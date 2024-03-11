@@ -1,0 +1,22 @@
+[workspace]
+members = [ "crates/chainio","crates/logging", "crates/services", "crates/signer"]
+
+resolver = "2"
+
+[workspace.package]
+version = "0.0.1-alpha"
+edition = "2021"
+rust-version = "1.75"
+repository = "https://github.com/anjaneyalabs/eigensdk-rs"
+
+[workspace.lints]
+rust.missing_debug_implementations = "warn"
+rust.missing_docs = "warn"
+rust.unreachable_pub = "warn"
+rustdoc.all = "warn"
+rust.unused_must_use = "deny"
+rust.rust_2018_idioms = "deny"
+
+
+[workspace.dependencies]
+reth = {git = "https://github.com/paradigmxyz/reth" , rev = "*"}
