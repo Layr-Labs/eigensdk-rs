@@ -19,4 +19,6 @@ rust.rust_2018_idioms = "deny"
 
 
 [workspace.dependencies]
-reth = {git = "https://github.com/paradigmxyz/reth" , rev = "*"}
+reth = {git = "https://github.com/paradigmxyz/reth" }
+prometheus_client = "0.22.2"
+bn254 = {git = "https://github.com/sedaprotocol/bn254"}
