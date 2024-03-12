@@ -1,0 +1,3 @@
+struct AvsRegistryChainWriter {}
+
+trait AvsRegistryWriter {}

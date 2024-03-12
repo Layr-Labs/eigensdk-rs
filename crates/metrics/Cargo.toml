@@ -1,9 +1,11 @@
 [package]
-name = "chainio"
+name = "eigensdk-metrics"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 repository.workspace = true
 
 [dependencies]
-reth.workspace = true
+
+[lints]
+workspace = true

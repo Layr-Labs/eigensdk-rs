@@ -1,5 +1,5 @@
 [workspace]
-members = [ "crates/chainio","crates/logging", "crates/services", "crates/signer"]
+members = [ "crates/chainio/clients/avsregistry","crates/chainio/clients/elcontracts","crates/chainio/clients/eth","crates/chainio/clients/fireblocks","crates/logging", "crates/metrics", "crates/services", "crates/signer"]
 
 resolver = "2"
 
@@ -13,12 +13,13 @@ repository = "https://github.com/anjaneyalabs/eigensdk-rs"
 rust.missing_debug_implementations = "warn"
 rust.missing_docs = "warn"
 rust.unreachable_pub = "warn"
-rustdoc.all = "warn"
 rust.unused_must_use = "deny"
 rust.rust_2018_idioms = "deny"
+rustdoc.all = "warn"
 
 
 [workspace.dependencies]
-reth = {git = "https://github.com/paradigmxyz/reth" }
-prometheus_client = "0.22.2"
+reth = {git = "https://github.com/paradigmxyz/reth"}
+prometheus-client = "0.22.2"
 bn254 = {git = "https://github.com/sedaprotocol/bn254"}
+eigensdk-metrics = {path = "crates/metrics"}

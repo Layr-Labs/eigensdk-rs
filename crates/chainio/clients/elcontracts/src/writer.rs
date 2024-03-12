@@ -1,0 +1,3 @@
+struct ELChainWriter {}
+
+trait ELWriter {}

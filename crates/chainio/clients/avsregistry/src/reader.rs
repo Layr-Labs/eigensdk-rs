@@ -1,0 +1,3 @@
+struct AvsRegistryChainReader {}
+
+trait AvsRegistryReader {}
