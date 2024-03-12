@@ -1,5 +1,5 @@
 [package]
-name = "eigensdk-client-avsregistry"
+name = "eigensdk-client-wallet"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -7,6 +7,5 @@ repository.workspace = true
 
 [dependencies]
 # reth.workspace = true
-
-[lints]
-workspace = true
+serde.workspace = true
+alloy-primitives.workspace = true

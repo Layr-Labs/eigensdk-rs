@@ -1,3 +1,3 @@
-struct AvsRegistryChainSubscriber {}
+pub struct AvsRegistryChainSubscriber {}
 
 trait AvsRegistrySubscriber {}

@@ -1,1 +1,1 @@
-mod eigenmetrics;
+pub mod eigenmetrics;

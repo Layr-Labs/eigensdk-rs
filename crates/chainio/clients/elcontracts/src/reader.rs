@@ -1,3 +1,3 @@
-struct ELChainReader {}
+pub struct ELChainReader {}
 
 trait ELReader {}

@@ -1,5 +1,14 @@
 [workspace]
-members = [ "crates/chainio/clients/avsregistry","crates/chainio/clients/elcontracts","crates/chainio/clients/eth","crates/chainio/clients/fireblocks","crates/logging", "crates/metrics", "crates/services", "crates/signer"]
+members = [ "crates/chainio/clients/avsregistry",
+"crates/chainio/clients/elcontracts/",
+"crates/chainio/clients/eth/",
+"crates/chainio/clients/fireblocks/",
+"crates/chainio/clients/builder/",
+"crates/chainio/clients/wallet/",
+"crates/logging/",
+"crates/metrics/",
+"crates/services/",
+"crates/signer/"]
 
 resolver = "2"
 
@@ -25,3 +34,9 @@ bn254 = {git = "https://github.com/sedaprotocol/bn254"}
 eigensdk-metrics = {path = "crates/metrics"}
 serde = {version = "1.0.197" , features = ["derive"]}
 alloy-primitives = "0.6.4"
+eigensdk-client-avsregistry = {path = "crates/chainio/clients/avsregistry"}
+eigensdk-client-builder = {path = "crates/chainio/clients/builder"}
+eigensdk-client-elcontracts = {path = "crates/chainio/clients/elcontracts"}
+eigensdk-client-eth = {path = "crates/chainio/clients/eth"}
+eigensdk-client-fireblocks = {path = "crates/chainio/clients/fireblocks"}
+eigensdk-client-wallet = {path = "crates/chainio/clients/wallet"}

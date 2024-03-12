@@ -1,0 +1,3 @@
+struct FireBlocksWallet {}
+
+struct PrivateKeyWallet {}

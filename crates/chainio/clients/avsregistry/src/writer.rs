@@ -1,3 +1,3 @@
-struct AvsRegistryChainWriter {}
+pub struct AvsRegistryChainWriter {}
 
 trait AvsRegistryWriter {}

@@ -1,0 +1,14 @@
+[package]
+name = "eigensdk-client-builder"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+repository.workspace = true
+
+[dependencies]
+# reth.workspace = true
+prometheus-client.workspace = true
+eigensdk-client-avsregistry.workspace = true
+eigensdk-client-elcontracts.workspace = true
+eigensdk-client-eth.workspace = true
+eigensdk-metrics.workspace = true

@@ -1,1 +1,1 @@
-trait Client {}
+pub trait Client {}

@@ -1,3 +1,3 @@
-struct AvsRegistryChainReader {}
+pub struct AvsRegistryChainReader {}
 
 trait AvsRegistryReader {}
