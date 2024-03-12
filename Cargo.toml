@@ -23,3 +23,4 @@ reth = {git = "https://github.com/paradigmxyz/reth"}
 prometheus-client = "0.22.2"
 bn254 = {git = "https://github.com/sedaprotocol/bn254"}
 eigensdk-metrics = {path = "crates/metrics"}
+serde = {version = "1.0.197" , features = ["derive"]}

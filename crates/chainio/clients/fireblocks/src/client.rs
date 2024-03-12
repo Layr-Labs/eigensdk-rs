@@ -1,7 +1,9 @@
 use std::collections::HashMap;
 
-#[derive(Debug, PartialEq)]
-enum AssetID {
+use serde::{Deserialize, Serialize};
+
+#[derive(Debug, PartialEq, Serialize, Deserialize)]
+pub enum AssetID {
     ETH,
     GoerliETH,
 }
@@ -25,6 +27,16 @@ fn asset_id_by_chain() -> HashMap<u64, AssetID> {
     map.insert(1, AssetID::ETH);
     map.insert(2, AssetID::GoerliETH);
     map
+}
+
+trait Client {}
+
+struct client {}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct ErrorResponse {
+    pub message: String,
+    pub code: i32,
 }
 
 #[test]
