@@ -1,6 +1,7 @@
-use alloy_sol_macro::{sol};
-
+use alloy_sol_types::{sol};
 
 sol!{
     ""
 }
+
+
