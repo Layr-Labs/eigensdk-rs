@@ -474,7 +474,10 @@ dependencies = [
 name = "eigensdk-client-avsregistry"
 version = "0.0.1-alpha"
 dependencies = [
+ "alloy-primitives",
+ "alloy-sol-types",
  "eigensdk-client-eth",
+ "eigensdk-logging",
 ]
 
 [[package]]
@@ -519,6 +522,10 @@ dependencies = [
  "alloy-sol-macro",
  "alloy-sol-types",
 ]
+
+[[package]]
+name = "eigensdk-logging"
+version = "0.0.1-alpha"
 
 [[package]]
 name = "eigensdk-metrics"
@@ -787,10 +794,6 @@ dependencies = [
  "autocfg",
  "scopeguard",
 ]
-
-[[package]]
-name = "logging"
-version = "0.0.1-alpha"
 
 [[package]]
 name = "memchr"

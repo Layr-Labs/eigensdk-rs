@@ -1,1 +1,2 @@
-pub trait Client {}
+#[derive(Debug)]
+pub struct  Client {}

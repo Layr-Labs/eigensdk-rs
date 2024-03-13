@@ -24,6 +24,7 @@ cp $CONTRACT_PATH/out/EigenPod.sol/EigenPod.json ../src/EigenPod.json
 cp $CONTRACT_PATH/out/EigenPodManager.sol/EigenPodManager.json ../src/EigenPodManager.json
 cp $CONTRACT_PATH/out/IStrategy.sol/IStrategy.json ../src/IStrategy.json
 cp $CONTRACT_PATH/out/AVSDirectory.sol/AVSDirectory.json ../src/AVSDirectory.json
+cp $CONTRACT_PATH/out/IRegistryCoordinator.sol/IRegistryCoordinator.json ../src/IRegistryCoordinator.json
 
 
 

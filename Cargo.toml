@@ -42,3 +42,5 @@ eigensdk-client-eth = {path = "crates/chainio/clients/eth"}
 eigensdk-client-fireblocks = {path = "crates/chainio/clients/fireblocks"}
 eigensdk-client-wallet = {path = "crates/chainio/clients/wallet"}
 eigensdk-contracts = {path  = "crates/contracts"}
+eigensdk-logging = {path = "crates/logging"}
+alloy-sol-types = {version = "0.6.4", features = ["json"]}
