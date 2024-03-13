@@ -1,13 +1,10 @@
 [package]
-name = "eigensdk-client-avsregistry"
+name = "eigensdk-contracts"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 repository.workspace = true
 
 [dependencies]
-eigensdk-client-eth.workspace = true
+alloy-sol-macro = "0.6.4"
 
-
-[lints]
-workspace = true
