@@ -10,6 +10,8 @@ eigensdk-client-eth.workspace = true
 alloy-primitives.workspace = true
 alloy-sol-types.workspace = true
 eigensdk-logging.workspace = true
-
+alloy-contract = { git = "https://github.com/alloy-rs/alloy", rev = "818b3e9692f2a207e456653a67aa8956fe1518a9" }  # As per workspace level
+alloy-provider.workspace = true
+alloy-network.workspace = true
 [lints]
 workspace = true

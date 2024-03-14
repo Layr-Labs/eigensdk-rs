@@ -16,7 +16,7 @@ resolver = "2"
 [workspace.package]
 version = "0.0.1-alpha"
 edition = "2021"
-rust-version = "1.75"
+rust-version = "1.76"
 repository = "https://github.com/anjaneyalabs/eigensdk-rs"
 
 [workspace.lints]
@@ -44,3 +44,6 @@ eigensdk-client-wallet = {path = "crates/chainio/clients/wallet"}
 eigensdk-contracts = {path  = "crates/contracts"}
 eigensdk-logging = {path = "crates/logging"}
 alloy-sol-types = {version = "0.6.4", features = ["json"]}
+alloy-contract = { git = "https://github.com/alloy-rs/alloy", rev = "818b3e9692f2a207e456653a67aa8956fe1518a9", path = "crates/contract" }
+alloy-provider = "0.1.0"
+alloy-network = "0.1.0"

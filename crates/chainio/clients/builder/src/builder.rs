@@ -22,8 +22,8 @@ struct Clients {
     avs_registry_chain_writer: AvsRegistryChainWriter,
     el_chain_reader: ELChainReader,
     el_chain_writer: ELChainWriter,
-    eth_http_client: Box<dyn Client>,
-    eth_ws_client: Box<dyn Client>,
+    eth_http_client: Client,
+    eth_ws_client: Client,
     metrics: EigenMetrics,
     prometheus_registry: Registry,
 }
