@@ -5,16 +5,10 @@ use eigensdk_logging::logger::Logger;
 use alloy_transport_http::Http;
 use alloy_sol_types::SolEvent;
 use alloy_contract::{private::Network, private::Provider, private::Transport, SolCallBuilder};
-use ethers::{prelude::Abigen};
+use ethers::{prelude::Abigen, providers::Middleware};
 use std::path::{Path,PathBuf};
-use eigensdk_contracts_bindings::registry_coordinator;
-// sol! {
-//     // #[sol(rpc)]
-//     #[derive(Debug)]
-//     RegistryCoordinator,
-//     "../../../../crates/contracts/src/RegistryCoordinator.json"
-//     // "../../../../crates/contracts/src/RegistryCoordinator.sol"
-// }
+use eigensdk_contracts_bindings::{RegistryCoordinator,OperatorStateRetriever,StakeRegistry};
+
 
 
 
@@ -25,7 +19,7 @@ fn generate_bindings(contract_name: &str,input_path : &str,output_path: &str ) {
     match Abigen::new(&contract_name, coontract){
         Ok(v)=>{
             println!("okoik");
-           let _=v.generate().expect("failed to abigen").write_to_file("../../../../crates/contracts/bindings/src/registry_coordinator.rs");
+           let _=v.generate().expect("failed to abigen").write_to_file(format!("{output_path}/src/{contract_name}.rs"));
         },
         Err(e)=>{
             println!("abigenerr{}",e);
@@ -34,31 +28,16 @@ fn generate_bindings(contract_name: &str,input_path : &str,output_path: &str ) {
 
 }
 
-// use self::{
-//     OperatorStateRetriever::OperatorStateRetrieverCalls,
-//     RegistryCoordinator::{quorumCountCall, RegistryCoordinatorCalls}, StakeRegistry::StakeRegistryCalls,
-// };
 
-// sol!{
-//     #[derive(Debug)]
-//     OperatorStateRetriever,
-//     "../../../../crates/contracts/src/OperatorStateRetriever.json"
-// }
-
-// sol! {
-// #[derive(Debug)]
-// StakeRegistry,
-//     "../../../../crates/contracts/src/StakeRegistry.json"
-// }
 
 #[derive(Debug)]
-pub struct AvsRegistryChainReader {
+pub struct AvsRegistryChainReader<M> {
     logger: Logger,
     bls_apk_registry_addr: Address,
     registry_coordinator_addr: Address,
-    // registry_coordinator: RegistryCoordinatorCalls,
-    // operator_state_retriever: OperatorStateRetrieverCalls,
-    // stake_registry: StakeRegistryCalls,
+    registry_coordinator:ethers::contract::Contract<M>,
+    operator_state_retriever:ethers::contract::Contract<M>,
+    stake_registry: ethers::contract::Contract<M>,
     eth_client: Client,
 }
 
@@ -66,23 +45,23 @@ trait AvsRegistryReader {
     fn get_quorum_count() -> Result<U8, String>;
 }
 
-impl AvsRegistryChainReader {
+impl <M: 'static + Middleware>AvsRegistryChainReader<M> {
     fn new(
+        logger : Logger,
         registry_coordinator_addr: Address,
         bls_apk_registry_addr: Address,
-        // registry_coordinator: RegistryCoordinatorCalls,
-        // operator_state_retriever: OperatorStateRetrieverCalls,
-        // stake_registry: StakeRegistryCalls,
-        logger: Logger,
+        registry_coordinate: ethers::contract::Contract<M>,
+        operator_state_retriever: ethers::contract::Contract<M>,
+        stake_registry:ethers::contract::Contract<M>,
         eth_client: Client,
     ) -> Self {
         AvsRegistryChainReader {
             logger,
             bls_apk_registry_addr,
             registry_coordinator_addr,
-            // registry_coordinator,
-            // operator_state_retriever,
-            // stake_registry,
+            registry_coordinator:registry_coordinate,
+            operator_state_retriever,
+            stake_registry,
             eth_client,
         }
     }
@@ -94,9 +73,8 @@ impl AvsRegistryChainReader {
     //     P: alloy_contract::private::Provider<N, Http<T>>,
     //     C: SolCall,
     {
-            generate_bindings("RegistryCoordinator","RegistryCoordinator.json", "crates/contracts/src/RegistryCoordinatorbindings");
+            generate_bindings("RegistryCoordinator","RegistryCoordinator.json", "../../../../crates/contracts/bindings/src/RegistryCoordinatorbindings");
         
-        let a = 2;
         // let registry_coordinator = RegistryCoordinator{registry_coordinator_addr};
 
        
@@ -115,5 +93,9 @@ impl AvsRegistryChainReader {
 #[test]
 fn test_binding_generation() {
     
-    generate_bindings("RegistryCoordinator","RegistryCoordinator.json", "../../../../crates/contracts/src/bindings");
+    generate_bindings("RegistryCoordinator","RegistryCoordinator.json", "../../../../crates/contracts/bindings");
+    generate_bindings("OperatorStateRetriever","OperatorStateRetriever.json", "../../../../crates/contracts/bindings");
+    generate_bindings("StakeRegistry","StakeRegistry.json", "../../../../crates/contracts/bindings");
+
+
 }

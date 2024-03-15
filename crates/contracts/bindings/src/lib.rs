@@ -1,1 +1,3 @@
-pub mod registry_coordinator;
+pub mod OperatorStateRetriever;
+pub mod RegistryCoordinator;
+pub mod StakeRegistry;

@@ -16,8 +16,8 @@ struct BuildAllConfig {
     FromMetricsIpPortAddress: String,
 }
 
-struct Clients {
-    avs_registry_chain_reader: AvsRegistryChainReader,
+struct Clients<M> {
+    avs_registry_chain_reader: AvsRegistryChainReader<M>,
     avs_registry_chain_subscriber: AvsRegistryChainSubscriber,
     avs_registry_chain_writer: AvsRegistryChainWriter,
     el_chain_reader: ELChainReader,
