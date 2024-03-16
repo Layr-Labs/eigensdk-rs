@@ -1210,6 +1210,7 @@ dependencies = [
  "ethers",
  "ethers-core",
  "ethers-providers",
+ "num-bigint",
  "serde_json",
 ]
 

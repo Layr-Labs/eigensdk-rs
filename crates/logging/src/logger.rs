@@ -1,4 +1,4 @@
 use std::default;
 
-#[derive(Debug,Default)]
+#[derive(Debug, Default)]
 pub struct Logger {}

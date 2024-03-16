@@ -20,5 +20,8 @@ ethers =  "2.0.14"
 ethers-providers ="2.0.14"
 serde_json = "1.0.114"
 ethers-core = "2.0.14"
+num-bigint = "0.4.4"
+
+
 [lints]
 workspace = true
