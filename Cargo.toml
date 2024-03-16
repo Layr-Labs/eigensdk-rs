@@ -9,6 +9,7 @@ members = [ "crates/chainio/clients/avsregistry",
 "crates/logging/",
 "crates/metrics/",
 "crates/services/",
+"crates/types/",
 "crates/signer/"]
 
 resolver = "2"
@@ -43,6 +44,7 @@ eigensdk-client-fireblocks = {path = "crates/chainio/clients/fireblocks"}
 eigensdk-client-wallet = {path = "crates/chainio/clients/wallet"}
 eigensdk-logging = {path = "crates/logging"}
 eigensdk-contracts-bindings = {patn = "crates/contracts/bindings"}
+eigensdk-types = {path = "crates/types"}
 alloy-sol-types = {git = "https://github.com/alloy-rs/core", rev = "5edbf5e17f0874c2870c7bba43ae063081adabb5", features = ["json"]}
 alloy-contract = { git = "https://github.com/alloy-rs/alloy", rev = "818b3e9692f2a207e456653a67aa8956fe1518a9", path = "crates/contract" }
 alloy-provider = { git = "https://github.com/alloy-rs/alloy", rev = "818b3e9692f2a207e456653a67aa8956fe1518a9"}

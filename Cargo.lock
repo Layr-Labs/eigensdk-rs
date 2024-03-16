@@ -1206,7 +1206,11 @@ dependencies = [
  "eigensdk-client-eth",
  "eigensdk-contracts-bindings",
  "eigensdk-logging",
+ "eigensdk-types",
  "ethers",
+ "ethers-core",
+ "ethers-providers",
+ "serde_json",
 ]
 
 [[package]]
@@ -1258,6 +1262,14 @@ version = "0.0.1-alpha"
 [[package]]
 name = "eigensdk-metrics"
 version = "0.0.1-alpha"
+
+[[package]]
+name = "eigensdk-types"
+version = "0.0.1-alpha"
+dependencies = [
+ "ethers",
+ "num-bigint",
+]
 
 [[package]]
 name = "either"
@@ -1579,6 +1591,7 @@ dependencies = [
  "const-hex",
  "enr",
  "ethers-core",
+ "futures-channel",
  "futures-core",
  "futures-timer",
  "futures-util",
