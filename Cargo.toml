@@ -6,6 +6,8 @@ members = [ "crates/chainio/clients/avsregistry",
 "crates/chainio/clients/builder/",
 "crates/chainio/clients/wallet/",
 "crates/contracts/bindings",
+"crates/crypto/bn254/",
+"crates/crypto/bls/",
 "crates/logging/",
 "crates/metrics/",
 "crates/services/",
@@ -45,6 +47,8 @@ eigensdk-client-wallet = {path = "crates/chainio/clients/wallet"}
 eigensdk-logging = {path = "crates/logging"}
 eigensdk-contracts-bindings = {patn = "crates/contracts/bindings"}
 eigensdk-types = {path = "crates/types"}
+eigensdk-crypto-bls = {path = "crates/crypto/bls"}
+eigensdk-crypto-bn254 = {path = "crates/crypto/bn254"}
 alloy-sol-types = {git = "https://github.com/alloy-rs/core", rev = "5edbf5e17f0874c2870c7bba43ae063081adabb5", features = ["json"]}
 alloy-contract = { git = "https://github.com/alloy-rs/alloy", rev = "818b3e9692f2a207e456653a67aa8956fe1518a9", path = "crates/contract" }
 alloy-provider = { git = "https://github.com/alloy-rs/alloy", rev = "818b3e9692f2a207e456653a67aa8956fe1518a9"}

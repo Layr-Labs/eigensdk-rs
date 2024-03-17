@@ -1,5 +1,5 @@
 [package]
-name = "eigensdk-types"
+name = "eigensdk-crypto-bls"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -7,6 +7,4 @@ repository.workspace = true
 
 [dependencies]
 # reth.workspace = true
-ethers =  "2.0.14"
-num-bigint = "0.4.4"
-eigensdk-crypto-bls.workspace = true
+

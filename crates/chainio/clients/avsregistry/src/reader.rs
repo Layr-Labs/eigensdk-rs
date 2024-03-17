@@ -15,13 +15,14 @@ use eigensdk_contracts_bindings::{
     StakeRegistry::{self, stake_registry},
 };
 use eigensdk_logging::logger::Logger;
-use eigensdk_types::operator::bitmap_to_quorum_ids;
+use eigensdk_types::{operator::{bitmap_to_quorum_ids,OperatorPubKeys}};
 use ethers::{
     prelude::Abigen,
     providers::Middleware,
     types::{Address, Bytes, H256, U256},
 };
-use ethers_core::{abi::Abi, k256::elliptic_curve::rand_core::block};
+
+use ethers_core::{abi::Abi, k256::elliptic_curve::rand_core::block,types::{Filter,FilterBlockOption,BlockNumber,ValueOrArray,Topic}};
 use ethers_providers::{Http, Provider};
 use num_bigint::BigInt;
 use serde_json;
@@ -32,6 +33,13 @@ const REGISTRY_COORDINATOR_PATH: &str =
 const STAKE_REGISTRY_PATH: &str = "../../../../crates/contracts/bindings/json/StakeRegistry.json";
 const OPERATOR_STATE_RETRIEVER: &str =
     "../../../../crates/contracts/bindings/json/OperatorStateRetriever.json";
+
+
+    // cast sig-event "NewPubkeyRegistration(address,(uint256,uint256),(uint256[2],uint256[2]))"
+    const NEW_BLS_APK_REGISTRATION_EVENT_SIGNATURE:H256 = H256([
+        0xe3,0xfb,0x66,0x13,0xaf,0x2e,0x89,0x30,0xcf,0x85,0xd4,0x7f,0xcf,0x6d,0xb1,0x01,0x92,0x22,0x4a,0x64,0xc6,
+        0xcb,0xe8,0x02,0x3e,0x0e,0xee,0x1b,0xa3,0x82,0x80,0x41
+        ]);
 
 fn generate_bindings(contract_name: &str, input_path: &str, output_path: &str) {
     let coontract: String =
@@ -365,7 +373,33 @@ impl AvsRegistryChainReader {
         Ok(operator_status == 1) 
     }
 
-    // async fn query_existing_registered_operator_pub_keys(&self)
+
+    async fn query_existing_registered_operator_pub_keys(&self,start_block : BlockNumber, stop_block : BlockNumber )  {
+
+        let block_option :FilterBlockOption  = FilterBlockOption::Range { from_block:Some(start_block), to_block: Some(stop_block) };
+
+        let query = Filter{
+            block_option,
+            address: Some(ValueOrArray::Value(self.bls_apk_registry_addr)),
+            topics: [Some(Topic::Value(Some(NEW_BLS_APK_REGISTRATION_EVENT_SIGNATURE))),None,None,None]
+        };
+
+        let logs  = self.eth_client.get_logs(&query).await.unwrap();
+
+        let operator_addresses :Vec<Address> ;
+        let operator_pub_keys :Vec<OperatorPubKeys>;
+
+        for (i,v_log) in logs.iter().enumerate(){
+
+            let operator_addr =Address::from_slice(&v_log.topics[i].as_bytes()[12..]);            
+            operator_addresses.push(operator_addr);
+
+            
+
+
+        }
+
+    }
 
 
 
