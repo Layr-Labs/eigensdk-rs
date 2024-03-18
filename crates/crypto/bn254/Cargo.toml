@@ -6,5 +6,4 @@ rust-version.workspace = true
 repository.workspace = true
 
 [dependencies]
-# reth.workspace = true
 

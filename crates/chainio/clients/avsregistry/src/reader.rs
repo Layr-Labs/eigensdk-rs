@@ -2,6 +2,8 @@ use alloy_contract::{
     private::{Network, Transport},
     ContractInstance, SolCallBuilder,
 };
+use ark_ff::{BigInteger, BigInteger256};
+use std::fmt::Debug;
 use alloy_primitives::{U32, U8};
 use alloy_sol_types::SolEvent;
 use alloy_sol_types::{sol, SolCall, SolConstructor, SolInterface};
@@ -13,7 +15,10 @@ use eigensdk_contracts_bindings::{
     },
     RegistryCoordinator::registry_coordinator,
     StakeRegistry::{self, stake_registry},
+    BLSApkRegistry::{bls_apk_registry,NewPubkeyRegistrationFilter}
+    
 };
+use eigensdk_crypto_bls::attestation::{G1Point, G2Point};
 use eigensdk_logging::logger::Logger;
 use eigensdk_types::{operator::{bitmap_to_quorum_ids,OperatorPubKeys}};
 use ethers::{
@@ -22,7 +27,7 @@ use ethers::{
     types::{Address, Bytes, H256, U256},
 };
 
-use ethers_core::{abi::Abi, k256::elliptic_curve::rand_core::block,types::{Filter,FilterBlockOption,BlockNumber,ValueOrArray,Topic}};
+use ethers_core::{abi::{Detokenize,Abi}, k256::elliptic_curve::rand_core::block,types::{Filter,FilterBlockOption,BlockNumber,ValueOrArray,Topic}};
 use ethers_providers::{Http, Provider};
 use num_bigint::BigInt;
 use serde_json;
@@ -374,7 +379,7 @@ impl AvsRegistryChainReader {
     }
 
 
-    async fn query_existing_registered_operator_pub_keys(&self,start_block : BlockNumber, stop_block : BlockNumber )  {
+    async fn query_existing_registered_operator_pub_keys<M: Detokenize + Debug>(&self,start_block : BlockNumber, stop_block : BlockNumber ) -> Result<(Vec<Address>,Vec<OperatorPubKeys>),String> {
 
         let block_option :FilterBlockOption  = FilterBlockOption::Range { from_block:Some(start_block), to_block: Some(stop_block) };
 
@@ -384,34 +389,68 @@ impl AvsRegistryChainReader {
             topics: [Some(Topic::Value(Some(NEW_BLS_APK_REGISTRATION_EVENT_SIGNATURE))),None,None,None]
         };
 
+        let contract_bls_apk_registry = bls_apk_registry::BLSApkRegistry::new(self.bls_apk_registry_addr,self.eth_client.clone().into());
+        let mut filter  = bls_apk_registry::BLSApkRegistry::new_pubkey_registration_filter(&contract_bls_apk_registry);
+
+        let s= filter.from_block(start_block).to_block(stop_block).address( ValueOrArray::Value(self.bls_apk_registry_addr)).topic0(NEW_BLS_APK_REGISTRATION_EVENT_SIGNATURE).query().await;
+
+        // let event_logs = filter.query().await;
         let logs  = self.eth_client.get_logs(&query).await.unwrap();
 
-        let operator_addresses :Vec<Address> ;
-        let operator_pub_keys :Vec<OperatorPubKeys>;
+        let mut operator_addresses :Vec<Address> = vec![];
+        let mut operator_pub_keys :Vec<OperatorPubKeys> = vec![];
 
         for (i,v_log) in logs.iter().enumerate(){
 
             let operator_addr =Address::from_slice(&v_log.topics[i].as_bytes()[12..]);            
             operator_addresses.push(operator_addr);
 
+            let decoded_event = contract_bls_apk_registry.decode_event::<NewPubkeyRegistrationFilter>("NewPubkeyRegistration", v_log.topics.clone(), v_log.data.clone()).unwrap();
+            let g1_pub_key = decoded_event.pubkey_g1;
+            let g2_pub_key = decoded_event.pubkey_g2;
+
+            let operator_pub_key = OperatorPubKeys{g1_pub_key : G1Point::new(u256_to_bigint256(g1_pub_key.x),u256_to_bigint256(g1_pub_key.y))  , g2_pub_key : G2Point::new((u256_to_bigint256(g2_pub_key.x[0]),u256_to_bigint256(g2_pub_key.x[1])),(u256_to_bigint256(g2_pub_key.y[0]), u256_to_bigint256(g2_pub_key.y[1])))};
+
+
+            operator_pub_keys.push(operator_pub_key);
+
+            // let g1_pub_key :NewPubkeyRegistrationFilter= s.filter;
+            // let g1_pub_key = M::from_token();
             
-
-
+            
         }
+        let res = (operator_addresses,operator_pub_keys);
+        Ok(res)
 
     }
 
+}
 
+fn u256_to_bigint256(value: U256) -> BigInteger256 {
+    // Convert U256 to a byte array
+    let mut bytes = [0u8; 32];
+    value.to_big_endian(&mut bytes);
+    // Convert the byte array to a bit array
+    let mut bits = [false; 256];
+    for (byte_idx, byte) in bytes.iter().enumerate() {
+        for bit_idx in 0..8 {
+            let bit = byte & (1 << bit_idx) != 0;
+            bits[byte_idx * 8 + bit_idx] = bit;
+        }
+    }
+    // Create a BigInteger256 from the byte array
+    BigInteger256::from_bits_be(&bits)
+}
+
+#[test]
+fn test_binding_generation() {
+
+    // generate_bindings("RegistryCoordinator","RegistryCoordinator.json", "../../../../crates/contracts/bindings");
+    generate_bindings("OperatorStateRetriever","OperatorStateRetriever.json", "../../../../crates/contracts/bindings");
+    generate_bindings("StakeRegistry","StakeRegistry.json", "../../../../crates/contracts/bindings");
+    generate_bindings("BLSApkRegistry","BLSApkRegistry.json", "../../../../crates/contracts/bindings");
 
 }
-// #[test]
-// fn test_binding_generation() {
-
-//     generate_bindings("RegistryCoordinator","RegistryCoordinator.json", "../../../../crates/contracts/bindings");
-//     generate_bindings("OperatorStateRetriever","OperatorStateRetriever.json", "../../../../crates/contracts/bindings");
-//     generate_bindings("StakeRegistry","StakeRegistry.json", "../../../../crates/contracts/bindings");
-
-// }
 
 #[test]
 fn test_build_avs_registry_chain_reader() {

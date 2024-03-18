@@ -1,6 +1,6 @@
 use ethers::types::U256;
 use num_bigint::BigUint;
-use eigensdk_crypto_bls::{G1Point,G2Point};
+use eigensdk_crypto_bls::attestation::{G1Point,G2Point};
 const MAX_NUMBER_OF_QUORUMS: usize = 192;
 
 pub fn bitmap_to_quorum_ids(quorum_bitmaps: U256) -> Vec<u8> {
@@ -21,7 +21,7 @@ pub fn bitmap_to_quorum_ids(quorum_bitmaps: U256) -> Vec<u8> {
 
 pub struct OperatorPubKeys {
 
-    g1_pub_key :G1Point, 
-    g2_pub_key :G2Point
+    pub g1_pub_key :G1Point, 
+    pub g2_pub_key :G2Point
 
 }

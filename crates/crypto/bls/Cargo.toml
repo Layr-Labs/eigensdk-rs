@@ -8,3 +8,5 @@ repository.workspace = true
 [dependencies]
 # reth.workspace = true
 
+ark-bn254 = "0.4.0"
+ark-ff = "0.4.0"
