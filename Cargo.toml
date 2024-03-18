@@ -33,6 +33,7 @@ rustdoc.all = "warn"
 
 
 [workspace.dependencies]
+ark-ff = "0.4.0"
 reth = {git = "https://github.com/paradigmxyz/reth"}
 prometheus-client = "0.22.2"
 bn254 = {git = "https://github.com/sedaprotocol/bn254"}
@@ -45,7 +46,7 @@ eigensdk-client-elcontracts = {path = "crates/chainio/clients/elcontracts"}
 eigensdk-client-eth = {path = "crates/chainio/clients/eth"}
 eigensdk-client-fireblocks = {path = "crates/chainio/clients/fireblocks"}
 eigensdk-client-wallet = {path = "crates/chainio/clients/wallet"}
-eigensdk-logging = {path = "crates/logging"}
+eigensdk-logging = {path = "crates/logging/"}
 eigensdk-contracts-bindings = {patn = "crates/contracts/bindings"}
 eigensdk-types = {path = "crates/types/"}
 eigensdk-crypto-bls = {path = "crates/crypto/bls/"}

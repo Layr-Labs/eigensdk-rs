@@ -6,11 +6,11 @@ rust-version.workspace = true
 repository.workspace = true
 
 [dependencies]
+eigensdk-logging = {path = "../../../../crates/logging/"}
 eigensdk-client-eth.workspace = true 
 eigensdk-contracts-bindings = {path = "../../../../crates/contracts/bindings"}
 alloy-primitives = {git = "https://github.com/alloy-rs/core", rev = "14083ea11780b92f5c6466b12cc879e3b8c16972"}
 alloy-sol-types = {git = "https://github.com/alloy-rs/core", rev = "14083ea11780b92f5c6466b12cc879e3b8c16972", features = ["json"]}
-eigensdk-logging.workspace = true
 alloy-contract = { git = "https://github.com/alloy-rs/alloy", rev = "818b3e9692f2a207e456653a67aa8956fe1518a9" }  # As per workspace level
 alloy-provider = { git = "https://github.com/alloy-rs/alloy", rev = "818b3e9692f2a207e456653a67aa8956fe1518a9"}
 alloy-network = { git = "https://github.com/alloy-rs/alloy", rev = "818b3e9692f2a207e456653a67aa8956fe1518a9"}
@@ -22,7 +22,6 @@ ethers-core = "2.0.14"
 num-bigint = "0.4.4"
 eigensdk-types.workspace = true
 eigensdk-crypto-bls.workspace = true
-ark-ff = "0.4.0"
-
+ark-ff.workspace = true
 [lints]
 workspace = true

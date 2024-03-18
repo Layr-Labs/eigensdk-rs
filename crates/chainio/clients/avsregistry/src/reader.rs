@@ -26,6 +26,7 @@ use ethers::{
 };
 use std::fmt::Debug;
 
+use crate::NEW_BLS_APK_REGISTRATION_EVENT_SIGNATURE;
 use ethers_core::{
     abi::{Abi, Detokenize},
     k256::elliptic_curve::rand_core::block,
@@ -41,12 +42,6 @@ const REGISTRY_COORDINATOR_PATH: &str =
 const STAKE_REGISTRY_PATH: &str = "../../../../crates/contracts/bindings/json/StakeRegistry.json";
 const OPERATOR_STATE_RETRIEVER: &str =
     "../../../../crates/contracts/bindings/json/OperatorStateRetriever.json";
-
-// cast sig-event "NewPubkeyRegistration(address,(uint256,uint256),(uint256[2],uint256[2]))"
-const NEW_BLS_APK_REGISTRATION_EVENT_SIGNATURE: H256 = H256([
-    0xe3, 0xfb, 0x66, 0x13, 0xaf, 0x2e, 0x89, 0x30, 0xcf, 0x85, 0xd4, 0x7f, 0xcf, 0x6d, 0xb1, 0x01,
-    0x92, 0x22, 0x4a, 0x64, 0xc6, 0xcb, 0xe8, 0x02, 0x3e, 0x0e, 0xee, 0x1b, 0xa3, 0x82, 0x80, 0x41,
-]);
 
 fn generate_bindings(contract_name: &str, input_path: &str, output_path: &str) {
     let coontract: String =
@@ -422,7 +417,7 @@ impl AvsRegistryChainReader {
         Ok(operator_status == 1)
     }
 
-    async fn query_existing_registered_operator_pub_keys<M: Detokenize + Debug>(
+    async fn query_existing_registered_operator_pub_keys(
         &self,
         start_block: BlockNumber,
         stop_block: BlockNumber,
@@ -447,19 +442,18 @@ impl AvsRegistryChainReader {
             self.bls_apk_registry_addr,
             self.eth_client.clone().into(),
         );
-        let mut filter = bls_apk_registry::BLSApkRegistry::new_pubkey_registration_filter(
-            &contract_bls_apk_registry,
-        );
+        // let mut filter = bls_apk_registry::BLSApkRegistry::new_pubkey_registration_filter(
+        //     &contract_bls_apk_registry,
+        // );
 
-        let s = filter
-            .from_block(start_block)
-            .to_block(stop_block)
-            .address(ValueOrArray::Value(self.bls_apk_registry_addr))
-            .topic0(NEW_BLS_APK_REGISTRATION_EVENT_SIGNATURE)
-            .query()
-            .await;
+        // let s = filter
+        //     .from_block(start_block)
+        //     .to_block(stop_block)
+        //     .address(ValueOrArray::Value(self.bls_apk_registry_addr))
+        //     .topic0(NEW_BLS_APK_REGISTRATION_EVENT_SIGNATURE)
+        //     .query()
+        //     .await;
 
-        // let event_logs = filter.query().await;
         let logs = self.eth_client.get_logs(&query).await.unwrap();
 
         let mut operator_addresses: Vec<Address> = vec![];
@@ -503,7 +497,8 @@ impl AvsRegistryChainReader {
     }
 }
 
-fn u256_to_bigint256(value: U256) -> BigInteger256 {
+/// Converts [U256] to [BigInteger256]
+pub fn u256_to_bigint256(value: U256) -> BigInteger256 {
     // Convert U256 to a byte array
     let mut bytes = [0u8; 32];
     value.to_big_endian(&mut bytes);
