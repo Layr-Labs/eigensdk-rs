@@ -532,6 +532,11 @@ fn test_binding_generation() {
         "BLSApkRegistry.json",
         "../../../../crates/contracts/bindings",
     );
+    generate_bindings(
+        "ServiceManagerBase",
+        "ServiceManagerBase.json",
+        "../../../../crates/contracts/bindings",
+    );
 }
 
 #[test]

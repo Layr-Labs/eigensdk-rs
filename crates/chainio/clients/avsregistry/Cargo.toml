@@ -23,5 +23,9 @@ num-bigint = "0.4.4"
 eigensdk-types.workspace = true
 eigensdk-crypto-bls.workspace = true
 ark-ff.workspace = true
+eigensdk-client-elcontracts.workspace = true
+eigensdk-txmgr.workspace = true
+
+
 [lints]
 workspace = true

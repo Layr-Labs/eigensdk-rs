@@ -1,3 +1,3 @@
 pub struct ELChainReader {}
 
-trait ELReader {}
+pub struct ELReader {}
