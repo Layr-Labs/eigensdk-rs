@@ -1285,6 +1285,11 @@ dependencies = [
 [[package]]
 name = "eigensdk-client-elcontracts"
 version = "0.0.1-alpha"
+dependencies = [
+ "eigensdk-contracts-bindings",
+ "eigensdk-logging",
+ "ethers-providers",
+]
 
 [[package]]
 name = "eigensdk-client-eth"

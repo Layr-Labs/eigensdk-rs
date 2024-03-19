@@ -537,6 +537,26 @@ fn test_binding_generation() {
         "ServiceManagerBase.json",
         "../../../../crates/contracts/bindings",
     );
+    generate_bindings(
+        "DelegationManager",
+        "DelegationManager.json",
+        "../../../../crates/contracts/bindings",
+    );
+    generate_bindings(
+        "StrategyManager",
+        "StrategyManager.json",
+        "../../../../crates/contracts/bindings",
+    );
+    generate_bindings(
+        "AVSDirectory",
+        "AVSDirectory.json",
+        "../../../../crates/contracts/bindings",
+    );
+    generate_bindings(
+        "ISlasher",
+        "ISlasher.json",
+        "../../../../crates/contracts/bindings",
+    );
 }
 
 #[test]

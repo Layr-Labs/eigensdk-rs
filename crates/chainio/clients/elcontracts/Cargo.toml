@@ -7,4 +7,6 @@ repository.workspace = true
 
 [dependencies]
 # reth.workspace = true
-
+eigensdk-logging.workspace = true
+eigensdk-contracts-bindings = {path = "../../../../crates/contracts/bindings"}
+ethers-providers.workspace=true

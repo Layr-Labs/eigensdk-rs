@@ -1,4 +1,9 @@
+pub mod AVSDirectory;
 pub mod BLSApkRegistry;
+pub mod DelegationManager;
+pub mod ISlasher;
 pub mod OperatorStateRetriever;
 pub mod RegistryCoordinator;
+pub mod ServiceManagerBase;
 pub mod StakeRegistry;
+pub mod StrategyManager;

@@ -16,10 +16,10 @@ alloy-provider = { git = "https://github.com/alloy-rs/alloy", rev = "818b3e9692f
 alloy-network = { git = "https://github.com/alloy-rs/alloy", rev = "818b3e9692f2a207e456653a67aa8956fe1518a9"}
 alloy-transport-http = { git = "https://github.com/alloy-rs/alloy", rev = "818b3e9692f2a207e456653a67aa8956fe1518a9" }
 ethers =  "2.0.14"
-ethers-providers ="2.0.14"
 serde_json = "1.0.114"
 ethers-core = "2.0.14"
 num-bigint = "0.4.4"
+ethers-providers.workspace = true
 eigensdk-types.workspace = true
 eigensdk-crypto-bls.workspace = true
 ark-ff.workspace = true
