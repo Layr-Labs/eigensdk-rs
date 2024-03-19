@@ -1288,6 +1288,7 @@ version = "0.0.1-alpha"
 dependencies = [
  "eigensdk-contracts-bindings",
  "eigensdk-logging",
+ "ethers-core",
  "ethers-providers",
 ]
 

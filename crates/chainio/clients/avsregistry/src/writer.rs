@@ -1,4 +1,4 @@
-use eigensdk_client_elcontracts::reader::ELReader;
+use eigensdk_client_elcontracts::reader::ELChainReader;
 use eigensdk_contracts_bindings::{
     BLSApkRegistry::bls_apk_registry::{self},
     OperatorStateRetriever::operator_state_retriever::{self},
@@ -18,7 +18,7 @@ pub struct AvsRegistryChainWriter {
     operator_state_retriever_addr: Address,
     stake_registry_addr: Address,
     bls_apk_registry_addr: Address,
-    el_reader: ELReader,
+    el_reader: ELChainReader,
     logger: Logger,
     client: Provider<Http>,
     tx_mgr: TxManager,
@@ -33,7 +33,7 @@ impl AvsRegistryChainWriter {
         operator_state_retriever_addr: Address,
         stake_registry_addr: Address,
         bls_apk_registry_addr: Address,
-        el_reader: ELReader,
+        el_reader: ELChainReader,
         logger: Logger,
         client: Provider<Http>,
         tx_mgr: TxManager,
@@ -58,8 +58,8 @@ impl AvsRegistryChainWriter {
         logger: Logger,
         client: Provider<Http>,
         tx_mgr: TxManager,
-    ) {
-        let provider = Arc::new(client);
+    ) -> Self {
+        let provider = Arc::new(client.clone());
         let contract_registry_coordinator = registry_coordinator::RegistryCoordinator::new(
             registry_coordinator_addr,
             provider.clone(),
@@ -105,5 +105,25 @@ impl AvsRegistryChainWriter {
             .call()
             .await
             .unwrap();
+
+        let el_reader = ELChainReader::build(
+            delegation_manager_addr,
+            avs_directory_addr,
+            logger.clone(),
+            client.clone(),
+        )
+        .await;
+
+        return AvsRegistryChainWriter {
+            service_manager_addr,
+            registry_coordinator_addr,
+            operator_state_retriever_addr,
+            stake_registry_addr,
+            bls_apk_registry_addr,
+            el_reader,
+            logger,
+            client,
+            tx_mgr,
+        };
     }
 }

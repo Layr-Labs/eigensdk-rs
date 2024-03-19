@@ -36,6 +36,7 @@ rustdoc.all = "warn"
 [workspace.dependencies]
 ark-ff = "0.4.0"
 ethers-providers ="2.0.14"
+ethers-core = "2.0.14"
 reth = {git = "https://github.com/paradigmxyz/reth"}
 prometheus-client = "0.22.2"
 bn254 = {git = "https://github.com/sedaprotocol/bn254"}

@@ -10,3 +10,4 @@ repository.workspace = true
 eigensdk-logging.workspace = true
 eigensdk-contracts-bindings = {path = "../../../../crates/contracts/bindings"}
 ethers-providers.workspace=true
+ethers-core.workspace=true
