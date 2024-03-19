@@ -6,6 +6,7 @@ members = [ "crates/chainio/clients/avsregistry/",
 "crates/chainio/clients/builder/",
 "crates/chainio/clients/wallet/",
 "crates/contracts/bindings/",
+"crates/chainio/utils/",
 "crates/crypto/bn254/",
 "crates/crypto/bls/",
 "crates/logging/",
@@ -34,6 +35,7 @@ rustdoc.all = "warn"
 
 
 [workspace.dependencies]
+ethers =  "2.0.14"
 ark-ff = "0.4.0"
 ethers-providers ="2.0.14"
 ethers-core = "2.0.14"
@@ -42,6 +44,7 @@ prometheus-client = "0.22.2"
 bn254 = {git = "https://github.com/sedaprotocol/bn254"}
 eigensdk-metrics = {path = "crates/metrics"}
 serde = {version = "1.0.197" , features = ["derive"]}
+eigensdk-chainio-utils = {path = "crates/chainio/utils"}
 alloy-primitives = {git = "https://github.com/alloy-rs/core", rev = "14083ea11780b92f5c6466b12cc879e3b8c16972"}
 eigensdk-client-avsregistry = {path = "crates/chainio/clients/avsregistry"}
 eigensdk-client-builder = {path = "crates/chainio/clients/builder"}
@@ -50,7 +53,7 @@ eigensdk-client-eth = {path = "crates/chainio/clients/eth"}
 eigensdk-client-fireblocks = {path = "crates/chainio/clients/fireblocks"}
 eigensdk-client-wallet = {path = "crates/chainio/clients/wallet"}
 eigensdk-logging = {path = "crates/logging/"}
-eigensdk-contracts-bindings = {patn = "crates/contracts/bindings"}
+eigensdk-contracts-bindings = {patn = "crates/contracts/bindings/"}
 eigensdk-types = {path = "crates/types/"}
 eigensdk-crypto-bls = {path = "crates/crypto/bls/"}
 eigensdk-crypto-bn254 = {path = "crates/crypto/bn254/"}

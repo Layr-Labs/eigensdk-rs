@@ -1,0 +1,14 @@
+[package]
+name = "eigensdk-chainio-utils"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+repository.workspace = true
+
+[dependencies]
+ethers = "2.0.14"
+ark-bn254 = "0.4.0"
+ark-ff.workspace = true
+eigensdk-contracts-bindings = {path = "../../../crates/contracts/bindings"}
+eigensdk-crypto-bls.workspace = true
+eigensdk-crypto-bn254.workspace = true

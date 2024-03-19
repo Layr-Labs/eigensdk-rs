@@ -1,3 +1,4 @@
+use eigensdk_chainio_utils::convert_bn254_to_ark;
 use eigensdk_client_elcontracts::reader::ELChainReader;
 use eigensdk_contracts_bindings::{
     BLSApkRegistry::bls_apk_registry::{self},
@@ -10,7 +11,10 @@ use eigensdk_logging::logger::Logger;
 use eigensdk_txmgr::TxManager;
 use ethers_core::types::Address;
 use ethers_providers::{Http, Middleware, Provider};
+use std::str::FromStr;
 use std::sync::Arc;
+
+use ethers::signers::{Signer, Wallet};
 
 pub struct AvsRegistryChainWriter {
     service_manager_addr: Address,
@@ -125,5 +129,24 @@ impl AvsRegistryChainWriter {
             client,
             tx_mgr,
         };
+    }
+
+    async fn reigster_operator_in_quorum_with_avs_registry_coordinator(&self, pvt_key: &str) {
+        let provider = Arc::new(&self.client);
+        let contract_registry_coordinator = registry_coordinator::RegistryCoordinator::new(
+            self.registry_coordinator_addr,
+            provider,
+        );
+        let wallet = Wallet::from_str(pvt_key).unwrap();
+        let g1_hashes_msg_to_sign = contract_registry_coordinator
+            .pubkey_registration_message_hash(wallet.address())
+            .call()
+            .await
+            .unwrap();
+
+        let x_point = g1_hashes_msg_to_sign.x;
+        let y_point = g1_hashes_msg_to_sign.y;
+
+        let g1_point = convert_bn254_to_ark(g1_hashes_msg_to_sign);
     }
 }

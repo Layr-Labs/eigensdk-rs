@@ -1,7 +1,7 @@
 use ark_bn254::{Fq, Fq2, G1Projective, G2Projective};
 use ark_ff::{fields::Field, BigInteger256, One};
 
-fn new_fp_element(x: BigInteger256) -> Fq {
+pub fn new_fp_element(x: BigInteger256) -> Fq {
     Fq::from(x)
 }
 
