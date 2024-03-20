@@ -7,6 +7,8 @@ use eigensdk_contracts_bindings::{
     ServiceManagerBase::service_manager_base::{self},
     StakeRegistry::stake_registry::{self},
 };
+use ark_bn254::{G1Projective};
+use eigensdk_crypto_bls::attestation::KeyPair;
 use eigensdk_logging::logger::Logger;
 use eigensdk_txmgr::TxManager;
 use ethers_core::types::Address;
@@ -131,7 +133,7 @@ impl AvsRegistryChainWriter {
         };
     }
 
-    async fn reigster_operator_in_quorum_with_avs_registry_coordinator(&self, pvt_key: &str) {
+    async fn reigster_operator_in_quorum_with_avs_registry_coordinator(&self, pvt_key: &str, bls_key_pair : KeyPair) {
         let provider = Arc::new(&self.client);
         let contract_registry_coordinator = registry_coordinator::RegistryCoordinator::new(
             self.registry_coordinator_addr,
@@ -147,6 +149,6 @@ impl AvsRegistryChainWriter {
         let x_point = g1_hashes_msg_to_sign.x;
         let y_point = g1_hashes_msg_to_sign.y;
 
-        let g1_point = convert_bn254_to_ark(g1_hashes_msg_to_sign);
+        let g1_point =   bls_key_pair.sign_hashes_to_curve_message( G1Projective::from(convert_bn254_to_ark(g1_hashes_msg_to_sign).point));
     }
 }

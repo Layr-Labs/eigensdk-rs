@@ -27,6 +27,7 @@ eigensdk-crypto-bn254.workspace = true
 eigensdk-client-elcontracts.workspace = true
 eigensdk-txmgr.workspace = true
 eigensdk-chainio-utils.workspace = true
+ark-bn254 = "0.4.0"
 
 
 [lints]

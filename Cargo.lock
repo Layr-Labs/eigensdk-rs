@@ -1268,6 +1268,7 @@ dependencies = [
  "alloy-provider",
  "alloy-sol-types 0.6.4 (git+https://github.com/alloy-rs/core?rev=14083ea11780b92f5c6466b12cc879e3b8c16972)",
  "alloy-transport-http",
+ "ark-bn254",
  "ark-ff 0.4.2",
  "eigensdk-chainio-utils",
  "eigensdk-client-elcontracts",
@@ -1339,6 +1340,7 @@ version = "0.0.1-alpha"
 dependencies = [
  "ark-bn254",
  "ark-ff 0.4.2",
+ "eigensdk-crypto-bn254",
 ]
 
 [[package]]
