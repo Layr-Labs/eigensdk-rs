@@ -1301,6 +1301,8 @@ dependencies = [
 name = "eigensdk-client-elcontracts"
 version = "0.0.1-alpha"
 dependencies = [
+ "ark-bn254",
+ "ark-ff 0.4.2",
  "eigensdk-contracts-bindings",
  "eigensdk-logging",
  "ethers-core",

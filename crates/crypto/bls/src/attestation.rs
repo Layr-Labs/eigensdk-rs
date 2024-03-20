@@ -1,6 +1,6 @@
 use ark_bn254::{g1::G1_GENERATOR_X, Fq, Fq2, Fr, FrConfig, G1Affine, G1Projective, G2Projective};
 use ark_ff::{fields::Field, BigInteger256, MontConfig, One, PrimeField};
-use eigensdk_crypto_bn254::utils::mul_by_generator_g1;
+use eigensdk_crypto_bn254::utils::{mul_by_generator_g1, mul_by_generator_g2};
 use std::ops::Mul;
 pub fn new_fp_element(x: BigInteger256) -> Fq {
     Fq::from(x)
@@ -13,7 +13,13 @@ fn new_fp2_element(a: BigInteger256, b: BigInteger256) -> Fq2 {
 type PrivateKey = Fr;
 
 pub struct Signature {
-    sig: G1Projective, 
+    sig: G1Projective,
+}
+
+impl Signature {
+    pub fn sig(&self) -> G1Projective {
+        self.sig
+    }
 }
 
 pub struct KeyPair {
@@ -31,20 +37,24 @@ impl KeyPair {
     }
 
     pub fn sign_hashes_to_curve_message(&self, g1_hashes_msg: G1Projective) -> Signature {
-
-        let affine :G1Affine= g1_hashes_msg.into();
+        let affine: G1Affine = g1_hashes_msg.into();
         let sig = g1_hashes_msg.mul(self.priv_key);
 
-        Signature{sig}
+        Signature { sig }
+    }
 
+    pub fn get_pub_key_g1(&self) -> G1Projective {
+        self.pub_key
+    }
+
+    pub fn gt_pub_key_g2(&self) -> G2Projective {
+        mul_by_generator_g2(self.priv_key)
     }
 }
 
 pub struct G1Point {
-    pub  point: G1Projective,
+    pub point: G1Projective,
 }
-
-
 
 pub struct G2Point {
     pub point: G2Projective,
