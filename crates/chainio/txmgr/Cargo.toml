@@ -7,5 +7,6 @@ repository.workspace = true
 
 [dependencies]
 ethers = "2.0.14"
-
-
+eigensdk-client-wallet.workspace = true
+eigensdk-signerv2.workspace = true
+eigensdk-logging.workspace = true

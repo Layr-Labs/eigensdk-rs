@@ -1,5 +1,5 @@
 [package]
-name = "eigensdk-client-wallet"
+name = "eigensdk-signerv2"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -7,9 +7,6 @@ repository.workspace = true
 
 [dependencies]
 # reth.workspace = true
-serde.workspace = true
-alloy-primitives.workspace = true
-ethers-providers.workspace = true
-eigensdk-logging.workspace = true
-ethers.workspace = true
 ethers-core.workspace = true
+ethers.workspace = true
+ethers-signers = "2.0.14"

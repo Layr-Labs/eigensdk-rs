@@ -6,17 +6,20 @@ use eigensdk_client_elcontracts::reader::ELChainReader;
 use eigensdk_contracts_bindings::{
     BLSApkRegistry::bls_apk_registry,
     OperatorStateRetriever::operator_state_retriever,
-    RegistryCoordinator::{registry_coordinator::{self,REGISTRYCOORDINATOR_ABI}, RegistryCoordinator,SignatureWithSaltAndExpiry},
+    RegistryCoordinator::{
+        registry_coordinator::{self, REGISTRYCOORDINATOR_ABI},
+        RegistryCoordinator, SignatureWithSaltAndExpiry,
+    },
     ServiceManagerBase::service_manager_base,
     StakeRegistry::stake_registry,
 };
 use eigensdk_crypto_bls::attestation::KeyPair;
 use eigensdk_logging::logger::Logger;
 use eigensdk_txmgr::TxManager;
-use ethers_core::types::{Address,U256};
+use ethers_core::types::{Address, U256};
 use ethers_providers::{Http, Middleware, Provider};
-use std::{any::Any, str::FromStr};
 use std::sync::Arc;
+use std::{any::Any, str::FromStr};
 
 use ethers::signers::{Signer, Wallet};
 
@@ -139,8 +142,8 @@ impl AvsRegistryChainWriter {
         &self,
         pvt_key: &str,
         bls_key_pair: KeyPair,
-        operator_to_avs_registration_sig_salt: [u8;32],
-        operator_to_avs_registration_sig_expiry: U256
+        operator_to_avs_registration_sig_salt: [u8; 32],
+        operator_to_avs_registration_sig_expiry: U256,
     ) {
         let provider = Arc::new(&self.client);
         let contract_registry_coordinator = registry_coordinator::RegistryCoordinator::new(
@@ -168,27 +171,27 @@ impl AvsRegistryChainWriter {
         let g1_pubkey_bn254 = convert_to_bn254_g1_point(bls_key_pair.get_pub_key_g1());
         let g2_pubkey_bn254 = convert_to_bn254_g2_point(bls_key_pair.gt_pub_key_g2());
 
-        let msg_to_sign = self.el_reader.calculate_operator_avs_registration_digest_hash(wallet.address(),self.service_manager_addr,operator_to_avs_registration_sig_salt,operator_to_avs_registration_sig_expiry).await.unwrap();
+        let msg_to_sign = self
+            .el_reader
+            .calculate_operator_avs_registration_digest_hash(
+                wallet.address(),
+                self.service_manager_addr,
+                operator_to_avs_registration_sig_salt,
+                operator_to_avs_registration_sig_expiry,
+            )
+            .await
+            .unwrap();
 
         let operator_signature = wallet.sign_message(msg_to_sign).await.unwrap();
 
-
-
-
-        let operator_signature_with_salt_and_expiry = SignatureWithSaltAndExpiry{
-
+        let operator_signature_with_salt_and_expiry = SignatureWithSaltAndExpiry {
             signature: operator_signature.to_vec().into(),
             salt: operator_to_avs_registration_sig_salt,
-            expiry: operator_to_avs_registration_sig_expiry
-
+            expiry: operator_to_avs_registration_sig_expiry,
         };
-
-        
 
         // let no_send_tx_opts = self.tx_mgr
 
         // let pub_key_reg_params = contract_registry_coordinator.register_operator(quorum_numbers, socket, params, s)
-
-        }
     }
-
+}
