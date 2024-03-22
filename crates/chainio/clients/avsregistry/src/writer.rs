@@ -8,20 +8,24 @@ use eigensdk_contracts_bindings::{
     OperatorStateRetriever::operator_state_retriever,
     RegistryCoordinator::{
         registry_coordinator::{self, REGISTRYCOORDINATOR_ABI},
-        RegistryCoordinator, SignatureWithSaltAndExpiry,PubkeyRegistrationParams
+        PubkeyRegistrationParams, RegistryCoordinator, SignatureWithSaltAndExpiry,
     },
     ServiceManagerBase::service_manager_base,
     StakeRegistry::stake_registry,
 };
 use eigensdk_crypto_bls::attestation::KeyPair;
 use eigensdk_logging::logger::Logger;
-use eigensdk_txmgr::TxManager;
-use ethers_core::types::{Address, U256,Bytes,H256};
+use eigensdk_txmgr::{SimpleTxManager, TxManager};
+use ethers_core::types::{Address, Bytes, TxHash, H256, U256};
 use ethers_providers::{Http, Middleware, Provider};
 use std::sync::Arc;
 use std::{any::Any, str::FromStr};
 
-use ethers::{signers::{Signer, Wallet},abi::AbiEncode};
+use ethers::{
+    abi::AbiEncode,
+    middleware::{MiddlewareBuilder, SignerMiddleware},
+    signers::{Signer, Wallet},
+};
 
 pub struct AvsRegistryChainWriter {
     service_manager_addr: Address,
@@ -32,7 +36,7 @@ pub struct AvsRegistryChainWriter {
     el_reader: ELChainReader,
     logger: Logger,
     client: Provider<Http>,
-    tx_mgr: TxManager,
+    tx_mgr: SimpleTxManager,
 }
 
 trait AvsRegistryWriter {}
@@ -47,7 +51,7 @@ impl AvsRegistryChainWriter {
         el_reader: ELChainReader,
         logger: Logger,
         client: Provider<Http>,
-        tx_mgr: TxManager,
+        tx_mgr: SimpleTxManager,
     ) -> Self {
         AvsRegistryChainWriter {
             service_manager_addr,
@@ -68,7 +72,7 @@ impl AvsRegistryChainWriter {
         operator_state_retriever_addr: Address,
         logger: Logger,
         client: Provider<Http>,
-        tx_mgr: TxManager,
+        tx_mgr: SimpleTxManager,
     ) -> Self {
         let provider = Arc::new(client.clone());
         let contract_registry_coordinator = registry_coordinator::RegistryCoordinator::new(
@@ -144,13 +148,15 @@ impl AvsRegistryChainWriter {
         bls_key_pair: KeyPair,
         operator_to_avs_registration_sig_salt: [u8; 32],
         operator_to_avs_registration_sig_expiry: U256,
-        quorum_numbers : Bytes,
-        socket : String
-    ) {
+        quorum_numbers: Bytes,
+        socket: String,
+    ) -> Result<TxHash, String> {
         let provider = Arc::new(&self.client);
+        let wallet = self.tx_mgr.wallet.signer.clone();
+        let signer = SignerMiddleware::new(provider.clone(), wallet);
         let contract_registry_coordinator = registry_coordinator::RegistryCoordinator::new(
             self.registry_coordinator_addr,
-            provider,
+            signer.into(),
         );
         let wallet = Wallet::from_str(pvt_key).unwrap();
         let g1_hashes_msg_to_sign = contract_registry_coordinator
@@ -173,10 +179,10 @@ impl AvsRegistryChainWriter {
         let g1_pubkey_bn254 = convert_to_bn254_g1_point(bls_key_pair.get_pub_key_g1());
         let g2_pubkey_bn254 = convert_to_bn254_g2_point(bls_key_pair.gt_pub_key_g2());
 
-        let pub_key_reg_params = PubkeyRegistrationParams{
-            pubkey_registration_signature:signed_msg,
-            pubkey_g1:g1_pubkey_bn254,
-            pubkey_g2:g2_pubkey_bn254
+        let pub_key_reg_params = PubkeyRegistrationParams {
+            pubkey_registration_signature: signed_msg,
+            pubkey_g1: g1_pubkey_bn254,
+            pubkey_g2: g2_pubkey_bn254,
         };
 
         let msg_to_sign = self
@@ -198,6 +204,17 @@ impl AvsRegistryChainWriter {
             expiry: operator_to_avs_registration_sig_expiry,
         };
 
+        let contract_call = contract_registry_coordinator.register_operator(
+            quorum_numbers,
+            socket,
+            pub_key_reg_params,
+            operator_signature_with_salt_and_expiry,
+        );
+
+        let tx = contract_call.send().await.unwrap();
+
+        Ok(tx.tx_hash())
+
         // let tx = contract_registry_coordinator.register_operator(quorum_numbers, socket, pub_key_reg_params, operator_signature_with_salt_and_expiry).call().await.unwrap();
         // let quorum_count = contract_registry_coordinator
         // .method::<_, u8>("quorumCount", ())
@@ -209,7 +226,6 @@ impl AvsRegistryChainWriter {
         // let no_send_tx_opts = self.tx_mgr.send()
 
         // let data = "RegisterOperator".abi_encode(quorum_numbers, socket, pub_key_reg_params, operator_signature_with_salt_and_expiry)
-
 
         // let pub_key_reg_params = contract_registry_coordinator.register_operator(quorum_numbers, socket, params, s)
     }

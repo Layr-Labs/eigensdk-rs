@@ -15,7 +15,7 @@ use std::sync::Arc;
 pub struct TxManager;
 
 pub struct SimpleTxManager {
-    wallet: PrivateKeyWallet,
+    pub wallet: PrivateKeyWallet,
     client: Provider<Http>,
     // signer_fn: Box<SignerV2>,
     log: Logger,

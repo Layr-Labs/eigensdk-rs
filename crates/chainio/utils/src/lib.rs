@@ -5,7 +5,9 @@ use eigensdk_contracts_bindings::BLSApkRegistry::bls_apk_registry::{
     G1Point as BlsG1Point, G2Point as BlsG2Point,
 };
 // use eigensdk_
-use eigensdk_contracts_bindings::RegistryCoordinator::{self,G1Point as RegistryG1Point,G2Point as RegistryG2Point};
+use eigensdk_contracts_bindings::RegistryCoordinator::{
+    self, G1Point as RegistryG1Point, G2Point as RegistryG2Point,
+};
 use eigensdk_crypto_bls::attestation::{new_fp_element, G1Point, G2Point};
 use eigensdk_crypto_bn254::utils::biginteger256_to_u256;
 use eigensdk_crypto_bn254::utils::u256_to_bigint256;

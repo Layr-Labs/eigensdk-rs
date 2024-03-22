@@ -14,7 +14,7 @@ use std::sync::Arc;
 pub struct PrivateKeyWallet {
     client: Provider<Http>,
     address: Address,
-    signer: LocalWallet,
+    pub signer: LocalWallet,
     logger: Logger,
 }
 
