@@ -9,4 +9,4 @@ repository.workspace = true
 # reth.workspace = true
 ethers-core.workspace = true
 ethers.workspace = true
-ethers-signers = "2.0.14"
+ethers-signers.workspace = true
