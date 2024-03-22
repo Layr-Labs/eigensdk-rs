@@ -214,19 +214,5 @@ impl AvsRegistryChainWriter {
         let tx = contract_call.send().await.unwrap();
 
         Ok(tx.tx_hash())
-
-        // let tx = contract_registry_coordinator.register_operator(quorum_numbers, socket, pub_key_reg_params, operator_signature_with_salt_and_expiry).call().await.unwrap();
-        // let quorum_count = contract_registry_coordinator
-        // .method::<_, u8>("quorumCount", ())
-        // .unwrap()
-        // .call()
-        // .await
-        // .expect("failed");
-        // let tx = contract_registry_coordinator.method::<_,H256>("RegisterOperator",(quorum_numbers,socket,pub_key_reg_params,operator_signature_with_salt_and_expiry)).unwrap().await;
-        // let no_send_tx_opts = self.tx_mgr.send()
-
-        // let data = "RegisterOperator".abi_encode(quorum_numbers, socket, pub_key_reg_params, operator_signature_with_salt_and_expiry)
-
-        // let pub_key_reg_params = contract_registry_coordinator.register_operator(quorum_numbers, socket, params, s)
     }
 }
