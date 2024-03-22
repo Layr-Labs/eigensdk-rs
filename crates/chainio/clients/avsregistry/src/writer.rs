@@ -8,7 +8,7 @@ use eigensdk_contracts_bindings::{
     OperatorStateRetriever::operator_state_retriever,
     RegistryCoordinator::{
         registry_coordinator::{self, REGISTRYCOORDINATOR_ABI},
-        PubkeyRegistrationParams, RegistryCoordinator, SignatureWithSaltAndExpiry,
+        G1Point, PubkeyRegistrationParams, RegistryCoordinator, SignatureWithSaltAndExpiry,
     },
     ServiceManagerBase::service_manager_base,
     StakeRegistry::stake_registry,
@@ -214,5 +214,46 @@ impl AvsRegistryChainWriter {
         let tx = contract_call.send().await.unwrap();
 
         Ok(tx.tx_hash())
+    }
+
+    async fn update_stakes_of_entire_operator_set_for_quorums(
+        &self,
+        operators_per_quorum: Vec<Vec<Address>>,
+        quorum_number: Bytes,
+    ) -> Result<TxHash, String> {
+        let provider = Arc::new(&self.client);
+        let wallet = self.tx_mgr.wallet.signer.clone();
+        let signer = SignerMiddleware::new(provider.clone(), wallet);
+        let contract_registry_coordinator = registry_coordinator::RegistryCoordinator::new(
+            self.registry_coordinator_addr,
+            signer.into(),
+        );
+
+        let contract_call = contract_registry_coordinator
+            .update_operators_for_quorum(operators_per_quorum, quorum_number);
+
+        let tx = contract_call.send().await.unwrap();
+
+        return Ok(tx.tx_hash());
+    }
+
+    async fn deregister_operator(
+        &self,
+        quorum_numbers: Bytes,
+        pub_key: G1Point,
+    ) -> Result<TxHash, String> {
+        let provider = Arc::new(&self.client);
+        let wallet = self.tx_mgr.wallet.signer.clone();
+        let signer = SignerMiddleware::new(provider.clone(), wallet);
+        let contract_registry_coordinator = registry_coordinator::RegistryCoordinator::new(
+            self.registry_coordinator_addr,
+            signer.into(),
+        );
+
+        let contract_call = contract_registry_coordinator.deregister_operator(quorum_numbers);
+
+        let tx = contract_call.send().await.unwrap();
+
+        return Ok(tx.tx_hash());
     }
 }
