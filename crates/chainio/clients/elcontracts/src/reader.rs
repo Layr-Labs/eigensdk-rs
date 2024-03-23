@@ -193,6 +193,7 @@ impl ELChainReader {
             operator_details.earnings_receiver,
             operator_details.delegation_approver,
             operator_details.staker_opt_out_window_blocks,
+            None,
         ));
     }
 

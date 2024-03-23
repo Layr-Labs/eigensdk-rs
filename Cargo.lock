@@ -1305,7 +1305,9 @@ dependencies = [
  "ark-ff 0.4.2",
  "eigensdk-contracts-bindings",
  "eigensdk-logging",
+ "eigensdk-txmgr",
  "eigensdk-types",
+ "ethers",
  "ethers-core",
  "ethers-providers",
 ]

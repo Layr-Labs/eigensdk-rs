@@ -28,6 +28,7 @@ pub struct Operator {
     earnings_receiver_address: Address,
     delegation_approver_address: Address,
     staker_opt_out_window_blocks: u32,
+    metadata_url: String,
 }
 
 impl Operator {
@@ -36,28 +37,54 @@ impl Operator {
         earnings_receiver_address: Address,
         delegation_approver_address: Address,
         staker_opt_out_window_blocks: u32,
+        metadata_url: Option<String>,
     ) -> Self {
         Operator {
             address,
             earnings_receiver_address,
             delegation_approver_address,
             staker_opt_out_window_blocks,
+            metadata_url: metadata_url.unwrap(),
         }
     }
 
-    fn address(&mut self, address: Address) {
+    pub fn address(&mut self, address: Address) {
         self.address = address;
     }
 
-    fn earnings_receiver_address(&mut self, address: Address) {
+    pub fn metadata_url(&mut self, metadata: String) {
+        self.metadata_url = metadata;
+    }
+
+    pub fn earnings_receiver_address(&mut self, address: Address) {
         self.earnings_receiver_address = address;
     }
 
-    fn delegation_approver_address(&mut self, address: Address) {
+    pub fn delegation_approver_address(&mut self, address: Address) {
         self.delegation_approver_address = address;
     }
 
-    fn staker_opt_out_window_blocks(&mut self, block: u32) {
+    pub fn staker_opt_out_window_blocks(&mut self, block: u32) {
         self.staker_opt_out_window_blocks = block;
+    }
+
+    pub fn has_address(&self) -> Address {
+        self.address
+    }
+
+    pub fn has_metadata_url(&self) -> String {
+        self.metadata_url.clone()
+    }
+
+    pub fn has_earnings_receiver_address(&self) -> Address {
+        self.earnings_receiver_address
+    }
+
+    pub fn has_delegation_approver_address(&self) -> Address {
+        self.delegation_approver_address
+    }
+
+    pub fn has_staker_opt_out_window_blocks(&self) -> u32 {
+        self.staker_opt_out_window_blocks
     }
 }
