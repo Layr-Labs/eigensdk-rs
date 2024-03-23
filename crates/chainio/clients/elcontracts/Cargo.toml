@@ -13,3 +13,4 @@ ethers-providers.workspace=true
 ethers-core.workspace=true
 ark-bn254 = "0.4.0"
 ark-ff = "0.4.0"
+eigensdk-types.workspace=true

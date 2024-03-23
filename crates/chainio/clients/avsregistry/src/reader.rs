@@ -541,6 +541,16 @@ fn test_binding_generation() {
         "ISlasher.json",
         "../../../../crates/contracts/bindings",
     );
+    generate_bindings(
+        "IStrategy",
+        "IStrategy.json",
+        "../../../../crates/contracts/bindings",
+    );
+    generate_bindings(
+        "IERC20",
+        "IERC20.json",
+        "../../../../crates/contracts/bindings",
+    );
 }
 
 #[test]

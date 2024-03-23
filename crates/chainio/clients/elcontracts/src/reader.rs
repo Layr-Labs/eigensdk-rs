@@ -1,10 +1,14 @@
 use ark_ff::BigInteger256;
 use eigensdk_contracts_bindings::{
     AVSDirectory::{self, avs_directory},
-    DelegationManager::{self, delegation_manager},
-    ISlasher, StrategyManager,
+    DelegationManager::{self, delegation_manager, OperatorDetails},
+    ISlasher::{self, i_slasher},
+    IStrategy::{self, i_strategy},
+    StrategyManager::{self, strategy_manager},
+    IERC20::{self, ierc20},
 };
 use eigensdk_logging::logger::Logger;
+use eigensdk_types::operator::Operator;
 use ethers_core::types::{Address, U256};
 use ethers_providers::{Http, Provider};
 use std::sync::Arc;
@@ -106,5 +110,104 @@ impl ELChainReader {
             .call()
             .await
             .unwrap());
+    }
+
+    pub async fn get_operator_shares_in_strategy(
+        &self,
+        operator_addr: Address,
+        strategy_addr: Address,
+    ) {
+        let provider = Arc::new(self.client.clone());
+
+        let contract_delegation_manager =
+            delegation_manager::DelegationManager::new(self.delegation_manager, provider);
+
+        let operator_shares_in_strategy = contract_delegation_manager
+            .operator_shares(operator_addr, strategy_addr)
+            .call()
+            .await
+            .unwrap();
+    }
+
+    pub async fn operator_is_frozen(&self, operator_addr: Address) -> Result<bool, String> {
+        let provider = Arc::new(self.client.clone());
+
+        let contract_slasher = i_slasher::ISlasher::new(self.slasher, provider);
+
+        let operator_is_frozen = contract_slasher
+            .is_frozen(operator_addr)
+            .call()
+            .await
+            .unwrap();
+
+        Ok(operator_is_frozen)
+    }
+
+    pub async fn service_manager_can_slash_operator_until_block(
+        &self,
+        operator_addr: Address,
+        service_manager_addr: Address,
+    ) {
+        let provider = Arc::new(self.client.clone());
+
+        let contract_slasher = i_slasher::ISlasher::new(self.slasher, provider);
+
+        let service_manager_can_slash_operator_until_block = contract_slasher
+            .contract_can_slash_operator_until_block(operator_addr, service_manager_addr)
+            .call()
+            .await
+            .unwrap();
+    }
+
+    pub async fn get_strategy_and_underlying_erc20_token(
+        &self,
+        strategy_addr: Address,
+    ) -> Result<(Address, Address, Address), String> {
+        let provider = Arc::new(self.client.clone());
+        let contract_strategy = i_strategy::IStrategy::new(strategy_addr, provider.clone());
+        let underlying_token_addr = contract_strategy.underlying_token().call().await.unwrap();
+
+        let contract_ierc20 = ierc20::IERC20::new(underlying_token_addr, provider);
+
+        return Ok((
+            strategy_addr,
+            underlying_token_addr,
+            contract_ierc20.address(),
+        ));
+    }
+
+    pub async fn get_operator_details(&self, operator: Address) -> Result<Operator, String> {
+        let provider = Arc::new(self.client.clone());
+
+        let contract_delegation_manager =
+            delegation_manager::DelegationManager::new(self.delegation_manager, provider);
+
+        let operator_details: OperatorDetails = contract_delegation_manager
+            .operator_details(operator)
+            .call()
+            .await
+            .unwrap();
+
+        return Ok(Operator::new(
+            operator,
+            operator_details.earnings_receiver,
+            operator_details.delegation_approver,
+            operator_details.staker_opt_out_window_blocks,
+        ));
+    }
+
+    pub async fn is_operator_registered(&self, operator: Address) -> Result<bool, String> {
+        let provider = Arc::new(self.client.clone());
+
+        let contract_delegation_manager =
+            delegation_manager::DelegationManager::new(self.delegation_manager, provider);
+
+        let is_operator = contract_delegation_manager
+            .is_operator(operator)
+            .call()
+            .await
+            .unwrap();
+
+        Ok(is_operator)
     }
 }
