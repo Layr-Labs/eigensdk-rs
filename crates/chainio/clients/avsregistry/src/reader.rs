@@ -1,20 +1,9 @@
-use alloy_contract::{
-    private::{Network, Transport},
-    ContractInstance, SolCallBuilder,
-};
-use alloy_primitives::{U32, U8};
-use alloy_sol_types::SolEvent;
-use alloy_sol_types::{sol, SolCall, SolConstructor, SolInterface};
-use ark_ff::{BigInteger, BigInteger256};
-use eigensdk_client_eth::client::Client;
+use alloy_primitives::U8;
 use eigensdk_contracts_bindings::{
     BLSApkRegistry::{bls_apk_registry, NewPubkeyRegistrationFilter},
-    OperatorStateRetriever::{
-        self, operator_state_retriever, CheckSignaturesIndices, GetOperatorStateCall,
-        GetOperatorStateWithRegistryCoordinatorAndOperatorIdCall, Operator,
-    },
+    OperatorStateRetriever::{operator_state_retriever, CheckSignaturesIndices, Operator},
     RegistryCoordinator::registry_coordinator,
-    StakeRegistry::{self, stake_registry},
+    StakeRegistry::stake_registry,
 };
 use eigensdk_crypto_bls::attestation::{G1Point, G2Point};
 use eigensdk_crypto_bn254::utils::u256_to_bigint256;
@@ -29,8 +18,7 @@ use std::fmt::Debug;
 
 use crate::NEW_BLS_APK_REGISTRATION_EVENT_SIGNATURE;
 use ethers_core::{
-    abi::{Abi, Detokenize},
-    k256::elliptic_curve::rand_core::block,
+    abi::Abi,
     types::{BlockNumber, Filter, FilterBlockOption, Topic, ValueOrArray},
 };
 use ethers_providers::{Http, Provider};
@@ -38,31 +26,14 @@ use num_bigint::BigInt;
 use serde_json;
 use std::collections::HashMap;
 use std::fs;
+
 const REGISTRY_COORDINATOR_PATH: &str =
     "../../../../crates/contracts/bindings/json/RegistryCoordinator.json";
 const STAKE_REGISTRY_PATH: &str = "../../../../crates/contracts/bindings/json/StakeRegistry.json";
 const OPERATOR_STATE_RETRIEVER: &str =
     "../../../../crates/contracts/bindings/json/OperatorStateRetriever.json";
 
-fn generate_bindings(contract_name: &str, input_path: &str, output_path: &str) {
-    let coontract: String =
-        format!("../../../../crates/contracts/bindings/json/{input_path}").to_string();
-    println!("path :{}", coontract);
-
-    match Abigen::new(&contract_name, coontract) {
-        Ok(v) => {
-            println!("okoik");
-            let _ = v
-                .generate()
-                .expect("failed to abigen")
-                .write_to_file(format!("{output_path}/src/{contract_name}.rs"));
-        }
-        Err(e) => {
-            println!("abigenerr{}", e);
-        }
-    }
-}
-
+/// Avs Registry chainreader
 #[derive(Debug)]
 pub struct AvsRegistryChainReader {
     logger: Logger,
@@ -70,8 +41,6 @@ pub struct AvsRegistryChainReader {
     registry_coordinator_addr: Address,
     operator_state_retriever: Address,
     stake_registry_addr: Address,
-    // operator_state_retriever:ethers::contract::Contract<M>,
-    // stake_registry: ethers::contract::Contract<M>,
     eth_client: Provider<Http>,
 }
 
@@ -86,8 +55,6 @@ impl AvsRegistryChainReader {
         bls_apk_registry_addr: Address,
         operator_state_retriever: Address,
         stake_registry_addr: Address,
-        // operator_state_retriever: ethers::contract::Contract<M>,
-        // stake_registry:ethers::contract::Contract<M>,
         eth_client: Provider<Http>,
     ) -> Self {
         AvsRegistryChainReader {
@@ -96,9 +63,6 @@ impl AvsRegistryChainReader {
             registry_coordinator_addr,
             operator_state_retriever,
             stake_registry_addr,
-            // registry_coordinator:registry_coordinate,
-            // operator_state_retriever,
-            // stake_registry,
             eth_client,
         }
     }
@@ -125,24 +89,6 @@ impl AvsRegistryChainReader {
             .call()
             .await
             .expect("fail bls ");
-
-        let stake_json_str = fs::read_to_string(STAKE_REGISTRY_PATH).unwrap();
-
-        let stake_registry_abi: Abi = serde_json::from_str(&stake_json_str).unwrap();
-        let contract_stake_registry = ethers::contract::Contract::new(
-            stake_registry_addr,
-            stake_registry_abi,
-            eth_client.clone().into(),
-        );
-
-        let operator_json_str = fs::read_to_string(OPERATOR_STATE_RETRIEVER).unwrap();
-        let operator_state_retriever_abi: Abi = serde_json::from_str(&operator_json_str).unwrap();
-
-        let contract_operator_state_retriever = ethers::contract::Contract::new(
-            operator_state_retriever_addr,
-            operator_state_retriever_abi,
-            eth_client.clone().into(),
-        );
 
         Ok(AvsRegistryChainReader {
             logger,
@@ -443,18 +389,6 @@ impl AvsRegistryChainReader {
             self.bls_apk_registry_addr,
             self.eth_client.clone().into(),
         );
-        // let mut filter = bls_apk_registry::BLSApkRegistry::new_pubkey_registration_filter(
-        //     &contract_bls_apk_registry,
-        // );
-
-        // let s = filter
-        //     .from_block(start_block)
-        //     .to_block(stop_block)
-        //     .address(ValueOrArray::Value(self.bls_apk_registry_addr))
-        //     .topic0(NEW_BLS_APK_REGISTRATION_EVENT_SIGNATURE)
-        //     .query()
-        //     .await;
-
         let logs = self.eth_client.get_logs(&query).await.unwrap();
 
         let mut operator_addresses: Vec<Address> = vec![];
@@ -500,7 +434,11 @@ impl AvsRegistryChainReader {
 
 #[test]
 fn test_binding_generation() {
-    // generate_bindings("RegistryCoordinator","RegistryCoordinator.json", "../../../../crates/contracts/bindings");
+    generate_bindings(
+        "RegistryCoordinator",
+        "RegistryCoordinator.json",
+        "../../../../crates/contracts/bindings",
+    );
     generate_bindings(
         "OperatorStateRetriever",
         "OperatorStateRetriever.json",
@@ -551,6 +489,26 @@ fn test_binding_generation() {
         "IERC20.json",
         "../../../../crates/contracts/bindings",
     );
+}
+
+/// Generate rust bindings using ethers
+fn generate_bindings(contract_name: &str, input_path: &str, output_path: &str) {
+    let coontract: String =
+        format!("../../../../crates/contracts/bindings/json/{input_path}").to_string();
+    println!("path :{}", coontract);
+
+    match Abigen::new(&contract_name, coontract) {
+        Ok(v) => {
+            println!("okoik");
+            let _ = v
+                .generate()
+                .expect("failed to abigen")
+                .write_to_file(format!("{output_path}/src/{contract_name}.rs"));
+        }
+        Err(e) => {
+            println!("abigenerr{}", e);
+        }
+    }
 }
 
 #[test]
