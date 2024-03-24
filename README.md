@@ -24,3 +24,13 @@ List of crates in the repository :-
 - [eigensdk-signer](https://github.com/anjaneyalabs/eigensdk-rs/tree/main/crates/signer)
 - [eigensdk-signerv2](https://github.com/anjaneyalabs/eigensdk-rs/tree/main/crates/signerv2)
 - [eigensdk-types](https://github.com/anjaneyalabs/eigensdk-rs/tree/main/crates/types)
+
+
+## Supported Rust Version
+
+Rolling `MSRV` policy of 6 months. THe current  `MSRV` is 1.76 
+
+
+## Get Help 
+
+DM on Telegram - supernovahs444
