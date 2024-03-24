@@ -1,5 +1,5 @@
 [package]
-name = "eigensdk-client-eth"
+name = "eigensdk-metrics-collectors-economic"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -7,4 +7,6 @@ repository.workspace = true
 
 [dependencies]
 # reth.workspace = true
+ethers-core.workspace = true
 ethers.workspace = true
+ethers-signers.workspace = true

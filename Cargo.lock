@@ -1315,6 +1315,9 @@ dependencies = [
 [[package]]
 name = "eigensdk-client-eth"
 version = "0.0.1-alpha"
+dependencies = [
+ "ethers",
+]
 
 [[package]]
 name = "eigensdk-client-fireblocks"
@@ -1370,6 +1373,31 @@ version = "0.0.1-alpha"
 [[package]]
 name = "eigensdk-metrics"
 version = "0.0.1-alpha"
+dependencies = [
+ "ark-bn254",
+ "ark-ff 0.4.2",
+ "eigensdk-crypto-bls",
+ "eigensdk-crypto-bn254",
+ "ethers",
+]
+
+[[package]]
+name = "eigensdk-metrics-collectors-economic"
+version = "0.0.1-alpha"
+dependencies = [
+ "ethers",
+ "ethers-core",
+ "ethers-signers",
+]
+
+[[package]]
+name = "eigensdk-metrics-collectors-rpc-calls"
+version = "0.0.1-alpha"
+dependencies = [
+ "ethers",
+ "ethers-core",
+ "ethers-signers",
+]
 
 [[package]]
 name = "eigensdk-signerv2"

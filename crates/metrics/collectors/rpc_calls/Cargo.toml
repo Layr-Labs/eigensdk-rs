@@ -1,10 +1,11 @@
 [package]
-name = "eigensdk-client-eth"
+name = "eigensdk-metrics-collectors-rpc-calls"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 repository.workspace = true
 
 [dependencies]
-# reth.workspace = true
+ethers-core.workspace = true
 ethers.workspace = true
+ethers-signers.workspace = true

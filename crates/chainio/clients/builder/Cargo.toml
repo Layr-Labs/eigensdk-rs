@@ -6,7 +6,6 @@ rust-version.workspace = true
 repository.workspace = true
 
 [dependencies]
-# reth.workspace = true
 prometheus-client.workspace = true
 eigensdk-client-avsregistry.workspace = true
 eigensdk-client-elcontracts.workspace = true

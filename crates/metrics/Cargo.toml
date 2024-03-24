@@ -6,6 +6,8 @@ rust-version.workspace = true
 repository.workspace = true
 
 [dependencies]
-
-[lints]
-workspace = true
+ethers = "2.0.14"
+ark-bn254 = "0.4.0"
+ark-ff.workspace = true
+eigensdk-crypto-bls.workspace = true
+eigensdk-crypto-bn254.workspace = true
