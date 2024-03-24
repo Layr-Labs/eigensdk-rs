@@ -4,26 +4,22 @@ use eigensdk_chainio_utils::{
 };
 use eigensdk_client_elcontracts::reader::ELChainReader;
 use eigensdk_contracts_bindings::{
-    BLSApkRegistry::bls_apk_registry,
-    OperatorStateRetriever::operator_state_retriever,
     RegistryCoordinator::{
-        registry_coordinator::{self, REGISTRYCOORDINATOR_ABI},
-        G1Point, PubkeyRegistrationParams, RegistryCoordinator, SignatureWithSaltAndExpiry,
+        registry_coordinator, G1Point, PubkeyRegistrationParams, SignatureWithSaltAndExpiry,
     },
     ServiceManagerBase::service_manager_base,
     StakeRegistry::stake_registry,
 };
 use eigensdk_crypto_bls::attestation::KeyPair;
 use eigensdk_logging::logger::Logger;
-use eigensdk_txmgr::{SimpleTxManager, TxManager};
-use ethers_core::types::{Address, Bytes, TxHash, H256, U256};
-use ethers_providers::{Http, Middleware, Provider};
+use eigensdk_txmgr::SimpleTxManager;
+use ethers_core::types::{Address, Bytes, TxHash, U256};
+use ethers_providers::{Http, Provider};
+use std::str::FromStr;
 use std::sync::Arc;
-use std::{any::Any, str::FromStr};
 
 use ethers::{
-    abi::AbiEncode,
-    middleware::{MiddlewareBuilder, SignerMiddleware},
+    middleware::SignerMiddleware,
     signers::{Signer, Wallet},
 };
 
@@ -80,12 +76,6 @@ impl AvsRegistryChainWriter {
             provider.clone(),
         );
 
-        let contract_operator_state_retriever =
-            operator_state_retriever::OperatorStateRetriever::new(
-                operator_state_retriever_addr,
-                provider.clone(),
-            );
-
         let service_manager_addr = contract_registry_coordinator
             .service_manager()
             .call()
@@ -100,9 +90,6 @@ impl AvsRegistryChainWriter {
             .call()
             .await
             .unwrap();
-
-        let contract_bls_apk_registry =
-            bls_apk_registry::BLSApkRegistry::new(bls_apk_registry_addr, provider.clone());
 
         let stake_registry_addr = contract_registry_coordinator
             .stake_registry()
@@ -164,9 +151,6 @@ impl AvsRegistryChainWriter {
             .call()
             .await
             .unwrap();
-
-        let x_point = g1_hashes_msg_to_sign.x;
-        let y_point = g1_hashes_msg_to_sign.y;
 
         let signed_msg = convert_to_bn254_g1_point(
             bls_key_pair

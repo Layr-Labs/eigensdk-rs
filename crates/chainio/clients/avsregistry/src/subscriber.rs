@@ -1,11 +1,10 @@
 use crate::NEW_BLS_APK_REGISTRATION_EVENT_SIGNATURE;
 use eigensdk_contracts_bindings::BLSApkRegistry::bls_apk_registry::{
-    self, BLSApkRegistry, BLSApkRegistryEvents, NewPubkeyRegistrationFilter,
+    self, BLSApkRegistry, BLSApkRegistryEvents,
 };
 use eigensdk_logging::logger::Logger;
-use ethers::contract::Contract;
 use ethers_core::types::{Address, Filter};
-use ethers_providers::{Http, Middleware, Provider, StreamExt, Ws};
+use ethers_providers::{Http, Middleware, Provider, Ws};
 
 pub struct AvsRegistryChainSubscriber {
     logger: Logger,
