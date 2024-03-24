@@ -28,7 +28,7 @@ eigensdk-client-elcontracts.workspace = true
 eigensdk-txmgr.workspace = true
 eigensdk-chainio-utils.workspace = true
 ark-bn254 = "0.4.0"
-
+thiserror.workspace = true
 
 [lints]
 workspace = true

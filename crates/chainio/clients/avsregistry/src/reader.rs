@@ -1,3 +1,4 @@
+use crate::error::AvsRegistryError;
 use alloy_primitives::U8;
 use eigensdk_contracts_bindings::{
     BLSApkRegistry::{bls_apk_registry, NewPubkeyRegistrationFilter},
@@ -72,223 +73,268 @@ impl AvsRegistryChainReader {
         registry_coordinator_addr: Address,
         operator_state_retriever_addr: Address,
         stake_registry_addr: Address,
-        eth_client: Provider<Http>,
         logger: Logger,
-    ) -> Result<AvsRegistryChainReader, String> {
-        let json_str = fs::read_to_string(REGISTRY_COORDINATOR_PATH).unwrap();
-        let registry_coordinator_abi: Abi = serde_json::from_str(&json_str).unwrap();
-        let contract_registry_coordinator = ethers::contract::Contract::new(
-            registry_coordinator_addr,
-            registry_coordinator_abi,
-            eth_client.clone().into(),
-        );
-
-        let bls_apk_registry_addr = contract_registry_coordinator
-            .method::<_, Address>("blsApkRegistry", ())
-            .unwrap()
-            .call()
-            .await
-            .expect("fail bls ");
-
-        Ok(AvsRegistryChainReader {
-            logger,
-            bls_apk_registry_addr,
-            registry_coordinator_addr,
-            operator_state_retriever: operator_state_retriever_addr,
-            stake_registry_addr,
-            // contract_registry_coordinator,
-            eth_client,
-        })
-    }
-
-    async fn get_quorum_count(&self) -> Result<u8, String> {
-        let json_str = fs::read_to_string(REGISTRY_COORDINATOR_PATH).unwrap();
-        let registry_coordinator_abi: Abi = serde_json::from_str(&json_str).unwrap();
-        let contract_registry_coordinator = ethers::contract::Contract::new(
+    ) -> Result<AvsRegistryChainReader, AvsRegistryError> {
+        let contract_registry_coordinator = registry_coordinator::RegistryCoordinator::new(
             self.registry_coordinator_addr,
-            registry_coordinator_abi,
             self.eth_client.clone().into(),
         );
 
-        let quorum_count = contract_registry_coordinator
-            .method::<_, u8>("quorumCount", ())
-            .unwrap()
+        let bls_apk_registry_addr = contract_registry_coordinator
+            .bls_apk_registry()
             .call()
-            .await
-            .expect("failed");
+            .await;
 
-        Ok(quorum_count)
+        match bls_apk_registry_addr {
+            Ok(address) => Ok(AvsRegistryChainReader {
+                logger,
+                bls_apk_registry_addr: address,
+                registry_coordinator_addr,
+                operator_state_retriever: operator_state_retriever_addr,
+                stake_registry_addr,
+                eth_client: self.eth_client.clone(),
+            }),
+
+            Err(_) => Err(AvsRegistryError::GetBlsApkRegistry),
+        }
+    }
+
+    async fn get_quorum_count(&self) -> Result<u8, AvsRegistryError> {
+        let contract_registry_coordinator = registry_coordinator::RegistryCoordinator::new(
+            self.registry_coordinator_addr,
+            self.eth_client.clone().into(),
+        );
+
+        let quorum_count = contract_registry_coordinator.quorum_count().call().await;
+
+        match quorum_count {
+            Ok(quorum) => {
+                return Ok(quorum);
+            }
+
+            Err(_) => Err(AvsRegistryError::GetQuorumCount),
+        }
     }
 
     async fn get_operators_stake_in_quorums_at_block(
         &self,
         block_number: u32,
         quorum_numbers: Bytes,
-    ) -> Result<Vec<Vec<Operator>>, String> {
-        let operator_json_str = fs::read_to_string(OPERATOR_STATE_RETRIEVER).unwrap();
-        let operator_state_retriever_abi: Abi = serde_json::from_str(&operator_json_str).unwrap();
-
+    ) -> Result<Vec<Vec<Operator>>, AvsRegistryError> {
         let contract_operator_state_retriever =
             operator_state_retriever::OperatorStateRetriever::new(
                 self.operator_state_retriever,
                 self.eth_client.clone().into(),
             );
-        let res = contract_operator_state_retriever
+        let operator_state_result = contract_operator_state_retriever
             .get_operator_state(self.registry_coordinator_addr, quorum_numbers, block_number)
             .call()
-            .await
-            .unwrap();
-        Ok(res)
+            .await;
+
+        match operator_state_result {
+            Ok(operator_state) => {
+                return Ok(operator_state);
+            }
+            Err(_) => {
+                return Err(AvsRegistryError::GetOperatorState);
+            }
+        }
     }
 
     async fn get_operators_stake_in_quorums_at_block_operator_id(
         &self,
         block_number: u32,
         operator_id: H256,
-    ) -> Result<(U256, Vec<Vec<Operator>>), String> {
+    ) -> Result<(U256, Vec<Vec<Operator>>), AvsRegistryError> {
         let contract_operator_state_retriever =
             operator_state_retriever::OperatorStateRetriever::new(
                 self.operator_state_retriever,
                 self.eth_client.clone().into(),
             );
-        let s = contract_operator_state_retriever
-            .get_operator_state_with_registry_coordinator_and_operator_id(
-                self.registry_coordinator_addr,
-                operator_id.into(),
-                block_number,
-            )
-            .call()
-            .await
-            .unwrap();
-        Ok(s)
+        let operator_state_with_registry_coordinator_and_oeprator_id_result =
+            contract_operator_state_retriever
+                .get_operator_state_with_registry_coordinator_and_operator_id(
+                    self.registry_coordinator_addr,
+                    operator_id.into(),
+                    block_number,
+                )
+                .call()
+                .await;
+
+        match operator_state_with_registry_coordinator_and_oeprator_id_result {
+            Ok(operator_state_with_registry_coordinator_and_oeprator_id) => {
+                return Ok(operator_state_with_registry_coordinator_and_oeprator_id);
+            }
+            Err(_) => {
+                return Err(AvsRegistryError::GetOperatorStateWithRegistryCoordinatorAndOperatorId);
+            }
+        }
     }
 
     async fn get_operators_stake_in_quorums_at_current_block(
         &self,
         quorum_numbers: Bytes,
-    ) -> Result<Vec<Vec<Operator>>, String> {
-        let current_block_number = self
-            .eth_client
-            .get_block_number()
-            .await
-            .expect("Failed to get current block number");
+    ) -> Result<Vec<Vec<Operator>>, AvsRegistryError> {
+        let current_block_number_result = self.eth_client.get_block_number().await;
 
-        if current_block_number > u32::MAX.into() {
-            return Err("block number exceed maximum u32 value".to_string());
+        match current_block_number_result {
+            Ok(current_block_number) => {
+                if current_block_number > u32::MAX.into() {
+                    return Err(AvsRegistryError::BlockNumberOverflow);
+                }
+
+                let operators_stake_in_quorums_at_block_result = self
+                    .get_operators_stake_in_quorums_at_block(
+                        current_block_number.as_u64() as u32,
+                        quorum_numbers,
+                    )
+                    .await;
+
+                match operators_stake_in_quorums_at_block_result {
+                    Ok(operators_stake_in_quorums_at_block) => {
+                        Ok(operators_stake_in_quorums_at_block)
+                    }
+                    Err(_) => return Err(AvsRegistryError::GetOperatorStakeInQuorumAtBlockNumber),
+                }
+            }
+            Err(_) => return Err(AvsRegistryError::GetBlockNumber),
         }
-
-        Ok(self
-            .get_operators_stake_in_quorums_at_block(
-                current_block_number.as_u64() as u32,
-                quorum_numbers,
-            )
-            .await
-            .expect("failed to get operaotrs stakr"))
     }
 
     async fn get_operator_addrs_in_quorums_at_current_block(
         &self,
         quorum_numbers: Bytes,
-    ) -> Result<Vec<Vec<Address>>, String> {
-        let current_block_number = self
-            .eth_client
-            .get_block_number()
-            .await
-            .expect("Failed to get current block number");
+    ) -> Result<Vec<Vec<Address>>, AvsRegistryError> {
+        let current_block_number_result = self.eth_client.get_block_number().await;
 
-        if current_block_number > u32::MAX.into() {
-            return Err("block number exceed maximum u32 value".to_string());
-        }
+        match current_block_number_result {
+            Ok(current_block_number) => {
+                if current_block_number > u32::MAX.into() {
+                    return Err(AvsRegistryError::BlockNumberOverflow);
+                }
 
-        let operator_stakes = self
-            .get_operators_stake_in_quorums_at_block(
-                current_block_number.as_u64() as u32,
-                quorum_numbers,
-            )
-            .await
-            .expect("Failed to get operators stake");
+                let operator_stakes_result = self
+                    .get_operators_stake_in_quorums_at_block(
+                        current_block_number.as_u64() as u32,
+                        quorum_numbers,
+                    )
+                    .await;
 
-        let mut quorum_operators_addrs: Vec<Vec<Address>> = Vec::new();
+                match operator_stakes_result {
+                    Ok(operator_stakes) => {
+                        let mut quorum_operators_addrs: Vec<Vec<Address>> = Vec::new();
 
-        for quorum in operator_stakes.iter() {
-            let mut operator_addrs: Vec<Address> = Vec::new();
+                        for quorum in operator_stakes.iter() {
+                            let mut operator_addrs: Vec<Address> = Vec::new();
 
-            for operator in quorum.iter() {
-                operator_addrs.push(operator.operator.clone());
+                            for operator in quorum.iter() {
+                                operator_addrs.push(operator.operator.clone());
+                            }
+
+                            quorum_operators_addrs.push(operator_addrs);
+                        }
+
+                        return Ok(quorum_operators_addrs);
+                    }
+                    Err(_) => return Err(AvsRegistryError::GetOperatorStakeInQuorumAtBlockNumber),
+                }
             }
-
-            quorum_operators_addrs.push(operator_addrs);
+            Err(_) => return Err(AvsRegistryError::GetBlockNumber),
         }
-
-        return Ok(quorum_operators_addrs);
     }
 
     async fn get_operators_stake_in_quorums_of_operator_at_block(
         &self,
         operator_id: H256,
         block_number: u32,
-    ) -> Result<(Vec<u8>, Vec<Vec<Operator>>), String> {
-        let (quorum_bitmaps, operator_stakes) = self
+    ) -> Result<(Vec<u8>, Vec<Vec<Operator>>), AvsRegistryError> {
+        let result_ = self
             .get_operators_stake_in_quorums_at_block_operator_id(block_number, operator_id)
-            .await
-            .unwrap();
+            .await;
 
-        let quorums = bitmap_to_quorum_ids(quorum_bitmaps);
+        match result_ {
+            Ok((quorum_bitmaps, operator_stakes)) => {
+                let quorums = bitmap_to_quorum_ids(quorum_bitmaps);
 
-        let s = (quorums, operator_stakes);
-        return Ok(s);
+                let s = (quorums, operator_stakes);
+                return Ok(s);
+            }
+            Err(_) => return Err(AvsRegistryError::GetOperatorStakeInQuorumAtBlockOperatorId),
+        }
     }
 
     async fn get_operators_stake_in_quorums_of_operator_at_current_block(
         &self,
         operator_id: H256,
-    ) -> Result<(Vec<u8>, Vec<Vec<Operator>>), String> {
-        let current_block_number = self
-            .eth_client
-            .get_block_number()
-            .await
-            .expect("failed to get current block number ");
-        if current_block_number > u32::MAX.into() {
-            return Err("block number exceed maximum u32 value".to_string());
-        }
+    ) -> Result<(Vec<u8>, Vec<Vec<Operator>>), AvsRegistryError> {
+        let current_block_number_result = self.eth_client.get_block_number().await;
 
-        self.get_operators_stake_in_quorums_of_operator_at_block(
-            operator_id,
-            current_block_number.as_u64() as u32,
-        )
-        .await
+        match current_block_number_result {
+            Ok(current_block_number) => {
+                if current_block_number > u32::MAX.into() {
+                    return Err(AvsRegistryError::BlockNumberOverflow);
+                }
+
+                let operator_stake_in_quorum_of_operaotr_at_block_result = self
+                    .get_operators_stake_in_quorums_of_operator_at_block(
+                        operator_id,
+                        current_block_number.as_u64() as u32,
+                    )
+                    .await;
+
+                match operator_stake_in_quorum_of_operaotr_at_block_result {
+                    Ok(operator_stake_in_quorum_of_operaotr_at_block) => {
+                        Ok(operator_stake_in_quorum_of_operaotr_at_block)
+                    }
+                    Err(_) => {
+                        return Err(AvsRegistryError::GetOperatorStakeInQuorumAtCurrentBlockNumber)
+                    }
+                }
+            }
+            Err(_) => return Err(AvsRegistryError::GetBlockNumber),
+        }
     }
 
     async fn get_operator_stake_in_quorums_of_operator_at_current_block(
         &self,
         operator_id: H256,
-    ) -> HashMap<u8, BigInt> {
+    ) -> Result<HashMap<u8, BigInt>, AvsRegistryError> {
         let registry_coordinator = registry_coordinator::RegistryCoordinator::new(
             self.registry_coordinator_addr,
             self.eth_client.clone().into(),
         );
 
-        let quorum_bitmap = registry_coordinator
+        let quorum_bitmap_result = registry_coordinator
             .get_current_quorum_bitmap(operator_id.into())
             .call()
-            .await
-            .unwrap();
-        let quorums = bitmap_to_quorum_ids(quorum_bitmap);
+            .await;
 
-        let mut quorum_stakes: HashMap<u8, BigInt> = HashMap::new();
-        let stake_registry = stake_registry::StakeRegistry::new(
-            self.stake_registry_addr,
-            self.eth_client.clone().into(),
-        );
-        for quorum in quorums.iter() {
-            let stakes = stake_registry
-                .get_current_stake(operator_id.into(), *quorum)
-                .call()
-                .await
-                .unwrap();
-            quorum_stakes.insert(*quorum, stakes.into());
+        match quorum_bitmap_result {
+            Ok(quorum_bitmap) => {
+                let quorums = bitmap_to_quorum_ids(quorum_bitmap);
+
+                let mut quorum_stakes: HashMap<u8, BigInt> = HashMap::new();
+                let stake_registry = stake_registry::StakeRegistry::new(
+                    self.stake_registry_addr,
+                    self.eth_client.clone().into(),
+                );
+                for quorum in quorums.iter() {
+                    let stakes_result = stake_registry
+                        .get_current_stake(operator_id.into(), *quorum)
+                        .call()
+                        .await;
+
+                    match stakes_result {
+                        Ok(current_stake) => {
+                            quorum_stakes.insert(*quorum, current_stake.into());
+                        }
+                        Err(_) => return Err(AvsRegistryError::GetCurrentStake),
+                    }
+                }
+                Ok(quorum_stakes)
+            }
+            Err(_) => return Err(AvsRegistryError::GetCurrentQuorumBitmap),
         }
-        quorum_stakes
     }
 
     async fn get_check_signatures_indices(
@@ -296,16 +342,14 @@ impl AvsRegistryChainReader {
         reference_block_number: u32,
         quorum_numbers: Vec<u8>,
         non_signer_operator_ids: Vec<[u8; 32]>,
-    ) -> Result<CheckSignaturesIndices, String> {
-        let mut non_signer_operator_ids_bytes: Vec<[u8; 32]> =
-            Vec::with_capacity(non_signer_operator_ids.len());
+    ) -> Result<CheckSignaturesIndices, AvsRegistryError> {
         let contract_operator_state_retriever =
             operator_state_retriever::OperatorStateRetriever::new(
                 self.operator_state_retriever,
                 self.eth_client.clone().into(),
             );
 
-        let check_signature_indices = contract_operator_state_retriever
+        let check_signature_indices_result = contract_operator_state_retriever
             .get_check_signatures_indices(
                 self.registry_coordinator_addr,
                 reference_block_number,
@@ -313,62 +357,78 @@ impl AvsRegistryChainReader {
                 non_signer_operator_ids,
             )
             .call()
-            .await
-            .expect("Failed to get check signature");
+            .await;
 
-        Ok(check_signature_indices)
+        match check_signature_indices_result {
+            Ok(check_signature_indices) => Ok(check_signature_indices),
+            Err(_) => return Err(AvsRegistryError::CheckSignatureIndices),
+        }
     }
 
-    async fn get_operator_id(&self, operator_address: Address) -> Result<[u8; 32], String> {
+    async fn get_operator_id(
+        &self,
+        operator_address: Address,
+    ) -> Result<[u8; 32], AvsRegistryError> {
         let contract_registry_coordinator = registry_coordinator::RegistryCoordinator::new(
             self.registry_coordinator_addr,
             self.eth_client.clone().into(),
         );
 
-        let operator_id = contract_registry_coordinator
+        let operator_id_result = contract_registry_coordinator
             .get_operator_id(operator_address)
             .call()
-            .await
-            .unwrap();
+            .await;
 
-        return Ok(operator_id);
+        match operator_id_result {
+            Ok(operator_id) => {
+                return Ok(operator_id);
+            }
+            Err(_) => return Err(AvsRegistryError::GetOperatorId),
+        }
     }
 
-    async fn get_operator_from_id(&self, operator_id: H256) -> Result<Address, String> {
+    async fn get_operator_from_id(&self, operator_id: H256) -> Result<Address, AvsRegistryError> {
         let contract_registry_coordinator = registry_coordinator::RegistryCoordinator::new(
             self.registry_coordinator_addr,
             self.eth_client.clone().into(),
         );
 
-        let operator_address = contract_registry_coordinator
+        let operator_address_result = contract_registry_coordinator
             .get_operator_from_id(operator_id.into())
             .call()
-            .await
-            .expect("Failed to get operator address");
+            .await;
 
-        Ok(operator_address)
+        match operator_address_result {
+            Ok(operator_address) => Ok(operator_address),
+            Err(_) => return Err(AvsRegistryError::GetOperatorFromId),
+        }
     }
 
-    async fn is_operator_registered(&self, operator_address: Address) -> Result<bool, String> {
+    async fn is_operator_registered(
+        &self,
+        operator_address: Address,
+    ) -> Result<bool, AvsRegistryError> {
         let contract_registry_coordinator = registry_coordinator::RegistryCoordinator::new(
             self.registry_coordinator_addr,
             self.eth_client.clone().into(),
         );
 
-        let operator_status = contract_registry_coordinator
+        let operator_status_result = contract_registry_coordinator
             .get_operator_status(operator_address)
             .call()
-            .await
-            .unwrap();
+            .await;
 
-        Ok(operator_status == 1)
+        match operator_status_result {
+            Ok(operator_status) => Ok(operator_status == 1),
+            Err(_) => return Err(AvsRegistryError::GetOperatorStatus),
+        }
     }
 
     async fn query_existing_registered_operator_pub_keys(
         &self,
         start_block: BlockNumber,
         stop_block: BlockNumber,
-    ) -> Result<(Vec<Address>, Vec<OperatorPubKeys>), String> {
+    ) -> Result<(Vec<Address>, Vec<OperatorPubKeys>), AvsRegistryError> {
         let block_option: FilterBlockOption = FilterBlockOption::Range {
             from_block: Some(start_block),
             to_block: Some(stop_block),
@@ -389,46 +449,58 @@ impl AvsRegistryChainReader {
             self.bls_apk_registry_addr,
             self.eth_client.clone().into(),
         );
-        let logs = self.eth_client.get_logs(&query).await.unwrap();
+        let logs_result = self.eth_client.get_logs(&query).await;
 
-        let mut operator_addresses: Vec<Address> = vec![];
-        let mut operator_pub_keys: Vec<OperatorPubKeys> = vec![];
+        match logs_result {
+            Ok(logs) => {
+                let mut operator_addresses: Vec<Address> = vec![];
+                let mut operator_pub_keys: Vec<OperatorPubKeys> = vec![];
 
-        for (i, v_log) in logs.iter().enumerate() {
-            let operator_addr = Address::from_slice(&v_log.topics[i].as_bytes()[12..]);
-            operator_addresses.push(operator_addr);
+                for (i, v_log) in logs.iter().enumerate() {
+                    let operator_addr = Address::from_slice(&v_log.topics[i].as_bytes()[12..]);
+                    operator_addresses.push(operator_addr);
 
-            let decoded_event = contract_bls_apk_registry
-                .decode_event::<NewPubkeyRegistrationFilter>(
-                    "NewPubkeyRegistration",
-                    v_log.topics.clone(),
-                    v_log.data.clone(),
-                )
-                .unwrap();
-            let g1_pub_key = decoded_event.pubkey_g1;
-            let g2_pub_key = decoded_event.pubkey_g2;
+                    let decoded_event_result = contract_bls_apk_registry
+                        .decode_event::<NewPubkeyRegistrationFilter>(
+                            "NewPubkeyRegistration",
+                            v_log.topics.clone(),
+                            v_log.data.clone(),
+                        );
 
-            let operator_pub_key = OperatorPubKeys {
-                g1_pub_key: G1Point::new(
-                    u256_to_bigint256(g1_pub_key.x),
-                    u256_to_bigint256(g1_pub_key.y),
-                ),
-                g2_pub_key: G2Point::new(
-                    (
-                        u256_to_bigint256(g2_pub_key.x[0]),
-                        u256_to_bigint256(g2_pub_key.x[1]),
-                    ),
-                    (
-                        u256_to_bigint256(g2_pub_key.y[0]),
-                        u256_to_bigint256(g2_pub_key.y[1]),
-                    ),
-                ),
-            };
+                    match decoded_event_result {
+                        Ok(decoded_event) => {
+                            let g1_pub_key = decoded_event.pubkey_g1;
+                            let g2_pub_key = decoded_event.pubkey_g2;
 
-            operator_pub_keys.push(operator_pub_key);
+                            let operator_pub_key = OperatorPubKeys {
+                                g1_pub_key: G1Point::new(
+                                    u256_to_bigint256(g1_pub_key.x),
+                                    u256_to_bigint256(g1_pub_key.y),
+                                ),
+                                g2_pub_key: G2Point::new(
+                                    (
+                                        u256_to_bigint256(g2_pub_key.x[0]),
+                                        u256_to_bigint256(g2_pub_key.x[1]),
+                                    ),
+                                    (
+                                        u256_to_bigint256(g2_pub_key.y[0]),
+                                        u256_to_bigint256(g2_pub_key.y[1]),
+                                    ),
+                                ),
+                            };
+
+                            operator_pub_keys.push(operator_pub_key);
+                        }
+                        Err(_) => {
+                            return Err(AvsRegistryError::DecodeEventNewPubkeyRegistrationFilter)
+                        }
+                    }
+                }
+
+                Ok((operator_addresses, operator_pub_keys))
+            }
+            Err(_) => return Err(AvsRegistryError::GetEthLogs),
         }
-        let res = (operator_addresses, operator_pub_keys);
-        Ok(res)
     }
 }
 
@@ -529,7 +601,6 @@ fn test_build_avs_registry_chain_reader() {
         Address::from_low_u64_be(333),
         Address::from_low_u64_be(87),
         Address::from_low_u64_be(675),
-        provider,
         new_log,
     );
 }

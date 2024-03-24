@@ -1284,6 +1284,7 @@ dependencies = [
  "ethers-providers",
  "num-bigint",
  "serde_json",
+ "thiserror",
 ]
 
 [[package]]

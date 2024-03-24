@@ -13,6 +13,9 @@ pub mod subscriber;
 /// Writer module
 pub mod writer;
 
+/// Avs registry error message
+pub mod error;
+
 /// cast sig-event "NewPubkeyRegistration(address,(uint256,uint256),(uint256[2],uint256[2]))"
 pub const NEW_BLS_APK_REGISTRATION_EVENT_SIGNATURE: H256 = H256([
     0xe3, 0xfb, 0x66, 0x13, 0xaf, 0x2e, 0x89, 0x30, 0xcf, 0x85, 0xd4, 0x7f, 0xcf, 0x6d, 0xb1, 0x01,
