@@ -31,6 +31,6 @@ List of crates in the repository :-
 Rolling `MSRV` policy of 6 months. THe current  `MSRV` is 1.76 
 
 
-## Get Help 
+## Contact 
 
 DM on Telegram - supernovahs444
