@@ -8,3 +8,4 @@ repository.workspace = true
 [dependencies]
 # reth.workspace = true
 ethers.workspace = true
+eigensdk-metrics-collectors-rpc-calls.workspace = true

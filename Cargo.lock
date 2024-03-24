@@ -1316,6 +1316,7 @@ dependencies = [
 name = "eigensdk-client-eth"
 version = "0.0.1-alpha"
 dependencies = [
+ "eigensdk-metrics-collectors-rpc-calls",
  "ethers",
 ]
 
@@ -1385,6 +1386,8 @@ dependencies = [
 name = "eigensdk-metrics-collectors-economic"
 version = "0.0.1-alpha"
 dependencies = [
+ "eigensdk-client-avsregistry",
+ "eigensdk-client-elcontracts",
  "ethers",
  "ethers-core",
  "ethers-signers",

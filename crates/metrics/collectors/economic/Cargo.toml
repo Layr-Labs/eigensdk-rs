@@ -10,3 +10,5 @@ repository.workspace = true
 ethers-core.workspace = true
 ethers.workspace = true
 ethers-signers.workspace = true
+eigensdk-client-elcontracts.workspace = true
+eigensdk-client-avsregistry.workspace = true

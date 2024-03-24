@@ -59,3 +59,21 @@ pub struct ContractCallResponse {
     id: String,
     status: Status,
 }
+
+// impl ContractCallRequest{
+
+//     pub fn new(external_tx_id:String,asset_id : AssetID,source_account_id : String, destination_account_id: String,amount:String,calldata:String,replace_tx_by_hash:String )-> Self{
+
+//         ContractCallRequest{
+
+//             operation: ContractCallResponse
+
+//         }
+
+//     }
+
+//     pub fn  contract_call(&self,req: ContractCallRequest) -> ContractCallResponse{
+
+//     }
+
+// }

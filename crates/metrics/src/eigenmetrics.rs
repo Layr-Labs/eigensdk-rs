@@ -1,5 +1,1 @@
-
-
-pub struct EigenMetrics{
-    
-}
+pub struct EigenMetrics {}
