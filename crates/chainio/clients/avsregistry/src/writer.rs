@@ -1,3 +1,4 @@
+use crate::error::AvsRegistryError;
 use ark_bn254::G1Projective;
 use eigensdk_chainio_utils::{
     convert_bn254_to_ark, convert_to_bn254_g1_point, convert_to_bn254_g2_point,
@@ -69,64 +70,88 @@ impl AvsRegistryChainWriter {
         logger: Logger,
         client: Provider<Http>,
         tx_mgr: SimpleTxManager,
-    ) -> Self {
+    ) -> Result<Self, AvsRegistryError> {
         let provider = Arc::new(client.clone());
         let contract_registry_coordinator = registry_coordinator::RegistryCoordinator::new(
             registry_coordinator_addr,
             provider.clone(),
         );
 
-        let service_manager_addr = contract_registry_coordinator
-            .service_manager()
-            .call()
-            .await
-            .unwrap();
+        let service_manager_addr_result =
+            contract_registry_coordinator.service_manager().call().await;
 
-        let contract_service_manager_base =
-            service_manager_base::ServiceManagerBase::new(service_manager_addr, provider.clone());
+        match service_manager_addr_result {
+            Ok(service_manager_addr) => {
+                let contract_service_manager_base = service_manager_base::ServiceManagerBase::new(
+                    service_manager_addr,
+                    provider.clone(),
+                );
 
-        let bls_apk_registry_addr = contract_registry_coordinator
-            .bls_apk_registry()
-            .call()
-            .await
-            .unwrap();
+                let bls_apk_registry_addr_result = contract_registry_coordinator
+                    .bls_apk_registry()
+                    .call()
+                    .await;
 
-        let stake_registry_addr = contract_registry_coordinator
-            .stake_registry()
-            .call()
-            .await
-            .unwrap();
+                match bls_apk_registry_addr_result {
+                    Ok(bls_apk_registry_addr) => {
+                        let stake_registry_addr_result =
+                            contract_registry_coordinator.stake_registry().call().await;
 
-        let contract_stake_registry =
-            stake_registry::StakeRegistry::new(stake_registry_addr, provider);
+                        match stake_registry_addr_result {
+                            Ok(stake_registry_addr) => {
+                                let contract_stake_registry = stake_registry::StakeRegistry::new(
+                                    stake_registry_addr,
+                                    provider,
+                                );
 
-        let delegation_manager_addr = contract_stake_registry.delegation().call().await.unwrap();
+                                let delegation_manager_addr_result =
+                                    contract_stake_registry.delegation().call().await;
 
-        let avs_directory_addr = contract_service_manager_base
-            .avs_directory()
-            .call()
-            .await
-            .unwrap();
+                                match delegation_manager_addr_result {
+                                    Ok(delegation_manager_addr) => {
+                                        let avs_directory_addr_result =
+                                            contract_service_manager_base
+                                                .avs_directory()
+                                                .call()
+                                                .await;
 
-        let el_reader = ELChainReader::build(
-            delegation_manager_addr,
-            avs_directory_addr,
-            logger.clone(),
-            client.clone(),
-        )
-        .await;
+                                        match avs_directory_addr_result {
+                                            Ok(avs_directory_addr) => {
+                                                let el_reader = ELChainReader::build(
+                                                    delegation_manager_addr,
+                                                    avs_directory_addr,
+                                                    logger.clone(),
+                                                    client.clone(),
+                                                )
+                                                .await;
 
-        return AvsRegistryChainWriter {
-            service_manager_addr,
-            registry_coordinator_addr,
-            operator_state_retriever_addr,
-            stake_registry_addr,
-            bls_apk_registry_addr,
-            el_reader,
-            logger,
-            client,
-            tx_mgr,
-        };
+                                                return Ok(AvsRegistryChainWriter {
+                                                    service_manager_addr,
+                                                    registry_coordinator_addr,
+                                                    operator_state_retriever_addr,
+                                                    stake_registry_addr,
+                                                    bls_apk_registry_addr,
+                                                    el_reader,
+                                                    logger,
+                                                    client,
+                                                    tx_mgr,
+                                                });
+                                            }
+                                            Err(_) => return Err(AvsRegistryError::GetAvsRegistry),
+                                        }
+                                    }
+                                    Err(_) => return Err(AvsRegistryError::GetDelegation),
+                                }
+                            }
+                            Err(_) => return Err(AvsRegistryError::GetStakeRegistry),
+                        }
+                    }
+
+                    Err(_) => return Err(AvsRegistryError::GetBlsApkRegistry),
+                }
+            }
+            Err(_) => return Err(AvsRegistryError::GetServiceManager),
+        }
     }
 
     async fn reigster_operator_in_quorum_with_avs_registry_coordinator(
@@ -137,7 +162,7 @@ impl AvsRegistryChainWriter {
         operator_to_avs_registration_sig_expiry: U256,
         quorum_numbers: Bytes,
         socket: String,
-    ) -> Result<TxHash, String> {
+    ) -> Result<TxHash, AvsRegistryError> {
         let provider = Arc::new(&self.client);
         let wallet = self.tx_mgr.wallet.signer.clone();
         let signer = SignerMiddleware::new(provider.clone(), wallet);
@@ -146,65 +171,78 @@ impl AvsRegistryChainWriter {
             signer.into(),
         );
         let wallet = Wallet::from_str(pvt_key).unwrap();
-        let g1_hashes_msg_to_sign = contract_registry_coordinator
+        let g1_hashes_msg_to_sign_result = contract_registry_coordinator
             .pubkey_registration_message_hash(wallet.address())
             .call()
-            .await
-            .unwrap();
+            .await;
 
-        let signed_msg = convert_to_bn254_g1_point(
-            bls_key_pair
-                .sign_hashes_to_curve_message(G1Projective::from(
-                    convert_bn254_to_ark(g1_hashes_msg_to_sign).point,
-                ))
-                .sig(),
-        );
+        match g1_hashes_msg_to_sign_result {
+            Ok(g1_hashes_msg_to_sign) => {
+                let signed_msg = convert_to_bn254_g1_point(
+                    bls_key_pair
+                        .sign_hashes_to_curve_message(G1Projective::from(
+                            convert_bn254_to_ark(g1_hashes_msg_to_sign).point,
+                        ))
+                        .sig(),
+                );
 
-        let g1_pubkey_bn254 = convert_to_bn254_g1_point(bls_key_pair.get_pub_key_g1());
-        let g2_pubkey_bn254 = convert_to_bn254_g2_point(bls_key_pair.gt_pub_key_g2());
+                let g1_pubkey_bn254 = convert_to_bn254_g1_point(bls_key_pair.get_pub_key_g1());
+                let g2_pubkey_bn254 = convert_to_bn254_g2_point(bls_key_pair.gt_pub_key_g2());
 
-        let pub_key_reg_params = PubkeyRegistrationParams {
-            pubkey_registration_signature: signed_msg,
-            pubkey_g1: g1_pubkey_bn254,
-            pubkey_g2: g2_pubkey_bn254,
-        };
+                let pub_key_reg_params = PubkeyRegistrationParams {
+                    pubkey_registration_signature: signed_msg,
+                    pubkey_g1: g1_pubkey_bn254,
+                    pubkey_g2: g2_pubkey_bn254,
+                };
 
-        let msg_to_sign = self
-            .el_reader
-            .calculate_operator_avs_registration_digest_hash(
-                wallet.address(),
-                self.service_manager_addr,
-                operator_to_avs_registration_sig_salt,
-                operator_to_avs_registration_sig_expiry,
-            )
-            .await
-            .unwrap();
+                let msg_to_sign_result = self
+                    .el_reader
+                    .calculate_operator_avs_registration_digest_hash(
+                        wallet.address(),
+                        self.service_manager_addr,
+                        operator_to_avs_registration_sig_salt,
+                        operator_to_avs_registration_sig_expiry,
+                    )
+                    .await;
 
-        let operator_signature = wallet.sign_message(msg_to_sign).await.unwrap();
+                match msg_to_sign_result {
+                    Ok(msg_to_sign) => {
+                        let operator_signature = wallet.sign_message(msg_to_sign).await.unwrap();
 
-        let operator_signature_with_salt_and_expiry = SignatureWithSaltAndExpiry {
-            signature: operator_signature.to_vec().into(),
-            salt: operator_to_avs_registration_sig_salt,
-            expiry: operator_to_avs_registration_sig_expiry,
-        };
+                        let operator_signature_with_salt_and_expiry = SignatureWithSaltAndExpiry {
+                            signature: operator_signature.to_vec().into(),
+                            salt: operator_to_avs_registration_sig_salt,
+                            expiry: operator_to_avs_registration_sig_expiry,
+                        };
 
-        let contract_call = contract_registry_coordinator.register_operator(
-            quorum_numbers,
-            socket,
-            pub_key_reg_params,
-            operator_signature_with_salt_and_expiry,
-        );
+                        let contract_call = contract_registry_coordinator.register_operator(
+                            quorum_numbers,
+                            socket,
+                            pub_key_reg_params,
+                            operator_signature_with_salt_and_expiry,
+                        );
 
-        let tx = contract_call.send().await.unwrap();
+                        let tx_result = contract_call.send().await;
 
-        Ok(tx.tx_hash())
+                        match tx_result {
+                            Ok(tx) => Ok(tx.tx_hash()),
+                            Err(_) => return Err(AvsRegistryError::RegisterOperator),
+                        }
+                    }
+                    Err(_) => {
+                        return Err(AvsRegistryError::CalculateOperatorAvsRegistrationDigestHash);
+                    }
+                }
+            }
+            Err(_) => return Err(AvsRegistryError::PubKeyRegistrationMessageHash),
+        }
     }
 
     async fn update_stakes_of_entire_operator_set_for_quorums(
         &self,
         operators_per_quorum: Vec<Vec<Address>>,
         quorum_number: Bytes,
-    ) -> Result<TxHash, String> {
+    ) -> Result<TxHash, AvsRegistryError> {
         let provider = Arc::new(&self.client);
         let wallet = self.tx_mgr.wallet.signer.clone();
         let signer = SignerMiddleware::new(provider.clone(), wallet);
@@ -216,16 +254,21 @@ impl AvsRegistryChainWriter {
         let contract_call = contract_registry_coordinator
             .update_operators_for_quorum(operators_per_quorum, quorum_number);
 
-        let tx = contract_call.send().await.unwrap();
+        let tx_result = contract_call.send().await;
 
-        return Ok(tx.tx_hash());
+        match tx_result {
+            Ok(tx) => {
+                return Ok(tx.tx_hash());
+            }
+            Err(_) => return Err(AvsRegistryError::UpdateOperatorForQuorum),
+        }
     }
 
     async fn deregister_operator(
         &self,
         quorum_numbers: Bytes,
         pub_key: G1Point,
-    ) -> Result<TxHash, String> {
+    ) -> Result<TxHash, AvsRegistryError> {
         let provider = Arc::new(&self.client);
         let wallet = self.tx_mgr.wallet.signer.clone();
         let signer = SignerMiddleware::new(provider.clone(), wallet);
@@ -236,8 +279,13 @@ impl AvsRegistryChainWriter {
 
         let contract_call = contract_registry_coordinator.deregister_operator(quorum_numbers);
 
-        let tx = contract_call.send().await.unwrap();
+        let tx_result = contract_call.send().await;
 
-        return Ok(tx.tx_hash());
+        match tx_result {
+            Ok(tx) => {
+                return Ok(tx.tx_hash());
+            }
+            Err(_) => return Err(AvsRegistryError::DeregisterOperator),
+        }
     }
 }

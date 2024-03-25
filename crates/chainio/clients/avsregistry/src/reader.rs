@@ -18,15 +18,10 @@ use ethers::{
 use std::fmt::Debug;
 
 use crate::NEW_BLS_APK_REGISTRATION_EVENT_SIGNATURE;
-use ethers_core::{
-    abi::Abi,
-    types::{BlockNumber, Filter, FilterBlockOption, Topic, ValueOrArray},
-};
+use ethers_core::types::{BlockNumber, Filter, FilterBlockOption, Topic, ValueOrArray};
 use ethers_providers::{Http, Provider};
 use num_bigint::BigInt;
-use serde_json;
 use std::collections::HashMap;
-use std::fs;
 
 const REGISTRY_COORDINATOR_PATH: &str =
     "../../../../crates/contracts/bindings/json/RegistryCoordinator.json";

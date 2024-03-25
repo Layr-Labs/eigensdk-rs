@@ -70,4 +70,40 @@ pub enum AvsRegistryError {
     /// Failed to decode event
     #[error("Failed to decode New PubKey Registration Filter")]
     DecodeEventNewPubkeyRegistrationFilter,
+
+    /// Failed to get Service Manager
+    #[error("Failed to get service manager")]
+    GetServiceManager,
+
+    /// Failed to get stake registry
+    #[error("Failed to get stake registry address")]
+    GetStakeRegistry,
+
+    /// Failed to get delegation manager address
+    #[error("Failed to get delegation manager address")]
+    GetDelegation,
+
+    /// Failed to get avs registry address
+    #[error("failed to get avs registry ")]
+    GetAvsRegistry,
+
+    /// Pubey registration msg hash
+    #[error("Failed to regiser pub key message hash")]
+    PubKeyRegistrationMessageHash,
+
+    /// Failed to calculate operator avs registration digest hash
+    #[error(" Failed to calculate operator avs registration digest hash")]
+    CalculateOperatorAvsRegistrationDigestHash,
+
+    /// Register Operator
+    #[error("Failed to register operatror")]
+    RegisterOperator,
+
+    /// Update Operator for Quorum
+    #[error("Failed to update operator for quorum")]
+    UpdateOperatorForQuorum,
+
+    /// Failed to Deregister operator
+    #[error("failed to deregister operator")]
+    DeregisterOperator,
 }

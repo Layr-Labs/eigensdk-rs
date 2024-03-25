@@ -4,8 +4,10 @@ use eigensdk_contracts_bindings::BLSApkRegistry::bls_apk_registry::{
 };
 use eigensdk_logging::logger::Logger;
 use ethers_core::types::{Address, Filter};
-use ethers_providers::{Http, Middleware, Provider, Ws};
-
+use ethers_providers::{Http, Middleware, Provider, SubscriptionStream, Ws};
+use std::sync::Arc;
+/// AvsRegistry Chain Subscriber struct
+#[derive(Debug)]
 pub struct AvsRegistryChainSubscriber {
     logger: Logger,
     bls_apk_registry: BLSApkRegistryEvents,
@@ -30,13 +32,13 @@ impl AvsRegistryChainSubscriber {
     }
 
     async fn subscribe_to_new_pub_key_registrations(&self, client: Provider<Ws>) {
-        let current_block_number = client.clone().get_block_number().await.unwrap();
-        // let filter = Contract::event_of_type::<NewPubkeyRegistrationFilter>(client.into()).from_block(current_block_number);
+        let provider = Arc::new(client.clone());
+        let current_block_number = provider.clone().get_block_number().await.unwrap();
 
         let filter = Filter::new()
             .topic0(NEW_BLS_APK_REGISTRATION_EVENT_SIGNATURE)
             .from_block(current_block_number);
 
-        let mut stream = client.subscribe_logs(&filter).await.unwrap();
+        let _ = (client.subscribe_logs(&filter).await.unwrap());
     }
 }
