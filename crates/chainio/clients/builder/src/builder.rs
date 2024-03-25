@@ -8,7 +8,7 @@ use eigensdk_client_eth::client::Client;
 use eigensdk_metrics::eigenmetrics::EigenMetrics;
 use prometheus_client::registry::Registry;
 
-struct BuildAllConfig {
+pub struct BuildAllConfig {
     EthHttpUrl: String,
     EthWsUrl: String,
     RegistryCoordinatorAddr: String,
@@ -16,7 +16,7 @@ struct BuildAllConfig {
     FromMetricsIpPortAddress: String,
 }
 
-struct Clients {
+pub struct Clients {
     avs_registry_chain_reader: AvsRegistryChainReader,
     avs_registry_chain_subscriber: AvsRegistryChainSubscriber,
     avs_registry_chain_writer: AvsRegistryChainWriter,
@@ -27,3 +27,5 @@ struct Clients {
     metrics: EigenMetrics,
     prometheus_registry: Registry,
 }
+
+impl Clients {}

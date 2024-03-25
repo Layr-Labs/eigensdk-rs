@@ -1311,6 +1311,7 @@ dependencies = [
  "ethers",
  "ethers-core",
  "ethers-providers",
+ "thiserror",
 ]
 
 [[package]]

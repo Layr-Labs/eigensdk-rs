@@ -120,7 +120,6 @@ impl AvsRegistryChainWriter {
                                                 let el_reader = ELChainReader::build(
                                                     delegation_manager_addr,
                                                     avs_directory_addr,
-                                                    logger.clone(),
                                                     client.clone(),
                                                 )
                                                 .await;
