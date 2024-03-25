@@ -117,24 +117,34 @@ impl AvsRegistryChainWriter {
 
                                         match avs_directory_addr_result {
                                             Ok(avs_directory_addr) => {
-                                                let el_reader = ELChainReader::build(
+                                                let el_reader_result = ELChainReader::build(
                                                     delegation_manager_addr,
                                                     avs_directory_addr,
                                                     client.clone(),
                                                 )
                                                 .await;
 
-                                                return Ok(AvsRegistryChainWriter {
-                                                    service_manager_addr,
-                                                    registry_coordinator_addr,
-                                                    operator_state_retriever_addr,
-                                                    stake_registry_addr,
-                                                    bls_apk_registry_addr,
-                                                    el_reader,
-                                                    logger,
-                                                    client,
-                                                    tx_mgr,
-                                                });
+                                                match el_reader_result {
+                                                    Ok(el_reader) => {
+                                                        return Ok(AvsRegistryChainWriter {
+                                                            service_manager_addr,
+                                                            registry_coordinator_addr,
+                                                            operator_state_retriever_addr,
+                                                            stake_registry_addr,
+                                                            bls_apk_registry_addr,
+                                                            el_reader,
+                                                            logger,
+                                                            client,
+                                                            tx_mgr,
+                                                        });
+                                                    }
+
+                                                    Err(_) => {
+                                                        return Err(
+                                                            AvsRegistryError::BuildElChainReader,
+                                                        )
+                                                    }
+                                                }
                                             }
                                             Err(_) => return Err(AvsRegistryError::GetAvsRegistry),
                                         }

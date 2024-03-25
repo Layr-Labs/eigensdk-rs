@@ -1,9 +1,6 @@
 use eigensdk_contracts_bindings::{
-    AVSDirectory::avs_directory,
-    DelegationManager::{delegation_manager, OperatorDetails},
-    ISlasher::i_slasher,
-    IStrategy::i_strategy,
-    IERC20::ierc20,
+    AVSDirectory::avs_directory, DelegationManager::delegation_manager, ISlasher::i_slasher,
+    IStrategy::i_strategy, IERC20::ierc20,
 };
 use eigensdk_types::operator::Operator;
 use ethers_core::types::{Address, U256};
@@ -19,8 +16,6 @@ pub struct ELChainReader {
     avs_directory: Address,
     client: Provider<Http>,
 }
-
-pub struct ELReader {}
 
 impl ELChainReader {
     fn new(

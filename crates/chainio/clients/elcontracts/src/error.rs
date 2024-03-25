@@ -41,4 +41,24 @@ pub enum ElContractsError {
     /// is operator or not
     #[error("Is operator or not ")]
     IsOperator,
+
+    /// registering as operator
+    #[error("Failed to register as a operator")]
+    RegisterAsOperator,
+
+    /// modify operator details
+    #[error("modify operator details")]
+    ModifyOperatorDetails,
+
+    /// get strategy and underlying erc20 token
+    #[error("get strategy and underlying erc20 token")]
+    GetStrategyAndUnderlyingERC20Token,
+
+    /// approve to underlying token
+    #[error("Failed to call approve in underlying token contract")]
+    ApproveCallToUnderlyingToken,
+
+    /// deposit into strategy call
+    #[error("Failed to deposit into strategy")]
+    DepositIntoStrategy,
 }

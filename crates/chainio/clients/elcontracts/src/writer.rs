@@ -1,4 +1,4 @@
-use crate::reader::ELChainReader;
+use crate::{error::ElContractsError, reader::ELChainReader};
 use eigensdk_contracts_bindings::{
     DelegationManager::OperatorDetails,
     DelegationManager::{self, delegation_manager},
@@ -41,7 +41,10 @@ impl ELChainWriter {
         }
     }
 
-    pub async fn register_as_operator(&self, operator: Operator) -> Result<TxHash, String> {
+    pub async fn register_as_operator(
+        &self,
+        operator: Operator,
+    ) -> Result<TxHash, ElContractsError> {
         let op_details = OperatorDetails {
             earnings_receiver: operator.has_earnings_receiver_address(),
             delegation_approver: operator.has_delegation_approver_address(),
@@ -57,12 +60,18 @@ impl ELChainWriter {
         let contract_call = contract_delegation_manager
             .register_as_operator(op_details, operator.has_metadata_url());
 
-        let tx = contract_call.send().await.unwrap();
+        let tx_result = contract_call.send().await;
 
-        Ok(tx.tx_hash())
+        match tx_result {
+            Ok(tx) => Ok(tx.tx_hash()),
+            Err(_) => return Err(ElContractsError::RegisterAsOperator),
+        }
     }
 
-    pub async fn update_operator_details(&self, operator: Operator) -> Result<TxHash, String> {
+    pub async fn update_operator_details(
+        &self,
+        operator: Operator,
+    ) -> Result<TxHash, ElContractsError> {
         let operator_details = OperatorDetails {
             earnings_receiver: operator.has_earnings_receiver_address(),
             delegation_approver: operator.has_delegation_approver_address(),
@@ -77,44 +86,61 @@ impl ELChainWriter {
 
         let contract_call = contract_delegation_manager.modify_operator_details(operator_details);
 
-        let tx = contract_call.send().await.unwrap();
+        let tx_result = contract_call.send().await;
 
-        Ok(tx.tx_hash())
+        match tx_result {
+            Ok(tx) => Ok(tx.tx_hash()),
+            Err(_) => return Err(ElContractsError::ModifyOperatorDetails),
+        }
     }
 
     pub async fn deposit_erc20_into_strategy(
         &self,
         strategy_addr: Address,
         amount: U256,
-    ) -> Result<TxHash, String> {
-        let (_, underlying_token_contract, underlying_token) = self
+    ) -> Result<TxHash, ElContractsError> {
+        let result_value = self
             .el_chain_reader
             .get_strategy_and_underlying_erc20_token(strategy_addr)
-            .await
-            .unwrap();
+            .await;
 
-        let provider = Arc::new(&self.client);
-        let wallet = self.tx_mgr.wallet.signer.clone();
-        let signer = SignerMiddleware::new(provider.clone(), wallet);
+        match result_value {
+            Ok((_, underlying_token_contract, underlying_token)) => {
+                let provider = Arc::new(&self.client);
+                let wallet = self.tx_mgr.wallet.signer.clone();
+                let signer = SignerMiddleware::new(provider.clone(), wallet);
 
-        let contract_underlying_token =
-            ierc20::IERC20::new(underlying_token_contract, signer.clone().into());
+                let contract_underlying_token =
+                    ierc20::IERC20::new(underlying_token_contract, signer.clone().into());
 
-        let contract_call = contract_underlying_token.approve(self.strategy_manager, amount);
+                let contract_call =
+                    contract_underlying_token.approve(self.strategy_manager, amount);
 
-        let _approve_tx = contract_call.send().await.unwrap();
+                let _approve_tx_result = contract_call.send().await;
 
-        let contract_strategy_manager =
-            strategy_manager::StrategyManager::new(self.strategy_manager, signer.into());
+                match _approve_tx_result {
+                    Ok(_approve_tx) => {
+                        let contract_strategy_manager = strategy_manager::StrategyManager::new(
+                            self.strategy_manager,
+                            signer.into(),
+                        );
 
-        let deposit_contract_call = contract_strategy_manager.deposit_into_strategy(
-            strategy_addr,
-            underlying_token,
-            amount,
-        );
+                        let deposit_contract_call = contract_strategy_manager
+                            .deposit_into_strategy(strategy_addr, underlying_token, amount);
 
-        let tx = deposit_contract_call.send().await.unwrap();
+                        let tx_result = deposit_contract_call.send().await;
 
-        Ok(tx.tx_hash())
+                        match tx_result {
+                            Ok(tx) => Ok(tx.tx_hash()),
+                            Err(_) => {
+                                return Err(ElContractsError::GetStrategyAndUnderlyingERC20Token)
+                            }
+                        }
+                    }
+                    Err(_) => return Err(ElContractsError::DepositIntoStrategy),
+                }
+            }
+            Err(_) => return Err(ElContractsError::ApproveCallToUnderlyingToken),
+        }
     }
 }

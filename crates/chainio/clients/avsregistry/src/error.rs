@@ -106,4 +106,8 @@ pub enum AvsRegistryError {
     /// Failed to Deregister operator
     #[error("failed to deregister operator")]
     DeregisterOperator,
+
+    /// build el chain reader
+    #[error("Failed to build el chain reader")]
+    BuildElChainReader,
 }
