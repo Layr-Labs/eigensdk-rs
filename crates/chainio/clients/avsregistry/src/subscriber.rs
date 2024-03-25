@@ -39,6 +39,6 @@ impl AvsRegistryChainSubscriber {
             .topic0(NEW_BLS_APK_REGISTRATION_EVENT_SIGNATURE)
             .from_block(current_block_number);
 
-        let _ = (client.subscribe_logs(&filter).await.unwrap());
+        let _ = client.subscribe_logs(&filter).await.unwrap();
     }
 }
