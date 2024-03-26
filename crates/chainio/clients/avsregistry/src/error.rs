@@ -110,4 +110,8 @@ pub enum AvsRegistryError {
     /// build el chain reader
     #[error("Failed to build el chain reader")]
     BuildElChainReader,
+
+    /// Update stake for all quorums
+    #[error("Failed to update stake foor all quorums")]
+    UpdateStakeForAllQuorums,
 }

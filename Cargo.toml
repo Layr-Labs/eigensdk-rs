@@ -70,3 +70,4 @@ ethers-signers = "2.0.14"
 eigensdk-metrics-collectors-economic = {path = "crates/metrics/collectors/economic"}
 eigensdk-metrics-collectors-rpc-calls = {path = "crates/metrics/collectors/rpc_calls"}
 thiserror = "1.0"
+tracing = "0.1.40"

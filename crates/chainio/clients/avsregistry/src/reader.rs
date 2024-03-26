@@ -8,7 +8,6 @@ use eigensdk_contracts_bindings::{
 };
 use eigensdk_crypto_bls::attestation::{G1Point, G2Point};
 use eigensdk_crypto_bn254::utils::u256_to_bigint256;
-use eigensdk_logging::logger::Logger;
 use eigensdk_types::operator::{bitmap_to_quorum_ids, OperatorPubKeys};
 use ethers::{
     prelude::Abigen,
@@ -16,6 +15,7 @@ use ethers::{
     types::{Address, Bytes, H256, U256},
 };
 use std::fmt::Debug;
+use tracing::{debug, error, info, span, warn, Level};
 
 use crate::NEW_BLS_APK_REGISTRATION_EVENT_SIGNATURE;
 use ethers_core::types::{BlockNumber, Filter, FilterBlockOption, Topic, ValueOrArray};
@@ -32,7 +32,6 @@ const OPERATOR_STATE_RETRIEVER: &str =
 /// Avs Registry chainreader
 #[derive(Debug)]
 pub struct AvsRegistryChainReader {
-    logger: Logger,
     bls_apk_registry_addr: Address,
     registry_coordinator_addr: Address,
     operator_state_retriever: Address,
@@ -46,7 +45,6 @@ trait AvsRegistryReader {
 
 impl AvsRegistryChainReader {
     fn new(
-        logger: Logger,
         registry_coordinator_addr: Address,
         bls_apk_registry_addr: Address,
         operator_state_retriever: Address,
@@ -54,7 +52,6 @@ impl AvsRegistryChainReader {
         eth_client: Provider<Http>,
     ) -> Self {
         AvsRegistryChainReader {
-            logger,
             bls_apk_registry_addr,
             registry_coordinator_addr,
             operator_state_retriever,
@@ -68,7 +65,6 @@ impl AvsRegistryChainReader {
         registry_coordinator_addr: Address,
         operator_state_retriever_addr: Address,
         stake_registry_addr: Address,
-        logger: Logger,
     ) -> Result<AvsRegistryChainReader, AvsRegistryError> {
         let contract_registry_coordinator = registry_coordinator::RegistryCoordinator::new(
             self.registry_coordinator_addr,
@@ -82,7 +78,6 @@ impl AvsRegistryChainReader {
 
         match bls_apk_registry_addr {
             Ok(address) => Ok(AvsRegistryChainReader {
-                logger,
                 bls_apk_registry_addr: address,
                 registry_coordinator_addr,
                 operator_state_retriever: operator_state_retriever_addr,
@@ -448,6 +443,7 @@ impl AvsRegistryChainReader {
 
         match logs_result {
             Ok(logs) => {
+                debug!(transactionLogs = ?logs, "avsRegistryChainReader.QueryExistingRegisteredOperatorPubKeys");
                 let mut operator_addresses: Vec<Address> = vec![];
                 let mut operator_pub_keys: Vec<OperatorPubKeys> = vec![];
 

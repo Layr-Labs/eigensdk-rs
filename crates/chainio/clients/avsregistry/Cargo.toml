@@ -29,6 +29,7 @@ eigensdk-txmgr.workspace = true
 eigensdk-chainio-utils.workspace = true
 ark-bn254 = "0.4.0"
 thiserror.workspace = true
+tracing.workspace = true
 
 [lints]
 workspace = true

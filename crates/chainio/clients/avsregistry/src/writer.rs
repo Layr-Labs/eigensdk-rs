@@ -18,6 +18,7 @@ use ethers_core::types::{Address, Bytes, TxHash, U256};
 use ethers_providers::{Http, Provider};
 use std::str::FromStr;
 use std::sync::Arc;
+use tracing::info;
 
 use ethers::{
     middleware::SignerMiddleware,
@@ -174,6 +175,8 @@ impl AvsRegistryChainWriter {
     ) -> Result<TxHash, AvsRegistryError> {
         let provider = Arc::new(&self.client);
         let wallet = self.tx_mgr.wallet.signer.clone();
+        // tracing info
+        info!(avs_service_manager = %self.service_manager_addr, operator= %wallet.address(),quorum_numbers = ?quorum_numbers,"quorum_numbers,registering operator with the AVS's registry coordinator");
         let signer = SignerMiddleware::new(provider.clone(), wallet);
         let contract_registry_coordinator = registry_coordinator::RegistryCoordinator::new(
             self.registry_coordinator_addr,
@@ -225,7 +228,7 @@ impl AvsRegistryChainWriter {
                         };
 
                         let contract_call = contract_registry_coordinator.register_operator(
-                            quorum_numbers,
+                            quorum_numbers.clone(),
                             socket,
                             pub_key_reg_params,
                             operator_signature_with_salt_and_expiry,
@@ -234,7 +237,11 @@ impl AvsRegistryChainWriter {
                         let tx_result = contract_call.send().await;
 
                         match tx_result {
-                            Ok(tx) => Ok(tx.tx_hash()),
+                            Ok(tx) => {
+                                // tracing info
+                                info!(tx_hash = %tx.tx_hash(), avs_service_manager = %self.service_manager_addr,operator = %wallet.address(),quorum_numbers = ?quorum_numbers , "successfully registered operator with AVS registry coordinator");
+                                Ok(tx.tx_hash())
+                            }
                             Err(_) => return Err(AvsRegistryError::RegisterOperator),
                         }
                     }
@@ -252,6 +259,7 @@ impl AvsRegistryChainWriter {
         operators_per_quorum: Vec<Vec<Address>>,
         quorum_number: Bytes,
     ) -> Result<TxHash, AvsRegistryError> {
+        info!(quorum_numbers = %quorum_number, "updating stakes for entire operator set");
         let provider = Arc::new(&self.client);
         let wallet = self.tx_mgr.wallet.signer.clone();
         let signer = SignerMiddleware::new(provider.clone(), wallet);
@@ -261,15 +269,46 @@ impl AvsRegistryChainWriter {
         );
 
         let contract_call = contract_registry_coordinator
-            .update_operators_for_quorum(operators_per_quorum, quorum_number);
+            .update_operators_for_quorum(operators_per_quorum, quorum_number.clone());
 
         let tx_result = contract_call.send().await;
 
         match tx_result {
             Ok(tx) => {
+                // tracing info
+                info!(tx_hash = ?tx, quorum_numbers = %quorum_number,"succesfully updated stakes for entire operator set" );
                 return Ok(tx.tx_hash());
             }
             Err(_) => return Err(AvsRegistryError::UpdateOperatorForQuorum),
+        }
+    }
+
+    async fn update_stakes_of_operator_subset_for_all_quorums(
+        &self,
+        operators: Vec<Address>,
+    ) -> Result<TxHash, AvsRegistryError> {
+        info!(operators = ?operators, "updating stakes of operator subset for all quorums");
+
+        let provider = Arc::new(&self.client);
+        let wallet = self.tx_mgr.wallet.signer.clone();
+        let signer = SignerMiddleware::new(provider.clone(), wallet);
+        let contract_registry_coordinator = registry_coordinator::RegistryCoordinator::new(
+            self.registry_coordinator_addr,
+            signer.into(),
+        );
+
+        let contract_call = contract_registry_coordinator.update_operators(operators);
+
+        let tx_result = contract_call.send().await;
+
+        match tx_result {
+            Ok(tx) => {
+                info!(tx_hash = ?tx,"ssuccesfully updated stakes of operator subset for all quorums" );
+                Ok(tx.tx_hash())
+            }
+            Err(_) => {
+                return Err(AvsRegistryError::UpdateStakeForAllQuorums);
+            }
         }
     }
 
@@ -278,6 +317,7 @@ impl AvsRegistryChainWriter {
         quorum_numbers: Bytes,
         pub_key: G1Point,
     ) -> Result<TxHash, AvsRegistryError> {
+        info!("deregistering operator with the AVS's registry coordinator");
         let provider = Arc::new(&self.client);
         let wallet = self.tx_mgr.wallet.signer.clone();
         let signer = SignerMiddleware::new(provider.clone(), wallet);
@@ -292,6 +332,7 @@ impl AvsRegistryChainWriter {
 
         match tx_result {
             Ok(tx) => {
+                info!(tx_hash = ?tx,"succesfully deregistered operator with the AVS's registry coordinator" );
                 return Ok(tx.tx_hash());
             }
             Err(_) => return Err(AvsRegistryError::DeregisterOperator),

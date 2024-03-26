@@ -1285,6 +1285,7 @@ dependencies = [
  "num-bigint",
  "serde_json",
  "thiserror",
+ "tracing",
 ]
 
 [[package]]
