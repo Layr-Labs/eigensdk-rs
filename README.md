@@ -9,7 +9,7 @@ List of crates in the repository :-
 
 - [eigensdk-client-avsregistry](https://github.com/anjaneyalabs/eigensdk-rs/tree/main/crates/chainio/clients/avsregistry) - Read, Write and subscribe methods for AvsRegistry
 - [eigensdk-client-builder](https://github.com/anjaneyalabs/eigensdk-rs/tree/main/crates/chainio/clients/builder)
-- [eigensdk-client-elcontracts](https://github.com/anjaneyalabs/eigensdk-rs/tree/main/crates/chainio/clients/builder)
+- [eigensdk-client-elcontracts](https://github.com/anjaneyalabs/eigensdk-rs/tree/main/crates/chainio/clients/builder) - Convenience methods to call Eigenlayer contracts 
 - [eigensdk-client-fireblocks](https://github.com/anjaneyalabs/eigensdk-rs/tree/main/crates/chainio/clients/fireblocks)
 - [eigensdk-client-wallet](https://github.com/anjaneyalabs/eigensdk-rs/tree/main/crates/chainio/clients/wallet)
 - [eigensdk-chainio-txmgr](https://github.com/anjaneyalabs/eigensdk-rs/tree/main/crates/chainio/txmgr)
