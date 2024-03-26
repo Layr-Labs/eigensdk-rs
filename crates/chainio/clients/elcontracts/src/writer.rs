@@ -11,6 +11,7 @@ use ethers::middleware::SignerMiddleware;
 use ethers_core::types::{Address, TxHash, U256};
 use ethers_providers::{Http, Provider};
 use std::sync::Arc;
+use tracing::info;
 trait ELWriter {}
 
 pub struct ELChainWriter {
@@ -45,6 +46,10 @@ impl ELChainWriter {
         &self,
         operator: Operator,
     ) -> Result<TxHash, ElContractsError> {
+        info!(
+            "registering operator {:?} to EigenLayer",
+            operator.has_address()
+        );
         let op_details = OperatorDetails {
             earnings_receiver: operator.has_earnings_receiver_address(),
             delegation_approver: operator.has_delegation_approver_address(),
@@ -63,7 +68,10 @@ impl ELChainWriter {
         let tx_result = contract_call.send().await;
 
         match tx_result {
-            Ok(tx) => Ok(tx.tx_hash()),
+            Ok(tx) => {
+                info!(tx_hash = %tx.tx_hash(), "tx successfully included");
+                Ok(tx.tx_hash())
+            }
             Err(_) => return Err(ElContractsError::RegisterAsOperator),
         }
     }
@@ -72,6 +80,10 @@ impl ELChainWriter {
         &self,
         operator: Operator,
     ) -> Result<TxHash, ElContractsError> {
+        info!(
+            "updating operator detils of operator {:?} to EigenLayer",
+            operator.has_address()
+        );
         let operator_details = OperatorDetails {
             earnings_receiver: operator.has_earnings_receiver_address(),
             delegation_approver: operator.has_delegation_approver_address(),
@@ -84,12 +96,25 @@ impl ELChainWriter {
         let contract_delegation_manager =
             delegation_manager::DelegationManager::new(self.delegation_manager, signer.into());
 
-        let contract_call = contract_delegation_manager.modify_operator_details(operator_details);
+        let contract_call_modify_operator_details =
+            contract_delegation_manager.modify_operator_details(operator_details);
 
-        let tx_result = contract_call.send().await;
+        let tx_result = contract_call_modify_operator_details.send().await;
 
         match tx_result {
-            Ok(tx) => Ok(tx.tx_hash()),
+            Ok(tx) => {
+                info!(tx_hash = %tx.tx_hash(), operator = %operator.has_address(), "succesfully updated operator details");
+
+                let contract_call_update_metadata_uri = contract_delegation_manager
+                    .update_operator_metadata_uri(operator.has_metadata_url());
+
+                let metadata_tx_result = contract_call_update_metadata_uri.send().await;
+
+                match metadata_tx_result {
+                    Ok(metadata_tx) => Ok(metadata_tx.tx_hash()),
+                    Err(_) => return Err(ElContractsError::UpdateMetadataUri),
+                }
+            }
             Err(_) => return Err(ElContractsError::ModifyOperatorDetails),
         }
     }
@@ -99,6 +124,10 @@ impl ELChainWriter {
         strategy_addr: Address,
         amount: U256,
     ) -> Result<TxHash, ElContractsError> {
+        info!(
+            "depositing {:?} tokens into strategy {:?}",
+            amount, strategy_addr
+        );
         let result_value = self
             .el_chain_reader
             .get_strategy_and_underlying_erc20_token(strategy_addr)
@@ -131,7 +160,13 @@ impl ELChainWriter {
                         let tx_result = deposit_contract_call.send().await;
 
                         match tx_result {
-                            Ok(tx) => Ok(tx.tx_hash()),
+                            Ok(tx) => {
+                                info!(
+                                    "deposited {:?} tokens into strategy {:?}",
+                                    amount, strategy_addr
+                                );
+                                Ok(tx.tx_hash())
+                            }
                             Err(_) => {
                                 return Err(ElContractsError::GetStrategyAndUnderlyingERC20Token)
                             }

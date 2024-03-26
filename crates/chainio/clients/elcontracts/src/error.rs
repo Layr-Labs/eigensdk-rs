@@ -61,4 +61,8 @@ pub enum ElContractsError {
     /// deposit into strategy call
     #[error("Failed to deposit into strategy")]
     DepositIntoStrategy,
+
+    /// update metadata uri
+    #[error("Failed to update metadata uri")]
+    UpdateMetadataUri,
 }

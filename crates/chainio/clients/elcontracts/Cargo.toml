@@ -17,3 +17,4 @@ eigensdk-txmgr.workspace=true
 eigensdk-types.workspace=true
 ethers.workspace = true
 thiserror.workspace = true
+tracing.workspace = true
