@@ -1,9 +1,7 @@
 use crate::{error::ElContractsError, reader::ELChainReader};
 use eigensdk_contracts_bindings::{
-    DelegationManager::OperatorDetails,
-    DelegationManager::{self, delegation_manager},
-    StrategyManager::{self, strategy_manager},
-    IERC20::{self, ierc20},
+    DelegationManager::delegation_manager, DelegationManager::OperatorDetails,
+    StrategyManager::strategy_manager, IERC20::ierc20,
 };
 use eigensdk_txmgr::SimpleTxManager;
 use eigensdk_types::operator::Operator;
@@ -15,7 +13,6 @@ use tracing::info;
 trait ELWriter {}
 
 pub struct ELChainWriter {
-    slasher: Address,
     delegation_manager: Address,
     strategy_manager: Address,
     el_chain_reader: ELChainReader,
@@ -25,7 +22,6 @@ pub struct ELChainWriter {
 
 impl ELChainWriter {
     fn new(
-        slasher: Address,
         delegation_manager: Address,
         strategy_manager: Address,
         el_chain_reader: ELChainReader,
@@ -33,7 +29,6 @@ impl ELChainWriter {
         tx_mgr: SimpleTxManager,
     ) -> Self {
         Self {
-            slasher,
             delegation_manager,
             strategy_manager,
             el_chain_reader,

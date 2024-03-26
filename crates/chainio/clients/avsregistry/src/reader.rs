@@ -576,22 +576,18 @@ fn generate_bindings(contract_name: &str, input_path: &str, output_path: &str) {
 
 #[test]
 fn test_build_avs_registry_chain_reader() {
-    let log = Logger {};
     let provider = Provider::<Http>::try_from("http://localhost:8545").unwrap();
     let instance = AvsRegistryChainReader::new(
-        log,
         Address::from_low_u64_be(23),
         Address::from_low_u64_be(544),
         Address::from_low_u64_be(5445),
         Address::from_low_u64_be(34),
         provider.clone(),
     );
-    let new_log = Logger {};
     let s = AvsRegistryChainReader::build_avs_registry_chain_reader(
         &instance,
         Address::from_low_u64_be(333),
         Address::from_low_u64_be(87),
         Address::from_low_u64_be(675),
-        new_log,
     );
 }
