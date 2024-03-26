@@ -2,21 +2,18 @@ use crate::NEW_BLS_APK_REGISTRATION_EVENT_SIGNATURE;
 use eigensdk_contracts_bindings::BLSApkRegistry::bls_apk_registry::{
     self, BLSApkRegistry, BLSApkRegistryEvents,
 };
-use eigensdk_logging::logger::Logger;
 use ethers_core::types::{Address, Filter};
 use ethers_providers::{Http, Middleware, Provider, SubscriptionStream, Ws};
 use std::sync::Arc;
 /// AvsRegistry Chain Subscriber struct
 #[derive(Debug)]
 pub struct AvsRegistryChainSubscriber {
-    logger: Logger,
     bls_apk_registry: BLSApkRegistryEvents,
 }
 
 impl AvsRegistryChainSubscriber {
-    fn new(bls_apk_registry: BLSApkRegistryEvents, logger: Logger) -> Self {
+    fn new(bls_apk_registry: BLSApkRegistryEvents) -> Self {
         return AvsRegistryChainSubscriber {
-            logger: logger,
             bls_apk_registry: bls_apk_registry,
         };
     }

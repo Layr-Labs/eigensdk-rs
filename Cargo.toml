@@ -10,7 +10,6 @@ members = [ "crates/chainio/clients/avsregistry/",
 "crates/chainio/utils/",
 "crates/crypto/bn254/",
 "crates/crypto/bls/",
-"crates/logging/",
 "crates/metrics/collectors/economic/",
 "crates/metrics/collectors/rpc_calls/",
 "crates/types/",
@@ -55,7 +54,6 @@ eigensdk-client-elcontracts = {path = "crates/chainio/clients/elcontracts"}
 eigensdk-client-eth = {path = "crates/chainio/clients/eth"}
 eigensdk-client-fireblocks = {path = "crates/chainio/clients/fireblocks"}
 eigensdk-client-wallet = {path = "crates/chainio/clients/wallet"}
-eigensdk-logging = {path = "crates/logging/"}
 eigensdk-contracts-bindings = {patn = "crates/contracts/bindings/"}
 eigensdk-types = {path = "crates/types/"}
 eigensdk-crypto-bls = {path = "crates/crypto/bls/"}

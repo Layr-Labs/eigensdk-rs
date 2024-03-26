@@ -12,7 +12,6 @@ use eigensdk_contracts_bindings::{
     StakeRegistry::stake_registry,
 };
 use eigensdk_crypto_bls::attestation::KeyPair;
-use eigensdk_logging::logger::Logger;
 use eigensdk_txmgr::SimpleTxManager;
 use ethers_core::types::{Address, Bytes, TxHash, U256};
 use ethers_providers::{Http, Provider};
@@ -32,7 +31,6 @@ pub struct AvsRegistryChainWriter {
     stake_registry_addr: Address,
     bls_apk_registry_addr: Address,
     el_reader: ELChainReader,
-    logger: Logger,
     client: Provider<Http>,
     tx_mgr: SimpleTxManager,
 }
@@ -47,7 +45,6 @@ impl AvsRegistryChainWriter {
         stake_registry_addr: Address,
         bls_apk_registry_addr: Address,
         el_reader: ELChainReader,
-        logger: Logger,
         client: Provider<Http>,
         tx_mgr: SimpleTxManager,
     ) -> Self {
@@ -58,7 +55,6 @@ impl AvsRegistryChainWriter {
             stake_registry_addr,
             bls_apk_registry_addr,
             el_reader,
-            logger,
             client,
             tx_mgr,
         }
@@ -68,7 +64,6 @@ impl AvsRegistryChainWriter {
         &self,
         registry_coordinator_addr: Address,
         operator_state_retriever_addr: Address,
-        logger: Logger,
         client: Provider<Http>,
         tx_mgr: SimpleTxManager,
     ) -> Result<Self, AvsRegistryError> {
@@ -134,7 +129,6 @@ impl AvsRegistryChainWriter {
                                                             stake_registry_addr,
                                                             bls_apk_registry_addr,
                                                             el_reader,
-                                                            logger,
                                                             client,
                                                             tx_mgr,
                                                         });

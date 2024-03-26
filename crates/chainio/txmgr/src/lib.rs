@@ -1,4 +1,3 @@
-use eigensdk_logging::logger::Logger;
 use eigensdk_signerv2::SignerV2;
 use ethers::{
     core::types::Address,
@@ -18,23 +17,14 @@ pub struct SimpleTxManager {
     pub wallet: PrivateKeyWallet,
     client: Provider<Http>,
     // signer_fn: Box<SignerV2>,
-    log: Logger,
     sender: Address,
 }
 
 impl SimpleTxManager {
-    pub fn new(
-        wallet: PrivateKeyWallet,
-        client: Provider<Http>,
-        log: Logger,
-        // signer_fn: Box<SignerV2>,
-        sender: Address,
-    ) -> Self {
+    pub fn new(wallet: PrivateKeyWallet, client: Provider<Http>, sender: Address) -> Self {
         SimpleTxManager {
             wallet,
             client,
-            log,
-            // signer_fn,
             sender,
         }
     }

@@ -1,6 +1,5 @@
 // use alloy_primitives::TxHash;
 use crate::{TxId, WalletTrait};
-use eigensdk_logging::logger::Logger;
 use eigensdk_signerv2::PrivateKeySigner;
 use ethers::{
     middleware::SignerMiddleware,
@@ -15,7 +14,6 @@ pub struct PrivateKeyWallet {
     client: Provider<Http>,
     address: Address,
     pub signer: LocalWallet,
-    logger: Logger,
 }
 
 impl WalletTrait for PrivateKeyWallet {
@@ -43,7 +41,6 @@ impl PrivateKeyWallet {
         address: Address,
         pvt_key: &str,
         signer: LocalWallet,
-        logger: Logger,
     ) -> Self {
         let wallet: LocalWallet = pvt_key.parse().unwrap();
 
@@ -51,7 +48,6 @@ impl PrivateKeyWallet {
             client,
             address,
             signer: wallet,
-            logger,
         };
     }
 

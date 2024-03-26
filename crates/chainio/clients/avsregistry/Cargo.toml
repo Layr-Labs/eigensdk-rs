@@ -6,7 +6,6 @@ rust-version.workspace = true
 repository.workspace = true
 
 [dependencies]
-eigensdk-logging = {path = "../../../../crates/logging/"}
 eigensdk-client-eth.workspace = true 
 eigensdk-contracts-bindings = {path = "../../../../crates/contracts/bindings"}
 alloy-primitives = {git = "https://github.com/alloy-rs/core", rev = "14083ea11780b92f5c6466b12cc879e3b8c16972"}

@@ -1276,7 +1276,6 @@ dependencies = [
  "eigensdk-contracts-bindings",
  "eigensdk-crypto-bls",
  "eigensdk-crypto-bn254",
- "eigensdk-logging",
  "eigensdk-txmgr",
  "eigensdk-types",
  "ethers",
@@ -1306,7 +1305,6 @@ dependencies = [
  "ark-bn254",
  "ark-ff 0.4.2",
  "eigensdk-contracts-bindings",
- "eigensdk-logging",
  "eigensdk-txmgr",
  "eigensdk-types",
  "ethers",
@@ -1337,7 +1335,6 @@ name = "eigensdk-client-wallet"
 version = "0.0.1-alpha"
 dependencies = [
  "alloy-primitives 0.6.4 (git+https://github.com/alloy-rs/core?rev=14083ea11780b92f5c6466b12cc879e3b8c16972)",
- "eigensdk-logging",
  "eigensdk-signerv2",
  "ethers",
  "ethers-core",
@@ -1370,10 +1367,6 @@ dependencies = [
  "ark-ff 0.4.2",
  "ethers",
 ]
-
-[[package]]
-name = "eigensdk-logging"
-version = "0.0.1-alpha"
 
 [[package]]
 name = "eigensdk-metrics"
@@ -1420,7 +1413,6 @@ name = "eigensdk-txmgr"
 version = "0.0.1-alpha"
 dependencies = [
  "eigensdk-client-wallet",
- "eigensdk-logging",
  "eigensdk-signerv2",
  "ethers",
 ]

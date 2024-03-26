@@ -10,7 +10,6 @@ repository.workspace = true
 serde.workspace = true
 alloy-primitives.workspace = true
 ethers-providers.workspace = true
-eigensdk-logging.workspace = true
 ethers.workspace = true
 ethers-core.workspace = true
 eigensdk-signerv2.workspace = true
