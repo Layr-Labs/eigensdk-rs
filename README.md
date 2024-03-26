@@ -35,7 +35,7 @@ Rolling `MSRV` policy of 6 months. THe current  `MSRV` is 1.76
 
 This SDK would not have been possible without the original go sdk work by the [Layer-labs](https://github.com/Layr-Labs/eigensdk-go/tree/master) team.
 
-We also thank [12yearoldvc](https://twitter.com/13yearoldvc) and [BuidlGuidl](https://buidlguidl.com/) for their support.
+We also thank [13yearoldvc](https://twitter.com/13yearoldvc) and [BuidlGuidl](https://buidlguidl.com/) for their support.
 
 ## Contact 
 
