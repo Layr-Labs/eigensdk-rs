@@ -59,6 +59,27 @@ impl WalletTrait for PrivateKeyWallet {
             Err(_) => return Err(PrivateKeyWalletError::EstimateGasAndNonce),
         }
     }
+
+    async fn get_transaction_receipt(
+        &self,
+        tx_id: TxId,
+    ) -> Result<Option<TransactionReceipt>, PrivateKeyWalletError> {
+        let tx_hash_result = TxHash::from_str(&tx_id);
+
+        match (tx_hash_result) {
+            Ok(tx_hash) => {
+                let receipt_result = self.client.get_transaction_receipt(tx_hash).await;
+
+                match receipt_result {
+                    Ok(receipt) => {
+                        return Ok(receipt);
+                    }
+                    Err(_) => return Err(PrivateKeyWalletError::GetTransactionReceipt),
+                }
+            }
+            Err(_) => return Err(PrivateKeyWalletError::TxIdtoTxHash),
+        }
+    }
 }
 
 impl PrivateKeyWallet {
@@ -169,27 +190,6 @@ impl PrivateKeyWallet {
                 Ok(None)
             }
             Err(_) => return Err(PrivateKeyWalletError::GetBlockNumber),
-        }
-    }
-
-    async fn get_transaction_receipt(
-        &self,
-        tx_id: TxId,
-    ) -> Result<Option<TransactionReceipt>, PrivateKeyWalletError> {
-        let tx_hash_result = TxHash::from_str(&tx_id);
-
-        match (tx_hash_result) {
-            Ok(tx_hash) => {
-                let receipt_result = self.client.get_transaction_receipt(tx_hash).await;
-
-                match receipt_result {
-                    Ok(receipt) => {
-                        return Ok(receipt);
-                    }
-                    Err(_) => return Err(PrivateKeyWalletError::GetTransactionReceipt),
-                }
-            }
-            Err(_) => return Err(PrivateKeyWalletError::TxIdtoTxHash),
         }
     }
 }
