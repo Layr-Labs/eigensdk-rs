@@ -1,5 +1,4 @@
 use crate::error::AvsRegistryError;
-use alloy_primitives::U8;
 use eigensdk_contracts_bindings::{
     BLSApkRegistry::{bls_apk_registry, NewPubkeyRegistrationFilter},
     OperatorStateRetriever::{operator_state_retriever, CheckSignaturesIndices, Operator},
@@ -41,7 +40,7 @@ pub struct AvsRegistryChainReader {
 }
 
 trait AvsRegistryReader {
-    fn get_quorum_count() -> Result<U8, String>;
+    fn get_quorum_count() -> Result<u8, String>;
 }
 
 impl AvsRegistryChainReader {
@@ -555,9 +554,9 @@ fn test_build_avs_registry_chain_reader() {
 mod tests {
 
     use super::*;
-    use alloy_primitives::hex::FromHex;
     use ethers::types::BigEndianHash;
-    use tokio;
+    use hex::FromHex;
+    use tokio::*;
 
     const HOLESKY_REGISTRY_COORDINATOR: &str = "0x53012C69A189cfA2D9d29eb6F19B32e0A2EA3490";
     const HOLESKY_OPERATOR_STATE_RETRIEVER: &str = "0xB4baAfee917fb4449f5ec64804217bccE9f46C67";
@@ -641,8 +640,6 @@ mod tests {
     #[tokio::test]
     async fn test_get_operators_stake_in_quorums_of_operator_at_block() {
         let avs_reader = build_avs_registry_chain_reader();
-
-        let quorum_number = Bytes::from_hex("0x00").expect("bytes parse");
 
         let operator_id = (&U256::from_dec_str(
             "35344093966194310405039483339636912150346494903629410125452342281826147822033",
