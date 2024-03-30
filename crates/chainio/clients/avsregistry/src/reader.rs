@@ -668,4 +668,19 @@ mod tests {
             .await
             .unwrap();
     }
+
+    #[tokio::test]
+    async fn test_get_operators_stake_in_quorums_at_current_block() {
+
+        let avs_reader = build_avs_registry_chain_reader();
+        let quorum_number = Bytes::from_hex("0x00").expect("bytes parse");
+
+        let operators_stake = avs_reader.get_operators_stake_in_quorums_at_current_block(quorum_number).await.unwrap();
+
+        
+
+
+
+    }
+
 }
