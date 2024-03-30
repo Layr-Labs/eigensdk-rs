@@ -22,6 +22,7 @@ use ethers_core::types::{BlockNumber, Filter, FilterBlockOption, Topic, ValueOrA
 use ethers_providers::{Http, Provider};
 use num_bigint::BigInt;
 use std::collections::HashMap;
+use std::str::FromStr;
 
 const REGISTRY_COORDINATOR_PATH: &str =
     "../../../../crates/contracts/bindings/json/RegistryCoordinator.json";
@@ -590,4 +591,43 @@ fn test_build_avs_registry_chain_reader() {
         Address::from_low_u64_be(87),
         Address::from_low_u64_be(675),
     );
+}
+
+#[cfg(test)]
+mod tests {
+
+    use super::*;
+    use tokio;
+
+    #[tokio::test]
+    async fn test_get_quorum_count() {
+        let HOLESKY_REGISTRY_COORDINATOR =
+            Address::from_str("0x53012C69A189cfA2D9d29eb6F19B32e0A2EA3490")
+                .expect("failed to parse address");
+        let HOLESKY_OPERATOR_STATE_RETRIEVER =
+            Address::from_str("0xB4baAfee917fb4449f5ec64804217bccE9f46C67")
+                .expect("failed to parse address");
+
+        let HOLESKY_STAKE_REGISTRY =
+            Address::from_str("0xBDACD5998989Eec814ac7A0f0f6596088AA2a270")
+                .expect("failed to parse address");
+
+        let HOLESKY_BLS_APK_REGISTRY =
+            Address::from_str("0x066cF95c1bf0927124DFB8B02B401bc23A79730D")
+                .expect("failed to parse address");
+
+        let holesky_provider =
+            Provider::<Http>::try_from("https://ethereum-holesky.blockpi.network/v1/rpc/public")
+                .expect("Not able to initialize holesky rpc provider");
+
+        let avs_registry_chain_reader = AvsRegistryChainReader::new(
+            HOLESKY_REGISTRY_COORDINATOR,
+            HOLESKY_BLS_APK_REGISTRY,
+            HOLESKY_OPERATOR_STATE_RETRIEVER,
+            HOLESKY_STAKE_REGISTRY,
+            holesky_provider,
+        );
+
+        let quorum_count = avs_registry_chain_reader.get_quorum_count().await.unwrap();
+    }
 }

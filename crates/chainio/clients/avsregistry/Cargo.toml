@@ -29,6 +29,6 @@ eigensdk-chainio-utils.workspace = true
 ark-bn254 = "0.4.0"
 thiserror.workspace = true
 tracing.workspace = true
-
+tokio = "1.37.0"
 [lints]
 workspace = true
