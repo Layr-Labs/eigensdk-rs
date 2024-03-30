@@ -192,48 +192,6 @@ impl AvsRegistryChainReader {
         }
     }
 
-    async fn get_operator_addrs_in_quorums_at_current_block(
-        &self,
-        quorum_numbers: Bytes,
-    ) -> Result<Vec<Vec<Address>>, AvsRegistryError> {
-        let current_block_number_result = self.eth_client.get_block_number().await;
-
-        match current_block_number_result {
-            Ok(current_block_number) => {
-                if current_block_number > u32::MAX.into() {
-                    return Err(AvsRegistryError::BlockNumberOverflow);
-                }
-
-                let operator_stakes_result = self
-                    .get_operators_stake_in_quorums_at_block(
-                        current_block_number.as_u64() as u32,
-                        quorum_numbers,
-                    )
-                    .await;
-
-                match operator_stakes_result {
-                    Ok(operator_stakes) => {
-                        let mut quorum_operators_addrs: Vec<Vec<Address>> = Vec::new();
-
-                        for quorum in operator_stakes.iter() {
-                            let mut operator_addrs: Vec<Address> = Vec::new();
-
-                            for operator in quorum.iter() {
-                                operator_addrs.push(operator.operator.clone());
-                            }
-
-                            quorum_operators_addrs.push(operator_addrs);
-                        }
-
-                        return Ok(quorum_operators_addrs);
-                    }
-                    Err(_) => return Err(AvsRegistryError::GetOperatorStakeInQuorumAtBlockNumber),
-                }
-            }
-            Err(_) => return Err(AvsRegistryError::GetBlockNumber),
-        }
-    }
-
     async fn get_operators_stake_in_quorums_of_operator_at_block(
         &self,
         operator_id: H256,
@@ -671,16 +629,12 @@ mod tests {
 
     #[tokio::test]
     async fn test_get_operators_stake_in_quorums_at_current_block() {
-
         let avs_reader = build_avs_registry_chain_reader();
         let quorum_number = Bytes::from_hex("0x00").expect("bytes parse");
 
-        let operators_stake = avs_reader.get_operators_stake_in_quorums_at_current_block(quorum_number).await.unwrap();
-
-        
-
-
-
+        let operators_stake = avs_reader
+            .get_operators_stake_in_quorums_at_current_block(quorum_number)
+            .await
+            .unwrap();
     }
-
 }
