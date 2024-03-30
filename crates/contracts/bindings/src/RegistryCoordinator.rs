@@ -7,7 +7,7 @@ pub use registry_coordinator::*;
     clippy::upper_case_acronyms,
     clippy::type_complexity,
     dead_code,
-    non_camel_case_types
+    non_camel_case_types,
 )]
 pub mod registry_coordinator {
     const _: () = {
@@ -1902,8 +1902,9 @@ pub mod registry_coordinator {
         }
     }
     ///The parsed JSON ABI of the contract.
-    pub static REGISTRYCOORDINATOR_ABI: ::ethers::contract::Lazy<::ethers::core::abi::Abi> =
-        ::ethers::contract::Lazy::new(__abi);
+    pub static REGISTRYCOORDINATOR_ABI: ::ethers::contract::Lazy<
+        ::ethers::core::abi::Abi,
+    > = ::ethers::contract::Lazy::new(__abi);
     pub struct RegistryCoordinator<M>(::ethers::contract::Contract<M>);
     impl<M> ::core::clone::Clone for RegistryCoordinator<M> {
         fn clone(&self) -> Self {
@@ -1935,11 +1936,13 @@ pub mod registry_coordinator {
             address: T,
             client: ::std::sync::Arc<M>,
         ) -> Self {
-            Self(::ethers::contract::Contract::new(
-                address.into(),
-                REGISTRYCOORDINATOR_ABI.clone(),
-                client,
-            ))
+            Self(
+                ::ethers::contract::Contract::new(
+                    address.into(),
+                    REGISTRYCOORDINATOR_ABI.clone(),
+                    client,
+                ),
+            )
         }
         ///Calls the contract's `OPERATOR_CHURN_APPROVAL_TYPEHASH` (0xca0de882) function
         pub fn operator_churn_approval_typehash(
@@ -1960,7 +1963,10 @@ pub mod registry_coordinator {
         ///Calls the contract's `blsApkRegistry` (0x5df45946) function
         pub fn bls_apk_registry(
             &self,
-        ) -> ::ethers::contract::builders::ContractCall<M, ::ethers::core::types::Address> {
+        ) -> ::ethers::contract::builders::ContractCall<
+            M,
+            ::ethers::core::types::Address,
+        > {
             self.0
                 .method_hash([93, 244, 89, 70], ())
                 .expect("method not found (this should never happen)")
@@ -1990,7 +1996,10 @@ pub mod registry_coordinator {
         ///Calls the contract's `churnApprover` (0x054310e6) function
         pub fn churn_approver(
             &self,
-        ) -> ::ethers::contract::builders::ContractCall<M, ::ethers::core::types::Address> {
+        ) -> ::ethers::contract::builders::ContractCall<
+            M,
+            ::ethers::core::types::Address,
+        > {
             self.0
                 .method_hash([5, 67, 16, 230], ())
                 .expect("method not found (this should never happen)")
@@ -2031,7 +2040,10 @@ pub mod registry_coordinator {
         ///Calls the contract's `ejector` (0x28f61b31) function
         pub fn ejector(
             &self,
-        ) -> ::ethers::contract::builders::ContractCall<M, ::ethers::core::types::Address> {
+        ) -> ::ethers::contract::builders::ContractCall<
+            M,
+            ::ethers::core::types::Address,
+        > {
             self.0
                 .method_hash([40, 246, 27, 49], ())
                 .expect("method not found (this should never happen)")
@@ -2058,7 +2070,10 @@ pub mod registry_coordinator {
         pub fn get_operator_from_id(
             &self,
             operator_id: [u8; 32],
-        ) -> ::ethers::contract::builders::ContractCall<M, ::ethers::core::types::Address> {
+        ) -> ::ethers::contract::builders::ContractCall<
+            M,
+            ::ethers::core::types::Address,
+        > {
             self.0
                 .method_hash([41, 107, 176, 100], operator_id)
                 .expect("method not found (this should never happen)")
@@ -2133,7 +2148,10 @@ pub mod registry_coordinator {
         ///Calls the contract's `indexRegistry` (0x9e9923c2) function
         pub fn index_registry(
             &self,
-        ) -> ::ethers::contract::builders::ContractCall<M, ::ethers::core::types::Address> {
+        ) -> ::ethers::contract::builders::ContractCall<
+            M,
+            ::ethers::core::types::Address,
+        > {
             self.0
                 .method_hash([158, 153, 35, 194], ())
                 .expect("method not found (this should never happen)")
@@ -2186,7 +2204,10 @@ pub mod registry_coordinator {
         ///Calls the contract's `owner` (0x8da5cb5b) function
         pub fn owner(
             &self,
-        ) -> ::ethers::contract::builders::ContractCall<M, ::ethers::core::types::Address> {
+        ) -> ::ethers::contract::builders::ContractCall<
+            M,
+            ::ethers::core::types::Address,
+        > {
             self.0
                 .method_hash([141, 165, 203, 91], ())
                 .expect("method not found (this should never happen)")
@@ -2226,7 +2247,10 @@ pub mod registry_coordinator {
         ///Calls the contract's `pauserRegistry` (0x886f1195) function
         pub fn pauser_registry(
             &self,
-        ) -> ::ethers::contract::builders::ContractCall<M, ::ethers::core::types::Address> {
+        ) -> ::ethers::contract::builders::ContractCall<
+            M,
+            ::ethers::core::types::Address,
+        > {
             self.0
                 .method_hash([136, 111, 17, 149], ())
                 .expect("method not found (this should never happen)")
@@ -2298,13 +2322,18 @@ pub mod registry_coordinator {
         pub fn registries(
             &self,
             p0: ::ethers::core::types::U256,
-        ) -> ::ethers::contract::builders::ContractCall<M, ::ethers::core::types::Address> {
+        ) -> ::ethers::contract::builders::ContractCall<
+            M,
+            ::ethers::core::types::Address,
+        > {
             self.0
                 .method_hash([99, 71, 201, 0], p0)
                 .expect("method not found (this should never happen)")
         }
         ///Calls the contract's `renounceOwnership` (0x715018a6) function
-        pub fn renounce_ownership(&self) -> ::ethers::contract::builders::ContractCall<M, ()> {
+        pub fn renounce_ownership(
+            &self,
+        ) -> ::ethers::contract::builders::ContractCall<M, ()> {
             self.0
                 .method_hash([113, 80, 24, 166], ())
                 .expect("method not found (this should never happen)")
@@ -2312,7 +2341,10 @@ pub mod registry_coordinator {
         ///Calls the contract's `serviceManager` (0x3998fdd3) function
         pub fn service_manager(
             &self,
-        ) -> ::ethers::contract::builders::ContractCall<M, ::ethers::core::types::Address> {
+        ) -> ::ethers::contract::builders::ContractCall<
+            M,
+            ::ethers::core::types::Address,
+        > {
             self.0
                 .method_hash([57, 152, 253, 211], ())
                 .expect("method not found (this should never happen)")
@@ -2357,7 +2389,10 @@ pub mod registry_coordinator {
         ///Calls the contract's `stakeRegistry` (0x68304835) function
         pub fn stake_registry(
             &self,
-        ) -> ::ethers::contract::builders::ContractCall<M, ::ethers::core::types::Address> {
+        ) -> ::ethers::contract::builders::ContractCall<
+            M,
+            ::ethers::core::types::Address,
+        > {
             self.0
                 .method_hash([104, 48, 72, 53], ())
                 .expect("method not found (this should never happen)")
@@ -2392,7 +2427,9 @@ pub mod registry_coordinator {
         ///Calls the contract's `updateOperatorsForQuorum` (0x5140a548) function
         pub fn update_operators_for_quorum(
             &self,
-            operators_per_quorum: ::std::vec::Vec<::std::vec::Vec<::ethers::core::types::Address>>,
+            operators_per_quorum: ::std::vec::Vec<
+                ::std::vec::Vec<::ethers::core::types::Address>,
+            >,
             quorum_numbers: ::ethers::core::types::Bytes,
         ) -> ::ethers::contract::builders::ContractCall<M, ()> {
             self.0
@@ -2411,36 +2448,51 @@ pub mod registry_coordinator {
         ///Gets the contract's `ChurnApproverUpdated` event
         pub fn churn_approver_updated_filter(
             &self,
-        ) -> ::ethers::contract::builders::Event<::std::sync::Arc<M>, M, ChurnApproverUpdatedFilter>
-        {
+        ) -> ::ethers::contract::builders::Event<
+            ::std::sync::Arc<M>,
+            M,
+            ChurnApproverUpdatedFilter,
+        > {
             self.0.event()
         }
         ///Gets the contract's `EjectorUpdated` event
         pub fn ejector_updated_filter(
             &self,
-        ) -> ::ethers::contract::builders::Event<::std::sync::Arc<M>, M, EjectorUpdatedFilter>
-        {
+        ) -> ::ethers::contract::builders::Event<
+            ::std::sync::Arc<M>,
+            M,
+            EjectorUpdatedFilter,
+        > {
             self.0.event()
         }
         ///Gets the contract's `Initialized` event
         pub fn initialized_filter(
             &self,
-        ) -> ::ethers::contract::builders::Event<::std::sync::Arc<M>, M, InitializedFilter>
-        {
+        ) -> ::ethers::contract::builders::Event<
+            ::std::sync::Arc<M>,
+            M,
+            InitializedFilter,
+        > {
             self.0.event()
         }
         ///Gets the contract's `OperatorDeregistered` event
         pub fn operator_deregistered_filter(
             &self,
-        ) -> ::ethers::contract::builders::Event<::std::sync::Arc<M>, M, OperatorDeregisteredFilter>
-        {
+        ) -> ::ethers::contract::builders::Event<
+            ::std::sync::Arc<M>,
+            M,
+            OperatorDeregisteredFilter,
+        > {
             self.0.event()
         }
         ///Gets the contract's `OperatorRegistered` event
         pub fn operator_registered_filter(
             &self,
-        ) -> ::ethers::contract::builders::Event<::std::sync::Arc<M>, M, OperatorRegisteredFilter>
-        {
+        ) -> ::ethers::contract::builders::Event<
+            ::std::sync::Arc<M>,
+            M,
+            OperatorRegisteredFilter,
+        > {
             self.0.event()
         }
         ///Gets the contract's `OperatorSetParamsUpdated` event
@@ -2456,15 +2508,21 @@ pub mod registry_coordinator {
         ///Gets the contract's `OperatorSocketUpdate` event
         pub fn operator_socket_update_filter(
             &self,
-        ) -> ::ethers::contract::builders::Event<::std::sync::Arc<M>, M, OperatorSocketUpdateFilter>
-        {
+        ) -> ::ethers::contract::builders::Event<
+            ::std::sync::Arc<M>,
+            M,
+            OperatorSocketUpdateFilter,
+        > {
             self.0.event()
         }
         ///Gets the contract's `OwnershipTransferred` event
         pub fn ownership_transferred_filter(
             &self,
-        ) -> ::ethers::contract::builders::Event<::std::sync::Arc<M>, M, OwnershipTransferredFilter>
-        {
+        ) -> ::ethers::contract::builders::Event<
+            ::std::sync::Arc<M>,
+            M,
+            OwnershipTransferredFilter,
+        > {
             self.0.event()
         }
         ///Gets the contract's `Paused` event
@@ -2476,8 +2534,11 @@ pub mod registry_coordinator {
         ///Gets the contract's `PauserRegistrySet` event
         pub fn pauser_registry_set_filter(
             &self,
-        ) -> ::ethers::contract::builders::Event<::std::sync::Arc<M>, M, PauserRegistrySetFilter>
-        {
+        ) -> ::ethers::contract::builders::Event<
+            ::std::sync::Arc<M>,
+            M,
+            PauserRegistrySetFilter,
+        > {
             self.0.event()
         }
         ///Gets the contract's `QuorumBlockNumberUpdated` event
@@ -2493,21 +2554,26 @@ pub mod registry_coordinator {
         ///Gets the contract's `Unpaused` event
         pub fn unpaused_filter(
             &self,
-        ) -> ::ethers::contract::builders::Event<::std::sync::Arc<M>, M, UnpausedFilter> {
+        ) -> ::ethers::contract::builders::Event<
+            ::std::sync::Arc<M>,
+            M,
+            UnpausedFilter,
+        > {
             self.0.event()
         }
         /// Returns an `Event` builder for all the events of this contract.
         pub fn events(
             &self,
-        ) -> ::ethers::contract::builders::Event<::std::sync::Arc<M>, M, RegistryCoordinatorEvents>
-        {
-            self.0
-                .event_with_filter(::core::default::Default::default())
+        ) -> ::ethers::contract::builders::Event<
+            ::std::sync::Arc<M>,
+            M,
+            RegistryCoordinatorEvents,
+        > {
+            self.0.event_with_filter(::core::default::Default::default())
         }
     }
     impl<M: ::ethers::providers::Middleware> From<::ethers::contract::Contract<M>>
-        for RegistryCoordinator<M>
-    {
+    for RegistryCoordinator<M> {
         fn from(contract: ::ethers::contract::Contract<M>) -> Self {
             Self::new(contract.address(), contract.client())
         }
@@ -2520,7 +2586,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     #[ethevent(
         name = "ChurnApproverUpdated",
@@ -2538,7 +2604,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     #[ethevent(name = "EjectorUpdated", abi = "EjectorUpdated(address,address)")]
     pub struct EjectorUpdatedFilter {
@@ -2553,7 +2619,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     #[ethevent(name = "Initialized", abi = "Initialized(uint8)")]
     pub struct InitializedFilter {
@@ -2567,7 +2633,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     #[ethevent(
         name = "OperatorDeregistered",
@@ -2587,12 +2653,9 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
-    #[ethevent(
-        name = "OperatorRegistered",
-        abi = "OperatorRegistered(address,bytes32)"
-    )]
+    #[ethevent(name = "OperatorRegistered", abi = "OperatorRegistered(address,bytes32)")]
     pub struct OperatorRegisteredFilter {
         #[ethevent(indexed)]
         pub operator: ::ethers::core::types::Address,
@@ -2607,7 +2670,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     #[ethevent(
         name = "OperatorSetParamsUpdated",
@@ -2626,7 +2689,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     #[ethevent(
         name = "OperatorSocketUpdate",
@@ -2645,7 +2708,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     #[ethevent(
         name = "OwnershipTransferred",
@@ -2665,7 +2728,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     #[ethevent(name = "Paused", abi = "Paused(address,uint256)")]
     pub struct PausedFilter {
@@ -2681,7 +2744,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     #[ethevent(name = "PauserRegistrySet", abi = "PauserRegistrySet(address,address)")]
     pub struct PauserRegistrySetFilter {
@@ -2696,7 +2759,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     #[ethevent(
         name = "QuorumBlockNumberUpdated",
@@ -2715,7 +2778,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     #[ethevent(name = "Unpaused", abi = "Unpaused(address,uint256)")]
     pub struct UnpausedFilter {
@@ -2744,9 +2807,9 @@ pub mod registry_coordinator {
             log: &::ethers::core::abi::RawLog,
         ) -> ::core::result::Result<Self, ::ethers::core::abi::Error> {
             if let Ok(decoded) = ChurnApproverUpdatedFilter::decode_log(log) {
-                return Ok(RegistryCoordinatorEvents::ChurnApproverUpdatedFilter(
-                    decoded,
-                ));
+                return Ok(
+                    RegistryCoordinatorEvents::ChurnApproverUpdatedFilter(decoded),
+                );
             }
             if let Ok(decoded) = EjectorUpdatedFilter::decode_log(log) {
                 return Ok(RegistryCoordinatorEvents::EjectorUpdatedFilter(decoded));
@@ -2755,27 +2818,27 @@ pub mod registry_coordinator {
                 return Ok(RegistryCoordinatorEvents::InitializedFilter(decoded));
             }
             if let Ok(decoded) = OperatorDeregisteredFilter::decode_log(log) {
-                return Ok(RegistryCoordinatorEvents::OperatorDeregisteredFilter(
-                    decoded,
-                ));
+                return Ok(
+                    RegistryCoordinatorEvents::OperatorDeregisteredFilter(decoded),
+                );
             }
             if let Ok(decoded) = OperatorRegisteredFilter::decode_log(log) {
                 return Ok(RegistryCoordinatorEvents::OperatorRegisteredFilter(decoded));
             }
             if let Ok(decoded) = OperatorSetParamsUpdatedFilter::decode_log(log) {
-                return Ok(RegistryCoordinatorEvents::OperatorSetParamsUpdatedFilter(
-                    decoded,
-                ));
+                return Ok(
+                    RegistryCoordinatorEvents::OperatorSetParamsUpdatedFilter(decoded),
+                );
             }
             if let Ok(decoded) = OperatorSocketUpdateFilter::decode_log(log) {
-                return Ok(RegistryCoordinatorEvents::OperatorSocketUpdateFilter(
-                    decoded,
-                ));
+                return Ok(
+                    RegistryCoordinatorEvents::OperatorSocketUpdateFilter(decoded),
+                );
             }
             if let Ok(decoded) = OwnershipTransferredFilter::decode_log(log) {
-                return Ok(RegistryCoordinatorEvents::OwnershipTransferredFilter(
-                    decoded,
-                ));
+                return Ok(
+                    RegistryCoordinatorEvents::OwnershipTransferredFilter(decoded),
+                );
             }
             if let Ok(decoded) = PausedFilter::decode_log(log) {
                 return Ok(RegistryCoordinatorEvents::PausedFilter(decoded));
@@ -2784,9 +2847,9 @@ pub mod registry_coordinator {
                 return Ok(RegistryCoordinatorEvents::PauserRegistrySetFilter(decoded));
             }
             if let Ok(decoded) = QuorumBlockNumberUpdatedFilter::decode_log(log) {
-                return Ok(RegistryCoordinatorEvents::QuorumBlockNumberUpdatedFilter(
-                    decoded,
-                ));
+                return Ok(
+                    RegistryCoordinatorEvents::QuorumBlockNumberUpdatedFilter(decoded),
+                );
             }
             if let Ok(decoded) = UnpausedFilter::decode_log(log) {
                 return Ok(RegistryCoordinatorEvents::UnpausedFilter(decoded));
@@ -2797,18 +2860,32 @@ pub mod registry_coordinator {
     impl ::core::fmt::Display for RegistryCoordinatorEvents {
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
             match self {
-                Self::ChurnApproverUpdatedFilter(element) => ::core::fmt::Display::fmt(element, f),
-                Self::EjectorUpdatedFilter(element) => ::core::fmt::Display::fmt(element, f),
+                Self::ChurnApproverUpdatedFilter(element) => {
+                    ::core::fmt::Display::fmt(element, f)
+                }
+                Self::EjectorUpdatedFilter(element) => {
+                    ::core::fmt::Display::fmt(element, f)
+                }
                 Self::InitializedFilter(element) => ::core::fmt::Display::fmt(element, f),
-                Self::OperatorDeregisteredFilter(element) => ::core::fmt::Display::fmt(element, f),
-                Self::OperatorRegisteredFilter(element) => ::core::fmt::Display::fmt(element, f),
+                Self::OperatorDeregisteredFilter(element) => {
+                    ::core::fmt::Display::fmt(element, f)
+                }
+                Self::OperatorRegisteredFilter(element) => {
+                    ::core::fmt::Display::fmt(element, f)
+                }
                 Self::OperatorSetParamsUpdatedFilter(element) => {
                     ::core::fmt::Display::fmt(element, f)
                 }
-                Self::OperatorSocketUpdateFilter(element) => ::core::fmt::Display::fmt(element, f),
-                Self::OwnershipTransferredFilter(element) => ::core::fmt::Display::fmt(element, f),
+                Self::OperatorSocketUpdateFilter(element) => {
+                    ::core::fmt::Display::fmt(element, f)
+                }
+                Self::OwnershipTransferredFilter(element) => {
+                    ::core::fmt::Display::fmt(element, f)
+                }
                 Self::PausedFilter(element) => ::core::fmt::Display::fmt(element, f),
-                Self::PauserRegistrySetFilter(element) => ::core::fmt::Display::fmt(element, f),
+                Self::PauserRegistrySetFilter(element) => {
+                    ::core::fmt::Display::fmt(element, f)
+                }
                 Self::QuorumBlockNumberUpdatedFilter(element) => {
                     ::core::fmt::Display::fmt(element, f)
                 }
@@ -2816,7 +2893,8 @@ pub mod registry_coordinator {
             }
         }
     }
-    impl ::core::convert::From<ChurnApproverUpdatedFilter> for RegistryCoordinatorEvents {
+    impl ::core::convert::From<ChurnApproverUpdatedFilter>
+    for RegistryCoordinatorEvents {
         fn from(value: ChurnApproverUpdatedFilter) -> Self {
             Self::ChurnApproverUpdatedFilter(value)
         }
@@ -2831,7 +2909,8 @@ pub mod registry_coordinator {
             Self::InitializedFilter(value)
         }
     }
-    impl ::core::convert::From<OperatorDeregisteredFilter> for RegistryCoordinatorEvents {
+    impl ::core::convert::From<OperatorDeregisteredFilter>
+    for RegistryCoordinatorEvents {
         fn from(value: OperatorDeregisteredFilter) -> Self {
             Self::OperatorDeregisteredFilter(value)
         }
@@ -2841,17 +2920,20 @@ pub mod registry_coordinator {
             Self::OperatorRegisteredFilter(value)
         }
     }
-    impl ::core::convert::From<OperatorSetParamsUpdatedFilter> for RegistryCoordinatorEvents {
+    impl ::core::convert::From<OperatorSetParamsUpdatedFilter>
+    for RegistryCoordinatorEvents {
         fn from(value: OperatorSetParamsUpdatedFilter) -> Self {
             Self::OperatorSetParamsUpdatedFilter(value)
         }
     }
-    impl ::core::convert::From<OperatorSocketUpdateFilter> for RegistryCoordinatorEvents {
+    impl ::core::convert::From<OperatorSocketUpdateFilter>
+    for RegistryCoordinatorEvents {
         fn from(value: OperatorSocketUpdateFilter) -> Self {
             Self::OperatorSocketUpdateFilter(value)
         }
     }
-    impl ::core::convert::From<OwnershipTransferredFilter> for RegistryCoordinatorEvents {
+    impl ::core::convert::From<OwnershipTransferredFilter>
+    for RegistryCoordinatorEvents {
         fn from(value: OwnershipTransferredFilter) -> Self {
             Self::OwnershipTransferredFilter(value)
         }
@@ -2866,7 +2948,8 @@ pub mod registry_coordinator {
             Self::PauserRegistrySetFilter(value)
         }
     }
-    impl ::core::convert::From<QuorumBlockNumberUpdatedFilter> for RegistryCoordinatorEvents {
+    impl ::core::convert::From<QuorumBlockNumberUpdatedFilter>
+    for RegistryCoordinatorEvents {
         fn from(value: QuorumBlockNumberUpdatedFilter) -> Self {
             Self::QuorumBlockNumberUpdatedFilter(value)
         }
@@ -2885,7 +2968,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     #[ethcall(
         name = "OPERATOR_CHURN_APPROVAL_TYPEHASH",
@@ -2901,7 +2984,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     #[ethcall(
         name = "PUBKEY_REGISTRATION_TYPEHASH",
@@ -2917,7 +3000,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     #[ethcall(name = "blsApkRegistry", abi = "blsApkRegistry()")]
     pub struct BlsApkRegistryCall;
@@ -2930,7 +3013,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     #[ethcall(
         name = "calculateOperatorChurnApprovalDigestHash",
@@ -2952,7 +3035,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     #[ethcall(name = "churnApprover", abi = "churnApprover()")]
     pub struct ChurnApproverCall;
@@ -2965,7 +3048,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     #[ethcall(
         name = "createQuorum",
@@ -2985,7 +3068,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     #[ethcall(name = "deregisterOperator", abi = "deregisterOperator(bytes)")]
     pub struct DeregisterOperatorCall {
@@ -3000,7 +3083,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     #[ethcall(name = "ejectOperator", abi = "ejectOperator(address,bytes)")]
     pub struct EjectOperatorCall {
@@ -3016,7 +3099,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     #[ethcall(name = "ejector", abi = "ejector()")]
     pub struct EjectorCall;
@@ -3029,12 +3112,9 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
-    #[ethcall(
-        name = "getCurrentQuorumBitmap",
-        abi = "getCurrentQuorumBitmap(bytes32)"
-    )]
+    #[ethcall(name = "getCurrentQuorumBitmap", abi = "getCurrentQuorumBitmap(bytes32)")]
     pub struct GetCurrentQuorumBitmapCall {
         pub operator_id: [u8; 32],
     }
@@ -3047,7 +3127,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     #[ethcall(name = "getOperator", abi = "getOperator(address)")]
     pub struct GetOperatorCall {
@@ -3062,7 +3142,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     #[ethcall(name = "getOperatorFromId", abi = "getOperatorFromId(bytes32)")]
     pub struct GetOperatorFromIdCall {
@@ -3077,7 +3157,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     #[ethcall(name = "getOperatorId", abi = "getOperatorId(address)")]
     pub struct GetOperatorIdCall {
@@ -3092,7 +3172,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     #[ethcall(name = "getOperatorSetParams", abi = "getOperatorSetParams(uint8)")]
     pub struct GetOperatorSetParamsCall {
@@ -3107,7 +3187,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     #[ethcall(name = "getOperatorStatus", abi = "getOperatorStatus(address)")]
     pub struct GetOperatorStatusCall {
@@ -3122,7 +3202,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     #[ethcall(
         name = "getQuorumBitmapAtBlockNumberByIndex",
@@ -3142,7 +3222,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     #[ethcall(
         name = "getQuorumBitmapHistoryLength",
@@ -3160,7 +3240,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     #[ethcall(
         name = "getQuorumBitmapIndicesAtBlockNumber",
@@ -3179,7 +3259,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     #[ethcall(
         name = "getQuorumBitmapUpdateByIndex",
@@ -3198,7 +3278,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     #[ethcall(name = "indexRegistry", abi = "indexRegistry()")]
     pub struct IndexRegistryCall;
@@ -3211,7 +3291,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     #[ethcall(
         name = "initialize",
@@ -3236,7 +3316,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     #[ethcall(
         name = "isChurnApproverSaltUsed",
@@ -3252,7 +3332,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     #[ethcall(name = "numRegistries", abi = "numRegistries()")]
     pub struct NumRegistriesCall;
@@ -3265,7 +3345,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     #[ethcall(name = "owner", abi = "owner()")]
     pub struct OwnerCall;
@@ -3278,7 +3358,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     #[ethcall(name = "pause", abi = "pause(uint256)")]
     pub struct PauseCall {
@@ -3293,7 +3373,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     #[ethcall(name = "pauseAll", abi = "pauseAll()")]
     pub struct PauseAllCall;
@@ -3306,7 +3386,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     #[ethcall(name = "paused", abi = "paused(uint8)")]
     pub struct PausedWithIndexCall {
@@ -3321,7 +3401,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     #[ethcall(name = "paused", abi = "paused()")]
     pub struct PausedCall;
@@ -3334,7 +3414,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     #[ethcall(name = "pauserRegistry", abi = "pauserRegistry()")]
     pub struct PauserRegistryCall;
@@ -3347,7 +3427,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     #[ethcall(
         name = "pubkeyRegistrationMessageHash",
@@ -3365,7 +3445,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     #[ethcall(name = "quorumCount", abi = "quorumCount()")]
     pub struct QuorumCountCall;
@@ -3378,12 +3458,9 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
-    #[ethcall(
-        name = "quorumUpdateBlockNumber",
-        abi = "quorumUpdateBlockNumber(uint8)"
-    )]
+    #[ethcall(name = "quorumUpdateBlockNumber", abi = "quorumUpdateBlockNumber(uint8)")]
     pub struct QuorumUpdateBlockNumberCall(pub u8);
     ///Container type for all input parameters for the `registerOperator` function with signature `registerOperator(bytes,string,((uint256,uint256),(uint256,uint256),(uint256[2],uint256[2])),(bytes,bytes32,uint256))` and selector `0xa50857bf`
     #[derive(
@@ -3394,7 +3471,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     #[ethcall(
         name = "registerOperator",
@@ -3415,7 +3492,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     #[ethcall(
         name = "registerOperatorWithChurn",
@@ -3438,7 +3515,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     #[ethcall(name = "registries", abi = "registries(uint256)")]
     pub struct RegistriesCall(pub ::ethers::core::types::U256);
@@ -3451,7 +3528,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     #[ethcall(name = "renounceOwnership", abi = "renounceOwnership()")]
     pub struct RenounceOwnershipCall;
@@ -3464,7 +3541,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     #[ethcall(name = "serviceManager", abi = "serviceManager()")]
     pub struct ServiceManagerCall;
@@ -3477,7 +3554,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     #[ethcall(name = "setChurnApprover", abi = "setChurnApprover(address)")]
     pub struct SetChurnApproverCall {
@@ -3492,7 +3569,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     #[ethcall(name = "setEjector", abi = "setEjector(address)")]
     pub struct SetEjectorCall {
@@ -3507,7 +3584,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     #[ethcall(
         name = "setOperatorSetParams",
@@ -3526,7 +3603,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     #[ethcall(name = "setPauserRegistry", abi = "setPauserRegistry(address)")]
     pub struct SetPauserRegistryCall {
@@ -3541,7 +3618,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     #[ethcall(name = "stakeRegistry", abi = "stakeRegistry()")]
     pub struct StakeRegistryCall;
@@ -3554,7 +3631,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     #[ethcall(name = "transferOwnership", abi = "transferOwnership(address)")]
     pub struct TransferOwnershipCall {
@@ -3569,7 +3646,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     #[ethcall(name = "unpause", abi = "unpause(uint256)")]
     pub struct UnpauseCall {
@@ -3584,7 +3661,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     #[ethcall(name = "updateOperators", abi = "updateOperators(address[])")]
     pub struct UpdateOperatorsCall {
@@ -3599,14 +3676,16 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     #[ethcall(
         name = "updateOperatorsForQuorum",
         abi = "updateOperatorsForQuorum(address[][],bytes)"
     )]
     pub struct UpdateOperatorsForQuorumCall {
-        pub operators_per_quorum: ::std::vec::Vec<::std::vec::Vec<::ethers::core::types::Address>>,
+        pub operators_per_quorum: ::std::vec::Vec<
+            ::std::vec::Vec<::ethers::core::types::Address>,
+        >,
         pub quorum_numbers: ::ethers::core::types::Bytes,
     }
     ///Container type for all input parameters for the `updateSocket` function with signature `updateSocket(string)` and selector `0x0cf4b767`
@@ -3618,7 +3697,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     #[ethcall(name = "updateSocket", abi = "updateSocket(string)")]
     pub struct UpdateSocketCall {
@@ -3630,7 +3709,9 @@ pub mod registry_coordinator {
         OperatorChurnApprovalTypehash(OperatorChurnApprovalTypehashCall),
         PubkeyRegistrationTypehash(PubkeyRegistrationTypehashCall),
         BlsApkRegistry(BlsApkRegistryCall),
-        CalculateOperatorChurnApprovalDigestHash(CalculateOperatorChurnApprovalDigestHashCall),
+        CalculateOperatorChurnApprovalDigestHash(
+            CalculateOperatorChurnApprovalDigestHashCall,
+        ),
         ChurnApprover(ChurnApproverCall),
         CreateQuorum(CreateQuorumCall),
         DeregisterOperator(DeregisterOperatorCall),
@@ -3680,19 +3761,19 @@ pub mod registry_coordinator {
             data: impl AsRef<[u8]>,
         ) -> ::core::result::Result<Self, ::ethers::core::abi::AbiError> {
             let data = data.as_ref();
-            if let Ok(decoded) =
-                <OperatorChurnApprovalTypehashCall as ::ethers::core::abi::AbiDecode>::decode(data)
-            {
+            if let Ok(decoded) = <OperatorChurnApprovalTypehashCall as ::ethers::core::abi::AbiDecode>::decode(
+                data,
+            ) {
                 return Ok(Self::OperatorChurnApprovalTypehash(decoded));
             }
-            if let Ok(decoded) =
-                <PubkeyRegistrationTypehashCall as ::ethers::core::abi::AbiDecode>::decode(data)
-            {
+            if let Ok(decoded) = <PubkeyRegistrationTypehashCall as ::ethers::core::abi::AbiDecode>::decode(
+                data,
+            ) {
                 return Ok(Self::PubkeyRegistrationTypehash(decoded));
             }
-            if let Ok(decoded) =
-                <BlsApkRegistryCall as ::ethers::core::abi::AbiDecode>::decode(data)
-            {
+            if let Ok(decoded) = <BlsApkRegistryCall as ::ethers::core::abi::AbiDecode>::decode(
+                data,
+            ) {
                 return Ok(Self::BlsApkRegistry(decoded));
             }
             if let Ok(decoded) = <CalculateOperatorChurnApprovalDigestHashCall as ::ethers::core::abi::AbiDecode>::decode(
@@ -3700,193 +3781,219 @@ pub mod registry_coordinator {
             ) {
                 return Ok(Self::CalculateOperatorChurnApprovalDigestHash(decoded));
             }
-            if let Ok(decoded) = <ChurnApproverCall as ::ethers::core::abi::AbiDecode>::decode(data)
-            {
+            if let Ok(decoded) = <ChurnApproverCall as ::ethers::core::abi::AbiDecode>::decode(
+                data,
+            ) {
                 return Ok(Self::ChurnApprover(decoded));
             }
-            if let Ok(decoded) = <CreateQuorumCall as ::ethers::core::abi::AbiDecode>::decode(data)
-            {
+            if let Ok(decoded) = <CreateQuorumCall as ::ethers::core::abi::AbiDecode>::decode(
+                data,
+            ) {
                 return Ok(Self::CreateQuorum(decoded));
             }
-            if let Ok(decoded) =
-                <DeregisterOperatorCall as ::ethers::core::abi::AbiDecode>::decode(data)
-            {
+            if let Ok(decoded) = <DeregisterOperatorCall as ::ethers::core::abi::AbiDecode>::decode(
+                data,
+            ) {
                 return Ok(Self::DeregisterOperator(decoded));
             }
-            if let Ok(decoded) = <EjectOperatorCall as ::ethers::core::abi::AbiDecode>::decode(data)
-            {
+            if let Ok(decoded) = <EjectOperatorCall as ::ethers::core::abi::AbiDecode>::decode(
+                data,
+            ) {
                 return Ok(Self::EjectOperator(decoded));
             }
-            if let Ok(decoded) = <EjectorCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <EjectorCall as ::ethers::core::abi::AbiDecode>::decode(
+                data,
+            ) {
                 return Ok(Self::Ejector(decoded));
             }
-            if let Ok(decoded) =
-                <GetCurrentQuorumBitmapCall as ::ethers::core::abi::AbiDecode>::decode(data)
-            {
+            if let Ok(decoded) = <GetCurrentQuorumBitmapCall as ::ethers::core::abi::AbiDecode>::decode(
+                data,
+            ) {
                 return Ok(Self::GetCurrentQuorumBitmap(decoded));
             }
-            if let Ok(decoded) = <GetOperatorCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <GetOperatorCall as ::ethers::core::abi::AbiDecode>::decode(
+                data,
+            ) {
                 return Ok(Self::GetOperator(decoded));
             }
-            if let Ok(decoded) =
-                <GetOperatorFromIdCall as ::ethers::core::abi::AbiDecode>::decode(data)
-            {
+            if let Ok(decoded) = <GetOperatorFromIdCall as ::ethers::core::abi::AbiDecode>::decode(
+                data,
+            ) {
                 return Ok(Self::GetOperatorFromId(decoded));
             }
-            if let Ok(decoded) = <GetOperatorIdCall as ::ethers::core::abi::AbiDecode>::decode(data)
-            {
+            if let Ok(decoded) = <GetOperatorIdCall as ::ethers::core::abi::AbiDecode>::decode(
+                data,
+            ) {
                 return Ok(Self::GetOperatorId(decoded));
             }
-            if let Ok(decoded) =
-                <GetOperatorSetParamsCall as ::ethers::core::abi::AbiDecode>::decode(data)
-            {
+            if let Ok(decoded) = <GetOperatorSetParamsCall as ::ethers::core::abi::AbiDecode>::decode(
+                data,
+            ) {
                 return Ok(Self::GetOperatorSetParams(decoded));
             }
-            if let Ok(decoded) =
-                <GetOperatorStatusCall as ::ethers::core::abi::AbiDecode>::decode(data)
-            {
+            if let Ok(decoded) = <GetOperatorStatusCall as ::ethers::core::abi::AbiDecode>::decode(
+                data,
+            ) {
                 return Ok(Self::GetOperatorStatus(decoded));
             }
-            if let Ok(decoded) =
-                <GetQuorumBitmapAtBlockNumberByIndexCall as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                )
-            {
+            if let Ok(decoded) = <GetQuorumBitmapAtBlockNumberByIndexCall as ::ethers::core::abi::AbiDecode>::decode(
+                data,
+            ) {
                 return Ok(Self::GetQuorumBitmapAtBlockNumberByIndex(decoded));
             }
-            if let Ok(decoded) =
-                <GetQuorumBitmapHistoryLengthCall as ::ethers::core::abi::AbiDecode>::decode(data)
-            {
+            if let Ok(decoded) = <GetQuorumBitmapHistoryLengthCall as ::ethers::core::abi::AbiDecode>::decode(
+                data,
+            ) {
                 return Ok(Self::GetQuorumBitmapHistoryLength(decoded));
             }
-            if let Ok(decoded) =
-                <GetQuorumBitmapIndicesAtBlockNumberCall as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                )
-            {
+            if let Ok(decoded) = <GetQuorumBitmapIndicesAtBlockNumberCall as ::ethers::core::abi::AbiDecode>::decode(
+                data,
+            ) {
                 return Ok(Self::GetQuorumBitmapIndicesAtBlockNumber(decoded));
             }
-            if let Ok(decoded) =
-                <GetQuorumBitmapUpdateByIndexCall as ::ethers::core::abi::AbiDecode>::decode(data)
-            {
+            if let Ok(decoded) = <GetQuorumBitmapUpdateByIndexCall as ::ethers::core::abi::AbiDecode>::decode(
+                data,
+            ) {
                 return Ok(Self::GetQuorumBitmapUpdateByIndex(decoded));
             }
-            if let Ok(decoded) = <IndexRegistryCall as ::ethers::core::abi::AbiDecode>::decode(data)
-            {
+            if let Ok(decoded) = <IndexRegistryCall as ::ethers::core::abi::AbiDecode>::decode(
+                data,
+            ) {
                 return Ok(Self::IndexRegistry(decoded));
             }
-            if let Ok(decoded) = <InitializeCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <InitializeCall as ::ethers::core::abi::AbiDecode>::decode(
+                data,
+            ) {
                 return Ok(Self::Initialize(decoded));
             }
-            if let Ok(decoded) =
-                <IsChurnApproverSaltUsedCall as ::ethers::core::abi::AbiDecode>::decode(data)
-            {
+            if let Ok(decoded) = <IsChurnApproverSaltUsedCall as ::ethers::core::abi::AbiDecode>::decode(
+                data,
+            ) {
                 return Ok(Self::IsChurnApproverSaltUsed(decoded));
             }
-            if let Ok(decoded) = <NumRegistriesCall as ::ethers::core::abi::AbiDecode>::decode(data)
-            {
+            if let Ok(decoded) = <NumRegistriesCall as ::ethers::core::abi::AbiDecode>::decode(
+                data,
+            ) {
                 return Ok(Self::NumRegistries(decoded));
             }
-            if let Ok(decoded) = <OwnerCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <OwnerCall as ::ethers::core::abi::AbiDecode>::decode(
+                data,
+            ) {
                 return Ok(Self::Owner(decoded));
             }
-            if let Ok(decoded) = <PauseCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <PauseCall as ::ethers::core::abi::AbiDecode>::decode(
+                data,
+            ) {
                 return Ok(Self::Pause(decoded));
             }
-            if let Ok(decoded) = <PauseAllCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <PauseAllCall as ::ethers::core::abi::AbiDecode>::decode(
+                data,
+            ) {
                 return Ok(Self::PauseAll(decoded));
             }
-            if let Ok(decoded) =
-                <PausedWithIndexCall as ::ethers::core::abi::AbiDecode>::decode(data)
-            {
+            if let Ok(decoded) = <PausedWithIndexCall as ::ethers::core::abi::AbiDecode>::decode(
+                data,
+            ) {
                 return Ok(Self::PausedWithIndex(decoded));
             }
-            if let Ok(decoded) = <PausedCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <PausedCall as ::ethers::core::abi::AbiDecode>::decode(
+                data,
+            ) {
                 return Ok(Self::Paused(decoded));
             }
-            if let Ok(decoded) =
-                <PauserRegistryCall as ::ethers::core::abi::AbiDecode>::decode(data)
-            {
+            if let Ok(decoded) = <PauserRegistryCall as ::ethers::core::abi::AbiDecode>::decode(
+                data,
+            ) {
                 return Ok(Self::PauserRegistry(decoded));
             }
-            if let Ok(decoded) =
-                <PubkeyRegistrationMessageHashCall as ::ethers::core::abi::AbiDecode>::decode(data)
-            {
+            if let Ok(decoded) = <PubkeyRegistrationMessageHashCall as ::ethers::core::abi::AbiDecode>::decode(
+                data,
+            ) {
                 return Ok(Self::PubkeyRegistrationMessageHash(decoded));
             }
-            if let Ok(decoded) = <QuorumCountCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <QuorumCountCall as ::ethers::core::abi::AbiDecode>::decode(
+                data,
+            ) {
                 return Ok(Self::QuorumCount(decoded));
             }
-            if let Ok(decoded) =
-                <QuorumUpdateBlockNumberCall as ::ethers::core::abi::AbiDecode>::decode(data)
-            {
+            if let Ok(decoded) = <QuorumUpdateBlockNumberCall as ::ethers::core::abi::AbiDecode>::decode(
+                data,
+            ) {
                 return Ok(Self::QuorumUpdateBlockNumber(decoded));
             }
-            if let Ok(decoded) =
-                <RegisterOperatorCall as ::ethers::core::abi::AbiDecode>::decode(data)
-            {
+            if let Ok(decoded) = <RegisterOperatorCall as ::ethers::core::abi::AbiDecode>::decode(
+                data,
+            ) {
                 return Ok(Self::RegisterOperator(decoded));
             }
-            if let Ok(decoded) =
-                <RegisterOperatorWithChurnCall as ::ethers::core::abi::AbiDecode>::decode(data)
-            {
+            if let Ok(decoded) = <RegisterOperatorWithChurnCall as ::ethers::core::abi::AbiDecode>::decode(
+                data,
+            ) {
                 return Ok(Self::RegisterOperatorWithChurn(decoded));
             }
-            if let Ok(decoded) = <RegistriesCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <RegistriesCall as ::ethers::core::abi::AbiDecode>::decode(
+                data,
+            ) {
                 return Ok(Self::Registries(decoded));
             }
-            if let Ok(decoded) =
-                <RenounceOwnershipCall as ::ethers::core::abi::AbiDecode>::decode(data)
-            {
+            if let Ok(decoded) = <RenounceOwnershipCall as ::ethers::core::abi::AbiDecode>::decode(
+                data,
+            ) {
                 return Ok(Self::RenounceOwnership(decoded));
             }
-            if let Ok(decoded) =
-                <ServiceManagerCall as ::ethers::core::abi::AbiDecode>::decode(data)
-            {
+            if let Ok(decoded) = <ServiceManagerCall as ::ethers::core::abi::AbiDecode>::decode(
+                data,
+            ) {
                 return Ok(Self::ServiceManager(decoded));
             }
-            if let Ok(decoded) =
-                <SetChurnApproverCall as ::ethers::core::abi::AbiDecode>::decode(data)
-            {
+            if let Ok(decoded) = <SetChurnApproverCall as ::ethers::core::abi::AbiDecode>::decode(
+                data,
+            ) {
                 return Ok(Self::SetChurnApprover(decoded));
             }
-            if let Ok(decoded) = <SetEjectorCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <SetEjectorCall as ::ethers::core::abi::AbiDecode>::decode(
+                data,
+            ) {
                 return Ok(Self::SetEjector(decoded));
             }
-            if let Ok(decoded) =
-                <SetOperatorSetParamsCall as ::ethers::core::abi::AbiDecode>::decode(data)
-            {
+            if let Ok(decoded) = <SetOperatorSetParamsCall as ::ethers::core::abi::AbiDecode>::decode(
+                data,
+            ) {
                 return Ok(Self::SetOperatorSetParams(decoded));
             }
-            if let Ok(decoded) =
-                <SetPauserRegistryCall as ::ethers::core::abi::AbiDecode>::decode(data)
-            {
+            if let Ok(decoded) = <SetPauserRegistryCall as ::ethers::core::abi::AbiDecode>::decode(
+                data,
+            ) {
                 return Ok(Self::SetPauserRegistry(decoded));
             }
-            if let Ok(decoded) = <StakeRegistryCall as ::ethers::core::abi::AbiDecode>::decode(data)
-            {
+            if let Ok(decoded) = <StakeRegistryCall as ::ethers::core::abi::AbiDecode>::decode(
+                data,
+            ) {
                 return Ok(Self::StakeRegistry(decoded));
             }
-            if let Ok(decoded) =
-                <TransferOwnershipCall as ::ethers::core::abi::AbiDecode>::decode(data)
-            {
+            if let Ok(decoded) = <TransferOwnershipCall as ::ethers::core::abi::AbiDecode>::decode(
+                data,
+            ) {
                 return Ok(Self::TransferOwnership(decoded));
             }
-            if let Ok(decoded) = <UnpauseCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <UnpauseCall as ::ethers::core::abi::AbiDecode>::decode(
+                data,
+            ) {
                 return Ok(Self::Unpause(decoded));
             }
-            if let Ok(decoded) =
-                <UpdateOperatorsCall as ::ethers::core::abi::AbiDecode>::decode(data)
-            {
+            if let Ok(decoded) = <UpdateOperatorsCall as ::ethers::core::abi::AbiDecode>::decode(
+                data,
+            ) {
                 return Ok(Self::UpdateOperators(decoded));
             }
-            if let Ok(decoded) =
-                <UpdateOperatorsForQuorumCall as ::ethers::core::abi::AbiDecode>::decode(data)
-            {
+            if let Ok(decoded) = <UpdateOperatorsForQuorumCall as ::ethers::core::abi::AbiDecode>::decode(
+                data,
+            ) {
                 return Ok(Self::UpdateOperatorsForQuorum(decoded));
             }
-            if let Ok(decoded) = <UpdateSocketCall as ::ethers::core::abi::AbiDecode>::decode(data)
-            {
+            if let Ok(decoded) = <UpdateSocketCall as ::ethers::core::abi::AbiDecode>::decode(
+                data,
+            ) {
                 return Ok(Self::UpdateSocket(decoded));
             }
             Err(::ethers::core::abi::Error::InvalidData.into())
@@ -3901,27 +4008,43 @@ pub mod registry_coordinator {
                 Self::PubkeyRegistrationTypehash(element) => {
                     ::ethers::core::abi::AbiEncode::encode(element)
                 }
-                Self::BlsApkRegistry(element) => ::ethers::core::abi::AbiEncode::encode(element),
+                Self::BlsApkRegistry(element) => {
+                    ::ethers::core::abi::AbiEncode::encode(element)
+                }
                 Self::CalculateOperatorChurnApprovalDigestHash(element) => {
                     ::ethers::core::abi::AbiEncode::encode(element)
                 }
-                Self::ChurnApprover(element) => ::ethers::core::abi::AbiEncode::encode(element),
-                Self::CreateQuorum(element) => ::ethers::core::abi::AbiEncode::encode(element),
+                Self::ChurnApprover(element) => {
+                    ::ethers::core::abi::AbiEncode::encode(element)
+                }
+                Self::CreateQuorum(element) => {
+                    ::ethers::core::abi::AbiEncode::encode(element)
+                }
                 Self::DeregisterOperator(element) => {
                     ::ethers::core::abi::AbiEncode::encode(element)
                 }
-                Self::EjectOperator(element) => ::ethers::core::abi::AbiEncode::encode(element),
+                Self::EjectOperator(element) => {
+                    ::ethers::core::abi::AbiEncode::encode(element)
+                }
                 Self::Ejector(element) => ::ethers::core::abi::AbiEncode::encode(element),
                 Self::GetCurrentQuorumBitmap(element) => {
                     ::ethers::core::abi::AbiEncode::encode(element)
                 }
-                Self::GetOperator(element) => ::ethers::core::abi::AbiEncode::encode(element),
-                Self::GetOperatorFromId(element) => ::ethers::core::abi::AbiEncode::encode(element),
-                Self::GetOperatorId(element) => ::ethers::core::abi::AbiEncode::encode(element),
+                Self::GetOperator(element) => {
+                    ::ethers::core::abi::AbiEncode::encode(element)
+                }
+                Self::GetOperatorFromId(element) => {
+                    ::ethers::core::abi::AbiEncode::encode(element)
+                }
+                Self::GetOperatorId(element) => {
+                    ::ethers::core::abi::AbiEncode::encode(element)
+                }
                 Self::GetOperatorSetParams(element) => {
                     ::ethers::core::abi::AbiEncode::encode(element)
                 }
-                Self::GetOperatorStatus(element) => ::ethers::core::abi::AbiEncode::encode(element),
+                Self::GetOperatorStatus(element) => {
+                    ::ethers::core::abi::AbiEncode::encode(element)
+                }
                 Self::GetQuorumBitmapAtBlockNumberByIndex(element) => {
                     ::ethers::core::abi::AbiEncode::encode(element)
                 }
@@ -3934,46 +4057,82 @@ pub mod registry_coordinator {
                 Self::GetQuorumBitmapUpdateByIndex(element) => {
                     ::ethers::core::abi::AbiEncode::encode(element)
                 }
-                Self::IndexRegistry(element) => ::ethers::core::abi::AbiEncode::encode(element),
-                Self::Initialize(element) => ::ethers::core::abi::AbiEncode::encode(element),
+                Self::IndexRegistry(element) => {
+                    ::ethers::core::abi::AbiEncode::encode(element)
+                }
+                Self::Initialize(element) => {
+                    ::ethers::core::abi::AbiEncode::encode(element)
+                }
                 Self::IsChurnApproverSaltUsed(element) => {
                     ::ethers::core::abi::AbiEncode::encode(element)
                 }
-                Self::NumRegistries(element) => ::ethers::core::abi::AbiEncode::encode(element),
+                Self::NumRegistries(element) => {
+                    ::ethers::core::abi::AbiEncode::encode(element)
+                }
                 Self::Owner(element) => ::ethers::core::abi::AbiEncode::encode(element),
                 Self::Pause(element) => ::ethers::core::abi::AbiEncode::encode(element),
-                Self::PauseAll(element) => ::ethers::core::abi::AbiEncode::encode(element),
-                Self::PausedWithIndex(element) => ::ethers::core::abi::AbiEncode::encode(element),
+                Self::PauseAll(element) => {
+                    ::ethers::core::abi::AbiEncode::encode(element)
+                }
+                Self::PausedWithIndex(element) => {
+                    ::ethers::core::abi::AbiEncode::encode(element)
+                }
                 Self::Paused(element) => ::ethers::core::abi::AbiEncode::encode(element),
-                Self::PauserRegistry(element) => ::ethers::core::abi::AbiEncode::encode(element),
+                Self::PauserRegistry(element) => {
+                    ::ethers::core::abi::AbiEncode::encode(element)
+                }
                 Self::PubkeyRegistrationMessageHash(element) => {
                     ::ethers::core::abi::AbiEncode::encode(element)
                 }
-                Self::QuorumCount(element) => ::ethers::core::abi::AbiEncode::encode(element),
+                Self::QuorumCount(element) => {
+                    ::ethers::core::abi::AbiEncode::encode(element)
+                }
                 Self::QuorumUpdateBlockNumber(element) => {
                     ::ethers::core::abi::AbiEncode::encode(element)
                 }
-                Self::RegisterOperator(element) => ::ethers::core::abi::AbiEncode::encode(element),
+                Self::RegisterOperator(element) => {
+                    ::ethers::core::abi::AbiEncode::encode(element)
+                }
                 Self::RegisterOperatorWithChurn(element) => {
                     ::ethers::core::abi::AbiEncode::encode(element)
                 }
-                Self::Registries(element) => ::ethers::core::abi::AbiEncode::encode(element),
-                Self::RenounceOwnership(element) => ::ethers::core::abi::AbiEncode::encode(element),
-                Self::ServiceManager(element) => ::ethers::core::abi::AbiEncode::encode(element),
-                Self::SetChurnApprover(element) => ::ethers::core::abi::AbiEncode::encode(element),
-                Self::SetEjector(element) => ::ethers::core::abi::AbiEncode::encode(element),
+                Self::Registries(element) => {
+                    ::ethers::core::abi::AbiEncode::encode(element)
+                }
+                Self::RenounceOwnership(element) => {
+                    ::ethers::core::abi::AbiEncode::encode(element)
+                }
+                Self::ServiceManager(element) => {
+                    ::ethers::core::abi::AbiEncode::encode(element)
+                }
+                Self::SetChurnApprover(element) => {
+                    ::ethers::core::abi::AbiEncode::encode(element)
+                }
+                Self::SetEjector(element) => {
+                    ::ethers::core::abi::AbiEncode::encode(element)
+                }
                 Self::SetOperatorSetParams(element) => {
                     ::ethers::core::abi::AbiEncode::encode(element)
                 }
-                Self::SetPauserRegistry(element) => ::ethers::core::abi::AbiEncode::encode(element),
-                Self::StakeRegistry(element) => ::ethers::core::abi::AbiEncode::encode(element),
-                Self::TransferOwnership(element) => ::ethers::core::abi::AbiEncode::encode(element),
+                Self::SetPauserRegistry(element) => {
+                    ::ethers::core::abi::AbiEncode::encode(element)
+                }
+                Self::StakeRegistry(element) => {
+                    ::ethers::core::abi::AbiEncode::encode(element)
+                }
+                Self::TransferOwnership(element) => {
+                    ::ethers::core::abi::AbiEncode::encode(element)
+                }
                 Self::Unpause(element) => ::ethers::core::abi::AbiEncode::encode(element),
-                Self::UpdateOperators(element) => ::ethers::core::abi::AbiEncode::encode(element),
+                Self::UpdateOperators(element) => {
+                    ::ethers::core::abi::AbiEncode::encode(element)
+                }
                 Self::UpdateOperatorsForQuorum(element) => {
                     ::ethers::core::abi::AbiEncode::encode(element)
                 }
-                Self::UpdateSocket(element) => ::ethers::core::abi::AbiEncode::encode(element),
+                Self::UpdateSocket(element) => {
+                    ::ethers::core::abi::AbiEncode::encode(element)
+                }
             }
         }
     }
@@ -3983,21 +4142,29 @@ pub mod registry_coordinator {
                 Self::OperatorChurnApprovalTypehash(element) => {
                     ::core::fmt::Display::fmt(element, f)
                 }
-                Self::PubkeyRegistrationTypehash(element) => ::core::fmt::Display::fmt(element, f),
+                Self::PubkeyRegistrationTypehash(element) => {
+                    ::core::fmt::Display::fmt(element, f)
+                }
                 Self::BlsApkRegistry(element) => ::core::fmt::Display::fmt(element, f),
                 Self::CalculateOperatorChurnApprovalDigestHash(element) => {
                     ::core::fmt::Display::fmt(element, f)
                 }
                 Self::ChurnApprover(element) => ::core::fmt::Display::fmt(element, f),
                 Self::CreateQuorum(element) => ::core::fmt::Display::fmt(element, f),
-                Self::DeregisterOperator(element) => ::core::fmt::Display::fmt(element, f),
+                Self::DeregisterOperator(element) => {
+                    ::core::fmt::Display::fmt(element, f)
+                }
                 Self::EjectOperator(element) => ::core::fmt::Display::fmt(element, f),
                 Self::Ejector(element) => ::core::fmt::Display::fmt(element, f),
-                Self::GetCurrentQuorumBitmap(element) => ::core::fmt::Display::fmt(element, f),
+                Self::GetCurrentQuorumBitmap(element) => {
+                    ::core::fmt::Display::fmt(element, f)
+                }
                 Self::GetOperator(element) => ::core::fmt::Display::fmt(element, f),
                 Self::GetOperatorFromId(element) => ::core::fmt::Display::fmt(element, f),
                 Self::GetOperatorId(element) => ::core::fmt::Display::fmt(element, f),
-                Self::GetOperatorSetParams(element) => ::core::fmt::Display::fmt(element, f),
+                Self::GetOperatorSetParams(element) => {
+                    ::core::fmt::Display::fmt(element, f)
+                }
                 Self::GetOperatorStatus(element) => ::core::fmt::Display::fmt(element, f),
                 Self::GetQuorumBitmapAtBlockNumberByIndex(element) => {
                     ::core::fmt::Display::fmt(element, f)
@@ -4013,7 +4180,9 @@ pub mod registry_coordinator {
                 }
                 Self::IndexRegistry(element) => ::core::fmt::Display::fmt(element, f),
                 Self::Initialize(element) => ::core::fmt::Display::fmt(element, f),
-                Self::IsChurnApproverSaltUsed(element) => ::core::fmt::Display::fmt(element, f),
+                Self::IsChurnApproverSaltUsed(element) => {
+                    ::core::fmt::Display::fmt(element, f)
+                }
                 Self::NumRegistries(element) => ::core::fmt::Display::fmt(element, f),
                 Self::Owner(element) => ::core::fmt::Display::fmt(element, f),
                 Self::Pause(element) => ::core::fmt::Display::fmt(element, f),
@@ -4025,31 +4194,41 @@ pub mod registry_coordinator {
                     ::core::fmt::Display::fmt(element, f)
                 }
                 Self::QuorumCount(element) => ::core::fmt::Display::fmt(element, f),
-                Self::QuorumUpdateBlockNumber(element) => ::core::fmt::Display::fmt(element, f),
+                Self::QuorumUpdateBlockNumber(element) => {
+                    ::core::fmt::Display::fmt(element, f)
+                }
                 Self::RegisterOperator(element) => ::core::fmt::Display::fmt(element, f),
-                Self::RegisterOperatorWithChurn(element) => ::core::fmt::Display::fmt(element, f),
+                Self::RegisterOperatorWithChurn(element) => {
+                    ::core::fmt::Display::fmt(element, f)
+                }
                 Self::Registries(element) => ::core::fmt::Display::fmt(element, f),
                 Self::RenounceOwnership(element) => ::core::fmt::Display::fmt(element, f),
                 Self::ServiceManager(element) => ::core::fmt::Display::fmt(element, f),
                 Self::SetChurnApprover(element) => ::core::fmt::Display::fmt(element, f),
                 Self::SetEjector(element) => ::core::fmt::Display::fmt(element, f),
-                Self::SetOperatorSetParams(element) => ::core::fmt::Display::fmt(element, f),
+                Self::SetOperatorSetParams(element) => {
+                    ::core::fmt::Display::fmt(element, f)
+                }
                 Self::SetPauserRegistry(element) => ::core::fmt::Display::fmt(element, f),
                 Self::StakeRegistry(element) => ::core::fmt::Display::fmt(element, f),
                 Self::TransferOwnership(element) => ::core::fmt::Display::fmt(element, f),
                 Self::Unpause(element) => ::core::fmt::Display::fmt(element, f),
                 Self::UpdateOperators(element) => ::core::fmt::Display::fmt(element, f),
-                Self::UpdateOperatorsForQuorum(element) => ::core::fmt::Display::fmt(element, f),
+                Self::UpdateOperatorsForQuorum(element) => {
+                    ::core::fmt::Display::fmt(element, f)
+                }
                 Self::UpdateSocket(element) => ::core::fmt::Display::fmt(element, f),
             }
         }
     }
-    impl ::core::convert::From<OperatorChurnApprovalTypehashCall> for RegistryCoordinatorCalls {
+    impl ::core::convert::From<OperatorChurnApprovalTypehashCall>
+    for RegistryCoordinatorCalls {
         fn from(value: OperatorChurnApprovalTypehashCall) -> Self {
             Self::OperatorChurnApprovalTypehash(value)
         }
     }
-    impl ::core::convert::From<PubkeyRegistrationTypehashCall> for RegistryCoordinatorCalls {
+    impl ::core::convert::From<PubkeyRegistrationTypehashCall>
+    for RegistryCoordinatorCalls {
         fn from(value: PubkeyRegistrationTypehashCall) -> Self {
             Self::PubkeyRegistrationTypehash(value)
         }
@@ -4060,8 +4239,7 @@ pub mod registry_coordinator {
         }
     }
     impl ::core::convert::From<CalculateOperatorChurnApprovalDigestHashCall>
-        for RegistryCoordinatorCalls
-    {
+    for RegistryCoordinatorCalls {
         fn from(value: CalculateOperatorChurnApprovalDigestHashCall) -> Self {
             Self::CalculateOperatorChurnApprovalDigestHash(value)
         }
@@ -4121,22 +4299,26 @@ pub mod registry_coordinator {
             Self::GetOperatorStatus(value)
         }
     }
-    impl ::core::convert::From<GetQuorumBitmapAtBlockNumberByIndexCall> for RegistryCoordinatorCalls {
+    impl ::core::convert::From<GetQuorumBitmapAtBlockNumberByIndexCall>
+    for RegistryCoordinatorCalls {
         fn from(value: GetQuorumBitmapAtBlockNumberByIndexCall) -> Self {
             Self::GetQuorumBitmapAtBlockNumberByIndex(value)
         }
     }
-    impl ::core::convert::From<GetQuorumBitmapHistoryLengthCall> for RegistryCoordinatorCalls {
+    impl ::core::convert::From<GetQuorumBitmapHistoryLengthCall>
+    for RegistryCoordinatorCalls {
         fn from(value: GetQuorumBitmapHistoryLengthCall) -> Self {
             Self::GetQuorumBitmapHistoryLength(value)
         }
     }
-    impl ::core::convert::From<GetQuorumBitmapIndicesAtBlockNumberCall> for RegistryCoordinatorCalls {
+    impl ::core::convert::From<GetQuorumBitmapIndicesAtBlockNumberCall>
+    for RegistryCoordinatorCalls {
         fn from(value: GetQuorumBitmapIndicesAtBlockNumberCall) -> Self {
             Self::GetQuorumBitmapIndicesAtBlockNumber(value)
         }
     }
-    impl ::core::convert::From<GetQuorumBitmapUpdateByIndexCall> for RegistryCoordinatorCalls {
+    impl ::core::convert::From<GetQuorumBitmapUpdateByIndexCall>
+    for RegistryCoordinatorCalls {
         fn from(value: GetQuorumBitmapUpdateByIndexCall) -> Self {
             Self::GetQuorumBitmapUpdateByIndex(value)
         }
@@ -4151,7 +4333,8 @@ pub mod registry_coordinator {
             Self::Initialize(value)
         }
     }
-    impl ::core::convert::From<IsChurnApproverSaltUsedCall> for RegistryCoordinatorCalls {
+    impl ::core::convert::From<IsChurnApproverSaltUsedCall>
+    for RegistryCoordinatorCalls {
         fn from(value: IsChurnApproverSaltUsedCall) -> Self {
             Self::IsChurnApproverSaltUsed(value)
         }
@@ -4191,7 +4374,8 @@ pub mod registry_coordinator {
             Self::PauserRegistry(value)
         }
     }
-    impl ::core::convert::From<PubkeyRegistrationMessageHashCall> for RegistryCoordinatorCalls {
+    impl ::core::convert::From<PubkeyRegistrationMessageHashCall>
+    for RegistryCoordinatorCalls {
         fn from(value: PubkeyRegistrationMessageHashCall) -> Self {
             Self::PubkeyRegistrationMessageHash(value)
         }
@@ -4201,7 +4385,8 @@ pub mod registry_coordinator {
             Self::QuorumCount(value)
         }
     }
-    impl ::core::convert::From<QuorumUpdateBlockNumberCall> for RegistryCoordinatorCalls {
+    impl ::core::convert::From<QuorumUpdateBlockNumberCall>
+    for RegistryCoordinatorCalls {
         fn from(value: QuorumUpdateBlockNumberCall) -> Self {
             Self::QuorumUpdateBlockNumber(value)
         }
@@ -4211,7 +4396,8 @@ pub mod registry_coordinator {
             Self::RegisterOperator(value)
         }
     }
-    impl ::core::convert::From<RegisterOperatorWithChurnCall> for RegistryCoordinatorCalls {
+    impl ::core::convert::From<RegisterOperatorWithChurnCall>
+    for RegistryCoordinatorCalls {
         fn from(value: RegisterOperatorWithChurnCall) -> Self {
             Self::RegisterOperatorWithChurn(value)
         }
@@ -4271,7 +4457,8 @@ pub mod registry_coordinator {
             Self::UpdateOperators(value)
         }
     }
-    impl ::core::convert::From<UpdateOperatorsForQuorumCall> for RegistryCoordinatorCalls {
+    impl ::core::convert::From<UpdateOperatorsForQuorumCall>
+    for RegistryCoordinatorCalls {
         fn from(value: UpdateOperatorsForQuorumCall) -> Self {
             Self::UpdateOperatorsForQuorum(value)
         }
@@ -4290,7 +4477,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     pub struct OperatorChurnApprovalTypehashReturn(pub [u8; 32]);
     ///Container type for all return fields from the `PUBKEY_REGISTRATION_TYPEHASH` function with signature `PUBKEY_REGISTRATION_TYPEHASH()` and selector `0x9feab859`
@@ -4302,7 +4489,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     pub struct PubkeyRegistrationTypehashReturn(pub [u8; 32]);
     ///Container type for all return fields from the `blsApkRegistry` function with signature `blsApkRegistry()` and selector `0x5df45946`
@@ -4314,7 +4501,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     pub struct BlsApkRegistryReturn(pub ::ethers::core::types::Address);
     ///Container type for all return fields from the `calculateOperatorChurnApprovalDigestHash` function with signature `calculateOperatorChurnApprovalDigestHash(address,bytes32,(uint8,address)[],bytes32,uint256)` and selector `0x84ca5213`
@@ -4326,7 +4513,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     pub struct CalculateOperatorChurnApprovalDigestHashReturn(pub [u8; 32]);
     ///Container type for all return fields from the `churnApprover` function with signature `churnApprover()` and selector `0x054310e6`
@@ -4338,7 +4525,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     pub struct ChurnApproverReturn(pub ::ethers::core::types::Address);
     ///Container type for all return fields from the `ejector` function with signature `ejector()` and selector `0x28f61b31`
@@ -4350,7 +4537,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     pub struct EjectorReturn(pub ::ethers::core::types::Address);
     ///Container type for all return fields from the `getCurrentQuorumBitmap` function with signature `getCurrentQuorumBitmap(bytes32)` and selector `0x871ef049`
@@ -4362,7 +4549,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     pub struct GetCurrentQuorumBitmapReturn(pub ::ethers::core::types::U256);
     ///Container type for all return fields from the `getOperator` function with signature `getOperator(address)` and selector `0x5865c60c`
@@ -4374,7 +4561,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     pub struct GetOperatorReturn(pub OperatorInfo);
     ///Container type for all return fields from the `getOperatorFromId` function with signature `getOperatorFromId(bytes32)` and selector `0x296bb064`
@@ -4386,7 +4573,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     pub struct GetOperatorFromIdReturn(pub ::ethers::core::types::Address);
     ///Container type for all return fields from the `getOperatorId` function with signature `getOperatorId(address)` and selector `0x13542a4e`
@@ -4398,7 +4585,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     pub struct GetOperatorIdReturn(pub [u8; 32]);
     ///Container type for all return fields from the `getOperatorSetParams` function with signature `getOperatorSetParams(uint8)` and selector `0xe65797ad`
@@ -4410,7 +4597,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     pub struct GetOperatorSetParamsReturn(pub OperatorSetParam);
     ///Container type for all return fields from the `getOperatorStatus` function with signature `getOperatorStatus(address)` and selector `0xfd39105a`
@@ -4422,7 +4609,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     pub struct GetOperatorStatusReturn(pub u8);
     ///Container type for all return fields from the `getQuorumBitmapAtBlockNumberByIndex` function with signature `getQuorumBitmapAtBlockNumberByIndex(bytes32,uint32,uint256)` and selector `0x04ec6351`
@@ -4434,9 +4621,11 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
-    pub struct GetQuorumBitmapAtBlockNumberByIndexReturn(pub ::ethers::core::types::U256);
+    pub struct GetQuorumBitmapAtBlockNumberByIndexReturn(
+        pub ::ethers::core::types::U256,
+    );
     ///Container type for all return fields from the `getQuorumBitmapHistoryLength` function with signature `getQuorumBitmapHistoryLength(bytes32)` and selector `0x03fd3492`
     #[derive(
         Clone,
@@ -4446,7 +4635,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     pub struct GetQuorumBitmapHistoryLengthReturn(pub ::ethers::core::types::U256);
     ///Container type for all return fields from the `getQuorumBitmapIndicesAtBlockNumber` function with signature `getQuorumBitmapIndicesAtBlockNumber(uint32,bytes32[])` and selector `0xc391425e`
@@ -4458,7 +4647,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     pub struct GetQuorumBitmapIndicesAtBlockNumberReturn(pub ::std::vec::Vec<u32>);
     ///Container type for all return fields from the `getQuorumBitmapUpdateByIndex` function with signature `getQuorumBitmapUpdateByIndex(bytes32,uint256)` and selector `0x1eb812da`
@@ -4470,7 +4659,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     pub struct GetQuorumBitmapUpdateByIndexReturn(pub QuorumBitmapUpdate);
     ///Container type for all return fields from the `indexRegistry` function with signature `indexRegistry()` and selector `0x9e9923c2`
@@ -4482,7 +4671,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     pub struct IndexRegistryReturn(pub ::ethers::core::types::Address);
     ///Container type for all return fields from the `isChurnApproverSaltUsed` function with signature `isChurnApproverSaltUsed(bytes32)` and selector `0x1478851f`
@@ -4494,7 +4683,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     pub struct IsChurnApproverSaltUsedReturn(pub bool);
     ///Container type for all return fields from the `numRegistries` function with signature `numRegistries()` and selector `0xd72d8dd6`
@@ -4506,7 +4695,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     pub struct NumRegistriesReturn(pub ::ethers::core::types::U256);
     ///Container type for all return fields from the `owner` function with signature `owner()` and selector `0x8da5cb5b`
@@ -4518,7 +4707,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     pub struct OwnerReturn(pub ::ethers::core::types::Address);
     ///Container type for all return fields from the `paused` function with signature `paused(uint8)` and selector `0x5ac86ab7`
@@ -4530,7 +4719,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     pub struct PausedWithIndexReturn(pub bool);
     ///Container type for all return fields from the `paused` function with signature `paused()` and selector `0x5c975abb`
@@ -4542,7 +4731,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     pub struct PausedReturn(pub ::ethers::core::types::U256);
     ///Container type for all return fields from the `pauserRegistry` function with signature `pauserRegistry()` and selector `0x886f1195`
@@ -4554,7 +4743,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     pub struct PauserRegistryReturn(pub ::ethers::core::types::Address);
     ///Container type for all return fields from the `pubkeyRegistrationMessageHash` function with signature `pubkeyRegistrationMessageHash(address)` and selector `0x3c2a7f4c`
@@ -4566,7 +4755,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     pub struct PubkeyRegistrationMessageHashReturn(pub G1Point);
     ///Container type for all return fields from the `quorumCount` function with signature `quorumCount()` and selector `0x9aa1653d`
@@ -4578,7 +4767,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     pub struct QuorumCountReturn(pub u8);
     ///Container type for all return fields from the `quorumUpdateBlockNumber` function with signature `quorumUpdateBlockNumber(uint8)` and selector `0x249a0c42`
@@ -4590,7 +4779,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     pub struct QuorumUpdateBlockNumberReturn(pub ::ethers::core::types::U256);
     ///Container type for all return fields from the `registries` function with signature `registries(uint256)` and selector `0x6347c900`
@@ -4602,7 +4791,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     pub struct RegistriesReturn(pub ::ethers::core::types::Address);
     ///Container type for all return fields from the `serviceManager` function with signature `serviceManager()` and selector `0x3998fdd3`
@@ -4614,7 +4803,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     pub struct ServiceManagerReturn(pub ::ethers::core::types::Address);
     ///Container type for all return fields from the `stakeRegistry` function with signature `stakeRegistry()` and selector `0x68304835`
@@ -4626,7 +4815,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     pub struct StakeRegistryReturn(pub ::ethers::core::types::Address);
     ///`G1Point(uint256,uint256)`
@@ -4638,7 +4827,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     pub struct G1Point {
         pub x: ::ethers::core::types::U256,
@@ -4653,7 +4842,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     pub struct G2Point {
         pub x: [::ethers::core::types::U256; 2],
@@ -4668,7 +4857,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     pub struct PubkeyRegistrationParams {
         pub pubkey_registration_signature: G1Point,
@@ -4684,7 +4873,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     pub struct OperatorInfo {
         pub operator_id: [u8; 32],
@@ -4699,7 +4888,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     pub struct OperatorKickParam {
         pub quorum_number: u8,
@@ -4714,7 +4903,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     pub struct OperatorSetParam {
         pub max_operator_count: u32,
@@ -4730,7 +4919,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     pub struct QuorumBitmapUpdate {
         pub update_block_number: u32,
@@ -4746,7 +4935,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     pub struct SignatureWithSaltAndExpiry {
         pub signature: ::ethers::core::types::Bytes,
@@ -4762,7 +4951,7 @@ pub mod registry_coordinator {
         Debug,
         PartialEq,
         Eq,
-        Hash,
+        Hash
     )]
     pub struct StrategyParams {
         pub strategy: ::ethers::core::types::Address,

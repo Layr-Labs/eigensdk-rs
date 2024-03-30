@@ -637,4 +637,24 @@ mod tests {
             .await
             .unwrap();
     }
+
+    #[tokio::test]
+    async fn test_get_operators_stake_in_quorums_of_operator_at_block() {
+        let avs_reader = build_avs_registry_chain_reader();
+
+        let quorum_number = Bytes::from_hex("0x00").expect("bytes parse");
+
+        let operator_id = (&U256::from_dec_str(
+            "35344093966194310405039483339636912150346494903629410125452342281826147822033",
+        )
+        .unwrap());
+
+        let operators_stake = avs_reader
+            .get_operators_stake_in_quorums_of_operator_at_block(
+                H256::from_uint(operator_id).into(),
+                1246078,
+            )
+            .await
+            .unwrap();
+    }
 }
