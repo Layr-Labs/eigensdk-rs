@@ -597,6 +597,8 @@ fn test_build_avs_registry_chain_reader() {
 mod tests {
 
     use super::*;
+    use alloy_primitives::hex::FromHex;
+    use ethers::types::BigEndianHash;
     use tokio;
 
     const HOLESKY_REGISTRY_COORDINATOR: &str = "0x53012C69A189cfA2D9d29eb6F19B32e0A2EA3490";
@@ -636,5 +638,34 @@ mod tests {
         let avs_reader = build_avs_registry_chain_reader();
 
         let _ = avs_reader.get_quorum_count().await.unwrap();
+    }
+
+    #[tokio::test]
+    async fn test_get_operators_stake_in_quorums_at_block() {
+        let avs_reader = build_avs_registry_chain_reader();
+
+        let quorum_number = Bytes::from_hex("0x00").expect("bytes parse");
+        let state = avs_reader
+            .get_operators_stake_in_quorums_at_block(1245063, quorum_number)
+            .await
+            .unwrap();
+    }
+
+    #[tokio::test]
+    async fn test_get_operators_stake_in_quorums_at_block_operator_id() {
+        let avs_reader = build_avs_registry_chain_reader();
+
+        let operator_id = (&U256::from_dec_str(
+            "35344093966194310405039483339636912150346494903629410125452342281826147822033",
+        )
+        .unwrap());
+
+        let _ = avs_reader
+            .get_operators_stake_in_quorums_at_block_operator_id(
+                1245842,
+                H256::from_uint(operator_id).into(),
+            )
+            .await
+            .unwrap();
     }
 }
