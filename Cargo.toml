@@ -24,10 +24,11 @@ resolver = "2"
 [workspace.package]
 version = "0.0.1-alpha"
 edition = "2021"
+authors = ["Eigen Layer contributors"]
 rust-version = "1.76"
 repository = "https://github.com/anjaneyalabs/eigensdk-rs"
 homepage = ""
-license = ""
+license = "BSL 1.1"
 
 
 [workspace.lints]
@@ -47,28 +48,28 @@ ethers-core = "2.0.14"
 reth = {git = "https://github.com/paradigmxyz/reth"}
 prometheus-client = "0.22.2"
 bn254 = {git = "https://github.com/sedaprotocol/bn254"}
-eigensdk-metrics = {path = "crates/metrics/"}
+eigensdk-metrics = {version = "0.0.1-alpha",  path = "crates/metrics/"}
 serde = {version = "1.0.197" , features = ["derive"]}
-eigensdk-chainio-utils = {path = "crates/chainio/utils/"}
+eigensdk-chainio-utils = {version = "0.0.1-alpha", path = "crates/chainio/utils/"}
 alloy-primitives = {git = "https://github.com/alloy-rs/core", rev = "14083ea11780b92f5c6466b12cc879e3b8c16972"}
-eigensdk-client-avsregistry = {path = "crates/chainio/clients/avsregistry"}
-eigensdk-client-builder = {path = "crates/chainio/clients/builder"}
-eigensdk-client-elcontracts = {path = "crates/chainio/clients/elcontracts"}
-eigensdk-client-eth = {path = "crates/chainio/clients/eth"}
-eigensdk-client-fireblocks = {path = "crates/chainio/clients/fireblocks"}
-eigensdk-client-wallet = {path = "crates/chainio/clients/wallet"}
-eigensdk-contracts-bindings = {patn = "crates/contracts/bindings/"}
-eigensdk-types = {path = "crates/types/"}
-eigensdk-crypto-bls = {path = "crates/crypto/bls/"}
-eigensdk-crypto-bn254 = {path = "crates/crypto/bn254/"}
-eigensdk-txmgr = {path = "crates/chainio/txmgr/"}
+eigensdk-client-avsregistry = {version = "0.0.1-alpha", path = "crates/chainio/clients/avsregistry"}
+eigensdk-client-builder = {version = "0.0.1-alpha",path = "crates/chainio/clients/builder"}
+eigensdk-client-elcontracts = {version = "0.0.1-alpha",path = "crates/chainio/clients/elcontracts"}
+eigensdk-client-eth = {version = "0.0.1-alpha",path = "crates/chainio/clients/eth"}
+eigensdk-client-fireblocks = {version = "0.0.1-alpha",path = "crates/chainio/clients/fireblocks"}
+eigensdk-client-wallet = {version = "0.0.1-alpha",path = "crates/chainio/clients/wallet"}
+eigensdk-contracts-bindings = {version = "0.0.1-alpha", patn = "crates/contracts/bindings/"}
+eigensdk-types = {version = "0.0.1-alpha",path = "crates/types/"}
+eigensdk-crypto-bls = {version = "0.0.1-alpha",path = "crates/crypto/bls/"}
+eigensdk-crypto-bn254 = {version = "0.0.1-alpha",path = "crates/crypto/bn254/"}
+eigensdk-txmgr = {version = "0.0.1-alpha",path = "crates/chainio/txmgr/"}
 alloy-sol-types = {git = "https://github.com/alloy-rs/core", rev = "5edbf5e17f0874c2870c7bba43ae063081adabb5", features = ["json"]}
 alloy-contract = { git = "https://github.com/alloy-rs/alloy", rev = "818b3e9692f2a207e456653a67aa8956fe1518a9", path = "crates/contract" }
 alloy-provider = { git = "https://github.com/alloy-rs/alloy", rev = "818b3e9692f2a207e456653a67aa8956fe1518a9"}
 alloy-network = { git = "https://github.com/alloy-rs/alloy", rev = "818b3e9692f2a207e456653a67aa8956fe1518a9"}
-eigensdk-signerv2 = {path = "crates/signerv2/"}
+eigensdk-signerv2 = {version = "0.0.1-alpha",path = "crates/signerv2/"}
 ethers-signers = "2.0.14"
-eigensdk-metrics-collectors-economic = {path = "crates/metrics/collectors/economic"}
-eigensdk-metrics-collectors-rpc-calls = {path = "crates/metrics/collectors/rpc_calls"}
+eigensdk-metrics-collectors-economic = {version = "0.0.1-alpha",path = "crates/metrics/collectors/economic"}
+eigensdk-metrics-collectors-rpc-calls = {version = "0.0.1-alpha",path = "crates/metrics/collectors/rpc_calls"}
 thiserror = "1.0"
 tracing = "0.1.40"

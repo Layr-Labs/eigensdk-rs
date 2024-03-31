@@ -1,5 +1,7 @@
 [package]
 name = "eigensdk-client-elcontracts"
+description = "Eigen Layer core contracts sdk"
+
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true

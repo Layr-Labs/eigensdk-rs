@@ -1,3 +1,2 @@
-[submodule "crates/contracts/bindings/lib"]
-	path = crates/contracts/bindings/lib
+[submodule "./crates/contracts/lib"]
 	url = git@github.com:Layr-Labs/eigenlayer-middleware.git

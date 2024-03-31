@@ -1,5 +1,7 @@
 [package]
 name = "eigensdk-client-builder"
+description = "eigen layer client builder "
+
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
