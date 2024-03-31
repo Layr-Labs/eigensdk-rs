@@ -61,27 +61,6 @@ dependencies = [
 
 [[package]]
 name = "alloy-primitives"
-version = "0.6.4"
-source = "git+https://github.com/alloy-rs/core?rev=14083ea11780b92f5c6466b12cc879e3b8c16972#14083ea11780b92f5c6466b12cc879e3b8c16972"
-dependencies = [
- "alloy-rlp",
- "bytes",
- "cfg-if",
- "const-hex",
- "derive_more",
- "hex-literal",
- "itoa",
- "k256",
- "keccak-asm",
- "proptest",
- "rand",
- "ruint",
- "serde",
- "tiny-keccak",
-]
-
-[[package]]
-name = "alloy-primitives"
 version = "0.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "99bbad0a6b588ef4aec1b5ddbbfdacd9ef04e00b979617765b03174318ee1f3a"
@@ -894,7 +873,7 @@ dependencies = [
 name = "eigensdk-client-avsregistry"
 version = "0.0.1-alpha"
 dependencies = [
- "alloy-primitives 0.7.0",
+ "alloy-primitives",
  "ark-bn254",
  "ark-ff 0.4.2",
  "eigensdk-chainio-utils",
@@ -955,7 +934,7 @@ dependencies = [
 name = "eigensdk-client-fireblocks"
 version = "0.0.1-alpha"
 dependencies = [
- "alloy-primitives 0.6.4",
+ "alloy-primitives",
  "serde",
 ]
 
@@ -963,7 +942,7 @@ dependencies = [
 name = "eigensdk-client-wallet"
 version = "0.0.1-alpha"
 dependencies = [
- "alloy-primitives 0.6.4",
+ "alloy-primitives",
  "eigensdk-signerv2",
  "ethers",
  "ethers-core",
@@ -1033,6 +1012,7 @@ dependencies = [
 name = "eigensdk-signerv2"
 version = "0.0.1-alpha"
 dependencies = [
+ "eth-keystore",
  "ethers",
  "ethers-core",
  "ethers-signers",
@@ -1055,6 +1035,10 @@ dependencies = [
  "ethers",
  "num-bigint",
 ]
+
+[[package]]
+name = "eigensdk-utils"
+version = "0.0.1-alpha"
 
 [[package]]
 name = "either"

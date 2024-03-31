@@ -1,13 +1,9 @@
 [package]
-name = "eigensdk-signerv2"
+name = "eigensdk-crypto-ecdsa"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 repository.workspace = true
 
 [dependencies]
-# reth.workspace = true
-ethers-core.workspace = true
-ethers.workspace = true
-ethers-signers.workspace = true
 eth-keystore = "0.5.0"
