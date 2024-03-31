@@ -1,12 +1,14 @@
 [package]
 name = "eigensdk-signerv2"
+description = "Eigen Layer SDK signer utilities"
+
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 repository.workspace = true
+license.workspace = true
 
 [dependencies]
-# reth.workspace = true
 ethers-core.workspace = true
 ethers.workspace = true
 ethers-signers.workspace = true

@@ -1,8 +1,10 @@
+//! Signer utilities for Eigen SDK
+//! TODO: Alloy migration when alloy features are complete
+
 use crate::error::SignerV2Error;
 use eth_keystore::decrypt_key;
-use ethers::{core::types::Signature, signers::Wallet};
-use ethers_core::types::transaction::eip2718::TypedTransaction;
-use ethers_signers::Signer;
+use ethers_core::types::{transaction::eip2718::TypedTransaction,Signature};
+use ethers_signers::{Wallet,Signer};
 
 pub mod error;
 
