@@ -12,7 +12,7 @@ pub use service_manager_base::*;
 pub mod service_manager_base {
     const _: () = {
         ::core::include_bytes!(
-            "/Users/supernovahs/Desktop/eigensdk-rs/crates/contracts/bindings/json/ServiceManagerBase.json",
+            "/Users/supernovahs/Desktop/eigensdk-rs/crates/contracts/utils/json/ServiceManagerBase.json",
         );
     };
     #[allow(deprecated)]

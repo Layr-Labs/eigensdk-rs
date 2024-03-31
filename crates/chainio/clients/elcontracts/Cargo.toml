@@ -9,7 +9,7 @@ repository.workspace = true
 
 [dependencies]
 # reth.workspace = true
-eigensdk-contracts-bindings = {path = "../../../../crates/contracts/bindings"}
+eigensdk-contract-bindings.workspace = true
 ethers-providers.workspace=true
 ethers-core.workspace=true
 ark-bn254 = "0.4.0"

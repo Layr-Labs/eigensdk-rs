@@ -884,7 +884,7 @@ version = "0.0.1-alpha"
 dependencies = [
  "ark-bn254",
  "ark-ff 0.4.2",
- "eigensdk-contracts-bindings",
+ "eigensdk-contract-bindings",
  "eigensdk-crypto-bls",
  "eigensdk-crypto-bn254",
  "ethers",
@@ -900,7 +900,7 @@ dependencies = [
  "eigensdk-chainio-utils",
  "eigensdk-client-elcontracts",
  "eigensdk-client-eth",
- "eigensdk-contracts-bindings",
+ "eigensdk-contract-bindings",
  "eigensdk-crypto-bls",
  "eigensdk-crypto-bn254",
  "eigensdk-txmgr",
@@ -933,7 +933,7 @@ version = "0.0.1-alpha"
 dependencies = [
  "ark-bn254",
  "ark-ff 0.4.2",
- "eigensdk-contracts-bindings",
+ "eigensdk-contract-bindings",
  "eigensdk-txmgr",
  "eigensdk-types",
  "ethers",
@@ -974,7 +974,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "eigensdk-contracts-bindings"
+name = "eigensdk-contract-bindings"
 version = "0.0.1-alpha"
 dependencies = [
  "ethers",

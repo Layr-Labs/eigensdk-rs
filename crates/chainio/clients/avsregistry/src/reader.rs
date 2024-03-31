@@ -1,5 +1,5 @@
 use crate::error::AvsRegistryError;
-use eigensdk_contracts_bindings::{
+use eigensdk_contract_bindings::{
     BLSApkRegistry::{bls_apk_registry, NewPubkeyRegistrationFilter},
     OperatorStateRetriever::{operator_state_retriever, CheckSignaturesIndices, Operator},
     RegistryCoordinator::registry_coordinator,

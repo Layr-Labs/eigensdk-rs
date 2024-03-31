@@ -1,4 +1,4 @@
-use eigensdk_contracts_bindings::{
+use eigensdk_contract_bindings::{
     AVSDirectory::avs_directory, DelegationManager::delegation_manager, ISlasher::i_slasher,
     IStrategy::i_strategy, IERC20::ierc20,
 };

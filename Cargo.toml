@@ -58,7 +58,7 @@ eigensdk-client-elcontracts = {version = "0.0.1-alpha",path = "crates/chainio/cl
 eigensdk-client-eth = {version = "0.0.1-alpha",path = "crates/chainio/clients/eth"}
 eigensdk-client-fireblocks = {version = "0.0.1-alpha",path = "crates/chainio/clients/fireblocks"}
 eigensdk-client-wallet = {version = "0.0.1-alpha",path = "crates/chainio/clients/wallet"}
-eigensdk-contracts-bindings = {version = "0.0.1-alpha", patn = "crates/contracts/bindings/"}
+eigensdk-contract-bindings = {version = "0.0.1-alpha", path = "crates/contracts/bindings/"}
 eigensdk-types = {version = "0.0.1-alpha",path = "crates/types/"}
 eigensdk-crypto-bls = {version = "0.0.1-alpha",path = "crates/crypto/bls/"}
 eigensdk-crypto-bn254 = {version = "0.0.1-alpha",path = "crates/crypto/bn254/"}

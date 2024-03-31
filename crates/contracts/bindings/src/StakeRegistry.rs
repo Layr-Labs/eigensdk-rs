@@ -12,7 +12,7 @@ pub use stake_registry::*;
 pub mod stake_registry {
     const _: () = {
         ::core::include_bytes!(
-            "/Users/supernovahs/Desktop/eigensdk-rs/crates/contracts/bindings/json/StakeRegistry.json",
+            "/Users/supernovahs/Desktop/eigensdk-rs/crates/contracts/utils/json/StakeRegistry.json",
         );
     };
     #[allow(deprecated)]

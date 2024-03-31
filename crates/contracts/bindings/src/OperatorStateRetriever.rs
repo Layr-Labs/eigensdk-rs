@@ -12,7 +12,7 @@ pub use operator_state_retriever::*;
 pub mod operator_state_retriever {
     const _: () = {
         ::core::include_bytes!(
-            "/Users/supernovahs/Desktop/eigensdk-rs/crates/contracts/bindings/json/OperatorStateRetriever.json",
+            "/Users/supernovahs/Desktop/eigensdk-rs/crates/contracts/utils/json/OperatorStateRetriever.json",
         );
     };
     #[allow(deprecated)]

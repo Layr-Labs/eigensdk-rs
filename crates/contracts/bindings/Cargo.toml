@@ -1,5 +1,5 @@
 [package]
-name = "eigensdk-contracts-bindings"
+name = "eigensdk-contract-bindings"
 description = "Eigen Layer contract bindings"
 
 version.workspace = true

@@ -4,7 +4,7 @@ use eigensdk_chainio_utils::{
     convert_bn254_to_ark, convert_to_bn254_g1_point, convert_to_bn254_g2_point,
 };
 use eigensdk_client_elcontracts::reader::ELChainReader;
-use eigensdk_contracts_bindings::{
+use eigensdk_contract_bindings::{
     RegistryCoordinator::{
         registry_coordinator, G1Point, PubkeyRegistrationParams, SignatureWithSaltAndExpiry,
     },

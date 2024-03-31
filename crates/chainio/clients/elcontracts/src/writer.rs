@@ -1,5 +1,5 @@
 use crate::{error::ElContractsError, reader::ELChainReader};
-use eigensdk_contracts_bindings::{
+use eigensdk_contract_bindings::{
     DelegationManager::delegation_manager, DelegationManager::OperatorDetails,
     StrategyManager::strategy_manager, IERC20::ierc20,
 };

@@ -1,11 +1,10 @@
 use ark_bn254::G2Projective;
 use ark_bn254::{Fq, G1Projective};
 use ark_ff::BigInteger256;
-use eigensdk_contracts_bindings::BLSApkRegistry::bls_apk_registry::{
+use eigensdk_contract_bindings::BLSApkRegistry::bls_apk_registry::{
     G1Point as BlsG1Point, G2Point as BlsG2Point,
 };
-// use eigensdk_
-use eigensdk_contracts_bindings::RegistryCoordinator::{
+use eigensdk_contract_bindings::RegistryCoordinator::{
     self, G1Point as RegistryG1Point, G2Point as RegistryG2Point,
 };
 use eigensdk_crypto_bls::attestation::{new_fp_element, G1Point, G2Point};

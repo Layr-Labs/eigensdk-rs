@@ -1,9 +1,9 @@
 use crate::NEW_BLS_APK_REGISTRATION_EVENT_SIGNATURE;
-use eigensdk_contracts_bindings::BLSApkRegistry::bls_apk_registry::{
+use eigensdk_contract_bindings::BLSApkRegistry::bls_apk_registry::{
     self, BLSApkRegistry, BLSApkRegistryEvents,
 };
 use ethers_core::types::{Address, Filter};
-use ethers_providers::{Http, Middleware, Provider, SubscriptionStream, Ws};
+use ethers_providers::{Http, Middleware, Provider, Ws};
 use std::sync::Arc;
 /// AvsRegistry Chain Subscriber struct
 #[derive(Debug)]

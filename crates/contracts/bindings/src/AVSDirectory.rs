@@ -12,7 +12,7 @@ pub use avs_directory::*;
 pub mod avs_directory {
     const _: () = {
         ::core::include_bytes!(
-            "/Users/supernovahs/Desktop/eigensdk-rs/crates/contracts/bindings/json/AVSDirectory.json",
+            "/Users/supernovahs/Desktop/eigensdk-rs/crates/contracts/utils/json/AVSDirectory.json",
         );
     };
     #[allow(deprecated)]

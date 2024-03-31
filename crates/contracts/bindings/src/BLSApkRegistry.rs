@@ -12,7 +12,7 @@ pub use bls_apk_registry::*;
 pub mod bls_apk_registry {
     const _: () = {
         ::core::include_bytes!(
-            "/Users/supernovahs/Desktop/eigensdk-rs/crates/contracts/bindings/json/BLSApkRegistry.json",
+            "/Users/supernovahs/Desktop/eigensdk-rs/crates/contracts/utils/json/BLSApkRegistry.json",
         );
     };
     #[allow(deprecated)]

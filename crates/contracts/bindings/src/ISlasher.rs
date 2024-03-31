@@ -12,7 +12,7 @@ pub use i_slasher::*;
 pub mod i_slasher {
     const _: () = {
         ::core::include_bytes!(
-            "/Users/supernovahs/Desktop/eigensdk-rs/crates/contracts/bindings/json/ISlasher.json",
+            "/Users/supernovahs/Desktop/eigensdk-rs/crates/contracts/utils/json/ISlasher.json",
         );
     };
     #[allow(deprecated)]
