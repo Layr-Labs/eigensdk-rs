@@ -1016,6 +1016,7 @@ dependencies = [
  "ethers",
  "ethers-core",
  "ethers-signers",
+ "thiserror",
 ]
 
 [[package]]
