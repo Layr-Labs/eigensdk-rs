@@ -1,5 +1,5 @@
 //! Signer utilities for Eigen SDK
-//! TODO: Alloy migration when alloy features are complete
+//! TODO: Alloy migration when alloy features are complete.
 
 use crate::error::SignerV2Error;
 use eth_keystore::decrypt_key;
