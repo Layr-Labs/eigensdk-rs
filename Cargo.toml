@@ -29,7 +29,7 @@ authors = ["Eigen Layer contributors"]
 rust-version = "1.76"
 repository = "https://github.com/anjaneyalabs/eigensdk-rs"
 homepage = ""
-license = "BSL 1.1"
+license-file = "LICENSE.txt"
 
 
 [workspace.lints]
