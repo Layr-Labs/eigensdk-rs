@@ -1,5 +1,7 @@
 [package]
 name = "eigensdk-crypto-bn254"
+description = "Eigen layer SDK bn254 utilities"
+
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -9,3 +11,4 @@ repository.workspace = true
 ark-ff.workspace = true
 ark-bn254 = "0.4.0"
 ethers.workspace = true
+thiserror.workspace = true

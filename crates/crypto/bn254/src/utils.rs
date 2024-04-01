@@ -1,3 +1,4 @@
+use crate::error::Bn254Err;
 use ark_bn254::{Fq, Fq2, Fr, G1Affine, G1Projective, G2Affine, G2Projective};
 use ark_ff::{BigInteger, BigInteger256};
 use ethers::core::types::U256;
@@ -25,46 +26,89 @@ pub fn biginteger256_to_u256(bi: BigInteger256) -> U256 {
     U256::from_little_endian(&s)
 }
 
-pub fn get_g1_generator() -> G1Affine {
-    let x = Fq::from_str("1").unwrap();
-    let y = Fq::from_str("2").unwrap();
+pub fn get_g1_generator() -> Result<G1Affine, Bn254Err> {
+    let x_result = Fq::from_str("1");
 
-    G1Affine::new(x, y)
+    let y_result = Fq::from_str("2");
+
+    match x_result {
+        Ok(x) => match y_result {
+            Ok(y) => {
+                return Ok(G1Affine::new(x, y));
+            }
+            Err(_) => return Err(Bn254Err::Fq),
+        },
+        Err(_) => return Err(Bn254Err::Fq),
+    }
 }
 
-pub fn get_g2_generator() -> G2Affine {
-    let x = Fq2::new(
-        Fq::from_str(
-            "10857046999023057135944570762232829481370756359578518086990519993285655852781",
-        )
-        .unwrap(),
-        Fq::from_str(
-            "11559732032986387107991004021392285783925812861821192530917403151452391805634",
-        )
-        .unwrap(),
-    );
-    let y = Fq2::new(
-        Fq::from_str(
-            "8495653923123431417604973247489272438418190587263600148770280649306958101930",
-        )
-        .unwrap(),
-        Fq::from_str(
-            "4082367875863433681332203403145435568316851327593401208105741076214120093531",
-        )
-        .unwrap(),
+pub fn get_g2_generator() -> Result<G2Affine, Bn254Err> {
+    let x_0_result = Fq::from_str(
+        "10857046999023057135944570762232829481370756359578518086990519993285655852781",
     );
 
-    G2Affine::new(x, y)
+    let x_1result = Fq::from_str(
+        "11559732032986387107991004021392285783925812861821192530917403151452391805634",
+    );
+
+    match x_0_result {
+        Ok(x_0) => {
+            match x_1result {
+                Ok(x_1) => {
+                    let x = Fq2::new(x_0, x_1);
+
+                    let y_0_result = Fq::from_str("8495653923123431417604973247489272438418190587263600148770280649306958101930");
+
+                    match y_0_result {
+                        Ok(y_0) => {
+                            let y_1_result = Fq::from_str("4082367875863433681332203403145435568316851327593401208105741076214120093531");
+
+                            match y_1_result {
+                                Ok(y_1) => {
+                                    let y = Fq2::new(y_0, y_1);
+                                    return Ok(G2Affine::new(x, y));
+                                }
+                                Err(_) => return Err(Bn254Err::Fq),
+                            }
+                        }
+                        Err(_) => {
+                            return Err(Bn254Err::Fq);
+                        }
+                    }
+                }
+                Err(_) => return Err(Bn254Err::Fq),
+            }
+        }
+        Err(_) => {
+            return Err(Bn254Err::Fq);
+        }
+    }
 }
 
-pub fn mul_by_generator_g1(pvt_key: Fr) -> G1Projective {
-    let g1_gen: G1Projective = get_g1_generator().into();
+pub fn mul_by_generator_g1(pvt_key: Fr) -> Result<G1Projective, Bn254Err> {
+    let g1_gen_result = get_g1_generator();
 
-    g1_gen.mul(pvt_key)
+    match g1_gen_result {
+        Ok(g1_gen) => {
+            let s: G1Projective = g1_gen.into();
+            return Ok(s.mul(pvt_key));
+        }
+        Err(_) => {
+            return Err(Bn254Err::Fq);
+        }
+    }
 }
 
-pub fn mul_by_generator_g2(pvt_key: Fr) -> G2Projective {
-    let g2_gen: G2Projective = get_g2_generator().into();
+pub fn mul_by_generator_g2(pvt_key: Fr) -> Result<G2Projective, Bn254Err> {
+    let g2_gen_result = get_g2_generator();
 
-    g2_gen.mul(pvt_key)
+    match g2_gen_result {
+        Ok(g2_gen) => {
+            let s: G2Projective = g2_gen.into();
+            return Ok(s.mul(pvt_key));
+        }
+        Err(_) => {
+            return Err(Bn254Err::Fq);
+        }
+    }
 }
