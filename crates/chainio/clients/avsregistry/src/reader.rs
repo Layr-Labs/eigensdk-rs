@@ -515,7 +515,7 @@ fn test_binding_generation() {
 /// Generate rust bindings using ethers
 fn generate_bindings(contract_name: &str, input_path: &str, output_path: &str) {
     let coontract: String =
-        format!("../../../../crates/contracts/bindings/json/{input_path}").to_string();
+        format!("../../../../crates/contracts/bindings/utils/json/{input_path}").to_string();
     println!("path :{}", coontract);
 
     match Abigen::new(&contract_name, coontract) {
