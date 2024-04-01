@@ -1,6 +1,6 @@
 [package]
 name = "eigensdk-contract-bindings"
-description = "Eigen Layer contract bindings"
+description = "Eigen Layer ethers bindings"
 
 version.workspace = true
 edition.workspace = true
