@@ -1,5 +1,4 @@
 pub mod error;
-pub mod fireblocks_wallet;
 pub mod privatekey_wallet;
 use error::PrivateKeyWalletError;
 use ethers_core::types::{transaction::eip2718::TypedTransaction, TransactionReceipt, TxHash};
