@@ -193,55 +193,67 @@ impl AvsRegistryChainWriter {
                 );
 
                 let g1_pubkey_bn254 = convert_to_bn254_g1_point(bls_key_pair.get_pub_key_g1());
-                let g2_pubkey_bn254 = convert_to_bn254_g2_point(bls_key_pair.gt_pub_key_g2());
+                let g2_projective_result = bls_key_pair.gt_pub_key_g2();
 
-                let pub_key_reg_params = PubkeyRegistrationParams {
-                    pubkey_registration_signature: signed_msg,
-                    pubkey_g1: g1_pubkey_bn254,
-                    pubkey_g2: g2_pubkey_bn254,
-                };
+                match g2_projective_result {
+                    Ok(g2_projective) => {
+                        let g2_pubkey_bn254 = convert_to_bn254_g2_point(g2_projective);
 
-                let msg_to_sign_result = self
-                    .el_reader
-                    .calculate_operator_avs_registration_digest_hash(
-                        wallet.address(),
-                        self.service_manager_addr,
-                        operator_to_avs_registration_sig_salt,
-                        operator_to_avs_registration_sig_expiry,
-                    )
-                    .await;
-
-                match msg_to_sign_result {
-                    Ok(msg_to_sign) => {
-                        let operator_signature = wallet.sign_message(msg_to_sign).await.unwrap();
-
-                        let operator_signature_with_salt_and_expiry = SignatureWithSaltAndExpiry {
-                            signature: operator_signature.to_vec().into(),
-                            salt: operator_to_avs_registration_sig_salt,
-                            expiry: operator_to_avs_registration_sig_expiry,
+                        let pub_key_reg_params = PubkeyRegistrationParams {
+                            pubkey_registration_signature: signed_msg,
+                            pubkey_g1: g1_pubkey_bn254,
+                            pubkey_g2: g2_pubkey_bn254,
                         };
 
-                        let contract_call = contract_registry_coordinator.register_operator(
-                            quorum_numbers.clone(),
-                            socket,
-                            pub_key_reg_params,
-                            operator_signature_with_salt_and_expiry,
-                        );
+                        let msg_to_sign_result = self
+                            .el_reader
+                            .calculate_operator_avs_registration_digest_hash(
+                                wallet.address(),
+                                self.service_manager_addr,
+                                operator_to_avs_registration_sig_salt,
+                                operator_to_avs_registration_sig_expiry,
+                            )
+                            .await;
 
-                        let tx_result = contract_call.send().await;
+                        match msg_to_sign_result {
+                            Ok(msg_to_sign) => {
+                                let operator_signature =
+                                    wallet.sign_message(msg_to_sign).await.unwrap();
 
-                        match tx_result {
-                            Ok(tx) => {
-                                // tracing info
-                                info!(tx_hash = %tx.tx_hash(), avs_service_manager = %self.service_manager_addr,operator = %wallet.address(),quorum_numbers = ?quorum_numbers , "successfully registered operator with AVS registry coordinator");
-                                Ok(tx.tx_hash())
+                                let operator_signature_with_salt_and_expiry =
+                                    SignatureWithSaltAndExpiry {
+                                        signature: operator_signature.to_vec().into(),
+                                        salt: operator_to_avs_registration_sig_salt,
+                                        expiry: operator_to_avs_registration_sig_expiry,
+                                    };
+
+                                let contract_call = contract_registry_coordinator
+                                    .register_operator(
+                                        quorum_numbers.clone(),
+                                        socket,
+                                        pub_key_reg_params,
+                                        operator_signature_with_salt_and_expiry,
+                                    );
+
+                                let tx_result = contract_call.send().await;
+
+                                match tx_result {
+                                    Ok(tx) => {
+                                        // tracing info
+                                        info!(tx_hash = %tx.tx_hash(), avs_service_manager = %self.service_manager_addr,operator = %wallet.address(),quorum_numbers = ?quorum_numbers , "successfully registered operator with AVS registry coordinator");
+                                        Ok(tx.tx_hash())
+                                    }
+                                    Err(_) => return Err(AvsRegistryError::RegisterOperator),
+                                }
                             }
-                            Err(_) => return Err(AvsRegistryError::RegisterOperator),
+                            Err(_) => {
+                                return Err(
+                                    AvsRegistryError::CalculateOperatorAvsRegistrationDigestHash,
+                                );
+                            }
                         }
                     }
-                    Err(_) => {
-                        return Err(AvsRegistryError::CalculateOperatorAvsRegistrationDigestHash);
-                    }
+                    Err(_) => return Err(AvsRegistryError::PUbKeyG2),
                 }
             }
             Err(_) => return Err(AvsRegistryError::PubKeyRegistrationMessageHash),

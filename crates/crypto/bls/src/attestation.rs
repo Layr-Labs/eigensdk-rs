@@ -1,3 +1,4 @@
+use crate::error::BlsError;
 use ark_bn254::{g1::G1_GENERATOR_X, Fq, Fq2, Fr, FrConfig, G1Affine, G1Projective, G2Projective};
 use ark_ff::{fields::Field, BigInteger256, MontConfig, One, PrimeField};
 use eigensdk_crypto_bn254::utils::{mul_by_generator_g1, mul_by_generator_g2};
@@ -28,12 +29,18 @@ pub struct KeyPair {
 }
 
 impl KeyPair {
-    pub fn new(key: PrivateKey) -> Self {
-        let priv_key_repor = mul_by_generator_g1(key);
-        return Self {
-            priv_key: key,
-            pub_key: priv_key_repor,
-        };
+    pub fn new(key: PrivateKey) -> Result<Self, BlsError> {
+        let priv_key_projective_cconfig_result = mul_by_generator_g1(key);
+
+        match priv_key_projective_cconfig_result {
+            Ok(priv_key_projective_cconfig) => {
+                return Ok(Self {
+                    priv_key: key,
+                    pub_key: priv_key_projective_cconfig,
+                });
+            }
+            Err(_) => return Err(BlsError::MulByG1Projective),
+        }
     }
 
     pub fn sign_hashes_to_curve_message(&self, g1_hashes_msg: G1Projective) -> Signature {
@@ -47,8 +54,13 @@ impl KeyPair {
         self.pub_key
     }
 
-    pub fn gt_pub_key_g2(&self) -> G2Projective {
-        mul_by_generator_g2(self.priv_key)
+    pub fn gt_pub_key_g2(&self) -> Result<G2Projective, BlsError> {
+        let mul_result = mul_by_generator_g2(self.priv_key);
+
+        match mul_result {
+            Ok(mul) => Ok(mul),
+            Err(_) => return Err(BlsError::MulByG2Projective),
+        }
     }
 }
 

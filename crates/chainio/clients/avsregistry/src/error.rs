@@ -114,4 +114,8 @@ pub enum AvsRegistryError {
     /// Update stake for all quorums
     #[error("Failed to update stake foor all quorums")]
     UpdateStakeForAllQuorums,
+
+    /// Failed to get g2 projective
+    #[error("pub key g2")]
+    PUbKeyG2,
 }

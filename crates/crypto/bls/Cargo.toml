@@ -10,3 +10,4 @@ repository.workspace = true
 ark-bn254 = "0.4.0"
 ark-ff.workspace = true
 eigensdk-crypto-bn254.workspace = true
+thiserror.workspace = true

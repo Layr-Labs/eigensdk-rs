@@ -966,6 +966,7 @@ dependencies = [
  "ark-bn254",
  "ark-ff 0.4.2",
  "eigensdk-crypto-bn254",
+ "thiserror",
 ]
 
 [[package]]
