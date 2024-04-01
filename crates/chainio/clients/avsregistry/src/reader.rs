@@ -14,7 +14,7 @@ use ethers::{
     types::{Address, Bytes, H256, U256},
 };
 use std::fmt::Debug;
-use tracing::{debug, error, info, span, warn, Level};
+use tracing::debug;
 
 use crate::NEW_BLS_APK_REGISTRATION_EVENT_SIGNATURE;
 use ethers_core::types::{BlockNumber, Filter, FilterBlockOption, Topic, ValueOrArray};
@@ -556,7 +556,6 @@ mod tests {
     use super::*;
     use ethers::types::BigEndianHash;
     use hex::FromHex;
-    use tokio::*;
 
     const HOLESKY_REGISTRY_COORDINATOR: &str = "0x53012C69A189cfA2D9d29eb6F19B32e0A2EA3490";
     const HOLESKY_OPERATOR_STATE_RETRIEVER: &str = "0xB4baAfee917fb4449f5ec64804217bccE9f46C67";
