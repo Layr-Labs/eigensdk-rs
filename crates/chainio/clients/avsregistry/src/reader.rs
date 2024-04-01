@@ -24,10 +24,11 @@ use std::collections::HashMap;
 use std::str::FromStr;
 
 const REGISTRY_COORDINATOR_PATH: &str =
-    "../../../../crates/contracts/bindings/json/RegistryCoordinator.json";
-const STAKE_REGISTRY_PATH: &str = "../../../../crates/contracts/bindings/json/StakeRegistry.json";
+    "../../../../crates/contracts/bindings/utils/json/RegistryCoordinator.json";
+const STAKE_REGISTRY_PATH: &str =
+    "../../../../crates/contracts/bindings/utils/json/StakeRegistry.json";
 const OPERATOR_STATE_RETRIEVER: &str =
-    "../../../../crates/contracts/bindings/json/OperatorStateRetriever.json";
+    "../../../../crates/contracts/bindings/utils/json/OperatorStateRetriever.json";
 
 /// Avs Registry chainreader
 #[derive(Debug)]
@@ -449,85 +450,6 @@ impl AvsRegistryChainReader {
                 Ok((operator_addresses, operator_pub_keys))
             }
             Err(_) => return Err(AvsRegistryError::GetEthLogs),
-        }
-    }
-}
-
-#[test]
-fn test_binding_generation() {
-    generate_bindings(
-        "RegistryCoordinator",
-        "RegistryCoordinator.json",
-        "../../../../crates/contracts/bindings",
-    );
-    generate_bindings(
-        "OperatorStateRetriever",
-        "OperatorStateRetriever.json",
-        "../../../../crates/contracts/bindings",
-    );
-    generate_bindings(
-        "StakeRegistry",
-        "StakeRegistry.json",
-        "../../../../crates/contracts/bindings",
-    );
-    generate_bindings(
-        "BLSApkRegistry",
-        "BLSApkRegistry.json",
-        "../../../../crates/contracts/bindings",
-    );
-    generate_bindings(
-        "ServiceManagerBase",
-        "ServiceManagerBase.json",
-        "../../../../crates/contracts/bindings",
-    );
-    generate_bindings(
-        "DelegationManager",
-        "DelegationManager.json",
-        "../../../../crates/contracts/bindings",
-    );
-    generate_bindings(
-        "StrategyManager",
-        "StrategyManager.json",
-        "../../../../crates/contracts/bindings",
-    );
-    generate_bindings(
-        "AVSDirectory",
-        "AVSDirectory.json",
-        "../../../../crates/contracts/bindings",
-    );
-    generate_bindings(
-        "ISlasher",
-        "ISlasher.json",
-        "../../../../crates/contracts/bindings",
-    );
-    generate_bindings(
-        "IStrategy",
-        "IStrategy.json",
-        "../../../../crates/contracts/bindings",
-    );
-    generate_bindings(
-        "IERC20",
-        "IERC20.json",
-        "../../../../crates/contracts/bindings",
-    );
-}
-
-/// Generate rust bindings using ethers
-fn generate_bindings(contract_name: &str, input_path: &str, output_path: &str) {
-    let coontract: String =
-        format!("../../../../crates/contracts/bindings/utils/json/{input_path}").to_string();
-    println!("path :{}", coontract);
-
-    match Abigen::new(&contract_name, coontract) {
-        Ok(v) => {
-            println!("okoik");
-            let _ = v
-                .generate()
-                .expect("failed to abigen")
-                .write_to_file(format!("{output_path}/src/{contract_name}.rs"));
-        }
-        Err(e) => {
-            println!("abigenerr{}", e);
         }
     }
 }

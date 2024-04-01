@@ -4,6 +4,7 @@ pub mod AVSDirectory;
 #[allow(non_snake_case)]
 /// Bls Apk Registry bindings
 pub mod BLSApkRegistry;
+pub mod generate_bindings;
 
 #[allow(non_snake_case)]
 

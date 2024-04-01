@@ -12,7 +12,7 @@ pub use ierc20::*;
 pub mod ierc20 {
     const _: () = {
         ::core::include_bytes!(
-            "/Users/supernovahs/Desktop/eigensdk-rs/crates/contracts/utils/json/IERC20.json",
+            "/Users/supernovahs/Desktop/eigensdk-rs/crates/contracts/bindings/utils/json/IERC20.json",
         );
     };
     #[allow(deprecated)]

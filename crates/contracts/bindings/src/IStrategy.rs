@@ -12,7 +12,7 @@ pub use i_strategy::*;
 pub mod i_strategy {
     const _: () = {
         ::core::include_bytes!(
-            "/Users/supernovahs/Desktop/eigensdk-rs/crates/contracts/utils/json/IStrategy.json",
+            "/Users/supernovahs/Desktop/eigensdk-rs/crates/contracts/bindings/utils/json/IStrategy.json",
         );
     };
     #[allow(deprecated)]
