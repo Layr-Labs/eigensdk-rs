@@ -6,9 +6,9 @@ version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 repository.workspace = true
+license-file.workspace = true
 
 [dependencies]
-# reth.workspace = true
 eigensdk-contract-bindings.workspace = true
 ethers-providers.workspace=true
 ethers-core.workspace=true
