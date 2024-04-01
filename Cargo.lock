@@ -1027,6 +1027,7 @@ dependencies = [
  "eigensdk-client-wallet",
  "eigensdk-signerv2",
  "ethers",
+ "thiserror",
 ]
 
 [[package]]

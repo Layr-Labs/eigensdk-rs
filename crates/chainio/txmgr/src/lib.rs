@@ -1,10 +1,10 @@
-use eigensdk_signerv2::SignerV2;
+use crate::error::TxMgrError;
 use ethers::{
     core::types::Address,
     providers::{Http, Middleware, Provider},
     types::{
         transaction::{eip1559::Eip1559TransactionRequest, eip2718::TypedTransaction},
-        Transaction, TransactionReceipt,
+        TransactionReceipt,
     },
 };
 
@@ -16,7 +16,6 @@ pub struct TxManager;
 pub struct SimpleTxManager {
     pub wallet: PrivateKeyWallet,
     client: Provider<Http>,
-    // signer_fn: Box<SignerV2>,
     sender: Address,
 }
 
@@ -29,19 +28,32 @@ impl SimpleTxManager {
         }
     }
 
-    pub async fn send(&self, tx: Eip1559TransactionRequest) -> Result<TransactionReceipt, String> {
-        let tx_id = self
+    pub async fn send(
+        &self,
+        tx: Eip1559TransactionRequest,
+    ) -> Result<TransactionReceipt, TxMgrError> {
+        let tx_id_result = self
             .wallet
             .send_transaction(TypedTransaction::Eip1559(tx))
-            .await
-            .unwrap();
-        let provider = Arc::new(self.client.clone());
-        let receipt = provider.get_transaction_receipt(tx_id).await.unwrap();
+            .await;
 
-        if let Some(rece) = receipt {
-            Ok(rece)
-        } else {
-            return Err("receipt not found ".to_string());
+        match tx_id_result {
+            Ok(tx_id) => {
+                let provider = Arc::new(self.client.clone());
+                let receipt_result = provider.get_transaction_receipt(tx_id).await;
+
+                match receipt_result {
+                    Ok(receipt) => {
+                        if let Some(rece) = receipt {
+                            Ok(rece)
+                        } else {
+                            return Err(TxMgrError::EmptyReceipt);
+                        }
+                    }
+                    Err(_) => return Err(TxMgrError::GetTransactionReceipt),
+                }
+            }
+            Err(_) => return Err(TxMgrError::SendTransaction),
         }
     }
 }

@@ -1,11 +1,14 @@
 [package]
 name = "eigensdk-txmgr"
+description = "EigenSDK TxMgr"
+
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 repository.workspace = true
 
 [dependencies]
-ethers = "2.0.14"
+ethers.workspace = true
 eigensdk-client-wallet.workspace = true
 eigensdk-signerv2.workspace = true
+thiserror.workspace = true
