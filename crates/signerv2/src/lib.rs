@@ -3,8 +3,8 @@
 
 use crate::error::SignerV2Error;
 use eth_keystore::decrypt_key;
-use ethers_core::types::{transaction::eip2718::TypedTransaction,Signature};
-use ethers_signers::{Wallet,Signer};
+use ethers_core::types::{transaction::eip2718::TypedTransaction, Signature};
+use ethers_signers::{Signer, Wallet};
 
 pub mod error;
 
