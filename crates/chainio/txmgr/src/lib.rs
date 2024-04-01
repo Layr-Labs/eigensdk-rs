@@ -1,4 +1,5 @@
 use crate::error::TxMgrError;
+pub mod error;
 use ethers::{
     core::types::Address,
     providers::{Http, Middleware, Provider},
