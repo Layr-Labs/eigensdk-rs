@@ -1,6 +1,6 @@
 use crate::error::BlsError;
-use ark_bn254::{g1::G1_GENERATOR_X, Fq, Fq2, Fr, FrConfig, G1Affine, G1Projective, G2Projective};
-use ark_ff::{fields::Field, BigInteger256, MontConfig, One, PrimeField};
+use ark_bn254::{Fq, Fq2, Fr, G1Projective, G2Projective};
+use ark_ff::{BigInteger256, One};
 use eigensdk_crypto_bn254::utils::{mul_by_generator_g1, mul_by_generator_g2};
 use std::ops::Mul;
 pub fn new_fp_element(x: BigInteger256) -> Fq {
@@ -44,7 +44,6 @@ impl KeyPair {
     }
 
     pub fn sign_hashes_to_curve_message(&self, g1_hashes_msg: G1Projective) -> Signature {
-        let affine: G1Affine = g1_hashes_msg.into();
         let sig = g1_hashes_msg.mul(self.priv_key);
 
         Signature { sig }
