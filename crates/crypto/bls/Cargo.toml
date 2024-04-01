@@ -1,12 +1,14 @@
 [package]
 name = "eigensdk-crypto-bls"
+description = "Eigen layer bls utilities"
+
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 repository.workspace = true
+license-file.workspace = true
 
 [dependencies]
-# reth.workspace = true
 ark-bn254 = "0.4.0"
 ark-ff.workspace = true
 eigensdk-crypto-bn254.workspace = true
