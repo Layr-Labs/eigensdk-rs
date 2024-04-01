@@ -9,7 +9,6 @@ repository.workspace = true
 license-file.workspace = true
 
 [dependencies]
-eigensdk-client-eth.workspace = true 
 eigensdk-contract-bindings.workspace = true
 alloy-primitives = "0.7.0"
 ethers.workspace = true

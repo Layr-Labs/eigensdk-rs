@@ -878,7 +878,6 @@ dependencies = [
  "ark-ff 0.4.2",
  "eigensdk-chainio-utils",
  "eigensdk-client-elcontracts",
- "eigensdk-client-eth",
  "eigensdk-contract-bindings",
  "eigensdk-crypto-bls",
  "eigensdk-crypto-bn254",
