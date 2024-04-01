@@ -1,5 +1,5 @@
 use ark_bn254::G2Projective;
-use ark_bn254::{Fq, G1Projective};
+use ark_bn254::G1Projective;
 use ark_ff::BigInteger256;
 
 use eigensdk_contract_bindings::RegistryCoordinator::{
