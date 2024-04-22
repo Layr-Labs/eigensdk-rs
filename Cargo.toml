@@ -13,9 +13,11 @@ members = [ "crates/chainio/clients/avsregistry/",
 "crates/crypto/bls/",
 "crates/metrics/collectors/economic/",
 "crates/metrics/collectors/rpc_calls/",
+"crates/services/avsregistry/",
+"crates/services/bls_aggregation/",
+"crates/services/operatorpubkeys/",
 "crates/types/",
 "crates/metrics/",
-"crates/services/",
 "crates/chainio/txmgr/",
 "crates/types/",
 "crates/signer/"]
@@ -73,5 +75,9 @@ eigensdk-utils = {version = "0.0.1-alpha" , path = "crates/utils/"}
 ethers-signers = "2.0.14"
 eigensdk-metrics-collectors-economic = {version = "0.0.1-alpha",path = "crates/metrics/collectors/economic"}
 eigensdk-metrics-collectors-rpc-calls = {version = "0.0.1-alpha",path = "crates/metrics/collectors/rpc_calls"}
+eigensdk-services-avsregistry = {path = "crates/services/avsregistry"}
+eigensdk-services-bls_aggregation = {path = "crates/services/bls_aggregation"}
+eigensdk-services-operatorpubkeys = {path = "crates/services/operatorpubkeys"}
+
 thiserror = "1.0"
 tracing = "0.1.40"

@@ -1011,6 +1011,39 @@ dependencies = [
 ]
 
 [[package]]
+name = "eigensdk-services-avsregistry"
+version = "0.0.1-alpha"
+dependencies = [
+ "eth-keystore",
+ "ethers",
+ "ethers-core",
+ "ethers-signers",
+ "thiserror",
+]
+
+[[package]]
+name = "eigensdk-services-blsaggregation"
+version = "0.0.1-alpha"
+dependencies = [
+ "eth-keystore",
+ "ethers",
+ "ethers-core",
+ "ethers-signers",
+ "thiserror",
+]
+
+[[package]]
+name = "eigensdk-services-operatorpubkeys"
+version = "0.0.1-alpha"
+dependencies = [
+ "eth-keystore",
+ "ethers",
+ "ethers-core",
+ "ethers-signers",
+ "thiserror",
+]
+
+[[package]]
 name = "eigensdk-signerv2"
 version = "0.0.1-alpha"
 dependencies = [
@@ -3183,10 +3216,6 @@ dependencies = [
  "ryu",
  "serde",
 ]
-
-[[package]]
-name = "services"
-version = "0.0.1-alpha"
 
 [[package]]
 name = "sha1"
