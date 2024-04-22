@@ -886,6 +886,7 @@ dependencies = [
  "ethers",
  "ethers-core",
  "ethers-providers",
+ "futures",
  "hex",
  "num-bigint",
  "serde_json",

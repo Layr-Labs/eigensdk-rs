@@ -1,10 +1,18 @@
-use crate::NEW_BLS_APK_REGISTRATION_EVENT_SIGNATURE;
+use crate::{error::AvsRegistryError, NEW_BLS_APK_REGISTRATION_EVENT_SIGNATURE};
 use eigensdk_contract_bindings::BLSApkRegistry::bls_apk_registry::{
     self, BLSApkRegistry, BLSApkRegistryEvents,
 };
 use ethers_core::types::{Address, Filter};
-use ethers_providers::{Http, Middleware, Provider, Ws};
+use ethers_providers::{
+    Http, Middleware, Provider, ProviderError, StreamExt, SubscriptionStream, Ws,
+};
+use futures::Future;
+use std::pin::Pin;
 use std::sync::Arc;
+
+type MyStream<'a, T> =
+    Pin<Box<dyn Future<Output = Result<SubscriptionStream<'static, Ws, T>, ProviderError>> + Send>>;
+
 /// AvsRegistry Chain Subscriber struct
 #[derive(Debug)]
 pub struct AvsRegistryChainSubscriber {
@@ -28,14 +36,12 @@ impl AvsRegistryChainSubscriber {
         return bls_apk_reg;
     }
 
-    async fn subscribe_to_new_pub_key_registrations(&self, client: Provider<Ws>) {
-        let provider = Arc::new(client.clone());
-        let current_block_number = provider.clone().get_block_number().await.unwrap();
+    async fn get_new_pub_key_registration_filter<'a>(&self, client: Arc<Provider<Ws>>) -> Filter {
+        let current_block_number = client.get_block_number().await.unwrap();
 
         let filter = Filter::new()
             .topic0(NEW_BLS_APK_REGISTRATION_EVENT_SIGNATURE)
             .from_block(current_block_number);
-
-        let _ = client.subscribe_logs(&filter).await.unwrap();
+        filter
     }
 }

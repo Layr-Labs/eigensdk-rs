@@ -118,4 +118,8 @@ pub enum AvsRegistryError {
     /// Failed to get g2 projective
     #[error("pub key g2")]
     PUbKeyG2,
+
+    /// Failed to subscribe to logs
+    #[error("Could not subscribe to logs ")]
+    SubscribeLogs,
 }

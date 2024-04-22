@@ -28,6 +28,7 @@ thiserror.workspace = true
 tracing.workspace = true
 tokio = {version = "1.37.0" , features = ["test-util", "full"] }
 hex = "0.4.3"
+futures = "0.3.30"
 
 [lints]
 workspace = true
