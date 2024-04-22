@@ -11,7 +11,7 @@ use eigensdk_types::operator::{bitmap_to_quorum_ids, OperatorPubKeys};
 use ethers::{
     prelude::Abigen,
     providers::Middleware,
-    types::{Address, Bytes, H256, U256},
+    types::{Address, Block, Bytes, H256, U256},
 };
 use std::fmt::Debug;
 use tracing::debug;
@@ -373,15 +373,27 @@ impl AvsRegistryChainReader {
         }
     }
 
-    async fn query_existing_registered_operator_pub_keys(
+    pub async fn query_existing_registered_operator_pub_keys(
         &self,
-        start_block: BlockNumber,
-        stop_block: BlockNumber,
+        start_block: Option<BlockNumber>,
+        stop_block: Option<BlockNumber>,
     ) -> Result<(Vec<Address>, Vec<OperatorPubKeys>), AvsRegistryError> {
-        let block_option: FilterBlockOption = FilterBlockOption::Range {
-            from_block: Some(start_block),
-            to_block: Some(stop_block),
+        let mut block_option: FilterBlockOption = FilterBlockOption::Range {
+            from_block: (start_block),
+            to_block: (stop_block),
         };
+
+        if stop_block.is_none() {
+            let current_block_number_result = self.eth_client.get_block_number().await;
+
+            match current_block_number_result {
+                Ok(current_block_number) => {
+                    block_option =
+                        block_option.set_to_block(BlockNumber::Number(current_block_number));
+                }
+                Err(_) => return Err(AvsRegistryError::GetBlockNumber),
+            }
+        }
 
         let query = Filter {
             block_option,

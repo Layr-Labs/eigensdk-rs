@@ -63,10 +63,12 @@ impl KeyPair {
     }
 }
 
+#[derive(Debug, Clone)]
 pub struct G1Point {
     pub point: G1Projective,
 }
 
+#[derive(Debug, Clone)]
 pub struct G2Point {
     pub point: G2Projective,
 }

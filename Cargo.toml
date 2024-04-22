@@ -55,7 +55,7 @@ eigensdk-metrics = {version = "0.0.1-alpha",  path = "crates/metrics/"}
 serde = {version = "1.0.197" , features = ["derive"]}
 eigensdk-chainio-utils = {version = "0.0.1-alpha", path = "crates/chainio/utils/"}
 alloy-primitives = "0.7.0"
-eigensdk-client-avsregistry = {version = "0.0.1-alpha", path = "crates/chainio/clients/avsregistry"}
+eigensdk-client-avsregistry = {path = "crates/chainio/clients/avsregistry"}
 eigensdk-client-builder = {version = "0.0.1-alpha",path = "crates/chainio/clients/builder"}
 eigensdk-client-elcontracts = {version = "0.0.1-alpha",path = "crates/chainio/clients/elcontracts"}
 eigensdk-client-eth = {version = "0.0.1-alpha",path = "crates/chainio/clients/eth"}

@@ -14,7 +14,7 @@ type MyStream<'a, T> =
     Pin<Box<dyn Future<Output = Result<SubscriptionStream<'static, Ws, T>, ProviderError>> + Send>>;
 
 /// AvsRegistry Chain Subscriber struct
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct AvsRegistryChainSubscriber {
     bls_apk_registry: BLSApkRegistryEvents,
 }
@@ -36,7 +36,10 @@ impl AvsRegistryChainSubscriber {
         return bls_apk_reg;
     }
 
-    async fn get_new_pub_key_registration_filter<'a>(&self, client: Arc<Provider<Ws>>) -> Filter {
+    pub async fn get_new_pub_key_registration_filter<'a>(
+        &self,
+        client: Arc<Provider<Ws>>,
+    ) -> Filter {
         let current_block_number = client.get_block_number().await.unwrap();
 
         let filter = Filter::new()

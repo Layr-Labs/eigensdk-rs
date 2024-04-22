@@ -18,6 +18,7 @@ pub fn bitmap_to_quorum_ids(quorum_bitmaps: U256) -> Vec<u8> {
     quorum_ids
 }
 
+#[derive(Debug, Clone)]
 pub struct OperatorPubKeys {
     pub g1_pub_key: G1Point,
     pub g2_pub_key: G2Point,

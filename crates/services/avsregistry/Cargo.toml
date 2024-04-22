@@ -14,3 +14,4 @@ ethers.workspace = true
 ethers-signers.workspace = true
 eth-keystore = "0.5.0"
 thiserror.workspace = true
+eigensdk-client-avsregistry.workspace = true

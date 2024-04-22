@@ -1014,6 +1014,7 @@ dependencies = [
 name = "eigensdk-services-avsregistry"
 version = "0.0.1-alpha"
 dependencies = [
+ "eigensdk-client-avsregistry",
  "eth-keystore",
  "ethers",
  "ethers-core",
@@ -1036,9 +1037,12 @@ dependencies = [
 name = "eigensdk-services-operatorpubkeys"
 version = "0.0.1-alpha"
 dependencies = [
+ "eigensdk-client-avsregistry",
+ "eigensdk-types",
  "eth-keystore",
  "ethers",
  "ethers-core",
+ "ethers-providers",
  "ethers-signers",
  "thiserror",
 ]
