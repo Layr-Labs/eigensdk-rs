@@ -11,11 +11,14 @@ use ethers_core::{types::{Address},abi::RawLog};
 use ethers_providers::{Middleware, Provider, Ws};
 use std::collections::HashMap;
 use eigensdk_crypto_bn254::utils::u256_to_bigint256;
+use std::sync::{Mutex};
+
 #[derive(Debug)]
 pub struct OperatorPubKeysServiceInMemory {
     avs_registry_reader: AvsRegistryChainReader,
     avs_registry_subscriber: AvsRegistryChainSubscriber,
     web_socket: Arc<Provider<Ws>>,
+    pub_keys: Arc<Mutex<HashMap<Address, OperatorPubKeys>>>
 }
 
 impl OperatorPubKeysServiceInMemory {
@@ -24,19 +27,20 @@ impl OperatorPubKeysServiceInMemory {
         avs_registry_chain_reader: AvsRegistryChainReader,
         web_socket: Arc<Provider<Ws>>,
     ) -> Self {
-        
+        let pub_keys = Arc::new(Mutex::new(HashMap::new()));
 
         Self {
             avs_registry_reader: avs_registry_chain_reader,
             avs_registry_subscriber: avs_registry_subscriber,
-            web_socket
+            web_socket,
+            pub_keys
         }
     }
 
     pub async fn start_service(&self) {
-        let  mut map:HashMap<Address,(OperatorPubKeys)> = HashMap::new();
+      
         // query past operator registratinos and store in memory 
-       map = self.query_past_registered_operator_events_and_fill_db(map).await;
+       let map = self.query_past_registered_operator_events_and_fill_db(self.pub_keys.clone()).await;
 
         let filter = self.avs_registry_subscriber
         .get_new_pub_key_registration_filter(self.web_socket.clone())
@@ -66,7 +70,8 @@ impl OperatorPubKeysServiceInMemory {
                             ),
                         ),
                     };
-                    map.insert(pubkeyreg.operator,operator_pub_key);
+                    let mut pub_keys = map.lock().unwrap();
+                    pub_keys.insert(pubkeyreg.operator,operator_pub_key);
                 },
                 _ =>{
                     
@@ -80,8 +85,8 @@ impl OperatorPubKeysServiceInMemory {
 
     pub async fn query_past_registered_operator_events_and_fill_db(
         &self,
-        mut map:HashMap<Address,OperatorPubKeys>
-    ) -> HashMap<Address, OperatorPubKeys> {
+        map:Arc<Mutex<HashMap<Address,OperatorPubKeys>>>
+    ) -> Arc<Mutex<HashMap<Address, OperatorPubKeys>>> {
         // Assuming ethers rs fetches data from first block . Have to validate this .
         let (operator_address, operator_pub_keys) = self
             .avs_registry_reader
@@ -90,9 +95,11 @@ impl OperatorPubKeysServiceInMemory {
             .unwrap();
 
         for (i, address) in operator_address.iter().enumerate() {
-            map.insert(*address, operator_pub_keys[i].clone());
+            let mut pub_keys  = map.lock().unwrap();
+            pub_keys.insert(*address, operator_pub_keys[i].clone());
         }
 
         return map;
     }
 }
+ 

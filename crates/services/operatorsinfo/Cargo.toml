@@ -1,6 +1,6 @@
 [package]
-name = "eigensdk-services-operatorpubkeys"
-description = "Eigen Layer SDK services operatorpubkeys"
+name = "eigensdk-services-operatorsinfo"
+description = "Eigen Layer SDK services operatorsinfo"
 
 version.workspace = true
 edition.workspace = true

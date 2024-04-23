@@ -1,3 +1,3 @@
-pub mod operatorpubkeys_inmemory;
+pub mod operatorsinfo_inmemory;
 
 pub struct OperatorPubKeysService {}
