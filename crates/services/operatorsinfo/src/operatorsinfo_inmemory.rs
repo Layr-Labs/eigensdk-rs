@@ -14,14 +14,14 @@ use eigensdk_crypto_bn254::utils::u256_to_bigint256;
 use std::sync::{Mutex};
 
 #[derive(Debug)]
-pub struct OperatorPubKeysServiceInMemory {
+pub struct OperatorInfoServiceInMemory {
     avs_registry_reader: AvsRegistryChainReader,
     avs_registry_subscriber: AvsRegistryChainSubscriber,
     web_socket: Arc<Provider<Ws>>,
     pub_keys: Arc<Mutex<HashMap<Address, OperatorPubKeys>>>
 }
 
-impl OperatorPubKeysServiceInMemory {
+impl OperatorInfoServiceInMemory {
     pub async fn new(
         avs_registry_subscriber: AvsRegistryChainSubscriber,
         avs_registry_chain_reader: AvsRegistryChainReader,

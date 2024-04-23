@@ -1,7 +1,9 @@
 use eigensdk_crypto_bls::attestation::{G1Point, G2Point};
-use ethers::types::{Address, U256};
+use ethers::types::{Address, U256,U64};
 use num_bigint::BigUint;
+use std::collections::HashMap;
 const MAX_NUMBER_OF_QUORUMS: usize = 192;
+    
 
 pub fn bitmap_to_quorum_ids(quorum_bitmaps: U256) -> Vec<u8> {
     let mut bytes: [u8; 32] = [0u8; 32];
@@ -89,3 +91,20 @@ impl Operator {
         self.staker_opt_out_window_blocks
     }
 }
+
+type Socket = String;
+
+type QuorumNum = u8;
+
+pub struct OperatorInfo{
+    socket: Socket,
+    pub_keys : OperatorPubKeys
+}
+
+pub struct OperatorAvsState{
+    operator_id : [u8;32],
+    operator_info: OperatorInfo,
+    stake_per_quorum : HashMap<QuorumNum,U256>,
+    block_num : U64    
+}
+

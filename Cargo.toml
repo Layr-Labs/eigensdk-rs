@@ -77,7 +77,7 @@ eigensdk-metrics-collectors-economic = {version = "0.0.1-alpha",path = "crates/m
 eigensdk-metrics-collectors-rpc-calls = {version = "0.0.1-alpha",path = "crates/metrics/collectors/rpc_calls"}
 eigensdk-services-avsregistry = {path = "crates/services/avsregistry"}
 eigensdk-services-bls_aggregation = {path = "crates/services/bls_aggregation"}
-eigensdk-services-operatorpubkeys = {path = "crates/services/operatorpubkeys"}
+eigensdk-services-operatorsinfo = {path = "crates/services/operatorsinfo"}
 
 thiserror = "1.0"
 tracing = "0.1.40"
