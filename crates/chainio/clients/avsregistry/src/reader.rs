@@ -107,7 +107,7 @@ impl AvsRegistryChainReader {
         }
     }
 
-    async fn get_operators_stake_in_quorums_at_block(
+    pub async fn get_operators_stake_in_quorums_at_block(
         &self,
         block_number: u32,
         quorum_numbers: Bytes,
@@ -336,7 +336,7 @@ impl AvsRegistryChainReader {
         }
     }
 
-    async fn get_operator_from_id(&self, operator_id: H256) -> Result<Address, AvsRegistryError> {
+    pub async fn get_operator_from_id(&self, operator_id: [u8;32]) -> Result<Address, AvsRegistryError> {
         let contract_registry_coordinator = registry_coordinator::RegistryCoordinator::new(
             self.registry_coordinator_addr,
             self.eth_client.clone().into(),
@@ -435,20 +435,8 @@ impl AvsRegistryChainReader {
                             let g2_pub_key = decoded_event.pubkey_g2;
 
                             let operator_pub_key = OperatorPubKeys {
-                                g1_pub_key: G1Point::new(
-                                    u256_to_bigint256(g1_pub_key.x),
-                                    u256_to_bigint256(g1_pub_key.y),
-                                ),
-                                g2_pub_key: G2Point::new(
-                                    (
-                                        u256_to_bigint256(g2_pub_key.x[0]),
-                                        u256_to_bigint256(g2_pub_key.x[1]),
-                                    ),
-                                    (
-                                        u256_to_bigint256(g2_pub_key.y[0]),
-                                        u256_to_bigint256(g2_pub_key.y[1]),
-                                    ),
-                                ),
+                                g1_pub_key,
+                                g2_pub_key
                             };
 
                             operator_pub_keys.push(operator_pub_key);

@@ -12,3 +12,4 @@ license-file.workspace = true
 ethers.workspace = true
 num-bigint = "0.4.4"
 eigensdk-crypto-bls.workspace = true
+eigensdk-contract-bindings.workspace = true

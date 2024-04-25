@@ -3,22 +3,27 @@ use eigensdk_client_avsregistry::{
 };
 use eigensdk_contract_bindings::BLSApkRegistry::BLSApkRegistryEvents;
 use ethers::contract::EthLogDecode;
-use eigensdk_crypto_bls::attestation::{G1Point,G2Point};
 use std::sync::Arc;
 use ethers_providers::StreamExt;
-use eigensdk_types::operator::OperatorPubKeys;
-use ethers_core::{types::{Address},abi::RawLog};
+use eigensdk_types::operator::{OperatorPubKeys,operator_id_from_g1_pub_key};
+use ethers_core::{types::Address,abi::RawLog};
 use ethers_providers::{Middleware, Provider, Ws};
 use std::collections::HashMap;
-use eigensdk_crypto_bn254::utils::u256_to_bigint256;
-use std::sync::{Mutex};
+use tokio::sync::{mpsc, mpsc::UnboundedSender, oneshot::{Sender,self}};
 
 #[derive(Debug)]
 pub struct OperatorInfoServiceInMemory {
     avs_registry_reader: AvsRegistryChainReader,
     avs_registry_subscriber: AvsRegistryChainSubscriber,
     web_socket: Arc<Provider<Ws>>,
-    pub_keys: Arc<Mutex<HashMap<Address, OperatorPubKeys>>>
+    pub_keys: UnboundedSender<OperatorsInfoMessage>,
+}
+
+#[derive(Debug)]
+enum OperatorsInfoMessage {
+    InsertOperatorInfo(Address,OperatorPubKeys),
+    Remove(Address),
+    Get(Address,Sender<Option<OperatorPubKeys>>)
 }
 
 impl OperatorInfoServiceInMemory {
@@ -27,20 +32,48 @@ impl OperatorInfoServiceInMemory {
         avs_registry_chain_reader: AvsRegistryChainReader,
         web_socket: Arc<Provider<Ws>>,
     ) -> Self {
-        let pub_keys = Arc::new(Mutex::new(HashMap::new()));
+        let (pubkeys_tx ,mut pubkeys_rx ) = mpsc::unbounded_channel();
+
+        let mut operator_info_data = HashMap::new();
+
+        let mut operator_addr_to_id = HashMap::new();
+
+        tokio::spawn( async move{
+
+            while let Some(cmd) = pubkeys_rx.recv().await {
+                match cmd {
+                    OperatorsInfoMessage::InsertOperatorInfo(addr, keys) => {
+                        operator_info_data.insert(addr, keys.clone());
+                        let operator_id =operator_id_from_g1_pub_key( keys.g1_pub_key  );
+                        operator_addr_to_id.insert(addr,operator_id);
+                    },
+                    OperatorsInfoMessage::Remove(addr) => {
+                        operator_info_data.remove(&addr);
+                    },
+                    OperatorsInfoMessage::Get(addr,responder) => {
+                        let result = operator_info_data.get(&addr).cloned();
+                        let _ = responder.send(result );
+                    }
+                }
+            }
+
+        });
+
 
         Self {
             avs_registry_reader: avs_registry_chain_reader,
             avs_registry_subscriber: avs_registry_subscriber,
             web_socket,
-            pub_keys
+            pub_keys:pubkeys_tx,
+            // operator_addr_to_id:operator_addr_to_id_tx,
+            // socket_dict:socket_dict_tx 
         }
     }
 
     pub async fn start_service(&self) {
       
-        // query past operator registratinos and store in memory 
-       let map = self.query_past_registered_operator_events_and_fill_db(self.pub_keys.clone()).await;
+        // query past operator registrations
+        self.query_past_registered_operator_events_and_fill_db().await;
 
         let filter = self.avs_registry_subscriber
         .get_new_pub_key_registration_filter(self.web_socket.clone())
@@ -55,23 +88,11 @@ impl OperatorInfoServiceInMemory {
             match data {
                 BLSApkRegistryEvents::NewPubkeyRegistrationFilter(pubkeyreg)=>{
                     let operator_pub_key = OperatorPubKeys {
-                        g1_pub_key: G1Point::new(
-                            u256_to_bigint256(pubkeyreg.pubkey_g1.x),
-                            u256_to_bigint256(pubkeyreg.pubkey_g1.y),
-                        ),
-                        g2_pub_key: G2Point::new(
-                            (
-                                u256_to_bigint256(pubkeyreg.pubkey_g2.x[0]),
-                                u256_to_bigint256(pubkeyreg.pubkey_g2.x[1]),
-                            ),
-                            (
-                                u256_to_bigint256(pubkeyreg.pubkey_g2.y[0]),
-                                u256_to_bigint256(pubkeyreg.pubkey_g2.y[1]),
-                            ),
-                        ),
+                        g1_pub_key:pubkeyreg.pubkey_g1,
+                        g2_pub_key: pubkeyreg.pubkey_g2
                     };
-                    let mut pub_keys = map.lock().unwrap();
-                    pub_keys.insert(pubkeyreg.operator,operator_pub_key);
+                    // send message 
+                    let _ = self.pub_keys.send(OperatorsInfoMessage::InsertOperatorInfo(pubkeyreg.operator,operator_pub_key));
                 },
                 _ =>{
                     
@@ -82,11 +103,15 @@ impl OperatorInfoServiceInMemory {
 
     }
 
+    pub async fn get_operator_info(&self, address: Address) -> Option<OperatorPubKeys> {
+        let (responder_tx, responder_rx) = oneshot::channel();
+        let _ = self.pub_keys.send(OperatorsInfoMessage::Get(address, responder_tx));
+        responder_rx.await.unwrap_or(None)
+    }
 
     pub async fn query_past_registered_operator_events_and_fill_db(
         &self,
-        map:Arc<Mutex<HashMap<Address,OperatorPubKeys>>>
-    ) -> Arc<Mutex<HashMap<Address, OperatorPubKeys>>> {
+    ) {
         // Assuming ethers rs fetches data from first block . Have to validate this .
         let (operator_address, operator_pub_keys) = self
             .avs_registry_reader
@@ -95,11 +120,13 @@ impl OperatorInfoServiceInMemory {
             .unwrap();
 
         for (i, address) in operator_address.iter().enumerate() {
-            let mut pub_keys  = map.lock().unwrap();
-            pub_keys.insert(*address, operator_pub_keys[i].clone());
+            // let mut pub_keys  = map.lock().unwrap();
+            let message = OperatorsInfoMessage::InsertOperatorInfo(*address,operator_pub_keys[i].clone());
+            let _ = self.pub_keys.send(message);
         }
 
-        return map;
     }
+
+
 }
  

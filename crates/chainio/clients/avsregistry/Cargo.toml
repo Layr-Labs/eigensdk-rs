@@ -26,7 +26,7 @@ eigensdk-chainio-utils.workspace = true
 ark-bn254 = "0.4.0"
 thiserror.workspace = true
 tracing.workspace = true
-tokio = {version = "1.37.0" , features = ["test-util", "full"] }
+tokio = {version = "1.37.0" , features = ["test-util", "full","sync"] }
 hex = "0.4.3"
 futures = "0.3.30"
 

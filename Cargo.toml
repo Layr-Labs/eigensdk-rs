@@ -78,6 +78,7 @@ eigensdk-metrics-collectors-rpc-calls = {version = "0.0.1-alpha",path = "crates/
 eigensdk-services-avsregistry = {path = "crates/services/avsregistry"}
 eigensdk-services-bls_aggregation = {path = "crates/services/bls_aggregation"}
 eigensdk-services-operatorsinfo = {path = "crates/services/operatorsinfo"}
+tokio = {version = "1.37.0" , features = ["test-util", "full","sync"] }
 
 thiserror = "1.0"
 tracing = "0.1.40"

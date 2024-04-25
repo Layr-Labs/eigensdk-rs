@@ -1050,6 +1050,7 @@ dependencies = [
  "ethers-providers",
  "ethers-signers",
  "thiserror",
+ "tokio",
 ]
 
 [[package]]
@@ -1077,6 +1078,7 @@ dependencies = [
 name = "eigensdk-types"
 version = "0.0.1-alpha"
 dependencies = [
+ "eigensdk-contract-bindings",
  "eigensdk-crypto-bls",
  "ethers",
  "num-bigint",
