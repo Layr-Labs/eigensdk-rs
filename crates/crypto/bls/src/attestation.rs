@@ -1,7 +1,8 @@
 use crate::error::BlsError;
 use ark_bn254::{Fq, Fq2, Fr, G1Projective, G2Projective};
 use ark_ff::{BigInteger256, One};
-use eigensdk_crypto_bn254::utils::{mul_by_generator_g1, mul_by_generator_g2};
+use eigensdk_crypto_bn254::utils::{mul_by_generator_g1, mul_by_generator_g2, u256_to_bigint256};
+use ethers_core::types::U256;
 use std::ops::{Add, Mul};
 pub fn new_fp_element(x: BigInteger256) -> Fq {
     Fq::from(x)
@@ -13,13 +14,20 @@ fn new_fp2_element(a: BigInteger256, b: BigInteger256) -> Fq2 {
 
 type PrivateKey = Fr;
 
+#[derive(Debug, Clone)]
 pub struct Signature {
-    sig: G1Projective,
+    g1_point: G1Point,
 }
 
 impl Signature {
+    pub fn new_zero_signature() -> Self {
+        return Signature {
+            g1_point: G1Point::new_zero_g1_point(),
+        };
+    }
+
     pub fn sig(&self) -> G1Projective {
-        self.sig
+        self.g1_point.point
     }
 }
 
@@ -46,7 +54,9 @@ impl KeyPair {
     pub fn sign_hashes_to_curve_message(&self, g1_hashes_msg: G1Projective) -> Signature {
         let sig = g1_hashes_msg.mul(self.priv_key);
 
-        Signature { sig }
+        Signature {
+            g1_point: G1Point { point: sig },
+        }
     }
 
     pub fn get_pub_key_g1(&self) -> G1Projective {
@@ -103,5 +113,12 @@ impl G1Point {
     pub fn add(&mut self, p2: G1Point) -> G1Point {
         let added_point = self.point.add(p2.point);
         G1Point { point: added_point }
+    }
+
+    pub fn new_zero_g1_point() -> Self {
+        G1Point::new(
+            u256_to_bigint256(U256::from(0)),
+            u256_to_bigint256(U256::from(0)),
+        )
     }
 }
