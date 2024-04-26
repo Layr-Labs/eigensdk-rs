@@ -53,7 +53,7 @@ prometheus-client = "0.22.2"
 bn254 = {git = "https://github.com/sedaprotocol/bn254"}
 eigensdk-metrics = {version = "0.0.1-alpha",  path = "crates/metrics/"}
 serde = {version = "1.0.197" , features = ["derive"]}
-eigensdk-chainio-utils = {version = "0.0.1-alpha", path = "crates/chainio/utils/"}
+eigensdk-chainio-utils = {path = "crates/chainio/utils/"}
 alloy-primitives = "0.7.0"
 eigensdk-client-avsregistry = {path = "crates/chainio/clients/avsregistry"}
 eigensdk-client-builder = {version = "0.0.1-alpha",path = "crates/chainio/clients/builder"}
@@ -63,7 +63,7 @@ eigensdk-client-fireblocks = {version = "0.0.1-alpha",path = "crates/chainio/cli
 eigensdk-client-wallet = {version = "0.0.1-alpha",path = "crates/chainio/clients/wallet"}
 eigensdk-contract-bindings = {version = "0.0.1-alpha", path = "crates/contracts/bindings/"}
 eigensdk-types = {version = "0.0.1-alpha",path = "crates/types/"}
-eigensdk-crypto-bls = {version = "0.0.1-alpha",path = "crates/crypto/bls/"}
+eigensdk-crypto-bls = {path = "crates/crypto/bls/"}
 eigensdk-crypto-bn254 = {version = "0.0.1-alpha",path = "crates/crypto/bn254/"}
 eigensdk-txmgr = {version = "0.0.1-alpha",path = "crates/chainio/txmgr/"}
 alloy-sol-types = {git = "https://github.com/alloy-rs/core", rev = "5edbf5e17f0874c2870c7bba43ae063081adabb5", features = ["json"]}

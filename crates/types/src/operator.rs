@@ -1,5 +1,8 @@
 use eigensdk_crypto_bls::attestation::{G1Point, G2Point};
-use ethers::{types::{Address, U256,U64},utils::keccak256};
+use ethers::{
+    types::{Address, U256, U64},
+    utils::keccak256,
+};
 use num_bigint::BigUint;
 use std::collections::HashMap;
 const MAX_NUMBER_OF_QUORUMS: usize = 192;
@@ -19,7 +22,6 @@ pub fn bitmap_to_quorum_ids(quorum_bitmaps: U256) -> Vec<u8> {
     }
     quorum_ids
 }
-
 
 #[derive(Debug, Clone)]
 pub struct OperatorPubKeys {
@@ -97,23 +99,27 @@ pub type Socket = String;
 
 type QuorumNum = u8;
 
-pub struct OperatorInfo{
-    socket: Socket,
-    pub_keys : OperatorPubKeys
+pub struct OperatorInfo {
+    pub pub_keys: Option<OperatorPubKeys>,
 }
 
-pub struct OperatorAvsState{
-    operator_id : [u8;32],
-    operator_info: OperatorInfo,
-    stake_per_quorum : HashMap<QuorumNum,U256>,
-    block_num : U64    
+pub struct OperatorAvsState {
+    pub operator_id: [u8; 32],
+    pub operator_info: OperatorInfo,
+    pub stake_per_quorum: HashMap<QuorumNum, U256>,
+    pub block_num: U64,
 }
 
-pub fn operator_id_from_g1_pub_key(pub_key : BlsG1Point) -> [u8;32]{
-
-    let mut bytes  = Vec::new();
+pub fn operator_id_from_g1_pub_key(pub_key: BlsG1Point) -> [u8; 32] {
+    let mut bytes = Vec::new();
     (pub_key.x.to_big_endian(&mut bytes[0..32]));
     (pub_key.y.to_big_endian(&mut bytes[0..32]));
     keccak256(bytes)
+}
 
+pub struct QuorumAvsState {
+    pub quorum_num: u8,
+    pub total_stake: U256,
+    pub agg_pub_key_g1: G1Point,
+    pub block_num: u32,
 }

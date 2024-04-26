@@ -1015,6 +1015,9 @@ name = "eigensdk-services-avsregistry"
 version = "0.0.1-alpha"
 dependencies = [
  "eigensdk-client-avsregistry",
+ "eigensdk-contract-bindings",
+ "eigensdk-crypto-bls",
+ "eigensdk-crypto-bn254",
  "eigensdk-services-operatorsinfo",
  "eigensdk-types",
  "eth-keystore",

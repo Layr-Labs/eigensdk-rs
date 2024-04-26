@@ -336,7 +336,10 @@ impl AvsRegistryChainReader {
         }
     }
 
-    pub async fn get_operator_from_id(&self, operator_id: [u8;32]) -> Result<Address, AvsRegistryError> {
+    pub async fn get_operator_from_id(
+        &self,
+        operator_id: [u8; 32],
+    ) -> Result<Address, AvsRegistryError> {
         let contract_registry_coordinator = registry_coordinator::RegistryCoordinator::new(
             self.registry_coordinator_addr,
             self.eth_client.clone().into(),
@@ -436,7 +439,7 @@ impl AvsRegistryChainReader {
 
                             let operator_pub_key = OperatorPubKeys {
                                 g1_pub_key,
-                                g2_pub_key
+                                g2_pub_key,
                             };
 
                             operator_pub_keys.push(operator_pub_key);

@@ -2,7 +2,7 @@ use crate::error::BlsError;
 use ark_bn254::{Fq, Fq2, Fr, G1Projective, G2Projective};
 use ark_ff::{BigInteger256, One};
 use eigensdk_crypto_bn254::utils::{mul_by_generator_g1, mul_by_generator_g2};
-use std::ops::Mul;
+use std::ops::{Add, Mul};
 pub fn new_fp_element(x: BigInteger256) -> Fq {
     Fq::from(x)
 }
@@ -98,5 +98,10 @@ impl G1Point {
         let point = G1Projective::new(x_elem, y_elem, Fq::one()); // Z coordinate is set to 1
 
         G1Point { point }
+    }
+
+    pub fn add(&mut self, p2: G1Point) -> G1Point {
+        let added_point = self.point.add(p2.point);
+        G1Point { point: added_point }
     }
 }
