@@ -9,6 +9,7 @@ use eigensdk_types::operator::{
 use ethers_core::types::{Bytes, U256, U64};
 use std::collections::HashMap;
 
+#[derive(Debug, Clone)]
 pub struct AvsRegistryServiceChainCaller {
     avs_registry: AvsRegistryChainReader,
     operators_info_service: OperatorInfoServiceInMemory,
@@ -23,6 +24,10 @@ impl AvsRegistryServiceChainCaller {
             avs_registry,
             operators_info_service,
         }
+    }
+
+    pub fn get_avs_registry(&self) -> AvsRegistryChainReader {
+        self.avs_registry.clone()
     }
 
     pub async fn get_operators_avs_state_at_block(
@@ -63,7 +68,11 @@ impl AvsRegistryServiceChainCaller {
         return operators_avs_state;
     }
 
-    pub async fn get_quorums_avs_state_at_block(&self, quorum_nums: Bytes, block_num: u32) {
+    pub async fn get_quorums_avs_state_at_block(
+        &self,
+        quorum_nums: Bytes,
+        block_num: u32,
+    ) -> HashMap<u8, QuorumAvsState> {
         let operators_avs_state = self
             .get_operators_avs_state_at_block(block_num, quorum_nums.clone())
             .await;
@@ -98,6 +107,7 @@ impl AvsRegistryServiceChainCaller {
                 },
             );
         }
+        return quorums_avs_state;
     }
 
     pub async fn get_operator_info(&self, operator_id: [u8; 32]) -> Option<OperatorPubKeys> {

@@ -123,3 +123,7 @@ pub struct QuorumAvsState {
     pub agg_pub_key_g1: G1Point,
     pub block_num: u32,
 }
+
+pub type QuorumThresholdPercentage = u8;
+
+pub type QuorumThresholdPercentages = Vec<QuorumThresholdPercentage>;

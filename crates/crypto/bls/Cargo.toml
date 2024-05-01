@@ -14,3 +14,4 @@ ark-ff.workspace = true
 eigensdk-crypto-bn254.workspace = true
 thiserror.workspace = true
 ethers-core.workspace = true
+ark-ec = "0.4.2"

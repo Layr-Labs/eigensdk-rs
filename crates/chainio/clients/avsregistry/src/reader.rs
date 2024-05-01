@@ -31,7 +31,7 @@ const OPERATOR_STATE_RETRIEVER: &str =
     "../../../../crates/contracts/bindings/utils/json/OperatorStateRetriever.json";
 
 /// Avs Registry chainreader
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct AvsRegistryChainReader {
     bls_apk_registry_addr: Address,
     registry_coordinator_addr: Address,
@@ -286,7 +286,7 @@ impl AvsRegistryChainReader {
         }
     }
 
-    async fn get_check_signatures_indices(
+    pub async fn get_check_signatures_indices(
         &self,
         reference_block_number: u32,
         quorum_numbers: Vec<u8>,

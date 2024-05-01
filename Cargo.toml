@@ -82,3 +82,8 @@ tokio = {version = "1.37.0" , features = ["test-util", "full","sync"] }
 
 thiserror = "1.0"
 tracing = "0.1.40"
+
+
+
+#misc 
+parking_lot = "0.12"

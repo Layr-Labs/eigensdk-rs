@@ -964,6 +964,7 @@ name = "eigensdk-crypto-bls"
 version = "0.0.1-alpha"
 dependencies = [
  "ark-bn254",
+ "ark-ec",
  "ark-ff 0.4.2",
  "eigensdk-crypto-bn254",
  "ethers-core",
@@ -1033,12 +1034,16 @@ name = "eigensdk-services-blsaggregation"
 version = "0.0.1-alpha"
 dependencies = [
  "eigensdk-crypto-bls",
+ "eigensdk-crypto-bn254",
+ "eigensdk-services-avsregistry",
  "eigensdk-types",
  "eth-keystore",
  "ethers",
  "ethers-core",
  "ethers-signers",
+ "parking_lot",
  "thiserror",
+ "tokio",
 ]
 
 [[package]]

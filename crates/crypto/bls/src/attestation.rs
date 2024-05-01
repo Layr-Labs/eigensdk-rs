@@ -1,12 +1,20 @@
 use crate::error::BlsError;
-use ark_bn254::{Fq, Fq2, Fr, G1Projective, G2Projective};
-use ark_ff::{BigInteger256, One};
-use eigensdk_crypto_bn254::utils::{mul_by_generator_g1, mul_by_generator_g2, u256_to_bigint256};
+use ark_bn254::{Bn254, Fq, Fq2, Fr, G1Affine, G1Projective, G2Affine, G2Projective};
+use ark_ec::{
+    pairing::{prepare_g1, prepare_g2, Pairing},
+    AffineRepr, CurveGroup,
+};
+use ark_ff::{BigInteger256, Field, One};
+use eigensdk_crypto_bn254::utils::{
+    get_g2_generator, mul_by_generator_g1, mul_by_generator_g2, u256_to_bigint256,
+};
 use ethers_core::types::U256;
+use std::ops::Neg;
 use std::ops::{Add, Mul};
 pub fn new_fp_element(x: BigInteger256) -> Fq {
     Fq::from(x)
 }
+use ark_ff::PrimeField;
 
 fn new_fp2_element(a: BigInteger256, b: BigInteger256) -> Fq2 {
     Fq2::new(Fq::from(a), Fq::from(b))
@@ -26,11 +34,48 @@ impl Signature {
         };
     }
 
+    pub fn get_g1_point(&self) -> G1Point {
+        self.g1_point.clone()
+    }
+
     pub fn sig(&self) -> G1Projective {
         self.g1_point.point
     }
+
+    /// Verify BLS signature using BN254
+    /// TODO : test this . 99% this is wrong
+    pub fn verify_signature(&self, pubkey: G2Projective, message: &[u8; 32]) -> bool {
+        let msg_hash = hash_to_g1(message);
+        let g1_affine = self.g1_point.point.into_affine();
+
+        let g2_affine = pubkey.into_affine();
+
+        let generator = get_g2_generator().unwrap();
+        let pairing_left = Bn254::pairing(g1_affine, generator);
+
+        let pairing_right = Bn254::pairing(msg_hash, g2_affine);
+
+        pairing_left == pairing_right
+    }
 }
 
+fn hash_to_g1(digest: &[u8; 32]) -> G1Affine {
+    let one = Fq::one();
+    let three = Fq::from(3u64);
+    let mut x = Fq::from_le_bytes_mod_order(digest);
+
+    loop {
+        let x_cubed = x.square() * x;
+        let y_squared = x_cubed + three;
+
+        if let Some(y) = y_squared.sqrt() {
+            let point = G1Projective::new(x, y, Fq::one());
+            return point.into_affine();
+        } else {
+            x += &one;
+        }
+    }
+}
 pub struct KeyPair {
     priv_key: PrivateKey,
     pub_key: G1Projective,
@@ -94,6 +139,24 @@ impl G2Point {
         let point = G2Projective::new(x_elem, y_elem, Fq2::one()); // Z coordinate is set to 1
 
         G2Point { point }
+    }
+
+    pub fn add(&mut self, p2: G2Point) -> G2Point {
+        let added_point = self.point.add(p2.point);
+        G2Point { point: added_point }
+    }
+
+    pub fn new_zero_g2_point() -> Self {
+        G2Point::new(
+            (
+                u256_to_bigint256(U256::from(0)),
+                u256_to_bigint256(U256::from(0)),
+            ),
+            (
+                u256_to_bigint256(U256::from(0)),
+                u256_to_bigint256(U256::from(0)),
+            ),
+        )
     }
 }
 

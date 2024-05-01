@@ -15,7 +15,7 @@ use tokio::sync::{
     oneshot::{self, Sender},
 };
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct OperatorInfoServiceInMemory {
     avs_registry_reader: AvsRegistryChainReader,
     avs_registry_subscriber: AvsRegistryChainSubscriber,
