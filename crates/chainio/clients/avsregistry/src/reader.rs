@@ -5,13 +5,10 @@ use eigensdk_contract_bindings::{
     RegistryCoordinator::registry_coordinator,
     StakeRegistry::stake_registry,
 };
-use eigensdk_crypto_bls::attestation::{G1Point, G2Point};
-use eigensdk_crypto_bn254::utils::u256_to_bigint256;
 use eigensdk_types::operator::{bitmap_to_quorum_ids, OperatorPubKeys};
 use ethers::{
-    prelude::Abigen,
     providers::Middleware,
-    types::{Address, Block, Bytes, H256, U256},
+    types::{Address, Bytes, H256, U256},
 };
 use std::fmt::Debug;
 use tracing::debug;
@@ -21,7 +18,6 @@ use ethers_core::types::{BlockNumber, Filter, FilterBlockOption, Topic, ValueOrA
 use ethers_providers::{Http, Provider};
 use num_bigint::BigInt;
 use std::collections::HashMap;
-use std::str::FromStr;
 
 const REGISTRY_COORDINATOR_PATH: &str =
     "../../../../crates/contracts/bindings/utils/json/RegistryCoordinator.json";
@@ -107,6 +103,7 @@ impl AvsRegistryChainReader {
         }
     }
 
+    /// Get operators stake in quorums at a particular block
     pub async fn get_operators_stake_in_quorums_at_block(
         &self,
         block_number: u32,
@@ -286,6 +283,7 @@ impl AvsRegistryChainReader {
         }
     }
 
+    ///
     pub async fn get_check_signatures_indices(
         &self,
         reference_block_number: u32,
@@ -336,6 +334,7 @@ impl AvsRegistryChainReader {
         }
     }
 
+    /// Get Operator from operator id
     pub async fn get_operator_from_id(
         &self,
         operator_id: [u8; 32],
@@ -376,6 +375,7 @@ impl AvsRegistryChainReader {
         }
     }
 
+    /// Queies existing operators from for a particular block range
     pub async fn query_existing_registered_operator_pub_keys(
         &self,
         start_block: Option<BlockNumber>,
@@ -467,7 +467,7 @@ fn test_build_avs_registry_chain_reader() {
         Address::from_low_u64_be(34),
         provider.clone(),
     );
-    let s = AvsRegistryChainReader::build_avs_registry_chain_reader(
+    let _ = AvsRegistryChainReader::build_avs_registry_chain_reader(
         &instance,
         Address::from_low_u64_be(333),
         Address::from_low_u64_be(87),
@@ -481,6 +481,7 @@ mod tests {
     use super::*;
     use ethers::types::BigEndianHash;
     use hex::FromHex;
+    use std::str::FromStr;
 
     const HOLESKY_REGISTRY_COORDINATOR: &str = "0x53012C69A189cfA2D9d29eb6F19B32e0A2EA3490";
     const HOLESKY_OPERATOR_STATE_RETRIEVER: &str = "0xB4baAfee917fb4449f5ec64804217bccE9f46C67";
@@ -526,7 +527,7 @@ mod tests {
         let avs_reader = build_avs_registry_chain_reader();
 
         let quorum_number = Bytes::from_hex("0x00").expect("bytes parse");
-        let state = avs_reader
+        let _ = avs_reader
             .get_operators_stake_in_quorums_at_block(1245063, quorum_number)
             .await
             .unwrap();
@@ -536,10 +537,10 @@ mod tests {
     async fn test_get_operators_stake_in_quorums_at_block_operator_id() {
         let avs_reader = build_avs_registry_chain_reader();
 
-        let operator_id = (&U256::from_dec_str(
+        let operator_id = &U256::from_dec_str(
             "35344093966194310405039483339636912150346494903629410125452342281826147822033",
         )
-        .unwrap());
+        .unwrap();
 
         let _ = avs_reader
             .get_operators_stake_in_quorums_at_block_operator_id(
@@ -555,7 +556,7 @@ mod tests {
         let avs_reader = build_avs_registry_chain_reader();
         let quorum_number = Bytes::from_hex("0x00").expect("bytes parse");
 
-        let operators_stake = avs_reader
+        let _ = avs_reader
             .get_operators_stake_in_quorums_at_current_block(quorum_number)
             .await
             .unwrap();
@@ -565,12 +566,12 @@ mod tests {
     async fn test_get_operators_stake_in_quorums_of_operator_at_block() {
         let avs_reader = build_avs_registry_chain_reader();
 
-        let operator_id = (&U256::from_dec_str(
+        let operator_id = &U256::from_dec_str(
             "35344093966194310405039483339636912150346494903629410125452342281826147822033",
         )
-        .unwrap());
+        .unwrap();
 
-        let operators_stake = avs_reader
+        let _ = avs_reader
             .get_operators_stake_in_quorums_of_operator_at_block(
                 H256::from_uint(operator_id).into(),
                 1246078,
