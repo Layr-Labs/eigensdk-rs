@@ -71,6 +71,10 @@ pub enum AvsRegistryError {
     #[error("Failed to decode New PubKey Registration Filter")]
     DecodeEventNewPubkeyRegistrationFilter,
 
+    /// Failed to decode event
+    #[error("failed to decode  operator socket update filter ")]
+    DecodeEventOperatorSocketUpdateFilter,
+
     /// Failed to get Service Manager
     #[error("Failed to get service manager")]
     GetServiceManager,

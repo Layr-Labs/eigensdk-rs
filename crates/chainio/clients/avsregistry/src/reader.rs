@@ -2,22 +2,22 @@ use crate::error::AvsRegistryError;
 use eigensdk_contract_bindings::{
     BLSApkRegistry::{bls_apk_registry, NewPubkeyRegistrationFilter},
     OperatorStateRetriever::{operator_state_retriever, CheckSignaturesIndices, Operator},
-    RegistryCoordinator::registry_coordinator,
+    RegistryCoordinator::{registry_coordinator, OperatorSocketUpdateFilter},
     StakeRegistry::stake_registry,
 };
 use eigensdk_types::operator::{bitmap_to_quorum_ids, OperatorPubKeys};
 use ethers::{
     providers::Middleware,
-    types::{Address, Bytes, H256, U256},
+    types::{Address, Bytes, H256, U256, U64},
 };
+use std::collections::HashMap;
 use std::fmt::Debug;
 use tracing::debug;
 
-use crate::NEW_BLS_APK_REGISTRATION_EVENT_SIGNATURE;
+use crate::{NEW_BLS_APK_REGISTRATION_EVENT_SIGNATURE, OPERATOR_SOCKET_UPDATE_EVENT_SIGNATURE};
 use ethers_core::types::{BlockNumber, Filter, FilterBlockOption, Topic, ValueOrArray};
 use ethers_providers::{Http, Provider};
 use num_bigint::BigInt;
-use std::collections::HashMap;
 
 const REGISTRY_COORDINATOR_PATH: &str =
     "../../../../crates/contracts/bindings/utils/json/RegistryCoordinator.json";
@@ -92,11 +92,11 @@ impl AvsRegistryChainReader {
             self.eth_client.clone().into(),
         );
 
-        let quorum_count = contract_registry_coordinator.quorum_count().call().await;
+        let quorum_count_result = contract_registry_coordinator.quorum_count().call().await;
 
-        match quorum_count {
-            Ok(quorum) => {
-                return Ok(quorum);
+        match quorum_count_result {
+            Ok(quorum_count) => {
+                return Ok(quorum_count);
             }
 
             Err(_) => Err(AvsRegistryError::GetQuorumCount),
@@ -454,6 +454,94 @@ impl AvsRegistryChainReader {
             }
             Err(_) => return Err(AvsRegistryError::GetEthLogs),
         }
+    }
+
+    /// Query existing operator sockets
+    pub async fn query_existing_registered_operator_sockets(
+        &self,
+        start_block: Option<BlockNumber>,
+        stop_block: Option<BlockNumber>,
+    ) -> Result<HashMap<[u8; 32], String>, AvsRegistryError> {
+        let mut operator_id_to_socket = HashMap::new();
+
+        let query_block_range: U64 = U64::from(10000);
+
+        let contract_registry_coordinator = registry_coordinator::RegistryCoordinator::new(
+            self.registry_coordinator_addr,
+            self.eth_client.clone().into(),
+        );
+
+        if let (Some(start), Some(stop)) = (start_block, stop_block) {
+            let (st, sp) = (start.as_number(), stop.as_number());
+            if let (Some(mut i), Some(end)) = (st, sp) {
+                while i <= end {
+                    let mut to_block = i + (query_block_range - 1);
+                    if to_block > end {
+                        to_block = end;
+                    }
+
+                    let mut block_option: FilterBlockOption = FilterBlockOption::Range {
+                        from_block: (start_block),
+                        to_block: Some(BlockNumber::Number(to_block)),
+                    };
+
+                    if stop_block.is_none() {
+                        let current_block_number_result = self.eth_client.get_block_number().await;
+
+                        match current_block_number_result {
+                            Ok(current_block_number) => {
+                                block_option = block_option
+                                    .set_to_block(BlockNumber::Number(current_block_number));
+                            }
+                            Err(_) => return Err(AvsRegistryError::GetBlockNumber),
+                        }
+                    }
+                    let query = Filter {
+                        block_option,
+                        address: Some(ValueOrArray::Value(self.bls_apk_registry_addr)),
+                        topics: [
+                            Some(Topic::Value(Some(OPERATOR_SOCKET_UPDATE_EVENT_SIGNATURE))),
+                            None,
+                            None,
+                            None,
+                        ],
+                    };
+                    let logs_result = self.eth_client.get_logs(&query).await;
+
+                    match logs_result {
+                        Ok(logs) => {
+                            for (_, v_log) in logs.iter().enumerate() {
+                                let decoded_event_result = contract_registry_coordinator
+                                    .decode_event::<OperatorSocketUpdateFilter>(
+                                    "OperatorSocketUpdate",
+                                    v_log.topics.clone(),
+                                    v_log.data.clone(),
+                                );
+
+                                match decoded_event_result {
+                                    Ok(decoded_event) => {
+                                        operator_id_to_socket.insert(
+                                            decoded_event.operator_id,
+                                            decoded_event.socket,
+                                        );
+                                    }
+                                    Err(_) => {
+                                        return Err(
+                                            AvsRegistryError::DecodeEventOperatorSocketUpdateFilter,
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                        Err(_) => return Err(AvsRegistryError::GetEthLogs),
+                    }
+
+                    i += query_block_range;
+                }
+            }
+        }
+
+        Ok(operator_id_to_socket)
     }
 }
 
