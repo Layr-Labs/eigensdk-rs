@@ -1,16 +1,24 @@
+use alloy_primitives::U256;
+use alloy_sol_types::sol;
 use eigensdk_crypto_bls::attestation::{G1Point, G2Point};
 use ethers::{
-    types::{Address, U256, U64},
+    types::{Address, U64},
     utils::keccak256,
 };
 use num_bigint::BigUint;
 use std::collections::HashMap;
+sol!(
+    #[allow(missing_docs)]
+    #[derive(Debug)]
+    #[sol(rpc)]
+    BLSApkRegistry,
+    "../../crates/contracts/bindings/utils/json/BLSApkRegistry.json"
+);
 const MAX_NUMBER_OF_QUORUMS: usize = 192;
-use eigensdk_contract_bindings::BLSApkRegistry::{G1Point as BlsG1Point, G2Point as BlsG2Point};
+use BLSApkRegistry::{G1Point as BlsG1Point, G2Point as BlsG2Point};
 
 pub fn bitmap_to_quorum_ids(quorum_bitmaps: U256) -> Vec<u8> {
-    let mut bytes: [u8; 32] = [0u8; 32];
-    quorum_bitmaps.to_big_endian(&mut bytes);
+    let bytes = quorum_bitmaps.to_be_bytes::<32>();
 
     let mut quorum_ids: Vec<u8> = Vec::with_capacity(MAX_NUMBER_OF_QUORUMS);
 

@@ -1,22 +1,20 @@
-use crate::error::AvsRegistryError;
-use eigensdk_contract_bindings::{
-    BLSApkRegistry::{bls_apk_registry, NewPubkeyRegistrationFilter},
-    OperatorStateRetriever::{operator_state_retriever, CheckSignaturesIndices, Operator},
-    RegistryCoordinator::{registry_coordinator, OperatorSocketUpdateFilter},
-    StakeRegistry::stake_registry,
+use crate::{error::AvsRegistryError, reader::BLSApkRegistry::NewPubkeyRegistration};
+
+use alloy_contract::SolCallBuilder;
+use alloy_eips::eip1898::BlockNumberOrTag;
+use alloy_primitives::address;
+use alloy_primitives::{
+    hex::check, keccak256, Address, BlockNumber, Bytes, FixedBytes, B256, U256, U64,
 };
+use alloy_provider::{Provider, ProviderBuilder};
+use alloy_rpc_types::{Filter, FilterBlockOption, FilterSet, Topic, ValueOrArray};
+use alloy_sol_types::{sol, SolConstructor, SolEventInterface};
+use alloy_transport_http::Http;
 use eigensdk_types::operator::{bitmap_to_quorum_ids, OperatorPubKeys};
-use ethers::{
-    providers::Middleware,
-    types::{Address, Bytes, H256, U256, U64},
-};
 use std::collections::HashMap;
 use std::fmt::Debug;
 use tracing::debug;
-
-use crate::{NEW_BLS_APK_REGISTRATION_EVENT_SIGNATURE, OPERATOR_SOCKET_UPDATE_EVENT_SIGNATURE};
-use ethers_core::types::{BlockNumber, Filter, FilterBlockOption, Topic, ValueOrArray};
-use ethers_providers::{Http, Provider};
+// use ethers_providers::{Http, Provider};
 use num_bigint::BigInt;
 
 const REGISTRY_COORDINATOR_PATH: &str =
@@ -26,6 +24,40 @@ const STAKE_REGISTRY_PATH: &str =
 const OPERATOR_STATE_RETRIEVER: &str =
     "../../../../crates/contracts/bindings/utils/json/OperatorStateRetriever.json";
 
+sol!(
+    #[allow(missing_docs)]
+    #[sol(rpc)]
+    StakeRegistry,
+    "StakeRegistry.json"
+);
+
+sol!(
+    #[allow(missing_docs)]
+    #[sol(rpc)]
+    RegistryCoordinator,
+    "../../../../crates/contracts/bindings/utils/json/RegistryCoordinator.json"
+);
+sol!(
+    #[allow(missing_docs)]
+    #[sol(rpc)]
+    OperatorStateRetriever,
+    "../../../../crates/contracts/bindings/utils/json/OperatorStateRetriever.json"
+);
+
+sol!(
+    #[allow(missing_docs)]
+    #[sol(rpc)]
+    BLSApkRegistry,
+    "../../../../crates/contracts/bindings/utils/json/BLSApkRegistry.json"
+);
+
+use BLSApkRegistry::{BLSApkRegistryCalls, BLSApkRegistryEvents};
+use OperatorStateRetriever::OperatorStateRetrieverCalls;
+use RegistryCoordinator::RegistryCoordinatorEvents;
+use StakeRegistry::StakeRegistryEvents;
+
+use self::RegistryCoordinator::RegistryCoordinatorInstance;
+
 /// Avs Registry chainreader
 #[derive(Debug, Clone)]
 pub struct AvsRegistryChainReader {
@@ -33,7 +65,7 @@ pub struct AvsRegistryChainReader {
     registry_coordinator_addr: Address,
     operator_state_retriever: Address,
     stake_registry_addr: Address,
-    eth_client: Provider<Http>,
+    provider: String,
 }
 
 trait AvsRegistryReader {
@@ -46,14 +78,14 @@ impl AvsRegistryChainReader {
         bls_apk_registry_addr: Address,
         operator_state_retriever: Address,
         stake_registry_addr: Address,
-        eth_client: Provider<Http>,
+        provider: String,
     ) -> Self {
         AvsRegistryChainReader {
             bls_apk_registry_addr,
             registry_coordinator_addr,
             operator_state_retriever,
             stake_registry_addr,
-            eth_client,
+            provider,
         }
     }
 
@@ -62,44 +94,52 @@ impl AvsRegistryChainReader {
         registry_coordinator_addr: Address,
         operator_state_retriever_addr: Address,
         stake_registry_addr: Address,
-    ) -> Result<AvsRegistryChainReader, AvsRegistryError> {
-        let contract_registry_coordinator = registry_coordinator::RegistryCoordinator::new(
-            self.registry_coordinator_addr,
-            self.eth_client.clone().into(),
-        );
+    ) -> Result<AvsRegistryChainReader, Box<dyn std::error::Error>> {
+        let provider = ProviderBuilder::new()
+            .with_recommended_fillers()
+            .on_builtin(&self.provider)
+            .await?;
 
-        let bls_apk_registry_addr = contract_registry_coordinator
-            .bls_apk_registry()
-            .call()
-            .await;
+        let contract_registry_coordinator =
+            RegistryCoordinator::new(self.registry_coordinator_addr, &provider);
+
+        let bls_apk_registry_addr = contract_registry_coordinator.blsApkRegistry().call().await;
 
         match bls_apk_registry_addr {
-            Ok(address) => Ok(AvsRegistryChainReader {
-                bls_apk_registry_addr: address,
-                registry_coordinator_addr,
-                operator_state_retriever: operator_state_retriever_addr,
-                stake_registry_addr,
-                eth_client: self.eth_client.clone(),
-            }),
+            Ok(address) => {
+                let RegistryCoordinator::blsApkRegistryReturn { _0: addres } = address;
 
-            Err(_) => Err(AvsRegistryError::GetBlsApkRegistry),
+                Ok(AvsRegistryChainReader {
+                    bls_apk_registry_addr: addres,
+                    registry_coordinator_addr,
+                    operator_state_retriever: operator_state_retriever_addr,
+                    stake_registry_addr,
+                    provider: self.provider.clone(),
+                })
+            }
+
+            Err(_) => Err(Box::new(AvsRegistryError::GetBlsApkRegistry)),
         }
     }
 
-    async fn get_quorum_count(&self) -> Result<u8, AvsRegistryError> {
-        let contract_registry_coordinator = registry_coordinator::RegistryCoordinator::new(
-            self.registry_coordinator_addr,
-            self.eth_client.clone().into(),
-        );
+    async fn get_quorum_count(&self) -> Result<u8, Box<dyn std::error::Error>> {
+        let provider = ProviderBuilder::new()
+            .with_recommended_fillers()
+            .on_builtin(&self.provider)
+            .await?;
 
-        let quorum_count_result = contract_registry_coordinator.quorum_count().call().await;
+        let contract_registry_coordinator =
+            RegistryCoordinator::new(self.registry_coordinator_addr, provider);
+
+        let quorum_count_result = contract_registry_coordinator.quorumCount().call().await;
 
         match quorum_count_result {
             Ok(quorum_count) => {
-                return Ok(quorum_count);
+                let RegistryCoordinator::quorumCountReturn { _0: quorum } = quorum_count;
+                return Ok(quorum);
             }
 
-            Err(_) => Err(AvsRegistryError::GetQuorumCount),
+            Err(_) => Err(Box::new(AvsRegistryError::GetQuorumCount)),
         }
     }
 
@@ -108,23 +148,27 @@ impl AvsRegistryChainReader {
         &self,
         block_number: u32,
         quorum_numbers: Bytes,
-    ) -> Result<Vec<Vec<Operator>>, AvsRegistryError> {
+    ) -> Result<Vec<Vec<OperatorStateRetriever::Operator>>, Box<dyn std::error::Error>> {
+        let provider = ProviderBuilder::new()
+            .with_recommended_fillers()
+            .on_builtin(&self.provider)
+            .await?;
+
         let contract_operator_state_retriever =
-            operator_state_retriever::OperatorStateRetriever::new(
-                self.operator_state_retriever,
-                self.eth_client.clone().into(),
-            );
+            OperatorStateRetriever::new(self.operator_state_retriever, provider);
         let operator_state_result = contract_operator_state_retriever
-            .get_operator_state(self.registry_coordinator_addr, quorum_numbers, block_number)
+            .getOperatorState_0(self.registry_coordinator_addr, quorum_numbers, block_number)
             .call()
             .await;
 
         match operator_state_result {
             Ok(operator_state) => {
-                return Ok(operator_state);
+                let OperatorStateRetriever::getOperatorState_0Return { _0: quorum } =
+                    operator_state;
+                return Ok(quorum);
             }
             Err(_) => {
-                return Err(AvsRegistryError::GetOperatorState);
+                return Err(Box::new(AvsRegistryError::GetOperatorState));
             }
         }
     }
@@ -132,16 +176,19 @@ impl AvsRegistryChainReader {
     async fn get_operators_stake_in_quorums_at_block_operator_id(
         &self,
         block_number: u32,
-        operator_id: H256,
-    ) -> Result<(U256, Vec<Vec<Operator>>), AvsRegistryError> {
+        operator_id: B256,
+    ) -> Result<(U256, Vec<Vec<OperatorStateRetriever::Operator>>), Box<dyn std::error::Error>>
+    {
+        let provider = ProviderBuilder::new()
+            .with_recommended_fillers()
+            .on_builtin(&self.provider)
+            .await?;
+
         let contract_operator_state_retriever =
-            operator_state_retriever::OperatorStateRetriever::new(
-                self.operator_state_retriever,
-                self.eth_client.clone().into(),
-            );
+            OperatorStateRetriever::new(self.operator_state_retriever, provider);
         let operator_state_with_registry_coordinator_and_oeprator_id_result =
             contract_operator_state_retriever
-                .get_operator_state_with_registry_coordinator_and_operator_id(
+                .getOperatorState_1(
                     self.registry_coordinator_addr,
                     operator_id.into(),
                     block_number,
@@ -151,10 +198,16 @@ impl AvsRegistryChainReader {
 
         match operator_state_with_registry_coordinator_and_oeprator_id_result {
             Ok(operator_state_with_registry_coordinator_and_oeprator_id) => {
-                return Ok(operator_state_with_registry_coordinator_and_oeprator_id);
+                let OperatorStateRetriever::getOperatorState_1Return {
+                    _0: stake,
+                    _1: operator_state,
+                } = operator_state_with_registry_coordinator_and_oeprator_id;
+                return Ok((stake, operator_state));
             }
             Err(_) => {
-                return Err(AvsRegistryError::GetOperatorStateWithRegistryCoordinatorAndOperatorId);
+                return Err(Box::new(
+                    AvsRegistryError::GetOperatorStateWithRegistryCoordinatorAndOperatorId,
+                ));
             }
         }
     }
@@ -162,18 +215,22 @@ impl AvsRegistryChainReader {
     async fn get_operators_stake_in_quorums_at_current_block(
         &self,
         quorum_numbers: Bytes,
-    ) -> Result<Vec<Vec<Operator>>, AvsRegistryError> {
-        let current_block_number_result = self.eth_client.get_block_number().await;
+    ) -> Result<Vec<Vec<OperatorStateRetriever::Operator>>, Box<dyn std::error::Error>> {
+        let provider = ProviderBuilder::new()
+            .with_recommended_fillers()
+            .on_builtin(&self.provider)
+            .await?;
+        let current_block_number_result = provider.get_block_number().await;
 
         match current_block_number_result {
             Ok(current_block_number) => {
                 if current_block_number > u32::MAX.into() {
-                    return Err(AvsRegistryError::BlockNumberOverflow);
+                    return Err(Box::new(AvsRegistryError::BlockNumberOverflow));
                 }
 
                 let operators_stake_in_quorums_at_block_result = self
                     .get_operators_stake_in_quorums_at_block(
-                        current_block_number.as_u64() as u32,
+                        current_block_number as u32,
                         quorum_numbers,
                     )
                     .await;
@@ -182,18 +239,23 @@ impl AvsRegistryChainReader {
                     Ok(operators_stake_in_quorums_at_block) => {
                         Ok(operators_stake_in_quorums_at_block)
                     }
-                    Err(_) => return Err(AvsRegistryError::GetOperatorStakeInQuorumAtBlockNumber),
+                    Err(_) => {
+                        return Err(Box::new(
+                            AvsRegistryError::GetOperatorStakeInQuorumAtBlockNumber,
+                        ))
+                    }
                 }
             }
-            Err(_) => return Err(AvsRegistryError::GetBlockNumber),
+            Err(_) => return Err(Box::new(AvsRegistryError::GetBlockNumber)),
         }
     }
 
     async fn get_operators_stake_in_quorums_of_operator_at_block(
         &self,
-        operator_id: H256,
+        operator_id: B256,
         block_number: u32,
-    ) -> Result<(Vec<u8>, Vec<Vec<Operator>>), AvsRegistryError> {
+    ) -> Result<(Vec<u8>, Vec<Vec<OperatorStateRetriever::Operator>>), Box<dyn (std::error::Error)>>
+    {
         let result_ = self
             .get_operators_stake_in_quorums_at_block_operator_id(block_number, operator_id)
             .await;
@@ -205,82 +267,72 @@ impl AvsRegistryChainReader {
                 let s = (quorums, operator_stakes);
                 return Ok(s);
             }
-            Err(_) => return Err(AvsRegistryError::GetOperatorStakeInQuorumAtBlockOperatorId),
+            Err(_) => {
+                return Err(Box::new(
+                    AvsRegistryError::GetOperatorStakeInQuorumAtBlockOperatorId,
+                ))
+            }
         }
     }
 
     async fn get_operators_stake_in_quorums_of_operator_at_current_block(
         &self,
-        operator_id: H256,
-    ) -> Result<(Vec<u8>, Vec<Vec<Operator>>), AvsRegistryError> {
-        let current_block_number_result = self.eth_client.get_block_number().await;
+        operator_id: B256,
+    ) -> Result<(Vec<u8>, Vec<Vec<OperatorStateRetriever::Operator>>), Box<dyn std::error::Error>>
+    {
+        let provider = ProviderBuilder::new()
+            .with_recommended_fillers()
+            .on_builtin(&self.provider)
+            .await?;
+        let current_block_number = provider.get_block_number().await?;
 
-        match current_block_number_result {
-            Ok(current_block_number) => {
-                if current_block_number > u32::MAX.into() {
-                    return Err(AvsRegistryError::BlockNumberOverflow);
-                }
-
-                let operator_stake_in_quorum_of_operaotr_at_block_result = self
-                    .get_operators_stake_in_quorums_of_operator_at_block(
-                        operator_id,
-                        current_block_number.as_u64() as u32,
-                    )
-                    .await;
-
-                match operator_stake_in_quorum_of_operaotr_at_block_result {
-                    Ok(operator_stake_in_quorum_of_operaotr_at_block) => {
-                        Ok(operator_stake_in_quorum_of_operaotr_at_block)
-                    }
-                    Err(_) => {
-                        return Err(AvsRegistryError::GetOperatorStakeInQuorumAtCurrentBlockNumber)
-                    }
-                }
-            }
-            Err(_) => return Err(AvsRegistryError::GetBlockNumber),
+        if current_block_number > u32::MAX.into() {
+            return Err(Box::new(AvsRegistryError::BlockNumberOverflow));
         }
+
+        let operator_stake_in_quorum_of_operaotr_at_block = self
+            .get_operators_stake_in_quorums_of_operator_at_block(
+                operator_id,
+                current_block_number as u32,
+            )
+            .await?;
+        Ok(operator_stake_in_quorum_of_operaotr_at_block)
     }
 
     async fn get_operator_stake_in_quorums_of_operator_at_current_block(
         &self,
-        operator_id: H256,
-    ) -> Result<HashMap<u8, BigInt>, AvsRegistryError> {
-        let registry_coordinator = registry_coordinator::RegistryCoordinator::new(
-            self.registry_coordinator_addr,
-            self.eth_client.clone().into(),
-        );
+        operator_id: B256,
+    ) -> Result<HashMap<u8, BigInt>, Box<dyn std::error::Error>> {
+        let provider = ProviderBuilder::new()
+            .with_recommended_fillers()
+            .on_builtin(&self.provider)
+            .await?;
 
-        let quorum_bitmap_result = registry_coordinator
-            .get_current_quorum_bitmap(operator_id.into())
+        let registry_coordinator =
+            RegistryCoordinator::new(self.registry_coordinator_addr, &provider);
+
+        let quorum_bitmap = registry_coordinator
+            .getCurrentQuorumBitmap(operator_id.into())
             .call()
-            .await;
+            .await?;
 
-        match quorum_bitmap_result {
-            Ok(quorum_bitmap) => {
-                let quorums = bitmap_to_quorum_ids(quorum_bitmap);
+        let RegistryCoordinator::getCurrentQuorumBitmapReturn { _0: quo } = quorum_bitmap;
 
-                let mut quorum_stakes: HashMap<u8, BigInt> = HashMap::new();
-                let stake_registry = stake_registry::StakeRegistry::new(
-                    self.stake_registry_addr,
-                    self.eth_client.clone().into(),
-                );
-                for quorum in quorums.iter() {
-                    let stakes_result = stake_registry
-                        .get_current_stake(operator_id.into(), *quorum)
-                        .call()
-                        .await;
+        let quorums = bitmap_to_quorum_ids(quo);
 
-                    match stakes_result {
-                        Ok(current_stake) => {
-                            quorum_stakes.insert(*quorum, current_stake.into());
-                        }
-                        Err(_) => return Err(AvsRegistryError::GetCurrentStake),
-                    }
-                }
-                Ok(quorum_stakes)
-            }
-            Err(_) => return Err(AvsRegistryError::GetCurrentQuorumBitmap),
+        let mut quorum_stakes: HashMap<u8, BigInt> = HashMap::new();
+
+        let stake_registry = StakeRegistry::new(self.stake_registry_addr, &provider);
+        for quorum in quorums.iter() {
+            let stakes_result = stake_registry
+                .getCurrentStake(operator_id.into(), *quorum)
+                .call()
+                .await?;
+
+            let StakeRegistry::getCurrentStakeReturn { _0: c_stake } = stakes_result;
+            quorum_stakes.insert(*quorum, c_stake.into());
         }
+        Ok(quorum_stakes)
     }
 
     ///
@@ -288,257 +340,194 @@ impl AvsRegistryChainReader {
         &self,
         reference_block_number: u32,
         quorum_numbers: Vec<u8>,
-        non_signer_operator_ids: Vec<[u8; 32]>,
-    ) -> Result<CheckSignaturesIndices, AvsRegistryError> {
-        let contract_operator_state_retriever =
-            operator_state_retriever::OperatorStateRetriever::new(
-                self.operator_state_retriever,
-                self.eth_client.clone().into(),
-            );
+        non_signer_operator_ids: Vec<FixedBytes<32>>,
+    ) -> Result<OperatorStateRetriever::CheckSignaturesIndices, Box<dyn std::error::Error>> {
+        let provider = ProviderBuilder::new()
+            .with_recommended_fillers()
+            .on_builtin(&self.provider)
+            .await?;
 
-        let check_signature_indices_result = contract_operator_state_retriever
-            .get_check_signatures_indices(
+        let contract_operator_state_retriever =
+            OperatorStateRetriever::new(self.operator_state_retriever, provider);
+
+        let check_signature_indices = contract_operator_state_retriever
+            .getCheckSignaturesIndices(
                 self.registry_coordinator_addr,
                 reference_block_number,
                 quorum_numbers.into(),
                 non_signer_operator_ids,
             )
             .call()
-            .await;
-
-        match check_signature_indices_result {
-            Ok(check_signature_indices) => Ok(check_signature_indices),
-            Err(_) => return Err(AvsRegistryError::CheckSignatureIndices),
-        }
+            .await?;
+        let OperatorStateRetriever::getCheckSignaturesIndicesReturn { _0: indices } =
+            check_signature_indices;
+        Ok(indices)
     }
 
     async fn get_operator_id(
         &self,
         operator_address: Address,
-    ) -> Result<[u8; 32], AvsRegistryError> {
-        let contract_registry_coordinator = registry_coordinator::RegistryCoordinator::new(
-            self.registry_coordinator_addr,
-            self.eth_client.clone().into(),
-        );
+    ) -> Result<FixedBytes<32>, Box<dyn std::error::Error>> {
+        let provider = ProviderBuilder::new()
+            .with_recommended_fillers()
+            .on_builtin(&self.provider)
+            .await?;
 
-        let operator_id_result = contract_registry_coordinator
-            .get_operator_id(operator_address)
+        let contract_registry_coordinator =
+            RegistryCoordinator::new(self.registry_coordinator_addr, provider);
+
+        let operator_id_return = contract_registry_coordinator
+            .getOperatorId(operator_address)
             .call()
-            .await;
-
-        match operator_id_result {
-            Ok(operator_id) => {
-                return Ok(operator_id);
-            }
-            Err(_) => return Err(AvsRegistryError::GetOperatorId),
-        }
+            .await?;
+        let RegistryCoordinator::getOperatorIdReturn { _0: operator_id } = operator_id_return;
+        return Ok(operator_id);
     }
 
     /// Get Operator from operator id
     pub async fn get_operator_from_id(
         &self,
         operator_id: [u8; 32],
-    ) -> Result<Address, AvsRegistryError> {
-        let contract_registry_coordinator = registry_coordinator::RegistryCoordinator::new(
-            self.registry_coordinator_addr,
-            self.eth_client.clone().into(),
-        );
+    ) -> Result<Address, Box<dyn std::error::Error>> {
+        let provider = ProviderBuilder::new()
+            .with_recommended_fillers()
+            .on_builtin(&self.provider)
+            .await?;
 
-        let operator_address_result = contract_registry_coordinator
-            .get_operator_from_id(operator_id.into())
+        let contract_registry_coordinator =
+            RegistryCoordinator::new(self.registry_coordinator_addr, &provider);
+
+        let operator_address_return = contract_registry_coordinator
+            .getOperatorFromId(operator_id.into())
             .call()
-            .await;
+            .await?;
 
-        match operator_address_result {
-            Ok(operator_address) => Ok(operator_address),
-            Err(_) => return Err(AvsRegistryError::GetOperatorFromId),
-        }
+        let RegistryCoordinator::getOperatorFromIdReturn {
+            _0: operator_address,
+        } = operator_address_return;
+        Ok(operator_address)
     }
 
     async fn is_operator_registered(
         &self,
         operator_address: Address,
-    ) -> Result<bool, AvsRegistryError> {
-        let contract_registry_coordinator = registry_coordinator::RegistryCoordinator::new(
-            self.registry_coordinator_addr,
-            self.eth_client.clone().into(),
-        );
+    ) -> Result<bool, Box<dyn std::error::Error>> {
+        let provider = ProviderBuilder::new()
+            .with_recommended_fillers()
+            .on_builtin(&self.provider)
+            .await?;
 
-        let operator_status_result = contract_registry_coordinator
-            .get_operator_status(operator_address)
+        let contract_registry_coordinator =
+            RegistryCoordinator::new(self.registry_coordinator_addr, provider);
+
+        let operator_status_return = contract_registry_coordinator
+            .getOperatorStatus(operator_address)
             .call()
-            .await;
+            .await?;
 
-        match operator_status_result {
-            Ok(operator_status) => Ok(operator_status == 1),
-            Err(_) => return Err(AvsRegistryError::GetOperatorStatus),
-        }
+        let RegistryCoordinator::getOperatorStatusReturn {
+            _0: operator_status,
+        } = operator_status_return;
+
+        Ok(operator_status == 1)
     }
 
     /// Queies existing operators from for a particular block range
     pub async fn query_existing_registered_operator_pub_keys(
         &self,
-        start_block: Option<BlockNumber>,
-        stop_block: Option<BlockNumber>,
-    ) -> Result<(Vec<Address>, Vec<OperatorPubKeys>), AvsRegistryError> {
-        let mut block_option: FilterBlockOption = FilterBlockOption::Range {
-            from_block: (start_block),
-            to_block: (stop_block),
-        };
+        start_block: u64,
+        stop_block: u64,
+    ) -> Result<(Vec<Address>, Vec<OperatorPubKeys>), Box<dyn std::error::Error>> {
+        let provider = ProviderBuilder::new()
+            .with_recommended_fillers()
+            .on_builtin(&self.provider)
+            .await?;
 
-        if stop_block.is_none() {
-            let current_block_number_result = self.eth_client.get_block_number().await;
+        let filter = Filter::new()
+            .select(start_block..stop_block)
+            .event("NewPubkeyRegistration(address,(uint256,uint256),(uint256[2],uint256[2]))")
+            .address(self.bls_apk_registry_addr);
 
-            match current_block_number_result {
-                Ok(current_block_number) => {
-                    block_option =
-                        block_option.set_to_block(BlockNumber::Number(current_block_number));
-                }
-                Err(_) => return Err(AvsRegistryError::GetBlockNumber),
+        let contract_bls_apk_registry = BLSApkRegistry::new(self.bls_apk_registry_addr, &provider);
+        let logs = provider.get_logs(&filter).await?;
+
+        debug!(transactionLogs = ?logs, "avsRegistryChainReader.QueryExistingRegisteredOperatorPubKeys");
+        let mut operator_addresses: Vec<Address> = vec![];
+        let mut operator_pub_keys: Vec<OperatorPubKeys> = vec![];
+
+        for (i, v_log) in logs.iter().enumerate() {
+            let pub_key_reg_option = v_log
+                .log_decode::<BLSApkRegistry::NewPubkeyRegistration>()
+                .ok();
+            if let Some(pub_key_reg) = pub_key_reg_option {
+                let data = pub_key_reg.data();
+                let operator_addr = data.operator;
+                operator_addresses.push(operator_addr);
+                let g1_pub_key = data.pubkeyG1;
+                let g2_pub_key = data.pubkeyG2;
+
+                let operator_pub_key = OperatorPubKeys {
+                    g1_pub_key,
+                    g2_pub_key,
+                };
+
+                operator_pub_keys.push(operator_pub_key);
             }
         }
 
-        let query = Filter {
-            block_option,
-            address: Some(ValueOrArray::Value(self.bls_apk_registry_addr)),
-            topics: [
-                Some(Topic::Value(Some(NEW_BLS_APK_REGISTRATION_EVENT_SIGNATURE))),
-                None,
-                None,
-                None,
-            ],
-        };
-
-        let contract_bls_apk_registry = bls_apk_registry::BLSApkRegistry::new(
-            self.bls_apk_registry_addr,
-            self.eth_client.clone().into(),
-        );
-        let logs_result = self.eth_client.get_logs(&query).await;
-
-        match logs_result {
-            Ok(logs) => {
-                debug!(transactionLogs = ?logs, "avsRegistryChainReader.QueryExistingRegisteredOperatorPubKeys");
-                let mut operator_addresses: Vec<Address> = vec![];
-                let mut operator_pub_keys: Vec<OperatorPubKeys> = vec![];
-
-                for (i, v_log) in logs.iter().enumerate() {
-                    let operator_addr = Address::from_slice(&v_log.topics[i].as_bytes()[12..]);
-                    operator_addresses.push(operator_addr);
-
-                    let decoded_event_result = contract_bls_apk_registry
-                        .decode_event::<NewPubkeyRegistrationFilter>(
-                            "NewPubkeyRegistration",
-                            v_log.topics.clone(),
-                            v_log.data.clone(),
-                        );
-
-                    match decoded_event_result {
-                        Ok(decoded_event) => {
-                            let g1_pub_key = decoded_event.pubkey_g1;
-                            let g2_pub_key = decoded_event.pubkey_g2;
-
-                            let operator_pub_key = OperatorPubKeys {
-                                g1_pub_key,
-                                g2_pub_key,
-                            };
-
-                            operator_pub_keys.push(operator_pub_key);
-                        }
-                        Err(_) => {
-                            return Err(AvsRegistryError::DecodeEventNewPubkeyRegistrationFilter)
-                        }
-                    }
-                }
-
-                Ok((operator_addresses, operator_pub_keys))
-            }
-            Err(_) => return Err(AvsRegistryError::GetEthLogs),
-        }
+        Ok((operator_addresses, operator_pub_keys))
     }
 
     /// Query existing operator sockets
     pub async fn query_existing_registered_operator_sockets(
         &self,
-        start_block: Option<BlockNumber>,
-        stop_block: Option<BlockNumber>,
-    ) -> Result<HashMap<[u8; 32], String>, AvsRegistryError> {
+        start_block: u64,
+        stop_block: u64,
+    ) -> Result<HashMap<FixedBytes<32>, String>, Box<dyn std::error::Error>> {
+        let provider = ProviderBuilder::new()
+            .with_recommended_fillers()
+            .on_builtin(&self.provider)
+            .await?;
         let mut operator_id_to_socket = HashMap::new();
 
-        let query_block_range: U64 = U64::from(10000);
+        let query_block_range = 10000;
 
-        let contract_registry_coordinator = registry_coordinator::RegistryCoordinator::new(
-            self.registry_coordinator_addr,
-            self.eth_client.clone().into(),
-        );
+        let contract_registry_coordinator =
+            RegistryCoordinator::new(self.registry_coordinator_addr, &provider);
 
-        if let (Some(start), Some(stop)) = (start_block, stop_block) {
-            let (st, sp) = (start.as_number(), stop.as_number());
-            if let (Some(mut i), Some(end)) = (st, sp) {
-                while i <= end {
-                    let mut to_block = i + (query_block_range - 1);
-                    if to_block > end {
-                        to_block = end;
-                    }
+        let mut i = start_block;
 
-                    let mut block_option: FilterBlockOption = FilterBlockOption::Range {
-                        from_block: (start_block),
-                        to_block: Some(BlockNumber::Number(to_block)),
-                    };
+        while i <= stop_block {
+            let mut to_block = i + (query_block_range - 1);
+            if to_block > stop_block {
+                to_block = stop_block;
+            }
 
-                    if stop_block.is_none() {
-                        let current_block_number_result = self.eth_client.get_block_number().await;
+            let filter = Filter::new()
+                .select(start_block..to_block)
+                .event("OperatorSocketUpdate(bytes32,string)")
+                .address(self.registry_coordinator_addr);
+            if stop_block == 0 {
+                let current_block_number = provider.get_block_number().await?;
 
-                        match current_block_number_result {
-                            Ok(current_block_number) => {
-                                block_option = block_option
-                                    .set_to_block(BlockNumber::Number(current_block_number));
-                            }
-                            Err(_) => return Err(AvsRegistryError::GetBlockNumber),
-                        }
-                    }
-                    let query = Filter {
-                        block_option,
-                        address: Some(ValueOrArray::Value(self.bls_apk_registry_addr)),
-                        topics: [
-                            Some(Topic::Value(Some(OPERATOR_SOCKET_UPDATE_EVENT_SIGNATURE))),
-                            None,
-                            None,
-                            None,
-                        ],
-                    };
-                    let logs_result = self.eth_client.get_logs(&query).await;
+                filter.clone().select(start_block..current_block_number);
+            };
 
-                    match logs_result {
-                        Ok(logs) => {
-                            for (_, v_log) in logs.iter().enumerate() {
-                                let decoded_event_result = contract_registry_coordinator
-                                    .decode_event::<OperatorSocketUpdateFilter>(
-                                    "OperatorSocketUpdate",
-                                    v_log.topics.clone(),
-                                    v_log.data.clone(),
-                                );
+            let logs = provider.get_logs(&filter).await?;
 
-                                match decoded_event_result {
-                                    Ok(decoded_event) => {
-                                        operator_id_to_socket.insert(
-                                            decoded_event.operator_id,
-                                            decoded_event.socket,
-                                        );
-                                    }
-                                    Err(_) => {
-                                        return Err(
-                                            AvsRegistryError::DecodeEventOperatorSocketUpdateFilter,
-                                        )
-                                    }
-                                }
-                            }
-                        }
-                        Err(_) => return Err(AvsRegistryError::GetEthLogs),
-                    }
-
-                    i += query_block_range;
+            for (_, v_log) in logs.iter().enumerate() {
+                let socket_update_filter_option = v_log
+                    .log_decode::<RegistryCoordinator::OperatorSocketUpdate>()
+                    .ok();
+                if let Some(socket_update_filter) = socket_update_filter_option {
+                    let data = socket_update_filter.data();
+                    let operator_id = data.operatorId;
+                    let socket = &data.socket;
+                    operator_id_to_socket.insert(operator_id, socket.clone());
                 }
             }
+
+            i += query_block_range;
         }
 
         Ok(operator_id_to_socket)
@@ -547,19 +536,20 @@ impl AvsRegistryChainReader {
 
 #[test]
 fn test_build_avs_registry_chain_reader() {
-    let provider = Provider::<Http>::try_from("http://localhost:8545").unwrap();
+    let provider = "http://localhost:8545";
     let instance = AvsRegistryChainReader::new(
-        Address::from_low_u64_be(23),
-        Address::from_low_u64_be(544),
-        Address::from_low_u64_be(5445),
-        Address::from_low_u64_be(34),
-        provider.clone(),
+        Address::from_word(keccak256("registry")),
+        // Address::from_word(keccak256(("registry").into())),
+        Address::from_word(keccak256("blsapkregistry")),
+        Address::from_word(keccak256("operatorstateretriever")),
+        Address::from_word(keccak256("stakeregistry")),
+        provider.to_string(),
     );
     let _ = AvsRegistryChainReader::build_avs_registry_chain_reader(
         &instance,
-        Address::from_low_u64_be(333),
-        Address::from_low_u64_be(87),
-        Address::from_low_u64_be(675),
+        Address::from_word(keccak256("registry")),
+        Address::from_word(keccak256("operator")),
+        Address::from_word(keccak256("stake")),
     );
 }
 
@@ -567,7 +557,6 @@ fn test_build_avs_registry_chain_reader() {
 mod tests {
 
     use super::*;
-    use ethers::types::BigEndianHash;
     use hex::FromHex;
     use std::str::FromStr;
 
@@ -588,16 +577,13 @@ mod tests {
         let holesky_bls_apk_registry =
             Address::from_str(HOLESKY_BLS_APK_REGISTRY).expect("failed to parse address");
 
-        let holesky_provider =
-            Provider::<Http>::try_from("https://ethereum-holesky.blockpi.network/v1/rpc/public")
-                .expect("Not able to initialize holesky rpc provider");
-
+        let holesky_provider = "https://ethereum-holesky.blockpi.network/v1/rpc/public";
         let avs_registry_chain_reader = AvsRegistryChainReader::new(
             holesky_registry_coordinator,
             holesky_bls_apk_registry,
             holesky_operator_state_retriever,
             holesky_stake_registry,
-            holesky_provider,
+            holesky_provider.to_string(),
         );
 
         return avs_registry_chain_reader;
@@ -625,16 +611,13 @@ mod tests {
     async fn test_get_operators_stake_in_quorums_at_block_operator_id() {
         let avs_reader = build_avs_registry_chain_reader();
 
-        let operator_id = &U256::from_dec_str(
+        let operator_id = U256::from_str(
             "35344093966194310405039483339636912150346494903629410125452342281826147822033",
         )
         .unwrap();
 
         let _ = avs_reader
-            .get_operators_stake_in_quorums_at_block_operator_id(
-                1245842,
-                H256::from_uint(operator_id).into(),
-            )
+            .get_operators_stake_in_quorums_at_block_operator_id(1245842, operator_id.into())
             .await
             .unwrap();
     }
@@ -654,16 +637,13 @@ mod tests {
     async fn test_get_operators_stake_in_quorums_of_operator_at_block() {
         let avs_reader = build_avs_registry_chain_reader();
 
-        let operator_id = &U256::from_dec_str(
+        let operator_id = U256::from_str(
             "35344093966194310405039483339636912150346494903629410125452342281826147822033",
         )
         .unwrap();
 
         let _ = avs_reader
-            .get_operators_stake_in_quorums_of_operator_at_block(
-                H256::from_uint(operator_id).into(),
-                1246078,
-            )
+            .get_operators_stake_in_quorums_of_operator_at_block((operator_id).into(), 1246078)
             .await
             .unwrap();
     }

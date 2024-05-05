@@ -9,13 +9,14 @@ repository.workspace = true
 license-file.workspace = true
 
 [dependencies]
-eigensdk-contract-bindings.workspace = true
-alloy-primitives = "0.7.0"
-ethers.workspace = true
+alloy-primitives.workspace = true
+alloy-provider.workspace = true
+alloy-sol-types = { workspace = true, features = ["json"] }
+alloy-transport-http.workspace = true
+alloy-rpc-types.workspace = true
 serde_json = "1.0.114"
-ethers-core.workspace = true
 num-bigint = "0.4.4"
-ethers-providers.workspace = true
+reqwest = "0.12.4"
 eigensdk-types.workspace = true
 eigensdk-crypto-bls.workspace = true
 ark-ff.workspace = true
@@ -29,7 +30,8 @@ tracing.workspace = true
 tokio = {version = "1.37.0" , features = ["test-util", "full","sync"] }
 hex = "0.4.3"
 futures = "0.3.30"
-
+alloy-contract.workspace = true
+alloy-eips.workspace = true
 [lints]
 workspace = true
 

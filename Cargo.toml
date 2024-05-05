@@ -54,7 +54,6 @@ bn254 = {git = "https://github.com/sedaprotocol/bn254"}
 eigensdk-metrics = {version = "0.0.1-alpha",  path = "crates/metrics/"}
 serde = {version = "1.0.197" , features = ["derive"]}
 eigensdk-chainio-utils = {path = "crates/chainio/utils/"}
-alloy-primitives = "0.7.0"
 eigensdk-client-avsregistry = {path = "crates/chainio/clients/avsregistry"}
 eigensdk-client-builder = {version = "0.0.1-alpha",path = "crates/chainio/clients/builder"}
 eigensdk-client-elcontracts = {version = "0.0.1-alpha",path = "crates/chainio/clients/elcontracts"}
@@ -66,10 +65,6 @@ eigensdk-types = {version = "0.0.1-alpha",path = "crates/types/"}
 eigensdk-crypto-bls = {path = "crates/crypto/bls/"}
 eigensdk-crypto-bn254 = {version = "0.0.1-alpha",path = "crates/crypto/bn254/"}
 eigensdk-txmgr = {version = "0.0.1-alpha",path = "crates/chainio/txmgr/"}
-alloy-sol-types = {git = "https://github.com/alloy-rs/core", rev = "5edbf5e17f0874c2870c7bba43ae063081adabb5", features = ["json"]}
-alloy-contract = { git = "https://github.com/alloy-rs/alloy", rev = "818b3e9692f2a207e456653a67aa8956fe1518a9", path = "crates/contract" }
-alloy-provider = { git = "https://github.com/alloy-rs/alloy", rev = "818b3e9692f2a207e456653a67aa8956fe1518a9"}
-alloy-network = { git = "https://github.com/alloy-rs/alloy", rev = "818b3e9692f2a207e456653a67aa8956fe1518a9"}
 eigensdk-signerv2 = {version = "0.0.1-alpha",path = "crates/signerv2/"}
 eigensdk-utils = {version = "0.0.1-alpha" , path = "crates/utils/"}
 ethers-signers = "2.0.14"
@@ -87,3 +82,27 @@ tracing = "0.1.40"
 
 #misc 
 parking_lot = "0.12"
+
+#alloy
+alloy-chains = "0.1.15"
+alloy-primitives = "0.7.2"
+alloy-dyn-abi = "0.7.2"
+alloy-sol-types = "0.7.2"
+alloy-rlp = "0.3.4"
+alloy-trie = "0.3.1"
+alloy-rpc-types = { git = "https://github.com/alloy-rs/alloy", rev = "af788af" }
+alloy-rpc-types-anvil = { git = "https://github.com/alloy-rs/alloy", rev = "af788af" }
+alloy-rpc-types-trace = { git = "https://github.com/alloy-rs/alloy", rev = "af788af" }
+alloy-rpc-types-engine = { git = "https://github.com/alloy-rs/alloy", rev = "af788af" }
+alloy-genesis = { git = "https://github.com/alloy-rs/alloy", rev = "af788af" }
+alloy-node-bindings = { git = "https://github.com/alloy-rs/alloy", rev = "af788af" }
+alloy-provider = { git = "https://github.com/alloy-rs/alloy", rev = "af788af", default-features = false, features = [
+    "reqwest",
+] }
+alloy-transport-http = {git = "https://github.com/alloy-rs/alloy", rev = "af788af"}
+alloy-eips = { git = "https://github.com/alloy-rs/alloy", default-features = false, rev = "af788af" }
+alloy-signer = { git = "https://github.com/alloy-rs/alloy", rev = "af788af" }
+alloy-signer-wallet = { git = "https://github.com/alloy-rs/alloy", rev = "af788af" }
+alloy-network = { git = "https://github.com/alloy-rs/alloy", rev = "af788af" }
+alloy-consensus = { git = "https://github.com/alloy-rs/alloy", rev = "af788af" }
+alloy-contract = {git = "https://github.com/alloy-rs/alloy", rev = "af788af" }

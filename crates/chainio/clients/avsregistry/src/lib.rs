@@ -1,6 +1,6 @@
 //! AvsRegistry methods for reading, writing and subscribing purposes.
 
-use ethers_core::types::H256;
+use alloy_primitives::types::H256;
 
 #[allow(dead_code)]
 /// Reader module
