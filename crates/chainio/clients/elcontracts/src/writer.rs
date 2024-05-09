@@ -1,6 +1,6 @@
 use crate::{error::ElContractsError, reader::ELChainReader};
-use alloy_signer::{Signer, SignerSync};
 use alloy_network::EthereumSigner;
+use alloy_signer::{Signer, SignerSync};
 use alloy_sol_types::sol;
 use reqwest::Url;
 sol!(
@@ -23,20 +23,20 @@ sol!(
     IERC20,
     "../../../../crates/contracts/bindings/utils/json/IERC20.json"
 );
-use eigensdk_types::operator::Operator;
+use alloy_network::TxSignerSync;
 use alloy_primitives::{Address, TxHash, U256};
-use alloy_provider::{ProviderBuilder, Provider};
-use alloy_network::{TxSignerSync};
+use alloy_provider::{Provider, ProviderBuilder};
+use alloy_signer_wallet::LocalWallet;
+use eigensdk_types::operator::Operator;
 use std::sync::Arc;
 use tracing::info;
 use DelegationManager::OperatorDetails;
-use alloy_signer_wallet::LocalWallet;
 pub struct ELChainWriter {
     delegation_manager: Address,
     strategy_manager: Address,
     el_chain_reader: ELChainReader,
-    provider:String,
-    signer : LocalWallet
+    provider: String,
+    signer: LocalWallet,
 }
 
 impl ELChainWriter {
@@ -45,14 +45,14 @@ impl ELChainWriter {
         strategy_manager: Address,
         el_chain_reader: ELChainReader,
         provider: String,
-        signer:LocalWallet
+        signer: LocalWallet,
     ) -> Self {
         Self {
             delegation_manager,
             strategy_manager,
             el_chain_reader,
             provider,
-            signer
+            signer,
         }
     }
 
@@ -70,28 +70,27 @@ impl ELChainWriter {
             delegationApprover: operator.has_delegation_approver_address(),
             stakerOptOutWindowBlocks: operator.has_staker_opt_out_window_blocks(),
         };
-        let url = Url::new(self.provider);
+        let url = Url::parse(&self.provider).expect("Wrong rpc url");
         let provider = ProviderBuilder::new()
-        .with_recommended_fillers()
-        .signer(EthereumSigner::from(self.signer))
-        .on_http(url); 
+            .with_recommended_fillers()
+            .signer(EthereumSigner::from(self.signer.clone()))
+            .on_http(url);
 
-        let contract_delegation_manager =
-            DelegationManager::new(self.delegation_manager, provider);
+        let contract_delegation_manager = DelegationManager::new(self.delegation_manager, provider);
 
-        let contract_call = contract_delegation_manager
-            .registerAsOperator(op_details, operator.has_metadata_url());
+        let contract_call =
+            contract_delegation_manager.registerAsOperator(op_details, operator.has_metadata_url());
 
         let tx = contract_call.send().await?;
 
         info!(tx_hash = %tx.tx_hash(), "tx successfully included");
-        Ok(tx.tx_hash())
+        Ok(*tx.tx_hash())
     }
 
     pub async fn update_operator_details(
         &self,
         operator: Operator,
-    ) -> Result<TxHash, ElContractsError> {
+    ) -> Result<TxHash, Box<dyn std::error::Error>> {
         info!(
             "updating operator detils of operator {:?} to EigenLayer",
             operator.has_address()
@@ -101,14 +100,13 @@ impl ELChainWriter {
             delegationApprover: operator.has_delegation_approver_address(),
             stakerOptOutWindowBlocks: operator.has_staker_opt_out_window_blocks(),
         };
-        let url = Url::new(self.provider);
+        let url = Url::parse(&self.provider).expect("Wrong rpc url");
 
         let provider = ProviderBuilder::new()
-        .with_recommended_fillers()
-        .signer(EthereumSigner::from(self.signer))
-        .on_http(url); 
-        let contract_delegation_manager =
-            DelegationManager::new(self.delegation_manager, provider);
+            .with_recommended_fillers()
+            .signer(EthereumSigner::from(self.signer.clone()))
+            .on_http(url);
+        let contract_delegation_manager = DelegationManager::new(self.delegation_manager, provider);
 
         let contract_call_modify_operator_details =
             contract_delegation_manager.modifyOperatorDetails(operator_details);
@@ -117,20 +115,19 @@ impl ELChainWriter {
 
         info!(tx_hash = %tx.tx_hash(), operator = %operator.has_address(), "succesfully updated operator details");
 
-        let contract_call_update_metadata_uri = contract_delegation_manager
-            .updateOperatorMetadataURI(operator.has_metadata_url());
+        let contract_call_update_metadata_uri =
+            contract_delegation_manager.updateOperatorMetadataURI(operator.has_metadata_url());
 
         let metadata_tx = contract_call_update_metadata_uri.send().await?;
 
-        Ok(metadata_tx.tx_hash())
-
+        Ok(*metadata_tx.tx_hash())
     }
 
     pub async fn deposit_erc20_into_strategy(
         &self,
         strategy_addr: Address,
         amount: U256,
-    ) -> Result<TxHash, ElContractsError> {
+    ) -> Result<TxHash, Box<dyn std::error::Error>> {
         info!(
             "depositing {:?} tokens into strategy {:?}",
             amount, strategy_addr
@@ -139,39 +136,30 @@ impl ELChainWriter {
             .el_chain_reader
             .get_strategy_and_underlying_erc20_token(strategy_addr)
             .await?;
-            let (_, underlying_token_contract, underlying_token) = tokens;
-            let url = Url::new(self.provider);
+        let (_, underlying_token_contract, underlying_token) = tokens;
+        let url = Url::parse(&self.provider).expect("Wrong rpc url");
 
-            let provider = ProviderBuilder::new()
+        let provider = ProviderBuilder::new()
             .with_recommended_fillers()
-            .signer(EthereumSigner::from(self.signer))
-            .on_http(url); 
-                let contract_underlying_token =
-                    IERC20::new(underlying_token_contract, provider);
+            .signer(EthereumSigner::from(self.signer.clone()))
+            .on_http(url);
+        let contract_underlying_token = IERC20::new(underlying_token_contract, &provider);
 
-                let contract_call =
-                    contract_underlying_token.approve(self.strategy_manager, amount);
+        let contract_call = contract_underlying_token.approve(self.strategy_manager, amount);
 
-                let _approve = contract_call.send().await?;
+        let _approve = contract_call.send().await?;
 
-                        let contract_strategy_manager = StrategyManager::new(
-                            self.strategy_manager,
-                            provider,
-                        );
+        let contract_strategy_manager = StrategyManager::new(self.strategy_manager, &provider);
 
-                        let deposit_contract_call = contract_strategy_manager
-                            .depositIntoStrategy(strategy_addr, underlying_token, amount);
+        let deposit_contract_call =
+            contract_strategy_manager.depositIntoStrategy(strategy_addr, underlying_token, amount);
 
-                        let tx = deposit_contract_call.send().await?;
+        let tx = deposit_contract_call.send().await?;
 
-                                info!(
-                                    "deposited {:?} tokens into strategy {:?}",
-                                    amount, strategy_addr
-                                );
-                                Ok(tx.tx_hash())
-                            }
-                          
-                    }
-            
-    
-
+        info!(
+            "deposited {:?} tokens into strategy {:?}",
+            amount, strategy_addr
+        );
+        Ok(*tx.tx_hash())
+    }
+}

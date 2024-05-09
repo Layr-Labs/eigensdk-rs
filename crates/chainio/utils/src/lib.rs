@@ -1,13 +1,18 @@
+use alloy_sol_types::sol;
 use ark_bn254::G1Projective;
 use ark_bn254::G2Projective;
 use ark_ff::BigInteger256;
+sol!(
+    #[allow(missing_docs)]
+    #[sol(rpc)]
+    RegistryCoordinator,
+    "../../../crates/contracts/bindings/utils/json/RegistryCoordinator.json"
+);
 
-use eigensdk_contract_bindings::RegistryCoordinator::{
-    self, G1Point as RegistryG1Point, G2Point as RegistryG2Point,
-};
 use eigensdk_crypto_bls::attestation::G1Point;
 use eigensdk_crypto_bn254::utils::biginteger256_to_u256;
 use eigensdk_crypto_bn254::utils::u256_to_bigint256;
+use RegistryCoordinator::{G1Point as RegistryG1Point, G2Point as RegistryG2Point};
 
 pub fn convert_bn254_to_ark(g1_point: RegistryCoordinator::G1Point) -> G1Point {
     G1Point::new(u256_to_bigint256(g1_point.x), u256_to_bigint256(g1_point.y))

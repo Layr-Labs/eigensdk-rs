@@ -1,12 +1,9 @@
-use alloy_primitives::{U256,Address};
+use alloy_primitives::{Address, U256};
 use alloy_sol_types::sol;
 use eigensdk_crypto_bls::attestation::{
     G1Point as AttestationG1Point, G2Point as AttestationG2Point,
 };
-use ethers::{
-    types::U64,
-    utils::keccak256,
-};
+use ethers::{types::U64, utils::keccak256};
 use num_bigint::BigUint;
 use std::collections::HashMap;
 sol!(

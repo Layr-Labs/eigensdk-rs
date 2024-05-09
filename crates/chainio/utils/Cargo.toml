@@ -15,4 +15,5 @@ ark-ff.workspace = true
 eigensdk-contract-bindings.workspace = true
 eigensdk-crypto-bls.workspace = true
 eigensdk-crypto-bn254.workspace = true
-
+alloy-sol-types.workspace = true
+alloy-contract.workspace = true

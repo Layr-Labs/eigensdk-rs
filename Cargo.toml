@@ -3,7 +3,6 @@ members = [ "crates/chainio/clients/avsregistry/",
 "crates/chainio/clients/elcontracts/",
 "crates/chainio/clients/eth/",
 "crates/chainio/clients/fireblocks/",
-"crates/chainio/clients/builder/",
 "crates/contracts/bindings/",
 "crates/signerv2/",
 "crates/chainio/utils/",
@@ -53,7 +52,6 @@ eigensdk-metrics = {version = "0.0.1-alpha",  path = "crates/metrics/"}
 serde = {version = "1.0.197" , features = ["derive"]}
 eigensdk-chainio-utils = {path = "crates/chainio/utils/"}
 eigensdk-client-avsregistry = {path = "crates/chainio/clients/avsregistry"}
-eigensdk-client-builder = {version = "0.0.1-alpha",path = "crates/chainio/clients/builder"}
 eigensdk-client-elcontracts = {version = "0.0.1-alpha",path = "crates/chainio/clients/elcontracts"}
 eigensdk-client-eth = {version = "0.0.1-alpha",path = "crates/chainio/clients/eth"}
 eigensdk-client-fireblocks = {version = "0.0.1-alpha",path = "crates/chainio/clients/fireblocks"}
