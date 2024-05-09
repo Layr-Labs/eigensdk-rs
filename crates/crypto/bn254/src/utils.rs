@@ -1,14 +1,13 @@
 use crate::error::Bn254Err;
 use ark_bn254::{Fq, Fq2, Fr, G1Affine, G1Projective, G2Affine, G2Projective};
 use ark_ff::{BigInteger, BigInteger256};
-use ethers::core::types::U256;
+use alloy_primitives::U256;
 use std::ops::Mul;
 use std::str::FromStr;
 /// Converts [U256] to [BigInteger256]
 pub fn u256_to_bigint256(value: U256) -> BigInteger256 {
     // Convert U256 to a byte array
-    let mut bytes = [0u8; 32];
-    value.to_big_endian(&mut bytes);
+    let bytes = value.to_be_bytes::<32>();
     // Convert the byte array to a bit array
     let mut bits = [false; 256];
     for (byte_idx, byte) in bytes.iter().enumerate() {
@@ -23,7 +22,7 @@ pub fn u256_to_bigint256(value: U256) -> BigInteger256 {
 
 pub fn biginteger256_to_u256(bi: BigInteger256) -> U256 {
     let s = bi.to_bytes_be();
-    U256::from_little_endian(&s)
+    U256::from_be_slice(&s)
 }
 
 pub fn get_g1_generator() -> Result<G1Affine, Bn254Err> {

@@ -23,8 +23,8 @@ pub fn convert_to_bn254_g1_point(g1: G1Projective) -> RegistryG1Point {
     let y: BigInteger256 = g1.y.into();
 
     RegistryG1Point {
-        x: biginteger256_to_u256(x),
-        y: biginteger256_to_u256(y),
+        X: biginteger256_to_u256(x),
+        Y: biginteger256_to_u256(y),
     }
 }
 
@@ -35,7 +35,7 @@ pub fn convert_to_bn254_g2_point(g2: G2Projective) -> RegistryG2Point {
     let y_1: BigInteger256 = g2.y.c1.into();
 
     RegistryG2Point {
-        x: [biginteger256_to_u256(x_0), biginteger256_to_u256(x_1)],
-        y: [biginteger256_to_u256(y_0), biginteger256_to_u256(y_1)],
+        X: [biginteger256_to_u256(x_0), biginteger256_to_u256(x_1)],
+        Y: [biginteger256_to_u256(y_0), biginteger256_to_u256(y_1)],
     }
 }

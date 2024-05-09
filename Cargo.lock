@@ -1400,6 +1400,7 @@ dependencies = [
 name = "eigensdk-crypto-bn254"
 version = "0.0.1-alpha"
 dependencies = [
+ "alloy-primitives",
  "ark-bn254",
  "ark-ff 0.4.2",
  "ethers",
