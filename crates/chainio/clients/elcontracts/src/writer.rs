@@ -1,23 +1,42 @@
 use crate::{error::ElContractsError, reader::ELChainReader};
-use eigensdk_contract_bindings::{
-    DelegationManager::delegation_manager, DelegationManager::OperatorDetails,
-    StrategyManager::strategy_manager, IERC20::ierc20,
-};
-use eigensdk_txmgr::SimpleTxManager;
+use alloy_signer::{Signer, SignerSync};
+use alloy_network::EthereumSigner;
+use alloy_sol_types::sol;
+use reqwest::Url;
+sol!(
+    #[allow(missing_docs)]
+    #[sol(rpc)]
+    DelegationManager,
+    "../../../../crates/contracts/bindings/utils/json/DelegationManager.json"
+);
+
+sol!(
+    #[allow(missing_docs)]
+    #[sol(rpc)]
+    StrategyManager,
+    "../../../../crates/contracts/bindings/utils/json/StrategyManager.json"
+);
+
+sol!(
+    #[allow(missing_docs)]
+    #[sol(rpc)]
+    IERC20,
+    "../../../../crates/contracts/bindings/utils/json/IERC20.json"
+);
 use eigensdk_types::operator::Operator;
-use ethers::middleware::SignerMiddleware;
-use ethers_core::types::{Address, TxHash, U256};
-use ethers_providers::{Http, Provider};
+use alloy_primitives::{Address, TxHash, U256};
+use alloy_provider::{ProviderBuilder, Provider};
+use alloy_network::{TxSignerSync};
 use std::sync::Arc;
 use tracing::info;
-trait ELWriter {}
-
+use DelegationManager::OperatorDetails;
+use alloy_signer_wallet::LocalWallet;
 pub struct ELChainWriter {
     delegation_manager: Address,
     strategy_manager: Address,
     el_chain_reader: ELChainReader,
-    client: Provider<Http>,
-    tx_mgr: SimpleTxManager,
+    provider:String,
+    signer : LocalWallet
 }
 
 impl ELChainWriter {
@@ -25,50 +44,48 @@ impl ELChainWriter {
         delegation_manager: Address,
         strategy_manager: Address,
         el_chain_reader: ELChainReader,
-        client: Provider<Http>,
-        tx_mgr: SimpleTxManager,
+        provider: String,
+        signer:LocalWallet
     ) -> Self {
         Self {
             delegation_manager,
             strategy_manager,
             el_chain_reader,
-            client,
-            tx_mgr,
+            provider,
+            signer
         }
     }
 
     pub async fn register_as_operator(
         &self,
         operator: Operator,
-    ) -> Result<TxHash, ElContractsError> {
+    ) -> Result<TxHash, Box<dyn std::error::Error>> {
         info!(
             "registering operator {:?} to EigenLayer",
             operator.has_address()
         );
-        let op_details = OperatorDetails {
-            earnings_receiver: operator.has_earnings_receiver_address(),
-            delegation_approver: operator.has_delegation_approver_address(),
-            staker_opt_out_window_blocks: operator.has_staker_opt_out_window_blocks(),
-        };
 
-        let provider = Arc::new(&self.client);
-        let wallet = self.tx_mgr.wallet.signer.clone();
-        let signer = SignerMiddleware::new(provider.clone(), wallet);
+        let op_details = OperatorDetails {
+            earningsReceiver: operator.has_earnings_receiver_address(),
+            delegationApprover: operator.has_delegation_approver_address(),
+            stakerOptOutWindowBlocks: operator.has_staker_opt_out_window_blocks(),
+        };
+        let url = Url::new(self.provider);
+        let provider = ProviderBuilder::new()
+        .with_recommended_fillers()
+        .signer(EthereumSigner::from(self.signer))
+        .on_http(url); 
+
         let contract_delegation_manager =
-            delegation_manager::DelegationManager::new(self.delegation_manager, signer.into());
+            DelegationManager::new(self.delegation_manager, provider);
 
         let contract_call = contract_delegation_manager
-            .register_as_operator(op_details, operator.has_metadata_url());
+            .registerAsOperator(op_details, operator.has_metadata_url());
 
-        let tx_result = contract_call.send().await;
+        let tx = contract_call.send().await?;
 
-        match tx_result {
-            Ok(tx) => {
-                info!(tx_hash = %tx.tx_hash(), "tx successfully included");
-                Ok(tx.tx_hash())
-            }
-            Err(_) => return Err(ElContractsError::RegisterAsOperator),
-        }
+        info!(tx_hash = %tx.tx_hash(), "tx successfully included");
+        Ok(tx.tx_hash())
     }
 
     pub async fn update_operator_details(
@@ -80,38 +97,33 @@ impl ELChainWriter {
             operator.has_address()
         );
         let operator_details = OperatorDetails {
-            earnings_receiver: operator.has_earnings_receiver_address(),
-            delegation_approver: operator.has_delegation_approver_address(),
-            staker_opt_out_window_blocks: operator.has_staker_opt_out_window_blocks(),
+            earningsReceiver: operator.has_earnings_receiver_address(),
+            delegationApprover: operator.has_delegation_approver_address(),
+            stakerOptOutWindowBlocks: operator.has_staker_opt_out_window_blocks(),
         };
+        let url = Url::new(self.provider);
 
-        let provider = Arc::new(&self.client);
-        let wallet = self.tx_mgr.wallet.signer.clone();
-        let signer = SignerMiddleware::new(provider.clone(), wallet);
+        let provider = ProviderBuilder::new()
+        .with_recommended_fillers()
+        .signer(EthereumSigner::from(self.signer))
+        .on_http(url); 
         let contract_delegation_manager =
-            delegation_manager::DelegationManager::new(self.delegation_manager, signer.into());
+            DelegationManager::new(self.delegation_manager, provider);
 
         let contract_call_modify_operator_details =
-            contract_delegation_manager.modify_operator_details(operator_details);
+            contract_delegation_manager.modifyOperatorDetails(operator_details);
 
-        let tx_result = contract_call_modify_operator_details.send().await;
+        let tx = contract_call_modify_operator_details.send().await?;
 
-        match tx_result {
-            Ok(tx) => {
-                info!(tx_hash = %tx.tx_hash(), operator = %operator.has_address(), "succesfully updated operator details");
+        info!(tx_hash = %tx.tx_hash(), operator = %operator.has_address(), "succesfully updated operator details");
 
-                let contract_call_update_metadata_uri = contract_delegation_manager
-                    .update_operator_metadata_uri(operator.has_metadata_url());
+        let contract_call_update_metadata_uri = contract_delegation_manager
+            .updateOperatorMetadataURI(operator.has_metadata_url());
 
-                let metadata_tx_result = contract_call_update_metadata_uri.send().await;
+        let metadata_tx = contract_call_update_metadata_uri.send().await?;
 
-                match metadata_tx_result {
-                    Ok(metadata_tx) => Ok(metadata_tx.tx_hash()),
-                    Err(_) => return Err(ElContractsError::UpdateMetadataUri),
-                }
-            }
-            Err(_) => return Err(ElContractsError::ModifyOperatorDetails),
-        }
+        Ok(metadata_tx.tx_hash())
+
     }
 
     pub async fn deposit_erc20_into_strategy(
@@ -123,54 +135,43 @@ impl ELChainWriter {
             "depositing {:?} tokens into strategy {:?}",
             amount, strategy_addr
         );
-        let result_value = self
+        let tokens = self
             .el_chain_reader
             .get_strategy_and_underlying_erc20_token(strategy_addr)
-            .await;
+            .await?;
+            let (_, underlying_token_contract, underlying_token) = tokens;
+            let url = Url::new(self.provider);
 
-        match result_value {
-            Ok((_, underlying_token_contract, underlying_token)) => {
-                let provider = Arc::new(&self.client);
-                let wallet = self.tx_mgr.wallet.signer.clone();
-                let signer = SignerMiddleware::new(provider.clone(), wallet);
-
+            let provider = ProviderBuilder::new()
+            .with_recommended_fillers()
+            .signer(EthereumSigner::from(self.signer))
+            .on_http(url); 
                 let contract_underlying_token =
-                    ierc20::IERC20::new(underlying_token_contract, signer.clone().into());
+                    IERC20::new(underlying_token_contract, provider);
 
                 let contract_call =
                     contract_underlying_token.approve(self.strategy_manager, amount);
 
-                let _approve_tx_result = contract_call.send().await;
+                let _approve = contract_call.send().await?;
 
-                match _approve_tx_result {
-                    Ok(_approve_tx) => {
-                        let contract_strategy_manager = strategy_manager::StrategyManager::new(
+                        let contract_strategy_manager = StrategyManager::new(
                             self.strategy_manager,
-                            signer.into(),
+                            provider,
                         );
 
                         let deposit_contract_call = contract_strategy_manager
-                            .deposit_into_strategy(strategy_addr, underlying_token, amount);
+                            .depositIntoStrategy(strategy_addr, underlying_token, amount);
 
-                        let tx_result = deposit_contract_call.send().await;
+                        let tx = deposit_contract_call.send().await?;
 
-                        match tx_result {
-                            Ok(tx) => {
                                 info!(
                                     "deposited {:?} tokens into strategy {:?}",
                                     amount, strategy_addr
                                 );
                                 Ok(tx.tx_hash())
                             }
-                            Err(_) => {
-                                return Err(ElContractsError::GetStrategyAndUnderlyingERC20Token)
-                            }
-                        }
+                          
                     }
-                    Err(_) => return Err(ElContractsError::DepositIntoStrategy),
-                }
-            }
-            Err(_) => return Err(ElContractsError::ApproveCallToUnderlyingToken),
-        }
-    }
-}
+            
+    
+

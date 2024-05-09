@@ -230,6 +230,24 @@ dependencies = [
 ]
 
 [[package]]
+name = "alloy-pubsub"
+version = "0.1.0"
+source = "git+https://github.com/alloy-rs/alloy?rev=af788af#af788afe934d4c54ec1fcb6bb4b16ce385f913ab"
+dependencies = [
+ "alloy-json-rpc",
+ "alloy-primitives",
+ "alloy-transport",
+ "bimap",
+ "futures",
+ "serde",
+ "serde_json",
+ "tokio",
+ "tokio-stream",
+ "tower",
+ "tracing",
+]
+
+[[package]]
 name = "alloy-rlp"
 version = "0.3.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -325,6 +343,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "alloy-signer-wallet"
+version = "0.1.0"
+source = "git+https://github.com/alloy-rs/alloy?rev=af788af#af788afe934d4c54ec1fcb6bb4b16ce385f913ab"
+dependencies = [
+ "alloy-consensus",
+ "alloy-network",
+ "alloy-primitives",
+ "alloy-signer",
+ "async-trait",
+ "k256",
+ "rand",
+ "thiserror",
+]
+
+[[package]]
 name = "alloy-sol-macro"
 version = "0.7.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -411,6 +444,22 @@ dependencies = [
  "serde_json",
  "tower",
  "url",
+]
+
+[[package]]
+name = "alloy-transport-ws"
+version = "0.1.0"
+source = "git+https://github.com/alloy-rs/alloy?rev=af788af#af788afe934d4c54ec1fcb6bb4b16ce385f913ab"
+dependencies = [
+ "alloy-pubsub",
+ "alloy-transport",
+ "futures",
+ "http 0.2.12",
+ "serde_json",
+ "tokio",
+ "tokio-tungstenite",
+ "tracing",
+ "ws_stream_wasm",
 ]
 
 [[package]]
@@ -716,6 +765,12 @@ name = "bech32"
 version = "0.9.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d86b93f97252c47b41663388e6d155714a9d0c398b99f1005cbc5f978b29f445"
+
+[[package]]
+name = "bimap"
+version = "0.6.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "230c5f1ca6a325a32553f8640d31ac9b49f2411e901e427570154868b46da4f7"
 
 [[package]]
 name = "bit-set"
@@ -1264,18 +1319,20 @@ version = "0.0.1-alpha"
 dependencies = [
  "alloy-contract",
  "alloy-eips",
+ "alloy-network",
  "alloy-primitives",
  "alloy-provider",
  "alloy-rpc-types",
  "alloy-sol-types",
+ "alloy-transport",
  "alloy-transport-http",
+ "alloy-transport-ws",
  "ark-bn254",
  "ark-ff 0.4.2",
  "eigensdk-chainio-utils",
  "eigensdk-client-elcontracts",
  "eigensdk-crypto-bls",
  "eigensdk-crypto-bn254",
- "eigensdk-txmgr",
  "eigensdk-types",
  "futures",
  "hex",
@@ -1302,14 +1359,16 @@ dependencies = [
 name = "eigensdk-client-elcontracts"
 version = "0.0.1-alpha"
 dependencies = [
+ "alloy-contract",
+ "alloy-network",
+ "alloy-primitives",
+ "alloy-provider",
+ "alloy-signer",
+ "alloy-signer-wallet",
+ "alloy-sol-types",
  "ark-bn254",
  "ark-ff 0.4.2",
- "eigensdk-contract-bindings",
- "eigensdk-txmgr",
  "eigensdk-types",
- "ethers",
- "ethers-core",
- "ethers-providers",
  "thiserror",
  "tracing",
 ]
@@ -1328,20 +1387,6 @@ version = "0.0.1-alpha"
 dependencies = [
  "alloy-primitives",
  "serde",
-]
-
-[[package]]
-name = "eigensdk-client-wallet"
-version = "0.0.1-alpha"
-dependencies = [
- "alloy-primitives",
- "eigensdk-signerv2",
- "ethers",
- "ethers-core",
- "ethers-providers",
- "ethers-signers",
- "serde",
- "thiserror",
 ]
 
 [[package]]
@@ -1464,16 +1509,6 @@ dependencies = [
  "ethers",
  "ethers-core",
  "ethers-signers",
- "thiserror",
-]
-
-[[package]]
-name = "eigensdk-txmgr"
-version = "0.0.1-alpha"
-dependencies = [
- "eigensdk-client-wallet",
- "eigensdk-signerv2",
- "ethers",
  "thiserror",
 ]
 

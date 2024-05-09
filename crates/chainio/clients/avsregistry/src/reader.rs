@@ -9,13 +9,11 @@ use alloy_primitives::{
 use alloy_provider::{Provider, ProviderBuilder};
 use alloy_rpc_types::{Filter, FilterBlockOption, FilterSet, Topic, ValueOrArray};
 use alloy_sol_types::{sol, SolConstructor, SolEventInterface};
-use alloy_transport_http::Http;
-use eigensdk_types::operator::{bitmap_to_quorum_ids, OperatorPubKeys};
+use eigensdk_types::operator::bitmap_to_quorum_ids;
+use num_bigint::BigInt;
 use std::collections::HashMap;
 use std::fmt::Debug;
 use tracing::debug;
-// use ethers_providers::{Http, Provider};
-use num_bigint::BigInt;
 
 const REGISTRY_COORDINATOR_PATH: &str =
     "../../../../crates/contracts/bindings/utils/json/RegistryCoordinator.json";
@@ -46,17 +44,17 @@ sol!(
 
 sol!(
     #[allow(missing_docs)]
+    #[derive(Debug)]
     #[sol(rpc)]
     BLSApkRegistry,
     "../../../../crates/contracts/bindings/utils/json/BLSApkRegistry.json"
 );
 
-use BLSApkRegistry::{BLSApkRegistryCalls, BLSApkRegistryEvents};
+use self::RegistryCoordinator::RegistryCoordinatorInstance;
+use BLSApkRegistry::{G1Point, G2Point};
 use OperatorStateRetriever::OperatorStateRetrieverCalls;
 use RegistryCoordinator::RegistryCoordinatorEvents;
 use StakeRegistry::StakeRegistryEvents;
-
-use self::RegistryCoordinator::RegistryCoordinatorInstance;
 
 /// Avs Registry chainreader
 #[derive(Debug, Clone)]
@@ -66,6 +64,12 @@ pub struct AvsRegistryChainReader {
     operator_state_retriever: Address,
     stake_registry_addr: Address,
     provider: String,
+}
+
+#[derive(Debug, Clone)]
+pub struct OperatorPubKeys {
+    pub g1_pub_key: G1Point,
+    pub g2_pub_key: G2Point,
 }
 
 trait AvsRegistryReader {
@@ -463,12 +467,12 @@ impl AvsRegistryChainReader {
                 let data = pub_key_reg.data();
                 let operator_addr = data.operator;
                 operator_addresses.push(operator_addr);
-                let g1_pub_key = data.pubkeyG1;
-                let g2_pub_key = data.pubkeyG2;
+                let g1_pub_key = data.pubkeyG1.clone();
+                let g2_pub_key = data.pubkeyG2.clone();
 
                 let operator_pub_key = OperatorPubKeys {
-                    g1_pub_key,
-                    g2_pub_key,
+                    g1_pub_key: g1_pub_key,
+                    g2_pub_key: g2_pub_key,
                 };
 
                 operator_pub_keys.push(operator_pub_key);

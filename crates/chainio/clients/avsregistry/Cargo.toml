@@ -22,7 +22,6 @@ eigensdk-crypto-bls.workspace = true
 ark-ff.workspace = true
 eigensdk-crypto-bn254.workspace = true
 eigensdk-client-elcontracts.workspace = true
-eigensdk-txmgr.workspace = true
 eigensdk-chainio-utils.workspace = true
 ark-bn254 = "0.4.0"
 thiserror.workspace = true
@@ -32,6 +31,10 @@ hex = "0.4.3"
 futures = "0.3.30"
 alloy-contract.workspace = true
 alloy-eips.workspace = true
+alloy-transport.workspace = true
+alloy-network.workspace = true
+alloy-transport-ws.workspace = true
+
 [lints]
 workspace = true
 

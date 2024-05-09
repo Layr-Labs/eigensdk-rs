@@ -4,7 +4,6 @@ members = [ "crates/chainio/clients/avsregistry/",
 "crates/chainio/clients/eth/",
 "crates/chainio/clients/fireblocks/",
 "crates/chainio/clients/builder/",
-"crates/chainio/clients/wallet/",
 "crates/contracts/bindings/",
 "crates/signerv2/",
 "crates/chainio/utils/",
@@ -18,7 +17,6 @@ members = [ "crates/chainio/clients/avsregistry/",
 "crates/services/operatorsinfo/",
 "crates/types/",
 "crates/metrics/",
-"crates/chainio/txmgr/",
 "crates/types/",
 "crates/signer/"]
 
@@ -59,12 +57,10 @@ eigensdk-client-builder = {version = "0.0.1-alpha",path = "crates/chainio/client
 eigensdk-client-elcontracts = {version = "0.0.1-alpha",path = "crates/chainio/clients/elcontracts"}
 eigensdk-client-eth = {version = "0.0.1-alpha",path = "crates/chainio/clients/eth"}
 eigensdk-client-fireblocks = {version = "0.0.1-alpha",path = "crates/chainio/clients/fireblocks"}
-eigensdk-client-wallet = {version = "0.0.1-alpha",path = "crates/chainio/clients/wallet"}
 eigensdk-contract-bindings = {version = "0.0.1-alpha", path = "crates/contracts/bindings/"}
 eigensdk-types = {version = "0.0.1-alpha",path = "crates/types/"}
 eigensdk-crypto-bls = {path = "crates/crypto/bls/"}
 eigensdk-crypto-bn254 = {version = "0.0.1-alpha",path = "crates/crypto/bn254/"}
-eigensdk-txmgr = {version = "0.0.1-alpha",path = "crates/chainio/txmgr/"}
 eigensdk-signerv2 = {version = "0.0.1-alpha",path = "crates/signerv2/"}
 eigensdk-utils = {version = "0.0.1-alpha" , path = "crates/utils/"}
 ethers-signers = "2.0.14"
@@ -106,3 +102,5 @@ alloy-signer-wallet = { git = "https://github.com/alloy-rs/alloy", rev = "af788a
 alloy-network = { git = "https://github.com/alloy-rs/alloy", rev = "af788af" }
 alloy-consensus = { git = "https://github.com/alloy-rs/alloy", rev = "af788af" }
 alloy-contract = {git = "https://github.com/alloy-rs/alloy", rev = "af788af" }
+alloy-transport =  {git = "https://github.com/alloy-rs/alloy", rev = "af788af"}
+alloy-transport-ws = {git = "https://github.com/alloy-rs/alloy", rev = "af788af"}

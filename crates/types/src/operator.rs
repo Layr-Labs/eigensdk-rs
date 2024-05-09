@@ -1,8 +1,10 @@
-use alloy_primitives::U256;
+use alloy_primitives::{U256,Address};
 use alloy_sol_types::sol;
-use eigensdk_crypto_bls::attestation::{G1Point, G2Point};
+use eigensdk_crypto_bls::attestation::{
+    G1Point as AttestationG1Point, G2Point as AttestationG2Point,
+};
 use ethers::{
-    types::{Address, U64},
+    types::U64,
     utils::keccak256,
 };
 use num_bigint::BigUint;
@@ -15,7 +17,7 @@ sol!(
     "../../crates/contracts/bindings/utils/json/BLSApkRegistry.json"
 );
 const MAX_NUMBER_OF_QUORUMS: usize = 192;
-use BLSApkRegistry::{G1Point as BlsG1Point, G2Point as BlsG2Point};
+use BLSApkRegistry::{G1Point, G2Point};
 
 pub fn bitmap_to_quorum_ids(quorum_bitmaps: U256) -> Vec<u8> {
     let bytes = quorum_bitmaps.to_be_bytes::<32>();
@@ -33,8 +35,8 @@ pub fn bitmap_to_quorum_ids(quorum_bitmaps: U256) -> Vec<u8> {
 
 #[derive(Debug, Clone)]
 pub struct OperatorPubKeys {
-    pub g1_pub_key: BlsG1Point,
-    pub g2_pub_key: BlsG2Point,
+    pub g1_pub_key: G1Point,
+    pub g2_pub_key: G2Point,
 }
 
 pub struct Operator {
@@ -118,10 +120,10 @@ pub struct OperatorAvsState {
     pub block_num: U64,
 }
 
-pub fn operator_id_from_g1_pub_key(pub_key: BlsG1Point) -> [u8; 32] {
+pub fn operator_id_from_g1_pub_key(pub_key: G1Point) -> [u8; 32] {
     let mut bytes = Vec::new();
-    (pub_key.x.to_big_endian(&mut bytes[0..32]));
-    (pub_key.y.to_big_endian(&mut bytes[0..32]));
+    bytes.extend_from_slice(&pub_key.X.to_be_bytes::<32>());
+    bytes.extend_from_slice(&pub_key.Y.to_be_bytes::<32>());
     keccak256(bytes)
 }
 

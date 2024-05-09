@@ -1,49 +1,75 @@
-use crate::{error::AvsRegistryError, NEW_BLS_APK_REGISTRATION_EVENT_SIGNATURE};
-use eigensdk_contract_bindings::BLSApkRegistry::bls_apk_registry::{
-    self, BLSApkRegistry, BLSApkRegistryEvents,
+use alloy_sol_types::sol;
+sol!(
+    #[allow(missing_docs)]
+    #[derive(Debug)]
+    #[sol(rpc)]
+    BLSApkRegistry,
+    "../../../../crates/contracts/bindings/utils/json/BLSApkRegistry.json"
+);
+use alloy_network::Ethereum;
+use alloy_primitives::Address;
+use alloy_provider::{
+    fillers::{ChainIdFiller, FillProvider, GasFiller, JoinFill, NonceFiller},
+    RootProvider,
 };
-use ethers_core::types::{Address, Filter};
-use ethers_providers::{
-    Http, Middleware, Provider, ProviderError, StreamExt, SubscriptionStream, Ws,
-};
-use futures::Future;
-use std::pin::Pin;
-use std::sync::Arc;
-
-type MyStream<'a, T> =
-    Pin<Box<dyn Future<Output = Result<SubscriptionStream<'static, Ws, T>, ProviderError>> + Send>>;
-
+use alloy_provider::{Provider, ProviderBuilder};
+use alloy_rpc_types::Filter;
+use alloy_transport::BoxTransport;
+use BLSApkRegistry::{BLSApkRegistryEvents, BLSApkRegistryInstance};
 /// AvsRegistry Chain Subscriber struct
-#[derive(Debug, Clone)]
+#[derive(Debug)]
 pub struct AvsRegistryChainSubscriber {
     bls_apk_registry: BLSApkRegistryEvents,
+    provider: String,
 }
 
 impl AvsRegistryChainSubscriber {
-    fn new(bls_apk_registry: BLSApkRegistryEvents) -> Self {
+    fn new(bls_apk_registry: BLSApkRegistryEvents, provider: String) -> Self {
         return AvsRegistryChainSubscriber {
             bls_apk_registry: bls_apk_registry,
+            provider,
         };
     }
 
-    fn build_avs_registry_chain_reader(
+    async fn build_avs_registry_chain_reader(
+        &self,
         bls_apk_registry_addr: Address,
-        client: Provider<Http>,
-    ) -> BLSApkRegistry<ethers_providers::Provider<Http>> {
-        let bls_apk_reg =
-            bls_apk_registry::BLSApkRegistry::new(bls_apk_registry_addr, client.into());
+        provider: String,
+    ) -> Result<
+        BLSApkRegistryInstance<
+            BoxTransport,
+            FillProvider<
+                JoinFill<
+                    JoinFill<JoinFill<alloy_provider::Identity, GasFiller>, NonceFiller>,
+                    ChainIdFiller,
+                >,
+                RootProvider<BoxTransport>,
+                BoxTransport,
+                Ethereum,
+            >,
+        >,
+        Box<dyn std::error::Error>,
+    > {
+        let provider = ProviderBuilder::new()
+            .with_recommended_fillers()
+            .on_builtin(&self.provider)
+            .await?;
+        let bls_apk_reg = BLSApkRegistry::new(bls_apk_registry_addr, provider);
 
-        return bls_apk_reg;
+        return Ok(bls_apk_reg);
     }
 
-    pub async fn get_new_pub_key_registration_filter<'a>(
-        &self,
-        client: Arc<Provider<Ws>>,
-    ) -> Filter {
-        let current_block_number = client.get_block_number().await.unwrap();
+    pub async fn get_new_pub_key_registration_filter<'a>(&self) -> Filter {
+        let provider = ProviderBuilder::new()
+            .with_recommended_fillers()
+            .on_builtin(&self.provider)
+            .await?;
+        let current_block_number = provider.get_block_number().await.unwrap();
 
         let filter = Filter::new()
-            .topic0(NEW_BLS_APK_REGISTRATION_EVENT_SIGNATURE)
+            .event_signature(
+                "NewPubkeyRegistration(address,(uint256,uint256),(uint256[2],uint256[2]))".into(),
+            )
             .from_block(current_block_number);
         filter
     }

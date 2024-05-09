@@ -9,13 +9,17 @@ repository.workspace = true
 license-file.workspace = true
 
 [dependencies]
-eigensdk-contract-bindings.workspace = true
-ethers-providers.workspace=true
-ethers-core.workspace=true
 ark-bn254 = "0.4.0"
 ark-ff = "0.4.0"
-eigensdk-txmgr.workspace=true
 eigensdk-types.workspace=true
-ethers.workspace = true
 thiserror.workspace = true
 tracing.workspace = true
+
+alloy-sol-types.workspace = true
+alloy-contract.workspace = true
+alloy-primitives.workspace = true
+alloy-provider.workspace = true
+alloy-signer.workspace = true
+alloy-network.workspace = true
+alloy-signer-wallet.workspace = true
+reqwest.workspace = true
