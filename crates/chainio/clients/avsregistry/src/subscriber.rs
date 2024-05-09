@@ -15,7 +15,8 @@ use alloy_provider::{
 use alloy_provider::{Provider, ProviderBuilder};
 use alloy_rpc_types::Filter;
 use alloy_transport::BoxTransport;
-use BLSApkRegistry::{BLSApkRegistryEvents, BLSApkRegistryInstance};
+use BLSApkRegistry::{BLSApkRegistryEvents, BLSApkRegistryInstance,NewPubkeyRegistration};
+
 /// AvsRegistry Chain Subscriber struct
 #[derive(Debug)]
 pub struct AvsRegistryChainSubscriber {
@@ -59,7 +60,7 @@ impl AvsRegistryChainSubscriber {
         return Ok(bls_apk_reg);
     }
 
-    pub async fn get_new_pub_key_registration_filter<'a>(&self) -> Filter {
+    pub async fn get_new_pub_key_registration_filter<'a>(&self) -> Result<Filter, Box<dyn std::error::Error>> {
         let provider = ProviderBuilder::new()
             .with_recommended_fillers()
             .on_builtin(&self.provider)
@@ -67,10 +68,10 @@ impl AvsRegistryChainSubscriber {
         let current_block_number = provider.get_block_number().await.unwrap();
 
         let filter = Filter::new()
-            .event_signature(
-                "NewPubkeyRegistration(address,(uint256,uint256),(uint256[2],uint256[2]))".into(),
+            .event(
+                "NewPubkeyRegistration(address,(uint256,uint256),(uint256[2],uint256[2]))"
             )
             .from_block(current_block_number);
-        filter
+        Ok(filter)
     }
 }
