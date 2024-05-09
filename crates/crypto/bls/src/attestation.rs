@@ -8,7 +8,7 @@ use ark_ff::{BigInteger256, Field, One};
 use eigensdk_crypto_bn254::utils::{
     get_g2_generator, mul_by_generator_g1, mul_by_generator_g2, u256_to_bigint256,
 };
-use ethers_core::types::U256;
+use alloy_primitives::U256;
 use std::ops::Neg;
 use std::ops::{Add, Mul};
 pub fn new_fp_element(x: BigInteger256) -> Fq {

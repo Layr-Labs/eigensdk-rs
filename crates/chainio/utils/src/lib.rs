@@ -15,7 +15,7 @@ use eigensdk_crypto_bn254::utils::u256_to_bigint256;
 use RegistryCoordinator::{G1Point as RegistryG1Point, G2Point as RegistryG2Point};
 
 pub fn convert_bn254_to_ark(g1_point: RegistryCoordinator::G1Point) -> G1Point {
-    G1Point::new(u256_to_bigint256(g1_point.x), u256_to_bigint256(g1_point.y))
+    G1Point::new(u256_to_bigint256(g1_point.X), u256_to_bigint256(g1_point.Y))
 }
 
 pub fn convert_to_bn254_g1_point(g1: G1Projective) -> RegistryG1Point {
