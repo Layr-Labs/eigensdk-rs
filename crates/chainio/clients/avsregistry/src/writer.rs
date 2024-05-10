@@ -1,4 +1,3 @@
-use crate::error::AvsRegistryError;
 use alloy_network::EthereumSigner;
 use alloy_signer::SignerSync;
 use alloy_signer_wallet::LocalWallet;
@@ -9,12 +8,14 @@ use eigensdk_chainio_utils::{
 };
 use eigensdk_client_elcontracts::reader::ELChainReader;
 use reqwest::Url;
-sol!(
-    #[allow(missing_docs)]
-    #[sol(rpc)]
-    RegistryCoordinator,
-    "../../../../crates/contracts/bindings/utils/json/RegistryCoordinator.json"
-);
+
+use eigensdk_chainio_utils::{
+    BLSApkRegistry::{G1Point, PubkeyRegistrationParams},
+    RegistryCoordinator::{
+        self, G1Point as RegistryG1Point, G2Point as RegistryG2Point,
+        PubkeyRegistrationParams as RegistryPubkeyRegistrationParams,
+    },
+};
 sol!(
     #[allow(missing_docs)]
     #[sol(rpc)]
@@ -29,21 +30,13 @@ sol!(
     "StakeRegistry.json"
 );
 
-sol!(
-    #[allow(missing_docs)]
-    #[derive(Debug)]
-    #[sol(rpc)]
-    BLSApkRegistry,
-    "../../../../crates/contracts/bindings/utils/json/BLSApkRegistry.json"
-);
-
 use alloy_primitives::{Address, Bytes, FixedBytes, TxHash, U256};
 use alloy_provider::{Provider, ProviderBuilder};
 use eigensdk_crypto_bls::attestation::KeyPair;
-use std::sync::Arc;
 use tracing::info;
-use BLSApkRegistry::PubkeyRegistrationParams;
 use RegistryCoordinator::SignatureWithSaltAndExpiry;
+
+#[derive(Debug)]
 pub struct AvsRegistryChainWriter {
     service_manager_addr: Address,
     registry_coordinator_addr: Address,
@@ -164,7 +157,11 @@ impl AvsRegistryChainWriter {
         let signed_msg = convert_to_bn254_g1_point(
             bls_key_pair
                 .sign_hashes_to_curve_message(G1Projective::from(
-                    convert_bn254_to_ark(g1_hashes_msg_to_sign).point,
+                    convert_bn254_to_ark(G1Point {
+                        X: g1_hashes_msg_to_sign.X,
+                        Y: g1_hashes_msg_to_sign.Y,
+                    })
+                    .point,
                 ))
                 .sig(),
         );
@@ -206,7 +203,20 @@ impl AvsRegistryChainWriter {
         let contract_call = contract_registry_coordinator.registerOperator(
             quorum_numbers.clone(),
             socket,
-            pub_key_reg_params,
+            RegistryPubkeyRegistrationParams {
+                pubkeyRegistrationSignature: RegistryG1Point {
+                    X: pub_key_reg_params.pubkeyRegistrationSignature.X,
+                    Y: pub_key_reg_params.pubkeyRegistrationSignature.Y,
+                },
+                pubkeyG1: RegistryG1Point {
+                    X: pub_key_reg_params.pubkeyG1.X,
+                    Y: pub_key_reg_params.pubkeyG1.Y,
+                },
+                pubkeyG2: RegistryG2Point {
+                    X: pub_key_reg_params.pubkeyG2.X,
+                    Y: pub_key_reg_params.pubkeyG2.Y,
+                },
+            },
             operator_signature_with_salt_and_expiry,
         );
 
@@ -282,6 +292,6 @@ impl AvsRegistryChainWriter {
         let tx = contract_call.send().await?;
 
         info!(tx_hash = ?tx,"succesfully deregistered operator with the AVS's registry coordinator" );
-        return Ok(tx.tx_hash());
+        return Ok(*tx.tx_hash());
     }
 }

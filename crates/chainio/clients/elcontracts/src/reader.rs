@@ -41,6 +41,7 @@ use std::sync::Arc;
 
 use crate::error::ElContractsError;
 
+#[derive(Debug)]
 pub struct ELChainReader {
     slasher: Address,
     delegation_manager: Address,

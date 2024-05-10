@@ -9,9 +9,7 @@ repository.workspace = true
 license-file.workspace = true
 
 [dependencies]
-ethers-core.workspace = true
 ethers.workspace = true
-ethers-signers.workspace = true
 eth-keystore = "0.5.0"
 thiserror.workspace = true
 eigensdk-types.workspace = true

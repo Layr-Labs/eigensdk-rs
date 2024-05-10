@@ -4,7 +4,6 @@ members = [ "crates/chainio/clients/avsregistry/",
 "crates/chainio/clients/eth/",
 "crates/chainio/clients/fireblocks/",
 "crates/contracts/bindings/",
-"crates/signerv2/",
 "crates/chainio/utils/",
 "crates/crypto/bn254/",
 "crates/utils/",
@@ -16,8 +15,7 @@ members = [ "crates/chainio/clients/avsregistry/",
 "crates/services/operatorsinfo/",
 "crates/types/",
 "crates/metrics/",
-"crates/types/",
-"crates/signer/"]
+"crates/types/"]
 
 resolver = "2"
 
@@ -43,8 +41,6 @@ rustdoc.all = "warn"
 [workspace.dependencies]
 ethers =  "2.0.14"
 ark-ff = "0.4.0"
-ethers-providers ="2.0.14"
-ethers-core = "2.0.14"
 reth = {git = "https://github.com/paradigmxyz/reth"}
 prometheus-client = "0.22.2"
 bn254 = {git = "https://github.com/sedaprotocol/bn254"}
@@ -59,9 +55,7 @@ eigensdk-contract-bindings = {version = "0.0.1-alpha", path = "crates/contracts/
 eigensdk-types = {version = "0.0.1-alpha",path = "crates/types/"}
 eigensdk-crypto-bls = {path = "crates/crypto/bls/"}
 eigensdk-crypto-bn254 = {version = "0.0.1-alpha",path = "crates/crypto/bn254/"}
-eigensdk-signerv2 = {version = "0.0.1-alpha",path = "crates/signerv2/"}
 eigensdk-utils = {version = "0.0.1-alpha" , path = "crates/utils/"}
-ethers-signers = "2.0.14"
 eigensdk-metrics-collectors-economic = {version = "0.0.1-alpha",path = "crates/metrics/collectors/economic"}
 eigensdk-metrics-collectors-rpc-calls = {version = "0.0.1-alpha",path = "crates/metrics/collectors/rpc_calls"}
 eigensdk-services-avsregistry = {path = "crates/services/avsregistry"}

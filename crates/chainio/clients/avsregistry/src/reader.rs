@@ -507,14 +507,14 @@ impl AvsRegistryChainReader {
                 to_block = stop_block;
             }
 
-            let filter = Filter::new()
+            let mut filter = Filter::new()
                 .select(start_block..to_block)
                 .event("OperatorSocketUpdate(bytes32,string)")
                 .address(self.registry_coordinator_addr);
             if stop_block == 0 {
                 let current_block_number = provider.get_block_number().await?;
 
-                filter.clone().select(start_block..current_block_number);
+                filter = filter.clone().select(start_block..current_block_number);
             };
 
             let logs = provider.get_logs(&filter).await?;

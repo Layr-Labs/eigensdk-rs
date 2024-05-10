@@ -1306,7 +1306,6 @@ dependencies = [
  "eigensdk-contract-bindings",
  "eigensdk-crypto-bls",
  "eigensdk-crypto-bn254",
- "ethers",
 ]
 
 [[package]]
@@ -1393,7 +1392,6 @@ dependencies = [
  "ark-ec",
  "ark-ff 0.4.2",
  "eigensdk-crypto-bn254",
- "ethers-core",
  "thiserror",
 ]
 
@@ -1416,7 +1414,6 @@ dependencies = [
  "ark-ff 0.4.2",
  "eigensdk-crypto-bls",
  "eigensdk-crypto-bn254",
- "ethers",
 ]
 
 [[package]]
@@ -1426,8 +1423,6 @@ dependencies = [
  "eigensdk-client-avsregistry",
  "eigensdk-client-elcontracts",
  "ethers",
- "ethers-core",
- "ethers-signers",
 ]
 
 [[package]]
@@ -1435,8 +1430,6 @@ name = "eigensdk-metrics-collectors-rpc-calls"
 version = "0.0.1-alpha"
 dependencies = [
  "ethers",
- "ethers-core",
- "ethers-signers",
 ]
 
 [[package]]
@@ -1451,8 +1444,6 @@ dependencies = [
  "eigensdk-types",
  "eth-keystore",
  "ethers",
- "ethers-core",
- "ethers-signers",
  "thiserror",
 ]
 
@@ -1466,8 +1457,6 @@ dependencies = [
  "eigensdk-types",
  "eth-keystore",
  "ethers",
- "ethers-core",
- "ethers-signers",
  "parking_lot",
  "thiserror",
  "tokio",
@@ -1484,22 +1473,8 @@ dependencies = [
  "eigensdk-types",
  "eth-keystore",
  "ethers",
- "ethers-core",
- "ethers-providers",
- "ethers-signers",
  "thiserror",
  "tokio",
-]
-
-[[package]]
-name = "eigensdk-signerv2"
-version = "0.0.1-alpha"
-dependencies = [
- "eth-keystore",
- "ethers",
- "ethers-core",
- "ethers-signers",
- "thiserror",
 ]
 
 [[package]]
@@ -1839,7 +1814,6 @@ dependencies = [
  "const-hex",
  "enr",
  "ethers-core",
- "futures-channel",
  "futures-core",
  "futures-timer",
  "futures-util",
@@ -4033,10 +4007,6 @@ dependencies = [
  "digest 0.10.7",
  "rand_core",
 ]
-
-[[package]]
-name = "signer"
-version = "0.0.1-alpha"
 
 [[package]]
 name = "simple_asn1"
