@@ -210,11 +210,13 @@ dependencies = [
  "alloy-json-rpc",
  "alloy-network",
  "alloy-primitives",
+ "alloy-pubsub",
  "alloy-rpc-client",
  "alloy-rpc-types",
  "alloy-rpc-types-trace",
  "alloy-transport",
  "alloy-transport-http",
+ "alloy-transport-ws",
  "async-stream",
  "async-trait",
  "auto_impl",
@@ -275,8 +277,11 @@ version = "0.1.0"
 source = "git+https://github.com/alloy-rs/alloy?rev=af788af#af788afe934d4c54ec1fcb6bb4b16ce385f913ab"
 dependencies = [
  "alloy-json-rpc",
+ "alloy-primitives",
+ "alloy-pubsub",
  "alloy-transport",
  "alloy-transport-http",
+ "alloy-transport-ws",
  "futures",
  "pin-project",
  "reqwest 0.12.4",
@@ -1420,6 +1425,7 @@ dependencies = [
 name = "eigensdk-metrics-collectors-economic"
 version = "0.0.1-alpha"
 dependencies = [
+ "alloy-primitives",
  "eigensdk-client-avsregistry",
  "eigensdk-client-elcontracts",
  "ethers",
@@ -1436,6 +1442,8 @@ dependencies = [
 name = "eigensdk-services-avsregistry"
 version = "0.0.1-alpha"
 dependencies = [
+ "alloy-primitives",
+ "eigensdk-chainio-utils",
  "eigensdk-client-avsregistry",
  "eigensdk-contract-bindings",
  "eigensdk-crypto-bls",
@@ -1451,6 +1459,7 @@ dependencies = [
 name = "eigensdk-services-blsaggregation"
 version = "0.0.1-alpha"
 dependencies = [
+ "alloy-primitives",
  "eigensdk-crypto-bls",
  "eigensdk-crypto-bn254",
  "eigensdk-services-avsregistry",
@@ -1466,6 +1475,11 @@ dependencies = [
 name = "eigensdk-services-operatorsinfo"
 version = "0.0.1-alpha"
 dependencies = [
+ "alloy-contract",
+ "alloy-primitives",
+ "alloy-provider",
+ "alloy-sol-types",
+ "alloy-transport-ws",
  "eigensdk-client-avsregistry",
  "eigensdk-contract-bindings",
  "eigensdk-crypto-bls",
@@ -1473,6 +1487,8 @@ dependencies = [
  "eigensdk-types",
  "eth-keystore",
  "ethers",
+ "eyre",
+ "futures-util",
  "thiserror",
  "tokio",
 ]

@@ -1,15 +1,9 @@
-use crate::{error::AvsRegistryError, reader::BLSApkRegistry::NewPubkeyRegistration};
-
-use alloy_contract::SolCallBuilder;
-use alloy_eips::eip1898::BlockNumberOrTag;
-use alloy_primitives::address;
-use alloy_primitives::{
-    hex::check, keccak256, Address, BlockNumber, Bytes, FixedBytes, B256, U256, U64,
-};
+use crate::error::AvsRegistryError;
+use alloy_primitives::{Address, Bytes, FixedBytes, B256, U256};
 use alloy_provider::{Provider, ProviderBuilder};
-use alloy_rpc_types::{Filter, FilterBlockOption, FilterSet, Topic, ValueOrArray};
-use alloy_sol_types::{sol, SolConstructor, SolEventInterface};
-use eigensdk_types::operator::bitmap_to_quorum_ids;
+use alloy_rpc_types::Filter;
+use alloy_sol_types::sol;
+use eigensdk_types::operator::{bitmap_to_quorum_ids, BLSApkRegistry, OperatorPubKeys};
 use num_bigint::BigInt;
 use std::collections::HashMap;
 use std::fmt::Debug;
@@ -42,20 +36,7 @@ sol!(
     "../../../../crates/contracts/bindings/utils/json/OperatorStateRetriever.json"
 );
 
-sol!(
-    #[allow(missing_docs)]
-    #[derive(Debug)]
-    #[sol(rpc)]
-    BLSApkRegistry,
-    "../../../../crates/contracts/bindings/utils/json/BLSApkRegistry.json"
-);
-
-use self::RegistryCoordinator::RegistryCoordinatorInstance;
 use BLSApkRegistry::{G1Point, G2Point};
-use OperatorStateRetriever::OperatorStateRetrieverCalls;
-use RegistryCoordinator::RegistryCoordinatorEvents;
-use StakeRegistry::StakeRegistryEvents;
-
 /// Avs Registry chainreader
 #[derive(Debug, Clone)]
 pub struct AvsRegistryChainReader {
@@ -64,12 +45,6 @@ pub struct AvsRegistryChainReader {
     operator_state_retriever: Address,
     stake_registry_addr: Address,
     provider: String,
-}
-
-#[derive(Debug, Clone)]
-pub struct OperatorPubKeys {
-    pub g1_pub_key: G1Point,
-    pub g2_pub_key: G2Point,
 }
 
 trait AvsRegistryReader {
@@ -452,7 +427,6 @@ impl AvsRegistryChainReader {
             .event("NewPubkeyRegistration(address,(uint256,uint256),(uint256[2],uint256[2]))")
             .address(self.bls_apk_registry_addr);
 
-        let contract_bls_apk_registry = BLSApkRegistry::new(self.bls_apk_registry_addr, &provider);
         let logs = provider.get_logs(&filter).await?;
 
         debug!(transactionLogs = ?logs, "avsRegistryChainReader.QueryExistingRegisteredOperatorPubKeys");
@@ -538,37 +512,36 @@ impl AvsRegistryChainReader {
     }
 }
 
-#[test]
-fn test_build_avs_registry_chain_reader() {
-    let provider = "http://localhost:8545";
-    let instance = AvsRegistryChainReader::new(
-        Address::from_word(keccak256("registry")),
-        // Address::from_word(keccak256(("registry").into())),
-        Address::from_word(keccak256("blsapkregistry")),
-        Address::from_word(keccak256("operatorstateretriever")),
-        Address::from_word(keccak256("stakeregistry")),
-        provider.to_string(),
-    );
-    let _ = AvsRegistryChainReader::build_avs_registry_chain_reader(
-        &instance,
-        Address::from_word(keccak256("registry")),
-        Address::from_word(keccak256("operator")),
-        Address::from_word(keccak256("stake")),
-    );
-}
-
 #[cfg(test)]
 mod tests {
 
     use super::*;
+    use alloy_primitives::keccak256;
     use hex::FromHex;
     use std::str::FromStr;
-
     const HOLESKY_REGISTRY_COORDINATOR: &str = "0x53012C69A189cfA2D9d29eb6F19B32e0A2EA3490";
     const HOLESKY_OPERATOR_STATE_RETRIEVER: &str = "0xB4baAfee917fb4449f5ec64804217bccE9f46C67";
     const HOLESKY_STAKE_REGISTRY: &str = "0xBDACD5998989Eec814ac7A0f0f6596088AA2a270";
     const HOLESKY_BLS_APK_REGISTRY: &str = "0x066cF95c1bf0927124DFB8B02B401bc23A79730D";
 
+    #[tokio::test]
+    async fn test_build_avs_registry_chain_reader() {
+        let provider = "http://localhost:8545";
+        let instance = AvsRegistryChainReader::new(
+            Address::from_word(keccak256("registry")),
+            // Address::from_word(keccak256(("registry").into())),
+            Address::from_word(keccak256("blsapkregistry")),
+            Address::from_word(keccak256("operatorstateretriever")),
+            Address::from_word(keccak256("stakeregistry")),
+            provider.to_string(),
+        );
+        let _ = AvsRegistryChainReader::build_avs_registry_chain_reader(
+            &instance,
+            Address::from_word(keccak256("registry")),
+            Address::from_word(keccak256("operator")),
+            Address::from_word(keccak256("stake")),
+        );
+    }
     fn build_avs_registry_chain_reader() -> AvsRegistryChainReader {
         let holesky_registry_coordinator =
             Address::from_str(HOLESKY_REGISTRY_COORDINATOR).expect("failed to parse address");

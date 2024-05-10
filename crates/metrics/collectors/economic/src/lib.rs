@@ -1,6 +1,6 @@
+use alloy_primitives::{Address, U256};
 use eigensdk_client_avsregistry::reader::AvsRegistryChainReader;
 use eigensdk_client_elcontracts::reader::ELChainReader;
-use ethers_core::types::{Address, U256};
 use std::collections::HashMap;
 
 pub struct Collector {

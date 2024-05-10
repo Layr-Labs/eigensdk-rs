@@ -41,6 +41,7 @@ rustdoc.all = "warn"
 [workspace.dependencies]
 ethers =  "2.0.14"
 ark-ff = "0.4.0"
+eyre = "0.6.12"
 reth = {git = "https://github.com/paradigmxyz/reth"}
 prometheus-client = "0.22.2"
 bn254 = {git = "https://github.com/sedaprotocol/bn254"}
@@ -62,11 +63,9 @@ eigensdk-services-avsregistry = {path = "crates/services/avsregistry"}
 eigensdk-services-bls_aggregation = {path = "crates/services/bls_aggregation"}
 eigensdk-services-operatorsinfo = {path = "crates/services/operatorsinfo"}
 tokio = {version = "1.37.0" , features = ["test-util", "full","sync"] }
-
+futures-util = "0.3.30"
 thiserror = "1.0"
 tracing = "0.1.40"
-
-
 
 #misc 
 parking_lot = "0.12"
@@ -85,7 +84,7 @@ alloy-rpc-types-engine = { git = "https://github.com/alloy-rs/alloy", rev = "af7
 alloy-genesis = { git = "https://github.com/alloy-rs/alloy", rev = "af788af" }
 alloy-node-bindings = { git = "https://github.com/alloy-rs/alloy", rev = "af788af" }
 alloy-provider = { git = "https://github.com/alloy-rs/alloy", rev = "af788af", default-features = false, features = [
-    "reqwest",
+    "reqwest","ws"
 ] }
 alloy-transport-http = {git = "https://github.com/alloy-rs/alloy", rev = "af788af"}
 alloy-eips = { git = "https://github.com/alloy-rs/alloy", default-features = false, rev = "af788af" }
@@ -96,3 +95,4 @@ alloy-consensus = { git = "https://github.com/alloy-rs/alloy", rev = "af788af" }
 alloy-contract = {git = "https://github.com/alloy-rs/alloy", rev = "af788af" }
 alloy-transport =  {git = "https://github.com/alloy-rs/alloy", rev = "af788af"}
 alloy-transport-ws = {git = "https://github.com/alloy-rs/alloy", rev = "af788af"}
+alloy-rpc-client = {git = "https://github.com/alloy-rs/alloy", rev = "af788af"}

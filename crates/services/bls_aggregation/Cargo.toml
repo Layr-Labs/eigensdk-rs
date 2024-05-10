@@ -18,3 +18,4 @@ eigensdk-services-avsregistry.workspace = true
 parking_lot.workspace = true
 tokio = {workspace = true, features = ["full"]}
 eigensdk-crypto-bn254.workspace = true
+alloy-primitives.workspace = true

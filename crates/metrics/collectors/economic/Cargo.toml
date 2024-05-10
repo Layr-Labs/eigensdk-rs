@@ -10,3 +10,4 @@ repository.workspace = true
 ethers.workspace = true
 eigensdk-client-elcontracts.workspace = true
 eigensdk-client-avsregistry.workspace = true
+alloy-primitives.workspace = true

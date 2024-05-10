@@ -67,7 +67,7 @@ impl AvsRegistryChainSubscriber {
             .with_recommended_fillers()
             .on_builtin(&self.provider)
             .await?;
-        let current_block_number = provider.get_block_number().await.unwrap();
+        let current_block_number = provider.get_block_number().await?;
 
         let filter = Filter::new()
             .event("NewPubkeyRegistration(address,(uint256,uint256),(uint256[2],uint256[2]))")

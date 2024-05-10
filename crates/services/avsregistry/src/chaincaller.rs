@@ -1,15 +1,16 @@
+use alloy_primitives::{Bytes, FixedBytes, U256};
+use eigensdk_chainio_utils::convert_to_bn254_g1_point;
 use eigensdk_client_avsregistry::reader::AvsRegistryChainReader;
-use eigensdk_contract_bindings::BLSApkRegistry::{G1Point, G2Point};
 use eigensdk_crypto_bls::attestation::G1Point as BlsG1Point;
 use eigensdk_crypto_bn254::utils::u256_to_bigint256;
 use eigensdk_services_operatorsinfo::operatorsinfo_inmemory::OperatorInfoServiceInMemory;
+use eigensdk_types::operator::BLSApkRegistry::{G1Point, G2Point};
 use eigensdk_types::operator::{
     self, OperatorAvsState, OperatorInfo, OperatorPubKeys, QuorumAvsState,
 };
-use ethers_core::types::{Bytes, U256, U64};
 use std::collections::HashMap;
 
-#[derive(Debug, Clone)]
+#[derive(Debug)]
 pub struct AvsRegistryServiceChainCaller {
     avs_registry: AvsRegistryChainReader,
     operators_info_service: OperatorInfoServiceInMemory,
@@ -34,8 +35,8 @@ impl AvsRegistryServiceChainCaller {
         &self,
         block_num: u32,
         quorum_nums: Bytes,
-    ) -> HashMap<[u8; 32], OperatorAvsState> {
-        let mut operators_avs_state: HashMap<[u8; 32], OperatorAvsState> = HashMap::new();
+    ) -> HashMap<FixedBytes<32>, OperatorAvsState> {
+        let mut operators_avs_state: HashMap<FixedBytes<32>, OperatorAvsState> = HashMap::new();
 
         let operators_stakes_in_quorums = self
             .avs_registry
@@ -49,12 +50,12 @@ impl AvsRegistryServiceChainCaller {
 
         for (quorum_id, quorum_num) in quorum_nums.iter().enumerate() {
             for operator in &operators_stakes_in_quorums[quorum_id] {
-                let info = self.get_operator_info(operator.operator_id).await;
+                let info = self.get_operator_info(*operator.operatorId).await;
                 let stake_per_quorum = HashMap::new();
                 let avs_state = operators_avs_state
-                    .entry(operator.operator_id)
+                    .entry(FixedBytes(*operator.operatorId))
                     .or_insert_with(|| OperatorAvsState {
-                        operator_id: operator.operator_id,
+                        operator_id: *operator.operatorId,
                         operator_info: OperatorInfo { pub_keys: info },
                         stake_per_quorum: stake_per_quorum,
                         block_num: block_num.into(),
@@ -89,20 +90,24 @@ impl AvsRegistryServiceChainCaller {
                 if !operator.stake_per_quorum[quorum_num].is_zero() {
                     if let Some(pubkeys) = &operator.operator_info.pub_keys {
                         let g1_point = BlsG1Point::new(
-                            u256_to_bigint256(pubkeys.g1_pub_key.x),
-                            u256_to_bigint256(pubkeys.g1_pub_key.y),
+                            u256_to_bigint256(pubkeys.g1_pub_key.X),
+                            u256_to_bigint256(pubkeys.g1_pub_key.Y),
                         );
                         pub_key_g1.add(g1_point);
                         total_stake += operator.stake_per_quorum[quorum_num];
                     }
                 }
             }
+            let g1_point = convert_to_bn254_g1_point(pub_key_g1.point);
             quorums_avs_state.insert(
                 *quorum_num,
                 QuorumAvsState {
                     quorum_num: *quorum_num,
                     total_stake: total_stake,
-                    agg_pub_key_g1: pub_key_g1,
+                    agg_pub_key_g1: G1Point {
+                        X: g1_point.X,
+                        Y: g1_point.Y,
+                    },
                     block_num: block_num,
                 },
             );
