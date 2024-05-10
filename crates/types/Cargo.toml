@@ -13,3 +13,6 @@ ethers.workspace = true
 num-bigint = "0.4.4"
 eigensdk-crypto-bls.workspace = true
 eigensdk-contract-bindings.workspace = true
+alloy-primitives.workspace = true
+alloy-sol-types = { workspace = true, features = ["json"] }
+alloy-contract.workspace = true

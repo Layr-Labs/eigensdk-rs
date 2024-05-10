@@ -1,4 +1,5 @@
 use crate::error::BlsError;
+use alloy_primitives::U256;
 use ark_bn254::{Bn254, Fq, Fq2, Fr, G1Affine, G1Projective, G2Affine, G2Projective};
 use ark_ec::{
     pairing::{prepare_g1, prepare_g2, Pairing},
@@ -8,7 +9,6 @@ use ark_ff::{BigInteger256, Field, One};
 use eigensdk_crypto_bn254::utils::{
     get_g2_generator, mul_by_generator_g1, mul_by_generator_g2, u256_to_bigint256,
 };
-use ethers_core::types::U256;
 use std::ops::Neg;
 use std::ops::{Add, Mul};
 pub fn new_fp_element(x: BigInteger256) -> Fq {

@@ -13,3 +13,4 @@ ark-ff.workspace = true
 ark-bn254 = "0.4.0"
 ethers.workspace = true
 thiserror.workspace = true
+alloy-primitives.workspace = true

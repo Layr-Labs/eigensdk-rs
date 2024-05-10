@@ -9,15 +9,19 @@ repository.workspace = true
 license-file.workspace = true
 
 [dependencies]
-ethers-core.workspace = true
 ethers.workspace = true
-ethers-signers.workspace = true
+eyre.workspace = true
 eth-keystore = "0.5.0"
 thiserror.workspace = true
 eigensdk-client-avsregistry.workspace = true
-ethers-providers.workspace = true
 eigensdk-types.workspace = true
 eigensdk-contract-bindings.workspace = true
 eigensdk-crypto-bls.workspace = true
 eigensdk-crypto-bn254.workspace = true
-tokio.workspace = true
+alloy-sol-types.workspace = true
+alloy-contract.workspace = true
+alloy-primitives.workspace = true
+alloy-provider.workspace = true
+alloy-transport-ws.workspace = true
+futures-util.workspace = true
+tokio = { workspace = true, features = ["rt-multi-thread", "macros"] }

@@ -1,25 +1,27 @@
+use alloy_sol_types::sol;
 use eigensdk_client_avsregistry::{
     reader::AvsRegistryChainReader, subscriber::AvsRegistryChainSubscriber,
 };
-use eigensdk_contract_bindings::BLSApkRegistry::BLSApkRegistryEvents;
+
+// use eigensdk_types::{G1Point,G2Point};
+use alloy_primitives::Address;
+use alloy_provider::{Provider, ProviderBuilder};
+use alloy_transport_ws::WsConnect;
+use eigensdk_types::operator::BLSApkRegistry::{self, G1Point, G2Point};
 use eigensdk_types::operator::{operator_id_from_g1_pub_key, OperatorPubKeys};
-use ethers::contract::EthLogDecode;
-use ethers_core::{abi::RawLog, types::Address};
-use ethers_providers::StreamExt;
-use ethers_providers::{Middleware, Provider, Ws};
+use eyre::Result;
+use futures_util::{stream, StreamExt};
 use std::collections::HashMap;
-use std::sync::Arc;
 use tokio::sync::{
     mpsc,
     mpsc::UnboundedSender,
     oneshot::{self, Sender},
 };
-
-#[derive(Debug, Clone)]
+#[derive(Debug)]
 pub struct OperatorInfoServiceInMemory {
     avs_registry_reader: AvsRegistryChainReader,
     avs_registry_subscriber: AvsRegistryChainSubscriber,
-    web_socket: Arc<Provider<Ws>>,
+    ws: String,
     pub_keys: UnboundedSender<OperatorsInfoMessage>,
 }
 
@@ -34,7 +36,7 @@ impl OperatorInfoServiceInMemory {
     pub async fn new(
         avs_registry_subscriber: AvsRegistryChainSubscriber,
         avs_registry_chain_reader: AvsRegistryChainReader,
-        web_socket: Arc<Provider<Ws>>,
+        web_socket: String,
     ) -> Self {
         let (pubkeys_tx, mut pubkeys_rx) = mpsc::unbounded_channel();
 
@@ -64,42 +66,59 @@ impl OperatorInfoServiceInMemory {
         Self {
             avs_registry_reader: avs_registry_chain_reader,
             avs_registry_subscriber: avs_registry_subscriber,
-            web_socket,
+            ws: web_socket,
             pub_keys: pubkeys_tx,
         }
     }
 
-    pub async fn start_service(&self) {
+    #[tokio::main]
+    pub async fn start_service(&self) -> Result<()> {
         // query past operator registrations
         self.query_past_registered_operator_events_and_fill_db()
             .await;
 
-        let filter = self
+        let filter_result = self
             .avs_registry_subscriber
-            .get_new_pub_key_registration_filter(self.web_socket.clone())
+            .get_new_pub_key_registration_filter()
             .await;
 
-        let mut subcription_new_operator_registration_stream =
-            self.web_socket.subscribe_logs(&filter).await.unwrap();
+        match filter_result {
+            Ok(filter) => {
+                let ws = WsConnect::new(&self.ws);
+                let provider = ProviderBuilder::new().on_ws(ws).await?;
 
-        while let Some(log) = subcription_new_operator_registration_stream.next().await {
-            let data = BLSApkRegistryEvents::decode_log(&RawLog::from(log)).unwrap();
+                let mut subcription_new_operator_registration_stream =
+                    provider.subscribe_logs(&filter).await?;
+                let mut stream = subcription_new_operator_registration_stream.into_stream();
+                while let Some(log) = stream.next().await {
+                    let data = log
+                        .log_decode::<BLSApkRegistry::NewPubkeyRegistration>()
+                        .ok();
 
-            match data {
-                BLSApkRegistryEvents::NewPubkeyRegistrationFilter(pubkeyreg) => {
-                    let operator_pub_key = OperatorPubKeys {
-                        g1_pub_key: pubkeyreg.pubkey_g1,
-                        g2_pub_key: pubkeyreg.pubkey_g2,
-                    };
-                    // send message
-                    let _ = self.pub_keys.send(OperatorsInfoMessage::InsertOperatorInfo(
-                        pubkeyreg.operator,
-                        operator_pub_key,
-                    ));
+                    if let Some(new_pub_key_event) = data {
+                        let event_data = new_pub_key_event.data();
+                        let operator_pub_key = OperatorPubKeys {
+                            g1_pub_key: G1Point {
+                                X: event_data.pubkeyG1.X,
+                                Y: event_data.pubkeyG1.Y,
+                            },
+                            g2_pub_key: G2Point {
+                                X: event_data.pubkeyG2.X,
+                                Y: event_data.pubkeyG2.Y,
+                            },
+                        };
+                        // send message
+                        let _ = self.pub_keys.send(OperatorsInfoMessage::InsertOperatorInfo(
+                            event_data.operator,
+                            operator_pub_key,
+                        ));
+                    }
                 }
-                _ => {}
             }
+            Err(_) => {}
         }
+
+        Ok(())
     }
 
     pub async fn get_operator_info(&self, address: Address) -> Option<OperatorPubKeys> {
@@ -111,10 +130,9 @@ impl OperatorInfoServiceInMemory {
     }
 
     pub async fn query_past_registered_operator_events_and_fill_db(&self) {
-        // Assuming ethers rs fetches data from first block . Have to validate this .
         let (operator_address, operator_pub_keys) = self
             .avs_registry_reader
-            .query_existing_registered_operator_pub_keys(None, None)
+            .query_existing_registered_operator_pub_keys(0, 0)
             .await
             .unwrap();
 
