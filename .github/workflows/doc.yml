@@ -1,4 +1,4 @@
-name: docs
+name: Deploy docs to pages
 
 on:
   push:
@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [ "main" ]
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
 
 jobs:
   build_docs:
@@ -19,9 +23,21 @@ jobs:
     - name: Run tests
       run: cargo test --verbose
     - name: Generate documentation
-      run: cargo doc
+      run: cargo doc --no-deps --workspace
     - name: Upload documentation
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-pages-artifact@v3
       with:
         name: documentation
         path: target/doc/**
+  
+  # Deployment job
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build_docs
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
