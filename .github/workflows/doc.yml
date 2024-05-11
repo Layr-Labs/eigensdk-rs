@@ -28,7 +28,7 @@ jobs:
       uses: actions/upload-pages-artifact@v3
       with:
         name: documentation
-        path: target/doc/**
+        path: target/doc
   
   # Deployment job
   deploy:
