@@ -25,7 +25,7 @@ jobs:
     - name: Generate documentation
       run: cargo doc --no-deps --workspace
     - name: Upload documentation
-      uses: actions/upload-pages-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: documentation
         path: target/doc
