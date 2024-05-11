@@ -22,3 +22,6 @@ jobs:
       run: cargo doc
     - name: Upload documentation
       uses: actions/upload-artifact@v3
+      with:
+        name: documentation
+        path: target/doc/**
