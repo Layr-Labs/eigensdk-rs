@@ -3,6 +3,7 @@ use alloy_primitives::{Address, Bytes, FixedBytes, B256, U256};
 use alloy_provider::{Provider, ProviderBuilder};
 use alloy_rpc_types::Filter;
 use alloy_sol_types::sol;
+use ark_ff::Zero;
 use eigensdk_types::operator::{bitmap_to_quorum_ids, BLSApkRegistry, OperatorPubKeys};
 use num_bigint::BigInt;
 use std::collections::HashMap;
@@ -36,7 +37,6 @@ sol!(
     "../../../../crates/contracts/bindings/utils/json/OperatorStateRetriever.json"
 );
 
-use BLSApkRegistry::{G1Point, G2Point};
 /// Avs Registry chainreader
 #[derive(Debug, Clone)]
 pub struct AvsRegistryChainReader {
@@ -52,7 +52,7 @@ trait AvsRegistryReader {
 }
 
 impl AvsRegistryChainReader {
-    fn new(
+    pub fn new(
         registry_coordinator_addr: Address,
         bls_apk_registry_addr: Address,
         operator_state_retriever: Address,
@@ -415,44 +415,59 @@ impl AvsRegistryChainReader {
     pub async fn query_existing_registered_operator_pub_keys(
         &self,
         start_block: u64,
-        stop_block: u64,
+        mut stop_block: u64,
     ) -> Result<(Vec<Address>, Vec<OperatorPubKeys>), Box<dyn std::error::Error>> {
         let provider = ProviderBuilder::new()
             .with_recommended_fillers()
             .on_builtin(&self.provider)
             .await?;
-
-        let filter = Filter::new()
-            .select(start_block..stop_block)
-            .event("NewPubkeyRegistration(address,(uint256,uint256),(uint256[2],uint256[2]))")
-            .address(self.bls_apk_registry_addr);
-
-        let logs = provider.get_logs(&filter).await?;
-
-        debug!(transactionLogs = ?logs, "avsRegistryChainReader.QueryExistingRegisteredOperatorPubKeys");
+        let query_block_range = 1024;
+        let current_block_number = provider.get_block_number().await?;
+        if stop_block.is_zero() {
+            stop_block = current_block_number;
+        }
+        println!("start block :{}", start_block);
+        println!("stop block {}", stop_block);
+        let mut i = start_block;
         let mut operator_addresses: Vec<Address> = vec![];
         let mut operator_pub_keys: Vec<OperatorPubKeys> = vec![];
-
-        for (i, v_log) in logs.iter().enumerate() {
-            let pub_key_reg_option = v_log
-                .log_decode::<BLSApkRegistry::NewPubkeyRegistration>()
-                .ok();
-            if let Some(pub_key_reg) = pub_key_reg_option {
-                let data = pub_key_reg.data();
-                let operator_addr = data.operator;
-                operator_addresses.push(operator_addr);
-                let g1_pub_key = data.pubkeyG1.clone();
-                let g2_pub_key = data.pubkeyG2.clone();
-
-                let operator_pub_key = OperatorPubKeys {
-                    g1_pub_key: g1_pub_key,
-                    g2_pub_key: g2_pub_key,
-                };
-
-                operator_pub_keys.push(operator_pub_key);
+        while i <= stop_block {
+            let mut to_block = i + (query_block_range - 1);
+            if to_block > stop_block {
+                to_block = stop_block;
             }
-        }
+            println!("to block{}", to_block);
+            println!("bls apk address :{}", self.bls_apk_registry_addr);
+            let filter = Filter::new()
+                .select(i..to_block)
+                .event("NewPubkeyRegistration(address,(uint256,uint256),(uint256[2],uint256[2]))")
+                .address(self.bls_apk_registry_addr);
 
+            let logs = provider.get_logs(&filter).await?;
+            println!("logs length {:?}", logs.len());
+            debug!(transactionLogs = ?logs, "avsRegistryChainReader.QueryExistingRegisteredOperatorPubKeys");
+
+            for (_, v_log) in logs.iter().enumerate() {
+                let pub_key_reg_option = v_log
+                    .log_decode::<BLSApkRegistry::NewPubkeyRegistration>()
+                    .ok();
+                if let Some(pub_key_reg) = pub_key_reg_option {
+                    let data = pub_key_reg.data();
+                    let operator_addr = data.operator;
+                    operator_addresses.push(operator_addr);
+                    let g1_pub_key = data.pubkeyG1.clone();
+                    let g2_pub_key = data.pubkeyG2.clone();
+
+                    let operator_pub_key = OperatorPubKeys {
+                        g1_pub_key: g1_pub_key,
+                        g2_pub_key: g2_pub_key,
+                    };
+
+                    operator_pub_keys.push(operator_pub_key);
+                }
+            }
+            i += 1024;
+        }
         Ok((operator_addresses, operator_pub_keys))
     }
 
@@ -469,9 +484,6 @@ impl AvsRegistryChainReader {
         let mut operator_id_to_socket = HashMap::new();
 
         let query_block_range = 10000;
-
-        let contract_registry_coordinator =
-            RegistryCoordinator::new(self.registry_coordinator_addr, &provider);
 
         let mut i = start_block;
 
