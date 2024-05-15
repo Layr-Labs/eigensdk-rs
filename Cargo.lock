@@ -468,6 +468,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "anyhow"
+version = "1.0.83"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "25bdb32cbbdce2b519a9cd7df3a678443100e265d5e25ca763b7572a5104f5f3"
+
+[[package]]
 name = "ark-bn254"
 version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1478,8 +1484,10 @@ dependencies = [
  "alloy-contract",
  "alloy-primitives",
  "alloy-provider",
+ "alloy-rpc-types",
  "alloy-sol-types",
  "alloy-transport-ws",
+ "anyhow",
  "eigensdk-client-avsregistry",
  "eigensdk-contract-bindings",
  "eigensdk-crypto-bls",
@@ -1491,6 +1499,7 @@ dependencies = [
  "futures-util",
  "thiserror",
  "tokio",
+ "tracing",
 ]
 
 [[package]]
@@ -2538,6 +2547,17 @@ checksum = "7b0b929d511467233429c45a44ac1dcaa21ba0f5ba11e4879e6ed28ddb4f9df4"
 dependencies = [
  "equivalent",
  "hashbrown 0.14.3",
+]
+
+[[package]]
+name = "info-operator-service"
+version = "0.0.1-alpha"
+dependencies = [
+ "alloy-primitives",
+ "eigensdk-client-avsregistry",
+ "eigensdk-services-operatorsinfo",
+ "tokio",
+ "tracing",
 ]
 
 [[package]]

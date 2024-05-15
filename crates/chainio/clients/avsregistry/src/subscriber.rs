@@ -20,22 +20,17 @@ use BLSApkRegistry::{BLSApkRegistryEvents, BLSApkRegistryInstance, NewPubkeyRegi
 /// AvsRegistry Chain Subscriber struct
 #[derive(Debug)]
 pub struct AvsRegistryChainSubscriber {
-    bls_apk_registry: BLSApkRegistryEvents,
     provider: String,
 }
 
 impl AvsRegistryChainSubscriber {
-    fn new(bls_apk_registry: BLSApkRegistryEvents, provider: String) -> Self {
-        return AvsRegistryChainSubscriber {
-            bls_apk_registry: bls_apk_registry,
-            provider,
-        };
+    pub fn new(provider: String) -> Self {
+        return AvsRegistryChainSubscriber { provider };
     }
 
-    async fn build_avs_registry_chain_reader(
+    pub async fn build(
         &self,
         bls_apk_registry_addr: Address,
-        provider: String,
     ) -> Result<
         BLSApkRegistryInstance<
             BoxTransport,
@@ -60,6 +55,7 @@ impl AvsRegistryChainSubscriber {
         return Ok(bls_apk_reg);
     }
 
+    /// Utility function that returns new pubkey registration filter
     pub async fn get_new_pub_key_registration_filter<'a>(
         &self,
     ) -> Result<Filter, Box<dyn std::error::Error>> {
