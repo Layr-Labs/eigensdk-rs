@@ -42,7 +42,7 @@ pub struct AggregatedOperators {
 
 impl AggregatedOperators {}
 #[derive(Debug)]
-pub(crate) struct BlsAggregatorService {
+pub struct BlsAggregatorService {
     aggregated_response_sender: UnboundedSender<BlsAggregationServiceResponse>,
     pub aggregated_response_receiver: UnboundedReceiver<BlsAggregationServiceResponse>,
     signed_task_response:
