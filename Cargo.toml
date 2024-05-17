@@ -26,7 +26,7 @@ version = "0.0.1-alpha"
 edition = "2021"
 authors = ["Eigen Layer contributors"]
 rust-version = "1.76"
-repository = "https://github.com/anjaneyalabs/eigensdk-rs"
+repository = "https://github.com/supernovahs/eigensdk-rs"
 homepage = ""
 license-file = "LICENSE.txt"
 
