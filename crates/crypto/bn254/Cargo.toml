@@ -14,3 +14,7 @@ ark-bn254 = "0.4.0"
 ethers.workspace = true
 thiserror.workspace = true
 alloy-primitives.workspace = true
+
+[dev-dependencies]
+tokio = { workspace = true, features = ["full"] }
+rand = "0.8.4"

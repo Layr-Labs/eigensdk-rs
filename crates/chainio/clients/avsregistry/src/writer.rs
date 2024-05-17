@@ -168,7 +168,7 @@ impl AvsRegistryChainWriter {
 
         let g1_pubkey_bn254 = convert_to_bn254_g1_point(bls_key_pair.get_pub_key_g1());
         let g2_projective = bls_key_pair
-            .gt_pub_key_g2()
+            .get_pub_key_g2()
             .expect("Failed to get g2 projective");
 
         let g2_pubkey_bn254 = convert_to_bn254_g2_point(g2_projective);

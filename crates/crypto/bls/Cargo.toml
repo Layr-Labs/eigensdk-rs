@@ -15,3 +15,7 @@ eigensdk-crypto-bn254.workspace = true
 thiserror.workspace = true
 ark-ec = "0.4.2"
 alloy-primitives.workspace = true
+
+[dev-dependencies]
+rand = "0.8.4"
+tokio = { workspace = true, features = ["full"] }
