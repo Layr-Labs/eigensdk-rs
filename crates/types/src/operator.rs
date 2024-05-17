@@ -1,4 +1,4 @@
-use alloy_primitives::{Address, U256};
+use alloy_primitives::{Address, FixedBytes, U256};
 use alloy_sol_types::sol;
 use eigensdk_crypto_bls::attestation::{
     G1Point as AttestationG1Point, G2Point as AttestationG2Point,
@@ -15,6 +15,8 @@ sol!(
 );
 const MAX_NUMBER_OF_QUORUMS: usize = 192;
 use BLSApkRegistry::{G1Point, G2Point};
+
+pub type OperatorId = FixedBytes<32>;
 
 pub fn bitmap_to_quorum_ids(quorum_bitmaps: U256) -> Vec<u8> {
     let bytes = quorum_bitmaps.to_be_bytes::<32>();

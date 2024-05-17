@@ -47,7 +47,6 @@ pub struct BlsAggregatorService {
     pub aggregated_response_receiver: UnboundedReceiver<BlsAggregationServiceResponse>,
     signed_task_response:
         Arc<RwLock<HashMap<TaskIndex, UnboundedSender<SignedTaskResponseDigest>>>>,
-
     avs_registry_service: AvsRegistryServiceChainCaller,
 }
 
@@ -61,7 +60,7 @@ impl BlsAggregatorService {
             avs_registry_service: avs_registry_service,
         }
     }
-
+    
     pub(crate) async fn write(
         &self,
     ) -> RwLockWriteGuard<'_, HashMap<TaskIndex, UnboundedSender<SignedTaskResponseDigest>>> {
