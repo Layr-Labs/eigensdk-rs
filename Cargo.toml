@@ -51,16 +51,16 @@ eigensdk-metrics = {version = "0.0.1-alpha",  path = "crates/metrics/"}
 serde = {version = "1.0.197" , features = ["derive"]}
 eigensdk-chainio-utils = {path = "crates/chainio/utils/"}
 eigensdk-client-avsregistry = {path = "crates/chainio/clients/avsregistry"}
-eigensdk-client-elcontracts = {version = "0.0.1-alpha",path = "crates/chainio/clients/elcontracts"}
-eigensdk-client-eth = {version = "0.0.1-alpha",path = "crates/chainio/clients/eth"}
-eigensdk-client-fireblocks = {version = "0.0.1-alpha",path = "crates/chainio/clients/fireblocks"}
-eigensdk-contract-bindings = {version = "0.0.1-alpha", path = "crates/contracts/bindings/"}
-eigensdk-types = {version = "0.0.1-alpha",path = "crates/types/"}
+eigensdk-client-elcontracts = {path = "crates/chainio/clients/elcontracts"}
+eigensdk-client-eth = {path = "crates/chainio/clients/eth"}
+eigensdk-client-fireblocks = {path = "crates/chainio/clients/fireblocks"}
+eigensdk-contract-bindings = { path = "crates/contracts/bindings/"}
+eigensdk-types = {path = "crates/types/"}
 eigensdk-crypto-bls = {path = "crates/crypto/bls/"}
-eigensdk-crypto-bn254 = {version = "0.0.1-alpha",path = "crates/crypto/bn254/"}
-eigensdk-utils = {version = "0.0.1-alpha" , path = "crates/utils/"}
-eigensdk-metrics-collectors-economic = {version = "0.0.1-alpha",path = "crates/metrics/collectors/economic"}
-eigensdk-metrics-collectors-rpc-calls = {version = "0.0.1-alpha",path = "crates/metrics/collectors/rpc_calls"}
+eigensdk-crypto-bn254 = {path = "crates/crypto/bn254/"}
+eigensdk-utils = {path = "crates/utils/"}
+eigensdk-metrics-collectors-economic = {path = "crates/metrics/collectors/economic"}
+eigensdk-metrics-collectors-rpc-calls = {path = "crates/metrics/collectors/rpc_calls"}
 eigensdk-services-avsregistry = {path = "crates/services/avsregistry"}
 eigensdk-services-bls_aggregation = {path = "crates/services/bls_aggregation"}
 eigensdk-services-operatorsinfo = {path = "crates/services/operatorsinfo"}
