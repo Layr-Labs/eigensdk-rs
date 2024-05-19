@@ -5,4 +5,7 @@ Examples demonstrating how to interact with Eigen layer contracts using eigensdk
 
 ## OperatorsInfo
 
+```
+cargo run -p info-operator-service
+```
 
