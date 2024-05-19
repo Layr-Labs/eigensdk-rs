@@ -60,7 +60,7 @@ impl BlsAggregatorService {
             avs_registry_service: avs_registry_service,
         }
     }
-    
+
     pub(crate) async fn write(
         &self,
     ) -> RwLockWriteGuard<'_, HashMap<TaskIndex, UnboundedSender<SignedTaskResponseDigest>>> {
