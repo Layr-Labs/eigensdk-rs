@@ -16,8 +16,8 @@ List of crates in the repository :-
 - [eigensdk-crypto-bls](https://github.com/anjaneyalabs/eigensdk-rs/tree/main/crates/crypto/bls) - bls utilities
 - [eigensdk-crypto-bn254](https://github.com/anjaneyalabs/eigensdk-rs/tree/main/crates/crypto/bn254) - bn254 utilities
 - [eigensdk-metrics](https://github.com/anjaneyalabs/eigensdk-rs/tree/main/crates/metrics) - pending implementation
-- [eigensdk-services](https://github.com/anjaneyalabs/eigensdk-rs/tree/main/crates/services) 
-- [eigensdk-types](https://github.com/anjaneyalabs/eigensdk-rs/tree/main/crates/types)
+- [eigensdk-services](https://github.com/anjaneyalabs/eigensdk-rs/tree/main/crates/services)  - Spawn tokio services for operators info , bls aggregation 
+- [eigensdk-types](https://github.com/anjaneyalabs/eigensdk-rs/tree/main/crates/types) - Common types 
 
 ## Contributor Guidelines
 We are actively looking for contributors. Thanks for your interest.
