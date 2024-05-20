@@ -3,13 +3,13 @@ use alloy_signer::SignerSync;
 use alloy_signer_wallet::LocalWallet;
 use alloy_sol_types::sol;
 use ark_bn254::G1Projective;
-use eigensdk_chainio_utils::{
+use eigen_chainio_utils::{
     convert_bn254_to_ark, convert_to_bn254_g1_point, convert_to_bn254_g2_point,
 };
-use eigensdk_client_elcontracts::reader::ELChainReader;
+use eigen_client_elcontracts::reader::ELChainReader;
 use reqwest::Url;
 
-use eigensdk_chainio_utils::{
+use eigen_chainio_utils::{
     BLSApkRegistry::{G1Point, PubkeyRegistrationParams},
     RegistryCoordinator::{
         self, G1Point as RegistryG1Point, G2Point as RegistryG2Point,
@@ -32,7 +32,7 @@ sol!(
 
 use alloy_primitives::{Address, Bytes, FixedBytes, TxHash, U256};
 use alloy_provider::{Provider, ProviderBuilder};
-use eigensdk_crypto_bls::attestation::KeyPair;
+use eigen_crypto_bls::attestation::KeyPair;
 use tracing::info;
 use RegistryCoordinator::SignatureWithSaltAndExpiry;
 

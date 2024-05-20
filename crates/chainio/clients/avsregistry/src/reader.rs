@@ -4,7 +4,7 @@ use alloy_provider::{Provider, ProviderBuilder};
 use alloy_rpc_types::Filter;
 use alloy_sol_types::sol;
 use ark_ff::Zero;
-use eigensdk_types::operator::{bitmap_to_quorum_ids, BLSApkRegistry, OperatorPubKeys};
+use eigen_types::operator::{bitmap_to_quorum_ids, BLSApkRegistry, OperatorPubKeys};
 use num_bigint::BigInt;
 use std::collections::HashMap;
 use std::fmt::Debug;

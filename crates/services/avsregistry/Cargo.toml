@@ -1,5 +1,5 @@
 [package]
-name = "eigensdk-services-avsregistry"
+name = "eigen-services-avsregistry"
 description = "Eigen Layer SDK services avsregistry"
 
 version.workspace = true
@@ -12,11 +12,11 @@ license-file.workspace = true
 ethers.workspace = true
 eth-keystore = "0.5.0"
 thiserror.workspace = true
-eigensdk-client-avsregistry.workspace = true
-eigensdk-services-operatorsinfo.workspace = true
-eigensdk-types.workspace = true
-eigensdk-contract-bindings.workspace = true
-eigensdk-crypto-bls.workspace = true
-eigensdk-crypto-bn254.workspace = true
+eigen-client-avsregistry.workspace = true
+eigen-services-operatorsinfo.workspace = true
+eigen-types.workspace = true
+eigen-contract-bindings.workspace = true
+eigen-crypto-bls.workspace = true
+eigen-crypto-bn254.workspace = true
 alloy-primitives.workspace = true
-eigensdk-chainio-utils.workspace = true
+eigen-chainio-utils.workspace = true

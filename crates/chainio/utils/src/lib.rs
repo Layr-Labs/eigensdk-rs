@@ -16,9 +16,9 @@ sol!(
     "../../../crates/contracts/bindings/utils/json/BLSApkRegistry.json"
 );
 
-use eigensdk_crypto_bls::attestation::G1Point as AttestationG1Point;
-use eigensdk_crypto_bn254::utils::biginteger256_to_u256;
-use eigensdk_crypto_bn254::utils::u256_to_bigint256;
+use eigen_crypto_bls::attestation::G1Point as AttestationG1Point;
+use eigen_crypto_bn254::utils::biginteger256_to_u256;
+use eigen_crypto_bn254::utils::u256_to_bigint256;
 pub use BLSApkRegistry::{G1Point, G2Point};
 
 pub fn convert_bn254_to_ark(g1_point: G1Point) -> AttestationG1Point {

@@ -1,5 +1,5 @@
 [package]
-name = "eigensdk-client-fireblocks"
+name = "eigen-client-fireblocks"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true

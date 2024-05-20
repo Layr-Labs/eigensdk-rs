@@ -1,5 +1,5 @@
 [package]
-name = "eigensdk-crypto-ecdsa"
+name = "eigen-crypto-ecdsa"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true

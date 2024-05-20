@@ -26,7 +26,7 @@ version = "0.0.1-alpha"
 edition = "2021"
 authors = ["Eigen Layer contributors"]
 rust-version = "1.76"
-repository = "https://github.com/supernovahs/eigensdk-rs"
+repository = "https://github.com/supernovahs/eigen-rs"
 homepage = ""
 license-file = "LICENSE.txt"
 
@@ -47,23 +47,23 @@ eyre = "0.6.12"
 reth = {git = "https://github.com/paradigmxyz/reth"}
 prometheus-client = "0.22.2"
 bn254 = {git = "https://github.com/sedaprotocol/bn254"}
-eigensdk-metrics = {version = "0.0.1-alpha",  path = "crates/metrics/"}
+eigen-metrics = {version = "0.0.1-alpha",  path = "crates/metrics/"}
 serde = {version = "1.0.197" , features = ["derive"]}
-eigensdk-chainio-utils = {path = "crates/chainio/utils/"}
-eigensdk-client-avsregistry = {path = "crates/chainio/clients/avsregistry"}
-eigensdk-client-elcontracts = {path = "crates/chainio/clients/elcontracts"}
-eigensdk-client-eth = {path = "crates/chainio/clients/eth"}
-eigensdk-client-fireblocks = {path = "crates/chainio/clients/fireblocks"}
-eigensdk-contract-bindings = { path = "crates/contracts/bindings/"}
-eigensdk-types = {path = "crates/types/"}
-eigensdk-crypto-bls = {path = "crates/crypto/bls/"}
-eigensdk-crypto-bn254 = {path = "crates/crypto/bn254/"}
-eigensdk-utils = {path = "crates/utils/"}
-eigensdk-metrics-collectors-economic = {path = "crates/metrics/collectors/economic"}
-eigensdk-metrics-collectors-rpc-calls = {path = "crates/metrics/collectors/rpc_calls"}
-eigensdk-services-avsregistry = {path = "crates/services/avsregistry"}
-eigensdk-services-bls_aggregation = {path = "crates/services/bls_aggregation"}
-eigensdk-services-operatorsinfo = {path = "crates/services/operatorsinfo"}
+eigen-chainio-utils = {path = "crates/chainio/utils/"}
+eigen-client-avsregistry = {path = "crates/chainio/clients/avsregistry"}
+eigen-client-elcontracts = {path = "crates/chainio/clients/elcontracts"}
+eigen-client-eth = {path = "crates/chainio/clients/eth"}
+eigen-client-fireblocks = {path = "crates/chainio/clients/fireblocks"}
+eigen-contract-bindings = { path = "crates/contracts/bindings/"}
+eigen-types = {path = "crates/types/"}
+eigen-crypto-bls = {path = "crates/crypto/bls/"}
+eigen-crypto-bn254 = {path = "crates/crypto/bn254/"}
+eigen-utils = {path = "crates/utils/"}
+eigen-metrics-collectors-economic = {path = "crates/metrics/collectors/economic"}
+eigen-metrics-collectors-rpc-calls = {path = "crates/metrics/collectors/rpc_calls"}
+eigen-services-avsregistry = {path = "crates/services/avsregistry"}
+eigen-services-bls_aggregation = {path = "crates/services/bls_aggregation"}
+eigen-services-operatorsinfo = {path = "crates/services/operatorsinfo"}
 info-operator-service = {path = "examples/info-operator-service"}
 tokio = {version = "1.37.0" , features = ["test-util", "full","sync"] }
 futures-util = "0.3.30"

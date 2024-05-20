@@ -1,5 +1,5 @@
 [package]
-name = "eigensdk-crypto-bn254"
+name = "eigen-crypto-bn254"
 description = "Eigen layer SDK bn254 utilities"
 
 version.workspace = true
