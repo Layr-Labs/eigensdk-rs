@@ -247,7 +247,7 @@ mod tests {
 
         let mut message = [0u8; 32];
         rng.fill_bytes(&mut message);
-        
+
         let msg_hash = hash_to_g1(&message);
 
         let signature = keypair.sign_hashes_to_curve_message(msg_hash.into());
