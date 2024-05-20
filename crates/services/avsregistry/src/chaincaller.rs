@@ -17,7 +17,7 @@ pub struct AvsRegistryServiceChainCaller {
 }
 
 impl AvsRegistryServiceChainCaller {
-    fn new(
+    pub fn new(
         avs_registry: AvsRegistryChainReader,
         operators_info_service: OperatorInfoServiceInMemory,
     ) -> Self {
