@@ -1,6 +1,7 @@
-# 🚧 eigensdk-rs 🚧
+# EigenSDK
 Rust SDK for building AVS on EigenLayer
 
+![360_F_303452599_eZMGXe7awggqAHTQXpjzBFehJBEyw4QR-overlay](https://github.com/supernovahs/eigensdk-rs/assets/91280922/42f1b4e7-fa48-4b08-b027-ee6ced4fd42b)
 
 
 ## Overview
