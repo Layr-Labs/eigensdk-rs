@@ -1,13 +1,13 @@
-use eigensdk_crypto_bls::attestation::{G1Point, G2Point, Signature};
-use eigensdk_services_avsregistry::chaincaller::AvsRegistryServiceChainCaller;
-use eigensdk_types::{
+use eigen_crypto_bls::attestation::{G1Point, G2Point, Signature};
+use eigen_services_avsregistry::chaincaller::AvsRegistryServiceChainCaller;
+use eigen_types::{
     avs::{SignedTaskResponseDigest, TaskIndex, TaskResponseDigest},
     operator::BLSApkRegistry,
     operator::{OperatorAvsState, QuorumThresholdPercentage, QuorumThresholdPercentages},
 };
 
 use alloy_primitives::{FixedBytes, U256};
-use eigensdk_crypto_bn254::utils::u256_to_bigint256;
+use eigen_crypto_bn254::utils::u256_to_bigint256;
 use ethers::core::k256::FieldBytes;
 use std::collections::HashMap;
 use tokio::sync::mpsc::{self, UnboundedReceiver, UnboundedSender};

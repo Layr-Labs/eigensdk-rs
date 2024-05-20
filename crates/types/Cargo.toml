@@ -1,5 +1,5 @@
 [package]
-name = "eigensdk-types"
+name = "eigen-types"
 description = "Eigen Layer types "
 
 version.workspace = true
@@ -11,8 +11,8 @@ license-file.workspace = true
 [dependencies]
 ethers.workspace = true
 num-bigint = "0.4.4"
-eigensdk-crypto-bls.workspace = true
-eigensdk-contract-bindings.workspace = true
+eigen-crypto-bls.workspace = true
+eigen-contract-bindings.workspace = true
 alloy-primitives.workspace = true
 alloy-sol-types = { workspace = true, features = ["json"] }
 alloy-contract.workspace = true

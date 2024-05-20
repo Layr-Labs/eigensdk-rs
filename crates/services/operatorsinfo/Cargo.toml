@@ -1,5 +1,5 @@
 [package]
-name = "eigensdk-services-operatorsinfo"
+name = "eigen-services-operatorsinfo"
 description = "Eigen Layer SDK services operatorsinfo"
 
 version.workspace = true
@@ -13,11 +13,11 @@ ethers.workspace = true
 eyre.workspace = true
 eth-keystore = "0.5.0"
 thiserror.workspace = true
-eigensdk-client-avsregistry.workspace = true
-eigensdk-types.workspace = true
-eigensdk-contract-bindings.workspace = true
-eigensdk-crypto-bls.workspace = true
-eigensdk-crypto-bn254.workspace = true
+eigen-client-avsregistry.workspace = true
+eigen-types.workspace = true
+eigen-contract-bindings.workspace = true
+eigen-crypto-bls.workspace = true
+eigen-crypto-bn254.workspace = true
 alloy-sol-types.workspace = true
 alloy-contract.workspace = true
 alloy-primitives.workspace = true

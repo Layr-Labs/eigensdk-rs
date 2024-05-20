@@ -1,5 +1,5 @@
 [package]
-name = "eigensdk-client-avsregistry"
+name = "eigen-client-avsregistry"
 description = "Eigen Layer AvsRegistry Sdk"
 
 version.workspace = true
@@ -17,12 +17,12 @@ alloy-rpc-types.workspace = true
 serde_json = "1.0.114"
 num-bigint = "0.4.4"
 reqwest = "0.12.4"
-eigensdk-types.workspace = true
-eigensdk-crypto-bls.workspace = true
+eigen-types.workspace = true
+eigen-crypto-bls.workspace = true
 ark-ff.workspace = true
-eigensdk-crypto-bn254.workspace = true
-eigensdk-client-elcontracts.workspace = true
-eigensdk-chainio-utils.workspace = true
+eigen-crypto-bn254.workspace = true
+eigen-client-elcontracts.workspace = true
+eigen-chainio-utils.workspace = true
 ark-bn254 = "0.4.0"
 thiserror.workspace = true
 tracing.workspace = true

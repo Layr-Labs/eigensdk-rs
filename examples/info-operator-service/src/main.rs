@@ -1,8 +1,8 @@
 use alloy_primitives::address;
-use eigensdk_client_avsregistry::{
+use eigen_client_avsregistry::{
     reader::AvsRegistryChainReader, subscriber::AvsRegistryChainSubscriber,
 };
-use eigensdk_services_operatorsinfo::operatorsinfo_inmemory::OperatorInfoServiceInMemory;
+use eigen_services_operatorsinfo::operatorsinfo_inmemory::OperatorInfoServiceInMemory;
 use std::sync::Arc;
 use tokio::sync::Mutex;
 use tokio::task;

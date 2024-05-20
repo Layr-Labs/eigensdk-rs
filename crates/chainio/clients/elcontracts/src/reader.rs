@@ -36,7 +36,7 @@ sol!(
 
 use alloy_primitives::{Address, FixedBytes, U256};
 use alloy_provider::{Provider, ProviderBuilder};
-use eigensdk_types::operator::Operator;
+use eigen_types::operator::Operator;
 use std::sync::Arc;
 
 use crate::error::ElContractsError;
