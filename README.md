@@ -22,6 +22,12 @@ List of crates in the repository :-
 - [eigensdk-services](https://github.com/anjaneyalabs/eigensdk-rs/tree/main/crates/services)
 - [eigensdk-types](https://github.com/anjaneyalabs/eigensdk-rs/tree/main/crates/types)
 
+## Contributor Guidelines
+We are actively looking for contributors. Thanks for your interest.
+
+Ensure the following passes when raising a PR
+- `cargo test --workspace`
+- `cargo +nightly fmt -- --check`
 
 ## Supported Rust Version
 
