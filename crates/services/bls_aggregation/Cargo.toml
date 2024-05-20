@@ -16,6 +16,7 @@ eigen-types.workspace = true
 eigen-crypto-bls.workspace = true
 eigen-services-avsregistry.workspace = true
 parking_lot.workspace = true
-tokio = {workspace = true, features = ["full"]}
 eigen-crypto-bn254.workspace = true
 alloy-primitives.workspace = true
+tokio = { workspace = true, features = ["full"] }
+

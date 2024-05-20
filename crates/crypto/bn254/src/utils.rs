@@ -4,20 +4,23 @@ use ark_bn254::{Fq, Fq2, Fr, G1Affine, G1Projective, G2Affine, G2Projective};
 use ark_ff::{BigInteger, BigInteger256};
 use std::ops::Mul;
 use std::str::FromStr;
+
 /// Converts [U256] to [BigInteger256]
 pub fn u256_to_bigint256(value: U256) -> BigInteger256 {
-    // Convert U256 to a byte array
-    let bytes = value.to_be_bytes::<32>();
-    // Convert the byte array to a bit array
-    let mut bits = [false; 256];
-    for (byte_idx, byte) in bytes.iter().enumerate() {
-        for bit_idx in 0..8 {
-            let bit = byte & (1 << bit_idx) != 0;
-            bits[byte_idx * 8 + bit_idx] = bit;
-        }
+    // Convert U256 to a big-endian byte array
+    let bytes: [u8; 32] = value.to_be_bytes();
+
+    // BigInteger256 expects a 4-element array of 64-bit values in little-endian order
+    let mut data = [0u64; 4];
+
+    // Iterate over the bytes in chunks of 8 bytes and convert to u64
+    for (i, chunk) in bytes.chunks(8).enumerate() {
+        let mut chunk_array = [0u8; 8];
+        chunk_array.copy_from_slice(chunk);
+        data[3 - i] = u64::from_be_bytes(chunk_array);
     }
-    // Create a BigInteger256 from the byte array
-    BigInteger256::from_bits_be(&bits)
+
+    BigInteger256::new(data)
 }
 
 pub fn biginteger256_to_u256(bi: BigInteger256) -> U256 {
@@ -114,4 +117,23 @@ pub fn mul_by_generator_g2(pvt_key: Fr) -> Result<G2Projective, Bn254Err> {
 
 pub fn verify_sig(sig: G1Affine, pub_key: G2Affine, msg: [u8; 32]) {
     let g2_gen = get_g1_generator().unwrap();
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[tokio::test]
+    async fn test_u256_to_bigint256() {
+        let u256 = U256::from(123456789);
+        let result = u256_to_bigint256(u256);
+        assert_eq!(result, BigInteger256::from(123456789u32));
+    }
+
+    #[tokio::test]
+    async fn test_bigint256_to_u256() {
+        let bi = BigInteger256::from(123456789u32);
+        let result = biginteger256_to_u256(bi);
+        assert_eq!(result, U256::from(123456789));
+    }
 }

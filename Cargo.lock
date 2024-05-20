@@ -1402,8 +1402,10 @@ dependencies = [
  "ark-bn254",
  "ark-ec",
  "ark-ff 0.4.2",
- "eigen-crypto-bn254",
+ "eigensdk-crypto-bn254",
+ "rand",
  "thiserror",
+ "tokio",
 ]
 
 [[package]]
@@ -1414,7 +1416,9 @@ dependencies = [
  "ark-bn254",
  "ark-ff 0.4.2",
  "ethers",
+ "rand",
  "thiserror",
+ "tokio",
 ]
 
 [[package]]

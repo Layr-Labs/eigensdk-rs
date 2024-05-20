@@ -5,7 +5,7 @@ use ark_ec::{
     pairing::{prepare_g1, prepare_g2, Pairing},
     AffineRepr, CurveGroup,
 };
-use ark_ff::{BigInteger256, Field, One};
+use ark_ff::{BigInteger256, Field, One, Zero};
 use eigen_crypto_bn254::utils::{
     get_g2_generator, mul_by_generator_g1, mul_by_generator_g2, u256_to_bigint256,
 };
@@ -108,7 +108,7 @@ impl KeyPair {
         self.pub_key
     }
 
-    pub fn gt_pub_key_g2(&self) -> Result<G2Projective, BlsError> {
+    pub fn get_pub_key_g2(&self) -> Result<G2Projective, BlsError> {
         let mul_result = mul_by_generator_g2(self.priv_key);
 
         match mul_result {
@@ -183,5 +183,80 @@ impl G1Point {
             u256_to_bigint256(U256::from(0)),
             u256_to_bigint256(U256::from(0)),
         )
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use ark_ff::UniformRand;
+    use rand::{thread_rng, RngCore};
+
+    #[tokio::test]
+    async fn test_keypair_generation() {
+        let mut rng = thread_rng();
+        let private_key = Fr::rand(&mut rng);
+        let keypair = KeyPair::new(private_key).unwrap();
+        let pub_key = keypair.get_pub_key_g1();
+
+        // Check that the public key is not zero
+        assert_ne!(pub_key, G1Projective::zero());
+    }
+
+    #[tokio::test]
+    async fn test_signature_generation() {
+        let mut rng = thread_rng();
+        let private_key = Fr::rand(&mut rng);
+        let keypair = KeyPair::new(private_key).unwrap();
+
+        let message = [0u8; 32];
+        let msg_hash = hash_to_g1(&message);
+
+        let signature = keypair.sign_hashes_to_curve_message(msg_hash.into());
+
+        // Check that the signature is not zero
+        assert_ne!(signature.sig(), G1Projective::zero());
+    }
+
+    #[tokio::test]
+    async fn test_signature_verification() {
+        let mut rng = thread_rng();
+        let private_key = Fr::rand(&mut rng);
+        let keypair = KeyPair::new(private_key).unwrap();
+        let pub_key_g2 = keypair.get_pub_key_g2().unwrap();
+        // generate a random message
+        let mut message = [0u8; 32];
+        rng.fill_bytes(&mut message);
+
+        let msg_hash = hash_to_g1(&message);
+
+        let signature = keypair.sign_hashes_to_curve_message(msg_hash.into());
+
+        // Check that the signature is not zero
+        assert_ne!(signature.sig(), G1Projective::zero());
+
+        // Check that the signature verifies
+        assert!(signature.verify_signature(pub_key_g2, &message));
+    }
+
+    #[tokio::test]
+    async fn test_signature_verification_invalid() {
+        let mut rng = thread_rng();
+        let private_key = Fr::rand(&mut rng);
+        let keypair = KeyPair::new(private_key).unwrap();
+
+        let mut message = [0u8; 32];
+        rng.fill_bytes(&mut message);
+
+        let msg_hash = hash_to_g1(&message);
+
+        let signature = keypair.sign_hashes_to_curve_message(msg_hash.into());
+
+        // Check that the signature is not zero
+        assert_ne!(signature.sig(), G1Projective::zero());
+
+        // Check that the signature does not verify with a different public key
+        let different_pub_key = G2Projective::rand(&mut rng);
+        assert!(!signature.verify_signature(different_pub_key, &message));
     }
 }
