@@ -1,5 +1,5 @@
 [package]
-name = "eigensdk-client-elcontracts"
+name = "eigen-client-elcontracts"
 description = "Eigen Layer core contracts sdk"
 
 version.workspace = true
@@ -11,7 +11,7 @@ license-file.workspace = true
 [dependencies]
 ark-bn254 = "0.4.0"
 ark-ff = "0.4.0"
-eigensdk-types.workspace=true
+eigen-types.workspace=true
 thiserror.workspace = true
 tracing.workspace = true
 

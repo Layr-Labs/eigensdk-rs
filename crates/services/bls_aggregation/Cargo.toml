@@ -1,5 +1,5 @@
 [package]
-name = "eigensdk-services-blsaggregation"
+name = "eigen-services-blsaggregation"
 description = "Eigen Layer SDK services blsaggregation"
 
 version.workspace = true
@@ -12,10 +12,10 @@ license-file.workspace = true
 ethers.workspace = true
 eth-keystore = "0.5.0"
 thiserror.workspace = true
-eigensdk-types.workspace = true
-eigensdk-crypto-bls.workspace = true
-eigensdk-services-avsregistry.workspace = true
+eigen-types.workspace = true
+eigen-crypto-bls.workspace = true
+eigen-services-avsregistry.workspace = true
 parking_lot.workspace = true
 tokio = {workspace = true, features = ["full"]}
-eigensdk-crypto-bn254.workspace = true
+eigen-crypto-bn254.workspace = true
 alloy-primitives.workspace = true

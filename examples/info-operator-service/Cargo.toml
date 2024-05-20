@@ -9,8 +9,8 @@ repository.workspace = true
 license-file.workspace = true
 
 [dependencies]
-eigensdk-client-avsregistry.workspace = true
-eigensdk-services-operatorsinfo.workspace = true
+eigen-client-avsregistry.workspace = true
+eigen-services-operatorsinfo.workspace = true
 alloy-primitives.workspace = true
 tokio = {workspace = true, features =["full"]}
 tracing.workspace = true

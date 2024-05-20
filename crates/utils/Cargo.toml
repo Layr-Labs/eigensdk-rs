@@ -1,5 +1,5 @@
 [package]
-name = "eigensdk-utils"
+name = "eigen-utils"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true

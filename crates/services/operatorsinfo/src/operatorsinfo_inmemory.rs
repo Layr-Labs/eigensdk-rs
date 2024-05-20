@@ -3,11 +3,11 @@ use alloy_provider::{Provider, ProviderBuilder};
 use alloy_rpc_types::Filter;
 use alloy_transport_ws::WsConnect;
 use anyhow::Result;
-use eigensdk_client_avsregistry::{
+use eigen_client_avsregistry::{
     reader::AvsRegistryChainReader, subscriber::AvsRegistryChainSubscriber,
 };
-use eigensdk_types::operator::BLSApkRegistry::{self, G1Point, G2Point};
-use eigensdk_types::operator::{operator_id_from_g1_pub_key, OperatorPubKeys};
+use eigen_types::operator::BLSApkRegistry::{self, G1Point, G2Point};
+use eigen_types::operator::{operator_id_from_g1_pub_key, OperatorPubKeys};
 use futures_util::StreamExt;
 use std::collections::HashMap;
 use std::error::Error as StdError;

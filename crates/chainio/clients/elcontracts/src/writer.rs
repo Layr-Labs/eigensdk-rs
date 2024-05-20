@@ -27,7 +27,7 @@ use alloy_network::TxSignerSync;
 use alloy_primitives::{Address, TxHash, U256};
 use alloy_provider::{Provider, ProviderBuilder};
 use alloy_signer_wallet::LocalWallet;
-use eigensdk_types::operator::Operator;
+use eigen_types::operator::Operator;
 use std::sync::Arc;
 use tracing::info;
 use DelegationManager::OperatorDetails;

@@ -1,5 +1,5 @@
 [package]
-name = "eigensdk-metrics-collectors-rpc-calls"
+name = "eigen-metrics-collectors-rpc-calls"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true

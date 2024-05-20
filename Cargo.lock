@@ -1307,20 +1307,20 @@ dependencies = [
 ]
 
 [[package]]
-name = "eigensdk-chainio-utils"
+name = "eigen-chainio-utils"
 version = "0.0.1-alpha"
 dependencies = [
  "alloy-contract",
  "alloy-sol-types",
  "ark-bn254",
  "ark-ff 0.4.2",
- "eigensdk-contract-bindings",
- "eigensdk-crypto-bls",
- "eigensdk-crypto-bn254",
+ "eigen-contract-bindings",
+ "eigen-crypto-bls",
+ "eigen-crypto-bn254",
 ]
 
 [[package]]
-name = "eigensdk-client-avsregistry"
+name = "eigen-client-avsregistry"
 version = "0.0.1-alpha"
 dependencies = [
  "alloy-contract",
@@ -1337,11 +1337,11 @@ dependencies = [
  "alloy-transport-ws",
  "ark-bn254",
  "ark-ff 0.4.2",
- "eigensdk-chainio-utils",
- "eigensdk-client-elcontracts",
- "eigensdk-crypto-bls",
- "eigensdk-crypto-bn254",
- "eigensdk-types",
+ "eigen-chainio-utils",
+ "eigen-client-elcontracts",
+ "eigen-crypto-bls",
+ "eigen-crypto-bn254",
+ "eigen-types",
  "futures",
  "hex",
  "num-bigint",
@@ -1353,7 +1353,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "eigensdk-client-elcontracts"
+name = "eigen-client-elcontracts"
 version = "0.0.1-alpha"
 dependencies = [
  "alloy-contract",
@@ -1365,22 +1365,22 @@ dependencies = [
  "alloy-sol-types",
  "ark-bn254",
  "ark-ff 0.4.2",
- "eigensdk-types",
+ "eigen-types",
  "reqwest 0.12.4",
  "thiserror",
  "tracing",
 ]
 
 [[package]]
-name = "eigensdk-client-eth"
+name = "eigen-client-eth"
 version = "0.0.1-alpha"
 dependencies = [
- "eigensdk-metrics-collectors-rpc-calls",
+ "eigen-metrics-collectors-rpc-calls",
  "ethers",
 ]
 
 [[package]]
-name = "eigensdk-client-fireblocks"
+name = "eigen-client-fireblocks"
 version = "0.0.1-alpha"
 dependencies = [
  "alloy-primitives",
@@ -1388,26 +1388,26 @@ dependencies = [
 ]
 
 [[package]]
-name = "eigensdk-contract-bindings"
+name = "eigen-contract-bindings"
 version = "0.0.1-alpha"
 dependencies = [
  "ethers",
 ]
 
 [[package]]
-name = "eigensdk-crypto-bls"
+name = "eigen-crypto-bls"
 version = "0.0.1-alpha"
 dependencies = [
  "alloy-primitives",
  "ark-bn254",
  "ark-ec",
  "ark-ff 0.4.2",
- "eigensdk-crypto-bn254",
+ "eigen-crypto-bn254",
  "thiserror",
 ]
 
 [[package]]
-name = "eigensdk-crypto-bn254"
+name = "eigen-crypto-bn254"
 version = "0.0.1-alpha"
 dependencies = [
  "alloy-primitives",
@@ -1418,58 +1418,58 @@ dependencies = [
 ]
 
 [[package]]
-name = "eigensdk-metrics"
+name = "eigen-metrics"
 version = "0.0.1-alpha"
 dependencies = [
  "ark-bn254",
  "ark-ff 0.4.2",
- "eigensdk-crypto-bls",
- "eigensdk-crypto-bn254",
+ "eigen-crypto-bls",
+ "eigen-crypto-bn254",
 ]
 
 [[package]]
-name = "eigensdk-metrics-collectors-economic"
+name = "eigen-metrics-collectors-economic"
 version = "0.0.1-alpha"
 dependencies = [
  "alloy-primitives",
- "eigensdk-client-avsregistry",
- "eigensdk-client-elcontracts",
+ "eigen-client-avsregistry",
+ "eigen-client-elcontracts",
  "ethers",
 ]
 
 [[package]]
-name = "eigensdk-metrics-collectors-rpc-calls"
+name = "eigen-metrics-collectors-rpc-calls"
 version = "0.0.1-alpha"
 dependencies = [
  "ethers",
 ]
 
 [[package]]
-name = "eigensdk-services-avsregistry"
+name = "eigen-services-avsregistry"
 version = "0.0.1-alpha"
 dependencies = [
  "alloy-primitives",
- "eigensdk-chainio-utils",
- "eigensdk-client-avsregistry",
- "eigensdk-contract-bindings",
- "eigensdk-crypto-bls",
- "eigensdk-crypto-bn254",
- "eigensdk-services-operatorsinfo",
- "eigensdk-types",
+ "eigen-chainio-utils",
+ "eigen-client-avsregistry",
+ "eigen-contract-bindings",
+ "eigen-crypto-bls",
+ "eigen-crypto-bn254",
+ "eigen-services-operatorsinfo",
+ "eigen-types",
  "eth-keystore",
  "ethers",
  "thiserror",
 ]
 
 [[package]]
-name = "eigensdk-services-blsaggregation"
+name = "eigen-services-blsaggregation"
 version = "0.0.1-alpha"
 dependencies = [
  "alloy-primitives",
- "eigensdk-crypto-bls",
- "eigensdk-crypto-bn254",
- "eigensdk-services-avsregistry",
- "eigensdk-types",
+ "eigen-crypto-bls",
+ "eigen-crypto-bn254",
+ "eigen-services-avsregistry",
+ "eigen-types",
  "eth-keystore",
  "ethers",
  "parking_lot",
@@ -1478,7 +1478,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "eigensdk-services-operatorsinfo"
+name = "eigen-services-operatorsinfo"
 version = "0.0.1-alpha"
 dependencies = [
  "alloy-contract",
@@ -1488,11 +1488,11 @@ dependencies = [
  "alloy-sol-types",
  "alloy-transport-ws",
  "anyhow",
- "eigensdk-client-avsregistry",
- "eigensdk-contract-bindings",
- "eigensdk-crypto-bls",
- "eigensdk-crypto-bn254",
- "eigensdk-types",
+ "eigen-client-avsregistry",
+ "eigen-contract-bindings",
+ "eigen-crypto-bls",
+ "eigen-crypto-bn254",
+ "eigen-types",
  "eth-keystore",
  "ethers",
  "eyre",
@@ -1503,20 +1503,20 @@ dependencies = [
 ]
 
 [[package]]
-name = "eigensdk-types"
+name = "eigen-types"
 version = "0.0.1-alpha"
 dependencies = [
  "alloy-contract",
  "alloy-primitives",
  "alloy-sol-types",
- "eigensdk-contract-bindings",
- "eigensdk-crypto-bls",
+ "eigen-contract-bindings",
+ "eigen-crypto-bls",
  "ethers",
  "num-bigint",
 ]
 
 [[package]]
-name = "eigensdk-utils"
+name = "eigen-utils"
 version = "0.0.1-alpha"
 
 [[package]]
@@ -2554,8 +2554,8 @@ name = "info-operator-service"
 version = "0.0.1-alpha"
 dependencies = [
  "alloy-primitives",
- "eigensdk-client-avsregistry",
- "eigensdk-services-operatorsinfo",
+ "eigen-client-avsregistry",
+ "eigen-services-operatorsinfo",
  "tokio",
  "tracing",
 ]

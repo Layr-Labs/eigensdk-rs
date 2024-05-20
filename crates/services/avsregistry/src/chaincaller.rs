@@ -1,11 +1,11 @@
 use alloy_primitives::{Bytes, FixedBytes, U256};
-use eigensdk_chainio_utils::convert_to_bn254_g1_point;
-use eigensdk_client_avsregistry::reader::AvsRegistryChainReader;
-use eigensdk_crypto_bls::attestation::G1Point as BlsG1Point;
-use eigensdk_crypto_bn254::utils::u256_to_bigint256;
-use eigensdk_services_operatorsinfo::operatorsinfo_inmemory::OperatorInfoServiceInMemory;
-use eigensdk_types::operator::BLSApkRegistry::{G1Point, G2Point};
-use eigensdk_types::operator::{
+use eigen_chainio_utils::convert_to_bn254_g1_point;
+use eigen_client_avsregistry::reader::AvsRegistryChainReader;
+use eigen_crypto_bls::attestation::G1Point as BlsG1Point;
+use eigen_crypto_bn254::utils::u256_to_bigint256;
+use eigen_services_operatorsinfo::operatorsinfo_inmemory::OperatorInfoServiceInMemory;
+use eigen_types::operator::BLSApkRegistry::{G1Point, G2Point};
+use eigen_types::operator::{
     self, OperatorAvsState, OperatorInfo, OperatorPubKeys, QuorumAvsState,
 };
 use std::collections::HashMap;

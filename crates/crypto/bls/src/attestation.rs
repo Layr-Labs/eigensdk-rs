@@ -6,7 +6,7 @@ use ark_ec::{
     AffineRepr, CurveGroup,
 };
 use ark_ff::{BigInteger256, Field, One};
-use eigensdk_crypto_bn254::utils::{
+use eigen_crypto_bn254::utils::{
     get_g2_generator, mul_by_generator_g1, mul_by_generator_g2, u256_to_bigint256,
 };
 use std::ops::Neg;
