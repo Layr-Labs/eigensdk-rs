@@ -9,4 +9,8 @@ pub enum BlsError {
     /// Multiply private key to g1 projective
     #[error("Failed to multiply by G1 Projective")]
     MulByG1Projective,
+
+    /// Failed to generate keypair from private key string
+    #[error("Failed to generate keypair from String")]
+    KeyPairFromString
 }

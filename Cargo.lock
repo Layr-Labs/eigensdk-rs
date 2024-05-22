@@ -1403,6 +1403,7 @@ dependencies = [
  "ark-ec",
  "ark-ff 0.4.2",
  "eigen-crypto-bn254",
+ "hex",
  "rand",
  "thiserror",
  "tokio",
