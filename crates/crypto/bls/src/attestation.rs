@@ -5,16 +5,16 @@ use ark_ec::{
     pairing::{prepare_g1, prepare_g2, Pairing},
     AffineRepr, CurveGroup,
 };
-use ark_ff::{BigInteger256, Field, One, Zero};
+use ark_ff::{BigInteger256, Field, Fp256, One, PrimeField};
 use eigen_crypto_bn254::utils::{
     get_g2_generator, mul_by_generator_g1, mul_by_generator_g2, u256_to_bigint256,
 };
-use std::ops::Neg;
+use hex::FromHex;
 use std::ops::{Add, Mul};
+use std::{fmt::Write, io::Read};
 pub fn new_fp_element(x: BigInteger256) -> Fq {
     Fq::from(x)
 }
-use ark_ff::PrimeField;
 
 fn new_fp2_element(a: BigInteger256, b: BigInteger256) -> Fq2 {
     Fq2::new(Fq::from(a), Fq::from(b))
@@ -96,6 +96,12 @@ impl KeyPair {
         }
     }
 
+    pub fn from_string(s: String) -> Result<Self, BlsError> {
+        let bigint_key = hex_string_to_biginteger256(&s);
+        let key = Fr::from(bigint_key);
+        KeyPair::new(key)
+    }
+
     pub fn sign_hashes_to_curve_message(&self, g1_hashes_msg: G1Projective) -> Signature {
         let sig = g1_hashes_msg.mul(self.priv_key);
 
@@ -116,6 +122,34 @@ impl KeyPair {
             Err(_) => return Err(BlsError::MulByG2Projective),
         }
     }
+}
+
+pub fn bigint_to_hex(bigint: &BigInteger256) -> String {
+    let mut hex_string = String::new();
+    for part in bigint.0.iter().rev() {
+        write!(&mut hex_string, "{:016x}", part).unwrap();
+    }
+    hex_string
+}
+
+pub fn hex_string_to_biginteger256(hex_str: &str) -> BigInteger256 {
+    let bytes = Vec::from_hex(hex_str).unwrap();
+
+    assert!(bytes.len() <= 32, "Byte length exceeds 32 bytes");
+
+    let mut padded_bytes = vec![0u8; 32];
+    let start = 32 - bytes.len();
+    padded_bytes[start..].copy_from_slice(&bytes);
+
+    let mut limbs = [0u64; 4];
+    for (i, chunk) in padded_bytes.chunks(8).rev().enumerate() {
+        let mut array = [0u8; 8];
+        let len = chunk.len().min(8);
+        array[..len].copy_from_slice(&chunk[..len]); // Copy the bytes into the fixed-size array
+        limbs[i] = u64::from_be_bytes(array);
+    }
+
+    BigInteger256::new(limbs)
 }
 
 #[derive(Debug, Clone)]
@@ -190,8 +224,8 @@ impl G1Point {
 mod tests {
     use super::*;
     use ark_ff::UniformRand;
+    use ark_ff::{BigInt, Zero};
     use rand::{thread_rng, RngCore};
-
     #[tokio::test]
     async fn test_keypair_generation() {
         let mut rng = thread_rng();
@@ -243,6 +277,7 @@ mod tests {
     async fn test_signature_verification_invalid() {
         let mut rng = thread_rng();
         let private_key = Fr::rand(&mut rng);
+        println!("private key :{:?}", private_key);
         let keypair = KeyPair::new(private_key).unwrap();
 
         let mut message = [0u8; 32];
@@ -258,5 +293,24 @@ mod tests {
         // Check that the signature does not verify with a different public key
         let different_pub_key = G2Projective::rand(&mut rng);
         assert!(!signature.verify_signature(different_pub_key, &message));
+    }
+
+    #[tokio::test]
+    async fn test_keypair_from_string() {
+        let bigint = BigInt([
+            12844100841192127628,
+            7068359412155877604,
+            5417847382009744817,
+            1586467664616413849,
+        ]);
+        let hex_string = bigint_to_hex(&bigint);
+        let converted_bigint = hex_string_to_biginteger256(&hex_string);
+        assert_eq!(bigint, converted_bigint);
+        let keypair_result_from_string = KeyPair::from_string(hex_string);
+        let keypair_result_normal = KeyPair::new(Fr::from(bigint));
+
+        let keypair_from_string = keypair_result_from_string.unwrap();
+        let keypair_from_new = keypair_result_normal.unwrap();
+        assert_eq!(keypair_from_new.priv_key, keypair_from_string.priv_key);
     }
 }
