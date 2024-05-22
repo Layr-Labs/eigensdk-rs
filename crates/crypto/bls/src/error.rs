@@ -12,5 +12,5 @@ pub enum BlsError {
 
     /// Failed to generate keypair from private key string
     #[error("Failed to generate keypair from String")]
-    KeyPairFromString
+    KeyPairFromString,
 }
