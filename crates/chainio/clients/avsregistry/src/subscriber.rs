@@ -15,7 +15,7 @@ use alloy_provider::{
 use alloy_provider::{Provider, ProviderBuilder};
 use alloy_rpc_types::Filter;
 use alloy_transport::BoxTransport;
-use BLSApkRegistry::{BLSApkRegistryEvents, BLSApkRegistryInstance, NewPubkeyRegistration};
+use BLSApkRegistry::BLSApkRegistryInstance;
 
 /// AvsRegistry Chain Subscriber struct
 #[derive(Debug)]
@@ -24,10 +24,12 @@ pub struct AvsRegistryChainSubscriber {
 }
 
 impl AvsRegistryChainSubscriber {
+    /// New avs registry subscriber instance
     pub fn new(provider: String) -> Self {
-        return AvsRegistryChainSubscriber { provider };
+        AvsRegistryChainSubscriber { provider }
     }
 
+    /// Returns blsapkregistry instance
     pub async fn build(
         &self,
         bls_apk_registry_addr: Address,
@@ -52,7 +54,7 @@ impl AvsRegistryChainSubscriber {
             .await?;
         let bls_apk_reg = BLSApkRegistry::new(bls_apk_registry_addr, provider);
 
-        return Ok(bls_apk_reg);
+        Ok(bls_apk_reg)
     }
 
     /// Utility function that returns new pubkey registration filter

@@ -4,6 +4,7 @@ use ark_bn254::G2Projective;
 use ark_ff::BigInteger256;
 sol!(
     #[allow(missing_docs)]
+    #[allow(clippy::too_many_arguments)]
     #[sol(rpc)]
     RegistryCoordinator,
     "../../../crates/contracts/bindings/utils/json/RegistryCoordinator.json"

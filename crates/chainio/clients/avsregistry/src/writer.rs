@@ -31,11 +31,12 @@ sol!(
 );
 
 use alloy_primitives::{Address, Bytes, FixedBytes, TxHash, U256};
-use alloy_provider::{Provider, ProviderBuilder};
+use alloy_provider::ProviderBuilder;
 use eigen_crypto_bls::attestation::KeyPair;
 use tracing::info;
 use RegistryCoordinator::SignatureWithSaltAndExpiry;
 
+/// AvsRegistry Writer
 #[derive(Debug)]
 pub struct AvsRegistryChainWriter {
     service_manager_addr: Address,
@@ -130,7 +131,6 @@ impl AvsRegistryChainWriter {
 
     async fn reigster_operator_in_quorum_with_avs_registry_coordinator(
         &self,
-        pvt_key: &str,
         bls_key_pair: KeyPair,
         operator_to_avs_registration_sig_salt: FixedBytes<32>,
         operator_to_avs_registration_sig_expiry: U256,
@@ -276,7 +276,6 @@ impl AvsRegistryChainWriter {
     async fn deregister_operator(
         &self,
         quorum_numbers: Bytes,
-        pub_key: G1Point,
     ) -> Result<TxHash, Box<dyn std::error::Error>> {
         info!("deregistering operator with the AVS's registry coordinator");
         let url = Url::parse(&self.provider).expect("Wrong rpc url");

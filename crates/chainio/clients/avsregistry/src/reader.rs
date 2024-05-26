@@ -52,6 +52,7 @@ trait AvsRegistryReader {
 }
 
 impl AvsRegistryChainReader {
+    /// New AvsRegistryChainReader instance
     pub fn new(
         registry_coordinator_addr: Address,
         bls_apk_registry_addr: Address,
@@ -360,7 +361,7 @@ impl AvsRegistryChainReader {
             .call()
             .await?;
         let RegistryCoordinator::getOperatorIdReturn { _0: operator_id } = operator_id_return;
-        return Ok(operator_id);
+        Ok(operator_id)
     }
 
     /// Get Operator from operator id
@@ -447,7 +448,7 @@ impl AvsRegistryChainReader {
             println!("logs length {:?}", logs.len());
             debug!(transactionLogs = ?logs, "avsRegistryChainReader.QueryExistingRegisteredOperatorPubKeys");
 
-            for (_, v_log) in logs.iter().enumerate() {
+            for v_log in logs.iter() {
                 let pub_key_reg_option = v_log
                     .log_decode::<BLSApkRegistry::NewPubkeyRegistration>()
                     .ok();
@@ -505,7 +506,7 @@ impl AvsRegistryChainReader {
 
             let logs = provider.get_logs(&filter).await?;
 
-            for (_, v_log) in logs.iter().enumerate() {
+            for v_log in logs.iter() {
                 let socket_update_filter_option = v_log
                     .log_decode::<RegistryCoordinator::OperatorSocketUpdate>()
                     .ok();

@@ -214,7 +214,7 @@ impl BlsAggregatorService {
                         }
                         else{
                             let mut operator_id_set = HashMap::new();
-                            operator_id_set.insert(signed_task_digest.operator_id.clone(),true);
+                            operator_id_set.insert(signed_task_digest.operator_id,true);
                             // first operator
 
                             if let Some(avs_state) = operator_state_avs.get(&signed_task_digest.operator_id.clone()){
@@ -244,7 +244,7 @@ impl BlsAggregatorService {
                             });
 
                             let mut non_signers_g1_pub_keys: Vec<G1Point> = vec![];
-                            for (_,operator_id) in non_signers_operators_ids.iter().enumerate(){
+                            for operator_id in non_signers_operators_ids.iter(){
 
                                 if let  Some(operator) = operator_state_avs.get(operator_id){
                                     if let Some(keys) = &operator.operator_info.pub_keys{
@@ -338,6 +338,6 @@ impl BlsAggregatorService {
             }
         }
 
-        return true;
+        true
     }
 }
