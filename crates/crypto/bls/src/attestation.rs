@@ -1,17 +1,14 @@
 use crate::error::BlsError;
 use alloy_primitives::U256;
-use ark_bn254::{Bn254, Fq, Fq2, Fr, G1Affine, G1Projective, G2Affine, G2Projective};
-use ark_ec::{
-    pairing::{prepare_g1, prepare_g2, Pairing},
-    AffineRepr, CurveGroup,
-};
-use ark_ff::{BigInteger256, Field, Fp256, One, PrimeField};
+use ark_bn254::{Bn254, Fq, Fq2, Fr, G1Affine, G1Projective, G2Projective};
+use ark_ec::{pairing::Pairing, CurveGroup};
+use ark_ff::{BigInteger256, Field, One, PrimeField};
 use eigen_crypto_bn254::utils::{
     get_g2_generator, mul_by_generator_g1, mul_by_generator_g2, u256_to_bigint256,
 };
 use hex::FromHex;
+use std::fmt::Write;
 use std::ops::{Add, Mul};
-use std::{fmt::Write, io::Read};
 pub fn new_fp_element(x: BigInteger256) -> Fq {
     Fq::from(x)
 }
@@ -268,7 +265,7 @@ mod tests {
 
         // Check that the signature is not zero
         assert_ne!(signature.sig(), G1Projective::zero());
-        let mut wrong_message =[0u8;32];
+        let mut wrong_message = [0u8; 32];
         rng.fill_bytes(&mut wrong_message);
         // Check that the signature verifies
         assert!(signature.verify_signature(pub_key_g2, &message));

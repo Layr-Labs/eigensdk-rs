@@ -2,13 +2,11 @@ use eigen_crypto_bls::attestation::{G1Point, G2Point, Signature};
 use eigen_services_avsregistry::chaincaller::AvsRegistryServiceChainCaller;
 use eigen_types::{
     avs::{SignedTaskResponseDigest, TaskIndex, TaskResponseDigest},
-    operator::BLSApkRegistry,
     operator::{OperatorAvsState, QuorumThresholdPercentage, QuorumThresholdPercentages},
 };
 
 use alloy_primitives::{FixedBytes, U256};
 use eigen_crypto_bn254::utils::u256_to_bigint256;
-use ethers::core::k256::FieldBytes;
 use std::collections::HashMap;
 use tokio::sync::mpsc::{self, UnboundedReceiver, UnboundedSender};
 use tokio::time::{self, Duration};
@@ -93,14 +91,16 @@ impl BlsAggregatorService {
         tokio::spawn(async move {
             while let Some(signed_response) = rx.recv().await {
                 // Process each signed response here
-                self_clone.single_task_aggregator(
-                    task_index,
-                    task_created_block,
-                    quorum_nums.clone(),
-                    quorum_threshold_percentages.clone(),
-                    time_to_expiry,
-                    signed_response,
-                );
+                self_clone
+                    .single_task_aggregator(
+                        task_index,
+                        task_created_block,
+                        quorum_nums.clone(),
+                        quorum_threshold_percentages.clone(),
+                        time_to_expiry,
+                        signed_response,
+                    )
+                    .await;
             }
         });
     }
@@ -244,7 +244,7 @@ impl BlsAggregatorService {
                             });
 
                             let mut non_signers_g1_pub_keys: Vec<G1Point> = vec![];
-                            for (i,operator_id) in non_signers_operators_ids.iter().enumerate(){
+                            for (_,operator_id) in non_signers_operators_ids.iter().enumerate(){
 
                                 if let  Some(operator) = operator_state_avs.get(operator_id){
                                     if let Some(keys) = &operator.operator_info.pub_keys{
