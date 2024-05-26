@@ -268,16 +268,17 @@ mod tests {
 
         // Check that the signature is not zero
         assert_ne!(signature.sig(), G1Projective::zero());
-
+        let mut wrong_message =[0u8;32];
+        rng.fill_bytes(&mut wrong_message);
         // Check that the signature verifies
         assert!(signature.verify_signature(pub_key_g2, &message));
+        assert!(!signature.verify_signature(pub_key_g2, &wrong_message))
     }
 
     #[tokio::test]
     async fn test_signature_verification_invalid() {
         let mut rng = thread_rng();
         let private_key = Fr::rand(&mut rng);
-        println!("private key :{:?}", private_key);
         let keypair = KeyPair::new(private_key).unwrap();
 
         let mut message = [0u8; 32];
