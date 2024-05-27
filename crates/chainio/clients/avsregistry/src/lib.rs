@@ -1,7 +1,5 @@
 //! AvsRegistry methods for reading, writing and subscribing purposes.
 
-use alloy_primitives::B256;
-
 #[allow(dead_code)]
 /// Reader module
 pub mod reader;
