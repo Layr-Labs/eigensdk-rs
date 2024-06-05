@@ -12,6 +12,7 @@ members = [ "crates/chainio/clients/avsregistry/",
 "crates/metrics/collectors/rpc_calls/",
 "crates/services/avsregistry/",
 "crates/services/bls_aggregation/",
+"crates/metrics/metrics-derive",
 "crates/services/operatorsinfo/",
 "crates/types/",
 "crates/metrics/",
@@ -44,6 +45,10 @@ rustdoc.all = "warn"
 ethers =  "2.0.14"
 ark-ff = "0.4.0"
 eyre = "0.6.12"
+syn = "2.0"
+quote = "1.0"
+metrics = "0.21.1"
+once_cell = "1.17"
 reth = {git = "https://github.com/paradigmxyz/reth"}
 prometheus-client = "0.22.2"
 bn254 = {git = "https://github.com/sedaprotocol/bn254"}
@@ -64,6 +69,7 @@ eigen-metrics-collectors-rpc-calls = {path = "crates/metrics/collectors/rpc_call
 eigen-services-avsregistry = {path = "crates/services/avsregistry"}
 eigen-services-bls_aggregation = {path = "crates/services/bls_aggregation"}
 eigen-services-operatorsinfo = {path = "crates/services/operatorsinfo"}
+eigen-metrics-derive = {path = "crates/metrics/metrics-derive"}
 info-operator-service = {path = "examples/info-operator-service"}
 tokio = {version = "1.37.0" , features = ["test-util", "full","sync"] }
 futures-util = "0.3.30"

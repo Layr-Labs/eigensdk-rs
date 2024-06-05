@@ -1,0 +1,26 @@
+[package]
+name = "eigen-metrics-derive"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+repository.workspace = true
+
+
+[lib]
+proc-macro = true
+
+[dependencies]
+
+#prometheus
+prometheus = "0.13.4"
+
+proc-macro2 = "1.0"
+
+syn = { workspace = true, features = ["extra-traits"] }
+quote.workspace = true
+regex = "1.6.0"
+once_cell.workspace = true
+
+[dev-dependencies]
+metrics.workspace = true
+trybuild = "1.0"
