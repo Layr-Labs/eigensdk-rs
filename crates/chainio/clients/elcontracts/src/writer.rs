@@ -31,6 +31,8 @@ use eigen_types::operator::Operator;
 use std::sync::Arc;
 use tracing::info;
 use DelegationManager::OperatorDetails;
+
+#[derive(Debug, Clone)]
 pub struct ELChainWriter {
     delegation_manager: Address,
     strategy_manager: Address,
@@ -40,7 +42,7 @@ pub struct ELChainWriter {
 }
 
 impl ELChainWriter {
-   pub fn new(
+    pub fn new(
         delegation_manager: Address,
         strategy_manager: Address,
         el_chain_reader: ELChainReader,
