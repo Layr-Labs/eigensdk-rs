@@ -51,7 +51,7 @@ pub struct ELChainReader {
 }
 
 impl ELChainReader {
-    fn new(
+    pub fn new(
         slasher: Address,
         delegation_manager: Address,
         strategy_manager: Address,
