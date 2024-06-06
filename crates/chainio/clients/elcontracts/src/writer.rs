@@ -40,7 +40,7 @@ pub struct ELChainWriter {
 }
 
 impl ELChainWriter {
-    fn new(
+   pub fn new(
         delegation_manager: Address,
         strategy_manager: Address,
         el_chain_reader: ELChainReader,
