@@ -41,7 +41,7 @@ pub struct Operator {
     earnings_receiver_address: Address,
     delegation_approver_address: Address,
     staker_opt_out_window_blocks: u32,
-    metadata_url: String,
+    metadata_url: Option<String>,
 }
 
 impl Operator {
@@ -57,7 +57,7 @@ impl Operator {
             earnings_receiver_address,
             delegation_approver_address,
             staker_opt_out_window_blocks,
-            metadata_url: metadata_url.unwrap(),
+            metadata_url: metadata_url,
         }
     }
 
@@ -66,7 +66,7 @@ impl Operator {
     }
 
     pub fn metadata_url(&mut self, metadata: String) {
-        self.metadata_url = metadata;
+        self.metadata_url = Some(metadata);
     }
 
     pub fn earnings_receiver_address(&mut self, address: Address) {
@@ -85,8 +85,8 @@ impl Operator {
         self.address
     }
 
-    pub fn has_metadata_url(&self) -> String {
-        self.metadata_url.clone()
+    pub fn has_metadata_url(&self) -> Option<String> {
+       self.metadata_url.clone()
     }
 
     pub fn has_earnings_receiver_address(&self) -> Address {
