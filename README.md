@@ -19,13 +19,23 @@ List of crates in the repository :-
 - [eigen-services](https://github.com/supernovahs/eigen-rs/tree/main/crates/services) - Spawn tokio services for operators info , bls aggregation
 - [eigen-types](https://github.com/supernovahs/eigen-rs/tree/main/crates/types) - Common types
 
+## Examples
+
+You can run any [example](https://github.com/supernovahs/eigensdk-rs/tree/main/examples) using the command cargo run -p <example-name>
+
+Example : 
+```
+cargo run -p info-operator-service
+
+```
+
 ## Contributor Guidelines
 
 We are actively looking for contributors. Thanks for your interest.
 
 Ensure the following passes when raising a PR
 
-- `cargo test --workspace`
+- `cargo test --workspace --all-features`
 - `cargo +nightly fmt -- --check`
 
 ## Supported Rust Version
