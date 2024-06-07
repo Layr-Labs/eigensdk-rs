@@ -86,7 +86,7 @@ impl Operator {
     }
 
     pub fn has_metadata_url(&self) -> Option<String> {
-       self.metadata_url.clone()
+        self.metadata_url.clone()
     }
 
     pub fn has_earnings_receiver_address(&self) -> Address {

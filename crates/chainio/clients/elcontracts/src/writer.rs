@@ -80,29 +80,26 @@ impl ELChainWriter {
 
         let contract_delegation_manager = DelegationManager::new(self.delegation_manager, provider);
 
-        match operator.has_metadata_url(){
-            Some(metadata) =>{
+        match operator.has_metadata_url() {
+            Some(metadata) => {
                 let contract_call =
-                contract_delegation_manager.registerAsOperator(op_details,metadata );
-                
-                let tx = contract_call.send().await?;
-                
-                info!(tx_hash = %tx.tx_hash(), "tx successfully included");
-                Ok(*tx.tx_hash())
-            },
-            None=>{
-                let contract_call =
-                contract_delegation_manager.registerAsOperator(op_details,"".to_string() );
-                
-                let tx = contract_call.send().await?;
-                
+                    contract_delegation_manager.registerAsOperator(op_details, metadata);
+                let binding = contract_call.gas(130000);
+                let tx = binding.send().await?;
+
                 info!(tx_hash = %tx.tx_hash(), "tx successfully included");
                 Ok(*tx.tx_hash())
             }
+            None => {
+                let contract_call =
+                    contract_delegation_manager.registerAsOperator(op_details, "".to_string());
+                let binding = contract_call.gas(130000);
+                let tx = binding.send().await?;
 
+                info!(tx_hash = %tx.tx_hash(), "tx successfully included");
+                Ok(*tx.tx_hash())
+            }
         }
-      
-       
     }
 
     pub async fn update_operator_details(
@@ -133,8 +130,8 @@ impl ELChainWriter {
 
         info!(tx_hash = %tx.tx_hash(), operator = %operator.has_address(), "succesfully updated operator details");
 
-        let contract_call_update_metadata_uri =
-            contract_delegation_manager.updateOperatorMetadataURI(operator.has_metadata_url().unwrap_or_default());
+        let contract_call_update_metadata_uri = contract_delegation_manager
+            .updateOperatorMetadataURI(operator.has_metadata_url().unwrap_or_default());
 
         let metadata_tx = contract_call_update_metadata_uri.send().await?;
 
