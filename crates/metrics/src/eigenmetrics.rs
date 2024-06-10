@@ -21,4 +21,8 @@ impl EigenMetrics {
         gauge.performance_score.set(100 as f64);
         gauge
     }
+
+    pub fn performance_score(&self) -> Gauge {
+        return self.performance_score.clone();
+    }
 }
