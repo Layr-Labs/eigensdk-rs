@@ -16,7 +16,7 @@ metrics.workspace = true
 #prometheus
 prometheus = "0.13.4"
 metrics-exporter-prometheus.workspace = true
-
+eigen-metrics-collectors-economic.workspace = true 
 reqwest = "0.12.4"
 eyre.workspace = true
 
