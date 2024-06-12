@@ -79,7 +79,7 @@ jobs:
         working-directory: ./book
 
       - name: Build docs
-        run: cargo docs
+        run: cargo doc
         env:
           # Keep in sync with ./ci.yml:jobs.docs
           RUSTDOCFLAGS:
