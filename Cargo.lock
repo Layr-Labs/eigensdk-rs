@@ -1498,7 +1498,8 @@ dependencies = [
 name = "eigen-metrics-collectors-rpc-calls"
 version = "0.0.1-alpha"
 dependencies = [
- "ethers",
+ "eigen-metrics-derive",
+ "metrics",
 ]
 
 [[package]]
