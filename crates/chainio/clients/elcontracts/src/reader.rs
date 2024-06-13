@@ -34,12 +34,10 @@ sol!(
     "../../../../crates/contracts/bindings/utils/json/IERC20.json"
 );
 
-use alloy_primitives::{Address, FixedBytes, U256};
-use alloy_provider::{Provider, ProviderBuilder};
-use eigen_types::operator::Operator;
-use std::sync::Arc;
-
 use crate::error::ElContractsError;
+use alloy_primitives::{Address, FixedBytes, U256};
+use eigen_types::operator::Operator;
+use eigen_utils::{get_provider, get_signer};
 
 #[derive(Debug, Clone)]
 pub struct ELChainReader {
@@ -72,10 +70,8 @@ impl ELChainReader {
         avs_directory: Address,
         client: &String,
     ) -> Result<Self, Box<dyn std::error::Error>> {
-        let provider = ProviderBuilder::new()
-            .with_recommended_fillers()
-            .on_builtin(&client)
-            .await?;
+        let provider = get_provider(client);
+
         let contract_delegation_manager = DelegationManager::new(delegation_manager, provider);
 
         let slasher = contract_delegation_manager.slasher().call().await?;
@@ -104,10 +100,8 @@ impl ELChainReader {
         approve_salt: FixedBytes<32>,
         expiry: U256,
     ) -> Result<FixedBytes<32>, Box<dyn std::error::Error>> {
-        let provider = ProviderBuilder::new()
-            .with_recommended_fillers()
-            .on_builtin(&self.provider)
-            .await?;
+        let provider = get_provider(&self.provider);
+
         let contract_delegation_manager = DelegationManager::new(self.delegation_manager, provider);
 
         let delegation_approval_digest_hash = contract_delegation_manager
@@ -134,10 +128,8 @@ impl ELChainReader {
         salt: FixedBytes<32>,
         expiry: U256,
     ) -> Result<FixedBytes<32>, Box<dyn std::error::Error>> {
-        let provider = ProviderBuilder::new()
-            .with_recommended_fillers()
-            .on_builtin(&self.provider)
-            .await?;
+        let provider = get_provider(&self.provider);
+
         let contract_avs_directory = AVSDirectory::new(self.avs_directory, provider);
 
         let operator_avs_registration_digest_hash = contract_avs_directory
@@ -156,10 +148,7 @@ impl ELChainReader {
         operator_addr: Address,
         strategy_addr: Address,
     ) -> Result<U256, Box<dyn std::error::Error>> {
-        let provider = ProviderBuilder::new()
-            .with_recommended_fillers()
-            .on_builtin(&self.provider)
-            .await?;
+        let provider = get_provider(&self.provider);
 
         let contract_delegation_manager = DelegationManager::new(self.delegation_manager, provider);
 
@@ -176,10 +165,7 @@ impl ELChainReader {
         &self,
         operator_addr: Address,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let provider = ProviderBuilder::new()
-            .with_recommended_fillers()
-            .on_builtin(&self.provider)
-            .await?;
+        let provider = get_provider(&self.provider);
 
         let contract_slasher = ISlasher::new(self.slasher, provider);
 
@@ -194,10 +180,8 @@ impl ELChainReader {
         operator_addr: Address,
         service_manager_addr: Address,
     ) -> Result<u32, Box<dyn std::error::Error>> {
-        let provider = ProviderBuilder::new()
-            .with_recommended_fillers()
-            .on_builtin(&self.provider)
-            .await?;
+        let provider = get_provider(&self.provider);
+
         let contract_slasher = ISlasher::new(self.slasher, provider);
 
         let service_manager_can_slash_operator_until_block = contract_slasher
@@ -215,10 +199,8 @@ impl ELChainReader {
         &self,
         strategy_addr: Address,
     ) -> Result<(Address, Address, Address), Box<dyn std::error::Error>> {
-        let provider = ProviderBuilder::new()
-            .with_recommended_fillers()
-            .on_builtin(&self.provider)
-            .await?;
+        let provider = get_provider(&self.provider);
+
         let contract_strategy = IStrategy::new(strategy_addr, &provider);
 
         let underlying_token = contract_strategy.underlyingToken().call().await?;
@@ -240,10 +222,7 @@ impl ELChainReader {
         &self,
         operator: Address,
     ) -> Result<Operator, Box<dyn std::error::Error>> {
-        let provider = ProviderBuilder::new()
-            .with_recommended_fillers()
-            .on_builtin(&self.provider)
-            .await?;
+        let provider = get_provider(&self.provider);
 
         let contract_delegation_manager =
             DelegationManager::new(self.delegation_manager, &provider);
@@ -270,10 +249,8 @@ impl ELChainReader {
         &self,
         operator: Address,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let provider = ProviderBuilder::new()
-            .with_recommended_fillers()
-            .on_builtin(&self.provider)
-            .await?;
+        let provider = get_provider(&self.provider);
+
         let contract_delegation_manager = DelegationManager::new(self.delegation_manager, provider);
 
         let is_operator = contract_delegation_manager

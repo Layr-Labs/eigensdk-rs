@@ -2,41 +2,16 @@ use crate::error::AvsRegistryError;
 use alloy_primitives::{Address, Bytes, FixedBytes, B256, U256};
 use alloy_provider::Provider;
 use alloy_rpc_types::Filter;
-use alloy_sol_types::sol;
 use ark_ff::Zero;
 use eigen_types::operator::{bitmap_to_quorum_ids, BLSApkRegistry, OperatorPubKeys};
-use eigen_utils::get_provider;
+use eigen_utils::{
+    binding::{OperatorStateRetriever, RegistryCoordinator, StakeRegistry},
+    get_provider,
+};
 use num_bigint::BigInt;
 use std::collections::HashMap;
 use std::fmt::Debug;
 use tracing::debug;
-
-const REGISTRY_COORDINATOR_PATH: &str =
-    "../../../../crates/contracts/bindings/utils/json/RegistryCoordinator.json";
-const STAKE_REGISTRY_PATH: &str =
-    "../../../../crates/contracts/bindings/utils/json/StakeRegistry.json";
-const OPERATOR_STATE_RETRIEVER: &str =
-    "../../../../crates/contracts/bindings/utils/json/OperatorStateRetriever.json";
-
-sol!(
-    #[allow(missing_docs)]
-    #[sol(rpc)]
-    StakeRegistry,
-    "StakeRegistry.json"
-);
-
-sol!(
-    #[allow(missing_docs)]
-    #[sol(rpc)]
-    RegistryCoordinator,
-    "../../../../crates/contracts/bindings/utils/json/RegistryCoordinator.json"
-);
-sol!(
-    #[allow(missing_docs)]
-    #[sol(rpc)]
-    OperatorStateRetriever,
-    "../../../../crates/contracts/bindings/utils/json/OperatorStateRetriever.json"
-);
 
 /// Avs Registry chainreader
 #[derive(Debug, Clone)]

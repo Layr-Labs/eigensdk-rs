@@ -1,13 +1,10 @@
-use alloy_network::EthereumSigner;
 use alloy_signer::SignerSync;
 use alloy_signer_wallet::LocalWallet;
-use alloy_sol_types::sol;
 use ark_bn254::G1Projective;
 use eigen_chainio_utils::{
     convert_bn254_to_ark, convert_to_bn254_g1_point, convert_to_bn254_g2_point,
 };
 use eigen_client_elcontracts::reader::ELChainReader;
-use reqwest::Url;
 use std::str::FromStr;
 
 use eigen_chainio_utils::{
@@ -17,27 +14,16 @@ use eigen_chainio_utils::{
         PubkeyRegistrationParams as RegistryPubkeyRegistrationParams,
     },
 };
-sol!(
-    #[allow(missing_docs)]
-    #[sol(rpc)]
-    ServiceManagerBase,
-    "../../../../crates/contracts/bindings/utils/json/ServiceManagerBase.json"
-);
-
-sol!(
-    #[allow(missing_docs)]
-    #[sol(rpc)]
-    StakeRegistry,
-    "StakeRegistry.json"
-);
 
 use alloy_primitives::{Address, Bytes, FixedBytes, TxHash, U256};
-use alloy_provider::ProviderBuilder;
 use eigen_crypto_bls::attestation::KeyPair;
 use tracing::info;
 use RegistryCoordinator::SignatureWithSaltAndExpiry;
 
-use eigen_utils::{get_provider, get_signer};
+use eigen_utils::{
+    binding::{ServiceManagerBase, StakeRegistry},
+    get_provider, get_signer,
+};
 
 /// AvsRegistry Writer
 #[derive(Debug)]

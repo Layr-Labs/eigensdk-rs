@@ -1,23 +1,13 @@
-use alloy_sol_types::sol;
-sol!(
-    #[allow(missing_docs)]
-    #[derive(Debug)]
-    #[sol(rpc)]
-    BLSApkRegistry,
-    "../../../../crates/contracts/bindings/utils/json/BLSApkRegistry.json"
-);
 use alloy_network::Ethereum;
 use alloy_primitives::Address;
+use alloy_provider::Provider;
 use alloy_provider::{
     fillers::{ChainIdFiller, FillProvider, GasFiller, JoinFill, NonceFiller},
     RootProvider,
 };
-use alloy_provider::{Provider, ProviderBuilder};
 use alloy_rpc_types::Filter;
-use alloy_transport::BoxTransport;
-use eigen_utils::get_provider;
+use eigen_utils::{binding::BLSApkRegistry, get_provider};
 use reqwest::Client;
-use BLSApkRegistry::BLSApkRegistryInstance;
 
 /// AvsRegistry Chain Subscriber struct
 #[derive(Debug)]
