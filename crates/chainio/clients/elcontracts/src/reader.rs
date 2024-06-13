@@ -1,49 +1,14 @@
-use alloy_sol_types::sol;
-sol!(
-    #[allow(missing_docs)]
-    #[sol(rpc)]
-    AVSDirectory,
-    "../../../../crates/contracts/bindings/utils/json/AVSDirectory.json"
-);
-
-sol!(
-    #[allow(missing_docs)]
-    #[sol(rpc)]
-    DelegationManager,
-    "../../../../crates/contracts/bindings/utils/json/DelegationManager.json"
-);
-
-sol!(
-    #[allow(missing_docs)]
-    #[sol(rpc)]
-    ISlasher,
-    "../../../../crates/contracts/bindings/utils/json/ISlasher.json"
-);
-
-sol!(
-    #[allow(missing_docs)]
-    #[sol(rpc)]
-    IStrategy,
-    "../../../../crates/contracts/bindings/utils/json/IStrategy.json"
-);
-
-sol!(
-    #[allow(missing_docs)]
-    #[sol(rpc)]
-    IERC20,
-    "../../../../crates/contracts/bindings/utils/json/IERC20.json"
-);
-
-use crate::error::ElContractsError;
 use alloy_primitives::{Address, FixedBytes, U256};
 use eigen_types::operator::Operator;
-use eigen_utils::{get_provider, get_signer};
+use eigen_utils::{
+    binding::{AVSDirectory, DelegationManager, ISlasher, IStrategy, IERC20},
+    get_provider,
+};
 
 #[derive(Debug, Clone)]
 pub struct ELChainReader {
     slasher: Address,
     delegation_manager: Address,
-    strategy_manager: Address,
     avs_directory: Address,
     provider: String,
 }
@@ -52,14 +17,12 @@ impl ELChainReader {
     pub fn new(
         slasher: Address,
         delegation_manager: Address,
-        strategy_manager: Address,
         avs_directory: Address,
         provider: String,
     ) -> Self {
         ELChainReader {
             slasher,
             delegation_manager,
-            strategy_manager,
             avs_directory,
             provider,
         }
@@ -87,7 +50,6 @@ impl ELChainReader {
             avs_directory,
             slasher: slasher_addr,
             delegation_manager,
-            strategy_manager: strategy_manager,
             provider: client.to_string(),
         })
     }

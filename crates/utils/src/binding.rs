@@ -35,3 +35,45 @@ sol!(
     ServiceManagerBase,
     "../../crates/contracts/bindings/utils/json/ServiceManagerBase.json"
 );
+
+sol!(
+    #[allow(missing_docs)]
+    #[sol(rpc)]
+    AVSDirectory,
+    "../../crates/contracts/bindings/utils/json/AVSDirectory.json"
+);
+
+sol!(
+    #[allow(missing_docs)]
+    #[sol(rpc)]
+    DelegationManager,
+    "../../crates/contracts/bindings/utils/json/DelegationManager.json"
+);
+
+sol!(
+    #[allow(missing_docs)]
+    #[sol(rpc)]
+    ISlasher,
+    "../../crates/contracts/bindings/utils/json/ISlasher.json"
+);
+
+sol!(
+    #[allow(missing_docs)]
+    #[sol(rpc)]
+    IStrategy,
+    "../../crates/contracts/bindings/utils/json/IStrategy.json"
+);
+
+sol!(
+    #[allow(missing_docs)]
+    #[sol(rpc)]
+    IERC20,
+    "../../crates/contracts/bindings/utils/json/IERC20.json"
+);
+
+sol!(
+    #[allow(missing_docs)]
+    #[sol(rpc)]
+    StrategyManager,
+    "../../crates/contracts/bindings/utils/json/StrategyManager.json"
+);
