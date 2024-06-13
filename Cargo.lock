@@ -1358,6 +1358,7 @@ dependencies = [
  "eigen-crypto-bls",
  "eigen-crypto-bn254",
  "eigen-types",
+ "eigen-utils",
  "futures",
  "hex",
  "num-bigint",
@@ -1382,6 +1383,7 @@ dependencies = [
  "ark-bn254",
  "ark-ff 0.4.2",
  "eigen-types",
+ "eigen-utils",
  "reqwest 0.12.4",
  "thiserror",
  "tracing",
@@ -1539,6 +1541,15 @@ dependencies = [
 [[package]]
 name = "eigen-utils"
 version = "0.0.1-alpha"
+dependencies = [
+ "alloy-contract",
+ "alloy-network",
+ "alloy-provider",
+ "alloy-signer-wallet",
+ "alloy-sol-types",
+ "alloy-transport-http",
+ "reqwest 0.12.4",
+]
 
 [[package]]
 name = "either"
