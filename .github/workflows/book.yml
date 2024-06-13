@@ -74,11 +74,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install Rust toolchain
+      - name: Install Nightly Rust toolchain
         uses: actions-rs/toolchain@v1
         with:
           profile: minimal
-          toolchain: stable
+          toolchain: nightly
           components: clippy, rustfmt
           override: true
 
@@ -103,7 +103,7 @@ jobs:
         working-directory: ./book
 
       - name: Build docs
-        run: cargo doc
+        run: cargo +nightly doc
 
       - name: Move docs to book folder
         run: |
