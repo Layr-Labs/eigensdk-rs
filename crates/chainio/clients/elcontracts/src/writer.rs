@@ -1,7 +1,10 @@
 use crate::reader::ELChainReader;
 use alloy_primitives::{Address, TxHash, U256};
 pub use eigen_types::operator::Operator;
-use eigen_utils::{binding::{DelegationManager, StrategyManager, IERC20}, get_signer};
+use eigen_utils::{
+    binding::{DelegationManager, StrategyManager, IERC20},
+    get_signer,
+};
 use tracing::info;
 use DelegationManager::OperatorDetails;
 
@@ -45,8 +48,7 @@ impl ELChainWriter {
             delegationApprover: operator.has_delegation_approver_address(),
             stakerOptOutWindowBlocks: operator.has_staker_opt_out_window_blocks(),
         };
-        let provider = get_signer(self.signer.clone(),&self.provider);
-
+        let provider = get_signer(self.signer.clone(), &self.provider);
 
         let contract_delegation_manager = DelegationManager::new(self.delegation_manager, provider);
 
@@ -85,7 +87,7 @@ impl ELChainWriter {
             delegationApprover: operator.has_delegation_approver_address(),
             stakerOptOutWindowBlocks: operator.has_staker_opt_out_window_blocks(),
         };
-        let provider = get_signer(self.signer.clone(),&self.provider);
+        let provider = get_signer(self.signer.clone(), &self.provider);
 
         let contract_delegation_manager = DelegationManager::new(self.delegation_manager, provider);
 
@@ -118,7 +120,7 @@ impl ELChainWriter {
             .get_strategy_and_underlying_erc20_token(strategy_addr)
             .await?;
         let (_, underlying_token_contract, underlying_token) = tokens;
-        let provider = get_signer(self.signer.clone(),&self.provider);
+        let provider = get_signer(self.signer.clone(), &self.provider);
 
         let contract_underlying_token = IERC20::new(underlying_token_contract, &provider);
 
