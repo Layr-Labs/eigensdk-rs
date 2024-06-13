@@ -44,6 +44,7 @@ rustdoc.all = "warn"
 ethers =  "2.0.14"
 ark-ff = "0.4.0"
 eyre = "0.6.12"
+reqwest = "0.12.4"
 reth = {git = "https://github.com/paradigmxyz/reth"}
 prometheus-client = "0.22.2"
 bn254 = {git = "https://github.com/sedaprotocol/bn254"}
