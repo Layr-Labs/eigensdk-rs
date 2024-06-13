@@ -77,3 +77,18 @@ sol!(
     StrategyManager,
     "../../crates/contracts/bindings/utils/json/StrategyManager.json"
 );
+
+sol!(
+    #[allow(missing_docs)]
+    #[sol(rpc)]
+    IAVSDirectory,
+    "../../crates/contracts/bindings/utils/json/IAVSDirectory.json"
+);
+
+sol!(
+    #[allow(missing_docs)]
+    #[sol(rpc)]
+    ECDSAStakeRegistry,
+    "../../crates/contracts/bindings/utils/json/ECDSAStakeRegistry.json"
+);
+
