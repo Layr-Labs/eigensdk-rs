@@ -4,8 +4,7 @@ use ark_ff::BigInteger256;
 use eigen_crypto_bls::attestation::G1Point as AttestationG1Point;
 use eigen_crypto_bn254::utils::biginteger256_to_u256;
 use eigen_crypto_bn254::utils::u256_to_bigint256;
-use eigen_utils::binding::BLSApkRegistry;
-pub use BLSApkRegistry::{G1Point, G2Point};
+use eigen_utils::binding::BLSApkRegistry::{G1Point, G2Point};
 
 pub fn convert_bn254_to_ark(g1_point: G1Point) -> AttestationG1Point {
     AttestationG1Point::new(u256_to_bigint256(g1_point.X), u256_to_bigint256(g1_point.Y))

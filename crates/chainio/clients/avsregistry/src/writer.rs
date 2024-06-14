@@ -7,7 +7,7 @@ use eigen_chainio_utils::{
 use eigen_client_elcontracts::reader::ELChainReader;
 use std::str::FromStr;
 
-use eigen_chainio_utils::{
+use eigen_utils::binding::{
     BLSApkRegistry::{G1Point, PubkeyRegistrationParams},
     RegistryCoordinator::{
         self, G1Point as RegistryG1Point, G2Point as RegistryG2Point,
