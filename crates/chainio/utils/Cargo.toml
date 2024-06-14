@@ -16,3 +16,4 @@ eigen-crypto-bls.workspace = true
 eigen-crypto-bn254.workspace = true
 alloy-sol-types.workspace = true
 alloy-contract.workspace = true
+eigen-utils.workspace = true

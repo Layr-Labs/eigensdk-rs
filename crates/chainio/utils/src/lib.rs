@@ -1,25 +1,10 @@
-use alloy_sol_types::sol;
 use ark_bn254::G1Projective;
 use ark_bn254::G2Projective;
 use ark_ff::BigInteger256;
-sol!(
-    #[allow(missing_docs)]
-    #[allow(clippy::too_many_arguments)]
-    #[sol(rpc)]
-    RegistryCoordinator,
-    "../../../crates/contracts/bindings/utils/json/RegistryCoordinator.json"
-);
-sol!(
-    #[allow(missing_docs)]
-    #[derive(Debug)]
-    #[sol(rpc)]
-    BLSApkRegistry,
-    "../../../crates/contracts/bindings/utils/json/BLSApkRegistry.json"
-);
-
 use eigen_crypto_bls::attestation::G1Point as AttestationG1Point;
 use eigen_crypto_bn254::utils::biginteger256_to_u256;
 use eigen_crypto_bn254::utils::u256_to_bigint256;
+use eigen_utils::binding::BLSApkRegistry;
 pub use BLSApkRegistry::{G1Point, G2Point};
 
 pub fn convert_bn254_to_ark(g1_point: G1Point) -> AttestationG1Point {
