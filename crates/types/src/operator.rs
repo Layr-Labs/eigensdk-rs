@@ -1,16 +1,8 @@
 use alloy_primitives::{Address, FixedBytes, U256};
-use alloy_sol_types::sol;
-use eigen_crypto_bls::attestation::{G1Point as AttestationG1Point, G2Point as AttestationG2Point};
+use eigen_utils::binding::BLSApkRegistry;
 use ethers::{types::U64, utils::keccak256};
 use num_bigint::BigUint;
 use std::collections::HashMap;
-sol!(
-    #[allow(missing_docs)]
-    #[derive(Debug)]
-    #[sol(rpc)]
-    BLSApkRegistry,
-    "../../crates/contracts/bindings/utils/json/BLSApkRegistry.json"
-);
 const MAX_NUMBER_OF_QUORUMS: usize = 192;
 use BLSApkRegistry::{G1Point, G2Point};
 

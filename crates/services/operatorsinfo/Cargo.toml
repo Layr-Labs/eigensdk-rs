@@ -18,7 +18,6 @@ eigen-types.workspace = true
 eigen-contract-bindings.workspace = true
 eigen-crypto-bls.workspace = true
 eigen-crypto-bn254.workspace = true
-alloy-sol-types.workspace = true
 alloy-contract.workspace = true
 alloy-primitives.workspace = true
 alloy-provider.workspace = true
@@ -28,3 +27,4 @@ tokio = { workspace = true, features = ["rt-multi-thread", "macros"] }
 tracing.workspace = true
 anyhow = "1.0.83"
 alloy-rpc-types.workspace = true
+eigen-utils.workspace = true

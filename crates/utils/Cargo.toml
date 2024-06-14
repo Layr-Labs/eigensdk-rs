@@ -6,3 +6,10 @@ rust-version.workspace = true
 repository.workspace = true
 
 [dependencies]
+alloy-network.workspace = true
+alloy-provider.workspace = true
+alloy-transport-http.workspace = true
+alloy-signer-wallet.workspace = true
+reqwest.workspace = true
+alloy-sol-types.workspace = true
+alloy-contract.workspace = true

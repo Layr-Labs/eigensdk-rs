@@ -1,41 +1,17 @@
 use crate::error::AvsRegistryError;
 use alloy_primitives::{Address, Bytes, FixedBytes, B256, U256};
-use alloy_provider::{Provider, ProviderBuilder};
+use alloy_provider::Provider;
 use alloy_rpc_types::Filter;
-use alloy_sol_types::sol;
 use ark_ff::Zero;
-use eigen_types::operator::{bitmap_to_quorum_ids, BLSApkRegistry, OperatorPubKeys};
+use eigen_types::operator::{bitmap_to_quorum_ids, OperatorPubKeys};
+use eigen_utils::{
+    binding::{BLSApkRegistry, OperatorStateRetriever, RegistryCoordinator, StakeRegistry},
+    get_provider,
+};
 use num_bigint::BigInt;
 use std::collections::HashMap;
 use std::fmt::Debug;
 use tracing::debug;
-
-const REGISTRY_COORDINATOR_PATH: &str =
-    "../../../../crates/contracts/bindings/utils/json/RegistryCoordinator.json";
-const STAKE_REGISTRY_PATH: &str =
-    "../../../../crates/contracts/bindings/utils/json/StakeRegistry.json";
-const OPERATOR_STATE_RETRIEVER: &str =
-    "../../../../crates/contracts/bindings/utils/json/OperatorStateRetriever.json";
-
-sol!(
-    #[allow(missing_docs)]
-    #[sol(rpc)]
-    StakeRegistry,
-    "StakeRegistry.json"
-);
-
-sol!(
-    #[allow(missing_docs)]
-    #[sol(rpc)]
-    RegistryCoordinator,
-    "../../../../crates/contracts/bindings/utils/json/RegistryCoordinator.json"
-);
-sol!(
-    #[allow(missing_docs)]
-    #[sol(rpc)]
-    OperatorStateRetriever,
-    "../../../../crates/contracts/bindings/utils/json/OperatorStateRetriever.json"
-);
 
 /// Avs Registry chainreader
 #[derive(Debug, Clone)]
@@ -75,10 +51,7 @@ impl AvsRegistryChainReader {
         operator_state_retriever_addr: Address,
         stake_registry_addr: Address,
     ) -> Result<AvsRegistryChainReader, Box<dyn std::error::Error>> {
-        let provider = ProviderBuilder::new()
-            .with_recommended_fillers()
-            .on_builtin(&self.provider)
-            .await?;
+        let provider = get_provider(&self.provider);
 
         let contract_registry_coordinator =
             RegistryCoordinator::new(self.registry_coordinator_addr, &provider);
@@ -103,10 +76,7 @@ impl AvsRegistryChainReader {
     }
 
     async fn get_quorum_count(&self) -> Result<u8, Box<dyn std::error::Error>> {
-        let provider = ProviderBuilder::new()
-            .with_recommended_fillers()
-            .on_builtin(&self.provider)
-            .await?;
+        let provider = get_provider(&self.provider);
 
         let contract_registry_coordinator =
             RegistryCoordinator::new(self.registry_coordinator_addr, provider);
@@ -129,10 +99,7 @@ impl AvsRegistryChainReader {
         block_number: u32,
         quorum_numbers: Bytes,
     ) -> Result<Vec<Vec<OperatorStateRetriever::Operator>>, Box<dyn std::error::Error>> {
-        let provider = ProviderBuilder::new()
-            .with_recommended_fillers()
-            .on_builtin(&self.provider)
-            .await?;
+        let provider = get_provider(&self.provider);
 
         let contract_operator_state_retriever =
             OperatorStateRetriever::new(self.operator_state_retriever, provider);
@@ -159,10 +126,7 @@ impl AvsRegistryChainReader {
         operator_id: B256,
     ) -> Result<(U256, Vec<Vec<OperatorStateRetriever::Operator>>), Box<dyn std::error::Error>>
     {
-        let provider = ProviderBuilder::new()
-            .with_recommended_fillers()
-            .on_builtin(&self.provider)
-            .await?;
+        let provider = get_provider(&self.provider);
 
         let contract_operator_state_retriever =
             OperatorStateRetriever::new(self.operator_state_retriever, provider);
@@ -196,10 +160,8 @@ impl AvsRegistryChainReader {
         &self,
         quorum_numbers: Bytes,
     ) -> Result<Vec<Vec<OperatorStateRetriever::Operator>>, Box<dyn std::error::Error>> {
-        let provider = ProviderBuilder::new()
-            .with_recommended_fillers()
-            .on_builtin(&self.provider)
-            .await?;
+        let provider = get_provider(&self.provider);
+
         let current_block_number_result = provider.get_block_number().await;
 
         match current_block_number_result {
@@ -260,10 +222,8 @@ impl AvsRegistryChainReader {
         operator_id: B256,
     ) -> Result<(Vec<u8>, Vec<Vec<OperatorStateRetriever::Operator>>), Box<dyn std::error::Error>>
     {
-        let provider = ProviderBuilder::new()
-            .with_recommended_fillers()
-            .on_builtin(&self.provider)
-            .await?;
+        let provider = get_provider(&self.provider);
+
         let current_block_number = provider.get_block_number().await?;
 
         if current_block_number > u32::MAX.into() {
@@ -283,10 +243,7 @@ impl AvsRegistryChainReader {
         &self,
         operator_id: B256,
     ) -> Result<HashMap<u8, BigInt>, Box<dyn std::error::Error>> {
-        let provider = ProviderBuilder::new()
-            .with_recommended_fillers()
-            .on_builtin(&self.provider)
-            .await?;
+        let provider = get_provider(&self.provider);
 
         let registry_coordinator =
             RegistryCoordinator::new(self.registry_coordinator_addr, &provider);
@@ -322,10 +279,7 @@ impl AvsRegistryChainReader {
         quorum_numbers: Vec<u8>,
         non_signer_operator_ids: Vec<FixedBytes<32>>,
     ) -> Result<OperatorStateRetriever::CheckSignaturesIndices, Box<dyn std::error::Error>> {
-        let provider = ProviderBuilder::new()
-            .with_recommended_fillers()
-            .on_builtin(&self.provider)
-            .await?;
+        let provider = get_provider(&self.provider);
 
         let contract_operator_state_retriever =
             OperatorStateRetriever::new(self.operator_state_retriever, provider);
@@ -348,10 +302,7 @@ impl AvsRegistryChainReader {
         &self,
         operator_address: Address,
     ) -> Result<FixedBytes<32>, Box<dyn std::error::Error>> {
-        let provider = ProviderBuilder::new()
-            .with_recommended_fillers()
-            .on_builtin(&self.provider)
-            .await?;
+        let provider = get_provider(&self.provider);
 
         let contract_registry_coordinator =
             RegistryCoordinator::new(self.registry_coordinator_addr, provider);
@@ -369,10 +320,7 @@ impl AvsRegistryChainReader {
         &self,
         operator_id: [u8; 32],
     ) -> Result<Address, Box<dyn std::error::Error>> {
-        let provider = ProviderBuilder::new()
-            .with_recommended_fillers()
-            .on_builtin(&self.provider)
-            .await?;
+        let provider = get_provider(&self.provider);
 
         let contract_registry_coordinator =
             RegistryCoordinator::new(self.registry_coordinator_addr, &provider);
@@ -392,10 +340,7 @@ impl AvsRegistryChainReader {
         &self,
         operator_address: Address,
     ) -> Result<bool, Box<dyn std::error::Error>> {
-        let provider = ProviderBuilder::new()
-            .with_recommended_fillers()
-            .on_builtin(&self.provider)
-            .await?;
+        let provider = get_provider(&self.provider);
 
         let contract_registry_coordinator =
             RegistryCoordinator::new(self.registry_coordinator_addr, provider);
@@ -418,10 +363,8 @@ impl AvsRegistryChainReader {
         start_block: u64,
         mut stop_block: u64,
     ) -> Result<(Vec<Address>, Vec<OperatorPubKeys>), Box<dyn std::error::Error>> {
-        let provider = ProviderBuilder::new()
-            .with_recommended_fillers()
-            .on_builtin(&self.provider)
-            .await?;
+        let provider = get_provider(&self.provider);
+
         let query_block_range = 1024;
         let current_block_number = provider.get_block_number().await?;
         if stop_block.is_zero() {
@@ -478,10 +421,8 @@ impl AvsRegistryChainReader {
         start_block: u64,
         stop_block: u64,
     ) -> Result<HashMap<FixedBytes<32>, String>, Box<dyn std::error::Error>> {
-        let provider = ProviderBuilder::new()
-            .with_recommended_fillers()
-            .on_builtin(&self.provider)
-            .await?;
+        let provider = get_provider(&self.provider);
+
         let mut operator_id_to_socket = HashMap::new();
 
         let query_block_range = 10000;
