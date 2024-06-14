@@ -1,12 +1,12 @@
+# Documentation and mdbook related jobs.
+
 name: book
 
 on:
   push:
-    branches:
-        - '**'
+    branches: [main]
   pull_request:
-    branches:
-        - '**'
+    branches: [main]
   merge_group:
 
 jobs:
@@ -32,7 +32,6 @@ jobs:
 
       - name: Run tests
         run: mdbook test
-        working-directory: ./book
 
   lint:
     runs-on: ubuntu-latest
@@ -52,7 +51,6 @@ jobs:
 
       - name: Run linkcheck
         run: mdbook-linkcheck --standalone
-        working-directory: ./book
 
   build:
     runs-on: ubuntu-latest
@@ -78,15 +76,14 @@ jobs:
 
       - name: Build book
         run: mdbook build
-        working-directory: ./book
 
       - name: Build docs
-        run: cargo doc
+        run: cargo docs
         env:
-            # Keep in sync with ./ci.yml:jobs.docs
-            RUSTDOCFLAGS:
-              --cfg docsrs --show-type-layout --generate-link-to-definition --enable-index-page
-              -Zunstable-options
+          # Keep in sync with ./ci.yml:jobs.docs
+          RUSTDOCFLAGS:
+            --cfg docsrs --show-type-layout --generate-link-to-definition --enable-index-page
+            -Zunstable-options
 
       - name: Move docs to book folder
         run: |
