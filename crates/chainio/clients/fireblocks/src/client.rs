@@ -29,8 +29,6 @@ fn asset_id_by_chain() -> HashMap<u64, AssetID> {
     map
 }
 
-trait Client {}
-
 #[allow(non_camel_case_types)]
 struct client {}
 
