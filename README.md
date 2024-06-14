@@ -18,6 +18,7 @@ List of crates in the repository :-
 - [eigen-metrics](https://github.com/supernovahs/eigen-rs/tree/main/crates/metrics) - performance , rpc and economic metrics 
 - [eigen-services](https://github.com/supernovahs/eigen-rs/tree/main/crates/services) - Spawn tokio services for operators info , bls aggregation
 - [eigen-types](https://github.com/supernovahs/eigen-rs/tree/main/crates/types) - Common types
+- [eigen-utils](https://github.com/supernovahs/eigensdk-rs/tree/main/crates/utils) - Publicly exportable `m2-mainnet` compatible alloy rust bindings. 
 
 ## Examples
 
