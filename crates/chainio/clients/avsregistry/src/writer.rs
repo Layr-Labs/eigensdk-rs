@@ -103,7 +103,7 @@ impl AvsRegistryChainWriter {
         let el_reader =
             ELChainReader::build(delegation_manager_addr, avs_directory, &self.provider).await?;
 
-        return Ok(AvsRegistryChainWriter {
+        Ok(AvsRegistryChainWriter {
             service_manager_addr: service_manager,
             registry_coordinator_addr,
             operator_state_retriever_addr,
@@ -112,7 +112,7 @@ impl AvsRegistryChainWriter {
             el_reader,
             provider: self.provider.clone(),
             signer: self.signer.clone(),
-        });
+        })
     }
 
     async fn reigster_operator_in_quorum_with_avs_registry_coordinator(

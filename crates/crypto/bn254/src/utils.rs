@@ -115,10 +115,6 @@ pub fn mul_by_generator_g2(pvt_key: Fr) -> Result<G2Projective, Bn254Err> {
     }
 }
 
-pub fn verify_sig(sig: G1Affine, pub_key: G2Affine, msg: [u8; 32]) {
-    let g2_gen = get_g1_generator().unwrap();
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
