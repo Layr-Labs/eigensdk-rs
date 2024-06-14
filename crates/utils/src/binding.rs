@@ -91,4 +91,3 @@ sol!(
     ECDSAStakeRegistry,
     "../../crates/contracts/bindings/utils/json/ECDSAStakeRegistry.json"
 );
-

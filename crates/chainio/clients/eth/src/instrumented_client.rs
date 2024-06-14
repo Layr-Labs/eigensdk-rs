@@ -1,4 +1,4 @@
-use eigen_metrics_collectors_rpc_calls::Collector as RpcCallsCollector;
+use eigen_metrics_collectors_rpc_calls::RpcCalls as RpcCallsCollector;
 use ethers::providers::{Http, Middleware, Provider};
 
 pub struct InstrumentedClient {
