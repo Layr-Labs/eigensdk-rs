@@ -40,7 +40,7 @@ Ensure the following passes when raising a PR
 
 ## Supported Rust Version
 
-Rolling `MSRV` policy of 6 months. THe current `MSRV` is 1.76
+Rolling `MSRV` policy of 6 months. THe current `MSRV` is 1.79
 
 # Credits
 
