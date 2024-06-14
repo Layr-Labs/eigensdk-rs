@@ -48,12 +48,10 @@ async fn main() {
         let res = info
             .get_operator_info(address!("40d2c07fe83cf73df224f691cefd46257c4e5149"))
             .await;
-        match res {
-            Some(operator_pub_keys) => {
-                println!("operator pub keys : {:?}", operator_pub_keys);
-            }
-            None => {}
+        if let Some(operator_pub_keys) = res {
+            println!("operator pub keys : {:?}", operator_pub_keys);
         };
+
         drop(info); // Explicitly drop the lock to release it
         time::sleep(Duration::from_secs(60)).await; // Adjust the duration as needed
     }

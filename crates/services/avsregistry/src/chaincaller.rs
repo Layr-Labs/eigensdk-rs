@@ -64,7 +64,7 @@ impl AvsRegistryServiceChainCaller {
             }
         }
 
-        return operators_avs_state;
+        operators_avs_state
     }
 
     pub async fn get_quorums_avs_state_at_block(
@@ -78,7 +78,7 @@ impl AvsRegistryServiceChainCaller {
 
         let mut quorums_avs_state: HashMap<u8, QuorumAvsState> = HashMap::new();
 
-        for (_i, quorum_num) in quorum_nums.iter().enumerate() {
+        for quorum_num in quorum_nums.iter() {
             let mut pub_key_g1 = BlsG1Point::new(
                 u256_to_bigint256(U256::from(0)),
                 u256_to_bigint256(U256::from(0)),
@@ -110,7 +110,7 @@ impl AvsRegistryServiceChainCaller {
                 },
             );
         }
-        return quorums_avs_state;
+        quorums_avs_state
     }
 
     pub async fn get_operator_info(&self, operator_id: [u8; 32]) -> Option<OperatorPubKeys> {

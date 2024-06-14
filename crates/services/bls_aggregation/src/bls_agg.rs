@@ -234,7 +234,7 @@ impl BlsAggregatorService {
                         if self.check_if_stake_thresholds_met(aggregate_response.signers_total_stake_per_quorum,total_stake_per_quorum.clone(),quorum_threshold_percentage_map.clone()){
                             let mut non_signers_operators_ids: Vec<FixedBytes<32>> = vec![];
                             for (i,op_info) in &operator_state_avs{
-                                if aggregate_response.signers_operator_ids_set.get(&op_info.operator_id).is_none(){
+                                if aggregate_response.signers_operator_ids_set.contains_key(&op_info.operator_id){
                                     non_signers_operators_ids.push(*i);
                                 }
                             }

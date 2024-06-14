@@ -10,9 +10,7 @@ use reqwest::Url;
 use std::fs;
 use std::str::FromStr;
 pub fn read_file(path: &str) -> String {
-    let content = fs::read_to_string(path).unwrap();
-
-    content
+    fs::read_to_string(path).unwrap()
 }
 
 pub fn get_signer(
@@ -53,5 +51,5 @@ pub fn get_provider(
         .with_recommended_fillers()
         .on_http(url);
 
-    return provider;
+    provider
 }
