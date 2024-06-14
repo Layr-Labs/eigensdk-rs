@@ -1,5 +1,5 @@
 use eigen_metrics_derive::Metrics;
-use metrics::{Counter, Gauge};
+use metrics::Gauge;
 /// TODO implement other metrics also . For now only perfomrmance is supported.
 #[derive(Clone, Metrics)]
 #[metrics(scope = "eigenmetrics.performancemetrics")]
@@ -18,7 +18,7 @@ impl EigenMetrics {
             performance_score: metrics::register_gauge!("eigen_performance_score"),
         };
         EigenMetrics::describe();
-        gauge.performance_score.set(100 as f64);
+        gauge.performance_score.set(100_f64);
         gauge
     }
 

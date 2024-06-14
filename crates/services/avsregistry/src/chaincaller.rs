@@ -4,10 +4,8 @@ use eigen_client_avsregistry::reader::AvsRegistryChainReader;
 use eigen_crypto_bls::attestation::G1Point as BlsG1Point;
 use eigen_crypto_bn254::utils::u256_to_bigint256;
 use eigen_services_operatorsinfo::operatorsinfo_inmemory::OperatorInfoServiceInMemory;
-use eigen_types::operator::{
-    self, OperatorAvsState, OperatorInfo, OperatorPubKeys, QuorumAvsState,
-};
-use eigen_utils::binding::BLSApkRegistry::{G1Point, G2Point};
+use eigen_types::operator::{OperatorAvsState, OperatorInfo, OperatorPubKeys, QuorumAvsState};
+use eigen_utils::binding::BLSApkRegistry::G1Point;
 use std::collections::HashMap;
 
 #[derive(Debug)]
@@ -86,7 +84,7 @@ impl AvsRegistryServiceChainCaller {
                 u256_to_bigint256(U256::from(0)),
             );
             let mut total_stake: U256 = U256::from(0);
-            for (_i, operator) in &operators_avs_state {
+            for operator in operators_avs_state.values() {
                 if !operator.stake_per_quorum[quorum_num].is_zero() {
                     if let Some(pubkeys) = &operator.operator_info.pub_keys {
                         let g1_point = BlsG1Point::new(
@@ -122,11 +120,8 @@ impl AvsRegistryServiceChainCaller {
             .await
             .unwrap();
 
-        let info = self
-            .operators_info_service
+        self.operators_info_service
             .get_operator_info(operator_addr)
-            .await;
-
-        info
+            .await
     }
 }
