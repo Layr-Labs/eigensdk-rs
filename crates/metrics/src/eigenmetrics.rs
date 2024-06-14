@@ -23,6 +23,6 @@ impl EigenMetrics {
     }
 
     pub fn performance_score(&self) -> Gauge {
-        return self.performance_score.clone();
+        self.performance_score.clone()
     }
 }

@@ -1,6 +1,3 @@
-use crate::eigenmetrics::EigenMetrics;
-use eigen_metrics_collectors_economic::RegisteredStakes;
-use eyre::Result;
 use hyper::{
     body::Body,
     service::{make_service_fn, service_fn},
@@ -8,9 +5,6 @@ use hyper::{
 };
 use metrics_exporter_prometheus::{PrometheusBuilder, PrometheusHandle};
 use std::{convert::Infallible, net::SocketAddr};
-use tokio::runtime::Runtime;
-use tokio::time::sleep;
-use tokio::time::Duration;
 
 fn init_registry() -> PrometheusHandle {
     let recorder = PrometheusBuilder::new().build_recorder();
@@ -41,8 +35,12 @@ async fn serve_metrics(addr: SocketAddr, handle: PrometheusHandle) -> eyre::Resu
 #[cfg(test)]
 
 mod tests {
-
     use super::*;
+    use crate::eigenmetrics::EigenMetrics;
+    use eigen_metrics_collectors_economic::RegisteredStakes;
+    use eyre::Result;
+    use tokio::time::sleep;
+    use tokio::time::Duration;
 
     #[tokio::test]
     async fn test_prometheus_server() {

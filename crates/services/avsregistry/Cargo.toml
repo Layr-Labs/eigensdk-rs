@@ -20,3 +20,4 @@ eigen-crypto-bls.workspace = true
 eigen-crypto-bn254.workspace = true
 alloy-primitives.workspace = true
 eigen-chainio-utils.workspace = true
+eigen-utils.workspace = true

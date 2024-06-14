@@ -4,10 +4,10 @@ use eigen_client_avsregistry::reader::AvsRegistryChainReader;
 use eigen_crypto_bls::attestation::G1Point as BlsG1Point;
 use eigen_crypto_bn254::utils::u256_to_bigint256;
 use eigen_services_operatorsinfo::operatorsinfo_inmemory::OperatorInfoServiceInMemory;
-use eigen_types::operator::BLSApkRegistry::{G1Point, G2Point};
 use eigen_types::operator::{
     self, OperatorAvsState, OperatorInfo, OperatorPubKeys, QuorumAvsState,
 };
+use eigen_utils::binding::BLSApkRegistry::{G1Point, G2Point};
 use std::collections::HashMap;
 
 #[derive(Debug)]

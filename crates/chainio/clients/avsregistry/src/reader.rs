@@ -3,9 +3,9 @@ use alloy_primitives::{Address, Bytes, FixedBytes, B256, U256};
 use alloy_provider::Provider;
 use alloy_rpc_types::Filter;
 use ark_ff::Zero;
-use eigen_types::operator::{bitmap_to_quorum_ids, BLSApkRegistry, OperatorPubKeys};
+use eigen_types::operator::{bitmap_to_quorum_ids, OperatorPubKeys};
 use eigen_utils::{
-    binding::{OperatorStateRetriever, RegistryCoordinator, StakeRegistry},
+    binding::{BLSApkRegistry, OperatorStateRetriever, RegistryCoordinator, StakeRegistry},
     get_provider,
 };
 use num_bigint::BigInt;

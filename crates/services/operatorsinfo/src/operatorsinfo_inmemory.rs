@@ -6,8 +6,8 @@ use anyhow::Result;
 use eigen_client_avsregistry::{
     reader::AvsRegistryChainReader, subscriber::AvsRegistryChainSubscriber,
 };
-use eigen_types::operator::BLSApkRegistry::{self, G1Point, G2Point};
 use eigen_types::operator::{operator_id_from_g1_pub_key, OperatorPubKeys};
+use eigen_utils::binding::BLSApkRegistry::{self, G1Point, G2Point};
 use futures_util::StreamExt;
 use std::collections::HashMap;
 use std::error::Error as StdError;
