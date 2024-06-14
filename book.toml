@@ -1,0 +1,11 @@
+[book]
+language = "en"
+multilingual = false
+src = "src"
+title = "eigenlayer book"
+description = "A book on eigen rust developer tooling"
+
+
+[build]
+build-dir = "target/book"
+
