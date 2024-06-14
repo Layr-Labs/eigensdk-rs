@@ -27,12 +27,11 @@ You can run any [example](https://github.com/supernovahs/eigensdk-rs/tree/main/e
 Example : 
 ```
 cargo run -p info-operator-service
-
 ```
 
 ## Contributor Guidelines
 
-We are actively looking for contributors. Thanks for your interest.
+We are actively looking for contributors. Thank you for your interest.
 
 Ensure the following passes when raising a PR
 
@@ -41,7 +40,7 @@ Ensure the following passes when raising a PR
 
 ## Supported Rust Version
 
-Rolling `MSRV` policy of 6 months. THe current `MSRV` is 1.79
+Rolling `MSRV` policy of 6 months. The current `MSRV` is 1.79
 
 # Credits
 
@@ -49,4 +48,4 @@ Rolling `MSRV` policy of 6 months. THe current `MSRV` is 1.79
 
 ## Contact
 
-DM on Telegram - supernovahs444
+Telegram - supernovahs444
