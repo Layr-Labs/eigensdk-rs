@@ -41,11 +41,6 @@ impl ELChainReader {
 
         let DelegationManager::slasherReturn { _0: slasher_addr } = slasher;
 
-        let strategy_manager_addr = contract_delegation_manager.strategyManager().call().await?;
-
-        let DelegationManager::strategyManagerReturn {
-            _0: strategy_manager,
-        } = strategy_manager_addr;
         Ok(Self {
             avs_directory,
             slasher: slasher_addr,

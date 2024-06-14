@@ -10,7 +10,6 @@ use eigen_types::operator::{operator_id_from_g1_pub_key, OperatorPubKeys};
 use eigen_utils::binding::BLSApkRegistry::{self, G1Point, G2Point};
 use futures_util::StreamExt;
 use std::collections::HashMap;
-use std::error::Error as StdError;
 use tokio::sync::{
     mpsc,
     mpsc::UnboundedSender,
@@ -31,7 +30,6 @@ enum OperatorsInfoMessage {
     Get(Address, Sender<Option<OperatorPubKeys>>),
 }
 
-type BoxedError = Box<dyn StdError + Send + Sync>;
 
 impl OperatorInfoServiceInMemory {
     pub async fn new(
