@@ -100,6 +100,12 @@ jobs:
       - name: Build docs
         run: cargo +nightly doc
 
+        env:
+            # Keep in sync with ./ci.yml:jobs.docs
+            RUSTDOCFLAGS:
+              --cfg docsrs --show-type-layout --generate-link-to-definition --enable-index-page
+              -Zunstable-options
+
       - name: Move docs to book folder
         run: |
           mv target/doc target/book/docs
