@@ -159,8 +159,8 @@ impl BlsAggregatorService {
         }
         let mut quorum_apks_g1: Vec<G1Point> = vec![];
         // let quorum_apks_g1
-        for (_, quorum_number) in quorum_nums.iter().enumerate() {
-            if let Some(val) = quorums_avs_stake.get(&quorum_number) {
+        for quorum_number in quorum_nums.iter() {
+            if let Some(val) = quorums_avs_stake.get(quorum_number) {
                 quorum_apks_g1.push(G1Point::new(
                     u256_to_bigint256(val.agg_pub_key_g1.X),
                     u256_to_bigint256(val.agg_pub_key_g1.Y),
@@ -323,9 +323,8 @@ impl BlsAggregatorService {
     ) -> bool {
         for (quorum_num, quorum_threshold_percentage) in quorum_threshold_percentages_map {
             // to do check if quorum num <= u8 max assert
-            if let Some(signed_stake_by_quorum) = signed_stake_per_quorum.get(&(quorum_num as u8)) {
-                if let Some(total_stake_by_quorum) = total_stake_per_quorum.get(&(quorum_num as u8))
-                {
+            if let Some(signed_stake_by_quorum) = signed_stake_per_quorum.get(&quorum_num) {
+                if let Some(total_stake_by_quorum) = total_stake_per_quorum.get(&quorum_num) {
                     let signed_stake = signed_stake_by_quorum * U256::from(100);
                     let threshold_stake =
                         *total_stake_by_quorum * U256::from(quorum_threshold_percentage);

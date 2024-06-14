@@ -1,21 +1,13 @@
-use alloy_sol_types::sol;
-sol!(
-    #[allow(missing_docs)]
-    #[derive(Debug)]
-    #[sol(rpc)]
-    BLSApkRegistry,
-    "../../../../crates/contracts/bindings/utils/json/BLSApkRegistry.json"
-);
 use alloy_network::Ethereum;
 use alloy_primitives::Address;
+use alloy_provider::Provider;
 use alloy_provider::{
     fillers::{ChainIdFiller, FillProvider, GasFiller, JoinFill, NonceFiller},
     RootProvider,
 };
-use alloy_provider::{Provider, ProviderBuilder};
 use alloy_rpc_types::Filter;
-use alloy_transport::BoxTransport;
-use BLSApkRegistry::BLSApkRegistryInstance;
+use eigen_utils::{binding::BLSApkRegistry, get_provider};
+use reqwest::Client;
 
 /// AvsRegistry Chain Subscriber struct
 #[derive(Debug)]
@@ -30,41 +22,34 @@ impl AvsRegistryChainSubscriber {
     }
 
     /// Returns blsapkregistry instance
-    pub async fn build(
+    pub fn build(
         &self,
         bls_apk_registry_addr: Address,
-    ) -> Result<
-        BLSApkRegistryInstance<
-            BoxTransport,
-            FillProvider<
-                JoinFill<
-                    JoinFill<JoinFill<alloy_provider::Identity, GasFiller>, NonceFiller>,
-                    ChainIdFiller,
-                >,
-                RootProvider<BoxTransport>,
-                BoxTransport,
-                Ethereum,
+    ) -> BLSApkRegistry::BLSApkRegistryInstance<
+        alloy_transport_http::Http<Client>,
+        FillProvider<
+            JoinFill<
+                JoinFill<JoinFill<alloy_provider::Identity, GasFiller>, NonceFiller>,
+                ChainIdFiller,
             >,
+            RootProvider<alloy_transport_http::Http<Client>>,
+            alloy_transport_http::Http<Client>,
+            Ethereum,
         >,
-        Box<dyn std::error::Error>,
     > {
-        let provider = ProviderBuilder::new()
-            .with_recommended_fillers()
-            .on_builtin(&self.provider)
-            .await?;
+        let provider = get_provider(&self.provider);
+
         let bls_apk_reg = BLSApkRegistry::new(bls_apk_registry_addr, provider);
 
-        Ok(bls_apk_reg)
+        bls_apk_reg
     }
 
     /// Utility function that returns new pubkey registration filter
     pub async fn get_new_pub_key_registration_filter<'a>(
         &self,
     ) -> Result<Filter, Box<dyn std::error::Error>> {
-        let provider = ProviderBuilder::new()
-            .with_recommended_fillers()
-            .on_builtin(&self.provider)
-            .await?;
+        let provider = get_provider(&self.provider);
+
         let current_block_number = provider.get_block_number().await?;
 
         let filter = Filter::new()

@@ -1,40 +1,29 @@
-use alloy_network::EthereumSigner;
 use alloy_signer::SignerSync;
 use alloy_signer_wallet::LocalWallet;
-use alloy_sol_types::sol;
 use ark_bn254::G1Projective;
 use eigen_chainio_utils::{
     convert_bn254_to_ark, convert_to_bn254_g1_point, convert_to_bn254_g2_point,
 };
 use eigen_client_elcontracts::reader::ELChainReader;
-use reqwest::Url;
+use std::str::FromStr;
 
-use eigen_chainio_utils::{
+use eigen_utils::binding::{
     BLSApkRegistry::{G1Point, PubkeyRegistrationParams},
     RegistryCoordinator::{
         self, G1Point as RegistryG1Point, G2Point as RegistryG2Point,
         PubkeyRegistrationParams as RegistryPubkeyRegistrationParams,
     },
 };
-sol!(
-    #[allow(missing_docs)]
-    #[sol(rpc)]
-    ServiceManagerBase,
-    "../../../../crates/contracts/bindings/utils/json/ServiceManagerBase.json"
-);
-
-sol!(
-    #[allow(missing_docs)]
-    #[sol(rpc)]
-    StakeRegistry,
-    "StakeRegistry.json"
-);
 
 use alloy_primitives::{Address, Bytes, FixedBytes, TxHash, U256};
-use alloy_provider::ProviderBuilder;
 use eigen_crypto_bls::attestation::KeyPair;
 use tracing::info;
 use RegistryCoordinator::SignatureWithSaltAndExpiry;
+
+use eigen_utils::{
+    binding::{ServiceManagerBase, StakeRegistry},
+    get_provider, get_signer,
+};
 
 /// AvsRegistry Writer
 #[derive(Debug)]
@@ -46,7 +35,7 @@ pub struct AvsRegistryChainWriter {
     bls_apk_registry_addr: Address,
     el_reader: ELChainReader,
     provider: String,
-    signer: LocalWallet,
+    signer: String,
 }
 
 impl AvsRegistryChainWriter {
@@ -58,7 +47,7 @@ impl AvsRegistryChainWriter {
         bls_apk_registry_addr: Address,
         el_reader: ELChainReader,
         provider: String,
-        signer: LocalWallet,
+        signer: String,
     ) -> Self {
         AvsRegistryChainWriter {
             service_manager_addr,
@@ -76,12 +65,9 @@ impl AvsRegistryChainWriter {
         &self,
         registry_coordinator_addr: Address,
         operator_state_retriever_addr: Address,
-        signer: LocalWallet,
     ) -> Result<Self, Box<dyn std::error::Error>> {
-        let provider = ProviderBuilder::new()
-            .with_recommended_fillers()
-            .on_builtin(&self.provider)
-            .await?;
+        let provider = get_provider(&self.provider);
+
         let contract_registry_coordinator =
             RegistryCoordinator::new(registry_coordinator_addr, &provider);
 
@@ -125,7 +111,7 @@ impl AvsRegistryChainWriter {
             bls_apk_registry_addr: bls_apk_registry,
             el_reader,
             provider: self.provider.clone(),
-            signer,
+            signer: self.signer.clone(),
         });
     }
 
@@ -137,17 +123,15 @@ impl AvsRegistryChainWriter {
         quorum_numbers: Bytes,
         socket: String,
     ) -> Result<TxHash, Box<dyn std::error::Error>> {
-        let url = Url::parse(&self.provider).expect("Wrong rpc url");
-        let provider = ProviderBuilder::new()
-            .with_recommended_fillers()
-            .signer(EthereumSigner::from(self.signer.clone()))
-            .on_http(url);
+        let provider = get_signer(self.signer.clone(), &self.provider);
+        let wallet = LocalWallet::from_str(&self.signer).expect("failed to generate wallet ");
+
         // tracing info
-        info!(avs_service_manager = %self.service_manager_addr, operator= %self.signer.address(),quorum_numbers = ?quorum_numbers,"quorum_numbers,registering operator with the AVS's registry coordinator");
+        info!(avs_service_manager = %self.service_manager_addr, operator= %wallet.address(),quorum_numbers = ?quorum_numbers,"quorum_numbers,registering operator with the AVS's registry coordinator");
         let contract_registry_coordinator =
             RegistryCoordinator::new(self.registry_coordinator_addr, provider);
         let g1_hashes_msg_to_sign_return = contract_registry_coordinator
-            .pubkeyRegistrationMessageHash(self.signer.address())
+            .pubkeyRegistrationMessageHash(wallet.address())
             .call()
             .await?;
 
@@ -182,15 +166,14 @@ impl AvsRegistryChainWriter {
         let msg_to_sign = self
             .el_reader
             .calculate_operator_avs_registration_digest_hash(
-                self.signer.address(),
+                wallet.address(),
                 self.service_manager_addr,
                 operator_to_avs_registration_sig_salt,
                 operator_to_avs_registration_sig_expiry,
             )
             .await?;
 
-        let operator_signature = self
-            .signer
+        let operator_signature = wallet
             .sign_message_sync(msg_to_sign.as_slice())
             .expect("failed to sign message");
 
@@ -223,7 +206,7 @@ impl AvsRegistryChainWriter {
         let tx = contract_call.send().await?;
 
         // tracing info
-        info!(tx_hash = %tx.tx_hash(), avs_service_manager = %self.service_manager_addr,operator = %self.signer.address(),quorum_numbers = ?quorum_numbers , "successfully registered operator with AVS registry coordinator");
+        info!(tx_hash = %tx.tx_hash(), avs_service_manager = %self.service_manager_addr,operator = %wallet.address(),quorum_numbers = ?quorum_numbers , "successfully registered operator with AVS registry coordinator");
         Ok(*tx.tx_hash())
     }
 
@@ -233,11 +216,7 @@ impl AvsRegistryChainWriter {
         quorum_number: Bytes,
     ) -> Result<TxHash, Box<dyn std::error::Error>> {
         info!(quorum_numbers = %quorum_number, "updating stakes for entire operator set");
-        let url = Url::parse(&self.provider).expect("Wrong rpc url");
-        let provider = ProviderBuilder::new()
-            .with_recommended_fillers()
-            .signer(EthereumSigner::from(self.signer.clone()))
-            .on_http(url);
+        let provider = get_signer(self.signer.clone(), &self.provider);
         let contract_registry_coordinator =
             RegistryCoordinator::new(self.registry_coordinator_addr, provider);
 
@@ -257,11 +236,8 @@ impl AvsRegistryChainWriter {
     ) -> Result<TxHash, Box<dyn std::error::Error>> {
         info!(operators = ?operators, "updating stakes of operator subset for all quorums");
 
-        let url = Url::parse(&self.provider).expect("Wrong rpc url");
-        let provider = ProviderBuilder::new()
-            .with_recommended_fillers()
-            .signer(EthereumSigner::from(self.signer.clone()))
-            .on_http(url);
+        let provider = get_signer(self.signer.clone(), &self.provider);
+
         let contract_registry_coordinator =
             RegistryCoordinator::new(self.registry_coordinator_addr, provider);
 
@@ -278,11 +254,8 @@ impl AvsRegistryChainWriter {
         quorum_numbers: Bytes,
     ) -> Result<TxHash, Box<dyn std::error::Error>> {
         info!("deregistering operator with the AVS's registry coordinator");
-        let url = Url::parse(&self.provider).expect("Wrong rpc url");
-        let provider = ProviderBuilder::new()
-            .with_recommended_fillers()
-            .signer(EthereumSigner::from(self.signer.clone()))
-            .on_http(url);
+        let provider = get_signer(self.signer.clone(), &self.provider);
+
         let contract_registry_coordinator =
             RegistryCoordinator::new(self.registry_coordinator_addr, provider);
 

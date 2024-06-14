@@ -2,9 +2,11 @@ name: book
 
 on:
   push:
-    branches: [main]
+    branches:
+        - '**'
   pull_request:
-    branches: [main]
+    branches:
+        - '**'
   merge_group:
 
 jobs:
@@ -98,7 +100,13 @@ jobs:
         working-directory: ./book
 
       - name: Build docs
-        run: cargo +nightly doc
+
+        run: cargo doc
+        env:
+            # Keep in sync with ./ci.yml:jobs.docs
+            RUSTDOCFLAGS:
+              --cfg docsrs --show-type-layout --generate-link-to-definition --enable-index-page
+              -Zunstable-options
 
       - name: Move docs to book folder
         run: |

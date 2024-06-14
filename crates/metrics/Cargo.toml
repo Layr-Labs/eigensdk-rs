@@ -10,3 +10,17 @@ ark-bn254 = "0.4.0"
 ark-ff.workspace = true
 eigen-crypto-bls.workspace = true
 eigen-crypto-bn254.workspace = true
+eigen-metrics-derive.workspace = true
+metrics.workspace = true
+
+#prometheus
+prometheus = "0.13.4"
+metrics-exporter-prometheus.workspace = true
+eigen-metrics-collectors-economic.workspace = true 
+reqwest = "0.12.4"
+eyre.workspace = true
+
+#http
+hyper.workspace = true
+
+tokio.workspace = true

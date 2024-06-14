@@ -6,4 +6,5 @@ rust-version.workspace = true
 repository.workspace = true
 
 [dependencies]
-ethers.workspace = true
+eigen-metrics-derive.workspace = true
+metrics.workspace = true
