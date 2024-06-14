@@ -1,12 +1,12 @@
-# Documentation and mdbook related jobs.
-
 name: book
 
 on:
   push:
-    branches: [main]
+    branches:
+        - '**'
   pull_request:
-    branches: [main]
+    branches:
+        - '**'
   merge_group:
 
 jobs:
@@ -17,6 +17,14 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          components: clippy, rustfmt
+          override: true
 
       - name: Install mdbook
         run: |
@@ -32,6 +40,7 @@ jobs:
 
       - name: Run tests
         run: mdbook test
+        working-directory: ./book
 
   lint:
     runs-on: ubuntu-latest
@@ -40,6 +49,14 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          components: clippy, rustfmt
+          override: true
 
       - name: Install mdbook-linkcheck
         run: |
@@ -51,13 +68,22 @@ jobs:
 
       - name: Run linkcheck
         run: mdbook-linkcheck --standalone
+        working-directory: ./book
 
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@nightly
+
+      - name: Install Nightly Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: nightly
+          components: clippy, rustfmt
+          override: true
+
       - name: Install mdbook
         run: |
           mkdir mdbook
@@ -76,14 +102,15 @@ jobs:
 
       - name: Build book
         run: mdbook build
+        working-directory: ./book
 
       - name: Build docs
-        run: cargo docs
+        run: cargo +nightly doc
         env:
-          # Keep in sync with ./ci.yml:jobs.docs
-          RUSTDOCFLAGS:
-            --cfg docsrs --show-type-layout --generate-link-to-definition --enable-index-page
-            -Zunstable-options
+            # Keep in sync with ./ci.yml:jobs.docs
+            RUSTDOCFLAGS:
+              --cfg docsrs --show-type-layout --generate-link-to-definition --enable-index-page
+              -Zunstable-options
 
       - name: Move docs to book folder
         run: |
@@ -108,7 +135,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: github-pages
-          path: ${{ runner.temp }}/artifact.tar
+          path: $RUNNER_TEMP/artifact.tar
           retention-days: 1
           if-no-files-found: error
 
