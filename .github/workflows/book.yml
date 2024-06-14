@@ -1,4 +1,4 @@
-name: booj
+name: book
 
 on:
   push:
@@ -26,18 +26,16 @@ jobs:
 
       - name: Install mdbook
         run: |
-          mkdir mdbook
-          curl -sSL https://github.com/rust-lang/mdBook/releases/download/v0.4.14/mdbook-v0.4.14-x86_64-unknown-linux-gnu.tar.gz | tar -xz --directory=./mdbook
-          echo $(pwd)/mdbook >> $GITHUB_PATH
+          curl -sSL https://github.com/rust-lang/mdBook/releases/download/v0.4.14/mdbook-v0.4.14-x86_64-unknown-linux-gnu.tar.gz | tar -xz
+          echo $PWD >> $GITHUB_PATH
 
       - name: Install mdbook-template
         run: |
-          mkdir mdbook-template
-          curl -sSL https://github.com/sgoudham/mdbook-template/releases/latest/download/mdbook-template-x86_64-unknown-linux-gnu.tar.gz | tar -xz --directory=./mdbook-template
-          echo $(pwd)/mdbook-template >> $GITHUB_PATH
+          curl -sSL https://github.com/sgoudham/mdbook-template/releases/latest/download/mdbook-template-x86_64-unknown-linux-gnu.tar.gz | tar -xz
+          echo $PWD >> $GITHUB_PATH
 
       - name: Run tests
-        run: mdbook test
+        run: ./mdbook test
         working-directory: ./book
 
   lint:
@@ -58,14 +56,13 @@ jobs:
 
       - name: Install mdbook-linkcheck
         run: |
-          mkdir mdbook-linkcheck
           curl -sSL -o mdbook-linkcheck.zip https://github.com/Michael-F-Bryan/mdbook-linkcheck/releases/latest/download/mdbook-linkcheck.x86_64-unknown-linux-gnu.zip
-          unzip mdbook-linkcheck.zip -d ./mdbook-linkcheck
-          chmod +x $(pwd)/mdbook-linkcheck/mdbook-linkcheck
-          echo $(pwd)/mdbook-linkcheck >> $GITHUB_PATH
+          unzip mdbook-linkcheck.zip
+          chmod +x mdbook-linkcheck
+          echo $PWD >> $GITHUB_PATH
 
       - name: Run linkcheck
-        run: mdbook-linkcheck --standalone
+        run: ./mdbook-linkcheck --standalone
         working-directory: ./book
 
   build:
@@ -84,22 +81,20 @@ jobs:
 
       - name: Install mdbook
         run: |
-          mkdir mdbook
-          curl -sSL https://github.com/rust-lang/mdBook/releases/download/v0.4.14/mdbook-v0.4.14-x86_64-unknown-linux-gnu.tar.gz | tar -xz --directory=./mdbook
-          echo $(pwd)/mdbook >> $GITHUB_PATH
+          curl -sSL https://github.com/rust-lang/mdBook/releases/download/v0.4.14/mdbook-v0.4.14-x86_64-unknown-linux-gnu.tar.gz | tar -xz
+          echo $PWD >> $GITHUB_PATH
 
       - name: Install mdbook-template
         run: |
-          mkdir mdbook-template
-          curl -sSL https://github.com/sgoudham/mdbook-template/releases/latest/download/mdbook-template-x86_64-unknown-linux-gnu.tar.gz | tar -xz --directory=./mdbook-template
-          echo $(pwd)/mdbook-template >> $GITHUB_PATH
+          curl -sSL https://github.com/sgoudham/mdbook-template/releases/latest/download/mdbook-template-x86_64-unknown-linux-gnu.tar.gz | tar -xz
+          echo $PWD >> $GITHUB_PATH
 
       - uses: Swatinem/rust-cache@v2
         with:
           cache-on-failure: true
 
       - name: Build book
-        run: mdbook build
+        run: ./mdbook build
         working-directory: ./book
 
       - name: Build docs
