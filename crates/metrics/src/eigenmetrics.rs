@@ -1,6 +1,7 @@
 use eigen_metrics_derive::Metrics;
 use metrics::Gauge;
-/// TODO implement other metrics also . For now only perfomrmance is supported.
+
+// Performance Metrics
 #[derive(Clone, Metrics)]
 #[metrics(scope = "eigenmetrics.performancemetrics")]
 pub struct EigenMetrics {

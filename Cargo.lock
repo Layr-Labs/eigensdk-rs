@@ -1485,8 +1485,6 @@ dependencies = [
 name = "eigen-metrics"
 version = "0.0.1-alpha"
 dependencies = [
- "ark-bn254",
- "ark-ff 0.4.2",
  "eigen-crypto-bls",
  "eigen-crypto-bn254",
  "eigen-metrics-collectors-economic",
@@ -1495,7 +1493,6 @@ dependencies = [
  "hyper 0.14.28",
  "metrics",
  "metrics-exporter-prometheus",
- "prometheus",
  "reqwest 0.12.4",
  "tokio",
 ]
