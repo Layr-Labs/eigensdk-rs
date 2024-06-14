@@ -1373,6 +1373,7 @@ dependencies = [
  "eigen-contract-bindings",
  "eigen-crypto-bls",
  "eigen-crypto-bn254",
+ "eigen-utils",
 ]
 
 [[package]]

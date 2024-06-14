@@ -73,7 +73,7 @@ sol!(
     "../../crates/contracts/bindings/utils/json/IStrategy.json"
 );
 
-// standard 
+// standard
 sol!(
     #[allow(missing_docs)]
     #[sol(rpc)]
