@@ -37,6 +37,7 @@ alloy-network.workspace = true
 alloy-transport-ws.workspace = true
 alloy-signer-wallet.workspace = true
 alloy-signer.workspace = true
+
 [lints]
 workspace = true
 

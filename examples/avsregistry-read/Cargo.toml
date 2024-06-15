@@ -1,0 +1,20 @@
+[package]
+name = "examples-avsregistry-read"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+repository.workspace = true
+license-file.workspace = true
+authors.workspace = true
+
+
+[lints]
+workspace = true
+
+[dependencies]
+alloy-primitives.workspace = true
+eyre.workspace = true
+tokio = { workspace = true, features = ["macros", "rt-multi-thread"] }
+
+eigen-client-avsregistry.workspace = true
+eigen-testing-utils.workspace = true

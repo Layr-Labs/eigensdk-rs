@@ -2021,6 +2021,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "examples-avsregistry-read"
+version = "0.0.1-alpha"
+dependencies = [
+ "alloy-primitives",
+ "eigen-client-avsregistry",
+ "eigen-testing-utils",
+ "eyre",
+ "tokio",
+]
+
+[[package]]
 name = "eyre"
 version = "0.6.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"

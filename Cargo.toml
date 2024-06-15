@@ -18,7 +18,8 @@ members = [ "crates/chainio/clients/avsregistry/",
 "crates/metrics/",
 "crates/types/",
 "examples/info-operator-service/",
-"testing/testing-utils/"
+"testing/testing-utils/",
+"examples/avsregistry-read"
 ]
 
 resolver = "2"
@@ -111,3 +112,7 @@ alloy-contract = {git = "https://github.com/alloy-rs/alloy", rev = "cc68b93" }
 alloy-transport =  {git = "https://github.com/alloy-rs/alloy", rev = "cc68b93"}
 alloy-transport-ws = {git = "https://github.com/alloy-rs/alloy", rev = "cc68b93"}
 alloy-rpc-client = {git = "https://github.com/alloy-rs/alloy", rev = "cc68b93"}
+
+
+# examples
+avsregistry-read = {path = "examples/avsregistry-read"}

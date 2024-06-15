@@ -45,7 +45,7 @@ impl AvsRegistryChainReader {
         }
     }
 
-    async fn build_avs_registry_chain_reader(
+    pub async fn build_avs_registry_chain_reader(
         &self,
         registry_coordinator_addr: Address,
         operator_state_retriever_addr: Address,
@@ -75,7 +75,7 @@ impl AvsRegistryChainReader {
         }
     }
 
-    async fn get_quorum_count(&self) -> Result<u8, Box<dyn std::error::Error>> {
+    pub async fn get_quorum_count(&self) -> Result<u8, Box<dyn std::error::Error>> {
         let provider = get_provider(&self.provider);
 
         let contract_registry_coordinator =
@@ -120,7 +120,7 @@ impl AvsRegistryChainReader {
         }
     }
 
-    async fn get_operators_stake_in_quorums_at_block_operator_id(
+    pub async fn get_operators_stake_in_quorums_at_block_operator_id(
         &self,
         block_number: u32,
         operator_id: B256,
