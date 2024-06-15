@@ -31,10 +31,12 @@ const StrategyBase_sfrxETH: Address = address!("8CA7A5d6f3acd3A7A8bC468a8CD0FB14
 const StrategyBase_lsETH: Address = address!("Ae60d8180437b5C34bB956822ac2710972584473");
 #[allow(non_upper_case_globals)]
 const StrategyBase_mETH: Address = address!("298aFB19A105D59E74658C4C334Ff360BadE6dd2");
-const BEACON_CHAIN: Address = address!("aCB55C530Acdb2849e6d4f36992Cd8c9D50ED8F7");
-const EIGEN_POD_BEACON: Address = address!("5a2a4F2F3C18f09179B6703e63D9eDD165909073");
+const BEACON_CHAIN_ETH: Address = address!("beaC0eeEeeeeEEeEeEEEEeeEEeEeeeEeeEEBEaC0");
+const EIGEN_POD_BEACON: Address = address!("7261C2bd75a7ACE1762f6d7FAe8F63215581832D");
 const DELAYED_WITHDRAWAL_ROUTER: Address = address!("7Fe7E9CC0F274d2435AD5d56D5fa73E47F6A23D8");
 const EIGEN_LAYER_BEACON_ORACLE: Address = address!("343907185b71aDF0eBa9567538314396aa985442");
 const EIGEN_TOKEN: Address = address!("ec53bf9167f50cdeb3ae105f56099aaab9061f83");
 const BEIGEN: Address = address!("83E9115d334D248Ce39a6f36144aEaB5b3456e75");
 const SIGNED_DISTRIBUTOR: Address = address!("035bdAeaB85E47710C27EdA7FD754bA80aD4ad02");
+
+const EIGEN_STRATEGY: Address = address!("aCB55C530Acdb2849e6d4f36992Cd8c9D50ED8F7");
