@@ -17,7 +17,8 @@ members = [ "crates/chainio/clients/avsregistry/",
 "crates/types/",
 "crates/metrics/",
 "crates/types/",
-"examples/info-operator-service/"
+"examples/info-operator-service/",
+"testing/testing-utils/"
 ]
 
 resolver = "2"
@@ -72,6 +73,7 @@ eigen-services-avsregistry = {path = "crates/services/avsregistry"}
 eigen-services-bls_aggregation = {path = "crates/services/bls_aggregation"}
 eigen-services-operatorsinfo = {path = "crates/services/operatorsinfo"}
 eigen-metrics-derive = {path = "crates/metrics/metrics-derive"}
+eigen-testing-utils = {path = "testing/testing-utils"}
 info-operator-service = {path = "examples/info-operator-service"}
 tokio = {version = "1.37.0" , features = ["test-util", "full","sync"] }
 futures-util = "0.3.30"
