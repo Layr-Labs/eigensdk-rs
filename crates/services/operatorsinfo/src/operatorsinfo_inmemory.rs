@@ -30,7 +30,6 @@ enum OperatorsInfoMessage {
     Get(Address, Sender<Option<OperatorPubKeys>>),
 }
 
-
 impl OperatorInfoServiceInMemory {
     pub async fn new(
         avs_registry_subscriber: AvsRegistryChainSubscriber,
