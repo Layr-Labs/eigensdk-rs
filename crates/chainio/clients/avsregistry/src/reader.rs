@@ -156,7 +156,7 @@ impl AvsRegistryChainReader {
         }
     }
 
-    async fn get_operators_stake_in_quorums_at_current_block(
+    pub async fn get_operators_stake_in_quorums_at_current_block(
         &self,
         quorum_numbers: Bytes,
     ) -> Result<Vec<Vec<OperatorStateRetriever::Operator>>, Box<dyn std::error::Error>> {
@@ -192,7 +192,7 @@ impl AvsRegistryChainReader {
         }
     }
 
-    async fn get_operators_stake_in_quorums_of_operator_at_block(
+    pub async fn get_operators_stake_in_quorums_of_operator_at_block(
         &self,
         operator_id: B256,
         block_number: u32,
@@ -217,7 +217,7 @@ impl AvsRegistryChainReader {
         }
     }
 
-    async fn get_operators_stake_in_quorums_of_operator_at_current_block(
+    pub async fn get_operators_stake_in_quorums_of_operator_at_current_block(
         &self,
         operator_id: B256,
     ) -> Result<(Vec<u8>, Vec<Vec<OperatorStateRetriever::Operator>>), Box<dyn std::error::Error>>
