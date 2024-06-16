@@ -239,7 +239,7 @@ impl AvsRegistryChainReader {
         Ok(operator_stake_in_quorum_of_operaotr_at_block)
     }
 
-    async fn get_operator_stake_in_quorums_of_operator_at_current_block(
+    pub async fn get_operator_stake_in_quorums_of_operator_at_current_block(
         &self,
         operator_id: B256,
     ) -> Result<HashMap<u8, BigInt>, Box<dyn std::error::Error>> {
@@ -298,7 +298,7 @@ impl AvsRegistryChainReader {
         Ok(indices)
     }
 
-    async fn get_operator_id(
+    pub async fn get_operator_id(
         &self,
         operator_address: Address,
     ) -> Result<FixedBytes<32>, Box<dyn std::error::Error>> {
@@ -336,7 +336,7 @@ impl AvsRegistryChainReader {
         Ok(operator_address)
     }
 
-    async fn is_operator_registered(
+    pub async fn is_operator_registered(
         &self,
         operator_address: Address,
     ) -> Result<bool, Box<dyn std::error::Error>> {
