@@ -370,8 +370,6 @@ impl AvsRegistryChainReader {
         if stop_block.is_zero() {
             stop_block = current_block_number;
         }
-        println!("start block :{}", start_block);
-        println!("stop block {}", stop_block);
         let mut i = start_block;
         let mut operator_addresses: Vec<Address> = vec![];
         let mut operator_pub_keys: Vec<OperatorPubKeys> = vec![];
@@ -380,15 +378,12 @@ impl AvsRegistryChainReader {
             if to_block > stop_block {
                 to_block = stop_block;
             }
-            println!("to block{}", to_block);
-            println!("bls apk address :{}", self.bls_apk_registry_addr);
             let filter = Filter::new()
                 .select(i..to_block)
                 .event("NewPubkeyRegistration(address,(uint256,uint256),(uint256[2],uint256[2]))")
                 .address(self.bls_apk_registry_addr);
 
             let logs = provider.get_logs(&filter).await?;
-            println!("logs length {:?}", logs.len());
             debug!(transactionLogs = ?logs, "avsRegistryChainReader.QueryExistingRegisteredOperatorPubKeys");
 
             for v_log in logs.iter() {
