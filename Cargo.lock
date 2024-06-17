@@ -2037,6 +2037,7 @@ version = "0.0.1-alpha"
 dependencies = [
  "alloy-primitives",
  "eigen-client-avsregistry",
+ "eigen-client-elcontracts",
  "eigen-testing-utils",
  "eyre",
  "tokio",

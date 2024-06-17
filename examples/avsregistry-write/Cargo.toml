@@ -17,4 +17,5 @@ eyre.workspace = true
 tokio = { workspace = true, features = ["macros", "rt-multi-thread"] }
 
 eigen-client-avsregistry.workspace = true
+eigen-client-elcontracts.workspace = true
 eigen-testing-utils.workspace = true
