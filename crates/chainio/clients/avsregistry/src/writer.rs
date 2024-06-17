@@ -115,7 +115,7 @@ impl AvsRegistryChainWriter {
         })
     }
 
-    async fn reigster_operator_in_quorum_with_avs_registry_coordinator(
+    async fn register_operator_in_quorum_with_avs_registry_coordinator(
         &self,
         bls_key_pair: KeyPair,
         operator_to_avs_registration_sig_salt: FixedBytes<32>,
