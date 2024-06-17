@@ -2036,8 +2036,10 @@ name = "examples-avsregistry-write"
 version = "0.0.1-alpha"
 dependencies = [
  "alloy-primitives",
+ "ark-ff 0.4.2",
  "eigen-client-avsregistry",
  "eigen-client-elcontracts",
+ "eigen-crypto-bls",
  "eigen-testing-utils",
  "eyre",
  "tokio",
