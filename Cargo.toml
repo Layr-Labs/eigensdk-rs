@@ -19,7 +19,8 @@ members = [ "crates/chainio/clients/avsregistry/",
 "crates/types/",
 "examples/info-operator-service/",
 "testing/testing-utils/",
-"examples/avsregistry-read"
+"examples/avsregistry-read",
+"examples/avsregistry-write"
 ]
 
 resolver = "2"
@@ -116,3 +117,4 @@ alloy-rpc-client = {git = "https://github.com/alloy-rs/alloy", rev = "cc68b93"}
 
 # examples
 avsregistry-read = {path = "examples/avsregistry-read"}
+avsregistry-write = {path = "examples/avsregistry-write"}
