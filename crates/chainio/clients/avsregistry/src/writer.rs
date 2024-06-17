@@ -39,7 +39,7 @@ pub struct AvsRegistryChainWriter {
 }
 
 impl AvsRegistryChainWriter {
-    async fn new_avs_registry_chain_writer(
+    pub async fn new(
         service_manager_addr: Address,
         registry_coordinator_addr: Address,
         operator_state_retriever_addr: Address,
@@ -61,7 +61,7 @@ impl AvsRegistryChainWriter {
         }
     }
 
-    async fn build_avs_registry_chain_writer(
+    pub async fn build_avs_registry_chain_writer(
         &self,
         registry_coordinator_addr: Address,
         operator_state_retriever_addr: Address,
@@ -115,7 +115,7 @@ impl AvsRegistryChainWriter {
         })
     }
 
-    async fn register_operator_in_quorum_with_avs_registry_coordinator(
+    pub async fn register_operator_in_quorum_with_avs_registry_coordinator(
         &self,
         bls_key_pair: KeyPair,
         operator_to_avs_registration_sig_salt: FixedBytes<32>,
@@ -210,7 +210,7 @@ impl AvsRegistryChainWriter {
         Ok(*tx.tx_hash())
     }
 
-    async fn update_stakes_of_entire_operator_set_for_quorums(
+    pub async fn update_stakes_of_entire_operator_set_for_quorums(
         &self,
         operators_per_quorum: Vec<Vec<Address>>,
         quorum_number: Bytes,
@@ -230,7 +230,7 @@ impl AvsRegistryChainWriter {
         return Ok(*tx.tx_hash());
     }
 
-    async fn update_stakes_of_operator_subset_for_all_quorums(
+    pub async fn update_stakes_of_operator_subset_for_all_quorums(
         &self,
         operators: Vec<Address>,
     ) -> Result<TxHash, Box<dyn std::error::Error>> {
@@ -249,7 +249,7 @@ impl AvsRegistryChainWriter {
         Ok(*tx.tx_hash())
     }
 
-    async fn deregister_operator(
+    pub async fn deregister_operator(
         &self,
         quorum_numbers: Bytes,
     ) -> Result<TxHash, Box<dyn std::error::Error>> {
