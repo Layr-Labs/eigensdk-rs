@@ -17,7 +17,7 @@ fn new_fp2_element(a: BigInteger256, b: BigInteger256) -> Fq2 {
     Fq2::new(Fq::from(a), Fq::from(b))
 }
 
-type PrivateKey = Fr;
+pub type PrivateKey = Fr;
 
 #[derive(Debug, Clone)]
 pub struct Signature {
