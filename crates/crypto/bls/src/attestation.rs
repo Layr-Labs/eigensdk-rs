@@ -302,6 +302,7 @@ mod tests {
             1586467664616413849,
         ]);
         let hex_string = bigint_to_hex(&bigint);
+        println!("hex string :{}",hex_string);
         let converted_bigint = hex_string_to_biginteger256(&hex_string);
         assert_eq!(bigint, converted_bigint);
         let keypair_result_from_string = KeyPair::from_string(hex_string);

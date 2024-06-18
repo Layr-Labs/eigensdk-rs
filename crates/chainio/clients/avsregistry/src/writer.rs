@@ -134,7 +134,6 @@ impl AvsRegistryChainWriter {
             .pubkeyRegistrationMessageHash(wallet.address())
             .call()
             .await?;
-
         let RegistryCoordinator::pubkeyRegistrationMessageHashReturn {
             _0: g1_hashes_msg_to_sign,
         } = g1_hashes_msg_to_sign_return;
@@ -147,8 +146,11 @@ impl AvsRegistryChainWriter {
                     })
                     .point,
                 ))
-                .sig(),
+                .sig(), 
         );
+
+        println!("signed msg :{:?}",signed_msg);
+
 
         let g1_pubkey_bn254 = convert_to_bn254_g1_point(bls_key_pair.get_pub_key_g1());
         let g2_projective = bls_key_pair
@@ -183,6 +185,8 @@ impl AvsRegistryChainWriter {
             expiry: operator_to_avs_registration_sig_expiry,
         };
 
+        
+
         let contract_call = contract_registry_coordinator.registerOperator(
             quorum_numbers.clone(),
             socket,
@@ -203,7 +207,8 @@ impl AvsRegistryChainWriter {
             operator_signature_with_salt_and_expiry,
         );
 
-        let tx = contract_call.send().await?;
+        let tx_call = contract_call.gas(2000000);
+        let tx = tx_call.send().await?;
 
         // tracing info
         info!(tx_hash = %tx.tx_hash(), avs_service_manager = %self.service_manager_addr,operator = %wallet.address(),quorum_numbers = ?quorum_numbers , "successfully registered operator with AVS registry coordinator");
