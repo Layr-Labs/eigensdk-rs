@@ -20,6 +20,7 @@ sol!(
 sol!(
     #[allow(missing_docs)]
     #[sol(rpc)]
+    #[derive(Debug)]
     OperatorStateRetriever,
     "../../crates/contracts/bindings/utils/json/OperatorStateRetriever.json"
 );

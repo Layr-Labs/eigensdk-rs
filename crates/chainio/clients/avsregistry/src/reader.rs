@@ -45,7 +45,7 @@ impl AvsRegistryChainReader {
         }
     }
 
-    async fn build_avs_registry_chain_reader(
+    pub async fn build_avs_registry_chain_reader(
         &self,
         registry_coordinator_addr: Address,
         operator_state_retriever_addr: Address,

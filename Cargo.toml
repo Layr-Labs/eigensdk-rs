@@ -17,7 +17,10 @@ members = [ "crates/chainio/clients/avsregistry/",
 "crates/types/",
 "crates/metrics/",
 "crates/types/",
-"examples/info-operator-service/"
+"examples/info-operator-service/",
+"testing/testing-utils/",
+"examples/avsregistry-read",
+"examples/avsregistry-write"
 ]
 
 resolver = "2"
@@ -72,6 +75,7 @@ eigen-services-avsregistry = {path = "crates/services/avsregistry"}
 eigen-services-bls_aggregation = {path = "crates/services/bls_aggregation"}
 eigen-services-operatorsinfo = {path = "crates/services/operatorsinfo"}
 eigen-metrics-derive = {path = "crates/metrics/metrics-derive"}
+eigen-testing-utils = {path = "testing/testing-utils"}
 info-operator-service = {path = "examples/info-operator-service"}
 tokio = {version = "1.37.0" , features = ["test-util", "full","sync"] }
 futures-util = "0.3.30"
@@ -109,3 +113,8 @@ alloy-contract = {git = "https://github.com/alloy-rs/alloy", rev = "cc68b93" }
 alloy-transport =  {git = "https://github.com/alloy-rs/alloy", rev = "cc68b93"}
 alloy-transport-ws = {git = "https://github.com/alloy-rs/alloy", rev = "cc68b93"}
 alloy-rpc-client = {git = "https://github.com/alloy-rs/alloy", rev = "cc68b93"}
+
+
+# examples
+avsregistry-read = {path = "examples/avsregistry-read"}
+avsregistry-write = {path = "examples/avsregistry-write"}

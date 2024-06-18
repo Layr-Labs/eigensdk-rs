@@ -21,11 +21,11 @@ List of crates in the repository :-
 
 ## Examples
 
-You can run any [example](https://github.com/supernovahs/eigensdk-rs/tree/main/examples) using the command cargo run -p <example-name>
+You can run any [example](https://github.com/supernovahs/eigen-rs/tree/main/examples) using the command cargo run --example <example-name>
 
 Example : 
 ```
-cargo run -p info-operator-service
+cargo run --example get_quorum_count
 ```
 
 ## Contributor Guidelines
