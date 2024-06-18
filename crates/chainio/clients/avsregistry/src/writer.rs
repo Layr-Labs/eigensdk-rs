@@ -146,11 +146,8 @@ impl AvsRegistryChainWriter {
                     })
                     .point,
                 ))
-                .sig(), 
+                .sig(),
         );
-
-        println!("signed msg :{:?}",signed_msg);
-
 
         let g1_pubkey_bn254 = convert_to_bn254_g1_point(bls_key_pair.get_pub_key_g1());
         let g2_projective = bls_key_pair
@@ -184,8 +181,6 @@ impl AvsRegistryChainWriter {
             salt: operator_to_avs_registration_sig_salt,
             expiry: operator_to_avs_registration_sig_expiry,
         };
-
-        
 
         let contract_call = contract_registry_coordinator.registerOperator(
             quorum_numbers.clone(),
