@@ -1,0 +1,141 @@
+{
+  "abi": [
+    {
+      "type": "function",
+      "name": "contractCount",
+      "inputs": [],
+      "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "contractNames",
+      "inputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
+      "outputs": [{ "name": "", "type": "string", "internalType": "string" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "contracts",
+      "inputs": [{ "name": "", "type": "string", "internalType": "string" }],
+      "outputs": [{ "name": "", "type": "address", "internalType": "address" }],
+      "stateMutability": "view"
+    },
+    {
+      "type": "function",
+      "name": "registerContract",
+      "inputs": [
+        { "name": "name", "type": "string", "internalType": "string" },
+        { "name": "_contract", "type": "address", "internalType": "address" }
+      ],
+      "outputs": [],
+      "stateMutability": "nonpayable"
+    }
+  ],
+  "bytecode": {
+    "object": "0x608060405234801561001057600080fd5b50610593806100206000396000f3fe608060405234801561001057600080fd5b506004361061004c5760003560e01c80633ca6bb92146100515780637f3c2c281461007a5780638736381a1461008f5780638c5b8385146100a6575b600080fd5b61006461005f366004610323565b6100f2565b604051610071919061036c565b60405180910390f35b61008d610088366004610442565b61018c565b005b61009860025481565b604051908152602001610071565b6100da6100b43660046104a0565b80516020818301810180516000825292820191909301209152546001600160a01b031681565b6040516001600160a01b039091168152602001610071565b6001602052600090815260409020805461010b906104dd565b80601f0160208091040260200160405190810160405280929190818152602001828054610137906104dd565b80156101845780601f1061015957610100808354040283529160200191610184565b820191906000526020600020905b81548152906001019060200180831161016757829003601f168201915b505050505081565b60006001600160a01b03166000836040516101a79190610518565b908152604051908190036020019020546001600160a01b0316146102115760405162461bcd60e51b815260206004820152601b60248201527f636f6e747261637420616c726561647920726567697374657265640000000000604482015260640160405180910390fd5b806000836040516102229190610518565b908152604080516020928190038301902080546001600160a01b0319166001600160a01b0394909416939093179092556002546000908152600182529190912083516102709285019061028a565b506002805490600061028183610534565b91905055505050565b828054610296906104dd565b90600052602060002090601f0160209004810192826102b857600085556102fe565b82601f106102d157805160ff19168380011785556102fe565b828001600101855582156102fe579182015b828111156102fe5782518255916020019190600101906102e3565b5061030a92915061030e565b5090565b5b8082111561030a576000815560010161030f565b60006020828403121561033557600080fd5b5035919050565b60005b8381101561035757818101518382015260200161033f565b83811115610366576000848401525b50505050565b602081526000825180602084015261038b81604085016020870161033c565b601f01601f19169190910160400192915050565b634e487b7160e01b600052604160045260246000fd5b600082601f8301126103c657600080fd5b813567ffffffffffffffff808211156103e1576103e161039f565b604051601f8301601f19908116603f011681019082821181831017156104095761040961039f565b8160405283815286602085880101111561042257600080fd5b836020870160208301376000602085830101528094505050505092915050565b6000806040838503121561045557600080fd5b823567ffffffffffffffff81111561046c57600080fd5b610478858286016103b5565b92505060208301356001600160a01b038116811461049557600080fd5b809150509250929050565b6000602082840312156104b257600080fd5b813567ffffffffffffffff8111156104c957600080fd5b6104d5848285016103b5565b949350505050565b600181811c908216806104f157607f821691505b6020821081141561051257634e487b7160e01b600052602260045260246000fd5b50919050565b6000825161052a81846020870161033c565b9190910192915050565b600060001982141561055657634e487b7160e01b600052601160045260246000fd5b506001019056fea264697066735822122093fd710c54b22aa1f040bee46ef38c898302daad59dae3ad43362792eac272c864736f6c634300080c0033",
+    "sourceMap": "721:604:95:-:0;;;;;;;;;;;;;;;;;;;",
+    "linkReferences": {}
+  },
+  "deployedBytecode": {
+    "object": "0x608060405234801561001057600080fd5b506004361061004c5760003560e01c80633ca6bb92146100515780637f3c2c281461007a5780638736381a1461008f5780638c5b8385146100a6575b600080fd5b61006461005f366004610323565b6100f2565b604051610071919061036c565b60405180910390f35b61008d610088366004610442565b61018c565b005b61009860025481565b604051908152602001610071565b6100da6100b43660046104a0565b80516020818301810180516000825292820191909301209152546001600160a01b031681565b6040516001600160a01b039091168152602001610071565b6001602052600090815260409020805461010b906104dd565b80601f0160208091040260200160405190810160405280929190818152602001828054610137906104dd565b80156101845780601f1061015957610100808354040283529160200191610184565b820191906000526020600020905b81548152906001019060200180831161016757829003601f168201915b505050505081565b60006001600160a01b03166000836040516101a79190610518565b908152604051908190036020019020546001600160a01b0316146102115760405162461bcd60e51b815260206004820152601b60248201527f636f6e747261637420616c726561647920726567697374657265640000000000604482015260640160405180910390fd5b806000836040516102229190610518565b908152604080516020928190038301902080546001600160a01b0319166001600160a01b0394909416939093179092556002546000908152600182529190912083516102709285019061028a565b506002805490600061028183610534565b91905055505050565b828054610296906104dd565b90600052602060002090601f0160209004810192826102b857600085556102fe565b82601f106102d157805160ff19168380011785556102fe565b828001600101855582156102fe579182015b828111156102fe5782518255916020019190600101906102e3565b5061030a92915061030e565b5090565b5b8082111561030a576000815560010161030f565b60006020828403121561033557600080fd5b5035919050565b60005b8381101561035757818101518382015260200161033f565b83811115610366576000848401525b50505050565b602081526000825180602084015261038b81604085016020870161033c565b601f01601f19169190910160400192915050565b634e487b7160e01b600052604160045260246000fd5b600082601f8301126103c657600080fd5b813567ffffffffffffffff808211156103e1576103e161039f565b604051601f8301601f19908116603f011681019082821181831017156104095761040961039f565b8160405283815286602085880101111561042257600080fd5b836020870160208301376000602085830101528094505050505092915050565b6000806040838503121561045557600080fd5b823567ffffffffffffffff81111561046c57600080fd5b610478858286016103b5565b92505060208301356001600160a01b038116811461049557600080fd5b809150509250929050565b6000602082840312156104b257600080fd5b813567ffffffffffffffff8111156104c957600080fd5b6104d5848285016103b5565b949350505050565b600181811c908216806104f157607f821691505b6020821081141561051257634e487b7160e01b600052602260045260246000fd5b50919050565b6000825161052a81846020870161033c565b9190910192915050565b600060001982141561055657634e487b7160e01b600052601160045260246000fd5b506001019056fea264697066735822122093fd710c54b22aa1f040bee46ef38c898302daad59dae3ad43362792eac272c864736f6c634300080c0033",
+    "sourceMap": "721:604:95:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;803:44;;;;;;:::i;:::-;;:::i;:::-;;;;;;;:::i;:::-;;;;;;;;885:438;;;;;;:::i;:::-;;:::i;:::-;;853:25;;;;;;;;;2353::98;;;2341:2;2326:18;853:25:95;2207:177:98;754:43:95;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;;;-1:-1:-1;;;;;754:43:95;;;;;;-1:-1:-1;;;;;2880:32:98;;;2862:51;;2850:2;2835:18;754:43:95;2716:203:98;803:44:95;;;;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::o;885:438::-;1175:1;-1:-1:-1;;;;;1148:29:95;:9;1158:4;1148:15;;;;;;:::i;:::-;;;;;;;;;;;;;;;-1:-1:-1;;;;;1148:15:95;:29;1140:69;;;;-1:-1:-1;;;1140:69:95;;3792:2:98;1140:69:95;;;3774:21:98;3831:2;3811:18;;;3804:30;3870:29;3850:18;;;3843:57;3917:18;;1140:69:95;;;;;;;;1237:9;1219;1229:4;1219:15;;;;;;:::i;:::-;;;;;;;;;;;;;;;;:27;;-1:-1:-1;;;;;;1219:27:95;-1:-1:-1;;;;;1219:27:95;;;;;;;;;;;1270:13;;-1:-1:-1;1256:28:95;;;-1:-1:-1;1256:28:95;;;;;;:35;;;;;;;;:::i;:::-;-1:-1:-1;1301:13:95;:15;;;:13;:15;;;:::i;:::-;;;;;;885:438;;:::o;-1:-1:-1:-;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;;;:::o;:::-;;;;;;;;;;;;;;;14:180:98;73:6;126:2;114:9;105:7;101:23;97:32;94:52;;;142:1;139;132:12;94:52;-1:-1:-1;165:23:98;;14:180;-1:-1:-1;14:180:98:o;199:258::-;271:1;281:113;295:6;292:1;289:13;281:113;;;371:11;;;365:18;352:11;;;345:39;317:2;310:10;281:113;;;412:6;409:1;406:13;403:48;;;447:1;438:6;433:3;429:16;422:27;403:48;;199:258;;;:::o;462:383::-;611:2;600:9;593:21;574:4;643:6;637:13;686:6;681:2;670:9;666:18;659:34;702:66;761:6;756:2;745:9;741:18;736:2;728:6;724:15;702:66;:::i;:::-;829:2;808:15;-1:-1:-1;;804:29:98;789:45;;;;836:2;785:54;;462:383;-1:-1:-1;;462:383:98:o;850:127::-;911:10;906:3;902:20;899:1;892:31;942:4;939:1;932:15;966:4;963:1;956:15;982:719;1025:5;1078:3;1071:4;1063:6;1059:17;1055:27;1045:55;;1096:1;1093;1086:12;1045:55;1132:6;1119:20;1158:18;1195:2;1191;1188:10;1185:36;;;1201:18;;:::i;:::-;1276:2;1270:9;1244:2;1330:13;;-1:-1:-1;;1326:22:98;;;1350:2;1322:31;1318:40;1306:53;;;1374:18;;;1394:22;;;1371:46;1368:72;;;1420:18;;:::i;:::-;1460:10;1456:2;1449:22;1495:2;1487:6;1480:18;1541:3;1534:4;1529:2;1521:6;1517:15;1513:26;1510:35;1507:55;;;1558:1;1555;1548:12;1507:55;1622:2;1615:4;1607:6;1603:17;1596:4;1588:6;1584:17;1571:54;1669:1;1662:4;1657:2;1649:6;1645:15;1641:26;1634:37;1689:6;1680:15;;;;;;982:719;;;;:::o;1706:496::-;1784:6;1792;1845:2;1833:9;1824:7;1820:23;1816:32;1813:52;;;1861:1;1858;1851:12;1813:52;1901:9;1888:23;1934:18;1926:6;1923:30;1920:50;;;1966:1;1963;1956:12;1920:50;1989;2031:7;2022:6;2011:9;2007:22;1989:50;:::i;:::-;1979:60;-1:-1:-1;;2089:2:98;2074:18;;2061:32;-1:-1:-1;;;;;2122:31:98;;2112:42;;2102:70;;2168:1;2165;2158:12;2102:70;2191:5;2181:15;;;1706:496;;;;;:::o;2389:322::-;2458:6;2511:2;2499:9;2490:7;2486:23;2482:32;2479:52;;;2527:1;2524;2517:12;2479:52;2567:9;2554:23;2600:18;2592:6;2589:30;2586:50;;;2632:1;2629;2622:12;2586:50;2655;2697:7;2688:6;2677:9;2673:22;2655:50;:::i;:::-;2645:60;2389:322;-1:-1:-1;;;;2389:322:98:o;2924:380::-;3003:1;2999:12;;;;3046;;;3067:61;;3121:4;3113:6;3109:17;3099:27;;3067:61;3174:2;3166:6;3163:14;3143:18;3140:38;3137:161;;;3220:10;3215:3;3211:20;3208:1;3201:31;3255:4;3252:1;3245:15;3283:4;3280:1;3273:15;3137:161;;2924:380;;;:::o;3309:276::-;3440:3;3478:6;3472:13;3494:53;3540:6;3535:3;3528:4;3520:6;3516:17;3494:53;:::i;:::-;3563:16;;;;;3309:276;-1:-1:-1;;3309:276:98:o;3946:232::-;3985:3;-1:-1:-1;;4006:17:98;;4003:140;;;4065:10;4060:3;4056:20;4053:1;4046:31;4100:4;4097:1;4090:15;4128:4;4125:1;4118:15;4003:140;-1:-1:-1;4170:1:98;4159:13;;3946:232::o",
+    "linkReferences": {}
+  },
+  "methodIdentifiers": {
+    "contractCount()": "8736381a",
+    "contractNames(uint256)": "3ca6bb92",
+    "contracts(string)": "8c5b8385",
+    "registerContract(string,address)": "7f3c2c28"
+  },
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.12+commit.f00d7308\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"name\":\"contractCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"contractNames\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"name\":\"contracts\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"name\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"_contract\",\"type\":\"address\"}],\"name\":\"registerContract\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"src/ContractsRegistry.sol\":\"ContractsRegistry\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[\":@openzeppelin-upgrades-v4.9.0/=lib/eigenlayer-middleware/lib/eigenlayer-contracts/lib/openzeppelin-contracts-upgradeable-v4.9.0/\",\":@openzeppelin-upgrades/=lib/eigenlayer-middleware/lib/openzeppelin-contracts-upgradeable/\",\":@openzeppelin-v4.9.0/=lib/eigenlayer-middleware/lib/eigenlayer-contracts/lib/openzeppelin-contracts-v4.9.0/\",\":@openzeppelin/=lib/eigenlayer-middleware/lib/openzeppelin-contracts/\",\":ds-test/=lib/eigenlayer-middleware/lib/ds-test/src/\",\":eigenlayer-contracts/=lib/eigenlayer-middleware/lib/eigenlayer-contracts/\",\":eigenlayer-middleware/=lib/eigenlayer-middleware/\",\":erc4626-tests/=lib/eigenlayer-middleware/lib/eigenlayer-contracts/lib/openzeppelin-contracts-upgradeable-v4.9.0/lib/erc4626-tests/\",\":forge-std/=lib/forge-std/src/\",\":openzeppelin-contracts-upgradeable-v4.9.0/=lib/eigenlayer-middleware/lib/eigenlayer-contracts/lib/openzeppelin-contracts-upgradeable-v4.9.0/\",\":openzeppelin-contracts-upgradeable/=lib/eigenlayer-middleware/lib/openzeppelin-contracts-upgradeable/\",\":openzeppelin-contracts-v4.9.0/=lib/eigenlayer-middleware/lib/eigenlayer-contracts/lib/openzeppelin-contracts-v4.9.0/\",\":openzeppelin-contracts/=lib/eigenlayer-middleware/lib/openzeppelin-contracts/\",\":openzeppelin/=lib/eigenlayer-middleware/lib/eigenlayer-contracts/lib/openzeppelin-contracts-upgradeable-v4.9.0/contracts/\"]},\"sources\":{\"src/ContractsRegistry.sol\":{\"keccak256\":\"0x24fcc812e0a6a90a9412e973a8aecc9995dad131b0875324231fae27115977bd\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://f88ec576ddcd0cf0709a0f84293e4f46740b7967fc665a115b528705d9ce0853\",\"dweb:/ipfs/QmQqNibTeT8zSoKi6WzuyKL4aT52ZnXM2wEL3pY4rskLzm\"]}},\"version\":1}",
+  "metadata": {
+    "compiler": { "version": "0.8.12+commit.f00d7308" },
+    "language": "Solidity",
+    "output": {
+      "abi": [
+        {
+          "inputs": [],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "contractCount",
+          "outputs": [
+            { "internalType": "uint256", "name": "", "type": "uint256" }
+          ]
+        },
+        {
+          "inputs": [
+            { "internalType": "uint256", "name": "", "type": "uint256" }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "contractNames",
+          "outputs": [
+            { "internalType": "string", "name": "", "type": "string" }
+          ]
+        },
+        {
+          "inputs": [
+            { "internalType": "string", "name": "", "type": "string" }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "contracts",
+          "outputs": [
+            { "internalType": "address", "name": "", "type": "address" }
+          ]
+        },
+        {
+          "inputs": [
+            { "internalType": "string", "name": "name", "type": "string" },
+            {
+              "internalType": "address",
+              "name": "_contract",
+              "type": "address"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "registerContract"
+        }
+      ],
+      "devdoc": { "kind": "dev", "methods": {}, "version": 1 },
+      "userdoc": { "kind": "user", "methods": {}, "version": 1 }
+    },
+    "settings": {
+      "remappings": [
+        "@openzeppelin-upgrades-v4.9.0/=lib/eigenlayer-middleware/lib/eigenlayer-contracts/lib/openzeppelin-contracts-upgradeable-v4.9.0/",
+        "@openzeppelin-upgrades/=lib/eigenlayer-middleware/lib/openzeppelin-contracts-upgradeable/",
+        "@openzeppelin-v4.9.0/=lib/eigenlayer-middleware/lib/eigenlayer-contracts/lib/openzeppelin-contracts-v4.9.0/",
+        "@openzeppelin/=lib/eigenlayer-middleware/lib/openzeppelin-contracts/",
+        "ds-test/=lib/eigenlayer-middleware/lib/ds-test/src/",
+        "eigenlayer-contracts/=lib/eigenlayer-middleware/lib/eigenlayer-contracts/",
+        "eigenlayer-middleware/=lib/eigenlayer-middleware/",
+        "erc4626-tests/=lib/eigenlayer-middleware/lib/eigenlayer-contracts/lib/openzeppelin-contracts-upgradeable-v4.9.0/lib/erc4626-tests/",
+        "forge-std/=lib/forge-std/src/",
+        "openzeppelin-contracts-upgradeable-v4.9.0/=lib/eigenlayer-middleware/lib/eigenlayer-contracts/lib/openzeppelin-contracts-upgradeable-v4.9.0/",
+        "openzeppelin-contracts-upgradeable/=lib/eigenlayer-middleware/lib/openzeppelin-contracts-upgradeable/",
+        "openzeppelin-contracts-v4.9.0/=lib/eigenlayer-middleware/lib/eigenlayer-contracts/lib/openzeppelin-contracts-v4.9.0/",
+        "openzeppelin-contracts/=lib/eigenlayer-middleware/lib/openzeppelin-contracts/",
+        "openzeppelin/=lib/eigenlayer-middleware/lib/eigenlayer-contracts/lib/openzeppelin-contracts-upgradeable-v4.9.0/contracts/"
+      ],
+      "optimizer": { "enabled": true, "runs": 200 },
+      "metadata": { "bytecodeHash": "ipfs" },
+      "compilationTarget": { "src/ContractsRegistry.sol": "ContractsRegistry" },
+      "evmVersion": "london",
+      "libraries": {}
+    },
+    "sources": {
+      "src/ContractsRegistry.sol": {
+        "keccak256": "0x24fcc812e0a6a90a9412e973a8aecc9995dad131b0875324231fae27115977bd",
+        "urls": [
+          "bzz-raw://f88ec576ddcd0cf0709a0f84293e4f46740b7967fc665a115b528705d9ce0853",
+          "dweb:/ipfs/QmQqNibTeT8zSoKi6WzuyKL4aT52ZnXM2wEL3pY4rskLzm"
+        ],
+        "license": "MIT"
+      }
+    },
+    "version": 1
+  },
+  "id": 95
+}

@@ -1595,7 +1595,12 @@ dependencies = [
 name = "eigen-testing-utils"
 version = "0.0.1-alpha"
 dependencies = [
+ "alloy-network",
  "alloy-primitives",
+ "alloy-provider",
+ "alloy-transport-http",
+ "eigen-utils",
+ "once_cell",
 ]
 
 [[package]]
@@ -2018,6 +2023,17 @@ dependencies = [
  "tracing",
  "walkdir",
  "yansi",
+]
+
+[[package]]
+name = "examples-anvil-utils"
+version = "0.0.1-alpha"
+dependencies = [
+ "alloy-primitives",
+ "eigen-client-avsregistry",
+ "eigen-testing-utils",
+ "eyre",
+ "tokio",
 ]
 
 [[package]]

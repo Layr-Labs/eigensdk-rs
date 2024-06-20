@@ -105,3 +105,10 @@ sol!(
     ECDSAStakeRegistry,
     "../../crates/contracts/bindings/utils/json/ECDSAStakeRegistry.json"
 );
+
+sol!(
+    #[allow(missing_docs)]
+    #[sol(rpc)]
+    ContractsRegistry,
+    "../../crates/contracts/bindings/utils/json/ContractsRegistry.json"
+);

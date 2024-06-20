@@ -15,7 +15,7 @@ set +a
 
 # start an anvil instance in the background that has eigenlayer contracts deployed
 # we start anvil in the background so that we can run the below script
-start_anvil_docker $anvil_dir/contracts-deployed-anvil-state.json ""
+start_anvil_docker $anvil_dir/contracts_deployed_anvil_state.json ""
 
 cd $root_dir/contracts
 # we need to restart the anvil chain at the correct block, otherwise the indexRegistry has a quorumUpdate at the block number
