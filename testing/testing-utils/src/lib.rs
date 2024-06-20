@@ -11,3 +11,6 @@ pub mod mainnet_constants;
 
 ///  Holesky EigenLayer contract m2 compatible constants.
 pub mod m2_holesky_constants;
+
+/// Anvil constants
+pub mod anvil_constants;
