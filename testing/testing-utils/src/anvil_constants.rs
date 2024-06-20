@@ -1,3 +1,4 @@
+//! Anvil utilities
 use alloy_network::Ethereum;
 use alloy_primitives::{address, Address, U256};
 use alloy_provider::{
@@ -11,7 +12,10 @@ use eigen_utils::{
 };
 use once_cell::sync::Lazy;
 
+/// Local anvil ContractsRegistry which contains a mapping of all locally deployed EL contracts.
 pub const CONTRACTS_REGISTRY: Address = address!("5FbDB2315678afecb367f032d93F642f64180aa3");
+
+/// Local anvil rpc url alloy instance
 pub static ANVIL_RPC_URL: Lazy<
     FillProvider<
         JoinFill<
@@ -24,6 +28,7 @@ pub static ANVIL_RPC_URL: Lazy<
     >,
 > = Lazy::new(|| get_provider(&"http://localhost:8545".to_string()));
 
+/// Service Manager contract address
 pub async fn get_service_manager_address() {
     let contracts_registry = ContractsRegistry::new(CONTRACTS_REGISTRY, (*ANVIL_RPC_URL).clone());
 
@@ -38,6 +43,7 @@ pub async fn get_service_manager_address() {
     println!("contract name  : {:?}", first_name);
 }
 
+/// Registry Coordinator contract address
 pub async fn get_registry_coordinator_address() {
     let contracts_registry = ContractsRegistry::new(CONTRACTS_REGISTRY, (*ANVIL_RPC_URL).clone());
 
@@ -52,6 +58,7 @@ pub async fn get_registry_coordinator_address() {
     println!("contract name  : {:?}", first_name);
 }
 
+/// Operator state retriever contract address
 pub async fn get_operator_state_retriever_address() {
     let contracts_registry = ContractsRegistry::new(CONTRACTS_REGISTRY, (*ANVIL_RPC_URL).clone());
 
@@ -66,6 +73,7 @@ pub async fn get_operator_state_retriever_address() {
     println!("contract name  : {:?}", first_name);
 }
 
+/// Delegation Manager contract address
 pub async fn get_delegation_manager_address() {
     let contracts_registry = ContractsRegistry::new(CONTRACTS_REGISTRY, (*ANVIL_RPC_URL).clone());
 
@@ -80,6 +88,7 @@ pub async fn get_delegation_manager_address() {
     println!("contract name  : {:?}", first_name);
 }
 
+/// Strategy Mananger contract address
 pub async fn get_strategy_manager_address() {
     let contracts_registry = ContractsRegistry::new(CONTRACTS_REGISTRY, (*ANVIL_RPC_URL).clone());
 
