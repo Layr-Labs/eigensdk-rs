@@ -23,5 +23,4 @@ alloy-primitives.workspace = true
 alloy-provider.workspace = true
 alloy-signer.workspace = true
 alloy-network.workspace = true
-alloy-signer-wallet.workspace = true
 reqwest.workspace = true

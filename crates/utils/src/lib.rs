@@ -5,12 +5,12 @@
 #![cfg_attr(not(test), warn(unused_crate_dependencies))]
 
 pub mod binding;
-use alloy_network::{Ethereum, EthereumSigner};
+use alloy_network::{Ethereum, EthereumWallet};
 use alloy_provider::{
-    fillers::{ChainIdFiller, FillProvider, GasFiller, JoinFill, NonceFiller, SignerFiller},
+    fillers::{ChainIdFiller, FillProvider, GasFiller, JoinFill, NonceFiller, WalletFiller},
     ProviderBuilder, RootProvider,
 };
-use alloy_signer_wallet::LocalWallet;
+use alloy_signer_local::PrivateKeySigner;
 use alloy_transport_http::{Client, Http};
 use reqwest::Url;
 use std::fs;
@@ -28,17 +28,18 @@ pub fn get_signer(
             JoinFill<JoinFill<alloy_provider::Identity, GasFiller>, NonceFiller>,
             ChainIdFiller,
         >,
-        SignerFiller<EthereumSigner>,
+        WalletFiller<EthereumWallet>,
     >,
-    RootProvider<alloy_transport_http::Http<Client>>,
-    alloy_transport_http::Http<Client>,
+    RootProvider<Http<Client>>,
+    Http<Client>,
     Ethereum,
 > {
-    let wallet = LocalWallet::from_str(&key.to_string()).expect("failed to generate wallet ");
+    let signer = PrivateKeySigner::from_str(&key.to_string()).expect("failed to generate wallet ");
+    let wallet = EthereumWallet::from(signer);
     let url = Url::parse(&rpc_url).expect("Wrong rpc url");
     let provider = ProviderBuilder::new()
         .with_recommended_fillers()
-        .signer(EthereumSigner::from(wallet.clone()))
+        .wallet(wallet.clone())
         .on_http(url);
 
     return provider;
