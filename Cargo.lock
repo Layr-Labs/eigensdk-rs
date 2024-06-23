@@ -1393,7 +1393,9 @@ dependencies = [
  "alloy-transport-http",
  "alloy-transport-ws",
  "ark-bn254",
+ "ark-ec",
  "ark-ff 0.4.2",
+ "ark-serialize 0.4.2",
  "eigen-chainio-utils",
  "eigen-client-elcontracts",
  "eigen-crypto-bls",
@@ -1404,6 +1406,7 @@ dependencies = [
  "hex",
  "num-bigint",
  "reqwest 0.12.4",
+ "rust-bls-bn254",
  "serde_json",
  "thiserror",
  "tokio",
@@ -3130,11 +3133,10 @@ dependencies = [
 
 [[package]]
 name = "num-bigint"
-version = "0.4.4"
+version = "0.4.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "608e7659b5c3d7cba262d894801b9ec9d00de989e8a82bd4bef91d08da45cdc0"
+checksum = "c165a9ab64cf766f73521c0dd2cfdff64f488b8f0b3e621face3462d3db536d7"
 dependencies = [
- "autocfg",
  "num-integer",
  "num-traits",
 ]
@@ -4035,6 +4037,19 @@ name = "ruint-macro"
 version = "1.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f86854cf50259291520509879a5c294c3c9a4c334e9ff65071c51e42ef1e2343"
+
+[[package]]
+name = "rust-bls-bn254"
+version = "0.1.0"
+source = "git+ssh://git@github.com/Layr-Labs/rust-bls-bn254.git?rev=2ebe5f4#2ebe5f4d8b859c8d3dd9a18a51a272fbac791918"
+dependencies = [
+ "ark-bn254",
+ "ark-ec",
+ "ark-ff 0.4.2",
+ "ark-std 0.4.0",
+ "num-bigint",
+ "sha2",
+]
 
 [[package]]
 name = "rustc-demangle"

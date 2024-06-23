@@ -45,7 +45,7 @@
 //     let sig_expiry : U256 = U256::from(current_block_number + 20);
 //     let quorum_nums = Bytes::from([0x01]);
 //     println!("quorum nums : {:?}",quorum_nums);
-//     let tx_hash = avs_registry_writer.register_operator_in_quorum_with_avs_registry_coordinator(key_pair,digest_hash,U256::from(1718697416),quorum_nums,"65.109.158.181:33078;31078".to_string()).await.unwrap();
+//     let tx_hash = avs_registry_writer.register_operator_in_quorum_with_avs_registry_coordinator(key_pair,digest_hash,U256::from(1719169414),quorum_nums,"65.109.158.181:33078;31078".to_string()).await.unwrap();
 //     println!("tx hash :{:?}",tx_hash);
 //     Ok(())
 // }

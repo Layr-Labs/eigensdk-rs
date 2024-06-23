@@ -1,21 +1,24 @@
-use alloy_signer::SignerSync;
+use alloy_signer::{Signer,SignerSync};
 use alloy_signer_wallet::LocalWallet;
-use ark_bn254::G1Projective;
+use ark_ec::{AffineRepr, CurveGroup};
+use ark_bn254::{G1Projective,G1Affine};
 use eigen_chainio_utils::{
     convert_bn254_to_ark, convert_to_bn254_g1_point, convert_to_bn254_g2_point,
 };
 use eigen_client_elcontracts::reader::ELChainReader;
 use std::str::FromStr;
-
 use eigen_utils::binding::{
     BLSApkRegistry::{G1Point, PubkeyRegistrationParams},
     RegistryCoordinator::{
         self, G1Point as RegistryG1Point, G2Point as RegistryG2Point,
         PubkeyRegistrationParams as RegistryPubkeyRegistrationParams,
     },
-};
 
-use alloy_primitives::{Address, Bytes, FixedBytes, TxHash, U256};
+};
+use ark_serialize::{CanonicalSerialize, CanonicalDeserialize};
+
+use rust_bls_bn254::{sign};
+use alloy_primitives::{Address, Bytes, FixedBytes, TxHash, U256,Signature};
 use eigen_crypto_bls::attestation::KeyPair;
 use tracing::info;
 use RegistryCoordinator::SignatureWithSaltAndExpiry;
@@ -148,7 +151,16 @@ impl AvsRegistryChainWriter {
                 ))
                 .sig(),
         );
+        println!("signedmsg 1 :{:?}",signed_msg);
 
+        let mut serialized_bytes = vec![];
+        let s = convert_bn254_to_ark(G1Point {
+            X: g1_hashes_msg_to_sign.X,
+            Y: g1_hashes_msg_to_sign.Y,
+        }).point;
+        s.serialize_uncompressed(&mut serialized_bytes).unwrap();
+        let sign_msg = sign(bls_key_pair.priv_key,&serialized_bytes).unwrap();
+        println!("sign msg: {:?}",convert_to_bn254_g1_point(G1Projective::from(sign_msg)));
         let g1_pubkey_bn254 = convert_to_bn254_g1_point(bls_key_pair.get_pub_key_g1());
         let g2_projective = bls_key_pair
             .get_pub_key_g2()
@@ -157,7 +169,7 @@ impl AvsRegistryChainWriter {
         let g2_pubkey_bn254 = convert_to_bn254_g2_point(g2_projective);
 
         let pub_key_reg_params = PubkeyRegistrationParams {
-            pubkeyRegistrationSignature: signed_msg,
+            pubkeyRegistrationSignature:convert_to_bn254_g1_point(G1Projective::from(sign_msg)),
             pubkeyG1: g1_pubkey_bn254,
             pubkeyG2: g2_pubkey_bn254,
         };
@@ -173,11 +185,10 @@ impl AvsRegistryChainWriter {
             .await?;
 
         let operator_signature = wallet
-            .sign_message_sync(msg_to_sign.as_slice())
-            .expect("failed to sign message");
+            .sign_hash(&msg_to_sign).await.unwrap();
 
         let operator_signature_with_salt_and_expiry = SignatureWithSaltAndExpiry {
-            signature: operator_signature.as_bytes().into(),
+            signature: Bytes::from((Signature::from(operator_signature)).as_bytes()),
             salt: operator_to_avs_registration_sig_salt,
             expiry: operator_to_avs_registration_sig_expiry,
         };
@@ -267,3 +278,4 @@ impl AvsRegistryChainWriter {
         return Ok(*tx.tx_hash());
     }
 }
+
