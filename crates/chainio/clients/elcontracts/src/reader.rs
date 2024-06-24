@@ -224,15 +224,12 @@ impl ELChainReader {
 #[cfg(test)]
 mod tests {
 
-    use core::time;
-    use std::{ops::Add, str::FromStr};
-
     use super::*;
     use alloy_eips::eip1898::BlockNumberOrTag::Number;
     use alloy_primitives::address;
     use alloy_provider::Provider;
     use eigen_testing_utils::anvil_constants::{self, ANVIL_RPC_URL};
-    use eigen_utils::binding::{mockAvsServiceManager, ServiceManagerBase::avsDirectoryReturn};
+    use eigen_utils::binding::mockAvsServiceManager;
     use DelegationManager::calculateDelegationApprovalDigestHashReturn;
     async fn build_el_chain_reader() -> ELChainReader {
         let delegation_manager_address = anvil_constants::get_delegation_manager_address().await;
