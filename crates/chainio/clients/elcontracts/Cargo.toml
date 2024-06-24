@@ -25,3 +25,9 @@ alloy-signer.workspace = true
 alloy-network.workspace = true
 alloy-signer-wallet.workspace = true
 reqwest.workspace = true
+
+
+[dev-dependencies]
+alloy-eips.workspace = true
+eigen-testing-utils.workspace = true
+tokio.workspace = true

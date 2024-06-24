@@ -4,7 +4,7 @@ pragma solidity ^0.8.9;
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 import "forge-std/StdJson.sol";
-
+import "forge-std/console.sol";
 import "./parsers/TokensAndStrategiesContractsParser.sol";
 import "./parsers/EigenlayerContractsParser.sol";
 import {ConfigsReadWriter} from "./parsers/ConfigsReadWriter.sol";
@@ -42,6 +42,7 @@ contract RegisterOperators is
         );
         for (uint256 i; i < numberOfOperators; i++) {
             (address operator, ) = deriveRememberKey(mnemonic, uint32(i));
+            console.log("operator",operator);
             operators[i] = operator;
             operatorsETHAmount[i] = 5 ether;
             operatorTokenAmounts[i] = bound(
