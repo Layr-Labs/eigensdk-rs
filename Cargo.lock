@@ -2056,8 +2056,10 @@ version = "0.0.1-alpha"
 dependencies = [
  "alloy-primitives",
  "alloy-provider",
+ "alloy-signer-wallet",
  "ark-bn254",
  "ark-ff 0.4.2",
+ "ark-std 0.4.0",
  "eigen-chainio-utils",
  "eigen-client-avsregistry",
  "eigen-client-elcontracts",
@@ -2066,6 +2068,7 @@ dependencies = [
  "eigen-testing-utils",
  "eigen-utils",
  "eyre",
+ "rand_core",
  "tokio",
 ]
 

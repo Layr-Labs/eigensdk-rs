@@ -140,18 +140,18 @@ impl AvsRegistryChainWriter {
         let RegistryCoordinator::pubkeyRegistrationMessageHashReturn {
             _0: g1_hashes_msg_to_sign,
         } = g1_hashes_msg_to_sign_return;
-        let signed_msg = convert_to_bn254_g1_point(
-            bls_key_pair
-                .sign_hashes_to_curve_message(G1Projective::from(
-                    convert_bn254_to_ark(G1Point {
-                        X: g1_hashes_msg_to_sign.X,
-                        Y: g1_hashes_msg_to_sign.Y,
-                    })
-                    .point,
-                ))
-                .sig(),
-        );
-        println!("signedmsg 1 :{:?}",signed_msg);
+        // let signed_msg = convert_to_bn254_g1_point(
+        //     bls_key_pair
+        //         .sign_hashes_to_curve_message(G1Projective::from(
+        //             convert_bn254_to_ark(G1Point {
+        //                 X: g1_hashes_msg_to_sign.X,
+        //                 Y: g1_hashes_msg_to_sign.Y,
+        //             })
+        //             .point,
+        //         ))
+        //         .sig(),
+        // );
+        // println!("signedmsg 1 :{:?}",signed_msg);
 
         let mut serialized_bytes = vec![];
         let s = convert_bn254_to_ark(G1Point {
@@ -213,7 +213,7 @@ impl AvsRegistryChainWriter {
             operator_signature_with_salt_and_expiry,
         );
 
-        let tx_call = contract_call.gas(2000000);
+        let tx_call = contract_call.gas(2500000);
         let tx = tx_call.send().await?;
 
         // tracing info
