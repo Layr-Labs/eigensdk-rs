@@ -2,19 +2,20 @@
 pragma solidity ^0.8.9;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-
+import "@openzeppelin/contracts/utils/Strings.sol";
 import "forge-std/StdJson.sol";
-
+import {console} from "forge-std/console.sol";
 import "./parsers/TokensAndStrategiesContractsParser.sol";
 import "./parsers/EigenlayerContractsParser.sol";
 import {ConfigsReadWriter} from "./parsers/ConfigsReadWriter.sol";
+import {ContractsRegistry} from "../src/ContractsRegistry.sol";
 
-// This script registers a bunch of operators with eigenlayer
-// We don't register with eigencert/eigenda because events are not registered in saved anvil state, so we need to register
-// them at runtime whenver we start anvil for a test or localnet.
-contract RegisterOperators is ConfigsReadWriter, EigenlayerContractsParser, TokenAndStrategyContractsParser {
+contract UpdateOperators is ConfigsReadWriter, EigenlayerContractsParser, TokenAndStrategyContractsParser {
+    using Strings for uint256;
+
     string internal mnemonic;
     uint256 internal numberOfOperators;
+    ContractsRegistry contractsRegistry = ContractsRegistry(0x5FbDB2315678afecb367f032d93F642f64180aa3);
 
     function setUp() public {
         numberOfOperators = 10;
@@ -51,16 +52,12 @@ contract RegisterOperators is ConfigsReadWriter, EigenlayerContractsParser, Toke
         // Register operators with EigenLayer
         for (uint256 i = 0; i < numberOfOperators; i++) {
             address delegationApprover = address(0); // anyone can delegate to this operator
-            uint32 stakerOptOutWindowBlocks = 100;
-            string memory metadataURI = string.concat("https://coolstuff.com/operator/", vm.toString(i));
+            uint32 stakerOptOutWindowBlocks = 120;
             (, uint256 privateKey) = deriveRememberKey(mnemonic, uint32(i));
             vm.startBroadcast(privateKey);
-            eigenlayerContracts.delegationManager.registerAsOperator(
-                IDelegationManager.OperatorDetails(operators[i], delegationApprover, stakerOptOutWindowBlocks),
-                metadataURI
-            );
-            eigenlayerContracts.strategyManager.depositIntoStrategy(
-                tokenAndStrategy.strategy, IERC20(tokenAndStrategy.token), operatorTokenAmounts[i]
+            contractsRegistry.store_test("test_modify_operator_details", int256(i), block.number, block.timestamp);
+            eigenlayerContracts.delegationManager.modifyOperatorDetails(
+                IDelegationManager.OperatorDetails(operators[i], delegationApprover, stakerOptOutWindowBlocks)
             );
             vm.stopBroadcast();
         }
