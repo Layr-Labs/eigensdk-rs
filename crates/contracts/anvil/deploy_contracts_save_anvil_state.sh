@@ -33,7 +33,7 @@ DEPLOYER_PRIVATE_KEY=0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf
 set +a
 
 # start an empty anvil chain in the background and dump its state to a json file upon exit
-start_anvil_docker "" $anvil_dir/contracts-deployed-anvil-state.json
+start_anvil_docker "" $anvil_dir/contracts_deployed_anvil_state.json
 sleep 1
 
 CHAIN_ID=$(cast chain-id)
@@ -63,11 +63,13 @@ cd $root_dir/contracts
 # DO NOT REMOVE THE SLOW DIRECTIVE FROM THIS SCRIPT INVOCATION
 # slow ensures that the transaction reciept is successful and recieved before sending the next transaction
 # this should prevent the strategies deploying/registering in a flakey manner,
-forge script script/DeployTokensStrategiesCreateQuorums.s.sol --rpc-url $ETH_HTTP_URL --private-key $DEPLOYER_PRIVATE_KEY --broadcast --slow
+forge script script/DeployTokensStrategiesCreateQuorums.s.sol --rpc-url $ETH_HTTP_URL --private-key $DEPLOYER_PRIVATE_KEY --broadcast 
 
 # REGISTER OPERATORS WITH EIGENLAYER
 cd $root_dir/contracts
 # DO NOT REMOVE THE SLOW DIRECTIVE FROM THIS SCRIPT INVOCATION
 # slow ensures that the transaction receipt is successful and recieved before sending the next transaction
 # this should prevent the operators registering in a flakey manner, the operators registered will change from run to run without this
-forge script script/RegisterOperatorsWithEigenlayer.s.sol --rpc-url $ETH_HTTP_URL --private-key $DEPLOYER_PRIVATE_KEY --broadcast --slow
+forge script script/RegisterOperatorsWithEigenlayer.s.sol --rpc-url $ETH_HTTP_URL --private-key $DEPLOYER_PRIVATE_KEY --broadcast 
+
+forge script script/UpdateOperators.s.sol --rpc-url $ETH_HTTP_URL --private-key $DEPLOYER_PRIVATE_KEY --broadcast --slow
