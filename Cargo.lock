@@ -1578,10 +1578,8 @@ dependencies = [
  "eigen-crypto-bn254",
  "eigen-services-avsregistry",
  "eigen-types",
- "eth-keystore",
  "ethers",
  "parking_lot",
- "thiserror",
  "tokio",
 ]
 

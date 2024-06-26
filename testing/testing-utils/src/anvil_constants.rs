@@ -15,6 +15,7 @@ use once_cell::sync::Lazy;
 /// Local anvil ContractsRegistry which contains a mapping of all locally deployed EL contracts.
 pub const CONTRACTS_REGISTRY: Address = address!("5FbDB2315678afecb367f032d93F642f64180aa3");
 
+#[allow(clippy::type_complexity)]
 /// Local anvil rpc url alloy instance
 pub static ANVIL_RPC_URL: Lazy<
     FillProvider<
@@ -103,6 +104,7 @@ pub async fn get_strategy_manager_address() {
     println!("contract name  : {:?}", first_name);
 }
 
+/// erc20 mock strategy contract address
 pub async fn get_erc20_mock_strategy() {
     let contracts_registry = ContractsRegistry::new(CONTRACTS_REGISTRY, (*ANVIL_RPC_URL).clone());
 
