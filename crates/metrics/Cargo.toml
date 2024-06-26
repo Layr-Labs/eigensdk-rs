@@ -21,3 +21,6 @@ hyper.workspace = true
 [dev-dependencies]
 eigen-metrics-collectors-economic.workspace = true 
 reqwest = "0.12.4"
+
+#tokio
+tokio.workspace = true

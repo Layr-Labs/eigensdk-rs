@@ -1,4 +1,4 @@
-// //! register operator in quorum with avs registry coordinator
+//! register operator in quorum with avs registry coordinator
 // use alloy_primitives::{FixedBytes,Bytes};
 // use eigen_client_avsregistry::writer::AvsRegistryChainWriter;
 // use eigen_client_elcontracts::reader::ELChainReader;

@@ -39,6 +39,8 @@ pub struct AvsRegistryChainWriter {
 }
 
 impl AvsRegistryChainWriter {
+    /// New AvsRegistryChainWriter instance
+    #[allow(clippy::too_many_arguments)]
     pub async fn new(
         service_manager_addr: Address,
         registry_coordinator_addr: Address,
@@ -61,6 +63,7 @@ impl AvsRegistryChainWriter {
         }
     }
 
+    /// build avs registry chain writer instance
     pub async fn build_avs_registry_chain_writer(
         &self,
         registry_coordinator_addr: Address,
@@ -115,6 +118,7 @@ impl AvsRegistryChainWriter {
         })
     }
 
+    /// Register operator in quorum with avs registry coordinator
     pub async fn register_operator_in_quorum_with_avs_registry_coordinator(
         &self,
         bls_key_pair: KeyPair,
@@ -210,6 +214,7 @@ impl AvsRegistryChainWriter {
         Ok(*tx.tx_hash())
     }
 
+    /// Update stakes of entire operator set for quorums
     pub async fn update_stakes_of_entire_operator_set_for_quorums(
         &self,
         operators_per_quorum: Vec<Vec<Address>>,
@@ -230,6 +235,7 @@ impl AvsRegistryChainWriter {
         return Ok(*tx.tx_hash());
     }
 
+    /// Update stakes of operator subset for all quorums
     pub async fn update_stakes_of_operator_subset_for_all_quorums(
         &self,
         operators: Vec<Address>,
@@ -249,6 +255,7 @@ impl AvsRegistryChainWriter {
         Ok(*tx.tx_hash())
     }
 
+    /// Deregister operator
     pub async fn deregister_operator(
         &self,
         quorum_numbers: Bytes,

@@ -21,6 +21,7 @@ impl AvsRegistryChainSubscriber {
         AvsRegistryChainSubscriber { provider }
     }
 
+    #[allow(clippy::type_complexity)]
     /// Returns blsapkregistry instance
     pub fn build(
         &self,
@@ -39,9 +40,7 @@ impl AvsRegistryChainSubscriber {
     > {
         let provider = get_provider(&self.provider);
 
-        let bls_apk_reg = BLSApkRegistry::new(bls_apk_registry_addr, provider);
-
-        bls_apk_reg
+        BLSApkRegistry::new(bls_apk_registry_addr, provider)
     }
 
     /// Utility function that returns new pubkey registration filter

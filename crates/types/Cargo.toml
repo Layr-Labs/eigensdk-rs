@@ -12,8 +12,7 @@ license-file.workspace = true
 ethers.workspace = true
 num-bigint = "0.4.4"
 eigen-crypto-bls.workspace = true
-eigen-contract-bindings.workspace = true
 alloy-primitives.workspace = true
-alloy-sol-types = { workspace = true, features = ["json"] }
-alloy-contract.workspace = true
 eigen-utils.workspace = true
+
+[dev-dependencies]

@@ -11,9 +11,6 @@ license-file.workspace = true
 [dependencies]
 ark-bn254 = "0.4.0"
 ark-ff.workspace = true
-eigen-contract-bindings.workspace = true
 eigen-crypto-bls.workspace = true
 eigen-crypto-bn254.workspace = true
-alloy-sol-types.workspace = true
-alloy-contract.workspace = true
 eigen-utils.workspace = true

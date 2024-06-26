@@ -1348,11 +1348,8 @@ dependencies = [
 name = "eigen-chainio-utils"
 version = "0.0.1-alpha"
 dependencies = [
- "alloy-contract",
- "alloy-sol-types",
  "ark-bn254",
  "ark-ff 0.4.2",
- "eigen-contract-bindings",
  "eigen-crypto-bls",
  "eigen-crypto-bn254",
  "eigen-utils",
@@ -1362,31 +1359,23 @@ dependencies = [
 name = "eigen-client-avsregistry"
 version = "0.0.1-alpha"
 dependencies = [
- "alloy-contract",
- "alloy-eips",
  "alloy-network",
  "alloy-primitives",
  "alloy-provider",
  "alloy-rpc-types",
  "alloy-signer",
  "alloy-signer-local",
- "alloy-sol-types",
- "alloy-transport",
  "alloy-transport-http",
- "alloy-transport-ws",
  "ark-bn254",
  "ark-ff 0.4.2",
  "eigen-chainio-utils",
  "eigen-client-elcontracts",
  "eigen-crypto-bls",
- "eigen-crypto-bn254",
  "eigen-types",
  "eigen-utils",
- "futures",
  "hex",
  "num-bigint",
  "reqwest 0.12.5",
- "serde_json",
  "thiserror",
  "tokio",
  "tracing",
@@ -1396,17 +1385,9 @@ dependencies = [
 name = "eigen-client-elcontracts"
 version = "0.0.1-alpha"
 dependencies = [
- "alloy-contract",
- "alloy-network",
  "alloy-primitives",
- "alloy-provider",
- "alloy-signer",
- "alloy-sol-types",
- "ark-bn254",
- "ark-ff 0.4.2",
  "eigen-types",
  "eigen-utils",
- "reqwest 0.12.5",
  "thiserror",
  "tracing",
 ]
@@ -1426,9 +1407,6 @@ dependencies = [
 [[package]]
 name = "eigen-contract-bindings"
 version = "0.0.1-alpha"
-dependencies = [
- "ethers",
-]
 
 [[package]]
 name = "eigen-crypto-bls"
@@ -1468,6 +1446,7 @@ dependencies = [
  "metrics",
  "metrics-exporter-prometheus",
  "reqwest 0.12.5",
+ "tokio",
 ]
 
 [[package]]
@@ -1557,10 +1536,7 @@ dependencies = [
 name = "eigen-types"
 version = "0.0.1-alpha"
 dependencies = [
- "alloy-contract",
  "alloy-primitives",
- "alloy-sol-types",
- "eigen-contract-bindings",
  "eigen-crypto-bls",
  "eigen-utils",
  "ethers",
