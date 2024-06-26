@@ -9,7 +9,6 @@ repository.workspace = true
 license-file.workspace = true
 
 [dependencies]
-ethers.workspace = true
 eigen-types.workspace = true
 eigen-crypto-bls.workspace = true
 eigen-services-avsregistry.workspace = true

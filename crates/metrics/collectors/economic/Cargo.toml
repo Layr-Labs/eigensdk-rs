@@ -12,4 +12,3 @@ eigen-client-avsregistry.workspace = true
 alloy-primitives.workspace = true
 eigen-metrics-derive.workspace = true
 metrics.workspace = true
-metrics-process = "=1.0.14"
