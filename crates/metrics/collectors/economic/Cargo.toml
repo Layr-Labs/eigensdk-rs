@@ -6,7 +6,6 @@ rust-version.workspace = true
 repository.workspace = true
 
 [dependencies]
-# reth.workspace = true
 ethers.workspace = true
 eigen-client-elcontracts.workspace = true
 eigen-client-avsregistry.workspace = true
