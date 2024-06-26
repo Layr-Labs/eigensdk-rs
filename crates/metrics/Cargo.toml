@@ -6,8 +6,6 @@ rust-version.workspace = true
 repository.workspace = true
 
 [dependencies]
-eigen-crypto-bls.workspace = true
-eigen-crypto-bn254.workspace = true
 eigen-metrics-derive.workspace = true
 metrics.workspace = true
 
@@ -19,8 +17,6 @@ eyre.workspace = true
 #http
 hyper.workspace = true
 
-#tokio
-tokio.workspace = true
 
 [dev-dependencies]
 eigen-metrics-collectors-economic.workspace = true 

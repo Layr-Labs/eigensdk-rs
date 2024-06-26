@@ -1461,8 +1461,6 @@ dependencies = [
 name = "eigen-metrics"
 version = "0.0.1-alpha"
 dependencies = [
- "eigen-crypto-bls",
- "eigen-crypto-bn254",
  "eigen-metrics-collectors-economic",
  "eigen-metrics-derive",
  "eyre",
@@ -1470,18 +1468,13 @@ dependencies = [
  "metrics",
  "metrics-exporter-prometheus",
  "reqwest 0.12.5",
- "tokio",
 ]
 
 [[package]]
 name = "eigen-metrics-collectors-economic"
 version = "0.0.1-alpha"
 dependencies = [
- "alloy-primitives",
- "eigen-client-avsregistry",
- "eigen-client-elcontracts",
  "eigen-metrics-derive",
- "ethers",
  "metrics",
 ]
 
@@ -1513,13 +1506,11 @@ dependencies = [
  "alloy-primitives",
  "eigen-chainio-utils",
  "eigen-client-avsregistry",
- "eigen-contract-bindings",
  "eigen-crypto-bls",
  "eigen-crypto-bn254",
  "eigen-services-operatorsinfo",
  "eigen-types",
  "eigen-utils",
- "eth-keystore",
 ]
 
 [[package]]
@@ -1539,25 +1530,15 @@ dependencies = [
 name = "eigen-services-operatorsinfo"
 version = "0.0.1-alpha"
 dependencies = [
- "alloy-contract",
  "alloy-primitives",
  "alloy-provider",
  "alloy-rpc-types",
- "alloy-transport-ws",
  "anyhow",
  "eigen-client-avsregistry",
- "eigen-contract-bindings",
- "eigen-crypto-bls",
- "eigen-crypto-bn254",
  "eigen-types",
  "eigen-utils",
- "eth-keystore",
- "ethers",
- "eyre",
  "futures-util",
- "thiserror",
  "tokio",
- "tracing",
 ]
 
 [[package]]
