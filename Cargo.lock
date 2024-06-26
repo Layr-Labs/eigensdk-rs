@@ -1442,6 +1442,7 @@ dependencies = [
  "alloy-primitives",
  "alloy-provider",
  "alloy-signer",
+ "alloy-signer-local",
  "alloy-sol-types",
  "ark-bn254",
  "ark-ff 0.4.2",

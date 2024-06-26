@@ -58,9 +58,7 @@ impl ELChainReader {
         expiry: U256,
     ) -> Result<FixedBytes<32>, Box<dyn std::error::Error>> {
         let provider = get_provider(&self.provider);
-        println!("afterrr");
         let contract_delegation_manager = DelegationManager::new(self.delegation_manager, provider);
-        println!("bbbb");
         let delegation_approval_digest_hash = contract_delegation_manager
             .calculateDelegationApprovalDigestHash(
                 staker,
@@ -71,7 +69,6 @@ impl ELChainReader {
             )
             .call()
             .await?;
-        println!("fsfsdfdsf");
         let DelegationManager::calculateDelegationApprovalDigestHashReturn { _0: digest_hash } =
             delegation_approval_digest_hash;
 
