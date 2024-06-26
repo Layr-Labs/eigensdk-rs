@@ -220,8 +220,8 @@ mod tests {
             anvil_constants::CONTRACTS_REGISTRY,
             anvil_constants::ANVIL_RPC_URL.clone(),
         );
-        let s: u64 = 2;
-        let operator_index = "2".parse().unwrap();
+        /// Use these value in tests when needed
+        let operator_index = "1".parse().unwrap();
         let get_test_values_return = contract_registry
             .get_test_values("test_register_operator".to_string(), operator_index)
             .call()
@@ -234,7 +234,6 @@ mod tests {
         } = get_test_values_return;
 
         // operator who registered at index 1
-
         let operator_address = operator.address();
         let operator_details = Operator::new(
             operator_address,
