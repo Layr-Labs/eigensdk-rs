@@ -10,6 +10,7 @@ sol!(
 
 // https://github.com/Layr-Labs/eigenlayer-middleware/blob/m2-mainnet/src/RegistryCoordinator.sol
 sol!(
+    #[allow(clippy::too_many_arguments)]
     #[allow(missing_docs)]
     #[sol(rpc)]
     RegistryCoordinator,

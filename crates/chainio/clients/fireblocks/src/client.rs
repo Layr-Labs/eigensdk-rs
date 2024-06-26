@@ -22,6 +22,7 @@ impl std::fmt::Display for AssetID {
 }
 
 // Initialize AssetIDByChain as a HashMap
+#[allow(unused)]
 fn asset_id_by_chain() -> HashMap<u64, AssetID> {
     let mut map = HashMap::new();
     map.insert(1, AssetID::ETH);
@@ -29,6 +30,7 @@ fn asset_id_by_chain() -> HashMap<u64, AssetID> {
     map
 }
 
+#[allow(unused)]
 #[allow(non_camel_case_types)]
 struct client {}
 

@@ -26,7 +26,7 @@ pub static ANVIL_RPC_URL: Lazy<
         Http<Client>,
         Ethereum,
     >,
-> = Lazy::new(|| get_provider(&"http://localhost:8545".to_string()));
+> = Lazy::new(|| get_provider("http://localhost:8545"));
 
 /// Service Manager contract address
 pub async fn get_service_manager_address() {
