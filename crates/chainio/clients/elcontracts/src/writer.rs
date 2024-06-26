@@ -1,11 +1,10 @@
 use crate::reader::ELChainReader;
-use alloy_network::ReceiptResponse;
 use alloy_primitives::FixedBytes;
-use alloy_primitives::{Address, TxHash, I256, U256, U32};
+use alloy_primitives::{Address, TxHash, U256};
 pub use eigen_types::operator::Operator;
 use eigen_utils::{
     binding::{
-        DelegationManager::{self, isOperatorReturn},
+        DelegationManager::{self},
         StrategyManager, IERC20,
     },
     get_signer,
@@ -57,11 +56,6 @@ impl ELChainWriter {
 
         let contract_delegation_manager = DelegationManager::new(self.delegation_manager, provider);
 
-        let already_operator_return = contract_delegation_manager
-            .isOperator(operator.has_earnings_receiver_address())
-            .call()
-            .await?;
-        let isOperatorReturn { _0: isoperator } = already_operator_return;
         let binding = match operator.has_metadata_url() {
             Some(metadata) => {
                 let contract_call =
@@ -166,12 +160,11 @@ mod tests {
 
     use super::*;
     use alloy_signer_local::PrivateKeySigner;
-    use eigen_testing_utils::anvil_constants::{self, ANVIL_RPC_URL};
+    use eigen_testing_utils::anvil_constants::{self};
     use eigen_utils::binding::{
         mockAvsServiceManager,
         ContractsRegistry::{self, get_test_valuesReturn},
     };
-    use std::str::FromStr;
 
     #[tokio::test]
     async fn test_register_operator() {
@@ -220,7 +213,7 @@ mod tests {
             anvil_constants::CONTRACTS_REGISTRY,
             anvil_constants::ANVIL_RPC_URL.clone(),
         );
-        /// Use these value in tests when needed
+        // Use these value in tests when needed
         let operator_index = "1".parse().unwrap();
         let get_test_values_return = contract_registry
             .get_test_values("test_register_operator".to_string(), operator_index)
@@ -228,9 +221,9 @@ mod tests {
             .await
             .unwrap();
         let get_test_valuesReturn {
-            _0: timestamp,
-            _1: blocknumber,
-            _2: index,
+            _0: _timestamp,
+            _1: _blocknumber,
+            _2: _index,
         } = get_test_values_return;
 
         // operator who registered at index 1
