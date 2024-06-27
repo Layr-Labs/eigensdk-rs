@@ -23,6 +23,11 @@ jobs:
         uses: Swatinem/rust-cache@v2
         with:
           cache-on-failure: true
+      - name: docker
+        uses: docker-practice/actions-setup-docker@master
+  
+      - name: Run make pr
+        run: make pr
 
       - name: Run tests
         run: cargo test --workspace --all-features
