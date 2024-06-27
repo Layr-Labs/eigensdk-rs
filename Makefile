@@ -1,11 +1,23 @@
-
-
 __CONTRACTS__: ##
 
-start-anvil-with-contracts-deployed: ##
-	./crates/contracts/anvil/start_anvil_chain_with_el_and_avs_deployed.sh
-
+start-anvil-chain-with-contracts-deployed: ##
+	./crates/contracts/anvil/start-anvil-chain-with-el-and-avs-deployed.sh
 
 deploy-contracts-to-anvil-and-save-state: ## 
-	./crates/contracts/anvil/deploy_contracts_save_anvil_state.sh
+	./crates/contracts/anvil/deploy-eigenlayer-save-anvil-state.sh
+
+start-anvil: ##
+	./crates/contracts/anvil/start-anvil.sh
+
+stop-anvil: ##
+	./crates/contracts/anvil/stop-anvil.sh
+
+__TESTING__: ##
+
+pr: ## 
+	$(MAKE) start-anvil-chain-with-contracts-deployed
+	$(MAKE) start-anvil
+	cargo test --workspace
+	cargo +nightly fmt -- --check
+	$(MAKE) stop-anvil
 

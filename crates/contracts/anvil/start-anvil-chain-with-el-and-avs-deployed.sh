@@ -1,23 +1,36 @@
 #!/bin/bash
 
-set -o errexit -o nounset -o pipefail
+RPC_URL=http://localhost:8545
 
 # cd to the directory of this script so that this can be run from anywhere
-anvil_dir=$(
+parent_path=$(
     cd "$(dirname "${BASH_SOURCE[0]}")"
     pwd -P
 )
-root_dir=$(realpath $anvil_dir/../..)
+cd "$parent_path"
 
 set -a
-source $anvil_dir/utils.sh
+source ./utils.sh
 set +a
+
+cleanup() {
+    echo "Executing cleanup function..."
+    set +e
+    docker rm -f anvil
+    exit_status=$?
+    if [ $exit_status -ne 0 ]; then
+        echo "Script exited due to set -e on line $1 with command '$2'. Exit status: $exit_status"
+    fi
+}
+trap 'cleanup $LINENO "$BASH_COMMAND"' EXIT
 
 # start an anvil instance in the background that has eigenlayer contracts deployed
 # we start anvil in the background so that we can run the below script
-start_anvil_docker $anvil_dir/contracts_deployed_anvil_state.json ""
+# anvil --load-state avs-and-eigenlayer-deployed-anvil-state.json &
+# FIXME: bug in latest foundry version, so we use this pinned version instead of latest
+start_anvil_docker $parent_path/eigenlayer-deployed-anvil-state.json ""
 
-cd $root_dir/contracts
+cd ../../contracts
 # we need to restart the anvil chain at the correct block, otherwise the indexRegistry has a quorumUpdate at the block number
 # at which it was deployed (aka quorum was created/updated), but when we start anvil by loading state file it starts at block number 0
 # so calling getOperatorListAtBlockNumber reverts because it thinks there are no quorums registered at block 0

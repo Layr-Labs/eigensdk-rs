@@ -107,9 +107,18 @@ sol!(
     "../../crates/contracts/bindings/utils/json/ECDSAStakeRegistry.json"
 );
 
+/// Anvil utilities /////
+
 sol!(
     #[allow(missing_docs)]
     #[sol(rpc)]
     ContractsRegistry,
     "../../crates/contracts/bindings/utils/json/ContractsRegistry.json"
+);
+
+sol!(
+    #[allow(missing_docs)]
+    #[sol(rpc)]
+    mockAvsServiceManager,
+    "../../crates/contracts/bindings/utils/json/MockAvsServiceManager.json"
 );

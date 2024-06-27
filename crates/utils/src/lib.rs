@@ -35,7 +35,7 @@ pub fn get_signer(
     Http<Client>,
     Ethereum,
 > {
-    let signer = PrivateKeySigner::from_str(&key.to_string()).expect("failed to generate wallet ");
+    let signer: PrivateKeySigner = key.parse().expect("failed to generate wallet ");
     let wallet = EthereumWallet::from(signer);
     let url = Url::parse(rpc_url).expect("Wrong rpc url");
     ProviderBuilder::new()
