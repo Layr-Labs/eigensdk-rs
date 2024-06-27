@@ -26,8 +26,11 @@ jobs:
       - name: docker
         uses: docker-practice/actions-setup-docker@master
 
-      - name : Install foundry image
-        run : docker pull ghcr.io/foundry-rs/foundry:latest  
+      - name: Install Foundry
+        run: |
+          curl -L https://foundry.paradigm.xyz | bash
+          source ~/.bashrc
+          foundryup 
 
       - name: Run make pr
         run: make pr
