@@ -26,14 +26,11 @@ jobs:
       - name: docker
         uses: docker-practice/actions-setup-docker@master
 
-      - name: Install Foundry and run make pr
-        run: |
-          curl -L https://foundry.paradigm.xyz | bash
-          source ~/.bashrc
-          foundryup
-          export PATH="$HOME/.foundry/bin:$PATH"
-          chmod +x ./crates/contracts/anvil/*.sh
-          make pr
+      - name: Install Foundry
+        run: cargo install --git https://github.com/foundry-rs/foundry --profile release --locked forge cast chisel anvil
+
+      - name: Run make pr
+        run: make pr
 
       - name: Run tests
         run: cargo test --workspace --all-features
