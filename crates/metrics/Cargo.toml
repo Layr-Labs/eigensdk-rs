@@ -6,19 +6,21 @@ rust-version.workspace = true
 repository.workspace = true
 
 [dependencies]
-eigen-crypto-bls.workspace = true
-eigen-crypto-bn254.workspace = true
 eigen-metrics-derive.workspace = true
 metrics.workspace = true
 
 #prometheus
 metrics-exporter-prometheus.workspace = true
-eigen-metrics-collectors-economic.workspace = true 
-reqwest = "0.12.4"
+
 eyre.workspace = true
 
 #http
 hyper.workspace = true
+
+
+[dev-dependencies]
+eigen-metrics-collectors-economic.workspace = true 
+reqwest = "0.12.4"
 
 #tokio
 tokio.workspace = true

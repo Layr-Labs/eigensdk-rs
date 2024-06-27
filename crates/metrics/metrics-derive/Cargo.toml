@@ -11,8 +11,6 @@ proc-macro = true
 
 [dependencies]
 
-#prometheus
-prometheus = "0.13.4"
 
 proc-macro2 = "1.0"
 

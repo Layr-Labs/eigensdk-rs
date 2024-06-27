@@ -35,12 +35,10 @@ pub fn get_g1_generator() -> Result<G1Affine, Bn254Err> {
 
     match x_result {
         Ok(x) => match y_result {
-            Ok(y) => {
-                return Ok(G1Affine::new(x, y));
-            }
-            Err(_) => return Err(Bn254Err::Fq),
+            Ok(y) => Ok(G1Affine::new(x, y)),
+            Err(_) => Err(Bn254Err::Fq),
         },
-        Err(_) => return Err(Bn254Err::Fq),
+        Err(_) => Err(Bn254Err::Fq),
     }
 }
 
@@ -68,22 +66,18 @@ pub fn get_g2_generator() -> Result<G2Affine, Bn254Err> {
                             match y_1_result {
                                 Ok(y_1) => {
                                     let y = Fq2::new(y_0, y_1);
-                                    return Ok(G2Affine::new(x, y));
+                                    Ok(G2Affine::new(x, y))
                                 }
-                                Err(_) => return Err(Bn254Err::Fq),
+                                Err(_) => Err(Bn254Err::Fq),
                             }
                         }
-                        Err(_) => {
-                            return Err(Bn254Err::Fq);
-                        }
+                        Err(_) => Err(Bn254Err::Fq),
                     }
                 }
-                Err(_) => return Err(Bn254Err::Fq),
+                Err(_) => Err(Bn254Err::Fq),
             }
         }
-        Err(_) => {
-            return Err(Bn254Err::Fq);
-        }
+        Err(_) => Err(Bn254Err::Fq),
     }
 }
 
@@ -93,11 +87,9 @@ pub fn mul_by_generator_g1(pvt_key: Fr) -> Result<G1Projective, Bn254Err> {
     match g1_gen_result {
         Ok(g1_gen) => {
             let s: G1Projective = g1_gen.into();
-            return Ok(s.mul(pvt_key));
+            Ok(s.mul(pvt_key))
         }
-        Err(_) => {
-            return Err(Bn254Err::Fq);
-        }
+        Err(_) => Err(Bn254Err::Fq),
     }
 }
 
@@ -107,11 +99,9 @@ pub fn mul_by_generator_g2(pvt_key: Fr) -> Result<G2Projective, Bn254Err> {
     match g2_gen_result {
         Ok(g2_gen) => {
             let s: G2Projective = g2_gen.into();
-            return Ok(s.mul(pvt_key));
+            Ok(s.mul(pvt_key))
         }
-        Err(_) => {
-            return Err(Bn254Err::Fq);
-        }
+        Err(_) => Err(Bn254Err::Fq),
     }
 }
 

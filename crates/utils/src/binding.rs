@@ -10,6 +10,7 @@ sol!(
 
 // https://github.com/Layr-Labs/eigenlayer-middleware/blob/m2-mainnet/src/RegistryCoordinator.sol
 sol!(
+    #[allow(clippy::too_many_arguments)]
     #[allow(missing_docs)]
     #[sol(rpc)]
     RegistryCoordinator,
@@ -106,7 +107,7 @@ sol!(
     "../../crates/contracts/bindings/utils/json/ECDSAStakeRegistry.json"
 );
 
-/// Anvil utilities /////
+// Anvil utilities
 
 sol!(
     #[allow(missing_docs)]

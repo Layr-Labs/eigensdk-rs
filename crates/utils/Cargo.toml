@@ -9,8 +9,7 @@ repository.workspace = true
 alloy-network.workspace = true
 alloy-provider.workspace = true
 alloy-transport-http.workspace = true
-alloy-signer.workspace = true
 reqwest.workspace = true
-alloy-sol-types.workspace = true
 alloy-contract.workspace = true
 alloy-signer-local.workspace = true
+alloy-sol-types = { workspace = true, features = ["json"] }

@@ -45,6 +45,7 @@ impl AvsRegistryChainReader {
         }
     }
 
+    /// Build avs registry chain reader
     pub async fn build_avs_registry_chain_reader(
         &self,
         registry_coordinator_addr: Address,
@@ -75,6 +76,7 @@ impl AvsRegistryChainReader {
         }
     }
 
+    /// Get quorum count
     pub async fn get_quorum_count(&self) -> Result<u8, Box<dyn std::error::Error>> {
         let provider = get_provider(&self.provider);
 
@@ -86,7 +88,7 @@ impl AvsRegistryChainReader {
         match quorum_count_result {
             Ok(quorum_count) => {
                 let RegistryCoordinator::quorumCountReturn { _0: quorum } = quorum_count;
-                return Ok(quorum);
+                Ok(quorum)
             }
 
             Err(_) => Err(Box::new(AvsRegistryError::GetQuorumCount)),
@@ -112,14 +114,13 @@ impl AvsRegistryChainReader {
             Ok(operator_state) => {
                 let OperatorStateRetriever::getOperatorState_0Return { _0: quorum } =
                     operator_state;
-                return Ok(quorum);
+                Ok(quorum)
             }
-            Err(_) => {
-                return Err(Box::new(AvsRegistryError::GetOperatorState));
-            }
+            Err(_) => Err(Box::new(AvsRegistryError::GetOperatorState)),
         }
     }
 
+    /// Get operators stake in quorums at block operator id
     pub async fn get_operators_stake_in_quorums_at_block_operator_id(
         &self,
         block_number: u32,
@@ -132,11 +133,7 @@ impl AvsRegistryChainReader {
             OperatorStateRetriever::new(self.operator_state_retriever, provider);
         let operator_state_with_registry_coordinator_and_oeprator_id_result =
             contract_operator_state_retriever
-                .getOperatorState_1(
-                    self.registry_coordinator_addr,
-                    operator_id.into(),
-                    block_number,
-                )
+                .getOperatorState_1(self.registry_coordinator_addr, operator_id, block_number)
                 .call()
                 .await;
 
@@ -146,16 +143,15 @@ impl AvsRegistryChainReader {
                     _0: stake,
                     _1: operator_state,
                 } = operator_state_with_registry_coordinator_and_oeprator_id;
-                return Ok((stake, operator_state));
+                Ok((stake, operator_state))
             }
-            Err(_) => {
-                return Err(Box::new(
-                    AvsRegistryError::GetOperatorStateWithRegistryCoordinatorAndOperatorId,
-                ));
-            }
+            Err(_) => Err(Box::new(
+                AvsRegistryError::GetOperatorStateWithRegistryCoordinatorAndOperatorId,
+            )),
         }
     }
 
+    /// Get operators stake in quorums at current block
     pub async fn get_operators_stake_in_quorums_at_current_block(
         &self,
         quorum_numbers: Bytes,
@@ -181,17 +177,16 @@ impl AvsRegistryChainReader {
                     Ok(operators_stake_in_quorums_at_block) => {
                         Ok(operators_stake_in_quorums_at_block)
                     }
-                    Err(_) => {
-                        return Err(Box::new(
-                            AvsRegistryError::GetOperatorStakeInQuorumAtBlockNumber,
-                        ))
-                    }
+                    Err(_) => Err(Box::new(
+                        AvsRegistryError::GetOperatorStakeInQuorumAtBlockNumber,
+                    )),
                 }
             }
-            Err(_) => return Err(Box::new(AvsRegistryError::GetBlockNumber)),
+            Err(_) => Err(Box::new(AvsRegistryError::GetBlockNumber)),
         }
     }
 
+    /// Get operators stake in quorums of operator at block
     pub async fn get_operators_stake_in_quorums_of_operator_at_block(
         &self,
         operator_id: B256,
@@ -207,16 +202,15 @@ impl AvsRegistryChainReader {
                 let quorums = bitmap_to_quorum_ids(quorum_bitmaps);
 
                 let s = (quorums, operator_stakes);
-                return Ok(s);
+                Ok(s)
             }
-            Err(_) => {
-                return Err(Box::new(
-                    AvsRegistryError::GetOperatorStakeInQuorumAtBlockOperatorId,
-                ))
-            }
+            Err(_) => Err(Box::new(
+                AvsRegistryError::GetOperatorStakeInQuorumAtBlockOperatorId,
+            )),
         }
     }
 
+    /// Get operators stake in quorums of operator at current block
     pub async fn get_operators_stake_in_quorums_of_operator_at_current_block(
         &self,
         operator_id: B256,
@@ -239,6 +233,7 @@ impl AvsRegistryChainReader {
         Ok(operator_stake_in_quorum_of_operaotr_at_block)
     }
 
+    /// Get operator stake in quorums of operator at current block
     pub async fn get_operator_stake_in_quorums_of_operator_at_current_block(
         &self,
         operator_id: B256,
@@ -249,7 +244,7 @@ impl AvsRegistryChainReader {
             RegistryCoordinator::new(self.registry_coordinator_addr, &provider);
 
         let quorum_bitmap = registry_coordinator
-            .getCurrentQuorumBitmap(operator_id.into())
+            .getCurrentQuorumBitmap(operator_id)
             .call()
             .await?;
 
@@ -262,7 +257,7 @@ impl AvsRegistryChainReader {
         let stake_registry = StakeRegistry::new(self.stake_registry_addr, &provider);
         for quorum in quorums.iter() {
             let stakes_result = stake_registry
-                .getCurrentStake(operator_id.into(), *quorum)
+                .getCurrentStake(operator_id, *quorum)
                 .call()
                 .await?;
 
@@ -272,7 +267,7 @@ impl AvsRegistryChainReader {
         Ok(quorum_stakes)
     }
 
-    ///
+    /// Get Signature indices
     pub async fn get_check_signatures_indices(
         &self,
         reference_block_number: u32,
@@ -298,6 +293,7 @@ impl AvsRegistryChainReader {
         Ok(indices)
     }
 
+    /// Get Operator Id
     pub async fn get_operator_id(
         &self,
         operator_address: Address,
@@ -336,6 +332,7 @@ impl AvsRegistryChainReader {
         Ok(operator_address)
     }
 
+    /// Check if operator is registered
     pub async fn is_operator_registered(
         &self,
         operator_address: Address,
@@ -398,8 +395,8 @@ impl AvsRegistryChainReader {
                     let g2_pub_key = data.pubkeyG2.clone();
 
                     let operator_pub_key = OperatorPubKeys {
-                        g1_pub_key: g1_pub_key,
-                        g2_pub_key: g2_pub_key,
+                        g1_pub_key,
+                        g2_pub_key,
                     };
 
                     operator_pub_keys.push(operator_pub_key);
@@ -489,8 +486,10 @@ mod tests {
             Address::from_word(keccak256("registry")),
             Address::from_word(keccak256("operator")),
             Address::from_word(keccak256("stake")),
-        );
+        )
+        .await;
     }
+
     fn build_avs_registry_chain_reader() -> AvsRegistryChainReader {
         let holesky_registry_coordinator =
             Address::from_str(HOLESKY_REGISTRY_COORDINATOR).expect("failed to parse address");
@@ -504,15 +503,13 @@ mod tests {
             Address::from_str(HOLESKY_BLS_APK_REGISTRY).expect("failed to parse address");
 
         let holesky_provider = "https://ethereum-holesky.blockpi.network/v1/rpc/public";
-        let avs_registry_chain_reader = AvsRegistryChainReader::new(
+        AvsRegistryChainReader::new(
             holesky_registry_coordinator,
             holesky_bls_apk_registry,
             holesky_operator_state_retriever,
             holesky_stake_registry,
             holesky_provider.to_string(),
-        );
-
-        return avs_registry_chain_reader;
+        )
     }
 
     #[tokio::test]

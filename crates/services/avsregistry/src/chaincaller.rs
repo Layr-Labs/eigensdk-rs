@@ -55,7 +55,7 @@ impl AvsRegistryServiceChainCaller {
                     .or_insert_with(|| OperatorAvsState {
                         operator_id: *operator.operatorId,
                         operator_info: OperatorInfo { pub_keys: info },
-                        stake_per_quorum: stake_per_quorum,
+                        stake_per_quorum,
                         block_num: block_num.into(),
                     });
                 avs_state
@@ -101,12 +101,12 @@ impl AvsRegistryServiceChainCaller {
                 *quorum_num,
                 QuorumAvsState {
                     quorum_num: *quorum_num,
-                    total_stake: total_stake,
+                    total_stake,
                     agg_pub_key_g1: G1Point {
                         X: g1_point.X,
                         Y: g1_point.Y,
                     },
-                    block_num: block_num,
+                    block_num,
                 },
             );
         }
