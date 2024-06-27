@@ -35,5 +35,9 @@ cd ../../contracts
 # at which it was deployed (aka quorum was created/updated), but when we start anvil by loading state file it starts at block number 0
 # so calling getOperatorListAtBlockNumber reverts because it thinks there are no quorums registered at block 0
 # advancing chain manually like this is a current hack until https://github.com/foundry-rs/foundry/issues/6679 is merged
-cast rpc anvil_mine 100 --rpc-url $RPC_URL
-echo "advancing chain... current block-number:" $(cast block-number)
+cast rpc anvil_mine 200 --rpc-url http://localhost:8545 > /dev/null
+echo "Anvil is ready. Advanced chain to block-number:" $(cast block-number)
+
+
+docker attach anvil
+

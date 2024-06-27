@@ -1,7 +1,6 @@
 use alloy_primitives::Address;
-use alloy_provider::{Provider, ProviderBuilder};
+use alloy_provider::{Provider, ProviderBuilder, WsConnect};
 use alloy_rpc_types::Filter;
-use alloy_transport_ws::WsConnect;
 use anyhow::Result;
 use eigen_client_avsregistry::{
     reader::AvsRegistryChainReader, subscriber::AvsRegistryChainSubscriber,

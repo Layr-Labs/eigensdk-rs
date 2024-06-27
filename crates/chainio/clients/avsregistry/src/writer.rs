@@ -1,5 +1,5 @@
 use alloy_signer::SignerSync;
-use alloy_signer_wallet::LocalWallet;
+use alloy_signer_local::PrivateKeySigner;
 use ark_bn254::G1Projective;
 use eigen_chainio_utils::{
     convert_bn254_to_ark, convert_to_bn254_g1_point, convert_to_bn254_g2_point,
@@ -124,7 +124,7 @@ impl AvsRegistryChainWriter {
         socket: String,
     ) -> Result<TxHash, Box<dyn std::error::Error>> {
         let provider = get_signer(self.signer.clone(), &self.provider);
-        let wallet = LocalWallet::from_str(&self.signer).expect("failed to generate wallet ");
+        let wallet = PrivateKeySigner::from_str(&self.signer).expect("failed to generate wallet ");
 
         // tracing info
         info!(avs_service_manager = %self.service_manager_addr, operator= %wallet.address(),quorum_numbers = ?quorum_numbers,"quorum_numbers,registering operator with the AVS's registry coordinator");

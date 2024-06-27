@@ -20,7 +20,7 @@ eigen-crypto-bls.workspace = true
 eigen-crypto-bn254.workspace = true
 alloy-contract.workspace = true
 alloy-primitives.workspace = true
-alloy-provider.workspace = true
+alloy-provider= {workspace = true , features = ["ws"]}
 alloy-transport-ws.workspace = true
 futures-util.workspace = true
 tokio = { workspace = true, features = ["rt-multi-thread", "macros"] }
