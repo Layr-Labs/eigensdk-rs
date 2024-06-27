@@ -25,7 +25,10 @@ jobs:
           cache-on-failure: true
       - name: docker
         uses: docker-practice/actions-setup-docker@master
-  
+
+      - name : Install foundry image
+        run : docker pull ghcr.io/foundry-rs/foundry:latest  
+
       - name: Run make pr
         run: make pr
 
