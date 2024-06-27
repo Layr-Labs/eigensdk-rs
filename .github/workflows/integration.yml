@@ -29,7 +29,7 @@ jobs:
       - name: Install Foundry
         run: |
           curl -L https://foundry.paradigm.xyz | bash
-          source /home/runner/.bashrc
+          export PATH="$HOME/.foundry/bin:$PATH"
           foundryup 
 
       - name: Run make pr
