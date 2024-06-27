@@ -1437,17 +1437,21 @@ name = "eigen-client-elcontracts"
 version = "0.0.1-alpha"
 dependencies = [
  "alloy-contract",
+ "alloy-eips",
  "alloy-network",
  "alloy-primitives",
  "alloy-provider",
  "alloy-signer",
+ "alloy-signer-local",
  "alloy-sol-types",
  "ark-bn254",
  "ark-ff 0.4.2",
+ "eigen-testing-utils",
  "eigen-types",
  "eigen-utils",
  "reqwest 0.12.5",
  "thiserror",
+ "tokio",
  "tracing",
 ]
 
