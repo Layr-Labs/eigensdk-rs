@@ -26,13 +26,14 @@ jobs:
       - name: docker
         uses: docker-practice/actions-setup-docker@master
 
-      - name: Install Foundry
+      - name: Install Foundry and run make pr
         run: |
           curl -L https://foundry.paradigm.xyz | bash
+          source ~/.bashrc
+          foundryup
           export PATH="$HOME/.foundry/bin:$PATH"
-
-      - name: Run make pr
-        run: make pr
+          chmod +x ./crates/contracts/anvil/*.sh
+          make pr
 
       - name: Run tests
         run: cargo test --workspace --all-features
