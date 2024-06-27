@@ -17,7 +17,7 @@ __TESTING__: ##
 pr: ## 
 	$(MAKE) start-anvil-chain-with-contracts-deployed
 	$(MAKE) start-anvil
-	cargo test --workspace
+	cargo test --workspace --all-features
 	cargo +nightly fmt -- --check
 	$(MAKE) stop-anvil
 
