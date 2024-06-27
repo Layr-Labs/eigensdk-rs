@@ -14,7 +14,6 @@ use alloy_signer_local::PrivateKeySigner;
 use alloy_transport_http::{Client, Http};
 use reqwest::Url;
 use std::fs;
-use std::str::FromStr;
 pub fn read_file(path: &str) -> String {
     fs::read_to_string(path).unwrap()
 }

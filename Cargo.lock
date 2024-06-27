@@ -1385,7 +1385,16 @@ dependencies = [
 name = "eigen-client-elcontracts"
 version = "0.0.1-alpha"
 dependencies = [
- "alloy-primitives"
+ "alloy-eips",
+ "alloy-primitives",
+ "alloy-provider",
+ "alloy-signer-local",
+ "eigen-testing-utils",
+ "eigen-types",
+ "eigen-utils",
+ "thiserror",
+ "tokio",
+ "tracing",
 ]
 
 [[package]]

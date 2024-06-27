@@ -1,6 +1,6 @@
 //! Anvil utilities
 use alloy_network::Ethereum;
-use alloy_primitives::{address, Address, U256};
+use alloy_primitives::{address, Address};
 use alloy_provider::{
     fillers::{ChainIdFiller, FillProvider, GasFiller, JoinFill, NonceFiller},
     RootProvider,

@@ -107,7 +107,7 @@ sol!(
     "../../crates/contracts/bindings/utils/json/ECDSAStakeRegistry.json"
 );
 
-/// Anvil utilities /////
+// Anvil utilities
 
 sol!(
     #[allow(missing_docs)]

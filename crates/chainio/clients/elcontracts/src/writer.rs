@@ -60,14 +60,12 @@ impl ELChainWriter {
             Some(metadata) => {
                 let contract_call =
                     contract_delegation_manager.registerAsOperator(op_details, metadata);
-                let binding = contract_call.gas(130000);
-                binding
+                contract_call.gas(130000)
             }
             None => {
                 let contract_call =
                     contract_delegation_manager.registerAsOperator(op_details, "".to_string());
-                let binding = contract_call.gas(130000);
-                binding
+                contract_call.gas(130000)
             }
         };
         let tx = binding.send().await?;
