@@ -30,12 +30,14 @@ cargo run --example get_quorum_count
 
 ## Contributor Guidelines
 
-We are actively looking for contributors. Thank you for your interest.
+We are actively looking for contributors. Thank you for your interest. We have strict ci checks in place. In case of any questions and support , feel free to dm on telegram.
 
-Ensure the following passes when raising a PR
+To test locally and raise a PR :- 
 
-- `cargo test --workspace --all-features`
-- `cargo +nightly fmt -- --check`
+You need `foundry` , `docker` and `make`  and `nightly rust` to successfully run it.
+```
+make pr 
+```
 
 ## Supported Rust Version
 
