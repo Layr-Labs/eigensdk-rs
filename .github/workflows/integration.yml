@@ -18,22 +18,26 @@ jobs:
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
+        
+      - name: Install nightly Rust
+        run: rustup toolchain install nightly
+  
+      - name: Install rustfmt for nightly
+        run: rustup component add rustfmt --toolchain nightly
 
       - name: Cache Rust dependencies
         uses: Swatinem/rust-cache@v2
         with:
           cache-on-failure: true
+      - name: clippy
+        uses: dtolnay/rust-toolchain@clippy
+        
+      - name: Install Foundry
+        run: cargo install --git https://github.com/foundry-rs/foundry --profile release --locked forge cast chisel anvil
+
       - name: docker
         uses: docker-practice/actions-setup-docker@master
-
-      - name: Install Foundry
-        run: |
-          curl -L https://foundry.paradigm.xyz | bash
-          export PATH="$HOME/.foundry/bin:$PATH"
-          foundryup 
 
       - name: Run make pr
         run: make pr
 
-      - name: Run tests
-        run: cargo test --workspace --all-features

@@ -63,13 +63,13 @@ cd $root_dir/contracts
 # DO NOT REMOVE THE SLOW DIRECTIVE FROM THIS SCRIPT INVOCATION
 # slow ensures that the transaction reciept is successful and recieved before sending the next transaction
 # this should prevent the strategies deploying/registering in a flakey manner,
-forge script script/DeployTokensStrategiesCreateQuorums.s.sol --rpc-url $ETH_HTTP_URL --private-key $DEPLOYER_PRIVATE_KEY --broadcast 
+forge script script/DeployTokensStrategiesCreateQuorums.s.sol --rpc-url $ETH_HTTP_URL --private-key $DEPLOYER_PRIVATE_KEY --broadcast --slow
 
 # REGISTER OPERATORS WITH EIGENLAYER
 cd $root_dir/contracts
 # DO NOT REMOVE THE SLOW DIRECTIVE FROM THIS SCRIPT INVOCATION
 # slow ensures that the transaction receipt is successful and recieved before sending the next transaction
 # this should prevent the operators registering in a flakey manner, the operators registered will change from run to run without this
-forge script script/RegisterOperatorsWithEigenlayer.s.sol --rpc-url $ETH_HTTP_URL --private-key $DEPLOYER_PRIVATE_KEY --broadcast 
+forge script script/RegisterOperatorsWithEigenlayer.s.sol --rpc-url $ETH_HTTP_URL --private-key $DEPLOYER_PRIVATE_KEY --broadcast --slow
 
 forge script script/UpdateOperators.s.sol --rpc-url $ETH_HTTP_URL --private-key $DEPLOYER_PRIVATE_KEY --broadcast --slow
