@@ -20,7 +20,7 @@ jobs:
           toolchain: stable
         
       - name: Install nightly Rust
-        run: rustup toolchain install nightly
+        run: rustup component add --toolchain nightly-x86_64-unknown-linux-gnu rustfmt
 
       - name: Cache Rust dependencies
         uses: Swatinem/rust-cache@v2
