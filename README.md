@@ -30,7 +30,7 @@ cargo run --example get_quorum_count
 
 ## Contributor Guidelines
 
-We are actively looking for contributors. Thank you for your interest. We have strict ci checks in place. In case of any questions and support , feel free to dm on telegram.
+We are actively looking for contributors. Thank you for your interest. We have strict ci checks in place. In case of any questions and support , feel free to raise an issue.
 
 To test locally and raise a PR :- 
 
