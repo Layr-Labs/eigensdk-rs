@@ -32,7 +32,6 @@ impl AvsRegistryChainReader {
     pub async fn new(
         registry_coordinator_addr: Address,
         operator_state_retriever_addr: Address,
-        stake_registry_addr: Address,
         provider_url: String,
     ) -> Result<AvsRegistryChainReader, Box<dyn std::error::Error>> {
         let provider = get_provider(&provider_url);
@@ -40,19 +39,34 @@ impl AvsRegistryChainReader {
         let contract_registry_coordinator =
             RegistryCoordinator::new(registry_coordinator_addr, &provider);
 
-        let bls_apk_registry_addr = contract_registry_coordinator.blsApkRegistry().call().await;
+        let bls_apk_registry_addr_result =
+            contract_registry_coordinator.blsApkRegistry().call().await;
 
-        match bls_apk_registry_addr {
-            Ok(address) => {
-                let RegistryCoordinator::blsApkRegistryReturn { _0: addres } = address;
+        match bls_apk_registry_addr_result {
+            Ok(bls_apk_registry_return) => {
+                let RegistryCoordinator::blsApkRegistryReturn {
+                    _0: bls_apk_registry_addr,
+                } = bls_apk_registry_return;
 
-                Ok(AvsRegistryChainReader {
-                    bls_apk_registry_addr: addres,
-                    registry_coordinator_addr,
-                    operator_state_retriever: operator_state_retriever_addr,
-                    stake_registry_addr,
-                    provider: provider_url.clone(),
-                })
+                let stake_registry_addr_result =
+                    contract_registry_coordinator.stakeRegistry().call().await;
+
+                match stake_registry_addr_result {
+                    Ok(stake_registry_return) => {
+                        let RegistryCoordinator::stakeRegistryReturn {
+                            _0: stake_registry_addr,
+                        } = stake_registry_return;
+
+                        Ok(AvsRegistryChainReader {
+                            bls_apk_registry_addr,
+                            registry_coordinator_addr,
+                            operator_state_retriever: operator_state_retriever_addr,
+                            stake_registry_addr,
+                            provider: provider_url.clone(),
+                        })
+                    }
+                    Err(_) => Err(Box::new(AvsRegistryError::GetStakeRegistry)),
+                }
             }
 
             Err(_) => Err(Box::new(AvsRegistryError::GetBlsApkRegistry)),
@@ -445,7 +459,6 @@ impl AvsRegistryChainReader {
 mod tests {
 
     use super::*;
-    use alloy_primitives::keccak256;
     use hex::FromHex;
     use std::str::FromStr;
     const HOLESKY_REGISTRY_COORDINATOR: &str = "0x53012C69A189cfA2D9d29eb6F19B32e0A2EA3490";
@@ -459,14 +472,10 @@ mod tests {
         let holesky_operator_state_retriever =
             Address::from_str(HOLESKY_OPERATOR_STATE_RETRIEVER).expect("failed to parse address");
 
-        let holesky_stake_registry =
-            Address::from_str(HOLESKY_STAKE_REGISTRY).expect("failed to parse address");
-
         let holesky_provider = "https://ethereum-holesky.blockpi.network/v1/rpc/public";
         let reader = AvsRegistryChainReader::new(
             holesky_registry_coordinator,
             holesky_operator_state_retriever,
-            holesky_stake_registry,
             holesky_provider.to_string(),
         )
         .await
