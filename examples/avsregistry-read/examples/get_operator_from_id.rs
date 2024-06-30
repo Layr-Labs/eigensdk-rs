@@ -12,11 +12,12 @@ async fn main() -> Result<()> {
     let holesky_provider = "https://holesky.drpc.org";
     let avs_registry = AvsRegistryChainReader::new(
         REGISTRY_COORDINATOR,
-        BLS_APK_REGISTRY,
         OPERATOR_STATE_RETRIEVER,
         STAKE_REGISTRY,
         holesky_provider.to_string(),
-    );
+    )
+    .await
+    .expect("failed to build avs registry chain reader");
     let operator_id =
         FixedBytes::from_str("0xb31102e4cf235efcb84545cb656b039782755994835365d1cd11764ccb4f2fdd")
             .expect("invalid operator id ");
