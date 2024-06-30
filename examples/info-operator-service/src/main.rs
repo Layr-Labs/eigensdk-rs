@@ -16,7 +16,6 @@ async fn main() {
     let avs_registry_chain_reader = AvsRegistryChainReader::new(
         address!("53012C69A189cfA2D9d29eb6F19B32e0A2EA3490"),
         address!("B4baAfee917fb4449f5ec64804217bccE9f46C67"),
-        address!("BDACD5998989Eec814ac7A0f0f6596088AA2a270"),
         HOLESKY_PROVIDER.to_string(),
     )
     .await
