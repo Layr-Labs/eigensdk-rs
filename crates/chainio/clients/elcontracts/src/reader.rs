@@ -227,8 +227,10 @@ mod tests {
     use alloy_provider::Provider;
     use eigen_testing_utils::anvil_constants::{self, ANVIL_RPC_URL};
     use eigen_utils::binding::mockAvsServiceManager;
+    use tokio::time::{sleep, Duration};
     use AVSDirectory::calculateOperatorAVSRegistrationDigestHashReturn;
     use DelegationManager::calculateDelegationApprovalDigestHashReturn;
+
     async fn build_el_chain_reader() -> ELChainReader {
         let delegation_manager_address = anvil_constants::get_delegation_manager_address().await;
         let delegation_manager_contract = DelegationManager::new(
@@ -262,6 +264,8 @@ mod tests {
 
     #[tokio::test]
     async fn test_calculate_delegation_approval_digest_hash() {
+        // Introduce a 2-second delay
+        sleep(Duration::from_secs(2)).await;
         let el_chain_reader = build_el_chain_reader().await;
         let operator: Address = address!("5eb15C0992734B5e77c888D713b4FC67b3D679A2");
 
