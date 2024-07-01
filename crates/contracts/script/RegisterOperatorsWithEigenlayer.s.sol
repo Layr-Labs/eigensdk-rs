@@ -58,8 +58,6 @@ contract RegisterOperators is ConfigsReadWriter, EigenlayerContractsParser, Toke
             (, uint256 privateKey) = deriveRememberKey(mnemonic, uint32(i));
             vm.startBroadcast(privateKey);
                     if (block.chainid == 31337 || block.chainid == 1337) {
-                        console2.log(vm.addr(privateKey));
-                        console2.log(privateKey,i);
             contractsRegistry.store_test("test_register_operator",int(i),block.number,block.timestamp);
                     }
             eigenlayerContracts.delegationManager.registerAsOperator(

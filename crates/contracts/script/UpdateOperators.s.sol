@@ -29,7 +29,7 @@ contract UpdateOperators is ConfigsReadWriter, EigenlayerContractsParser, TokenA
     function run() external {
         EigenlayerContracts memory eigenlayerContracts = _loadEigenlayerDeployedContracts();
         TokenAndStrategyContracts memory tokenAndStrategy = _loadTokenAndStrategyContracts();
-
+        
         address[] memory operators = new address[](numberOfOperators);
         uint256[] memory operatorsETHAmount = new uint256[](numberOfOperators);
         uint256[] memory operatorTokenAmounts = new uint256[](numberOfOperators);

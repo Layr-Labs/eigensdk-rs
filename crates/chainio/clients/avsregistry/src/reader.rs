@@ -473,14 +473,13 @@ mod tests {
             Address::from_str(HOLESKY_OPERATOR_STATE_RETRIEVER).expect("failed to parse address");
 
         let holesky_provider = "https://ethereum-holesky.blockpi.network/v1/rpc/public";
-        let reader = AvsRegistryChainReader::new(
+        AvsRegistryChainReader::new(
             holesky_registry_coordinator,
             holesky_operator_state_retriever,
             holesky_provider.to_string(),
         )
         .await
-        .unwrap();
-        reader
+        .unwrap()
     }
 
     #[tokio::test]

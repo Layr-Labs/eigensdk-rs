@@ -33,7 +33,6 @@ contract DeployTokensStrategiesCreateQuorums is Script, EigenlayerContractsParse
         IERC20 mockToken;
         vm.startBroadcast();
         uint256 current_block_num = vm.getBlockNumber();
-        console.log("11current block number", current_block_num);
         if (block.chainid == 31337 || block.chainid == 1337) {
             (mockToken, strat) = _deployErc20AndStrategyAndWhitelistStrategy(
                 eigenlayerContracts.eigenlayerProxyAdmin,

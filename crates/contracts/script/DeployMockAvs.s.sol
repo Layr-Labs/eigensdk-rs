@@ -41,6 +41,9 @@ contract DeployMockAvs is DeployMockAvsRegistries {
         require(Ownable(address(mockAvsServiceManager)).owner() != address(0), "Owner uninitialized");
 
         if (block.chainid == 31337 || block.chainid == 1337) {
+            contractsRegistry.registerContract("ProxyAdmin",address(mockAvsProxyAdmin));
+            contractsRegistry.registerContract("AvsDirectory",address(eigenlayerContracts.avsDirectory));
+            contractsRegistry.registerContract("eigenlayerPauserReg", address(eigenlayerContracts.eigenlayerPauserReg));
             _writeContractsToRegistry(contractsRegistry, eigenlayerContracts, mockAvsContracts);
         }
         vm.stopBroadcast();
