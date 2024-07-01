@@ -117,3 +117,18 @@ pub async fn get_erc20_mock_strategy() -> Address {
 
     address
 }
+
+/// proxy admin contract address
+pub async fn get_proxy_admin() -> Address {
+    let contracts_registry = ContractsRegistry::new(CONTRACTS_REGISTRY, (*ANVIL_RPC_URL).clone());
+
+    let val = contracts_registry
+        .contracts("ProxyAdmin".to_string())
+        .call()
+        .await
+        .unwrap();
+
+    let contractsReturn { _0: address } = val;
+
+    address
+}
