@@ -73,6 +73,8 @@ fn hash_to_g1(digest: &[u8; 32]) -> G1Affine {
         }
     }
 }
+
+#[derive(Debug)]
 pub struct KeyPair {
     priv_key: PrivateKey,
     pub_key: G1Projective,
