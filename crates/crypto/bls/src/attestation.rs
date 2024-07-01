@@ -119,6 +119,10 @@ impl KeyPair {
             Err(_) => Err(BlsError::MulByG2Projective),
         }
     }
+
+    pub fn priv_key(&self) -> PrivateKey {
+        self.priv_key
+    }
 }
 
 pub fn bigint_to_hex(bigint: &BigInteger256) -> String {
