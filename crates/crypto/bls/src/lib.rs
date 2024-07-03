@@ -126,6 +126,10 @@ impl BlsKeypair {
             }
         }
     }
+
+    pub fn priv_key(&self) -> Fr {
+        self.private
+    }
 }
 
 pub struct EthConvert;
