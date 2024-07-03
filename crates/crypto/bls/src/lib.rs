@@ -14,13 +14,8 @@ use ark_ff::{
     fields::{Field, PrimeField},
     BigInt, BigInteger, One,
 };
-use eigen_utils::
-    binding::BLSApkRegistry::{G1Point, G2Point};
-use ethers::{
-    core::types::{H256},
-    types::Address,
-    utils::keccak256,
-};
+use eigen_utils::binding::BLSApkRegistry::{G1Point, G2Point};
+use ethers::{core::types::H256, types::Address, utils::keccak256};
 use num_bigint::BigUint;
 
 pub type PrivateKey = Fr;
@@ -79,8 +74,9 @@ impl BlsKeypair {
                 xy.0.into_bigint().to_bytes_be(),
                 xy.1.into_bigint().to_bytes_be(),
             ]
-            .concat()
-        ).into()
+            .concat(),
+        )
+        .into()
     }
 
     pub fn make_pubkey_registration_data(
@@ -132,7 +128,6 @@ impl BlsKeypair {
     }
 }
 
-
 pub struct EthConvert;
 impl EthConvert {
     pub fn to_u256(p: &Fq) -> alloy_primitives::U256 {
@@ -159,7 +154,6 @@ impl EthConvert {
         G1Affine::new(x.into(), y.into())
     }
 }
-
 
 #[test]
 fn test_map_parity() {

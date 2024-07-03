@@ -11,7 +11,7 @@ use aes::{
 use ark_ec::{AffineRepr, CurveGroup};
 use ark_ff::{fields::PrimeField, Field};
 use eth_keystore::{CryptoJson, KdfparamsType};
-use ethers::{signers::LocalWallet, utils::keccak256, types::H256};
+use ethers::{signers::LocalWallet, types::H256, utils::keccak256};
 use eyre::{eyre, Ok, Report};
 use rand::{thread_rng, RngCore};
 use scrypt::{scrypt, Params as ScryptParams};
@@ -115,10 +115,7 @@ where
     };
 
     // Derive the MAC from the derived key and ciphertext.
-    let derived_mac: H256 = keccak256(
-        [&key[16..32], &keystore.crypto.ciphertext]
-            .concat()
-    ).into();
+    let derived_mac: H256 = keccak256([&key[16..32], &keystore.crypto.ciphertext].concat()).into();
 
     if derived_mac.as_bytes() != keystore.crypto.mac.as_slice() {
         return Err(eyre!("MacMismatch"));
