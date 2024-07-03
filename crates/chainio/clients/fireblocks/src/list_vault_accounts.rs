@@ -9,6 +9,7 @@ struct Asset {
     available: String,
 }
 
+#[allow(unused)]
 struct VaultAccount {
     id: String,
     name: String,

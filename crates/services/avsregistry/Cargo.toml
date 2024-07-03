@@ -9,13 +9,9 @@ repository.workspace = true
 license-file.workspace = true
 
 [dependencies]
-ethers.workspace = true
-eth-keystore = "0.5.0"
-thiserror.workspace = true
 eigen-client-avsregistry.workspace = true
 eigen-services-operatorsinfo.workspace = true
 eigen-types.workspace = true
-eigen-contract-bindings.workspace = true
 eigen-crypto-bls.workspace = true
 eigen-crypto-bn254.workspace = true
 alloy-primitives.workspace = true

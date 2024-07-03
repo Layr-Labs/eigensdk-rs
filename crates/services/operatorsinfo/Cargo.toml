@@ -9,22 +9,12 @@ repository.workspace = true
 license-file.workspace = true
 
 [dependencies]
-ethers.workspace = true
-eyre.workspace = true
-eth-keystore = "0.5.0"
-thiserror.workspace = true
 eigen-client-avsregistry.workspace = true
 eigen-types.workspace = true
-eigen-contract-bindings.workspace = true
-eigen-crypto-bls.workspace = true
-eigen-crypto-bn254.workspace = true
-alloy-contract.workspace = true
 alloy-primitives.workspace = true
-alloy-provider.workspace = true
-alloy-transport-ws.workspace = true
+alloy-provider= {workspace = true , features = ["ws"]}
 futures-util.workspace = true
 tokio = { workspace = true, features = ["rt-multi-thread", "macros"] }
-tracing.workspace = true
 anyhow = "1.0.83"
 alloy-rpc-types.workspace = true
 eigen-utils.workspace = true

@@ -9,6 +9,5 @@ repository.workspace = true
 license-file.workspace = true
 
 [dependencies]
-ethers.workspace = true
 
 

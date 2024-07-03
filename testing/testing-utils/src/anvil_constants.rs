@@ -1,13 +1,13 @@
 //! Anvil utilities
 use alloy_network::Ethereum;
-use alloy_primitives::{address, Address, U256};
+use alloy_primitives::{address, Address};
 use alloy_provider::{
     fillers::{ChainIdFiller, FillProvider, GasFiller, JoinFill, NonceFiller},
     RootProvider,
 };
 use alloy_transport_http::{Client, Http};
 use eigen_utils::{
-    binding::ContractsRegistry::{self, contractNamesReturn},
+    binding::ContractsRegistry::{self, contractsReturn},
     get_provider,
 };
 use once_cell::sync::Lazy;
@@ -15,6 +15,7 @@ use once_cell::sync::Lazy;
 /// Local anvil ContractsRegistry which contains a mapping of all locally deployed EL contracts.
 pub const CONTRACTS_REGISTRY: Address = address!("5FbDB2315678afecb367f032d93F642f64180aa3");
 
+#[allow(clippy::type_complexity)]
 /// Local anvil rpc url alloy instance
 pub static ANVIL_RPC_URL: Lazy<
     FillProvider<
@@ -26,93 +27,108 @@ pub static ANVIL_RPC_URL: Lazy<
         Http<Client>,
         Ethereum,
     >,
-> = Lazy::new(|| get_provider(&"http://localhost:8545".to_string()));
+> = Lazy::new(|| get_provider("http://localhost:8545"));
 
 /// Service Manager contract address
-pub async fn get_service_manager_address() {
+pub async fn get_service_manager_address() -> Address {
     let contracts_registry = ContractsRegistry::new(CONTRACTS_REGISTRY, (*ANVIL_RPC_URL).clone());
 
     let val = contracts_registry
-        .contractNames(U256::from(0))
+        .contracts("mockAvsServiceManager".to_string())
         .call()
         .await
         .unwrap();
 
-    let contractNamesReturn { _0: first_name } = val;
-
-    println!("contract name  : {:?}", first_name);
+    let contractsReturn { _0: address } = val;
+    address
 }
 
 /// Registry Coordinator contract address
-pub async fn get_registry_coordinator_address() {
+pub async fn get_registry_coordinator_address() -> Address {
     let contracts_registry = ContractsRegistry::new(CONTRACTS_REGISTRY, (*ANVIL_RPC_URL).clone());
 
     let val = contracts_registry
-        .contractNames(U256::from(1))
+        .contracts("mockAvsRegistryCoordinator".to_string())
         .call()
         .await
         .unwrap();
 
-    let contractNamesReturn { _0: first_name } = val;
+    let contractsReturn { _0: address } = val;
 
-    println!("contract name  : {:?}", first_name);
+    address
 }
 
 /// Operator state retriever contract address
-pub async fn get_operator_state_retriever_address() {
+pub async fn get_operator_state_retriever_address() -> Address {
     let contracts_registry = ContractsRegistry::new(CONTRACTS_REGISTRY, (*ANVIL_RPC_URL).clone());
 
     let val = contracts_registry
-        .contractNames(U256::from(2))
+        .contracts("mockAvsOperatorStateRetriever".to_string())
         .call()
         .await
         .unwrap();
 
-    let contractNamesReturn { _0: first_name } = val;
+    let contractsReturn { _0: address } = val;
 
-    println!("contract name  : {:?}", first_name);
+    address
 }
 
 /// Delegation Manager contract address
-pub async fn get_delegation_manager_address() {
+pub async fn get_delegation_manager_address() -> Address {
     let contracts_registry = ContractsRegistry::new(CONTRACTS_REGISTRY, (*ANVIL_RPC_URL).clone());
 
     let val = contracts_registry
-        .contractNames(U256::from(3))
+        .contracts("delegationManager".to_string())
         .call()
         .await
         .unwrap();
 
-    let contractNamesReturn { _0: first_name } = val;
+    let contractsReturn { _0: address } = val;
 
-    println!("contract name  : {:?}", first_name);
+    address
 }
 
 /// Strategy Mananger contract address
-pub async fn get_strategy_manager_address() {
+pub async fn get_strategy_manager_address() -> Address {
     let contracts_registry = ContractsRegistry::new(CONTRACTS_REGISTRY, (*ANVIL_RPC_URL).clone());
 
     let val = contracts_registry
-        .contractNames(U256::from(4))
+        .contracts("strategyManager".to_string())
         .call()
         .await
         .unwrap();
 
-    let contractNamesReturn { _0: first_name } = val;
+    let contractsReturn { _0: address } = val;
 
-    println!("contract name  : {:?}", first_name);
+    address
 }
 
-pub async fn get_erc20_mock_strategy() {
+/// erc20 mock strategy contract address
+pub async fn get_erc20_mock_strategy() -> Address {
     let contracts_registry = ContractsRegistry::new(CONTRACTS_REGISTRY, (*ANVIL_RPC_URL).clone());
 
     let val = contracts_registry
-        .contractNames(U256::from(5))
+        .contracts("erc20MockStrategy".to_string())
         .call()
         .await
         .unwrap();
 
-    let contractNamesReturn { _0: first_name } = val;
+    let contractsReturn { _0: address } = val;
 
-    println!("contract name  : {:?}", first_name);
+    address
+}
+
+/// proxy admin contract address
+pub async fn get_proxy_admin() -> Address {
+    let contracts_registry = ContractsRegistry::new(CONTRACTS_REGISTRY, (*ANVIL_RPC_URL).clone());
+
+    let val = contracts_registry
+        .contracts("ProxyAdmin".to_string())
+        .call()
+        .await
+        .unwrap();
+
+    let contractsReturn { _0: address } = val;
+
+    address
 }

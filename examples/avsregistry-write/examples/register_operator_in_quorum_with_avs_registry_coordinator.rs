@@ -19,6 +19,7 @@ use eigen_testing_utils::m2_holesky_constants::{
 use eigen_utils::get_provider;
 use eyre::Result;
 use std::str::FromStr;
+
 #[tokio::main]
 async fn main() -> Result<()> {
     let holesky_provider = "https://holesky.drpc.org";

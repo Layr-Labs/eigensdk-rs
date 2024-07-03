@@ -49,7 +49,7 @@ impl Operator {
             earnings_receiver_address,
             delegation_approver_address,
             staker_opt_out_window_blocks,
-            metadata_url: metadata_url,
+            metadata_url,
         }
     }
 

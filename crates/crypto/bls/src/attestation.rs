@@ -26,9 +26,9 @@ pub struct Signature {
 
 impl Signature {
     pub fn new_zero_signature() -> Self {
-        return Signature {
+        Signature {
             g1_point: G1Point::new_zero_g1_point(),
-        };
+        }
     }
 
     pub fn get_g1_point(&self) -> G1Point {
@@ -73,6 +73,8 @@ fn hash_to_g1(digest: &[u8; 32]) -> G1Affine {
         }
     }
 }
+
+#[derive(Debug, Default)]
 pub struct KeyPair {
     pub priv_key: PrivateKey,
     pub_key: G1Projective,
@@ -83,13 +85,11 @@ impl KeyPair {
         let priv_key_projective_cconfig_result = mul_by_generator_g1(key);
 
         match priv_key_projective_cconfig_result {
-            Ok(priv_key_projective_cconfig) => {
-                return Ok(Self {
-                    priv_key: key,
-                    pub_key: priv_key_projective_cconfig,
-                });
-            }
-            Err(_) => return Err(BlsError::MulByG1Projective),
+            Ok(priv_key_projective_cconfig) => Ok(Self {
+                priv_key: key,
+                pub_key: priv_key_projective_cconfig,
+            }),
+            Err(_) => Err(BlsError::MulByG1Projective),
         }
     }
 
@@ -116,8 +116,12 @@ impl KeyPair {
 
         match mul_result {
             Ok(mul) => Ok(mul),
-            Err(_) => return Err(BlsError::MulByG2Projective),
+            Err(_) => Err(BlsError::MulByG2Projective),
         }
+    }
+
+    pub fn priv_key(&self) -> PrivateKey {
+        self.priv_key
     }
 }
 
@@ -134,7 +138,7 @@ pub fn hex_string_to_biginteger256(hex_str: &str) -> BigInteger256 {
 
     assert!(bytes.len() <= 32, "Byte length exceeds 32 bytes");
 
-    let mut padded_bytes = vec![0u8; 32];
+    let mut padded_bytes = [0u8; 32];
     let start = 32 - bytes.len();
     padded_bytes[start..].copy_from_slice(&bytes);
 

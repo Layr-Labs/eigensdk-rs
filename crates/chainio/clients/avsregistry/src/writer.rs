@@ -3,6 +3,7 @@ use alloy_signer_wallet::LocalWallet;
 use ark_bn254::{G1Affine, G1Projective,Fq,G2Affine,G2Projective};
 use ark_ec::{short_weierstrass::Projective, AffineRepr, CurveGroup};
 use ark_serialize::{CanonicalDeserialize, CanonicalSerialize};
+use alloy_signer_local::PrivateKeySigner;
 use eigen_chainio_utils::{
     convert_bn254_to_ark, convert_to_bn254_g1_point, convert_to_bn254_g2_point,
 };
@@ -44,6 +45,8 @@ pub struct AvsRegistryChainWriter {
 }
 
 impl AvsRegistryChainWriter {
+    /// New AvsRegistryChainWriter instance
+    #[allow(clippy::too_many_arguments)]
     pub async fn new(
         service_manager_addr: Address,
         registry_coordinator_addr: Address,
@@ -66,6 +69,7 @@ impl AvsRegistryChainWriter {
         }
     }
 
+    /// build avs registry chain writer instance
     pub async fn build_avs_registry_chain_writer(
         &self,
         registry_coordinator_addr: Address,
@@ -120,6 +124,7 @@ impl AvsRegistryChainWriter {
         })
     }
 
+    /// Register operator in quorum with avs registry coordinator
     pub async fn register_operator_in_quorum_with_avs_registry_coordinator(
         &self,
         bls_key_pair: KeyPair,
@@ -129,7 +134,7 @@ impl AvsRegistryChainWriter {
         socket: String,
     ) -> Result<TxHash, Box<dyn std::error::Error>> {
         let provider = get_signer(self.signer.clone(), &self.provider);
-        let wallet = LocalWallet::from_str(&self.signer).expect("failed to generate wallet ");
+        let wallet = PrivateKeySigner::from_str(&self.signer).expect("failed to generate wallet ");
 
         // tracing info
         info!(avs_service_manager = %self.service_manager_addr, operator= %wallet.address(),quorum_numbers = ?quorum_numbers,"quorum_numbers,registering operator with the AVS's registry coordinator");
@@ -219,6 +224,7 @@ impl AvsRegistryChainWriter {
         Ok(*tx.tx_hash())
     }
 
+    /// Update stakes of entire operator set for quorums
     pub async fn update_stakes_of_entire_operator_set_for_quorums(
         &self,
         operators_per_quorum: Vec<Vec<Address>>,
@@ -239,6 +245,7 @@ impl AvsRegistryChainWriter {
         return Ok(*tx.tx_hash());
     }
 
+    /// Update stakes of operator subset for all quorums
     pub async fn update_stakes_of_operator_subset_for_all_quorums(
         &self,
         operators: Vec<Address>,
@@ -258,6 +265,7 @@ impl AvsRegistryChainWriter {
         Ok(*tx.tx_hash())
     }
 
+    /// Deregister operator
     pub async fn deregister_operator(
         &self,
         quorum_numbers: Bytes,

@@ -13,6 +13,8 @@ use tokio::time::{self, Duration};
 
 use parking_lot::{RwLock, RwLockReadGuard, RwLockWriteGuard};
 use std::sync::Arc;
+
+#[allow(unused)]
 #[derive(Debug, Clone)]
 pub struct BlsAggregationServiceResponse {
     task_index: TaskIndex,
@@ -55,7 +57,7 @@ impl BlsAggregatorService {
             aggregated_response_sender: tx,
             aggregated_response_receiver: rx,
             signed_task_response: Arc::new(RwLock::new(HashMap::new())),
-            avs_registry_service: avs_registry_service,
+            avs_registry_service,
         }
     }
 
@@ -172,7 +174,7 @@ impl BlsAggregatorService {
 
         tokio::pin!(task_expired_timer);
         let mut aggregated_operators: HashMap<FixedBytes<32>, AggregatedOperators> = HashMap::new();
-        let sig = self
+        let _sig = self
             .verify_signature(task_index, &signed_task_digest, &operator_state_avs)
             .await;
         loop {
@@ -202,7 +204,7 @@ impl BlsAggregatorService {
 
                                 for (quorum_num,stake) in state_avs.stake_per_quorum.clone(){
 
-                                    if let Some(quorum) =  aggregate_response.signers_total_stake_per_quorum.get(&quorum_num){
+                                    if let Some(_quorum) =  aggregate_response.signers_total_stake_per_quorum.get(&quorum_num){
                                             aggregate_response.signers_total_stake_per_quorum.insert(quorum_num, U256::from(0));
 
                                     }
@@ -287,7 +289,7 @@ impl BlsAggregatorService {
 
     pub async fn verify_signature(
         &self,
-        task_index: TaskIndex,
+        _task_index: TaskIndex,
         signed_task_response_digest: &SignedTaskResponseDigest,
         operator_avs_state: &HashMap<FixedBytes<32>, OperatorAvsState>,
     ) {
@@ -306,7 +308,7 @@ impl BlsAggregatorService {
                     ),
                 )
                 .point;
-                let signature_verified = signed_task_response_digest
+                let _signature_verified = signed_task_response_digest
                     .bls_signature
                     .verify_signature(g2_proj, &signed_task_response_digest.task_response_digest);
             }
@@ -321,7 +323,9 @@ impl BlsAggregatorService {
         total_stake_per_quorum: HashMap<u8, U256>,
         quorum_threshold_percentages_map: HashMap<u8, QuorumThresholdPercentage>,
     ) -> bool {
-        for (quorum_num, quorum_threshold_percentage) in quorum_threshold_percentages_map {
+        if let Some((quorum_num, quorum_threshold_percentage)) =
+            quorum_threshold_percentages_map.into_iter().next()
+        {
             // to do check if quorum num <= u8 max assert
             if let Some(signed_stake_by_quorum) = signed_stake_per_quorum.get(&quorum_num) {
                 if let Some(total_stake_by_quorum) = total_stake_per_quorum.get(&quorum_num) {

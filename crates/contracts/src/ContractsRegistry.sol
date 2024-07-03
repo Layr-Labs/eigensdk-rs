@@ -9,8 +9,16 @@ pragma solidity ^0.8.12;
 // forge create src/ContractsRegistry.sol:ContractsRegistry --rpc-url $RPC_URL  --private-key $PRIVATE_KEY
 contract ContractsRegistry {
     mapping(string => address) public contracts;
-    mapping(uint => string) public contractNames;
-    uint public contractCount;
+    mapping(uint256 => string) public contractNames;
+    uint256 public contractCount;
+
+    mapping(bytes32 => BlockAndTimestamp) public anvil_test;
+
+    struct BlockAndTimestamp {
+        uint256 timestamp;
+        uint256 block_number;
+        int256 index;
+    }
 
     function registerContract(string memory name, address _contract) public {
         // we treat redeploys as a bug since this is only meant to be used for testing.
@@ -19,5 +27,16 @@ contract ContractsRegistry {
         contracts[name] = _contract;
         contractNames[contractCount] = name;
         contractCount++;
+    }
+
+    function store_test(string memory test_name, int256 index, uint256 timestamp, uint256 block_number) public {
+        require(anvil_test[keccak256(abi.encodePacked(test_name,index))].timestamp == 0);
+        anvil_test[keccak256(abi.encodePacked(test_name))] =
+            BlockAndTimestamp({timestamp: timestamp, block_number: block_number, index: index});
+    }
+
+    function get_test_values(string memory test_name,int index) public view returns (uint256, uint256, int256) {
+        BlockAndTimestamp memory test_details = anvil_test[keccak256(abi.encodePacked(test_name,index))];
+        return (test_details.timestamp, test_details.block_number, test_details.index);
     }
 }

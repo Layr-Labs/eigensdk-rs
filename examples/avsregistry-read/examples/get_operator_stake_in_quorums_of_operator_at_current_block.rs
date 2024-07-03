@@ -1,9 +1,7 @@
 //! get operators stake in quorums at current block
 use alloy_primitives::FixedBytes;
 use eigen_client_avsregistry::reader::AvsRegistryChainReader;
-use eigen_testing_utils::m2_holesky_constants::{
-    BLS_APK_REGISTRY, OPERATOR_STATE_RETRIEVER, REGISTRY_COORDINATOR, STAKE_REGISTRY,
-};
+use eigen_testing_utils::m2_holesky_constants::{OPERATOR_STATE_RETRIEVER, REGISTRY_COORDINATOR};
 use eyre::Result;
 use std::str::FromStr;
 
@@ -12,11 +10,11 @@ async fn main() -> Result<()> {
     let holesky_provider = "https://holesky.drpc.org";
     let avs_registry = AvsRegistryChainReader::new(
         REGISTRY_COORDINATOR,
-        BLS_APK_REGISTRY,
         OPERATOR_STATE_RETRIEVER,
-        STAKE_REGISTRY,
         holesky_provider.to_string(),
-    );
+    )
+    .await
+    .expect("failed to build avs registry chain reader");
     let operators_state = avs_registry
         .get_operator_stake_in_quorums_of_operator_at_current_block(
             FixedBytes::from_str(

@@ -1,7 +1,6 @@
 use alloy_primitives::Address;
-use alloy_provider::{Provider, ProviderBuilder};
+use alloy_provider::{Provider, ProviderBuilder, WsConnect};
 use alloy_rpc_types::Filter;
-use alloy_transport_ws::WsConnect;
 use anyhow::Result;
 use eigen_client_avsregistry::{
     reader::AvsRegistryChainReader, subscriber::AvsRegistryChainSubscriber,
@@ -15,6 +14,8 @@ use tokio::sync::{
     mpsc::UnboundedSender,
     oneshot::{self, Sender},
 };
+
+#[allow(dead_code)]
 #[derive(Debug)]
 pub struct OperatorInfoServiceInMemory {
     avs_registry_reader: AvsRegistryChainReader,
@@ -23,6 +24,7 @@ pub struct OperatorInfoServiceInMemory {
     pub_keys: UnboundedSender<OperatorsInfoMessage>,
 }
 
+#[allow(dead_code)]
 #[derive(Debug)]
 enum OperatorsInfoMessage {
     InsertOperatorInfo(Address, OperatorPubKeys),
@@ -62,7 +64,7 @@ impl OperatorInfoServiceInMemory {
 
         Self {
             avs_registry_reader: avs_registry_chain_reader,
-            avs_registry_subscriber: avs_registry_subscriber,
+            avs_registry_subscriber,
             ws: web_socket,
             pub_keys: pubkeys_tx,
         }

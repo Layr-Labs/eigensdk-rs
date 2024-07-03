@@ -55,6 +55,7 @@ pub struct ContractCallRequest {
     replace_tx_by_hash: String,
 }
 
+#[allow(unused)]
 pub struct ContractCallResponse {
     id: String,
     status: Status,
