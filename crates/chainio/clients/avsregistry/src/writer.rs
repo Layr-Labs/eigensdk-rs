@@ -39,40 +39,17 @@ pub struct AvsRegistryChainWriter {
 }
 
 impl AvsRegistryChainWriter {
-    /// New AvsRegistryChainWriter instance
-    #[allow(clippy::too_many_arguments)]
-    pub async fn new(
-        service_manager_addr: Address,
-        registry_coordinator_addr: Address,
-        operator_state_retriever_addr: Address,
-        stake_registry_addr: Address,
-        bls_apk_registry_addr: Address,
-        el_reader: ELChainReader,
-        provider: String,
-        signer: String,
-    ) -> Self {
-        AvsRegistryChainWriter {
-            service_manager_addr,
-            registry_coordinator_addr,
-            operator_state_retriever_addr,
-            stake_registry_addr,
-            bls_apk_registry_addr,
-            el_reader,
-            provider,
-            signer,
-        }
-    }
-
     /// build avs registry chain writer instance
     pub async fn build_avs_registry_chain_writer(
-        &self,
+        provider: String,
+        signer: String,
         registry_coordinator_addr: Address,
         operator_state_retriever_addr: Address,
     ) -> Result<Self, Box<dyn std::error::Error>> {
-        let provider = get_provider(&self.provider);
+        let fill_provider = get_provider(&provider);
 
         let contract_registry_coordinator =
-            RegistryCoordinator::new(registry_coordinator_addr, &provider);
+            RegistryCoordinator::new(registry_coordinator_addr, &fill_provider);
 
         let service_manager_addr = contract_registry_coordinator
             .serviceManager()
@@ -81,7 +58,8 @@ impl AvsRegistryChainWriter {
         let RegistryCoordinator::serviceManagerReturn {
             _0: service_manager,
         } = service_manager_addr;
-        let contract_service_manager_base = ServiceManagerBase::new(service_manager, &provider);
+        let contract_service_manager_base =
+            ServiceManagerBase::new(service_manager, &fill_provider);
 
         let bls_apk_registry_addr = contract_registry_coordinator
             .blsApkRegistry()
@@ -92,7 +70,7 @@ impl AvsRegistryChainWriter {
         } = bls_apk_registry_addr;
         let stake_registry_addr = contract_registry_coordinator.stakeRegistry().call().await?;
         let RegistryCoordinator::stakeRegistryReturn { _0: stake_registry } = stake_registry_addr;
-        let contract_stake_registry = StakeRegistry::new(stake_registry, &provider);
+        let contract_stake_registry = StakeRegistry::new(stake_registry, &fill_provider);
 
         let delegation_manager_return = contract_stake_registry.delegation().call().await?;
 
@@ -104,7 +82,7 @@ impl AvsRegistryChainWriter {
         let ServiceManagerBase::avsDirectoryReturn { _0: avs_directory } = avs_directory_addr;
 
         let el_reader =
-            ELChainReader::build(delegation_manager_addr, avs_directory, &self.provider).await?;
+            ELChainReader::build(delegation_manager_addr, avs_directory, &provider).await?;
 
         Ok(AvsRegistryChainWriter {
             service_manager_addr: service_manager,
@@ -113,8 +91,8 @@ impl AvsRegistryChainWriter {
             stake_registry_addr: stake_registry,
             bls_apk_registry_addr: bls_apk_registry,
             el_reader,
-            provider: self.provider.clone(),
-            signer: self.signer.clone(),
+            provider: provider.clone(),
+            signer: signer.clone(),
         })
     }
 
