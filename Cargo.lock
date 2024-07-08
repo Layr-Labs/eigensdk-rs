@@ -1386,6 +1386,7 @@ dependencies = [
 name = "eigen-client-avsregistry"
 version = "0.0.1-alpha"
 dependencies = [
+ "alloy-contract",
  "alloy-network",
  "alloy-primitives",
  "alloy-provider",
@@ -1412,6 +1413,7 @@ dependencies = [
 name = "eigen-client-elcontracts"
 version = "0.0.1-alpha"
 dependencies = [
+ "alloy-contract",
  "alloy-eips",
  "alloy-primitives",
  "alloy-provider",

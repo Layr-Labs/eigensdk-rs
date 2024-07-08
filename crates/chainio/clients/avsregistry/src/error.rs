@@ -1,3 +1,4 @@
+use alloy_contract::error::Error as AlloyError;
 use thiserror::Error;
 
 /// Error returned by AvsRegistry
@@ -126,4 +127,13 @@ pub enum AvsRegistryError {
     /// Failed to subscribe to logs
     #[error("Could not subscribe to logs ")]
     SubscribeLogs,
+
+    #[error("Alloy contract error: {0}")]
+    AlloyContractError(#[from] AlloyError),
+}
+
+impl From<AlloyError> for AvsRegistryError {
+    fn from(err: AlloyError) -> Self {
+        AvsRegistryError::AlloyContractError(err)
+    }
 }

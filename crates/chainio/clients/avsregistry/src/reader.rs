@@ -33,7 +33,7 @@ impl AvsRegistryChainReader {
         registry_coordinator_addr: Address,
         operator_state_retriever_addr: Address,
         provider_url: String,
-    ) -> Result<AvsRegistryChainReader, Box<dyn std::error::Error>> {
+    ) -> Result<AvsRegistryChainReader, AvsRegistryError> {
         let provider = get_provider(&provider_url);
 
         let contract_registry_coordinator =
@@ -65,16 +65,16 @@ impl AvsRegistryChainReader {
                             provider: provider_url.clone(),
                         })
                     }
-                    Err(_) => Err(Box::new(AvsRegistryError::GetStakeRegistry)),
+                    Err(_) => Err(AvsRegistryError::GetStakeRegistry),
                 }
             }
 
-            Err(_) => Err(Box::new(AvsRegistryError::GetBlsApkRegistry)),
+            Err(_) => Err((AvsRegistryError::GetBlsApkRegistry)),
         }
     }
 
     /// Get quorum count
-    pub async fn get_quorum_count(&self) -> Result<u8, Box<dyn std::error::Error>> {
+    pub async fn get_quorum_count(&self) -> Result<u8, AvsRegistryError> {
         let provider = get_provider(&self.provider);
 
         let contract_registry_coordinator =
@@ -88,7 +88,7 @@ impl AvsRegistryChainReader {
                 Ok(quorum)
             }
 
-            Err(_) => Err(Box::new(AvsRegistryError::GetQuorumCount)),
+            Err(_) => Err((AvsRegistryError::GetQuorumCount)),
         }
     }
 
@@ -97,7 +97,7 @@ impl AvsRegistryChainReader {
         &self,
         block_number: u32,
         quorum_numbers: Bytes,
-    ) -> Result<Vec<Vec<OperatorStateRetriever::Operator>>, Box<dyn std::error::Error>> {
+    ) -> Result<Vec<Vec<OperatorStateRetriever::Operator>>, AvsRegistryError> {
         let provider = get_provider(&self.provider);
 
         let contract_operator_state_retriever =
@@ -113,7 +113,7 @@ impl AvsRegistryChainReader {
                     operator_state;
                 Ok(quorum)
             }
-            Err(_) => Err(Box::new(AvsRegistryError::GetOperatorState)),
+            Err(_) => Err((AvsRegistryError::GetOperatorState)),
         }
     }
 
@@ -122,8 +122,7 @@ impl AvsRegistryChainReader {
         &self,
         block_number: u32,
         operator_id: B256,
-    ) -> Result<(U256, Vec<Vec<OperatorStateRetriever::Operator>>), Box<dyn std::error::Error>>
-    {
+    ) -> Result<(U256, Vec<Vec<OperatorStateRetriever::Operator>>), AvsRegistryError> {
         let provider = get_provider(&self.provider);
 
         let contract_operator_state_retriever =
@@ -142,9 +141,7 @@ impl AvsRegistryChainReader {
                 } = operator_state_with_registry_coordinator_and_oeprator_id;
                 Ok((stake, operator_state))
             }
-            Err(_) => Err(Box::new(
-                AvsRegistryError::GetOperatorStateWithRegistryCoordinatorAndOperatorId,
-            )),
+            Err(_) => Err((AvsRegistryError::GetOperatorStateWithRegistryCoordinatorAndOperatorId)),
         }
     }
 
@@ -152,7 +149,7 @@ impl AvsRegistryChainReader {
     pub async fn get_operators_stake_in_quorums_at_current_block(
         &self,
         quorum_numbers: Bytes,
-    ) -> Result<Vec<Vec<OperatorStateRetriever::Operator>>, Box<dyn std::error::Error>> {
+    ) -> Result<Vec<Vec<OperatorStateRetriever::Operator>>, AvsRegistryError> {
         let provider = get_provider(&self.provider);
 
         let current_block_number_result = provider.get_block_number().await;
@@ -160,7 +157,7 @@ impl AvsRegistryChainReader {
         match current_block_number_result {
             Ok(current_block_number) => {
                 if current_block_number > u32::MAX.into() {
-                    return Err(Box::new(AvsRegistryError::BlockNumberOverflow));
+                    return Err((AvsRegistryError::BlockNumberOverflow));
                 }
 
                 let operators_stake_in_quorums_at_block_result = self
@@ -174,12 +171,10 @@ impl AvsRegistryChainReader {
                     Ok(operators_stake_in_quorums_at_block) => {
                         Ok(operators_stake_in_quorums_at_block)
                     }
-                    Err(_) => Err(Box::new(
-                        AvsRegistryError::GetOperatorStakeInQuorumAtBlockNumber,
-                    )),
+                    Err(_) => Err((AvsRegistryError::GetOperatorStakeInQuorumAtBlockNumber,)),
                 }
             }
-            Err(_) => Err(Box::new(AvsRegistryError::GetBlockNumber)),
+            Err(_) => Err((AvsRegistryError::GetBlockNumber)),
         }
     }
 
@@ -188,8 +183,7 @@ impl AvsRegistryChainReader {
         &self,
         operator_id: B256,
         block_number: u32,
-    ) -> Result<(Vec<u8>, Vec<Vec<OperatorStateRetriever::Operator>>), Box<dyn (std::error::Error)>>
-    {
+    ) -> Result<(Vec<u8>, Vec<Vec<OperatorStateRetriever::Operator>>), AvsRegistryError> {
         let result_ = self
             .get_operators_stake_in_quorums_at_block_operator_id(block_number, operator_id)
             .await;
@@ -201,9 +195,7 @@ impl AvsRegistryChainReader {
                 let s = (quorums, operator_stakes);
                 Ok(s)
             }
-            Err(_) => Err(Box::new(
-                AvsRegistryError::GetOperatorStakeInQuorumAtBlockOperatorId,
-            )),
+            Err(_) => Err((AvsRegistryError::GetOperatorStakeInQuorumAtBlockOperatorId,)),
         }
     }
 
@@ -211,14 +203,13 @@ impl AvsRegistryChainReader {
     pub async fn get_operators_stake_in_quorums_of_operator_at_current_block(
         &self,
         operator_id: B256,
-    ) -> Result<(Vec<u8>, Vec<Vec<OperatorStateRetriever::Operator>>), Box<dyn std::error::Error>>
-    {
+    ) -> Result<(Vec<u8>, Vec<Vec<OperatorStateRetriever::Operator>>), AvsRegistryError> {
         let provider = get_provider(&self.provider);
 
         let current_block_number = provider.get_block_number().await?;
 
         if current_block_number > u32::MAX.into() {
-            return Err(Box::new(AvsRegistryError::BlockNumberOverflow));
+            return Err((AvsRegistryError::BlockNumberOverflow));
         }
 
         let operator_stake_in_quorum_of_operaotr_at_block = self
@@ -234,7 +225,7 @@ impl AvsRegistryChainReader {
     pub async fn get_operator_stake_in_quorums_of_operator_at_current_block(
         &self,
         operator_id: B256,
-    ) -> Result<HashMap<u8, BigInt>, Box<dyn std::error::Error>> {
+    ) -> Result<HashMap<u8, BigInt>, AvsRegistryError> {
         let provider = get_provider(&self.provider);
 
         let registry_coordinator =
@@ -270,7 +261,7 @@ impl AvsRegistryChainReader {
         reference_block_number: u32,
         quorum_numbers: Vec<u8>,
         non_signer_operator_ids: Vec<FixedBytes<32>>,
-    ) -> Result<OperatorStateRetriever::CheckSignaturesIndices, Box<dyn std::error::Error>> {
+    ) -> Result<OperatorStateRetriever::CheckSignaturesIndices, AvsRegistryError> {
         let provider = get_provider(&self.provider);
 
         let contract_operator_state_retriever =
@@ -294,7 +285,7 @@ impl AvsRegistryChainReader {
     pub async fn get_operator_id(
         &self,
         operator_address: Address,
-    ) -> Result<FixedBytes<32>, Box<dyn std::error::Error>> {
+    ) -> Result<FixedBytes<32>, AvsRegistryError> {
         let provider = get_provider(&self.provider);
 
         let contract_registry_coordinator =
@@ -312,7 +303,7 @@ impl AvsRegistryChainReader {
     pub async fn get_operator_from_id(
         &self,
         operator_id: [u8; 32],
-    ) -> Result<Address, Box<dyn std::error::Error>> {
+    ) -> Result<Address, AvsRegistryError> {
         let provider = get_provider(&self.provider);
 
         let contract_registry_coordinator =
@@ -333,7 +324,7 @@ impl AvsRegistryChainReader {
     pub async fn is_operator_registered(
         &self,
         operator_address: Address,
-    ) -> Result<bool, Box<dyn std::error::Error>> {
+    ) -> Result<bool, AvsRegistryError> {
         let provider = get_provider(&self.provider);
 
         let contract_registry_coordinator =
@@ -356,7 +347,7 @@ impl AvsRegistryChainReader {
         &self,
         start_block: u64,
         mut stop_block: u64,
-    ) -> Result<(Vec<Address>, Vec<OperatorPubKeys>), Box<dyn std::error::Error>> {
+    ) -> Result<(Vec<Address>, Vec<OperatorPubKeys>), AvsRegistryError> {
         let provider = get_provider(&self.provider);
 
         let query_block_range = 1024;
@@ -409,7 +400,7 @@ impl AvsRegistryChainReader {
         &self,
         start_block: u64,
         stop_block: u64,
-    ) -> Result<HashMap<FixedBytes<32>, String>, Box<dyn std::error::Error>> {
+    ) -> Result<HashMap<FixedBytes<32>, String>, AvsRegistryError> {
         let provider = get_provider(&self.provider);
 
         let mut operator_id_to_socket = HashMap::new();
