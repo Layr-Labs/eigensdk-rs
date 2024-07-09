@@ -1478,7 +1478,6 @@ name = "eigen-crypto-keystore"
 version = "0.0.1-alpha"
 dependencies = [
  "aes",
- "ark-bn254",
  "ark-ec",
  "ark-ff 0.4.2",
  "color-eyre",

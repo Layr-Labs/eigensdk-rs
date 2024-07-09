@@ -52,7 +52,7 @@ impl ELChainReader {
                 })
             }
 
-            Err(e) => Err(ElContractsError::Alloy(e)),
+            Err(e) => Err(ElContractsError::AlloyContractError(e)),
         }
     }
 
@@ -84,7 +84,7 @@ impl ELChainReader {
 
                 Ok(digest_hash)
             }
-            Err(e) => Err(ElContractsError::Alloy(e)),
+            Err(e) => Err(ElContractsError::AlloyContractError(e)),
         }
     }
 
@@ -111,7 +111,7 @@ impl ELChainReader {
 
                 Ok(avs_hash)
             }
-            Err(e) => Err(ElContractsError::Alloy(e)),
+            Err(e) => Err(ElContractsError::AlloyContractError(e)),
         }
     }
 
@@ -135,7 +135,7 @@ impl ELChainReader {
                     operator_shares_in_strategy;
                 Ok(shares)
             }
-            Err(e) => Err(ElContractsError::Alloy(e)),
+            Err(e) => Err(ElContractsError::AlloyContractError(e)),
         }
     }
 
@@ -154,7 +154,7 @@ impl ELChainReader {
                 let ISlasher::isFrozenReturn { _0: is_froze } = operator_is_frozen;
                 Ok(is_froze)
             }
-            Err(e) => Err(ElContractsError::Alloy(e)),
+            Err(e) => Err(ElContractsError::AlloyContractError(e)),
         }
     }
 
@@ -179,7 +179,7 @@ impl ELChainReader {
 
                 Ok(can_slash)
             }
-            Err(e) => Err(ElContractsError::Alloy(e)),
+            Err(e) => Err(ElContractsError::AlloyContractError(e)),
         }
     }
 
@@ -208,7 +208,7 @@ impl ELChainReader {
                 ));
             }
 
-            Err(e) => Err(ElContractsError::Alloy(e)),
+            Err(e) => Err(ElContractsError::AlloyContractError(e)),
         }
     }
 
@@ -240,7 +240,7 @@ impl ELChainReader {
                     None,
                 ))
             }
-            Err(e) => Err(ElContractsError::Alloy(e)),
+            Err(e) => Err(ElContractsError::AlloyContractError(e)),
         }
     }
 
@@ -262,7 +262,7 @@ impl ELChainReader {
                 let DelegationManager::isOperatorReturn { _0: is_operator_is } = is_operator;
                 Ok(is_operator_is)
             }
-            Err(e) => Err(ElContractsError::Alloy(e)),
+            Err(e) => Err(ElContractsError::AlloyContractError(e)),
         }
     }
 }
@@ -377,6 +377,8 @@ mod tests {
 
     #[tokio::test]
     async fn test_calculate_operator_avs_registration_digest_hash() {
+        // a 2 se
+        sleep(Duration::from_secs(2)).await;
         let el_chain_reader = build_el_chain_reader().await;
         let operator: Address = address!("5eb15C0992734B5e77c888D713b4FC67b3D679A2");
         let avs = Address::from_slice(&keccak256("avs ")[0..20]);

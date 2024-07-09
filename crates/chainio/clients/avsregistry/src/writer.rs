@@ -4,7 +4,7 @@ use ark_bn254::G1Projective;
 use eigen_chainio_utils::{
     convert_bn254_to_ark, convert_to_bn254_g1_point, convert_to_bn254_g2_point,
 };
-use eigen_client_elcontracts::{error::ElContractsError, reader::ELChainReader};
+use eigen_client_elcontracts::reader::ELChainReader;
 use std::str::FromStr;
 
 use eigen_utils::binding::{
@@ -105,7 +105,7 @@ impl AvsRegistryChainWriter {
                                 provider: provider.clone(),
                                 signer: signer.clone(),
                             }),
-                            Err(e) => Err(AvsRegistryError::AlloyContractError(e)),
+                            Err(e) => Err(AvsRegistryError::ElContractsError(e.to_string())),
                         }
                     }
                     Err(e) => Err(AvsRegistryError::AlloyContractError(e)),
@@ -216,13 +216,13 @@ impl AvsRegistryChainWriter {
                                 info!(tx_hash = ?tx,"succesfully deregistered operator with the AVS's registry coordinator" );
                                 return Ok(*tx.tx_hash());
                             }
-                            Err(e) => return Err(AvsRegistryError::AlloyContractError(e)),
+                            Err(e) => Err(AvsRegistryError::AlloyContractError(e)),
                         }
                     }
-                    Err(e) => return Err(AvsRegistryError::AlloyContractError(e)),
+                    Err(e) => Err(AvsRegistryError::ElContractsError(e.to_string())),
                 }
             }
-            Err(e) => return Err(AvsRegistryError::PubKeyRegistrationMessageHash),
+            Err(e) => Err(AvsRegistryError::PubKeyRegistrationMessageHash),
         }
     }
 
@@ -244,15 +244,11 @@ impl AvsRegistryChainWriter {
 
         match tx_result {
             Ok(tx) => {
-                info!(tx_hash = ?tx,"update stakes of entire operator set" );
+                info!(tx_hash = ?tx, quorum_numbers = %quorum_number," update stakes for entire operator set tx" );
                 return Ok(*tx.tx_hash());
             }
-            Err(e) => return Err(AvsRegistryError::AlloyContractError(e)),
+            Err(e) => Err(AvsRegistryError::AlloyContractError(e)),
         }
-
-        // tracing info
-        info!(tx_hash = ?tx, quorum_numbers = %quorum_number,"succesfully updated stakes for entire operator set" );
-        return Ok(*tx.tx_hash());
     }
 
     /// Update stakes of operator subset for all quorums
@@ -274,9 +270,9 @@ impl AvsRegistryChainWriter {
         match tx_result {
             Ok(tx) => {
                 info!(tx_hash = ?tx,"succesfully updated stakes of operator subset for all quorums" );
-                return Ok(*tx.tx_hash());
+                Ok(*tx.tx_hash())
             }
-            Err(e) => return Err(AvsRegistryError::AlloyContractError(e)),
+            Err(e) => Err(AvsRegistryError::AlloyContractError(e)),
         }
     }
 
@@ -297,9 +293,9 @@ impl AvsRegistryChainWriter {
         match tx_result {
             Ok(tx) => {
                 info!(tx_hash = ?tx,"succesfully deregistered operator with the AVS's registry coordinator" );
-                return Ok(*tx.tx_hash());
+                Ok(*tx.tx_hash())
             }
-            Err(e) => return Err(AvsRegistryError::AlloyContractError(e)),
-        };
+            Err(e) => Err(AvsRegistryError::AlloyContractError(e)),
+        }
     }
 }

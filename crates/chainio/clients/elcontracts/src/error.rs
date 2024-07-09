@@ -68,5 +68,5 @@ pub enum ElContractsError {
     UpdateMetadataUri,
 
     #[error("Alloy contract error: {0}")]
-    Alloy(#[from] AlloyError),
+    AlloyContractError(#[from] AlloyError),
 }
