@@ -177,7 +177,7 @@ impl ELChainWriter {
                 );
                 Ok(*tx.tx_hash())
             }
-            Err(e) => Err((e)),
+            Err(e) => Err(e),
         }
     }
 }
@@ -196,7 +196,6 @@ mod tests {
     #[tokio::test]
     async fn test_register_operator() {
         let delegation_manager_address = anvil_constants::get_delegation_manager_address().await;
-        let strategy_manager_address = anvil_constants::get_strategy_manager_address().await;
         let delegation_manager_contract = DelegationManager::new(
             delegation_manager_address,
             anvil_constants::ANVIL_RPC_URL.clone(),
@@ -228,14 +227,6 @@ mod tests {
             avs_directory_address,
             "http://localhost:8545".to_string(),
         );
-        let el_chain_writer = ELChainWriter::new(
-            delegation_manager_address,
-            strategy_manager_address,
-            el_chain_reader.clone(),
-            "http://localhost:8545".to_string(),
-            operator_pvt_key.to_string(),
-        );
-
         let contract_registry = ContractsRegistry::new(
             anvil_constants::CONTRACTS_REGISTRY,
             anvil_constants::ANVIL_RPC_URL.clone(),
@@ -255,13 +246,6 @@ mod tests {
 
         // operator who registered at index 1
         let operator_address = operator.address();
-        let operator_details = Operator::new(
-            operator_address,
-            operator_address,
-            Address::ZERO,
-            "0".parse().unwrap(),
-            Some("https://coolstuff.com/operator/".to_string()),
-        );
         assert!(el_chain_reader
             .is_operator_registered(operator_address)
             .await

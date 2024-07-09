@@ -3,7 +3,6 @@ use alloy_primitives::{Address, Bytes, FixedBytes, B256, U256};
 use alloy_provider::Provider;
 use alloy_rpc_types::Filter;
 use ark_ff::Zero;
-use eigen_client_elcontracts::error::ElContractsError;
 use eigen_types::operator::{bitmap_to_quorum_ids, OperatorPubKeys};
 use eigen_utils::{
     binding::{BLSApkRegistry, OperatorStateRetriever, RegistryCoordinator, StakeRegistry},

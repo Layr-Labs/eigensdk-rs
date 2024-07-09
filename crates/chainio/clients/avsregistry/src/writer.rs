@@ -222,7 +222,7 @@ impl AvsRegistryChainWriter {
                     Err(e) => Err(AvsRegistryError::ElContractsError(e.to_string())),
                 }
             }
-            Err(e) => Err(AvsRegistryError::PubKeyRegistrationMessageHash),
+            Err(_) => Err(AvsRegistryError::PubKeyRegistrationMessageHash),
         }
     }
 
