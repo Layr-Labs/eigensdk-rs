@@ -96,7 +96,7 @@ impl Operator {
 
 pub type Socket = String;
 
-type QuorumNum = u8;
+pub type QuorumNum = u8;
 
 pub struct OperatorInfo {
     pub pub_keys: Option<OperatorPubKeys>,
