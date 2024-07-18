@@ -27,6 +27,7 @@ tracing.workspace = true
 alloy-network.workspace = true
 alloy-signer.workspace = true
 alloy-signer-local.workspace = true
+alloy-contract.workspace = true
 [lints]
 workspace = true
 
