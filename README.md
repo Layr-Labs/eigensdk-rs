@@ -18,7 +18,7 @@ List of crates in the repository :-
 - [eigen-services](https://github.com/supernovahs/eigen-rs/tree/main/crates/services) - Spawn tokio services for operators info , bls aggregation
 - [eigen-types](https://github.com/supernovahs/eigen-rs/tree/main/crates/types) - Common types
 - [eigen-utils](https://github.com/supernovahs/eigen-rs/tree/main/crates/utils) - Publicly exportable `m2-mainnet` compatible alloy bindings. 
-- [eigen-testing-utils](https://github.com/supernovahs/eigen-rs/tree/main/testing/testing-utils)
+- [eigen-testing-utils](https://github.com/supernovahs/eigen-rs/tree/main/testing/testing-utils) - Contains publicly exportable  anvil , holesky , mainnet addresses for eigen contracts .
 
 ## Examples
 
