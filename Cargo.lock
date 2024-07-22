@@ -1465,6 +1465,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "eigen-logging"
+version = "0.0.1-alpha"
+dependencies = [
+ "tracing",
+]
+
+[[package]]
 name = "eigen-metrics"
 version = "0.0.1-alpha"
 dependencies = [
