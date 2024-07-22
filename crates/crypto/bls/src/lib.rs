@@ -23,7 +23,7 @@ pub type PublicKey = G1Affine;
 pub type BlsSignature = G1Affine;
 pub type OperatorId = H256;
 
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub struct BlsKeypair {
     pub private: PrivateKey,
     pub public: PublicKey,
