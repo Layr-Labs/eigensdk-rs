@@ -23,8 +23,6 @@ pub enum LogLevel {
 // SLoggerOptions are an extension of [slog.HandlerOptions].
 #[derive(Default, Debug)]
 pub struct SLogger {
-    subscriber: Subscriber,
-
     // Enable source code location (Default: false)
     pub add_source: bool,
 
@@ -47,13 +45,59 @@ impl SLogger {
         level: LogLevel,
         add_source: bool,
     ) -> Self {
-        let subscriber: Subscriber = tracing_subscriber::fmt::Subscriber::builder()
-            .with_max_level(tracing::Level::TRACE)
-            .with_ansi(no_color)
-            .finish();
+        tracing::subscriber::set_global_default(
+            tracing_subscriber::fmt::Subscriber::builder()
+                .with_max_level(tracing::Level::TRACE)
+                .with_ansi(no_color)
+                .finish(),
+        )
+        .expect("setting default subscriber failed");
 
         SLogger {
-            subscriber,
+            add_source,
+            level,
+            time_format,
+        }
+    }
+
+    pub fn new_compact_logger(
+        no_color: bool,
+        time_format: String,
+        level: LogLevel,
+        add_source: bool,
+    ) -> Self {
+        tracing::subscriber::set_global_default(
+            tracing_subscriber::fmt::Subscriber::builder()
+                .with_max_level(tracing::Level::TRACE)
+                .with_ansi(no_color)
+                .compact()
+                .finish(),
+        )
+        .expect("setting default subscriber failed");
+
+        SLogger {
+            add_source,
+            level,
+            time_format,
+        }
+    }
+
+    pub fn new_json_logger(
+        no_color: bool,
+        time_format: String,
+        level: LogLevel,
+        add_source: bool,
+    ) -> Self {
+        tracing::subscriber::set_global_default(
+            tracing_subscriber::fmt::Subscriber::builder()
+                .with_max_level(tracing::Level::TRACE)
+                .with_ansi(no_color)
+                .json()
+                .finish(),
+        )
+        .expect("setting default subscriber failed");
+
+        SLogger {
             add_source,
             level,
             time_format,
