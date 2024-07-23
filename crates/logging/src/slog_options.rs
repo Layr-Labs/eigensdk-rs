@@ -1,4 +1,10 @@
-use tracing::{debug, error, info, trace, warn};
+use super::logging::Logger;
+use std::fmt::Arguments;
+use std::fmt::Debug;
+use std::process::exit;
+use tracing::{debug, error, info, span, trace, warn, Event, Level, Metadata};
+use tracing_subscriber::fmt::Subscriber;
+use tracing_subscriber::layer::Context;
 
 #[derive(Default, Debug)]
 pub enum LogLevel {
@@ -17,6 +23,8 @@ pub enum LogLevel {
 // SLoggerOptions are an extension of [slog.HandlerOptions].
 #[derive(Default, Debug)]
 pub struct SLogger {
+    subscriber: Subscriber,
+
     // Enable source code location (Default: false)
     pub add_source: bool,
 
@@ -30,34 +38,107 @@ pub struct SLogger {
     // Time format (Default: time.StampMilli)
     // only supported with text handler
     pub time_format: String,
-
-    // Disable color (Default: false)
-    // only supported with text handler (no color in json)
-    pub no_color: bool,
 }
 
 impl SLogger {
-    pub fn log(&self) {
+    pub fn new_full_logger(
+        no_color: bool,
+        time_format: String,
+        level: LogLevel,
+        add_source: bool,
+    ) -> Self {
+        let subscriber: Subscriber = tracing_subscriber::fmt::Subscriber::builder()
+            .with_max_level(tracing::Level::TRACE)
+            .with_ansi(no_color)
+            .finish();
+
+        SLogger {
+            subscriber,
+            add_source,
+            level,
+            time_format,
+        }
+    }
+
+    pub fn log(&self, msg: &str, tags: &[impl Debug]) {
         match self.level {
             LogLevel::Error => {
-                error!("Error"); // TODO!
+                error!("Error");
+                self.error(msg, tags);
             }
             LogLevel::Warn => {
                 warn!("Warn");
+                self.warn(msg, tags);
             }
             LogLevel::Info => {
                 info!("Info");
+                self.info(msg, tags);
             }
             LogLevel::Debug => {
                 debug!("Debug");
+                self.debug(msg, tags);
             }
             LogLevel::Trace => {
                 trace!("Trace");
+                self.debug(msg, tags);
             }
             LogLevel::Fatal => {
-                error!("Fatal"); // TODO!
-                                 // exit!!!
+                error!("Fatal");
+                self.error(msg, tags);
+                exit(1); // exit process
             }
         }
+    }
+}
+
+// NewSlogJSONLogger creates a new SLogger with a JSON handler
+// Default behavior is colored log outputs. To disable colors, set opts.NoColor to true.
+
+impl Logger for SLogger {
+    type LoggerType = SLogger;
+
+    fn debug(&self, msg: &str, tags: &[impl Debug]) {
+        debug!("{} {:?}", msg, tags);
+    }
+
+    fn info(&self, msg: &str, tags: &[impl Debug]) {
+        info!("{} {:?}", msg, tags);
+    }
+
+    fn warn(&self, msg: &str, tags: &[impl Debug]) {
+        warn!("{} {:?}", msg, tags);
+    }
+
+    fn error(&self, msg: &str, tags: &[impl Debug]) {
+        error!("{} {:?}", msg, tags);
+    }
+
+    fn fatal(&self, msg: &str, tags: &[impl Debug]) {
+        error!("{} {:?}", msg, tags);
+        exit(1); // exit process
+    }
+
+    fn debugf(&self, template: &str, args: &[impl Debug]) {
+        todo!()
+    }
+
+    fn infof(&self, template: &str, args: &[impl Debug]) {
+        todo!()
+    }
+
+    fn warnf(&self, template: &str, args: &[impl Debug]) {
+        todo!()
+    }
+
+    fn errorf(&self, template: &str, args: &[impl Debug]) {
+        todo!()
+    }
+
+    fn fatalf(&self, template: &str, args: &[impl Debug]) {
+        todo!()
+    }
+
+    fn with(&self, tags: &[impl Debug]) -> Box<Self::LoggerType> {
+        todo!()
     }
 }
