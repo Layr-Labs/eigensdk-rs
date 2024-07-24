@@ -47,41 +47,27 @@ struct BlockInfo {
 
 #[allow(dead_code)]
 #[derive(Serialize, Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
 pub struct Transaction {
     id: String,
     status: Status,
-    #[serde(rename = "subStatus")]
     sub_status: String,
-    #[serde(rename = "txHash")]
     tx_hash: String,
     operation: TransactionOperation,
-    #[serde(rename = "createdAt")]
     created_at: i64,
-    #[serde(rename = "lastUpdated")]
     last_updated: i64,
-    #[serde(rename = "assetId")]
     asset_id: AssetID,
     source: Account,
-    #[serde(rename = "sourceAddress")]
     source_address: String,
-    destination: Account, // 1
-    #[serde(rename = "destinationAddress")]
+    destination: Account,
     destination_address: String,
-    #[serde(rename = "destinationAddressDescription")]
     destination_address_description: String,
-    #[serde(rename = "destinationTag")]
     destination_tag: String,
-    #[serde(rename = "amountInfo")]
     amount_info: AmountInfo,
-    #[serde(rename = "feeInfo")]
     fee_info: FeeInfo,
-    #[serde(rename = "feeCurrency")]
     fee_currency: String,
-    #[serde(rename = "extraParameters")]
     extra_parameters: Option<ExtraParameters>,
-    #[serde(rename = "numOfConfirmations")]
     num_of_confirmations: i64,
-    #[serde(rename = "blockInfo")]
     block_info: BlockInfo,
 }
 
@@ -92,7 +78,6 @@ pub trait GetTransaction {
 }
 
 impl GetTransaction for Client {
-    /// Get transaction api
     async fn get_transaction(&self, tx_id: String) -> Result<Transaction, String> {
         let transaction_object_result = self
             .get_request(&format!("/v1/transactions/{}", tx_id))
@@ -100,7 +85,6 @@ impl GetTransaction for Client {
 
         match transaction_object_result {
             Ok(transaction) => {
-                println!("Transaction: {:?}", transaction);
                 let serialized_tx: Transaction = serde_json::from_str(&transaction).unwrap();
                 Ok(serialized_tx)
             }

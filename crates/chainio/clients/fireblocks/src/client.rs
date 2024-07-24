@@ -115,6 +115,7 @@ impl Client {
             &claims,
             &EncodingKey::from_rsa_pem(self.private_key.as_bytes())?,
         )?;
+
         Ok(token)
     }
 
