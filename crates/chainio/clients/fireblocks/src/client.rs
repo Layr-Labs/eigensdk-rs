@@ -1,3 +1,4 @@
+use crate::error::FireBlockError;
 use chrono::Utc;
 use jsonwebtoken::{encode, Algorithm, EncodingKey, Header};
 use mime::APPLICATION_JSON;
@@ -90,11 +91,7 @@ impl Client {
     }
 
     ///  Sign the payload
-    pub fn sign_jwt(
-        &self,
-        path: &str,
-        body: Option<&str>,
-    ) -> Result<String, jsonwebtoken::errors::Error> {
+    pub fn sign_jwt(&self, path: &str, body: Option<&str>) -> Result<String, FireBlockError> {
         let now = Utc::now().timestamp();
         let nonce = Uuid::new_v4().to_string();
         let body_hash = match body {
@@ -111,13 +108,18 @@ impl Client {
             body_hash: body_hash,
         };
 
-        let token = encode(
-            &Header::new(Algorithm::RS256),
-            &claims,
-            &EncodingKey::from_rsa_pem(self.private_key.as_bytes())?,
-        )?;
+        let encoding_key_result = EncodingKey::from_rsa_pem(self.private_key.as_bytes());
+        match encoding_key_result {
+            Ok(encoding_key) => {
+                let token_result = encode(&Header::new(Algorithm::RS256), &claims, &encoding_key);
 
-        Ok(token)
+                match token_result {
+                    Ok(token) => Ok(token),
+                    Err(e) => return Err(FireBlockError::JsonWebTokenError(e)),
+                }
+            }
+            Err(e) => return Err(FireBlockError::JsonWebTokenError(e)),
+        }
     }
 
     /// GET : Calls a get request to the fireblocks endpoint using the given path.
