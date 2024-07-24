@@ -1,59 +1,86 @@
-// use crate::client::{AssetID, Client};
-// use alloy_primitives::Address;
-// use serde::{Deserialize, Serialize};
+use crate::client::{AssetID, Client};
+use serde::{Deserialize, Serialize};
 
-// #[derive(Serialize, Deserialize, Debug)]
-// pub struct AssetAddress {
-//     asset_id: AssetID,
-//     address: Address,
-//     tag: String,
-//     description: String,
-//     #[serde(rename = "type")]
-//     type_field: String,
-//     legacy_address: Address,
-//     enterprise_address: Address,
-//     user_defined: Address,
-// }
+#[derive(Serialize, Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct AssetAddress {
+    asset_id: AssetID,
+    address: String,
+    tag: String,
+    description: String,
+    #[serde(rename = "type")]
+    type_field: String,
+    legacy_address: String,
+    enterprise_address: String,
+    user_defined: bool,
+    bip_44_address_index: u32,
+}
 
-// pub trait GetAssetAddresses {
-//     async fn get_asset_addresses(&self, vault_id: String, asset_id: AssetID) -> AssetAddress;
-// }
+/// Addresses Response struct that contains an array of [`AssetAddress`]
+#[derive(Debug, Serialize, Deserialize)]
+pub struct AddressesResponse {
+    addresses: Vec<AssetAddress>,
+}
 
-// impl GetAssetAddresses for Client {
-//     async fn get_asset_addresses(&self, vault_id: String, asset_id: AssetID) -> AssetAddress {
-//         let res = self
-//             .get_request(&format!(
-//                 "/v1/vault/accounts/{}/{}/addresses",
-//                 vault_id, asset_id
-//             ))
-//             .await
-//             .unwrap();
+/// Get Asset Addresses trait for "/v1/vault/accounts/{vault_id}/{asset_id}/addresses_paginated" requests
+#[allow(async_fn_in_trait)]
+pub trait GetAssetAddresses {
+    async fn get_asset_addresses(
+        &self,
+        vault_id: String,
+        asset_id: AssetID,
+    ) -> Result<AddressesResponse, String>;
+}
 
-//         let asset_address: AssetAddress = serde_json::from_str(&res).unwrap();
-//         asset_address
-//     }
-// }
+impl GetAssetAddresses for Client {
+    async fn get_asset_addresses(
+        &self,
+        vault_id: String,
+        asset_id: AssetID,
+    ) -> Result<AddressesResponse, String> {
+        let asset_addresses_result = self
+            .get_request(&format!(
+                "/v1/vault/accounts/{}/{}/addresses_paginated",
+                vault_id, asset_id
+            ))
+            .await;
 
-// #[cfg(test)]
-// mod tests {
+        match asset_addresses_result {
+            Ok(asset_addresses) => {
+                let asset_address: AddressesResponse =
+                    serde_json::from_str(&asset_addresses).unwrap();
+                Ok(asset_address)
+            }
+            Err(e) => Err(e.to_string()),
+        }
+    }
+}
 
-//     use super::*;
+#[cfg(test)]
+mod tests {
 
-//     #[tokio::test]
-//     async fn test_asset_addresses() {
-//         let api_key = "4aff0abf-9e81-4cf4-8bae-c9fc0c8a13af".to_string();
-//         let private_key = "0x29962ee54b8107328d033006e33627ecdbc9f5adc8b3e8ab4064e34a1193110c";
-//         let api_url = "https://api.fireblocks.io".to_string();
-//         let vault_id = "";
-//         let asset_id: AssetID = AssetID::ETH;
-//         let client = Client::new(
-//             api_key.to_string(),
-//             private_key.to_string(),
-//             api_url.clone(),
-//         );
+    use super::*;
+    use std::env;
 
-//         let s = client
-//             .get_asset_addresses(vault_id.to_string(), asset_id)
-//             .await;
-//     }
-// }
+    #[tokio::test]
+    async fn test_asset_addresses() {
+        let api_key = env::var("FIREBLOCKS_API_KEY").expect("FIREBLOCKS_API_KEY not set");
+        let private_key_path =
+            env::var("FIREBLOCKS_PRIVATE_KEY_PATH").expect("FIREBLOCKS_PRIVATE_KEY_PATH not set");
+        let api_url = env::var("FIREBLOCKS_API_URL").expect("FIREBLOCKS_API_URL not set");
+        let private_key =
+            std::fs::read_to_string(private_key_path).expect("Failed to read private key file");
+        let vault_id = "1";
+        let asset_id: AssetID = AssetID::EthTest5;
+        let client = Client::new(
+            api_key.to_string(),
+            private_key.to_string(),
+            api_url.clone(),
+        );
+
+        let _ = client
+            .get_asset_addresses(vault_id.to_string(), asset_id)
+            .await
+            .unwrap();
+    }
+}
