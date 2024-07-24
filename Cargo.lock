@@ -1345,6 +1345,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "eigen-chainio-txmanager"
+version = "0.0.1-alpha"
+
+[[package]]
 name = "eigen-chainio-utils"
 version = "0.0.1-alpha"
 dependencies = [
