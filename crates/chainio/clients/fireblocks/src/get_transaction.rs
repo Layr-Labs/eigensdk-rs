@@ -122,11 +122,6 @@ mod tests {
         let private_key_path =
             env::var("FIREBLOCKS_PRIVATE_KEY_PATH").expect("FIREBLOCKS_PRIVATE_KEY_PATH not set");
         let api_url = env::var("FIREBLOCKS_API_URL").expect("FIREBLOCKS_API_URL not set");
-        println!(
-            "Current working directory: {:?}",
-            env::current_dir().unwrap()
-        );
-        println!("private key path :{:?}", private_key_path);
         let private_key =
             std::fs::read_to_string(private_key_path).expect("Failed to read private key file");
         let tx_id = "10d377ac-0655-45c3-9d05-4fe0887787f3";
