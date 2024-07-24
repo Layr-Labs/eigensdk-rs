@@ -6,6 +6,7 @@
 
 pub mod client;
 pub mod contract_call;
+pub mod get_asset_addresses;
 mod get_transaction;
 mod list_contracts;
 mod list_vault_accounts;
