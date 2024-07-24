@@ -3,8 +3,6 @@ use std::fmt::Arguments;
 use std::fmt::Debug;
 use std::process::exit;
 use tracing::{debug, error, info, span, trace, warn, Event, Level, Metadata};
-use tracing_subscriber::fmt::Subscriber;
-use tracing_subscriber::layer::Context;
 
 #[derive(Default, Debug)]
 pub enum LogLevel {
@@ -160,29 +158,5 @@ impl Logger for SLogger {
     fn fatal(&self, msg: &str, tags: &[impl Debug]) {
         error!("{} {:?}", msg, tags);
         exit(1); // exit process
-    }
-
-    fn debugf(&self, template: &str, args: &[impl Debug]) {
-        todo!()
-    }
-
-    fn infof(&self, template: &str, args: &[impl Debug]) {
-        todo!()
-    }
-
-    fn warnf(&self, template: &str, args: &[impl Debug]) {
-        todo!()
-    }
-
-    fn errorf(&self, template: &str, args: &[impl Debug]) {
-        todo!()
-    }
-
-    fn fatalf(&self, template: &str, args: &[impl Debug]) {
-        todo!()
-    }
-
-    fn with(&self, tags: &[impl Debug]) -> Box<Self::LoggerType> {
-        todo!()
     }
 }
