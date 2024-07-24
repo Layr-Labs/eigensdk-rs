@@ -5,11 +5,17 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub enum TransactionOperation {
+    #[serde(rename = "CONTRACT_CALL")]
     ContractCall,
+    #[serde(rename = "TRANSFER")]
     Transfer,
+    #[serde(rename = "MINT")]
     Mint,
+    #[serde(rename = "BURN")]
     Burn,
+    #[serde(rename = "TYPED_MESSAGE")]
     TypedMessage,
+    #[serde(rename = "RAW")]
     Raw,
 }
 

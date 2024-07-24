@@ -24,8 +24,8 @@ struct AmountInfo {
 struct FeeInfo {
     #[serde(rename = "networkFee")]
     network_fee: String,
-    #[serde(rename = "serviceFee")]
-    service_fee: String,
+    // #[serde(rename = "serviceFee")]
+    // service_fee: String,
     #[serde(rename = "gasPrice")]
     gas_price: String,
 }
@@ -66,12 +66,12 @@ pub struct Transaction {
     source: Account,
     #[serde(rename = "sourceAddress")]
     source_address: String,
-    destination: Account,
-    #[serde(rename = "DestinationAddress")]
+    destination: Account, // 1
+    #[serde(rename = "destinationAddress")]
     destination_address: String,
-    #[serde(rename = "DestinationAddressDescription")]
+    #[serde(rename = "destinationAddressDescription")]
     destination_address_description: String,
-    #[serde(rename = "DestinationTag")]
+    #[serde(rename = "destinationTag")]
     destination_tag: String,
     #[serde(rename = "amountInfo")]
     amount_info: AmountInfo,
@@ -80,7 +80,7 @@ pub struct Transaction {
     #[serde(rename = "feeCurrency")]
     fee_currency: String,
     #[serde(rename = "extraParameters")]
-    extra_parameters: ExtraParameters,
+    extra_parameters: Option<ExtraParameters>,
     #[serde(rename = "numOfConfirmations")]
     num_of_confirmations: i64,
     #[serde(rename = "blockInfo")]
@@ -100,7 +100,7 @@ impl GetTransaction for Client {
 
         match transaction_object_result {
             Ok(transaction) => {
-                println!("Transaction: {:?}",transaction);
+                println!("Transaction: {:?}", transaction);
                 let serialized_tx: Transaction = serde_json::from_str(&transaction).unwrap();
                 Ok(serialized_tx)
             }
@@ -113,15 +113,23 @@ impl GetTransaction for Client {
 mod tests {
 
     use super::*;
-
-    /// https://sandbox-api.fireblocks.io/transactions/cfe5be48-9307-4aa3-8ead-b959fca35dd6
+    use std::env;
     #[tokio::test]
+    #[cfg(feature = "fireblock-tests")]
     async fn test_get_transaction() {
-        let api_key = "77023f3a-8c6e-497c-9cb4-6beb44bb7846".to_string();
-        let private_key = include_str!("fireblocks_secret.key");
-        // this is the sandbox url , TODO: change it to mainnet/testnet url after testing
-        let api_url = "https://sandbox-api.fireblocks.io".to_string();
-        // todo : Change the tx id to something that's availabe in the sandbox
+        let api_key = env::var("FIREBLOCKS_API_KEY").expect("FIREBLOCKS_API_KEY not set");
+        let private_key_path =
+            env::var("FIREBLOCKS_PRIVATE_KEY_PATH").expect("FIREBLOCKS_PRIVATE_KEY_PATH not set");
+        let api_url = env::var("FIREBLOCKS_API_URL").expect("FIREBLOCKS_API_URL not set");
+        // let api_key = "77023f3a-8c6e-497c-9cb4-6beb44bb7846".to_string();
+        println!(
+            "Current working directory: {:?}",
+            env::current_dir().unwrap()
+        );
+        println!("private key path :{:?}", private_key_path);
+        let private_key =
+            std::fs::read_to_string(private_key_path).expect("Failed to read private key file");
+        // let api_url = "https://sandbox-api.fireblocks.io".to_string();
         let tx_id = "10d377ac-0655-45c3-9d05-4fe0887787f3"; // this tx id is  not found in sandbox environment, hence it calls 404 : Not found. Manually tested on postman to see if it works also.
 
         let client = Client::new(
