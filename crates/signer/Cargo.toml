@@ -6,13 +6,15 @@ rust-version.workspace = true
 repository.workspace = true
 
 [dependencies]
+alloy-consensus = "0.2.0"
 alloy-contract = "0.2.0"
+alloy-network = "0.2.0"
 alloy-primitives = "0.7.7"
+alloy-signer.workspace = true
+alloy-signer-local = "0.2.0"
+eth-keystore = "0.5.0"
 hex-literal = "0.4.1"
 k256 = "0.13.3"
-
-[lib]
-path = "signer.rs"
 
 [lints]
 workspace = true
