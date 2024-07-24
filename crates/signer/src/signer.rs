@@ -34,7 +34,7 @@ impl Config {
             Config::Keystore(path, password) => {
                 let keypath = Path::new(&path);
                 let private_key =
-                    decrypt_key(&keypath, password).map_err(|_| SignerError::InvalidPassword)?;
+                    decrypt_key(keypath, password).map_err(|_| SignerError::InvalidPassword)?;
                 PrivateKeySigner::from_slice(&private_key)
                     .map_err(|_| SignerError::InvalidPrivateKey)
             }
