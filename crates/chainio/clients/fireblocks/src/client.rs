@@ -6,10 +6,13 @@ use sha2::{Digest, Sha256};
 use std::collections::HashMap;
 use uuid::Uuid;
 
+/// AssetID represents the asset identifier as supported by fireblocks
+/// TODO : Add more assetid identifiers
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 pub enum AssetID {
     ETH,
-    ETH_TEST5,
+    #[serde(rename = "ETH_TEST5")]
+    EthTest5,
 }
 
 impl std::fmt::Display for AssetID {
@@ -19,7 +22,7 @@ impl std::fmt::Display for AssetID {
             "{}",
             match self {
                 AssetID::ETH => "ETH",
-                AssetID::ETH_TEST5 => "ETH_TEST5",
+                AssetID::EthTest5 => "ETH_TEST5",
             }
         )
     }
@@ -30,9 +33,11 @@ impl std::fmt::Display for AssetID {
 fn asset_id_by_chain() -> HashMap<u64, AssetID> {
     let mut map = HashMap::new();
     map.insert(1, AssetID::ETH);
-    map.insert(2, AssetID::ETH_TEST5);
+    map.insert(2, AssetID::EthTest5);
     map
 }
+
+pub const JWT_EXPIRATION_SECONDS: i64 = 30;
 
 #[allow(unused)]
 #[allow(non_camel_case_types)]
@@ -44,25 +49,37 @@ pub struct ErrorResponse {
     pub code: i32,
 }
 
+/// Payload for JWT
 #[derive(Debug, Serialize, Deserialize)]
 struct Claims {
+    /// fireblocks api uri
     uri: String,
+    /// unique identifier. Each request needs to have a unique identifier.
     nonce: String,
+    /// The time at which the JWT was issued, in seconds since Epoch.
     iat: i64,
+    /// expiration time of jwt
     exp: i64,
+    /// api key
     sub: String,
-    bodyHash: String,
+    #[serde(rename = "bodyHash")]
+    /// Hex-encoded SHA-256 hash of the raw HTTP request body.
+    body_hash: String,
 }
 
 /// Fireblock Client
 #[derive(Debug)]
 pub struct Client {
+    /// api key
     api_key: String,
+    /// Fireblocks generated secret key based on RS256 (RSASSA-PKCS1-v1_5 using SHA-256 hash) algorithm
     private_key: String,
+    /// it depends on sandbox or testnet/mainnet ex:  https://sandbox-api.fireblocks.io/v1 or https://api.fireblocks.io/v1
     api_url: String,
 }
 
 impl Client {
+    /// new client instance
     pub fn new(api_key: String, private_key: String, api_url: String) -> Self {
         Self {
             api_key,
@@ -71,6 +88,7 @@ impl Client {
         }
     }
 
+    ///  Sign the payload
     pub fn sign_jwt(
         &self,
         path: &str,
@@ -87,9 +105,9 @@ impl Client {
             uri: path.to_owned(),
             nonce,
             iat: now,
-            exp: now + 30, // Adjusted to ensure it's within the required timeframe
+            exp: now + JWT_EXPIRATION_SECONDS, // Adjusted to ensure it's within the required timeframe
             sub: self.api_key.clone(),
-            bodyHash: body_hash,
+            body_hash: body_hash,
         };
 
         let token = encode(
@@ -99,6 +117,8 @@ impl Client {
         )?;
         Ok(token)
     }
+
+    /// GET : Calls a get request to the fireblocks endpoint using the given path.
     pub async fn get_request(&self, path: &str) -> Result<String, Box<dyn std::error::Error>> {
         let token = self.sign_jwt(path, None)?;
 
@@ -112,7 +132,7 @@ impl Client {
 
         // Make the GET request
         let response = client
-            .get(self.api_url.to_owned() + path) // Use api_url here
+            .get(self.api_url.to_owned() + path)
             .headers(headers)
             .send()
             .await?;
@@ -129,6 +149,7 @@ impl Client {
         }
     }
 
+    /// POST: Post a request using the fireblocks path api and the appropriate body parameters
     pub async fn post_request(
         &self,
         path: &str,

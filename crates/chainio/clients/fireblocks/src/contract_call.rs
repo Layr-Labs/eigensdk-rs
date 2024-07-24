@@ -4,30 +4,26 @@ use crate::status::Status;
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug)]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
+#[allow(non_camel_case_types)]
 pub enum TransactionOperation {
-    #[serde(rename = "CONTRACT_CALL")]
-    ContractCall,
-    #[serde(rename = "TRANSFER")]
-    Transfer,
-    #[serde(rename = "MINT")]
-    Mint,
-    #[serde(rename = "BURN")]
-    Burn,
-    #[serde(rename = "TYPED_MESSAGE")]
-    TypedMessage,
-    #[serde(rename = "RAW")]
-    Raw,
+    contract_call,
+    transfer,
+    mint,
+    burn,
+    typed_message,
+    raw,
 }
 
 impl TransactionOperation {
     pub fn as_str(&self) -> &'static str {
         match self {
-            TransactionOperation::ContractCall => "CONTRACT_CALL",
-            TransactionOperation::Transfer => "TRANSFER",
-            TransactionOperation::Mint => "MINT",
-            TransactionOperation::Burn => "BURN",
-            TransactionOperation::TypedMessage => "TYPED_MESSAGE",
-            TransactionOperation::Raw => "RAW",
+            TransactionOperation::contract_call => "CONTRACT_CALL",
+            TransactionOperation::transfer => "TRANSFER",
+            TransactionOperation::mint => "MINT",
+            TransactionOperation::burn => "BURN",
+            TransactionOperation::typed_message => "TYPED_MESSAGE",
+            TransactionOperation::raw => "RAW",
         }
     }
 }

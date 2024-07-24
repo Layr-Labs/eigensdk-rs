@@ -21,12 +21,10 @@ struct AmountInfo {
 /// Fee Info
 #[allow(dead_code)]
 #[derive(Serialize, Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
 struct FeeInfo {
-    #[serde(rename = "networkFee")]
     network_fee: String,
-    // #[serde(rename = "serviceFee")]
     // service_fee: String,
-    #[serde(rename = "gasPrice")]
     gas_price: String,
 }
 
@@ -87,6 +85,8 @@ pub struct Transaction {
     block_info: BlockInfo,
 }
 
+#[allow(unused)]
+/// Get Transaction trait for "/v1/transactions/tx_id" get requests
 pub trait GetTransaction {
     async fn get_transaction(&self, tx_id: String) -> Result<Transaction, String>;
 }
@@ -121,7 +121,6 @@ mod tests {
         let private_key_path =
             env::var("FIREBLOCKS_PRIVATE_KEY_PATH").expect("FIREBLOCKS_PRIVATE_KEY_PATH not set");
         let api_url = env::var("FIREBLOCKS_API_URL").expect("FIREBLOCKS_API_URL not set");
-        // let api_key = "77023f3a-8c6e-497c-9cb4-6beb44bb7846".to_string();
         println!(
             "Current working directory: {:?}",
             env::current_dir().unwrap()
@@ -129,8 +128,7 @@ mod tests {
         println!("private key path :{:?}", private_key_path);
         let private_key =
             std::fs::read_to_string(private_key_path).expect("Failed to read private key file");
-        // let api_url = "https://sandbox-api.fireblocks.io".to_string();
-        let tx_id = "10d377ac-0655-45c3-9d05-4fe0887787f3"; // this tx id is  not found in sandbox environment, hence it calls 404 : Not found. Manually tested on postman to see if it works also.
+        let tx_id = "10d377ac-0655-45c3-9d05-4fe0887787f3";
 
         let client = Client::new(
             api_key.to_string(),
@@ -138,6 +136,6 @@ mod tests {
             api_url.clone(),
         );
 
-        let s = client.get_transaction(tx_id.to_string()).await;
+        let _ = client.get_transaction(tx_id.to_string()).await.unwrap();
     }
 }
