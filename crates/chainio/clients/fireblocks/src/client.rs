@@ -40,8 +40,13 @@ pub struct ErrorResponse {
     pub code: i32,
 }
 
-#[test]
-fn test_asset_id_by_chain() {
-    let asset_id_by_chain = asset_id_by_chain();
-    assert_eq!(AssetID::ETH, *asset_id_by_chain.get(&1).unwrap());
+#[cfg(test)]
+mod tests {
+    use super::{asset_id_by_chain, AssetID};
+
+    #[test]
+    fn test_asset_id_by_chain() {
+        let asset_id_by_chain = asset_id_by_chain();
+        assert_eq!(AssetID::ETH, *asset_id_by_chain.get(&1).unwrap());
+    }
 }
