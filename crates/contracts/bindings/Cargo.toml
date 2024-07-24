@@ -1,6 +1,6 @@
 [package]
 name = "eigen-contract-bindings"
-description = "Eigen Layer ethers bindings"
+description = "Eigen Layer ethers binding generator"
 
 version.workspace = true
 edition.workspace = true
