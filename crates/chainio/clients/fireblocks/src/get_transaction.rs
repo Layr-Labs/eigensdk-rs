@@ -114,6 +114,7 @@ mod tests {
 
     use super::*;
     use std::env;
+
     #[tokio::test]
     #[cfg(feature = "fireblock-tests")]
     async fn test_get_transaction() {
