@@ -1,5 +1,6 @@
 use chrono::Utc;
 use jsonwebtoken::{encode, Algorithm, EncodingKey, Header};
+use mime::APPLICATION_JSON;
 use reqwest::header::{HeaderMap, HeaderValue, AUTHORIZATION, CONTENT_TYPE};
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
@@ -170,7 +171,7 @@ impl Client {
         let response = client
             .post(self.api_url.to_owned() + path) // Use api_url here
             .headers(headers)
-            .header(CONTENT_TYPE, "application/json") // Set Content-Type header
+            .header(CONTENT_TYPE, APPLICATION_JSON.as_ref()) // Set Content-Type header
             .body(body.to_string())
             .send()
             .await?;
