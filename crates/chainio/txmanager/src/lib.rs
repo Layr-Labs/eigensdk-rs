@@ -4,6 +4,8 @@
 )]
 #![cfg_attr(not(test), warn(unused_crate_dependencies))]
 
+pub mod simple_tx_manager;
+
 pub fn println_hello() {
     println!("Hello, world!");
 }
