@@ -8,7 +8,6 @@ repository.workspace = true
 [dependencies]
 alloy-contract = "0.2.0"
 alloy-primitives = "0.7.7"
-hex = "0.4.3"
 hex-literal = "0.4.1"
 k256 = "0.13.3"
 

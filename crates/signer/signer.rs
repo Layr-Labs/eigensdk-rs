@@ -31,7 +31,7 @@ mod test {
         )
         .unwrap();
         let expected_address =
-            Address::from_slice(&hex::decode("2c7536E3605D9C16a7a3D7b1898e529396a65c23").unwrap());
+            Address::from_slice(&hex!("2c7536E3605D9C16a7a3D7b1898e529396a65c23"));
         let basic_signer = BasicSigner::new(signing_key);
 
         assert_eq!(basic_signer.account_address, expected_address);

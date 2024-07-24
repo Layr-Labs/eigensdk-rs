@@ -1757,7 +1757,6 @@ version = "0.0.1-alpha"
 dependencies = [
  "alloy-contract 0.2.0",
  "alloy-primitives",
- "hex",
  "hex-literal",
  "k256",
 ]
