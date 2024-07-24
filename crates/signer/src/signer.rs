@@ -23,28 +23,31 @@ pub enum SignerError {
     InvalidPassword,
 }
 
-/// Creates a signer from given config.
-pub fn signer_from_config(c: Config) -> Result<PrivateKeySigner, SignerError> {
-    // TODO: check chain id to select signer
-    match c {
-        Config::PrivateKey(key) => key
-            .parse::<PrivateKeySigner>()
-            .map_err(|_| SignerError::InvalidPrivateKey),
-        Config::Keystore(path, password) => {
-            let keypath = Path::new(&path);
-            let private_key =
-                decrypt_key(&keypath, password).map_err(|_| SignerError::InvalidPassword)?;
-            PrivateKeySigner::from_slice(&private_key).map_err(|_| SignerError::InvalidPrivateKey)
-        }
-        Config::Web3(_endpoint, _address) => {
-            todo!()
+impl Config {
+    /// Creates a signer from given config.
+    pub fn signer_from_config(c: Config) -> Result<PrivateKeySigner, SignerError> {
+        // TODO: check chain id to select signer
+        match c {
+            Config::PrivateKey(key) => key
+                .parse::<PrivateKeySigner>()
+                .map_err(|_| SignerError::InvalidPrivateKey),
+            Config::Keystore(path, password) => {
+                let keypath = Path::new(&path);
+                let private_key =
+                    decrypt_key(&keypath, password).map_err(|_| SignerError::InvalidPassword)?;
+                PrivateKeySigner::from_slice(&private_key)
+                    .map_err(|_| SignerError::InvalidPrivateKey)
+            }
+            Config::Web3(_endpoint, _address) => {
+                todo!()
+            }
         }
     }
 }
 
 #[cfg(test)]
 mod test {
-    use super::{signer_from_config, Config};
+    use super::Config;
     use alloy_consensus::TxLegacy;
     use alloy_network::TxSignerSync;
     use alloy_primitives::{address, bytes, U256};
@@ -68,7 +71,7 @@ mod test {
             chain_id: Some(1),
         };
 
-        let signer = signer_from_config(config);
+        let signer = Config::signer_from_config(config);
 
         let signature = signer.unwrap().sign_transaction_sync(&mut tx).unwrap();
         let expected_signature = Signature::from_rs_and_parity(
@@ -105,7 +108,7 @@ mod test {
         let expected_signer = PrivateKeySigner::from_slice(&private_key).unwrap();
         let expected_signature = expected_signer.sign_transaction_sync(&mut tx).unwrap();
 
-        let signer = signer_from_config(config);
+        let signer = Config::signer_from_config(config);
         let signature = signer.unwrap().sign_transaction_sync(&mut tx).unwrap();
 
         assert_eq!(signature, expected_signature);
