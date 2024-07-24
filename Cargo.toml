@@ -23,7 +23,7 @@ members = [ "crates/chainio/clients/avsregistry/",
 "examples/avsregistry-read",
 "examples/avsregistry-write",
 "examples/anvil-utils"
-]
+, "crates/signer"]
 
 resolver = "2"
 
