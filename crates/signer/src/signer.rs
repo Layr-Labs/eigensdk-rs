@@ -34,10 +34,12 @@ mod test {
     use alloy_network::TxSignerSync;
     use alloy_primitives::{address, bytes, U256};
     use alloy_signer::Signature;
+    use alloy_signer_local::PrivateKeySigner;
+    use hex_literal::hex;
     use std::str::FromStr;
 
     #[test]
-    fn sign_transaction() {
+    fn sign_transaction_with_private_key() {
         let private_key =
             "dcf2cbdd171a21c480aa7f53d77f31bb102282b3ff099c78e3118b37348c72f7".to_owned();
         let config = Config::PrivateKey(private_key);
@@ -66,6 +68,31 @@ mod test {
             37,
         )
         .unwrap();
+        assert_eq!(signature, expected_signature);
+    }
+
+    #[test]
+    fn sign_transaction_with_keystore() {
+        let path = "/Users/tomas/Lambda/eigen-rs/crates/signer/mockdata/dummy.key.json".to_owned();
+        let password = "testpassword".to_owned();
+        let config = Config::Keystore(path, password);
+        let mut tx = TxLegacy {
+            to: address!("d8dA6BF26964aF9D7eEd9e03E53415D37aA96045").into(),
+            value: U256::from(1_000_000_000),
+            gas_limit: 2_000_000,
+            nonce: 0,
+            gas_price: 21_000_000_000,
+            input: bytes!(),
+            chain_id: Some(1),
+        };
+
+        let private_key = hex!("7a28b5ba57c53603b0b07b56bba752f7784bf506fa95edc395f5cf6c7514fe9d");
+        let expected_signer = PrivateKeySigner::from_slice(&private_key).unwrap();
+        let expected_signature = expected_signer.sign_transaction_sync(&mut tx).unwrap();
+
+        let signer = signer_from_config(config);
+        let signature = signer.sign_transaction_sync(&mut tx).unwrap();
+
         assert_eq!(signature, expected_signature);
     }
 }
