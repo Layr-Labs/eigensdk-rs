@@ -1780,6 +1780,7 @@ dependencies = [
  "eth-keystore",
  "hex-literal",
  "k256",
+ "thiserror",
 ]
 
 [[package]]
