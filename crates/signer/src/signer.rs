@@ -47,14 +47,13 @@ impl Config {
         }
     }
     /// Creates a signer from a key ID in AWS Key Management Service
-    pub async fn aws_signer(key_id: String, region: Region) -> AwsSigner {
+    pub async fn aws_signer(key_id: String, chain_id: Option<u64>, region: Region) -> AwsSigner {
         let config = aws_config::load_defaults(BehaviorVersion::latest())
             .await
             .to_builder()
             .region(Some(region))
             .build();
         let client = aws_sdk_kms::Client::new(&config);
-        let chain_id = Some(1);
         AwsSigner::new(client, key_id, chain_id).await.unwrap()
     }
 }
@@ -132,8 +131,9 @@ mod test {
     #[tokio::test]
     async fn sign_transaction_with_aws_signer() {
         let key_id = "1234abcd-12ab-34cd-56ef-1234567890ab".to_string();
+        let chain_id = Some(1);
         let region = Region::from_static("us-west-2a");
-        let signer = Config::aws_signer(key_id, region).await;
+        let signer = Config::aws_signer(key_id, chain_id, region).await;
         let mut tx = TxLegacy {
             to: address!("d8dA6BF26964aF9D7eEd9e03E53415D37aA96045").into(),
             value: U256::from(1_000_000_000),
