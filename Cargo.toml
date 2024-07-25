@@ -19,11 +19,12 @@ members = [ "crates/chainio/clients/avsregistry/",
 "crates/metrics/",
 "crates/types/",
 "crates/signer/",
+
 "examples/info-operator-service/",
 "testing/testing-utils/",
 "examples/avsregistry-read",
 "examples/avsregistry-write",
-"examples/anvil-utils",
+"examples/anvil-utils"
 ]
 
 resolver = "2"
@@ -74,10 +75,13 @@ eigen-crypto-bn254 = {path = "crates/crypto/bn254/"}
 eigen-crypto-keystore = {path = "crates/crypto/keystore/"}
 eigen-utils = {path = "crates/utils/"}
 eigen-metrics-collectors-economic = {path = "crates/metrics/collectors/economic"}
+eigen-metrics-collectors-rpc-calls = {path = "crates/metrics/collectors/rpc_calls"}
 eigen-services-avsregistry = {path = "crates/services/avsregistry"}
+eigen-services-bls_aggregation = {path = "crates/services/bls_aggregation"}
 eigen-services-operatorsinfo = {path = "crates/services/operatorsinfo"}
 eigen-metrics-derive = {path = "crates/metrics/metrics-derive"}
 eigen-testing-utils = {path = "testing/testing-utils"}
+info-operator-service = {path = "examples/info-operator-service"}
 tokio = {version = "1.37.0" , features = ["test-util", "full","sync"] }
 futures-util = "0.3.30"
 thiserror = "1.0"
