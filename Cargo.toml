@@ -18,12 +18,13 @@ members = [ "crates/chainio/clients/avsregistry/",
 "crates/types/",
 "crates/metrics/",
 "crates/types/",
+"crates/signer/",
 "examples/info-operator-service/",
 "testing/testing-utils/",
 "examples/avsregistry-read",
 "examples/avsregistry-write",
-"examples/anvil-utils"
-, "crates/signer"]
+"examples/anvil-utils",
+]
 
 resolver = "2"
 
