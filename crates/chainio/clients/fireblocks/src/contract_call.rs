@@ -1,6 +1,6 @@
-use crate::client::{AssetID, Client};
+use crate::client::AssetID;
 use crate::status::Status;
-use crate::transaction::{TransactionRequest, TransactionResponse};
+use crate::transaction::TransactionRequest;
 
 use serde::{Deserialize, Serialize};
 

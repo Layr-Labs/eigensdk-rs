@@ -15,6 +15,8 @@ pub enum AssetID {
     ETH,
     #[serde(rename = "ETH_TEST5")]
     EthTest5,
+    #[serde(rename = "BTC_TEST")]
+    BtcTest,
 }
 
 impl std::fmt::Display for AssetID {
@@ -25,6 +27,7 @@ impl std::fmt::Display for AssetID {
             match self {
                 AssetID::ETH => "ETH",
                 AssetID::EthTest5 => "ETH_TEST5",
+                AssetID::BtcTest => "BTC_TEST",
             }
         )
     }
