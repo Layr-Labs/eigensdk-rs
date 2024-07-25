@@ -118,3 +118,14 @@ impl Logger for TracingLogger {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_log() {
+        let logger = TracingLogger::new_text_logger(false, String::from(""), LogLevel::Info, false);
+        logger.log("Log", &["info logged"]);
+    }
+}
