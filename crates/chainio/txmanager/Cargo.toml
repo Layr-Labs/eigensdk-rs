@@ -9,3 +9,5 @@ repository.workspace = true
 license-file.workspace = true
 
 [dependencies]
+alloy-network.workspace = true
+alloy-primitives.workspace = true
