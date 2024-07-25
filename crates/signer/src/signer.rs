@@ -18,7 +18,7 @@ pub enum Config {
 }
 
 #[derive(Error, Debug)]
-#[allow(missing_docs)]
+/// Possible errors raised in signer creation
 pub enum SignerError {
     #[error("invalid private key")]
     InvalidPrivateKey,
@@ -42,7 +42,7 @@ impl Config {
                     .map_err(|_| SignerError::InvalidPrivateKey)
             }
             Config::Web3(_endpoint, _address) => {
-                todo!()
+                todo!() // We are implementing this in a following PR
             }
         }
     }
