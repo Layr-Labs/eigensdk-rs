@@ -4,3 +4,4 @@
 )]
 
 pub mod signer;
+pub mod web3_signer;

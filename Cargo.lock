@@ -116,7 +116,7 @@ dependencies = [
  "alloy-provider",
  "alloy-rpc-types-eth 0.1.2",
  "alloy-sol-types",
- "alloy-transport",
+ "alloy-transport 0.1.2",
  "futures",
  "futures-util",
  "thiserror",
@@ -282,10 +282,10 @@ dependencies = [
  "alloy-network 0.1.2",
  "alloy-primitives",
  "alloy-pubsub",
- "alloy-rpc-client",
+ "alloy-rpc-client 0.1.2",
  "alloy-rpc-types-eth 0.1.2",
- "alloy-transport",
- "alloy-transport-http",
+ "alloy-transport 0.1.2",
+ "alloy-transport-http 0.1.2",
  "alloy-transport-ws",
  "async-stream",
  "async-trait",
@@ -311,7 +311,7 @@ checksum = "702f330b7da123a71465ab9d39616292f8344a2811c28f2cc8d8438a69d79e35"
 dependencies = [
  "alloy-json-rpc 0.1.2",
  "alloy-primitives",
- "alloy-transport",
+ "alloy-transport 0.1.2",
  "bimap",
  "futures",
  "serde",
@@ -353,9 +353,30 @@ dependencies = [
  "alloy-json-rpc 0.1.2",
  "alloy-primitives",
  "alloy-pubsub",
- "alloy-transport",
- "alloy-transport-http",
+ "alloy-transport 0.1.2",
+ "alloy-transport-http 0.1.2",
  "alloy-transport-ws",
+ "futures",
+ "pin-project",
+ "reqwest 0.12.5",
+ "serde",
+ "serde_json",
+ "tokio",
+ "tokio-stream",
+ "tower",
+ "tracing",
+ "url",
+]
+
+[[package]]
+name = "alloy-rpc-client"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f8a9e609524fa31c2c70eb24c0da60796809193ad4787a6dfe6d0db0d3ac112d"
+dependencies = [
+ "alloy-json-rpc 0.2.0",
+ "alloy-transport 0.2.0",
+ "alloy-transport-http 0.2.0",
  "futures",
  "pin-project",
  "reqwest 0.12.5",
@@ -606,13 +627,47 @@ dependencies = [
 ]
 
 [[package]]
+name = "alloy-transport"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "5b44b0f6f4a2593b258fa7b6cae8968e6a4c404d9ef4f5bc74401f2d04fa23fa"
+dependencies = [
+ "alloy-json-rpc 0.2.0",
+ "base64 0.22.1",
+ "futures-util",
+ "futures-utils-wasm",
+ "serde",
+ "serde_json",
+ "thiserror",
+ "tokio",
+ "tower",
+ "tracing",
+ "url",
+]
+
+[[package]]
 name = "alloy-transport-http"
 version = "0.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5619c017e1fdaa1db87f9182f4f0ed97c53d674957f4902fba655e972d359c6c"
 dependencies = [
  "alloy-json-rpc 0.1.2",
- "alloy-transport",
+ "alloy-transport 0.1.2",
+ "reqwest 0.12.5",
+ "serde_json",
+ "tower",
+ "tracing",
+ "url",
+]
+
+[[package]]
+name = "alloy-transport-http"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6d8f1eefa8cb9e7550740ee330feba4fed303a77ad3085707546f9152a88c380"
+dependencies = [
+ "alloy-json-rpc 0.2.0",
+ "alloy-transport 0.2.0",
  "reqwest 0.12.5",
  "serde_json",
  "tower",
@@ -627,7 +682,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9c0aff8af5be5e58856c5cdd1e46db2c67c7ecd3a652d9100b4822c96c899947"
 dependencies = [
  "alloy-pubsub",
- "alloy-transport",
+ "alloy-transport 0.1.2",
  "futures",
  "http 1.1.0",
  "rustls 0.23.10",
@@ -860,9 +915,9 @@ dependencies = [
 
 [[package]]
 name = "async-trait"
-version = "0.1.80"
+version = "0.1.81"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c6fa2087f2753a7da8cc1c0dbfcf89579dd57458e36769de5ac750b4671737ca"
+checksum = "6e0c28dcc82d7c8ead5cb13beb15405b57b8546e93215673ff8ca0349a028107"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1847,7 +1902,7 @@ dependencies = [
  "alloy-rpc-types",
  "alloy-signer 0.1.2",
  "alloy-signer-local 0.1.2",
- "alloy-transport-http",
+ "alloy-transport-http 0.1.2",
  "ark-bn254",
  "ark-ff 0.4.2",
  "eigen-chainio-utils",
@@ -2037,6 +2092,7 @@ dependencies = [
  "alloy-consensus 0.2.0",
  "alloy-network 0.2.0",
  "alloy-primitives",
+ "alloy-rpc-client 0.2.0",
  "alloy-signer 0.1.2",
  "alloy-signer-aws",
  "alloy-signer-local 0.2.0",
@@ -2044,9 +2100,12 @@ dependencies = [
  "aws-sdk-kms",
  "eth-keystore",
  "ethers-signers",
+ "hex",
  "hex-literal",
+ "serde",
  "thiserror",
  "tokio",
+ "url",
 ]
 
 [[package]]
@@ -2056,7 +2115,7 @@ dependencies = [
  "alloy-network 0.1.2",
  "alloy-primitives",
  "alloy-provider",
- "alloy-transport-http",
+ "alloy-transport-http 0.1.2",
  "eigen-utils",
  "once_cell",
 ]
@@ -2081,7 +2140,7 @@ dependencies = [
  "alloy-provider",
  "alloy-signer-local 0.1.2",
  "alloy-sol-types",
- "alloy-transport-http",
+ "alloy-transport-http 0.1.2",
  "reqwest 0.12.5",
 ]
 

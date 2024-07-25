@@ -9,6 +9,7 @@ repository.workspace = true
 alloy-consensus = "0.2.0"
 alloy-network = "0.2.0"
 alloy-primitives = "0.7.7"
+alloy-rpc-client = "0.2.0"
 alloy-signer.workspace = true
 alloy-signer-aws = "0.2.0"
 alloy-signer-local = "0.2.0"
@@ -16,9 +17,12 @@ aws-config = "1.5.4"
 aws-sdk-kms = "1.37.0"
 eth-keystore = "0.5.0"
 ethers-signers = "2.0.14"
+hex = "0.4.3"
 hex-literal = "0.4.1"
+serde.workspace = true
 thiserror.workspace = true
 tokio.workspace = true
+url = "2.5.2"
 
 [lints]
 workspace = true
