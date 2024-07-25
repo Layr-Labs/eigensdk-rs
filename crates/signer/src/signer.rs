@@ -1,4 +1,7 @@
+use alloy_signer_aws::AwsSigner;
 use alloy_signer_local::PrivateKeySigner;
+use aws_config::{BehaviorVersion, Region};
+use aws_sdk_kms;
 use eth_keystore::decrypt_key;
 use std::path::Path;
 use thiserror::Error;
@@ -43,17 +46,29 @@ impl Config {
             }
         }
     }
+    /// Creates a signer from a key ID in AWS Key Management Service
+    pub async fn aws_signer(key_id: String, region: Region) -> AwsSigner {
+        let config = aws_config::load_defaults(BehaviorVersion::latest())
+            .await
+            .to_builder()
+            .region(Some(region))
+            .build();
+        let client = aws_sdk_kms::Client::new(&config);
+        let chain_id = Some(1);
+        AwsSigner::new(client, key_id, chain_id).await.unwrap()
+    }
 }
 
 #[cfg(test)]
 mod test {
     use super::Config;
-    use alloy_consensus::TxLegacy;
-    use alloy_network::TxSignerSync;
+    use super::*;
+    use alloy_consensus::{SignableTransaction, TxLegacy};
+    use alloy_network::{TxSigner, TxSignerSync};
+    use alloy_primitives::hex_literal::hex;
     use alloy_primitives::{address, bytes, U256};
     use alloy_signer::Signature;
     use alloy_signer_local::PrivateKeySigner;
-    use hex_literal::hex;
     use std::str::FromStr;
 
     #[test]
@@ -112,5 +127,32 @@ mod test {
         let signature = signer.unwrap().sign_transaction_sync(&mut tx).unwrap();
 
         assert_eq!(signature, expected_signature);
+    }
+
+    #[tokio::test]
+    async fn sign_transaction_with_aws_signer() {
+        let key_id = "1234abcd-12ab-34cd-56ef-1234567890ab".to_string();
+        let region = Region::from_static("us-west-2a");
+        let signer = Config::aws_signer(key_id, region).await;
+        let mut tx = TxLegacy {
+            to: address!("d8dA6BF26964aF9D7eEd9e03E53415D37aA96045").into(),
+            value: U256::from(1_000_000_000),
+            gas_limit: 2_000_000,
+            nonce: 0,
+            gas_price: 21_000_000_000,
+            input: bytes!(),
+            chain_id: Some(1),
+        };
+
+        // This request fails because key_id is not a valid key
+        let sig = signer.sign_transaction(&mut tx).await.unwrap();
+
+        let mut encoded_tx = Vec::new();
+        tx.encode_for_signing(&mut encoded_tx);
+
+        assert_eq!(
+            sig.recover_address_from_msg(encoded_tx).unwrap(),
+            signer.address()
+        );
     }
 }

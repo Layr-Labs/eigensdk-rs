@@ -7,15 +7,18 @@ repository.workspace = true
 
 [dependencies]
 alloy-consensus = "0.2.0"
-alloy-contract = "0.2.0"
 alloy-network = "0.2.0"
 alloy-primitives = "0.7.7"
 alloy-signer.workspace = true
+alloy-signer-aws = "0.2.0"
 alloy-signer-local = "0.2.0"
+aws-config = "1.5.4"
+aws-sdk-kms = "1.37.0"
 eth-keystore = "0.5.0"
+ethers-signers = "2.0.14"
 hex-literal = "0.4.1"
-k256 = "0.13.3"
 thiserror.workspace = true
+tokio.workspace = true
 
 [lints]
 workspace = true
