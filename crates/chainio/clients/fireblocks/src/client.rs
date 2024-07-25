@@ -10,7 +10,7 @@ use uuid::Uuid;
 
 /// AssetID represents the asset identifier as supported by fireblocks
 /// TODO : Add more assetid identifiers
-#[derive(Debug, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, PartialEq, Serialize, Deserialize, Clone)]
 pub enum AssetID {
     ETH,
     #[serde(rename = "ETH_TEST5")]
@@ -157,9 +157,9 @@ impl Client {
     pub async fn post_request(
         &self,
         path: &str,
-        body: &str,
+        body: Option<&str>,
     ) -> Result<String, Box<dyn std::error::Error>> {
-        let token = self.sign_jwt(path, Some(body))?;
+        let token = self.sign_jwt(path, body)?;
 
         let client = reqwest::Client::new();
         let mut headers = HeaderMap::new();
@@ -174,7 +174,7 @@ impl Client {
             .post(self.api_url.to_owned() + path) // Use api_url here
             .headers(headers)
             .header(CONTENT_TYPE, APPLICATION_JSON.as_ref()) // Set Content-Type header
-            .body(body.to_string())
+            .body(body.unwrap_or("").to_string())
             .send()
             .await?;
 

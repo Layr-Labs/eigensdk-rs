@@ -1,56 +1,83 @@
-// use crate::{
-//     client::{AssetID, Client},
-//     status::Status,
-// };
-// use alloy_primitives::Address;
-// use serde::{Deserialize, Serialize};
+use crate::{
+    client::{AssetID, Client},
+    status::Status,
+};
+use serde::{Deserialize, Serialize};
 
-// #[allow(unused)]
-// #[derive(Debug, Serialize, Deserialize)]
-// pub struct Assets {
-//     id: AssetID,
-//     status: Status,
-//     address: Address,
-//     tag: String,
-// }
+#[derive(Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct Assets {
+    id: Option<AssetID>,
+    balance: Option<String>,
+    status: Option<Status>,
+    address: Option<String>,
+    tag: Option<String>,
+    locked_amount: Option<String>,
+    activation_time: Option<String>,
+}
 
-// #[allow(unused)]
-// #[derive(Debug, Serialize, Deserialize)]
-// pub struct WhitelistedContract {
-//     id: String,
-//     name: String,
-//     assets: Assets,
-// }
+#[derive(Debug, Serialize, Deserialize)]
+pub struct WhitelistedContract {
+    id: String,
+    name: String,
+    #[serde(default)]
+    assets: Vec<Assets>,
+}
 
-// pub trait ListContracts {
-//     async fn list_contracts(&self) -> Vec<WhitelistedContract>;
-// }
+#[derive(Debug, Serialize, Deserialize)]
+pub struct WhitelistedContractResponse {
+    contracts: Vec<WhitelistedContract>,
+}
 
-// impl ListContracts for Client {
-//     async fn list_contracts(&self) -> Vec<WhitelistedContract> {
-//         let res = self.get_request(&format!("/v1/contracts")).await.unwrap();
+#[allow(unused)]
+/// Get List Contracts trait for "/v1/contracts" requests
+pub trait ListContracts {
+    async fn list_contracts(&self) -> Result<WhitelistedContractResponse, String>;
+}
 
-//         let contracts: Vec<WhitelistedContract> = serde_json::from_str(&res).unwrap();
-//         contracts
-//     }
-// }
+impl ListContracts for Client {
+    async fn list_contracts(&self) -> Result<WhitelistedContractResponse, String> {
+        let list_contracts_result = self.get_request(&format!("/v1/contracts")).await;
+        match list_contracts_result {
+            Ok(list_contracts_object) => {
+                if list_contracts_object.trim() == "[]" {
+                    return Ok(WhitelistedContractResponse {
+                        contracts: Vec::new(),
+                    });
+                }
+                let serialized_tx: Result<Vec<WhitelistedContract>, _> =
+                    serde_json::from_str(&list_contracts_object);
+                match serialized_tx {
+                    Ok(contracts) => Ok(WhitelistedContractResponse { contracts }),
+                    Err(e) => Err(e.to_string()),
+                }
+            }
+            Err(e) => Err(e.to_string()),
+        }
+    }
+}
 
-// #[cfg(test)]
-// mod tests {
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::env;
 
-//     use super::*;
+    #[tokio::test]
+    #[cfg(feature = "fireblock-tests")]
+    async fn test_list_contracts() {
+        let api_key = env::var("FIREBLOCKS_API_KEY").expect("FIREBLOCKS_API_KEY not set");
+        let private_key_path =
+            env::var("FIREBLOCKS_PRIVATE_KEY_PATH").expect("FIREBLOCKS_PRIVATE_KEY_PATH not set");
+        let api_url = env::var("FIREBLOCKS_API_URL").expect("FIREBLOCKS_API_URL not set");
+        let private_key =
+            std::fs::read_to_string(private_key_path).expect("Failed to read private key file");
 
-//     #[tokio::test]
-//     async fn test_list_contracts() {
-//         let api_key = "4aff0abf-9e81-4cf4-8bae-c9fc0c8a13af".to_string();
-//         let private_key = "0x29962ee54b8107328d033006e33627ecdbc9f5adc8b3e8ab4064e34a1193110c";
-//         let api_url = "https://api.fireblocks.io".to_string();
-//         let client = Client::new(
-//             api_key.to_string(),
-//             private_key.to_string(),
-//             api_url.clone(),
-//         );
+        let client = Client::new(
+            api_key.to_string(),
+            private_key.to_string(),
+            api_url.clone(),
+        );
 
-//         let s = client.list_contracts().await;
-//     }
-// }
+        let _ = client.list_contracts().await.unwrap();
+    }
+}
