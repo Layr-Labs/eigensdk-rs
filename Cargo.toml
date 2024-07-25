@@ -19,7 +19,6 @@ members = [ "crates/chainio/clients/avsregistry/",
 "crates/metrics/",
 "crates/types/",
 "crates/signer/",
-
 "examples/info-operator-service/",
 "testing/testing-utils/",
 "examples/avsregistry-read",
