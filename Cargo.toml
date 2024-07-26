@@ -94,6 +94,7 @@ ethers-signers = "2.0.14"
 eth-keystore = "0.5.0"
 aws-config = "1.5.4"
 aws-sdk-kms = "1.37.0"
+url = "2.5.2"
 
 #misc 
 parking_lot = "0.12"
@@ -134,7 +135,7 @@ alloy-transport-ws = { version = "0.1", default-features = false }
 alloy-transport-ipc = { version = "0.1", default-features = false }
 alloy-pubsub = { version = "0.1", default-features = false }
 alloy-json-rpc = { version = "0.1", default-features = false }
-alloy-rpc-client = { version = "0.1", default-features = false }
+alloy-rpc-client = "0.2"
 alloy-contract = { version = "0.1", default-features = false }
 alloy-signer-aws = "0.1.0"
 

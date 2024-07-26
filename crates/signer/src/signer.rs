@@ -1,3 +1,5 @@
+use crate::web3_signer::Web3Signer;
+use alloy_primitives::{hex, Address};
 use alloy_signer_aws::{AwsSigner, AwsSignerError};
 use alloy_signer_local::PrivateKeySigner;
 use aws_config::{BehaviorVersion, Region};
@@ -5,6 +7,7 @@ use aws_sdk_kms;
 use eth_keystore::decrypt_key;
 use std::path::Path;
 use thiserror::Error;
+use url::Url;
 
 /// Represents the input params to create a signer
 #[derive(Debug)]
@@ -24,6 +27,10 @@ pub enum SignerError {
     InvalidPrivateKey,
     #[error("invalid keystore password")]
     InvalidPassword,
+    #[error("invalid address")]
+    InvalidAddress,
+    #[error("invalid url")]
+    InvalidUrl,
 }
 
 impl Config {
@@ -59,6 +66,14 @@ impl Config {
             .build();
         let client = aws_sdk_kms::Client::new(&config);
         Ok(AwsSigner::new(client, key_id, chain_id).await?)
+    }
+
+    /// Creates a signer from an endpoint and address
+    pub fn web3_signer(endpoint: String, address: String) -> Result<Web3Signer, SignerError> {
+        let url: Url = endpoint.parse().map_err(|_| SignerError::InvalidUrl)?;
+        let address =
+            Address::from_slice(&hex::decode(address).map_err(|_| SignerError::InvalidAddress)?);
+        Ok(Web3Signer::new(address, url))
     }
 }
 
