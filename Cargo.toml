@@ -25,7 +25,7 @@ members = [
     "testing/testing-utils/",
     "examples/avsregistry-read",
     "examples/avsregistry-write",
-    "examples/anvil-utils"
+    "examples/anvil-utils",
 ]
 
 resolver = "2"
@@ -89,7 +89,11 @@ thiserror = "1.0"
 tracing = "0.1.40"
 tracing-subscriber = { version = "0.3", features = ["json"] }
 hyper = "0.14.25"
-
+hex-literal = "0.4.1"
+ethers-signers = "2.0.14"
+eth-keystore = "0.5.0"
+aws-config = "1.5.4"
+aws-sdk-kms = "1.37.0"
 
 #misc 
 parking_lot = "0.12"
@@ -132,6 +136,8 @@ alloy-pubsub = { version = "0.1", default-features = false }
 alloy-json-rpc = { version = "0.1", default-features = false }
 alloy-rpc-client = { version = "0.1", default-features = false }
 alloy-contract = { version = "0.1", default-features = false }
+alloy-signer-aws = "0.1.0"
+
 
 # examples
 avsregistry-read = { path = "examples/avsregistry-read" }
