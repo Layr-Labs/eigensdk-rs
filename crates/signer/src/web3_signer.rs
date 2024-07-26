@@ -11,12 +11,12 @@ pub struct Web3Signer {
 }
 
 #[derive(Serialize, Clone, Debug)]
-#[allow(non_snake_case)]
+#[serde(rename_all = "camelCase")]
 struct SignTransactionParams {
     from: String,
     to: TxKind,
     gas: String,
-    gasPrice: String,
+    gas_price: String,
     nonce: String,
     data: String,
 }
@@ -45,7 +45,7 @@ impl Web3Signer {
             from: self.address.to_string(),
             to: tx.to(),
             gas: format!("0x{:x}", tx.gas_limit()),
-            gasPrice: format!("0x{:x}", tx.gas_price().unwrap()),
+            gas_price: format!("0x{:x}", tx.gas_price().unwrap()),
             nonce: format!("0x{:x}", tx.nonce()),
             data: Bytes::copy_from_slice(tx.input()).to_string(),
         };
