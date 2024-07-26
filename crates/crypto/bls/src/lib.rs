@@ -159,20 +159,26 @@ impl EthConvert {
     }
 }
 
-#[test]
-fn test_map_parity() {
-    use std::str::FromStr;
-    // taken from golang impl
-    let x = Fq::from_str(
-        "21808877952123445795107598745041753552237365029343566086488416315631580963384",
-    )
-    .unwrap();
-    let y = Fq::from_str(
-        "11638128931416599220980524115187668264422283409187640152391635080130668110949",
-    )
-    .unwrap();
-    let expected = PublicKey::new(x, y);
-    let msg = b"07c2ee97b7ae54ffe597b9db97ede3b7";
-    let r = BlsKeypair::map_to_curve(msg).unwrap();
-    assert_eq!(r, expected);
+#[cfg(test)]
+mod tests {
+    use super::{BlsKeypair, PublicKey};
+    use ark_bn254::Fq;
+
+    #[test]
+    fn test_map_parity() {
+        use std::str::FromStr;
+        // taken from golang impl
+        let x = Fq::from_str(
+            "21808877952123445795107598745041753552237365029343566086488416315631580963384",
+        )
+        .unwrap();
+        let y = Fq::from_str(
+            "11638128931416599220980524115187668264422283409187640152391635080130668110949",
+        )
+        .unwrap();
+        let expected = PublicKey::new(x, y);
+        let msg = b"07c2ee97b7ae54ffe597b9db97ede3b7";
+        let r = BlsKeypair::map_to_curve(msg).unwrap();
+        assert_eq!(r, expected);
+    }
 }
