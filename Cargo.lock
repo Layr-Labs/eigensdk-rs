@@ -1992,6 +1992,7 @@ dependencies = [
  "alloy-consensus",
  "alloy-network",
  "alloy-primitives",
+ "alloy-rlp",
  "alloy-rpc-client 0.2.0",
  "alloy-signer",
  "alloy-signer-aws",

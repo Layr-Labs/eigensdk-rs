@@ -1,5 +1,5 @@
 use crate::web3_signer::Web3Signer;
-use alloy_primitives::{hex, Address};
+use alloy_primitives::Address;
 use alloy_signer_aws::{AwsSigner, AwsSignerError};
 use alloy_signer_local::PrivateKeySigner;
 use aws_config::{BehaviorVersion, Region};
@@ -16,8 +16,6 @@ pub enum Config {
     PrivateKey(String),
     /// Keystore path and password
     Keystore(String, String),
-    /// Web3 endpoint and address
-    Web3(String, String),
 }
 
 /// Possible errors raised in signer creation
@@ -48,9 +46,6 @@ impl Config {
                 PrivateKeySigner::from_slice(&private_key)
                     .map_err(|_| SignerError::InvalidPrivateKey)
             }
-            Config::Web3(_endpoint, _address) => {
-                todo!() // We are implementing this in a following PR
-            }
         }
     }
     /// Creates a signer from a key ID in AWS Key Management Service
@@ -65,14 +60,11 @@ impl Config {
             .region(Some(region))
             .build();
         let client = aws_sdk_kms::Client::new(&config);
-        Ok(AwsSigner::new(client, key_id, chain_id).await?)
+        AwsSigner::new(client, key_id, chain_id).await
     }
 
-    /// Creates a signer from an endpoint and address
-    pub fn web3_signer(endpoint: String, address: String) -> Result<Web3Signer, SignerError> {
+    pub fn web3_signer(endpoint: String, address: Address) -> Result<Web3Signer, SignerError> {
         let url: Url = endpoint.parse().map_err(|_| SignerError::InvalidUrl)?;
-        let address =
-            Address::from_slice(&hex::decode(address).map_err(|_| SignerError::InvalidAddress)?);
         Ok(Web3Signer::new(address, url))
     }
 }
@@ -88,6 +80,7 @@ mod test {
     use alloy_signer::Signature;
     use alloy_signer_local::PrivateKeySigner;
     use std::str::FromStr;
+    use tokio;
 
     const PRIVATE_KEY: &str = "dcf2cbdd171a21c480aa7f53d77f31bb102282b3ff099c78e3118b37348c72f7";
     const ADDRESS: [u8; 20] = hex!("d8dA6BF26964aF9D7eEd9e03E53415D37aA96045");
@@ -149,6 +142,7 @@ mod test {
 
     #[tokio::test]
     async fn sign_transaction_with_aws_signer() {
+        // TODO: use localstack
         let key_id = "1234abcd-12ab-34cd-56ef-1234567890ab".to_string();
         let chain_id = Some(1);
         let region = Region::from_static("us-west-2a");
@@ -176,14 +170,13 @@ mod test {
     }
 
     #[tokio::test]
-    #[ignore = "missing test endpoint"]
     async fn sign_transaction_with_web3_signer() {
-        // TODO: add a valid endpoint
-        let endpoint = "".to_string();
-        let address = "b60e8dd61c5d32be8058bb8eb970870f07233155".to_string();
+        // TODO: replace hardcoded addresses with anvil
+        let endpoint = "http://127.0.0.1:8545 ".to_string();
+        let address = address!("f39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
         let signer = Config::web3_signer(endpoint, address).unwrap();
         let mut tx = TxLegacy {
-            to: address!("d46e8dd67c5d32be8058bb8eb970870f07244567").into(),
+            to: address!("70997970C51812dc3A010C7d01b50e0d17dc79C8").into(),
             value: U256::from(1_000_000_000),
             gas_limit: 0x76c0,
             nonce: 0,
@@ -192,14 +185,12 @@ mod test {
             chain_id: Some(1),
         };
 
-        let sig = signer.sign_transaction(&mut tx).await.unwrap();
+        let signature = signer.sign_transaction(&mut tx).await.unwrap();
 
-        let mut encoded_tx = Vec::new();
-        tx.encode_for_signing(&mut encoded_tx);
+        let private_key = hex!("ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80");
+        let expected_signer = PrivateKeySigner::from_slice(&private_key).unwrap();
+        let expected_signature = expected_signer.sign_transaction_sync(&mut tx).unwrap();
 
-        assert_eq!(
-            sig.recover_address_from_msg(encoded_tx).unwrap(),
-            signer.address
-        );
+        assert_eq!(signature, expected_signature);
     }
 }

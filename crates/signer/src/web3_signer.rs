@@ -1,8 +1,9 @@
 use alloy_consensus::SignableTransaction;
 use alloy_primitives::{Address, Bytes, TxKind, U256};
+use alloy_rlp::{Decodable, RlpDecodable};
 use alloy_rpc_client::{ClientBuilder, ReqwestClient, RpcCall};
 use alloy_signer::Signature;
-use serde::{Deserialize, Serialize};
+use serde::Serialize;
 use url::Url;
 
 /// A signer that sends an rpc request to sign a transaction remotely
@@ -26,11 +27,12 @@ struct SignTransactionParams {
     data: String,
 }
 
-#[derive(Deserialize, Clone, Debug)]
+#[derive(Debug, RlpDecodable)]
 struct SignTransactionResponse {
+    // TODO: fill with tx fields
     r: U256,
     s: U256,
-    parity: bool,
+    parity: u8,
 }
 
 impl Web3Signer {
@@ -42,7 +44,7 @@ impl Web3Signer {
         }
     }
 
-    /// TODO: implement alloy TxSigner trait
+    // TODO: implement alloy TxSigner trait
     pub async fn sign_transaction(
         &self,
         tx: &mut dyn SignableTransaction<Signature>,
@@ -56,11 +58,12 @@ impl Web3Signer {
             data: Bytes::copy_from_slice(tx.input()).to_string(),
         };
 
-        let request: RpcCall<_, Vec<SignTransactionParams>, SignTransactionResponse> =
+        let request: RpcCall<_, Vec<SignTransactionParams>, Bytes> =
             self.client.request("eth_signTransaction", vec![params]);
 
-        let res = request.await.unwrap();
-
-        Signature::from_rs_and_parity(res.r, res.s, res.parity).map_err(alloy_signer::Error::from)
+        let mut rlp_encoded_signed_tx = request.await.unwrap();
+        let signed_tx = SignTransactionResponse::decode(&mut rlp_encoded_signed_tx).unwrap(); // TODO: fix this
+        Signature::from_rs_and_parity(signed_tx.r, signed_tx.s, signed_tx.parity as u64)
+            .map_err(alloy_signer::Error::from)
     }
 }
