@@ -1,13 +1,10 @@
 [package]
-name = "eigen-contract-bindings"
-description = "Eigen Layer ethers binding generator"
-
+name = "eigen-logging"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 repository.workspace = true
-license-file.workspace = true
 
 [dependencies]
-
-
+tracing.workspace = true
+tracing-subscriber.workspace = true
