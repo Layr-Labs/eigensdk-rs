@@ -89,7 +89,9 @@ thiserror = "1.0"
 tracing = "0.1.40"
 tracing-subscriber = { version = "0.3", features = ["json"] }
 hyper = "0.14.25"
-
+eth-keystore = "0.5.0"
+hex-literal = "0.4.1"
+k256 = "0.13.3"
 
 #misc 
 parking_lot = "0.12"
