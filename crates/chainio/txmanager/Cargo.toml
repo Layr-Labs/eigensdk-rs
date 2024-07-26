@@ -11,3 +11,4 @@ license-file.workspace = true
 [dependencies]
 alloy-network.workspace = true
 alloy-primitives.workspace = true
+alloy-contracts.workspace = true
