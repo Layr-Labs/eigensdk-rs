@@ -1,6 +1,4 @@
-use alloy_network::TxSigner;
 use alloy_primitives::Address;
-use alloy_signer::{Signature, Signer};
 use alloy_signer_aws::{AwsSigner, AwsSignerError};
 use alloy_signer_local::PrivateKeySigner;
 use aws_config::{BehaviorVersion, Region};
@@ -19,8 +17,6 @@ pub enum Config {
     PrivateKey(String),
     /// Keystore path and password
     Keystore(String, String),
-    /// Web3 endpoint and address
-    Web3(String, String),
 }
 
 #[derive(Error, Debug)]
@@ -38,7 +34,7 @@ pub enum SignerError {
 
 impl Config {
     /// Creates a signer from given config.
-    pub fn signer_from_config(c: Config) -> Result<impl TxSigner<Signature>, SignerError> {
+    pub fn signer_from_config(c: Config) -> Result<PrivateKeySigner, SignerError> {
         // TODO: check chain id to select signer
         match c {
             Config::PrivateKey(key) => key
@@ -51,15 +47,9 @@ impl Config {
                 PrivateKeySigner::from_slice(&private_key)
                     .map_err(|_| SignerError::InvalidPrivateKey)
             }
-            Config::Web3(endpoint, address) => {
-                let url: Url = endpoint.parse().map_err(|_| SignerError::InvalidUrl)?;
-                let address = Address::from_slice(
-                    &hex::decode(address).map_err(|_| SignerError::InvalidAddress)?,
-                );
-                Ok(Web3Signer::new(address, url))
-            }
         }
     }
+
     /// Creates a signer from a key ID in AWS Key Management Service
     pub async fn aws_signer(
         key_id: String,
@@ -73,6 +63,13 @@ impl Config {
             .build();
         let client = aws_sdk_kms::Client::new(&config);
         Ok(AwsSigner::new(client, key_id, chain_id).await?)
+    }
+
+    pub fn web3_signer(endpoint: String, address: String) -> Result<Web3Signer, SignerError> {
+        let url: Url = endpoint.parse().map_err(|_| SignerError::InvalidUrl)?;
+        let address =
+            Address::from_slice(&hex::decode(address).map_err(|_| SignerError::InvalidAddress)?);
+        Ok(Web3Signer::new(address, url))
     }
 }
 

@@ -24,6 +24,3 @@ serde.workspace = true
 thiserror.workspace = true
 tokio.workspace = true
 url = "2.5.2"
-
-[lints]
-workspace = true
