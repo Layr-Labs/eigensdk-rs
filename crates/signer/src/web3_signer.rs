@@ -11,13 +11,14 @@ pub struct Web3Signer {
 }
 
 #[derive(Serialize, Clone, Debug)]
+#[allow(non_snake_case)]
 struct SignTransactionParams {
-    from: Address,
+    from: String,
     to: TxKind,
-    gas: u128,
-    gas_price: Option<u128>,
-    nonce: u64,
-    data: Bytes,
+    gas: String,
+    gasPrice: String,
+    nonce: String,
+    data: String,
 }
 
 #[derive(Deserialize, Clone, Debug)]
@@ -41,20 +42,19 @@ impl Web3Signer {
         tx: &mut dyn SignableTransaction<Signature>,
     ) -> alloy_signer::Result<Signature, alloy_signer::Error> {
         let params = SignTransactionParams {
-            from: self.address,
+            from: self.address.to_string(),
             to: tx.to(),
-            gas: tx.gas_limit(),
-            gas_price: tx.gas_price(),
-            nonce: tx.nonce(),
-            data: Bytes::copy_from_slice(tx.input()),
+            gas: format!("0x{:x}", tx.gas_limit()),
+            gasPrice: format!("0x{:x}", tx.gas_price().unwrap()),
+            nonce: format!("0x{:x}", tx.nonce()),
+            data: Bytes::copy_from_slice(tx.input()).to_string(),
         };
 
-        let request: RpcCall<_, SignTransactionParams, SignTransactionResponse> =
-            self.client.request("eth_signTransaction", params);
+        let request: RpcCall<_, Vec<SignTransactionParams>, SignTransactionResponse> =
+            self.client.request("eth_signTransaction", vec![params]);
 
         let res = request.await.unwrap();
 
-        Signature::from_rs_and_parity(res.r, res.s, res.parity)
-            .map_err(|e| alloy_signer::Error::from(e))
+        Signature::from_rs_and_parity(res.r, res.s, res.parity).map_err(alloy_signer::Error::from)
     }
 }
