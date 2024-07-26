@@ -170,4 +170,30 @@ mod test {
             signer.address()
         );
     }
+
+    #[tokio::test]
+    async fn sign_transaction_with_web3_signer() {
+        let endpoint = "/".to_string();
+        let address = "0xb60e8dd61c5d32be8058bb8eb970870f07233155".to_string();
+        let signer = Config::web3_signer(endpoint, address).unwrap();
+        let mut tx = TxLegacy {
+            to: address!("d46e8dd67c5d32be8058bb8eb970870f07244567").into(),
+            value: U256::from(1_000_000_000),
+            gas_limit: 0x76c0,
+            nonce: 0,
+            gas_price: 21_000_000_000,
+            input: bytes!(),
+            chain_id: Some(1),
+        };
+
+        let sig = signer.sign_transaction(&mut tx).await.unwrap();
+
+        let mut encoded_tx = Vec::new();
+        tx.encode_for_signing(&mut encoded_tx);
+
+        assert_eq!(
+            sig.recover_address_from_msg(encoded_tx).unwrap(),
+            signer.address
+        );
+    }
 }

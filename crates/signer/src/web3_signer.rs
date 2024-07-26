@@ -1,24 +1,13 @@
 use alloy_consensus::SignableTransaction;
-use alloy_network::TxSigner;
-use alloy_primitives::{Address, Bytes, TxKind};
+use alloy_primitives::{Address, Bytes, TxKind, U256};
 use alloy_rpc_client::{ClientBuilder, ReqwestClient, RpcCall};
-use alloy_signer::k256::ecdsa::Signature;
-use async_trait::async_trait;
-use serde::Serialize;
+use alloy_signer::Signature;
+use serde::{Deserialize, Serialize};
 use url::Url;
 
 pub struct Web3Signer {
-    client: ReqwestClient,
-    address: Address,
-}
-
-impl Web3Signer {
-    pub fn new(address: Address, url: Url) -> Self {
-        Web3Signer {
-            client: ClientBuilder::default().http(url),
-            address,
-        }
-    }
+    pub client: ReqwestClient,
+    pub address: Address,
 }
 
 #[derive(Serialize, Clone, Debug)]
@@ -31,13 +20,23 @@ struct SignTransactionParams {
     data: Bytes,
 }
 
-#[cfg_attr(target_arch = "wasm32", async_trait(?Send))]
-#[cfg_attr(not(target_arch = "wasm32"), async_trait)]
-impl TxSigner<Signature> for Web3Signer {
-    fn address(&self) -> Address {
-        self.address
+#[derive(Deserialize, Clone, Debug)]
+struct SignTransactionResponse {
+    r: U256,
+    s: U256,
+    parity: bool,
+}
+
+impl Web3Signer {
+    pub fn new(address: Address, url: Url) -> Self {
+        Web3Signer {
+            client: ClientBuilder::default().http(url),
+            address,
+        }
     }
-    async fn sign_transaction(
+
+    // TODO: implement alloy TxSigner trait
+    pub async fn sign_transaction(
         &self,
         tx: &mut dyn SignableTransaction<Signature>,
     ) -> alloy_signer::Result<Signature, alloy_signer::Error> {
@@ -50,11 +49,12 @@ impl TxSigner<Signature> for Web3Signer {
             data: Bytes::copy_from_slice(tx.input()),
         };
 
-        let request: RpcCall<_, SignTransactionParams, Bytes> =
+        let request: RpcCall<_, SignTransactionParams, SignTransactionResponse> =
             self.client.request("eth_signTransaction", params);
 
         let res = request.await.unwrap();
 
-        Signature::from_slice(&res).map_err(|e| alloy_signer::Error::Ecdsa(e))
+        Signature::from_rs_and_parity(res.r, res.s, res.parity)
+            .map_err(|e| alloy_signer::Error::from(e))
     }
 }
