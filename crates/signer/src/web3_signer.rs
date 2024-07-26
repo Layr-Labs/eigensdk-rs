@@ -1,7 +1,9 @@
 use alloy_consensus::SignableTransaction;
-use alloy_primitives::{Address, TxKind, U256};
+use alloy_network::TxSigner;
+use alloy_primitives::{Address, Bytes, TxKind};
 use alloy_rpc_client::{ClientBuilder, ReqwestClient, RpcCall};
-use alloy_signer::Signature;
+use alloy_signer::k256::ecdsa::Signature;
+use async_trait::async_trait;
 use serde::Serialize;
 use url::Url;
 
@@ -20,41 +22,39 @@ impl Web3Signer {
 }
 
 #[derive(Serialize, Clone, Debug)]
-struct SignParams<'a> {
+struct SignTransactionParams {
     from: Address,
     to: TxKind,
     gas: u128,
     gas_price: Option<u128>,
     nonce: u64,
-    data: &'a [u8],
+    data: Bytes,
 }
 
-trait Signer {
+#[cfg_attr(target_arch = "wasm32", async_trait(?Send))]
+#[cfg_attr(not(target_arch = "wasm32"), async_trait)]
+impl TxSigner<Signature> for Web3Signer {
+    fn address(&self) -> Address {
+        self.address
+    }
     async fn sign_transaction(
         &self,
         tx: &mut dyn SignableTransaction<Signature>,
-    ) -> alloy_signer::Result<Signature>;
-}
-
-impl Signer for Web3Signer {
-    async fn sign_transaction(
-        &self,
-        tx: &mut dyn SignableTransaction<Signature>,
-    ) -> alloy_signer::Result<Signature> {
-        let params = SignParams {
+    ) -> alloy_signer::Result<Signature, alloy_signer::Error> {
+        let params = SignTransactionParams {
             from: self.address,
             to: tx.to(),
             gas: tx.gas_limit(),
             gas_price: tx.gas_price(),
             nonce: tx.nonce(),
-            data: tx.input(),
+            data: Bytes::copy_from_slice(tx.input()),
         };
 
-        let request: RpcCall<_, SignParams, U256> =
+        let request: RpcCall<_, SignTransactionParams, Bytes> =
             self.client.request("eth_signTransaction", params);
 
-        request.await.unwrap();
+        let res = request.await.unwrap();
 
-        // TODO: return signature from response
+        Signature::from_slice(&res).map_err(|e| alloy_signer::Error::Ecdsa(e))
     }
 }

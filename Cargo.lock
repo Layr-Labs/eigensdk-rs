@@ -2096,6 +2096,7 @@ dependencies = [
  "alloy-signer 0.1.2",
  "alloy-signer-aws",
  "alloy-signer-local 0.2.0",
+ "async-trait",
  "aws-config",
  "aws-sdk-kms",
  "eth-keystore",

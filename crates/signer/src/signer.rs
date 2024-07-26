@@ -1,4 +1,6 @@
+use alloy_network::TxSigner;
 use alloy_primitives::Address;
+use alloy_signer::{Signature, Signer};
 use alloy_signer_aws::{AwsSigner, AwsSignerError};
 use alloy_signer_local::PrivateKeySigner;
 use aws_config::{BehaviorVersion, Region};
@@ -36,7 +38,7 @@ pub enum SignerError {
 
 impl Config {
     /// Creates a signer from given config.
-    pub fn signer_from_config(c: Config) -> Result<PrivateKeySigner, SignerError> {
+    pub fn signer_from_config(c: Config) -> Result<impl TxSigner<Signature>, SignerError> {
         // TODO: check chain id to select signer
         match c {
             Config::PrivateKey(key) => key
@@ -54,8 +56,7 @@ impl Config {
                 let address = Address::from_slice(
                     &hex::decode(address).map_err(|_| SignerError::InvalidAddress)?,
                 );
-                Web3Signer::new(address, url)
-                // TODO: return Web3Signer using Signer trait
+                Ok(Web3Signer::new(address, url))
             }
         }
     }
