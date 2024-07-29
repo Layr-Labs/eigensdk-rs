@@ -95,6 +95,7 @@ eth-keystore = "0.5.0"
 aws-config = "1.5.4"
 aws-sdk-kms = "1.37.0"
 url = "2.5.2"
+testcontainers = "0.20.1"
 
 #misc 
 parking_lot = "0.12"

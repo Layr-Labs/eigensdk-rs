@@ -3,6 +3,7 @@ use alloy_primitives::{Address, Bytes, TxKind, U256};
 use alloy_rlp::{Decodable, RlpDecodable};
 use alloy_rpc_client::{ClientBuilder, ReqwestClient, RpcCall};
 use alloy_signer::Signature;
+use aws_sdk_kms::operation::sign;
 use serde::Serialize;
 use url::Url;
 
@@ -62,7 +63,8 @@ impl Web3Signer {
             self.client.request("eth_signTransaction", vec![params]);
 
         let mut rlp_encoded_signed_tx = request.await.unwrap();
-        let signed_tx = SignTransactionResponse::decode(&mut rlp_encoded_signed_tx).unwrap(); // TODO: fix this
+        let signed_tx =
+            SignTransactionResponse::decode(&mut rlp_encoded_signed_tx.as_ref()).unwrap(); // TODO: fix this
         Signature::from_rs_and_parity(signed_tx.r, signed_tx.s, signed_tx.parity as u64)
             .map_err(alloy_signer::Error::from)
     }

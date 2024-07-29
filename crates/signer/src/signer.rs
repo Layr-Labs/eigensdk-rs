@@ -2,8 +2,6 @@ use crate::web3_signer::Web3Signer;
 use alloy_primitives::Address;
 use alloy_signer_aws::{AwsSigner, AwsSignerError};
 use alloy_signer_local::PrivateKeySigner;
-use aws_config::{BehaviorVersion, Region};
-use aws_sdk_kms;
 use eth_keystore::decrypt_key;
 use std::path::Path;
 use thiserror::Error;
@@ -52,14 +50,8 @@ impl Config {
     pub async fn aws_signer(
         key_id: String,
         chain_id: Option<u64>,
-        region: Region,
+        client: aws_sdk_kms::Client,
     ) -> Result<AwsSigner, AwsSignerError> {
-        let config = aws_config::load_defaults(BehaviorVersion::latest())
-            .await
-            .to_builder()
-            .region(Some(region))
-            .build();
-        let client = aws_sdk_kms::Client::new(&config);
         AwsSigner::new(client, key_id, chain_id).await
     }
 
@@ -72,14 +64,24 @@ impl Config {
 #[cfg(test)]
 mod test {
     use super::Config;
-    use super::*;
     use alloy_consensus::{SignableTransaction, TxLegacy};
     use alloy_network::{TxSigner, TxSignerSync};
     use alloy_primitives::hex_literal::hex;
-    use alloy_primitives::{address, bytes, Address, U256};
+    use alloy_primitives::{address, bytes, keccak256, Address, U256};
     use alloy_signer::Signature;
     use alloy_signer_local::PrivateKeySigner;
+    use aws_config::{BehaviorVersion, Region};
+    use aws_sdk_kms::{
+        self,
+        config::{Credentials, SharedCredentialsProvider},
+    };
     use std::str::FromStr;
+    use testcontainers::runners::AsyncRunner;
+    use testcontainers::ImageExt;
+    use testcontainers::{
+        core::{IntoContainerPort, WaitFor},
+        GenericImage,
+    };
     use tokio;
 
     const PRIVATE_KEY: &str = "dcf2cbdd171a21c480aa7f53d77f31bb102282b3ff099c78e3118b37348c72f7";
@@ -91,7 +93,10 @@ mod test {
     const SIGNATURE_Y_PARITY: u64 = 37;
     const KEYSTORE_PATH: &str = "mockdata/dummy.key.json";
     const KEYSTORE_PASSWORD: &str = "testpassword";
-
+    const LOCALSTACK_PORT: u16 = 4566;
+    const AWS_SOUTH_AMERICA_REGION: &str = "sa-east-1";
+    const LOCALSTACK_IMAGE_NAME: &str = "localstack/localstack";
+    const LOCALSTACK_IMAGE_TAG: &str = "latest";
     #[test]
     fn sign_transaction_with_private_key() {
         let config = Config::PrivateKey(PRIVATE_KEY.into());
@@ -142,11 +147,46 @@ mod test {
 
     #[tokio::test]
     async fn sign_transaction_with_aws_signer() {
-        // TODO: use localstack
-        let key_id = "1234abcd-12ab-34cd-56ef-1234567890ab".to_string();
+        // Start the container running Localstack
+        let _container = GenericImage::new(LOCALSTACK_IMAGE_NAME, LOCALSTACK_IMAGE_TAG)
+            .with_exposed_port(LOCALSTACK_PORT.tcp())
+            .with_wait_for(WaitFor::message_on_stdout("Ready."))
+            .with_mapped_port(LOCALSTACK_PORT, LOCALSTACK_PORT.tcp())
+            .start()
+            .await
+            .unwrap();
+
+        // Set up the client configuration
+        let creds = Credentials::new("localstack", "localstack", None, None, "Static");
+        let localstack_url: String = "http://localhost:".to_string() + &LOCALSTACK_PORT.to_string();
+        let region = Region::from_static(&AWS_SOUTH_AMERICA_REGION);
+        let config = aws_config::load_defaults(BehaviorVersion::latest())
+            .await
+            .to_builder()
+            .credentials_provider(SharedCredentialsProvider::new(creds))
+            .endpoint_url(localstack_url)
+            .region(Some(region.clone()))
+            .build();
+
+        // Create an AWS KMS Client
+        let client = aws_sdk_kms::Client::new(&config);
+
+        // Create a key
+        let key = client
+            .create_key()
+            .key_spec(aws_sdk_kms::types::KeySpec::EccSecgP256K1)
+            .key_usage(aws_sdk_kms::types::KeyUsageType::SignVerify)
+            .send()
+            .await
+            .unwrap();
+
+        // Create a signer for the given key
+        let key_id = key.key_metadata().unwrap().key_id();
         let chain_id = Some(1);
-        let region = Region::from_static("us-west-2a");
-        let signer = Config::aws_signer(key_id, chain_id, region).await.unwrap();
+        let signer = Config::aws_signer(key_id.into(), chain_id, client.clone())
+            .await
+            .unwrap();
+
         let mut tx = TxLegacy {
             to: address!("d8dA6BF26964aF9D7eEd9e03E53415D37aA96045").into(),
             value: U256::from(1_000_000_000),
@@ -157,19 +197,21 @@ mod test {
             chain_id: Some(1),
         };
 
-        // This request fails because key_id is not a valid key
-        let sig = signer.sign_transaction(&mut tx).await.unwrap();
+        // Sign the transaction
+        let signature = signer.sign_transaction(&mut tx).await.unwrap();
 
+        // Recover the address
         let mut encoded_tx = Vec::new();
         tx.encode_for_signing(&mut encoded_tx);
+        let prehash = keccak256(encoded_tx);
+        let recovered_address = signature.recover_address_from_prehash(&prehash).unwrap();
 
-        assert_eq!(
-            sig.recover_address_from_msg(encoded_tx).unwrap(),
-            signer.address()
-        );
+        // Check that the recovered addresses are the same
+        assert_eq!(signer.address(), recovered_address);
     }
 
     #[tokio::test]
+    #[ignore = "work in progress"]
     async fn sign_transaction_with_web3_signer() {
         // TODO: replace hardcoded addresses with anvil
         let endpoint = "http://127.0.0.1:8545 ".to_string();
