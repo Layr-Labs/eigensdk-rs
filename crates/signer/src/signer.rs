@@ -55,6 +55,7 @@ impl Config {
         AwsSigner::new(client, key_id, chain_id).await
     }
 
+    /// Creates a signer that uses the Web3Signer JSON-RPC API
     pub fn web3_signer(endpoint: String, address: Address) -> Result<Web3Signer, SignerError> {
         let url: Url = endpoint.parse().map_err(|_| SignerError::InvalidUrl)?;
         Ok(Web3Signer::new(address, url))
@@ -72,8 +73,6 @@ mod test {
     use alloy_signer::Signature;
     use alloy_signer_local::PrivateKeySigner;
     use aws_config::{BehaviorVersion, Region, SdkConfig};
-    use aws_sdk_kms::config::StalledStreamProtectionConfig;
-    use aws_sdk_kms::operation::create_key::CreateKeyOutput;
     use aws_sdk_kms::types::KeyMetadata;
     use aws_sdk_kms::{
         self,

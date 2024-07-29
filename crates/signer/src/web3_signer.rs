@@ -29,7 +29,6 @@ struct SignTransactionParams {
 }
 
 impl Web3Signer {
-    /// TODO: add docs
     pub fn new(address: Address, url: Url) -> Self {
         Web3Signer {
             client: ClientBuilder::default().http(url),
