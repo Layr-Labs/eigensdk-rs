@@ -2,7 +2,7 @@
 
 Rust <> EigenLayer developer tools
 
-![360_F_303452599_eZMGXe7awggqAHTQXpjzBFehJBEyw4QR-overlay](https://github.com/supernovahs/eigensdk-rs/assets/91280922/bd13caec-3c00-4afc-839a-b83d2890beb5)
+![eigen-rs](https://github.com/user-attachments/assets/bf1d1090-db70-487a-a49a-40f727849251)
 
 ## Overview
 
