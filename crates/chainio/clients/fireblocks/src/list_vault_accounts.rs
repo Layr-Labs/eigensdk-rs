@@ -1,7 +1,10 @@
-use crate::client::{AssetID, Client};
+use crate::{
+    client::{AssetID, Client},
+    error::FireBlockError,
+};
 use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(rename_all = "camelCase")]
 struct Asset {
     id: AssetID,
@@ -18,7 +21,7 @@ struct Asset {
 }
 
 #[allow(unused)]
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct VaultAccount {
     id: String,
     name: String,
@@ -36,28 +39,33 @@ pub struct VaultAccountResponse {
     paging: Paging,
 }
 
+impl VaultAccountResponse {
+    pub fn vault_accounts(&self) -> Vec<VaultAccount> {
+        self.vault_accounts.clone()
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Paging {}
 
 /// Get List Vault Accounts trait for "/v1/vault/accounts_paged" get requests
 #[allow(unused)]
 pub trait ListVaultAccounts {
-    async fn list_vault_accounts(&self) -> Result<VaultAccountResponse, String>;
+    async fn list_vault_accounts(&self) -> Result<VaultAccountResponse, FireBlockError>;
 }
 
 impl ListVaultAccounts for Client {
-    async fn list_vault_accounts(&self) -> Result<VaultAccountResponse, String> {
+    async fn list_vault_accounts(&self) -> Result<VaultAccountResponse, FireBlockError> {
         let list_vault_accounts_result =
             self.get_request(&format!("/v1/vault/accounts_paged")).await;
 
         match list_vault_accounts_result {
             Ok(list_vault_accounts) => {
-                println!("list vault accounts {:?}", list_vault_accounts);
                 let vault_accounts: VaultAccountResponse =
                     serde_json::from_str(&list_vault_accounts).unwrap();
                 return Ok(vault_accounts);
             }
-            Err(e) => return Err(e.to_string()),
+            Err(e) => return Err(e),
         }
     }
 }

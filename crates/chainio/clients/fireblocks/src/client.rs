@@ -2,6 +2,7 @@ use crate::error::FireBlockError;
 use chrono::Utc;
 use jsonwebtoken::{encode, Algorithm, EncodingKey, Header};
 use mime::APPLICATION_JSON;
+use once_cell::sync::Lazy;
 use reqwest::header::{HeaderMap, HeaderValue, AUTHORIZATION, CONTENT_TYPE};
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
@@ -34,13 +35,13 @@ impl std::fmt::Display for AssetID {
 }
 
 // Initialize AssetIDByChain as a HashMap
-#[allow(unused)]
-fn asset_id_by_chain() -> HashMap<u64, AssetID> {
-    let mut map = HashMap::new();
-    map.insert(1, AssetID::ETH);
-    map.insert(2, AssetID::EthTest5);
-    map
-}
+pub static ASSET_ID_BY_CHAIN: Lazy<HashMap<u64, AssetID>> = Lazy::new(|| {
+    let mut m = HashMap::new();
+
+    m.insert(1, AssetID::ETH);
+    m.insert(2, AssetID::EthTest5);
+    m
+});
 
 pub const JWT_EXPIRATION_SECONDS: i64 = 30;
 
@@ -126,7 +127,7 @@ impl Client {
     }
 
     /// GET : Calls a get request to the fireblocks endpoint using the given path.
-    pub async fn get_request(&self, path: &str) -> Result<String, Box<dyn std::error::Error>> {
+    pub async fn get_request(&self, path: &str) -> Result<String, FireBlockError> {
         let token = self.sign_jwt(path, None)?;
 
         let client = reqwest::Client::new();
@@ -149,10 +150,10 @@ impl Client {
             let response_text = response.text().await?;
             Ok(response_text)
         } else {
-            Err(format!(
+            Err(FireBlockError::from(format!(
                 "GET Request failed with status: {}",
                 response.status()
-            ))?
+            )))
         }
     }
 
@@ -161,7 +162,7 @@ impl Client {
         &self,
         path: &str,
         body: Option<&str>,
-    ) -> Result<String, Box<dyn std::error::Error>> {
+    ) -> Result<String, FireBlockError> {
         let token = self.sign_jwt(path, body)?;
 
         let client = reqwest::Client::new();
@@ -186,21 +187,20 @@ impl Client {
             let response_text = response.text().await?;
             Ok(response_text)
         } else {
-            Err(format!(
+            Err(FireBlockError::from(format!(
                 "POST Request failed with status: {}",
                 response.status()
-            ))?
+            )))
         }
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use super::{asset_id_by_chain, AssetID};
+    use super::{AssetID, ASSET_ID_BY_CHAIN};
 
     #[test]
     fn test_asset_id_by_chain() {
-        let asset_id_by_chain = asset_id_by_chain();
-        assert_eq!(AssetID::ETH, *asset_id_by_chain.get(&1).unwrap());
+        assert_eq!(AssetID::ETH, *ASSET_ID_BY_CHAIN.get(&1).unwrap());
     }
 }

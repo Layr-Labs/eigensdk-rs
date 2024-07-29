@@ -1433,11 +1433,15 @@ version = "0.0.1-alpha"
 name = "eigen-client-fireblocks"
 version = "0.0.1-alpha"
 dependencies = [
+ "alloy-contract",
  "alloy-primitives",
+ "alloy-provider",
  "chrono",
+ "eigen-utils",
  "hex",
  "jsonwebtoken 7.2.0",
  "mime",
+ "once_cell",
  "reqwest 0.11.27",
  "serde",
  "serde_json",

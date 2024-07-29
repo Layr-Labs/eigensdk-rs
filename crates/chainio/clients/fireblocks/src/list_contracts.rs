@@ -4,13 +4,13 @@ use crate::{
 };
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct Assets {
-    id: Option<AssetID>,
+    pub id: Option<AssetID>,
     balance: Option<String>,
-    status: Option<Status>,
-    address: Option<String>,
+    pub status: Option<Status>,
+    pub address: Option<String>,
     tag: Option<String>,
     locked_amount: Option<String>,
     activation_time: Option<String>,
