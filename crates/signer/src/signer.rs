@@ -66,6 +66,7 @@ mod test {
     use super::Config;
     use alloy_consensus::{SignableTransaction, TxLegacy};
     use alloy_network::{TxSigner, TxSignerSync};
+    use alloy_node_bindings::Anvil;
     use alloy_primitives::hex_literal::hex;
     use alloy_primitives::{address, bytes, keccak256, Address, U256};
     use alloy_signer::Signature;
@@ -199,26 +200,26 @@ mod test {
     }
 
     #[tokio::test]
-    #[ignore = "work in progress"]
-    async fn sign_transaction_with_web3_signer() {
-        // TODO: replace hardcoded addresses with anvil
-        let endpoint = "http://127.0.0.1:8545 ".to_string();
-        let address = address!("f39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+    async fn sign_legacy_transaction_with_web3_signer() {
+        let anvil = Anvil::default().spawn();
+
+        let endpoint = anvil.endpoint();
+        let address = anvil.addresses()[0];
         let signer = Config::web3_signer(endpoint, address).unwrap();
         let mut tx = TxLegacy {
-            to: address!("70997970C51812dc3A010C7d01b50e0d17dc79C8").into(),
+            to: anvil.addresses()[1].into(),
             value: U256::from(1_000_000_000),
             gas_limit: 0x76c0,
-            nonce: 0,
             gas_price: 21_000_000_000,
+            nonce: 0,
             input: bytes!(),
-            chain_id: Some(1),
+            chain_id: Some(anvil.chain_id()),
         };
 
         let signature = signer.sign_transaction(&mut tx).await.unwrap();
 
-        let private_key = hex!("ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80");
-        let expected_signer = PrivateKeySigner::from_slice(&private_key).unwrap();
+        let private_key = anvil.keys()[0].clone();
+        let expected_signer = PrivateKeySigner::from_field_bytes(&private_key.to_bytes()).unwrap();
         let expected_signature = expected_signer.sign_transaction_sync(&mut tx).unwrap();
 
         assert_eq!(signature, expected_signature);
