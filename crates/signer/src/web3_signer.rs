@@ -1,7 +1,9 @@
 use alloy_consensus::{SignableTransaction, TxLegacy};
+use alloy_network::TxSigner;
 use alloy_primitives::{Address, Bytes, TxKind, U256};
 use alloy_rpc_client::{ClientBuilder, ReqwestClient, RpcCall};
 use alloy_signer::Signature;
+use async_trait::async_trait;
 use serde::Serialize;
 use url::Url;
 
@@ -35,12 +37,18 @@ impl Web3Signer {
             address,
         }
     }
+}
 
-    // TODO: implement alloy TxSigner trait
-    pub async fn sign_transaction(
+#[async_trait]
+impl TxSigner<Signature> for Web3Signer {
+    fn address(&self) -> Address {
+        self.address
+    }
+
+    async fn sign_transaction(
         &self,
         tx: &mut dyn SignableTransaction<Signature>,
-    ) -> alloy_signer::Result<Signature, alloy_signer::Error> {
+    ) -> alloy_signer::Result<Signature> {
         let params = SignTransactionParams {
             from: self.address.to_string(),
             to: tx.to(),

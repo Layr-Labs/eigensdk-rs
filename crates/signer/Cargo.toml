@@ -23,3 +23,4 @@ serde.workspace = true
 url.workspace = true
 testcontainers.workspace = true
 alloy-node-bindings.workspace = true
+async-trait.workspace = true
