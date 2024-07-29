@@ -70,18 +70,21 @@ mod test {
     use alloy_primitives::{address, bytes, keccak256, Address, U256};
     use alloy_signer::Signature;
     use alloy_signer_local::PrivateKeySigner;
-    use aws_config::{BehaviorVersion, Region};
+    use aws_config::{BehaviorVersion, Region, SdkConfig};
+    use aws_sdk_kms::config::StalledStreamProtectionConfig;
+    use aws_sdk_kms::operation::create_key::CreateKeyOutput;
+    use aws_sdk_kms::types::KeyMetadata;
     use aws_sdk_kms::{
         self,
         config::{Credentials, SharedCredentialsProvider},
     };
     use std::str::FromStr;
     use testcontainers::runners::AsyncRunner;
-    use testcontainers::ImageExt;
     use testcontainers::{
         core::{IntoContainerPort, WaitFor},
         GenericImage,
     };
+    use testcontainers::{ContainerAsync, ImageExt};
     use tokio;
 
     const PRIVATE_KEY: &str = "dcf2cbdd171a21c480aa7f53d77f31bb102282b3ff099c78e3118b37348c72f7";
@@ -148,40 +151,25 @@ mod test {
     #[tokio::test]
     async fn sign_transaction_with_aws_signer() {
         // Start the container running Localstack
-        let _container = GenericImage::new(LOCALSTACK_IMAGE_NAME, LOCALSTACK_IMAGE_TAG)
-            .with_exposed_port(LOCALSTACK_PORT.tcp())
-            .with_wait_for(WaitFor::message_on_stdout("Ready."))
-            .with_mapped_port(LOCALSTACK_PORT, LOCALSTACK_PORT.tcp())
-            .start()
-            .await
-            .unwrap();
+        let _container = start_localstack_container().await;
 
-        // Set up the client configuration
-        let creds = Credentials::new("localstack", "localstack", None, None, "Static");
-        let localstack_url: String = "http://localhost:".to_string() + &LOCALSTACK_PORT.to_string();
-        let region = Region::from_static(&AWS_SOUTH_AMERICA_REGION);
-        let config = aws_config::load_defaults(BehaviorVersion::latest())
-            .await
-            .to_builder()
-            .credentials_provider(SharedCredentialsProvider::new(creds))
-            .endpoint_url(localstack_url)
-            .region(Some(region.clone()))
-            .build();
+        let localstack_endpoint = "http://localhost:".to_string() + &LOCALSTACK_PORT.to_string();
+        let config = get_aws_config(
+            "localstack".into(),
+            "localstack".into(),
+            Region::from_static(&AWS_SOUTH_AMERICA_REGION),
+            localstack_endpoint,
+        )
+        .await;
 
         // Create an AWS KMS Client
         let client = aws_sdk_kms::Client::new(&config);
 
         // Create a key
-        let key = client
-            .create_key()
-            .key_spec(aws_sdk_kms::types::KeySpec::EccSecgP256K1)
-            .key_usage(aws_sdk_kms::types::KeyUsageType::SignVerify)
-            .send()
-            .await
-            .unwrap();
+        let key_metadata = create_kms_key(&client).await;
 
         // Create a signer for the given key
-        let key_id = key.key_metadata().unwrap().key_id();
+        let key_id = key_metadata.key_id();
         let chain_id = Some(1);
         let signer = Config::aws_signer(key_id.into(), chain_id, client.clone())
             .await
@@ -234,5 +222,47 @@ mod test {
         let expected_signature = expected_signer.sign_transaction_sync(&mut tx).unwrap();
 
         assert_eq!(signature, expected_signature);
+    }
+
+    async fn start_localstack_container() -> ContainerAsync<GenericImage> {
+        let container = GenericImage::new(LOCALSTACK_IMAGE_NAME, LOCALSTACK_IMAGE_TAG)
+            .with_exposed_port(LOCALSTACK_PORT.tcp())
+            .with_wait_for(WaitFor::message_on_stdout("Ready."))
+            .with_mapped_port(LOCALSTACK_PORT, LOCALSTACK_PORT.tcp())
+            .start()
+            .await
+            .unwrap();
+        container
+    }
+
+    async fn create_kms_key(client: &aws_sdk_kms::Client) -> KeyMetadata {
+        client
+            .create_key()
+            .key_spec(aws_sdk_kms::types::KeySpec::EccSecgP256K1)
+            .key_usage(aws_sdk_kms::types::KeyUsageType::SignVerify)
+            .send()
+            .await
+            .unwrap()
+            .key_metadata()
+            .unwrap()
+            .clone()
+    }
+
+    async fn get_aws_config(
+        access_key: String,
+        secret_access_key: String,
+        region: Region,
+        endpoint_url: String,
+    ) -> SdkConfig {
+        let creds = Credentials::new(access_key, secret_access_key, None, None, "Static");
+        // let localstack_url: String = "http://localhost:".to_string() + &LOCALSTACK_PORT.to_string();
+        let config = aws_config::load_defaults(BehaviorVersion::latest())
+            .await
+            .to_builder()
+            .credentials_provider(SharedCredentialsProvider::new(creds))
+            .endpoint_url(endpoint_url)
+            .region(Some(region.clone()))
+            .build();
+        config
     }
 }
