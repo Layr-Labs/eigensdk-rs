@@ -255,7 +255,6 @@ mod test {
         endpoint_url: String,
     ) -> SdkConfig {
         let creds = Credentials::new(access_key, secret_access_key, None, None, "Static");
-        // let localstack_url: String = "http://localhost:".to_string() + &LOCALSTACK_PORT.to_string();
         let config = aws_config::load_defaults(BehaviorVersion::latest())
             .await
             .to_builder()
