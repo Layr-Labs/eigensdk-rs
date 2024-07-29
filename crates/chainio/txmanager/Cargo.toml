@@ -11,4 +11,9 @@ license-file.workspace = true
 [dependencies]
 alloy-network.workspace = true
 alloy-primitives.workspace = true
-alloy-contracts.workspace = true
+alloy-contract.workspace = true
+alloy-provider.workspace = true
+alloy-signer.workspace = true
+alloy-consensus.workspace = true
+alloy-eips.workspace = true
+#logging.workspace = { path = "crates/chainio/utils/" }
