@@ -1,9 +1,7 @@
-use alloy_consensus::SignableTransaction;
+use alloy_consensus::{SignableTransaction, TxLegacy};
 use alloy_primitives::{Address, Bytes, TxKind, U256};
-use alloy_rlp::{Decodable, RlpDecodable};
 use alloy_rpc_client::{ClientBuilder, ReqwestClient, RpcCall};
 use alloy_signer::Signature;
-use aws_sdk_kms::operation::sign;
 use serde::Serialize;
 use url::Url;
 
@@ -22,18 +20,12 @@ pub struct Web3Signer {
 struct SignTransactionParams {
     from: String,
     to: TxKind,
+    value: U256,
     gas: String,
-    gas_price: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    gas_price: Option<String>,
     nonce: String,
     data: String,
-}
-
-#[derive(Debug, RlpDecodable)]
-struct SignTransactionResponse {
-    // TODO: fill with tx fields
-    r: U256,
-    s: U256,
-    parity: u8,
 }
 
 impl Web3Signer {
@@ -53,19 +45,20 @@ impl Web3Signer {
         let params = SignTransactionParams {
             from: self.address.to_string(),
             to: tx.to(),
+            value: tx.value(),
             gas: format!("0x{:x}", tx.gas_limit()),
-            gas_price: format!("0x{:x}", tx.gas_price().unwrap()),
+            gas_price: tx.gas_price().map(|price| format!("0x{:x}", price)),
             nonce: format!("0x{:x}", tx.nonce()),
             data: Bytes::copy_from_slice(tx.input()).to_string(),
         };
 
         let request: RpcCall<_, Vec<SignTransactionParams>, Bytes> =
             self.client.request("eth_signTransaction", vec![params]);
+        let rlp_encoded_signed_tx = request.await.map_err(alloy_signer::Error::other)?;
 
-        let mut rlp_encoded_signed_tx = request.await.unwrap();
-        let signed_tx =
-            SignTransactionResponse::decode(&mut rlp_encoded_signed_tx.as_ref()).unwrap(); // TODO: fix this
-        Signature::from_rs_and_parity(signed_tx.r, signed_tx.s, signed_tx.parity as u64)
-            .map_err(alloy_signer::Error::from)
+        let signed_tx = TxLegacy::decode_signed_fields(&mut rlp_encoded_signed_tx.as_ref())
+            .map_err(alloy_signer::Error::other)?;
+
+        Ok(*signed_tx.signature())
     }
 }
