@@ -56,16 +56,19 @@ pub trait ListVaultAccounts {
 
 impl ListVaultAccounts for Client {
     async fn list_vault_accounts(&self) -> Result<VaultAccountResponse, FireBlockError> {
-        let list_vault_accounts_result =
-            self.get_request(&format!("/v1/vault/accounts_paged")).await;
+        let list_vault_accounts_result = self.get_request("/v1/vault/accounts_paged").await;
 
         match list_vault_accounts_result {
             Ok(list_vault_accounts) => {
-                let vault_accounts: VaultAccountResponse =
-                    serde_json::from_str(&list_vault_accounts).unwrap();
-                return Ok(vault_accounts);
+                let vault_accounts_result: Result<VaultAccountResponse, _> =
+                    serde_json::from_str(&list_vault_accounts);
+
+                match vault_accounts_result {
+                    Ok(vault_accounts) => Ok(vault_accounts),
+                    Err(e) => Err(FireBlockError::SerdeError(e)),
+                }
             }
-            Err(e) => return Err(e),
+            Err(e) => Err(e),
         }
     }
 }

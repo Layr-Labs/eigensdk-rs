@@ -50,7 +50,7 @@ impl FireblocksWallet {
         match chain_id_result {
             Ok(chain_id) => Ok(Self {
                 fireblocks_client,
-                _vault_account_name:vault_account_name,
+                _vault_account_name: vault_account_name,
                 chain_id,
                 vault_account: None,
                 whitelisted_accounts: HashMap::new(),
@@ -98,8 +98,8 @@ impl FireblocksWallet {
 
                         match accounts_result {
                             Ok(accounts) => {
-                                for (_, account) in accounts.iter().enumerate() {
-                                    for (_, asset) in account.assets.iter().enumerate() {
+                                for account in accounts.iter() {
+                                    for asset in account.assets.iter() {
                                         if asset.address.as_ref().unwrap().eq(&address.to_string())
                                             && asset.status.as_ref().unwrap().as_str() == "APPROVED"
                                             && *asset.id.as_ref().unwrap() == *asset_id
@@ -117,9 +117,7 @@ impl FireblocksWallet {
                             Err(e) => Err(e),
                         }
                     }
-                    None => {
-                        return Err(FireBlockError::AccountNotFoundError(address.to_string()));
-                    }
+                    None => Err(FireBlockError::AccountNotFoundError(address.to_string())),
                 }
             }
             None => Err(FireBlockError::AssetIDError(self.chain_id.to_string())),
@@ -140,8 +138,8 @@ impl FireblocksWallet {
                     Some(mut contract) => {
                         let contracts_response = self.fireblocks_client.list_contracts().await?;
                         let contracts = contracts_response.contracts();
-                        for (_, c) in contracts.iter().enumerate() {
-                            for (_, a) in c.assets().iter().enumerate() {
+                        for c in contracts.iter() {
+                            for a in c.assets().iter() {
                                 if a.address.as_ref().unwrap().eq(&address.to_string())
                                     && a.status.as_ref().unwrap().as_str() == "APPROVED"
                                     && *a.id.as_ref().unwrap() == *asset_id
@@ -153,7 +151,7 @@ impl FireblocksWallet {
                             }
                         }
 
-                        return Ok(contract.clone());
+                        Ok(contract.clone())
                     }
 
                     None => Err(FireBlockError::ContractNotFound(address.to_string())),

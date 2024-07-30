@@ -16,7 +16,7 @@ impl WhitelistedAccount {
     }
 }
 
-#[allow(unused,async_fn_in_trait)]
+#[allow(unused, async_fn_in_trait)]
 /// Get List External Accounts trait for "/v1/external_wallets" requests
 pub trait ListExternalAccounts {
     async fn list_external_accounts(&self) -> Result<Vec<WhitelistedAccount>, FireBlockError>;
@@ -29,8 +29,7 @@ impl ListExternalAccounts for Client {
         match list_external_accounts_result {
             Ok(list_external_accounts) => {
                 if list_external_accounts.trim() == "[]" {
-                    let mut default_accounts = Vec::new();
-                    default_accounts.push(WhitelistedAccount::default());
+                    let default_accounts = vec![WhitelistedAccount::default()];
                     return Ok(default_accounts);
                 }
                 let serialized_tx: Result<Vec<WhitelistedAccount>, _> =

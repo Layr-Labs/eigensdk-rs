@@ -109,7 +109,7 @@ impl Client {
             iat: now,
             exp: now + JWT_EXPIRATION_SECONDS, // Adjusted to ensure it's within the required timeframe
             sub: self.api_key.clone(),
-            body_hash: body_hash,
+            body_hash,
         };
 
         let encoding_key_result = EncodingKey::from_rsa_pem(self.private_key.as_bytes());
@@ -119,10 +119,10 @@ impl Client {
 
                 match token_result {
                     Ok(token) => Ok(token),
-                    Err(e) => return Err(FireBlockError::JsonWebTokenError(e)),
+                    Err(e) => Err(FireBlockError::JsonWebTokenError(e)),
                 }
             }
-            Err(e) => return Err(FireBlockError::JsonWebTokenError(e)),
+            Err(e) => Err(FireBlockError::JsonWebTokenError(e)),
         }
     }
 

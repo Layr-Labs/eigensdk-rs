@@ -36,6 +36,7 @@ pub struct TransactionRequest {
 }
 
 impl TransactionRequest {
+    #[allow(clippy::too_many_arguments)]
     pub fn new(
         operation: String,
 

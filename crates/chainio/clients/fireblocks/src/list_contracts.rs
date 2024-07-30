@@ -50,7 +50,7 @@ pub trait ListContracts {
 
 impl ListContracts for Client {
     async fn list_contracts(&self) -> Result<WhitelistedContractResponse, FireBlockError> {
-        let list_contracts_result = self.get_request(&format!("/v1/contracts")).await;
+        let list_contracts_result = self.get_request("/v1/contracts").await;
         match list_contracts_result {
             Ok(list_contracts_object) => {
                 if list_contracts_object.trim() == "[]" {
