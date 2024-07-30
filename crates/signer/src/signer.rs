@@ -100,6 +100,7 @@ mod test {
     const AWS_SOUTH_AMERICA_REGION: &str = "sa-east-1";
     const LOCALSTACK_IMAGE_NAME: &str = "localstack/localstack";
     const LOCALSTACK_IMAGE_TAG: &str = "latest";
+
     #[test]
     fn sign_transaction_with_private_key() {
         let config = Config::PrivateKey(PRIVATE_KEY.into());

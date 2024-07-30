@@ -7,7 +7,9 @@ use async_trait::async_trait;
 use serde::Serialize;
 use url::Url;
 
-/// A signer that sends an rpc request to sign a transaction remotely
+/// A signer that sends an RPC request to sign a transaction remotely
+/// Implements `eth_signTransaction` method of Consensys Web3 Signer
+/// Reference: https://docs.web3signer.consensys.io/reference/api/json-rpc#eth_signtransaction
 #[derive(Debug)]
 pub struct Web3Signer {
     /// Client used to send an RPC request
