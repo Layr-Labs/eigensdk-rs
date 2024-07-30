@@ -1,0 +1,14 @@
+[package]
+name = "eigen-egnaddrs"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+repository.workspace = true
+
+[dependencies]
+clap = { version = "4.5.11", features = ["derive"] }
+alloy-primitives.workspace = true
+
+[[bin]]
+name = "cli_eth"
+path = "cli_eth.rs"

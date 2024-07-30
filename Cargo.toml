@@ -10,6 +10,7 @@ members = [
     "crates/utils/",
     "crates/crypto/bls/",
     "crates/crypto/keystore/",
+    "crates/egnaddrs/",
     "crates/metrics/collectors/economic/",
     "crates/metrics/collectors/rpc_calls/",
     "crates/services/avsregistry/",
@@ -25,7 +26,7 @@ members = [
     "testing/testing-utils/",
     "examples/avsregistry-read",
     "examples/avsregistry-write",
-    "examples/anvil-utils"
+    "examples/anvil-utils",
 ]
 
 resolver = "2"
