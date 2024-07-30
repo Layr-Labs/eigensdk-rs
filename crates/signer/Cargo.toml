@@ -1,0 +1,17 @@
+[package]
+name = "eigen-signer"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+repository.workspace = true
+
+[dependencies]
+alloy-consensus.workspace = true
+alloy-network.workspace = true
+alloy-primitives.workspace = true
+alloy-signer.workspace = true
+alloy-signer-local.workspace = true
+eth-keystore.workspace = true
+hex-literal.workspace = true
+k256.workspace = true
+thiserror.workspace = true
