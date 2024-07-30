@@ -108,7 +108,7 @@ impl SimpleTxManager {
         self.gas_limit_multiplier = multiplier;
     }
 
-    pub fn send() {
+    pub fn send(tx: &TxEip1559) {
         /*
             // Spin up a local Anvil node.
             // Ensure `anvil` is available in $PATH.
