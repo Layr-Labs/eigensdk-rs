@@ -15,5 +15,7 @@ alloy-contract.workspace = true
 alloy-provider.workspace = true
 alloy-signer.workspace = true
 alloy-consensus.workspace = true
-alloy-eips.workspace = true
 #logging.workspace = { path = "crates/chainio/utils/" }
+
+[dev-dependencies]
+alloy-eips.workspace = true
