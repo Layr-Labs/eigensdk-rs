@@ -9,11 +9,12 @@
 use alloy_consensus::{SignableTransaction, TxEip1559};
 use alloy_contract::SolCallBuilder;
 use alloy_network::{Ethereum, EthereumWallet};
-use alloy_primitives::{address, fixed_bytes, Address, Bytes, FixedBytes, B256, I256, U256};
+use alloy_primitives::{address, fixed_bytes, Address, Bytes, FixedBytes, B256, I256, U256, U64};
 use alloy_provider::{Provider, ProviderBuilder};
+use alloy_rpc_client::PollerBuilder;
 use alloy_signer::Signer;
+// use futures_util::StreamExt;
 //use alloy_transactions::TransactionRequest;
-
 //use alloy_sol_types::sol;
 //use alloy_provider::Provider;
 //use alloy_rpc_types::Filter;
@@ -184,6 +185,23 @@ impl SimpleTxManager {
 
         Ok(())
         */
+    }
+
+    /// Waits for the transaction receipt.
+    /// The waiting is done by polling the node for the transaction receipt, using `PollerBuilder`
+    /// in `alloy_rpc_client`
+    pub fn wait_for_receipt() {
+        // # async fn example<T: alloy_transport::Transport + Clone>(client: alloy_rpc_client::RpcClient<T>) -> Result<(), Box<dyn std::error::Error>> {
+        //
+        // let poller: PollerBuilder<_, (), U64> = client
+        //     .prepare_static_poller("eth_blockNumber", ())
+        //     .with_poll_interval(std::time::Duration::from_secs(5));
+        // let mut stream = poller.into_stream();
+        // while let Some(block_number) = stream.next().await {
+        //    println!("polled block number: {block_number}");
+        // }
+        // # Ok(())
+        // # }
     }
 }
 

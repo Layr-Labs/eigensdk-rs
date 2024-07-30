@@ -15,6 +15,7 @@ alloy-contract.workspace = true
 alloy-provider.workspace = true
 alloy-signer.workspace = true
 alloy-consensus.workspace = true
+alloy-rpc-client.workspace = true
 #logging.workspace = { path = "crates/chainio/utils/" }
 
 [dev-dependencies]
