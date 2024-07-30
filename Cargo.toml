@@ -19,6 +19,7 @@ members = [
     "crates/types/",
     "crates/metrics/",
     "crates/types/",
+    "crates/signer/",
     "crates/logging/",
     "crates/signer/",
     "examples/info-operator-service/",
