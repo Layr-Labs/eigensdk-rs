@@ -21,20 +21,21 @@ use alloy_provider::Provider;
 use client::{Client, ASSET_ID_BY_CHAIN};
 use eigen_utils::get_provider;
 use error::FireBlockError;
+use list_contracts::ListContracts;
+use list_contracts::WhitelistedContract;
 use list_external_accounts::ListExternalAccounts;
 use list_external_accounts::WhitelistedAccount;
 use list_vault_accounts::{ListVaultAccounts, VaultAccount};
-use list_contracts::WhitelistedContract;
 
+/// Fireblocks wallet
 #[derive(Debug)]
 pub struct FireblocksWallet {
     fireblocks_client: Client,
-    provider: String,
     vault_account_name: String,
     chain_id: u64,
     vault_account: Option<Vec<VaultAccount>>,
     whitelisted_accounts: HashMap<Address, WhitelistedAccount>,
-    whitelisted_contracts: HashMap<Address,WhitelistedContract>
+    whitelisted_contracts: HashMap<Address, WhitelistedContract>,
 }
 
 impl FireblocksWallet {
@@ -50,10 +51,10 @@ impl FireblocksWallet {
             Ok(chain_id) => Ok(Self {
                 fireblocks_client,
                 vault_account_name,
-                provider,
                 chain_id,
                 vault_account: None,
                 whitelisted_accounts: HashMap::new(),
+                whitelisted_contracts: HashMap::new(),
             }),
             Err(e) => Err(FireBlockError::AlloyContractError(
                 alloy_contract::Error::TransportError(e),
@@ -125,24 +126,40 @@ impl FireblocksWallet {
         }
     }
 
-/// get whitelisted contract
-    pub fn get_whitelisted_contract(&self,address: Address) -> Result<WhitelistedContract,FireBlockError>{
-
+    /// get whitelisted contract
+    pub async fn get_whitelisted_contract(
+        &mut self,
+        address: Address,
+    ) -> Result<WhitelistedContract, FireBlockError> {
         let asset_id_some = ASSET_ID_BY_CHAIN.get(&self.chain_id);
         match asset_id_some {
-            Some(asset_id) =>{
+            Some(asset_id) => {
+                let contract_some = self.whitelisted_contracts.get(&address);
 
-                let contract = self.whitelisted_contracts.get(&address);
+                match contract_some {
+                    Some(mut contract) => {
+                        let contracts_response = self.fireblocks_client.list_contracts().await?;
+                        let contracts = contracts_response.contracts();
+                        for (_, c) in contracts.iter().enumerate() {
+                            for (_, a) in c.assets().iter().enumerate() {
+                                if a.address.as_ref().unwrap().eq(&address.to_string())
+                                    && a.status.as_ref().unwrap().as_str() == "APPROVED"
+                                    && *a.id.as_ref().unwrap() == *asset_id
+                                {
+                                    self.whitelisted_contracts.insert(address, c.clone());
+                                    contract = c;
+                                    return Ok(contract.clone());
+                                }
+                            }
+                        }
 
-                
+                        return Ok(contract.clone());
+                    }
 
+                    None => Err(FireBlockError::ContractNotFound(address.to_string())),
+                }
             }
             None => Err(FireBlockError::AssetIDError(self.chain_id.to_string())),
-
-
         }
-
-
-
     }
 }

@@ -39,6 +39,10 @@ pub enum FireBlockError {
     /// Account not found in whitelisted accounts
     #[error("Account not found in whitelisted accounts {0}")]
     AccountNotFoundError(String),
+
+    /// Contract not found in whitelisted contract
+    #[error("Contract {0} not found in whitelisted contract")]
+    ContractNotFound(String),
 }
 
 impl FireBlockError {

@@ -1,4 +1,7 @@
-use crate::client::{AssetID, Client};
+use crate::{
+    client::{AssetID, Client},
+    error::FireBlockError,
+};
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -29,7 +32,7 @@ pub trait GetAssetAddresses {
         &self,
         vault_id: String,
         asset_id: AssetID,
-    ) -> Result<AddressesResponse, String>;
+    ) -> Result<AddressesResponse, FireBlockError>;
 }
 
 impl GetAssetAddresses for Client {
@@ -37,7 +40,7 @@ impl GetAssetAddresses for Client {
         &self,
         vault_id: String,
         asset_id: AssetID,
-    ) -> Result<AddressesResponse, String> {
+    ) -> Result<AddressesResponse, FireBlockError> {
         let asset_addresses_result = self
             .get_request(&format!(
                 "/v1/vault/accounts/{}/{}/addresses_paginated",
@@ -47,11 +50,16 @@ impl GetAssetAddresses for Client {
 
         match asset_addresses_result {
             Ok(asset_addresses) => {
-                let asset_address: AddressesResponse =
-                    serde_json::from_str(&asset_addresses).unwrap();
-                Ok(asset_address)
+                let asset_address_result: Result<AddressesResponse, _> =
+                    serde_json::from_str(&asset_addresses);
+
+                match asset_address_result {
+                    Ok(asset_address) => Ok(asset_address),
+
+                    Err(e) => Err(FireBlockError::SerdeError(e)),
+                }
             }
-            Err(e) => Err(e.to_string()),
+            Err(e) => Err(e),
         }
     }
 }

@@ -1,6 +1,7 @@
 use crate::{
     client::{AssetID, Client},
     contract_call::{Account, TransactionOperation},
+    error::FireBlockError,
     status::Status,
 };
 use serde::{Deserialize, Serialize};
@@ -74,21 +75,26 @@ pub struct Transaction {
 #[allow(unused)]
 /// Get Transaction trait for "/v1/transactions/tx_id" get requests
 pub trait GetTransaction {
-    async fn get_transaction(&self, tx_id: String) -> Result<Transaction, String>;
+    async fn get_transaction(&self, tx_id: String) -> Result<Transaction, FireBlockError>;
 }
 
 impl GetTransaction for Client {
-    async fn get_transaction(&self, tx_id: String) -> Result<Transaction, String> {
+    async fn get_transaction(&self, tx_id: String) -> Result<Transaction, FireBlockError> {
         let transaction_object_result = self
             .get_request(&format!("/v1/transactions/{}", tx_id))
             .await;
 
         match transaction_object_result {
             Ok(transaction) => {
-                let serialized_tx: Transaction = serde_json::from_str(&transaction).unwrap();
-                Ok(serialized_tx)
+                let serialized_tx_result: Result<Transaction, _> =
+                    serde_json::from_str(&transaction);
+
+                match serialized_tx_result {
+                    Ok(serialized_tx) => Ok(serialized_tx),
+                    Err(e) => Err(FireBlockError::SerdeError(e)),
+                }
             }
-            Err(e) => Err(e.to_string()),
+            Err(e) => Err(e),
         }
     }
 }

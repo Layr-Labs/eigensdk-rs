@@ -1,5 +1,6 @@
 use crate::{
     client::{AssetID, Client},
+    error::FireBlockError,
     status::Status,
 };
 use serde::{Deserialize, Serialize};
@@ -16,7 +17,7 @@ pub struct Assets {
     activation_time: Option<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct WhitelistedContract {
     id: String,
     name: String,
@@ -24,19 +25,31 @@ pub struct WhitelistedContract {
     assets: Vec<Assets>,
 }
 
+impl WhitelistedContract {
+    pub fn assets(&self) -> Vec<Assets> {
+        self.assets.clone()
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct WhitelistedContractResponse {
     contracts: Vec<WhitelistedContract>,
 }
 
+impl WhitelistedContractResponse {
+    pub fn contracts(&self) -> Vec<WhitelistedContract> {
+        self.contracts.clone()
+    }
+}
+
 #[allow(unused)]
 /// Get List Contracts trait for "/v1/contracts" requests
 pub trait ListContracts {
-    async fn list_contracts(&self) -> Result<WhitelistedContractResponse, String>;
+    async fn list_contracts(&self) -> Result<WhitelistedContractResponse, FireBlockError>;
 }
 
 impl ListContracts for Client {
-    async fn list_contracts(&self) -> Result<WhitelistedContractResponse, String> {
+    async fn list_contracts(&self) -> Result<WhitelistedContractResponse, FireBlockError> {
         let list_contracts_result = self.get_request(&format!("/v1/contracts")).await;
         match list_contracts_result {
             Ok(list_contracts_object) => {
@@ -49,10 +62,10 @@ impl ListContracts for Client {
                     serde_json::from_str(&list_contracts_object);
                 match serialized_tx {
                     Ok(contracts) => Ok(WhitelistedContractResponse { contracts }),
-                    Err(e) => Err(e.to_string()),
+                    Err(e) => Err(FireBlockError::SerdeError(e)),
                 }
             }
-            Err(e) => Err(e.to_string()),
+            Err(e) => Err(e),
         }
     }
 }
