@@ -137,9 +137,9 @@ alloy-transport-ws = { version = "0.1", default-features = false }
 alloy-transport-ipc = { version = "0.1", default-features = false }
 alloy-pubsub = { version = "0.1", default-features = false }
 alloy-json-rpc = { version = "0.1", default-features = false }
-alloy-rpc-client = "0.2"
+alloy-rpc-client = "0.1"
 alloy-contract = { version = "0.1", default-features = false }
-alloy-signer-aws = "0.1.0"
+alloy-signer-aws = "0.1"
 
 
 # examples

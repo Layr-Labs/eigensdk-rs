@@ -68,23 +68,21 @@ mod test {
     use alloy_consensus::{SignableTransaction, TxLegacy};
     use alloy_network::{TxSigner, TxSignerSync};
     use alloy_node_bindings::Anvil;
-    use alloy_primitives::hex_literal::hex;
-    use alloy_primitives::{address, bytes, keccak256, Address, U256};
+    use alloy_primitives::{address, bytes, hex_literal::hex, keccak256, Address, U256};
     use alloy_signer::Signature;
     use alloy_signer_local::PrivateKeySigner;
     use aws_config::{BehaviorVersion, Region, SdkConfig};
-    use aws_sdk_kms::types::KeyMetadata;
     use aws_sdk_kms::{
         self,
         config::{Credentials, SharedCredentialsProvider},
+        types::KeyMetadata,
     };
     use std::str::FromStr;
-    use testcontainers::runners::AsyncRunner;
     use testcontainers::{
         core::{IntoContainerPort, WaitFor},
-        GenericImage,
+        runners::AsyncRunner,
+        ContainerAsync, GenericImage, ImageExt,
     };
-    use testcontainers::{ContainerAsync, ImageExt};
     use tokio;
 
     const PRIVATE_KEY: &str = "dcf2cbdd171a21c480aa7f53d77f31bb102282b3ff099c78e3118b37348c72f7";
@@ -149,12 +147,13 @@ mod test {
         assert_eq!(signature, expected_signature);
     }
 
+    // This test will fail if docker is not running
     #[tokio::test]
     async fn sign_transaction_with_aws_signer() {
         // Start the container running Localstack
         let _container = start_localstack_container().await;
 
-        let localstack_endpoint = "http://localhost:".to_string() + &LOCALSTACK_PORT.to_string();
+        let localstack_endpoint = format!("http://localhost:{}", LOCALSTACK_PORT);
         let config = get_aws_config(
             "localstack".into(),
             "localstack".into(),
@@ -199,6 +198,7 @@ mod test {
         assert_eq!(signer.address(), recovered_address);
     }
 
+    // This test will fail if anvil is not installed (Foundry contains anvil)
     #[tokio::test]
     async fn sign_legacy_transaction_with_web3_signer() {
         let anvil = Anvil::default().spawn();
@@ -232,7 +232,7 @@ mod test {
             .with_mapped_port(LOCALSTACK_PORT, LOCALSTACK_PORT.tcp())
             .start()
             .await
-            .unwrap();
+            .expect("Error starting localstack container");
         container
     }
 
