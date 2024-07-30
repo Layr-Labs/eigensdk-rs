@@ -15,30 +15,38 @@ mod list_vault_accounts;
 pub mod status;
 pub mod transaction;
 use std::collections::HashMap;
+use std::str::FromStr;
 
 use alloy_primitives::Address;
+use alloy_primitives::U64;
 use alloy_provider::Provider;
+use alloy_rpc_types::transaction::TransactionReceipt;
 use client::{Client, ASSET_ID_BY_CHAIN};
 use eigen_utils::get_provider;
 use error::FireBlockError;
+use get_transaction::GetTransaction;
 use list_contracts::ListContracts;
 use list_contracts::WhitelistedContract;
 use list_external_accounts::ListExternalAccounts;
 use list_external_accounts::WhitelistedAccount;
 use list_vault_accounts::{ListVaultAccounts, VaultAccount};
+use status::Status;
 
 /// Fireblocks wallet
 #[derive(Debug)]
 pub struct FireblocksWallet {
     fireblocks_client: Client,
     _vault_account_name: String,
+    provider: String,
     chain_id: u64,
     vault_account: Option<Vec<VaultAccount>>,
     whitelisted_accounts: HashMap<Address, WhitelistedAccount>,
     whitelisted_contracts: HashMap<Address, WhitelistedContract>,
+    tx_id_to_nonce: HashMap<String, U64>,
 }
 
 impl FireblocksWallet {
+    /// new fireblocks wallet instance
     pub async fn new(
         fireblocks_client: Client,
         provider: String,
@@ -52,9 +60,11 @@ impl FireblocksWallet {
                 fireblocks_client,
                 _vault_account_name: vault_account_name,
                 chain_id,
+                provider,
                 vault_account: None,
                 whitelisted_accounts: HashMap::new(),
                 whitelisted_contracts: HashMap::new(),
+                tx_id_to_nonce: HashMap::new(),
             }),
             Err(e) => Err(FireBlockError::AlloyContractError(
                 alloy_contract::Error::TransportError(e),
@@ -62,7 +72,7 @@ impl FireblocksWallet {
         }
     }
 
-    /// Get Account
+    /// Get Vault Accounts
     pub async fn get_account(&self) -> Result<Vec<VaultAccount>, FireBlockError> {
         if self.vault_account.is_none() {
             let accounts_result = self.fireblocks_client.list_vault_accounts().await;
@@ -81,7 +91,7 @@ impl FireblocksWallet {
         }
     }
 
-    /// get whitelisted account
+    /// get whitelisted account for the particular address
     pub async fn get_whitelisted_account(
         &mut self,
         address: Address,
@@ -158,6 +168,69 @@ impl FireblocksWallet {
                 }
             }
             None => Err(FireBlockError::AssetIDError(self.chain_id.to_string())),
+        }
+    }
+
+    /// get transaction receipt for the tx_id derived from fireblocks
+    pub async fn get_transaction_receipt(
+        &mut self,
+        tx_id: String,
+    ) -> Result<TransactionReceipt, FireBlockError> {
+        let fireblocks_tx = self
+            .fireblocks_client
+            .get_transaction(tx_id.clone())
+            .await?;
+
+        match fireblocks_tx.status() {
+            Status::Completed => {
+                let provider = get_provider(&self.provider);
+                let hash_result =
+                    alloy_primitives::FixedBytes::<32>::from_str(&fireblocks_tx.tx_hash());
+                match hash_result {
+                    Ok(hash) => {
+                        let tx_hash_result = provider.get_transaction_receipt(hash).await;
+
+                        match tx_hash_result {
+                            Ok(tx_hash) => {
+                                if let Some(tx) = tx_hash {
+                                    if self.tx_id_to_nonce.contains_key(&tx_id) {
+                                        self.tx_id_to_nonce.remove(&tx_id);
+                                    }
+                                    Ok(tx)
+                                } else {
+                                    Err(FireBlockError::TransactionReceiptNotFound(tx_id))
+                                }
+                            }
+                            Err(e) => Err(FireBlockError::AlloyContractError(
+                                alloy_contract::Error::TransportError(e),
+                            )),
+                        }
+                    }
+
+                    Err(e) => Err(FireBlockError::OtherError(e.to_string())),
+                }
+            }
+            Status::Failed | Status::Rejected | Status::Cancelled | Status::Blocked => {
+                Err(FireBlockError::TransactionFailed(
+                    fireblocks_tx.status().as_str().to_string(),
+                    tx_id,
+                ))
+            }
+            Status::Submitted
+            | Status::PendingAuthorization
+            | Status::PendingScreening
+            | Status::Queued
+            | Status::PendingSignature
+            | Status::PendingEmailApproval
+            | Status::Pending3rdParity
+            | Status::Broadcasting => Err(FireBlockError::NotBroadcasted(
+                fireblocks_tx.status().as_str().to_string(),
+                tx_id,
+            )),
+            _ => Err(FireBlockError::ReceiptNotYetAvailable(
+                fireblocks_tx.status().as_str().to_string(),
+                tx_id,
+            )),
         }
     }
 }

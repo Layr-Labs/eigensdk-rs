@@ -43,6 +43,22 @@ pub enum FireBlockError {
     /// Contract not found in whitelisted contract
     #[error("Contract {0} not found in whitelisted contract")]
     ContractNotFound(String),
+
+    /// Transaction failed or rejected or Cancelled or Blocked
+    #[error("Transaction Failed with  Status {0} , tx_id {1}")]
+    TransactionFailed(String, String),
+
+    /// To be broadcasted transactions
+    #[error("Transaction to be broadcasted with Status {0} , tx_id {1}")]
+    NotBroadcasted(String, String),
+
+    /// Receipt not available yet
+    #[error("Transaction not available yet with Status {0} , tx_id {1} ")]
+    ReceiptNotYetAvailable(String, String),
+
+    /// Transaction receipt not found
+    #[error("Transactin receipt not found with tx_id {0}")]
+    TransactionReceiptNotFound(String),
 }
 
 impl FireBlockError {

@@ -72,6 +72,16 @@ pub struct Transaction {
     block_info: BlockInfo,
 }
 
+impl Transaction {
+    pub fn status(&self) -> Status {
+        self.status.clone()
+    }
+
+    pub fn tx_hash(&self) -> String {
+        self.tx_hash.clone()
+    }
+}
+
 #[allow(unused)]
 /// Get Transaction trait for "/v1/transactions/tx_id" get requests
 pub trait GetTransaction {

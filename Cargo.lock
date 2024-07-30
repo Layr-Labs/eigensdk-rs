@@ -1436,6 +1436,7 @@ dependencies = [
  "alloy-contract",
  "alloy-primitives",
  "alloy-provider",
+ "alloy-rpc-types",
  "chrono",
  "eigen-utils",
  "hex",
