@@ -31,7 +31,7 @@ use list_vault_accounts::{ListVaultAccounts, VaultAccount};
 #[derive(Debug)]
 pub struct FireblocksWallet {
     fireblocks_client: Client,
-    vault_account_name: String,
+    _vault_account_name: String,
     chain_id: u64,
     vault_account: Option<Vec<VaultAccount>>,
     whitelisted_accounts: HashMap<Address, WhitelistedAccount>,
@@ -50,7 +50,7 @@ impl FireblocksWallet {
         match chain_id_result {
             Ok(chain_id) => Ok(Self {
                 fireblocks_client,
-                vault_account_name,
+                _vault_account_name:vault_account_name,
                 chain_id,
                 vault_account: None,
                 whitelisted_accounts: HashMap::new(),

@@ -16,7 +16,7 @@ impl WhitelistedAccount {
     }
 }
 
-#[allow(unused)]
+#[allow(unused,async_fn_in_trait)]
 /// Get List External Accounts trait for "/v1/external_wallets" requests
 pub trait ListExternalAccounts {
     async fn list_external_accounts(&self) -> Result<Vec<WhitelistedAccount>, FireBlockError>;
