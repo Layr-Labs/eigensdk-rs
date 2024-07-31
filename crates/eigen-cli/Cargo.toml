@@ -1,5 +1,5 @@
 [package]
-name = "eigen-egnaddrs"
+name = "eigen-eigen-cli"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -11,7 +11,13 @@ alloy-primitives.workspace = true
 ethers.workspace = true
 tokio.workspace = true
 eigen-utils.workspace = true
+eigen-contract-bindings.workspace = true
+eigen-testing-utils.workspace = true
+alloy-provider.workspace = true
+alloy-contract.workspace = true
+serde.workspace = true
+serde_json.workspace = true
 
 [[bin]]
-name = "cli_eth"
-path = "cli_eth.rs"
+name = "egnaddrs"
+path = "egnaddrs.rs"

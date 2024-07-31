@@ -10,7 +10,7 @@ members = [
     "crates/utils/",
     "crates/crypto/bls/",
     "crates/crypto/keystore/",
-    "crates/egnaddrs/",
+    "crates/eigen-cli/",
     "crates/metrics/collectors/economic/",
     "crates/metrics/collectors/rpc_calls/",
     "crates/services/avsregistry/",
@@ -93,6 +93,7 @@ hyper = "0.14.25"
 eth-keystore = "0.5.0"
 hex-literal = "0.4.1"
 k256 = "0.13.3"
+serde_json = "1.0.121"
 
 #misc 
 parking_lot = "0.12"
