@@ -2,10 +2,10 @@ use alloy_primitives::Address;
 use alloy_provider::Provider;
 use clap::Parser;
 use eigen_utils::{
-    binding::{ContractsRegistry, DelegationManager, IBLSSignatureChecker},
+    binding::{DelegationManager, IBLSSignatureChecker, RegistryCoordinator},
     get_provider,
 };
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
 #[derive(Parser, Debug)]
 #[command(
@@ -24,32 +24,38 @@ struct Args {
     rpc_url: String,
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Deserialize, Debug, PartialEq)]
 pub struct EigenAddressesResponse {
-    network: NetworkInfo,
-    eigenlayer: EigenAddresses,
     avs: AvsAddresses,
+    eigenlayer: EigenAddresses,
+    network: NetworkInfo,
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[serde(rename_all(serialize = "kebab-case"))]
+#[serde(rename_all(deserialize = "kebab-case"))]
 pub struct NetworkInfo {
+    chain_id: String,
     rpc_url: String,
-    chain_id: u64,
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[serde(rename_all(serialize = "kebab-case"))]
+#[serde(rename_all(deserialize = "kebab-case"))]
 pub struct EigenAddresses {
-    slasher: Address,
     delegation_manager: Address,
+    slasher: Address,
     strategy_manager: Address,
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[serde(rename_all(serialize = "kebab-case"))]
+#[serde(rename_all(deserialize = "kebab-case"))]
 pub struct AvsAddresses {
-    service_manager: Address,
-    registry_coordinator: Address,
     bls_apk_registry: Address,
     index_registry: Address,
+    registry_coordinator: Address,
+    service_manager: Address,
     stake_registry: Address,
 }
 
@@ -71,10 +77,9 @@ where
     N: alloy_contract::private::Network,
 {
     if let Some(registry_coord_addr) = args.registry_coordinator {
-        let contracts_registry = ContractsRegistry::new(registry_coord_addr, client);
-
-        let service_manager_addr = contracts_registry
-            .contracts("mockAvsServiceManager".to_string())
+        let registry_coordinator = RegistryCoordinator::new(registry_coord_addr, &client);
+        let service_manager_addr = registry_coordinator
+            .serviceManager()
             .call()
             .await
             .unwrap()
@@ -133,27 +138,27 @@ where
     T: alloy_contract::private::Transport + ::core::clone::Clone,
     N: alloy_contract::private::Network,
 {
-    let contracts_registry = ContractsRegistry::new(registry_coord_addr, &client);
-    let service_manager_addr = contracts_registry
-        .contracts("ServiceManagerBase".to_string())
+    let registry_coordinator = RegistryCoordinator::new(registry_coord_addr, &client);
+    let service_manager_addr = registry_coordinator
+        .serviceManager()
         .call()
         .await
         .unwrap()
         ._0;
-    let bls_pubkey_apk_addr = contracts_registry
-        .contracts("blsApkRegistry".to_string())
+    let bls_pubkey_apk_addr = registry_coordinator
+        .blsApkRegistry()
         .call()
         .await
         .unwrap()
         ._0;
-    let index_registry_addr = contracts_registry
-        .contracts("indexRegistry".to_string())
+    let index_registry_addr = registry_coordinator
+        .indexRegistry()
         .call()
         .await
         .unwrap()
         ._0;
-    let stake_registry_addr = contracts_registry
-        .contracts("stakeRegistry".to_string())
+    let stake_registry_addr = registry_coordinator
+        .stakeRegistry()
         .call()
         .await
         .unwrap()
@@ -171,11 +176,10 @@ where
 async fn get_addresses(args: Args) -> EigenAddressesResponse {
     let rpc_url = args.rpc_url.clone();
     let client = get_provider(&rpc_url);
-    let chain_id = client.get_chain_id().await.unwrap();
+    let chain_id = client.get_chain_id().await.unwrap().to_string();
     let (registry_coord_addr, service_manager_addr) =
         get_registry_coord_and_service_manager_addr(args, client.clone()).await;
     let avs = get_avs_contract_addresses(registry_coord_addr, client.clone()).await;
-
     let eigenlayer = get_eigenlayer_contract_addresses(service_manager_addr, client).await;
 
     let network = NetworkInfo { rpc_url, chain_id };
@@ -188,9 +192,7 @@ async fn get_addresses(args: Args) -> EigenAddressesResponse {
 
 #[cfg(test)]
 mod test {
-    use crate::get_addresses;
-
-    use super::Args;
+    use super::{get_addresses, Args, EigenAddressesResponse};
     use eigen_testing_utils::anvil_constants::{
         get_registry_coordinator_address, get_service_manager_address,
     };
@@ -199,26 +201,72 @@ mod test {
     #[tokio::test]
     async fn egnaddrs_with_service_manager_flag() {
         let service_manager_address = get_service_manager_address().await;
+
         let args = Args {
             registry_coordinator: None,
             service_manager: Some(service_manager_address),
             rpc_url: "http://localhost:8545".into(),
         };
+        let expected_addresses: EigenAddressesResponse = serde_json::from_str(
+            r#"{
+            "avs": {
+              "bls-apk-registry": "0x1613beB3B2C4f22Ee086B2b38C1476A3cE7f78E8",
+              "index-registry": "0x851356ae760d987E095750cCeb3bC6014560891C",
+              "registry-coordinator": "0xa82fF9aFd8f496c3d6ac40E2a0F282E47488CFc9",
+              "service-manager": "0x84eA74d481Ee0A5332c457a4d796187F6Ba67fEB",
+              "stake-registry": "0xf5059a5D33d5853360D16C683c16e67980206f36"
+            },
+            "eigenlayer": {
+              "delegation-manager": "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
+              "slasher": "0xa513E6E4b8f2a923D98304ec87F64353C4D5C853",
+              "strategy-manager": "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707"
+            },
+            "network": {
+              "chain-id": "31337",
+              "rpc-url": "http://localhost:8545"
+            }
+          }"#,
+        )
+        .unwrap();
+
         let addresses = get_addresses(args).await;
-        // TODO: add corresponding assert
-        assert!(true);
+
+        assert_eq!(expected_addresses, addresses);
     }
 
     #[tokio::test]
     async fn egnaddrs_with_registry_coordinator_flag() {
         let registry_coordinator_address = get_registry_coordinator_address().await;
+
         let args = Args {
             registry_coordinator: Some(registry_coordinator_address),
             service_manager: None,
             rpc_url: "http://localhost:8545".into(),
         };
+        let expected_addresses: EigenAddressesResponse = serde_json::from_str(
+            r#"{
+            "avs": {
+              "bls-apk-registry": "0x1613beB3B2C4f22Ee086B2b38C1476A3cE7f78E8",
+              "index-registry": "0x851356ae760d987E095750cCeb3bC6014560891C",
+              "registry-coordinator": "0xa82fF9aFd8f496c3d6ac40E2a0F282E47488CFc9",
+              "service-manager": "0x84eA74d481Ee0A5332c457a4d796187F6Ba67fEB",
+              "stake-registry": "0xf5059a5D33d5853360D16C683c16e67980206f36"
+            },
+            "eigenlayer": {
+              "delegation-manager": "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
+              "slasher": "0xa513E6E4b8f2a923D98304ec87F64353C4D5C853",
+              "strategy-manager": "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707"
+            },
+            "network": {
+              "chain-id": "31337",
+              "rpc-url": "http://localhost:8545"
+            }
+          }"#,
+        )
+        .unwrap();
+
         let addresses = get_addresses(args).await;
-        // TODO: add corresponding assert
-        assert!(true);
+
+        assert_eq!(expected_addresses, addresses);
     }
 }
