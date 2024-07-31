@@ -1,9 +1,9 @@
 use alloy_consensus::TxEip1559;
-use alloy_network::Ethereum;
-use alloy_network::EthereumWallet;
+use alloy_consensus::TxLegacy;
+use alloy_network::{Ethereum, EthereumWallet};
 use alloy_primitives::Address;
 use alloy_provider::PendingTransactionBuilder;
-
+use alloy_rpc_types_eth::TransactionReceipt;
 pub type Transport = alloy_transport_http::Http<reqwest::Client>;
 
 pub struct SimpleTxManager {
@@ -52,9 +52,6 @@ func NoopSigner(addr common.Address, tx *types.Transaction) (*types.Transaction,
 func (m *SimpleTxManager) GetNoSendTxOpts() (*bind.TransactOpts, error) {
 }
 
-func (m *SimpleTxManager) waitForReceipt(ctx context.Context, txID wallet.TxID) (*types.Receipt, error) {
-}
-
 func (m *SimpleTxManager) queryReceipt(ctx context.Context, txID wallet.TxID) *types.Receipt {
 }
 
@@ -90,19 +87,6 @@ impl SimpleTxManager {
     }
 
     pub fn send(tx: &TxEip1559) {
-        /*
-            // Spin up a local Anvil node.
-            // Ensure `anvil` is available in $PATH.
-            let anvil = Anvil::new().try_spawn()?;
-
-            // Create a provider.
-            let rpc_url = anvil.endpoint().parse()?;
-            let provider = ProviderBuilder::new().on_http(rpc_url);
-
-            // Create two users, Alice and Bob.
-            let alice = anvil.addresses()[0];
-            let bob = anvil.addresses()[1];
-        */
 
         // #####################
 
@@ -161,11 +145,12 @@ impl SimpleTxManager {
         );
 
         assert_eq!(receipt.from, alice);
-        assert_eq!(receipt.to, Some(bob));
 
         Ok(())
         */
     }
+
+    pub fn send_legacy_tx(tx: &TxLegacy) {}
 
     /// Waits for the transaction receipt.
     ///
@@ -181,8 +166,8 @@ impl SimpleTxManager {
     /// - `None` if the transaction was not included in a block or an error ocurred.
     pub async fn wait_for_receipt(
         pending_tx: PendingTransactionBuilder<'_, Transport, Ethereum>,
-    ) -> Option<u64> {
-        pending_tx.get_receipt().await.ok()?.block_number
+    ) -> Option<TransactionReceipt> {
+        pending_tx.get_receipt().await.ok()
     }
 }
 
@@ -231,8 +216,10 @@ mod tests {
         let pending_tx = provider.send_transaction(tx.into()).await.unwrap();
 
         // wait for the transaction to be mined
-        let block_number = SimpleTxManager::wait_for_receipt(pending_tx).await.unwrap();
-        println!("Transaction mined in block: {:?}", block_number);
+        let receipt = SimpleTxManager::wait_for_receipt(pending_tx).await.unwrap();
+        let block_number = receipt.block_number.unwrap();
+        println!("Transaction mined in block: {}", block_number);
         assert!(block_number > 0);
+        assert_eq!(receipt.to, Some(bob));
     }
 }

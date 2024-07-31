@@ -14,6 +14,7 @@ alloy-primitives.workspace = true
 alloy-consensus.workspace = true
 alloy-provider.workspace = true
 alloy-transport-http.workspace = true
+alloy-rpc-types-eth.workspace = true
 reqwest.workspace = true
 #logging.workspace = { path = "crates/chainio/utils/" }
 
