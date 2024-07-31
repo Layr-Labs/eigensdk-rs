@@ -182,8 +182,7 @@ impl SimpleTxManager {
     pub async fn wait_for_receipt(
         pending_tx: PendingTransactionBuilder<'_, Transport, Ethereum>,
     ) -> Option<u64> {
-        let receipt = pending_tx.get_receipt().await.ok()?;
-        receipt.block_number
+        pending_tx.get_receipt().await.ok()?.block_number
     }
 }
 

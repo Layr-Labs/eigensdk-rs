@@ -1857,7 +1857,6 @@ dependencies = [
  "alloy-node-bindings",
  "alloy-primitives",
  "alloy-provider",
- "alloy-transport",
  "alloy-transport-http",
  "eigen-signer",
  "reqwest 0.12.5",
