@@ -222,13 +222,10 @@ mod tests {
         let _signed_tx = signer.sign_transaction(&mut tx).await.unwrap();
 
         // send transaction and get receipt
-        let receipt = provider
-            .send_transaction(tx.into())
-            .await
-            .unwrap()
-            .get_receipt()
-            .await
-            .unwrap();
+        let pending_tx = provider.send_transaction(tx.into()).await.unwrap();
+
+        // wait for the transaction to be mined
+        let receipt = pending_tx.get_receipt().await.unwrap();
         // do something with the receipt
         let block_number = receipt.block_number.unwrap();
         println!("Transaction mined in block: {:?}", block_number);

@@ -1858,8 +1858,6 @@ dependencies = [
  "alloy-node-bindings",
  "alloy-primitives",
  "alloy-provider",
- "alloy-rpc-client",
- "alloy-signer",
  "eigen-signer",
  "tokio",
 ]

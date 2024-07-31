@@ -12,14 +12,12 @@ license-file.workspace = true
 alloy-network.workspace = true
 alloy-primitives.workspace = true
 alloy-contract.workspace = true
-alloy-provider.workspace = true
-alloy-signer.workspace = true
 alloy-consensus.workspace = true
-alloy-rpc-client.workspace = true
 #logging.workspace = { path = "crates/chainio/utils/" }
 
 [dev-dependencies]
 alloy-eips.workspace = true
 alloy-node-bindings.workspace = true
+alloy-provider.workspace = true
 tokio.workspace = true
 eigen-signer = { path = "../../signer" }
