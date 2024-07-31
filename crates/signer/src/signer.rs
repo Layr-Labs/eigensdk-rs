@@ -148,8 +148,6 @@ mod test {
         assert_eq!(signature, expected_signature);
     }
 
-    /// Prerequisites for running the test
-    /// * Docker engine running
     #[tokio::test]
     async fn sign_transaction_with_aws_signer() {
         // Start the container running Localstack
@@ -200,8 +198,6 @@ mod test {
         assert_eq!(signer.address(), recovered_address);
     }
 
-    /// Prerequisites for running the test
-    /// * Anvil installed
     #[tokio::test]
     async fn sign_legacy_transaction_with_web3_signer() {
         let anvil = Anvil::default().spawn();

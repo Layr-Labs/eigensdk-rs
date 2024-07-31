@@ -14,17 +14,18 @@ List of crates in the repository :-
 - [eigen-contracts-bindings](https://github.com/supernovahs/eigen-rs/tree/main/crates/contracts/bindings) - Generate ethers bindings for Eigen Layer.
 - [eigen-crypto-bls](https://github.com/supernovahs/eigen-rs/tree/main/crates/crypto/bls) - bls utilities
 - [eigen-crypto-bn254](https://github.com/supernovahs/eigen-rs/tree/main/crates/crypto/bn254) - bn254 utilities
-- [eigen-metrics](https://github.com/supernovahs/eigen-rs/tree/main/crates/metrics) - performance , rpc and economic metrics 
+- [eigen-metrics](https://github.com/supernovahs/eigen-rs/tree/main/crates/metrics) - performance , rpc and economic metrics
 - [eigen-services](https://github.com/supernovahs/eigen-rs/tree/main/crates/services) - Spawn tokio services for operators info , bls aggregation
 - [eigen-types](https://github.com/supernovahs/eigen-rs/tree/main/crates/types) - Common types
-- [eigen-utils](https://github.com/supernovahs/eigen-rs/tree/main/crates/utils) - Publicly exportable `m2-mainnet` compatible alloy bindings. 
-- [eigen-testing-utils](https://github.com/supernovahs/eigen-rs/tree/main/testing/testing-utils) - Contains publicly exportable  anvil , holesky , mainnet addresses for eigen contracts .
+- [eigen-utils](https://github.com/supernovahs/eigen-rs/tree/main/crates/utils) - Publicly exportable `m2-mainnet` compatible alloy bindings.
+- [eigen-testing-utils](https://github.com/supernovahs/eigen-rs/tree/main/testing/testing-utils) - Contains publicly exportable anvil , holesky , mainnet addresses for eigen contracts .
 
 ## Examples
 
 You can run any [example](https://github.com/supernovahs/eigen-rs/tree/main/examples) using the command cargo run --example <example-name>
 
-Example : 
+Example :
+
 ```
 cargo run --example get_quorum_count
 ```
@@ -33,11 +34,12 @@ cargo run --example get_quorum_count
 
 We are actively looking for contributors. Thank you for your interest. We have strict ci checks in place. In case of any questions and support , feel free to raise an issue.
 
-To test locally and raise a PR :- 
+To test locally and raise a PR :-
 
-You need `foundry` , `docker` and `make`  and `nightly rust` to successfully run it.
+You need `foundry` , `docker` and `make` and `nightly rust` to successfully run it. Also, the `docker` engine has to be running for all the tests to execute correctly.
+
 ```
-make pr 
+make pr
 ```
 
 ## Supported Rust Version
