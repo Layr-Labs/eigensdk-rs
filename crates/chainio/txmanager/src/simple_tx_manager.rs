@@ -1,30 +1,6 @@
-//use alloy::{
-//    network::TransactionBuilder,
-//    node_bindings::Anvil,
-//    primitives::U256,
-//    providers::{Provider, ProviderBuilder},
-//    rpc::types::TransactionRequest,
-//};
-
-use alloy_consensus::{SignableTransaction, TxEip1559};
-use alloy_contract::SolCallBuilder;
-use alloy_network::{Ethereum, EthereumWallet};
-use alloy_primitives::{address, fixed_bytes, Address, Bytes, FixedBytes, B256, I256, U256, U64};
-use alloy_provider::{Provider, ProviderBuilder};
-use alloy_rpc_client::PollerBuilder;
-use alloy_signer::Signer;
-// use futures_util::StreamExt;
-//use alloy_transactions::TransactionRequest;
-//use alloy_sol_types::sol;
-//use alloy_provider::Provider;
-//use alloy_rpc_types::Filter;
-
-// TODO!!!
-
-//use alloy_signer_local::PrivateKeySigner;
-//use eth_keystore::decrypt_key;
-//use std::path::Path;
-//
+use alloy_consensus::TxEip1559;
+use alloy_network::EthereumWallet;
+use alloy_primitives::Address;
 
 pub struct SimpleTxManager {
     wallet: EthereumWallet,
@@ -205,73 +181,57 @@ impl SimpleTxManager {
     }
 }
 
-/*
-async fn test() -> Result<(), Box<dyn std::error::Error>> {
-use alloy_contract::SolCallBuilder;
-use alloy_network::Ethereum;
-use alloy_primitives::{Address, U256};
-use alloy_provider::ProviderBuilder;
-use alloy_sol_types::sol;
-
-sol! {
-    #[sol(rpc)] // <-- Important! Generates the necessary `MyContract` struct and function methods.
-    #[sol(bytecode = "0x1234")] // <-- Generates the `BYTECODE` static and the `deploy` method.
-    contract MyContract {
-        constructor(address) {} // The `deploy` method will also include any constructor arguments.
-
-        #[derive(Debug)]
-        function doStuff(uint a, bool b) public payable returns(address c, bytes32 d);
-    }
-}
-
-// Build a provider.
-let provider = ProviderBuilder::new().with_recommended_fillers().on_builtin("http://localhost:8545").await?;
-
-// If `#[sol(bytecode = "0x...")]` is provided, the contract can be deployed with `MyContract::deploy`,
-// and a new instance will be created.
-let constructor_arg = Address::ZERO;
-let contract = MyContract::deploy(&provider, constructor_arg).await?;
-
-// Otherwise, or if already deployed, a new contract instance can be created with `MyContract::new`.
-let address = Address::ZERO;
-let contract = MyContract::new(address, &provider);
-
-// Build a call to the `doStuff` function and configure it.
-let a = U256::from(123);
-let b = true;
-let call_builder = contract.doStuff(a, b).value(U256::from(50e18 as u64));
-
-// Send the call. Note that this is not broadcasted as a transaction.
-let call_return = call_builder.call().await?;
-println!("{call_return:?}"); // doStuffReturn { c: 0x..., d: 0x... }
-
-// Use `send` to broadcast the call as a transaction.
-let _pending_tx = call_builder.send().await?;
-Ok(())
-}
-*/
-
-// TODO!
-// continue with this:
-// https://github.com/alloy-rs/examples/blob/main/examples/transactions/examples/encode_decode_eip1559.rs
 #[cfg(test)]
 mod tests {
-    use alloy_consensus::{SignableTransaction, TxEip1559};
-    use alloy_eips::eip2930::AccessList;
-    use alloy_primitives::{address, hex, TxKind, U256};
+    use alloy_consensus::TxLegacy;
+    use alloy_network::TxSigner;
+    use alloy_node_bindings::Anvil;
+    use alloy_primitives::{bytes, TxKind::Call, U256};
+    use alloy_provider::{Provider, ProviderBuilder};
+    use eigen_signer::signer::Config;
+    use tokio;
 
-    #[test]
-    fn test_tx() {
-        let tx = TxEip1559 {
-            chain_id: 1,
-            nonce: 0x42,
-            gas_limit: 44386,
-            to: TxKind::Call( address!("6069a6c32cf691f5982febae4faf8a6f3ab2f0f6")),
-            value: U256::from(0_u64),
-            input: hex!("a22cb4650000000000000000000000005eee75727d804a2b13038928d36f8b188945a57a0000000000000000000000000000000000000000000000000000000000000000").into(),
-            max_fee_per_gas: 0x4a817c800,
-            max_priority_fee_per_gas: 0x3b9aca00,
-            access_list: AccessList::default(),
+    const PRIVATE_KEY: &str = "dcf2cbdd171a21c480aa7f53d77f31bb102282b3ff099c78e3118b37348c72f7";
+
+    #[tokio::test]
+    async fn test_send_signed_transaction() {
+        // Spin up a local Anvil node.
+        // Ensure `anvil` is available in $PATH.
+        let anvil = Anvil::new().try_spawn().unwrap();
+
+        // Create a provider.
+        let rpc_url = anvil.endpoint().parse().unwrap();
+        let provider = ProviderBuilder::new().on_http(rpc_url);
+
+        // Create two users, Alice and Bob.
+        let _alice = anvil.addresses()[0];
+        let bob = anvil.addresses()[1];
+
+        let config = Config::PrivateKey(PRIVATE_KEY.into());
+        let signer = Config::signer_from_config(config).unwrap();
+
+        let mut tx = TxLegacy {
+            to: Call(bob),
+            value: U256::from(1_000_000_000),
+            gas_limit: 2_000_000,
+            nonce: 0,
+            gas_price: 21_000_000_000,
+            input: bytes!(),
+            chain_id: Some(31337),
         };
+        let _signed_tx = signer.sign_transaction(&mut tx).await.unwrap();
+
+        // send transaction and get receipt
+        let receipt = provider
+            .send_transaction(tx.into())
+            .await
+            .unwrap()
+            .get_receipt()
+            .await
+            .unwrap();
+        // do something with the receipt
+        let block_number = receipt.block_number.unwrap();
+        println!("Transaction mined in block: {:?}", block_number);
+        assert!(block_number > 0);
     }
 }

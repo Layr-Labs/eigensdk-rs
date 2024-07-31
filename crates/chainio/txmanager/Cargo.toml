@@ -20,3 +20,6 @@ alloy-rpc-client.workspace = true
 
 [dev-dependencies]
 alloy-eips.workspace = true
+alloy-node-bindings.workspace = true
+tokio.workspace = true
+eigen-signer = { path = "../../signer" }

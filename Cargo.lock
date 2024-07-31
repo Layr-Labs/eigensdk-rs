@@ -1855,10 +1855,13 @@ dependencies = [
  "alloy-contract",
  "alloy-eips",
  "alloy-network",
+ "alloy-node-bindings",
  "alloy-primitives",
  "alloy-provider",
  "alloy-rpc-client",
  "alloy-signer",
+ "eigen-signer",
+ "tokio",
 ]
 
 [[package]]
