@@ -16,10 +16,11 @@ alloy-provider.workspace = true
 alloy-transport-http.workspace = true
 alloy-rpc-types-eth.workspace = true
 reqwest.workspace = true
+eigen-signer = { path = "../../signer" }
+thiserror = "1.0"
 #logging.workspace = { path = "crates/chainio/utils/" }
 
 [dev-dependencies]
 alloy-eips.workspace = true
 alloy-node-bindings.workspace = true
 tokio.workspace = true
-eigen-signer = { path = "../../signer" }

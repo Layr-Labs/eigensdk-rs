@@ -1,10 +1,19 @@
-use alloy_consensus::TxEip1559;
-use alloy_consensus::TxLegacy;
-use alloy_network::{Ethereum, EthereumWallet};
+use alloy_consensus::{TxEip1559, TxLegacy};
+use alloy_network::{Ethereum, EthereumWallet, TxSigner};
 use alloy_primitives::Address;
-use alloy_provider::PendingTransactionBuilder;
+use alloy_provider::{PendingTransactionBuilder, Provider, RootProvider};
 use alloy_rpc_types_eth::TransactionReceipt;
+use eigen_signer::signer::Config;
+use thiserror::Error;
+
 pub type Transport = alloy_transport_http::Http<reqwest::Client>;
+
+/// Possible errors raised in signer creation
+#[derive(Error, Debug)]
+pub enum TxManagerError {
+    #[error("wait_for_receipt error")]
+    WaitForReceipt,
+}
 
 pub struct SimpleTxManager {
     wallet: EthereumWallet,
@@ -12,6 +21,8 @@ pub struct SimpleTxManager {
     //log: logging::Logger,
     sender: Address,
     gas_limit_multiplier: f64,
+    private_key: String,
+    provider: RootProvider<Transport>,
 }
 
 /*
@@ -150,7 +161,42 @@ impl SimpleTxManager {
         */
     }
 
-    pub fn send_legacy_tx(tx: &TxLegacy) {}
+    /// Send is used to send a transaction to the Ethereum node. It takes an unsigned/signed transaction
+    /// and then sends it to the Ethereum node.
+    /// If you pass in a signed transaction it will ignore the signature
+    /// and resign the transaction after adding the nonce and gas limit.
+    ///
+    /// # Arguments
+    ///
+    /// - `tx`: The transaction to be sent.
+    ///
+    /// # Returns
+    ///
+    /// - The transaction receipt.
+    pub async fn send_legacy_tx(&self, tx: &mut TxLegacy) -> Option<TransactionReceipt> {
+        // TODO: It also takes care of gas estimation and adds a buffer to the gas limit
+        // TODO: Estimating gas and nonce
+        //m.log.Debug("Estimating gas and nonce")
+        //tx, err := m.estimateGasAndNonce(ctx, tx)
+
+        let config = Config::PrivateKey(self.private_key.clone());
+        let signer = Config::signer_from_config(config).unwrap();
+
+        let _signed_tx = signer.sign_transaction(tx).await.unwrap();
+
+        // send transaction and get receipt
+        let pending_tx = self
+            .provider
+            .send_transaction(tx.clone().into())
+            .await
+            .unwrap();
+        // Return: send: failed to estimate gas and nonce
+
+        // wait for the transaction to be mined
+        let receipt = SimpleTxManager::wait_for_receipt(pending_tx).await.unwrap();
+        // return: Transaction receipt not found
+        Some(receipt)
+    }
 
     /// Waits for the transaction receipt.
     ///

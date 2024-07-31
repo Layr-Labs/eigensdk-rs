@@ -1861,6 +1861,7 @@ dependencies = [
  "alloy-transport-http",
  "eigen-signer",
  "reqwest 0.12.5",
+ "thiserror",
  "tokio",
 ]
 
