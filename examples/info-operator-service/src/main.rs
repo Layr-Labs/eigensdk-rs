@@ -20,11 +20,9 @@ async fn main() {
     )
     .await
     .expect("failed to build avs registry chain reader");
-    let avs_registry_subscriber = AvsRegistryChainSubscriber::new(WS_HOLESKY_PROIVIDER.to_string());
 
     let operators_info = Arc::new(Mutex::new(
         OperatorInfoServiceInMemory::new(
-            avs_registry_subscriber,
             avs_registry_chain_reader,
             WS_HOLESKY_PROIVIDER.to_string(),
         )

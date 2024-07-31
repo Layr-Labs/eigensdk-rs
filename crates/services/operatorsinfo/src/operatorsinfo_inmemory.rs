@@ -19,7 +19,6 @@ use tokio::sync::{
 #[derive(Debug)]
 pub struct OperatorInfoServiceInMemory {
     avs_registry_reader: AvsRegistryChainReader,
-    avs_registry_subscriber: AvsRegistryChainSubscriber,
     ws: String,
     pub_keys: UnboundedSender<OperatorsInfoMessage>,
 }
@@ -34,7 +33,6 @@ enum OperatorsInfoMessage {
 
 impl OperatorInfoServiceInMemory {
     pub async fn new(
-        avs_registry_subscriber: AvsRegistryChainSubscriber,
         avs_registry_chain_reader: AvsRegistryChainReader,
         web_socket: String,
     ) -> Self {
@@ -64,7 +62,6 @@ impl OperatorInfoServiceInMemory {
 
         Self {
             avs_registry_reader: avs_registry_chain_reader,
-            avs_registry_subscriber,
             ws: web_socket,
             pub_keys: pubkeys_tx,
         }
@@ -72,8 +69,12 @@ impl OperatorInfoServiceInMemory {
 
     pub async fn start_service(&self, start_block: u64, end_block: u64) -> Result<()> {
         // query past operator registrations
-        self.query_past_registered_operator_events_and_fill_db(start_block, end_block)
-            .await;
+        self.query_past_registered_operator_events_and_fill_db(
+            start_block,
+            end_block,
+            self.ws.clone(),
+        )
+        .await;
 
         let ws = WsConnect::new(&self.ws);
         let provider = ProviderBuilder::new().on_ws(ws).await?;
@@ -123,10 +124,11 @@ impl OperatorInfoServiceInMemory {
         &self,
         start_block: u64,
         end_block: u64,
+        ws_url: String,
     ) {
         let (operator_address, operator_pub_keys) = self
             .avs_registry_reader
-            .query_existing_registered_operator_pub_keys(start_block, end_block)
+            .query_existing_registered_operator_pub_keys(start_block, end_block, ws_url)
             .await
             .unwrap();
         for (i, address) in operator_address.iter().enumerate() {
@@ -134,5 +136,50 @@ impl OperatorInfoServiceInMemory {
                 OperatorsInfoMessage::InsertOperatorInfo(*address, operator_pub_keys[i].clone());
             let _ = self.pub_keys.send(message);
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+
+    use super::*;
+    use alloy_primitives::address;
+    use eigen_testing_utils::m2_holesky_constants::{
+        OPERATOR_STATE_RETRIEVER, REGISTRY_COORDINATOR,
+    };
+    use std::env;
+    #[tokio::test]
+    async fn test_query_past_registered_operator_events_and_fill_db() {
+        let websocket_url_holesky = env::var("HOLESKY_WS_URL").expect("HOLEESKY_WS_URL not set");
+        let http_url_holesky = env::var("HOLESKY_HTTP_URL").expect("HOLESKY_HTTP_URL not set");
+        let avs_registry_chain_reader = AvsRegistryChainReader::new(
+            REGISTRY_COORDINATOR,
+            OPERATOR_STATE_RETRIEVER,
+            http_url_holesky.clone(),
+        )
+        .await
+        .unwrap();
+        let operators_info_service_in_memory = OperatorInfoServiceInMemory::new(
+            avs_registry_chain_reader,
+            websocket_url_holesky.clone(),
+        )
+        .await;
+
+        let s = operators_info_service_in_memory
+            .query_past_registered_operator_events_and_fill_db(
+                2019065,
+                2039045,
+                websocket_url_holesky,
+            )
+            .await;
+
+        // Give some time for the background task to process the messages
+        tokio::time::sleep(tokio::time::Duration::from_millis(100)).await;
+
+        let address = address!("385b3b04126b221b09ad68fd55dee74965e9be8b");
+        let operator_info = operators_info_service_in_memory
+            .get_operator_info(address)
+            .await;
+        assert!(operator_info.is_some());
     }
 }
