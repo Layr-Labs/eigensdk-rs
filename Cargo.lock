@@ -1852,13 +1852,15 @@ name = "eigen-chainio-txmanager"
 version = "0.0.1-alpha"
 dependencies = [
  "alloy-consensus",
- "alloy-contract",
  "alloy-eips",
  "alloy-network",
  "alloy-node-bindings",
  "alloy-primitives",
  "alloy-provider",
+ "alloy-transport",
+ "alloy-transport-http",
  "eigen-signer",
+ "reqwest 0.12.5",
  "tokio",
 ]
 

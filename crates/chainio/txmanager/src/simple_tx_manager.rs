@@ -1,6 +1,10 @@
 use alloy_consensus::TxEip1559;
+use alloy_network::Ethereum;
 use alloy_network::EthereumWallet;
 use alloy_primitives::Address;
+use alloy_provider::PendingTransactionBuilder;
+
+pub type Transport = alloy_transport_http::Http<reqwest::Client>;
 
 pub struct SimpleTxManager {
     wallet: EthereumWallet,
@@ -164,25 +168,28 @@ impl SimpleTxManager {
     }
 
     /// Waits for the transaction receipt.
-    /// The waiting is done by polling the node for the transaction receipt, using `PollerBuilder`
-    /// in `alloy_rpc_client`
-    pub fn wait_for_receipt() {
-        // # async fn example<T: alloy_transport::Transport + Clone>(client: alloy_rpc_client::RpcClient<T>) -> Result<(), Box<dyn std::error::Error>> {
-        //
-        // let poller: PollerBuilder<_, (), U64> = client
-        //     .prepare_static_poller("eth_blockNumber", ())
-        //     .with_poll_interval(std::time::Duration::from_secs(5));
-        // let mut stream = poller.into_stream();
-        // while let Some(block_number) = stream.next().await {
-        //    println!("polled block number: {block_number}");
-        // }
-        // # Ok(())
-        // # }
+    ///
+    /// This is a wrapper around `PendingTransactionBuilder::get_receipt`.
+    ///
+    /// # Arguments
+    ///
+    /// - `pending_tx`: The pending transaction builder we want to wait for.
+    ///
+    /// # Returns
+    ///
+    /// - The block number in which the transaction was included.
+    /// - `None` if the transaction was not included in a block or an error ocurred.
+    pub async fn wait_for_receipt(
+        pending_tx: PendingTransactionBuilder<'_, Transport, Ethereum>,
+    ) -> Option<u64> {
+        let receipt = pending_tx.get_receipt().await.ok()?;
+        receipt.block_number
     }
 }
 
 #[cfg(test)]
 mod tests {
+    use super::SimpleTxManager;
     use alloy_consensus::TxLegacy;
     use alloy_network::TxSigner;
     use alloy_node_bindings::Anvil;
@@ -225,9 +232,7 @@ mod tests {
         let pending_tx = provider.send_transaction(tx.into()).await.unwrap();
 
         // wait for the transaction to be mined
-        let receipt = pending_tx.get_receipt().await.unwrap();
-        // do something with the receipt
-        let block_number = receipt.block_number.unwrap();
+        let block_number = SimpleTxManager::wait_for_receipt(pending_tx).await.unwrap();
         println!("Transaction mined in block: {:?}", block_number);
         assert!(block_number > 0);
     }
