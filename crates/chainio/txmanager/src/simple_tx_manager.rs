@@ -8,11 +8,15 @@ use thiserror::Error;
 
 pub type Transport = alloy_transport_http::Http<reqwest::Client>;
 
-/// Possible errors raised in signer creation
+/// Possible errors raised in Tx Manager
 #[derive(Error, Debug)]
 pub enum TxManagerError {
+    #[error("signer error")]
+    SignerError,
+    #[error("send error")]
+    SendTxError,
     #[error("wait_for_receipt error")]
-    WaitForReceipt,
+    WaitForReceiptError,
 }
 
 pub struct SimpleTxManager {
@@ -24,55 +28,6 @@ pub struct SimpleTxManager {
     private_key: String,
     provider: RootProvider<Transport>,
 }
-
-/*
-Go interface:
-
-// ========
-type TxManager interface {
-    // Send is used to send a transaction
-    // It takes an unsigned transaction and then signs it before sending
-    // It also takes care of nonce management and gas estimation
-    Send(ctx context.Context, tx *types.Transaction) (*types.Receipt, error)
-
-    // GetNoSendTxOpts This generates a noSend TransactOpts so that we can use
-    // this to generate the transaction without actually sending it
-    GetNoSendTxOpts() (*bind.TransactOpts, error)
-}
-// =======
-
-// Send is used to send a transaction to the Ethereum node. It takes an unsigned/signed transaction
-// and then sends it to the Ethereum node.
-// It also takes care of gas estimation and adds a buffer to the gas limit
-// If you pass in a signed transaction it will ignore the signature
-// and resign the transaction after adding the nonce and gas limit.
-// To check out the whole flow on how this works, check out the README.md in this folder
-func (m *SimpleTxManager) Send(ctx context.Context, tx *types.Transaction) (*types.Receipt, error) {
-    // Estimate gas and nonce
-    // can't print tx hash in logs because the tx changes below when we complete and sign it
-    // so the txHash is meaningless at this point
-    // ...
-}
-
-func NoopSigner(addr common.Address, tx *types.Transaction) (*types.Transaction, error) {
-    return tx, nil
-}
-
-// GetNoSendTxOpts This generates a noSend TransactOpts so that we can use
-// this to generate the transaction without actually sending it
-func (m *SimpleTxManager) GetNoSendTxOpts() (*bind.TransactOpts, error) {
-}
-
-func (m *SimpleTxManager) queryReceipt(ctx context.Context, txID wallet.TxID) *types.Receipt {
-}
-
-// estimateGasAndNonce we are explicitly implementing this because
-// * We want to support legacy transactions (i.e. not dynamic fee)
-// * We want to support gas management, i.e. add buffer to gas limit
-func (m *SimpleTxManager) estimateGasAndNonce(ctx context.Context, tx *types.Transaction) (*types.Transaction, error) {
-}
-
-*/
 
 impl SimpleTxManager {
     /*
@@ -173,29 +128,32 @@ impl SimpleTxManager {
     /// # Returns
     ///
     /// - The transaction receipt.
-    pub async fn send_legacy_tx(&self, tx: &mut TxLegacy) -> Option<TransactionReceipt> {
+    pub async fn send_legacy_tx(
+        &self,
+        tx: &mut TxLegacy,
+    ) -> Result<TransactionReceipt, TxManagerError> {
         // TODO: It also takes care of gas estimation and adds a buffer to the gas limit
         // TODO: Estimating gas and nonce
         //m.log.Debug("Estimating gas and nonce")
         //tx, err := m.estimateGasAndNonce(ctx, tx)
 
         let config = Config::PrivateKey(self.private_key.clone());
-        let signer = Config::signer_from_config(config).unwrap();
+        let signer = Config::signer_from_config(config).map_err(|_| TxManagerError::SignerError)?;
 
-        let _signed_tx = signer.sign_transaction(tx).await.unwrap();
+        let _signed_tx = signer
+            .sign_transaction(tx)
+            .await
+            .map_err(|_| TxManagerError::SignerError)?;
 
         // send transaction and get receipt
         let pending_tx = self
             .provider
             .send_transaction(tx.clone().into())
             .await
-            .unwrap();
-        // Return: send: failed to estimate gas and nonce
+            .map_err(|_| TxManagerError::SendTxError)?;
 
         // wait for the transaction to be mined
-        let receipt = SimpleTxManager::wait_for_receipt(pending_tx).await.unwrap();
-        // return: Transaction receipt not found
-        Some(receipt)
+        SimpleTxManager::wait_for_receipt(pending_tx).await
     }
 
     /// Waits for the transaction receipt.
@@ -212,9 +170,28 @@ impl SimpleTxManager {
     /// - `None` if the transaction was not included in a block or an error ocurred.
     pub async fn wait_for_receipt(
         pending_tx: PendingTransactionBuilder<'_, Transport, Ethereum>,
-    ) -> Option<TransactionReceipt> {
-        pending_tx.get_receipt().await.ok()
+    ) -> Result<TransactionReceipt, TxManagerError> {
+        pending_tx
+            .get_receipt()
+            .await
+            .map_err(|_| TxManagerError::WaitForReceiptError)
     }
+
+    /*
+    // GetNoSendTxOpts This generates a noSend TransactOpts so that we can use
+    // this to generate the transaction without actually sending it
+    func (m *SimpleTxManager) GetNoSendTxOpts() (*bind.TransactOpts, error) {
+    }
+
+    func (m *SimpleTxManager) queryReceipt(ctx context.Context, txID wallet.TxID) *types.Receipt {
+    }
+
+    // estimateGasAndNonce we are explicitly implementing this because
+    // * We want to support legacy transactions (i.e. not dynamic fee)
+    // * We want to support gas management, i.e. add buffer to gas limit
+    func (m *SimpleTxManager) estimateGasAndNonce(ctx context.Context, tx *types.Transaction) (*types.Transaction, error) {
+    }
+    */
 }
 
 #[cfg(test)]
