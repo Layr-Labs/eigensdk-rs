@@ -8,10 +8,8 @@ repository.workspace = true
 [dependencies]
 clap = { version = "4.5.11", features = ["derive"] }
 alloy-primitives.workspace = true
-ethers.workspace = true
 tokio.workspace = true
 eigen-utils.workspace = true
-eigen-contract-bindings.workspace = true
 eigen-testing-utils.workspace = true
 alloy-provider.workspace = true
 alloy-contract.workspace = true

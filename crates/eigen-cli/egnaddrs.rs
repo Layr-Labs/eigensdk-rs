@@ -1,4 +1,3 @@
-use alloy_contract;
 use alloy_primitives::Address;
 use alloy_provider::Provider;
 use clap::Parser;
@@ -7,8 +6,6 @@ use eigen_utils::{
     get_provider,
 };
 use serde::Serialize;
-use serde_json;
-use tokio;
 
 #[derive(Parser, Debug)]
 #[command(
@@ -198,6 +195,7 @@ mod test {
         get_registry_coordinator_address, get_service_manager_address,
     };
     use tokio;
+
     #[tokio::test]
     async fn egnaddrs_with_service_manager_flag() {
         let service_manager_address = get_service_manager_address().await;
