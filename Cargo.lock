@@ -1858,6 +1858,7 @@ dependencies = [
  "alloy-primitives",
  "alloy-provider",
  "alloy-rpc-types-eth",
+ "alloy-signer-local",
  "alloy-transport-http",
  "eigen-signer",
  "reqwest 0.12.5",

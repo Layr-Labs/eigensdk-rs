@@ -3,6 +3,7 @@ use alloy_network::{Ethereum, EthereumWallet, TxSigner};
 use alloy_primitives::Address;
 use alloy_provider::{PendingTransactionBuilder, Provider, RootProvider};
 use alloy_rpc_types_eth::TransactionReceipt;
+use alloy_signer_local::PrivateKeySigner;
 use eigen_signer::signer::Config;
 use thiserror::Error;
 
@@ -52,68 +53,44 @@ impl SimpleTxManager {
         self.gas_limit_multiplier = multiplier;
     }
 
-    pub fn send(tx: &TxEip1559) {
+    fn create_local_signer(&self) -> Result<PrivateKeySigner, TxManagerError> {
+        let config = Config::PrivateKey(self.private_key.clone());
+        Config::signer_from_config(config).map_err(|_| TxManagerError::SignerError)
+    }
 
-        // #####################
+    /// Sends a EIP1559 transaction.
+    ///
+    /// Send is used to send a transaction to the Ethereum node. It takes an unsigned/signed transaction
+    /// and then sends it to the Ethereum node.
+    /// If you pass in a signed transaction it will ignore the signature
+    /// and resign the transaction after adding the nonce and gas limit.
+    ///
+    /// # Arguments
+    ///
+    /// - `tx`: The transaction to be sent.
+    ///
+    /// # Returns
+    ///
+    /// - The transaction receipt.
+    pub async fn send_eip1559_tx(
+        &self,
+        tx: &mut TxEip1559,
+    ) -> Result<TransactionReceipt, TxManagerError> {
+        let signer = self.create_local_signer()?;
+        let _signed_tx = signer
+            .sign_transaction(tx)
+            .await
+            .map_err(|_| TxManagerError::SignerError)?;
 
-        /*
-        // Set up the provider
-        let provider = Provider::<Http>::try_from("https://mainnet.infura.io/v3/YOUR-PROJECT-ID")?;
+        // send transaction and get receipt
+        let pending_tx = self
+            .provider
+            .send_transaction(tx.clone().into())
+            .await
+            .map_err(|_| TxManagerError::SendTxError)?;
 
-        // Set up the signer (you'll need to replace this with your actual private key)
-        let signer = Signer::from_private_key("YOUR_PRIVATE_KEY_HERE".parse()?);
-
-        // Create the transaction request
-        let tx = TransactionRequest::new()
-            .to(Address::from_str(
-                "0x742d35Cc6634C0532925a3b844Bc454e4438f44e",
-            )?)
-            .value(U256::from(1_000_000_000_000_000_000u128)) // 1 ETH in wei
-            .gas_limit(21000)
-            .gas_price(provider.get_gas_price().await?)
-            .nonce(
-                provider
-                    .get_transaction_count(signer.address(), None)
-                    .await?,
-            );
-
-        // Sign and send the transaction
-        let signed_tx = signer.sign_transaction(&tx).await?;
-        let pending_tx = provider.send_raw_transaction(signed_tx.rlp()).await?;
-
-        // Wait for the transaction to be mined
-        let receipt = pending_tx.await?;
-        println!("Transaction mined in block: {:?}", receipt.block_number);
-
-        // #####################
-        let tx = TransactionRequest::default()
-            .with_to(bob)
-            .with_nonce(0)
-            .with_chain_id(anvil.chain_id())
-            .with_value(U256::from(100))
-            .with_gas_limit(21_000)
-            .with_max_priority_fee_per_gas(1_000_000_000)
-            .with_max_fee_per_gas(20_000_000_000);
-        */
-
-        /*
-        // Send the transaction and wait for the broadcast.
-        let pending_tx = provider.send_transaction(tx).await?;
-
-        println!("Pending transaction... {}", pending_tx.tx_hash());
-
-        // Wait for the transaction to be included and get the receipt.
-        let receipt = pending_tx.get_receipt().await?;
-
-        println!(
-            "Transaction included in block {}",
-            receipt.block_number.expect("Failed to get block number")
-        );
-
-        assert_eq!(receipt.from, alice);
-
-        Ok(())
-        */
+        // wait for the transaction to be mined
+        SimpleTxManager::wait_for_receipt(pending_tx).await
     }
 
     /// Send is used to send a transaction to the Ethereum node. It takes an unsigned/signed transaction
@@ -136,10 +113,7 @@ impl SimpleTxManager {
         // TODO: Estimating gas and nonce
         //m.log.Debug("Estimating gas and nonce")
         //tx, err := m.estimateGasAndNonce(ctx, tx)
-
-        let config = Config::PrivateKey(self.private_key.clone());
-        let signer = Config::signer_from_config(config).map_err(|_| TxManagerError::SignerError)?;
-
+        let signer = self.create_local_signer()?;
         let _signed_tx = signer
             .sign_transaction(tx)
             .await

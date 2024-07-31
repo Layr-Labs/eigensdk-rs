@@ -15,6 +15,7 @@ alloy-consensus.workspace = true
 alloy-provider.workspace = true
 alloy-transport-http.workspace = true
 alloy-rpc-types-eth.workspace = true
+alloy-signer-local.workspace = true
 reqwest.workspace = true
 eigen-signer = { path = "../../signer" }
 thiserror = "1.0"
