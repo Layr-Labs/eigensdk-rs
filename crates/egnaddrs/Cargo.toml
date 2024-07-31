@@ -8,6 +8,9 @@ repository.workspace = true
 [dependencies]
 clap = { version = "4.5.11", features = ["derive"] }
 alloy-primitives.workspace = true
+ethers.workspace = true
+tokio.workspace = true
+eigen-utils.workspace = true
 
 [[bin]]
 name = "cli_eth"

@@ -1566,6 +1566,9 @@ version = "0.0.1-alpha"
 dependencies = [
  "alloy-primitives",
  "clap",
+ "eigen-utils",
+ "ethers",
+ "tokio",
 ]
 
 [[package]]
