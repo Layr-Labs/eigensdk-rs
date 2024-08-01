@@ -49,7 +49,7 @@ mod tests {
     use super::*;
     use crate::eigenmetrics::EigenMetrics;
     use eigen_logging::init_logger;
-    use eigen_metrics_collectors_economic::RegisteredStakes;
+    use eigen_metrics_collectors_economic::RegisteredStakesMetrics;
     use eigen_metrics_collectors_rpc_calls::RpcCalls;
     use tokio::time::sleep;
     use tokio::time::Duration;
@@ -61,7 +61,7 @@ mod tests {
 
         // Initialize EigenMetrics
         let metrics = EigenMetrics::new();
-        let registered_metrics = RegisteredStakes::new();
+        let registered_metrics = RegisteredStakesMetrics::new(init_logger().clone());
         let rpc_calls = RpcCalls::new();
 
         // Run the metrics server in a background task

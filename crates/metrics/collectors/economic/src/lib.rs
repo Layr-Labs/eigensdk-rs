@@ -3,6 +3,7 @@
     issue_tracker_base_url = "https://github.com/supernovahs/eigen-rs/issues/"
 )]
 #![cfg_attr(not(test), warn(unused_crate_dependencies))]
+use eigen_logging::{logger::Logger, tracing_logger::TracingLogger};
 use eigen_metrics_derive::Metrics;
 use metrics::{Gauge, Key, Label};
 
@@ -16,10 +17,21 @@ pub struct RegisteredStakes {
     registered_stake: Gauge,
 }
 
-impl RegisteredStakes {
-    pub fn new() -> Self {
+/// RegisteredStakes Metrics with logger
+#[derive(Debug)]
+pub struct RegisteredStakesMetrics {
+    registered_stakes: RegisteredStakes,
+
+    logger: TracingLogger,
+}
+
+impl RegisteredStakesMetrics {
+    pub fn new(logger: TracingLogger) -> Self {
         let gauge = Self {
-            registered_stake: metrics::register_gauge!("eigen_registered_stakes"),
+            registered_stakes: RegisteredStakes {
+                registered_stake: metrics::register_gauge!("eigen_registered_stakes"),
+            },
+            logger,
         };
         RegisteredStakes::describe();
 
@@ -35,12 +47,19 @@ impl RegisteredStakes {
                 Label::new("quorum_name", quorum_name.to_string()),
             ],
         );
+        self.logger.debug(
+            &format!(
+                "set registered stakes , quorum_name: {} , quorum_number: {} , value: {}  ",
+                quorum_name, quorum_number, value
+            ),
+            &["eigen-metrics-collectors-economic.set_stake"],
+        );
 
         // Register or retrieve the gauge with the specified key and set the value
         metrics::gauge!(key.to_string(), value);
     }
 
     pub fn registered_stakes(&self) -> Gauge {
-        self.registered_stake.clone()
+        self.registered_stakes.registered_stake.clone()
     }
 }

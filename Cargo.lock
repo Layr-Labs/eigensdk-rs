@@ -2000,6 +2000,7 @@ dependencies = [
 name = "eigen-metrics-collectors-economic"
 version = "0.0.1-alpha"
 dependencies = [
+ "eigen-logging",
  "eigen-metrics-derive",
  "metrics",
 ]
@@ -2008,6 +2009,7 @@ dependencies = [
 name = "eigen-metrics-collectors-rpc-calls"
 version = "0.0.1-alpha"
 dependencies = [
+ "eigen-logging",
  "eigen-metrics-derive",
  "metrics",
 ]
