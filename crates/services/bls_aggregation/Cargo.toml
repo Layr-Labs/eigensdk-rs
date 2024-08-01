@@ -16,4 +16,4 @@ parking_lot.workspace = true
 eigen-crypto-bn254.workspace = true
 alloy-primitives.workspace = true
 tokio = { workspace = true, features = ["full"] }
-
+eigen-logging.workspace = true

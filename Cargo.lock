@@ -2047,6 +2047,7 @@ dependencies = [
  "alloy-primitives",
  "eigen-crypto-bls",
  "eigen-crypto-bn254",
+ "eigen-logging",
  "eigen-services-avsregistry",
  "eigen-types",
  "parking_lot",
