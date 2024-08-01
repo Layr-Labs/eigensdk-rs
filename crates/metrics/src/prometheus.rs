@@ -47,10 +47,10 @@ async fn serve_metrics(
 
 mod tests {
     use super::*;
-    use crate::eigenmetrics::EigenMetrics;
+    use crate::eigenmetrics::EigenMetricsMetrics;
     use eigen_logging::init_logger;
     use eigen_metrics_collectors_economic::RegisteredStakesMetrics;
-    use eigen_metrics_collectors_rpc_calls::RpcCalls;
+    use eigen_metrics_collectors_rpc_calls::RpcCallsMetrics;
     use tokio::time::sleep;
     use tokio::time::Duration;
 
@@ -60,9 +60,9 @@ mod tests {
         let handle = init_registry();
 
         // Initialize EigenMetrics
-        let metrics = EigenMetrics::new();
+        let metrics = EigenMetricsMetrics::new(init_logger().clone());
         let registered_metrics = RegisteredStakesMetrics::new(init_logger().clone());
-        let rpc_calls = RpcCalls::new();
+        let rpc_calls = RpcCallsMetrics::new(init_logger().clone());
 
         // Run the metrics server in a background task
         let server_handle = tokio::spawn(async move {
