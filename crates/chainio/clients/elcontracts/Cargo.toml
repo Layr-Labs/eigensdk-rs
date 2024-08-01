@@ -15,7 +15,7 @@ tracing.workspace = true
 alloy-contract.workspace = true
 eigen-utils.workspace = true
 alloy-primitives.workspace = true
-
+eigen-logging.workspace = true
 
 [dev-dependencies]
 eigen-testing-utils.workspace = true
@@ -24,3 +24,4 @@ alloy-signer-local.workspace = true
 alloy-provider.workspace = true
 tokio.workspace = true
 alloy-eips.workspace = true
+once_cell.workspace = true

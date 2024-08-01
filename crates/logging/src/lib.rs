@@ -8,5 +8,16 @@ pub mod log_level;
 pub mod logger;
 pub mod noop_logger;
 pub mod tracing_logger;
-
+use log_level::LogLevel;
+use logger::Logger;
+use once_cell::sync::OnceCell;
+use tracing_logger::TracingLogger;
 pub static COMPONENT_KEY: &str = "component";
+
+static LOGGER: OnceCell<TracingLogger> = OnceCell::new();
+
+pub fn init_logger() -> &'static TracingLogger {
+    LOGGER.get_or_init(|| {
+        TracingLogger::new_text_logger(false, String::from(""), LogLevel::Info, false)
+    })
+}

@@ -14,3 +14,4 @@ eigen-services-operatorsinfo.workspace = true
 alloy-primitives.workspace = true
 tokio = {workspace = true, features =["full"]}
 tracing.workspace = true
+eigen-logging.workspace = true

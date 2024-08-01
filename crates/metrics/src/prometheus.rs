@@ -1,3 +1,4 @@
+use eigen_logging::{logger::Logger, tracing_logger::TracingLogger};
 use hyper::{
     body::Body,
     service::{make_service_fn, service_fn},
@@ -5,6 +6,7 @@ use hyper::{
 };
 use metrics_exporter_prometheus::{PrometheusBuilder, PrometheusHandle};
 use std::{convert::Infallible, net::SocketAddr};
+
 #[allow(unused)]
 fn init_registry() -> PrometheusHandle {
     let recorder = PrometheusBuilder::new().build_recorder();
@@ -16,7 +18,15 @@ fn init_registry() -> PrometheusHandle {
 }
 
 #[allow(unused)]
-async fn serve_metrics(addr: SocketAddr, handle: PrometheusHandle) -> eyre::Result<()> {
+async fn serve_metrics(
+    addr: SocketAddr,
+    handle: PrometheusHandle,
+    logger: TracingLogger,
+) -> eyre::Result<()> {
+    logger.info(
+        &format!("Starting metrics server at port {}", addr),
+        &["eigen-metrics.serve_metrics"],
+    );
     let make_svc = make_service_fn(move |_| {
         let handle = handle.clone();
 
@@ -38,6 +48,7 @@ async fn serve_metrics(addr: SocketAddr, handle: PrometheusHandle) -> eyre::Resu
 mod tests {
     use super::*;
     use crate::eigenmetrics::EigenMetrics;
+    use eigen_logging::init_logger;
     use eigen_metrics_collectors_economic::RegisteredStakes;
     use eigen_metrics_collectors_rpc_calls::RpcCalls;
     use tokio::time::sleep;
@@ -55,7 +66,9 @@ mod tests {
 
         // Run the metrics server in a background task
         let server_handle = tokio::spawn(async move {
-            serve_metrics(socket, handle).await.unwrap();
+            serve_metrics(socket, handle, init_logger().clone())
+                .await
+                .unwrap();
         });
 
         sleep(Duration::from_secs(1)).await;

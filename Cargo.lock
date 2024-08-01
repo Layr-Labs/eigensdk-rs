@@ -1875,10 +1875,12 @@ dependencies = [
  "eigen-chainio-utils",
  "eigen-client-elcontracts",
  "eigen-crypto-bls",
+ "eigen-logging",
  "eigen-types",
  "eigen-utils",
  "hex",
  "num-bigint",
+ "once_cell",
  "reqwest 0.12.5",
  "thiserror",
  "tokio",
@@ -1894,9 +1896,11 @@ dependencies = [
  "alloy-primitives",
  "alloy-provider",
  "alloy-signer-local",
+ "eigen-logging",
  "eigen-testing-utils",
  "eigen-types",
  "eigen-utils",
+ "once_cell",
  "thiserror",
  "tokio",
  "tracing",
@@ -1971,6 +1975,7 @@ dependencies = [
 name = "eigen-logging"
 version = "0.0.1-alpha"
 dependencies = [
+ "once_cell",
  "tracing",
  "tracing-subscriber",
 ]
@@ -1979,6 +1984,7 @@ dependencies = [
 name = "eigen-metrics"
 version = "0.0.1-alpha"
 dependencies = [
+ "eigen-logging",
  "eigen-metrics-collectors-economic",
  "eigen-metrics-collectors-rpc-calls",
  "eigen-metrics-derive",
@@ -2545,6 +2551,7 @@ version = "0.0.1-alpha"
 dependencies = [
  "alloy-primitives",
  "eigen-client-avsregistry",
+ "eigen-logging",
  "eigen-testing-utils",
  "eyre",
  "tokio",
@@ -3393,6 +3400,7 @@ version = "0.0.1-alpha"
 dependencies = [
  "alloy-primitives",
  "eigen-client-avsregistry",
+ "eigen-logging",
  "eigen-services-operatorsinfo",
  "tokio",
  "tracing",

@@ -8,7 +8,7 @@ use tracing::{debug, error, info, trace, warn};
 // A zero Options consists entirely of default values.
 //
 // SLoggerOptions are an extension of [slog.HandlerOptions].
-#[derive(Default, Debug)]
+#[derive(Default, Debug, Clone)]
 pub struct TracingLogger {
     // Enable source code location (Default: false)
     pub add_source: bool,

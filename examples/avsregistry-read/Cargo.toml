@@ -15,6 +15,6 @@ workspace = true
 alloy-primitives.workspace = true
 eyre.workspace = true
 tokio = { workspace = true, features = ["macros", "rt-multi-thread"] }
-
+eigen-logging.workspace = true
 eigen-client-avsregistry.workspace = true
 eigen-testing-utils.workspace = true

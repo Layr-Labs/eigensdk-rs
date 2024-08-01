@@ -1,4 +1,4 @@
-#[derive(Default, Debug)]
+#[derive(Default, Debug, Clone)]
 pub enum LogLevel {
     Error,
     Warn,
