@@ -2034,6 +2034,7 @@ dependencies = [
  "eigen-client-avsregistry",
  "eigen-crypto-bls",
  "eigen-crypto-bn254",
+ "eigen-logging",
  "eigen-services-operatorsinfo",
  "eigen-types",
  "eigen-utils",

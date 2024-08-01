@@ -3,6 +3,7 @@ use eigen_chainio_utils::convert_to_bn254_g1_point;
 use eigen_client_avsregistry::reader::AvsRegistryChainReader;
 use eigen_crypto_bls::attestation::G1Point as BlsG1Point;
 use eigen_crypto_bn254::utils::u256_to_bigint256;
+use eigen_logging::{logger::Logger, tracing_logger::TracingLogger};
 use eigen_services_operatorsinfo::operatorsinfo_inmemory::OperatorInfoServiceInMemory;
 use eigen_types::operator::{OperatorAvsState, OperatorInfo, OperatorPubKeys, QuorumAvsState};
 use eigen_utils::binding::BLSApkRegistry::G1Point;
@@ -10,16 +11,19 @@ use std::collections::HashMap;
 
 #[derive(Debug)]
 pub struct AvsRegistryServiceChainCaller {
+    logger: TracingLogger,
     avs_registry: AvsRegistryChainReader,
     operators_info_service: OperatorInfoServiceInMemory,
 }
 
 impl AvsRegistryServiceChainCaller {
     pub fn new(
+        logger: TracingLogger,
         avs_registry: AvsRegistryChainReader,
         operators_info_service: OperatorInfoServiceInMemory,
     ) -> Self {
         Self {
+            logger,
             avs_registry,
             operators_info_service,
         }
@@ -44,6 +48,7 @@ impl AvsRegistryServiceChainCaller {
 
         if operators_stakes_in_quorums.len() != quorum_nums.len() {
             // throw error
+            self.logger.fatal("Number of quorums returned from get_operators_stake_in_quorums_at_block does not match number of quorums requested. Probably pointing to old contract or wrong implementation service AvsRegistryServiceChainCaller", &[""])
         }
 
         for (quorum_id, quorum_num) in quorum_nums.iter().enumerate() {
