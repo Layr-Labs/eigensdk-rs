@@ -6,16 +6,15 @@ rust-version.workspace = true
 repository.workspace = true
 
 [dependencies]
+alloy-contract.workspace = true
+alloy-json-rpc.workspace = true
 alloy-primitives.workspace = true
 alloy-provider.workspace = true
-alloy-contract.workspace = true
+alloy-transport.workspace = true
 clap.workspace = true
 eigen-testing-utils.workspace = true
 eigen-utils.workspace = true
 serde.workspace = true
 serde_json.workspace = true
+thiserror.workspace = true
 tokio.workspace = true
-
-[[bin]]
-name = "egnaddrs"
-path = "src/bin/egnaddrs.rs"

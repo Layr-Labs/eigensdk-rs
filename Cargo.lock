@@ -1456,13 +1456,16 @@ name = "eigen-cli"
 version = "0.0.1-alpha"
 dependencies = [
  "alloy-contract",
+ "alloy-json-rpc",
  "alloy-primitives",
  "alloy-provider",
+ "alloy-transport",
  "clap",
  "eigen-testing-utils",
  "eigen-utils",
  "serde",
  "serde_json",
+ "thiserror",
  "tokio",
 ]
 
