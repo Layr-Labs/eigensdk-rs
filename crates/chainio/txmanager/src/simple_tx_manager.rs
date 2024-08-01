@@ -4,6 +4,7 @@ use alloy_primitives::Address;
 use alloy_provider::{PendingTransactionBuilder, Provider, ProviderBuilder, RootProvider};
 use alloy_rpc_types_eth::TransactionReceipt;
 use alloy_signer_local::PrivateKeySigner;
+use eigen_logging::{logger::Logger, tracing_logger::TracingLogger};
 use eigen_signer::signer::Config;
 use k256::ecdsa::SigningKey;
 use reqwest::Url;
@@ -26,23 +27,24 @@ pub enum TxManagerError {
     InvalidUrlError,
 }
 
-pub struct SimpleTxManager {
-    //log: logging::Logger,
+pub struct SimpleTxManager<'log> {
+    logger: &'log TracingLogger,
     gas_limit_multiplier: f64,
     private_key: String,
     provider: RootProvider<Transport>,
 }
 
-impl SimpleTxManager {
+impl<'log> SimpleTxManager<'log> {
     pub fn new(
-        //log: logging::Logger,
+        logger: &'log TracingLogger,
         gas_limit_multiplier: f64,
         private_key: &str,
         rpc_url: &str,
-    ) -> Result<SimpleTxManager, TxManagerError> {
+    ) -> Result<SimpleTxManager<'log>, TxManagerError> {
         let url = Url::parse(rpc_url).map_err(|_| TxManagerError::InvalidUrlError)?;
         let provider = ProviderBuilder::new().on_http(url);
         Ok(SimpleTxManager {
+            logger,
             gas_limit_multiplier,
             private_key: private_key.to_string(),
             provider,
@@ -98,10 +100,12 @@ impl SimpleTxManager {
         tx: &mut TxEip1559,
     ) -> Result<TransactionReceipt, TxManagerError> {
         let signer = self.create_local_signer()?;
-        let _signed_tx = signer
+        let _ = signer
             .sign_transaction(tx)
             .await
             .map_err(|_| TxManagerError::SignerError)?;
+
+        self.logger.debug("Transaction signed", &[&tx]);
 
         // send transaction and get receipt
         let pending_tx = self
@@ -109,6 +113,9 @@ impl SimpleTxManager {
             .send_transaction(tx.clone().into())
             .await
             .map_err(|_| TxManagerError::SendTxError)?;
+
+        self.logger
+            .debug("Transaction sent. Pending transaction: ", &[&pending_tx]);
 
         // wait for the transaction to be mined
         SimpleTxManager::wait_for_receipt(pending_tx).await
@@ -140,12 +147,17 @@ impl SimpleTxManager {
             .await
             .map_err(|_| TxManagerError::SignerError)?;
 
+        self.logger.debug("Transaction signed", &[&tx]);
+
         // send transaction and get receipt
         let pending_tx = self
             .provider
             .send_transaction(tx.clone().into())
             .await
             .map_err(|_| TxManagerError::SendTxError)?;
+
+        self.logger
+            .debug("Transaction sent. Pending transaction: ", &[&pending_tx]);
 
         // wait for the transaction to be mined
         SimpleTxManager::wait_for_receipt(pending_tx).await
@@ -195,19 +207,28 @@ mod tests {
     use alloy_consensus::TxLegacy;
     use alloy_node_bindings::Anvil;
     use alloy_primitives::{bytes, TxKind::Call, U256};
+    use eigen_logging::{log_level::LogLevel, logger::Logger, tracing_logger::TracingLogger};
+    use once_cell::sync::OnceCell;
     use tokio;
 
+    static TEST_LOGGER: OnceCell<TracingLogger> = OnceCell::new();
     const PRIVATE_KEY: &str = "dcf2cbdd171a21c480aa7f53d77f31bb102282b3ff099c78e3118b37348c72f7";
 
     #[tokio::test]
     async fn test_send_signed_transaction() {
+        TEST_LOGGER.get_or_init(|| {
+            TracingLogger::new_text_logger(false, String::from(""), LogLevel::Debug, false)
+        });
+
         // Spin up a local Anvil node.
         // Ensure `anvil` is available in $PATH.
         let anvil = Anvil::new().try_spawn().unwrap();
         let rpc_url: String = anvil.endpoint().parse().unwrap();
 
         // Create a provider.
-        let simple_tx_manager = SimpleTxManager::new(1.0, PRIVATE_KEY, rpc_url.as_str()).unwrap();
+        let logger = TEST_LOGGER.get().unwrap();
+        let simple_tx_manager =
+            SimpleTxManager::new(logger, 1.0, PRIVATE_KEY, rpc_url.as_str()).unwrap();
 
         // Create two users, Alice and Bob.
         let _alice = anvil.addresses()[0];
