@@ -20,12 +20,13 @@ List of crates in the repository :-
 - [eigen-utils](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/utils) - Publicly exportable `m2-mainnet` compatible alloy bindings.
 - [eigen-testing-utils](https://github.com/Layr-Labs/eigensdk-rs/tree/main/testing/testing-utils) - Contains publicly exportable anvil , holesky , mainnet addresses for eigen contracts .
 
+
 ## Examples
 
 You can run any [example](https://github.com/Layr-Labs/eigensdk-rs/tree/main/examples) using the command cargo run --example <example-name>
 
 Example :
-
+  
 ```
 cargo run --example get_quorum_count
 ```
@@ -36,10 +37,32 @@ We are actively looking for contributors. Thank you for your interest. We have s
 
 To test locally and raise a PR :-
 
-You need `foundry` , `docker` and `make` and `nightly rust` to successfully run it. Also, the `docker` engine has to be running for all the tests to execute correctly.
 
+You need `foundry` , `docker` and `make` and `nightly rust` to successfully run it. Also, the `docker` engine has to be running for all the tests to execute correctly.
 ```
 make pr
+```
+
+Test coverage should aim to be around 80%.
+
+Here's how to generate test coverage reports:
+
+Install llvm tools:
+```
+rustup component add llvm-tools-preview
+```
+
+Run the tests with coverage instrumentations:
+```
+cargo clean && mkdir -p coverage/ && rm -r coverage/*
+CARGO_INCREMENTAL=0 RUSTFLAGS='-Cinstrument-coverage' LLVM_PROFILE_FILE='coverage/cargo-test-%p-%m.profraw' cargo test --no-fail-fast
+```
+
+Install coverage report tool and run it:
+```
+cargo install grcov
+grcov . --binary-path ./target/debug/deps/ -s . -t html --branch --ignore-not-existing --ignore '../*' --ignore "/*" -o target/coverage/
+
 ```
 
 ## Supported Rust Version
