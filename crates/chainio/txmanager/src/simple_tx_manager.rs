@@ -35,6 +35,22 @@ pub struct SimpleTxManager<'log> {
 }
 
 impl<'log> SimpleTxManager<'log> {
+    /// Creates a new SimpleTxManager.
+    ///
+    /// # Arguments
+    ///
+    /// - `logger`: The logger to be used.
+    /// - `gas_limit_multiplier`: The gas limit multiplier.
+    /// - `private_key`: The private key of the wallet.
+    /// - `rpc_url`: The RPC URL. It could be an anvil node or any other node.
+    ///
+    /// # Returns
+    ///
+    /// - The SimpleTxManager created.
+    ///
+    /// # Errors
+    ///
+    /// - If the URL is invalid.
     pub fn new(
         logger: &'log TracingLogger,
         gas_limit_multiplier: f64,
