@@ -93,11 +93,6 @@ impl<'log> SimpleTxManager<'log> {
 
     /// Sends a EIP1559 transaction.
     ///
-    /// Send is used to send a transaction to the Ethereum node. It takes an unsigned/signed transaction
-    /// and then sends it to the Ethereum node.
-    /// If you pass in a signed transaction it will ignore the signature
-    /// and resign the transaction after adding the nonce and gas limit.
-    ///
     /// # Arguments
     ///
     /// - `tx`: The transaction to be sent.
