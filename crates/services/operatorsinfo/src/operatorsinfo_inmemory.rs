@@ -2,9 +2,7 @@ use alloy_primitives::Address;
 use alloy_provider::{Provider, ProviderBuilder, WsConnect};
 use alloy_rpc_types::Filter;
 use anyhow::Result;
-use eigen_client_avsregistry::{
-    reader::AvsRegistryChainReader, subscriber::AvsRegistryChainSubscriber,
-};
+use eigen_client_avsregistry::reader::AvsRegistryChainReader;
 use eigen_types::operator::{operator_id_from_g1_pub_key, OperatorPubKeys};
 use eigen_utils::binding::BLSApkRegistry::{self, G1Point, G2Point};
 use futures_util::StreamExt;
@@ -67,7 +65,12 @@ impl OperatorInfoServiceInMemory {
         }
     }
 
-    pub async fn start_service(&self, start_block: u64, end_block: u64) -> Result<()> {
+    pub async fn start_service(
+        &self,
+        start_block: u64,
+        end_block: u64,
+        shutdown_rx: tokio::sync::watch::Receiver<()>,
+    ) -> Result<()> {
         // query past operator registrations
         self.query_past_registered_operator_events_and_fill_db(
             start_block,
@@ -85,30 +88,40 @@ impl OperatorInfoServiceInMemory {
 
         let subcription_new_operator_registration_stream = provider.subscribe_logs(&filter).await?;
         let mut stream = subcription_new_operator_registration_stream.into_stream();
-        while let Some(log) = stream.next().await {
-            let data = log
-                .log_decode::<BLSApkRegistry::NewPubkeyRegistration>()
-                .ok();
 
-            if let Some(new_pub_key_event) = data {
-                let event_data = new_pub_key_event.data();
-                let operator_pub_key = OperatorPubKeys {
-                    g1_pub_key: G1Point {
-                        X: event_data.pubkeyG1.X,
-                        Y: event_data.pubkeyG1.Y,
-                    },
-                    g2_pub_key: G2Point {
-                        X: event_data.pubkeyG2.X,
-                        Y: event_data.pubkeyG2.Y,
-                    },
-                };
-                // send message
-                let _ = self.pub_keys.send(OperatorsInfoMessage::InsertOperatorInfo(
-                    event_data.operator,
-                    operator_pub_key,
-                ));
+        let mut shutdown_rx = shutdown_rx.clone();
+        let pub_keys = self.pub_keys.clone();
+        tokio::spawn(async move {
+            while let Some(log) = stream.next().await {
+                if shutdown_rx.has_changed().unwrap_or(false) {
+                    break;
+                }
+
+                let data = log
+                    .log_decode::<BLSApkRegistry::NewPubkeyRegistration>()
+                    .ok();
+
+                if let Some(new_pub_key_event) = data {
+                    let event_data = new_pub_key_event.data();
+                    let operator_pub_key = OperatorPubKeys {
+                        g1_pub_key: G1Point {
+                            X: event_data.pubkeyG1.X,
+                            Y: event_data.pubkeyG1.Y,
+                        },
+                        g2_pub_key: G2Point {
+                            X: event_data.pubkeyG2.X,
+                            Y: event_data.pubkeyG2.Y,
+                        },
+                    };
+                    // Send message
+                    let _ = pub_keys.send(OperatorsInfoMessage::InsertOperatorInfo(
+                        event_data.operator,
+                        operator_pub_key,
+                    ));
+                }
             }
-        }
+        });
+
         Ok(())
     }
 
@@ -148,6 +161,9 @@ mod tests {
         OPERATOR_STATE_RETRIEVER, REGISTRY_COORDINATOR,
     };
     use std::env;
+    use tokio::sync::watch;
+    use tokio::time::{timeout, Duration};
+
     #[tokio::test]
     async fn test_query_past_registered_operator_events_and_fill_db() {
         let websocket_url_holesky = env::var("HOLESKY_WS_URL").expect("HOLEESKY_WS_URL not set");
@@ -181,5 +197,45 @@ mod tests {
             .get_operator_info(address)
             .await;
         assert!(operator_info.is_some());
+    }
+
+    #[tokio::test]
+    async fn test_start_service() {
+        let websocket_url_holesky = env::var("HOLESKY_WS_URL").expect("HOLEESKY_WS_URL not set");
+        let http_url_holesky = env::var("HOLESKY_HTTP_URL").expect("HOLESKY_HTTP_URL not set");
+        let avs_registry_chain_reader = AvsRegistryChainReader::new(
+            REGISTRY_COORDINATOR,
+            OPERATOR_STATE_RETRIEVER,
+            http_url_holesky.clone(),
+        )
+        .await
+        .unwrap();
+        let operators_info_service_in_memory = OperatorInfoServiceInMemory::new(
+            avs_registry_chain_reader,
+            websocket_url_holesky.clone(),
+        )
+        .await;
+
+        let (shutdown_tx, shutdown_rx) = watch::channel(());
+
+        // Use a timeout to ensure the test does not run indefinitely
+        let service_handle = tokio::spawn({
+            let shutdown_rx = shutdown_rx.clone();
+            async move {
+                operators_info_service_in_memory
+                    .start_service(2019065, 2039045, shutdown_rx)
+                    .await
+                    .unwrap();
+            }
+        });
+
+        // Wait some time to simulate some operations
+        tokio::time::sleep(tokio::time::Duration::from_millis(1000)).await;
+
+        // Send the shutdown signal
+        let _ = shutdown_tx.send(());
+
+        // Wait for the service to finish
+        let _ = service_handle.await;
     }
 }
