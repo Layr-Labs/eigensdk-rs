@@ -39,7 +39,7 @@ impl AvsRegistryServiceChainCaller {
         quorum_nums: Bytes,
     ) -> Result<HashMap<FixedBytes<32>, OperatorAvsState>, String> {
         let mut operators_avs_state: HashMap<FixedBytes<32>, OperatorAvsState> = HashMap::new();
-        /// temporarily using string for errors(For logging stuff on error) . TODO change to appropriate errors
+        // temporarily using string for errors(For logging stuff on error) . TODO change to appropriate errors
         let operators_stakes_in_quorums_result = self
             .avs_registry
             .get_operators_stake_in_quorums_at_block(block_num, quorum_nums.clone())
@@ -87,7 +87,7 @@ impl AvsRegistryServiceChainCaller {
 
         match operators_avs_state_result {
             Ok(operators_avs_state) => {
-                /// todo remove unwrap add Result<res, error>
+                // TODO(supernova) remove unwrap add Result<res, error>
                 let mut quorums_avs_state: HashMap<u8, QuorumAvsState> = HashMap::new();
 
                 for quorum_num in quorum_nums.iter() {
@@ -125,7 +125,7 @@ impl AvsRegistryServiceChainCaller {
                 Ok(quorums_avs_state)
             }
 
-            Err(e) => Err("Failed to get quorums from avs registry ".to_string()),
+            Err(_) => Err("Failed to get quorums from avs registry ".to_string()),
         }
     }
 

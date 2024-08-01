@@ -30,9 +30,17 @@ impl Logger for TracingLogger {
         level: LogLevel,
         add_source: bool,
     ) -> Self {
+        let tracing_level = match level {
+            LogLevel::Error => tracing::Level::ERROR,
+            LogLevel::Warn => tracing::Level::WARN,
+            LogLevel::Info => tracing::Level::INFO,
+            LogLevel::Debug => tracing::Level::DEBUG,
+            LogLevel::Trace => tracing::Level::TRACE,
+            LogLevel::Fatal => tracing::Level::ERROR, // `Fatal` can map to `ERROR` or a custom level if supported
+        };
         tracing::subscriber::set_global_default(
             tracing_subscriber::fmt::Subscriber::builder()
-                .with_max_level(tracing::Level::TRACE)
+                .with_max_level(tracing_level)
                 .with_ansi(no_color)
                 .finish(),
         )
