@@ -2000,6 +2000,7 @@ name = "eigen-metrics"
 version = "0.0.1-alpha"
 dependencies = [
  "eigen-metrics-collectors-economic",
+ "eigen-metrics-collectors-rpc-calls",
  "eigen-metrics-derive",
  "eyre",
  "hyper 0.14.29",

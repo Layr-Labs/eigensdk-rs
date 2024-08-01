@@ -46,6 +46,7 @@ impl Config {
             }
         }
     }
+
     /// Creates a signer from a key ID in AWS Key Management Service
     pub async fn aws_signer(
         key_id: String,
@@ -95,7 +96,7 @@ mod test {
     const KEYSTORE_PATH: &str = "mockdata/dummy.key.json";
     const KEYSTORE_PASSWORD: &str = "testpassword";
     const LOCALSTACK_PORT: u16 = 4566;
-    const AWS_SOUTH_AMERICA_REGION: &str = "sa-east-1";
+    const AWS_US_WEST_REGION: &str = "us-west-1";
     const LOCALSTACK_IMAGE_NAME: &str = "localstack/localstack";
     const LOCALSTACK_IMAGE_TAG: &str = "latest";
 
@@ -147,7 +148,6 @@ mod test {
         assert_eq!(signature, expected_signature);
     }
 
-    // This test will fail if docker is not running
     #[tokio::test]
     async fn sign_transaction_with_aws_signer() {
         // Start the container running Localstack
@@ -157,7 +157,7 @@ mod test {
         let config = get_aws_config(
             "localstack".into(),
             "localstack".into(),
-            Region::from_static(&AWS_SOUTH_AMERICA_REGION),
+            Region::from_static(&AWS_US_WEST_REGION),
             localstack_endpoint,
         )
         .await;
@@ -198,7 +198,6 @@ mod test {
         assert_eq!(signer.address(), recovered_address);
     }
 
-    // This test will fail if anvil is not installed (Foundry contains anvil)
     #[tokio::test]
     async fn sign_legacy_transaction_with_web3_signer() {
         let anvil = Anvil::default().spawn();
