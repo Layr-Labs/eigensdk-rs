@@ -8,7 +8,6 @@ use clap::Parser;
     about = "Used to help debug and test deployments and contract setups.",
     long_about = "This utility facilitates the debugging and testing of Eigenlayer and AVS contract deployments by retrieving and displaying a comprehensive list of contract addresses. Starting from an initial contract address provided, it recursively identifies and prints addresses for all relevant Eigenlayer and AVS contracts within the network. This includes service managers, registry coordinators, and various registries, thus providing a view of the deployment's structure within the network."
 )]
-
 pub struct Args {
     #[arg(long, help = "ServiceManager contract address")]
     pub service_manager: Option<Address>,

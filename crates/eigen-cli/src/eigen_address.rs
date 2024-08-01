@@ -17,6 +17,7 @@ pub struct EigenAddresses {
     slasher: Address,
     strategy_manager: Address,
 }
+
 #[derive(Serialize, Deserialize, Debug, PartialEq)]
 pub struct EigenAddressesResponse {
     avs: AvsAddresses,
@@ -44,6 +45,55 @@ pub struct AvsAddresses {
 }
 
 impl EigenAddresses {
+    /// Public function to get the Eigenlayer and AVS contract addresses.
+    ///
+    /// # Arguments
+    ///
+    /// * `args` - The command line arguments.
+    ///
+    /// # Returns
+    ///
+    /// * `EigenAddressesResponse` - The Eigenlayer and AVS contract addresses.
+    pub async fn get_addresses(args: Args) -> Result<EigenAddressesResponse, EigenAddressCliError> {
+        let rpc_url = args.rpc_url.clone();
+        let client = get_provider(&rpc_url);
+        let chain_id = client
+            .get_chain_id()
+            .await
+            .map_err(|e| EigenAddressCliError::RpcError(e))?
+            .to_string();
+        let (registry_coord_addr, service_manager_addr) =
+            EigenAddresses::get_registry_coord_and_service_manager_addr(args, client.clone())
+                .await?;
+
+        let avs = EigenAddresses::get_avs_contract_addresses(registry_coord_addr, client.clone())
+            .await
+            .map_err(|e| EigenAddressCliError::ContractError(e))?;
+
+        let eigenlayer =
+            EigenAddresses::get_eigenlayer_contract_addresses(service_manager_addr, client)
+                .await
+                .map_err(|e| EigenAddressCliError::ContractError(e))?;
+
+        let network = NetworkInfo { rpc_url, chain_id };
+        Ok(EigenAddressesResponse {
+            network,
+            eigenlayer,
+            avs,
+        })
+    }
+
+    /// Get the registry coordinator and service manager contract addresses.
+    ///
+    /// # Arguments
+    ///
+    /// * `args` - The command line arguments.
+    /// * `client` - The provider client.
+    ///
+    /// # Returns
+    ///
+    /// * `(Address, Address)` - The registry coordinator and service manager contract addresses,
+    /// used to call `get_avs_contract_addresses` and `get_eigenlayer_contract_addresses` functions.
     async fn get_registry_coord_and_service_manager_addr<T, P, N>(
         args: Args,
         client: P,
@@ -80,6 +130,16 @@ impl EigenAddresses {
         }
     }
 
+    /// Get the Eigenlayer contract addresses.
+    ///
+    /// # Arguments
+    ///
+    /// * `service_manager_addr` - The service manager contract address.
+    /// * `client` - The provider client.
+    ///
+    /// # Returns
+    ///
+    /// * `EigenAddresses` - The Eigenlayer contract addresses.
     async fn get_eigenlayer_contract_addresses<T, P, N>(
         service_manager_addr: Address,
         client: P,
@@ -102,6 +162,16 @@ impl EigenAddresses {
         })
     }
 
+    /// Get the AVS contract addresses.
+    ///
+    /// # Arguments
+    ///
+    /// * `registry_coordinator` - The registry coordinator contract address.
+    /// * `client` - The provider client.
+    ///
+    /// # Returns
+    ///
+    /// * `AvsAddresses` - The AVS contract addresses.
     async fn get_avs_contract_addresses<T, P, N>(
         registry_coordinator: Address,
         client: P,
@@ -139,35 +209,6 @@ impl EigenAddresses {
             bls_apk_registry,
             index_registry,
             stake_registry,
-        })
-    }
-
-    pub async fn get_addresses(args: Args) -> Result<EigenAddressesResponse, EigenAddressCliError> {
-        let rpc_url = args.rpc_url.clone();
-        let client = get_provider(&rpc_url);
-        let chain_id = client
-            .get_chain_id()
-            .await
-            .map_err(|e| EigenAddressCliError::RpcError(e))?
-            .to_string();
-        let (registry_coord_addr, service_manager_addr) =
-            EigenAddresses::get_registry_coord_and_service_manager_addr(args, client.clone())
-                .await?;
-
-        let avs = EigenAddresses::get_avs_contract_addresses(registry_coord_addr, client.clone())
-            .await
-            .map_err(|e| EigenAddressCliError::ContractError(e))?;
-
-        let eigenlayer =
-            EigenAddresses::get_eigenlayer_contract_addresses(service_manager_addr, client)
-                .await
-                .map_err(|e| EigenAddressCliError::ContractError(e))?;
-
-        let network = NetworkInfo { rpc_url, chain_id };
-        Ok(EigenAddressesResponse {
-            network,
-            eigenlayer,
-            avs,
         })
     }
 }
