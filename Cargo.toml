@@ -142,6 +142,7 @@ alloy-json-rpc = { version = "0.1", default-features = false }
 alloy-rpc-client = "0.1"
 alloy-contract = { version = "0.1", default-features = false }
 alloy-signer-aws = "0.1"
+k256 = "0.13"
 
 # examples
 avsregistry-read = { path = "examples/avsregistry-read" }

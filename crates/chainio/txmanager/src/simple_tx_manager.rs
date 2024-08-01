@@ -1,10 +1,12 @@
 use alloy_consensus::{TxEip1559, TxLegacy};
-use alloy_network::{Ethereum, EthereumWallet, TxSigner};
+use alloy_network::{Ethereum, TxSigner};
 use alloy_primitives::Address;
-use alloy_provider::{PendingTransactionBuilder, Provider, RootProvider};
+use alloy_provider::{PendingTransactionBuilder, Provider, ProviderBuilder, RootProvider};
 use alloy_rpc_types_eth::TransactionReceipt;
 use alloy_signer_local::PrivateKeySigner;
 use eigen_signer::signer::Config;
+use k256::ecdsa::SigningKey;
+use reqwest::Url;
 use thiserror::Error;
 
 pub type Transport = alloy_transport_http::Http<reqwest::Client>;
@@ -18,36 +20,49 @@ pub enum TxManagerError {
     SendTxError,
     #[error("wait_for_receipt error")]
     WaitForReceiptError,
+    #[error("address error")]
+    AddressError,
+    #[error("invalid url error")]
+    InvalidUrlError,
 }
 
 pub struct SimpleTxManager {
-    wallet: EthereumWallet,
-    //    client: eth::Client,
     //log: logging::Logger,
-    sender: Address,
     gas_limit_multiplier: f64,
     private_key: String,
     provider: RootProvider<Transport>,
 }
 
 impl SimpleTxManager {
-    /*
     pub fn new(
-        wallet: wallet::Wallet,
-        client: eth::Client,
-        log: logging::Logger,
-        sender: common::Address,
+        //log: logging::Logger,
         gas_limit_multiplier: f64,
-    ) -> SimpleTxManager {
-        SimpleTxManager {
-            wallet,
-            client,
-            log,
-            sender,
+        private_key: &str,
+        rpc_url: &str,
+    ) -> Result<SimpleTxManager, TxManagerError> {
+        let url = Url::parse(rpc_url).map_err(|_| TxManagerError::InvalidUrlError)?;
+        let provider = ProviderBuilder::new().on_http(url);
+        Ok(SimpleTxManager {
             gas_limit_multiplier,
-        }
+            private_key: private_key.to_string(),
+            provider,
+        })
     }
-    */
+
+    /// Returns the address of the wallet, beloing to the given private key.
+    ///
+    /// # Returns
+    ///
+    /// - The address of the wallet.
+    ///
+    /// # Errors
+    ///
+    /// - If the private key is invalid.
+    pub fn get_address(&self) -> Result<Address, TxManagerError> {
+        let private_key_signing_key = SigningKey::from_slice(self.private_key.as_bytes())
+            .map_err(|_| TxManagerError::AddressError)?;
+        Ok(Address::from_private_key(&private_key_signing_key))
+    }
 
     pub fn with_gas_limit_multiplier(&mut self, multiplier: f64) {
         self.gas_limit_multiplier = multiplier;
@@ -72,6 +87,12 @@ impl SimpleTxManager {
     /// # Returns
     ///
     /// - The transaction receipt.
+    ///
+    /// # Errors
+    ///
+    /// - If the transaction could not be signed.
+    /// - If the transaction could not be sent.
+    /// - If the transaction could not be mined.
     pub async fn send_eip1559_tx(
         &self,
         tx: &mut TxEip1559,
