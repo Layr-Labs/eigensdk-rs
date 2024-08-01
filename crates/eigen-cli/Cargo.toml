@@ -1,21 +1,21 @@
 [package]
-name = "eigen-eigen-cli"
+name = "eigen-cli"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 repository.workspace = true
 
 [dependencies]
-clap = { version = "4.5.11", features = ["derive"] }
 alloy-primitives.workspace = true
-tokio.workspace = true
-eigen-utils.workspace = true
-eigen-testing-utils.workspace = true
 alloy-provider.workspace = true
 alloy-contract.workspace = true
+clap.workspace = true
+eigen-testing-utils.workspace = true
+eigen-utils.workspace = true
 serde.workspace = true
 serde_json.workspace = true
+tokio.workspace = true
 
 [[bin]]
 name = "egnaddrs"
-path = "egnaddrs.rs"
+path = "src/bin/egnaddrs.rs"

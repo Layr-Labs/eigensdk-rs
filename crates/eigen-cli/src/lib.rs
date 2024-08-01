@@ -1,28 +1,15 @@
+use crate::args::Args;
+use alloy_contract::Error as ContractError;
 use alloy_primitives::Address;
 use alloy_provider::Provider;
-use clap::Parser;
 use eigen_utils::{
     binding::{DelegationManager, IBLSSignatureChecker, RegistryCoordinator},
     get_provider,
 };
 use serde::{Deserialize, Serialize};
+pub mod args;
 
-#[derive(Parser, Debug)]
-#[command(
-    version,
-    about = "Used to help debug and test deployments and contract setups.",
-    long_about = "This utility facilitates the debugging and testing of Eigenlayer and AVS contract deployments by retrieving and displaying a comprehensive list of contract addresses. Starting from an initial contract address provided, it recursively identifies and prints addresses for all relevant Eigenlayer and AVS contracts within the network. This includes service managers, registry coordinators, and various registries, thus providing a view of the deployment's structure within the network."
-)]
-struct Args {
-    #[arg(long, help = "ServiceManager contract address")]
-    service_manager: Option<Address>,
-
-    #[arg(long, help = "BLSRegistryCoordinatorWithIndices contract address")]
-    registry_coordinator: Option<Address>,
-
-    #[arg(long, help = "rpc url", default_value = "http://localhost:8545")]
-    rpc_url: String,
-}
+pub const ANVIL_RPC_URL: &str = "http://localhost:8545";
 
 #[derive(Serialize, Deserialize, Debug, PartialEq)]
 pub struct EigenAddressesResponse {
@@ -59,145 +46,121 @@ pub struct AvsAddresses {
     stake_registry: Address,
 }
 
-#[tokio::main]
-async fn main() {
-    let args = Args::parse();
-    let addresses = get_addresses(args).await;
-
-    println!("{}", serde_json::to_string_pretty(&addresses).unwrap());
-}
-
 async fn get_registry_coord_and_service_manager_addr<T, P, N>(
     args: Args,
     client: P,
-) -> (Address, Address)
+) -> Result<(Address, Address), ContractError>
 where
     T: alloy_contract::private::Transport + ::core::clone::Clone,
     P: alloy_contract::private::Provider<T, N>,
     N: alloy_contract::private::Network,
 {
-    if let Some(registry_coord_addr) = args.registry_coordinator {
-        let registry_coordinator = RegistryCoordinator::new(registry_coord_addr, &client);
-        let service_manager_addr = registry_coordinator
-            .serviceManager()
-            .call()
-            .await
-            .unwrap()
-            ._0;
-
-        (registry_coord_addr, service_manager_addr)
-    } else if let Some(service_manager_addr) = args.service_manager {
-        let service_manager = IBLSSignatureChecker::new(service_manager_addr, client);
-        let registry_coord_addr = service_manager
-            .registryCoordinator()
-            .call()
-            .await
-            .unwrap()
-            ._0;
-
-        (registry_coord_addr, service_manager_addr)
-    } else {
-        // raise error
-        panic!()
+    match (args.registry_coordinator, args.service_manager) {
+        (Some(registry_coord_addr), _) => {
+            let registry_coordinator = RegistryCoordinator::new(registry_coord_addr, &client);
+            let service_manager_addr = registry_coordinator.serviceManager().call().await?._0;
+            Ok((registry_coord_addr, service_manager_addr))
+        }
+        (_, Some(service_manager_addr)) => {
+            let service_manager = IBLSSignatureChecker::new(service_manager_addr, client);
+            let registry_coord_addr = service_manager.registryCoordinator().call().await?._0;
+            Ok((registry_coord_addr, service_manager_addr))
+        }
+        _ => {
+            // TODO: fix this adding a new Error type
+            panic!("must provide either --registry-coordinator or --service-manager flag")
+        }
     }
 }
 
 async fn get_eigenlayer_contract_addresses<T, P, N>(
     service_manager_addr: Address,
     client: P,
-) -> EigenAddresses
+) -> Result<EigenAddresses, ContractError>
 where
     P: alloy_contract::private::Provider<T, N>,
     T: alloy_contract::private::Transport + ::core::clone::Clone,
     N: alloy_contract::private::Network,
 {
     let service_manager = IBLSSignatureChecker::new(service_manager_addr, &client);
-    let delegation_manager_addr = service_manager.delegation().call().await.unwrap()._0;
-    let delegation_manager_client = DelegationManager::new(delegation_manager_addr, &client);
-    let slasher_addr = delegation_manager_client.slasher().call().await.unwrap()._0;
-    let strategy_manager_addr = delegation_manager_client
-        .strategyManager()
-        .call()
-        .await
-        .unwrap()
-        ._0;
+    let delegation_manager = service_manager.delegation().call().await?._0;
+    let delegation_manager_client = DelegationManager::new(delegation_manager, &client);
+    let slasher = delegation_manager_client.slasher().call().await?._0;
+    let strategy_manager = delegation_manager_client.strategyManager().call().await?._0;
 
-    EigenAddresses {
-        slasher: slasher_addr,
-        delegation_manager: delegation_manager_addr,
-        strategy_manager: strategy_manager_addr,
-    }
+    Ok(EigenAddresses {
+        slasher,
+        delegation_manager,
+        strategy_manager,
+    })
 }
 
 async fn get_avs_contract_addresses<T, P, N>(
-    registry_coord_addr: Address,
+    registry_coordinator: Address,
     client: P,
-) -> AvsAddresses
+) -> Result<AvsAddresses, ContractError>
 where
     P: alloy_contract::private::Provider<T, N>,
     T: alloy_contract::private::Transport + ::core::clone::Clone,
     N: alloy_contract::private::Network,
 {
-    let registry_coordinator = RegistryCoordinator::new(registry_coord_addr, &client);
-    let service_manager_addr = registry_coordinator
+    let registry_coordinator_instance = RegistryCoordinator::new(registry_coordinator, &client);
+    let service_manager = registry_coordinator_instance
         .serviceManager()
         .call()
-        .await
-        .unwrap()
+        .await?
         ._0;
-    let bls_pubkey_apk_addr = registry_coordinator
+    let bls_apk_registry = registry_coordinator_instance
         .blsApkRegistry()
         .call()
-        .await
-        .unwrap()
+        .await?
         ._0;
-    let index_registry_addr = registry_coordinator
+    let index_registry = registry_coordinator_instance
         .indexRegistry()
         .call()
-        .await
-        .unwrap()
+        .await?
         ._0;
-    let stake_registry_addr = registry_coordinator
+    let stake_registry = registry_coordinator_instance
         .stakeRegistry()
         .call()
-        .await
-        .unwrap()
+        .await?
         ._0;
 
-    AvsAddresses {
-        service_manager: service_manager_addr,
-        registry_coordinator: registry_coord_addr,
-        bls_apk_registry: bls_pubkey_apk_addr,
-        index_registry: index_registry_addr,
-        stake_registry: stake_registry_addr,
-    }
+    Ok(AvsAddresses {
+        service_manager,
+        registry_coordinator,
+        bls_apk_registry,
+        index_registry,
+        stake_registry,
+    })
 }
 
-async fn get_addresses(args: Args) -> EigenAddressesResponse {
+pub async fn get_addresses(args: Args) -> Result<EigenAddressesResponse, ContractError> {
     let rpc_url = args.rpc_url.clone();
     let client = get_provider(&rpc_url);
-    let chain_id = client.get_chain_id().await.unwrap().to_string();
+    let chain_id = client.get_chain_id().await?.to_string();
     let (registry_coord_addr, service_manager_addr) =
-        get_registry_coord_and_service_manager_addr(args, client.clone()).await;
-    let avs = get_avs_contract_addresses(registry_coord_addr, client.clone()).await;
-    let eigenlayer = get_eigenlayer_contract_addresses(service_manager_addr, client).await;
+        get_registry_coord_and_service_manager_addr(args, client.clone()).await?;
+    let avs = get_avs_contract_addresses(registry_coord_addr, client.clone()).await?;
+    let eigenlayer = get_eigenlayer_contract_addresses(service_manager_addr, client).await?;
 
     let network = NetworkInfo { rpc_url, chain_id };
-    EigenAddressesResponse {
+    Ok(EigenAddressesResponse {
         network,
         eigenlayer,
         avs,
-    }
+    })
 }
 
 #[cfg(test)]
 mod test {
-    use super::{get_addresses, Args, EigenAddressesResponse};
+    use super::{get_addresses, Args, EigenAddressesResponse, ANVIL_RPC_URL};
     use eigen_testing_utils::anvil_constants::{
         get_registry_coordinator_address, get_service_manager_address,
     };
     use tokio;
 
+    // TODO: start anvil with the right deployed state
     #[tokio::test]
     async fn egnaddrs_with_service_manager_flag() {
         let service_manager_address = get_service_manager_address().await;
@@ -205,7 +168,7 @@ mod test {
         let args = Args {
             registry_coordinator: None,
             service_manager: Some(service_manager_address),
-            rpc_url: "http://localhost:8545".into(),
+            rpc_url: ANVIL_RPC_URL.into(),
         };
         let expected_addresses: EigenAddressesResponse = serde_json::from_str(
             r#"{
@@ -228,8 +191,7 @@ mod test {
           }"#,
         )
         .unwrap();
-
-        let addresses = get_addresses(args).await;
+        let addresses = get_addresses(args).await.unwrap();
 
         assert_eq!(expected_addresses, addresses);
     }
@@ -241,7 +203,7 @@ mod test {
         let args = Args {
             registry_coordinator: Some(registry_coordinator_address),
             service_manager: None,
-            rpc_url: "http://localhost:8545".into(),
+            rpc_url: ANVIL_RPC_URL.into(),
         };
         let expected_addresses: EigenAddressesResponse = serde_json::from_str(
             r#"{
@@ -265,7 +227,7 @@ mod test {
         )
         .unwrap();
 
-        let addresses = get_addresses(args).await;
+        let addresses = get_addresses(args).await.unwrap();
 
         assert_eq!(expected_addresses, addresses);
     }

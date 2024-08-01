@@ -1452,6 +1452,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "eigen-cli"
+version = "0.0.1-alpha"
+dependencies = [
+ "alloy-contract",
+ "alloy-primitives",
+ "alloy-provider",
+ "clap",
+ "eigen-testing-utils",
+ "eigen-utils",
+ "serde",
+ "serde_json",
+ "tokio",
+]
+
+[[package]]
 name = "eigen-client-avsregistry"
 version = "0.0.1-alpha"
 dependencies = [
@@ -1561,21 +1576,6 @@ dependencies = [
  "scrypt",
  "serde",
  "serde_json",
-]
-
-[[package]]
-name = "eigen-eigen-cli"
-version = "0.0.1-alpha"
-dependencies = [
- "alloy-contract",
- "alloy-primitives",
- "alloy-provider",
- "clap",
- "eigen-testing-utils",
- "eigen-utils",
- "serde",
- "serde_json",
- "tokio",
 ]
 
 [[package]]

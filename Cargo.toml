@@ -94,6 +94,7 @@ eth-keystore = "0.5.0"
 hex-literal = "0.4.1"
 k256 = "0.13.3"
 serde_json = "1.0.121"
+clap = { version = "4.5.11", features = ["derive"] }
 
 #misc 
 parking_lot = "0.12"
