@@ -9,17 +9,17 @@ repository.workspace = true
 license-file.workspace = true
 
 [dependencies]
+eigen-signer = { path = "../../signer" }
+alloy-consensus.workspace = true
 alloy-network.workspace = true
 alloy-primitives.workspace = true
-alloy-consensus.workspace = true
 alloy-provider.workspace = true
-alloy-transport-http.workspace = true
 alloy-rpc-types-eth.workspace = true
 alloy-signer-local.workspace = true
+alloy-transport-http.workspace = true
+k256.workspace = true
 reqwest.workspace = true
 thiserror.workspace = true
-eigen-signer = { path = "../../signer" }
-k256.workspace = true
 #logging.workspace = { path = "crates/chainio/utils/" }
 
 [dev-dependencies]
