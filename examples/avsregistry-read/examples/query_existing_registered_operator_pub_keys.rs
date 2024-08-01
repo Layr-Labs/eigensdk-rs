@@ -1,6 +1,6 @@
 //! query existing registered operator pub keys for a specific block range
 use eigen_client_avsregistry::reader::AvsRegistryChainReader;
-use eigen_logging::init_logger;
+use eigen_logging::get_test_logger;
 use eigen_testing_utils::m2_holesky_constants::{OPERATOR_STATE_RETRIEVER, REGISTRY_COORDINATOR};
 use eyre::Result;
 
@@ -8,7 +8,7 @@ use eyre::Result;
 async fn main() -> Result<()> {
     let holesky_provider = "https://holesky.drpc.org";
     let avs_registry = AvsRegistryChainReader::new(
-        init_logger().clone(),
+        get_test_logger().clone(),
         REGISTRY_COORDINATOR,
         OPERATOR_STATE_RETRIEVER,
         holesky_provider.to_string(),

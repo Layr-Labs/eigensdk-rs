@@ -280,7 +280,7 @@ mod tests {
     use alloy_eips::eip1898::BlockNumberOrTag::Number;
     use alloy_primitives::{address, keccak256};
     use alloy_provider::Provider;
-    use eigen_logging::init_logger;
+    use eigen_logging::get_test_logger;
     use eigen_testing_utils::anvil_constants::{self, ANVIL_RPC_URL};
     use eigen_utils::binding::mockAvsServiceManager;
     use tokio::time::{sleep, Duration};
@@ -312,7 +312,7 @@ mod tests {
         } = avs_directory_address_return;
 
         ELChainReader::new(
-            init_logger().clone(),
+            get_test_logger().clone(),
             slasher_address,
             delegation_manager_address,
             avs_directory_address,

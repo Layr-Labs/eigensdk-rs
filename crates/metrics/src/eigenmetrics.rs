@@ -1,4 +1,4 @@
-use eigen_logging::tracing_logger::TracingLogger;
+use eigen_logging::{logger::Logger, tracing_logger::TracingLogger};
 use eigen_metrics_derive::Metrics;
 use metrics::Gauge;
 
@@ -45,6 +45,10 @@ impl EigenMetricsMetrics {
     }
 
     pub fn set_performance_score(&self, score: f64) {
+        self.logger.debug(
+            &format!("set performance score , new score {}", score),
+            &["eigen-metrics.set_performance_score"],
+        );
         self.eigen_metrics.performance_score.set(score)
     }
 }

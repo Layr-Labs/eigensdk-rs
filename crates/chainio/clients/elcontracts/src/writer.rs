@@ -187,7 +187,7 @@ mod tests {
 
     use super::*;
     use alloy_signer_local::PrivateKeySigner;
-    use eigen_logging::init_logger;
+    use eigen_logging::get_test_logger;
     use eigen_testing_utils::anvil_constants::{self};
     use eigen_utils::binding::{
         mockAvsServiceManager,
@@ -224,7 +224,7 @@ mod tests {
         } = avs_directory_address_return;
 
         let el_chain_reader = ELChainReader::new(
-            init_logger().clone(),
+            get_test_logger().clone(),
             slasher_address,
             delegation_manager_address,
             avs_directory_address,

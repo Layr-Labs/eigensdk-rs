@@ -520,7 +520,7 @@ impl AvsRegistryChainReader {
 mod tests {
 
     use super::*;
-    use eigen_logging::init_logger;
+    use eigen_logging::get_test_logger;
     use hex::FromHex;
     use std::str::FromStr;
     const HOLESKY_REGISTRY_COORDINATOR: &str = "0x53012C69A189cfA2D9d29eb6F19B32e0A2EA3490";
@@ -536,7 +536,7 @@ mod tests {
 
         let holesky_provider = "https://ethereum-holesky.blockpi.network/v1/rpc/public";
         AvsRegistryChainReader::new(
-            init_logger().clone(),
+            get_test_logger().clone(),
             holesky_registry_coordinator,
             holesky_operator_state_retriever,
             holesky_provider.to_string(),

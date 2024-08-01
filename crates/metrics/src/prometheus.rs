@@ -48,7 +48,6 @@ async fn serve_metrics(
 mod tests {
     use super::*;
     use crate::eigenmetrics::EigenMetricsMetrics;
-    use eigen_logging::init_logger;
     use eigen_metrics_collectors_economic::RegisteredStakesMetrics;
     use eigen_metrics_collectors_rpc_calls::RpcCallsMetrics;
     use tokio::time::sleep;
@@ -56,17 +55,18 @@ mod tests {
 
     #[tokio::test]
     async fn test_prometheus_server() {
+        use eigen_logging::get_test_logger;
         let socket: SocketAddr = "127.0.0.1:9091".parse().unwrap();
         let handle = init_registry();
 
         // Initialize EigenMetrics
-        let metrics = EigenMetricsMetrics::new(init_logger().clone());
-        let registered_metrics = RegisteredStakesMetrics::new(init_logger().clone());
-        let rpc_calls = RpcCallsMetrics::new(init_logger().clone());
+        let metrics = EigenMetricsMetrics::new(get_test_logger().clone());
+        let registered_metrics = RegisteredStakesMetrics::new(get_test_logger().clone());
+        let rpc_calls = RpcCallsMetrics::new(get_test_logger().clone());
 
         // Run the metrics server in a background task
         let server_handle = tokio::spawn(async move {
-            serve_metrics(socket, handle, init_logger().clone())
+            serve_metrics(socket, handle, get_test_logger().clone())
                 .await
                 .unwrap();
         });

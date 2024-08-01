@@ -129,11 +129,13 @@ impl Logger for TracingLogger {
 
 #[cfg(test)]
 mod tests {
+    use crate::get_test_logger;
+
     use super::*;
 
     #[test]
     fn test_log() {
-        let logger = TracingLogger::new_text_logger(false, String::from(""), LogLevel::Info, false);
+        let logger = get_test_logger();
         logger.log("Log", &["info logged"]);
     }
 }
