@@ -193,11 +193,8 @@ impl SimpleTxManager {
 mod tests {
     use super::SimpleTxManager;
     use alloy_consensus::TxLegacy;
-    use alloy_network::TxSigner;
     use alloy_node_bindings::Anvil;
     use alloy_primitives::{bytes, TxKind::Call, U256};
-    use alloy_provider::{Provider, ProviderBuilder};
-    use eigen_signer::signer::Config;
     use tokio;
 
     const PRIVATE_KEY: &str = "dcf2cbdd171a21c480aa7f53d77f31bb102282b3ff099c78e3118b37348c72f7";
@@ -207,17 +204,14 @@ mod tests {
         // Spin up a local Anvil node.
         // Ensure `anvil` is available in $PATH.
         let anvil = Anvil::new().try_spawn().unwrap();
+        let rpc_url: String = anvil.endpoint().parse().unwrap();
 
         // Create a provider.
-        let rpc_url = anvil.endpoint().parse().unwrap();
-        let provider = ProviderBuilder::new().on_http(rpc_url);
+        let simple_tx_manager = SimpleTxManager::new(1.0, PRIVATE_KEY, rpc_url.as_str()).unwrap();
 
         // Create two users, Alice and Bob.
         let _alice = anvil.addresses()[0];
         let bob = anvil.addresses()[1];
-
-        let config = Config::PrivateKey(PRIVATE_KEY.into());
-        let signer = Config::signer_from_config(config).unwrap();
 
         let mut tx = TxLegacy {
             to: Call(bob),
@@ -228,13 +222,9 @@ mod tests {
             input: bytes!(),
             chain_id: Some(31337),
         };
-        let _signed_tx = signer.sign_transaction(&mut tx).await.unwrap();
 
-        // send transaction and get receipt
-        let pending_tx = provider.send_transaction(tx.into()).await.unwrap();
-
-        // wait for the transaction to be mined
-        let receipt = SimpleTxManager::wait_for_receipt(pending_tx).await.unwrap();
+        //// send transaction and wait for receipt
+        let receipt = simple_tx_manager.send_legacy_tx(&mut tx).await.unwrap();
         let block_number = receipt.block_number.unwrap();
         println!("Transaction mined in block: {}", block_number);
         assert!(block_number > 0);
