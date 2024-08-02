@@ -1,5 +1,5 @@
 use clap::Parser;
-use eigen_cli::{args::Args, eigen_address::EigenAddresses};
+use egnaddrs::{args::Args, eigen_address::EigenAddresses};
 
 #[tokio::main]
 async fn main() {

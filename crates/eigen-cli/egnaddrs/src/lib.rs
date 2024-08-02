@@ -41,23 +41,23 @@ mod test {
         };
         let expected_addresses: EigenAddresses = serde_json::from_str(
             r#"{
-            "avs": {
-              "bls-apk-registry": "0x84ea74d481ee0a5332c457a4d796187f6ba67feb",
-              "index-registry": "0x9e545e3c0baab3e08cdfd552c960a1050f373042",
-              "registry-coordinator": "0xc3e53f4d16ae77db1c982e75a937b9f60fe63690",
-              "service-manager": "0x67d269191c92caf3cd7723f116c85e6e9bf55933",
-              "stake-registry": "0xa82ff9afd8f496c3d6ac40e2a0f282e47488cfc9"
-            },
-            "eigenlayer": {
-              "delegation-manager": "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
-              "slasher": "0xa513E6E4b8f2a923D98304ec87F64353C4D5C853",
-              "strategy-manager": "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707"
-            },
-            "network": {
-              "chain-id": "31337",
-              "rpc-url": "http://localhost:8545"
-            }
-          }"#,
+          "avs": {
+            "bls-apk-registry": "0x84ea74d481ee0a5332c457a4d796187f6ba67feb",
+            "index-registry": "0x9e545e3c0baab3e08cdfd552c960a1050f373042",
+            "registry-coordinator": "0xc3e53f4d16ae77db1c982e75a937b9f60fe63690",
+            "service-manager": "0x67d269191c92caf3cd7723f116c85e6e9bf55933",
+            "stake-registry": "0xa82ff9afd8f496c3d6ac40e2a0f282e47488cfc9"
+          },
+          "eigenlayer": {
+            "delegation-manager": "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
+            "slasher": "0xa513E6E4b8f2a923D98304ec87F64353C4D5C853",
+            "strategy-manager": "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707"
+          },
+          "network": {
+            "chain-id": "31337",
+            "rpc-url": "http://localhost:8545"
+          }
+        }"#,
         )
         .unwrap();
         let addresses = EigenAddresses::get_addresses(args).await.unwrap();
@@ -76,23 +76,23 @@ mod test {
         };
         let expected_addresses: EigenAddresses = serde_json::from_str(
             r#"{
-            "avs": {
-              "bls-apk-registry": "0x84ea74d481ee0a5332c457a4d796187f6ba67feb",
-              "index-registry": "0x9e545e3c0baab3e08cdfd552c960a1050f373042",
-              "registry-coordinator": "0xc3e53f4d16ae77db1c982e75a937b9f60fe63690",
-              "service-manager": "0x67d269191c92caf3cd7723f116c85e6e9bf55933",
-              "stake-registry": "0xa82ff9afd8f496c3d6ac40e2a0f282e47488cfc9"
-            },
-            "eigenlayer": {
-              "delegation-manager": "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
-              "slasher": "0xa513E6E4b8f2a923D98304ec87F64353C4D5C853",
-              "strategy-manager": "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707"
-            },
-            "network": {
-              "chain-id": "31337",
-              "rpc-url": "http://localhost:8545"
-            }
-          }"#,
+          "avs": {
+            "bls-apk-registry": "0x84ea74d481ee0a5332c457a4d796187f6ba67feb",
+            "index-registry": "0x9e545e3c0baab3e08cdfd552c960a1050f373042",
+            "registry-coordinator": "0xc3e53f4d16ae77db1c982e75a937b9f60fe63690",
+            "service-manager": "0x67d269191c92caf3cd7723f116c85e6e9bf55933",
+            "stake-registry": "0xa82ff9afd8f496c3d6ac40e2a0f282e47488cfc9"
+          },
+          "eigenlayer": {
+            "delegation-manager": "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
+            "slasher": "0xa513E6E4b8f2a923D98304ec87F64353C4D5C853",
+            "strategy-manager": "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707"
+          },
+          "network": {
+            "chain-id": "31337",
+            "rpc-url": "http://localhost:8545"
+          }
+        }"#,
         )
         .unwrap();
 
