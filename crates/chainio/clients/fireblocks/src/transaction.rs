@@ -5,33 +5,21 @@ use crate::{
     contract_call::{Account, ExtraParams, TransactionOperation},
 };
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct TransactionRequest {
     operation: String,
-
     external_tx_id: String,
-
     asset_id: AssetID,
-
     source: Account,
-
     destination: Account,
-
     amount: String,
-
     extra_parameters: ExtraParams,
-
     replace_tx_by_hash: String,
-
     gas_price: String,
-
     gas_limit: String,
-
     max_fee: String,
-
     priority_fee: String,
-
     fee_level: String,
 }
 
@@ -39,29 +27,17 @@ impl TransactionRequest {
     #[allow(clippy::too_many_arguments)]
     pub fn new(
         operation: String,
-
         external_tx_id: String,
-
         asset_id: AssetID,
-
         source: Account,
-
         destination: Account,
-
         amount: String,
-
         extra_parameters: ExtraParams,
-
         replace_tx_by_hash: String,
-
         gas_price: String,
-
         gas_limit: String,
-
         max_fee: String,
-
         priority_fee: String,
-
         fee_level: String,
     ) -> Self {
         Self {
@@ -83,21 +59,7 @@ impl TransactionRequest {
 
     pub fn get_contract_call(&mut self) -> Self {
         self.operation = TransactionOperation::contract_call.as_str().to_string();
-        Self {
-            operation: self.operation.clone(),
-            external_tx_id: self.external_tx_id.clone(),
-            asset_id: self.asset_id.clone(),
-            source: self.source.clone(),
-            destination: self.destination.clone(),
-            amount: self.amount.clone(),
-            extra_parameters: self.extra_parameters.clone(),
-            replace_tx_by_hash: self.replace_tx_by_hash.clone(),
-            gas_price: self.gas_price.clone(),
-            gas_limit: self.gas_limit.clone(),
-            max_fee: self.max_fee.clone(),
-            priority_fee: self.priority_fee.clone(),
-            fee_level: self.fee_level.clone(),
-        }
+        self.clone()
     }
 }
 

@@ -46,7 +46,6 @@ impl WhitelistedContractResponse {
     }
 }
 
-#[allow(unused)]
 /// Get List Contracts trait for "/v1/contracts" requests
 pub trait ListContracts {
     async fn list_contracts(&self) -> Result<WhitelistedContractResponse, FireBlockError>;

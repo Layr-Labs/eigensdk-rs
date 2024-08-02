@@ -49,7 +49,6 @@ impl VaultAccountResponse {
 pub struct Paging {}
 
 /// Get List Vault Accounts trait for "/v1/vault/accounts_paged" get requests
-#[allow(unused)]
 pub trait ListVaultAccounts {
     async fn list_vault_accounts(&self) -> Result<VaultAccountResponse, FireBlockError>;
 }

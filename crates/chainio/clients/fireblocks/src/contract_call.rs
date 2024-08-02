@@ -130,7 +130,7 @@ mod tests {
             api_url.clone(),
         );
         let external_tx_id = "";
-        let account = Account {
+        let _account = Account {
             type_field: "".to_string(),
             id: "".to_string(),
         };

@@ -46,7 +46,7 @@ pub struct FireblocksWallet {
 }
 
 impl FireblocksWallet {
-    /// new fireblocks wallet instance
+    /// New fireblocks wallet instance
     pub async fn new(
         fireblocks_client: Client,
         provider: String,
@@ -91,7 +91,7 @@ impl FireblocksWallet {
         }
     }
 
-    /// get whitelisted account for the particular address
+    /// Get whitelisted account for the particular address
     pub async fn get_whitelisted_account(
         &mut self,
         address: Address,
@@ -142,7 +142,7 @@ impl FireblocksWallet {
         }
     }
 
-    /// get whitelisted contract
+    /// Get whitelisted contract
     pub async fn get_whitelisted_contract(
         &mut self,
         address: Address,
@@ -194,7 +194,7 @@ impl FireblocksWallet {
         }
     }
 
-    /// get transaction receipt for the tx_id derived from fireblocks
+    /// Get transaction receipt for the tx_id derived from fireblocks
     pub async fn get_transaction_receipt(
         &mut self,
         tx_id: String,
@@ -266,6 +266,7 @@ mod tests {
     use std::env;
 
     #[tokio::test]
+    #[cfg(feature = "fireblock-tests")]
     async fn test_get_account() {
         let api_key = env::var("FIREBLOCKS_API_KEY").expect("FIREBLOCKS_API_KEY not set");
         let private_key_path =
@@ -291,6 +292,7 @@ mod tests {
     }
 
     #[tokio::test]
+    #[cfg(feature = "fireblock-tests")]
     async fn test_get_whitelisted_account() {
         let api_key = env::var("FIREBLOCKS_API_KEY").expect("FIREBLOCKS_API_KEY not set");
         let private_key_path =
@@ -319,6 +321,7 @@ mod tests {
     }
 
     #[tokio::test]
+    #[cfg(feature = "fireblock-tests")]
     async fn test_get_whitelisted_contract() {
         let api_key = env::var("FIREBLOCKS_API_KEY").expect("FIREBLOCKS_API_KEY not set");
         let private_key_path =
@@ -347,6 +350,7 @@ mod tests {
     }
 
     #[tokio::test]
+    #[cfg(feature = "fireblock-tests")]
     async fn test_get_transaction_receipt() {
         let api_key = env::var("FIREBLOCKS_API_KEY").expect("FIREBLOCKS_API_KEY not set");
         let private_key_path =

@@ -43,7 +43,6 @@ impl std::fmt::Display for AssetID {
 // Initialize AssetIDByChain as a HashMap
 pub static ASSET_ID_BY_CHAIN: Lazy<HashMap<u64, AssetID>> = Lazy::new(|| {
     let mut m = HashMap::new();
-
     m.insert(1, AssetID::ETH);
     m.insert(2, AssetID::EthTest5);
     m.insert(17000, AssetID::EthTest6);
@@ -51,10 +50,6 @@ pub static ASSET_ID_BY_CHAIN: Lazy<HashMap<u64, AssetID>> = Lazy::new(|| {
 });
 
 pub const JWT_EXPIRATION_SECONDS: i64 = 30;
-
-#[allow(unused)]
-#[allow(non_camel_case_types)]
-struct client {}
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct ErrorResponse {
@@ -65,15 +60,15 @@ pub struct ErrorResponse {
 /// Payload for JWT
 #[derive(Debug, Serialize, Deserialize)]
 struct Claims {
-    /// fireblocks api uri
+    /// Fireblocks api uri
     uri: String,
-    /// unique identifier. Each request needs to have a unique identifier.
+    /// Unique identifier. Each request needs to have a unique identifier.
     nonce: String,
     /// The time at which the JWT was issued, in seconds since Epoch.
     iat: i64,
-    /// expiration time of jwt
+    /// Expiration time of jwt
     exp: i64,
-    /// api key
+    /// Api key
     sub: String,
     #[serde(rename = "bodyHash")]
     /// Hex-encoded SHA-256 hash of the raw HTTP request body.
@@ -83,16 +78,16 @@ struct Claims {
 /// Fireblock Client
 #[derive(Debug)]
 pub struct Client {
-    /// api key
+    /// Api key
     api_key: String,
     /// Fireblocks generated secret key based on RS256 (RSASSA-PKCS1-v1_5 using SHA-256 hash) algorithm
     private_key: String,
-    /// it depends on sandbox or testnet/mainnet ex:  https://sandbox-api.fireblocks.io/v1 or https://api.fireblocks.io/v1
+    ///  Aandbox:  https://sandbox-api.fireblocks.io/v1 , Mainnet: https://api.fireblocks.io/v1
     api_url: String,
 }
 
 impl Client {
-    /// new client instance
+    /// New client instance
     pub fn new(api_key: String, private_key: String, api_url: String) -> Self {
         Self {
             api_key,
@@ -184,7 +179,7 @@ impl Client {
         let response = client
             .post(self.api_url.to_owned() + path) // Use api_url here
             .headers(headers)
-            .header(CONTENT_TYPE, "application/json") // Set Content-Type header
+            .header(CONTENT_TYPE, APPLICATION_JSON.as_ref()) // Set Content-Type header
             .body(body.unwrap_or("").to_string())
             .send()
             .await?;

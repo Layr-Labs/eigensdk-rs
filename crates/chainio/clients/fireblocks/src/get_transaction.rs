@@ -25,7 +25,7 @@ struct AmountInfo {
 #[serde(rename_all = "camelCase")]
 struct FeeInfo {
     network_fee: String,
-    // service_fee: String,
+    // Service_fee: String,
     gas_price: String,
 }
 
@@ -82,7 +82,6 @@ impl Transaction {
     }
 }
 
-#[allow(unused)]
 /// Get Transaction trait for "/v1/transactions/tx_id" get requests
 pub trait GetTransaction {
     async fn get_transaction(&self, tx_id: String) -> Result<Transaction, FireBlockError>;
