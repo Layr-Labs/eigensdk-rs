@@ -18,6 +18,10 @@ pub enum AssetID {
     EthTest5,
     #[serde(rename = "BTC_TEST")]
     BtcTest,
+    #[serde(rename = "BASECHAIN_ETH_TEST5")]
+    BaseChainEthTest5,
+    #[serde(rename = "ETH_TEST6")]
+    EthTest6,
 }
 
 impl std::fmt::Display for AssetID {
@@ -29,6 +33,8 @@ impl std::fmt::Display for AssetID {
                 AssetID::ETH => "ETH",
                 AssetID::EthTest5 => "ETH_TEST5",
                 AssetID::BtcTest => "BTC_TEST",
+                AssetID::BaseChainEthTest5 => "BASECHAIN_ETH_TEST5",
+                AssetID::EthTest6 => "ETH_TEST6",
             }
         )
     }
@@ -40,6 +46,7 @@ pub static ASSET_ID_BY_CHAIN: Lazy<HashMap<u64, AssetID>> = Lazy::new(|| {
 
     m.insert(1, AssetID::ETH);
     m.insert(2, AssetID::EthTest5);
+    m.insert(17000, AssetID::EthTest6);
     m
 });
 
@@ -177,7 +184,7 @@ impl Client {
         let response = client
             .post(self.api_url.to_owned() + path) // Use api_url here
             .headers(headers)
-            .header(CONTENT_TYPE, APPLICATION_JSON.as_ref()) // Set Content-Type header
+            .header(CONTENT_TYPE, "application/json") // Set Content-Type header
             .body(body.unwrap_or("").to_string())
             .send()
             .await?;

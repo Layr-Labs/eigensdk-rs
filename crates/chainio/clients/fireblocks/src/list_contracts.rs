@@ -17,7 +17,7 @@ pub struct Assets {
     activation_time: Option<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize, Clone)]
+#[derive(Debug, Serialize, Deserialize, Clone, Default)]
 pub struct WhitelistedContract {
     id: String,
     name: String,
@@ -28,6 +28,10 @@ pub struct WhitelistedContract {
 impl WhitelistedContract {
     pub fn assets(&self) -> Vec<Assets> {
         self.assets.clone()
+    }
+
+    pub fn id(&self) -> String {
+        self.id.clone()
     }
 }
 

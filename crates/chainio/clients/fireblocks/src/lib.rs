@@ -96,14 +96,22 @@ impl FireblocksWallet {
         &mut self,
         address: Address,
     ) -> Result<WhitelistedAccount, FireBlockError> {
-        let asset_id_some = ASSET_ID_BY_CHAIN.get(&self.chain_id);
+        let contains_asset_id = ASSET_ID_BY_CHAIN.contains_key(&self.chain_id);
 
-        match asset_id_some {
-            Some(asset_id) => {
-                let whitelisted_account_some = self.whitelisted_accounts.get(&address);
+        match contains_asset_id {
+            true => {
+                let contains_account = self.whitelisted_accounts.contains_key(&address);
 
-                match whitelisted_account_some {
-                    Some(mut whitelisted_accounts) => {
+                match contains_account {
+                    true => {
+                        if self.whitelisted_accounts.get(&address).unwrap().id().eq("") {
+                            Err(FireBlockError::AccountNotFoundError(address.to_string()))
+                        } else {
+                            Ok(self.whitelisted_accounts.get(&address).unwrap().clone())
+                        }
+                    }
+                    false => {
+                        let whitelisted_accounts;
                         let accounts_result = self.fireblocks_client.list_external_accounts().await;
 
                         match accounts_result {
@@ -112,7 +120,8 @@ impl FireblocksWallet {
                                     for asset in account.assets.iter() {
                                         if asset.address.as_ref().unwrap().eq(&address.to_string())
                                             && asset.status.as_ref().unwrap().as_str() == "APPROVED"
-                                            && *asset.id.as_ref().unwrap() == *asset_id
+                                            && *asset.id.as_ref().unwrap()
+                                                == *ASSET_ID_BY_CHAIN.get(&self.chain_id).unwrap()
                                         {
                                             self.whitelisted_accounts
                                                 .insert(address, account.clone());
@@ -122,15 +131,14 @@ impl FireblocksWallet {
                                     }
                                 }
 
-                                Ok(whitelisted_accounts.clone())
+                                Ok(WhitelistedAccount::default())
                             }
                             Err(e) => Err(e),
                         }
                     }
-                    None => Err(FireBlockError::AccountNotFoundError(address.to_string())),
                 }
             }
-            None => Err(FireBlockError::AssetIDError(self.chain_id.to_string())),
+            false => Err(FireBlockError::AssetIDError(self.chain_id.to_string())),
         }
     }
 
@@ -139,20 +147,37 @@ impl FireblocksWallet {
         &mut self,
         address: Address,
     ) -> Result<WhitelistedContract, FireBlockError> {
-        let asset_id_some = ASSET_ID_BY_CHAIN.get(&self.chain_id);
-        match asset_id_some {
-            Some(asset_id) => {
-                let contract_some = self.whitelisted_contracts.get(&address);
+        let contains_asset_id = ASSET_ID_BY_CHAIN.contains_key(&self.chain_id);
 
-                match contract_some {
-                    Some(mut contract) => {
+        match contains_asset_id {
+            true => {
+                let contains_contract = self.whitelisted_contracts.contains_key(&address);
+
+                match contains_contract {
+                    true => {
+                        if self
+                            .whitelisted_contracts
+                            .get(&address)
+                            .unwrap()
+                            .id()
+                            .eq("")
+                        {
+                            Err(FireBlockError::ContractNotFound(address.to_string()))
+                        } else {
+                            Ok(self.whitelisted_contracts.get(&address).unwrap().clone())
+                        }
+                    }
+
+                    false => {
+                        let contract;
                         let contracts_response = self.fireblocks_client.list_contracts().await?;
                         let contracts = contracts_response.contracts();
                         for c in contracts.iter() {
                             for a in c.assets().iter() {
                                 if a.address.as_ref().unwrap().eq(&address.to_string())
                                     && a.status.as_ref().unwrap().as_str() == "APPROVED"
-                                    && *a.id.as_ref().unwrap() == *asset_id
+                                    && *a.id.as_ref().unwrap()
+                                        == *ASSET_ID_BY_CHAIN.get(&self.chain_id).unwrap()
                                 {
                                     self.whitelisted_contracts.insert(address, c.clone());
                                     contract = c;
@@ -161,13 +186,11 @@ impl FireblocksWallet {
                             }
                         }
 
-                        Ok(contract.clone())
+                        Ok(WhitelistedContract::default())
                     }
-
-                    None => Err(FireBlockError::ContractNotFound(address.to_string())),
                 }
             }
-            None => Err(FireBlockError::AssetIDError(self.chain_id.to_string())),
+            false => Err(FireBlockError::AssetIDError(self.chain_id.to_string())),
         }
     }
 
@@ -232,5 +255,122 @@ impl FireblocksWallet {
                 tx_id,
             )),
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::client::Client;
+    use crate::FireblocksWallet;
+    use alloy_primitives::address;
+    use std::env;
+
+    #[tokio::test]
+    async fn test_get_account() {
+        let api_key = env::var("FIREBLOCKS_API_KEY").expect("FIREBLOCKS_API_KEY not set");
+        let private_key_path =
+            env::var("FIREBLOCKS_PRIVATE_KEY_PATH").expect("FIREBLOCKS_PRIVATE_KEY_PATH not set");
+        let api_url = env::var("FIREBLOCKS_API_URL").expect("FIREBLOCKS_API_URL not set");
+        let private_key =
+            std::fs::read_to_string(private_key_path).expect("Failed to read private key file");
+
+        let client = Client::new(
+            api_key.to_string(),
+            private_key.to_string(),
+            api_url.clone(),
+        );
+        let fireblocks_wallet = FireblocksWallet::new(
+            client,
+            "https://ethereum-holesky-rpc.publicnode.com".to_string(),
+            "vault-name".to_string(),
+        )
+        .await
+        .unwrap();
+
+        let _ = fireblocks_wallet.get_account().await.unwrap();
+    }
+
+    #[tokio::test]
+    async fn test_get_whitelisted_account() {
+        let api_key = env::var("FIREBLOCKS_API_KEY").expect("FIREBLOCKS_API_KEY not set");
+        let private_key_path =
+            env::var("FIREBLOCKS_PRIVATE_KEY_PATH").expect("FIREBLOCKS_PRIVATE_KEY_PATH not set");
+        let api_url = env::var("FIREBLOCKS_API_URL").expect("FIREBLOCKS_API_URL not set");
+        let private_key =
+            std::fs::read_to_string(private_key_path).expect("Failed to read private key file");
+
+        let client = Client::new(
+            api_key.to_string(),
+            private_key.to_string(),
+            api_url.clone(),
+        );
+        let mut fireblocks_wallet = FireblocksWallet::new(
+            client,
+            "https://ethereum-holesky-rpc.publicnode.com".to_string(),
+            "vault-name".to_string(),
+        )
+        .await
+        .unwrap();
+        let address = address!("AE64660EfB3223445c55cd76654e89101FB23830");
+        let _ = fireblocks_wallet
+            .get_whitelisted_account(address)
+            .await
+            .unwrap();
+    }
+
+    #[tokio::test]
+    async fn test_get_whitelisted_contract() {
+        let api_key = env::var("FIREBLOCKS_API_KEY").expect("FIREBLOCKS_API_KEY not set");
+        let private_key_path =
+            env::var("FIREBLOCKS_PRIVATE_KEY_PATH").expect("FIREBLOCKS_PRIVATE_KEY_PATH not set");
+        let api_url = env::var("FIREBLOCKS_API_URL").expect("FIREBLOCKS_API_URL not set");
+        let private_key =
+            std::fs::read_to_string(private_key_path).expect("Failed to read private key file");
+
+        let client = Client::new(
+            api_key.to_string(),
+            private_key.to_string(),
+            api_url.clone(),
+        );
+        let mut fireblocks_wallet = FireblocksWallet::new(
+            client,
+            "https://ethereum-holesky-rpc.publicnode.com".to_string(),
+            "vault-name".to_string(),
+        )
+        .await
+        .unwrap();
+        let address = address!("AE64660EfB3223445c55cd76654e89101FB23830");
+        let _ = fireblocks_wallet
+            .get_whitelisted_contract(address)
+            .await
+            .unwrap();
+    }
+
+    #[tokio::test]
+    async fn test_get_transaction_receipt() {
+        let api_key = env::var("FIREBLOCKS_API_KEY").expect("FIREBLOCKS_API_KEY not set");
+        let private_key_path =
+            env::var("FIREBLOCKS_PRIVATE_KEY_PATH").expect("FIREBLOCKS_PRIVATE_KEY_PATH not set");
+        let api_url = env::var("FIREBLOCKS_API_URL").expect("FIREBLOCKS_API_URL not set");
+        let private_key =
+            std::fs::read_to_string(private_key_path).expect("Failed to read private key file");
+
+        let client = Client::new(
+            api_key.to_string(),
+            private_key.to_string(),
+            api_url.clone(),
+        );
+        let mut fireblocks_wallet = FireblocksWallet::new(
+            client,
+            "https://ethereum-sepolia.rpc.subquery.network/public".to_string(),
+            "vault-name".to_string(),
+        )
+        .await
+        .unwrap();
+        let tx_id = "10d377ac-0655-45c3-9d05-4fe0887787f3";
+        let _ = fireblocks_wallet
+            .get_transaction_receipt(tx_id.to_string())
+            .await
+            .unwrap();
     }
 }

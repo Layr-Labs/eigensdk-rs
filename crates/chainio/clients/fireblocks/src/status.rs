@@ -2,6 +2,8 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub enum Status {
+    #[serde(rename = "APPROVED")]
+    Approved,
     #[serde(rename = "SUBMITTED")]
     Submitted,
     #[serde(rename = "PENDING_AML_SCREENING")]
@@ -37,6 +39,7 @@ pub enum Status {
 impl Status {
     pub fn as_str(&self) -> &'static str {
         match self {
+            Status::Approved => "Approved",
             Status::Submitted => "SUBMITTED",
             Status::PendingScreening => "PENDING_AML_SCREENING",
             Status::PendingAuthorization => "PENDING_AUTHORIZATION",
