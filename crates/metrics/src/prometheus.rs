@@ -39,6 +39,7 @@ mod tests {
     use super::*;
     use crate::eigenmetrics::EigenMetrics;
     use eigen_metrics_collectors_economic::RegisteredStakes;
+    use eigen_metrics_collectors_rpc_calls::RpcCalls;
     use tokio::time::sleep;
     use tokio::time::Duration;
 
@@ -50,6 +51,8 @@ mod tests {
         // Initialize EigenMetrics
         let metrics = EigenMetrics::new();
         let registered_metrics = RegisteredStakes::new();
+        let rpc_calls = RpcCalls::new();
+
         // Run the metrics server in a background task
         let server_handle = tokio::spawn(async move {
             serve_metrics(socket, handle).await.unwrap();
@@ -69,10 +72,11 @@ mod tests {
             .unwrap();
 
         let mut body = resp.text().await.unwrap();
-        println!("body :{:?}", body);
         assert!(body.contains("eigen_performance_score 100"));
 
         metrics.performance_score().set(80.0);
+        rpc_calls.set_rpc_request_duration_seconds("eth_getBlockByNumber", "rethv1.0.3", 100.0);
+        rpc_calls.set_rpc_request_total("eth_getBlockByNumber", "rethv1.0.3", 10);
         registered_metrics.set_stake("4th", "hello Eigen", 8.0);
 
         sleep(Duration::from_secs(1)).await;
@@ -82,7 +86,8 @@ mod tests {
         assert!(body.contains(
             "Key_eigen_registered_stakes___quorum_number___4th__quorum_name___hello_Eigen__ 8"
         ));
-
+        assert!(body.contains("eigen_rpc_request_duration_seconds___method___eth_getBlockByNumber__client_version___rethv1_0_3__{quantile=\"1\"} 100"));
+        assert!(body.contains("eigen_rpc_request_total___method___eth_getBlockByNumber__client_version___rethv1_0_3__ 10"));
         // Shutdown the server
         server_handle.abort();
     }
