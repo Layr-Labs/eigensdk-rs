@@ -26,7 +26,6 @@ mod test {
     };
     use tokio;
 
-    // TODO: start anvil with the right deployed state
     #[tokio::test]
     async fn egnaddrs_with_service_manager_flag() {
         let service_manager_address = get_service_manager_address().await;
