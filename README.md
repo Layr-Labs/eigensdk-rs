@@ -43,6 +43,22 @@ You need `foundry` , `docker` and `make` and `nightly rust` to successfully run 
 make pr
 ```
 
+### To run fireblocks tests 
+
+Add the following variables to your env 
+
+- FIREBLOCKS_API_KEY 
+- FIREBLOCKS_PRIVATE_KEY_PATH
+- FIREBLOCKS_API_URL
+
+ and then run the following command
+
+```
+make fireblocks-tests
+
+```
+Note: The tests were written using sandbox environment , you would need to modify the testing parameters according to your own asset id's , tx-id etc. 
+
 Test coverage should aim to be around 80%.
 
 Here's how to generate test coverage reports:
