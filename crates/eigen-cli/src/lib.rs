@@ -10,8 +10,6 @@ pub const ANVIL_RPC_URL: &str = "http://localhost:8545";
 /// Possible errors raised while trying to get contract addresses
 #[derive(Error, Debug)]
 pub enum EigenAddressCliError {
-    #[error("missing arguments error")]
-    MissingArgs(String),
     #[error("contract error")]
     ContractError(ContractError),
     #[error("RPC error")]

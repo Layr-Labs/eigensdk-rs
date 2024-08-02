@@ -124,9 +124,7 @@ impl EigenAddresses {
                     ._0;
                 Ok((registry_coord_addr, service_manager_addr))
             }
-            _ => Err(EigenAddressCliError::MissingArgs(
-                "must provide either --registry-coordinator or --service-manager flag".into(),
-            )),
+            _ => unreachable!(),
         }
     }
 

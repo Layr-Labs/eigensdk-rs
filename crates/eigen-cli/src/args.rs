@@ -1,8 +1,13 @@
 use crate::ANVIL_RPC_URL;
 use alloy_primitives::Address;
-use clap::Parser;
+use clap::{ArgGroup, Parser};
 
 #[derive(Parser, Debug)]
+#[command(group(
+    ArgGroup::new("manager_or_coordinator")
+        .required(true)
+        .args(&["service_manager", "registry_coordinator"]),
+))]
 #[command(
     version,
     about = "Used to help debug and test deployments and contract setups.",
