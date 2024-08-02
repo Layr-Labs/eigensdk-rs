@@ -43,3 +43,27 @@ impl ListExternalAccounts for Client {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::env;
+
+    #[tokio::test]
+    #[cfg(feature = "fireblock-tests")]
+    async fn test_list_external_accounts() {
+        let api_key = env::var("FIREBLOCKS_API_KEY").expect("FIREBLOCKS_API_KEY not set");
+        let private_key_path =
+            env::var("FIREBLOCKS_PRIVATE_KEY_PATH").expect("FIREBLOCKS_PRIVATE_KEY_PATH not set");
+        let api_url = env::var("FIREBLOCKS_API_URL").expect("FIREBLOCKS_API_URL not set");
+        let private_key =
+            std::fs::read_to_string(private_key_path).expect("Failed to read private key file");
+        let client = Client::new(
+            api_key.to_string(),
+            private_key.to_string(),
+            api_url.clone(),
+        );
+
+        let _ = client.list_external_accounts().await.unwrap();
+    }
+}
