@@ -2,7 +2,7 @@
 
 Rust <> EigenLayer developer tools
 
-![360_F_303452599_eZMGXe7awggqAHTQXpjzBFehJBEyw4QR-overlay](https://github.com/supernovahs/eigensdk-rs/assets/91280922/bd13caec-3c00-4afc-839a-b83d2890beb5)
+![eigen-rs](https://github.com/user-attachments/assets/bf1d1090-db70-487a-a49a-40f727849251)
 
 ## Overview
 
@@ -11,19 +11,22 @@ List of crates in the repository :-
 - [eigen-client-avsregistry](https://github.com/supernovahs/eigen-rs/tree/main/crates/chainio/clients/avsregistry) - Read, Write and subscribe methods for AvsRegistry
 - [eigen-client-elcontracts](https://github.com/supernovahs/eigen-rs/tree/main/crates/chainio/clients/elcontracts) - Convenience methods to call Eigenlayer contracts
 - [eigen-chainio-utils](https://github.com/supernovahs/eigen-rs/tree/main/crates/chainio/utils)
-- [eigen-contracts-bindings](https://github.com/supernovahs/eigen-rs/tree/main/crates/contracts/bindings) - Contains json files for eigen contracts with support to generate ethers bindings .
+- [eigen-contracts-bindings](https://github.com/supernovahs/eigen-rs/tree/main/crates/contracts/bindings) - Generate ethers bindings for Eigen Layer.
 - [eigen-crypto-bls](https://github.com/supernovahs/eigen-rs/tree/main/crates/crypto/bls) - bls utilities
 - [eigen-crypto-bn254](https://github.com/supernovahs/eigen-rs/tree/main/crates/crypto/bn254) - bn254 utilities
-- [eigen-metrics](https://github.com/supernovahs/eigen-rs/tree/main/crates/metrics) - performance , rpc and economic metrics 
+- [eigen-metrics](https://github.com/supernovahs/eigen-rs/tree/main/crates/metrics) - performance , rpc and economic metrics
 - [eigen-services](https://github.com/supernovahs/eigen-rs/tree/main/crates/services) - Spawn tokio services for operators info , bls aggregation
 - [eigen-types](https://github.com/supernovahs/eigen-rs/tree/main/crates/types) - Common types
-- [eigen-utils](https://github.com/supernovahs/eigen-rs/tree/main/crates/utils) - Publicly exportable `m2-mainnet` compatible alloy rust bindings. 
+- [eigen-utils](https://github.com/supernovahs/eigen-rs/tree/main/crates/utils) - Publicly exportable `m2-mainnet` compatible alloy bindings.
+- [eigen-testing-utils](https://github.com/supernovahs/eigen-rs/tree/main/testing/testing-utils) - Contains publicly exportable  anvil , holesky , mainnet addresses for eigen contracts .
+
 
 ## Examples
 
 You can run any [example](https://github.com/supernovahs/eigen-rs/tree/main/examples) using the command cargo run --example <example-name>
 
-Example : 
+Example :
+  
 ```
 cargo run --example get_quorum_count
 ```
@@ -32,11 +35,34 @@ cargo run --example get_quorum_count
 
 We are actively looking for contributors. Thank you for your interest. We have strict ci checks in place. In case of any questions and support , feel free to raise an issue.
 
-To test locally and raise a PR :- 
+To test locally and raise a PR :-
 
-You need `foundry` , `docker` and `make`  and `nightly rust` to successfully run it.
+
+You need `foundry` , `docker` and `make` and `nightly rust` to successfully run it. Also, the `docker` engine has to be running for all the tests to execute correctly.
 ```
-make pr 
+make pr
+```
+
+Test coverage should aim to be around 80%.
+
+Here's how to generate test coverage reports:
+
+Install llvm tools:
+```
+rustup component add llvm-tools-preview
+```
+
+Run the tests with coverage instrumentations:
+```
+cargo clean && mkdir -p coverage/ && rm -r coverage/*
+CARGO_INCREMENTAL=0 RUSTFLAGS='-Cinstrument-coverage' LLVM_PROFILE_FILE='coverage/cargo-test-%p-%m.profraw' cargo test --no-fail-fast
+```
+
+Install coverage report tool and run it:
+```
+cargo install grcov
+grcov . --binary-path ./target/debug/deps/ -s . -t html --branch --ignore-not-existing --ignore '../*' --ignore "/*" -o target/coverage/
+
 ```
 
 ## Supported Rust Version
