@@ -58,7 +58,7 @@ impl TransactionRequest {
     }
 
     pub fn get_contract_call(&mut self) -> Self {
-        self.operation = TransactionOperation::contract_call.as_str().to_string();
+        self.operation = TransactionOperation::ContractCall.as_str().to_string();
         self.clone()
     }
 }

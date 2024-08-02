@@ -36,17 +36,17 @@ use status::Status;
 #[derive(Debug)]
 pub struct FireblocksWallet {
     fireblocks_client: Client,
-    _vault_account_name: String,
+    //
+    vault_account_name: String,
     provider: String,
     chain_id: u64,
-    vault_account: Option<Vec<VaultAccount>>,
+    vault_account: Option<VaultAccount>,
     whitelisted_accounts: HashMap<Address, WhitelistedAccount>,
     whitelisted_contracts: HashMap<Address, WhitelistedContract>,
     tx_id_to_nonce: HashMap<String, U64>,
 }
 
 impl FireblocksWallet {
-    /// New fireblocks wallet instance
     pub async fn new(
         fireblocks_client: Client,
         provider: String,
@@ -58,7 +58,7 @@ impl FireblocksWallet {
         match chain_id_result {
             Ok(chain_id) => Ok(Self {
                 fireblocks_client,
-                _vault_account_name: vault_account_name,
+                vault_account_name: vault_account_name,
                 chain_id,
                 provider,
                 vault_account: None,
@@ -73,21 +73,25 @@ impl FireblocksWallet {
     }
 
     /// Get Vault Accounts
-    pub async fn get_account(&self) -> Result<Vec<VaultAccount>, FireBlockError> {
-        if self.vault_account.is_none() {
-            let accounts_result = self.fireblocks_client.list_vault_accounts().await;
+    pub async fn get_account(&mut self) -> Result<Option<VaultAccount>, FireBlockError> {
+        match &self.vault_account {
+            None => {
+                let accounts_result = self.fireblocks_client.list_vault_accounts().await;
 
-            match accounts_result {
-                Ok(accounts) => Ok(accounts.vault_accounts()),
-                Err(e) => Err(e),
+                match accounts_result {
+                    Ok(accounts) => {
+                        for account in accounts.vault_accounts().iter() {
+                            if account.name().eq(&self.vault_account_name) {
+                                self.vault_account = Some(account.clone());
+                                break;
+                            }
+                        }
+                        Ok(self.vault_account.clone())
+                    }
+                    Err(e) => Err(e),
+                }
             }
-        } else {
-            // Already checking if vault account is available in above if condition, so using expect
-            Ok(self
-                .vault_account
-                .as_ref()
-                .expect("Vault account not found")
-                .to_vec())
+            Some(account) => Ok(Some(account.clone())),
         }
     }
 
@@ -96,9 +100,7 @@ impl FireblocksWallet {
         &mut self,
         address: Address,
     ) -> Result<WhitelistedAccount, FireBlockError> {
-        let contains_asset_id = ASSET_ID_BY_CHAIN.contains_key(&self.chain_id);
-
-        match contains_asset_id {
+        match ASSET_ID_BY_CHAIN.contains_key(&self.chain_id) {
             true => {
                 let contains_account = self.whitelisted_accounts.contains_key(&address);
 
@@ -147,9 +149,7 @@ impl FireblocksWallet {
         &mut self,
         address: Address,
     ) -> Result<WhitelistedContract, FireBlockError> {
-        let contains_asset_id = ASSET_ID_BY_CHAIN.contains_key(&self.chain_id);
-
-        match contains_asset_id {
+        match ASSET_ID_BY_CHAIN.contains_key(&self.chain_id) {
             true => {
                 let contains_contract = self.whitelisted_contracts.contains_key(&address);
 
@@ -260,9 +260,14 @@ impl FireblocksWallet {
 
 #[cfg(test)]
 mod tests {
+
+    #[cfg(feature = "fireblock-tests")]
     use crate::client::Client;
+    #[cfg(feature = "fireblock-tests")]
     use crate::FireblocksWallet;
+    #[cfg(feature = "fireblock-tests")]
     use alloy_primitives::address;
+    #[cfg(feature = "fireblock-tests")]
     use std::env;
 
     #[tokio::test]
@@ -280,7 +285,7 @@ mod tests {
             private_key.to_string(),
             api_url.clone(),
         );
-        let fireblocks_wallet = FireblocksWallet::new(
+        let mut fireblocks_wallet = FireblocksWallet::new(
             client,
             "https://ethereum-holesky-rpc.publicnode.com".to_string(),
             "vault-name".to_string(),

@@ -6,25 +6,24 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
-#[allow(non_camel_case_types)]
 pub enum TransactionOperation {
-    contract_call,
-    transfer,
-    mint,
-    burn,
-    typed_message,
-    raw,
+    ContractCall,
+    Transfer,
+    Mint,
+    Burn,
+    TypedMessage,
+    Raw,
 }
 
 impl TransactionOperation {
     pub fn as_str(&self) -> &'static str {
         match self {
-            TransactionOperation::contract_call => "CONTRACT_CALL",
-            TransactionOperation::transfer => "TRANSFER",
-            TransactionOperation::mint => "MINT",
-            TransactionOperation::burn => "BURN",
-            TransactionOperation::typed_message => "TYPED_MESSAGE",
-            TransactionOperation::raw => "RAW",
+            TransactionOperation::ContractCall => "CONTRACT_CALL",
+            TransactionOperation::Transfer => "TRANSFER",
+            TransactionOperation::Mint => "MINT",
+            TransactionOperation::Burn => "BURN",
+            TransactionOperation::TypedMessage => "TYPED_MESSAGE",
+            TransactionOperation::Raw => "RAW",
         }
     }
 }
@@ -58,22 +57,33 @@ impl std::fmt::Display for ExtraParams {
     }
 }
 
+/// Contract Call Request
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct ContractCallRequest {
+    /// Type of Operation
     operation: TransactionOperation,
+    /// Tx id
     external_tx_id: String,
+    /// [`AssetID`]
     asset_id: AssetID,
+    /// Source [`Account`]
     source: Account,
+    /// Destination [`Account`]
     destination: Account,
+    /// Amount
     amount: String,
+    /// Any extra parameters
     extra_parameters: ExtraParams,
+    /// Replacement tx hash
     replace_tx_by_hash: String,
 }
 
 #[allow(unused)]
 pub struct ContractCallResponse {
+    /// Response id
     id: String,
+    /// Response [`Status`]
     status: Status,
 }
 
@@ -110,7 +120,9 @@ impl ContractCall for Client {
 #[cfg(test)]
 mod tests {
 
+    #[cfg(feature = "fireblock-tests")]
     use super::*;
+    #[cfg(feature = "fireblock-tests")]
     use std::env;
 
     #[tokio::test]
@@ -153,7 +165,7 @@ mod tests {
         let priority_fee = "".to_string();
         let fee_level = "".to_string();
         let tx_request = TransactionRequest::new(
-            TransactionOperation::contract_call.as_str().to_string(),
+            TransactionOperation::ContractCall.as_str().to_string(),
             external_tx_id.to_string(),
             AssetID::EthTest5,
             source,

@@ -9,6 +9,8 @@ use sha2::{Digest, Sha256};
 use std::collections::HashMap;
 use uuid::Uuid;
 
+const X_API_KEY: &str = "X-API-KEY";
+
 /// AssetID represents the asset identifier as supported by fireblocks
 /// TODO : Add more assetid identifiers
 #[derive(Debug, PartialEq, Serialize, Deserialize, Clone)]
@@ -87,7 +89,6 @@ pub struct Client {
 }
 
 impl Client {
-    /// New client instance
     pub fn new(api_key: String, private_key: String, api_url: String) -> Self {
         Self {
             api_key,
@@ -128,7 +129,7 @@ impl Client {
         }
     }
 
-    /// GET : Calls a get request to the fireblocks endpoint using the given path.
+    /// GET : Request to the fireblocks endpoint using the given path.
     pub async fn get_request(&self, path: &str) -> Result<String, FireBlockError> {
         let token = self.sign_jwt(path, None)?;
 
@@ -138,7 +139,7 @@ impl Client {
             AUTHORIZATION,
             HeaderValue::from_str(&format!("Bearer {}", token))?,
         );
-        headers.insert("X-API-Key", HeaderValue::from_str(&self.api_key)?);
+        headers.insert(X_API_KEY, HeaderValue::from_str(&self.api_key)?);
 
         // Make the GET request
         let response = client

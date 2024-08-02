@@ -75,7 +75,10 @@ impl ListContracts for Client {
 
 #[cfg(test)]
 mod tests {
+
+    #[cfg(feature = "fireblock-tests")]
     use super::*;
+    #[cfg(feature = "fireblock-tests")]
     use std::env;
 
     #[tokio::test]

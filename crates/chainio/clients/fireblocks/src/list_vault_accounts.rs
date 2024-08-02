@@ -32,6 +32,12 @@ pub struct VaultAccount {
     assets: Vec<Asset>,
 }
 
+impl VaultAccount {
+    pub fn name(&self) -> String {
+        self.name.clone()
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct VaultAccountResponse {
     #[serde(rename = "accounts")]
@@ -74,7 +80,10 @@ impl ListVaultAccounts for Client {
 
 #[cfg(test)]
 mod tests {
+
+    #[cfg(feature = "fireblock-tests")]
     use super::*;
+    #[cfg(feature = "fireblock-tests")]
     use std::env;
 
     #[tokio::test]
