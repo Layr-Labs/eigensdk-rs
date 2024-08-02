@@ -22,6 +22,7 @@ members = [
     "crates/types/",
     "crates/signer/",
     "crates/logging/",
+    "crates/signer/",
     "examples/info-operator-service/",
     "testing/testing-utils/",
     "examples/avsregistry-read",
@@ -90,11 +91,17 @@ thiserror = "1.0"
 tracing = "0.1.40"
 tracing-subscriber = { version = "0.3", features = ["json"] }
 hyper = "0.14.25"
-eth-keystore = "0.5.0"
 hex-literal = "0.4.1"
 k256 = "0.13.3"
 serde_json = "1.0.121"
 clap = { version = "4.5.11", features = ["derive"] }
+ethers-signers = "2.0.14"
+eth-keystore = "0.5.0"
+aws-config = "1.5.4"
+aws-sdk-kms = "1.37.0"
+url = "2.5.2"
+testcontainers = "0.20.1"
+async-trait = "0.1.81"
 
 #misc 
 parking_lot = "0.12"
@@ -135,8 +142,10 @@ alloy-transport-ws = { version = "0.1", default-features = false }
 alloy-transport-ipc = { version = "0.1", default-features = false }
 alloy-pubsub = { version = "0.1", default-features = false }
 alloy-json-rpc = { version = "0.1", default-features = false }
-alloy-rpc-client = { version = "0.1", default-features = false }
+alloy-rpc-client = "0.1"
 alloy-contract = { version = "0.1", default-features = false }
+alloy-signer-aws = "0.1"
+
 
 # examples
 avsregistry-read = { path = "examples/avsregistry-read" }
