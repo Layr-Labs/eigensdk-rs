@@ -39,7 +39,7 @@ pub enum Status {
 impl Status {
     pub fn as_str(&self) -> &'static str {
         match self {
-            Status::Approved => "Approved",
+            Status::Approved => "APPROVED",
             Status::Submitted => "SUBMITTED",
             Status::PendingScreening => "PENDING_AML_SCREENING",
             Status::PendingAuthorization => "PENDING_AUTHORIZATION",
