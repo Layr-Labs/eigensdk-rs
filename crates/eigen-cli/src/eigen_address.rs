@@ -10,19 +10,19 @@ use eigen_utils::{
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug, PartialEq)]
-#[serde(rename_all(serialize = "kebab-case"))]
-#[serde(rename_all(deserialize = "kebab-case"))]
 pub struct EigenAddresses {
-    delegation_manager: Address,
-    slasher: Address,
-    strategy_manager: Address,
+    avs: AvsAddresses,
+    eigenlayer: EigenLayerAddresses,
+    network: NetworkInfo,
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq)]
-pub struct EigenAddressesResponse {
-    avs: AvsAddresses,
-    eigenlayer: EigenAddresses,
-    network: NetworkInfo,
+#[serde(rename_all(serialize = "kebab-case"))]
+#[serde(rename_all(deserialize = "kebab-case"))]
+pub struct EigenLayerAddresses {
+    delegation_manager: Address,
+    slasher: Address,
+    strategy_manager: Address,
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq)]
@@ -53,14 +53,14 @@ impl EigenAddresses {
     ///
     /// # Returns
     ///
-    /// * `EigenAddressesResponse` - The Eigenlayer and AVS contract addresses.
-    pub async fn get_addresses(args: Args) -> Result<EigenAddressesResponse, EigenAddressCliError> {
+    /// * `EigenAddresses` - The Eigenlayer and AVS contract addresses.
+    pub async fn get_addresses(args: Args) -> Result<Self, EigenAddressCliError> {
         let rpc_url = args.rpc_url.clone();
         let client = get_provider(&rpc_url);
         let chain_id = client
             .get_chain_id()
             .await
-            .map_err(|e| EigenAddressCliError::RpcError(e))?
+            .map_err(EigenAddressCliError::RpcError)?
             .to_string();
         let (registry_coord_addr, service_manager_addr) =
             EigenAddresses::get_registry_coord_and_service_manager_addr(args, client.clone())
@@ -68,15 +68,15 @@ impl EigenAddresses {
 
         let avs = EigenAddresses::get_avs_contract_addresses(registry_coord_addr, client.clone())
             .await
-            .map_err(|e| EigenAddressCliError::ContractError(e))?;
+            .map_err(EigenAddressCliError::ContractError)?;
 
         let eigenlayer =
             EigenAddresses::get_eigenlayer_contract_addresses(service_manager_addr, client)
                 .await
-                .map_err(|e| EigenAddressCliError::ContractError(e))?;
+                .map_err(EigenAddressCliError::ContractError)?;
 
         let network = NetworkInfo { rpc_url, chain_id };
-        Ok(EigenAddressesResponse {
+        Ok(EigenAddresses {
             network,
             eigenlayer,
             avs,
@@ -110,7 +110,7 @@ impl EigenAddresses {
                     .serviceManager()
                     .call()
                     .await
-                    .map_err(|e| EigenAddressCliError::ContractError(e))?
+                    .map_err(EigenAddressCliError::ContractError)?
                     ._0;
                 Ok((registry_coord_addr, service_manager_addr))
             }
@@ -120,7 +120,7 @@ impl EigenAddresses {
                     .registryCoordinator()
                     .call()
                     .await
-                    .map_err(|e| EigenAddressCliError::ContractError(e))?
+                    .map_err(EigenAddressCliError::ContractError)?
                     ._0;
                 Ok((registry_coord_addr, service_manager_addr))
             }
@@ -141,7 +141,7 @@ impl EigenAddresses {
     async fn get_eigenlayer_contract_addresses<T, P, N>(
         service_manager_addr: Address,
         client: P,
-    ) -> Result<EigenAddresses, ContractError>
+    ) -> Result<EigenLayerAddresses, ContractError>
     where
         P: alloy_contract::private::Provider<T, N>,
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -153,7 +153,7 @@ impl EigenAddresses {
         let slasher = delegation_manager_client.slasher().call().await?._0;
         let strategy_manager = delegation_manager_client.strategyManager().call().await?._0;
 
-        Ok(EigenAddresses {
+        Ok(EigenLayerAddresses {
             slasher,
             delegation_manager,
             strategy_manager,

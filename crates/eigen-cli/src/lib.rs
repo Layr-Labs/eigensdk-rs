@@ -20,7 +20,7 @@ pub enum EigenAddressCliError {
 mod test {
     use super::ANVIL_RPC_URL;
     use crate::args::Args;
-    use crate::eigen_address::{EigenAddresses, EigenAddressesResponse};
+    use crate::eigen_address::EigenAddresses;
     use eigen_testing_utils::anvil_constants::{
         get_registry_coordinator_address, get_service_manager_address,
     };
@@ -36,14 +36,14 @@ mod test {
             service_manager: Some(service_manager_address),
             rpc_url: ANVIL_RPC_URL.into(),
         };
-        let expected_addresses: EigenAddressesResponse = serde_json::from_str(
+        let expected_addresses: EigenAddresses = serde_json::from_str(
             r#"{
             "avs": {
-              "bls-apk-registry": "0x1613beB3B2C4f22Ee086B2b38C1476A3cE7f78E8",
-              "index-registry": "0x851356ae760d987E095750cCeb3bC6014560891C",
-              "registry-coordinator": "0xa82fF9aFd8f496c3d6ac40E2a0F282E47488CFc9",
-              "service-manager": "0x84eA74d481Ee0A5332c457a4d796187F6Ba67fEB",
-              "stake-registry": "0xf5059a5D33d5853360D16C683c16e67980206f36"
+              "bls-apk-registry": "0x84ea74d481ee0a5332c457a4d796187f6ba67feb",
+              "index-registry": "0x9e545e3c0baab3e08cdfd552c960a1050f373042",
+              "registry-coordinator": "0xc3e53f4d16ae77db1c982e75a937b9f60fe63690",
+              "service-manager": "0x67d269191c92caf3cd7723f116c85e6e9bf55933",
+              "stake-registry": "0xa82ff9afd8f496c3d6ac40e2a0f282e47488cfc9"
             },
             "eigenlayer": {
               "delegation-manager": "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
@@ -71,14 +71,14 @@ mod test {
             service_manager: None,
             rpc_url: ANVIL_RPC_URL.into(),
         };
-        let expected_addresses: EigenAddressesResponse = serde_json::from_str(
+        let expected_addresses: EigenAddresses = serde_json::from_str(
             r#"{
             "avs": {
-              "bls-apk-registry": "0x1613beB3B2C4f22Ee086B2b38C1476A3cE7f78E8",
-              "index-registry": "0x851356ae760d987E095750cCeb3bC6014560891C",
-              "registry-coordinator": "0xa82fF9aFd8f496c3d6ac40E2a0F282E47488CFc9",
-              "service-manager": "0x84eA74d481Ee0A5332c457a4d796187F6Ba67fEB",
-              "stake-registry": "0xf5059a5D33d5853360D16C683c16e67980206f36"
+              "bls-apk-registry": "0x84ea74d481ee0a5332c457a4d796187f6ba67feb",
+              "index-registry": "0x9e545e3c0baab3e08cdfd552c960a1050f373042",
+              "registry-coordinator": "0xc3e53f4d16ae77db1c982e75a937b9f60fe63690",
+              "service-manager": "0x67d269191c92caf3cd7723f116c85e6e9bf55933",
+              "stake-registry": "0xa82ff9afd8f496c3d6ac40e2a0f282e47488cfc9"
             },
             "eigenlayer": {
               "delegation-manager": "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
