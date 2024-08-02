@@ -174,7 +174,7 @@ impl Client {
             AUTHORIZATION,
             HeaderValue::from_str(&format!("Bearer {}", token))?,
         );
-        headers.insert("X-API-Key", HeaderValue::from_str(&self.api_key)?);
+        headers.insert(X_API_KEY, HeaderValue::from_str(&self.api_key)?);
 
         // Make the POST request
         let response = client
