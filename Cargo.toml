@@ -96,6 +96,8 @@ hex-literal = "0.4.1"
 k256 = "0.13.3"
 serde_json = "1.0.121"
 clap = { version = "4.5.11", features = ["derive"] }
+rand_core = "0.6"
+hex = "0.4"
 ethers-signers = "2.0.14"
 eth-keystore = "0.5.0"
 aws-config = "1.5.4"

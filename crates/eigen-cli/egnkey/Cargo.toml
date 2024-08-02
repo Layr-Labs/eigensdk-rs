@@ -14,9 +14,13 @@ alloy-transport.workspace = true
 clap.workspace = true
 eigen-testing-utils.workspace = true
 eigen-utils.workspace = true
+eth-keystore.workspace = true
+hex.workspace = true
+k256.workspace = true
 serde.workspace = true
 serde_json.workspace = true
 thiserror.workspace = true
 tokio.workspace = true
 rand = "0.8"
+rand_core.workspace = true
 uuid = { version = "1.10.0", features = ["v4"] }
