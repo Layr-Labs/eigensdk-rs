@@ -187,18 +187,23 @@ impl<'log> SimpleTxManager<'log> {
             }
         };
 
-        let header = match self.provider.get_block_by_number(BlockNumberOrTag::Latest, false).await.unwrap() {
+        let header = match self
+            .provider
+            .get_block_by_number(BlockNumberOrTag::Latest, false)
+            .await
+            .unwrap()
+        {
             Some(block) => block.header,
             None => {
-                self.logger.error("Failed to get latest block header", &[()]);
+                self.logger
+                    .error("Failed to get latest block header", &[()]);
                 return Err(TxManagerError::SendTxError);
             }
         };
 
         // 2*baseFee + gasTipCap makes sure that the tx remains includeable for 6 consecutive 100% full blocks.
-	    // see https://www.blocknative.com/blog/eip-1559-fees
+        // see https://www.blocknative.com/blog/eip-1559-fees
         let gas_fee_cap = header.base_fee_per_gas.unwrap() * 2 + gas_tip_cap; // TODO: Check unwrap
-        // TODO: check if gas_fee_cap is always 1.
 
         let gas_limit = tx.gas_limit();
 
@@ -209,7 +214,11 @@ impl<'log> SimpleTxManager<'log> {
                 TxKind::Call(c) => c,
                 TxKind::Create => return Err(TxManagerError::SendTxError),
             };
-            let mut tx_request = TransactionRequest::default().to(to).from(from).value(tx.value()).input(TransactionInput::new(tx.input));
+            let mut tx_request = TransactionRequest::default()
+                .to(to)
+                .from(from)
+                .value(tx.value())
+                .input(TransactionInput::new(tx.input));
             tx_request.set_max_priority_fee_per_gas(gas_tip_cap);
             tx_request.set_max_fee_per_gas(gas_fee_cap);
 
@@ -218,7 +227,6 @@ impl<'log> SimpleTxManager<'log> {
                 .estimate_gas(&tx_request)
                 .await
                 .map_err(|_| TxManagerError::SendTxError)?;
-
         }
 
         todo!() // TODO: build tx with gas limit
