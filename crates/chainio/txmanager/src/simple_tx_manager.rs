@@ -187,14 +187,13 @@ impl<'log> SimpleTxManager<'log> {
             }
         };
 
-        let header = match self
+        let maybe_latest_block = self
             .provider
             .get_block_by_number(BlockNumberOrTag::Latest, false)
-            .await
-            .unwrap()
-        {
-            Some(block) => block.header,
-            None => {
+            .await;
+        let header = match maybe_latest_block {
+            Ok(Some(block)) => block.header,
+            _ => {
                 self.logger
                     .error("Failed to get latest block header", &[()]);
                 return Err(TxManagerError::SendTxError);
