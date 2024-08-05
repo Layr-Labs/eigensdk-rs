@@ -45,3 +45,8 @@ Contains predefined addresses for various contracts on the Ethereum mainnet.
 - StrategyBase_cbETH: Address of the cbETH strategy base.
 - StrategyBase_stETH: Address of the stETH strategy base.
 And various other strategy base addresses.
+
+
+## Example 
+
+- [get_contracts_from_registry](https://github.com/Layr-Labs/eigensdk-rs/blob/main/examples/anvil-utils/examples/get_contracts_from_registry.rs)
