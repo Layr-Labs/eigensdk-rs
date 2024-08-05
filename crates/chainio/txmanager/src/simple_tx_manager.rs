@@ -151,8 +151,6 @@ impl<'log> SimpleTxManager<'log> {
         &self,
         tx: &mut TxLegacy,
     ) -> Result<TransactionReceipt, TxManagerError> {
-        // TODO: It also takes care of gas estimation and adds a buffer to the gas limit
-
         // Estimating gas and nonce
         self.logger.debug("Estimating gas and nonce", &[()]);
         self.estimate_gas_and_nonce(tx).await?;
