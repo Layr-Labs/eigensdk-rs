@@ -6,6 +6,7 @@
 use eigen_metrics_derive::Metrics;
 use metrics::{Counter, Histogram, Key, Label};
 
+
 #[derive(Clone, Metrics)]
 #[metrics(scope = "eigen.rpcmetrics")]
 pub struct RpcCalls {
