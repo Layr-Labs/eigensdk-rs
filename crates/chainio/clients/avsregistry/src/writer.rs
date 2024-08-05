@@ -226,7 +226,12 @@ impl AvsRegistryChainWriter {
         }
     }
 
-    /// Update stakes of entire operator set for quorums
+
+/// update_stakes_of_entire_operator_set_for_quorums is used by avs teams running https://github.com/Layr-Labs/avs-sync
+/// to updates the stake of their entire operator set.
+/// Because of high gas costs of this operation, it typically needs to be called for every quorum, or perhaps for a
+/// small grouping of quorums
+/// (highly dependent on number of operators per quorum)
     pub async fn update_stakes_of_entire_operator_set_for_quorums(
         &self,
         operators_per_quorum: Vec<Vec<Address>>,
