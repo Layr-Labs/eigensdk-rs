@@ -43,6 +43,8 @@ You need `foundry` , `docker` and `make` and `nightly rust` to successfully run 
 make pr
 ```
 
+At least 1 `approving` review is required to merge the PR.
+
 Test coverage should aim to be around 80%.
 
 Here's how to generate test coverage reports:
@@ -64,6 +66,8 @@ cargo install grcov
 grcov . --binary-path ./target/debug/deps/ -s . -t html --branch --ignore-not-existing --ignore '../*' --ignore "/*" -o target/coverage/
 
 ```
+
+
 
 ## Supported Rust Version
 
