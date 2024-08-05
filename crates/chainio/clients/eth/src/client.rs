@@ -1,9 +1,7 @@
 #[derive(Debug)]
 pub struct Client {}
 
-use async_trait::async_trait;
-use ethers::providers::Middleware;
-use ethers::types::{Block, BlockNumber, U64};
+use alloy_primitives::TxHash;
 
 pub enum BackendType {
     HttpBAckend,
@@ -14,10 +12,10 @@ pub enum BackendType {
 pub trait BackendClient {
     type Error;
 
-    async fn block_number(&self, backend_type: &BackendType) -> Result<U64, Self::Error>;
+    async fn block_number(&self, backend_type: &BackendType) -> Result<u64, Self::Error>;
     async fn block_by_number(
         &self,
         backend_type: &BackendType,
-        number: Option<BlockNumber>,
-    ) -> Result<Option<Block<ethers::types::TxHash>>, Self::Error>;
+        number: u64,
+    ) -> Result<Option<TxHash>, Self::Error>;
 }

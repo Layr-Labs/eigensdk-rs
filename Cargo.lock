@@ -1906,6 +1906,7 @@ dependencies = [
 name = "eigen-client-eth"
 version = "0.0.1-alpha"
 dependencies = [
+ "alloy-primitives",
  "async-trait",
 ]
 
