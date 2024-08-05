@@ -29,7 +29,7 @@ impl ELChainReader {
         }
     }
 
-/// Builds a new [`ELChainReader`] instance .
+    /// Builds a new [`ELChainReader`] instance .
     pub async fn build(
         delegation_manager: Address,
         avs_directory: Address,
@@ -185,7 +185,7 @@ impl ELChainReader {
     }
 
     /// GetStrategyAndUnderlyingERC20Token returns the strategy contract, the erc20 bindings for the underlying token
-/// and the underlying token address
+    /// and the underlying token address
     pub async fn get_strategy_and_underlying_erc20_token(
         &self,
         strategy_addr: Address,

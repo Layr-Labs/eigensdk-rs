@@ -1,7 +1,7 @@
 use eigen_metrics_derive::Metrics;
 use metrics::Gauge;
 
-/// TODO(supernova): fee_earned_total is not yet implemented . As its not yet turned on 
+/// TODO(supernova): fee_earned_total is not yet implemented . As its not yet turned on
 // Performance Metrics
 #[derive(Clone, Metrics)]
 #[metrics(scope = "eigenmetrics.performancemetrics")]
