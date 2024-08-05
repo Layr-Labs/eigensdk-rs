@@ -153,8 +153,8 @@ impl<'log> SimpleTxManager<'log> {
     ) -> Result<TransactionReceipt, TxManagerError> {
         // TODO: It also takes care of gas estimation and adds a buffer to the gas limit
 
-        // TODO: Estimating gas and nonce
-        //m.log.Debug("Estimating gas and nonce")
+        // Estimating gas and nonce
+        self.logger.debug("Estimating gas and nonce", &[()]);
         self.estimate_gas_and_nonce(tx).await?;
 
         let signer = self.create_local_signer()?;
