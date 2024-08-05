@@ -195,12 +195,12 @@ impl<'log> SimpleTxManager<'log> {
                     .error("Failed to get latest block header", &[()])
             })?;
 
-        // 2*baseFee + gasTipCap makes sure that the tx remains includeable for 6 consecutive 100% full blocks.
+        // 2*baseFee + gas_tip_cap makes sure that the tx remains includeable for 6 consecutive 100% full blocks.
         // see https://www.blocknative.com/blog/eip-1559-fees
         let base_fee = header
             .base_fee_per_gas
             .ok_or_else(|| TxManagerError::SendTxError)?;
-        let gas_fee_cap = base_fee * 2 + gas_tip_cap;
+        let gas_fee_cap = 2 * base_fee + gas_tip_cap;
 
         // we only estimate if gas_limit is not already set
         if tx.gas_limit() == 0 {
@@ -223,11 +223,11 @@ impl<'log> SimpleTxManager<'log> {
                 .await
                 .map_err(|_| TxManagerError::SendTxError)?;
 
-            let gas_price_multiplied = tx.gas_price as f64 * self.gas_limit_multiplier;
-            tx.gas_price = gas_price_multiplied as u128;
-
             tx.gas_limit = gas_limit;
         }
+        let gas_price_multiplied = tx.gas_price as f64 * self.gas_limit_multiplier;
+        tx.gas_price = gas_price_multiplied as u128;
+
         Ok(())
     }
 
