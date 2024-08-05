@@ -184,18 +184,18 @@ impl<'log> SimpleTxManager<'log> {
         .inspect_err(|err| self.logger.info("eth_maxPriorityFeePerGas is unsupported by current backend, using fallback gasTipCap", &[err]))
         .unwrap_or(FALLBACK_GAS_TIP_CAP);
 
-        let maybe_latest_block = self
+        let header = self
             .provider
             .get_block_by_number(BlockNumberOrTag::Latest, false)
-            .await;
-        let header = match maybe_latest_block {
-            Ok(Some(block)) => block.header,
-            _ => {
+            .await
+            .ok()
+            .flatten()
+            .map(|block| block.header)
+            .ok_or(TxManagerError::SendTxError)
+            .inspect_err(|_| {
                 self.logger
-                    .error("Failed to get latest block header", &[()]);
-                return Err(TxManagerError::SendTxError);
-            }
-        };
+                    .error("Failed to get latest block header", &[()])
+            })?;
 
         // 2*baseFee + gasTipCap makes sure that the tx remains includeable for 6 consecutive 100% full blocks.
         // see https://www.blocknative.com/blog/eip-1559-fees
@@ -204,10 +204,8 @@ impl<'log> SimpleTxManager<'log> {
             .ok_or_else(|| TxManagerError::SendTxError)?;
         let gas_fee_cap = base_fee * 2 + gas_tip_cap;
 
-        let gas_limit = tx.gas_limit();
-
         // we only estimate if gas_limit is not already set
-        if gas_limit == 0 {
+        if tx.gas_limit() == 0 {
             let from = self.get_address()?;
             let to = match tx.to() {
                 TxKind::Call(c) => c,
@@ -226,9 +224,13 @@ impl<'log> SimpleTxManager<'log> {
                 .estimate_gas(&tx_request)
                 .await
                 .map_err(|_| TxManagerError::SendTxError)?;
-        }
 
-        todo!() // TODO: build tx with gas limit
+            let gas_price_multiplied = tx.gas_price as f64 * self.gas_limit_multiplier;
+            tx.gas_price = gas_price_multiplied as u128;
+
+            tx.gas_limit = gas_limit;
+        }
+        Ok(())
     }
 
     /// Waits for the transaction receipt.
