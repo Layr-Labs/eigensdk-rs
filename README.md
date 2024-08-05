@@ -81,6 +81,9 @@ This software is `unaudited`.This is experimental software and is provided on an
 
 - [Layer-labs](https://github.com/Layr-Labs/eigensdk-go/tree/master)
 
+# Security Bugs
+Please report security vulnerabilities to security@eigenlabs.org. Do NOT report security bugs via Github Issues.
+
 ## Contact
 
 Telegram - supernovahs444
