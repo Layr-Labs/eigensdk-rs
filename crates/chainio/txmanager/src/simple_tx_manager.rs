@@ -152,10 +152,11 @@ impl<'log> SimpleTxManager<'log> {
         tx: &mut TxLegacy,
     ) -> Result<TransactionReceipt, TxManagerError> {
         // TODO: It also takes care of gas estimation and adds a buffer to the gas limit
+
         // TODO: Estimating gas and nonce
         //m.log.Debug("Estimating gas and nonce")
-        //tx, err := m.estimateGasAndNonce(ctx, tx)
-        self.estimate_gas_and_nonce(tx);
+        self.estimate_gas_and_nonce(tx).await?;
+
         let signer = self.create_local_signer()?;
         let _signed_tx = signer
             .sign_transaction(tx)
@@ -179,13 +180,9 @@ impl<'log> SimpleTxManager<'log> {
     }
 
     async fn estimate_gas_and_nonce(&self, tx: &mut TxLegacy) -> Result<(), TxManagerError> {
-        let gas_tip_cap = match self.provider.get_max_priority_fee_per_gas().await {
-            Ok(gas_tip) => gas_tip,
-            Err(err) => {
-                self.logger.info("eth_maxPriorityFeePerGas is unsupported by current backend, using fallback gasTipCap", &[err]);
-                FALLBACK_GAS_TIP_CAP
-            }
-        };
+        let gas_tip_cap = self.provider.get_max_priority_fee_per_gas().await
+        .inspect_err(|err| self.logger.info("eth_maxPriorityFeePerGas is unsupported by current backend, using fallback gasTipCap", &[err]))
+        .unwrap_or(FALLBACK_GAS_TIP_CAP);
 
         let maybe_latest_block = self
             .provider

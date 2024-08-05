@@ -11,6 +11,7 @@ license-file.workspace = true
 [dependencies]
 eigen-signer.workspace = true
 eigen-logging.workspace = true
+alloy-eips.workspace = true
 alloy-consensus.workspace = true
 alloy-network.workspace = true
 alloy-primitives.workspace = true
@@ -23,7 +24,6 @@ reqwest.workspace = true
 thiserror.workspace = true
 
 [dev-dependencies]
-alloy-eips.workspace = true
 alloy-node-bindings.workspace = true
 once_cell.workspace = true
 tokio.workspace = true
