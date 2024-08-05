@@ -202,7 +202,10 @@ impl<'log> SimpleTxManager<'log> {
 
         // 2*baseFee + gasTipCap makes sure that the tx remains includeable for 6 consecutive 100% full blocks.
         // see https://www.blocknative.com/blog/eip-1559-fees
-        let gas_fee_cap = header.base_fee_per_gas.unwrap() * 2 + gas_tip_cap; // TODO: Check unwrap
+        let base_fee = header
+            .base_fee_per_gas
+            .ok_or_else(|| TxManagerError::SendTxError)?;
+        let gas_fee_cap = base_fee * 2 + gas_tip_cap;
 
         let gas_limit = tx.gas_limit();
 
@@ -217,7 +220,7 @@ impl<'log> SimpleTxManager<'log> {
                 .to(to)
                 .from(from)
                 .value(tx.value())
-                .input(TransactionInput::new(tx.input));
+                .input(TransactionInput::new(tx.input.clone()));
             tx_request.set_max_priority_fee_per_gas(gas_tip_cap);
             tx_request.set_max_fee_per_gas(gas_fee_cap);
 
