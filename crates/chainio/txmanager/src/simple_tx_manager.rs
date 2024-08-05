@@ -1,14 +1,17 @@
-use alloy_consensus::{TxEip1559, TxLegacy};
-use alloy_network::{Ethereum, TxSigner};
-use alloy_primitives::Address;
+use alloy_consensus::{Transaction, TxEip1559, TxLegacy};
+use alloy_eips::BlockNumberOrTag;
+use alloy_network::{Ethereum, TransactionBuilder, TxSigner};
+use alloy_primitives::{Address, TxKind};
 use alloy_provider::{PendingTransactionBuilder, Provider, ProviderBuilder, RootProvider};
-use alloy_rpc_types_eth::TransactionReceipt;
+use alloy_rpc_types_eth::{TransactionInput, TransactionReceipt, TransactionRequest};
 use alloy_signer_local::PrivateKeySigner;
 use eigen_logging::{logger::Logger, tracing_logger::TracingLogger};
 use eigen_signer::signer::Config;
 use k256::ecdsa::SigningKey;
 use reqwest::Url;
 use thiserror::Error;
+
+static FALLBACK_GAS_TIP_CAP: u128 = 5_000_000_000;
 
 pub type Transport = alloy_transport_http::Http<reqwest::Client>;
 
@@ -152,6 +155,7 @@ impl<'log> SimpleTxManager<'log> {
         // TODO: Estimating gas and nonce
         //m.log.Debug("Estimating gas and nonce")
         //tx, err := m.estimateGasAndNonce(ctx, tx)
+        self.estimate_gas_and_nonce(tx);
         let signer = self.create_local_signer()?;
         let _signed_tx = signer
             .sign_transaction(tx)
@@ -172,6 +176,52 @@ impl<'log> SimpleTxManager<'log> {
 
         // wait for the transaction to be mined
         SimpleTxManager::wait_for_receipt(pending_tx).await
+    }
+
+    async fn estimate_gas_and_nonce(&self, tx: &mut TxLegacy) -> Result<(), TxManagerError> {
+        let gas_tip_cap = match self.provider.get_max_priority_fee_per_gas().await {
+            Ok(gas_tip) => gas_tip,
+            Err(err) => {
+                self.logger.info("eth_maxPriorityFeePerGas is unsupported by current backend, using fallback gasTipCap", &[err]);
+                FALLBACK_GAS_TIP_CAP
+            }
+        };
+
+        let header = match self.provider.get_block_by_number(BlockNumberOrTag::Latest, false).await.unwrap() {
+            Some(block) => block.header,
+            None => {
+                self.logger.error("Failed to get latest block header", &[()]);
+                return Err(TxManagerError::SendTxError);
+            }
+        };
+
+        // 2*baseFee + gasTipCap makes sure that the tx remains includeable for 6 consecutive 100% full blocks.
+	    // see https://www.blocknative.com/blog/eip-1559-fees
+        let gas_fee_cap = header.base_fee_per_gas.unwrap() * 2 + gas_tip_cap; // TODO: Check unwrap
+        // TODO: check if gas_fee_cap is always 1.
+
+        let gas_limit = tx.gas_limit();
+
+        // we only estimate if gas_limit is not already set
+        if gas_limit == 0 {
+            let from = self.get_address()?;
+            let to = match tx.to() {
+                TxKind::Call(c) => c,
+                TxKind::Create => return Err(TxManagerError::SendTxError),
+            };
+            let mut tx_request = TransactionRequest::default().to(to).from(from).value(tx.value()).input(TransactionInput::new(tx.input));
+            tx_request.set_max_priority_fee_per_gas(gas_tip_cap);
+            tx_request.set_max_fee_per_gas(gas_fee_cap);
+
+            let gas_limit = self
+                .provider
+                .estimate_gas(&tx_request)
+                .await
+                .map_err(|_| TxManagerError::SendTxError)?;
+
+        }
+
+        todo!() // TODO: build tx with gas limit
     }
 
     /// Waits for the transaction receipt.
