@@ -1905,6 +1905,9 @@ dependencies = [
 [[package]]
 name = "eigen-client-eth"
 version = "0.0.1-alpha"
+dependencies = [
+ "async-trait",
+]
 
 [[package]]
 name = "eigen-client-fireblocks"
