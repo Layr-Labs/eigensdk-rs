@@ -47,7 +47,7 @@ async fn serve_metrics(
 
 mod tests {
     use super::*;
-    use crate::eigenmetrics::EigenMetricsMetrics;
+    use crate::eigenmetrics::EigenPerformanceMetrics;
     use eigen_metrics_collectors_economic::RegisteredStakesMetrics;
     use eigen_metrics_collectors_rpc_calls::RpcCallsMetrics;
     use tokio::time::sleep;
@@ -60,7 +60,7 @@ mod tests {
         let handle = init_registry();
 
         // Initialize EigenMetrics
-        let metrics = EigenMetricsMetrics::new(get_test_logger().clone());
+        let metrics = EigenPerformanceMetrics::new(get_test_logger().clone());
         let registered_metrics = RegisteredStakesMetrics::new(get_test_logger().clone());
         let rpc_calls = RpcCallsMetrics::new(get_test_logger().clone());
 

@@ -5,7 +5,7 @@ use metrics::Gauge;
 // Performance Metrics
 #[derive(Clone, Metrics)]
 #[metrics(scope = "eigenmetrics.performancemetrics")]
-pub struct EigenMetrics {
+pub struct EigenPerformance {
     /// performance score
     #[metric(
         rename = "eigen_performance_score",
@@ -16,25 +16,24 @@ pub struct EigenMetrics {
 
 // TODO(supernova) : feeearnedtotal is not turned on yet,so not implemented yet
 // https://github.com/Layr-Labs/eigensdk-go/blob/67787e959b727b115628a34e796df3a9ef42f646/metrics/eigenmetrics.go#L23
-/// This is a wrapper around [`EigenMetrics`], adding suffix Metrics to it , hence the name EigenMetricsMetrics
 #[derive(Debug)]
-pub struct EigenMetricsMetrics {
+pub struct EigenPerformanceMetrics {
     /// The performance metric is a score between 0 and 100 and each developer can define their own way of calculating the score.
     /// The score is calculated based on the performance of the AVS Node and the performance of the backing services.
-    eigen_metrics: EigenMetrics,
+    eigen_metrics: EigenPerformance,
 
     logger: TracingLogger,
 }
 
-impl EigenMetricsMetrics {
+impl EigenPerformanceMetrics {
     pub fn new(logger: TracingLogger) -> Self {
         let eigen_metrics_metrics = Self {
-            eigen_metrics: EigenMetrics {
+            eigen_metrics: EigenPerformance {
                 performance_score: metrics::register_gauge!("eigen_performance_score"),
             },
             logger,
         };
-        EigenMetrics::describe();
+        EigenPerformance::describe();
         eigen_metrics_metrics
             .eigen_metrics
             .performance_score
