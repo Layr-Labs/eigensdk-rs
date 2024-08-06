@@ -8,22 +8,22 @@ Rust <> EigenLayer developer tools
 
 List of crates in the repository :-
 
-- [eigen-client-avsregistry](https://github.com/supernovahs/eigen-rs/tree/main/crates/chainio/clients/avsregistry) - Read, Write and subscribe methods for AvsRegistry
-- [eigen-client-elcontracts](https://github.com/supernovahs/eigen-rs/tree/main/crates/chainio/clients/elcontracts) - Convenience methods to call Eigenlayer contracts
-- [eigen-chainio-utils](https://github.com/supernovahs/eigen-rs/tree/main/crates/chainio/utils)
-- [eigen-contracts-bindings](https://github.com/supernovahs/eigen-rs/tree/main/crates/contracts/bindings) - Generate ethers bindings for Eigen Layer.
-- [eigen-crypto-bls](https://github.com/supernovahs/eigen-rs/tree/main/crates/crypto/bls) - bls utilities
-- [eigen-crypto-bn254](https://github.com/supernovahs/eigen-rs/tree/main/crates/crypto/bn254) - bn254 utilities
-- [eigen-metrics](https://github.com/supernovahs/eigen-rs/tree/main/crates/metrics) - performance , rpc and economic metrics
-- [eigen-services](https://github.com/supernovahs/eigen-rs/tree/main/crates/services) - Spawn tokio services for operators info , bls aggregation
-- [eigen-types](https://github.com/supernovahs/eigen-rs/tree/main/crates/types) - Common types
-- [eigen-utils](https://github.com/supernovahs/eigen-rs/tree/main/crates/utils) - Publicly exportable `m2-mainnet` compatible alloy bindings.
-- [eigen-testing-utils](https://github.com/supernovahs/eigen-rs/tree/main/testing/testing-utils) - Contains publicly exportable  anvil , holesky , mainnet addresses for eigen contracts .
+- [eigen-client-avsregistry](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/chainio/clients/avsregistry) - Read, Write and subscribe methods for AvsRegistry
+- [eigen-client-elcontracts](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/chainio/clients/elcontracts) - Convenience methods to call Eigenlayer contracts
+- [eigen-chainio-utils](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/chainio/utils)
+- [eigen-contracts-bindings](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/contracts/bindings) - Generate ethers bindings for Eigen Layer.
+- [eigen-crypto-bls](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/crypto/bls) - bls utilities
+- [eigen-crypto-bn254](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/crypto/bn254) - bn254 utilities
+- [eigen-metrics](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/metrics) - performance , rpc and economic metrics
+- [eigen-services](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/services) - Spawn tokio services for operators info , bls aggregation
+- [eigen-types](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/types) - Common types
+- [eigen-utils](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/utils) - Publicly exportable `m2-mainnet` compatible alloy bindings.
+- [eigen-testing-utils](https://github.com/Layr-Labs/eigensdk-rs/tree/main/testing/testing-utils) - Contains publicly exportable anvil , holesky , mainnet addresses for eigen contracts .
 
 
 ## Examples
 
-You can run any [example](https://github.com/supernovahs/eigen-rs/tree/main/examples) using the command cargo run --example <example-name>
+You can run any [example](https://github.com/Layr-Labs/eigensdk-rs/tree/main/examples) using the command cargo run --example <example-name>
 
 Example :
   
