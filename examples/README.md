@@ -9,13 +9,13 @@ cargo run -p info-operator-service
 
 ## AvsRegistry Read
 ```
-cargo run -p examples-avsregistry-read
+cargo run --example get_operator-from_id
 ```
 
 ## Anvil utils(This requires a local anvil instance running using docker )
 ```
 make start-anvil-chain-with-contracts-deployed
 make start-anvil
-cargo run -p examples-anvil-utils
+cargo run --example get_contracts_from_registry
 ```
 
