@@ -20,6 +20,8 @@ pub struct RegisteredStakes {
 /// RegisteredStakes Metrics with logger
 #[derive(Debug)]
 pub struct RegisteredStakesMetrics {
+    /// Operator stakes in AVS registry contract.
+    /// Most commonly represents a weighted combination of delegated shares in the DelegationManager EigenLayer contract.
     registered_stakes: RegisteredStakes,
 
     logger: TracingLogger,

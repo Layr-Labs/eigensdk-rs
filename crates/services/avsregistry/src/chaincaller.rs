@@ -49,7 +49,11 @@ impl AvsRegistryServiceChainCaller {
             Ok(operators_stakes_in_quorums) => {
                 if operators_stakes_in_quorums.len() != quorum_nums.len() {
                     // throw error
-                    self.logger.fatal("Number of quorums returned from get_operators_stake_in_quorums_at_block does not match number of quorums requested. Probably pointing to old contract or wrong implementation service AvsRegistryServiceChainCaller", &["eigen-services-avsregistry.chaincaller.get_operators_avs_state_at_block"])
+                    self.logger.fatal(
+                        "Number of quorums returned from get_operators_stake_in_quorums_at_block does not match number of quorums \
+                        requested. Probably pointing to old contract or wrong implementation service AvsRegistryServiceChainCaller", 
+                        &["eigen-services-avsregistry.chaincaller.get_operators_avs_state_at_block"]
+                    )
                 }
 
                 for (quorum_id, quorum_num) in quorum_nums.iter().enumerate() {
@@ -87,7 +91,7 @@ impl AvsRegistryServiceChainCaller {
 
         match operators_avs_state_result {
             Ok(operators_avs_state) => {
-                // TODO(supernova) remove unwrap add Result<res, error>
+                // TODO(supernova) remove String add Result<res, error>
                 let mut quorums_avs_state: HashMap<u8, QuorumAvsState> = HashMap::new();
 
                 for quorum_num in quorum_nums.iter() {

@@ -25,6 +25,7 @@ pub struct RpcCalls {
 /// RpcCallsMetrics
 #[derive(Debug)]
 pub struct RpcCallsMetrics {
+    /// All things related to Metrics <> Rpc call Analytics
     rpc_calls: RpcCalls,
 
     logger: TracingLogger,

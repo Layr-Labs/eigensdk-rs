@@ -84,7 +84,18 @@ impl BlsAggregatorService {
         quorum_threshold_percentages: QuorumThresholdPercentages,
         time_to_expiry: Duration,
     ) {
-        self.logger.debug(&format!("BlsAggregatorService initializing new task, task_index : {}, task_created_block : {}, quorum_nums : {:?}, quorum_threshold_percentages : {:?}, time_to_expiry : {:?}",task_index,task_created_block,quorum_nums,quorum_threshold_percentages,time_to_expiry), &["eigen-services-blsaggregation.bls_agg.initialize_new_task"]);
+        self.logger.debug(
+            &format!(
+                "BlsAggregatorService initializing new task, task_index : {}, task_created_block : {}, quorum_nums : {:?}, \
+                quorum_threshold_percentages : {:?}, time_to_expiry : {:?}",
+                task_index,
+                task_created_block,
+                quorum_nums,
+                quorum_threshold_percentages,
+                time_to_expiry
+            ),
+            &["eigen-services-blsaggregation.bls_agg.initialize_new_task"]
+        );
         let mut task_channel = self.write().await;
 
         if task_channel.contains_key(&task_index) {
@@ -149,8 +160,17 @@ impl BlsAggregatorService {
         let mut operator_state_avs = self
             .avs_registry_service
             .get_operators_avs_state_at_block(task_created_block, quorum_nums.clone().into())
-            .await.map_err(|e|self.logger.error(&format!("Failed to get operators state from avs registry , task_index : {}, err: {}",task_index,e), &["eigen-services-blsaggregation.bls_agg.single_task_aggregator"])).unwrap();
-
+            .await
+            .map_err(|e| {
+                self.logger.error(
+                    &format!(
+                        "Failed to get operators state from avs registry, task_index: {}, err: {}",
+                        task_index, e
+                    ),
+                    &["eigen-services-blsaggregation.bls_agg.single_task_aggregator"],
+                )
+            })
+            .unwrap();
         let quorums_avs_stake = self
             .avs_registry_service
             .get_quorums_avs_state_at_block(quorum_nums.clone().into(), task_created_block)

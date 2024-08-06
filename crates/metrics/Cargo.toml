@@ -6,22 +6,15 @@ rust-version.workspace = true
 repository.workspace = true
 
 [dependencies]
-eigen-metrics-derive.workspace = true
-metrics.workspace = true
 eigen-logging.workspace = true
-#prometheus
-metrics-exporter-prometheus.workspace = true
-
+eigen-metrics-derive.workspace = true
 eyre.workspace = true
-
-#http
 hyper.workspace = true
-
+metrics.workspace = true
+metrics-exporter-prometheus.workspace = true
 
 [dev-dependencies]
 eigen-metrics-collectors-economic.workspace = true 
 eigen-metrics-collectors-rpc-calls.workspace = true
 reqwest = "0.12.4"
-
-#tokio
 tokio.workspace = true
