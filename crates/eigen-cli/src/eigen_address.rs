@@ -10,7 +10,7 @@ use eigen_utils::{
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug, PartialEq)]
-pub struct EigenAddresses {
+pub struct ContractAddresses {
     avs: AvsAddresses,
     eigenlayer: EigenLayerAddresses,
     network: NetworkInfo,
@@ -44,7 +44,7 @@ pub struct AvsAddresses {
     stake_registry: Address,
 }
 
-impl EigenAddresses {
+impl ContractAddresses {
     /// Public function to get the Eigenlayer and AVS contract addresses.
     ///
     /// # Arguments
@@ -53,7 +53,7 @@ impl EigenAddresses {
     ///
     /// # Returns
     ///
-    /// * `EigenAddresses` - The Eigenlayer and AVS contract addresses.
+    /// * `ContractAddresses` - The Eigenlayer and AVS contract addresses.
     pub async fn get_addresses(args: Args) -> Result<Self, EigenAddressCliError> {
         let rpc_url = args.rpc_url.clone();
         let client = get_provider(&rpc_url);
@@ -63,20 +63,21 @@ impl EigenAddresses {
             .map_err(EigenAddressCliError::RpcError)?
             .to_string();
         let (registry_coord_addr, service_manager_addr) =
-            EigenAddresses::get_registry_coord_and_service_manager_addr(args, client.clone())
+            ContractAddresses::get_registry_coord_and_service_manager_addr(args, client.clone())
                 .await?;
 
-        let avs = EigenAddresses::get_avs_contract_addresses(registry_coord_addr, client.clone())
-            .await
-            .map_err(EigenAddressCliError::ContractError)?;
+        let avs =
+            ContractAddresses::get_avs_contract_addresses(registry_coord_addr, client.clone())
+                .await
+                .map_err(EigenAddressCliError::ContractError)?;
 
         let eigenlayer =
-            EigenAddresses::get_eigenlayer_contract_addresses(service_manager_addr, client)
+            ContractAddresses::get_eigenlayer_contract_addresses(service_manager_addr, client)
                 .await
                 .map_err(EigenAddressCliError::ContractError)?;
 
         let network = NetworkInfo { rpc_url, chain_id };
-        Ok(EigenAddresses {
+        Ok(ContractAddresses {
             network,
             eigenlayer,
             avs,
@@ -137,7 +138,7 @@ impl EigenAddresses {
     ///
     /// # Returns
     ///
-    /// * `EigenAddresses` - The Eigenlayer contract addresses.
+    /// * `ContractAddresses` - The Eigenlayer contract addresses.
     async fn get_eigenlayer_contract_addresses<T, P, N>(
         service_manager_addr: Address,
         client: P,

@@ -24,7 +24,7 @@ pub enum EigenAddressCliError {
 mod test {
     use super::ANVIL_RPC_URL;
     use crate::args::Args;
-    use crate::eigen_address::EigenAddresses;
+    use crate::eigen_address::ContractAddresses;
     use eigen_testing_utils::anvil_constants::{
         get_registry_coordinator_address, get_service_manager_address,
     };
@@ -39,7 +39,7 @@ mod test {
             service_manager: Some(service_manager_address),
             rpc_url: ANVIL_RPC_URL.into(),
         };
-        let expected_addresses: EigenAddresses = serde_json::from_str(
+        let expected_addresses: ContractAddresses = serde_json::from_str(
             r#"{
             "avs": {
               "bls-apk-registry": "0x84ea74d481ee0a5332c457a4d796187f6ba67feb",
@@ -60,7 +60,7 @@ mod test {
           }"#,
         )
         .unwrap();
-        let addresses = EigenAddresses::get_addresses(args).await.unwrap();
+        let addresses = ContractAddresses::get_addresses(args).await.unwrap();
 
         assert_eq!(expected_addresses, addresses);
     }
@@ -74,7 +74,7 @@ mod test {
             service_manager: None,
             rpc_url: ANVIL_RPC_URL.into(),
         };
-        let expected_addresses: EigenAddresses = serde_json::from_str(
+        let expected_addresses: ContractAddresses = serde_json::from_str(
             r#"{
             "avs": {
               "bls-apk-registry": "0x84ea74d481ee0a5332c457a4d796187f6ba67feb",
@@ -96,7 +96,7 @@ mod test {
         )
         .unwrap();
 
-        let addresses = EigenAddresses::get_addresses(args).await.unwrap();
+        let addresses = ContractAddresses::get_addresses(args).await.unwrap();
 
         assert_eq!(expected_addresses, addresses);
     }
