@@ -1,9 +1,10 @@
 use crate::args::KeyType;
+use crate::EigenKeyCliError;
 use ark_ff::UniformRand;
 use ark_serialize::CanonicalSerialize;
-use eigen_crypto_bls::PrivateKey;
+use eigen_crypto_bls;
 use eth_keystore::encrypt_key;
-use k256::SecretKey;
+use k256;
 use rand::{distributions::Alphanumeric, Rng};
 use rand_core::OsRng;
 use std::io::Write;
@@ -31,50 +32,48 @@ impl KeyGenerator {
     /// * `key_type` - The type of the key to generate.
     /// * `num_keys` - The number of keys to generate.
     /// * `output_dir` - The directory where the key files are generated.
-    pub fn generate(key_type: KeyType, num_keys: u32, output_dir: Option<String>) {
-        // create dir
+    pub fn generate(
+        self,
+        num_keys: u32,
+        output_dir: Option<String>,
+    ) -> Result<(), EigenKeyCliError> {
         let dir_name = match output_dir {
             None => {
                 let id = Uuid::new_v4();
-                let key_name = match key_type {
-                    KeyType::Ecdsa => "ecdsa",
-                    KeyType::Bls => "bls",
-                };
-                format!("{}-{}", key_name, id.to_string())
+                format!("{}-{}", self.key_name(), id.to_string())
             }
             Some(dir) => dir,
         };
         let dir_path = Path::new(&dir_name);
         let key_path = dir_path.join(DEFAULT_KEY_FOLDER);
-        fs::create_dir_all(&key_path).unwrap();
+        fs::create_dir_all(&key_path).map_err(EigenKeyCliError::FileError)?;
 
-        // generate keys
-        let password = KeyGenerator::generate_random_password();
-        KeyGenerator::from(key_type).generate_keys(num_keys, dir_path, password)
+        self.generate_keys(num_keys, dir_path)
     }
 
     /// Generates a number of private keys and stores them both encrypted and in plaintext.
+    /// It creates the following files:
+    /// - `passwords.txt`: contains all passwords to decrypt keys
+    /// - `private_key_hex.txt`: plaintext private keys
+    /// - `keys/*`: all the encrypted json files in this folder
     ///
     /// # Arguments
     ///
     /// * `num_keys` - The number of keys to generate.
     /// * `path` - The path to the directory where the generated files are stored.
     /// * `password` - The password used to encrypt the keys.
-    fn generate_keys(self, num_keys: u32, path: &Path, password: String) {
+    fn generate_keys(self, num_keys: u32, path: &Path) -> Result<(), EigenKeyCliError> {
         let key_path = path.join(DEFAULT_KEY_FOLDER);
         let private_key_path = path.join(PRIVATE_KEY_HEX_FILE);
         let password_path = path.join(PASSWORD_FILE);
 
         for i in 0..num_keys {
+            let password = KeyGenerator::generate_random_password();
             let private_key = self.random_key();
             let private_key_hex = hex::encode(private_key.clone());
 
             // encrypt the private key into `path` directory
-            let key_name = match self {
-                KeyGenerator::ECDSAKeyGenerator => "ecdsa",
-                KeyGenerator::BLSKeyGenerator => "bls",
-            };
-            let name = format!("{}.{}.key.json", i + 1, key_name);
+            let name = format!("{}.{}.key.json", i + 1, self.key_name());
             encrypt_key(
                 key_path.clone(),
                 &mut OsRng,
@@ -82,20 +81,23 @@ impl KeyGenerator {
                 password.clone(),
                 Some(&name),
             )
-            .unwrap();
+            .map_err(EigenKeyCliError::KeystoreError)?;
 
             // write the private key into `private_key_file`
-            let mut pk_file = File::create(private_key_path.clone()).unwrap();
-            pk_file.write_all(private_key_hex.as_bytes()).unwrap();
+            File::create(private_key_path.clone())
+                .and_then(|mut file| file.write_all(private_key_hex.as_bytes()))
+                .map_err(EigenKeyCliError::FileError)?;
 
             // write the password into `password_file`
-            let mut password_file = File::create(password_path.clone()).unwrap();
-            password_file.write_all(password.as_bytes()).unwrap();
+            File::create(password_path.clone())
+                .and_then(|mut file| file.write_all(password.as_bytes()))
+                .map_err(EigenKeyCliError::FileError)?;
 
             if (i + 1) % 50 == 0 {
                 println!("Generated {} keys\n", i + 1);
             }
         }
+        Ok(())
     }
 
     /// Generates a random key which can be of type ecdsa or BLS.
@@ -116,7 +118,7 @@ impl KeyGenerator {
     ///
     /// * An ecdsa private key as a vector of bytes.
     fn random_ecdsa_key() -> Vec<u8> {
-        let private_key = SecretKey::random(&mut OsRng);
+        let private_key = k256::SecretKey::random(&mut OsRng);
         private_key.to_bytes().as_slice().to_vec()
     }
 
@@ -127,8 +129,8 @@ impl KeyGenerator {
     /// * A BLS private key as a vector of bytes.
     fn random_bls_key() -> Vec<u8> {
         let mut buffer = Vec::new();
-        let private_key = PrivateKey::rand(&mut OsRng);
-        private_key.serialize_uncompressed(&mut buffer).unwrap();
+        let private_key = eigen_crypto_bls::PrivateKey::rand(&mut OsRng);
+        private_key.serialize_uncompressed(&mut buffer).unwrap(); // handle unwrap
         buffer
     }
 
@@ -143,6 +145,19 @@ impl KeyGenerator {
             .take(PASSWORD_LENGTH)
             .map(char::from)
             .collect()
+    }
+
+    /// Get the key type.
+    ///
+    /// # Returns
+    ///
+    /// * The key type as a string.
+    fn key_name(&self) -> String {
+        match self {
+            KeyGenerator::ECDSAKeyGenerator => "ecdsa",
+            KeyGenerator::BLSKeyGenerator => "bls",
+        }
+        .to_string()
     }
 }
 

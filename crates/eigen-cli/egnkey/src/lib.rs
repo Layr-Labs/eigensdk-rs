@@ -4,21 +4,31 @@ use generate::KeyGenerator;
 pub mod args;
 mod convert;
 mod generate;
+use eth_keystore::KeystoreError;
+use thiserror::Error;
 
-pub fn execute_egnkey(args: Args) {
+#[derive(Error, Debug)]
+pub enum EigenKeyCliError {
+    #[error("file error")]
+    FileError(std::io::Error),
+    #[error("encription error")]
+    KeystoreError(KeystoreError),
+}
+
+pub fn execute_egnkey(args: Args) -> Result<(), EigenKeyCliError> {
     match args.command {
         Commands::Generate {
             key_type,
             num_keys,
             output_dir,
-        } => KeyGenerator::generate(key_type, num_keys, output_dir),
+        } => KeyGenerator::from(key_type).generate(num_keys, output_dir),
         Commands::Convert {
             private_key,
             output_file,
             password,
-        } => store(private_key, output_file, password).unwrap(),
+        } => store(private_key, output_file, password).map_err(EigenKeyCliError::KeystoreError),
         Commands::DeriveOperatorId { private_key } => todo!(),
-    };
+    }
 }
 
 #[cfg(test)]
@@ -47,7 +57,7 @@ pub mod test {
         };
         let args = Args { command };
 
-        execute_egnkey(args);
+        execute_egnkey(args).unwrap();
 
         let private_key_hex = fs::read_to_string(output_path.join(PRIVATE_KEY_HEX_FILE)).unwrap();
         let password = fs::read_to_string(output_path.join(PASSWORD_FILE)).unwrap();
