@@ -4,6 +4,8 @@ use alloy_transport_http::{Client, Http};
 use thiserror::Error;
 use url::Url;
 
+use crate::client;
+
 pub struct InstrumentedClient {
     client: RootProvider<Http<Client>>,
     net_version: u64,
@@ -29,6 +31,20 @@ impl InstrumentedClient {
             .map_err(|_| InstrumentedClientError::ErrorGettingVersion)?;
         Ok(InstrumentedClient {
             client,
+            net_version,
+        })
+    }
+
+    pub async fn new_from_client(
+        client: &RootProvider<Http<Client>>,
+    ) -> Result<Self, InstrumentedClientError> {
+        let net_version = client
+            .get_net_version()
+            .await
+            .map_err(|_| InstrumentedClientError::ErrorGettingVersion)?;
+
+        Ok(InstrumentedClient {
+            client: client.clone(),
             net_version,
         })
     }
