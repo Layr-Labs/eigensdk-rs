@@ -1907,7 +1907,11 @@ name = "eigen-client-eth"
 version = "0.0.1-alpha"
 dependencies = [
  "alloy-primitives",
+ "alloy-provider",
+ "alloy-transport-http",
  "async-trait",
+ "thiserror",
+ "url",
 ]
 
 [[package]]

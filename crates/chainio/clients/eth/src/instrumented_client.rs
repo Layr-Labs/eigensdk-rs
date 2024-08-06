@@ -1,25 +1,47 @@
-// use eigen_metrics_collectors_rpc_calls::RpcCalls as RpcCallsCollector;
-// use ethers::providers::{Http, Middleware, Provider};
+//use eigen_metrics_collectors_rpc_calls::RpcCalls as RpcCallsCollector;
+use alloy_provider::{Provider, ProviderBuilder, RootProvider};
+use alloy_transport_http::{Client, Http};
+use thiserror::Error;
+use url::Url;
 
-// pub struct InstrumentedClient {
-//     client: Provider<Http>,
-//     rpc_calls_collector: RpcCallsCollector,
-//     client_and_version: String,
-// }
+pub struct InstrumentedClient {
+    client: RootProvider<Http<Client>>,
+    net_version: u64,
+}
 
-// impl InstrumentedClient {
-//     // pub fn new_instrumented_client(rpc: String, rpc_calls_collector: RpcCallsCollector) {
+/// Possible errors raised in signer creation
+#[derive(Error, Debug)]
+pub enum InstrumentedClientError {
+    #[error("invalid url")]
+    InvalidUrl,
+    #[error("error getting version")]
+    ErrorGettingVersion,
+}
 
-//     //     let client = Provider::<Http>::try_from(rpc).unwrap();
+impl InstrumentedClient {
+    pub async fn new(url: &str) -> Result<Self, InstrumentedClientError> {
+        let url = Url::parse(url).map_err(|_| InstrumentedClientError::InvalidUrl)?;
+        let client = ProviderBuilder::new().on_http(url);
 
-//     //     let client_and_version =
-//     // }
+        let net_version = client
+            .get_net_version()
+            .await
+            .map_err(|_| InstrumentedClientError::ErrorGettingVersion)?;
+        Ok(InstrumentedClient {
+            client,
+            net_version,
+        })
+    }
+}
 
-//     //  pub async fn get_client_and_version(&self, client : Provider<Http>) -> String{
+// https://docs.rs/alloy-provider/0.1.4/alloy_provider/trait.Provider.html#method.raw_request
+/*
+// No parameters: `()`
+let block_number = provider.raw_request("eth_blockNumber".into(), ()).await?;
 
-//     //     let client_version = client.get_net_version().await.unwrap();
-//     //     let s = client.
-//     //     client_version
+// One parameter: `(param,)` or `[param]`
+let block = provider.raw_request("eth_getBlockByNumber".into(), (BlockNumberOrTag::Latest,)).await?;
 
-//     // }
-// }
+// Two or more parameters: `(param1, param2, ...)` or `[param1, param2, ...]`
+let full_block = provider.raw_request("eth_getBlockByNumber".into(), (BlockNumberOrTag::Latest, true)).await?;
+*/
