@@ -56,6 +56,35 @@ impl InstrumentedClient {
         })
     }
 
+    /*
+    func (iec *InstrumentedClient) BlockByHash(ctx context.Context, hash common.Hash) (*types.Block, error) {
+        blockByHash := func() (*types.Block, error) { return iec.client.BlockByHash(ctx, hash) }
+        block, err := instrumentFunction[*types.Block](blockByHash, "eth_getBlockByHash", iec)
+        if err != nil {
+            return nil, err
+        }
+        return block, nil
+    }
+    */
+    pub async fn block_by_hash(&self, hash: String) -> TransportResult<()> {
+        // WIP TODO!!!
+        let block_by_hash = || self.client.get_block_by_hash(hash);
+        self.instrument_function("eth_getBlockByHash", block_by_hash)
+            .await
+    }
+
+    /// Instrument a function call with the given method name and parameters.
+    ///
+    /// This function will measure the duration of the call and report it to the metrics collector.
+    ///
+    /// # Arguments
+    ///
+    /// * `rpc_method_name` - The name of the RPC method being called.
+    /// * `params` - The parameters to pass to the RPC method.
+    ///
+    /// # Returns
+    ///
+    /// The result of the RPC call.
     async fn instrument_function<'async_trait, P, R>(
         &self,
         rpc_method_name: &str,
@@ -79,43 +108,4 @@ impl InstrumentedClient {
 
         result
     }
-
-    /*
-    // Generic function used to instrument all the eth calls that we make below
-    func instrumentFunction[T any](
-        rpcCall func() (T, error),
-        rpcMethodName string,
-        iec *InstrumentedClient,
-    ) (value T, err error) {
-        start := time.Now()
-        result, err := rpcCall()
-        // we count both successful and erroring calls (even though this is not well defined in the spec)
-        iec.rpcCallsCollector.AddRPCRequestTotal(rpcMethodName, iec.clientAndVersion)
-        if err != nil {
-            return value, err
-        }
-        rpcRequestDuration := time.Since(start)
-        // we only observe the duration of successful calls (even though this is not well defined in the spec)
-        iec.rpcCallsCollector.ObserveRPCRequestDurationSeconds(
-            float64(rpcRequestDuration),
-            rpcMethodName,
-            iec.clientAndVersion,
-        )
-        return result, nil
-    }
-
-
-         */
 }
-
-// https://docs.rs/alloy-provider/0.1.4/alloy_provider/trait.Provider.html#method.raw_request
-/*
-// No parameters: `()`
-let block_number = provider.raw_request("eth_blockNumber".into(), ()).await?;
-
-// One parameter: `(param,)` or `[param]`
-let block = provider.raw_request("eth_getBlockByNumber".into(), (BlockNumberOrTag::Latest,)).await?;
-
-// Two or more parameters: `(param1, param2, ...)` or `[param1, param2, ...]`
-let full_block = provider.raw_request("eth_getBlockByNumber".into(), (BlockNumberOrTag::Latest, true)).await?;
-*/
