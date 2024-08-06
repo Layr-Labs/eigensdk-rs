@@ -28,15 +28,18 @@ pub mod test {
     };
     use eth_keystore::decrypt_key;
     use k256::SecretKey;
+    use rstest::rstest;
     use std::fs;
     use tempfile::tempdir;
 
-    #[test]
-    fn generate_ecdsa_key() {
+    #[rstest]
+    #[case(KeyType::Ecdsa)]
+    #[case(KeyType::Bls)]
+    fn generate_key(#[case] key_type: KeyType) {
         let output_dir = tempdir().unwrap();
         let output_path = output_dir.path();
         let command = Commands::Generate {
-            key_type: KeyType::Ecdsa,
+            key_type: key_type.clone(),
             num_keys: 1,
             output_dir: output_path.to_str().map(String::from),
         };
@@ -46,9 +49,13 @@ pub mod test {
 
         let private_key_hex = fs::read_to_string(output_path.join(PRIVATE_KEY_HEX_FILE)).unwrap();
         let password = fs::read_to_string(output_path.join(PASSWORD_FILE)).unwrap();
+        let key_name = match key_type {
+            KeyType::Ecdsa => "ecdsa",
+            KeyType::Bls => "bls",
+        };
         let key_path = output_path
             .join(DEFAULT_KEY_FOLDER)
-            .join("1.ecdsa.key.json");
+            .join(format!("1.{}.key.json", key_name));
 
         let decrypted_bytes = decrypt_key(key_path, password).unwrap();
         let decrypted_private_key = SecretKey::from_slice(&decrypted_bytes).unwrap().to_bytes();

@@ -1,6 +1,9 @@
 use crate::args::KeyType;
+use ark_ff::UniformRand;
+use ark_serialize::CanonicalSerialize;
+use eigen_crypto_bls::PrivateKey;
 use eth_keystore::encrypt_key;
-use k256::SecretKey;
+use k256::{FieldBytes, SecretKey};
 use rand::{distributions::Alphanumeric, Rng};
 use rand_core::OsRng;
 use std::io::Write;
@@ -21,30 +24,25 @@ enum KeyGenerator {
 }
 
 impl KeyGenerator {
-    pub fn generate_keys(self, num_keys: u32, dir_path: &Path, password: String) {
-        match self {
-            KeyGenerator::ECDSAKeyGenerator => {
-                Self::generate_ecdsa_key(num_keys, dir_path, password)
-            }
-            KeyGenerator::BLSKeyGenerator => Self::generate_bls_key(num_keys, dir_path, password),
-        }
-    }
-
-    fn generate_ecdsa_key(num_keys: u32, path: &Path, password: String) {
+    pub fn generate_keys(self, num_keys: u32, path: &Path, password: String) {
         let key_path = path.join(DEFAULT_KEY_FOLDER);
         let private_key_path = path.join(PRIVATE_KEY_HEX_FILE);
         let password_path = path.join(PASSWORD_FILE);
 
         for i in 0..num_keys {
-            let private_key = SecretKey::random(&mut OsRng);
-            let private_key_hex = hex::encode(private_key.to_bytes());
+            let private_key = self.random_key();
+            let private_key_hex = hex::encode(private_key.clone());
 
             // encrypt the private key into `path` directory
-            let name = format!("{}.ecdsa.key.json", i + 1);
+            let key_name = match self {
+                KeyGenerator::ECDSAKeyGenerator => "ecdsa",
+                KeyGenerator::BLSKeyGenerator => "bls",
+            };
+            let name = format!("{}.{}.key.json", i + 1, key_name);
             encrypt_key(
                 key_path.clone(),
                 &mut OsRng,
-                private_key.to_bytes(),
+                private_key,
                 password.clone(),
                 Some(&name),
             )
@@ -64,8 +62,23 @@ impl KeyGenerator {
         }
     }
 
-    fn generate_bls_key(num_keys: u32, path: &Path, password_file: String) {
-        todo!()
+    fn random_key(&self) -> Vec<u8> {
+        match self {
+            KeyGenerator::ECDSAKeyGenerator => Self::random_ecdsa_key(),
+            KeyGenerator::BLSKeyGenerator => Self::random_bls_key(),
+        }
+    }
+
+    fn random_ecdsa_key() -> Vec<u8> {
+        let private_key = SecretKey::random(&mut OsRng);
+        private_key.to_bytes().as_slice().to_vec()
+    }
+
+    fn random_bls_key() -> Vec<u8> {
+        let mut buffer = Vec::new();
+        let private_key = PrivateKey::rand(&mut OsRng);
+        private_key.serialize_uncompressed(&mut buffer).unwrap();
+        buffer
     }
 }
 

@@ -11,8 +11,10 @@ alloy-json-rpc.workspace = true
 alloy-primitives.workspace = true
 alloy-provider.workspace = true
 alloy-transport.workspace = true
+ark-ff.workspace = true
+ark-serialize = "0.4.2"
 clap.workspace = true
-eigen-testing-utils.workspace = true
+eigen-crypto-bls.workspace = true
 eigen-utils.workspace = true
 eth-keystore.workspace = true
 hex.workspace = true
@@ -27,3 +29,5 @@ uuid = { version = "1.10.0", features = ["v4"] }
 
 [dev-dependencies]
 tempfile = "3"
+rstest = "0.22.0"
+eigen-testing-utils.workspace = true

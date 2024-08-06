@@ -1,4 +1,5 @@
 use clap::{Parser, Subcommand};
+use std::fmt;
 
 #[derive(Parser, Debug)]
 #[command(
