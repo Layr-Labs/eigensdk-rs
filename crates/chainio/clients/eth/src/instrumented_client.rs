@@ -68,9 +68,10 @@ impl InstrumentedClient {
     */
     pub async fn block_by_hash(&self, hash: String) -> TransportResult<()> {
         // WIP TODO!!!
-        let block_by_hash = || self.client.get_block_by_hash(hash);
-        self.instrument_function("eth_getBlockByHash", block_by_hash)
-            .await
+        //let block_by_hash = || self.client.get_block_by_hash(hash);
+        //self.instrument_function("eth_getBlockByHash", block_by_hash)
+        //    .await
+        todo!()
     }
 
     /// Instrument a function call with the given method name and parameters.
