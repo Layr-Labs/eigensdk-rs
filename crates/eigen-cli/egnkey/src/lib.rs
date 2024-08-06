@@ -1,6 +1,8 @@
 use args::{Args, Commands};
+use convert::store;
 use generate::generate;
 pub mod args;
+mod convert;
 mod generate;
 
 pub fn execute_egnkey(args: Args) {
@@ -14,7 +16,7 @@ pub fn execute_egnkey(args: Args) {
             private_key,
             output_file,
             password,
-        } => todo!(),
+        } => store(private_key, output_file, password).unwrap(),
         Commands::DeriveOperatorId { private_key } => todo!(),
     };
 }
