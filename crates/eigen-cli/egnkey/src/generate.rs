@@ -3,7 +3,7 @@ use ark_ff::UniformRand;
 use ark_serialize::CanonicalSerialize;
 use eigen_crypto_bls::PrivateKey;
 use eth_keystore::encrypt_key;
-use k256::{FieldBytes, SecretKey};
+use k256::SecretKey;
 use rand::{distributions::Alphanumeric, Rng};
 use rand_core::OsRng;
 use std::io::Write;
@@ -18,13 +18,49 @@ pub const DEFAULT_KEY_FOLDER: &str = "keys";
 pub const PASSWORD_FILE: &str = "password.txt";
 pub const PRIVATE_KEY_HEX_FILE: &str = "private_key_hex.txt";
 
-enum KeyGenerator {
+pub enum KeyGenerator {
     ECDSAKeyGenerator,
     BLSKeyGenerator,
 }
 
 impl KeyGenerator {
-    pub fn generate_keys(self, num_keys: u32, path: &Path, password: String) {
+    /// Generates a number of private keys in the given directory.
+    ///
+    /// # Arguments
+    ///
+    /// * `key_type` - The type of the key to generate.
+    /// * `num_keys` - The number of keys to generate.
+    /// * `output_dir` - The directory where the key files are generated.
+    pub fn generate(key_type: KeyType, num_keys: u32, output_dir: Option<String>) {
+        // create dir
+        let dir_name = match output_dir {
+            None => {
+                let id = Uuid::new_v4();
+                let key_name = match key_type {
+                    KeyType::Ecdsa => "ecdsa",
+                    KeyType::Bls => "bls",
+                };
+                format!("{}-{}", key_name, id.to_string())
+            }
+            Some(dir) => dir,
+        };
+        let dir_path = Path::new(&dir_name);
+        let key_path = dir_path.join(DEFAULT_KEY_FOLDER);
+        fs::create_dir_all(&key_path).unwrap();
+
+        // generate keys
+        let password = KeyGenerator::generate_random_password();
+        KeyGenerator::from(key_type).generate_keys(num_keys, dir_path, password)
+    }
+
+    /// Generates a number of private keys and stores them both encrypted and in plaintext.
+    ///
+    /// # Arguments
+    ///
+    /// * `num_keys` - The number of keys to generate.
+    /// * `path` - The path to the directory where the generated files are stored.
+    /// * `password` - The password used to encrypt the keys.
+    fn generate_keys(self, num_keys: u32, path: &Path, password: String) {
         let key_path = path.join(DEFAULT_KEY_FOLDER);
         let private_key_path = path.join(PRIVATE_KEY_HEX_FILE);
         let password_path = path.join(PASSWORD_FILE);
@@ -62,6 +98,11 @@ impl KeyGenerator {
         }
     }
 
+    /// Generates a random key which can be of type ecdsa or BLS.
+    ///
+    /// # Returns
+    ///
+    /// * A private key as a vector of bytes.
     fn random_key(&self) -> Vec<u8> {
         match self {
             KeyGenerator::ECDSAKeyGenerator => Self::random_ecdsa_key(),
@@ -69,16 +110,39 @@ impl KeyGenerator {
         }
     }
 
+    /// Generates a random ecdsa key.
+    ///
+    /// # Returns
+    ///
+    /// * An ecdsa private key as a vector of bytes.
     fn random_ecdsa_key() -> Vec<u8> {
         let private_key = SecretKey::random(&mut OsRng);
         private_key.to_bytes().as_slice().to_vec()
     }
 
+    /// Generates a random BLS key.
+    ///
+    /// # Returns
+    ///
+    /// * A BLS private key as a vector of bytes.
     fn random_bls_key() -> Vec<u8> {
         let mut buffer = Vec::new();
         let private_key = PrivateKey::rand(&mut OsRng);
         private_key.serialize_uncompressed(&mut buffer).unwrap();
         buffer
+    }
+
+    /// Generates a 20-character random password.
+    ///
+    /// # Returns
+    ///
+    /// * A random password.
+    fn generate_random_password() -> String {
+        rand::thread_rng()
+            .sample_iter(&Alphanumeric)
+            .take(PASSWORD_LENGTH)
+            .map(char::from)
+            .collect()
     }
 }
 
@@ -89,34 +153,4 @@ impl From<KeyType> for KeyGenerator {
             KeyType::Bls => KeyGenerator::BLSKeyGenerator,
         }
     }
-}
-
-fn generate_random_password() -> String {
-    rand::thread_rng()
-        .sample_iter(&Alphanumeric)
-        .take(PASSWORD_LENGTH)
-        .map(char::from)
-        .collect()
-}
-
-pub fn generate(key_type: KeyType, num_keys: u32, output_dir: Option<String>) {
-    // create dir
-    let dir_name = match output_dir {
-        None => {
-            let id = Uuid::new_v4();
-            let key_name = match key_type {
-                KeyType::Ecdsa => "ecdsa",
-                KeyType::Bls => "bls",
-            };
-            format!("{}-{}", key_name, id.to_string())
-        }
-        Some(dir) => dir,
-    };
-    let dir_path = Path::new(&dir_name);
-    let key_path = dir_path.join(DEFAULT_KEY_FOLDER);
-    fs::create_dir_all(&key_path).unwrap();
-
-    // generate keys
-    let password = generate_random_password();
-    KeyGenerator::from(key_type).generate_keys(num_keys, dir_path, password)
 }

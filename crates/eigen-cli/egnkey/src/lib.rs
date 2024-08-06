@@ -1,6 +1,6 @@
 use args::{Args, Commands};
 use convert::store;
-use generate::generate;
+use generate::KeyGenerator;
 pub mod args;
 mod convert;
 mod generate;
@@ -11,7 +11,7 @@ pub fn execute_egnkey(args: Args) {
             key_type,
             num_keys,
             output_dir,
-        } => generate(key_type, num_keys, output_dir),
+        } => KeyGenerator::generate(key_type, num_keys, output_dir),
         Commands::Convert {
             private_key,
             output_file,
