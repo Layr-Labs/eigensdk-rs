@@ -1,4 +1,3 @@
-use crate::args::Args;
 use crate::EigenAddressCliError;
 use alloy_contract::Error as ContractError;
 use alloy_primitives::Address;
@@ -49,22 +48,33 @@ impl ContractAddresses {
     ///
     /// # Arguments
     ///
-    /// * `args` - The command line arguments.
+    /// * `registry_coordinator` - The registry coordinator contract address.
+    /// * `service_manager` - The service manager coordinator address.
+    /// * `client` - The provider client.
     ///
     /// # Returns
     ///
     /// * `ContractAddresses` - The Eigenlayer and AVS contract addresses.
-    pub async fn get_addresses(args: Args) -> Result<Self, EigenAddressCliError> {
-        let rpc_url = args.rpc_url.clone();
+    pub async fn get_addresses(
+        service_manager_addr: Option<Address>,
+        registry_coordinator: Option<Address>,
+        rpc_url: String,
+    ) -> Result<Self, EigenAddressCliError> {
+        let rpc_url = rpc_url.clone();
         let client = get_provider(&rpc_url);
         let chain_id = client
             .get_chain_id()
             .await
             .map_err(EigenAddressCliError::RpcError)?
             .to_string();
+
         let (registry_coord_addr, service_manager_addr) =
-            ContractAddresses::get_registry_coord_and_service_manager_addr(args, client.clone())
-                .await?;
+            ContractAddresses::get_registry_coord_and_service_manager_addr(
+                registry_coordinator,
+                service_manager_addr,
+                client.clone(),
+            )
+            .await?;
 
         let avs =
             ContractAddresses::get_avs_contract_addresses(registry_coord_addr, client.clone())
@@ -88,7 +98,8 @@ impl ContractAddresses {
     ///
     /// # Arguments
     ///
-    /// * `args` - The command line arguments.
+    /// * `registry_coordinator` - The registry coordinator contract address.
+    /// * `service_manager` - The service manager coordinator address.
     /// * `client` - The provider client.
     ///
     /// # Returns
@@ -96,7 +107,8 @@ impl ContractAddresses {
     /// * `(Address, Address)` - The registry coordinator and service manager contract addresses,
     /// used to call `get_avs_contract_addresses` and `get_eigenlayer_contract_addresses` functions.
     async fn get_registry_coord_and_service_manager_addr<T, P, N>(
-        args: Args,
+        registry_coordinator: Option<Address>,
+        service_manager: Option<Address>,
         client: P,
     ) -> Result<(Address, Address), EigenAddressCliError>
     where
@@ -104,7 +116,7 @@ impl ContractAddresses {
         P: alloy_contract::private::Provider<T, N>,
         N: alloy_contract::private::Network,
     {
-        match (args.registry_coordinator, args.service_manager) {
+        match (registry_coordinator, service_manager) {
             (Some(registry_coord_addr), _) => {
                 let registry_coordinator = RegistryCoordinator::new(registry_coord_addr, &client);
                 let service_manager_addr = registry_coordinator

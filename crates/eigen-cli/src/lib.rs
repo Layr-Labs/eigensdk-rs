@@ -23,7 +23,6 @@ pub enum EigenAddressCliError {
 #[cfg(test)]
 mod test {
     use super::ANVIL_RPC_URL;
-    use crate::args::Args;
     use crate::eigen_address::ContractAddresses;
     use eigen_testing_utils::anvil_constants::{
         get_registry_coordinator_address, get_service_manager_address,
@@ -34,11 +33,6 @@ mod test {
     async fn egnaddrs_with_service_manager_flag() {
         let service_manager_address = get_service_manager_address().await;
 
-        let args = Args {
-            registry_coordinator: None,
-            service_manager: Some(service_manager_address),
-            rpc_url: ANVIL_RPC_URL.into(),
-        };
         let expected_addresses: ContractAddresses = serde_json::from_str(
             r#"{
             "avs": {
@@ -60,7 +54,13 @@ mod test {
           }"#,
         )
         .unwrap();
-        let addresses = ContractAddresses::get_addresses(args).await.unwrap();
+        let addresses = ContractAddresses::get_addresses(
+            Some(service_manager_address),
+            None,
+            ANVIL_RPC_URL.into(),
+        )
+        .await
+        .unwrap();
 
         assert_eq!(expected_addresses, addresses);
     }
@@ -69,11 +69,6 @@ mod test {
     async fn egnaddrs_with_registry_coordinator_flag() {
         let registry_coordinator_address = get_registry_coordinator_address().await;
 
-        let args = Args {
-            registry_coordinator: Some(registry_coordinator_address),
-            service_manager: None,
-            rpc_url: ANVIL_RPC_URL.into(),
-        };
         let expected_addresses: ContractAddresses = serde_json::from_str(
             r#"{
             "avs": {
@@ -96,7 +91,13 @@ mod test {
         )
         .unwrap();
 
-        let addresses = ContractAddresses::get_addresses(args).await.unwrap();
+        let addresses = ContractAddresses::get_addresses(
+            None,
+            Some(registry_coordinator_address),
+            ANVIL_RPC_URL.into(),
+        )
+        .await
+        .unwrap();
 
         assert_eq!(expected_addresses, addresses);
     }
