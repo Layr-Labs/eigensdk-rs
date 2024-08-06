@@ -98,7 +98,7 @@ aws-sdk-kms = "1.37.0"
 url = "2.5.2"
 testcontainers = "0.20.1"
 async-trait = "0.1.81"
-
+rust-bls-bn254 = {git = "ssh://git@github.com/Layr-Labs/rust-bls-bn254.git", rev = "2ebe5f4", features = ["std"] }
 #misc 
 parking_lot = "0.12"
 

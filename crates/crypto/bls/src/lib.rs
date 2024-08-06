@@ -5,22 +5,157 @@
 #![cfg_attr(not(test), warn(unused_crate_dependencies))]
 
 pub mod attestation;
-
+use alloy_primitives::U256;
+use ark_std::str::FromStr;
+use num_bigint::BigUint;
+use sha2::{Digest, Sha256};
 pub mod error;
 
 use alloy_primitives::U64;
-use ark_bn254::{Fq, Fr, G1Affine, G2Affine};
+
+use ark_bn254::{Fq, Fr, G1Affine, G1Projective, G2Affine, G2Projective};
 use ark_ec::{AffineRepr, CurveGroup};
 use ark_ff::{
     fields::{Field, PrimeField},
-    BigInt, BigInteger, One,
+    BigInt, BigInteger, One,BigInteger256
 };
-use eigen_utils::binding::BLSApkRegistry::{G1Point, G2Point};
+// use rust_bls_bn254::
+use eigen_utils::binding::{
+    RegistryCoordinator::{
+        self
+    },
+};use RegistryCoordinator::{SignatureWithSaltAndExpiry,G1Point};
+use eigen_utils::binding::BLSApkRegistry::{ G2Point as AlloyG2Point};
 use ethers::{core::types::H256, types::Address, utils::keccak256};
 pub type PrivateKey = Fr;
 pub type PublicKey = G1Affine;
 pub type BlsSignature = G1Affine;
 pub type OperatorId = H256;
+
+#[derive(Debug,Clone)]
+pub struct BlsG1Point {
+    g1: G1Affine,
+}
+
+impl BlsG1Point {
+    pub fn new(g1: G1Affine) -> Self {
+        Self { g1 }
+    }
+
+    pub fn g1(&self) -> G1Affine{
+        self.g1
+    }
+
+
+}
+
+pub struct BlsKeyPair {
+    priv_key: Fr,
+    pub_key: BlsG1Point,
+}
+
+impl BlsKeyPair {
+    pub fn new(fr: String) -> Self {
+        let sk = Fr::from_str(&fr).unwrap();
+        let pk = G1Projective::from(G1Affine::generator()) * sk;
+        Self {
+            priv_key: sk,
+            pub_key: BlsG1Point::new(pk.into_affine()),
+        }
+    }
+
+    pub fn public_key(&self) -> BlsG1Point{
+        self.pub_key.clone()
+    }
+
+    pub fn sign_hashed_to_curve_message(&self,g1_hashed_msg: G1Affine) -> Signature {
+
+        let sk_int: BigInteger256 = self.priv_key.into();
+        let r = g1_hashed_msg.mul_bigint(sk_int);
+        Signature::new(r.into_affine())
+    }
+}
+
+pub fn alloy_g1_point_to_g1_affine(g1_point : G1Point) -> G1Affine{
+
+    let x_point = g1_point.X.as_limbs();
+    let x = BigInt(*x_point);
+    let y_point = g1_point.X.as_limbs();
+    let y= BigInt(*y_point);
+    G1Affine::new(x.into(), y.into())
+
+}
+
+pub fn convert_to_g1_point(g1 : G1Affine) -> G1Point{
+
+    let x = g1.x().unwrap().0.0;
+    let y  = g1.y().unwrap().0.0;
+
+
+    let x_u256 = U256::from_limbs(x);
+    let y_256 = U256::from_limbs(y);
+
+    G1Point{X: x_u256, Y: y_256}
+
+
+
+}
+
+#[derive(Debug)]
+pub struct Signature{
+
+    g1_point: BlsG1Point
+
+}
+
+impl Signature{
+
+    pub fn new(g1:G1Affine ) -> Self{
+
+        Self{g1_point: BlsG1Point::new(g1)}
+
+    }
+
+    pub fn g1_point(&self) -> BlsG1Point{
+
+        self.g1_point.clone()
+
+    }
+}
+
+
+pub fn hash_to_curve(digest: &[u8]) -> G1Affine {
+    let one = Fq::one();
+    let three = Fq::from(3u64);
+    
+    let mut hasher = Sha256::new();
+    hasher.update(digest);
+    let hashed_result = hasher.finalize();
+
+    // Convert digest to a big integer and then to a field element
+    let mut x = {
+        let big_int = BigUint::from_bytes_be(&hashed_result);
+        let mut bytes = [0u8; 32];
+        big_int.to_bytes_be().iter().rev().enumerate().for_each(|(i, &b)| bytes[i] = b);
+        Fq::from_le_bytes_mod_order(&bytes)
+    };
+
+    loop {
+        // y = x^3 + 3
+        let mut y = x;
+        y.square_in_place();
+        y *= x;
+        y += three;
+
+        // Check if y is a quadratic residue (i.e., has a square root in the field)
+        if let Some(y) = y.sqrt() {
+            return G1Projective::new(x, y, Fq::one()).into_affine();
+        } else {
+            // x = x + 1
+            x += one;
+        }
+    }
+}
 
 pub const Q_INV_VEG: u64 = 14042775128853446655;
 pub const Q0: u64 = 4891460686036598785;
@@ -53,7 +188,7 @@ pub fn cids_multiplication(x: Fr, y: Fr) -> Fr {
         (t3, c0) = add_64(u2, t3, c0);
         (c2, _) = add_64(u3, 0, c0);
 
-        let m = Q_INV_VEG * t0;
+        let m = t0.wrapping_mul(Q_INV_VEG);
 
         (u0, c1) = mul_64(m, Q0);
         (_, c0) = add_64(t0, c1, 0);
@@ -94,7 +229,7 @@ pub fn cids_multiplication(x: Fr, y: Fr) -> Fr {
         (t3, c0) = add_64(u2, t3, c0);
         (c2, _) = add_64(u3, c2, c0);
 
-        let m = Q_INV_VEG * t0;
+        let m = t0.wrapping_mul(Q_INV_VEG);
 
         (u0, c1) = mul_64(m, Q0);
         (_, c0) = add_64(t0, c1, 0);
@@ -136,7 +271,7 @@ pub fn cids_multiplication(x: Fr, y: Fr) -> Fr {
         (t3, c0) = add_64(u2, t3, c0);
         (c2, _) = add_64(u3, c2, c0);
 
-        let m = Q_INV_VEG * t0;
+        let m = t0.wrapping_mul(Q_INV_VEG);
 
         (u0, c1) = mul_64(m, Q0);
         (_, c0) = add_64(t0, c1, 0);
@@ -178,7 +313,7 @@ pub fn cids_multiplication(x: Fr, y: Fr) -> Fr {
         (t3, c0) = add_64(u2, t3, c0);
         (c2, _) = add_64(u3, c2, c0);
 
-        let m = Q_INV_VEG * t0;
+        let m = t0.wrapping_mul(Q_INV_VEG);
 
         (u0, c1) = mul_64(m, Q0);
         (_, c0) = add_64(t0, c1, 0);
