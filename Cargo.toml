@@ -36,7 +36,7 @@ version = "0.0.1-alpha"
 edition = "2021"
 authors = ["Eigen Layer contributors"]
 rust-version = "1.79"
-repository = "https://github.com/supernovahs/eigen-rs"
+repository = "https://github.com/Layr-Labs/eigensdk-rs"
 homepage = ""
 license-file = "LICENSE.txt"
 

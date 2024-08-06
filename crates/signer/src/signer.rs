@@ -157,7 +157,7 @@ mod test {
         let config = get_aws_config(
             "localstack".into(),
             "localstack".into(),
-            Region::from_static(&AWS_US_WEST_REGION),
+            Region::from_static(AWS_US_WEST_REGION),
             localstack_endpoint,
         )
         .await;
@@ -225,14 +225,13 @@ mod test {
     }
 
     async fn start_localstack_container() -> ContainerAsync<GenericImage> {
-        let container = GenericImage::new(LOCALSTACK_IMAGE_NAME, LOCALSTACK_IMAGE_TAG)
+        GenericImage::new(LOCALSTACK_IMAGE_NAME, LOCALSTACK_IMAGE_TAG)
             .with_exposed_port(LOCALSTACK_PORT.tcp())
             .with_wait_for(WaitFor::message_on_stdout("Ready."))
             .with_mapped_port(LOCALSTACK_PORT, LOCALSTACK_PORT.tcp())
             .start()
             .await
-            .expect("Error starting localstack container");
-        container
+            .expect("Error starting localstack container")
     }
 
     async fn create_kms_key(client: &aws_sdk_kms::Client) -> KeyMetadata {
@@ -255,13 +254,12 @@ mod test {
         endpoint_url: String,
     ) -> SdkConfig {
         let creds = Credentials::new(access_key, secret_access_key, None, None, "Static");
-        let config = aws_config::load_defaults(BehaviorVersion::latest())
+        aws_config::load_defaults(BehaviorVersion::latest())
             .await
             .to_builder()
             .credentials_provider(SharedCredentialsProvider::new(creds))
             .endpoint_url(endpoint_url)
             .region(Some(region.clone()))
-            .build();
-        config
+            .build()
     }
 }
