@@ -45,5 +45,10 @@ mod tests {
         generate_bindings("ISlasher", "ISlasher.json", "../bindings");
         generate_bindings("IStrategy", "IStrategy.json", "../bindings");
         generate_bindings("IERC20", "IERC20.json", "../bindings");
+        generate_bindings(
+            "IBLSSignatureChecker",
+            "IBLSSignatureChecker.json",
+            "../bindings",
+        );
     }
 }
