@@ -38,10 +38,8 @@ impl AvsRegistryChainReader {
 
         let contract_registry_coordinator =
             RegistryCoordinator::new(registry_coordinator_addr, &provider);
-
         let bls_apk_registry_addr_result =
             contract_registry_coordinator.blsApkRegistry().call().await;
-
         match bls_apk_registry_addr_result {
             Ok(bls_apk_registry_return) => {
                 let RegistryCoordinator::blsApkRegistryReturn {

@@ -14,7 +14,7 @@ use tokio::sync::{
 };
 
 #[allow(dead_code)]
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct OperatorInfoServiceInMemory {
     avs_registry_reader: AvsRegistryChainReader,
     ws: String,
@@ -89,11 +89,12 @@ impl OperatorInfoServiceInMemory {
         let subcription_new_operator_registration_stream = provider.subscribe_logs(&filter).await?;
         let mut stream = subcription_new_operator_registration_stream.into_stream();
 
-        let mut shutdown_rx = shutdown_rx.clone();
+        let shutdown_rx = shutdown_rx.clone();
         let pub_keys = self.pub_keys.clone();
         tokio::spawn(async move {
             while let Some(log) = stream.next().await {
                 if shutdown_rx.has_changed().unwrap_or(false) {
+                    println!("shutdown ");
                     break;
                 }
 
@@ -162,7 +163,6 @@ mod tests {
     };
     use std::env;
     use tokio::sync::watch;
-    use tokio::time::{timeout, Duration};
 
     #[tokio::test]
     async fn test_query_past_registered_operator_events_and_fill_db() {
@@ -181,7 +181,7 @@ mod tests {
         )
         .await;
 
-        let s = operators_info_service_in_memory
+        operators_info_service_in_memory
             .query_past_registered_operator_events_and_fill_db(
                 2019065,
                 2039045,
@@ -219,9 +219,9 @@ mod tests {
         let (shutdown_tx, shutdown_rx) = watch::channel(());
 
         // Use a timeout to ensure the test does not run indefinitely
-        let service_handle = tokio::spawn({
-            let shutdown_rx = shutdown_rx.clone();
+        let _ = tokio::spawn({
             async move {
+                let shutdown_rx = shutdown_rx.clone();
                 operators_info_service_in_memory
                     .start_service(2019065, 2039045, shutdown_rx)
                     .await
@@ -232,10 +232,12 @@ mod tests {
         // Wait some time to simulate some operations
         tokio::time::sleep(tokio::time::Duration::from_millis(1000)).await;
 
-        // Send the shutdown signal
+        // // Send the shutdown signal
         let _ = shutdown_tx.send(());
 
-        // Wait for the service to finish
-        let _ = service_handle.await;
+        // TODO (supernova): Call Register Operator to emit the NewPubkeyRegistration event , so the subscriber catches it.
+        // Blocked : https://github.com/Layr-Labs/eigensdk-rs/issues/49
+        // // Wait for the service to finish
+        // let _ = service_handle.await;
     }
 }
