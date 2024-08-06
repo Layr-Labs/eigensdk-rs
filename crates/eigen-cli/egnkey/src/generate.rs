@@ -11,9 +11,9 @@ use std::{
 use uuid::Uuid;
 
 const PASSWORD_LENGTH: usize = 20;
-const DEFAULT_KEY_FOLDER: &str = "keys";
-const PASSWORD_FILE: &str = "password.txt";
-const PRIVATE_KEY_HEX_FILE: &str = "private_key_hex.txt";
+pub const DEFAULT_KEY_FOLDER: &str = "keys";
+pub const PASSWORD_FILE: &str = "password.txt";
+pub const PRIVATE_KEY_HEX_FILE: &str = "private_key_hex.txt";
 
 enum KeyGenerator {
     ECDSAKeyGenerator,
@@ -24,7 +24,7 @@ impl KeyGenerator {
     pub fn generate_keys(self, num_keys: u32, dir_path: &Path, password: String) {
         match self {
             KeyGenerator::ECDSAKeyGenerator => {
-                Self::generate_ecdsa_key(num_keys, &dir_path, password)
+                Self::generate_ecdsa_key(num_keys, dir_path, password)
             }
             KeyGenerator::BLSKeyGenerator => Self::generate_bls_key(num_keys, dir_path, password),
         }
@@ -44,7 +44,7 @@ impl KeyGenerator {
             encrypt_key(
                 key_path.clone(),
                 &mut OsRng,
-                private_key_hex.clone(),
+                private_key.to_bytes(),
                 password.clone(),
                 Some(&name),
             )
@@ -72,7 +72,7 @@ impl KeyGenerator {
 impl From<KeyType> for KeyGenerator {
     fn from(value: KeyType) -> Self {
         match value {
-            KeyType::Ecsda => KeyGenerator::ECDSAKeyGenerator,
+            KeyType::Ecdsa => KeyGenerator::ECDSAKeyGenerator,
             KeyType::Bls => KeyGenerator::BLSKeyGenerator,
         }
     }
@@ -92,7 +92,7 @@ pub fn generate(key_type: KeyType, num_keys: u32, output_dir: Option<String>) {
         None => {
             let id = Uuid::new_v4();
             let key_name = match key_type {
-                KeyType::Ecsda => "ecsda",
+                KeyType::Ecdsa => "ecdsa",
                 KeyType::Bls => "bls",
             };
             format!("{}-{}", key_name, id.to_string())

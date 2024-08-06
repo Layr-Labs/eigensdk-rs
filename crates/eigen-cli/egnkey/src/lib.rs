@@ -18,3 +18,43 @@ pub fn execute_egnkey(args: Args) {
         Commands::DeriveOperatorId { private_key } => todo!(),
     };
 }
+
+#[cfg(test)]
+pub mod test {
+    use crate::{
+        args::{Args, Commands, KeyType},
+        execute_egnkey,
+        generate::{DEFAULT_KEY_FOLDER, PASSWORD_FILE, PRIVATE_KEY_HEX_FILE},
+    };
+    use eth_keystore::decrypt_key;
+    use k256::SecretKey;
+    use std::fs;
+    use tempfile::tempdir;
+
+    #[test]
+    fn generate_ecdsa_key() {
+        let output_dir = tempdir().unwrap();
+        let output_path = output_dir.path();
+        let command = Commands::Generate {
+            key_type: KeyType::Ecdsa,
+            num_keys: 1,
+            output_dir: output_path.to_str().map(String::from),
+        };
+        let args = Args { command };
+
+        execute_egnkey(args);
+
+        let private_key_hex = fs::read_to_string(output_path.join(PRIVATE_KEY_HEX_FILE)).unwrap();
+        let password = fs::read_to_string(output_path.join(PASSWORD_FILE)).unwrap();
+        let key_path = output_path
+            .join(DEFAULT_KEY_FOLDER)
+            .join("1.ecdsa.key.json");
+
+        let decrypted_bytes = decrypt_key(key_path, password).unwrap();
+        let decrypted_private_key = SecretKey::from_slice(&decrypted_bytes).unwrap().to_bytes();
+
+        let private_key = hex::decode(private_key_hex).unwrap();
+
+        assert_eq!(private_key, decrypted_private_key.as_slice());
+    }
+}

@@ -66,6 +66,6 @@ It creates the following artifacts based on arguments
 
 #[derive(clap::ValueEnum, Debug, Clone)]
 pub enum KeyType {
-    Ecsda,
+    Ecdsa,
     Bls,
 }
