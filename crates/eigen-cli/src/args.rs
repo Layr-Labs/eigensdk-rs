@@ -16,7 +16,7 @@ pub struct Args {
 pub enum Commands {
     #[command(
         about = "Given an initial contract address, which can be either a registry coordinator or service manager address, 
-        outputs addresses for all relevant Eigenlayer and AVS contracts within the network",
+outputs addresses for all relevant Eigenlayer and AVS contracts within the network",
         alias = "a",
         group(
             ArgGroup::new("manager_or_coordinator")
