@@ -156,13 +156,13 @@ impl BlsAggregatorService {
         for (i, quorum_number) in quorum_nums.iter().enumerate() {
             quorum_threshold_percentage_map.insert(*quorum_number, quorum_threshold_percentages[i]);
         }
-        // todo remove unwraps and handle erorr better
+        // TODO(supernova) remove unwraps and handle erorr better
         let mut operator_state_avs = self
             .avs_registry_service
             .get_operators_avs_state_at_block(task_created_block, quorum_nums.clone().into())
             .await
             .map_err(|e| {
-                self.logger.error(
+                self.logger.fatal(
                     &format!(
                         "Failed to get operators state from avs registry, task_index: {}, err: {}",
                         task_index, e
@@ -176,7 +176,7 @@ impl BlsAggregatorService {
             .get_quorums_avs_state_at_block(quorum_nums.clone().into(), task_created_block)
             .await
             .map_err(|e| {
-                self.logger.error(
+                self.logger.fatal(
                     &format!(
                         "Failed to get quorums state from avs registry, task_index: {} , err: {}",
                         task_index, e

@@ -5,7 +5,7 @@ use eigen_chainio_utils::{
     convert_bn254_to_ark, convert_to_bn254_g1_point, convert_to_bn254_g2_point,
 };
 use eigen_client_elcontracts::reader::ELChainReader;
-use eigen_logging::{logger::Logger, tracing_logger::TracingLogger};
+use eigen_logging::tracing_logger::TracingLogger;
 use std::str::FromStr;
 
 use eigen_utils::binding::{

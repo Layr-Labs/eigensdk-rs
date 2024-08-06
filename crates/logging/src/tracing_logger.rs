@@ -1,7 +1,6 @@
 use super::log_level::LogLevel;
 use super::logger::Logger;
 use std::fmt::Debug;
-use std::process::exit;
 use tracing::{debug, error, info, trace, warn};
 
 // SLoggerOptions are options when creating a new SLogger.
@@ -31,12 +30,12 @@ impl Logger for TracingLogger {
         add_source: bool,
     ) -> Self {
         let tracing_level = match level {
+            LogLevel::Fatal => tracing::Level::ERROR,
             LogLevel::Error => tracing::Level::ERROR,
             LogLevel::Warn => tracing::Level::WARN,
             LogLevel::Info => tracing::Level::INFO,
             LogLevel::Debug => tracing::Level::DEBUG,
             LogLevel::Trace => tracing::Level::TRACE,
-            LogLevel::Fatal => tracing::Level::ERROR, // `Fatal` can map to `ERROR` or a custom level if supported
         };
         tracing::subscriber::set_global_default(
             tracing_subscriber::fmt::Subscriber::builder()
@@ -93,11 +92,15 @@ impl Logger for TracingLogger {
 
     fn fatal(&self, msg: &str, tags: &[impl Debug]) {
         error!("{} {:?}", msg, tags);
-        exit(1); // exit process
+        panic!("Fatal error occurred: {} {:?}", msg, tags);
     }
 
     fn log(&self, msg: &str, tags: &[impl Debug]) {
         match self.level {
+            LogLevel::Fatal => {
+                error!("Fatal");
+                self.fatal(msg, tags);
+            }
             LogLevel::Error => {
                 error!("Error");
                 self.error(msg, tags);
@@ -117,11 +120,6 @@ impl Logger for TracingLogger {
             LogLevel::Trace => {
                 trace!("Trace");
                 self.debug(msg, tags);
-            }
-            LogLevel::Fatal => {
-                error!("Fatal");
-                self.error(msg, tags);
-                exit(1); // exit process
             }
         }
     }
