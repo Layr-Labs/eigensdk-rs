@@ -1906,10 +1906,13 @@ dependencies = [
 name = "eigen-client-eth"
 version = "0.0.1-alpha"
 dependencies = [
+ "alloy-json-rpc",
  "alloy-primitives",
  "alloy-provider",
+ "alloy-transport",
  "alloy-transport-http",
  "async-trait",
+ "eigen-metrics-collectors-rpc-calls",
  "thiserror",
  "url",
 ]
