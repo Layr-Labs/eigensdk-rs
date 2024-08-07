@@ -8,6 +8,14 @@ use alloy_transport::TransportErrorKind;
 use thiserror::Error;
 pub mod args;
 pub mod eigen_address;
+use args::{Args, Commands};
+use convert::store;
+use generate::KeyGenerator;
+mod convert;
+mod generate;
+use crate::eigen_address::ContractAddresses;
+use eth_keystore::KeystoreError;
+use tokio::runtime::Runtime;
 
 pub const ANVIL_RPC_URL: &str = "http://localhost:8545";
 
@@ -20,14 +28,100 @@ pub enum EigenAddressCliError {
     RpcError(RpcError<TransportErrorKind>),
 }
 
+#[derive(Error, Debug)]
+pub enum EigenKeyCliError {
+    #[error("file error")]
+    FileError(std::io::Error),
+    #[error("encription error")]
+    KeystoreError(KeystoreError),
+}
+
+pub fn execute_command(args: Args) -> Result<(), EigenKeyCliError> {
+    match args.command {
+        Commands::GetAddresses {
+            service_manager,
+            registry_coordinator,
+            rpc_url,
+        } => {
+            let rt = Runtime::new().unwrap();
+            rt.block_on(async {
+                let addresses = ContractAddresses::get_addresses(
+                    service_manager,
+                    registry_coordinator,
+                    rpc_url,
+                )
+                .await
+                .unwrap();
+                println!("{}", serde_json::to_string_pretty(&addresses).unwrap());
+            });
+            // TODO: add error handling
+            Ok(())
+        }
+        Commands::Generate {
+            key_type,
+            num_keys,
+            output_dir,
+        } => KeyGenerator::from(key_type).generate(num_keys, output_dir),
+        Commands::Convert {
+            private_key,
+            output_file,
+            password,
+        } => store(private_key, output_file, password).map_err(EigenKeyCliError::KeystoreError),
+        Commands::DeriveOperatorId { private_key } => todo!(),
+    }
+}
+
 #[cfg(test)]
-mod test {
+pub mod test {
     use super::ANVIL_RPC_URL;
     use crate::eigen_address::ContractAddresses;
+    use crate::{
+        args::{Args, Commands, KeyType},
+        execute_command,
+        generate::{DEFAULT_KEY_FOLDER, PASSWORD_FILE, PRIVATE_KEY_HEX_FILE},
+    };
     use eigen_testing_utils::anvil_constants::{
         get_registry_coordinator_address, get_service_manager_address,
     };
+    use eth_keystore::decrypt_key;
+    use k256::SecretKey;
+    use rstest::rstest;
+    use std::fs;
+    use tempfile::tempdir;
     use tokio;
+
+    #[rstest]
+    #[case(KeyType::Ecdsa)]
+    #[case(KeyType::Bls)]
+    fn generate_key(#[case] key_type: KeyType) {
+        let output_dir = tempdir().unwrap();
+        let output_path = output_dir.path();
+        let command = Commands::Generate {
+            key_type: key_type.clone(),
+            num_keys: 1,
+            output_dir: output_path.to_str().map(String::from),
+        };
+        let args = Args { command };
+
+        execute_command(args).unwrap();
+
+        let private_key_hex = fs::read_to_string(output_path.join(PRIVATE_KEY_HEX_FILE)).unwrap();
+        let password = fs::read_to_string(output_path.join(PASSWORD_FILE)).unwrap();
+        let key_name = match key_type {
+            KeyType::Ecdsa => "ecdsa",
+            KeyType::Bls => "bls",
+        };
+        let key_path = output_path
+            .join(DEFAULT_KEY_FOLDER)
+            .join(format!("1.{}.key.json", key_name));
+
+        let decrypted_bytes = decrypt_key(key_path, password).unwrap();
+        let decrypted_private_key = SecretKey::from_slice(&decrypted_bytes).unwrap().to_bytes();
+
+        let private_key = hex::decode(private_key_hex).unwrap();
+
+        assert_eq!(private_key, decrypted_private_key.as_slice());
+    }
 
     #[tokio::test]
     async fn egnaddrs_with_service_manager_flag() {

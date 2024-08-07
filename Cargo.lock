@@ -1943,25 +1943,18 @@ dependencies = [
 ]
 
 [[package]]
-name = "egnaddrs"
+name = "eigen-chainio-utils"
 version = "0.0.1-alpha"
 dependencies = [
- "alloy-contract",
- "alloy-json-rpc",
- "alloy-primitives",
- "alloy-provider",
- "alloy-transport",
- "clap",
- "eigen-testing-utils",
+ "ark-bn254",
+ "ark-ff 0.4.2",
+ "eigen-crypto-bls",
+ "eigen-crypto-bn254",
  "eigen-utils",
- "serde",
- "serde_json",
- "thiserror",
- "tokio",
 ]
 
 [[package]]
-name = "egnkey"
+name = "eigen-cli"
 version = "0.0.1-alpha"
 dependencies = [
  "alloy-contract",
@@ -1987,35 +1980,6 @@ dependencies = [
  "thiserror",
  "tokio",
  "uuid 1.10.0",
-]
-
-[[package]]
-name = "eigen-chainio-utils"
-version = "0.0.1-alpha"
-dependencies = [
- "ark-bn254",
- "ark-ff 0.4.2",
- "eigen-crypto-bls",
- "eigen-crypto-bn254",
- "eigen-utils",
-]
-
-[[package]]
-name = "eigen-cli"
-version = "0.0.1-alpha"
-dependencies = [
- "alloy-contract",
- "alloy-json-rpc",
- "alloy-primitives",
- "alloy-provider",
- "alloy-transport",
- "clap",
- "eigen-testing-utils",
- "eigen-utils",
- "serde",
- "serde_json",
- "thiserror",
- "tokio",
 ]
 
 [[package]]
