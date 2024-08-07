@@ -13,6 +13,9 @@ use std::collections::HashMap;
 use std::fmt::Debug;
 use tracing::debug;
 
+/// Emitted when a new pubkey is registered
+pub const NEW_PUBKEY_REGISTRATION_EVENT: &str =
+    "NewPubkeyRegistration(address,(uint256,uint256),(uint256[2],uint256[2]))";
 /// Avs Registry chainreader
 #[derive(Debug, Clone, Default)]
 pub struct AvsRegistryChainReader {
@@ -382,7 +385,7 @@ impl AvsRegistryChainReader {
                             }
                             let filter = Filter::new()
                                 .select(i..to_block)
-                                .event("NewPubkeyRegistration(address,(uint256,uint256),(uint256[2],uint256[2]))")
+                                .event(NEW_PUBKEY_REGISTRATION_EVENT)
                                 .address(self.bls_apk_registry_addr);
 
                             let logs_result = provider.get_logs(&filter).await;
