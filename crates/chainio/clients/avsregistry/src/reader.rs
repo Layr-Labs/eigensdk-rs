@@ -391,21 +391,23 @@ impl AvsRegistryChainReader {
                                 Ok(logs) => {
                                     debug!(transactionLogs = ?logs, "avsRegistryChainReader.QueryExistingRegisteredOperatorPubKeys");
 
-                                    for v_log in logs.iter() {
-                                        if let Ok(pub_key_reg) =
-                                            v_log.log_decode::<BLSApkRegistry::NewPubkeyRegistration>()
-                                        {
-                                            let data = pub_key_reg.data();
-                                            let operator_addr = data.operator;
-                                            operator_addresses.push(operator_addr);
-                                            let g1_pub_key = data.pubkeyG1.clone();
-                                            let g2_pub_key = data.pubkeyG2.clone();
-                                            let operator_pub_key = OperatorPubKeys {
-                                                g1_pub_key,
-                                                g2_pub_key,
-                                            };
-                                            operator_pub_keys.push(operator_pub_key);
-                                        }
+                                    for pub_key_reg in logs
+                                        .iter()
+                                        .map(|v| {
+                                            v.log_decode::<BLSApkRegistry::NewPubkeyRegistration>()
+                                        })
+                                        .filter_map(Result::ok)
+                                    {
+                                        let data = pub_key_reg.data();
+                                        let operator_addr = data.operator;
+                                        operator_addresses.push(operator_addr);
+                                        let g1_pub_key = data.pubkeyG1.clone();
+                                        let g2_pub_key = data.pubkeyG2.clone();
+                                        let operator_pub_key = OperatorPubKeys {
+                                            g1_pub_key,
+                                            g2_pub_key,
+                                        };
+                                        operator_pub_keys.push(operator_pub_key);
                                     }
                                 }
                                 Err(e) => {
