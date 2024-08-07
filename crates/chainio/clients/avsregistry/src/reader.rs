@@ -379,10 +379,7 @@ impl AvsRegistryChainReader {
                         let mut operator_addresses: Vec<Address> = vec![];
                         let mut operator_pub_keys: Vec<OperatorPubKeys> = vec![];
                         while i <= stop_block {
-                            let mut to_block = i + (query_block_range - 1);
-                            if to_block > stop_block {
-                                to_block = stop_block;
-                            }
+                            let to_block = std::cmp::min(i + (query_block_range - 1), stop_block);
                             let filter = Filter::new()
                                 .select(i..to_block)
                                 .event(NEW_PUBKEY_REGISTRATION_EVENT)
