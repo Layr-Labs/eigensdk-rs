@@ -1,6 +1,5 @@
 #[cfg(test)]
 mod tests {
-
     use ethers::prelude::Abigen;
 
     /// Generate rust bindings using ethers
