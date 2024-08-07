@@ -8,7 +8,7 @@ use alloy_transport::TransportErrorKind;
 use thiserror::Error;
 pub mod args;
 pub mod eigen_address;
-use args::{Args, Commands, EigenKeyCommand};
+use args::{Commands, EigenKeyCommand};
 use convert::store;
 use generate::KeyGenerator;
 mod convert;
@@ -44,7 +44,20 @@ pub enum EigenKeyCliError {
     KeystoreError(KeystoreError),
 }
 
-pub fn execute_egnkey(subcommand: EigenKeyCommand) -> Result<(), EigenCliError> {
+/// Executes a CLI command.
+///
+/// # Arguments
+///
+/// * `command` - An egnkey subcommand which can be `generate`, `convert` or `derive-operator-id`.
+///
+/// # Returns
+///
+/// - Nothing (unit type ()).
+///
+/// # Errors
+///
+/// - If the subcommand execution fails (see `EigenKeyCliError`).
+pub fn execute_egnkey_subcommand(subcommand: EigenKeyCommand) -> Result<(), EigenCliError> {
     match subcommand {
         EigenKeyCommand::Generate {
             key_type,
@@ -64,6 +77,19 @@ pub fn execute_egnkey(subcommand: EigenKeyCommand) -> Result<(), EigenCliError> 
     }
 }
 
+/// Executes a CLI command.
+///
+/// # Arguments
+///
+/// * `command` - A CLI command which can be `egnaddrs` or `egnkey`
+///
+/// # Returns
+///
+/// - Nothing (unit type ()).
+///
+/// # Errors
+///
+/// - If the command execution fails (see `EigenCliError`).
 pub fn execute_command(command: Commands) -> Result<(), EigenCliError> {
     match command {
         Commands::EigenAddress {
@@ -80,7 +106,7 @@ pub fn execute_command(command: Commands) -> Result<(), EigenCliError> {
             println!("{}", serde_json::to_string_pretty(&addresses).unwrap());
             Ok(())
         }
-        Commands::EigenKey { subcommand } => execute_egnkey(subcommand),
+        Commands::EigenKey { subcommand } => execute_egnkey_subcommand(subcommand),
     }
 }
 
@@ -90,7 +116,7 @@ pub mod test {
     use crate::args::EigenKeyCommand;
     use crate::eigen_address::ContractAddresses;
     use crate::{
-        args::{Args, Commands, KeyType},
+        args::{Commands, KeyType},
         execute_command,
         generate::{DEFAULT_KEY_FOLDER, PASSWORD_FILE, PRIVATE_KEY_HEX_FILE},
     };
