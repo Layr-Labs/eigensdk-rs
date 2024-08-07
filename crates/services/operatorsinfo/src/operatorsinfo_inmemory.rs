@@ -4,7 +4,10 @@ use alloy_rpc_types::Filter;
 use anyhow::Result;
 use eigen_client_avsregistry::reader::AvsRegistryChainReader;
 use eigen_types::operator::{operator_id_from_g1_pub_key, OperatorPubKeys};
-use eigen_utils::binding::BLSApkRegistry::{self, G1Point, G2Point};
+use eigen_utils::{
+    binding::BLSApkRegistry::{self, G1Point, G2Point},
+    NEW_PUBKEY_REGISTRATION_EVENT,
+};
 use futures_util::StreamExt;
 use std::collections::HashMap;
 use tokio::sync::{
@@ -83,7 +86,7 @@ impl OperatorInfoServiceInMemory {
         let provider = ProviderBuilder::new().on_ws(ws).await?;
         let current_block_number = provider.get_block_number().await?;
         let filter = Filter::new()
-            .event("NewPubkeyRegistration(address,(uint256,uint256),(uint256[2],uint256[2]))")
+            .event(NEW_PUBKEY_REGISTRATION_EVENT)
             .from_block(current_block_number);
 
         let subcription_new_operator_registration_stream = provider.subscribe_logs(&filter).await?;
@@ -115,6 +118,7 @@ impl OperatorInfoServiceInMemory {
                         },
                     };
                     // Send message
+                    // TODO(supernova): Log
                     let _ = pub_keys.send(OperatorsInfoMessage::InsertOperatorInfo(
                         event_data.operator,
                         operator_pub_key,

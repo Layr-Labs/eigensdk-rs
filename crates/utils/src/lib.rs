@@ -68,3 +68,7 @@ pub async fn get_ws_provider(
     let ws = WsConnect::new(rpc_url);
     ProviderBuilder::new().on_ws(ws).await
 }
+
+/// Emitted when a new pubkey is registered
+pub const NEW_PUBKEY_REGISTRATION_EVENT: &str =
+    "NewPubkeyRegistration(address,(uint256,uint256),(uint256[2],uint256[2]))";

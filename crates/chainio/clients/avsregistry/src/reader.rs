@@ -4,6 +4,7 @@ use alloy_provider::Provider;
 use alloy_rpc_types::Filter;
 use ark_ff::Zero;
 use eigen_types::operator::{bitmap_to_quorum_ids, OperatorPubKeys};
+use eigen_utils::NEW_PUBKEY_REGISTRATION_EVENT;
 use eigen_utils::{
     binding::{BLSApkRegistry, OperatorStateRetriever, RegistryCoordinator, StakeRegistry},
     get_provider, get_ws_provider,
@@ -13,9 +14,6 @@ use std::collections::HashMap;
 use std::fmt::Debug;
 use tracing::debug;
 
-/// Emitted when a new pubkey is registered
-pub const NEW_PUBKEY_REGISTRATION_EVENT: &str =
-    "NewPubkeyRegistration(address,(uint256,uint256),(uint256[2],uint256[2]))";
 /// Avs Registry chainreader
 #[derive(Debug, Clone, Default)]
 pub struct AvsRegistryChainReader {
