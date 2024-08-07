@@ -76,7 +76,8 @@ pub fn execute_egnkey_subcommand(subcommand: EigenKeyCommand) -> Result<(), Eige
             .map_err(EigenKeyCliError::KeystoreError)
             .map_err(EigenCliError::EigenKeyCliError),
         EigenKeyCommand::DeriveOperatorId { private_key } => {
-            derive_operator_id(private_key);
+            let operator_id = derive_operator_id(private_key);
+            println!("{}", operator_id);
             Ok(())
         }
     }
@@ -127,6 +128,7 @@ pub mod test {
         args::{Commands, KeyType},
         execute_command,
         generate::{DEFAULT_KEY_FOLDER, PASSWORD_FILE, PRIVATE_KEY_HEX_FILE},
+        operator_id::derive_operator_id,
     };
     use eigen_testing_utils::anvil_constants::{
         get_registry_coordinator_address, get_service_manager_address,
@@ -169,6 +171,16 @@ pub mod test {
         let private_key = hex::decode(private_key_hex).unwrap();
 
         assert_eq!(private_key, decrypted_private_key.as_slice());
+    }
+
+    #[test]
+    fn egnkey_derive_operator_id() {
+        let private_key =
+            "1e4fa82657771dc209c466a0c2f696b39320a0284bf725cf1740971fe7e2d3cf".to_string();
+        let operator_id = derive_operator_id(private_key);
+        let expected_operator_id =
+            "48beccce16ccdf8000c13d5af5f91c7c3dac6c47b339d993d229af1500dbe4a9".to_string();
+        assert_eq!(expected_operator_id, operator_id);
     }
 
     #[tokio::test]

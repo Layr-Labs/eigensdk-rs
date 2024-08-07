@@ -2,7 +2,7 @@ use alloy_primitives::keccak256;
 use ark_ec::CurveGroup;
 use eigen_crypto_bls::attestation::KeyPair;
 
-pub fn derive_operator_id(private_key: String) {
+pub fn derive_operator_id(private_key: String) -> String {
     let key_pair = KeyPair::from_string(private_key).unwrap();
     let pub_key = key_pair.get_pub_key_g1();
     let pub_key_affine = pub_key.into_affine();
@@ -14,5 +14,5 @@ pub fn derive_operator_id(private_key: String) {
     let y_bytes = y_int.to_bytes_be();
 
     let hash = keccak256([x_bytes, y_bytes].concat());
-    println!("{}", hex::encode(hash));
+    hex::encode(hash)
 }
