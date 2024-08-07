@@ -17,14 +17,14 @@ pub enum Commands {
     #[command(
         about = "Given an initial contract address, which can be either a registry coordinator or service manager address, 
 outputs addresses for all relevant Eigenlayer and AVS contracts within the network",
-        alias = "a",
+        name = "egnaddrs",
         group(
             ArgGroup::new("manager_or_coordinator")
                 .required(true)
                 .args(&["service_manager", "registry_coordinator"]),
         )
     )]
-    GetAddresses {
+    EigenAddress {
         #[arg(
             long,
             help = "ServiceManager contract address",
@@ -42,6 +42,16 @@ outputs addresses for all relevant Eigenlayer and AVS contracts within the netwo
         #[arg(long, help = "rpc url", default_value = ANVIL_RPC_URL)]
         rpc_url: String,
     },
+
+    #[command(about = "EigenLayer CLI Key tools", name = "egnkey")]
+    EigenKey {
+        #[command(subcommand)]
+        subcommand: EigenKeyCommand,
+    },
+}
+
+#[derive(Subcommand, Debug)]
+pub enum EigenKeyCommand {
     #[command(
         about = "Generate keys for testing purpose.
 This command creates ecdsa or bls key pair for testing purposes. It generates

@@ -8,7 +8,7 @@ use alloy_transport::TransportErrorKind;
 use thiserror::Error;
 pub mod args;
 pub mod eigen_address;
-use args::{Args, Commands};
+use args::{Args, Commands, EigenKeyCommand};
 use convert::store;
 use generate::KeyGenerator;
 mod convert;
@@ -44,9 +44,29 @@ pub enum EigenKeyCliError {
     KeystoreError(KeystoreError),
 }
 
-pub fn execute_command(args: Args) -> Result<(), EigenCliError> {
-    match args.command {
-        Commands::GetAddresses {
+pub fn execute_egnkey(subcommand: EigenKeyCommand) -> Result<(), EigenCliError> {
+    match subcommand {
+        EigenKeyCommand::Generate {
+            key_type,
+            num_keys,
+            output_dir,
+        } => KeyGenerator::from(key_type)
+            .generate(num_keys, output_dir)
+            .map_err(EigenCliError::EigenKeyCliError),
+        EigenKeyCommand::Convert {
+            private_key,
+            output_file,
+            password,
+        } => store(private_key, output_file, password)
+            .map_err(EigenKeyCliError::KeystoreError)
+            .map_err(EigenCliError::EigenKeyCliError),
+        EigenKeyCommand::DeriveOperatorId { private_key } => todo!(),
+    }
+}
+
+pub fn execute_command(command: Commands) -> Result<(), EigenCliError> {
+    match command {
+        Commands::EigenAddress {
             service_manager,
             registry_coordinator,
             rpc_url,
@@ -60,27 +80,14 @@ pub fn execute_command(args: Args) -> Result<(), EigenCliError> {
             println!("{}", serde_json::to_string_pretty(&addresses).unwrap());
             Ok(())
         }
-        Commands::Generate {
-            key_type,
-            num_keys,
-            output_dir,
-        } => KeyGenerator::from(key_type)
-            .generate(num_keys, output_dir)
-            .map_err(EigenCliError::EigenKeyCliError),
-        Commands::Convert {
-            private_key,
-            output_file,
-            password,
-        } => store(private_key, output_file, password)
-            .map_err(EigenKeyCliError::KeystoreError)
-            .map_err(EigenCliError::EigenKeyCliError),
-        Commands::DeriveOperatorId { private_key } => todo!(),
+        Commands::EigenKey { subcommand } => execute_egnkey(subcommand),
     }
 }
 
 #[cfg(test)]
 pub mod test {
     use super::ANVIL_RPC_URL;
+    use crate::args::EigenKeyCommand;
     use crate::eigen_address::ContractAddresses;
     use crate::{
         args::{Args, Commands, KeyType},
@@ -103,14 +110,14 @@ pub mod test {
     fn generate_key(#[case] key_type: KeyType) {
         let output_dir = tempdir().unwrap();
         let output_path = output_dir.path();
-        let command = Commands::Generate {
+        let subcommand = EigenKeyCommand::Generate {
             key_type: key_type.clone(),
             num_keys: 1,
             output_dir: output_path.to_str().map(String::from),
         };
-        let args = Args { command };
+        let command = Commands::EigenKey { subcommand };
 
-        execute_command(args).unwrap();
+        execute_command(command).unwrap();
 
         let private_key_hex = fs::read_to_string(output_path.join(PRIVATE_KEY_HEX_FILE)).unwrap();
         let password = fs::read_to_string(output_path.join(PASSWORD_FILE)).unwrap();
