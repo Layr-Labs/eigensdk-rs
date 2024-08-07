@@ -10,6 +10,8 @@ jobs:
   test:
     name: Run Integration Tests
     runs-on: ubuntu-latest
+    environment: testing
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
