@@ -16,6 +16,7 @@ ark-serialize = "0.4.2"
 clap.workspace = true
 eigen-crypto-bls.workspace = true
 eigen-testing-utils.workspace = true
+eigen-types.workspace = true
 eigen-utils.workspace = true
 eth-keystore.workspace = true
 hex.workspace = true
@@ -27,7 +28,8 @@ serde_json.workspace = true
 thiserror.workspace = true
 tokio.workspace = true
 uuid = { version = "1.10.0", features = ["v4"] }
-
+ark-ec = "0.4"
+num-bigint = "0.4.6"
 [dev-dependencies]
 eigen-testing-utils.workspace = true
 rstest = "0.22.0"

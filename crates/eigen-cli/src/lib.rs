@@ -11,8 +11,10 @@ pub mod eigen_address;
 use args::{Commands, EigenKeyCommand};
 use convert::store;
 use generate::KeyGenerator;
+use operator_id::derive_operator_id;
 mod convert;
 mod generate;
+mod operator_id;
 use crate::eigen_address::ContractAddresses;
 use eth_keystore::KeystoreError;
 use tokio::runtime::Runtime;
@@ -73,7 +75,10 @@ pub fn execute_egnkey_subcommand(subcommand: EigenKeyCommand) -> Result<(), Eige
         } => store(private_key, output_file, password)
             .map_err(EigenKeyCliError::KeystoreError)
             .map_err(EigenCliError::EigenKeyCliError),
-        EigenKeyCommand::DeriveOperatorId { private_key } => todo!(),
+        EigenKeyCommand::DeriveOperatorId { private_key } => {
+            derive_operator_id(private_key);
+            Ok(())
+        }
     }
 }
 
@@ -106,7 +111,10 @@ pub fn execute_command(command: Commands) -> Result<(), EigenCliError> {
             println!("{}", serde_json::to_string_pretty(&addresses).unwrap());
             Ok(())
         }
-        Commands::EigenKey { subcommand } => execute_egnkey_subcommand(subcommand),
+        Commands::EigenKey { subcommand } => {
+            execute_egnkey_subcommand(subcommand);
+            Ok(())
+        }
     }
 }
 
