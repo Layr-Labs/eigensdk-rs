@@ -4,30 +4,30 @@ members = [
     "crates/chainio/clients/elcontracts/",
     "crates/chainio/clients/eth/",
     "crates/chainio/clients/fireblocks/",
-    "crates/contracts/bindings/",
     "crates/chainio/txmanager/",
     "crates/chainio/utils/",
-    "crates/crypto/bn254/",
-    "crates/utils/",
+    "crates/contracts/bindings/",
     "crates/crypto/bls/",
+    "crates/crypto/bn254/",
     "crates/crypto/keystore/",
     "crates/eigen-cli/",
+    "crates/logging/",
+    "crates/metrics/",
     "crates/metrics/collectors/economic/",
     "crates/metrics/collectors/rpc_calls/",
+    "crates/metrics/metrics-derive",
     "crates/services/avsregistry/",
     "crates/services/bls_aggregation/",
-    "crates/metrics/metrics-derive",
     "crates/services/operatorsinfo/",
-    "crates/types/",
-    "crates/metrics/",
-    "crates/types/",
-    "crates/logging/",
     "crates/signer/",
-    "examples/info-operator-service/",
-    "testing/testing-utils/",
+    "crates/types/",
+    "crates/types/",
+    "crates/utils/",
+    "examples/anvil-utils",
     "examples/avsregistry-read",
     "examples/avsregistry-write",
-    "examples/anvil-utils",
+    "examples/info-operator-service/",
+    "testing/testing-utils/",
 ]
 resolver = "2"
 
@@ -55,8 +55,8 @@ aws-config = "1.5.4"
 aws-sdk-kms = "1.37.0"
 bn254 = { git = "https://github.com/sedaprotocol/bn254" }
 clap = { version = "4.5.11", features = ["derive"] }
-eigen-chainio-utils = { path = "crates/chainio/utils/" }
 eigen-chainio-txmanager = { path = "crates/chainio/txmanager/" }
+eigen-chainio-utils = { path = "crates/chainio/utils/" }
 eigen-client-avsregistry = { path = "crates/chainio/clients/avsregistry" }
 eigen-client-elcontracts = { path = "crates/chainio/clients/elcontracts" }
 eigen-client-eth = { path = "crates/chainio/clients/eth" }
@@ -102,8 +102,11 @@ tracing = "0.1.40"
 tracing-subscriber = { version = "0.3", features = ["json"] }
 url = "2.5.2"
 
+#misc
+parking_lot = "0.12"
 
-# examplesalloy-chains = "0.1.15"#alloyparking_lot = "0.12"#misc
+#alloy
+alloy-chains = "0.1.15"
 alloy-consensus = { version = "0.1", default-features = false }
 alloy-contract = { version = "0.1", default-features = false }
 alloy-dyn-abi = "0.7.2"
