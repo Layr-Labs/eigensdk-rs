@@ -29,7 +29,6 @@ impl KeyGenerator {
     ///
     /// # Arguments
     ///
-    /// * `key_type` - The type of the key to generate.
     /// * `num_keys` - The number of keys to generate.
     /// * `output_dir` - The directory where the key files are generated.
     pub fn generate(
@@ -61,7 +60,6 @@ impl KeyGenerator {
     ///
     /// * `num_keys` - The number of keys to generate.
     /// * `path` - The path to the directory where the generated files are stored.
-    /// * `password` - The password used to encrypt the keys.
     fn generate_keys(self, num_keys: u32, path: &Path) -> Result<(), EigenKeyCliError> {
         let key_path = path.join(DEFAULT_KEY_FOLDER);
         let private_key_path = path.join(PRIVATE_KEY_HEX_FILE);

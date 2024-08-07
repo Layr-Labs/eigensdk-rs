@@ -2,25 +2,27 @@
     html_logo_url = "https://github.com/Layr-Labs/eigensdk-rs/assets/91280922/bd13caec-3c00-4afc-839a-b83d2890beb5",
     issue_tracker_base_url = "https://github.com/Layr-Labs/eigensdk-rs/issues/"
 )]
+use crate::eigen_address::ContractAddresses;
 use alloy_contract::Error as ContractError;
 use alloy_json_rpc::RpcError;
 use alloy_transport::TransportErrorKind;
-use thiserror::Error;
-pub mod args;
-pub mod eigen_address;
 use args::{Commands, EigenKeyCommand};
 use convert::store;
+use eigen_crypto_bls::error::BlsError;
 use generate::KeyGenerator;
 use operator_id::derive_operator_id;
+use thiserror::Error;
+pub mod args;
 mod convert;
+pub mod eigen_address;
 mod generate;
 mod operator_id;
-use crate::eigen_address::ContractAddresses;
 use eth_keystore::KeystoreError;
 use tokio::runtime::Runtime;
 
 pub const ANVIL_RPC_URL: &str = "http://localhost:8545";
 
+/// Possible errors raised while executing a CLI command
 #[derive(Error, Debug)]
 pub enum EigenCliError {
     #[error("address error")]
@@ -38,45 +40,43 @@ pub enum EigenAddressCliError {
     RpcError(RpcError<TransportErrorKind>),
 }
 
+/// Possible errors raised while executing egnkey commands
 #[derive(Error, Debug)]
 pub enum EigenKeyCliError {
     #[error("file error")]
     FileError(std::io::Error),
     #[error("encription error")]
     KeystoreError(KeystoreError),
+    #[error("BLS error")]
+    BLSError(BlsError),
 }
 
-/// Executes a CLI command.
+/// Executes an `egnkey` subcommand.
 ///
 /// # Arguments
 ///
-/// * `command` - An egnkey subcommand which can be `generate`, `convert` or `derive-operator-id`.
-///
-/// # Returns
-///
-/// - Nothing (unit type ()).
+/// * `subcommand` - An egnkey subcommand which can be `generate`, `convert` or `derive-operator-id`.
 ///
 /// # Errors
 ///
-/// - If the subcommand execution fails (see `EigenKeyCliError`).
-pub fn execute_egnkey_subcommand(subcommand: EigenKeyCommand) -> Result<(), EigenCliError> {
+/// - If the subcommand execution fails (`EigenKeyCliError`).
+pub fn execute_egnkey_subcommand(subcommand: EigenKeyCommand) -> Result<(), EigenKeyCliError> {
     match subcommand {
         EigenKeyCommand::Generate {
             key_type,
             num_keys,
             output_dir,
-        } => KeyGenerator::from(key_type)
-            .generate(num_keys, output_dir)
-            .map_err(EigenCliError::EigenKeyCliError),
+        } => KeyGenerator::from(key_type).generate(num_keys, output_dir),
+
         EigenKeyCommand::Convert {
             private_key,
             output_file,
             password,
-        } => store(private_key, output_file, password)
-            .map_err(EigenKeyCliError::KeystoreError)
-            .map_err(EigenCliError::EigenKeyCliError),
+        } => store(private_key, output_file, password).map_err(EigenKeyCliError::KeystoreError),
+
         EigenKeyCommand::DeriveOperatorId { private_key } => {
-            let operator_id = derive_operator_id(private_key);
+            let operator_id =
+                derive_operator_id(private_key).map_err(EigenKeyCliError::BLSError)?;
             println!("{}", operator_id);
             Ok(())
         }
@@ -87,15 +87,11 @@ pub fn execute_egnkey_subcommand(subcommand: EigenKeyCommand) -> Result<(), Eige
 ///
 /// # Arguments
 ///
-/// * `command` - A CLI command which can be `egnaddrs` or `egnkey`
-///
-/// # Returns
-///
-/// - Nothing (unit type ()).
+/// * `command` - A CLI command which can be `Commands::EigenAddress` or `Commands::EigenKey`
 ///
 /// # Errors
 ///
-/// - If the command execution fails (see `EigenCliError`).
+/// - If the command execution fails (`EigenCliError`).
 pub fn execute_command(command: Commands) -> Result<(), EigenCliError> {
     match command {
         Commands::EigenAddress {
@@ -113,7 +109,7 @@ pub fn execute_command(command: Commands) -> Result<(), EigenCliError> {
             Ok(())
         }
         Commands::EigenKey { subcommand } => {
-            execute_egnkey_subcommand(subcommand);
+            execute_egnkey_subcommand(subcommand).map_err(EigenCliError::EigenKeyCliError)?;
             Ok(())
         }
     }
@@ -177,7 +173,7 @@ pub mod test {
     fn egnkey_derive_operator_id() {
         let private_key =
             "1e4fa82657771dc209c466a0c2f696b39320a0284bf725cf1740971fe7e2d3cf".to_string();
-        let operator_id = derive_operator_id(private_key);
+        let operator_id = derive_operator_id(private_key).unwrap();
         let expected_operator_id =
             "48beccce16ccdf8000c13d5af5f91c7c3dac6c47b339d993d229af1500dbe4a9".to_string();
         assert_eq!(expected_operator_id, operator_id);
