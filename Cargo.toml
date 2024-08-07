@@ -65,6 +65,7 @@ eigen-contract-bindings = { path = "crates/contracts/bindings/" }
 eigen-crypto-bls = { path = "crates/crypto/bls/" }
 eigen-crypto-bn254 = { path = "crates/crypto/bn254/" }
 eigen-crypto-keystore = { path = "crates/crypto/keystore/" }
+eigen-logging = { path = "crates/logging/" }
 eigen-signer = { path = "crates/signer/" }
 eigen-metrics = { version = "0.0.1-alpha", path = "crates/metrics/" }
 eigen-metrics-collectors-economic = { path = "crates/metrics/collectors/economic" }
