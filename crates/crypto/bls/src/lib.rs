@@ -5,13 +5,13 @@
 #![cfg_attr(not(test), warn(unused_crate_dependencies))]
 
 pub mod attestation;
-use alloy_primitives::U256;
+use alloy_primitives::{U256};
 use ark_std::str::FromStr;
 use num_bigint::BigUint;
 use sha2::{Digest, Sha256};
 pub mod error;
 
-use alloy_primitives::U64;
+use alloy_primitives::Uint;
 
 use ark_bn254::{Fq, Fr, G1Affine, G1Projective, G2Affine, G2Projective};
 use ark_ec::{AffineRepr, CurveGroup};
@@ -76,28 +76,27 @@ impl BlsKeyPair {
     }
 }
 
-pub fn alloy_g1_point_to_g1_affine(g1_point : G1Point) -> G1Affine{
-
-    let x_point = g1_point.X.as_limbs();
-    let x = BigInt(*x_point);
-    let y_point = g1_point.X.as_limbs();
-    let y= BigInt(*y_point);
-    G1Affine::new(x.into(), y.into())
-
+pub fn alloy_g1_point_to_g1_affine(g1_point: G1Point) -> G1Affine {
+    let x_point = g1_point.X.into_limbs();
+    let x = Fq::new(BigInteger256::new(x_point));
+    let y_point = g1_point.Y.into_limbs();
+    let y = Fq::new(BigInteger256::new(y_point));
+    G1Affine::new(x, y)
 }
 
 pub fn convert_to_g1_point(g1 : G1Affine) -> G1Point{
+    println!("g1 affine input{:?}",g1);
+    let x_point = g1.x().unwrap();
+    let y_point = g1.y().unwrap();
+    println!("x point{:?}",x_point.0.0);
+    println!("x_point{:?}",(Fq::new(BigInteger256::new(x_point.0.0))));
+    println!("y_point{:?}",(Fq::new(BigInteger256::new(y_point.0.0))));
+    let check = Fq::from(BigInt(x_point.0.0));
+    assert_eq!(*x_point,check);
+    println!("check{:?}",check);
+    // G1Point{X: x_u256, Y: y_256}
 
-    let x = g1.x().unwrap().0.0;
-    let y  = g1.y().unwrap().0.0;
-
-
-    let x_u256 = U256::from_limbs(x);
-    let y_256 = U256::from_limbs(y);
-
-    G1Point{X: x_u256, Y: y_256}
-
-
+    todo!()
 
 }
 

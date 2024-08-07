@@ -125,7 +125,7 @@ impl AvsRegistryChainWriter {
     ) -> Result<TxHash, AvsRegistryError> {
         let provider = get_signer(self.signer.clone(), &self.provider);
         let wallet = PrivateKeySigner::from_str(&self.signer).expect("failed to generate wallet ");
-
+        println!("wallet address {:?}",wallet.address());
         // tracing info
         info!(avs_service_manager = %self.service_manager_addr, operator= %wallet.address(),quorum_numbers = ?quorum_numbers,"quorum_numbers,registering operator with the AVS's registry coordinator");
         let contract_registry_coordinator =
@@ -140,14 +140,14 @@ impl AvsRegistryChainWriter {
                 let RegistryCoordinator::pubkeyRegistrationMessageHashReturn {
                     _0: g1_hashes_msg_to_sign,
                 } = g1_hashes_msg_to_sign_return;
-
                 let g1_point:G1Point  = G1Point{X: g1_hashes_msg_to_sign.X,Y: g1_hashes_msg_to_sign.Y};
-
-                let sig = bls_key_pair.sign_hashed_to_curve_message(alloy_g1_point_to_g1_affine(g1_hashes_msg_to_sign));
+                println!("g1 hashed msg to sign{:?}",g1_point);
+                println!("g1 to alloy{:?}",alloy_g1_point_to_g1_affine(g1_hashes_msg_to_sign.clone()));
+                let sig = bls_key_pair.sign_hashed_to_curve_message(alloy_g1_point_to_g1_affine(g1_hashes_msg_to_sign)).g1_point();
                 println!("sig{:?}",sig);
-                let alloy_g1_point_signed_msg = convert_to_g1_point(sig.g1_point().g1());
+                let alloy_g1_point_signed_msg = convert_to_g1_point(sig.g1());
 
-
+ 
                 println!("alloy_g1_point_signed_msg{:?}", alloy_g1_point_signed_msg);
 
                 // let g1_pubkey_bn254 = convert_to_bn254_g1_point(bls_key_pair.get_pub_key_g1());

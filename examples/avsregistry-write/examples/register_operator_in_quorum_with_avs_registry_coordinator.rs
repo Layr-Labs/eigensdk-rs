@@ -27,7 +27,7 @@ use eyre::Result;
 #[tokio::main]
 async fn main() -> Result<()> {
     let holesky_provider = "https://ethereum-holesky-rpc.publicnode.com";
-    let pvt_key = "160443ef7d1ada994b300f7d2bf88db16217db6f825708e4b23f69aa028d7c8c";
+    let pvt_key = "bead471191bea97fc3aeac36c9d74c895e8a6242602e144e43152f96219e96e8";
     let avs_registry_writer = AvsRegistryChainWriter::build_avs_registry_chain_writer(
         holesky_provider.to_string(),
         pvt_key.to_string(),
@@ -48,7 +48,7 @@ async fn main() -> Result<()> {
 
 
     let _sk = Fr::from_str("12248929636257230549931416853095037629726205319386239410403476017439825112537").unwrap();
-    println!("{:?}", _sk.0.0);
+    println!("{:?}", _sk);
     let pk = G1Projective::from(G1Affine::generator()) * _sk;
     println!("{:?}", pk.into_affine());
     let mut compressed_bytes = Vec::new();
