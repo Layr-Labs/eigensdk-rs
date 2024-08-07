@@ -19,6 +19,14 @@ use tokio::runtime::Runtime;
 
 pub const ANVIL_RPC_URL: &str = "http://localhost:8545";
 
+#[derive(Error, Debug)]
+pub enum EigenCliError {
+    #[error("address error")]
+    EigenAddressCliError(EigenAddressCliError),
+    #[error("key error")]
+    EigenKeyCliError(EigenKeyCliError),
+}
+
 /// Possible errors raised while trying to get contract addresses
 #[derive(Error, Debug)]
 pub enum EigenAddressCliError {
@@ -36,7 +44,7 @@ pub enum EigenKeyCliError {
     KeystoreError(KeystoreError),
 }
 
-pub fn execute_command(args: Args) -> Result<(), EigenKeyCliError> {
+pub fn execute_command(args: Args) -> Result<(), EigenCliError> {
     match args.command {
         Commands::GetAddresses {
             service_manager,
@@ -44,29 +52,28 @@ pub fn execute_command(args: Args) -> Result<(), EigenKeyCliError> {
             rpc_url,
         } => {
             let rt = Runtime::new().unwrap();
-            rt.block_on(async {
-                let addresses = ContractAddresses::get_addresses(
-                    service_manager,
-                    registry_coordinator,
-                    rpc_url,
-                )
-                .await
-                .unwrap();
-                println!("{}", serde_json::to_string_pretty(&addresses).unwrap());
-            });
-            // TODO: add error handling
+            let addresses = rt.block_on(async {
+                ContractAddresses::get_addresses(service_manager, registry_coordinator, rpc_url)
+                    .await
+                    .map_err(EigenCliError::EigenAddressCliError)
+            })?;
+            println!("{}", serde_json::to_string_pretty(&addresses).unwrap());
             Ok(())
         }
         Commands::Generate {
             key_type,
             num_keys,
             output_dir,
-        } => KeyGenerator::from(key_type).generate(num_keys, output_dir),
+        } => KeyGenerator::from(key_type)
+            .generate(num_keys, output_dir)
+            .map_err(EigenCliError::EigenKeyCliError),
         Commands::Convert {
             private_key,
             output_file,
             password,
-        } => store(private_key, output_file, password).map_err(EigenKeyCliError::KeystoreError),
+        } => store(private_key, output_file, password)
+            .map_err(EigenKeyCliError::KeystoreError)
+            .map_err(EigenCliError::EigenKeyCliError),
         Commands::DeriveOperatorId { private_key } => todo!(),
     }
 }
