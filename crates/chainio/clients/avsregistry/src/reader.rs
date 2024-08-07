@@ -360,7 +360,6 @@ impl AvsRegistryChainReader {
         mut stop_block: u64,
         ws_url: String,
     ) -> Result<(Vec<Address>, Vec<OperatorPubKeys>), AvsRegistryError> {
-        // todo remove unwrap
         let provider_ws_result = get_ws_provider(&ws_url).await;
 
         match provider_ws_result {
