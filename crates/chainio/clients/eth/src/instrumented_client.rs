@@ -1,5 +1,6 @@
 //use eigen_metrics_collectors_rpc_calls::RpcCalls as RpcCallsCollector;
 use alloy_json_rpc::{RpcParam, RpcReturn};
+use alloy_primitives::Address;
 use alloy_provider::{Provider, ProviderBuilder, RootProvider};
 use alloy_rpc_types_eth::TransactionReceipt;
 use alloy_transport::TransportResult;
@@ -78,6 +79,16 @@ impl InstrumentedClient {
         todo!()
     }
 
+    pub async fn transaction_count(&self, block_hash: Address) -> TransportResult<u64> {
+        self.instrument_function("eth_getBlockTransactionCountByHash", block_hash)
+            .await
+            .inspect_err(|err| {
+                self.rpc_collector
+                    .logger()
+                    .error("Failed to get transaction count", &[err])
+            })
+    }
+
     pub async fn transaction_receipt(
         &self,
         tx_hash: [u8; 32],
@@ -87,7 +98,7 @@ impl InstrumentedClient {
             .inspect_err(|err| {
                 self.rpc_collector
                     .logger()
-                    .error("Failed to parse url", &[err])
+                    .error("Failed to get receipt", &[err])
             })
     }
 
