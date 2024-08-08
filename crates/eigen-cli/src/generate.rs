@@ -2,9 +2,7 @@ use crate::args::KeyType;
 use crate::EigenKeyCliError;
 use ark_ff::UniformRand;
 use ark_serialize::{CanonicalSerialize, SerializationError};
-use eigen_crypto_bls;
 use eth_keystore::encrypt_key;
-use k256;
 use rand::{distributions::Alphanumeric, Rng};
 use rand_core::OsRng;
 use std::io::Write;
@@ -39,7 +37,7 @@ impl KeyGenerator {
         let dir_name = match output_dir {
             None => {
                 let id = Uuid::new_v4();
-                format!("{}-{}", self.key_name(), id.to_string())
+                format!("{}-{}", self.key_name(), id)
             }
             Some(dir) => dir,
         };
