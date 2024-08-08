@@ -360,12 +360,12 @@ mod tests {
         assert!(block_number > 0);
         assert_eq!(receipt.to, Some(bob));
 
-        // Test 2: EIP1559 tx
         /*
+        // Test 2: EIP1559 tx
         let mut tx_eip1559 = TxEip1559 {
             to: Call(bob),
             value: U256::from(1_000_000_000),
-            nonce: 0,
+            nonce: 100,
             input: bytes!(),
             chain_id: 31337,
             gas_limit: 2_000_000,
