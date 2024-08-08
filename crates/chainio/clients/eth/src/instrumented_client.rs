@@ -1,9 +1,11 @@
 //use eigen_metrics_collectors_rpc_calls::RpcCalls as RpcCallsCollector;
 use alloy_json_rpc::{RpcParam, RpcReturn};
 use alloy_provider::{Provider, ProviderBuilder, RootProvider};
+use alloy_rpc_types_eth::TransactionReceipt;
 use alloy_transport::TransportResult;
 use alloy_transport_http::{reqwest::Method, Client, Http};
 use eigen_logging::get_test_logger;
+use eigen_logging::logger::Logger;
 use eigen_metrics_collectors_rpc_calls::RpcCallsMetrics as RpcCallsCollector;
 use std::time::Instant;
 use thiserror::Error;
@@ -74,6 +76,20 @@ impl InstrumentedClient {
         //self.instrument_function("eth_getBlockByHash", block_by_hash)
         //    .await
         todo!()
+    }
+
+    pub async fn transaction_receipt(&self, hash: [u8; 32]) -> TransportResult<TransactionReceipt> {
+        let transaction_receipt = self
+            .client
+            .get_transaction_receipt(hash.into())
+            .await
+            .inspect_err(|err| {
+                self.rpc_collector
+                    .logger()
+                    .error("Failed to parse url", &[err])
+            })?;
+        self.instrument_function("eth_getTransactionReceipt", transaction_receipt)
+            .await
     }
 
     /// Instrument a function call with the given method name and parameters.
