@@ -5,6 +5,7 @@ use eigen_chainio_utils::{
     convert_bn254_to_ark, convert_to_bn254_g1_point, convert_to_bn254_g2_point,
 };
 use eigen_client_elcontracts::reader::ELChainReader;
+use eigen_logging::tracing_logger::TracingLogger;
 use std::str::FromStr;
 
 use eigen_utils::binding::{
@@ -29,6 +30,7 @@ use eigen_utils::{
 /// AvsRegistry Writer
 #[derive(Debug)]
 pub struct AvsRegistryChainWriter {
+    logger: TracingLogger,
     service_manager_addr: Address,
     registry_coordinator_addr: Address,
     operator_state_retriever_addr: Address,
@@ -42,6 +44,7 @@ pub struct AvsRegistryChainWriter {
 impl AvsRegistryChainWriter {
     /// build avs registry chain writer instance
     pub async fn build_avs_registry_chain_writer(
+        logger: TracingLogger,
         provider: String,
         signer: String,
         registry_coordinator_addr: Address,
@@ -90,12 +93,17 @@ impl AvsRegistryChainWriter {
                         let ServiceManagerBase::avsDirectoryReturn { _0: avs_directory } =
                             avs_directory_addr;
 
-                        let el_reader_result =
-                            ELChainReader::build(delegation_manager_addr, avs_directory, &provider)
-                                .await;
+                        let el_reader_result = ELChainReader::build(
+                            logger.clone(),
+                            delegation_manager_addr,
+                            avs_directory,
+                            &provider,
+                        )
+                        .await;
 
                         match el_reader_result {
                             Ok(el_reader) => Ok(AvsRegistryChainWriter {
+                                logger,
                                 service_manager_addr: service_manager,
                                 registry_coordinator_addr,
                                 operator_state_retriever_addr,
@@ -226,7 +234,11 @@ impl AvsRegistryChainWriter {
         }
     }
 
-    /// Update stakes of entire operator set for quorums
+    /// update_stakes_of_entire_operator_set_for_quorums is used by avs teams running https://github.com/Layr-Labs/avs-sync
+    /// to updates the stake of their entire operator set.
+    /// Because of high gas costs of this operation, it typically needs to be called for every quorum, or perhaps for a
+    /// small grouping of quorums
+    /// (highly dependent on number of operators per quorum)
     pub async fn update_stakes_of_entire_operator_set_for_quorums(
         &self,
         operators_per_quorum: Vec<Vec<Address>>,
