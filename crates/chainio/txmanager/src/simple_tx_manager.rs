@@ -296,13 +296,6 @@ impl<'log> SimpleTxManager<'log> {
             .await
             .map_err(|_| TxManagerError::WaitForReceiptError)
     }
-
-    /*
-    // GetNoSendTxOpts This generates a noSend TransactOpts so that we can use
-    // this to generate the transaction without actually sending it
-    func (m *SimpleTxManager) GetNoSendTxOpts() (*bind.TransactOpts, error) {
-    }
-    */
 }
 
 #[cfg(test)]
