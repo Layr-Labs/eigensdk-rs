@@ -5,7 +5,7 @@
 #![cfg_attr(not(test), warn(unused_crate_dependencies))]
 
 pub mod attestation;
-use alloy_primitives::{U256};
+use alloy_primitives::U256;
 use ark_std::str::FromStr;
 use num_bigint::BigUint;
 use sha2::{Digest, Sha256};
@@ -17,22 +17,18 @@ use ark_bn254::{Fq, Fr, G1Affine, G1Projective, G2Affine, G2Projective};
 use ark_ec::{AffineRepr, CurveGroup};
 use ark_ff::{
     fields::{Field, PrimeField},
-    BigInt, BigInteger, One,BigInteger256
+    BigInt, BigInteger, BigInteger256, One,
 };
 // use rust_bls_bn254::
-use eigen_utils::binding::{
-    RegistryCoordinator::{
-        self
-    },
-};use RegistryCoordinator::{SignatureWithSaltAndExpiry,G1Point};
-use eigen_utils::binding::BLSApkRegistry::{ G2Point as AlloyG2Point};
+use eigen_utils::binding::RegistryCoordinator::{self};
 use ethers::{core::types::H256, types::Address, utils::keccak256};
+use RegistryCoordinator::{G1Point, G2Point, SignatureWithSaltAndExpiry};
 pub type PrivateKey = Fr;
 pub type PublicKey = G1Affine;
 pub type BlsSignature = G1Affine;
 pub type OperatorId = H256;
 
-#[derive(Debug,Clone)]
+#[derive(Debug, Clone)]
 pub struct BlsG1Point {
     g1: G1Affine,
 }
@@ -42,11 +38,24 @@ impl BlsG1Point {
         Self { g1 }
     }
 
-    pub fn g1(&self) -> G1Affine{
+    pub fn g1(&self) -> G1Affine {
         self.g1
     }
+}
 
+#[derive(Debug, Clone)]
+pub struct BlsG2Point {
+    g2: G2Affine,
+}
 
+impl BlsG2Point {
+    pub fn new(g2: G2Affine) -> Self {
+        Self { g2 }
+    }
+
+    pub fn g2(&self) -> G2Affine {
+        self.g2
+    }
 }
 
 pub struct BlsKeyPair {
@@ -64,15 +73,19 @@ impl BlsKeyPair {
         }
     }
 
-    pub fn public_key(&self) -> BlsG1Point{
+    pub fn public_key(&self) -> BlsG1Point {
         self.pub_key.clone()
     }
 
-    pub fn sign_hashed_to_curve_message(&self,g1_hashed_msg: G1Affine) -> Signature {
-
+    pub fn sign_hashed_to_curve_message(&self, g1_hashed_msg: G1Affine) -> Signature {
         let sk_int: BigInteger256 = self.priv_key.into();
         let r = g1_hashed_msg.mul_bigint(sk_int);
         Signature::new(r.into_affine())
+    }
+
+    pub fn public_key_g2(&self) -> BlsG2Point {
+        let pk = G2Projective::from(G2Affine::generator()) * self.priv_key;
+        BlsG2Point::new(pk.into_affine())
     }
 }
 
@@ -84,49 +97,69 @@ pub fn alloy_g1_point_to_g1_affine(g1_point: G1Point) -> G1Affine {
     G1Affine::new(x, y)
 }
 
-pub fn convert_to_g1_point(g1 : G1Affine) -> G1Point{
-    println!("g1 affine input{:?}",g1);
+pub fn convert_to_g1_point(g1: G1Affine) -> G1Point {
     let x_point = g1.x().unwrap();
     let y_point = g1.y().unwrap();
-    println!("x point{:?}",x_point.0.0);
-    println!("x_point{:?}",(Fq::new(BigInteger256::new(x_point.0.0))));
-    println!("y_point{:?}",(Fq::new(BigInteger256::new(y_point.0.0))));
-    let check = Fq::from(BigInt(x_point.0.0));
-    assert_eq!(*x_point,check);
-    println!("check{:?}",check);
-    // G1Point{X: x_u256, Y: y_256}
 
-    todo!()
+    let x = (BigInt::new(x_point.into_bigint().0));
+    let y = (BigInt::new(y_point.into_bigint().0));
 
+    let x_u256 = U256::from_limbs(x.0);
+    let y_u256 = U256::from_limbs(y.0);
+    // let y_256 = U256::from_limbs(y_point.0.0);
+
+    G1Point {
+        X: x_u256,
+        Y: y_u256,
+    }
+}
+
+pub fn convert_to_g2_point(g2: G2Affine) -> G2Point {
+    let x_point_c0 = g2.x().unwrap().c0;
+    let x_point_c1 = g2.x().unwrap().c1;
+
+    let y_point_c0 = g2.y().unwrap().c0;
+    let y_point_c1 = g2.y().unwrap().c1;
+
+    let x_0 = BigInt::new(x_point_c0.into_bigint().0);
+    let x_1 = BigInt::new(x_point_c1.into_bigint().0);
+    let y_0 = BigInt::new(y_point_c0.into_bigint().0);
+    let y_1 = BigInt::new(y_point_c1.into_bigint().0);
+
+    let x_u256_0 = U256::from_limbs(x_0.0);
+    let x_u256_1 = U256::from_limbs(x_1.0);
+    let y_u256_0 = U256::from_limbs(y_0.0);
+    let y_u256_1 = U256::from_limbs(y_1.0);
+
+    G2Point {
+        X: [x_u256_1, x_u256_0],
+        Y: [y_u256_1, y_u256_0],
+    }
 }
 
 #[derive(Debug)]
-pub struct Signature{
-
-    g1_point: BlsG1Point
-
+pub struct Signature {
+    g1_point: BlsG1Point,
 }
 
-impl Signature{
-
-    pub fn new(g1:G1Affine ) -> Self{
-
-        Self{g1_point: BlsG1Point::new(g1)}
-
+impl Signature {
+    pub fn new(g1: G1Affine) -> Self {
+        Self {
+            g1_point: BlsG1Point::new(g1),
+        }
     }
 
-    pub fn g1_point(&self) -> BlsG1Point{
-
+    pub fn g1_point(&self) -> BlsG1Point {
         self.g1_point.clone()
-
     }
 }
 
 
+/// https://github.com/Layr-Labs/rust-bls-bn254/blob/main/src/lib.rs
 pub fn hash_to_curve(digest: &[u8]) -> G1Affine {
     let one = Fq::one();
     let three = Fq::from(3u64);
-    
+
     let mut hasher = Sha256::new();
     hasher.update(digest);
     let hashed_result = hasher.finalize();
@@ -135,7 +168,12 @@ pub fn hash_to_curve(digest: &[u8]) -> G1Affine {
     let mut x = {
         let big_int = BigUint::from_bytes_be(&hashed_result);
         let mut bytes = [0u8; 32];
-        big_int.to_bytes_be().iter().rev().enumerate().for_each(|(i, &b)| bytes[i] = b);
+        big_int
+            .to_bytes_be()
+            .iter()
+            .rev()
+            .enumerate()
+            .for_each(|(i, &b)| bytes[i] = b);
         Fq::from_le_bytes_mod_order(&bytes)
     };
 

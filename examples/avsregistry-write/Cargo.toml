@@ -30,4 +30,4 @@ eigen-utils.workspace = true
 ark-bn254 = "0.4.0"
 ark-ff.workspace = true
 eigen-chainio-utils.workspace = true
-
+eigen-types.workspace = true
