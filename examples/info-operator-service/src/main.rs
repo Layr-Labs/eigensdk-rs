@@ -7,13 +7,14 @@ use std::sync::Arc;
 use tokio::sync::Mutex;
 use tokio::task;
 use tokio::time::{self, Duration};
-
 const HOLESKY_PROVIDER: &str = "https://ethereum-holesky.blockpi.network/v1/rpc/public";
 const WS_HOLESKY_PROIVIDER: &str = "wss://holesky.drpc.org";
+use eigen_logging::get_test_logger;
 
 #[tokio::main]
 async fn main() {
     let avs_registry_chain_reader = AvsRegistryChainReader::new(
+        get_test_logger().clone(),
         address!("53012C69A189cfA2D9d29eb6F19B32e0A2EA3490"),
         address!("B4baAfee917fb4449f5ec64804217bccE9f46C67"),
         HOLESKY_PROVIDER.to_string(),
