@@ -185,6 +185,29 @@ impl<'log> SimpleTxManager<'log> {
         SimpleTxManager::wait_for_receipt(pending_tx).await
     }
 
+    // estimateGasAndNonce we are explicitly implementing this because
+    // * We want to support legacy transactions (i.e. not dynamic fee)
+    // * We want to support gas management, i.e. add buffer to gas limit
+    //func (m *SimpleTxManager) estimateGasAndNonce(ctx context.Context, tx *types.Transaction) (*types.Transaction, error) {
+    //}
+
+    /// Estimates the gas and nonce for a transaction.
+    ///
+    /// # Arguments
+    ///
+    /// - `tx`: The transaction for which we want to estimate the gas and nonce.
+    ///
+    /// # Returns
+    ///
+    /// - The transaction request with the gas and nonce estimated.
+    ///
+    /// # Errors
+    ///
+    /// - If the transaction request could not sent of gives an error.
+    /// - If the latest block header could not be retrieved.
+    /// - If the gas price could not be estimated.
+    /// - If the gas limit could not be estimated.
+    /// - If the destination address could not be retrieved.
     async fn estimate_gas_and_nonce(
         &self,
         tx: &TxLegacy,
@@ -289,11 +312,7 @@ impl<'log> SimpleTxManager<'log> {
     func (m *SimpleTxManager) queryReceipt(ctx context.Context, txID wallet.TxID) *types.Receipt {
     }
 
-    // estimateGasAndNonce we are explicitly implementing this because
-    // * We want to support legacy transactions (i.e. not dynamic fee)
-    // * We want to support gas management, i.e. add buffer to gas limit
-    func (m *SimpleTxManager) estimateGasAndNonce(ctx context.Context, tx *types.Transaction) (*types.Transaction, error) {
-    }
+
     */
 }
 
