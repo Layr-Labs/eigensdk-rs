@@ -21,3 +21,4 @@ eigen-utils.workspace = true
 
 [dev-dependencies]
 eigen-testing-utils.workspace = true
+eigen-logging.workspace = true

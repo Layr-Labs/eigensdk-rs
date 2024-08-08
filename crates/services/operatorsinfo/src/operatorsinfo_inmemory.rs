@@ -162,6 +162,7 @@ mod tests {
 
     use super::*;
     use alloy_primitives::address;
+    use eigen_logging::get_test_logger;
     use eigen_testing_utils::m2_holesky_constants::{
         OPERATOR_STATE_RETRIEVER, REGISTRY_COORDINATOR,
     };
@@ -172,7 +173,9 @@ mod tests {
     async fn test_query_past_registered_operator_events_and_fill_db() {
         let websocket_url_holesky = env::var("HOLESKY_WS_URL").expect("HOLEESKY_WS_URL not set");
         let http_url_holesky = env::var("HOLESKY_HTTP_URL").expect("HOLESKY_HTTP_URL not set");
+        let test_logger = get_test_logger();
         let avs_registry_chain_reader = AvsRegistryChainReader::new(
+            test_logger.clone(),
             REGISTRY_COORDINATOR,
             OPERATOR_STATE_RETRIEVER,
             http_url_holesky.clone(),
@@ -207,7 +210,9 @@ mod tests {
     async fn test_start_service() {
         let websocket_url_holesky = env::var("HOLESKY_WS_URL").expect("HOLEESKY_WS_URL not set");
         let http_url_holesky = env::var("HOLESKY_HTTP_URL").expect("HOLESKY_HTTP_URL not set");
+        let test_logger = get_test_logger();
         let avs_registry_chain_reader = AvsRegistryChainReader::new(
+            test_logger.clone(),
             REGISTRY_COORDINATOR,
             OPERATOR_STATE_RETRIEVER,
             http_url_holesky.clone(),

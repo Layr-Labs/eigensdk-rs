@@ -371,38 +371,35 @@ impl AvsRegistryChainReader {
                 let query_block_range = 1024;
                 let current_block_number_result = provider.get_block_number().await;
 
-        match current_block_number_result {
-            Ok(current_block_number) => {
-                if stop_block.is_zero() {
-                    stop_block = current_block_number;
-                }
-                let mut i = start_block;
-                let mut operator_addresses: Vec<Address> = vec![];
-                let mut operator_pub_keys: Vec<OperatorPubKeys> = vec![];
-                while i <= stop_block {
-                    let mut to_block = i + (query_block_range - 1);
-                    if to_block > stop_block {
-                        to_block = stop_block;
-                    }
-                    let filter = Filter::new()
-                        .select(i..to_block)
-                        .event("NewPubkeyRegistration(address,(uint256,uint256),(uint256[2],uint256[2]))")
-                        .address(self.bls_apk_registry_addr);
+                match current_block_number_result {
+                    Ok(current_block_number) => {
+                        if stop_block.is_zero() {
+                            stop_block = current_block_number;
+                        }
+                        let mut i = start_block;
+                        let mut operator_addresses: Vec<Address> = vec![];
+                        let mut operator_pub_keys: Vec<OperatorPubKeys> = vec![];
+                        while i <= stop_block {
+                            let to_block = std::cmp::min(i + (query_block_range - 1), stop_block);
+                            let filter = Filter::new()
+                                .select(i..to_block)
+                                .event(NEW_PUBKEY_REGISTRATION_EVENT)
+                                .address(self.bls_apk_registry_addr);
 
-                    let logs_result = provider.get_logs(&filter).await;
+                            let logs_result = provider.get_logs(&filter).await;
 
-                    match logs_result {
-                        Ok(logs) => {
-                            self.logger.debug(
-                                &format!(
-                                    "numTransactionLogs: {}, fromBlock: {}, toBlock: {}",
-                                    logs.len(),
-                                    i,
-                                    to_block
-                                ),
-                                &["eigen-client-avsregistry.reader.query_existing_registered_operator_pub_keys"]
-                            );
-                           for pub_key_reg in logs
+                            match logs_result {
+                                Ok(logs) => {
+                                    self.logger.debug(
+                                        &format!(
+                                            "numTransactionLogs: {}, fromBlock: {}, toBlock: {}",
+                                            logs.len(),
+                                            i,
+                                            to_block
+                                        ),
+                                        &["eigen-client-avsregistry.reader.query_existing_registered_operator_pub_keys"]
+                                    );
+                                    for pub_key_reg in logs
                                         .iter()
                                         .map(|v| {
                                             v.log_decode::<BLSApkRegistry::NewPubkeyRegistration>()
@@ -420,6 +417,12 @@ impl AvsRegistryChainReader {
                                         };
                                         operator_pub_keys.push(operator_pub_key);
                                     }
+                                }
+                                Err(e) => {
+                                    return Err(AvsRegistryError::AlloyContractError(
+                                        alloy_contract::Error::TransportError(e),
+                                    ))
+                                }
                             }
                             i += query_block_range;
                         }

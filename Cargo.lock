@@ -2215,6 +2215,7 @@ dependencies = [
  "alloy-rpc-types",
  "anyhow",
  "eigen-client-avsregistry",
+ "eigen-logging",
  "eigen-testing-utils",
  "eigen-types",
  "eigen-utils",
