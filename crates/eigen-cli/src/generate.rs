@@ -115,7 +115,7 @@ impl KeyGenerator {
     /// # Returns
     ///
     /// * An ecdsa private key as a vector of bytes.
-    fn random_ecdsa_key() -> Vec<u8> {
+    pub fn random_ecdsa_key() -> Vec<u8> {
         let private_key = k256::SecretKey::random(&mut OsRng);
         private_key.to_bytes().as_slice().to_vec()
     }
@@ -137,7 +137,7 @@ impl KeyGenerator {
     /// # Returns
     ///
     /// * A random password.
-    fn generate_random_password() -> String {
+    pub fn generate_random_password() -> String {
         rand::thread_rng()
             .sample_iter(&Alphanumeric)
             .take(PASSWORD_LENGTH)

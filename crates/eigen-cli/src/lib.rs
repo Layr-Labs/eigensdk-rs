@@ -72,7 +72,8 @@ pub fn execute_egnkey_subcommand(subcommand: EigenKeyCommand) -> Result<(), Eige
             private_key,
             output_file,
             password,
-        } => store(private_key, output_file, password).map_err(EigenKeyCliError::KeystoreError),
+        } => store(private_key.into(), output_file, password)
+            .map_err(EigenKeyCliError::KeystoreError),
 
         EigenKeyCommand::DeriveOperatorId { private_key } => {
             let operator_id =
@@ -119,11 +120,12 @@ pub fn execute_command(command: Commands) -> Result<(), EigenCliError> {
 pub mod test {
     use super::ANVIL_RPC_URL;
     use crate::args::EigenKeyCommand;
+    use crate::convert::store;
     use crate::eigen_address::ContractAddresses;
     use crate::{
         args::{Commands, KeyType},
         execute_command,
-        generate::{DEFAULT_KEY_FOLDER, PASSWORD_FILE, PRIVATE_KEY_HEX_FILE},
+        generate::{KeyGenerator, DEFAULT_KEY_FOLDER, PASSWORD_FILE, PRIVATE_KEY_HEX_FILE},
         operator_id::derive_operator_id,
     };
     use eigen_testing_utils::anvil_constants::{
@@ -177,6 +179,20 @@ pub mod test {
         let expected_operator_id =
             "48beccce16ccdf8000c13d5af5f91c7c3dac6c47b339d993d229af1500dbe4a9".to_string();
         assert_eq!(expected_operator_id, operator_id);
+    }
+
+    #[test]
+    fn convert() {
+        let private_key = KeyGenerator::random_ecdsa_key();
+        let password = KeyGenerator::generate_random_password();
+        let file = "key.json".to_string();
+        let path = "./key.json".to_string();
+
+        store(private_key.clone(), Some(file), Some(password.clone())).unwrap();
+        let decrypted_key = decrypt_key(path.clone(), password).unwrap();
+        std::fs::remove_file(path).unwrap();
+
+        assert_eq!(private_key, decrypted_key);
     }
 
     #[tokio::test]

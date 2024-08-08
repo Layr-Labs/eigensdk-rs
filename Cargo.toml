@@ -142,7 +142,7 @@ alloy-rpc-types-txpool = { version = "0.1", default-features = false }
 alloy-serde = { version = "0.1", default-features = false }
 alloy-signer = { version = "0.1", default-features = false }
 alloy-signer-aws = "0.1"
-alloy-signer-local = { version = "0.1", default-features = false }
+alloy-signer-local = { version = "0.1", features = ["keystore"] }
 alloy-sol-types = "0.7.2"
 alloy-transport = { version = "0.1" }
 alloy-transport-http = { version = "0.1", features = [
