@@ -185,12 +185,6 @@ impl<'log> SimpleTxManager<'log> {
         SimpleTxManager::wait_for_receipt(pending_tx).await
     }
 
-    // estimateGasAndNonce we are explicitly implementing this because
-    // * We want to support legacy transactions (i.e. not dynamic fee)
-    // * We want to support gas management, i.e. add buffer to gas limit
-    //func (m *SimpleTxManager) estimateGasAndNonce(ctx context.Context, tx *types.Transaction) (*types.Transaction, error) {
-    //}
-
     /// Estimates the gas and nonce for a transaction.
     ///
     /// # Arguments
