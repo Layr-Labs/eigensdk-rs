@@ -25,6 +25,7 @@ async fn main() {
 
     let operators_info = Arc::new(Mutex::new(
         OperatorInfoServiceInMemory::new(
+            get_test_logger().clone(),
             avs_registry_chain_reader,
             WS_HOLESKY_PROIVIDER.to_string(),
         )

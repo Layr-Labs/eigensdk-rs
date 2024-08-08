@@ -3,6 +3,7 @@ use alloy_provider::{Provider, ProviderBuilder, WsConnect};
 use alloy_rpc_types::Filter;
 use anyhow::Result;
 use eigen_client_avsregistry::reader::AvsRegistryChainReader;
+use eigen_logging::{logger::Logger, tracing_logger::TracingLogger};
 use eigen_types::operator::{operator_id_from_g1_pub_key, OperatorPubKeys};
 use eigen_utils::{
     binding::BLSApkRegistry::{self, G1Point, G2Point},
@@ -19,6 +20,7 @@ use tokio::sync::{
 #[allow(dead_code)]
 #[derive(Debug, Clone)]
 pub struct OperatorInfoServiceInMemory {
+    logger: TracingLogger,
     avs_registry_reader: AvsRegistryChainReader,
     ws: String,
     pub_keys: UnboundedSender<OperatorsInfoMessage>,
@@ -34,6 +36,7 @@ enum OperatorsInfoMessage {
 
 impl OperatorInfoServiceInMemory {
     pub async fn new(
+        logger: TracingLogger,
         avs_registry_chain_reader: AvsRegistryChainReader,
         web_socket: String,
     ) -> Self {
@@ -62,6 +65,7 @@ impl OperatorInfoServiceInMemory {
         });
 
         Self {
+            logger,
             avs_registry_reader: avs_registry_chain_reader,
             ws: web_socket,
             pub_keys: pubkeys_tx,
@@ -94,10 +98,14 @@ impl OperatorInfoServiceInMemory {
 
         let shutdown_rx = shutdown_rx.clone();
         let pub_keys = self.pub_keys.clone();
+        let self_clone = self.clone();
         tokio::spawn(async move {
             while let Some(log) = stream.next().await {
                 if shutdown_rx.has_changed().unwrap_or(false) {
-                    println!("shutdown ");
+                    self_clone.logger.info(
+                        "shutdown of operators info service ",
+                        &["eigen-services-operatorsinfo.start_service"],
+                    );
                     break;
                 }
 
@@ -118,7 +126,13 @@ impl OperatorInfoServiceInMemory {
                         },
                     };
                     // Send message
-                    // TODO(supernova): Log
+                    self_clone.logger.debug(
+                        &format!(
+                            "New pub key found  operator_address : {:?} , operator_pub_keys : {:?}",
+                            event_data.operator, operator_pub_key
+                        ),
+                        &["eigen-services-operatorsinfo.start_service"],
+                    );
                     let _ = pub_keys.send(OperatorsInfoMessage::InsertOperatorInfo(
                         event_data.operator,
                         operator_pub_key,
@@ -152,6 +166,7 @@ impl OperatorInfoServiceInMemory {
         for (i, address) in operator_address.iter().enumerate() {
             let message =
                 OperatorsInfoMessage::InsertOperatorInfo(*address, operator_pub_keys[i].clone());
+            self.logger.debug(&format!("New pub key found  operator_address : {:?} , operator_pub_keys : {:?}",operator_address,operator_pub_keys), &["eigen-services-operatorsinfo.query_past_registered_operator_events_and_fill_db"]);
             let _ = self.pub_keys.send(message);
         }
     }
@@ -183,6 +198,7 @@ mod tests {
         .await
         .unwrap();
         let operators_info_service_in_memory = OperatorInfoServiceInMemory::new(
+            test_logger.clone(),
             avs_registry_chain_reader,
             websocket_url_holesky.clone(),
         )
@@ -220,6 +236,7 @@ mod tests {
         .await
         .unwrap();
         let operators_info_service_in_memory = OperatorInfoServiceInMemory::new(
+            test_logger.clone(),
             avs_registry_chain_reader,
             websocket_url_holesky.clone(),
         )
