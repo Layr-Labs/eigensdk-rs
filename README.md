@@ -35,6 +35,7 @@ cargo run --example get_quorum_count
 
 We are actively looking for contributors. Thank you for your interest. We have strict ci checks in place. In case of any questions and support , feel free to raise an issue.
 
+### PR 
 To test locally and raise a PR :-
 
 
@@ -42,9 +43,25 @@ You need `foundry` , `docker` and `make` and `nightly rust` to successfully run 
 ```
 make pr
 ```
-
 At least 1 `approving` review is required to merge the PR.
+  
+### To run fireblocks tests 
 
+Add the following variables to your env 
+
+- FIREBLOCKS_API_KEY 
+- FIREBLOCKS_PRIVATE_KEY_PATH
+- FIREBLOCKS_API_URL
+
+ and then run the following command
+
+```
+make fireblocks-tests
+
+```
+Note: The tests were written using sandbox environment , you would need to modify the testing parameters according to your own asset id's , tx-id etc. 
+
+### Test Coverage
 Test coverage should aim to be around 80%.
 
 Here's how to generate test coverage reports:
@@ -67,20 +84,17 @@ grcov . --binary-path ./target/debug/deps/ -s . -t html --branch --ignore-not-ex
 
 ```
 
-
-
 ## Supported Rust Version
-
 Rolling `MSRV` policy of 6 months. The current `MSRV` is 1.79
 
 ## Disclaimer
-
 This software is `unaudited`.This is experimental software and is provided on an "as is" and "as available" basis and may not work at all. It should not be used in production.
 
 # Credits
-
 - [Layer-labs](https://github.com/Layr-Labs/eigensdk-go/tree/master)
 
-## Contact
+# Security Bugs
+Please report security vulnerabilities to security@eigenlabs.org. Do NOT report security bugs via Github Issues.
 
+## Contact
 Telegram - supernovahs444

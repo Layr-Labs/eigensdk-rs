@@ -17,8 +17,12 @@ __TESTING__: ##
 pr: ## 
 	$(MAKE) start-anvil-chain-with-contracts-deployed
 	$(MAKE) start-anvil
-	cargo test --workspace --all-features
+	cargo test --workspace
 	cargo clippy --workspace --lib --examples --tests --benches --all-features
 	cargo +nightly fmt -- --check
 	$(MAKE) stop-anvil
 
+fireblocks-tests:
+	$(MAKE) start-anvil-chain-with-contracts-deployed
+	$(MAKE) start-anvil
+	cargo test --workspace --features fireblock-tests

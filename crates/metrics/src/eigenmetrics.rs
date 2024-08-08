@@ -2,6 +2,7 @@ use eigen_logging::{logger::Logger, tracing_logger::TracingLogger};
 use eigen_metrics_derive::Metrics;
 use metrics::Gauge;
 
+/// TODO(supernova): fee_earned_total is not yet implemented . As its not yet turned on
 // Performance Metrics
 #[derive(Clone, Metrics)]
 #[metrics(scope = "eigenmetrics.performancemetrics")]
@@ -41,6 +42,8 @@ impl EigenPerformanceMetrics {
         eigen_metrics_metrics
     }
 
+    /// Get the performance score
+    /// To set the performance score , use set() function available in [`Gauge`]
     pub fn performance_score(&self) -> Gauge {
         self.eigen_metrics.performance_score.clone()
     }
