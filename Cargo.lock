@@ -1750,6 +1750,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "ctor"
+version = "0.2.8"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "edb49164822f3ee45b17acd4a208cfc1251410cf0cad9a833234c9890774dd9f"
+dependencies = [
+ "quote",
+ "syn 2.0.67",
+]
+
+[[package]]
 name = "ctr"
 version = "0.9.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1996,10 +2006,12 @@ dependencies = [
  "eigen-chainio-utils",
  "eigen-client-elcontracts",
  "eigen-crypto-bls",
+ "eigen-logging",
  "eigen-types",
  "eigen-utils",
  "hex",
  "num-bigint 0.4.5",
+ "once_cell",
  "reqwest 0.12.5",
  "thiserror",
  "tokio",
@@ -2015,9 +2027,11 @@ dependencies = [
  "alloy-primitives",
  "alloy-provider",
  "alloy-signer-local",
+ "eigen-logging",
  "eigen-testing-utils",
  "eigen-types",
  "eigen-utils",
+ "once_cell",
  "thiserror",
  "tokio",
  "tracing",
@@ -2110,6 +2124,8 @@ dependencies = [
 name = "eigen-logging"
 version = "0.0.1-alpha"
 dependencies = [
+ "ctor",
+ "once_cell",
  "tracing",
  "tracing-subscriber",
 ]
@@ -2118,6 +2134,7 @@ dependencies = [
 name = "eigen-metrics"
 version = "0.0.1-alpha"
 dependencies = [
+ "eigen-logging",
  "eigen-metrics-collectors-economic",
  "eigen-metrics-collectors-rpc-calls",
  "eigen-metrics-derive",
@@ -2133,6 +2150,7 @@ dependencies = [
 name = "eigen-metrics-collectors-economic"
 version = "0.0.1-alpha"
 dependencies = [
+ "eigen-logging",
  "eigen-metrics-derive",
  "metrics",
 ]
@@ -2141,6 +2159,7 @@ dependencies = [
 name = "eigen-metrics-collectors-rpc-calls"
 version = "0.0.1-alpha"
 dependencies = [
+ "eigen-logging",
  "eigen-metrics-derive",
  "metrics",
 ]
@@ -2167,6 +2186,7 @@ dependencies = [
  "eigen-client-avsregistry",
  "eigen-crypto-bls",
  "eigen-crypto-bn254",
+ "eigen-logging",
  "eigen-services-operatorsinfo",
  "eigen-types",
  "eigen-utils",
@@ -2179,6 +2199,7 @@ dependencies = [
  "alloy-primitives",
  "eigen-crypto-bls",
  "eigen-crypto-bn254",
+ "eigen-logging",
  "eigen-services-avsregistry",
  "eigen-types",
  "parking_lot",
@@ -2684,6 +2705,7 @@ version = "0.0.1-alpha"
 dependencies = [
  "alloy-primitives",
  "eigen-client-avsregistry",
+ "eigen-logging",
  "eigen-testing-utils",
  "eyre",
  "tokio",
@@ -3545,6 +3567,7 @@ version = "0.0.1-alpha"
 dependencies = [
  "alloy-primitives",
  "eigen-client-avsregistry",
+ "eigen-logging",
  "eigen-services-operatorsinfo",
  "tokio",
  "tracing",
