@@ -73,8 +73,6 @@ eigen-services-bls_aggregation = { path = "crates/services/bls_aggregation" }
 eigen-services-operatorsinfo = { path = "crates/services/operatorsinfo" }
 eigen-testing-utils = { path = "testing/testing-utils" }
 eigen-logging  = {path = "crates/logging"}
-info-operator-service = { path = "examples/info-operator-service" }
-tokio = { version = "1.37.0", features = ["test-util", "full", "sync"] }
 eigen-types = { path = "crates/types/" }
 eigen-utils = { path = "crates/utils/" }
 eth-keystore = "0.5.0"
