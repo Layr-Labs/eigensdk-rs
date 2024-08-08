@@ -1,3 +1,4 @@
+use eigen_logging::{logger::Logger, tracing_logger::TracingLogger};
 use hyper::{
     body::Body,
     service::{make_service_fn, service_fn},
@@ -5,6 +6,7 @@ use hyper::{
 };
 use metrics_exporter_prometheus::{PrometheusBuilder, PrometheusHandle};
 use std::{convert::Infallible, net::SocketAddr};
+
 #[allow(unused)]
 fn init_registry() -> PrometheusHandle {
     let recorder = PrometheusBuilder::new().build_recorder();
@@ -16,7 +18,15 @@ fn init_registry() -> PrometheusHandle {
 }
 
 #[allow(unused)]
-async fn serve_metrics(addr: SocketAddr, handle: PrometheusHandle) -> eyre::Result<()> {
+async fn serve_metrics(
+    addr: SocketAddr,
+    handle: PrometheusHandle,
+    logger: TracingLogger,
+) -> eyre::Result<()> {
+    logger.info(
+        &format!("Starting metrics server at port {}", addr),
+        &["eigen-metrics.serve_metrics"],
+    );
     let make_svc = make_service_fn(move |_| {
         let handle = handle.clone();
 
@@ -37,25 +47,28 @@ async fn serve_metrics(addr: SocketAddr, handle: PrometheusHandle) -> eyre::Resu
 
 mod tests {
     use super::*;
-    use crate::eigenmetrics::EigenMetrics;
-    use eigen_metrics_collectors_economic::RegisteredStakes;
-    use eigen_metrics_collectors_rpc_calls::RpcCalls;
+    use crate::eigenmetrics::EigenPerformanceMetrics;
+    use eigen_metrics_collectors_economic::RegisteredStakesMetrics;
+    use eigen_metrics_collectors_rpc_calls::RpcCallsMetrics;
     use tokio::time::sleep;
     use tokio::time::Duration;
 
     #[tokio::test]
     async fn test_prometheus_server() {
+        use eigen_logging::get_test_logger;
         let socket: SocketAddr = "127.0.0.1:9091".parse().unwrap();
         let handle = init_registry();
 
         // Initialize EigenMetrics
-        let metrics = EigenMetrics::new();
-        let registered_metrics = RegisteredStakes::new();
-        let rpc_calls = RpcCalls::new();
+        let metrics = EigenPerformanceMetrics::new(get_test_logger().clone());
+        let registered_metrics = RegisteredStakesMetrics::new(get_test_logger().clone());
+        let rpc_calls = RpcCallsMetrics::new(get_test_logger().clone());
 
         // Run the metrics server in a background task
         let server_handle = tokio::spawn(async move {
-            serve_metrics(socket, handle).await.unwrap();
+            serve_metrics(socket, handle, get_test_logger().clone())
+                .await
+                .unwrap();
         });
 
         sleep(Duration::from_secs(1)).await;

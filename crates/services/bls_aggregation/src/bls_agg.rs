@@ -11,6 +11,7 @@ use std::collections::HashMap;
 use tokio::sync::mpsc::{self, UnboundedReceiver, UnboundedSender};
 use tokio::time::{self, Duration};
 
+use eigen_logging::{logger::Logger, tracing_logger::TracingLogger};
 use parking_lot::{RwLock, RwLockReadGuard, RwLockWriteGuard};
 use std::sync::Arc;
 
@@ -43,6 +44,7 @@ pub struct AggregatedOperators {
 impl AggregatedOperators {}
 #[derive(Debug)]
 pub struct BlsAggregatorService {
+    logger: TracingLogger,
     aggregated_response_sender: UnboundedSender<BlsAggregationServiceResponse>,
     pub aggregated_response_receiver: UnboundedReceiver<BlsAggregationServiceResponse>,
     signed_task_response:
@@ -51,9 +53,10 @@ pub struct BlsAggregatorService {
 }
 
 impl BlsAggregatorService {
-    pub fn new(avs_registry_service: AvsRegistryServiceChainCaller) -> Self {
+    pub fn new(logger: TracingLogger, avs_registry_service: AvsRegistryServiceChainCaller) -> Self {
         let (tx, rx) = tokio::sync::mpsc::unbounded_channel();
         Self {
+            logger,
             aggregated_response_sender: tx,
             aggregated_response_receiver: rx,
             signed_task_response: Arc::new(RwLock::new(HashMap::new())),
@@ -81,6 +84,18 @@ impl BlsAggregatorService {
         quorum_threshold_percentages: QuorumThresholdPercentages,
         time_to_expiry: Duration,
     ) {
+        self.logger.debug(
+            &format!(
+                "BlsAggregatorService initializing new task, task_index : {}, task_created_block : {}, quorum_nums : {:?}, \
+                quorum_threshold_percentages : {:?}, time_to_expiry : {:?}",
+                task_index,
+                task_created_block,
+                quorum_nums,
+                quorum_threshold_percentages,
+                time_to_expiry
+            ),
+            &["eigen-services-blsaggregation.bls_agg.initialize_new_task"]
+        );
         let mut task_channel = self.write().await;
 
         if task_channel.contains_key(&task_index) {
@@ -141,18 +156,35 @@ impl BlsAggregatorService {
         for (i, quorum_number) in quorum_nums.iter().enumerate() {
             quorum_threshold_percentage_map.insert(*quorum_number, quorum_threshold_percentages[i]);
         }
-
+        // TODO(supernova) remove unwraps and handle erorr better
         let mut operator_state_avs = self
             .avs_registry_service
             .get_operators_avs_state_at_block(task_created_block, quorum_nums.clone().into())
-            .await;
-        // throw erro if
-
+            .await
+            .map_err(|e| {
+                self.logger.fatal(
+                    &format!(
+                        "Failed to get operators state from avs registry, task_index: {}, err: {}",
+                        task_index, e
+                    ),
+                    &["eigen-services-blsaggregation.bls_agg.single_task_aggregator"],
+                )
+            })
+            .unwrap();
         let quorums_avs_stake = self
             .avs_registry_service
             .get_quorums_avs_state_at_block(quorum_nums.clone().into(), task_created_block)
-            .await;
-        // throw erro if != nil
+            .await
+            .map_err(|e| {
+                self.logger.fatal(
+                    &format!(
+                        "Failed to get quorums state from avs registry, task_index: {} , err: {}",
+                        task_index, e
+                    ),
+                    &["eigen-services-blsaggregation.bls_agg.single_task_aggregator"],
+                )
+            })
+            .unwrap();
 
         let mut total_stake_per_quorum = HashMap::new();
 
