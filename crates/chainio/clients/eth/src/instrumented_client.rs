@@ -85,8 +85,7 @@ impl InstrumentedClient {
         block_hash: [u8; 32],
         index: u64,
     ) -> TransportResult<Transaction> {
-        let params = TransactionInBlockParams { block_hash, index };
-        self.instrument_function("eth_getTransactionByBlockHashAndIndex", params)
+        self.instrument_function("eth_getTransactionByBlockHashAndIndex", (block_hash, index))
             .await
             .inspect_err(|err| {
                 self.rpc_collector
@@ -153,10 +152,4 @@ impl InstrumentedClient {
 
         result
     }
-}
-
-#[derive(Debug, Clone, Serialize)]
-struct TransactionInBlockParams {
-    block_hash: [u8; 32],
-    index: u64,
 }
