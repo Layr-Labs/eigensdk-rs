@@ -4,29 +4,25 @@
 )]
 #![cfg_attr(not(test), warn(unused_crate_dependencies))]
 
-pub mod attestation;
-use alloy_primitives::U256;
+use alloy_primitives::{B256, U256};
 use ark_std::str::FromStr;
 use num_bigint::BigUint;
 use sha2::{Digest, Sha256};
 pub mod error;
 
-use alloy_primitives::Uint;
-
+use crate::error::BlsError;
 use ark_bn254::{Fq, Fr, G1Affine, G1Projective, G2Affine, G2Projective};
 use ark_ec::{AffineRepr, CurveGroup};
 use ark_ff::{
     fields::{Field, PrimeField},
-    BigInt, BigInteger, BigInteger256, One,
+    BigInt, BigInteger256, One,
 };
-// use rust_bls_bn254::
 use eigen_utils::binding::RegistryCoordinator::{self};
-use ethers::{core::types::H256, types::Address, utils::keccak256};
-use RegistryCoordinator::{G1Point, G2Point, SignatureWithSaltAndExpiry};
+use RegistryCoordinator::{G1Point, G2Point};
 pub type PrivateKey = Fr;
 pub type PublicKey = G1Affine;
 pub type BlsSignature = G1Affine;
-pub type OperatorId = H256;
+pub type OperatorId = B256;
 
 #[derive(Debug, Clone)]
 pub struct BlsG1Point {
@@ -58,21 +54,31 @@ impl BlsG2Point {
     }
 }
 
+/// Bls key pair with public key on G1
 pub struct BlsKeyPair {
+    /// Private Key
     priv_key: Fr,
+    /// Public Key on G1
     pub_key: BlsG1Point,
 }
 
 impl BlsKeyPair {
-    pub fn new(fr: String) -> Self {
-        let sk = Fr::from_str(&fr).unwrap();
-        let pk = G1Projective::from(G1Affine::generator()) * sk;
-        Self {
-            priv_key: sk,
-            pub_key: BlsG1Point::new(pk.into_affine()),
+    /// Input [`Fr`] as a [`String`]
+    pub fn new(fr: String) -> Result<Self, BlsError> {
+        let sk_result = Fr::from_str(&fr);
+        match sk_result {
+            Ok(sk) => {
+                let pk = G1Projective::from(G1Affine::generator()) * sk;
+                Ok(Self {
+                    priv_key: sk,
+                    pub_key: BlsG1Point::new(pk.into_affine()),
+                })
+            }
+            Err(_) => Err(BlsError::InvalidBlsPrivateKey),
         }
     }
 
+    /// Get public key on G1
     pub fn public_key(&self) -> BlsG1Point {
         self.pub_key.clone()
     }
@@ -83,12 +89,24 @@ impl BlsKeyPair {
         Signature::new(r.into_affine())
     }
 
+    /// TODO(supernova): Wait for hash_to_curve to be tested in
+    /// https://github.com/Layr-Labs/rust-bls-bn254/blob/main/src/lib.rs
+    // pub fn sign_message(&self, message: &[u8]) -> Signature {
+    //     let g1 = hash_to_curve(message);
+    //     println!("hash to curve {:?}", g1);
+    //     let sk_int: BigInteger256 = self.priv_key.into();
+    //     let r = g1.mul_bigint(sk_int);
+    //     Signature::new(r.into_affine())
+    // }
+
+    /// Get public key on G2
     pub fn public_key_g2(&self) -> BlsG2Point {
         let pk = G2Projective::from(G2Affine::generator()) * self.priv_key;
         BlsG2Point::new(pk.into_affine())
     }
 }
 
+/// Convert [`G1Point`] to [`G1Affine`]
 pub fn alloy_g1_point_to_g1_affine(g1_point: G1Point) -> G1Affine {
     let x_point = g1_point.X.into_limbs();
     let x = Fq::new(BigInteger256::new(x_point));
@@ -97,47 +115,61 @@ pub fn alloy_g1_point_to_g1_affine(g1_point: G1Point) -> G1Affine {
     G1Affine::new(x, y)
 }
 
-pub fn convert_to_g1_point(g1: G1Affine) -> G1Point {
-    let x_point = g1.x().unwrap();
-    let y_point = g1.y().unwrap();
+/// Convert [`G1Affine`] to  Alloy [`G1Point`]
+pub fn convert_to_g1_point(g1: G1Affine) -> Result<G1Point, BlsError> {
+    let x_point_result = g1.x();
+    let y_point_result = g1.y();
 
-    let x = (BigInt::new(x_point.into_bigint().0));
-    let y = (BigInt::new(y_point.into_bigint().0));
+    if let (Some(x_point), Some(y_point)) = (x_point_result, y_point_result) {
+        let x = BigInt::new(x_point.into_bigint().0);
+        let y = BigInt::new(y_point.into_bigint().0);
 
-    let x_u256 = U256::from_limbs(x.0);
-    let y_u256 = U256::from_limbs(y.0);
-    // let y_256 = U256::from_limbs(y_point.0.0);
+        let x_u256 = U256::from_limbs(x.0);
+        let y_u256 = U256::from_limbs(y.0);
 
-    G1Point {
-        X: x_u256,
-        Y: y_u256,
+        Ok(G1Point {
+            X: x_u256,
+            Y: y_u256,
+        })
+    } else {
+        Err(BlsError::InvalidG1Affine)
     }
 }
 
-pub fn convert_to_g2_point(g2: G2Affine) -> G2Point {
-    let x_point_c0 = g2.x().unwrap().c0;
-    let x_point_c1 = g2.x().unwrap().c1;
+/// Convert [`G2Affine`] to [`G2Point`]
+pub fn convert_to_g2_point(g2: G2Affine) -> Result<G2Point, BlsError> {
+    let x_point_result = g2.x();
+    // let x_point_c1 = g2.x().unwrap().c1;
 
-    let y_point_c0 = g2.y().unwrap().c0;
-    let y_point_c1 = g2.y().unwrap().c1;
+    let y_point_result = g2.y();
+    // let y_point_c1 = g2.y().unwrap().c1;
 
-    let x_0 = BigInt::new(x_point_c0.into_bigint().0);
-    let x_1 = BigInt::new(x_point_c1.into_bigint().0);
-    let y_0 = BigInt::new(y_point_c0.into_bigint().0);
-    let y_1 = BigInt::new(y_point_c1.into_bigint().0);
+    if let (Some(x_point), Some(y_point)) = (x_point_result, y_point_result) {
+        let x_point_c0 = x_point.c0;
+        let x_point_c1 = x_point.c1;
+        let y_point_c0 = y_point.c0;
+        let y_point_c1 = y_point.c1;
 
-    let x_u256_0 = U256::from_limbs(x_0.0);
-    let x_u256_1 = U256::from_limbs(x_1.0);
-    let y_u256_0 = U256::from_limbs(y_0.0);
-    let y_u256_1 = U256::from_limbs(y_1.0);
+        let x_0 = BigInt::new(x_point_c0.into_bigint().0);
+        let x_1 = BigInt::new(x_point_c1.into_bigint().0);
+        let y_0 = BigInt::new(y_point_c0.into_bigint().0);
+        let y_1 = BigInt::new(y_point_c1.into_bigint().0);
 
-    G2Point {
-        X: [x_u256_1, x_u256_0],
-        Y: [y_u256_1, y_u256_0],
+        let x_u256_0 = U256::from_limbs(x_0.0);
+        let x_u256_1 = U256::from_limbs(x_1.0);
+        let y_u256_0 = U256::from_limbs(y_0.0);
+        let y_u256_1 = U256::from_limbs(y_1.0);
+
+        Ok(G2Point {
+            X: [x_u256_1, x_u256_0],
+            Y: [y_u256_1, y_u256_0],
+        })
+    } else {
+        Err(BlsError::InvalidG2Affine)
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Signature {
     g1_point: BlsG1Point,
 }
@@ -153,7 +185,6 @@ impl Signature {
         self.g1_point.clone()
     }
 }
-
 
 /// https://github.com/Layr-Labs/rust-bls-bn254/blob/main/src/lib.rs
 pub fn hash_to_curve(digest: &[u8]) -> G1Affine {
@@ -194,279 +225,147 @@ pub fn hash_to_curve(digest: &[u8]) -> G1Affine {
     }
 }
 
-pub const Q_INV_VEG: u64 = 14042775128853446655;
-pub const Q0: u64 = 4891460686036598785;
-pub const Q1: u64 = 2896914383306846353;
-pub const Q2: u64 = 13281191951274694749;
-pub const Q3: u64 = 3486998266802970665;
+#[cfg(test)]
+mod tests {
 
-pub fn cids_multiplication(x: Fr, y: Fr) -> Fr {
-    let mut t0: u64;
-    let mut t1: u64;
-    let mut t2: u64;
-    let mut t3: u64;
-    let mut u0;
-    let mut u1: u64;
-    let mut u2: u64;
-    let mut u3: u64;
+    use ark_bn254::Fq2;
 
-    {
-        let mut c0: u64;
-        let mut c1: u64;
-        let mut c2: u64;
+    use super::*;
 
-        let v = x.0 .0[0];
-        (u0, t0) = mul_64(v, y.0 .0[0]);
-        (u1, t1) = mul_64(v, y.0 .0[1]);
-        (u2, t2) = mul_64(v, y.0 .0[2]);
-        (u3, t3) = mul_64(v, y.0 .0[3]);
-        (t1, c0) = add_64(u0, t1, 0);
-        (t2, c0) = add_64(u1, t2, c0);
-        (t3, c0) = add_64(u2, t3, c0);
-        (c2, _) = add_64(u3, 0, c0);
+    #[test]
+    fn test_convert_to_g1_point() {
+        let x_point = Fq::from_str(
+            "17709620697113958145616918533531128159269167719799793368595970620022661612059",
+        )
+        .unwrap();
+        let y_point = Fq::from_str(
+            "9890439522434691655532127414660267222813910180198976870423582442696952349816",
+        )
+        .unwrap();
+        let g1_affine = G1Affine::new(x_point, y_point);
 
-        let m = t0.wrapping_mul(Q_INV_VEG);
-
-        (u0, c1) = mul_64(m, Q0);
-        (_, c0) = add_64(t0, c1, 0);
-        (u1, c1) = mul_64(m, Q1);
-        (t0, c0) = add_64(t1, c1, c0);
-        (u2, c1) = mul_64(m, Q2);
-        (t1, c0) = add_64(t2, c1, c0);
-        (u3, c1) = mul_64(m, Q3);
-
-        (t2, c0) = add_64(0, c1, c0);
-        (u3, _) = add_64(u3, 0, c0);
-        (t0, c0) = add_64(u0, t0, 0);
-        (t1, c0) = add_64(u1, t1, c0);
-        (t2, c0) = add_64(u2, t2, c0);
-        (c2, _) = add_64(c2, 0, c0);
-        (t2, c0) = add_64(t3, t2, 0);
-        (t3, _) = add_64(u3, c2, c0);
+        let alloy_g1_point = convert_to_g1_point(g1_affine).unwrap();
+        assert_eq!(
+            alloy_g1_point.X,
+            U256::from_str(
+                "17709620697113958145616918533531128159269167719799793368595970620022661612059"
+            )
+            .unwrap()
+        );
+        assert_eq!(
+            alloy_g1_point.Y,
+            U256::from_str(
+                "9890439522434691655532127414660267222813910180198976870423582442696952349816"
+            )
+            .unwrap()
+        );
     }
 
-    {
-        let mut c0: u64;
-        let mut c1: u64;
-        let mut c2: u64;
+    #[test]
+    fn test_alloy_g1_point_to_g1_affine() {
+        let alloy_g1_point = G1Point {
+            X: U256::from_str(
+                "17709620697113958145616918533531128159269167719799793368595970620022661612059",
+            )
+            .unwrap(),
+            Y: U256::from_str(
+                "9890439522434691655532127414660267222813910180198976870423582442696952349816",
+            )
+            .unwrap(),
+        };
 
-        let v = x.0 .0[1];
-        (u0, c1) = mul_64(v, y.0 .0[0]);
-        (t0, c0) = add_64(c1, t0, 0);
-        (u1, c1) = mul_64(v, y.0 .0[1]);
-        (t1, c0) = add_64(c1, t1, c0);
-        (u2, c1) = mul_64(v, y.0 .0[2]);
-        (t2, c0) = add_64(c1, t2, c0);
-        (u3, c1) = mul_64(v, y.0 .0[3]);
-        (t3, c0) = add_64(c1, t3, c0);
-
-        (c2, _) = add_64(0, 0, c0);
-        (t1, c0) = add_64(u0, t1, 0);
-        (t2, c0) = add_64(u1, t2, c0);
-        (t3, c0) = add_64(u2, t3, c0);
-        (c2, _) = add_64(u3, c2, c0);
-
-        let m = t0.wrapping_mul(Q_INV_VEG);
-
-        (u0, c1) = mul_64(m, Q0);
-        (_, c0) = add_64(t0, c1, 0);
-        (u1, c1) = mul_64(m, Q1);
-        (t0, c0) = add_64(t1, c1, c0);
-        (u2, c1) = mul_64(m, Q2);
-        (t1, c0) = add_64(t2, c1, c0);
-        (u3, c1) = mul_64(m, Q3);
-
-        (t2, c0) = add_64(0, c1, c0);
-        (u3, _) = add_64(u3, 0, c0);
-        (t0, c0) = add_64(u0, t0, 0);
-        (t1, c0) = add_64(u1, t1, c0);
-        (t2, c0) = add_64(u2, t2, c0);
-        (c2, _) = add_64(c2, 0, c0);
-        (t2, c0) = add_64(t3, t2, 0);
-        (t3, _) = add_64(u3, c2, c0);
+        let g1_affine = alloy_g1_point_to_g1_affine(alloy_g1_point);
+        assert_eq!(
+            U256::from_limbs(g1_affine.x().unwrap().into_bigint().0),
+            U256::from_str(
+                "17709620697113958145616918533531128159269167719799793368595970620022661612059"
+            )
+            .unwrap()
+        );
+        assert_eq!(
+            U256::from_limbs(g1_affine.y().unwrap().into_bigint().0),
+            U256::from_str(
+                "9890439522434691655532127414660267222813910180198976870423582442696952349816"
+            )
+            .unwrap()
+        );
     }
 
-    {
-        let mut c0: u64;
-        let mut c1: u64;
-        let mut c2: u64;
+    #[test]
+    fn test_convert_to_g2_point() {
+        let x_point_c0 = Fq::from_str(
+            "6834287759893774453556191528501556195232162436167606874229072410417955767882",
+        )
+        .unwrap();
+        let x_point_c1 = Fq::from_str(
+            "15529400123788596166111036611862227541174221446291015207340396747864347375335",
+        )
+        .unwrap();
 
-        let v = x.0 .0[2];
+        let y_point_c0 = Fq::from_str(
+            "7616309349481520605447660298084926776417001188005125143383153219707218450524",
+        )
+        .unwrap();
+        let y_point_c1 = Fq::from_str(
+            "19775028091101520702581412350510183088819198056772055625089714355379667714558",
+        )
+        .unwrap();
 
-        (u0, c1) = mul_64(v, y.0 .0[0]);
-        (t0, c0) = add_64(c1, t0, 0);
-        (u1, c1) = mul_64(v, y.0 .0[1]);
-        (t1, c0) = add_64(c1, t1, c0);
-        (u2, c1) = mul_64(v, y.0 .0[2]);
-        (t2, c0) = add_64(c1, t2, c0);
-        (u3, c1) = mul_64(v, y.0 .0[3]);
-        (t3, c0) = add_64(c1, t3, c0);
+        let x_point = Fq2::new(x_point_c0, x_point_c1);
+        let y_point = Fq2::new(y_point_c0, y_point_c1);
 
-        (c2, _) = add_64(0, 0, c0);
-        (t1, c0) = add_64(u0, t1, 0);
-        (t2, c0) = add_64(u1, t2, c0);
-        (t3, c0) = add_64(u2, t3, c0);
-        (c2, _) = add_64(u3, c2, c0);
+        let g2_affine = G2Affine::new(x_point, y_point);
 
-        let m = t0.wrapping_mul(Q_INV_VEG);
-
-        (u0, c1) = mul_64(m, Q0);
-        (_, c0) = add_64(t0, c1, 0);
-        (u1, c1) = mul_64(m, Q1);
-        (t0, c0) = add_64(t1, c1, c0);
-        (u2, c1) = mul_64(m, Q2);
-        (t1, c0) = add_64(t2, c1, c0);
-        (u3, c1) = mul_64(m, Q3);
-
-        (t2, c0) = add_64(0, c1, c0);
-        (u3, _) = add_64(u3, 0, c0);
-        (t0, c0) = add_64(u0, t0, 0);
-        (t1, c0) = add_64(u1, t1, c0);
-        (t2, c0) = add_64(u2, t2, c0);
-        (c2, _) = add_64(c2, 0, c0);
-        (t2, c0) = add_64(t3, t2, 0);
-        (t3, _) = add_64(u3, c2, c0);
+        let alloy_g2_point = convert_to_g2_point(g2_affine).unwrap();
+        assert_eq!(
+            alloy_g2_point.X[0],
+            U256::from_str(
+                "15529400123788596166111036611862227541174221446291015207340396747864347375335"
+            )
+            .unwrap()
+        );
+        assert_eq!(
+            alloy_g2_point.X[1],
+            U256::from_str(
+                "6834287759893774453556191528501556195232162436167606874229072410417955767882"
+            )
+            .unwrap()
+        );
+        assert_eq!(
+            alloy_g2_point.Y[0],
+            U256::from_str(
+                "19775028091101520702581412350510183088819198056772055625089714355379667714558"
+            )
+            .unwrap()
+        );
+        assert_eq!(
+            alloy_g2_point.Y[1],
+            U256::from_str(
+                "7616309349481520605447660298084926776417001188005125143383153219707218450524"
+            )
+            .unwrap()
+        );
     }
 
-    {
-        let mut c0: u64;
-        let mut c1: u64;
-        let mut c2: u64;
+    #[test]
+    fn test_bls_key_pair() {
+        let bls_priv_key =
+            "12248929636257230549931416853095037629726205319386239410403476017439825112537";
+        let bls_key_pair = BlsKeyPair::new(bls_priv_key.to_string()).unwrap();
 
-        let v = x.0 .0[3];
-
-        (u0, c1) = mul_64(v, y.0 .0[0]);
-        (t0, c0) = add_64(c1, t0, 0);
-        (u1, c1) = mul_64(v, y.0 .0[1]);
-        (t1, c0) = add_64(c1, t1, c0);
-        (u2, c1) = mul_64(v, y.0 .0[2]);
-        (t2, c0) = add_64(c1, t2, c0);
-        (u3, c1) = mul_64(v, y.0 .0[3]);
-        (t3, c0) = add_64(c1, t3, c0);
-
-        (c2, _) = add_64(0, 0, c0);
-        (t1, c0) = add_64(u0, t1, 0);
-        (t2, c0) = add_64(u1, t2, c0);
-        (t3, c0) = add_64(u2, t3, c0);
-        (c2, _) = add_64(u3, c2, c0);
-
-        let m = t0.wrapping_mul(Q_INV_VEG);
-
-        (u0, c1) = mul_64(m, Q0);
-        (_, c0) = add_64(t0, c1, 0);
-        (u1, c1) = mul_64(m, Q1);
-        (t0, c0) = add_64(t1, c1, c0);
-        (u2, c1) = mul_64(m, Q2);
-        (t1, c0) = add_64(t2, c1, c0);
-        (u3, c1) = mul_64(m, Q3);
-
-        (t2, c0) = add_64(0, c1, c0);
-        (u3, _) = add_64(u3, 0, c0);
-        (t0, c0) = add_64(u0, t0, 0);
-        (t1, c0) = add_64(u1, t1, c0);
-        (t2, c0) = add_64(u2, t2, c0);
-        (c2, _) = add_64(c2, 0, c0);
-        (t2, c0) = add_64(t3, t2, 0);
-        (t3, _) = add_64(u3, c2, c0);
+        assert_eq!(
+            U256::from_limbs(bls_key_pair.public_key().g1().x().unwrap().into_bigint().0),
+            U256::from_str(
+                "277950648056014144722774518899051149098728246263316284984520891067822832300"
+            )
+            .unwrap()
+        );
+        assert_eq!(
+            U256::from_limbs(bls_key_pair.public_key().g1().y().unwrap().into_bigint().0),
+            U256::from_str(
+                "16927236637669640540790285431111034664564710839671197540688155537113438534238"
+            )
+            .unwrap()
+        );
     }
-
-    let mut z: Fr = Fr::default();
-
-    z.0 .0[0] = t0;
-    z.0 .0[1] = t1;
-    z.0 .0[2] = t2;
-    z.0 .0[3] = t3;
-
-    if !smaller_than_modulus(z) {
-        let mut b: u64;
-        (z.0 .0[0], b) = sub_64(z.0 .0[0], Q0, 0);
-        (z.0 .0[1], b) = sub_64(z.0 .0[1], Q1, 0);
-        (z.0 .0[2], b) = sub_64(z.0 .0[2], Q2, 0);
-        (z.0 .0[3], b) = sub_64(z.0 .0[3], Q3, 0);
-    }
-
-    z
-}
-
-/// mul_64 https://pkg.go.dev/math/bits#Mul64
-pub fn mul_64(x: u64, y: u64) -> (u64, u64) {
-    let product: u128 = (x as u128) * (y as u128);
-    let u1: u64 = (product >> 64) as u64;
-    let t1: u64 = product as u64;
-    (u1, t1)
-}
-
-/// add_64 https://pkg.go.dev/math/bits#Add64
-pub fn add_64(x: u64, y: u64, carry: u64) -> (u64, u64) {
-    // Perform the addition with carry
-    let (sum1, carry1) = x.overflowing_add(y);
-    let (sum2, carry2) = sum1.overflowing_add(carry);
-
-    // Calculate the final carry
-    let carry_out = (carry1 as u64) + (carry2 as u64);
-
-    (sum2, carry_out)
-}
-
-pub fn sub_64(x: u64, y: u64, borrow: u64) -> (u64, u64) {
-    let diff = x.wrapping_sub(y).wrapping_sub(borrow);
-    let borrow_out = ((!x & y) | ((!x ^ y) & diff)) >> 63;
-    (diff, borrow_out)
-}
-
-pub fn smaller_than_modulus(z: Fr) -> bool {
-    return z.0 .0[3] < Q3
-        || (z.0 .0[3] == Q3
-            && (z.0 .0[2] < Q2
-                || (z.0 .0[2] == Q2
-                    && (z.0 .0[1] < Q1 || (z.0 .0[1] == Q1 && (z.0 .0[0] < Q0))))));
-}
-
-// Test vector from https://pkg.go.dev/math/bits#Mul64
-#[test]
-fn test_mul64() {
-    let a: u64 = 9223372036854775808;
-    let b: u64 = 2;
-
-    let s = mul_64(a, b);
-    assert_eq!(1, s.0);
-    assert_eq!(0, s.1);
-
-    let c: u64 = 12;
-    let d: u64 = 12;
-
-    let s = mul_64(c, d);
-    assert_eq!(0, s.0);
-    assert_eq!(144, s.1);
-}
-
-/// Test vector https://pkg.go.dev/math/bits#Sub64
-#[test]
-fn test_sub_64() {
-    let a: u64 = 23;
-    let b: u64 = 12;
-
-    let s = sub_64(a, b, 0);
-
-    assert_eq!(11, s.0);
-}
-
-/// Test vector from https://pkg.go.dev/math/bits#Add64
-#[test]
-fn test_add_64() {
-    let x: u64 = 12;
-    let y: u64 = 23;
-    let z: u64 = 0;
-
-    let s = add_64(x, y, z); // (d1,carry)
-
-    assert_eq!(35, s.0); // d1 =35
-    assert_eq!(0, s.1); // carry bit
-
-    let a: u64 = 33;
-    let b: u64 = 21;
-
-    let ss = add_64(a, b, s.1); // (d0,_)
-
-    assert_eq!(ss.0, 54);
 }
