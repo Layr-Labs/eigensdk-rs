@@ -120,7 +120,7 @@ pub fn execute_command(command: Commands) -> Result<(), EigenCliError> {
 }
 
 #[cfg(test)]
-pub mod test {
+mod test {
     use super::ANVIL_RPC_URL;
     use crate::args::EigenKeyCommand;
     use crate::convert::store;
