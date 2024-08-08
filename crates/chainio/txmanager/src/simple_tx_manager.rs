@@ -190,7 +190,9 @@ impl<'log> SimpleTxManager<'log> {
         tx: &TxLegacy,
     ) -> Result<TransactionRequest, TxManagerError> {
         let gas_tip_cap = self.provider.get_max_priority_fee_per_gas().await
-        .inspect_err(|err| self.logger.info("eth_maxPriorityFeePerGas is unsupported by current backend, using fallback gasTipCap", &[err]))
+        .inspect_err(|err|
+            self.logger.info("eth_maxPriorityFeePerGas is unsupported by current backend, using fallback gasTipCap",
+            &[err]))
         .unwrap_or(FALLBACK_GAS_TIP_CAP);
 
         let header = self
