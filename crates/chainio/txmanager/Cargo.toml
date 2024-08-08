@@ -8,6 +8,7 @@ repository.workspace = true
 license-file.workspace = true
 
 [dependencies]
+alloy-eips.workspace = true
 alloy-consensus.workspace = true
 alloy-network.workspace = true
 alloy-primitives.workspace = true
@@ -22,7 +23,6 @@ reqwest.workspace = true
 thiserror.workspace = true
 
 [dev-dependencies]
-alloy-eips.workspace = true
 alloy-node-bindings.workspace = true
 once_cell.workspace = true
 tokio.workspace = true
