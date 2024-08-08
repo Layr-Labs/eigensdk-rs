@@ -302,11 +302,6 @@ impl<'log> SimpleTxManager<'log> {
     // this to generate the transaction without actually sending it
     func (m *SimpleTxManager) GetNoSendTxOpts() (*bind.TransactOpts, error) {
     }
-
-    func (m *SimpleTxManager) queryReceipt(ctx context.Context, txID wallet.TxID) *types.Receipt {
-    }
-
-
     */
 }
 
