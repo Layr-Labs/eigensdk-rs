@@ -108,6 +108,13 @@ sol!(
     "../../crates/contracts/bindings/utils/json/ECDSAStakeRegistry.json"
 );
 
+sol!(
+    #[allow(missing_docs)]
+    #[sol(rpc)]
+    IBLSSignatureChecker,
+    "../../crates/contracts/bindings/utils/json/IBLSSignatureChecker.json"
+);
+
 // Anvil utilities
 
 sol!(

@@ -10,6 +10,7 @@ members = [
     "crates/utils/",
     "crates/crypto/bls/",
     "crates/crypto/keystore/",
+    "crates/eigen-cli/",
     "crates/metrics/collectors/economic/",
     "crates/metrics/collectors/rpc_calls/",
     "crates/services/avsregistry/",
@@ -28,7 +29,6 @@ members = [
     "examples/avsregistry-write",
     "examples/anvil-utils",
 ]
-
 resolver = "2"
 
 [workspace.package]
@@ -36,10 +36,9 @@ version = "0.0.1-alpha"
 edition = "2021"
 authors = ["Eigen Layer contributors"]
 rust-version = "1.79"
-repository = "https://github.com/supernovahs/eigen-rs"
+repository = "https://github.com/Layr-Labs/eigensdk-rs"
 homepage = ""
 license-file = "LICENSE.txt"
-
 
 [workspace.lints]
 rust.missing_debug_implementations = "warn"
@@ -49,52 +48,56 @@ rust.unused_must_use = "deny"
 rust.rust_2018_idioms = { level = "deny", priority = -1 }
 rustdoc.all = "warn"
 
-
 [workspace.dependencies]
-metrics-exporter-prometheus = "0.12.0"
-ethers = "2.0.14"
 ark-ff = "0.4.0"
-eyre = "0.6.12"
-syn = "2.0"
-quote = "1.0"
-metrics = "0.21.1"
-once_cell = "1.17"
-reqwest = "0.12.4"
-reth = { git = "https://github.com/paradigmxyz/reth" }
-prometheus-client = "0.22.2"
+async-trait = "0.1.81"
+aws-config = "1.5.4"
+aws-sdk-kms = "1.37.0"
 bn254 = { git = "https://github.com/sedaprotocol/bn254" }
-eigen-metrics = { version = "0.0.1-alpha", path = "crates/metrics/" }
-serde = { version = "1.0.197", features = ["derive"] }
+clap = { version = "4.5.11", features = ["derive"] }
 eigen-chainio-utils = { path = "crates/chainio/utils/" }
 eigen-client-avsregistry = { path = "crates/chainio/clients/avsregistry" }
 eigen-client-elcontracts = { path = "crates/chainio/clients/elcontracts" }
 eigen-client-eth = { path = "crates/chainio/clients/eth" }
 eigen-client-fireblocks = { path = "crates/chainio/clients/fireblocks" }
 eigen-contract-bindings = { path = "crates/contracts/bindings/" }
-eigen-types = { path = "crates/types/" }
 eigen-crypto-bls = { path = "crates/crypto/bls/" }
 eigen-crypto-bn254 = { path = "crates/crypto/bn254/" }
 eigen-crypto-keystore = { path = "crates/crypto/keystore/" }
-eigen-utils = { path = "crates/utils/" }
+eigen-metrics = { version = "0.0.1-alpha", path = "crates/metrics/" }
 eigen-metrics-collectors-economic = { path = "crates/metrics/collectors/economic" }
 eigen-metrics-collectors-rpc-calls = { path = "crates/metrics/collectors/rpc_calls" }
+eigen-metrics-derive = { path = "crates/metrics/metrics-derive" }
 eigen-services-avsregistry = { path = "crates/services/avsregistry" }
 eigen-services-bls_aggregation = { path = "crates/services/bls_aggregation" }
 eigen-services-operatorsinfo = { path = "crates/services/operatorsinfo" }
-eigen-metrics-derive = { path = "crates/metrics/metrics-derive" }
 eigen-testing-utils = { path = "testing/testing-utils" }
-info-operator-service = { path = "examples/info-operator-service" }
-tokio = { version = "1.37.0", features = ["test-util", "full", "sync"] }
+eigen-types = { path = "crates/types/" }
+eigen-utils = { path = "crates/utils/" }
+eth-keystore = "0.5.0"
+ethers = "2.0.14"
+ethers-signers = "2.0.14"
+eyre = "0.6.12"
 futures-util = "0.3.30"
+hex-literal = "0.4.1"
+hyper = "0.14.25"
+info-operator-service = { path = "examples/info-operator-service" }
+k256 = "0.13.3"
+metrics = "0.21.1"
+metrics-exporter-prometheus = "0.12.0"
+once_cell = "1.17"
+prometheus-client = "0.22.2"
+quote = "1.0"
+reqwest = "0.12.4"
+reth = { git = "https://github.com/paradigmxyz/reth" }
+serde = { version = "1.0.197", features = ["derive"] }
+serde_json = "1.0.121"
+syn = "2.0"
+testcontainers = "0.20.1"
 thiserror = "1.0"
+tokio = { version = "1.37.0", features = ["test-util", "full", "sync"] }
 tracing = "0.1.40"
 tracing-subscriber = { version = "0.3", features = ["json"] }
-hyper = "0.14.25"
-hex-literal = "0.4.1"
-ethers-signers = "2.0.14"
-eth-keystore = "0.5.0"
-aws-config = "1.5.4"
-aws-sdk-kms = "1.37.0"
 url = "2.5.2"
 testcontainers = "0.20.1"
 async-trait = "0.1.81"
@@ -104,46 +107,45 @@ parking_lot = "0.12"
 
 #alloy
 alloy-chains = "0.1.15"
-alloy-primitives = "0.7.2"
+alloy-consensus = { version = "0.1", default-features = false }
+alloy-contract = { version = "0.1", default-features = false }
 alloy-dyn-abi = "0.7.2"
-alloy-sol-types = "0.7.2"
-alloy-rlp = "0.3.4"
-alloy-trie = "0.4"
-alloy-rpc-types = { version = "0.1", default-features = false, features = [
-    "eth",
-] }
-alloy-rpc-types-anvil = { version = "0.1", default-features = false }
-alloy-rpc-types-beacon = { version = "0.1", default-features = false }
-alloy-rpc-types-admin = { version = "0.1", default-features = false }
-alloy-rpc-types-txpool = { version = "0.1", default-features = false }
-alloy-serde = { version = "0.1", default-features = false }
-alloy-rpc-types-engine = { version = "0.1", default-features = false }
-alloy-rpc-types-eth = { version = "0.1", default-features = false }
-alloy-rpc-types-trace = { version = "0.1", default-features = false }
+alloy-eips = { version = "0.1", default-features = false }
 alloy-genesis = { version = "0.1", default-features = false }
+alloy-json-rpc = { version = "0.1", default-features = false }
+alloy-network = { version = "0.1", default-features = false }
 alloy-node-bindings = { version = "0.1", default-features = false }
+alloy-primitives = "0.7.2"
 alloy-provider = { version = "0.1", default-features = false, features = [
     "reqwest",
 ] }
-alloy-eips = { version = "0.1", default-features = false }
+alloy-pubsub = { version = "0.1", default-features = false }
+alloy-rlp = "0.3.4"
+alloy-rpc-client = "0.1"
+alloy-rpc-types = { version = "0.1", default-features = false, features = [
+    "eth",
+] }
+alloy-rpc-types-admin = { version = "0.1", default-features = false }
+alloy-rpc-types-anvil = { version = "0.1", default-features = false }
+alloy-rpc-types-beacon = { version = "0.1", default-features = false }
+alloy-rpc-types-engine = { version = "0.1", default-features = false }
+alloy-rpc-types-eth = { version = "0.1", default-features = false }
+alloy-rpc-types-trace = { version = "0.1", default-features = false }
+alloy-rpc-types-txpool = { version = "0.1", default-features = false }
+alloy-serde = { version = "0.1", default-features = false }
 alloy-signer = { version = "0.1", default-features = false }
+alloy-signer-aws = "0.1"
 alloy-signer-local = { version = "0.1", default-features = false }
-alloy-network = { version = "0.1", default-features = false }
-alloy-consensus = { version = "0.1", default-features = false }
+alloy-sol-types = "0.7.2"
 alloy-transport = { version = "0.1" }
 alloy-transport-http = { version = "0.1", features = [
     "reqwest-rustls-tls",
 ], default-features = false }
-alloy-transport-ws = { version = "0.1", default-features = false }
 alloy-transport-ipc = { version = "0.1", default-features = false }
-alloy-pubsub = { version = "0.1", default-features = false }
-alloy-json-rpc = { version = "0.1", default-features = false }
-alloy-rpc-client = "0.1"
-alloy-contract = { version = "0.1", default-features = false }
-alloy-signer-aws = "0.1"
-
+alloy-transport-ws = { version = "0.1", default-features = false }
+alloy-trie = "0.4"
 
 # examples
+anvil-utils = { path = "examples/anvil-utils" }
 avsregistry-read = { path = "examples/avsregistry-read" }
 avsregistry-write = { path = "examples/avsregistry-write" }
-anvil-utils = { path = "examples/anvil-utils" }
