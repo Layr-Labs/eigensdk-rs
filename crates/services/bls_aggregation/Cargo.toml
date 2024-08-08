@@ -9,11 +9,12 @@ repository.workspace = true
 license-file.workspace = true
 
 [dependencies]
-eigen-types.workspace = true
-eigen-crypto-bls.workspace = true
-eigen-services-avsregistry.workspace = true
-parking_lot.workspace = true
-eigen-crypto-bn254.workspace = true
 alloy-primitives.workspace = true
+eigen-crypto-bls.workspace = true
+eigen-crypto-bn254.workspace = true
+eigen-logging.workspace = true
+eigen-services-avsregistry.workspace = true
+eigen-types.workspace = true
+parking_lot.workspace = true
 tokio = { workspace = true, features = ["full"] }
 

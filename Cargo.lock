@@ -653,7 +653,7 @@ dependencies = [
  "ark-serialize 0.3.0",
  "ark-std 0.3.0",
  "derivative",
- "num-bigint",
+ "num-bigint 0.4.6",
  "num-traits",
  "paste",
  "rustc_version 0.3.3",
@@ -673,7 +673,7 @@ dependencies = [
  "derivative",
  "digest 0.10.7",
  "itertools 0.10.5",
- "num-bigint",
+ "num-bigint 0.4.6",
  "num-traits",
  "paste",
  "rustc_version 0.4.0",
@@ -706,7 +706,7 @@ version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "db2fd794a08ccb318058009eefdf15bcaaaaf6f8161eb3345f907222bac38b20"
 dependencies = [
- "num-bigint",
+ "num-bigint 0.4.6",
  "num-traits",
  "quote",
  "syn 1.0.109",
@@ -718,7 +718,7 @@ version = "0.4.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7abe79b0e4288889c4574159ab790824d0033b9fdcb2a112a3182fac2e514565"
 dependencies = [
- "num-bigint",
+ "num-bigint 0.4.6",
  "num-traits",
  "proc-macro2",
  "quote",
@@ -757,7 +757,7 @@ dependencies = [
  "ark-serialize-derive",
  "ark-std 0.4.0",
  "digest 0.10.7",
- "num-bigint",
+ "num-bigint 0.4.6",
 ]
 
 [[package]]
@@ -1217,6 +1217,12 @@ checksum = "4c7f02d4ea65f2c1853089ffd8d2787bdbc63de2f0d29dedbcf8ccdfa0ccd4cf"
 
 [[package]]
 name = "base64"
+version = "0.12.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3441f0f7b02788e948e47f457ca01f1d7e6d92c693bc132c22b087d3141c03ff"
+
+[[package]]
+name = "base64"
 version = "0.13.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9e1b586273c5702936fe7b7d6896644d8be71e6314cfe09d3167c95f712589e8"
@@ -1510,8 +1516,10 @@ checksum = "a21f936df1771bf62b77f047b726c4625ff2e8aa607c01ec06e5a05bd8463401"
 dependencies = [
  "android-tzdata",
  "iana-time-zone",
+ "js-sys",
  "num-traits",
  "serde",
+ "wasm-bindgen",
  "windows-targets 0.52.5",
 ]
 
@@ -1739,6 +1747,16 @@ checksum = "1bfb12502f3fc46cca1bb51ac28df9d618d813cdc3d2f25b9fe775a34af26bb3"
 dependencies = [
  "generic-array",
  "typenum",
+]
+
+[[package]]
+name = "ctor"
+version = "0.2.8"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "edb49164822f3ee45b17acd4a208cfc1251410cf0cad9a833234c9890774dd9f"
+dependencies = [
+ "quote",
+ "syn 2.0.67",
 ]
 
 [[package]]
@@ -1973,7 +1991,7 @@ dependencies = [
  "eth-keystore",
  "hex",
  "k256",
- "num-bigint",
+ "num-bigint 0.4.6",
  "rand",
  "rand_core",
  "rstest",
@@ -2002,10 +2020,12 @@ dependencies = [
  "eigen-chainio-utils",
  "eigen-client-elcontracts",
  "eigen-crypto-bls",
+ "eigen-logging",
  "eigen-types",
  "eigen-utils",
  "hex",
- "num-bigint",
+ "num-bigint 0.4.6",
+ "once_cell",
  "reqwest 0.12.5",
  "thiserror",
  "tokio",
@@ -2021,9 +2041,11 @@ dependencies = [
  "alloy-primitives",
  "alloy-provider",
  "alloy-signer-local",
+ "eigen-logging",
  "eigen-testing-utils",
  "eigen-types",
  "eigen-utils",
+ "once_cell",
  "thiserror",
  "tokio",
  "tracing",
@@ -2037,8 +2059,23 @@ version = "0.0.1-alpha"
 name = "eigen-client-fireblocks"
 version = "0.0.1-alpha"
 dependencies = [
+ "alloy-contract",
  "alloy-primitives",
+ "alloy-provider",
+ "alloy-rpc-types",
+ "chrono",
+ "eigen-utils",
+ "hex",
+ "jsonwebtoken 7.2.0",
+ "mime",
+ "once_cell",
+ "reqwest 0.11.27",
  "serde",
+ "serde_json",
+ "sha2",
+ "thiserror",
+ "tokio",
+ "uuid 1.10.0",
 ]
 
 [[package]]
@@ -2061,7 +2098,7 @@ dependencies = [
  "ethers",
  "eyre",
  "hex",
- "num-bigint",
+ "num-bigint 0.4.6",
  "rand",
  "thiserror",
  "tokio",
@@ -2101,6 +2138,8 @@ dependencies = [
 name = "eigen-logging"
 version = "0.0.1-alpha"
 dependencies = [
+ "ctor",
+ "once_cell",
  "tracing",
  "tracing-subscriber",
 ]
@@ -2109,6 +2148,7 @@ dependencies = [
 name = "eigen-metrics"
 version = "0.0.1-alpha"
 dependencies = [
+ "eigen-logging",
  "eigen-metrics-collectors-economic",
  "eigen-metrics-collectors-rpc-calls",
  "eigen-metrics-derive",
@@ -2124,6 +2164,7 @@ dependencies = [
 name = "eigen-metrics-collectors-economic"
 version = "0.0.1-alpha"
 dependencies = [
+ "eigen-logging",
  "eigen-metrics-derive",
  "metrics",
 ]
@@ -2132,6 +2173,7 @@ dependencies = [
 name = "eigen-metrics-collectors-rpc-calls"
 version = "0.0.1-alpha"
 dependencies = [
+ "eigen-logging",
  "eigen-metrics-derive",
  "metrics",
 ]
@@ -2158,6 +2200,7 @@ dependencies = [
  "eigen-client-avsregistry",
  "eigen-crypto-bls",
  "eigen-crypto-bn254",
+ "eigen-logging",
  "eigen-services-operatorsinfo",
  "eigen-types",
  "eigen-utils",
@@ -2170,6 +2213,7 @@ dependencies = [
  "alloy-primitives",
  "eigen-crypto-bls",
  "eigen-crypto-bn254",
+ "eigen-logging",
  "eigen-services-avsregistry",
  "eigen-types",
  "parking_lot",
@@ -2234,7 +2278,7 @@ dependencies = [
  "eigen-crypto-bls",
  "eigen-utils",
  "ethers",
- "num-bigint",
+ "num-bigint 0.4.6",
 ]
 
 [[package]]
@@ -2589,7 +2633,7 @@ dependencies = [
  "hashers",
  "http 0.2.12",
  "instant",
- "jsonwebtoken",
+ "jsonwebtoken 8.3.0",
  "once_cell",
  "pin-project",
  "reqwest 0.11.27",
@@ -2675,6 +2719,7 @@ version = "0.0.1-alpha"
 dependencies = [
  "alloy-primitives",
  "eigen-client-avsregistry",
+ "eigen-logging",
  "eigen-testing-utils",
  "eyre",
  "tokio",
@@ -3353,6 +3398,19 @@ dependencies = [
 
 [[package]]
 name = "hyper-tls"
+version = "0.5.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d6183ddfa99b85da61a140bea0efc93fdf56ceaa041b37d553518030827f9905"
+dependencies = [
+ "bytes",
+ "hyper 0.14.29",
+ "native-tls",
+ "tokio",
+ "tokio-native-tls",
+]
+
+[[package]]
+name = "hyper-tls"
 version = "0.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "70206fc6890eaca9fde8a0bf71caa2ddfc9fe045ac9e5c70df101a7dbde866e0"
@@ -3523,6 +3581,7 @@ version = "0.0.1-alpha"
 dependencies = [
  "alloy-primitives",
  "eigen-client-avsregistry",
+ "eigen-logging",
  "eigen-services-operatorsinfo",
  "tokio",
  "tracing",
@@ -3623,16 +3682,30 @@ dependencies = [
 
 [[package]]
 name = "jsonwebtoken"
+version = "7.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "afabcc15e437a6484fc4f12d0fd63068fe457bf93f1c148d3d9649c60b103f32"
+dependencies = [
+ "base64 0.12.3",
+ "pem 0.8.3",
+ "ring 0.16.20",
+ "serde",
+ "serde_json",
+ "simple_asn1 0.4.1",
+]
+
+[[package]]
+name = "jsonwebtoken"
 version = "8.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6971da4d9c3aa03c3d8f3ff0f4155b534aad021292003895a469716b2a230378"
 dependencies = [
  "base64 0.21.7",
- "pem",
+ "pem 1.1.1",
  "ring 0.16.20",
  "serde",
  "serde_json",
- "simple_asn1",
+ "simple_asn1 0.6.2",
 ]
 
 [[package]]
@@ -3915,6 +3988,17 @@ checksum = "77a8165726e8236064dbb45459242600304b42a5ea24ee2948e18e023bf7ba84"
 dependencies = [
  "overload",
  "winapi",
+]
+
+[[package]]
+name = "num-bigint"
+version = "0.2.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "090c7f9998ee0ff65aa5b723e4009f7b217707f1fb5ea551329cc4d6231fb304"
+dependencies = [
+ "autocfg",
+ "num-integer",
+ "num-traits",
 ]
 
 [[package]]
@@ -4202,6 +4286,17 @@ checksum = "f8ed6a7761f76e3b9f92dfb0a60a6a6477c61024b775147ff0973a02653abaf2"
 dependencies = [
  "digest 0.10.7",
  "hmac",
+]
+
+[[package]]
+name = "pem"
+version = "0.8.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "fd56cbd21fea48d0c440b41cd69c589faacade08c992d9a54e471b79d0fd13eb"
+dependencies = [
+ "base64 0.13.1",
+ "once_cell",
+ "regex",
 ]
 
 [[package]]
@@ -4688,10 +4783,12 @@ dependencies = [
  "http-body 0.4.6",
  "hyper 0.14.29",
  "hyper-rustls 0.24.2",
+ "hyper-tls 0.5.0",
  "ipnet",
  "js-sys",
  "log",
  "mime",
+ "native-tls",
  "once_cell",
  "percent-encoding",
  "pin-project-lite",
@@ -4703,6 +4800,7 @@ dependencies = [
  "sync_wrapper 0.1.2",
  "system-configuration",
  "tokio",
+ "tokio-native-tls",
  "tokio-rustls 0.24.1",
  "tower-service",
  "url",
@@ -4731,7 +4829,7 @@ dependencies = [
  "http-body-util",
  "hyper 1.3.1",
  "hyper-rustls 0.27.2",
- "hyper-tls",
+ "hyper-tls 0.6.0",
  "hyper-util",
  "ipnet",
  "js-sys",
@@ -4885,7 +4983,7 @@ dependencies = [
  "ark-ff 0.4.2",
  "bytes",
  "fastrlp",
- "num-bigint",
+ "num-bigint 0.4.6",
  "num-traits",
  "parity-scale-codec",
  "primitive-types",
@@ -5410,11 +5508,22 @@ dependencies = [
 
 [[package]]
 name = "simple_asn1"
+version = "0.4.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "692ca13de57ce0613a363c8c2f1de925adebc81b04c923ac60c5488bb44abe4b"
+dependencies = [
+ "chrono",
+ "num-bigint 0.2.6",
+ "num-traits",
+]
+
+[[package]]
+name = "simple_asn1"
 version = "0.6.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "adc4e5204eb1910f40f9cfa375f6f05b68c3abac4b6fd879c8ff5e7ae8a0a085"
 dependencies = [
- "num-bigint",
+ "num-bigint 0.4.6",
  "num-traits",
  "thiserror",
  "time",
