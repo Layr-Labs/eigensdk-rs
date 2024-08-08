@@ -66,7 +66,6 @@ eigen-crypto-bls = { path = "crates/crypto/bls/" }
 eigen-crypto-bn254 = { path = "crates/crypto/bn254/" }
 eigen-crypto-keystore = { path = "crates/crypto/keystore/" }
 eigen-logging = { path = "crates/logging/" }
-eigen-signer = { path = "crates/signer/" }
 eigen-metrics = { version = "0.0.1-alpha", path = "crates/metrics/" }
 eigen-metrics-collectors-economic = { path = "crates/metrics/collectors/economic" }
 eigen-metrics-collectors-rpc-calls = { path = "crates/metrics/collectors/rpc_calls" }
@@ -74,8 +73,8 @@ eigen-metrics-derive = { path = "crates/metrics/metrics-derive" }
 eigen-services-avsregistry = { path = "crates/services/avsregistry" }
 eigen-services-bls_aggregation = { path = "crates/services/bls_aggregation" }
 eigen-services-operatorsinfo = { path = "crates/services/operatorsinfo" }
+eigen-signer = { path = "crates/signer/" }
 eigen-testing-utils = { path = "testing/testing-utils" }
-eigen-logging  = {path = "crates/logging"}
 eigen-types = { path = "crates/types/" }
 eigen-utils = { path = "crates/utils/" }
 eth-keystore = "0.5.0"
