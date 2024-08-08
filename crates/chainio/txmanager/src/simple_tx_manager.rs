@@ -438,11 +438,11 @@ impl<'log> SimpleTxManager<'log> {
 #[cfg(test)]
 mod tests {
     use super::SimpleTxManager;
-    use alloy_consensus::{TxEip1559, TxLegacy};
+    use alloy_consensus::TxLegacy;
     use alloy_network::TransactionBuilder;
     use alloy_node_bindings::Anvil;
-    use alloy_primitives::{bytes, Address, TxKind::Call, U256};
-    use alloy_rpc_types_eth::{AccessList, TransactionRequest};
+    use alloy_primitives::{bytes, TxKind::Call, U256};
+    use alloy_rpc_types_eth::TransactionRequest;
     use eigen_logging::{log_level::LogLevel, logger::Logger, tracing_logger::TracingLogger};
     use once_cell::sync::OnceCell;
     use tokio;
@@ -510,22 +510,18 @@ mod tests {
         let _alice = anvil.addresses()[0];
         let bob = anvil.addresses()[1];
 
-        let tx_eip1559 = TxEip1559 {
-            to: Call(bob),
-            value: U256::from(100),
-            nonce: 100,
-            input: bytes!(),
-            chain_id: 31337,
-            gas_limit: 210000,
-            max_fee_per_gas: 2_000_000_000,
-            max_priority_fee_per_gas: 1_000_000,
-            access_list: AccessList::default(),
-        };
+        let mut tx = TransactionRequest::default()
+            .with_to(bob)
+            .with_nonce(0)
+            .with_chain_id(anvil.chain_id())
+            .with_value(U256::from(100))
+            .with_gas_limit(21_000)
+            .with_max_priority_fee_per_gas(1_000_000_000)
+            .with_max_fee_per_gas(20_000_000_000);
 
-        let mut tx_request: TransactionRequest = tx_eip1559.clone().into();
-        tx_request.set_gas_price(21_000_000_000);
+        tx.set_gas_price(21_000_000_000);
         // send transaction and wait for receipt
-        let receipt = simple_tx_manager.send_tx(&mut tx_request).await.unwrap();
+        let receipt = simple_tx_manager.send_tx(&mut tx).await.unwrap();
         let block_number = receipt.block_number.unwrap();
         println!("Transaction mined in block: {}", block_number);
         assert!(block_number > 0);
