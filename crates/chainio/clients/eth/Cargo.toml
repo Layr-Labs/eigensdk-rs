@@ -18,6 +18,7 @@ alloy-transport-http.workspace = true
 eigen-logging.workspace = true
 eigen-metrics-collectors-rpc-calls.workspace = true
 once_cell.workspace = true
+serde.workspace = true
 thiserror.workspace = true
 tokio.workspace = true
 url.workspace = true

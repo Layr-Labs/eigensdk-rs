@@ -2053,6 +2053,7 @@ dependencies = [
  "eigen-logging",
  "eigen-metrics-collectors-rpc-calls",
  "once_cell",
+ "serde",
  "thiserror",
  "tokio",
  "url",

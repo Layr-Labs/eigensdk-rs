@@ -2,12 +2,13 @@
 use alloy_json_rpc::{RpcParam, RpcReturn};
 use alloy_primitives::Address;
 use alloy_provider::{Provider, ProviderBuilder, RootProvider};
-use alloy_rpc_types_eth::TransactionReceipt;
+use alloy_rpc_types_eth::{Transaction, TransactionReceipt};
 use alloy_transport::TransportResult;
 use alloy_transport_http::{reqwest::Method, Client, Http};
 use eigen_logging::get_test_logger;
 use eigen_logging::logger::Logger;
 use eigen_metrics_collectors_rpc_calls::RpcCallsMetrics as RpcCallsCollector;
+use serde::Serialize;
 use std::time::Instant;
 use thiserror::Error;
 use url::Url;
@@ -79,6 +80,21 @@ impl InstrumentedClient {
         todo!()
     }
 
+    pub async fn transaction_in_block(
+        &self,
+        block_hash: [u8; 32],
+        index: u64,
+    ) -> TransportResult<Transaction> {
+        let params = TransactionInBlockParams { block_hash, index };
+        self.instrument_function("eth_getTransactionByBlockHashAndIndex", params)
+            .await
+            .inspect_err(|err| {
+                self.rpc_collector
+                    .logger()
+                    .error("Failed to get transaction", &[err])
+            })
+    }
+
     pub async fn transaction_count(&self, block_hash: Address) -> TransportResult<u64> {
         self.instrument_function("eth_getBlockTransactionCountByHash", block_hash)
             .await
@@ -137,4 +153,10 @@ impl InstrumentedClient {
 
         result
     }
+}
+
+#[derive(Debug, Clone, Serialize)]
+struct TransactionInBlockParams {
+    block_hash: [u8; 32],
+    index: u64,
 }
