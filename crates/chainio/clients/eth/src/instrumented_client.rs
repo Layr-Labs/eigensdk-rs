@@ -3,14 +3,15 @@ use alloy_json_rpc::{RpcParam, RpcReturn};
 use alloy_provider::{Provider, ProviderBuilder, RootProvider};
 use alloy_transport::TransportResult;
 use alloy_transport_http::{reqwest::Method, Client, Http};
-use eigen_metrics_collectors_rpc_calls::RpcCalls;
+use eigen_logging::get_test_logger;
+use eigen_metrics_collectors_rpc_calls::RpcCallsMetrics as RpcCallsCollector;
 use std::time::Instant;
 use thiserror::Error;
 use url::Url;
 
 pub struct InstrumentedClient {
     client: RootProvider<Http<Client>>,
-    rpc_collector: RpcCalls,
+    rpc_collector: RpcCallsCollector,
     net_version: u64,
 }
 
@@ -32,7 +33,8 @@ impl InstrumentedClient {
             .get_net_version()
             .await
             .map_err(|_| InstrumentedClientError::ErrorGettingVersion)?;
-        let rpc_collector = RpcCalls::new();
+
+        let rpc_collector = RpcCallsCollector::new(get_test_logger().clone());
         Ok(InstrumentedClient {
             client,
             rpc_collector,
@@ -48,7 +50,7 @@ impl InstrumentedClient {
             .await
             .map_err(|_| InstrumentedClientError::ErrorGettingVersion)?;
 
-        let rpc_collector = RpcCalls::new();
+        let rpc_collector = RpcCallsCollector::new(get_test_logger().clone());
         Ok(InstrumentedClient {
             client: client.clone(),
             rpc_collector,

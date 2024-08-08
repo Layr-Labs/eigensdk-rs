@@ -12,6 +12,7 @@ alloy-primitives.workspace = true
 alloy-provider.workspace = true
 async-trait.workspace = true
 alloy-transport-http.workspace = true
+eigen-logging.workspace = true
 eigen-metrics-collectors-rpc-calls.workspace = true
 thiserror.workspace = true
 url.workspace = true
