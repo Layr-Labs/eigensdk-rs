@@ -301,9 +301,10 @@ impl<'log> SimpleTxManager<'log> {
 #[cfg(test)]
 mod tests {
     use super::SimpleTxManager;
-    use alloy_consensus::TxLegacy;
+    use alloy_consensus::{TxEip1559, TxLegacy};
     use alloy_node_bindings::Anvil;
-    use alloy_primitives::{bytes, TxKind::Call, U256};
+    use alloy_primitives::{bytes, Address, TxKind::Call, U256};
+    use alloy_rpc_types_eth::AccessList;
     use eigen_logging::{log_level::LogLevel, logger::Logger, tracing_logger::TracingLogger};
     use once_cell::sync::OnceCell;
     use tokio;
@@ -311,8 +312,7 @@ mod tests {
     static TEST_LOGGER: OnceCell<TracingLogger> = OnceCell::new();
     const PRIVATE_KEY: &str = "dcf2cbdd171a21c480aa7f53d77f31bb102282b3ff099c78e3118b37348c72f7";
 
-    #[tokio::test]
-    async fn test_send_signed_transaction() {
+    fn setup_and_get_dest_address<'log>() -> (SimpleTxManager<'log>, Address) {
         TEST_LOGGER.get_or_init(|| {
             TracingLogger::new_text_logger(false, String::from(""), LogLevel::Debug, false)
         });
@@ -330,7 +330,14 @@ mod tests {
         // Create two users, Alice and Bob.
         let _alice = anvil.addresses()[0];
         let bob = anvil.addresses()[1];
+        (simple_tx_manager, bob)
+    }
 
+    #[tokio::test]
+    async fn test_send_signed_legacy_transaction() {
+        let (simple_tx_manager, bob) = setup_and_get_dest_address();
+
+        // Test 1: legacy tx
         let mut tx = TxLegacy {
             to: Call(bob),
             value: U256::from(1_000_000_000),
@@ -343,6 +350,29 @@ mod tests {
 
         //// send transaction and wait for receipt
         let receipt = simple_tx_manager.send_legacy_tx(&mut tx).await.unwrap();
+        let block_number = receipt.block_number.unwrap();
+        println!("Transaction mined in block: {}", block_number);
+        assert!(block_number > 0);
+        assert_eq!(receipt.to, Some(bob));
+
+        // Test 2: EIP1559 tx
+        let mut tx_eip1559 = TxEip1559 {
+            to: Call(bob),
+            value: U256::from(1_000_000_000),
+            nonce: 0,
+            input: bytes!(),
+            chain_id: 31337,
+            gas_limit: 2_000_000,
+            max_fee_per_gas: 2_000_000,
+            max_priority_fee_per_gas: 200,
+            access_list: AccessList::default(),
+        };
+
+        // send transaction and wait for receipt
+        let receipt = simple_tx_manager
+            .send_eip1559_tx(&mut tx_eip1559)
+            .await
+            .unwrap();
         let block_number = receipt.block_number.unwrap();
         println!("Transaction mined in block: {}", block_number);
         assert!(block_number > 0);
