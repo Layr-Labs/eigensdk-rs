@@ -2090,24 +2090,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "eigen-crypto-keystore"
-version = "0.0.1-alpha"
-dependencies = [
- "aes",
- "ark-ec",
- "ark-ff 0.4.2",
- "ctr",
- "eigen-crypto-bls",
- "eth-keystore",
- "ethers",
- "eyre",
- "rand",
- "scrypt",
- "serde",
- "serde_json",
-]
-
-[[package]]
 name = "eigen-logging"
 version = "0.0.1-alpha"
 dependencies = [
@@ -4944,7 +4926,7 @@ dependencies = [
  "ark-ec",
  "ark-ff 0.4.2",
  "ark-std 0.4.0",
- "num-bigint",
+ "num-bigint 0.4.5",
  "sha2",
 ]
 
@@ -5196,7 +5178,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9f9e24d2b632954ded8ab2ef9fea0a0c769ea56ea98bddbafbad22caeeadf45d"
 dependencies = [
  "hmac",
- "password-hash",
  "pbkdf2 0.11.0",
  "salsa20",
  "sha2",
