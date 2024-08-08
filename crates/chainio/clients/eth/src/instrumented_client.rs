@@ -43,7 +43,7 @@ impl InstrumentedClient {
     }
 
     pub async fn new_from_client(
-        client: &RootProvider<Http<Client>>,
+        client: RootProvider<Http<Client>>,
     ) -> Result<Self, InstrumentedClientError> {
         let net_version = client
             .get_net_version()
@@ -52,7 +52,7 @@ impl InstrumentedClient {
 
         let rpc_collector = RpcCallsCollector::new(get_test_logger().clone());
         Ok(InstrumentedClient {
-            client: client.clone(),
+            client,
             rpc_collector,
             net_version,
         })
