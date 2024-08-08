@@ -2,7 +2,7 @@
 use alloy_json_rpc::{RpcParam, RpcReturn};
 use alloy_primitives::Address;
 use alloy_provider::{Provider, ProviderBuilder, RootProvider};
-use alloy_rpc_types_eth::{Transaction, TransactionReceipt};
+use alloy_rpc_types_eth::{SyncStatus, Transaction, TransactionReceipt};
 use alloy_transport::TransportResult;
 use alloy_transport_http::{reqwest::Method, Client, Http};
 use eigen_logging::get_test_logger;
@@ -78,6 +78,16 @@ impl InstrumentedClient {
         //self.instrument_function("eth_getBlockByHash", block_by_hash)
         //    .await
         todo!()
+    }
+
+    pub async fn sync_progress(&self) -> TransportResult<SyncStatus> {
+        self.instrument_function("eth_syncing", ())
+            .await
+            .inspect_err(|err| {
+                self.rpc_collector
+                    .logger()
+                    .error("Failed to get sync progress", &[err])
+            })
     }
 
     pub async fn transaction_in_block(
