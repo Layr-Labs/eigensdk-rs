@@ -78,18 +78,17 @@ impl InstrumentedClient {
         todo!()
     }
 
-    pub async fn transaction_receipt(&self, hash: [u8; 32]) -> TransportResult<TransactionReceipt> {
-        let transaction_receipt = self
-            .client
-            .get_transaction_receipt(hash.into())
+    pub async fn transaction_receipt(
+        &self,
+        tx_hash: [u8; 32],
+    ) -> TransportResult<TransactionReceipt> {
+        self.instrument_function("eth_getTransactionReceipt", tx_hash)
             .await
             .inspect_err(|err| {
                 self.rpc_collector
                     .logger()
                     .error("Failed to parse url", &[err])
-            })?;
-        self.instrument_function("eth_getTransactionReceipt", transaction_receipt)
-            .await
+            })
     }
 
     /// Instrument a function call with the given method name and parameters.
