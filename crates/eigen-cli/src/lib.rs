@@ -7,6 +7,7 @@ use alloy_contract::Error as ContractError;
 use alloy_json_rpc::RpcError;
 use alloy_transport::TransportErrorKind;
 use args::{Commands, EigenKeyCommand};
+use ark_serialize::SerializationError;
 use convert::store;
 use eigen_crypto_bls::error::BlsError;
 use generate::KeyGenerator;
@@ -49,6 +50,8 @@ pub enum EigenKeyCliError {
     KeystoreError(KeystoreError),
     #[error("BLS error")]
     BLSError(BlsError),
+    #[error("serialization error")]
+    SerializationError(SerializationError),
 }
 
 /// Executes an `egnkey` subcommand.

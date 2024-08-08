@@ -1,7 +1,7 @@
 use crate::args::KeyType;
 use crate::EigenKeyCliError;
 use ark_ff::UniformRand;
-use ark_serialize::CanonicalSerialize;
+use ark_serialize::{CanonicalSerialize, SerializationError};
 use eigen_crypto_bls;
 use eth_keystore::encrypt_key;
 use k256;
@@ -67,7 +67,9 @@ impl KeyGenerator {
 
         for i in 0..num_keys {
             let password = KeyGenerator::generate_random_password();
-            let private_key = self.random_key();
+            let private_key = self
+                .random_key()
+                .map_err(EigenKeyCliError::SerializationError)?;
             let private_key_hex = hex::encode(private_key.clone());
 
             // encrypt the private key into `path` directory
@@ -98,15 +100,15 @@ impl KeyGenerator {
         Ok(())
     }
 
-    /// Generates a random key which can be of type ecdsa or BLS.
+    /// Generates a random key which can be type ecdsa or BLS.
     ///
     /// # Returns
     ///
     /// * A private key as a vector of bytes.
-    fn random_key(&self) -> Vec<u8> {
+    fn random_key(&self) -> Result<Vec<u8>, SerializationError> {
         match self {
-            KeyGenerator::ECDSAKeyGenerator => Self::random_ecdsa_key(),
-            KeyGenerator::BLSKeyGenerator => Self::random_bls_key(),
+            KeyGenerator::ECDSAKeyGenerator => Ok(Self::random_ecdsa_key()),
+            KeyGenerator::BLSKeyGenerator => Ok(Self::random_bls_key()?),
         }
     }
 
@@ -125,11 +127,11 @@ impl KeyGenerator {
     /// # Returns
     ///
     /// * A BLS private key as a vector of bytes.
-    fn random_bls_key() -> Vec<u8> {
+    fn random_bls_key() -> Result<Vec<u8>, SerializationError> {
         let mut buffer = Vec::new();
         let private_key = eigen_crypto_bls::PrivateKey::rand(&mut OsRng);
-        private_key.serialize_uncompressed(&mut buffer).unwrap(); // handle unwrap
-        buffer
+        private_key.serialize_uncompressed(&mut buffer)?;
+        Ok(buffer)
     }
 
     /// Generates a 20-character random password.
