@@ -1,6 +1,6 @@
 use alloy_consensus::{Transaction, TxEip1559, TxLegacy};
 use alloy_eips::BlockNumberOrTag;
-use alloy_network::{Ethereum, EthereumWallet, TransactionBuilder, TxSigner};
+use alloy_network::{Ethereum, EthereumWallet, TransactionBuilder};
 use alloy_primitives::{Address, TxKind};
 use alloy_provider::{PendingTransactionBuilder, Provider, ProviderBuilder, RootProvider};
 use alloy_rpc_types_eth::{TransactionInput, TransactionReceipt, TransactionRequest};
@@ -118,19 +118,32 @@ impl<'log> SimpleTxManager<'log> {
         &self,
         tx: &mut TxEip1559,
     ) -> Result<TransactionReceipt, TxManagerError> {
-        let signer = self.create_local_signer()?;
-        let _ = signer
-            .sign_transaction(tx)
-            .await
-            .inspect_err(|err| self.logger.error("Failed to sign transaction", &[err]))
-            .map_err(|_| TxManagerError::SignerError)?;
+        // Estimating gas and nonce
+        self.logger.debug("Estimating gas and nonce", &[()]);
 
-        self.logger.debug("Transaction signed", &[&tx]);
+        let tx = self
+            .estimate_gas_and_nonce(tx)
+            .await
+            .inspect_err(|err| self.logger.error("Failed to estimate gas", &[err]))?;
+
+        let signer = self.create_local_signer()?;
+        let wallet = EthereumWallet::from(signer);
+
+        let signed_tx = tx
+            .build(&wallet)
+            .await
+            .inspect_err(|err| {
+                self.logger
+                    .error("Failed to build and sign transaction", &[err])
+            })
+            .map_err(|_| TxManagerError::SendTxError)?;
+
+        self.logger.debug("Transaction signed", &[&signed_tx]);
 
         // send transaction and get receipt
         let pending_tx = self
             .provider
-            .send_transaction(tx.clone().into())
+            .send_transaction(signed_tx.into())
             .await
             .inspect_err(|err| self.logger.error("Failed to send transaction", &[err]))
             .map_err(|_| TxManagerError::SendTxError)?;
@@ -193,6 +206,46 @@ impl<'log> SimpleTxManager<'log> {
         SimpleTxManager::wait_for_receipt(self, pending_tx).await
     }
 
+
+    pub async fn send_tx(
+        &self,
+        tx: &mut TransactionRequest,
+    ) -> Result<TransactionReceipt, TxManagerError> {
+        // Estimating gas and nonce
+        self.logger.debug("Estimating gas and nonce", &[()]);
+
+        let tx = self
+            .estimate_gas_and_nonce_2(tx)
+            .await
+            .inspect_err(|err| self.logger.error("Failed to estimate gas", &[err]))?;
+
+        let signer = self.create_local_signer()?;
+        let wallet = EthereumWallet::from(signer);
+
+        let signed_tx = tx
+            .build(&wallet)
+            .await
+            .inspect_err(|err| {
+                self.logger
+                    .error("Failed to build and sign transaction", &[err])
+            })
+            .map_err(|_| TxManagerError::SendTxError)?;
+
+        // send transaction and get receipt
+        let pending_tx = self
+            .provider
+            .send_transaction(signed_tx.into())
+            .await
+            .inspect_err(|err| self.logger.error("Failed to get receipt", &[err]))
+            .map_err(|_| TxManagerError::SendTxError)?;
+
+        self.logger
+            .debug("Transaction sent. Pending transaction: ", &[&pending_tx]);
+
+        // wait for the transaction to be mined
+        SimpleTxManager::wait_for_receipt(self, pending_tx).await
+    }
+
     /// Estimates the gas and nonce for a transaction.
     ///
     /// # Arguments
@@ -210,9 +263,9 @@ impl<'log> SimpleTxManager<'log> {
     /// - If the gas price could not be estimated.
     /// - If the gas limit could not be estimated.
     /// - If the destination address could not be retrieved.
-    async fn estimate_gas_and_nonce(
+    async fn estimate_gas_and_nonce<T: Transaction>(
         &self,
-        tx: &TxLegacy,
+        tx: &T,
     ) -> Result<TransactionRequest, TxManagerError> {
         let gas_tip_cap = self.provider.get_max_priority_fee_per_gas().await
         .inspect_err(|err|
@@ -239,7 +292,7 @@ impl<'log> SimpleTxManager<'log> {
         let gas_fee_cap = 2 * base_fee + gas_tip_cap;
 
         let mut gas_limit = tx.gas_limit();
-        let tx_input = tx.input.clone();
+        let tx_input = tx.input().to_vec();
         // we only estimate if gas_limit is not already set
         if gas_limit == 0 {
             let from = self.get_address()?;
@@ -251,7 +304,7 @@ impl<'log> SimpleTxManager<'log> {
                 .to(to)
                 .from(from)
                 .value(tx.value())
-                .input(TransactionInput::new(tx_input.clone()));
+                .input(TransactionInput::new(tx_input.clone().into()));
             tx_request.set_max_priority_fee_per_gas(gas_tip_cap);
             tx_request.set_max_fee_per_gas(gas_fee_cap);
 
@@ -275,6 +328,80 @@ impl<'log> SimpleTxManager<'log> {
             .with_value(tx.value())
             .with_gas_limit(gas_limit)
             .with_nonce(tx.nonce())
+            .with_input(tx_input)
+            .with_chain_id(tx.chain_id().unwrap_or(1))
+            .with_max_priority_fee_per_gas(gas_tip_cap)
+            .with_max_fee_per_gas(gas_fee_cap)
+            .with_gas_price(gas_price);
+
+        Ok(new_tx)
+    }
+
+    async fn estimate_gas_and_nonce_2(
+        &self,
+        tx: &TransactionRequest,
+    ) -> Result<TransactionRequest, TxManagerError> {
+        let gas_tip_cap = self.provider.get_max_priority_fee_per_gas().await
+        .inspect_err(|err|
+            self.logger.info("eth_maxPriorityFeePerGas is unsupported by current backend, using fallback gasTipCap",
+            &[err]))
+        .unwrap_or(FALLBACK_GAS_TIP_CAP);
+
+        let header = self
+            .provider
+            .get_block_by_number(BlockNumberOrTag::Latest, false)
+            .await
+            .ok()
+            .flatten()
+            .map(|block| block.header)
+            .ok_or(TxManagerError::SendTxError)
+            .inspect_err(|_| {
+                self.logger
+                    .error("Failed to get latest block header", &[()])
+            })?;
+
+        // 2*baseFee + gas_tip_cap makes sure that the tx remains includeable for 6 consecutive 100% full blocks.
+        // see https://www.blocknative.com/blog/eip-1559-fees
+        let base_fee = header.base_fee_per_gas.ok_or(TxManagerError::SendTxError)?;
+        let gas_fee_cap = 2 * base_fee + gas_tip_cap;
+
+        let mut gas_limit = tx.gas_limit();
+        let tx_input = tx.input().unwrap_or_default().to_vec();
+        // we only estimate if gas_limit is not already set
+        if let Some(0) = gas_limit {
+            let from = self.get_address()?;
+            let to = match tx.to() {
+                Some(c) => c,
+                None => return Err(TxManagerError::SendTxError),
+            };
+            let mut tx_request = TransactionRequest::default()
+                .to(to)
+                .from(from)
+                .value(tx.value().unwrap_or_default())
+                .input(TransactionInput::new(tx_input.clone().into()));
+            tx_request.set_max_priority_fee_per_gas(gas_tip_cap);
+            tx_request.set_max_fee_per_gas(gas_fee_cap);
+
+            gas_limit = Some(self
+                .provider
+                .estimate_gas(&tx_request)
+                .await
+                .map_err(|_| TxManagerError::SendTxError)?);
+        }
+        let gas_price_multiplied =
+            tx.gas_price().unwrap_or_default() as f64 * self.gas_limit_multiplier;
+        let gas_price = gas_price_multiplied as u128;
+
+        let to = match tx.to() {
+            None => return Err(TxManagerError::SendTxError),
+            Some(adress) => adress,
+        };
+
+        let new_tx = TransactionRequest::default()
+            .with_to(to)
+            .with_value(tx.value().unwrap_or_default())
+            .with_gas_limit(gas_limit.unwrap_or_default())
+            .with_nonce(tx.nonce().unwrap_or_default())
             .with_input(tx_input)
             .with_chain_id(tx.chain_id().unwrap_or(1))
             .with_max_priority_fee_per_gas(gas_tip_cap)
@@ -312,9 +439,10 @@ impl<'log> SimpleTxManager<'log> {
 mod tests {
     use super::SimpleTxManager;
     use alloy_consensus::{TxEip1559, TxLegacy};
+    use alloy_network::TransactionBuilder;
     use alloy_node_bindings::Anvil;
     use alloy_primitives::{bytes, Address, TxKind::Call, U256};
-    use alloy_rpc_types_eth::AccessList;
+    use alloy_rpc_types_eth::{AccessList, TransactionRequest};
     use eigen_logging::{log_level::LogLevel, logger::Logger, tracing_logger::TracingLogger};
     use once_cell::sync::OnceCell;
     use tokio;
@@ -322,8 +450,47 @@ mod tests {
     static TEST_LOGGER: OnceCell<TracingLogger> = OnceCell::new();
     const PRIVATE_KEY: &str = "dcf2cbdd171a21c480aa7f53d77f31bb102282b3ff099c78e3118b37348c72f7";
 
+    // #[tokio::test]
+    // async fn test_send_signed_legacy_transaction() {
+    //     TEST_LOGGER.get_or_init(|| {
+    //         TracingLogger::new_text_logger(false, String::from(""), LogLevel::Debug, false)
+    //     });
+
+    //     // Spin up a local Anvil node.
+    //     // Ensure `anvil` is available in $PATH.
+    //     let anvil = Anvil::new().try_spawn().unwrap();
+    //     let rpc_url: String = anvil.endpoint().parse().unwrap();
+
+    //     // Create a provider.
+    //     let logger = TEST_LOGGER.get().unwrap();
+    //     let simple_tx_manager =
+    //         SimpleTxManager::new(logger, 1.0, PRIVATE_KEY, rpc_url.as_str()).unwrap();
+
+    //     // Create two users, Alice and Bob.
+    //     let _alice = anvil.addresses()[0];
+    //     let bob = anvil.addresses()[1];
+
+    //     // Test 1: legacy tx
+    //     let mut tx = TxLegacy {
+    //         to: Call(bob),
+    //         value: U256::from(1_000_000_000),
+    //         gas_limit: 2_000_000,
+    //         nonce: 0,
+    //         gas_price: 21_000_000_000,
+    //         input: bytes!(),
+    //         chain_id: Some(31337),
+    //     };
+
+    //     //// send transaction and wait for receipt
+    //     let receipt = simple_tx_manager.send_legacy_tx(&mut tx).await.unwrap();
+    //     let block_number = receipt.block_number.unwrap();
+    //     println!("Transaction mined in block: {}", block_number);
+    //     assert!(block_number > 0);
+    //     assert_eq!(receipt.to, Some(bob));
+    // }
+
     #[tokio::test]
-    async fn test_send_signed_legacy_transaction() {
+    async fn test_send_signed_eip1559_transaction() {
         TEST_LOGGER.get_or_init(|| {
             TracingLogger::new_text_logger(false, String::from(""), LogLevel::Debug, false)
         });
@@ -342,38 +509,21 @@ mod tests {
         let _alice = anvil.addresses()[0];
         let bob = anvil.addresses()[1];
 
-        // Test 1: legacy tx
-        let mut tx = TxLegacy {
-            to: Call(bob),
-            value: U256::from(1_000_000_000),
-            gas_limit: 2_000_000,
-            nonce: 0,
-            gas_price: 21_000_000_000,
-            input: bytes!(),
-            chain_id: Some(31337),
-        };
-
-        //// send transaction and wait for receipt
-        let receipt = simple_tx_manager.send_legacy_tx(&mut tx).await.unwrap();
-        let block_number = receipt.block_number.unwrap();
-        println!("Transaction mined in block: {}", block_number);
-        assert!(block_number > 0);
-        assert_eq!(receipt.to, Some(bob));
-
-        /*
-        // Test 2: EIP1559 tx
         let mut tx_eip1559 = TxEip1559 {
             to: Call(bob),
-            value: U256::from(1_000_000_000),
-            nonce: 100,
+            value: U256::from(100),
+            nonce: 0,
             input: bytes!(),
             chain_id: 31337,
-            gas_limit: 2_000_000,
-            max_fee_per_gas: 2_000_000,
-            max_priority_fee_per_gas: 200,
+            gas_limit: 21_000_000,
+            max_fee_per_gas: 20_000_000_000_000,
+            max_priority_fee_per_gas: 1_000_000_000,
             access_list: AccessList::default(),
         };
 
+        let mut tx_request: TransactionRequest = tx_eip1559.clone().into();
+        tx_request.set_gas_price(2100000000000);
+        println!("Transaction request: {:?}", tx_request);
         // send transaction and wait for receipt
         let receipt = simple_tx_manager
             .send_eip1559_tx(&mut tx_eip1559)
@@ -383,6 +533,5 @@ mod tests {
         println!("Transaction mined in block: {}", block_number);
         assert!(block_number > 0);
         assert_eq!(receipt.to, Some(bob));
-        */
     }
 }
