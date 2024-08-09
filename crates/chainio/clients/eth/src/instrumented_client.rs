@@ -439,5 +439,8 @@ mod tests {
 
         let block_number = instrumented_client.block_number().await;
         assert!(block_number.is_ok());
+
+        let sync_status = instrumented_client.sync_progress().await;
+        assert!(sync_status.is_ok());
     }
 }
