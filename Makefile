@@ -11,8 +11,8 @@ deploy-contracts-to-anvil-and-save-state: ##
 __TESTING__: ##
 
 reset-anvil:
-	docker stop anvil
-	docker rm anvil
+	-docker stop anvil
+	-docker rm anvil
 
 pr: reset-anvil ## 
 	$(MAKE) start-anvil-chain-with-contracts-deployed
