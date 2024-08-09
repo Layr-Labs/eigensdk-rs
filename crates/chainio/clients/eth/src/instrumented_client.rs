@@ -1,6 +1,6 @@
 //use eigen_metrics_collectors_rpc_calls::RpcCalls as RpcCallsCollector;
 use alloy_json_rpc::{RpcParam, RpcReturn};
-use alloy_primitives::{Address, BlockNumber, Bytes, B256, U256};
+use alloy_primitives::{Address, BlockHash, BlockNumber, Bytes, ChainId, U256};
 use alloy_provider::{Provider, ProviderBuilder, RootProvider};
 use alloy_rpc_types_eth::{
     Header, SyncStatus, Transaction, TransactionReceipt, TransactionRequest,
@@ -65,22 +65,90 @@ impl InstrumentedClient {
         })
     }
 
-    /*
-    func (iec *InstrumentedClient) BlockByHash(ctx context.Context, hash common.Hash) (*types.Block, error) {
-        blockByHash := func() (*types.Block, error) { return iec.client.BlockByHash(ctx, hash) }
-        block, err := instrumentFunction[*types.Block](blockByHash, "eth_getBlockByHash", iec)
-        if err != nil {
-            return nil, err
-        }
-        return block, nil
+    pub async fn chain_id(&self) -> TransportResult<ChainId> {
+        self.instrument_function("eth_chainId", ())
+            .await
+            .inspect_err(|err| {
+                self.rpc_collector
+                    .logger()
+                    .error("Failed to get chain id", &[err])
+            })
     }
-    */
-    pub async fn block_by_hash(&self, hash: String) -> TransportResult<()> {
-        // WIP TODO!!!
-        //let block_by_hash = || self.client.get_block_by_hash(hash);
-        //self.instrument_function("eth_getBlockByHash", block_by_hash)
-        //    .await
-        todo!()
+
+    pub async fn balance_at(
+        &self,
+        account: Address,
+        block_number: BlockNumber,
+    ) -> TransportResult<U256> {
+        self.instrument_function("eth_getBalance", (account, block_number))
+            .await
+            .inspect_err(|err| {
+                self.rpc_collector
+                    .logger()
+                    .error("Failed to get balance", &[err])
+            })
+    }
+
+    pub async fn block_by_hash(&self, hash: BlockHash) -> TransportResult<Option<Block>> {
+        self.instrument_function("eth_getBlockByHash", (hash, true))
+            .await
+            .inspect_err(|err| {
+                self.rpc_collector
+                    .logger()
+                    .error("Failed to get block by hash", &[err])
+            })
+    }
+
+    pub async fn block_by_number(&self, number: BlockNumber) -> TransportResult<Option<Block>> {
+        self.instrument_function("eth_getBlockByNumber", (number, true))
+            .await
+            .inspect_err(|err| {
+                self.rpc_collector
+                    .logger()
+                    .error("Failed to get block by number", &[err])
+            })
+    }
+
+    pub async fn block_number(&self) -> TransportResult<BlockNumber> {
+        self.instrument_function("eth_blockNumber", ())
+            .await
+            .inspect_err(|err| {
+                self.rpc_collector
+                    .logger()
+                    .error("Failed to get block number", &[err])
+            })
+    }
+
+    pub async fn code_at(
+        &self,
+        address: Address,
+        block_number: BlockNumber,
+    ) -> TransportResult<Bytes> {
+        self.instrument_function("eth_getCode", (address, block_number))
+            .await
+            .inspect_err(|err| {
+                self.rpc_collector
+                    .logger()
+                    .error("Failed to get code", &[err])
+            })
+    }
+
+    pub async fn fee_history(
+        &self,
+        block_count: u64,
+        last_block: BlockNumber,
+        reward_percentiles: &[f64],
+    ) -> TransportResult<FeeHistory> {
+        self.instrument_function(
+            "eth_feeHistory",
+            (block_count, last_block, reward_percentiles),
+        )
+        .await
+        .inspect_err(|err| {
+            self.rpc_collector
+                .logger()
+                .error("Failed to get fee history", &[err])
+        })
     }
 
     pub async fn header_by_hash(&self, hash: B256) -> TransportResult<Header> {
