@@ -103,7 +103,7 @@ pub fn execute_egnkey_subcommand(subcommand: EigenKeyCommand) -> Result<(), Eige
             output_dir,
         } => KeyGenerator::from(key_type).generate(num_keys, output_dir),
 
-        EigenKeyCommand::Convert {
+        EigenKeyCommand::ConvertECDSA {
             private_key,
             output_file,
             password,
@@ -186,7 +186,6 @@ mod test {
     use rust_bls_bn254::keystores::base_keystore::Keystore;
     use std::fs;
     use tempfile::tempdir;
-    use tokio;
 
     #[rstest]
     #[case(BlsKeystoreType::Scrypt)]
