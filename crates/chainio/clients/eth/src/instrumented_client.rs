@@ -1,8 +1,8 @@
 //use eigen_metrics_collectors_rpc_calls::RpcCalls as RpcCallsCollector;
 use alloy_json_rpc::{RpcParam, RpcReturn};
-use alloy_primitives::{Address, U256};
+use alloy_primitives::{Address, BlockHash, ChainId, U256};
 use alloy_provider::{Provider, ProviderBuilder, RootProvider};
-use alloy_rpc_types_eth::{SyncStatus, Transaction, TransactionReceipt};
+use alloy_rpc_types_eth::{Block, SyncStatus, Transaction, TransactionReceipt};
 use alloy_transport::TransportResult;
 use alloy_transport_http::{reqwest::Method, Client, Http};
 use eigen_logging::get_test_logger;
@@ -61,7 +61,7 @@ impl InstrumentedClient {
         })
     }
 
-    pub async fn chain_id(&self) -> TransportResult<u64> {
+    pub async fn chain_id(&self) -> TransportResult<ChainId> {
         self.instrument_function("eth_chainId", ())
             .await
             .inspect_err(|err| {
@@ -81,22 +81,14 @@ impl InstrumentedClient {
             })
     }
 
-    /*
-    func (iec *InstrumentedClient) BlockByHash(ctx context.Context, hash common.Hash) (*types.Block, error) {
-        blockByHash := func() (*types.Block, error) { return iec.client.BlockByHash(ctx, hash) }
-        block, err := instrumentFunction[*types.Block](blockByHash, "eth_getBlockByHash", iec)
-        if err != nil {
-            return nil, err
-        }
-        return block, nil
-    }
-    */
-    pub async fn block_by_hash(&self, hash: String) -> TransportResult<()> {
-        // WIP TODO!!!
-        //let block_by_hash = || self.client.get_block_by_hash(hash);
-        //self.instrument_function("eth_getBlockByHash", block_by_hash)
-        //    .await
-        todo!()
+    pub async fn block_by_hash(&self, hash: BlockHash) -> TransportResult<Option<Block>> {
+        self.instrument_function("eth_getBlockByHash", (hash, true))
+            .await
+            .inspect_err(|err| {
+                self.rpc_collector
+                    .logger()
+                    .error("Failed to get block by hash", &[err])
+            })
     }
 
     pub async fn subscribe_new_head(&self) -> TransportResult<u128> {
