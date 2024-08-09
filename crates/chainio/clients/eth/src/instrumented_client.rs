@@ -1,8 +1,10 @@
 //use eigen_metrics_collectors_rpc_calls::RpcCalls as RpcCallsCollector;
 use alloy_json_rpc::{RpcParam, RpcReturn};
-use alloy_primitives::{Address, Bytes, B256, U256};
+use alloy_primitives::{Address, BlockNumber, Bytes, B256, U256};
 use alloy_provider::{Provider, ProviderBuilder, RootProvider};
-use alloy_rpc_types_eth::{SyncStatus, Transaction, TransactionReceipt, TransactionRequest};
+use alloy_rpc_types_eth::{
+    Header, SyncStatus, Transaction, TransactionReceipt, TransactionRequest,
+};
 use alloy_transport::TransportResult;
 use alloy_transport_http::{reqwest::Method, Client, Http};
 use eigen_logging::get_test_logger;
@@ -79,6 +81,17 @@ impl InstrumentedClient {
         //self.instrument_function("eth_getBlockByHash", block_by_hash)
         //    .await
         todo!()
+    }
+
+    pub async fn header_by_number(&self, block_number: BlockNumber) -> TransportResult<Header> {
+        let transaction_detail = false;
+        self.instrument_function("eth_getBlockByNumber", (block_number, transaction_detail))
+            .await
+            .inspect_err(|err| {
+                self.rpc_collector
+                    .logger()
+                    .error("Failed to get header by number", &[err])
+            })
     }
 
     pub async fn nonce_at(&self, account: Address, block_number: U256) -> TransportResult<u64> {
