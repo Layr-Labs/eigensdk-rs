@@ -143,7 +143,7 @@ mod test {
     #[rstest]
     #[case(KeyType::Ecdsa)]
     #[case(KeyType::Bls)]
-    fn generate_key(#[case] key_type: KeyType) {
+    fn test_generate_key(#[case] key_type: KeyType) {
         let output_dir = tempdir().unwrap();
         let output_path = output_dir.path();
         let subcommand = EigenKeyCommand::Generate {
@@ -174,7 +174,7 @@ mod test {
     }
 
     #[test]
-    fn egnkey_derive_operator_id() {
+    fn test_egnkey_derive_operator_id() {
         let private_key =
             "1e4fa82657771dc209c466a0c2f696b39320a0284bf725cf1740971fe7e2d3cf".to_string();
         let operator_id = derive_operator_id(private_key).unwrap();
@@ -184,7 +184,7 @@ mod test {
     }
 
     #[test]
-    fn convert() {
+    fn test_convert_ecdsa() {
         let private_key = KeyGenerator::random_ecdsa_key();
         let password = KeyGenerator::generate_random_password();
         let file = "key.json".to_string();
@@ -198,7 +198,7 @@ mod test {
     }
 
     #[tokio::test]
-    async fn egnaddrs_with_service_manager_flag() {
+    async fn test_egnaddrs_with_service_manager_flag() {
         let service_manager_address = get_service_manager_address().await;
 
         let expected_addresses: ContractAddresses = serde_json::from_str(
@@ -234,7 +234,7 @@ mod test {
     }
 
     #[tokio::test]
-    async fn egnaddrs_with_registry_coordinator_flag() {
+    async fn test_egnaddrs_with_registry_coordinator_flag() {
         let registry_coordinator_address = get_registry_coordinator_address().await;
 
         let expected_addresses: ContractAddresses = serde_json::from_str(
