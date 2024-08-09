@@ -65,6 +65,22 @@ impl InstrumentedClient {
         })
     }
 
+    pub async fn filter_logs(&self) {
+        todo!()
+    }
+
+    pub async fn pending_call_contract(&self) {
+        todo!()
+    }
+
+    pub async fn subscribe_filter_logs(&self) {
+        todo!()
+    }
+
+    pub async fn transaction_by_hash(&self) {
+        todo!()
+    }
+
     pub async fn chain_id(&self) -> TransportResult<ChainId> {
         self.instrument_function("eth_chainId", ())
             .await
