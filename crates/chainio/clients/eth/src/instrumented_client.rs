@@ -83,6 +83,17 @@ impl InstrumentedClient {
         todo!()
     }
 
+    pub async fn header_by_hash(&self, hash: B256) -> TransportResult<Header> {
+        let transaction_detail = false;
+        self.instrument_function("eth_getBlockByHash", (hash, transaction_detail))
+            .await
+            .inspect_err(|err| {
+                self.rpc_collector
+                    .logger()
+                    .error("Failed to get header by hash", &[err])
+            })
+    }
+
     pub async fn header_by_number(&self, block_number: BlockNumber) -> TransportResult<Header> {
         let transaction_detail = false;
         self.instrument_function("eth_getBlockByNumber", (block_number, transaction_detail))
