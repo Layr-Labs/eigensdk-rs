@@ -80,6 +80,17 @@ impl InstrumentedClient {
         todo!()
     }
 
+    // Check if this method is properly named
+    pub async fn suggest_gas_tip_cap(&self) -> TransportResult<u64> {
+        self.instrument_function("eth_maxPriorityFeePerGas", ())
+            .await
+            .inspect_err(|err| {
+                self.rpc_collector
+                    .logger()
+                    .error("Failed to suggest gas tip cap", &[err])
+            })
+    }
+
     pub async fn sync_progress(&self) -> TransportResult<SyncStatus> {
         self.instrument_function("eth_syncing", ())
             .await
