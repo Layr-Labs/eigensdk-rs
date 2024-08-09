@@ -81,13 +81,23 @@ impl InstrumentedClient {
         todo!()
     }
 
+    pub async fn pending_nonce_at(&self, account: Address) -> TransportResult<u64> {
+        self.instrument_function("eth_getTransactionCount", (account, PENDING_TAG))
+            .await
+            .inspect_err(|err| {
+                self.rpc_collector
+                    .logger()
+                    .error("Failed to get pending nonce", &[err])
+            })
+    }
+
     pub async fn pending_storage_at(&self, account: Address, key: B256) -> TransportResult<U256> {
         self.instrument_function("eth_getStorageAt", (account, key, PENDING_TAG))
             .await
             .inspect_err(|err| {
                 self.rpc_collector
                     .logger()
-                    .error("Failed to get storage", &[err])
+                    .error("Failed to get pending storage", &[err])
             })
     }
 
