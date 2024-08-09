@@ -286,13 +286,15 @@ impl InstrumentedClient {
     }
 
     pub async fn suggest_gas_price(&self) -> TransportResult<u64> {
-        self.instrument_function("eth_gasPrice", ())
+        let gas_str: String = self
+            .instrument_function("eth_gasPrice", ())
             .await
             .inspect_err(|err| {
                 self.rpc_collector
                     .logger()
                     .error("Failed to suggest gas price", &[err])
-            })
+            })?;
+        Ok(u64::from_str_radix(&gas_str.trim_start_matches("0x"), 16).unwrap()) // TODO: handle unwrap
     }
 
     // Check if this method is properly named
@@ -392,6 +394,7 @@ impl InstrumentedClient {
 
 #[cfg(test)]
 mod tests {
+    use super::*;
     use alloy_node_bindings::Anvil;
     use alloy_primitives::{bytes, TxKind::Call, U256};
     use alloy_rpc_types_eth::TransactionRequest;
@@ -404,9 +407,9 @@ mod tests {
 
     #[tokio::test]
     async fn test_send_transaction_from_legacy() {
-        TEST_LOGGER.get_or_init(|| {
-            TracingLogger::new_text_logger(false, String::from(""), LogLevel::Debug, false)
-        });
+        // TEST_LOGGER.get_or_init(|| {
+        //     TracingLogger::new_text_logger(false, String::from(""), LogLevel::Debug, false)
+        // });
 
         // Spin up a local Anvil node.
         // Ensure `anvil` is available in $PATH.
@@ -414,10 +417,14 @@ mod tests {
         let rpc_url: String = anvil.endpoint().parse().unwrap();
 
         // Create a provider.
-        let logger = TEST_LOGGER.get().unwrap();
+        // let logger = TEST_LOGGER.get().unwrap();
 
         // Create two users, Alice and Bob.
         let _alice = anvil.addresses()[0];
-        let bob = anvil.addresses()[1];
+        let _bob = anvil.addresses()[1];
+        let instrumented_client = InstrumentedClient::new(&rpc_url).await.unwrap();
+
+        let gas_price = instrumented_client.suggest_gas_price().await;
+        assert!(gas_price.is_ok());
     }
 }
