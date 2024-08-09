@@ -1,6 +1,8 @@
 //use eigen_metrics_collectors_rpc_calls::RpcCalls as RpcCallsCollector;
 use alloy_json_rpc::{RpcParam, RpcReturn};
-use alloy_primitives::{Address, BlockHash, BlockNumber, Bytes, ChainId, B256, U128, U256, U64};
+use alloy_primitives::{
+    Address, BlockHash, BlockNumber, Bytes, ChainId, Uint, B256, U128, U256, U64,
+};
 use alloy_provider::{Provider, ProviderBuilder, RootProvider};
 use alloy_rpc_types_eth::{
     Block, FeeHistory, Header, SyncStatus, Transaction, TransactionReceipt, TransactionRequest,
@@ -82,15 +84,14 @@ impl InstrumentedClient {
     }
 
     pub async fn chain_id(&self) -> TransportResult<ChainId> {
-        let result: U64 = self
-            .instrument_function("eth_chainId", ())
+        self.instrument_function("eth_chainId", ())
             .await
             .inspect_err(|err| {
                 self.rpc_collector
                     .logger()
                     .error("Failed to get chain id", &[err])
-            })?;
-        Ok(result.to())
+            })
+            .map(|result: U64| result.to())
     }
 
     pub async fn balance_at(
@@ -128,15 +129,14 @@ impl InstrumentedClient {
     }
 
     pub async fn block_number(&self) -> TransportResult<BlockNumber> {
-        let result: U64 = self
-            .instrument_function("eth_blockNumber", ())
+        self.instrument_function("eth_blockNumber", ())
             .await
             .inspect_err(|err| {
                 self.rpc_collector
                     .logger()
                     .error("Failed to get block number", &[err])
-            })?;
-        Ok(result.to())
+            })
+            .map(|result: U64| result.to())
     }
 
     pub async fn code_at(
@@ -290,28 +290,26 @@ impl InstrumentedClient {
     }
 
     pub async fn suggest_gas_price(&self) -> TransportResult<u64> {
-        let result: U64 = self
-            .instrument_function("eth_gasPrice", ())
+        self.instrument_function("eth_gasPrice", ())
             .await
             .inspect_err(|err| {
                 self.rpc_collector
                     .logger()
                     .error("Failed to suggest gas price", &[err])
-            })?;
-        Ok(result.to())
+            })
+            .map(|result: U64| result.to())
     }
 
     // TODO: Check if this method is properly named
     pub async fn suggest_gas_tip_cap(&self) -> TransportResult<u64> {
-        let result: U64 = self
-            .instrument_function("eth_maxPriorityFeePerGas", ())
+        self.instrument_function("eth_maxPriorityFeePerGas", ())
             .await
             .inspect_err(|err| {
                 self.rpc_collector
                     .logger()
                     .error("Failed to suggest gas tip cap", &[err])
-            })?;
-        Ok(result.to())
+            })
+            .map(|result: U64| result.to())
     }
 
     pub async fn sync_progress(&self) -> TransportResult<SyncStatus> {
