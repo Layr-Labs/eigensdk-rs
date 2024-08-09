@@ -1,13 +1,9 @@
 //use eigen_metrics_collectors_rpc_calls::RpcCalls as RpcCallsCollector;
 use alloy_json_rpc::{RpcParam, RpcReturn};
-use alloy_primitives::{Address, FixedBytes, B256, U256};
+use alloy_primitives::{Address, B256, U256};
 use alloy_provider::{Provider, ProviderBuilder, RootProvider};
-use alloy_rlp::Encodable;
-use alloy_rpc_types_eth::{
-    Filter, FilterBlockOption, SyncStatus, Transaction, TransactionReceipt, TransactionRequest,
-    ValueOrArray,
-};
-use alloy_transport::{Transport, TransportResult};
+use alloy_rpc_types_eth::{SyncStatus, Transaction, TransactionReceipt, TransactionRequest};
+use alloy_transport::TransportResult;
 use alloy_transport_http::{reqwest::Method, Client, Http};
 use eigen_logging::get_test_logger;
 use eigen_logging::logger::Logger;
@@ -15,6 +11,8 @@ use eigen_metrics_collectors_rpc_calls::RpcCallsMetrics as RpcCallsCollector;
 use std::time::Instant;
 use thiserror::Error;
 use url::Url;
+
+const PENDING_TAG: &str = "pending";
 
 pub struct InstrumentedClient {
     client: RootProvider<Http<Client>>,
@@ -83,8 +81,18 @@ impl InstrumentedClient {
         todo!()
     }
 
+    pub async fn pending_storage_at(&self, account: Address, key: B256) -> TransportResult<U256> {
+        self.instrument_function("eth_getStorageAt", (account, key, PENDING_TAG))
+            .await
+            .inspect_err(|err| {
+                self.rpc_collector
+                    .logger()
+                    .error("Failed to get storage", &[err])
+            })
+    }
+
     pub async fn pending_transaction_count(&self) -> TransportResult<u64> {
-        self.instrument_function("eth_getBlockTransactionCountByNumber", "pending")
+        self.instrument_function("eth_getBlockTransactionCountByNumber", PENDING_TAG)
             .await
             .inspect_err(|err| {
                 self.rpc_collector
@@ -93,7 +101,7 @@ impl InstrumentedClient {
             })
     }
 
-    pub async fn send_transaction(&self, tx: Transaction) -> TransportResult<B256> {
+    pub async fn send_transaction(&self, tx: TransactionRequest) -> TransportResult<B256> {
         // TODO: encode the transaction
         self.instrument_function("eth_sendRawTransaction", tx)
             .await
