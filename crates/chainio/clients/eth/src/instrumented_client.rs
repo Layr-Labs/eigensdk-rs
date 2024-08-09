@@ -1,8 +1,8 @@
 //use eigen_metrics_collectors_rpc_calls::RpcCalls as RpcCallsCollector;
 use alloy_json_rpc::{RpcParam, RpcReturn};
-use alloy_primitives::{Address, BlockHash, BlockNumber, ChainId, U256};
+use alloy_primitives::{Address, BlockHash, BlockNumber, Bytes, ChainId, U256};
 use alloy_provider::{Provider, ProviderBuilder, RootProvider};
-use alloy_rpc_types_eth::{Block, BlockNumberOrTag, SyncStatus, Transaction, TransactionReceipt};
+use alloy_rpc_types_eth::{Block, SyncStatus, Transaction, TransactionReceipt};
 use alloy_transport::TransportResult;
 use alloy_transport_http::{reqwest::Method, Client, Http};
 use eigen_logging::get_test_logger;
@@ -108,6 +108,20 @@ impl InstrumentedClient {
                 self.rpc_collector
                     .logger()
                     .error("Failed to get block number", &[err])
+            })
+    }
+
+    pub async fn code_at(
+        &self,
+        address: Address,
+        block_number: BlockNumber,
+    ) -> TransportResult<Bytes> {
+        self.instrument_function("eth_getCode", (address, block_number))
+            .await
+            .inspect_err(|err| {
+                self.rpc_collector
+                    .logger()
+                    .error("Failed to get code", &[err])
             })
     }
 
