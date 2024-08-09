@@ -2051,6 +2051,7 @@ dependencies = [
  "async-trait",
  "eigen-logging",
  "eigen-metrics-collectors-rpc-calls",
+ "eigen-testing-utils",
  "once_cell",
  "thiserror",
  "tokio",

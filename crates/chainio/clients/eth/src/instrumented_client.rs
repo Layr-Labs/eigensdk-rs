@@ -399,10 +399,10 @@ impl InstrumentedClient {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use alloy_node_bindings::Anvil;
     use alloy_primitives::{bytes, TxKind::Call, U256};
-    use alloy_rpc_types_eth::TransactionRequest;
+    use alloy_rpc_types_eth::{BlockNumberOrTag, TransactionRequest};
     use eigen_logging::{log_level::LogLevel, logger::Logger, tracing_logger::TracingLogger};
+    use eigen_testing_utils::anvil_constants::ANVIL_RPC_URL;
     use once_cell::sync::OnceCell;
     use tokio;
 
@@ -417,16 +417,18 @@ mod tests {
 
         // Spin up a local Anvil node.
         // Ensure `anvil` is available in $PATH.
-        let anvil = Anvil::new().try_spawn().unwrap();
-        let rpc_url: String = anvil.endpoint().parse().unwrap();
+        // let anvil = Anvil::new().try_spawn().unwrap();
+        // let rpc_url: String = anvil.endpoint().parse().unwrap();
 
         // Create a provider.
         // let logger = TEST_LOGGER.get().unwrap();
 
         // Create two users, Alice and Bob.
-        let _alice = anvil.addresses()[0];
-        let _bob = anvil.addresses()[1];
-        let instrumented_client = InstrumentedClient::new(&rpc_url).await.unwrap();
+        // let _alice = anvil.addresses()[0];
+        // let _bob = anvil.addresses()[1];
+        let instrumented_client = InstrumentedClient::new("http://localhost:8545")
+            .await
+            .unwrap();
 
         let gas_price = instrumented_client.suggest_gas_price().await;
         assert!(gas_price.is_ok());
@@ -434,13 +436,31 @@ mod tests {
         let fee_per_gas = instrumented_client.suggest_gas_tip_cap().await;
         assert!(fee_per_gas.is_ok());
 
-        let block_number = instrumented_client.block_number().await;
-        assert!(block_number.is_ok());
-
         let sync_status = instrumented_client.sync_progress().await;
         assert!(sync_status.is_ok());
+    }
 
-        let chain_id = instrumented_client.chain_id().await;
-        assert!(chain_id.is_ok());
+    #[tokio::test]
+    async fn test_block_number() {
+        let instrumented_client = InstrumentedClient::new("http://localhost:8545")
+            .await
+            .unwrap();
+
+        let expected_block_number = ANVIL_RPC_URL.clone().get_block_number().await.unwrap();
+        let block_number = instrumented_client.block_number().await.unwrap();
+
+        assert_eq!(expected_block_number, block_number);
+    }
+
+    #[tokio::test]
+    async fn test_suggest_gas_tip_cap() {
+        let instrumented_client = InstrumentedClient::new("http://localhost:8545")
+            .await
+            .unwrap();
+
+        let expected_chain_id = ANVIL_RPC_URL.clone().get_chain_id().await.unwrap();
+        let chain_id = instrumented_client.chain_id().await.unwrap();
+
+        assert_eq!(expected_chain_id, chain_id);
     }
 }

@@ -22,3 +22,4 @@ url.workspace = true
 alloy-node-bindings.workspace = true
 once_cell.workspace = true
 tokio.workspace = true
+eigen-testing-utils.workspace = true
