@@ -2,7 +2,9 @@
 use alloy_json_rpc::{RpcParam, RpcReturn};
 use alloy_primitives::{Address, BlockHash, BlockNumber, Bytes, ChainId, U256};
 use alloy_provider::{Provider, ProviderBuilder, RootProvider};
-use alloy_rpc_types_eth::{Block, FeeHistory, SyncStatus, Transaction, TransactionReceipt};
+use alloy_rpc_types_eth::{
+    Header, SyncStatus, Transaction, TransactionReceipt, TransactionRequest,
+};
 use alloy_transport::TransportResult;
 use alloy_transport_http::{reqwest::Method, Client, Http};
 use eigen_logging::get_test_logger;
@@ -11,6 +13,8 @@ use eigen_metrics_collectors_rpc_calls::RpcCallsMetrics as RpcCallsCollector;
 use std::time::Instant;
 use thiserror::Error;
 use url::Url;
+
+const PENDING_TAG: &str = "pending";
 
 pub struct InstrumentedClient {
     client: RootProvider<Http<Client>>,
@@ -145,6 +149,103 @@ impl InstrumentedClient {
                 .logger()
                 .error("Failed to get fee history", &[err])
         })
+    }
+
+    pub async fn header_by_number(&self, block_number: BlockNumber) -> TransportResult<Header> {
+        let transaction_detail = false;
+        self.instrument_function("eth_getBlockByNumber", (block_number, transaction_detail))
+            .await
+            .inspect_err(|err| {
+                self.rpc_collector
+                    .logger()
+                    .error("Failed to get header by number", &[err])
+            })
+    }
+
+    pub async fn nonce_at(&self, account: Address, block_number: U256) -> TransportResult<u64> {
+        self.instrument_function("eth_getTransactionCount", (account, block_number))
+            .await
+            .inspect_err(|err| {
+                self.rpc_collector
+                    .logger()
+                    .error("Failed to get nonce", &[err])
+            })
+    }
+
+    pub async fn pending_balance_at(&self, account: Address) -> TransportResult<U256> {
+        self.instrument_function("eth_getBalance", (account, PENDING_TAG))
+            .await
+            .inspect_err(|err| {
+                self.rpc_collector
+                    .logger()
+                    .error("Failed to get pending balance", &[err])
+            })
+    }
+
+    pub async fn pending_code_at(&self, account: Address) -> TransportResult<Bytes> {
+        self.instrument_function("eth_getCode", (account, PENDING_TAG))
+            .await
+            .inspect_err(|err| {
+                self.rpc_collector
+                    .logger()
+                    .error("Failed to get pending code", &[err])
+            })
+    }
+
+    pub async fn pending_nonce_at(&self, account: Address) -> TransportResult<u64> {
+        self.instrument_function("eth_getTransactionCount", (account, PENDING_TAG))
+            .await
+            .inspect_err(|err| {
+                self.rpc_collector
+                    .logger()
+                    .error("Failed to get pending nonce", &[err])
+            })
+    }
+
+    pub async fn pending_storage_at(&self, account: Address, key: B256) -> TransportResult<U256> {
+        self.instrument_function("eth_getStorageAt", (account, key, PENDING_TAG))
+            .await
+            .inspect_err(|err| {
+                self.rpc_collector
+                    .logger()
+                    .error("Failed to get pending storage", &[err])
+            })
+    }
+
+    pub async fn pending_transaction_count(&self) -> TransportResult<u64> {
+        self.instrument_function("eth_getBlockTransactionCountByNumber", PENDING_TAG)
+            .await
+            .inspect_err(|err| {
+                self.rpc_collector
+                    .logger()
+                    .error("Failed to get transaction count", &[err])
+            })
+    }
+
+    pub async fn send_transaction(&self, tx: TransactionRequest) -> TransportResult<B256> {
+        // TODO: encode the transaction
+        self.instrument_function("eth_sendRawTransaction", tx)
+            .await
+            .inspect_err(|err| {
+                self.rpc_collector
+                    .logger()
+                    .error("Failed to send transaction", &[err])
+            })
+    }
+
+    pub async fn storage_at(
+        &self,
+        account: Address,
+        key: [u8; 32],
+        block_number: U256,
+    ) -> TransportResult<U256> {
+        self.instrument_function("eth_getStorageAt", (account, key, block_number))
+            .await
+            .inspect_err(|err| {
+                self.rpc_collector
+                    .logger()
+                    .error("Failed to get storage", &[err])
+            })
     }
 
     pub async fn subscribe_new_head(&self) -> TransportResult<u128> {
