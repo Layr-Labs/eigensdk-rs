@@ -1,9 +1,9 @@
 //use eigen_metrics_collectors_rpc_calls::RpcCalls as RpcCallsCollector;
 use alloy_json_rpc::{RpcParam, RpcReturn};
-use alloy_primitives::{Address, BlockHash, BlockNumber, Bytes, ChainId, U256};
+use alloy_primitives::{Address, BlockHash, BlockNumber, Bytes, ChainId, B256, U256};
 use alloy_provider::{Provider, ProviderBuilder, RootProvider};
 use alloy_rpc_types_eth::{
-    Header, SyncStatus, Transaction, TransactionReceipt, TransactionRequest,
+    Block, FeeHistory, Header, SyncStatus, Transaction, TransactionReceipt, TransactionRequest,
 };
 use alloy_transport::TransportResult;
 use alloy_transport_http::{Client, Http};
@@ -371,5 +371,37 @@ impl InstrumentedClient {
         );
 
         result
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use alloy_node_bindings::Anvil;
+    use alloy_primitives::{bytes, TxKind::Call, U256};
+    use alloy_rpc_types_eth::TransactionRequest;
+    use eigen_logging::{log_level::LogLevel, logger::Logger, tracing_logger::TracingLogger};
+    use once_cell::sync::OnceCell;
+    use tokio;
+
+    static TEST_LOGGER: OnceCell<TracingLogger> = OnceCell::new();
+    const PRIVATE_KEY: &str = "dcf2cbdd171a21c480aa7f53d77f31bb102282b3ff099c78e3118b37348c72f7";
+
+    #[tokio::test]
+    async fn test_send_transaction_from_legacy() {
+        TEST_LOGGER.get_or_init(|| {
+            TracingLogger::new_text_logger(false, String::from(""), LogLevel::Debug, false)
+        });
+
+        // Spin up a local Anvil node.
+        // Ensure `anvil` is available in $PATH.
+        let anvil = Anvil::new().try_spawn().unwrap();
+        let rpc_url: String = anvil.endpoint().parse().unwrap();
+
+        // Create a provider.
+        let logger = TEST_LOGGER.get().unwrap();
+
+        // Create two users, Alice and Bob.
+        let _alice = anvil.addresses()[0];
+        let bob = anvil.addresses()[1];
     }
 }

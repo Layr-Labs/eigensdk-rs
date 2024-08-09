@@ -17,3 +17,8 @@ eigen-logging.workspace = true
 eigen-metrics-collectors-rpc-calls.workspace = true
 thiserror.workspace = true
 url.workspace = true
+
+[dev-dependencies]
+alloy-node-bindings.workspace = true
+once_cell.workspace = true
+tokio.workspace = true

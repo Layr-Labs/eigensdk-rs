@@ -2042,6 +2042,7 @@ name = "eigen-client-eth"
 version = "0.0.1-alpha"
 dependencies = [
  "alloy-json-rpc",
+ "alloy-node-bindings",
  "alloy-primitives",
  "alloy-provider",
  "alloy-rpc-types-eth",
@@ -2050,7 +2051,9 @@ dependencies = [
  "async-trait",
  "eigen-logging",
  "eigen-metrics-collectors-rpc-calls",
+ "once_cell",
  "thiserror",
+ "tokio",
  "url",
 ]
 
