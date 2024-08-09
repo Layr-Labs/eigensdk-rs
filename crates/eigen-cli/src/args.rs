@@ -92,7 +92,7 @@ It creates the following artifacts based on arguments
         about = "Stores an ecdsa key to a file, in web3 secret storage format.",
         alias = "c"
     )]
-    Convert {
+    ConvertECDSA {
         #[arg(long, help = "private key to store (in hex)")]
         private_key: String,
 
