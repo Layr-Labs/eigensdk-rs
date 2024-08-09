@@ -81,6 +81,16 @@ impl InstrumentedClient {
         todo!()
     }
 
+    pub async fn pending_balance_at(&self, account: Address) -> TransportResult<U256> {
+        self.instrument_function("eth_getBalance", (account, PENDING_TAG))
+            .await
+            .inspect_err(|err| {
+                self.rpc_collector
+                    .logger()
+                    .error("Failed to get pending balance", &[err])
+            })
+    }
+
     pub async fn pending_code_at(&self, account: Address) -> TransportResult<Bytes> {
         self.instrument_function("eth_getCode", (account, PENDING_TAG))
             .await
