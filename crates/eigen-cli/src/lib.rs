@@ -2,7 +2,17 @@
     html_logo_url = "https://github.com/Layr-Labs/eigensdk-rs/assets/91280922/bd13caec-3c00-4afc-839a-b83d2890beb5",
     issue_tracker_base_url = "https://github.com/Layr-Labs/eigensdk-rs/issues/"
 )]
+pub mod bls;
+pub mod args;
+mod convert;
+pub mod eigen_address;
+mod generate;
+mod operator_id;
+use bls::BlsKeystore;
+use eth_keystore::KeystoreError;
+use tokio::runtime::Runtime;
 use crate::eigen_address::ContractAddresses;
+use rust_bls_bn254::errors::KeystoreError as BlsKeystoreError;
 use alloy_contract::Error as ContractError;
 use alloy_json_rpc::RpcError;
 use alloy_transport::TransportErrorKind;
@@ -13,16 +23,7 @@ use eigen_crypto_bls::error::BlsError;
 use generate::KeyGenerator;
 use operator_id::derive_operator_id;
 use thiserror::Error;
-pub mod args;
-mod convert;
-pub mod eigen_address;
-mod generate;
-mod operator_id;
-use eth_keystore::KeystoreError;
-use rust_bls_bn254::errors::KeystoreError as BlsKeystoreError;
-use tokio::runtime::Runtime;
-pub mod bls;
-use crate::bls::BlsKeystore;
+
 pub const ANVIL_RPC_URL: &str = "http://localhost:8545";
 
 /// Possible errors raised while executing a CLI command
@@ -48,7 +49,7 @@ pub enum EigenAddressCliError {
 pub enum EigenKeyCliError {
     #[error("file error")]
     FileError(std::io::Error),
-    #[error("encription error")]
+    #[error("keystore error")]
     KeystoreError(KeystoreError),
     #[error("BLS error")]
     BLSError(BlsError),
