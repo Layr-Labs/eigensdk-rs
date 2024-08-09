@@ -1,6 +1,6 @@
 //use eigen_metrics_collectors_rpc_calls::RpcCalls as RpcCallsCollector;
 use alloy_json_rpc::{RpcParam, RpcReturn};
-use alloy_primitives::{Address, BlockHash, BlockNumber, Bytes, ChainId, B256, U256};
+use alloy_primitives::{Address, BlockHash, BlockNumber, Bytes, ChainId, B256, U128, U256, U64};
 use alloy_provider::{Provider, ProviderBuilder, RootProvider};
 use alloy_rpc_types_eth::{
     Block, FeeHistory, Header, SyncStatus, Transaction, TransactionReceipt, TransactionRequest,
@@ -82,7 +82,7 @@ impl InstrumentedClient {
     }
 
     pub async fn chain_id(&self) -> TransportResult<ChainId> {
-        let chain_id_str: String = self
+        let result: U64 = self
             .instrument_function("eth_chainId", ())
             .await
             .inspect_err(|err| {
@@ -90,8 +90,7 @@ impl InstrumentedClient {
                     .logger()
                     .error("Failed to get chain id", &[err])
             })?;
-        // TODO: handle unwrap
-        Ok(u64::from_str_radix(&chain_id_str.trim_start_matches("0x"), HEX_RADIX).unwrap())
+        Ok(result.to())
     }
 
     pub async fn balance_at(
@@ -129,7 +128,7 @@ impl InstrumentedClient {
     }
 
     pub async fn block_number(&self) -> TransportResult<BlockNumber> {
-        let block_number_str: String = self
+        let result: U64 = self
             .instrument_function("eth_blockNumber", ())
             .await
             .inspect_err(|err| {
@@ -137,8 +136,7 @@ impl InstrumentedClient {
                     .logger()
                     .error("Failed to get block number", &[err])
             })?;
-        // TODO: handle unwrap
-        Ok(u64::from_str_radix(&block_number_str.trim_start_matches("0x"), HEX_RADIX).unwrap())
+        Ok(result.to())
     }
 
     pub async fn code_at(
@@ -292,7 +290,7 @@ impl InstrumentedClient {
     }
 
     pub async fn suggest_gas_price(&self) -> TransportResult<u64> {
-        let gas_str: String = self
+        let result: U64 = self
             .instrument_function("eth_gasPrice", ())
             .await
             .inspect_err(|err| {
@@ -300,13 +298,12 @@ impl InstrumentedClient {
                     .logger()
                     .error("Failed to suggest gas price", &[err])
             })?;
-        // TODO: handle unwrap
-        Ok(u64::from_str_radix(&gas_str.trim_start_matches("0x"), HEX_RADIX).unwrap())
+        Ok(result.to())
     }
 
-    // Check if this method is properly named
+    // TODO: Check if this method is properly named
     pub async fn suggest_gas_tip_cap(&self) -> TransportResult<u64> {
-        let fee_str: String = self
+        let result: U64 = self
             .instrument_function("eth_maxPriorityFeePerGas", ())
             .await
             .inspect_err(|err| {
@@ -314,8 +311,7 @@ impl InstrumentedClient {
                     .logger()
                     .error("Failed to suggest gas tip cap", &[err])
             })?;
-        // TODO: handle unwrap
-        Ok(u64::from_str_radix(&fee_str.trim_start_matches("0x"), HEX_RADIX).unwrap())
+        Ok(result.to())
     }
 
     pub async fn sync_progress(&self) -> TransportResult<SyncStatus> {
