@@ -1,7 +1,6 @@
-use alloy_consensus::{Transaction, TxEip1559, TxLegacy};
 use alloy_eips::BlockNumberOrTag;
 use alloy_network::{Ethereum, EthereumWallet, TransactionBuilder};
-use alloy_primitives::{Address, TxKind};
+use alloy_primitives::Address;
 use alloy_provider::{PendingTransactionBuilder, Provider, ProviderBuilder, RootProvider};
 use alloy_rpc_types_eth::{TransactionInput, TransactionReceipt, TransactionRequest};
 use alloy_signer_local::PrivateKeySigner;
@@ -99,62 +98,6 @@ impl<'log> SimpleTxManager<'log> {
             .map_err(|_| TxManagerError::SignerError)
     }
 
-    /// Sends a EIP1559 transaction.
-    ///
-    /// # Arguments
-    ///
-    /// - `tx`: The transaction to be sent.
-    ///
-    /// # Returns
-    ///
-    /// - The transaction receipt.
-    ///
-    /// # Errors
-    ///
-    /// - If the transaction could not be signed.
-    /// - If the transaction could not be sent.
-    /// - If the transaction could not be mined.
-    pub async fn send_eip1559_tx(
-        &self,
-        tx: &mut TxEip1559,
-    ) -> Result<TransactionReceipt, TxManagerError> {
-        // Estimating gas and nonce
-        self.logger.debug("Estimating gas and nonce", &[()]);
-
-        let tx = self
-            .estimate_gas_and_nonce(tx)
-            .await
-            .inspect_err(|err| self.logger.error("Failed to estimate gas", &[err]))?;
-
-        let signer = self.create_local_signer()?;
-        let wallet = EthereumWallet::from(signer);
-
-        let signed_tx = tx
-            .build(&wallet)
-            .await
-            .inspect_err(|err| {
-                self.logger
-                    .error("Failed to build and sign transaction", &[err])
-            })
-            .map_err(|_| TxManagerError::SendTxError)?;
-
-        self.logger.debug("Transaction signed", &[&signed_tx]);
-
-        // send transaction and get receipt
-        let pending_tx = self
-            .provider
-            .send_transaction(signed_tx.into())
-            .await
-            .inspect_err(|err| self.logger.error("Failed to send transaction", &[err]))
-            .map_err(|_| TxManagerError::SendTxError)?;
-
-        self.logger
-            .debug("Transaction sent. Pending transaction: ", &[&pending_tx]);
-
-        // wait for the transaction to be mined
-        SimpleTxManager::wait_for_receipt(self, pending_tx).await
-    }
-
     /// Send is used to send a transaction to the Ethereum node. It takes an unsigned/signed transaction
     /// and then sends it to the Ethereum node.
     /// If you pass in a signed transaction it will ignore the signature
@@ -167,45 +110,6 @@ impl<'log> SimpleTxManager<'log> {
     /// # Returns
     ///
     /// - The transaction receipt.
-    pub async fn send_legacy_tx(
-        &self,
-        tx: &mut TxLegacy,
-    ) -> Result<TransactionReceipt, TxManagerError> {
-        // Estimating gas and nonce
-        self.logger.debug("Estimating gas and nonce", &[()]);
-
-        let tx = self
-            .estimate_gas_and_nonce(tx)
-            .await
-            .inspect_err(|err| self.logger.error("Failed to estimate gas", &[err]))?;
-
-        let signer = self.create_local_signer()?;
-        let wallet = EthereumWallet::from(signer);
-
-        let signed_tx = tx
-            .build(&wallet)
-            .await
-            .inspect_err(|err| {
-                self.logger
-                    .error("Failed to build and sign transaction", &[err])
-            })
-            .map_err(|_| TxManagerError::SendTxError)?;
-
-        // send transaction and get receipt
-        let pending_tx = self
-            .provider
-            .send_transaction(signed_tx.into())
-            .await
-            .inspect_err(|err| self.logger.error("Failed to get receipt", &[err]))
-            .map_err(|_| TxManagerError::SendTxError)?;
-
-        self.logger
-            .debug("Transaction sent. Pending transaction: ", &[&pending_tx]);
-
-        // wait for the transaction to be mined
-        SimpleTxManager::wait_for_receipt(self, pending_tx).await
-    }
-
     pub async fn send_tx(
         &self,
         tx: &mut TransactionRequest,
@@ -214,7 +118,7 @@ impl<'log> SimpleTxManager<'log> {
         self.logger.debug("Estimating gas and nonce", &[()]);
 
         let tx = self
-            .estimate_gas_and_nonce_2(tx)
+            .estimate_gas_and_nonce(tx)
             .await
             .inspect_err(|err| self.logger.error("Failed to estimate gas", &[err]))?;
 
@@ -262,81 +166,7 @@ impl<'log> SimpleTxManager<'log> {
     /// - If the gas price could not be estimated.
     /// - If the gas limit could not be estimated.
     /// - If the destination address could not be retrieved.
-    async fn estimate_gas_and_nonce<T: Transaction>(
-        &self,
-        tx: &T,
-    ) -> Result<TransactionRequest, TxManagerError> {
-        let gas_tip_cap = self.provider.get_max_priority_fee_per_gas().await
-        .inspect_err(|err|
-            self.logger.info("eth_maxPriorityFeePerGas is unsupported by current backend, using fallback gasTipCap",
-            &[err]))
-        .unwrap_or(FALLBACK_GAS_TIP_CAP);
-
-        let header = self
-            .provider
-            .get_block_by_number(BlockNumberOrTag::Latest, false)
-            .await
-            .ok()
-            .flatten()
-            .map(|block| block.header)
-            .ok_or(TxManagerError::SendTxError)
-            .inspect_err(|_| {
-                self.logger
-                    .error("Failed to get latest block header", &[()])
-            })?;
-
-        // 2*baseFee + gas_tip_cap makes sure that the tx remains includeable for 6 consecutive 100% full blocks.
-        // see https://www.blocknative.com/blog/eip-1559-fees
-        let base_fee = header.base_fee_per_gas.ok_or(TxManagerError::SendTxError)?;
-        let gas_fee_cap = 2 * base_fee + gas_tip_cap;
-
-        let mut gas_limit = tx.gas_limit();
-        let tx_input = tx.input().to_vec();
-        // we only estimate if gas_limit is not already set
-        if gas_limit == 0 {
-            let from = self.get_address()?;
-            let to = match tx.to() {
-                TxKind::Call(c) => c,
-                TxKind::Create => return Err(TxManagerError::SendTxError),
-            };
-            let mut tx_request = TransactionRequest::default()
-                .to(to)
-                .from(from)
-                .value(tx.value())
-                .input(TransactionInput::new(tx_input.clone().into()));
-            tx_request.set_max_priority_fee_per_gas(gas_tip_cap);
-            tx_request.set_max_fee_per_gas(gas_fee_cap);
-
-            gas_limit = self
-                .provider
-                .estimate_gas(&tx_request)
-                .await
-                .map_err(|_| TxManagerError::SendTxError)?;
-        }
-        let gas_price_multiplied =
-            tx.gas_price().unwrap_or_default() as f64 * self.gas_limit_multiplier;
-        let gas_price = gas_price_multiplied as u128;
-
-        let to = match tx.to() {
-            TxKind::Create => return Err(TxManagerError::SendTxError),
-            TxKind::Call(adress) => adress,
-        };
-
-        let new_tx = TransactionRequest::default()
-            .with_to(to)
-            .with_value(tx.value())
-            .with_gas_limit(gas_limit)
-            .with_nonce(tx.nonce())
-            .with_input(tx_input)
-            .with_chain_id(tx.chain_id().unwrap_or(1))
-            .with_max_priority_fee_per_gas(gas_tip_cap)
-            .with_max_fee_per_gas(gas_fee_cap)
-            .with_gas_price(gas_price);
-
-        Ok(new_tx)
-    }
-
-    async fn estimate_gas_and_nonce_2(
+    async fn estimate_gas_and_nonce(
         &self,
         tx: &TransactionRequest,
     ) -> Result<TransactionRequest, TxManagerError> {
