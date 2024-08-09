@@ -1,13 +1,16 @@
 //use eigen_metrics_collectors_rpc_calls::RpcCalls as RpcCallsCollector;
 use alloy_json_rpc::{RpcParam, RpcReturn};
-use alloy_primitives::Address;
+use alloy_primitives::{Address, FixedBytes, U256};
 use alloy_provider::{Provider, ProviderBuilder, RootProvider};
-use alloy_rpc_types_eth::{SyncStatus, Transaction, TransactionReceipt};
-use alloy_transport::TransportResult;
+use alloy_rpc_types_eth::{
+    Filter, FilterBlockOption, SyncStatus, Transaction, TransactionReceipt, ValueOrArray,
+};
+use alloy_transport::{Transport, TransportResult};
 use alloy_transport_http::{reqwest::Method, Client, Http};
 use eigen_logging::get_test_logger;
 use eigen_logging::logger::Logger;
 use eigen_metrics_collectors_rpc_calls::RpcCallsMetrics as RpcCallsCollector;
+use serde::Serialize;
 use std::time::Instant;
 use thiserror::Error;
 use url::Url;
@@ -77,6 +80,21 @@ impl InstrumentedClient {
         //self.instrument_function("eth_getBlockByHash", block_by_hash)
         //    .await
         todo!()
+    }
+
+    pub async fn storage_at(
+        &self,
+        account: Address,
+        key: [u8; 32],
+        block_number: U256,
+    ) -> TransportResult<U256> {
+        self.instrument_function("eth_getStorageAt", (account, key, block_number))
+            .await
+            .inspect_err(|err| {
+                self.rpc_collector
+                    .logger()
+                    .error("Failed to get storage", &[err])
+            })
     }
 
     pub async fn subscribe_new_head(&self) -> TransportResult<u128> {
