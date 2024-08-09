@@ -126,13 +126,16 @@ impl InstrumentedClient {
     }
 
     pub async fn block_number(&self) -> TransportResult<BlockNumber> {
-        self.instrument_function("eth_blockNumber", ())
+        let block_number_str: String = self
+            .instrument_function("eth_blockNumber", ())
             .await
             .inspect_err(|err| {
                 self.rpc_collector
                     .logger()
                     .error("Failed to get block number", &[err])
-            })
+            })?;
+        // TODO: handle unwrap
+        Ok(u64::from_str_radix(&block_number_str.trim_start_matches("0x"), HEX_RADIX).unwrap())
     }
 
     pub async fn code_at(
@@ -294,8 +297,8 @@ impl InstrumentedClient {
                     .logger()
                     .error("Failed to suggest gas price", &[err])
             })?;
-        Ok(u64::from_str_radix(&gas_str.trim_start_matches("0x"), HEX_RADIX).unwrap())
         // TODO: handle unwrap
+        Ok(u64::from_str_radix(&gas_str.trim_start_matches("0x"), HEX_RADIX).unwrap())
     }
 
     // Check if this method is properly named
@@ -308,8 +311,8 @@ impl InstrumentedClient {
                     .logger()
                     .error("Failed to suggest gas tip cap", &[err])
             })?;
-        Ok(u64::from_str_radix(&fee_str.trim_start_matches("0x"), HEX_RADIX).unwrap())
         // TODO: handle unwrap
+        Ok(u64::from_str_radix(&fee_str.trim_start_matches("0x"), HEX_RADIX).unwrap())
     }
 
     pub async fn sync_progress(&self) -> TransportResult<SyncStatus> {
@@ -433,5 +436,8 @@ mod tests {
 
         let fee_per_gas = instrumented_client.suggest_gas_tip_cap().await;
         assert!(fee_per_gas.is_ok());
+
+        let block_number = instrumented_client.block_number().await;
+        assert!(block_number.is_ok());
     }
 }
