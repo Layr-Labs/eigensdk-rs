@@ -2,7 +2,7 @@
 use alloy_json_rpc::{RpcParam, RpcReturn};
 use alloy_primitives::{Address, BlockHash, ChainId, U256};
 use alloy_provider::{Provider, ProviderBuilder, RootProvider};
-use alloy_rpc_types_eth::{Block, SyncStatus, Transaction, TransactionReceipt};
+use alloy_rpc_types_eth::{Block, BlockNumberOrTag, SyncStatus, Transaction, TransactionReceipt};
 use alloy_transport::TransportResult;
 use alloy_transport_http::{reqwest::Method, Client, Http};
 use eigen_logging::get_test_logger;
@@ -89,6 +89,19 @@ impl InstrumentedClient {
                     .logger()
                     .error("Failed to get block by hash", &[err])
             })
+    }
+
+    pub async fn block_by_number(&self, number: u64) -> TransportResult<Option<Block>> {
+        self.instrument_function(
+            "eth_getBlockByNumber",
+            (BlockNumberOrTag::Number(number), true),
+        )
+        .await
+        .inspect_err(|err| {
+            self.rpc_collector
+                .logger()
+                .error("Failed to get block by number", &[err])
+        })
     }
 
     pub async fn subscribe_new_head(&self) -> TransportResult<u128> {
