@@ -15,7 +15,7 @@ use thiserror::Error;
 use url::Url;
 
 const PENDING_TAG: &str = "pending";
-
+const HEX_RADIX: u32 = 16;
 pub struct InstrumentedClient {
     client: RootProvider<Http<Client>>,
     rpc_collector: RpcCallsCollector,
@@ -294,18 +294,22 @@ impl InstrumentedClient {
                     .logger()
                     .error("Failed to suggest gas price", &[err])
             })?;
-        Ok(u64::from_str_radix(&gas_str.trim_start_matches("0x"), 16).unwrap()) // TODO: handle unwrap
+        Ok(u64::from_str_radix(&gas_str.trim_start_matches("0x"), HEX_RADIX).unwrap())
+        // TODO: handle unwrap
     }
 
     // Check if this method is properly named
     pub async fn suggest_gas_tip_cap(&self) -> TransportResult<u64> {
-        self.instrument_function("eth_maxPriorityFeePerGas", ())
+        let fee_str: String = self
+            .instrument_function("eth_maxPriorityFeePerGas", ())
             .await
             .inspect_err(|err| {
                 self.rpc_collector
                     .logger()
                     .error("Failed to suggest gas tip cap", &[err])
-            })
+            })?;
+        Ok(u64::from_str_radix(&fee_str.trim_start_matches("0x"), HEX_RADIX).unwrap())
+        // TODO: handle unwrap
     }
 
     pub async fn sync_progress(&self) -> TransportResult<SyncStatus> {
@@ -426,5 +430,8 @@ mod tests {
 
         let gas_price = instrumented_client.suggest_gas_price().await;
         assert!(gas_price.is_ok());
+
+        let fee_per_gas = instrumented_client.suggest_gas_tip_cap().await;
+        assert!(fee_per_gas.is_ok());
     }
 }
