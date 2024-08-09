@@ -81,6 +81,16 @@ impl InstrumentedClient {
         todo!()
     }
 
+    pub async fn nonce_at(&self, account: Address, block_number: U256) -> TransportResult<u64> {
+        self.instrument_function("eth_getTransactionCount", (account, block_number))
+            .await
+            .inspect_err(|err| {
+                self.rpc_collector
+                    .logger()
+                    .error("Failed to get nonce", &[err])
+            })
+    }
+
     pub async fn pending_balance_at(&self, account: Address) -> TransportResult<U256> {
         self.instrument_function("eth_getBalance", (account, PENDING_TAG))
             .await
