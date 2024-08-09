@@ -79,6 +79,16 @@ impl InstrumentedClient {
         todo!()
     }
 
+    pub async fn subscribe_new_head(&self) -> TransportResult<u128> {
+        self.instrument_function("eth_subscribe", "newHeads")
+            .await
+            .inspect_err(|err| {
+                self.rpc_collector
+                    .logger()
+                    .error("Failed to subscribe new head", &[err])
+            })
+    }
+
     pub async fn suggest_gas_price(&self) -> TransportResult<u64> {
         self.instrument_function("eth_gasPrice", ())
             .await
