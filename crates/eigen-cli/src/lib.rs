@@ -27,7 +27,6 @@ mod test {
     use eigen_testing_utils::anvil_constants::{
         get_registry_coordinator_address, get_service_manager_address,
     };
-    use tokio;
 
     #[tokio::test]
     async fn egnaddrs_with_service_manager_flag() {

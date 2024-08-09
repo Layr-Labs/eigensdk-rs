@@ -26,3 +26,6 @@ fireblocks-tests:
 	$(MAKE) start-anvil-chain-with-contracts-deployed
 	docker start anvil
 	cargo test --workspace --features fireblock-tests
+
+clippy:
+	cargo clippy --workspace --all-features  --tests --examples -- -D warnings
