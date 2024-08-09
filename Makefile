@@ -1,3 +1,5 @@
+PHONY: reset-anvil
+
 __CONTRACTS__: ##
 
 start-anvil-chain-with-contracts-deployed: ##
@@ -14,7 +16,11 @@ stop-anvil: ##
 
 __TESTING__: ##
 
-pr: ## 
+reset-anvil:
+	$(MAKE) stop-anvil
+	docker rm anvil
+
+pr: reset-anvil ## 
 	$(MAKE) start-anvil-chain-with-contracts-deployed
 	$(MAKE) start-anvil
 	cargo test --workspace
