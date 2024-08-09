@@ -6,7 +6,7 @@ use alloy_rpc_types_eth::{
     Header, SyncStatus, Transaction, TransactionReceipt, TransactionRequest,
 };
 use alloy_transport::TransportResult;
-use alloy_transport_http::{reqwest::Method, Client, Http};
+use alloy_transport_http::{Client, Http};
 use eigen_logging::get_test_logger;
 use eigen_logging::logger::Logger;
 use eigen_metrics_collectors_rpc_calls::RpcCallsMetrics as RpcCallsCollector;
