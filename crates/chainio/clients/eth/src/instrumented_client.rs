@@ -1,16 +1,17 @@
 //use eigen_metrics_collectors_rpc_calls::RpcCalls as RpcCallsCollector;
 use alloy_json_rpc::{RpcParam, RpcReturn};
-use alloy_primitives::{Address, FixedBytes, U256};
+use alloy_primitives::{Address, FixedBytes, B256, U256};
 use alloy_provider::{Provider, ProviderBuilder, RootProvider};
+use alloy_rlp::Encodable;
 use alloy_rpc_types_eth::{
-    Filter, FilterBlockOption, SyncStatus, Transaction, TransactionReceipt, ValueOrArray,
+    Filter, FilterBlockOption, SyncStatus, Transaction, TransactionReceipt, TransactionRequest,
+    ValueOrArray,
 };
 use alloy_transport::{Transport, TransportResult};
 use alloy_transport_http::{reqwest::Method, Client, Http};
 use eigen_logging::get_test_logger;
 use eigen_logging::logger::Logger;
 use eigen_metrics_collectors_rpc_calls::RpcCallsMetrics as RpcCallsCollector;
-use serde::Serialize;
 use std::time::Instant;
 use thiserror::Error;
 use url::Url;
@@ -80,6 +81,17 @@ impl InstrumentedClient {
         //self.instrument_function("eth_getBlockByHash", block_by_hash)
         //    .await
         todo!()
+    }
+
+    pub async fn send_transaction(&self, tx: Transaction) -> TransportResult<B256> {
+        // TODO: encode the transaction
+        self.instrument_function("eth_sendRawTransaction", tx)
+            .await
+            .inspect_err(|err| {
+                self.rpc_collector
+                    .logger()
+                    .error("Failed to send transaction", &[err])
+            })
     }
 
     pub async fn storage_at(
