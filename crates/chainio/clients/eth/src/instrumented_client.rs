@@ -1,6 +1,6 @@
 //use eigen_metrics_collectors_rpc_calls::RpcCalls as RpcCallsCollector;
 use alloy_json_rpc::{RpcParam, RpcReturn};
-use alloy_primitives::Address;
+use alloy_primitives::{Address, U256};
 use alloy_provider::{Provider, ProviderBuilder, RootProvider};
 use alloy_rpc_types_eth::{SyncStatus, Transaction, TransactionReceipt};
 use alloy_transport::TransportResult;
@@ -68,6 +68,16 @@ impl InstrumentedClient {
                 self.rpc_collector
                     .logger()
                     .error("Failed to get chain id", &[err])
+            })
+    }
+
+    pub async fn balance_at(&self, account: Address, block_number: u32) -> TransportResult<U256> {
+        self.instrument_function("eth_getBalance", (account, block_number))
+            .await
+            .inspect_err(|err| {
+                self.rpc_collector
+                    .logger()
+                    .error("Failed to get balance", &[err])
             })
     }
 
