@@ -1,10 +1,10 @@
 use alloy_signer::Signer;
 use alloy_signer_local::PrivateKeySigner;
 use eigen_client_elcontracts::reader::ELChainReader;
+use eigen_logging::tracing_logger::TracingLogger;
 use eigen_utils::binding::RegistryCoordinator::{
     self, G1Point as RegistryG1Point, G2Point as RegistryG2Point, PubkeyRegistrationParams,
 };
-use eigen_logging::tracing_logger::TracingLogger;
 use std::str::FromStr;
 
 use alloy_primitives::{Address, Bytes, FixedBytes, TxHash, U256};

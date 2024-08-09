@@ -6,6 +6,7 @@ use eigen_client_avsregistry::writer::AvsRegistryChainWriter;
 use eigen_client_elcontracts::reader::ELChainReader;
 use eigen_client_elcontracts::writer::ELChainWriter;
 use eigen_crypto_bls::BlsKeyPair;
+use eigen_logging::get_test_logger;
 use eigen_testing_utils::m2_holesky_constants::{
     AVS_DIRECTORY_ADDRESS, DELEGATION_MANAGER_ADDRESS, OPERATOR_STATE_RETRIEVER,
     REGISTRY_COORDINATOR, SLASHER_ADDRESS, STRATEGY_MANAGER_ADDRESS,
@@ -13,12 +14,13 @@ use eigen_testing_utils::m2_holesky_constants::{
 use eigen_types::operator::Operator;
 use eyre::Result;
 use std::str::FromStr;
-
 #[tokio::main]
 async fn main() -> Result<()> {
     let holesky_provider = "https://ethereum-holesky.blockpi.network/v1/rpc/public";
     let pvt_key = "bead471191bea97fc3aeac36c9d74c895e8a6242602e144e43152f96219e96e8";
+    let test_logger = get_test_logger();
     let avs_registry_writer = AvsRegistryChainWriter::build_avs_registry_chain_writer(
+        test_logger.clone(),
         holesky_provider.to_string(),
         pvt_key.to_string(),
         REGISTRY_COORDINATOR,
@@ -40,6 +42,7 @@ async fn main() -> Result<()> {
     let quorum_nums = Bytes::from([0x01]);
 
     let el_chain_reader = ELChainReader::new(
+        get_test_logger().clone(),
         SLASHER_ADDRESS,
         DELEGATION_MANAGER_ADDRESS,
         AVS_DIRECTORY_ADDRESS,
