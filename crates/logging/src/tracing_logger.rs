@@ -1,14 +1,13 @@
 use super::log_level::LogLevel;
 use super::logger::Logger;
 use std::fmt::Debug;
-use std::process::exit;
 use tracing::{debug, error, info, trace, warn};
 
 // SLoggerOptions are options when creating a new SLogger.
 // A zero Options consists entirely of default values.
 //
 // SLoggerOptions are an extension of [slog.HandlerOptions].
-#[derive(Default, Debug)]
+#[derive(Default, Debug, Clone)]
 pub struct TracingLogger {
     // Enable source code location (Default: false)
     pub add_source: bool,
@@ -30,9 +29,17 @@ impl Logger for TracingLogger {
         level: LogLevel,
         add_source: bool,
     ) -> Self {
+        let tracing_level = match level {
+            LogLevel::Fatal => tracing::Level::ERROR,
+            LogLevel::Error => tracing::Level::ERROR,
+            LogLevel::Warn => tracing::Level::WARN,
+            LogLevel::Info => tracing::Level::INFO,
+            LogLevel::Debug => tracing::Level::DEBUG,
+            LogLevel::Trace => tracing::Level::TRACE,
+        };
         tracing::subscriber::set_global_default(
             tracing_subscriber::fmt::Subscriber::builder()
-                .with_max_level(tracing::Level::TRACE)
+                .with_max_level(tracing_level)
                 .with_ansi(no_color)
                 .finish(),
         )
@@ -85,11 +92,15 @@ impl Logger for TracingLogger {
 
     fn fatal(&self, msg: &str, tags: &[impl Debug]) {
         error!("{} {:?}", msg, tags);
-        exit(1); // exit process
+        panic!("Fatal error occurred: {} {:?}", msg, tags);
     }
 
     fn log(&self, msg: &str, tags: &[impl Debug]) {
         match self.level {
+            LogLevel::Fatal => {
+                error!("Fatal");
+                self.fatal(msg, tags);
+            }
             LogLevel::Error => {
                 error!("Error");
                 self.error(msg, tags);
@@ -110,22 +121,19 @@ impl Logger for TracingLogger {
                 trace!("Trace");
                 self.debug(msg, tags);
             }
-            LogLevel::Fatal => {
-                error!("Fatal");
-                self.error(msg, tags);
-                exit(1); // exit process
-            }
         }
     }
 }
 
 #[cfg(test)]
 mod tests {
+    use crate::get_test_logger;
+
     use super::*;
 
     #[test]
     fn test_log() {
-        let logger = TracingLogger::new_text_logger(false, String::from(""), LogLevel::Info, false);
+        let logger = get_test_logger();
         logger.log("Log", &["info logged"]);
     }
 }

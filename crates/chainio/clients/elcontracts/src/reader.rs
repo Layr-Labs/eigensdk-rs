@@ -1,13 +1,14 @@
 use crate::error::ElContractsError;
 use alloy_primitives::{Address, FixedBytes, U256};
+use eigen_logging::tracing_logger::TracingLogger;
 use eigen_types::operator::Operator;
 use eigen_utils::{
     binding::{AVSDirectory, DelegationManager, ISlasher, IStrategy, IERC20},
     get_provider,
 };
-
 #[derive(Debug, Clone)]
 pub struct ELChainReader {
+    _logger: TracingLogger,
     slasher: Address,
     delegation_manager: Address,
     avs_directory: Address,
@@ -16,12 +17,14 @@ pub struct ELChainReader {
 
 impl ELChainReader {
     pub fn new(
+        _logger: TracingLogger,
         slasher: Address,
         delegation_manager: Address,
         avs_directory: Address,
         provider: String,
     ) -> Self {
         ELChainReader {
+            _logger,
             slasher,
             delegation_manager,
             avs_directory,
@@ -31,6 +34,7 @@ impl ELChainReader {
 
     /// Builds a new [`ELChainReader`] instance .
     pub async fn build(
+        _logger: TracingLogger,
         delegation_manager: Address,
         avs_directory: Address,
         client: &String,
@@ -46,6 +50,7 @@ impl ELChainReader {
                 let DelegationManager::slasherReturn { _0: slasher_addr } = slasher;
 
                 Ok(Self {
+                    _logger,
                     avs_directory,
                     slasher: slasher_addr,
                     delegation_manager,
@@ -278,6 +283,7 @@ mod tests {
     use alloy_eips::eip1898::BlockNumberOrTag::Number;
     use alloy_primitives::{address, keccak256};
     use alloy_provider::Provider;
+    use eigen_logging::get_test_logger;
     use eigen_testing_utils::anvil_constants::{self, ANVIL_RPC_URL};
     use eigen_utils::binding::mockAvsServiceManager;
     use tokio::time::{sleep, Duration};
@@ -307,7 +313,9 @@ mod tests {
         let mockAvsServiceManager::avsDirectoryReturn {
             _0: avs_directory_address,
         } = avs_directory_address_return;
+
         ELChainReader::new(
+            get_test_logger().clone(),
             slasher_address,
             delegation_manager_address,
             avs_directory_address,

@@ -4,6 +4,7 @@ use eigen_client_elcontracts::reader::ELChainReader;
 use eigen_utils::binding::RegistryCoordinator::{
     self, G1Point as RegistryG1Point, G2Point as RegistryG2Point, PubkeyRegistrationParams,
 };
+use eigen_logging::tracing_logger::TracingLogger;
 use std::str::FromStr;
 
 use alloy_primitives::{Address, Bytes, FixedBytes, TxHash, U256};
@@ -22,6 +23,7 @@ use eigen_utils::{
 /// AvsRegistry Writer
 #[derive(Debug)]
 pub struct AvsRegistryChainWriter {
+    logger: TracingLogger,
     service_manager_addr: Address,
     registry_coordinator_addr: Address,
     operator_state_retriever_addr: Address,
@@ -35,6 +37,7 @@ pub struct AvsRegistryChainWriter {
 impl AvsRegistryChainWriter {
     /// build avs registry chain writer instance
     pub async fn build_avs_registry_chain_writer(
+        logger: TracingLogger,
         provider: String,
         signer: String,
         registry_coordinator_addr: Address,
@@ -83,12 +86,17 @@ impl AvsRegistryChainWriter {
                         let ServiceManagerBase::avsDirectoryReturn { _0: avs_directory } =
                             avs_directory_addr;
 
-                        let el_reader_result =
-                            ELChainReader::build(delegation_manager_addr, avs_directory, &provider)
-                                .await;
+                        let el_reader_result = ELChainReader::build(
+                            logger.clone(),
+                            delegation_manager_addr,
+                            avs_directory,
+                            &provider,
+                        )
+                        .await;
 
                         match el_reader_result {
                             Ok(el_reader) => Ok(AvsRegistryChainWriter {
+                                logger,
                                 service_manager_addr: service_manager,
                                 registry_coordinator_addr,
                                 operator_state_retriever_addr,
