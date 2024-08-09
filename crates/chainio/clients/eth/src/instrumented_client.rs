@@ -34,6 +34,19 @@ pub enum InstrumentedClientError {
 }
 
 impl InstrumentedClient {
+    /// Creates a new instance of the InstrumentedClient.
+    ///
+    /// # Arguments
+    ///
+    /// * `url` - The URL of the RPC server.
+    ///
+    /// # Returns
+    ///
+    /// A new instance of the InstrumentedClient.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if the URL is invalid or if there is an error getting the version.
     pub async fn new(url: &str) -> Result<Self, InstrumentedClientError> {
         let url = Url::parse(url).map_err(|_| InstrumentedClientError::InvalidUrl)?;
         let client = ProviderBuilder::new().on_http(url);
@@ -51,6 +64,19 @@ impl InstrumentedClient {
         })
     }
 
+    /// Creates a new instance of the InstrumentedClient from an existing client (`RootProvider`).
+    ///
+    /// # Arguments
+    ///
+    /// * `client` - The existing client (`RootProvider`).
+    ///
+    /// # Returns
+    ///
+    /// A new instance of the InstrumentedClient.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if there is an error getting the version.
     pub async fn new_from_client(
         client: RootProvider<Http<Client>>,
     ) -> Result<Self, InstrumentedClientError> {
@@ -83,6 +109,11 @@ impl InstrumentedClient {
         todo!()
     }
 
+    /// Returns the chain ID.
+    ///
+    /// # Returns
+    ///
+    /// The chain ID.
     pub async fn chain_id(&self) -> TransportResult<ChainId> {
         self.instrument_function("eth_chainId", ())
             .await
@@ -94,6 +125,16 @@ impl InstrumentedClient {
             .map(|result: U64| result.to())
     }
 
+    /// Returns the balance of the account at the given block number.
+    ///
+    /// # Arguments
+    ///
+    /// * `account` - The account address.
+    /// * `block_number` - The block number.
+    ///
+    /// # Returns
+    ///
+    /// The balance of the account at the given block number.
     pub async fn balance_at(
         &self,
         account: Address,
@@ -108,6 +149,15 @@ impl InstrumentedClient {
             })
     }
 
+    /// Returns the block having the given block hash.
+    ///
+    /// # Arguments
+    ///
+    /// * `hash` - The block hash.
+    ///
+    /// # Returns
+    ///
+    /// The block having the given block hash.
     pub async fn block_by_hash(&self, hash: BlockHash) -> TransportResult<Option<Block>> {
         self.instrument_function("eth_getBlockByHash", (hash, true))
             .await
@@ -118,6 +168,15 @@ impl InstrumentedClient {
             })
     }
 
+    /// Returns the block having the given block number.
+    ///
+    /// # Arguments
+    ///
+    /// * `number` - The block number.
+    ///
+    /// # Returns
+    ///
+    /// The block having the given block number.
     pub async fn block_by_number(&self, number: BlockNumber) -> TransportResult<Option<Block>> {
         self.instrument_function("eth_getBlockByNumber", (number, true))
             .await
@@ -128,6 +187,11 @@ impl InstrumentedClient {
             })
     }
 
+    /// Returns the latest block number.
+    ///
+    /// # Returns
+    ///
+    /// The latest block number.
     pub async fn block_number(&self) -> TransportResult<BlockNumber> {
         self.instrument_function("eth_blockNumber", ())
             .await
@@ -139,6 +203,16 @@ impl InstrumentedClient {
             .map(|result: U64| result.to())
     }
 
+    /// Returns the compiled bytecode of a smart contract given its address and block number.
+    ///
+    /// # Arguments
+    ///
+    /// * `address` - The address of the smart contract.
+    /// * `block_number` - The block number.
+    ///
+    /// # Returns
+    ///
+    /// The compiled bytecode of the smart contract with the given address and block number.
     pub async fn code_at(
         &self,
         address: Address,
@@ -153,6 +227,15 @@ impl InstrumentedClient {
             })
     }
 
+    /// Returns a collection of historical gas information.
+    ///
+    /// # Arguments
+    ///
+    /// * `block_count` - The number of blocks to include in the collection.
+    /// * `last_block` - The last block number to include in the collection.
+    /// * `reward_percentiles` - A sorted list of percentage points used to
+    /// sample the effective priority fees per gas from each block. The samples are
+    /// taken in ascending order and weighted by gas usage. The list is sorted increasingly.
     pub async fn fee_history(
         &self,
         block_count: u64,
