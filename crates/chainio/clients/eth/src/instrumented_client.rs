@@ -61,6 +61,16 @@ impl InstrumentedClient {
         })
     }
 
+    pub async fn chain_id(&self) -> TransportResult<u64> {
+        self.instrument_function("eth_chainId", ())
+            .await
+            .inspect_err(|err| {
+                self.rpc_collector
+                    .logger()
+                    .error("Failed to get chain id", &[err])
+            })
+    }
+
     /*
     func (iec *InstrumentedClient) BlockByHash(ctx context.Context, hash common.Hash) (*types.Block, error) {
         blockByHash := func() (*types.Block, error) { return iec.client.BlockByHash(ctx, hash) }
