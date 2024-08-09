@@ -102,10 +102,34 @@ It creates the following artifacts based on arguments
         #[arg(long, help = "password to encrypt key")]
         password: Option<String>,
     },
+
+    #[command(
+        about = "Using Pbkfd2 / scrypt encryption to secure the bls key.",
+        alias = "b"
+    )]
+    BlsConvert {
+        #[arg(long, help = "Bls keystore type (pbkdf2 or scrypt)")]
+        #[clap(value_enum)]
+        key_type: BlsKeystoreType,
+        #[arg(long, help = "bls key to encrypt  in hex")]
+        secret_key: String,
+
+        #[arg(long, help = "file path to store key")]
+        output_path: String,
+
+        #[arg(long, help = "password to encrypt key(default is empty string)")]
+        password: Option<String>,
+    },
 }
 
 #[derive(clap::ValueEnum, Debug, Clone)]
 pub enum KeyType {
     Ecdsa,
     Bls,
+}
+
+#[derive(clap::ValueEnum, Debug, Clone)]
+pub enum BlsKeystoreType {
+    Pbkdf2,
+    Scrypt,
 }

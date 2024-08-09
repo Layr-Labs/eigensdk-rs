@@ -30,7 +30,7 @@ serde_json.workspace = true
 thiserror.workspace = true
 tokio.workspace = true
 uuid.workspace = true
-
+rust-bls-bn254.workspace = true
 
 [dev-dependencies]
 eigen-testing-utils.workspace = true
