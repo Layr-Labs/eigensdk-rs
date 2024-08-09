@@ -82,13 +82,16 @@ impl InstrumentedClient {
     }
 
     pub async fn chain_id(&self) -> TransportResult<ChainId> {
-        self.instrument_function("eth_chainId", ())
+        let chain_id_str: String = self
+            .instrument_function("eth_chainId", ())
             .await
             .inspect_err(|err| {
                 self.rpc_collector
                     .logger()
                     .error("Failed to get chain id", &[err])
-            })
+            })?;
+        // TODO: handle unwrap
+        Ok(u64::from_str_radix(&chain_id_str.trim_start_matches("0x"), HEX_RADIX).unwrap())
     }
 
     pub async fn balance_at(
@@ -442,5 +445,8 @@ mod tests {
 
         let sync_status = instrumented_client.sync_progress().await;
         assert!(sync_status.is_ok());
+
+        let chain_id = instrumented_client.chain_id().await;
+        assert!(chain_id.is_ok());
     }
 }
