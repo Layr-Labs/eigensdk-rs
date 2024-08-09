@@ -83,6 +83,16 @@ impl InstrumentedClient {
         todo!()
     }
 
+    pub async fn pending_transaction_count(&self) -> TransportResult<u64> {
+        self.instrument_function("eth_getBlockTransactionCountByNumber", "pending")
+            .await
+            .inspect_err(|err| {
+                self.rpc_collector
+                    .logger()
+                    .error("Failed to get transaction count", &[err])
+            })
+    }
+
     pub async fn send_transaction(&self, tx: Transaction) -> TransportResult<B256> {
         // TODO: encode the transaction
         self.instrument_function("eth_sendRawTransaction", tx)
