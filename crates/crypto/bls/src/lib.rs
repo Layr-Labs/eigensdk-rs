@@ -15,7 +15,7 @@ use ark_bn254::{Fq, Fr, G1Affine, G1Projective, G2Affine, G2Projective};
 use ark_ec::{AffineRepr, CurveGroup};
 use ark_ff::{
     fields::{Field, PrimeField},
-    BigInt, BigInteger256, One,
+    BigInt, BigInteger, BigInteger256, One,
 };
 use eigen_utils::binding::RegistryCoordinator::{self};
 use RegistryCoordinator::{G1Point, G2Point};
@@ -89,15 +89,12 @@ impl BlsKeyPair {
         Signature::new(r.into_affine())
     }
 
-    /// TODO(supernova): Wait for hash_to_curve to be tested in
-    /// https://github.com/Layr-Labs/rust-bls-bn254/blob/main/src/lib.rs
-    // pub fn sign_message(&self, message: &[u8]) -> Signature {
-    //     let g1 = hash_to_curve(message);
-    //     println!("hash to curve {:?}", g1);
-    //     let sk_int: BigInteger256 = self.priv_key.into();
-    //     let r = g1.mul_bigint(sk_int);
-    //     Signature::new(r.into_affine())
-    // }
+    pub fn sign_message(&self, message: &[u8]) -> Signature {
+        let g1 = map_to_curve(message);
+        let sk_int: BigInteger256 = self.priv_key.into();
+        let r = g1.mul_bigint(sk_int);
+        Signature::new(r.into_affine())
+    }
 
     /// Get public key on G2
     pub fn public_key_g2(&self) -> BlsG2Point {
@@ -186,27 +183,19 @@ impl Signature {
     }
 }
 
-/// https://github.com/Layr-Labs/rust-bls-bn254/blob/main/src/lib.rs
-pub fn hash_to_curve(digest: &[u8]) -> G1Affine {
+pub fn map_to_curve(digest: &[u8]) -> G1Affine {
     let one = Fq::one();
     let three = Fq::from(3u64);
+    let big_int = BigUint::from_bytes_be(digest);
+    let mut bytes = [0u8; 32];
+    big_int
+        .to_bytes_be()
+        .iter()
+        .rev()
+        .enumerate()
+        .for_each(|(i, &b)| bytes[i] = b);
 
-    let mut hasher = Sha256::new();
-    hasher.update(digest);
-    let hashed_result = hasher.finalize();
-
-    // Convert digest to a big integer and then to a field element
-    let mut x = {
-        let big_int = BigUint::from_bytes_be(&hashed_result);
-        let mut bytes = [0u8; 32];
-        big_int
-            .to_bytes_be()
-            .iter()
-            .rev()
-            .enumerate()
-            .for_each(|(i, &b)| bytes[i] = b);
-        Fq::from_le_bytes_mod_order(&bytes)
-    };
+    let mut x = Fq::from_le_bytes_mod_order(&bytes);
 
     loop {
         // y = x^3 + 3
