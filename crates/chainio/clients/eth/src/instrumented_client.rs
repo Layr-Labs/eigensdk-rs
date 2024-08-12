@@ -345,7 +345,7 @@ impl InstrumentedClient {
     }
 
     pub async fn pending_transaction_count(&self) -> TransportResult<u64> {
-        self.instrument_function("eth_getBlockTransactionCountByNumber", PENDING_TAG)
+        self.instrument_function("eth_getBlockTransactionCountByNumber", (PENDING_TAG,))
             .await
             .inspect_err(|err| {
                 self.rpc_collector
@@ -383,8 +383,9 @@ impl InstrumentedClient {
             })
     }
 
+    // Fails with "method not found" error
     pub async fn subscribe_new_head(&self) -> TransportResult<u128> {
-        self.instrument_function("eth_subscribe", "newHeads")
+        self.instrument_function("eth_subscribe", ("newHeads",))
             .await
             .inspect_err(|err| {
                 self.rpc_collector
@@ -578,6 +579,17 @@ mod tests {
             .unwrap();
 
         assert_eq!(expected_balance_at, balance_at);
+    }
+
+    #[tokio::test]
+    #[ignore = "fails with 'method not found'"]
+    async fn test_subscribe_new_head() {
+        let instrumented_client = InstrumentedClient::new("http://localhost:8545")
+            .await
+            .unwrap();
+
+        let sub_id = instrumented_client.subscribe_new_head().await;
+        assert!(sub_id.is_ok());
     }
 
     #[tokio::test]
