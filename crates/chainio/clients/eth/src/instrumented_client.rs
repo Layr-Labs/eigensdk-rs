@@ -850,4 +850,25 @@ mod tests {
 
         assert_eq!(expected_pending_storage_at, pending_storage_at);
     }
+
+    #[tokio::test]
+    async fn test_pending_transaction_count() {
+        let instrumented_client = InstrumentedClient::new("http://localhost:8545")
+            .await
+            .unwrap();
+
+        let expected_transaction_count: u64 = ANVIL_RPC_URL
+            .get_block_by_number(BlockNumberOrTag::Pending, false)
+            .await
+            .unwrap()
+            .unwrap()
+            .transactions
+            .len() as u64;
+
+        // TODO: fix `pending_transaction_count` call
+        let transaction_count = instrumented_client.pending_transaction_count().await;
+
+        dbg!(&transaction_count);
+        assert_eq!(expected_transaction_count, transaction_count.unwrap());
+    }
 }
