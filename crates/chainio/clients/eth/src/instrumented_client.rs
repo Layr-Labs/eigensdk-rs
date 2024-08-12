@@ -433,14 +433,15 @@ impl InstrumentedClient {
             })
     }
 
-    pub async fn transaction_count(&self, block_hash: Address) -> TransportResult<u64> {
-        self.instrument_function("eth_getBlockTransactionCountByHash", block_hash)
+    pub async fn transaction_count(&self, block_hash: B256) -> TransportResult<u64> {
+        self.instrument_function("eth_getBlockTransactionCountByHash", (block_hash,))
             .await
             .inspect_err(|err| {
                 self.rpc_collector
                     .logger()
                     .error("Failed to get transaction count", &[err])
             })
+            .map(|result: U64| result.to())
     }
 
     pub async fn transaction_receipt(
@@ -610,6 +611,28 @@ mod tests {
             .unwrap();
 
         assert_eq!(expected_block, block);
+    }
+
+    #[tokio::test]
+    async fn test_transaction_count() {
+        let instrumented_client = InstrumentedClient::new("http://localhost:8545")
+            .await
+            .unwrap();
+
+        let block = ANVIL_RPC_URL
+            .get_block(BlockId::latest(), BlockTransactionsKind::Hashes)
+            .await
+            .unwrap()
+            .unwrap();
+
+        let block_hash = block.header.hash.unwrap();
+        let tx_count = instrumented_client
+            .transaction_count(B256::from_slice(block_hash.as_slice()))
+            .await
+            .unwrap();
+        let expected_tx_count = block.transactions.len();
+
+        assert_eq!(tx_count, expected_tx_count as u64);
     }
 
     #[tokio::test]
