@@ -2153,6 +2153,9 @@ name = "eigen-services-avsregistry"
 version = "0.0.1-alpha"
 dependencies = [
  "alloy-primitives",
+ "ark-bn254",
+ "ark-ec",
+ "ark-ff 0.4.2",
  "eigen-chainio-utils",
  "eigen-client-avsregistry",
  "eigen-crypto-bls",
@@ -2358,7 +2361,7 @@ dependencies = [
  "hmac",
  "pbkdf2 0.11.0",
  "rand",
- "scrypt",
+ "scrypt 0.10.0",
  "serde",
  "serde_json",
  "sha2",
@@ -3152,6 +3155,15 @@ dependencies = [
  "thiserror",
  "tokio",
  "tracing",
+]
+
+[[package]]
+name = "hkdf"
+version = "0.12.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7b5f8eb2ad728638ea2c7d47a21db23b7b58a72ed6a38256b8a1849f15fbbdf7"
+dependencies = [
+ "hmac",
 ]
 
 [[package]]
@@ -3977,6 +3989,7 @@ checksum = "c165a9ab64cf766f73521c0dd2cfdff64f488b8f0b3e621face3462d3db536d7"
 dependencies = [
  "num-integer",
  "num-traits",
+ "serde",
 ]
 
 [[package]]
@@ -4223,6 +4236,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "password-hash"
+version = "0.5.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "346f04948ba92c43e8469c1ee6736c7563d71012b17d40745260fe106aac2166"
+dependencies = [
+ "base64ct",
+ "rand_core",
+ "subtle",
+]
+
+[[package]]
 name = "paste"
 version = "1.0.15"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4242,7 +4266,7 @@ checksum = "83a0692ec44e4cf1ef28ca317f14f8f07da2d95ec3fa01f86e4467b725e60917"
 dependencies = [
  "digest 0.10.7",
  "hmac",
- "password-hash",
+ "password-hash 0.4.2",
  "sha2",
 ]
 
@@ -4937,14 +4961,28 @@ checksum = "48fd7bd8a6377e15ad9d42a8ec25371b94ddc67abe7c8b9127bec79bebaaae18"
 [[package]]
 name = "rust-bls-bn254"
 version = "0.1.0"
-source = "git+https://github.com/Layr-Labs/rust-bls-bn254.git?rev=bd712a7#bd712a7d556f7869a423956deee702f4a5546aa8"
+source = "git+https://github.com/Layr-Labs/rust-bls-bn254.git?rev=be3ef87#be3ef873f484bb09c2db7b6491715236df8c6174"
 dependencies = [
+ "aes",
  "ark-bn254",
  "ark-ec",
  "ark-ff 0.4.2",
+ "ark-serialize 0.4.2",
  "ark-std 0.4.0",
+ "ctr",
+ "hex",
+ "hkdf",
  "num-bigint 0.4.5",
+ "num-traits",
+ "pbkdf2 0.12.2",
+ "rand",
+ "scrypt 0.11.0",
+ "serde",
+ "serde_json",
  "sha2",
+ "thiserror",
+ "unicode-normalization",
+ "uuid 0.8.2",
 ]
 
 [[package]]
@@ -5196,6 +5234,18 @@ checksum = "9f9e24d2b632954ded8ab2ef9fea0a0c769ea56ea98bddbafbad22caeeadf45d"
 dependencies = [
  "hmac",
  "pbkdf2 0.11.0",
+ "salsa20",
+ "sha2",
+]
+
+[[package]]
+name = "scrypt"
+version = "0.11.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0516a385866c09368f0b5bcd1caff3366aace790fcd46e2bb032697bb172fd1f"
+dependencies = [
+ "password-hash 0.5.0",
+ "pbkdf2 0.12.2",
  "salsa20",
  "sha2",
 ]

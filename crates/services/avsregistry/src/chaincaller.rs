@@ -1,6 +1,9 @@
 use alloy_primitives::{Bytes, FixedBytes, U256};
+use ark_bn254::{Fq, G1Affine, G1Projective};
+use ark_ec::CurveGroup;
+use ark_ff::BigInteger256;
 use eigen_client_avsregistry::reader::AvsRegistryChainReader;
-use eigen_crypto_bls::BlsG1Point;
+use eigen_crypto_bls::{convert_to_g1_point, PublicKey};
 use eigen_services_operatorsinfo::operatorsinfo_inmemory::OperatorInfoServiceInMemory;
 use eigen_types::operator::{OperatorAvsState, OperatorInfo, OperatorPubKeys, QuorumAvsState};
 use eigen_utils::binding::BLSApkRegistry::G1Point;
@@ -77,24 +80,23 @@ impl AvsRegistryServiceChainCaller {
         let mut quorums_avs_state: HashMap<u8, QuorumAvsState> = HashMap::new();
 
         for quorum_num in quorum_nums.iter() {
-            let mut pub_key_g1 = BlsG1Point::new(
-                u256_to_bigint256(U256::from(0)),
-                u256_to_bigint256(U256::from(0)),
-            );
+            let mut pub_key_g1 = G1Projective::from(PublicKey::identity());
             let mut total_stake: U256 = U256::from(0);
             for operator in operators_avs_state.values() {
                 if !operator.stake_per_quorum[quorum_num].is_zero() {
-                    if let Some(pubkeys) = &operator.operator_info.pub_keys {
-                        let g1_point = BlsG1Point::new(
-                            u256_to_bigint256(pubkeys.g1_pub_key.X),
-                            u256_to_bigint256(pubkeys.g1_pub_key.Y),
-                        );
-                        pub_key_g1.add(g1_point);
+                    if let Some(pub_keys) = &operator.operator_info.pub_keys {
+                        let x_point = pub_keys.g1_pub_key.X.into_limbs();
+                        let x = Fq::new(BigInteger256::new(x_point));
+                        let y_point = pub_keys.g1_pub_key.Y.into_limbs();
+                        let y = Fq::new(BigInteger256::new(y_point));
+                        let affine_pub_key = G1Affine::new(x, y);
+
+                        pub_key_g1 = pub_key_g1 + affine_pub_key;
                         total_stake += operator.stake_per_quorum[quorum_num];
                     }
                 }
             }
-            let g1_point = convert_to_bn254_g1_point(pub_key_g1.point);
+            let g1_point = convert_to_g1_point(pub_key_g1.into_affine()).unwrap();
             quorums_avs_state.insert(
                 *quorum_num,
                 QuorumAvsState {
