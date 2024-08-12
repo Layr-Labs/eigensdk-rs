@@ -2041,17 +2041,22 @@ dependencies = [
 name = "eigen-client-eth"
 version = "0.0.1-alpha"
 dependencies = [
+ "alloy-consensus",
+ "alloy-eips",
  "alloy-json-rpc",
  "alloy-node-bindings",
  "alloy-primitives",
  "alloy-provider",
+ "alloy-rlp",
  "alloy-rpc-types-eth",
  "alloy-transport",
  "alloy-transport-http",
  "async-trait",
  "eigen-logging",
  "eigen-metrics-collectors-rpc-calls",
+ "eigen-signer",
  "eigen-testing-utils",
+ "hex",
  "once_cell",
  "thiserror",
  "tokio",

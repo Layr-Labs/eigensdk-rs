@@ -17,9 +17,14 @@ eigen-logging.workspace = true
 eigen-metrics-collectors-rpc-calls.workspace = true
 thiserror.workspace = true
 url.workspace = true
+alloy-rlp.workspace = true
+alloy-eips.workspace = true
+alloy-consensus.workspace = true
+hex = "0.4.3"
 
 [dev-dependencies]
 alloy-node-bindings.workspace = true
 once_cell.workspace = true
 tokio.workspace = true
 eigen-testing-utils.workspace = true
+eigen-signer.workspace = true
