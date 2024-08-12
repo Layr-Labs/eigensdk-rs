@@ -14,6 +14,9 @@ use eigen_utils::{
 use tracing::info;
 use DelegationManager::OperatorDetails;
 
+/// Gas limit for registerAsOperator in [`DelegationManager`]
+pub const GAS_LIMIT_REGISTER_AS_OPERATOR_DELEGATION_MANAGER: u128 = 300000;
+
 #[derive(Debug, Clone)]
 pub struct ELChainWriter {
     delegation_manager: Address,
@@ -147,7 +150,6 @@ impl ELChainWriter {
             .el_chain_reader
             .get_strategy_and_underlying_erc20_token(strategy_addr)
             .await;
-
         match tokens_result {
             Ok(tokens) => {
                 let (_, underlying_token_contract, underlying_token) = tokens;

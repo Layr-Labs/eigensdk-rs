@@ -32,3 +32,4 @@ ark-ff.workspace = true
 eigen-chainio-utils.workspace = true
 eigen-types.workspace = true
 eigen-logging.workspace = true
+lazy_static = "1.5.0"

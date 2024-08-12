@@ -20,6 +20,9 @@ use eigen_utils::{
     get_provider, get_signer,
 };
 
+/// Gas limit for registerOperator in [`RegistryCoordinator`]
+pub const GAS_LIMIT_REGISTER_OPERATOR_REGISTRY_COORDINATOR: u128 = 2000000;
+
 /// AvsRegistry Writer
 #[derive(Debug)]
 pub struct AvsRegistryChainWriter {
@@ -199,12 +202,12 @@ impl AvsRegistryChainWriter {
                     operator_signature_with_salt_and_expiry,
                 );
 
-                let tx_call = contract_call.gas(2000000);
+                let tx_call = contract_call.gas(GAS_LIMIT_REGISTER_OPERATOR_REGISTRY_COORDINATOR);
                 let tx_result = tx_call.send().await;
 
                 match tx_result {
                     Ok(tx) => {
-                        info!(tx_hash = ?tx,"succesfully deregistered operator with the AVS's registry coordinator" );
+                        info!(tx_hash = ?tx,"Succesfully deregistered operator with the AVS's registry coordinator" );
                         Ok(*tx.tx_hash())
                     }
                     Err(e) => Err(AvsRegistryError::AlloyContractError(e)),

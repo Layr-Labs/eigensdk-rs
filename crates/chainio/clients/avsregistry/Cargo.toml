@@ -21,7 +21,6 @@ ark-ff.workspace = true
 eigen-client-elcontracts.workspace = true
 eigen-utils.workspace = true
 eigen-logging.workspace = true
-ark-bn254 = "0.4.0"
 thiserror.workspace = true
 tracing.workspace = true
 alloy-network.workspace = true

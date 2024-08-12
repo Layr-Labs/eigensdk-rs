@@ -48,6 +48,8 @@ rust.rust_2018_idioms = { level = "deny", priority = -1 }
 rustdoc.all = "warn"
 
 [workspace.dependencies]
+ark-bn254 = "0.4.0"
+ark-ec = "0.4.2"
 ark-ff = "0.4.0"
 async-trait = "0.1.81"
 aws-config = "1.5.4"

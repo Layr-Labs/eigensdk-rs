@@ -6,18 +6,14 @@
 
 use alloy_primitives::{B256, U256};
 use ark_std::str::FromStr;
-use num_bigint::BigUint;
 pub mod error;
 
 use crate::error::BlsError;
 use ark_bn254::{Fq, Fr, G1Affine, G1Projective, G2Affine, G2Projective};
 use ark_ec::{AffineRepr, CurveGroup};
-use ark_ff::{
-    fields::{Field, PrimeField},
-    BigInt, BigInteger256, One,
-};
+use ark_ff::{fields::PrimeField, BigInt, BigInteger256};
+use eigen_crypto_bn254::utils::map_to_curve;
 use eigen_utils::binding::RegistryCoordinator::{self};
-use rust_bls_bn254::pairing;
 use RegistryCoordinator::{G1Point, G2Point};
 pub type PrivateKey = Fr;
 pub type PublicKey = G1Affine;
@@ -184,56 +180,12 @@ impl Signature {
     }
 }
 
-/// Maps the message to the curve
-pub fn map_to_curve(digest: &[u8]) -> G1Affine {
-    let one = Fq::one();
-    let three = Fq::from(3u64);
-    let big_int = BigUint::from_bytes_be(digest);
-    let mut bytes = [0u8; 32];
-    big_int
-        .to_bytes_be()
-        .iter()
-        .rev()
-        .enumerate()
-        .for_each(|(i, &b)| bytes[i] = b);
-
-    let mut x = Fq::from_le_bytes_mod_order(&bytes);
-
-    loop {
-        // y = x^3 + 3
-        let mut y = x;
-        y.square_in_place();
-        y *= x;
-        y += three;
-
-        // Check if y is a quadratic residue (i.e., has a square root in the field)
-        if let Some(y) = y.sqrt() {
-            return G1Projective::new(x, y, Fq::one()).into_affine();
-        } else {
-            // x = x + 1
-            x += one;
-        }
-    }
-}
-
-/// Verifies message on G2
-pub fn verify_message(public_key: G2Affine, message: &[u8], signature: G1Affine) -> bool {
-    if !signature.is_in_correct_subgroup_assuming_on_curve() || !signature.is_on_curve() {
-        return false;
-    }
-
-    let q = map_to_curve(message);
-    let c1 = pairing(public_key, q);
-    let c2 = pairing(G2Affine::generator(), signature);
-    c1 == c2
-}
-
 #[cfg(test)]
 mod tests {
 
-    use ark_bn254::Fq2;
-
     use super::*;
+    use ark_bn254::Fq2;
+    use eigen_crypto_bn254::utils::verify_message;
 
     #[test]
     fn test_convert_to_g1_point() {
