@@ -458,11 +458,8 @@ impl InstrumentedClient {
             .map(|result: U64| result.to())
     }
 
-    pub async fn transaction_receipt(
-        &self,
-        tx_hash: [u8; 32],
-    ) -> TransportResult<TransactionReceipt> {
-        self.instrument_function("eth_getTransactionReceipt", tx_hash)
+    pub async fn transaction_receipt(&self, tx_hash: B256) -> TransportResult<TransactionReceipt> {
+        self.instrument_function("eth_getTransactionReceipt", (tx_hash,))
             .await
             .inspect_err(|err| {
                 self.rpc_collector
@@ -524,6 +521,7 @@ mod tests {
     use eigen_signer::signer::Config;
     use eigen_testing_utils::anvil_constants::ANVIL_RPC_URL;
     use once_cell::sync::OnceCell;
+    use std::{thread, time};
     use tokio;
     static TEST_LOGGER: OnceCell<TracingLogger> = OnceCell::new();
     const PRIVATE_KEY: &str = "dcf2cbdd171a21c480aa7f53d77f31bb102282b3ff099c78e3118b37348c72f7";
@@ -663,9 +661,12 @@ mod tests {
 
         assert_eq!(tx_count, expected_tx_count as u64);
     }
-
+    /// This test tests the following methods
+    /// * `send_transaction`
+    /// * `transaction_by_hash`
+    /// * `transaction_receipt`
     #[tokio::test]
-    async fn test_send_transaction_and_transaction_by_hash() {
+    async fn test_transaction_methods() {
         // create a new anvil instance because otherwise it fails with "nonce too low" error.
         let anvil = Anvil::new().try_spawn().unwrap();
         let rpc_url: String = anvil.endpoint().parse().unwrap();
@@ -692,12 +693,17 @@ mod tests {
 
         let tx_hash = instrumented_client.send_transaction(tx).await;
         assert!(tx_hash.is_ok());
-
-        let tx = instrumented_client
-            .transaction_by_hash(B256::from_slice(tx_hash.unwrap().as_ref()))
-            .await;
+        let tx_hash = B256::from_slice(tx_hash.unwrap().as_ref());
+        let tx = instrumented_client.transaction_by_hash(tx_hash).await;
 
         assert!(tx.is_ok());
+
+        // this sleep is needed because we have to wait since the transaction is not ready yet
+        let one_seconds = time::Duration::from_millis(1_000);
+        thread::sleep(one_seconds);
+
+        let receipt = instrumented_client.transaction_receipt(tx_hash).await;
+        assert!(receipt.is_ok());
     }
 
     #[tokio::test]
