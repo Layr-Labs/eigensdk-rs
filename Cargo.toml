@@ -100,7 +100,7 @@ tracing = "0.1.40"
 tracing-subscriber = { version = "0.3", features = ["json"] }
 url = "2.5.2"
 testcontainers = "0.20.1"
-rust-bls-bn254 = {git = "https://github.com/Layr-Labs/rust-bls-bn254.git", rev = "bd712a7", features = ["std"] }
+rust-bls-bn254 = {git = "https://github.com/Layr-Labs/rust-bls-bn254.git", rev = "be3ef87", features = ["std"] }
 #misc 
 parking_lot = "0.12"
 
