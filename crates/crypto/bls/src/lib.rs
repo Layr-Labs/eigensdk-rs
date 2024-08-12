@@ -7,7 +7,6 @@
 use alloy_primitives::{B256, U256};
 use ark_std::str::FromStr;
 use num_bigint::BigUint;
-use sha2::{Digest, Sha256};
 pub mod error;
 
 use crate::error::BlsError;
@@ -15,9 +14,10 @@ use ark_bn254::{Fq, Fr, G1Affine, G1Projective, G2Affine, G2Projective};
 use ark_ec::{AffineRepr, CurveGroup};
 use ark_ff::{
     fields::{Field, PrimeField},
-    BigInt, BigInteger, BigInteger256, One,
+    BigInt, BigInteger256, One,
 };
 use eigen_utils::binding::RegistryCoordinator::{self};
+use rust_bls_bn254::pairing;
 use RegistryCoordinator::{G1Point, G2Point};
 pub type PrivateKey = Fr;
 pub type PublicKey = G1Affine;
@@ -166,6 +166,7 @@ pub fn convert_to_g2_point(g2: G2Affine) -> Result<G2Point, BlsError> {
     }
 }
 
+/// Signature instance on [`G1Affine`]
 #[derive(Debug, Clone)]
 pub struct Signature {
     g1_point: BlsG1Point,
@@ -183,6 +184,7 @@ impl Signature {
     }
 }
 
+/// Maps the message to the curve
 pub fn map_to_curve(digest: &[u8]) -> G1Affine {
     let one = Fq::one();
     let three = Fq::from(3u64);
@@ -212,6 +214,18 @@ pub fn map_to_curve(digest: &[u8]) -> G1Affine {
             x += one;
         }
     }
+}
+
+/// Verifies message on G2
+pub fn verify_message(public_key: G2Affine, message: &[u8], signature: G1Affine) -> bool {
+    if !signature.is_in_correct_subgroup_assuming_on_curve() || !signature.is_on_curve() {
+        return false;
+    }
+
+    let q = map_to_curve(message);
+    let c1 = pairing(public_key, q);
+    let c2 = pairing(G2Affine::generator(), signature);
+    c1 == c2
 }
 
 #[cfg(test)]
@@ -356,5 +370,75 @@ mod tests {
             )
             .unwrap()
         );
+    }
+
+    #[test]
+    fn test_map_to_curve() {
+        let message: [u8; 32] = [
+            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
+            25, 26, 27, 28, 29, 30, 31, 32,
+        ];
+        let g1 = map_to_curve(&message);
+
+        assert_eq!(
+            U256::from_limbs(g1.x().unwrap().into_bigint().0),
+            U256::from_str(
+                "455867356320691211509944977504407603390036387149619137164185182714736811811"
+            )
+            .unwrap()
+        );
+        assert_eq!(
+            U256::from_limbs(g1.y().unwrap().into_bigint().0),
+            U256::from_str(
+                "9802125641729881429496664198939823213610051907104384160271670136040620850981"
+            )
+            .unwrap()
+        );
+    }
+
+    #[test]
+    fn test_sign_message() {
+        let message: [u8; 32] = [
+            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
+            25, 26, 27, 28, 29, 30, 31, 32,
+        ];
+        let bls_priv_key =
+            "12248929636257230549931416853095037629726205319386239410403476017439825112537";
+        let bls_key_pair = BlsKeyPair::new(bls_priv_key.to_string()).unwrap();
+
+        let signature = bls_key_pair.sign_message(&message);
+        assert_eq!(
+            U256::from_limbs(signature.g1_point().g1().x().unwrap().into_bigint().0),
+            U256::from_str(
+                "6125087140203962697351933212367898471377426213402772883153680722977416765651"
+            )
+            .unwrap()
+        );
+        assert_eq!(
+            U256::from_limbs(signature.g1_point().g1().y().unwrap().into_bigint().0),
+            U256::from_str(
+                "19120302240465611628345095276448175199636936878728446037184749040811421969742"
+            )
+            .unwrap()
+        );
+    }
+
+    #[test]
+    fn test_verify_message() {
+        let message: [u8; 32] = [
+            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
+            25, 26, 27, 28, 29, 30, 31, 32,
+        ];
+        let bls_priv_key =
+            "12248929636257230549931416853095037629726205319386239410403476017439825112537";
+        let bls_key_pair = BlsKeyPair::new(bls_priv_key.to_string()).unwrap();
+
+        let signature = bls_key_pair.sign_message(&message);
+
+        assert!(verify_message(
+            bls_key_pair.public_key_g2().g2(),
+            &message,
+            signature.g1_point().g1()
+        ));
     }
 }
