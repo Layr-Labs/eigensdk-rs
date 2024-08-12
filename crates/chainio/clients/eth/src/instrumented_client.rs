@@ -1,9 +1,13 @@
 //use eigen_metrics_collectors_rpc_calls::RpcCalls as RpcCallsCollector;
+use alloy_consensus::{TxEnvelope, TxLegacy};
+use alloy_eips::eip2718::Encodable2718;
 use alloy_json_rpc::{RpcParam, RpcReturn};
+use alloy_primitives::hex::encode;
 use alloy_primitives::{
     Address, BlockHash, BlockNumber, Bytes, ChainId, Uint, B256, U128, U256, U64,
 };
-use alloy_provider::{Provider, ProviderBuilder, RootProvider};
+use alloy_provider::{Provider, ProviderBuilder, RootProvider, SendableTx};
+use alloy_rlp::{Decodable, Encodable, RlpDecodable, RlpEncodable};
 use alloy_rpc_types_eth::{
     Block, BlockNumberOrTag, FeeHistory, Header, SyncStatus, Transaction, TransactionReceipt,
     TransactionRequest,
@@ -13,6 +17,7 @@ use alloy_transport_http::{Client, Http};
 use eigen_logging::get_test_logger;
 use eigen_logging::logger::Logger;
 use eigen_metrics_collectors_rpc_calls::RpcCallsMetrics as RpcCallsCollector;
+use hex;
 use std::time::Instant;
 use thiserror::Error;
 use url::Url;
@@ -350,9 +355,11 @@ impl InstrumentedClient {
             .map(|result: U64| result.to())
     }
 
-    pub async fn send_transaction(&self, tx: TransactionRequest) -> TransportResult<B256> {
+    pub async fn send_transaction(&self, tx: TxEnvelope) -> TransportResult<B256> {
         // TODO: encode the transaction
-        self.instrument_function("eth_sendRawTransaction", tx)
+        let mut encoded_tx = Vec::new();
+        tx.encode(&mut encoded_tx);
+        self.instrument_function("eth_sendRawTransaction", (hex::encode(encoded_tx),))
             .await
             .inspect_err(|err| {
                 self.rpc_collector
@@ -499,11 +506,15 @@ mod tests {
     use std::str::FromStr;
 
     use super::*;
+    use alloy_consensus::SignableTransaction;
+    use alloy_node_bindings::Anvil;
     use alloy_primitives::{bytes, TxKind::Call, U256};
-    use alloy_rpc_types_eth::{
-        BlockId, BlockNumberOrTag, BlockTransactionsKind, TransactionRequest,
-    };
+    use alloy_provider::network::TxSignerSync;
+    use alloy_rpc_types_eth::BlockId;
+    use alloy_rpc_types_eth::BlockTransactionsKind;
+    use alloy_rpc_types_eth::{BlockNumberOrTag, TransactionRequest};
     use eigen_logging::{log_level::LogLevel, logger::Logger, tracing_logger::TracingLogger};
+    use eigen_signer::signer::Config;
     use eigen_testing_utils::anvil_constants::ANVIL_RPC_URL;
     use once_cell::sync::OnceCell;
     use tokio;
@@ -633,6 +644,36 @@ mod tests {
         let expected_tx_count = block.transactions.len();
 
         assert_eq!(tx_count, expected_tx_count as u64);
+    }
+
+    #[tokio::test]
+    async fn test_send_transaction() {
+        // create a new anvil instance because otherwise it fails with "nonce too low" error.
+        let anvil = Anvil::new().try_spawn().unwrap();
+        let rpc_url: String = anvil.endpoint().parse().unwrap();
+
+        let instrumented_client = InstrumentedClient::new(&rpc_url).await.unwrap();
+        let addr = Address::from_str("a0Ee7A142d267C1f36714E4a8F75612F20a79720").unwrap();
+
+        let mut tx = TxLegacy {
+            to: Call(addr),
+            value: U256::from(1_000_000_000),
+            gas_limit: 2_000_000,
+            nonce: 0,
+            gas_price: 21_000_000_000,
+            input: bytes!(),
+            chain_id: Some(31337),
+        };
+        let private_key =
+            "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80".to_string();
+        let config = Config::PrivateKey(private_key);
+        let signer = Config::signer_from_config(config).unwrap();
+        let signature = signer.sign_transaction_sync(&mut tx).unwrap();
+        let signed_tx = tx.into_signed(signature);
+        let tx: TxEnvelope = signed_tx.into();
+
+        let tx_hash = instrumented_client.send_transaction(tx).await;
+        assert!(tx_hash.is_ok());
     }
 
     #[tokio::test]
