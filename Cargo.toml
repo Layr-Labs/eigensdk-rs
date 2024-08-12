@@ -109,7 +109,7 @@ tracing = "0.1.40"
 tracing-subscriber = { version = "0.3", features = ["json"] }
 url = "2.5.2"
 uuid = { version = "1.10.0", features = ["v4"] }
-rust-bls-bn254 = {git = "https://github.com/supernovahs/rust-bls-bn254.git", rev = "d7c2e69", features = ["std"] }
+rust-bls-bn254 = {git = "https://github.com/supernovahs/rust-bls-bn254.git", rev = "4c1e0a4", features = ["std"] }
 
 #misc
 parking_lot = "0.12"

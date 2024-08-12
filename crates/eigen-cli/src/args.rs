@@ -111,7 +111,8 @@ It creates the following artifacts based on arguments
         #[arg(long, help = "Bls keystore type (pbkdf2 or scrypt)")]
         #[clap(value_enum)]
         key_type: BlsKeystoreType,
-        #[arg(long, help = "bls key to encrypt  in hex")]
+
+        #[arg(long, help = "bls key to encrypt in hex")]
         secret_key: String,
 
         #[arg(long, help = "file path to store key")]
@@ -119,6 +120,12 @@ It creates the following artifacts based on arguments
 
         #[arg(long, help = "password to encrypt key(default is empty string)")]
         password: Option<String>,
+    },
+
+    CreateNewMnemonic {
+        #[arg(long, help = "Mnemonic language select")]
+        #[clap(value_enum)]
+        language: MnemonicLanguage,
     },
 }
 
@@ -132,4 +139,16 @@ pub enum KeyType {
 pub enum BlsKeystoreType {
     Pbkdf2,
     Scrypt,
+}
+
+#[derive(clap::ValueEnum, Debug, Clone)]
+pub enum MnemonicLanguage {
+    English,
+    ChineseSimplified,
+    ChineseTraditional,
+    Italian,
+    Czech,
+    Korean,
+    Portuguese,
+    Spanish,
 }

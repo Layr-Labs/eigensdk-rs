@@ -2,27 +2,32 @@
     html_logo_url = "https://github.com/Layr-Labs/eigensdk-rs/assets/91280922/bd13caec-3c00-4afc-839a-b83d2890beb5",
     issue_tracker_base_url = "https://github.com/Layr-Labs/eigensdk-rs/issues/"
 )]
-pub mod bls;
 pub mod args;
+pub mod bls;
 mod convert;
 pub mod eigen_address;
 mod generate;
 mod operator_id;
-use bls::BlsKeystore;
-use eth_keystore::KeystoreError;
-use tokio::runtime::Runtime;
 use crate::eigen_address::ContractAddresses;
-use rust_bls_bn254::errors::KeystoreError as BlsKeystoreError;
 use alloy_contract::Error as ContractError;
 use alloy_json_rpc::RpcError;
 use alloy_transport::TransportErrorKind;
-use args::{Commands, EigenKeyCommand};
+use args::{Commands, EigenKeyCommand, MnemonicLanguage};
 use ark_serialize::SerializationError;
+use bls::BlsKeystore;
+use colored::*;
 use convert::store;
 use eigen_crypto_bls::error::BlsError;
+use eth_keystore::KeystoreError;
 use generate::KeyGenerator;
 use operator_id::derive_operator_id;
+use rust_bls_bn254::{
+    errors::KeystoreError as BlsKeystoreError, mnemonics::Mnemonic, CHINESE_SIMPLIFIED_WORD_LIST,
+    CHINESE_TRADITIONAL_WORD_LIST, CZECH_WORD_LIST, ENGLISH_WORD_LIST, ITALIAN_WORD_LIST,
+    KOREAN_WORD_LIST, PORTUGUESE_WORD_LIST, SPANISH_WORD_LIST,
+};
 use thiserror::Error;
+use tokio::runtime::Runtime;
 
 pub const ANVIL_RPC_URL: &str = "http://localhost:8545";
 
@@ -131,6 +136,40 @@ pub fn execute_egnkey_subcommand(subcommand: EigenKeyCommand) -> Result<(), Eige
             )?;
             Ok(())
         }
+        EigenKeyCommand::CreateNewMnemonic { language } => {
+            let mnemonic = match language {
+                MnemonicLanguage::English => {
+                    Mnemonic::get_mnemonic_without_word_path(ENGLISH_WORD_LIST, None).unwrap()
+                }
+                MnemonicLanguage::ChineseSimplified => {
+                    Mnemonic::get_mnemonic_without_word_path(CHINESE_SIMPLIFIED_WORD_LIST, None)
+                        .unwrap()
+                }
+                MnemonicLanguage::ChineseTraditional => {
+                    Mnemonic::get_mnemonic_without_word_path(CHINESE_TRADITIONAL_WORD_LIST, None)
+                        .unwrap()
+                }
+                MnemonicLanguage::Czech => {
+                    Mnemonic::get_mnemonic_without_word_path(CZECH_WORD_LIST, None).unwrap()
+                }
+                MnemonicLanguage::Italian => {
+                    Mnemonic::get_mnemonic_without_word_path(ITALIAN_WORD_LIST, None).unwrap()
+                }
+                MnemonicLanguage::Korean => {
+                    Mnemonic::get_mnemonic_without_word_path(KOREAN_WORD_LIST, None).unwrap()
+                }
+                MnemonicLanguage::Portuguese => {
+                    Mnemonic::get_mnemonic_without_word_path(PORTUGUESE_WORD_LIST, None).unwrap()
+                }
+                MnemonicLanguage::Spanish => {
+                    Mnemonic::get_mnemonic_without_word_path(SPANISH_WORD_LIST, None).unwrap()
+                }
+            };
+
+            println!("New mnemonic generated : {}", mnemonic);
+            println!("{}", "Please store it safely!".red().bold());
+            Ok(())
+        }
     }
 }
 
@@ -169,7 +208,7 @@ pub fn execute_command(command: Commands) -> Result<(), EigenCliError> {
 #[cfg(test)]
 mod test {
     use super::ANVIL_RPC_URL;
-    use crate::args::{BlsKeystoreType, EigenKeyCommand};
+    use crate::args::{BlsKeystoreType, EigenKeyCommand, MnemonicLanguage};
     use crate::convert::store;
     use crate::eigen_address::ContractAddresses;
     use crate::{
@@ -217,6 +256,23 @@ mod test {
                 .unwrap();
         assert_eq!(original_secret_key.as_slice(), decrypted_key);
         std::fs::remove_file("./keystore.json").unwrap();
+    }
+
+    #[rstest]
+    #[case(MnemonicLanguage::English)]
+    #[case(MnemonicLanguage::Italian)]
+    #[case(MnemonicLanguage::ChineseSimplified)]
+    #[case(MnemonicLanguage::ChineseTraditional)]
+    #[case(MnemonicLanguage::Spanish)]
+    #[case(MnemonicLanguage::Korean)]
+    #[case(MnemonicLanguage::Portuguese)]
+    #[case(MnemonicLanguage::Czech)]
+    fn test_new_mnemonic(#[case] language: MnemonicLanguage) {
+        let subcommand = EigenKeyCommand::CreateNewMnemonic { language };
+
+        let command = Commands::EigenKey { subcommand };
+
+        execute_command(command).unwrap();
     }
 
     #[test]

@@ -1632,6 +1632,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d3fd119d74b830634cea2a0f58bbd0d54540518a14397557951e79340abc28c0"
 
 [[package]]
+name = "colored"
+version = "2.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "cbf2150cce219b664a8a70df7a1f933836724b503f8a413af9365b4dcc4d90b8"
+dependencies = [
+ "lazy_static",
+ "windows-sys 0.48.0",
+]
+
+[[package]]
 name = "const-hex"
 version = "1.12.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1984,6 +1994,7 @@ dependencies = [
  "ark-ff 0.4.2",
  "ark-serialize 0.4.2",
  "clap",
+ "colored",
  "eigen-crypto-bls",
  "eigen-testing-utils",
  "eigen-types",
@@ -5027,7 +5038,7 @@ checksum = "48fd7bd8a6377e15ad9d42a8ec25371b94ddc67abe7c8b9127bec79bebaaae18"
 [[package]]
 name = "rust-bls-bn254"
 version = "0.1.0"
-source = "git+https://github.com/supernovahs/rust-bls-bn254.git?rev=d7c2e69#d7c2e69112e52d7de98da86670cd17d14c02d673"
+source = "git+https://github.com/supernovahs/rust-bls-bn254.git?rev=4c1e0a4#4c1e0a4bca81f8a132f80baf719960150fd18599"
 dependencies = [
  "aes",
  "ark-bn254",
