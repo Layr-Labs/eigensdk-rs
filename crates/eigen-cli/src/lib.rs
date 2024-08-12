@@ -230,7 +230,7 @@ mod test {
     #[rstest]
     #[case(BlsKeystoreType::Scrypt)]
     #[case(BlsKeystoreType::Pbkdf2)]
-    fn blskeystore_generation(#[case] keystore_type: BlsKeystoreType) {
+    fn test_blskeystore_generation(#[case] keystore_type: BlsKeystoreType) {
         let subcommand = EigenKeyCommand::BlsConvert {
             key_type: keystore_type,
             secret_key: "000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"
@@ -375,7 +375,7 @@ mod test {
     #[rstest]
     #[case(KeyType::Ecdsa)]
     #[case(KeyType::Bls)]
-    fn generate_key(#[case] key_type: KeyType) {
+    fn test_generate_key(#[case] key_type: KeyType) {
         let output_dir = tempdir().unwrap();
         let output_path = output_dir.path();
         let subcommand = EigenKeyCommand::Generate {
