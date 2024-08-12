@@ -12,7 +12,7 @@ use alloy_rpc_types_eth::{
     Block, BlockNumberOrTag, FeeHistory, Header, SyncStatus, Transaction, TransactionReceipt,
     TransactionRequest,
 };
-use alloy_transport::TransportResult;
+use alloy_transport::{Transport, TransportResult};
 use alloy_transport_http::{Client, Http};
 use eigen_logging::get_test_logger;
 use eigen_logging::logger::Logger;
@@ -111,8 +111,14 @@ impl InstrumentedClient {
         todo!()
     }
 
-    pub async fn transaction_by_hash(&self) {
-        todo!()
+    pub async fn transaction_by_hash(&self, tx_hash: B256) -> TransportResult<Transaction> {
+        self.instrument_function("eth_getTransactionByHash", (tx_hash,))
+            .await
+            .inspect_err(|err| {
+                self.rpc_collector
+                    .logger()
+                    .error("Failed to get chain id", &[err])
+            })
     }
 
     /// Returns the chain ID.
@@ -659,7 +665,7 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn test_send_transaction() {
+    async fn test_send_transaction_and_transaction_by_hash() {
         // create a new anvil instance because otherwise it fails with "nonce too low" error.
         let anvil = Anvil::new().try_spawn().unwrap();
         let rpc_url: String = anvil.endpoint().parse().unwrap();
@@ -686,6 +692,12 @@ mod tests {
 
         let tx_hash = instrumented_client.send_transaction(tx).await;
         assert!(tx_hash.is_ok());
+
+        let tx = instrumented_client
+            .transaction_by_hash(B256::from_slice(tx_hash.unwrap().as_ref()))
+            .await;
+
+        assert!(tx.is_ok());
     }
 
     #[tokio::test]
