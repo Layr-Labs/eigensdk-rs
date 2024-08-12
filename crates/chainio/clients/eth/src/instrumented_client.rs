@@ -407,7 +407,7 @@ impl InstrumentedClient {
 
     pub async fn transaction_in_block(
         &self,
-        block_hash: [u8; 32],
+        block_hash: B256,
         index: u64,
     ) -> TransportResult<Transaction> {
         self.instrument_function("eth_getTransactionByBlockHashAndIndex", (block_hash, index))
@@ -481,14 +481,17 @@ impl InstrumentedClient {
 
 #[cfg(test)]
 mod tests {
+    use std::str::FromStr;
+
     use super::*;
     use alloy_primitives::{bytes, TxKind::Call, U256};
+    use alloy_rpc_types_eth::BlockId;
+    use alloy_rpc_types_eth::BlockTransactionsKind;
     use alloy_rpc_types_eth::{BlockNumberOrTag, TransactionRequest};
     use eigen_logging::{log_level::LogLevel, logger::Logger, tracing_logger::TracingLogger};
     use eigen_testing_utils::anvil_constants::ANVIL_RPC_URL;
     use once_cell::sync::OnceCell;
     use tokio;
-
     static TEST_LOGGER: OnceCell<TracingLogger> = OnceCell::new();
     const PRIVATE_KEY: &str = "dcf2cbdd171a21c480aa7f53d77f31bb102282b3ff099c78e3118b37348c72f7";
 
@@ -521,6 +524,31 @@ mod tests {
 
         let sync_status = instrumented_client.sync_progress().await;
         assert!(sync_status.is_ok());
+    }
+
+    #[tokio::test]
+    async fn test_block_by_hash() {
+        let instrumented_client = InstrumentedClient::new("http://localhost:8545")
+            .await
+            .unwrap();
+
+        // get the hash from the last block
+        let hash = ANVIL_RPC_URL
+            .get_block(BlockId::latest(), BlockTransactionsKind::Hashes)
+            .await
+            .unwrap()
+            .unwrap()
+            .header
+            .hash
+            .unwrap();
+
+        let block = instrumented_client.block_by_hash(hash).await.unwrap();
+        let expected_block = ANVIL_RPC_URL
+            .get_block_by_hash(hash, BlockTransactionsKind::Full)
+            .await
+            .unwrap();
+
+        assert_eq!(block, expected_block);
     }
 
     #[tokio::test]
