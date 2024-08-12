@@ -5038,7 +5038,7 @@ checksum = "48fd7bd8a6377e15ad9d42a8ec25371b94ddc67abe7c8b9127bec79bebaaae18"
 [[package]]
 name = "rust-bls-bn254"
 version = "0.1.0"
-source = "git+https://github.com/supernovahs/rust-bls-bn254.git?rev=4c1e0a4#4c1e0a4bca81f8a132f80baf719960150fd18599"
+source = "git+https://github.com/Layr-labs/rust-bls-bn254.git?rev=be3ef87#be3ef873f484bb09c2db7b6491715236df8c6174"
 dependencies = [
  "aes",
  "ark-bn254",
