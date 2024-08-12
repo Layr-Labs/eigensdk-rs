@@ -371,7 +371,7 @@ impl InstrumentedClient {
     pub async fn storage_at(
         &self,
         account: Address,
-        key: [u8; 32],
+        key: U256,
         block_number: U256,
     ) -> TransportResult<U256> {
         self.instrument_function("eth_getStorageAt", (account, key, block_number))
@@ -674,6 +674,27 @@ mod tests {
 
         let tx_hash = instrumented_client.send_transaction(tx).await;
         assert!(tx_hash.is_ok());
+    }
+
+    #[tokio::test]
+    async fn test_storage_at() {
+        let instrumented_client = InstrumentedClient::new("http://localhost:8545")
+            .await
+            .unwrap();
+
+        let account = ANVIL_RPC_URL.clone().get_accounts().await.unwrap()[0];
+        let expected_storage = ANVIL_RPC_URL
+            .clone()
+            .get_storage_at(account, U256::ZERO)
+            .await
+            .unwrap();
+
+        let storage = instrumented_client
+            .storage_at(account, U256::ZERO, U256::ZERO)
+            .await
+            .unwrap();
+
+        assert_eq!(expected_storage, storage);
     }
 
     #[tokio::test]
