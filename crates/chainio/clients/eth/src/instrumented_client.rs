@@ -5,7 +5,8 @@ use alloy_primitives::{
 };
 use alloy_provider::{Provider, ProviderBuilder, RootProvider};
 use alloy_rpc_types_eth::{
-    Block, FeeHistory, Header, SyncStatus, Transaction, TransactionReceipt, TransactionRequest,
+    Block, BlockNumberOrTag, FeeHistory, Header, SyncStatus, Transaction, TransactionReceipt,
+    TransactionRequest,
 };
 use alloy_transport::TransportResult;
 use alloy_transport_http::{Client, Http};
@@ -138,7 +139,7 @@ impl InstrumentedClient {
     pub async fn balance_at(
         &self,
         account: Address,
-        block_number: BlockNumber,
+        block_number: BlockNumberOrTag,
     ) -> TransportResult<U256> {
         self.instrument_function("eth_getBalance", (account, block_number))
             .await
@@ -177,7 +178,10 @@ impl InstrumentedClient {
     /// # Returns
     ///
     /// The block having the given block number.
-    pub async fn block_by_number(&self, number: BlockNumber) -> TransportResult<Option<Block>> {
+    pub async fn block_by_number(
+        &self,
+        number: BlockNumberOrTag,
+    ) -> TransportResult<Option<Block>> {
         self.instrument_function("eth_getBlockByNumber", (number, true))
             .await
             .inspect_err(|err| {
@@ -216,7 +220,7 @@ impl InstrumentedClient {
     pub async fn code_at(
         &self,
         address: Address,
-        block_number: BlockNumber,
+        block_number: BlockNumberOrTag,
     ) -> TransportResult<Bytes> {
         self.instrument_function("eth_getCode", (address, block_number))
             .await
@@ -239,7 +243,7 @@ impl InstrumentedClient {
     pub async fn fee_history(
         &self,
         block_count: u64,
-        last_block: BlockNumber,
+        last_block: BlockNumberOrTag,
         reward_percentiles: &[f64],
     ) -> TransportResult<FeeHistory> {
         self.instrument_function(
@@ -265,7 +269,10 @@ impl InstrumentedClient {
             })
     }
 
-    pub async fn header_by_number(&self, block_number: BlockNumber) -> TransportResult<Header> {
+    pub async fn header_by_number(
+        &self,
+        block_number: BlockNumberOrTag,
+    ) -> TransportResult<Header> {
         let transaction_detail = false;
         self.instrument_function("eth_getBlockByNumber", (block_number, transaction_detail))
             .await
@@ -276,7 +283,11 @@ impl InstrumentedClient {
             })
     }
 
-    pub async fn nonce_at(&self, account: Address, block_number: U256) -> TransportResult<u64> {
+    pub async fn nonce_at(
+        &self,
+        account: Address,
+        block_number: BlockNumberOrTag,
+    ) -> TransportResult<u64> {
         self.instrument_function("eth_getTransactionCount", (account, block_number))
             .await
             .inspect_err(|err| {
@@ -284,6 +295,7 @@ impl InstrumentedClient {
                     .logger()
                     .error("Failed to get nonce", &[err])
             })
+            .map(|result: U64| result.to())
     }
 
     pub async fn pending_balance_at(&self, account: Address) -> TransportResult<U256> {
@@ -314,9 +326,10 @@ impl InstrumentedClient {
                     .logger()
                     .error("Failed to get pending nonce", &[err])
             })
+            .map(|result: U64| result.to())
     }
 
-    pub async fn pending_storage_at(&self, account: Address, key: B256) -> TransportResult<U256> {
+    pub async fn pending_storage_at(&self, account: Address, key: U256) -> TransportResult<U256> {
         self.instrument_function("eth_getStorageAt", (account, key, PENDING_TAG))
             .await
             .inspect_err(|err| {
@@ -334,6 +347,7 @@ impl InstrumentedClient {
                     .logger()
                     .error("Failed to get transaction count", &[err])
             })
+            .map(|result: U64| result.to())
     }
 
     pub async fn send_transaction(&self, tx: TransactionRequest) -> TransportResult<B256> {
@@ -483,7 +497,9 @@ impl InstrumentedClient {
 mod tests {
     use super::*;
     use alloy_primitives::{bytes, TxKind::Call, U256};
-    use alloy_rpc_types_eth::{BlockNumberOrTag, TransactionRequest};
+    use alloy_rpc_types_eth::{
+        BlockId, BlockNumberOrTag, BlockTransactionsKind, TransactionRequest,
+    };
     use eigen_logging::{log_level::LogLevel, logger::Logger, tracing_logger::TracingLogger};
     use eigen_testing_utils::anvil_constants::ANVIL_RPC_URL;
     use once_cell::sync::OnceCell;
@@ -524,6 +540,76 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn test_chain_id() {
+        let instrumented_client = InstrumentedClient::new("http://localhost:8545")
+            .await
+            .unwrap();
+
+        let expected_chain_id = ANVIL_RPC_URL.clone().get_chain_id().await.unwrap();
+        let chain_id = instrumented_client.chain_id().await.unwrap();
+
+        assert_eq!(expected_chain_id, chain_id);
+    }
+
+    #[tokio::test]
+    async fn test_balance_at() {
+        let instrumented_client = InstrumentedClient::new("http://localhost:8545")
+            .await
+            .unwrap();
+        let address = ANVIL_RPC_URL.get_accounts().await.unwrap()[0];
+
+        let expected_balance_at = ANVIL_RPC_URL.get_balance(address).await.unwrap();
+        let balance_at = instrumented_client
+            .balance_at(address, BlockNumberOrTag::Latest)
+            .await
+            .unwrap();
+
+        assert_eq!(expected_balance_at, balance_at);
+    }
+
+    #[tokio::test]
+    async fn test_block_by_hash() {
+        let instrumented_client = InstrumentedClient::new("http://localhost:8545")
+            .await
+            .unwrap();
+        let hash = ANVIL_RPC_URL
+            .get_block(BlockId::latest(), BlockTransactionsKind::Hashes)
+            .await
+            .unwrap()
+            .unwrap()
+            .header
+            .hash
+            .unwrap();
+
+        let expected_block = ANVIL_RPC_URL
+            .get_block_by_hash(hash, BlockTransactionsKind::Full)
+            .await
+            .unwrap();
+        let block = instrumented_client.block_by_hash(hash).await.unwrap();
+
+        assert_eq!(expected_block, block);
+    }
+
+    #[tokio::test]
+    async fn test_block_by_number() {
+        let instrumented_client = InstrumentedClient::new("http://localhost:8545")
+            .await
+            .unwrap();
+        let block_number = 1;
+
+        let expected_block = ANVIL_RPC_URL
+            .get_block_by_number(block_number.into(), true)
+            .await
+            .unwrap();
+        let block = instrumented_client
+            .block_by_number(block_number.into())
+            .await
+            .unwrap();
+
+        assert_eq!(expected_block, block);
+    }
+
+    #[tokio::test]
     async fn test_block_number() {
         let instrumented_client = InstrumentedClient::new("http://localhost:8545")
             .await
@@ -536,14 +622,165 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn test_suggest_gas_tip_cap() {
+    async fn test_code_at() {
         let instrumented_client = InstrumentedClient::new("http://localhost:8545")
             .await
             .unwrap();
+        let address = ANVIL_RPC_URL.get_accounts().await.unwrap()[0];
 
-        let expected_chain_id = ANVIL_RPC_URL.clone().get_chain_id().await.unwrap();
-        let chain_id = instrumented_client.chain_id().await.unwrap();
+        let expected_code = ANVIL_RPC_URL.get_code_at(address).await.unwrap();
+        let code = instrumented_client
+            .code_at(address, BlockNumberOrTag::Latest)
+            .await
+            .unwrap();
 
-        assert_eq!(expected_chain_id, chain_id);
+        assert_eq!(expected_code, code);
+    }
+
+    #[tokio::test]
+    async fn test_fee_history() {
+        let instrumented_client = InstrumentedClient::new("http://localhost:8545")
+            .await
+            .unwrap();
+        let block_count = 4;
+        let last_block = BlockNumberOrTag::Latest;
+        let reward_percentiles = [0.2, 0.3];
+
+        let expected_fee_history = ANVIL_RPC_URL
+            .get_fee_history(block_count, last_block, &reward_percentiles)
+            .await
+            .unwrap();
+        let fee_history = instrumented_client
+            .fee_history(block_count, last_block, &reward_percentiles)
+            .await
+            .unwrap();
+
+        assert_eq!(expected_fee_history, fee_history);
+    }
+
+    #[tokio::test]
+    async fn test_header_by_hash() {
+        let instrumented_client = InstrumentedClient::new("http://localhost:8545")
+            .await
+            .unwrap();
+        let hash = ANVIL_RPC_URL
+            .get_block(BlockId::latest(), BlockTransactionsKind::Hashes)
+            .await
+            .unwrap()
+            .unwrap()
+            .header
+            .hash
+            .unwrap();
+
+        let expected_header = ANVIL_RPC_URL
+            .get_block_by_hash(hash, BlockTransactionsKind::Hashes)
+            .await
+            .unwrap()
+            .unwrap()
+            .header;
+        let header = instrumented_client.header_by_hash(hash).await.unwrap();
+
+        assert_eq!(expected_header, header);
+    }
+
+    #[tokio::test]
+    async fn test_header_by_number() {
+        let instrumented_client = InstrumentedClient::new("http://localhost:8545")
+            .await
+            .unwrap();
+        let block_number = BlockNumberOrTag::Number(10);
+
+        let expected_header = ANVIL_RPC_URL
+            .get_block_by_number(block_number, false)
+            .await
+            .unwrap()
+            .unwrap()
+            .header;
+        let header = instrumented_client
+            .header_by_number(block_number)
+            .await
+            .unwrap();
+
+        assert_eq!(expected_header, header);
+    }
+
+    #[tokio::test]
+    async fn test_nonce_at() {
+        let instrumented_client = InstrumentedClient::new("http://localhost:8545")
+            .await
+            .unwrap();
+        let address = ANVIL_RPC_URL.get_accounts().await.unwrap()[0];
+
+        let expected_nonce = ANVIL_RPC_URL.get_transaction_count(address).await.unwrap();
+        let nonce = instrumented_client
+            .nonce_at(address, BlockNumberOrTag::Latest)
+            .await
+            .unwrap();
+
+        assert_eq!(expected_nonce, nonce);
+    }
+
+    #[tokio::test]
+    async fn test_pending_balance_at() {
+        let instrumented_client = InstrumentedClient::new("http://localhost:8545")
+            .await
+            .unwrap();
+        let address = ANVIL_RPC_URL.get_accounts().await.unwrap()[0];
+
+        // TODO: currently comparing "pending" balance with "latest" balance. Check for pending transactions?
+        let expected_balance = ANVIL_RPC_URL.get_balance(address).await.unwrap();
+        let balance = instrumented_client
+            .pending_balance_at(address)
+            .await
+            .unwrap();
+
+        assert_eq!(expected_balance, balance);
+    }
+
+    #[tokio::test]
+    async fn test_pending_code_at() {
+        let instrumented_client = InstrumentedClient::new("http://localhost:8545")
+            .await
+            .unwrap();
+        let address = ANVIL_RPC_URL.get_accounts().await.unwrap()[0];
+
+        // TODO: currently comparing "pending" with "latest". Check for pending transactions?
+        let expected_code = ANVIL_RPC_URL.get_code_at(address).await.unwrap();
+        let code = instrumented_client.pending_code_at(address).await.unwrap();
+
+        assert_eq!(expected_code, code);
+    }
+
+    #[tokio::test]
+    async fn test_pending_nonce_at() {
+        let instrumented_client = InstrumentedClient::new("http://localhost:8545")
+            .await
+            .unwrap();
+        let address = ANVIL_RPC_URL.get_accounts().await.unwrap()[0];
+
+        // TODO: currently comparing "pending" with "latest". Check for pending transactions?
+        let expected_pending_nonce_at = ANVIL_RPC_URL.get_transaction_count(address).await.unwrap();
+        let pending_nonce_at = instrumented_client.pending_nonce_at(address).await.unwrap();
+
+        assert_eq!(expected_pending_nonce_at, pending_nonce_at);
+    }
+
+    #[tokio::test]
+    async fn test_pending_storage_at() {
+        let instrumented_client = InstrumentedClient::new("http://localhost:8545")
+            .await
+            .unwrap();
+        let address = ANVIL_RPC_URL.get_accounts().await.unwrap()[0];
+        let key = U256::from(10);
+
+        // TODO: currently comparing "pending" with "latest". Check for pending transactions?
+        // TODO: set storage and check change
+        let expected_pending_storage_at = ANVIL_RPC_URL.get_storage_at(address, key).await.unwrap();
+        let pending_storage_at = instrumented_client
+            .pending_storage_at(address, key)
+            .await
+            .unwrap();
+
+        assert_eq!(expected_pending_storage_at, pending_storage_at);
     }
 }
