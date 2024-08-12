@@ -1,18 +1,16 @@
 //use eigen_metrics_collectors_rpc_calls::RpcCalls as RpcCallsCollector;
-use alloy_consensus::{TxEnvelope, TxLegacy};
-use alloy_eips::eip2718::Encodable2718;
+use alloy_consensus::TxEnvelope;
 use alloy_json_rpc::{RpcParam, RpcReturn};
 use alloy_primitives::hex::encode;
 use alloy_primitives::{
     Address, BlockHash, BlockNumber, Bytes, ChainId, Uint, B256, U128, U256, U64,
 };
-use alloy_provider::{Provider, ProviderBuilder, RootProvider, SendableTx};
-use alloy_rlp::{Decodable, Encodable, RlpDecodable, RlpEncodable};
+use alloy_provider::{EthCall, Provider, ProviderBuilder, RootProvider};
+use alloy_rlp::Encodable;
 use alloy_rpc_types_eth::{
     Block, BlockNumberOrTag, FeeHistory, Header, SyncStatus, Transaction, TransactionReceipt,
-    TransactionRequest,
 };
-use alloy_transport::{Transport, TransportResult};
+use alloy_transport::TransportResult;
 use alloy_transport_http::{Client, Http};
 use eigen_logging::get_test_logger;
 use eigen_logging::logger::Logger;
@@ -24,6 +22,7 @@ use url::Url;
 
 const PENDING_TAG: &str = "pending";
 const HEX_RADIX: u32 = 16;
+
 pub struct InstrumentedClient {
     client: RootProvider<Http<Client>>,
     rpc_collector: RpcCallsCollector,
@@ -510,13 +509,13 @@ mod tests {
     use std::str::FromStr;
 
     use super::*;
-    use alloy_consensus::SignableTransaction;
+    use alloy_consensus::{SignableTransaction, TxLegacy};
     use alloy_node_bindings::Anvil;
     use alloy_primitives::{bytes, TxKind::Call, U256};
     use alloy_provider::network::TxSignerSync;
     use alloy_rpc_types_eth::BlockId;
+    use alloy_rpc_types_eth::BlockNumberOrTag;
     use alloy_rpc_types_eth::BlockTransactionsKind;
-    use alloy_rpc_types_eth::{BlockNumberOrTag, TransactionRequest};
     use eigen_logging::{log_level::LogLevel, logger::Logger, tracing_logger::TracingLogger};
     use eigen_signer::signer::Config;
     use eigen_testing_utils::anvil_constants::ANVIL_RPC_URL;
@@ -527,34 +526,37 @@ mod tests {
     const PRIVATE_KEY: &str = "dcf2cbdd171a21c480aa7f53d77f31bb102282b3ff099c78e3118b37348c72f7";
 
     #[tokio::test]
-    async fn test_send_transaction_from_legacy() {
-        // TEST_LOGGER.get_or_init(|| {
-        //     TracingLogger::new_text_logger(false, String::from(""), LogLevel::Debug, false)
-        // });
-
-        // Spin up a local Anvil node.
-        // Ensure `anvil` is available in $PATH.
-        // let anvil = Anvil::new().try_spawn().unwrap();
-        // let rpc_url: String = anvil.endpoint().parse().unwrap();
-
-        // Create a provider.
-        // let logger = TEST_LOGGER.get().unwrap();
-
-        // Create two users, Alice and Bob.
-        // let _alice = anvil.addresses()[0];
-        // let _bob = anvil.addresses()[1];
+    async fn test_suggest_gas_tip_cap() {
         let instrumented_client = InstrumentedClient::new("http://localhost:8545")
             .await
             .unwrap();
+        let fee_per_gas = instrumented_client.suggest_gas_tip_cap().await.unwrap();
+        let expected_fee_per_gas = ANVIL_RPC_URL
+            .clone()
+            .get_max_priority_fee_per_gas()
+            .await
+            .unwrap();
+        assert_eq!(expected_fee_per_gas as u64, fee_per_gas);
+    }
 
-        let gas_price = instrumented_client.suggest_gas_price().await;
-        assert!(gas_price.is_ok());
+    #[tokio::test]
+    async fn test_gas_price() {
+        let instrumented_client = InstrumentedClient::new("http://localhost:8545")
+            .await
+            .unwrap();
+        let gas_price = instrumented_client.suggest_gas_price().await.unwrap();
+        let expected_gas_price = ANVIL_RPC_URL.clone().get_gas_price().await.unwrap();
+        assert_eq!(gas_price, expected_gas_price as u64);
+    }
 
-        let fee_per_gas = instrumented_client.suggest_gas_tip_cap().await;
-        assert!(fee_per_gas.is_ok());
-
-        let sync_status = instrumented_client.sync_progress().await;
-        assert!(sync_status.is_ok());
+    #[tokio::test]
+    async fn test_sync_status() {
+        let instrumented_client = InstrumentedClient::new("http://localhost:8545")
+            .await
+            .unwrap();
+        let sync_status = instrumented_client.sync_progress().await.unwrap();
+        let expected_sync_status = ANVIL_RPC_URL.clone().syncing().await.unwrap();
+        assert_eq!(expected_sync_status, sync_status);
     }
 
     #[tokio::test]

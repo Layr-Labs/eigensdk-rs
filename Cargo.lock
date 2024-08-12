@@ -2042,6 +2042,7 @@ name = "eigen-client-eth"
 version = "0.0.1-alpha"
 dependencies = [
  "alloy-consensus",
+ "alloy-contract",
  "alloy-eips",
  "alloy-json-rpc",
  "alloy-node-bindings",
