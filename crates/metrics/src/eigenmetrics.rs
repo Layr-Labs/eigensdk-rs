@@ -1,4 +1,4 @@
-use eigen_logging::{logger::Logger, tracing_logger::TracingLogger};
+use eigen_logging::{logger::Logger, EigenLogger};
 use eigen_metrics_derive::Metrics;
 use metrics::Gauge;
 
@@ -23,11 +23,11 @@ pub struct EigenPerformanceMetrics {
     /// The score is calculated based on the performance of the AVS Node and the performance of the backing services.
     eigen_metrics: EigenPerformance,
 
-    logger: TracingLogger,
+    logger: EigenLogger,
 }
 
 impl EigenPerformanceMetrics {
-    pub fn new(logger: TracingLogger) -> Self {
+    pub fn new(logger: EigenLogger) -> Self {
         let eigen_metrics_metrics = Self {
             eigen_metrics: EigenPerformance {
                 performance_score: metrics::register_gauge!("eigen_performance_score"),
@@ -49,10 +49,18 @@ impl EigenPerformanceMetrics {
     }
 
     pub fn set_performance_score(&self, score: f64) {
-        self.logger.debug(
-            &format!("set performance score , new score {}", score),
-            &["eigen-metrics.set_performance_score"],
-        );
+        match (&self.logger.tracing_logger, &self.logger.noop_logger) {
+            (Some(tracing_logger), _) => tracing_logger.debug(
+                &format!("set performance score , new score {}", score),
+                &["eigen-metrics.set_performance_score"],
+            ),
+            (_, Some(noop_logger)) => noop_logger.debug(
+                &format!("set performance score , new score {}", score),
+                &["eigen-metrics.set_performance_score"],
+            ),
+            _ => println!("Both TracingLogger and NoopLogger are None"),
+        }
+
         self.eigen_metrics.performance_score.set(score)
     }
 }

@@ -2,7 +2,7 @@ use super::log_level::LogLevel;
 use super::logger::Logger;
 use std::fmt::Debug;
 
-#[derive(Debug, Default)]
+#[derive(Debug, Default, Clone)]
 pub struct NoopLogger {}
 
 impl Logger for NoopLogger {

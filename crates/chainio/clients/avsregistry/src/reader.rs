@@ -3,7 +3,8 @@ use alloy_primitives::{Address, Bytes, FixedBytes, B256, U256};
 use alloy_provider::Provider;
 use alloy_rpc_types::Filter;
 use ark_ff::Zero;
-use eigen_logging::{logger::Logger, tracing_logger::TracingLogger};
+use eigen_logging::logger::Logger;
+use eigen_logging::EigenLogger;
 use eigen_types::operator::{bitmap_to_quorum_ids, OperatorPubKeys};
 use eigen_utils::NEW_PUBKEY_REGISTRATION_EVENT;
 use eigen_utils::{
@@ -17,7 +18,7 @@ use std::fmt::Debug;
 /// Avs Registry chainreader
 #[derive(Debug, Clone, Default)]
 pub struct AvsRegistryChainReader {
-    logger: TracingLogger,
+    logger: EigenLogger,
     bls_apk_registry_addr: Address,
     registry_coordinator_addr: Address,
     operator_state_retriever: Address,
@@ -32,7 +33,7 @@ trait AvsRegistryReader {
 impl AvsRegistryChainReader {
     /// New AvsRegistryChainReader instance
     pub async fn new(
-        logger: TracingLogger,
+        logger: EigenLogger,
         registry_coordinator_addr: Address,
         operator_state_retriever_addr: Address,
         http_provider_url: String,
@@ -390,15 +391,28 @@ impl AvsRegistryChainReader {
 
                             match logs_result {
                                 Ok(logs) => {
-                                    self.logger.debug(
-                                        &format!(
-                                            "numTransactionLogs: {}, fromBlock: {}, toBlock: {}",
-                                            logs.len(),
-                                            i,
-                                            to_block
+                                    match (&self.logger.tracing_logger, &self.logger.noop_logger) {
+                                        (Some(tracing_logger), _) => tracing_logger.debug(
+                                            &format!(
+                                                "numTransactionLogs: {}, fromBlock: {}, toBlock: {}",
+                                                logs.len(),
+                                                i,
+                                                to_block
+                                            ),
+                                            &["eigen-client-avsregistry.reader.query_existing_registered_operator_pub_keys"]
                                         ),
-                                        &["eigen-client-avsregistry.reader.query_existing_registered_operator_pub_keys"]
-                                    );
+                                        (_, Some(noop_logger)) => noop_logger.debug(
+                                            &format!(
+                                                "numTransactionLogs: {}, fromBlock: {}, toBlock: {}",
+                                                logs.len(),
+                                                i,
+                                                to_block
+                                            ),
+                                            &["eigen-client-avsregistry.reader.query_existing_registered_operator_pub_keys"]
+                                        ),
+                                        _ => println!("Both TracingLogger and NoopLogger are None"),
+                                    }
+
                                     for pub_key_reg in logs
                                         .iter()
                                         .map(|v| {
@@ -496,15 +510,27 @@ impl AvsRegistryChainReader {
                             operator_id_to_socket.insert(operator_id, socket.clone());
                         }
                     }
-                    self.logger.debug(
-                        &format!(
-                            "num_transaction_logs : {} , from_block: {} , to_block: {}",
-                            logs.len(),
-                            i,
-                            to_block
+                    match (&self.logger.tracing_logger, &self.logger.noop_logger) {
+                        (Some(tracing_logger), _) => tracing_logger.debug(
+                            &format!(
+                                "num_transaction_logs : {} , from_block: {} , to_block: {}",
+                                logs.len(),
+                                i,
+                                to_block
+                            ),
+                            &["eigen-client-avsregistry.reader.query_existing_registered_operator_sockets"],
                         ),
-                        &["eigen-client-avsregistry.reader.query_existing_registered_operator_sockets"],
-                    );
+                        (_, Some(noop_logger)) => noop_logger.debug(
+                            &format!(
+                                "num_transaction_logs : {} , from_block: {} , to_block: {}",
+                                logs.len(),
+                                i,
+                                to_block
+                            ),
+                            &["eigen-client-avsregistry.reader.query_existing_registered_operator_sockets"],
+                        ),
+                        _ => println!("Both TracingLogger and NoopLogger are None"),
+                    }
 
                     i += query_block_range;
                 }
@@ -539,7 +565,7 @@ mod tests {
 
         let holesky_provider = "https://ethereum-holesky.blockpi.network/v1/rpc/public";
         AvsRegistryChainReader::new(
-            get_test_logger().clone(),
+            get_test_logger(),
             holesky_registry_coordinator,
             holesky_operator_state_retriever,
             holesky_provider.to_string(),

@@ -1,6 +1,6 @@
 use crate::error::ElContractsError;
 use alloy_primitives::{Address, FixedBytes, U256};
-use eigen_logging::tracing_logger::TracingLogger;
+use eigen_logging::EigenLogger;
 use eigen_types::operator::Operator;
 use eigen_utils::{
     binding::{AVSDirectory, DelegationManager, ISlasher, IStrategy, IERC20},
@@ -8,7 +8,7 @@ use eigen_utils::{
 };
 #[derive(Debug, Clone)]
 pub struct ELChainReader {
-    _logger: TracingLogger,
+    _logger: EigenLogger,
     slasher: Address,
     delegation_manager: Address,
     avs_directory: Address,
@@ -17,7 +17,7 @@ pub struct ELChainReader {
 
 impl ELChainReader {
     pub fn new(
-        _logger: TracingLogger,
+        _logger: EigenLogger,
         slasher: Address,
         delegation_manager: Address,
         avs_directory: Address,
@@ -34,7 +34,7 @@ impl ELChainReader {
 
     /// Builds a new [`ELChainReader`] instance .
     pub async fn build(
-        _logger: TracingLogger,
+        _logger: EigenLogger,
         delegation_manager: Address,
         avs_directory: Address,
         client: &String,
@@ -315,7 +315,7 @@ mod tests {
         } = avs_directory_address_return;
 
         ELChainReader::new(
-            get_test_logger().clone(),
+            get_test_logger(),
             slasher_address,
             delegation_manager_address,
             avs_directory_address,

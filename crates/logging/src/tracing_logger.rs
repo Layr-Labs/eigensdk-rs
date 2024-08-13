@@ -134,6 +134,6 @@ mod tests {
     #[test]
     fn test_log() {
         let logger = get_test_logger();
-        logger.log("Log", &["info logged"]);
+        logger.noop_logger.unwrap().log("Log", &["info logged"]);
     }
 }

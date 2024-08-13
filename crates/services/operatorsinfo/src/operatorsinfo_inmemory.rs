@@ -3,7 +3,7 @@ use alloy_provider::{Provider, ProviderBuilder, WsConnect};
 use alloy_rpc_types::Filter;
 use anyhow::Result;
 use eigen_client_avsregistry::reader::AvsRegistryChainReader;
-use eigen_logging::{logger::Logger, tracing_logger::TracingLogger};
+use eigen_logging::{logger::Logger, EigenLogger};
 use eigen_types::operator::{operator_id_from_g1_pub_key, OperatorPubKeys};
 use eigen_utils::{
     binding::BLSApkRegistry::{self, G1Point, G2Point},
@@ -20,7 +20,7 @@ use tokio::sync::{
 #[allow(dead_code)]
 #[derive(Debug, Clone)]
 pub struct OperatorInfoServiceInMemory {
-    logger: TracingLogger,
+    logger: EigenLogger,
     avs_registry_reader: AvsRegistryChainReader,
     ws: String,
     pub_keys: UnboundedSender<OperatorsInfoMessage>,
@@ -36,7 +36,7 @@ enum OperatorsInfoMessage {
 
 impl OperatorInfoServiceInMemory {
     pub async fn new(
-        logger: TracingLogger,
+        logger: EigenLogger,
         avs_registry_chain_reader: AvsRegistryChainReader,
         web_socket: String,
     ) -> Self {
@@ -102,10 +102,20 @@ impl OperatorInfoServiceInMemory {
         tokio::spawn(async move {
             while let Some(log) = stream.next().await {
                 if shutdown_rx.has_changed().unwrap_or(false) {
-                    self_clone.logger.info(
-                        "shutdown of operators info service ",
-                        &["eigen-services-operatorsinfo.start_service"],
-                    );
+                    match (
+                        &self_clone.logger.tracing_logger,
+                        &self_clone.logger.noop_logger,
+                    ) {
+                        (Some(tracing_logger), _) => tracing_logger.info(
+                            "shutdown of operators info service ",
+                            &["eigen-services-operatorsinfo.start_service"],
+                        ),
+                        (_, Some(noop_logger)) => noop_logger.info(
+                            "shutdown of operators info service ",
+                            &["eigen-services-operatorsinfo.start_service"],
+                        ),
+                        _ => println!("Both TracingLogger and NoopLogger are None"),
+                    }
                     break;
                 }
 
@@ -126,13 +136,23 @@ impl OperatorInfoServiceInMemory {
                         },
                     };
                     // Send message
-                    self_clone.logger.debug(
-                        &format!(
-                            "New pub key found  operator_address : {:?} , operator_pub_keys : {:?}",
-                            event_data.operator, operator_pub_key
+                    match (&self_clone.logger.tracing_logger, &self_clone.logger.noop_logger) {
+                        (Some(tracing_logger), _) => tracing_logger.debug(
+                            &format!(
+                                "New pub key found  operator_address : {:?} , operator_pub_keys : {:?}",
+                                event_data.operator, operator_pub_key
+                            ),
+                            &["eigen-services-operatorsinfo.start_service"],
                         ),
-                        &["eigen-services-operatorsinfo.start_service"],
-                    );
+                        (_, Some(noop_logger)) => noop_logger.debug(
+                            &format!(
+                                "New pub key found  operator_address : {:?} , operator_pub_keys : {:?}",
+                                event_data.operator, operator_pub_key
+                            ),
+                            &["eigen-services-operatorsinfo.start_service"],
+                        ),
+                        _ => println!("Both TracingLogger and NoopLogger are None"),
+                    }
                     let _ = pub_keys.send(OperatorsInfoMessage::InsertOperatorInfo(
                         event_data.operator,
                         operator_pub_key,
@@ -166,7 +186,11 @@ impl OperatorInfoServiceInMemory {
         for (i, address) in operator_address.iter().enumerate() {
             let message =
                 OperatorsInfoMessage::InsertOperatorInfo(*address, operator_pub_keys[i].clone());
-            self.logger.debug(&format!("New pub key found  operator_address : {:?} , operator_pub_keys : {:?}",operator_address,operator_pub_keys), &["eigen-services-operatorsinfo.query_past_registered_operator_events_and_fill_db"]);
+            match (&self.logger.tracing_logger, &self.logger.noop_logger) {
+                    (Some(tracing_logger), _) => tracing_logger.debug(&format!("New pub key found  operator_address : {:?} , operator_pub_keys : {:?}",operator_address,operator_pub_keys), &["eigen-services-operatorsinfo.query_past_registered_operator_events_and_fill_db"]),
+                    (_, Some(noop_logger)) => noop_logger.debug(&format!("New pub key found  operator_address : {:?} , operator_pub_keys : {:?}",operator_address,operator_pub_keys), &["eigen-services-operatorsinfo.query_past_registered_operator_events_and_fill_db"]),
+                    _ => println!("Both TracingLogger and NoopLogger are None"),
+                }
             let _ = self.pub_keys.send(message);
         }
     }

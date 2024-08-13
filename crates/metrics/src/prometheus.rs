@@ -1,4 +1,4 @@
-use eigen_logging::{logger::Logger, tracing_logger::TracingLogger};
+use eigen_logging::{logger::Logger, EigenLogger};
 use hyper::{
     body::Body,
     service::{make_service_fn, service_fn},
@@ -21,12 +21,19 @@ fn init_registry() -> PrometheusHandle {
 async fn serve_metrics(
     addr: SocketAddr,
     handle: PrometheusHandle,
-    logger: TracingLogger,
+    logger: EigenLogger,
 ) -> eyre::Result<()> {
-    logger.info(
-        &format!("Starting metrics server at port {}", addr),
-        &["eigen-metrics.serve_metrics"],
-    );
+    match (&logger.tracing_logger, &logger.noop_logger) {
+        (Some(tracing_logger), _) => tracing_logger.info(
+            &format!("Starting metrics server at port {}", addr),
+            &["eigen-metrics.serve_metrics"],
+        ),
+        (_, Some(noop_logger)) => noop_logger.info(
+            &format!("Starting metrics server at port {}", addr),
+            &["eigen-metrics.serve_metrics"],
+        ),
+        _ => println!("Both TracingLogger and NoopLogger are None"),
+    }
     let make_svc = make_service_fn(move |_| {
         let handle = handle.clone();
 
@@ -60,13 +67,13 @@ mod tests {
         let handle = init_registry();
 
         // Initialize EigenMetrics
-        let metrics = EigenPerformanceMetrics::new(get_test_logger().clone());
-        let registered_metrics = RegisteredStakesMetrics::new(get_test_logger().clone());
-        let rpc_calls = RpcCallsMetrics::new(get_test_logger().clone());
+        let metrics = EigenPerformanceMetrics::new(get_test_logger());
+        let registered_metrics = RegisteredStakesMetrics::new(get_test_logger());
+        let rpc_calls = RpcCallsMetrics::new(get_test_logger());
 
         // Run the metrics server in a background task
         let server_handle = tokio::spawn(async move {
-            serve_metrics(socket, handle, get_test_logger().clone())
+            serve_metrics(socket, handle, get_test_logger())
                 .await
                 .unwrap();
         });
