@@ -1,7 +1,7 @@
 //use eigen_metrics_collectors_rpc_calls::RpcCalls as RpcCallsCollector;
 use alloy_consensus::TxEnvelope;
-use alloy_json_rpc::{RpcError, RpcParam, RpcReturn};
-use alloy_primitives::{Address, BlockHash, BlockNumber, Bytes, ChainId, B256, U128, U256, U64};
+use alloy_json_rpc::{RpcParam, RpcReturn};
+use alloy_primitives::{Address, BlockHash, BlockNumber, Bytes, ChainId, B256, U256, U64};
 use alloy_provider::{Provider, ProviderBuilder, RootProvider};
 use alloy_pubsub::PubSubFrontend;
 use alloy_rlp::Encodable;
@@ -547,51 +547,23 @@ impl InstrumentedClient {
     {
         let start = Instant::now();
         let method_string = String::from(rpc_method_name);
-        match (self.http_client.as_ref(), self.ws_client.as_ref()) {
-            (Some(client), _) => {
-                let result = client.raw_request(method_string.into(), params).await;
-                let rpc_request_duration = start.elapsed();
 
-                // we only observe the duration of successful calls (even though this is not well defined in the spec)
-                self.rpc_collector.set_rpc_request_duration_seconds(
-                    rpc_method_name,
-                    self.net_version.to_string().as_str(),
-                    rpc_request_duration.as_secs_f64(),
-                );
+        // send the request with the provided client (http or ws)
+        let result = match (self.http_client.as_ref(), self.ws_client.as_ref()) {
+            (Some(http_client), _) => http_client.raw_request(method_string.into(), params).await,
+            (_, Some(ws_client)) => ws_client.raw_request(method_string.into(), params).await,
+            (_, _) => unreachable!(),
+        };
 
-                result
-            }
-            (_, Some(client)) => {
-                let result = client.raw_request(method_string.into(), params).await;
-                let rpc_request_duration = start.elapsed();
+        let rpc_request_duration = start.elapsed();
 
-                // we only observe the duration of successful calls (even though this is not well defined in the spec)
-                self.rpc_collector.set_rpc_request_duration_seconds(
-                    rpc_method_name,
-                    self.net_version.to_string().as_str(),
-                    rpc_request_duration.as_secs_f64(),
-                );
-
-                result
-            }
-            (_, _) => panic!("no client"),
-        }
-        // let result = self
-        //     .http_client
-        //     .as_ref()
-        //     .unwrap()
-        //     .raw_request(method_string.into(), params)
-        //     .await;
-        // let rpc_request_duration = start.elapsed();
-
-        // // we only observe the duration of successful calls (even though this is not well defined in the spec)
-        // self.rpc_collector.set_rpc_request_duration_seconds(
-        //     rpc_method_name,
-        //     self.net_version.to_string().as_str(),
-        //     rpc_request_duration.as_secs_f64(),
-        // );
-
-        // result
+        // we only observe the duration of successful calls (even though this is not well defined in the spec)
+        self.rpc_collector.set_rpc_request_duration_seconds(
+            rpc_method_name,
+            self.net_version.to_string().as_str(),
+            rpc_request_duration.as_secs_f64(),
+        );
+        result
     }
 }
 
@@ -600,7 +572,6 @@ mod tests {
     use super::*;
     use alloy_consensus::{SignableTransaction, TxLegacy};
     use alloy_node_bindings::Anvil;
-    use alloy_node_bindings::AnvilInstance;
     use alloy_primitives::{bytes, TxKind::Call, U256};
     use alloy_provider::network::TxSignerSync;
     use alloy_rpc_types_eth::BlockId;
