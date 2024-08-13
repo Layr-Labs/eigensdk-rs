@@ -6,7 +6,8 @@ use alloy_primitives::{Address, BlockHash, BlockNumber, Bytes, ChainId, B256, U2
 use alloy_provider::{EthCall, Provider, ProviderBuilder, RootProvider};
 use alloy_rlp::Encodable;
 use alloy_rpc_types_eth::{
-    Block, BlockNumberOrTag, FeeHistory, Header, SyncStatus, Transaction, TransactionReceipt,
+    Block, BlockNumberOrTag, FeeHistory, Filter, Header, Log, SyncStatus, Transaction,
+    TransactionReceipt,
 };
 use alloy_transport::TransportResult;
 use alloy_transport_http::{Client, Http};
@@ -95,8 +96,14 @@ impl InstrumentedClient {
         })
     }
 
-    pub async fn filter_logs(&self) {
-        todo!()
+    pub async fn filter_logs(&self, filter: Filter) -> TransportResult<Vec<Log>> {
+        self.instrument_function("eth_getLogs", (filter,))
+            .await
+            .inspect_err(|err| {
+                self.rpc_collector
+                    .logger()
+                    .error("Failed to get filter logs", &[err])
+            })
     }
 
     pub async fn pending_call_contract(&self) {
@@ -590,7 +597,6 @@ mod tests {
         let instrumented_client = InstrumentedClient::new("http://localhost:8545")
             .await
             .unwrap();
-
         let sub_id = instrumented_client.subscribe_new_head().await;
         assert!(sub_id.is_ok());
     }
@@ -672,6 +678,7 @@ mod tests {
         let rpc_url: String = anvil.endpoint().parse().unwrap();
 
         let instrumented_client = InstrumentedClient::new(&rpc_url).await.unwrap();
+        // TODO: replace this with one of the anvil's addresses
         let addr = Address::from_str("a0Ee7A142d267C1f36714E4a8F75612F20a79720").unwrap();
 
         // build the transaction
@@ -717,6 +724,20 @@ mod tests {
             )
             .await;
         assert!(tx_by_block.is_ok());
+    }
+
+    #[tokio::test]
+    async fn test_filter_logs() {
+        let instrumented_client = InstrumentedClient::new("http://localhost:8545")
+            .await
+            .unwrap();
+        let address = ANVIL_RPC_URL.clone().get_accounts().await.unwrap()[0];
+        let filter = Filter::new().address(address.to_string().parse::<Address>().unwrap());
+
+        let expected_logs = ANVIL_RPC_URL.clone().get_logs(&filter).await.unwrap();
+        let logs = instrumented_client.filter_logs(filter).await.unwrap();
+
+        assert_eq!(expected_logs, logs);
     }
 
     #[tokio::test]
