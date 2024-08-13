@@ -209,7 +209,7 @@ impl BlsAggregatorService {
                             }
 
                         }
-                        else{
+                        else {
                             let mut operator_id_set = HashMap::new();
                             operator_id_set.insert(signed_task_digest.operator_id,true);
                             // first operator
@@ -310,24 +310,24 @@ impl BlsAggregatorService {
         total_stake_per_quorum: HashMap<u8, U256>,
         quorum_threshold_percentages_map: HashMap<u8, QuorumThresholdPercentage>,
     ) -> bool {
-        if let Some((quorum_num, quorum_threshold_percentage)) =
+        let Some((quorum_num, quorum_threshold_percentage)) =
             quorum_threshold_percentages_map.into_iter().next()
-        {
-            // to do check if quorum num <= u8 max assert
-            if let Some(signed_stake_by_quorum) = signed_stake_per_quorum.get(&quorum_num) {
-                if let Some(total_stake_by_quorum) = total_stake_per_quorum.get(&quorum_num) {
-                    let signed_stake = signed_stake_by_quorum * U256::from(100);
-                    let threshold_stake =
-                        *total_stake_by_quorum * U256::from(quorum_threshold_percentage);
-                    return signed_stake >= threshold_stake;
-                } else {
-                    return false;
-                }
-            } else {
-                return false;
-            }
-        }
+        else {
+            return true;
+        };
 
-        true
+        // TODO: check if quorum num <= u8 max assert
+        let Some(signed_stake_by_quorum) = signed_stake_per_quorum.get(&quorum_num) else {
+            return false;
+        };
+
+        let Some(total_stake_by_quorum) = total_stake_per_quorum.get(&quorum_num) else {
+            return false;
+        };
+
+        let signed_stake = signed_stake_by_quorum * U256::from(100);
+        let threshold_stake = *total_stake_by_quorum * U256::from(quorum_threshold_percentage);
+
+        signed_stake >= threshold_stake
     }
 }
