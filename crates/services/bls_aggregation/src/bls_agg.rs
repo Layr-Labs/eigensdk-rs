@@ -1,17 +1,23 @@
-use eigen_crypto_bls::attestation::{G1Point, G2Point, Signature};
+use alloy_primitives::{FixedBytes, U256};
+use ark_bn254::G2Affine;
+use ark_ec::{AffineRepr, CurveGroup};
+use ark_ff::{BigInteger256, Fp2};
+use eigen_crypto_bls::{
+    alloy_g1_point_to_g1_affine, alloy_registry_g2_point_to_g2_affine, convert_to_g2_point,
+    convert_to_registry_g2_point, BlsG2Point, Signature,
+};
+use eigen_crypto_bn254::utils::verify_message;
 use eigen_services_avsregistry::chaincaller::AvsRegistryServiceChainCaller;
 use eigen_types::{
     avs::{SignedTaskResponseDigest, TaskIndex, TaskResponseDigest},
     operator::{OperatorAvsState, QuorumThresholdPercentage, QuorumThresholdPercentages},
 };
-
-use alloy_primitives::{FixedBytes, U256};
+use eigen_utils::binding::BLSApkRegistry::{G1Point, G2Point};
+use parking_lot::{RwLock, RwLockReadGuard, RwLockWriteGuard};
 use std::collections::HashMap;
+use std::sync::Arc;
 use tokio::sync::mpsc::{self, UnboundedReceiver, UnboundedSender};
 use tokio::time::{self, Duration};
-
-use parking_lot::{RwLock, RwLockReadGuard, RwLockWriteGuard};
-use std::sync::Arc;
 
 #[allow(unused)]
 #[derive(Debug, Clone)]
@@ -20,7 +26,7 @@ pub struct BlsAggregationServiceResponse {
     task_response_digest: TaskResponseDigest,
     non_signers_pub_keys_g1: Vec<G1Point>,
     quorum_apks_g1: Vec<G1Point>,
-    signers_apk_g2: G2Point,
+    signers_apk_g2: BlsG2Point,
     signers_agg_sig_g1: Signature,
     non_signer_quorum_bitmap_indices: Vec<u32>,
     quorum_apk_indices: Vec<u32>,
@@ -30,7 +36,7 @@ pub struct BlsAggregationServiceResponse {
 
 #[derive(Debug, Clone)]
 pub struct AggregatedOperators {
-    signers_apk_g2: G2Point,
+    signers_apk_g2: BlsG2Point,
 
     signers_agg_sig_g1: Signature,
 
@@ -162,10 +168,7 @@ impl BlsAggregatorService {
         // let quorum_apks_g1
         for quorum_number in quorum_nums.iter() {
             if let Some(val) = quorums_avs_stake.get(quorum_number) {
-                quorum_apks_g1.push(G1Point::new(
-                    u256_to_bigint256(val.agg_pub_key_g1.X),
-                    u256_to_bigint256(val.agg_pub_key_g1.Y),
-                ));
+                quorum_apks_g1.push(val.agg_pub_key_g1);
             }
         }
 
@@ -188,12 +191,10 @@ impl BlsAggregatorService {
                     if let Some(response) = aggregated_operators.get(&signed_task_digest.task_response_digest) {
                         aggregate_response = response.clone();
                         if aggregated_operators.contains_key(&signed_task_digest.task_response_digest){
-                            aggregate_response.signers_agg_sig_g1.get_g1_point().add(signed_task_digest.bls_signature.get_g1_point());
+                            aggregate_response.signers_agg_sig_g1 = Signature::new((aggregate_response.signers_agg_sig_g1.g1_point().g1().into_group() + signed_task_digest.bls_signature.g1_point().g1()).into_affine());
                             if let Some(op_avs_state) = operator_state_avs.get_mut(&signed_task_digest.operator_id){
-                                if let Some(pub_key) =&op_avs_state.operator_info.pub_keys {
-                                    let g2_pub_key  = G2Point::new((u256_to_bigint256(pub_key.g2_pub_key.X[0]),u256_to_bigint256(pub_key.g2_pub_key.X[1])),(u256_to_bigint256(pub_key.g2_pub_key.Y[0]),u256_to_bigint256(pub_key.g2_pub_key.Y[1])));
-                                    aggregate_response.signers_apk_g2.add(g2_pub_key);
-
+                                if let Some(pub_key) = &op_avs_state.operator_info.pub_keys {
+                                    aggregate_response.signers_apk_g2 = BlsG2Point::new(aggregate_response.signers_apk_g2.g2() + pub_key.g2_pub_key.g2()); // check into()
                                 }
                             }
 
@@ -222,7 +223,7 @@ impl BlsAggregatorService {
 
                                 aggregate_response = AggregatedOperators{
                                     signers_agg_sig_g1: signed_task_digest.bls_signature.clone(),
-                                    signers_apk_g2 : G2Point::new_zero_g2_point(),
+                                    signers_apk_g2 : BlsG2Point::new(G2Affine::identity()),
                                     signers_operator_ids_set: operator_id_set,
                                     signers_total_stake_per_quorum: avs_state.stake_per_quorum.clone()
                                 } ;
@@ -249,8 +250,7 @@ impl BlsAggregatorService {
 
                                 if let  Some(operator) = operator_state_avs.get(operator_id){
                                     if let Some(keys) = &operator.operator_info.pub_keys{
-                                        let g1_key = G1Point::new(u256_to_bigint256(keys.g1_pub_key.X),u256_to_bigint256(keys.g1_pub_key.Y));
-                                        non_signers_g1_pub_keys.push(g1_key);
+                                        non_signers_g1_pub_keys.push(keys.g1_pub_key);
                                     }
                                 }
 
@@ -262,7 +262,7 @@ impl BlsAggregatorService {
                                 task_index,
                                 task_response_digest: signed_task_digest.task_response_digest,
                                 non_signers_pub_keys_g1: non_signers_g1_pub_keys,
-                                quorum_apks_g1: quorum_apks_g1.clone(),
+                                quorum_apks_g1,
                                 signers_apk_g2: aggregate_response.signers_apk_g2,
                                 signers_agg_sig_g1: aggregate_response.signers_agg_sig_g1,
                                 non_signer_quorum_bitmap_indices: indices.clone().quorumApkIndices,
@@ -293,20 +293,14 @@ impl BlsAggregatorService {
             operator_avs_state.get(&signed_task_response_digest.operator_id)
         {
             if let Some(pub_keys) = &operator_state.operator_info.pub_keys {
-                let g2_proj = G2Point::new(
-                    (
-                        u256_to_bigint256(pub_keys.g2_pub_key.X[0]),
-                        u256_to_bigint256(pub_keys.g2_pub_key.X[1]),
-                    ),
-                    (
-                        u256_to_bigint256(pub_keys.g2_pub_key.Y[0]),
-                        u256_to_bigint256(pub_keys.g2_pub_key.Y[1]),
-                    ),
-                )
-                .point;
-                let _signature_verified = signed_task_response_digest
-                    .bls_signature
-                    .verify_signature(g2_proj, &signed_task_response_digest.task_response_digest);
+                let signature_verified = verify_message(
+                    pub_keys.g2_pub_key.g2(),
+                    signed_task_response_digest.task_response_digest.as_slice(),
+                    signed_task_response_digest.bls_signature.g1_point().g1(),
+                );
+                if !signature_verified {
+                    // TODO: throw incorrect signature error
+                }
             }
         } else {
             // throw error

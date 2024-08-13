@@ -85,9 +85,7 @@ impl AvsRegistryServiceChainCaller {
             for operator in operators_avs_state.values() {
                 if !operator.stake_per_quorum[quorum_num].is_zero() {
                     if let Some(pub_keys) = &operator.operator_info.pub_keys {
-                        let affine_pub_key =
-                            alloy_registry_g1_point_to_g1_affine(pub_keys.g1_pub_key.clone());
-                        pub_key_g1 += affine_pub_key;
+                        pub_key_g1 += pub_keys.g1_pub_key.g1();
                         total_stake += operator.stake_per_quorum[quorum_num];
                     }
                 }

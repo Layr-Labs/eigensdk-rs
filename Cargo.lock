@@ -2171,11 +2171,15 @@ name = "eigen-services-blsaggregation"
 version = "0.0.1-alpha"
 dependencies = [
  "alloy-primitives",
+ "ark-bn254",
+ "ark-ec",
+ "ark-ff 0.4.2",
  "eigen-crypto-bls",
  "eigen-crypto-bn254",
  "eigen-logging",
  "eigen-services-avsregistry",
  "eigen-types",
+ "eigen-utils",
  "parking_lot",
  "tokio",
 ]
@@ -2189,6 +2193,7 @@ dependencies = [
  "alloy-rpc-types",
  "anyhow",
  "eigen-client-avsregistry",
+ "eigen-crypto-bls",
  "eigen-logging",
  "eigen-testing-utils",
  "eigen-types",
@@ -2237,6 +2242,8 @@ name = "eigen-types"
 version = "0.0.1-alpha"
 dependencies = [
  "alloy-primitives",
+ "ark-bn254",
+ "ark-serialize 0.4.2",
  "eigen-crypto-bls",
  "eigen-utils",
  "ethers",

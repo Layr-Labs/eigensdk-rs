@@ -11,7 +11,7 @@ pub mod error;
 use crate::error::BlsError;
 use ark_bn254::{Fq, Fr, G1Affine, G1Projective, G2Affine, G2Projective};
 use ark_ec::{AffineRepr, CurveGroup};
-use ark_ff::{fields::PrimeField, BigInt, BigInteger256};
+use ark_ff::{fields::PrimeField, BigInt, BigInteger256, Fp2};
 use eigen_crypto_bn254::utils::map_to_curve;
 use eigen_utils::binding::{
     BLSApkRegistry,
@@ -173,6 +173,19 @@ pub fn alloy_registry_g1_point_to_g1_affine(g1_point: G1PointRegistry) -> G1Affi
     let y_point = g1_point.Y.into_limbs();
     let y = Fq::new(BigInteger256::new(y_point));
     G1Affine::new(x, y)
+}
+
+/// Convert [`G1Point`] to [`G1Affine`]
+pub fn alloy_registry_g2_point_to_g2_affine(g2_point: G2PointRegistry) -> G2Affine {
+    let x_fp2 = Fp2::new(
+        BigInteger256::new(g2_point.X[0].into_limbs()).into(),
+        BigInteger256::new(g2_point.X[1].into_limbs()).into(),
+    );
+    let y_fp2 = Fp2::new(
+        BigInteger256::new(g2_point.Y[0].into_limbs()).into(),
+        BigInteger256::new(g2_point.Y[1].into_limbs()).into(),
+    );
+    G2Affine::new(x_fp2, y_fp2)
 }
 
 /// Convert [`G2Affine`] to [`G2Point`]

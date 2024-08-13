@@ -3,6 +3,10 @@ use alloy_provider::{Provider, ProviderBuilder, WsConnect};
 use alloy_rpc_types::Filter;
 use anyhow::Result;
 use eigen_client_avsregistry::reader::AvsRegistryChainReader;
+use eigen_crypto_bls::{
+    alloy_registry_g1_point_to_g1_affine, alloy_registry_g2_point_to_g2_affine, BlsG1Point,
+    BlsG2Point,
+};
 use eigen_logging::{logger::Logger, tracing_logger::TracingLogger};
 use eigen_types::operator::{operator_id_from_g1_pub_key, OperatorPubKeys};
 use eigen_utils::{
@@ -116,14 +120,18 @@ impl OperatorInfoServiceInMemory {
                 if let Some(new_pub_key_event) = data {
                     let event_data = new_pub_key_event.data();
                     let operator_pub_key = OperatorPubKeys {
-                        g1_pub_key: G1Point {
-                            X: event_data.pubkeyG1.X,
-                            Y: event_data.pubkeyG1.Y,
-                        },
-                        g2_pub_key: G2Point {
-                            X: event_data.pubkeyG2.X,
-                            Y: event_data.pubkeyG2.Y,
-                        },
+                        g1_pub_key: BlsG1Point::new(alloy_registry_g1_point_to_g1_affine(
+                            G1Point {
+                                X: event_data.pubkeyG1.X,
+                                Y: event_data.pubkeyG1.Y,
+                            },
+                        )),
+                        g2_pub_key: BlsG2Point::new(alloy_registry_g2_point_to_g2_affine(
+                            G2Point {
+                                X: event_data.pubkeyG2.X,
+                                Y: event_data.pubkeyG2.Y,
+                            },
+                        )),
                     };
                     // Send message
                     self_clone.logger.debug(
