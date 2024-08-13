@@ -9,7 +9,6 @@ use eigen_types::{
     avs::{SignedTaskResponseDigest, TaskIndex, TaskResponseDigest},
     operator::{OperatorAvsState, QuorumThresholdPercentage, QuorumThresholdPercentages},
 };
-use eigen_utils::binding::BLSApkRegistry::G1Point;
 use parking_lot::{RwLock, RwLockReadGuard, RwLockWriteGuard};
 use std::collections::HashMap;
 use std::sync::Arc;
@@ -22,7 +21,7 @@ pub struct BlsAggregationServiceResponse {
     task_index: TaskIndex,
     task_response_digest: TaskResponseDigest,
     non_signers_pub_keys_g1: Vec<BlsG1Point>,
-    quorum_apks_g1: Vec<G1Point>,
+    quorum_apks_g1: Vec<BlsG1Point>,
     signers_apk_g2: BlsG2Point,
     signers_agg_sig_g1: Signature,
     non_signer_quorum_bitmap_indices: Vec<u32>,
@@ -161,8 +160,7 @@ impl BlsAggregatorService {
         for (quorum_num, quorum_avs_stake) in &quorums_avs_stake {
             total_stake_per_quorum.insert(*quorum_num, quorum_avs_stake.total_stake);
         }
-        let mut quorum_apks_g1: Vec<G1Point> = vec![];
-        // let quorum_apks_g1
+        let mut quorum_apks_g1: Vec<BlsG1Point> = vec![];
         for quorum_number in quorum_nums.iter() {
             if let Some(val) = quorums_avs_stake.get(quorum_number) {
                 quorum_apks_g1.push(val.agg_pub_key_g1.clone());

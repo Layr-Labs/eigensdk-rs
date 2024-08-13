@@ -2173,13 +2173,10 @@ dependencies = [
  "alloy-primitives",
  "ark-bn254",
  "ark-ec",
- "ark-ff 0.4.2",
  "eigen-crypto-bls",
  "eigen-crypto-bn254",
- "eigen-logging",
  "eigen-services-avsregistry",
  "eigen-types",
- "eigen-utils",
  "parking_lot",
  "tokio",
 ]
@@ -2244,7 +2241,6 @@ dependencies = [
  "alloy-primitives",
  "ark-serialize 0.4.2",
  "eigen-crypto-bls",
- "eigen-utils",
  "ethers",
  "num-bigint 0.4.5",
 ]

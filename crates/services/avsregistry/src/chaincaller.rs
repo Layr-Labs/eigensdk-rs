@@ -2,7 +2,9 @@ use alloy_primitives::{Bytes, FixedBytes, U256};
 use ark_bn254::G1Projective;
 use ark_ec::CurveGroup;
 use eigen_client_avsregistry::reader::AvsRegistryChainReader;
-use eigen_crypto_bls::{convert_to_g1_point, PublicKey};
+use eigen_crypto_bls::{
+    alloy_registry_g1_point_to_g1_affine, convert_to_g1_point, BlsG1Point, PublicKey,
+};
 use eigen_services_operatorsinfo::operatorsinfo_inmemory::OperatorInfoServiceInMemory;
 use eigen_types::operator::{OperatorAvsState, OperatorInfo, OperatorPubKeys, QuorumAvsState};
 use eigen_utils::binding::BLSApkRegistry::G1Point;
@@ -95,10 +97,12 @@ impl AvsRegistryServiceChainCaller {
                 QuorumAvsState {
                     quorum_num: *quorum_num,
                     total_stake,
-                    agg_pub_key_g1: G1Point {
-                        X: g1_point.X,
-                        Y: g1_point.Y,
-                    },
+                    agg_pub_key_g1: BlsG1Point::new(alloy_registry_g1_point_to_g1_affine(
+                        G1Point {
+                            X: g1_point.X,
+                            Y: g1_point.Y,
+                        },
+                    )),
                     block_num,
                 },
             );

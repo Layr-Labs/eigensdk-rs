@@ -1,12 +1,10 @@
 use alloy_primitives::{Address, FixedBytes, U256};
 use ark_serialize::CanonicalSerialize;
 use eigen_crypto_bls::{BlsG1Point, BlsG2Point};
-use eigen_utils::binding::BLSApkRegistry;
 use ethers::{types::U64, utils::keccak256};
 use num_bigint::BigUint;
 use std::collections::HashMap;
 const MAX_NUMBER_OF_QUORUMS: usize = 192;
-use BLSApkRegistry::G1Point;
 
 pub type OperatorId = FixedBytes<32>;
 
@@ -121,7 +119,7 @@ pub fn operator_id_from_g1_pub_key(pub_key: BlsG1Point) -> [u8; 32] {
 pub struct QuorumAvsState {
     pub quorum_num: u8,
     pub total_stake: U256,
-    pub agg_pub_key_g1: G1Point,
+    pub agg_pub_key_g1: BlsG1Point,
     pub block_num: u32,
 }
 
