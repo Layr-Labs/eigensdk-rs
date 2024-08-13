@@ -194,7 +194,7 @@ impl BlsAggregatorService {
                             aggregate_response.signers_agg_sig_g1 = Signature::new((aggregate_response.signers_agg_sig_g1.g1_point().g1().into_group() + signed_task_digest.bls_signature.g1_point().g1()).into_affine());
                             if let Some(op_avs_state) = operator_state_avs.get_mut(&signed_task_digest.operator_id){
                                 if let Some(pub_key) = &op_avs_state.operator_info.pub_keys {
-                                    aggregate_response.signers_apk_g2 = BlsG2Point::new(aggregate_response.signers_apk_g2.g2() + pub_key.g2_pub_key.g2()); // check into()
+                                    aggregate_response.signers_apk_g2 = BlsG2Point::new((aggregate_response.signers_apk_g2.g2() + pub_key.g2_pub_key.g2()).into());
                                 }
                             }
 
