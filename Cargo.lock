@@ -2242,7 +2242,6 @@ name = "eigen-types"
 version = "0.0.1-alpha"
 dependencies = [
  "alloy-primitives",
- "ark-bn254",
  "ark-serialize 0.4.2",
  "eigen-crypto-bls",
  "eigen-utils",
