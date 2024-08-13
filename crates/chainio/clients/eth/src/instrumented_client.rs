@@ -1,10 +1,8 @@
 //use eigen_metrics_collectors_rpc_calls::RpcCalls as RpcCallsCollector;
 use alloy_consensus::TxEnvelope;
-use alloy_eips::BlockId;
 use alloy_json_rpc::{RpcParam, RpcReturn};
-use alloy_primitives::hex::encode;
 use alloy_primitives::{Address, BlockHash, BlockNumber, Bytes, ChainId, B256, U256, U64};
-use alloy_provider::{EthCall, Provider, ProviderBuilder, RootProvider};
+use alloy_provider::{Provider, ProviderBuilder, RootProvider};
 use alloy_rlp::Encodable;
 use alloy_rpc_types_eth::{
     Block, BlockNumberOrTag, FeeHistory, Filter, Header, Log, SyncStatus, Transaction,
@@ -464,7 +462,7 @@ impl InstrumentedClient {
             .inspect_err(|err| {
                 self.rpc_collector
                     .logger()
-                    .error("Failed to get chain id", &[err])
+                    .error("Failed to get transaction by hash", &[err])
             })
     }
 
@@ -550,18 +548,14 @@ mod tests {
     use alloy_rpc_types_eth::BlockId;
     use alloy_rpc_types_eth::BlockNumberOrTag;
     use alloy_rpc_types_eth::BlockTransactionsKind;
-    use eigen_logging::{log_level::LogLevel, logger::Logger, tracing_logger::TracingLogger};
     use eigen_signer::signer::Config;
     use eigen_testing_utils::anvil_constants::ANVIL_RPC_URL;
-    use once_cell::sync::OnceCell;
-    use std::str::FromStr;
+    use serial_test::serial;
     use std::{thread, time};
     use tokio;
 
-    static TEST_LOGGER: OnceCell<TracingLogger> = OnceCell::new();
-    const PRIVATE_KEY: &str = "dcf2cbdd171a21c480aa7f53d77f31bb102282b3ff099c78e3118b37348c72f7";
-
     #[tokio::test]
+    #[serial]
     async fn test_suggest_gas_tip_cap() {
         let instrumented_client = InstrumentedClient::new("http://localhost:8545")
             .await
@@ -576,6 +570,7 @@ mod tests {
     }
 
     #[tokio::test]
+    #[serial]
     async fn test_gas_price() {
         let instrumented_client = InstrumentedClient::new("http://localhost:8545")
             .await
@@ -586,6 +581,7 @@ mod tests {
     }
 
     #[tokio::test]
+    #[serial]
     async fn test_sync_status() {
         let instrumented_client = InstrumentedClient::new("http://localhost:8545")
             .await
@@ -596,6 +592,7 @@ mod tests {
     }
 
     #[tokio::test]
+    #[serial]
     async fn test_chain_id() {
         let instrumented_client = InstrumentedClient::new("http://localhost:8545")
             .await
@@ -608,6 +605,7 @@ mod tests {
     }
 
     #[tokio::test]
+    #[serial]
     async fn test_balance_at() {
         let instrumented_client = InstrumentedClient::new("http://localhost:8545")
             .await
@@ -624,6 +622,7 @@ mod tests {
     }
 
     #[tokio::test]
+    #[serial]
     #[ignore = "fails with 'method not found'"]
     async fn test_subscribe_new_head() {
         let instrumented_client = InstrumentedClient::new("http://localhost:8545")
@@ -634,6 +633,7 @@ mod tests {
     }
 
     #[tokio::test]
+    #[serial]
     #[ignore = "fails with 'method not found'"]
     async fn test_subscribe_filter_logs() {
         let instrumented_client = InstrumentedClient::new("http://localhost:8545")
@@ -647,6 +647,7 @@ mod tests {
     }
 
     #[tokio::test]
+    #[serial]
     async fn test_block_by_hash() {
         let instrumented_client = InstrumentedClient::new("http://localhost:8545")
             .await
@@ -672,6 +673,7 @@ mod tests {
     }
 
     #[tokio::test]
+    #[serial]
     async fn test_block_by_number() {
         let instrumented_client = InstrumentedClient::new("http://localhost:8545")
             .await
@@ -691,6 +693,7 @@ mod tests {
     }
 
     #[tokio::test]
+    #[serial]
     async fn test_transaction_count() {
         let instrumented_client = InstrumentedClient::new("http://localhost:8545")
             .await
@@ -717,29 +720,30 @@ mod tests {
     /// * `transaction_receipt`
     /// * `transaction_in_block`
     #[tokio::test]
+    #[serial]
     async fn test_transaction_methods() {
         // create a new anvil instance because otherwise it fails with "nonce too low" error.
         let anvil = Anvil::new().try_spawn().unwrap();
         let rpc_url: String = anvil.endpoint().parse().unwrap();
 
         let instrumented_client = InstrumentedClient::new(&rpc_url).await.unwrap();
-        // TODO: replace this with one of the anvil's addresses
-        let addr = Address::from_str("a0Ee7A142d267C1f36714E4a8F75612F20a79720").unwrap();
 
+        let addresses = anvil.addresses().to_vec();
+        let private_key = anvil.keys().first().unwrap();
+        let to = addresses.first().unwrap();
         // build the transaction
         let mut tx = TxLegacy {
-            to: Call(addr),
+            to: Call(*to),
             value: U256::from(0),
             gas_limit: 2_000_000,
             nonce: 0,
-            gas_price: 1_000_000,
+            gas_price: 21_000_000_000,
             input: bytes!(),
             chain_id: Some(31337),
         };
-        let tx_request: TransactionRequest = tx.clone().into();
-        let private_key =
-            "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80".to_string();
-        let config = Config::PrivateKey(private_key);
+
+        let private_key_hex = hex::encode(private_key.to_bytes());
+        let config = Config::PrivateKey(private_key_hex);
         let signer = Config::signer_from_config(config).unwrap();
         let signature = signer.sign_transaction_sync(&mut tx).unwrap();
         let signed_tx = tx.into_signed(signature);
@@ -773,13 +777,14 @@ mod tests {
     }
 
     #[tokio::test]
+    #[serial]
     async fn test_estimate_gas() {
         let instrumented_client = InstrumentedClient::new("http:/localhost:8545")
             .await
             .unwrap();
         let anvil = ANVIL_RPC_URL.clone();
         let accounts = anvil.get_accounts().await.unwrap();
-        let from = accounts.get(0).unwrap();
+        let from = accounts.first().unwrap();
         let to = accounts.get(1).unwrap();
 
         // build the transaction
@@ -801,6 +806,7 @@ mod tests {
     }
 
     #[tokio::test]
+    #[serial]
     async fn test_call_contract_and_pending_call_contract() {
         let instrumented_client = InstrumentedClient::new("http://localhost:8545")
             .await
@@ -808,16 +814,21 @@ mod tests {
 
         let anvil = ANVIL_RPC_URL.clone();
         let accounts = anvil.get_accounts().await.unwrap();
-        let from = accounts.get(0).unwrap();
+        let from = accounts.first().unwrap();
         let to = accounts.get(1).unwrap();
+
+        let nonce = instrumented_client
+            .nonce_at(*from, BlockNumberOrTag::Latest)
+            .await
+            .unwrap();
 
         // build the transaction
         let tx = TxLegacy {
             to: Call(*to),
             value: U256::from(0),
-            gas_limit: 2_000_000,
-            nonce: 0,
-            gas_price: 1_000_000,
+            gas_limit: 1_000_000,
+            nonce,
+            gas_price: 21_000_000_000,
             input: bytes!(),
             chain_id: Some(31337),
         };
@@ -827,7 +838,7 @@ mod tests {
         // test call_contract
         let expected_bytes = anvil.call(&tx_request).await.unwrap();
         let bytes = instrumented_client
-            .call_contract(tx_request.clone(), BlockNumberOrTag::Latest)
+            .call_contract(tx_request.clone(), BlockNumberOrTag::Earliest)
             .await
             .unwrap();
         assert_eq!(expected_bytes, bytes);
@@ -838,6 +849,7 @@ mod tests {
     }
 
     #[tokio::test]
+    #[serial]
     async fn test_filter_logs() {
         let instrumented_client = InstrumentedClient::new("http://localhost:8545")
             .await
@@ -852,6 +864,7 @@ mod tests {
     }
 
     #[tokio::test]
+    #[serial]
     async fn test_storage_at() {
         let instrumented_client = InstrumentedClient::new("http://localhost:8545")
             .await
@@ -873,6 +886,7 @@ mod tests {
     }
 
     #[tokio::test]
+    #[serial]
     async fn test_block_number() {
         let instrumented_client = InstrumentedClient::new("http://localhost:8545")
             .await
@@ -885,6 +899,7 @@ mod tests {
     }
 
     #[tokio::test]
+    #[serial]
     async fn test_code_at() {
         let instrumented_client = InstrumentedClient::new("http://localhost:8545")
             .await
@@ -901,6 +916,7 @@ mod tests {
     }
 
     #[tokio::test]
+    #[serial]
     async fn test_fee_history() {
         let instrumented_client = InstrumentedClient::new("http://localhost:8545")
             .await
@@ -922,6 +938,7 @@ mod tests {
     }
 
     #[tokio::test]
+    #[serial]
     async fn test_header_by_hash() {
         let instrumented_client = InstrumentedClient::new("http://localhost:8545")
             .await
@@ -947,11 +964,17 @@ mod tests {
     }
 
     #[tokio::test]
+    #[serial]
     async fn test_header_by_number() {
         let instrumented_client = InstrumentedClient::new("http://localhost:8545")
             .await
             .unwrap();
-        let block_number = BlockNumberOrTag::Number(10);
+        let block_number = BlockNumberOrTag::Earliest;
+
+        let header = instrumented_client
+            .header_by_number(block_number)
+            .await
+            .unwrap();
 
         let expected_header = ANVIL_RPC_URL
             .get_block_by_number(block_number, false)
@@ -959,15 +982,12 @@ mod tests {
             .unwrap()
             .unwrap()
             .header;
-        let header = instrumented_client
-            .header_by_number(block_number)
-            .await
-            .unwrap();
 
         assert_eq!(expected_header, header);
     }
 
     #[tokio::test]
+    #[serial]
     async fn test_nonce_at() {
         let instrumented_client = InstrumentedClient::new("http://localhost:8545")
             .await
@@ -984,6 +1004,7 @@ mod tests {
     }
 
     #[tokio::test]
+    #[serial]
     async fn test_pending_balance_at() {
         let instrumented_client = InstrumentedClient::new("http://localhost:8545")
             .await
@@ -1001,6 +1022,7 @@ mod tests {
     }
 
     #[tokio::test]
+    #[serial]
     async fn test_pending_code_at() {
         let instrumented_client = InstrumentedClient::new("http://localhost:8545")
             .await
@@ -1015,6 +1037,7 @@ mod tests {
     }
 
     #[tokio::test]
+    #[serial]
     async fn test_pending_nonce_at() {
         let instrumented_client = InstrumentedClient::new("http://localhost:8545")
             .await
@@ -1029,6 +1052,7 @@ mod tests {
     }
 
     #[tokio::test]
+    #[serial]
     async fn test_pending_storage_at() {
         let instrumented_client = InstrumentedClient::new("http://localhost:8545")
             .await
@@ -1048,6 +1072,7 @@ mod tests {
     }
 
     #[tokio::test]
+    #[serial]
     async fn test_pending_transaction_count() {
         let instrumented_client = InstrumentedClient::new("http://localhost:8545")
             .await
