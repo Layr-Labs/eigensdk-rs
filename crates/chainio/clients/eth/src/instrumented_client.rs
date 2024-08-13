@@ -132,8 +132,8 @@ impl InstrumentedClient {
             })
     }
 
-    pub async fn pending_call_contract(&self) {
-        todo!()
+    pub async fn pending_call_contract(&self, call: TransactionRequest) -> TransportResult<Bytes> {
+        self.call_contract(call, BlockNumberOrTag::Pending).await
     }
 
     pub async fn subscribe_filter_logs(&self, filter: Filter) -> TransportResult<u128> {
@@ -801,7 +801,7 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn test_call_contract() {
+    async fn test_call_contract_and_pending_call_contract() {
         let instrumented_client = InstrumentedClient::new("http://localhost:8545")
             .await
             .unwrap();
@@ -824,13 +824,17 @@ mod tests {
         let tx_request: TransactionRequest = tx.clone().into();
         let tx_request = tx_request.from(*from);
 
+        // test call_contract
         let expected_bytes = anvil.call(&tx_request).await.unwrap();
         let bytes = instrumented_client
-            .call_contract(tx_request, BlockNumberOrTag::Latest)
+            .call_contract(tx_request.clone(), BlockNumberOrTag::Latest)
             .await
             .unwrap();
-
         assert_eq!(expected_bytes, bytes);
+
+        // test pending_call_contract
+        let bytes = instrumented_client.pending_call_contract(tx_request).await;
+        assert!(bytes.is_ok());
     }
 
     #[tokio::test]
