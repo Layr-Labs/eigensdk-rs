@@ -2,9 +2,7 @@
 use alloy_consensus::TxEnvelope;
 use alloy_json_rpc::{RpcParam, RpcReturn};
 use alloy_primitives::hex::encode;
-use alloy_primitives::{
-    Address, BlockHash, BlockNumber, Bytes, ChainId, Uint, B256, U128, U256, U64,
-};
+use alloy_primitives::{Address, BlockHash, BlockNumber, Bytes, ChainId, B256, U256, U64};
 use alloy_provider::{EthCall, Provider, ProviderBuilder, RootProvider};
 use alloy_rlp::Encodable;
 use alloy_rpc_types_eth::{
@@ -21,7 +19,6 @@ use thiserror::Error;
 use url::Url;
 
 const PENDING_TAG: &str = "pending";
-const HEX_RADIX: u32 = 16;
 
 pub struct InstrumentedClient {
     client: RootProvider<Http<Client>>,
@@ -506,8 +503,6 @@ impl InstrumentedClient {
 
 #[cfg(test)]
 mod tests {
-    use std::str::FromStr;
-
     use super::*;
     use alloy_consensus::{SignableTransaction, TxLegacy};
     use alloy_node_bindings::Anvil;
@@ -520,8 +515,10 @@ mod tests {
     use eigen_signer::signer::Config;
     use eigen_testing_utils::anvil_constants::ANVIL_RPC_URL;
     use once_cell::sync::OnceCell;
+    use std::str::FromStr;
     use std::{thread, time};
     use tokio;
+
     static TEST_LOGGER: OnceCell<TracingLogger> = OnceCell::new();
     const PRIVATE_KEY: &str = "dcf2cbdd171a21c480aa7f53d77f31bb102282b3ff099c78e3118b37348c72f7";
 
@@ -667,6 +664,7 @@ mod tests {
     /// * `send_transaction`
     /// * `transaction_by_hash`
     /// * `transaction_receipt`
+    /// * `transaction_in_block`
     #[tokio::test]
     async fn test_transaction_methods() {
         // create a new anvil instance because otherwise it fails with "nonce too low" error.
@@ -676,6 +674,7 @@ mod tests {
         let instrumented_client = InstrumentedClient::new(&rpc_url).await.unwrap();
         let addr = Address::from_str("a0Ee7A142d267C1f36714E4a8F75612F20a79720").unwrap();
 
+        // build the transaction
         let mut tx = TxLegacy {
             to: Call(addr),
             value: U256::from(1_000_000_000),
@@ -693,19 +692,31 @@ mod tests {
         let signed_tx = tx.into_signed(signature);
         let tx: TxEnvelope = signed_tx.into();
 
+        // test send_transaction
         let tx_hash = instrumented_client.send_transaction(tx).await;
         assert!(tx_hash.is_ok());
         let tx_hash = B256::from_slice(tx_hash.unwrap().as_ref());
-        let tx = instrumented_client.transaction_by_hash(tx_hash).await;
 
-        assert!(tx.is_ok());
+        // test transaction_by_hash
+        let tx_by_hash = instrumented_client.transaction_by_hash(tx_hash).await;
+        assert!(tx_by_hash.is_ok());
 
         // this sleep is needed because we have to wait since the transaction is not ready yet
-        let one_seconds = time::Duration::from_millis(1_000);
-        thread::sleep(one_seconds);
+        thread::sleep(time::Duration::from_secs(1));
 
+        // test transaction_receipt
         let receipt = instrumented_client.transaction_receipt(tx_hash).await;
         assert!(receipt.is_ok());
+        let receipt = receipt.unwrap();
+
+        // test transaction_in_block
+        let tx_by_block = instrumented_client
+            .transaction_in_block(
+                receipt.block_hash.unwrap(),
+                receipt.transaction_index.unwrap(),
+            )
+            .await;
+        assert!(tx_by_block.is_ok());
     }
 
     #[tokio::test]
@@ -921,7 +932,6 @@ mod tests {
         // TODO: fix `pending_transaction_count` call
         let transaction_count = instrumented_client.pending_transaction_count().await;
 
-        dbg!(&transaction_count);
         assert_eq!(expected_transaction_count, transaction_count.unwrap());
     }
 }
