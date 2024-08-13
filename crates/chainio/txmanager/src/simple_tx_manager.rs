@@ -98,10 +98,10 @@ impl<'log> SimpleTxManager<'log> {
             .map_err(|_| TxManagerError::SignerError)
     }
 
-    /// Send is used to send a transaction to the Ethereum node. It takes an unsigned/signed transaction
-    /// and then sends it to the Ethereum node.
+    /// Send is used to send a transaction to the Ethereum node. It takes an unsigned/signed transaction, 
+    /// sends it to the Ethereum node and waits for the receipt.
     /// If you pass in a signed transaction it will ignore the signature
-    /// and resign the transaction after adding the nonce and gas limit.
+    /// and re-sign the transaction after adding the nonce and gas limit.
     ///
     /// # Arguments
     ///
