@@ -69,6 +69,19 @@ impl InstrumentedClient {
         })
     }
 
+    /// Creates a new instance of the InstrumentedClient that supports ws connection.
+    ///
+    /// # Arguments
+    ///
+    /// * `url` - The ws URL of the RPC server .
+    ///
+    /// # Returns
+    ///
+    /// A new instance of the InstrumentedClient.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if the URL is invalid or if there is an error getting the version.
     pub async fn new_ws(url: &str) -> Result<Self, InstrumentedClientError> {
         let url = Url::parse(url).map_err(|_| InstrumentedClientError::InvalidUrl)?;
         let ws_connect = WsConnect::new(url);
@@ -215,6 +228,16 @@ impl InstrumentedClient {
             .map(|result: U64| result.to())
     }
 
+    /// Executes a message call transaction.
+    ///
+    /// # Arguments
+    ///
+    /// * `call` - The message call to be executed
+    /// * `block_number` - The block height at which the call runs. *Note:* in case this argument is n
+    ///
+    /// # Returns
+    ///
+    /// The returned value of the executed contract.
     pub async fn call_contract(
         &self,
         call: TransactionRequest,
@@ -253,6 +276,15 @@ impl InstrumentedClient {
             })
     }
 
+    /// Estimates the gas needed to execute a specific transaction.
+    ///
+    /// # Arguments
+    ///
+    /// * `tx` - The transaction from which the gas consumption is estimated.
+    ///
+    /// # Returns
+    ///
+    /// The estimated gas.
     pub async fn estimate_gas(&self, tx: TransactionRequest) -> TransportResult<u64> {
         self.instrument_function("eth_estimateGas", (tx,))
             .await
@@ -290,7 +322,15 @@ impl InstrumentedClient {
                 .error("Failed to get fee history", &[err])
         })
     }
-
+    /// Executes a filter query.
+    ///
+    /// # Arguments
+    ///
+    /// * `filter` - The filter query to be executed.
+    ///
+    /// # Returns
+    ///
+    /// A vector of logs.
     pub async fn filter_logs(&self, filter: Filter) -> TransportResult<Vec<Log>> {
         self.instrument_function("eth_getLogs", (filter,))
             .await
@@ -301,6 +341,15 @@ impl InstrumentedClient {
             })
     }
 
+    /// Returns the block header with the given hash.
+    ///
+    /// # Arguments
+    ///
+    /// * `hash` - The block hash.
+    ///
+    /// # Returns
+    ///
+    /// The block header.
     pub async fn header_by_hash(&self, hash: B256) -> TransportResult<Header> {
         let transaction_detail = false;
         self.instrument_function("eth_getBlockByHash", (hash, transaction_detail))
@@ -312,6 +361,15 @@ impl InstrumentedClient {
             })
     }
 
+    /// Returns a block header with the given block number.
+    ///
+    /// # Arguments
+    ///
+    /// * `block_number` - The block number.
+    ///
+    /// # Returns
+    ///
+    /// The block header.
     pub async fn header_by_number(
         &self,
         block_number: BlockNumberOrTag,
@@ -326,6 +384,16 @@ impl InstrumentedClient {
             })
     }
 
+    /// Returns the nonce of the given account.
+    ///
+    /// # Arguments
+    ///
+    /// * `account` - The address of the account.
+    /// * `block_number` - The block number from where the nonce is taken.
+    ///
+    /// # Returns
+    ///
+    /// The nonce of the account.
     pub async fn nonce_at(
         &self,
         account: Address,
@@ -341,6 +409,15 @@ impl InstrumentedClient {
             .map(|result: U64| result.to())
     }
 
+    /// Returns the wei balance of the given account in the pending state.
+    ///
+    /// # Arguments
+    ///
+    /// * `account` - The address of the account.
+    ///
+    /// # Returns
+    ///
+    /// The wei balance of the account.
     pub async fn pending_balance_at(&self, account: Address) -> TransportResult<U256> {
         self.instrument_function("eth_getBalance", (account, PENDING_TAG))
             .await
@@ -351,10 +428,29 @@ impl InstrumentedClient {
             })
     }
 
+    /// Executes a message call transaction using the EVM.
+    /// The state seen by the contract call is the pending state.
+    ///
+    /// # Arguments
+    ///
+    /// * `call` - The message call to be executed
+    ///
+    /// # Returns
+    ///
+    /// The returned value of the executed contract.
     pub async fn pending_call_contract(&self, call: TransactionRequest) -> TransportResult<Bytes> {
         self.call_contract(call, BlockNumberOrTag::Pending).await
     }
 
+    /// Returns the contract code of the given account in the pending state.
+    ///
+    /// # Arguments
+    ///
+    /// * `account` - The address of the contract.
+    ///
+    /// # Returns
+    ///
+    /// The contract code.
     pub async fn pending_code_at(&self, account: Address) -> TransportResult<Bytes> {
         self.instrument_function("eth_getCode", (account, PENDING_TAG))
             .await
@@ -365,6 +461,16 @@ impl InstrumentedClient {
             })
     }
 
+    /// Returns the account nonce of the given account in the pending state.
+    /// This is the nonce that should be used for the next transaction.
+    ///
+    /// # Arguments
+    ///
+    /// * `account` - The address of the account.
+    ///
+    /// # Returns
+    ///
+    /// * The nonce of the account in the pending state.
     pub async fn pending_nonce_at(&self, account: Address) -> TransportResult<u64> {
         self.instrument_function("eth_getTransactionCount", (account, PENDING_TAG))
             .await
@@ -376,6 +482,16 @@ impl InstrumentedClient {
             .map(|result: U64| result.to())
     }
 
+    /// Returns the value of key in the contract storage of the given account in the pending state.
+    ///
+    /// # Arguments
+    ///
+    /// * `account` - The address of the contract.
+    /// * `key` - The position in the storage.
+    ///
+    /// # Returns
+    ///
+    /// The value of the storage position at the provided address.
     pub async fn pending_storage_at(&self, account: Address, key: U256) -> TransportResult<U256> {
         self.instrument_function("eth_getStorageAt", (account, key, PENDING_TAG))
             .await
@@ -386,6 +502,11 @@ impl InstrumentedClient {
             })
     }
 
+    /// Returns the total number of transactions in the pending state.
+    ///
+    /// # Returns
+    ///
+    /// The number of pending transactions.
     pub async fn pending_transaction_count(&self) -> TransportResult<u64> {
         self.instrument_function("eth_getBlockTransactionCountByNumber", (PENDING_TAG,))
             .await
@@ -397,8 +518,16 @@ impl InstrumentedClient {
             .map(|result: U64| result.to())
     }
 
+    /// Sends a signed transaction into the pending pool for execution.
+    ///
+    /// # Arguments
+    ///
+    /// * `tx` - The transaction to be executed.
+    ///
+    /// # Returns
+    ///
+    /// The hash of the given transaction.
     pub async fn send_transaction(&self, tx: TxEnvelope) -> TransportResult<B256> {
-        // TODO: encode the transaction
         let mut encoded_tx = Vec::new();
         tx.encode(&mut encoded_tx);
         self.instrument_function("eth_sendRawTransaction", (hex::encode(encoded_tx),))
@@ -410,6 +539,17 @@ impl InstrumentedClient {
             })
     }
 
+    /// Returns the value of key in the contract storage of the given account.
+    ///
+    /// # Arguments
+    ///
+    /// * `account` - The address of the contract.
+    /// * `key` - The position in the storage.
+    /// * `block_number` - The block number from which the storage is taken.
+    ///
+    /// # Returns
+    ///
+    /// The value of the storage position at the provided address.
     pub async fn storage_at(
         &self,
         account: Address,
@@ -425,6 +565,15 @@ impl InstrumentedClient {
             })
     }
 
+    /// Subscribes to the results of a streaming filter query.
+    ///
+    /// # Arguments
+    ///
+    /// * `filter` - A filter query.
+    ///
+    /// # Returns
+    ///
+    /// A subscription ID.
     pub async fn subscribe_filter_logs(&self, filter: Filter) -> TransportResult<U256> {
         self.instrument_function("eth_subscribe", ("logs", filter))
             .await
@@ -435,7 +584,11 @@ impl InstrumentedClient {
             })
     }
 
-    // Fails with "method not found" error
+    /// Subscribes to notifications about the current blockchain head.
+    ///
+    /// # Returns
+    ///
+    /// A subscription ID.
     pub async fn subscribe_new_head(&self) -> TransportResult<U256> {
         self.instrument_function("eth_subscribe", ("newHeads",))
             .await
@@ -446,6 +599,11 @@ impl InstrumentedClient {
             })
     }
 
+    /// Retrieves the currently suggested gas price.
+    ///
+    /// # Returns
+    ///
+    /// The currently suggested gas price.
     pub async fn suggest_gas_price(&self) -> TransportResult<u64> {
         self.instrument_function("eth_gasPrice", ())
             .await
@@ -457,7 +615,11 @@ impl InstrumentedClient {
             .map(|result: U64| result.to())
     }
 
-    // TODO: Check if this method is properly named
+    /// Retrieves the currently suggested gas tip cap after EIP1559.
+    ///
+    /// # Returns
+    ///
+    /// The currently suggested gas price.
     pub async fn suggest_gas_tip_cap(&self) -> TransportResult<u64> {
         self.instrument_function("eth_maxPriorityFeePerGas", ())
             .await
@@ -469,6 +631,12 @@ impl InstrumentedClient {
             .map(|result: U64| result.to())
     }
 
+    /// Retrieves the current progress of the sync algorithm.
+    /// If there's no sync currently running, it returns None.
+    ///
+    /// # Returns
+    ///
+    /// The current progress of the sync algorithm.
     pub async fn sync_progress(&self) -> TransportResult<SyncStatus> {
         self.instrument_function("eth_syncing", ())
             .await
@@ -479,6 +647,15 @@ impl InstrumentedClient {
             })
     }
 
+    /// Returns the transaction with the given hash.
+    ///
+    /// # Arguments
+    ///
+    /// * `tx_hash` - The transaction hash.
+    ///
+    /// # Returns
+    ///
+    /// The transaction with the given hash.
     pub async fn transaction_by_hash(&self, tx_hash: B256) -> TransportResult<Transaction> {
         self.instrument_function("eth_getTransactionByHash", (tx_hash,))
             .await
@@ -489,6 +666,15 @@ impl InstrumentedClient {
             })
     }
 
+    /// Returns the total number of transactions in the given block.
+    ///
+    /// # Arguments
+    ///
+    /// * `block_hash` - The block hash.
+    ///
+    /// # Returns
+    ///
+    /// The number of transactions in the given block.
     pub async fn transaction_count(&self, block_hash: B256) -> TransportResult<u64> {
         self.instrument_function("eth_getBlockTransactionCountByHash", (block_hash,))
             .await
@@ -500,6 +686,16 @@ impl InstrumentedClient {
             .map(|result: U64| result.to())
     }
 
+    /// Returns a single transaction at index in the given block.
+    ///
+    /// # Arguments
+    ///
+    /// * `block_hash` - The block hash.
+    /// * `index` - The index of the transaction in the block.
+    ///
+    /// # Returns
+    ///
+    /// The transaction at index in the given block.
     pub async fn transaction_in_block(
         &self,
         block_hash: B256,
@@ -514,6 +710,16 @@ impl InstrumentedClient {
             })
     }
 
+    /// Returns the receipt of a transaction by transaction hash.
+    /// *Note:* the receipt is not available for pending transactions.
+    ///
+    /// # Arguments
+    ///
+    /// * `tx_hash` - The hash of the transaction.
+    ///
+    /// # Returns
+    ///
+    /// The transaction receipt.
     pub async fn transaction_receipt(&self, tx_hash: B256) -> TransportResult<TransactionReceipt> {
         self.instrument_function("eth_getTransactionReceipt", (tx_hash,))
             .await
@@ -1113,7 +1319,6 @@ mod tests {
             .transactions
             .len() as u64;
 
-        // TODO: fix `pending_transaction_count` call
         let transaction_count = instrumented_client.pending_transaction_count().await;
 
         assert_eq!(expected_transaction_count, transaction_count.unwrap());
