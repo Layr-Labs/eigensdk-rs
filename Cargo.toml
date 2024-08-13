@@ -117,7 +117,7 @@ alloy-network = { version = "0.1", default-features = false }
 alloy-node-bindings = { version = "0.1", default-features = false }
 alloy-primitives = "0.7.2"
 alloy-provider = { version = "0.1", default-features = false, features = [
-    "reqwest",
+    "reqwest", "ws"
 ] }
 alloy-pubsub = { version = "0.1", default-features = false }
 alloy-rlp = "0.3.4"

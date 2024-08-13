@@ -21,6 +21,8 @@ url.workspace = true
 alloy-rlp.workspace = true
 alloy-eips.workspace = true
 alloy-consensus.workspace = true
+alloy-pubsub.workspace = true
+alloy-transport-ws.workspace = true
 hex = "0.4.3"
 serial_test = "*"
 

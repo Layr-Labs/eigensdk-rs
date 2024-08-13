@@ -1,8 +1,9 @@
 //use eigen_metrics_collectors_rpc_calls::RpcCalls as RpcCallsCollector;
 use alloy_consensus::TxEnvelope;
-use alloy_json_rpc::{RpcParam, RpcReturn};
-use alloy_primitives::{Address, BlockHash, BlockNumber, Bytes, ChainId, B256, U256, U64};
+use alloy_json_rpc::{RpcError, RpcParam, RpcReturn};
+use alloy_primitives::{Address, BlockHash, BlockNumber, Bytes, ChainId, B256, U128, U256, U64};
 use alloy_provider::{Provider, ProviderBuilder, RootProvider};
+use alloy_pubsub::PubSubFrontend;
 use alloy_rlp::Encodable;
 use alloy_rpc_types_eth::{
     Block, BlockNumberOrTag, FeeHistory, Filter, Header, Log, SyncStatus, Transaction,
@@ -10,6 +11,7 @@ use alloy_rpc_types_eth::{
 };
 use alloy_transport::TransportResult;
 use alloy_transport_http::{Client, Http};
+use alloy_transport_ws::WsConnect;
 use eigen_logging::get_test_logger;
 use eigen_logging::logger::Logger;
 use eigen_metrics_collectors_rpc_calls::RpcCallsMetrics as RpcCallsCollector;
@@ -21,7 +23,8 @@ use url::Url;
 const PENDING_TAG: &str = "pending";
 
 pub struct InstrumentedClient {
-    client: RootProvider<Http<Client>>,
+    http_client: Option<RootProvider<Http<Client>>>,
+    ws_client: Option<RootProvider<PubSubFrontend>>,
     rpc_collector: RpcCallsCollector,
     net_version: u64,
 }
@@ -51,16 +54,35 @@ impl InstrumentedClient {
     /// Returns an error if the URL is invalid or if there is an error getting the version.
     pub async fn new(url: &str) -> Result<Self, InstrumentedClientError> {
         let url = Url::parse(url).map_err(|_| InstrumentedClientError::InvalidUrl)?;
-        let client = ProviderBuilder::new().on_http(url);
-
-        let net_version = client
+        let http_client = ProviderBuilder::new().on_http(url);
+        let net_version = http_client
             .get_net_version()
             .await
             .map_err(|_| InstrumentedClientError::ErrorGettingVersion)?;
 
         let rpc_collector = RpcCallsCollector::new(get_test_logger().clone());
         Ok(InstrumentedClient {
-            client,
+            http_client: Some(http_client),
+            ws_client: None,
+            rpc_collector,
+            net_version,
+        })
+    }
+
+    pub async fn new_ws(url: &str) -> Result<Self, InstrumentedClientError> {
+        let url = Url::parse(url).map_err(|_| InstrumentedClientError::InvalidUrl)?;
+        let ws_connect = WsConnect::new(url);
+
+        let ws_client = ProviderBuilder::new().on_ws(ws_connect).await.unwrap();
+        let net_version = ws_client
+            .get_net_version()
+            .await
+            .map_err(|_| InstrumentedClientError::ErrorGettingVersion)?;
+
+        let rpc_collector = RpcCallsCollector::new(get_test_logger().clone());
+        Ok(InstrumentedClient {
+            http_client: None,
+            ws_client: Some(ws_client),
             rpc_collector,
             net_version,
         })
@@ -89,7 +111,8 @@ impl InstrumentedClient {
 
         let rpc_collector = RpcCallsCollector::new(get_test_logger().clone());
         Ok(InstrumentedClient {
-            client,
+            http_client: Some(client),
+            ws_client: None,
             rpc_collector,
             net_version,
         })
@@ -402,7 +425,7 @@ impl InstrumentedClient {
             })
     }
 
-    pub async fn subscribe_filter_logs(&self, filter: Filter) -> TransportResult<u128> {
+    pub async fn subscribe_filter_logs(&self, filter: Filter) -> TransportResult<U256> {
         self.instrument_function("eth_subscribe", ("logs", filter))
             .await
             .inspect_err(|err| {
@@ -413,7 +436,7 @@ impl InstrumentedClient {
     }
 
     // Fails with "method not found" error
-    pub async fn subscribe_new_head(&self) -> TransportResult<u128> {
+    pub async fn subscribe_new_head(&self) -> TransportResult<U256> {
         self.instrument_function("eth_subscribe", ("newHeads",))
             .await
             .inspect_err(|err| {
@@ -524,17 +547,51 @@ impl InstrumentedClient {
     {
         let start = Instant::now();
         let method_string = String::from(rpc_method_name);
-        let result = self.client.raw_request(method_string.into(), params).await;
-        let rpc_request_duration = start.elapsed();
+        match (self.http_client.as_ref(), self.ws_client.as_ref()) {
+            (Some(client), _) => {
+                let result = client.raw_request(method_string.into(), params).await;
+                let rpc_request_duration = start.elapsed();
 
-        // we only observe the duration of successful calls (even though this is not well defined in the spec)
-        self.rpc_collector.set_rpc_request_duration_seconds(
-            rpc_method_name,
-            self.net_version.to_string().as_str(),
-            rpc_request_duration.as_secs_f64(),
-        );
+                // we only observe the duration of successful calls (even though this is not well defined in the spec)
+                self.rpc_collector.set_rpc_request_duration_seconds(
+                    rpc_method_name,
+                    self.net_version.to_string().as_str(),
+                    rpc_request_duration.as_secs_f64(),
+                );
 
-        result
+                result
+            }
+            (_, Some(client)) => {
+                let result = client.raw_request(method_string.into(), params).await;
+                let rpc_request_duration = start.elapsed();
+
+                // we only observe the duration of successful calls (even though this is not well defined in the spec)
+                self.rpc_collector.set_rpc_request_duration_seconds(
+                    rpc_method_name,
+                    self.net_version.to_string().as_str(),
+                    rpc_request_duration.as_secs_f64(),
+                );
+
+                result
+            }
+            (_, _) => panic!("no client"),
+        }
+        // let result = self
+        //     .http_client
+        //     .as_ref()
+        //     .unwrap()
+        //     .raw_request(method_string.into(), params)
+        //     .await;
+        // let rpc_request_duration = start.elapsed();
+
+        // // we only observe the duration of successful calls (even though this is not well defined in the spec)
+        // self.rpc_collector.set_rpc_request_duration_seconds(
+        //     rpc_method_name,
+        //     self.net_version.to_string().as_str(),
+        //     rpc_request_duration.as_secs_f64(),
+        // );
+
+        // result
     }
 }
 
@@ -543,6 +600,7 @@ mod tests {
     use super::*;
     use alloy_consensus::{SignableTransaction, TxLegacy};
     use alloy_node_bindings::Anvil;
+    use alloy_node_bindings::AnvilInstance;
     use alloy_primitives::{bytes, TxKind::Call, U256};
     use alloy_provider::network::TxSignerSync;
     use alloy_rpc_types_eth::BlockId;
@@ -623,9 +681,8 @@ mod tests {
 
     #[tokio::test]
     #[serial]
-    #[ignore = "fails with 'method not found'"]
     async fn test_subscribe_new_head() {
-        let instrumented_client = InstrumentedClient::new("http://localhost:8545")
+        let instrumented_client = InstrumentedClient::new_ws("ws://localhost:8545")
             .await
             .unwrap();
         let sub_id = instrumented_client.subscribe_new_head().await;
@@ -634,9 +691,8 @@ mod tests {
 
     #[tokio::test]
     #[serial]
-    #[ignore = "fails with 'method not found'"]
     async fn test_subscribe_filter_logs() {
-        let instrumented_client = InstrumentedClient::new("http://localhost:8545")
+        let instrumented_client = InstrumentedClient::new_ws("ws://localhost:8545")
             .await
             .unwrap();
         let address = ANVIL_RPC_URL.clone().get_accounts().await.unwrap()[0];
