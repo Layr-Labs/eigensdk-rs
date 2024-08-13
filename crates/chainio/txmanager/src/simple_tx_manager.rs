@@ -98,7 +98,7 @@ impl<'log> SimpleTxManager<'log> {
             .map_err(|_| TxManagerError::SignerError)
     }
 
-    /// Send is used to send a transaction to the Ethereum node. It takes an unsigned/signed transaction, 
+    /// Send is used to send a transaction to the Ethereum node. It takes an unsigned/signed transaction,
     /// sends it to the Ethereum node and waits for the receipt.
     /// If you pass in a signed transaction it will ignore the signature
     /// and re-sign the transaction after adding the nonce and gas limit.
@@ -273,26 +273,21 @@ mod tests {
     use alloy_node_bindings::Anvil;
     use alloy_primitives::{bytes, TxKind::Call, U256};
     use alloy_rpc_types_eth::TransactionRequest;
-    use eigen_logging::{log_level::LogLevel, logger::Logger, tracing_logger::TracingLogger};
-    use once_cell::sync::OnceCell;
+    use eigen_logging::get_test_logger;
     use tokio;
 
-    static TEST_LOGGER: OnceCell<TracingLogger> = OnceCell::new();
     const PRIVATE_KEY: &str = "dcf2cbdd171a21c480aa7f53d77f31bb102282b3ff099c78e3118b37348c72f7";
 
     #[tokio::test]
     async fn test_send_transaction_from_legacy() {
-        TEST_LOGGER.get_or_init(|| {
-            TracingLogger::new_text_logger(false, String::from(""), LogLevel::Debug, false)
-        });
-
         // Spin up a local Anvil node.
         // Ensure `anvil` is available in $PATH.
         let anvil = Anvil::new().try_spawn().unwrap();
         let rpc_url: String = anvil.endpoint().parse().unwrap();
 
         // Create a provider.
-        let logger = TEST_LOGGER.get().unwrap();
+        let logger = get_test_logger();
+
         let simple_tx_manager =
             SimpleTxManager::new(logger, 1.0, PRIVATE_KEY, rpc_url.as_str()).unwrap();
 
@@ -322,17 +317,13 @@ mod tests {
 
     #[tokio::test]
     async fn test_send_transaction_from_eip1559() {
-        TEST_LOGGER.get_or_init(|| {
-            TracingLogger::new_text_logger(false, String::from(""), LogLevel::Debug, false)
-        });
-
         // Spin up a local Anvil node.
         // Ensure `anvil` is available in $PATH.
         let anvil = Anvil::new().try_spawn().unwrap();
         let rpc_url: String = anvil.endpoint().parse().unwrap();
 
         // Create a provider.
-        let logger = TEST_LOGGER.get().unwrap();
+        let logger = get_test_logger();
         let simple_tx_manager =
             SimpleTxManager::new(logger, 1.0, PRIVATE_KEY, rpc_url.as_str()).unwrap();
 
