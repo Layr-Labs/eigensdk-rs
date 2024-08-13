@@ -2,6 +2,7 @@ use alloy_primitives::{FixedBytes, U256};
 use ark_bn254::G2Affine;
 use ark_ec::{AffineRepr, CurveGroup};
 use ark_ff::{BigInteger256, Fp2};
+use eigen_crypto_bls::BlsG1Point;
 use eigen_crypto_bls::{
     alloy_g1_point_to_g1_affine, alloy_registry_g2_point_to_g2_affine, convert_to_g2_point,
     convert_to_registry_g2_point, BlsG2Point, Signature,
@@ -24,7 +25,7 @@ use tokio::time::{self, Duration};
 pub struct BlsAggregationServiceResponse {
     task_index: TaskIndex,
     task_response_digest: TaskResponseDigest,
-    non_signers_pub_keys_g1: Vec<G1Point>,
+    non_signers_pub_keys_g1: Vec<BlsG1Point>,
     quorum_apks_g1: Vec<G1Point>,
     signers_apk_g2: BlsG2Point,
     signers_agg_sig_g1: Signature,
@@ -168,7 +169,7 @@ impl BlsAggregatorService {
         // let quorum_apks_g1
         for quorum_number in quorum_nums.iter() {
             if let Some(val) = quorums_avs_stake.get(quorum_number) {
-                quorum_apks_g1.push(val.agg_pub_key_g1);
+                quorum_apks_g1.push(val.agg_pub_key_g1.clone());
             }
         }
 
@@ -245,12 +246,12 @@ impl BlsAggregatorService {
                                 a.cmp(b)
                             });
 
-                            let mut non_signers_g1_pub_keys: Vec<G1Point> = vec![];
+                            let mut non_signers_g1_pub_keys: Vec<BlsG1Point> = vec![];
                             for operator_id in non_signers_operators_ids.iter(){
 
                                 if let  Some(operator) = operator_state_avs.get(operator_id){
                                     if let Some(keys) = &operator.operator_info.pub_keys{
-                                        non_signers_g1_pub_keys.push(keys.g1_pub_key);
+                                        non_signers_g1_pub_keys.push(keys.g1_pub_key.clone());
                                     }
                                 }
 
@@ -262,7 +263,7 @@ impl BlsAggregatorService {
                                 task_index,
                                 task_response_digest: signed_task_digest.task_response_digest,
                                 non_signers_pub_keys_g1: non_signers_g1_pub_keys,
-                                quorum_apks_g1,
+                                quorum_apks_g1: quorum_apks_g1.clone(),
                                 signers_apk_g2: aggregate_response.signers_apk_g2,
                                 signers_agg_sig_g1: aggregate_response.signers_agg_sig_g1,
                                 non_signer_quorum_bitmap_indices: indices.clone().quorumApkIndices,
