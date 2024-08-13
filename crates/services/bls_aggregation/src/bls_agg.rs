@@ -1,19 +1,15 @@
 use alloy_primitives::{FixedBytes, U256};
 use ark_bn254::G2Affine;
 use ark_ec::{AffineRepr, CurveGroup};
-use ark_ff::{BigInteger256, Fp2};
 use eigen_crypto_bls::BlsG1Point;
-use eigen_crypto_bls::{
-    alloy_g1_point_to_g1_affine, alloy_registry_g2_point_to_g2_affine, convert_to_g2_point,
-    convert_to_registry_g2_point, BlsG2Point, Signature,
-};
+use eigen_crypto_bls::{BlsG2Point, Signature};
 use eigen_crypto_bn254::utils::verify_message;
 use eigen_services_avsregistry::chaincaller::AvsRegistryServiceChainCaller;
 use eigen_types::{
     avs::{SignedTaskResponseDigest, TaskIndex, TaskResponseDigest},
     operator::{OperatorAvsState, QuorumThresholdPercentage, QuorumThresholdPercentages},
 };
-use eigen_utils::binding::BLSApkRegistry::{G1Point, G2Point};
+use eigen_utils::binding::BLSApkRegistry::G1Point;
 use parking_lot::{RwLock, RwLockReadGuard, RwLockWriteGuard};
 use std::collections::HashMap;
 use std::sync::Arc;
