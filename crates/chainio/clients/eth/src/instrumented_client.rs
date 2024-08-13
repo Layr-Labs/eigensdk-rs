@@ -7,7 +7,7 @@ use alloy_provider::{EthCall, Provider, ProviderBuilder, RootProvider};
 use alloy_rlp::Encodable;
 use alloy_rpc_types_eth::{
     Block, BlockNumberOrTag, FeeHistory, Filter, Header, Log, SyncStatus, Transaction,
-    TransactionReceipt,
+    TransactionReceipt, TransactionRequest,
 };
 use alloy_transport::TransportResult;
 use alloy_transport_http::{Client, Http};
@@ -104,6 +104,21 @@ impl InstrumentedClient {
                     .logger()
                     .error("Failed to get filter logs", &[err])
             })
+    }
+
+    pub async fn estimate_gas(&self, tx: TransactionRequest) -> TransportResult<u64> {
+        self.instrument_function("eth_estimateGas", (tx,))
+            .await
+            .inspect_err(|err| {
+                self.rpc_collector
+                    .logger()
+                    .error("Failed to estimate gas", &[err])
+            })
+            .map(|result: U64| result.to())
+    }
+
+    pub async fn call_contract(&self) {
+        todo!()
     }
 
     pub async fn pending_call_contract(&self) {
@@ -703,13 +718,14 @@ mod tests {
         // build the transaction
         let mut tx = TxLegacy {
             to: Call(addr),
-            value: U256::from(1_000_000_000),
+            value: U256::from(0),
             gas_limit: 2_000_000,
             nonce: 0,
-            gas_price: 21_000_000_000,
+            gas_price: 1_000_000,
             input: bytes!(),
             chain_id: Some(31337),
         };
+        let tx_request: TransactionRequest = tx.clone().into();
         let private_key =
             "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80".to_string();
         let config = Config::PrivateKey(private_key);
@@ -743,6 +759,38 @@ mod tests {
             )
             .await;
         assert!(tx_by_block.is_ok());
+
+        let estimated_gas = instrumented_client.estimate_gas(tx_request).await;
+        assert!(estimated_gas.is_ok());
+        dbg!(estimated_gas);
+    }
+
+    #[tokio::test]
+    async fn test_estimate_gas() {
+        let instrumented_client = InstrumentedClient::new("http:/localhost:8545")
+            .await
+            .unwrap();
+        let anvil = ANVIL_RPC_URL.clone();
+        let accounts = anvil.get_accounts().await.unwrap();
+        let from = accounts.get(0).unwrap();
+        let to = accounts.get(1).unwrap();
+
+        // build the transaction
+        let tx = TxLegacy {
+            to: Call(*to),
+            value: U256::from(0),
+            gas_limit: 2_000_000,
+            nonce: 0,
+            gas_price: 1_000_000,
+            input: bytes!(),
+            chain_id: Some(31337),
+        };
+        let tx_request: TransactionRequest = tx.clone().into();
+        let tx_request = tx_request.from(*from);
+
+        let expected_estimated_gas = anvil.clone().estimate_gas(&tx_request).await.unwrap();
+        let estimated_gas = instrumented_client.estimate_gas(tx_request).await.unwrap();
+        assert_eq!(expected_estimated_gas, estimated_gas.into());
     }
 
     #[tokio::test]
