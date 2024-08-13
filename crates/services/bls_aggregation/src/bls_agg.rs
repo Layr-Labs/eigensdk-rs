@@ -284,21 +284,23 @@ impl BlsAggregatorService {
         signed_task_response_digest: &SignedTaskResponseDigest,
         operator_avs_state: &HashMap<FixedBytes<32>, OperatorAvsState>,
     ) {
-        if let Some(operator_state) =
-            operator_avs_state.get(&signed_task_response_digest.operator_id)
-        {
-            if let Some(pub_keys) = &operator_state.operator_info.pub_keys {
-                let signature_verified = verify_message(
-                    pub_keys.g2_pub_key.g2(),
-                    signed_task_response_digest.task_response_digest.as_slice(),
-                    signed_task_response_digest.bls_signature.g1_point().g1(),
-                );
-                if !signature_verified {
-                    // TODO: throw incorrect signature error
-                }
-            }
-        } else {
-            // throw error
+        let Some(operator_state) = operator_avs_state.get(&signed_task_response_digest.operator_id)
+        else {
+            todo!() // throw error operator not found
+        };
+
+        let Some(pub_keys) = &operator_state.operator_info.pub_keys else {
+            todo!() // throw error operator pub key not found
+        };
+
+        let signature_verified = verify_message(
+            pub_keys.g2_pub_key.g2(),
+            signed_task_response_digest.task_response_digest.as_slice(),
+            signed_task_response_digest.bls_signature.g1_point().g1(),
+        );
+
+        if !signature_verified {
+            todo!() // throw incorrect signature error
         }
     }
 
