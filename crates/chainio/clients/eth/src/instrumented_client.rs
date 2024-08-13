@@ -1,5 +1,6 @@
 //use eigen_metrics_collectors_rpc_calls::RpcCalls as RpcCallsCollector;
 use alloy_consensus::TxEnvelope;
+use alloy_eips::BlockId;
 use alloy_json_rpc::{RpcParam, RpcReturn};
 use alloy_primitives::hex::encode;
 use alloy_primitives::{Address, BlockHash, BlockNumber, Bytes, ChainId, B256, U256, U64};
@@ -117,8 +118,18 @@ impl InstrumentedClient {
             .map(|result: U64| result.to())
     }
 
-    pub async fn call_contract(&self) {
-        todo!()
+    pub async fn call_contract(
+        &self,
+        call: TransactionRequest,
+        block_number: BlockNumberOrTag,
+    ) -> TransportResult<Bytes> {
+        self.instrument_function("eth_call", (call, block_number))
+            .await
+            .inspect_err(|err| {
+                self.rpc_collector
+                    .logger()
+                    .error("Failed to call contract", &[err])
+            })
     }
 
     pub async fn pending_call_contract(&self) {
@@ -759,10 +770,6 @@ mod tests {
             )
             .await;
         assert!(tx_by_block.is_ok());
-
-        let estimated_gas = instrumented_client.estimate_gas(tx_request).await;
-        assert!(estimated_gas.is_ok());
-        dbg!(estimated_gas);
     }
 
     #[tokio::test]
@@ -791,6 +798,39 @@ mod tests {
         let expected_estimated_gas = anvil.clone().estimate_gas(&tx_request).await.unwrap();
         let estimated_gas = instrumented_client.estimate_gas(tx_request).await.unwrap();
         assert_eq!(expected_estimated_gas, estimated_gas.into());
+    }
+
+    #[tokio::test]
+    async fn test_call_contract() {
+        let instrumented_client = InstrumentedClient::new("http://localhost:8545")
+            .await
+            .unwrap();
+
+        let anvil = ANVIL_RPC_URL.clone();
+        let accounts = anvil.get_accounts().await.unwrap();
+        let from = accounts.get(0).unwrap();
+        let to = accounts.get(1).unwrap();
+
+        // build the transaction
+        let tx = TxLegacy {
+            to: Call(*to),
+            value: U256::from(0),
+            gas_limit: 2_000_000,
+            nonce: 0,
+            gas_price: 1_000_000,
+            input: bytes!(),
+            chain_id: Some(31337),
+        };
+        let tx_request: TransactionRequest = tx.clone().into();
+        let tx_request = tx_request.from(*from);
+
+        let expected_bytes = anvil.call(&tx_request).await.unwrap();
+        let bytes = instrumented_client
+            .call_contract(tx_request, BlockNumberOrTag::Latest)
+            .await
+            .unwrap();
+
+        assert_eq!(expected_bytes, bytes);
     }
 
     #[tokio::test]
