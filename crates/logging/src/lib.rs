@@ -41,5 +41,5 @@ pub fn init_logger(log_level: LogLevel) {
 
 /// get the initialized logger
 pub fn get_logger() -> &'static TracingLogger {
-    TEST_LOGGER.get().expect("Logger not initialized")
+    LOGGER.get().expect("Logger not initialized")
 }
