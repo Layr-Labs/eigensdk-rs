@@ -2099,10 +2099,6 @@ dependencies = [
  "ark-std 0.4.0",
  "eigen-crypto-bn254",
  "eigen-utils",
- "ethers",
- "eyre",
- "hex",
- "num-bigint 0.4.6",
  "rand",
  "thiserror",
  "tokio",
@@ -2117,9 +2113,6 @@ dependencies = [
  "ark-ff 0.4.2",
  "num-bigint 0.4.6",
  "rand",
- "scrypt 0.10.0",
- "serde",
- "serde_json",
  "rust-bls-bn254",
  "tokio",
 ]
@@ -5027,7 +5020,7 @@ checksum = "48fd7bd8a6377e15ad9d42a8ec25371b94ddc67abe7c8b9127bec79bebaaae18"
 [[package]]
 name = "rust-bls-bn254"
 version = "0.1.0"
-source = "git+https://github.com/Layr-labs/rust-bls-bn254.git?rev=be3ef87#be3ef873f484bb09c2db7b6491715236df8c6174"
+source = "git+https://github.com/Layr-Labs/rust-bls-bn254.git?rev=be3ef87#be3ef873f484bb09c2db7b6491715236df8c6174"
 dependencies = [
  "aes",
  "ark-bn254",
@@ -5299,7 +5292,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9f9e24d2b632954ded8ab2ef9fea0a0c769ea56ea98bddbafbad22caeeadf45d"
 dependencies = [
  "hmac",
- "password-hash 0.4.2",
  "pbkdf2 0.11.0",
  "salsa20",
  "sha2",

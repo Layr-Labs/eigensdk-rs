@@ -8,7 +8,6 @@ members = [
     "crates/contracts/bindings/",
     "crates/crypto/bls/",
     "crates/crypto/bn254/",
-    "crates/crypto/keystore/",
     "crates/eigen-cli/",
     "crates/logging/",
     "crates/metrics/",

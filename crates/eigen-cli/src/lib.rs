@@ -22,7 +22,6 @@ use bls::BlsKeystore;
 use colored::*;
 use convert::store;
 use eigen_crypto_bls::error::BlsError;
-use eth_keystore::KeystoreError;
 use generate::KeyGenerator;
 use operator_id::derive_operator_id;
 use rust_bls_bn254::{
@@ -31,7 +30,6 @@ use rust_bls_bn254::{
     KOREAN_WORD_LIST, PORTUGUESE_WORD_LIST, SPANISH_WORD_LIST,
 };
 use thiserror::Error;
-use tokio::runtime::Runtime;
 
 pub const ANVIL_RPC_URL: &str = "http://localhost:8545";
 
