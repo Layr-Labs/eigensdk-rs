@@ -1,6 +1,6 @@
 use alloy_primitives::keccak256;
 use ark_ec::CurveGroup;
-use eigen_crypto_bls::{attestation::KeyPair, error::BlsError};
+use eigen_crypto_bls::{error::BlsError, BlsKeyPair};
 
 /// Derives an operator ID from a private key
 ///
@@ -16,9 +16,9 @@ use eigen_crypto_bls::{attestation::KeyPair, error::BlsError};
 ///
 /// * If the private key is not valid
 pub fn derive_operator_id(private_key: String) -> Result<String, BlsError> {
-    let key_pair = KeyPair::from_string(private_key)?;
-    let pub_key = key_pair.get_pub_key_g1();
-    let pub_key_affine = pub_key.into_affine();
+    let key_pair = BlsKeyPair::new(private_key)?;
+    let pub_key = key_pair.public_key();
+    let pub_key_affine = pub_key.g1();
 
     let x_int: num_bigint::BigUint = pub_key_affine.x.into();
     let y_int: num_bigint::BigUint = pub_key_affine.y.into();

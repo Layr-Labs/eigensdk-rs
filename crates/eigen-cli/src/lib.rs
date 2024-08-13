@@ -8,6 +8,10 @@ mod convert;
 pub mod eigen_address;
 mod generate;
 mod operator_id;
+
+use eth_keystore::KeystoreError;
+use tokio::runtime::Runtime;
+
 use crate::eigen_address::ContractAddresses;
 use alloy_contract::Error as ContractError;
 use alloy_json_rpc::RpcError;
@@ -278,7 +282,8 @@ mod test {
     #[test]
     fn test_egnkey_derive_operator_id() {
         let private_key =
-            "1e4fa82657771dc209c466a0c2f696b39320a0284bf725cf1740971fe7e2d3cf".to_string();
+            "13710126902690889134622698668747132666439281256983827313388062967626731803599"
+                .to_string();
         let operator_id = derive_operator_id(private_key).unwrap();
         let expected_operator_id =
             "48beccce16ccdf8000c13d5af5f91c7c3dac6c47b339d993d229af1500dbe4a9".to_string();

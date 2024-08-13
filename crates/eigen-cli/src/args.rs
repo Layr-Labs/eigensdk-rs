@@ -55,7 +55,7 @@ pub enum EigenKeyCommand {
     #[command(
         about = "Generate keys for testing purpose.
 This command creates ecdsa or bls key pair for testing purposes. It generates
-all the relevant files for reading and keys and decrypted it and also gets 
+all the relevant files for reading the key and decrypts it and also gets 
 you the private keys in plaintext.
 
 It creates the following artifacts based on arguments

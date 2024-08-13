@@ -1,3 +1,5 @@
+PHONY: reset-anvil
+
 __CONTRACTS__: ##
 
 start-anvil-chain-with-contracts-deployed: ##
@@ -6,23 +8,21 @@ start-anvil-chain-with-contracts-deployed: ##
 deploy-contracts-to-anvil-and-save-state: ## 
 	./crates/contracts/anvil/deploy-contracts-save-anvil-state.sh
 
-start-anvil: ##
-	./crates/contracts/anvil/start-anvil.sh
-
-stop-anvil: ##
-	./crates/contracts/anvil/stop-anvil.sh
-
 __TESTING__: ##
 
-pr: ## 
+reset-anvil:
+	-docker stop anvil
+	-docker rm anvil
+
+pr: reset-anvil ## 
 	$(MAKE) start-anvil-chain-with-contracts-deployed
-	$(MAKE) start-anvil
+	docker start anvil
 	cargo test --workspace
 	cargo clippy --workspace --lib --examples --tests --benches --all-features
 	cargo +nightly fmt -- --check
-	$(MAKE) stop-anvil
+	docker stop anvil
 
 fireblocks-tests:
 	$(MAKE) start-anvil-chain-with-contracts-deployed
-	$(MAKE) start-anvil
+	docker start anvil
 	cargo test --workspace --features fireblock-tests

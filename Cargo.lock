@@ -1973,13 +1973,6 @@ dependencies = [
 [[package]]
 name = "eigen-chainio-utils"
 version = "0.0.1-alpha"
-dependencies = [
- "ark-bn254",
- "ark-ff 0.4.2",
- "eigen-crypto-bls",
- "eigen-crypto-bn254",
- "eigen-utils",
-]
 
 [[package]]
 name = "eigen-cli"
@@ -2027,9 +2020,7 @@ dependencies = [
  "alloy-signer",
  "alloy-signer-local",
  "alloy-transport-http",
- "ark-bn254",
  "ark-ff 0.4.2",
- "eigen-chainio-utils",
  "eigen-client-elcontracts",
  "eigen-crypto-bls",
  "eigen-logging",
@@ -2105,6 +2096,7 @@ dependencies = [
  "ark-bn254",
  "ark-ec",
  "ark-ff 0.4.2",
+ "ark-std 0.4.0",
  "eigen-crypto-bn254",
  "eigen-utils",
  "ethers",
@@ -2120,30 +2112,16 @@ dependencies = [
 name = "eigen-crypto-bn254"
 version = "0.0.1-alpha"
 dependencies = [
- "alloy-primitives",
  "ark-bn254",
- "ark-ff 0.4.2",
- "rand",
- "thiserror",
- "tokio",
-]
-
-[[package]]
-name = "eigen-crypto-keystore"
-version = "0.0.1-alpha"
-dependencies = [
- "aes",
  "ark-ec",
  "ark-ff 0.4.2",
- "ctr",
- "eigen-crypto-bls",
- "eth-keystore",
- "ethers",
- "eyre",
+ "num-bigint 0.4.6",
  "rand",
  "scrypt 0.10.0",
  "serde",
  "serde_json",
+ "rust-bls-bn254",
+ "tokio",
 ]
 
 [[package]]
@@ -2241,6 +2219,8 @@ dependencies = [
  "alloy-rpc-types",
  "anyhow",
  "eigen-client-avsregistry",
+ "eigen-logging",
+ "eigen-testing-utils",
  "eigen-types",
  "eigen-utils",
  "futures-util",
@@ -2298,10 +2278,13 @@ name = "eigen-utils"
 version = "0.0.1-alpha"
 dependencies = [
  "alloy-contract",
+ "alloy-json-rpc",
  "alloy-network",
  "alloy-provider",
+ "alloy-pubsub",
  "alloy-signer-local",
  "alloy-sol-types",
+ "alloy-transport",
  "alloy-transport-http",
  "reqwest 0.12.5",
 ]
@@ -2638,7 +2621,6 @@ dependencies = [
  "const-hex",
  "enr",
  "ethers-core",
- "futures-channel",
  "futures-core",
  "futures-timer",
  "futures-util",
@@ -2743,16 +2725,23 @@ version = "0.0.1-alpha"
 dependencies = [
  "alloy-primitives",
  "alloy-provider",
+ "alloy-signer-local",
  "ark-bn254",
+ "ark-ec",
  "ark-ff 0.4.2",
+ "ark-serialize 0.4.2",
+ "ark-std 0.4.0",
  "eigen-chainio-utils",
  "eigen-client-avsregistry",
  "eigen-client-elcontracts",
  "eigen-crypto-bls",
  "eigen-crypto-bn254",
+ "eigen-logging",
  "eigen-testing-utils",
+ "eigen-types",
  "eigen-utils",
  "eyre",
+ "lazy_static",
  "tokio",
 ]
 
@@ -3794,9 +3783,9 @@ dependencies = [
 
 [[package]]
 name = "lazy_static"
-version = "1.4.0"
+version = "1.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e2abad23fbc42b3700f2f279844dc832adb2b2eb069b2df918f455c4e18cc646"
+checksum = "bbd2bcb4c963f2ddae06a2efc7e9f3591312473c50c6685e1f298068316e66fe"
 
 [[package]]
 name = "libc"
