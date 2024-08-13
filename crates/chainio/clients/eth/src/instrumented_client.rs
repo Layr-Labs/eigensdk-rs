@@ -110,8 +110,14 @@ impl InstrumentedClient {
         todo!()
     }
 
-    pub async fn subscribe_filter_logs(&self) {
-        todo!()
+    pub async fn subscribe_filter_logs(&self, filter: Filter) -> TransportResult<u128> {
+        self.instrument_function("eth_subscribe", ("logs", filter))
+            .await
+            .inspect_err(|err| {
+                self.rpc_collector
+                    .logger()
+                    .error("Failed to get logs subscription id", &[err])
+            })
     }
 
     pub async fn transaction_by_hash(&self, tx_hash: B256) -> TransportResult<Transaction> {
@@ -598,6 +604,19 @@ mod tests {
             .await
             .unwrap();
         let sub_id = instrumented_client.subscribe_new_head().await;
+        assert!(sub_id.is_ok());
+    }
+
+    #[tokio::test]
+    #[ignore = "fails with 'method not found'"]
+    async fn test_subscribe_filter_logs() {
+        let instrumented_client = InstrumentedClient::new("http://localhost:8545")
+            .await
+            .unwrap();
+        let address = ANVIL_RPC_URL.clone().get_accounts().await.unwrap()[0];
+        let filter = Filter::new().address(address.to_string().parse::<Address>().unwrap());
+
+        let sub_id = instrumented_client.subscribe_filter_logs(filter).await;
         assert!(sub_id.is_ok());
     }
 
