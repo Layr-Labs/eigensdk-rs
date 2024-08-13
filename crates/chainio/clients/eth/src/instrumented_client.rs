@@ -97,65 +97,6 @@ impl InstrumentedClient {
         })
     }
 
-    pub async fn filter_logs(&self, filter: Filter) -> TransportResult<Vec<Log>> {
-        self.instrument_function("eth_getLogs", (filter,))
-            .await
-            .inspect_err(|err| {
-                self.rpc_collector
-                    .logger()
-                    .error("Failed to get filter logs", &[err])
-            })
-    }
-
-    pub async fn estimate_gas(&self, tx: TransactionRequest) -> TransportResult<u64> {
-        self.instrument_function("eth_estimateGas", (tx,))
-            .await
-            .inspect_err(|err| {
-                self.rpc_collector
-                    .logger()
-                    .error("Failed to estimate gas", &[err])
-            })
-            .map(|result: U64| result.to())
-    }
-
-    pub async fn call_contract(
-        &self,
-        call: TransactionRequest,
-        block_number: BlockNumberOrTag,
-    ) -> TransportResult<Bytes> {
-        self.instrument_function("eth_call", (call, block_number))
-            .await
-            .inspect_err(|err| {
-                self.rpc_collector
-                    .logger()
-                    .error("Failed to call contract", &[err])
-            })
-    }
-
-    pub async fn pending_call_contract(&self, call: TransactionRequest) -> TransportResult<Bytes> {
-        self.call_contract(call, BlockNumberOrTag::Pending).await
-    }
-
-    pub async fn subscribe_filter_logs(&self, filter: Filter) -> TransportResult<u128> {
-        self.instrument_function("eth_subscribe", ("logs", filter))
-            .await
-            .inspect_err(|err| {
-                self.rpc_collector
-                    .logger()
-                    .error("Failed to get logs subscription id", &[err])
-            })
-    }
-
-    pub async fn transaction_by_hash(&self, tx_hash: B256) -> TransportResult<Transaction> {
-        self.instrument_function("eth_getTransactionByHash", (tx_hash,))
-            .await
-            .inspect_err(|err| {
-                self.rpc_collector
-                    .logger()
-                    .error("Failed to get chain id", &[err])
-            })
-    }
-
     /// Returns the chain ID.
     ///
     /// # Returns
@@ -253,6 +194,20 @@ impl InstrumentedClient {
             .map(|result: U64| result.to())
     }
 
+    pub async fn call_contract(
+        &self,
+        call: TransactionRequest,
+        block_number: BlockNumberOrTag,
+    ) -> TransportResult<Bytes> {
+        self.instrument_function("eth_call", (call, block_number))
+            .await
+            .inspect_err(|err| {
+                self.rpc_collector
+                    .logger()
+                    .error("Failed to call contract", &[err])
+            })
+    }
+
     /// Returns the compiled bytecode of a smart contract given its address and block number.
     ///
     /// # Arguments
@@ -275,6 +230,17 @@ impl InstrumentedClient {
                     .logger()
                     .error("Failed to get code", &[err])
             })
+    }
+
+    pub async fn estimate_gas(&self, tx: TransactionRequest) -> TransportResult<u64> {
+        self.instrument_function("eth_estimateGas", (tx,))
+            .await
+            .inspect_err(|err| {
+                self.rpc_collector
+                    .logger()
+                    .error("Failed to estimate gas", &[err])
+            })
+            .map(|result: U64| result.to())
     }
 
     /// Returns a collection of historical gas information.
@@ -302,6 +268,16 @@ impl InstrumentedClient {
                 .logger()
                 .error("Failed to get fee history", &[err])
         })
+    }
+
+    pub async fn filter_logs(&self, filter: Filter) -> TransportResult<Vec<Log>> {
+        self.instrument_function("eth_getLogs", (filter,))
+            .await
+            .inspect_err(|err| {
+                self.rpc_collector
+                    .logger()
+                    .error("Failed to get filter logs", &[err])
+            })
     }
 
     pub async fn header_by_hash(&self, hash: B256) -> TransportResult<Header> {
@@ -352,6 +328,10 @@ impl InstrumentedClient {
                     .logger()
                     .error("Failed to get pending balance", &[err])
             })
+    }
+
+    pub async fn pending_call_contract(&self, call: TransactionRequest) -> TransportResult<Bytes> {
+        self.call_contract(call, BlockNumberOrTag::Pending).await
     }
 
     pub async fn pending_code_at(&self, account: Address) -> TransportResult<Bytes> {
@@ -424,6 +404,16 @@ impl InstrumentedClient {
             })
     }
 
+    pub async fn subscribe_filter_logs(&self, filter: Filter) -> TransportResult<u128> {
+        self.instrument_function("eth_subscribe", ("logs", filter))
+            .await
+            .inspect_err(|err| {
+                self.rpc_collector
+                    .logger()
+                    .error("Failed to get logs subscription id", &[err])
+            })
+    }
+
     // Fails with "method not found" error
     pub async fn subscribe_new_head(&self) -> TransportResult<u128> {
         self.instrument_function("eth_subscribe", ("newHeads",))
@@ -468,17 +458,13 @@ impl InstrumentedClient {
             })
     }
 
-    pub async fn transaction_in_block(
-        &self,
-        block_hash: B256,
-        index: u64,
-    ) -> TransportResult<Transaction> {
-        self.instrument_function("eth_getTransactionByBlockHashAndIndex", (block_hash, index))
+    pub async fn transaction_by_hash(&self, tx_hash: B256) -> TransportResult<Transaction> {
+        self.instrument_function("eth_getTransactionByHash", (tx_hash,))
             .await
             .inspect_err(|err| {
                 self.rpc_collector
                     .logger()
-                    .error("Failed to get transaction", &[err])
+                    .error("Failed to get chain id", &[err])
             })
     }
 
@@ -491,6 +477,20 @@ impl InstrumentedClient {
                     .error("Failed to get transaction count", &[err])
             })
             .map(|result: U64| result.to())
+    }
+
+    pub async fn transaction_in_block(
+        &self,
+        block_hash: B256,
+        index: u64,
+    ) -> TransportResult<Transaction> {
+        self.instrument_function("eth_getTransactionByBlockHashAndIndex", (block_hash, index))
+            .await
+            .inspect_err(|err| {
+                self.rpc_collector
+                    .logger()
+                    .error("Failed to get transaction", &[err])
+            })
     }
 
     pub async fn transaction_receipt(&self, tx_hash: B256) -> TransportResult<TransactionReceipt> {
