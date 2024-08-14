@@ -323,7 +323,7 @@ mod tests {
         )
     }
 
-    //#[tokio::test]
+    #[tokio::test]
     async fn test_calculate_delegation_approval_digest_hash() {
         // Introduce a 2-second delay
         sleep(Duration::from_secs(2)).await;

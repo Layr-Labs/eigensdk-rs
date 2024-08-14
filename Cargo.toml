@@ -4,29 +4,28 @@ members = [
     "crates/chainio/clients/elcontracts/",
     "crates/chainio/clients/eth/",
     "crates/chainio/clients/fireblocks/",
-    "crates/contracts/bindings/",
+    "crates/chainio/txmanager/",
     "crates/chainio/utils/",
-    "crates/crypto/bn254/",
-    "crates/utils/",
+    "crates/contracts/bindings/",
     "crates/crypto/bls/",
+    "crates/crypto/bn254/",
     "crates/eigen-cli/",
+    "crates/logging/",
+    "crates/metrics/",
     "crates/metrics/collectors/economic/",
     "crates/metrics/collectors/rpc_calls/",
+    "crates/metrics/metrics-derive",
     "crates/services/avsregistry/",
     "crates/services/bls_aggregation/",
-    "crates/metrics/metrics-derive",
     "crates/services/operatorsinfo/",
-    "crates/types/",
-    "crates/metrics/",
-    "crates/types/",
     "crates/signer/",
-    "crates/logging/",
-    "crates/signer/",
-    "examples/info-operator-service/",
-    "testing/testing-utils/",
+    "crates/types/",
+    "crates/utils/",
+    "examples/anvil-utils",
     "examples/avsregistry-read",
     "examples/avsregistry-write",
-    "examples/anvil-utils",
+    "examples/info-operator-service/",
+    "testing/testing-utils/",
 ]
 resolver = "2"
 
@@ -51,11 +50,13 @@ rustdoc.all = "warn"
 ark-bn254 = "0.4.0"
 ark-ec = "0.4.2"
 ark-ff = "0.4.0"
+ark-serialize = "0.4.2"
 async-trait = "0.1.81"
 aws-config = "1.5.4"
 aws-sdk-kms = "1.37.0"
 bn254 = { git = "https://github.com/sedaprotocol/bn254" }
 clap = { version = "4.5.11", features = ["derive"] }
+eigen-chainio-txmanager = { path = "crates/chainio/txmanager/" }
 eigen-chainio-utils = { path = "crates/chainio/utils/" }
 eigen-client-avsregistry = { path = "crates/chainio/clients/avsregistry" }
 eigen-client-elcontracts = { path = "crates/chainio/clients/elcontracts" }
@@ -64,6 +65,8 @@ eigen-client-fireblocks = { path = "crates/chainio/clients/fireblocks" }
 eigen-contract-bindings = { path = "crates/contracts/bindings/" }
 eigen-crypto-bls = { path = "crates/crypto/bls/" }
 eigen-crypto-bn254 = { path = "crates/crypto/bn254/" }
+eigen-crypto-keystore = { path = "crates/crypto/keystore/" }
+eigen-logging = { path = "crates/logging/" }
 eigen-metrics = { version = "0.0.1-alpha", path = "crates/metrics/" }
 eigen-metrics-collectors-economic = { path = "crates/metrics/collectors/economic" }
 eigen-metrics-collectors-rpc-calls = { path = "crates/metrics/collectors/rpc_calls" }
@@ -71,9 +74,8 @@ eigen-metrics-derive = { path = "crates/metrics/metrics-derive" }
 eigen-services-avsregistry = { path = "crates/services/avsregistry" }
 eigen-services-bls_aggregation = { path = "crates/services/bls_aggregation" }
 eigen-services-operatorsinfo = { path = "crates/services/operatorsinfo" }
+eigen-signer = { path = "crates/signer/" }
 eigen-testing-utils = { path = "testing/testing-utils" }
-eigen-logging  = {path = "crates/logging"}
-eigen-signer = {path = "crates/signer"}
 eigen-types = { path = "crates/types/" }
 eigen-utils = { path = "crates/utils/" }
 eth-keystore = "0.5.0"
@@ -81,29 +83,38 @@ ethers = "2.0.14"
 ethers-signers = "2.0.14"
 eyre = "0.6.12"
 futures-util = "0.3.30"
-hex = "0.4.3"
+hex = "0.4"
 hex-literal = "0.4.1"
 hyper = "0.14.25"
 info-operator-service = { path = "examples/info-operator-service" }
 k256 = "0.13.3"
 metrics = "0.21.1"
 metrics-exporter-prometheus = "0.12.0"
+num-bigint = "0.4.6"
 once_cell = "1.17"
 prometheus-client = "0.22.2"
 quote = "1.0"
+rand = "0.8"
+rand_core = "0.6"
 reqwest = "0.12.4"
 reth = { git = "https://github.com/paradigmxyz/reth" }
+rstest = "0.22.0"
 serde = { version = "1.0.197", features = ["derive"] }
 serde_json = "1.0.121"
 serial_test = "3.1"
 syn = "2.0"
+tempfile = "3"
+testcontainers = "0.20.1"
 thiserror = "1.0"
 tokio = { version = "1.37.0", features = ["test-util", "full", "sync"] }
 tracing = "0.1.40"
 tracing-subscriber = { version = "0.3", features = ["json"] }
 url = "2.5.2"
-testcontainers = "0.20.1"
+uuid = { version = "1.10.0", features = ["v4"] }
+
+#misc
 rust-bls-bn254 = {git = "https://github.com/Layr-Labs/rust-bls-bn254.git", rev = "be3ef87", features = ["std"] }
+
 #misc 
 parking_lot = "0.12"
 
@@ -146,8 +157,6 @@ alloy-transport-http = { version = "0.1", features = [
 alloy-transport-ipc = { version = "0.1", default-features = false }
 alloy-transport-ws = { version = "0.1", default-features = false }
 alloy-trie = "0.4"
-
-# examples
 anvil-utils = { path = "examples/anvil-utils" }
 avsregistry-read = { path = "examples/avsregistry-read" }
 avsregistry-write = { path = "examples/avsregistry-write" }
