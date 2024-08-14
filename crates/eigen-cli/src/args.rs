@@ -126,6 +126,8 @@ It creates the following artifacts based on arguments
         #[arg(long, help = "Mnemonic language select")]
         #[clap(value_enum)]
         language: MnemonicLanguage,
+        #[arg(long, help = "Path to a the directory where lists are stored)")]
+        path: Option<String>,
     },
 }
 

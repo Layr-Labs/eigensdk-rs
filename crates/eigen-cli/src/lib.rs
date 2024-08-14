@@ -138,33 +138,69 @@ pub fn execute_egnkey_subcommand(subcommand: EigenKeyCommand) -> Result<(), Eige
             )?;
             Ok(())
         }
-        EigenKeyCommand::CreateNewMnemonic { language } => {
+        EigenKeyCommand::CreateNewMnemonic { language, path } => {
             let mnemonic = match language {
                 MnemonicLanguage::English => {
-                    Mnemonic::get_mnemonic_without_word_path(ENGLISH_WORD_LIST, None).unwrap()
+                    if let Some(path_) = path {
+                        Mnemonic::get_mnemonic("english", &path_, None).unwrap()
+                    } else {
+                        Mnemonic::get_mnemonic_without_word_path(ENGLISH_WORD_LIST, None).unwrap()
+                    }
                 }
                 MnemonicLanguage::ChineseSimplified => {
-                    Mnemonic::get_mnemonic_without_word_path(CHINESE_SIMPLIFIED_WORD_LIST, None)
-                        .unwrap()
+                    if let Some(path_) = path {
+                        Mnemonic::get_mnemonic("chinese_simplified", &path_, None).unwrap()
+                    } else {
+                        Mnemonic::get_mnemonic_without_word_path(CHINESE_SIMPLIFIED_WORD_LIST, None)
+                            .unwrap()
+                    }
                 }
                 MnemonicLanguage::ChineseTraditional => {
-                    Mnemonic::get_mnemonic_without_word_path(CHINESE_TRADITIONAL_WORD_LIST, None)
+                    if let Some(path_) = path {
+                        Mnemonic::get_mnemonic("chinese_traditional", &path_, None).unwrap()
+                    } else {
+                        Mnemonic::get_mnemonic_without_word_path(
+                            CHINESE_TRADITIONAL_WORD_LIST,
+                            None,
+                        )
                         .unwrap()
+                    }
                 }
                 MnemonicLanguage::Czech => {
-                    Mnemonic::get_mnemonic_without_word_path(CZECH_WORD_LIST, None).unwrap()
+                    if let Some(path_) = path {
+                        Mnemonic::get_mnemonic("czech", &path_, None).unwrap()
+                    } else {
+                        Mnemonic::get_mnemonic_without_word_path(CZECH_WORD_LIST, None).unwrap()
+                    }
                 }
                 MnemonicLanguage::Italian => {
-                    Mnemonic::get_mnemonic_without_word_path(ITALIAN_WORD_LIST, None).unwrap()
+                    if let Some(path_) = path {
+                        Mnemonic::get_mnemonic("italian", &path_, None).unwrap()
+                    } else {
+                        Mnemonic::get_mnemonic_without_word_path(ITALIAN_WORD_LIST, None).unwrap()
+                    }
                 }
                 MnemonicLanguage::Korean => {
-                    Mnemonic::get_mnemonic_without_word_path(KOREAN_WORD_LIST, None).unwrap()
+                    if let Some(path_) = path {
+                        Mnemonic::get_mnemonic("korean", &path_, None).unwrap()
+                    } else {
+                        Mnemonic::get_mnemonic_without_word_path(KOREAN_WORD_LIST, None).unwrap()
+                    }
                 }
                 MnemonicLanguage::Portuguese => {
-                    Mnemonic::get_mnemonic_without_word_path(PORTUGUESE_WORD_LIST, None).unwrap()
+                    if let Some(path_) = path {
+                        Mnemonic::get_mnemonic("portuguese", &path_, None).unwrap()
+                    } else {
+                        Mnemonic::get_mnemonic_without_word_path(PORTUGUESE_WORD_LIST, None)
+                            .unwrap()
+                    }
                 }
                 MnemonicLanguage::Spanish => {
-                    Mnemonic::get_mnemonic_without_word_path(SPANISH_WORD_LIST, None).unwrap()
+                    if let Some(path_) = path {
+                        Mnemonic::get_mnemonic("spanish", &path_, None).unwrap()
+                    } else {
+                        Mnemonic::get_mnemonic_without_word_path(SPANISH_WORD_LIST, None).unwrap()
+                    }
                 }
             };
 
@@ -270,7 +306,10 @@ mod test {
     #[case(MnemonicLanguage::Portuguese)]
     #[case(MnemonicLanguage::Czech)]
     fn test_new_mnemonic(#[case] language: MnemonicLanguage) {
-        let subcommand = EigenKeyCommand::CreateNewMnemonic { language };
+        let subcommand = EigenKeyCommand::CreateNewMnemonic {
+            language,
+            path: None,
+        };
 
         let command = Commands::EigenKey { subcommand };
 
