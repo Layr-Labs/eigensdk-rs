@@ -5,6 +5,7 @@ use eigen_crypto_bls::BlsG1Point;
 use eigen_crypto_bls::{BlsG2Point, Signature};
 use eigen_crypto_bn254::utils::verify_message;
 use eigen_services_avsregistry::chaincaller::AvsRegistryServiceChainCaller;
+use eigen_services_avsregistry::AvsRegistryService;
 use eigen_types::{
     avs::{SignedTaskResponseDigest, TaskIndex, TaskResponseDigest},
     operator::{OperatorAvsState, QuorumThresholdPercentage, QuorumThresholdPercentages},
@@ -39,17 +40,17 @@ pub struct AggregatedOperators {
 }
 
 #[derive(Debug)]
-pub struct BlsAggregatorService {
+pub struct BlsAggregatorService<A: AvsRegistryService> {
     aggregated_response_sender: UnboundedSender<BlsAggregationServiceResponse>,
     pub aggregated_response_receiver: UnboundedReceiver<BlsAggregationServiceResponse>,
     signed_task_response:
         Arc<RwLock<HashMap<TaskIndex, UnboundedSender<SignedTaskResponseDigest>>>>,
 
-    avs_registry_service: AvsRegistryServiceChainCaller,
+    avs_registry_service: A,
 }
 
-impl BlsAggregatorService {
-    pub fn new(avs_registry_service: AvsRegistryServiceChainCaller) -> Self {
+impl<A: AvsRegistryService + Send + Sync + 'static> BlsAggregatorService<A> {
+    pub fn new(avs_registry_service: A) -> Self {
         let (tx, rx) = tokio::sync::mpsc::unbounded_channel();
         Self {
             aggregated_response_sender: tx,
@@ -88,6 +89,7 @@ impl BlsAggregatorService {
         let (tx, mut rx) = mpsc::unbounded_channel();
         task_channel.insert(task_index, tx);
         let self_clone = self.clone();
+
         tokio::spawn(async move {
             while let Some(signed_response) = rx.recv().await {
                 // Process each signed response here
@@ -358,5 +360,64 @@ impl BlsAggregatorService {
         let threshold_stake = *total_stake_by_quorum * U256::from(quorum_threshold_percentage);
 
         signed_stake >= threshold_stake
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use alloy_primitives::{BlockNumber, B256, U256};
+    use core::panic;
+    use eigen_crypto_bls::BlsKeyPair;
+    use eigen_logging::get_test_logger;
+    use eigen_services_avsregistry::fake_avs_registry_service::FakeAvsRegistryService;
+    use eigen_types::{
+        avs::TaskIndex,
+        operator::{QuorumNum, QuorumThresholdPercentage},
+        test::TestOperator,
+    };
+    use sha2::{Digest, Sha256};
+    use std::collections::HashMap;
+
+    use super::BlsAggregatorService;
+
+    fn new_bls_key_pair_panics(hex_key: String) -> BlsKeyPair {
+        let keypair = BlsKeyPair::new(hex_key);
+        match keypair {
+            Err(_) => panic!(),
+            Ok(keypair) => keypair,
+        }
+    }
+
+    fn hash(task_response: u64) -> B256 {
+        // TODO: add marshalling
+        let mut hasher = Sha256::new();
+        hasher.update(task_response.to_be_bytes());
+        B256::from_slice(hasher.finalize().as_ref())
+    }
+
+    #[test]
+    fn one_quorum_one_operator_one_correct_signature() {
+        let test_operator_1 = TestOperator {
+            operator_id: U256::from(1).into(),
+            stake_per_quorum: HashMap::from([(0u8, U256::from(100)), (1u8, U256::from(200))]),
+            bls_keypair: new_bls_key_pair_panics("0x1".into()),
+        };
+
+        let block_number: BlockNumber = 1;
+        let task_index: TaskIndex = 0;
+        let quorum_numbers: QuorumNum = 0;
+        let quorum_threshold_percentages: QuorumThresholdPercentage = 100;
+        let task_response = 123; // Initialize with appropriate data
+
+        // Compute the TaskResponseDigest as the SHA-256 sum of the TaskResponse (previously converting the taskresponse into a JSON string)
+        let task_response_digest = hash(task_response);
+        // assert!(task_response_digest.is_ok());
+        let bls_signature = test_operator_1
+            .bls_keypair
+            .sign_message(task_response_digest.as_ref());
+        let fake_avs_registry_service =
+            FakeAvsRegistryService::new(block_number, vec![test_operator_1]);
+        let logger = get_test_logger();
+        // BlsAggregatorService::new(avs_registry_service);
     }
 }

@@ -10,6 +10,8 @@ use eigen_types::operator::{OperatorAvsState, OperatorInfo, OperatorPubKeys, Quo
 use eigen_utils::binding::BLSApkRegistry::G1Point;
 use std::collections::HashMap;
 
+use crate::AvsRegistryService;
+
 #[derive(Debug)]
 pub struct AvsRegistryServiceChainCaller {
     avs_registry: AvsRegistryChainReader,
@@ -26,12 +28,14 @@ impl AvsRegistryServiceChainCaller {
             operators_info_service,
         }
     }
+}
 
-    pub fn get_avs_registry(&self) -> AvsRegistryChainReader {
+impl AvsRegistryService for AvsRegistryServiceChainCaller {
+    fn get_avs_registry(&self) -> AvsRegistryChainReader {
         self.avs_registry.clone()
     }
 
-    pub async fn get_operators_avs_state_at_block(
+    async fn get_operators_avs_state_at_block(
         &self,
         block_num: u32,
         quorum_nums: Bytes,
@@ -69,7 +73,7 @@ impl AvsRegistryServiceChainCaller {
         operators_avs_state
     }
 
-    pub async fn get_quorums_avs_state_at_block(
+    async fn get_quorums_avs_state_at_block(
         &self,
         quorum_nums: Bytes,
         block_num: u32,
@@ -110,7 +114,7 @@ impl AvsRegistryServiceChainCaller {
         quorums_avs_state
     }
 
-    pub async fn get_operator_info(&self, operator_id: [u8; 32]) -> Option<OperatorPubKeys> {
+    async fn get_operator_info(&self, operator_id: [u8; 32]) -> Option<OperatorPubKeys> {
         let operator_addr = self
             .avs_registry
             .get_operator_from_id(operator_id)

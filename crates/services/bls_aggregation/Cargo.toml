@@ -19,3 +19,6 @@ eigen-types.workspace = true
 parking_lot.workspace = true
 tokio = { workspace = true, features = ["full"] }
 
+[dev-dependencies]
+eigen-logging.workspace = true
+sha2 = "0.10.8"
