@@ -4,6 +4,7 @@ members = [
     "crates/chainio/clients/elcontracts/",
     "crates/chainio/clients/eth/",
     "crates/chainio/clients/fireblocks/",
+    "crates/chainio/txmanager/",
     "crates/chainio/utils/",
     "crates/contracts/bindings/",
     "crates/crypto/bls/",
@@ -18,8 +19,6 @@ members = [
     "crates/services/bls_aggregation/",
     "crates/services/operatorsinfo/",
     "crates/signer/",
-    "crates/signer/",
-    "crates/types/",
     "crates/types/",
     "crates/utils/",
     "examples/anvil-utils",
@@ -57,6 +56,7 @@ aws-config = "1.5.4"
 aws-sdk-kms = "1.37.0"
 bn254 = { git = "https://github.com/sedaprotocol/bn254" }
 clap = { version = "4.5.11", features = ["derive"] }
+eigen-chainio-txmanager = { path = "crates/chainio/txmanager/" }
 eigen-chainio-utils = { path = "crates/chainio/utils/" }
 eigen-client-avsregistry = { path = "crates/chainio/clients/avsregistry" }
 eigen-client-elcontracts = { path = "crates/chainio/clients/elcontracts" }
@@ -65,6 +65,8 @@ eigen-client-fireblocks = { path = "crates/chainio/clients/fireblocks" }
 eigen-contract-bindings = { path = "crates/contracts/bindings/" }
 eigen-crypto-bls = { path = "crates/crypto/bls/" }
 eigen-crypto-bn254 = { path = "crates/crypto/bn254/" }
+eigen-crypto-keystore = { path = "crates/crypto/keystore/" }
+eigen-logging = { path = "crates/logging/" }
 eigen-metrics = { version = "0.0.1-alpha", path = "crates/metrics/" }
 eigen-metrics-collectors-economic = { path = "crates/metrics/collectors/economic" }
 eigen-metrics-collectors-rpc-calls = { path = "crates/metrics/collectors/rpc_calls" }
@@ -72,8 +74,8 @@ eigen-metrics-derive = { path = "crates/metrics/metrics-derive" }
 eigen-services-avsregistry = { path = "crates/services/avsregistry" }
 eigen-services-bls_aggregation = { path = "crates/services/bls_aggregation" }
 eigen-services-operatorsinfo = { path = "crates/services/operatorsinfo" }
+eigen-signer = { path = "crates/signer/" }
 eigen-testing-utils = { path = "testing/testing-utils" }
-eigen-logging  = {path = "crates/logging"}
 eigen-types = { path = "crates/types/" }
 eigen-utils = { path = "crates/utils/" }
 eth-keystore = "0.5.0"
@@ -154,8 +156,6 @@ alloy-transport-http = { version = "0.1", features = [
 alloy-transport-ipc = { version = "0.1", default-features = false }
 alloy-transport-ws = { version = "0.1", default-features = false }
 alloy-trie = "0.4"
-
-# examples
 anvil-utils = { path = "examples/anvil-utils" }
 avsregistry-read = { path = "examples/avsregistry-read" }
 avsregistry-write = { path = "examples/avsregistry-write" }
