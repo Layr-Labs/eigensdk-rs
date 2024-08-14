@@ -1,19 +1,17 @@
-//use eigen_metrics_collectors_rpc_calls::RpcCalls as RpcCallsCollector;
 use alloy_consensus::TxEnvelope;
 use alloy_json_rpc::{RpcParam, RpcReturn};
 use alloy_primitives::{Address, BlockHash, BlockNumber, Bytes, ChainId, B256, U256, U64};
 use alloy_provider::{Provider, ProviderBuilder, RootProvider};
-use alloy_pubsub::PubSubFrontend;
+use alloy_pubsub::{PubSubFrontend, Subscription};
 use alloy_rlp::Encodable;
 use alloy_rpc_types_eth::{
-    Block, BlockNumberOrTag, FeeHistory, Filter, Header, Log, SyncStatus, Transaction,
-    TransactionReceipt, TransactionRequest,
+    pubsub::SubscriptionResult, Block, BlockNumberOrTag, FeeHistory, Filter, Header, Log,
+    SyncStatus, Transaction, TransactionReceipt, TransactionRequest,
 };
 use alloy_transport::TransportResult;
 use alloy_transport_http::{Client, Http};
 use alloy_transport_ws::WsConnect;
-use eigen_logging::get_test_logger;
-use eigen_logging::logger::Logger;
+use eigen_logging::{get_test_logger, logger::Logger};
 use eigen_metrics_collectors_rpc_calls::RpcCallsMetrics as RpcCallsCollector;
 use hex;
 use std::time::Instant;
@@ -574,14 +572,19 @@ impl InstrumentedClient {
     /// # Returns
     ///
     /// A subscription ID.
-    pub async fn subscribe_filter_logs(&self, filter: Filter) -> TransportResult<U256> {
-        self.instrument_function("eth_subscribe", ("logs", filter))
+    pub async fn subscribe_filter_logs<R: RpcReturn>(
+        &self,
+        filter: Filter,
+    ) -> TransportResult<Subscription<R>> {
+        let id: U256 = self
+            .instrument_function("eth_subscribe", ("logs", filter))
             .await
             .inspect_err(|err| {
                 self.rpc_collector
                     .logger()
                     .error("Failed to get logs subscription id", &[err])
-            })
+            })?;
+        self.ws_client.as_ref().unwrap().get_subscription(id).await
     }
 
     /// Subscribes to notifications about the current blockchain head.
@@ -589,14 +592,17 @@ impl InstrumentedClient {
     /// # Returns
     ///
     /// A subscription ID.
-    pub async fn subscribe_new_head(&self) -> TransportResult<U256> {
-        self.instrument_function("eth_subscribe", ("newHeads",))
+    pub async fn subscribe_new_head<R: RpcReturn>(&self) -> TransportResult<Subscription<R>> {
+        let id: U256 = self
+            .instrument_function("eth_subscribe", ("newHeads",))
             .await
             .inspect_err(|err| {
                 self.rpc_collector
                     .logger()
                     .error("Failed to subscribe new head", &[err])
-            })
+            })?;
+
+        self.ws_client.as_ref().unwrap().get_subscription(id).await
     }
 
     /// Retrieves the currently suggested gas price.
@@ -780,6 +786,7 @@ mod tests {
     use alloy_node_bindings::Anvil;
     use alloy_primitives::{bytes, TxKind::Call, U256};
     use alloy_provider::network::TxSignerSync;
+    use alloy_rpc_types_eth::pubsub::SubscriptionResult;
     use alloy_rpc_types_eth::BlockId;
     use alloy_rpc_types_eth::BlockNumberOrTag;
     use alloy_rpc_types_eth::BlockTransactionsKind;
@@ -853,8 +860,9 @@ mod tests {
     #[serial]
     async fn test_subscribe_new_head() {
         let instrumented_client = InstrumentedClient::new_ws(ANVIL_WS_URL).await.unwrap();
-        let sub_id = instrumented_client.subscribe_new_head().await;
-        assert!(sub_id.is_ok());
+        let subscription: TransportResult<Subscription<SubscriptionResult>> =
+            instrumented_client.subscribe_new_head().await;
+        assert!(subscription.is_ok())
     }
 
     #[tokio::test]
@@ -864,8 +872,10 @@ mod tests {
         let address = ANVIL_RPC_URL.clone().get_accounts().await.unwrap()[0];
         let filter = Filter::new().address(address.to_string().parse::<Address>().unwrap());
 
-        let sub_id = instrumented_client.subscribe_filter_logs(filter).await;
-        assert!(sub_id.is_ok());
+        let subscription: TransportResult<Subscription<SubscriptionResult>> =
+            instrumented_client.subscribe_filter_logs(filter).await;
+
+        assert!(subscription.is_ok());
     }
 
     #[tokio::test]
