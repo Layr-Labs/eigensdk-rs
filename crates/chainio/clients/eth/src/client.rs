@@ -4,7 +4,7 @@ pub struct Client {}
 use alloy_primitives::TxHash;
 
 pub enum BackendType {
-    HttpBAckend,
+    HttpBackend,
     WasmBackend,
 }
 
