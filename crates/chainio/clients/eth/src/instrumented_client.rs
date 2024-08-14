@@ -8,7 +8,7 @@ use alloy_rpc_types_eth::{
     Block, BlockNumberOrTag, FeeHistory, Filter, Header, Log, SyncStatus, Transaction,
     TransactionReceipt, TransactionRequest,
 };
-use alloy_transport::TransportResult;
+use alloy_transport::{TransportError, TransportResult};
 use alloy_transport_http::{Client, Http};
 use alloy_transport_ws::WsConnect;
 use eigen_logging::{get_test_logger, logger::Logger};
@@ -564,14 +564,18 @@ impl InstrumentedClient {
     }
 
     /// Subscribes to the results of a streaming filter query.
-    ///
+    /// *Note:* this method fails if the InstrumentedClient does not use a web socket client.
     /// # Arguments
     ///
     /// * `filter` - A filter query.
     ///
     /// # Returns
     ///
-    /// A subscription ID.
+    /// The subscription.
+    ///
+    /// # Errors
+    ///
+    /// * If ws_client is `None`.
     pub async fn subscribe_filter_logs<R: RpcReturn>(
         &self,
         filter: Filter,
@@ -584,14 +588,25 @@ impl InstrumentedClient {
                     .logger()
                     .error("Failed to get logs subscription id", &[err])
             })?;
-        self.ws_client.as_ref().unwrap().get_subscription(id).await
+        if let Some(ws_client) = self.ws_client.as_ref() {
+            ws_client.get_subscription(id).await
+        } else {
+            Err(TransportError::UnsupportedFeature(
+                "http client does not support eth_subscribe calls.",
+            ))
+        }
     }
 
     /// Subscribes to notifications about the current blockchain head.
+    /// *Note:* this method fails if the InstrumentedClient does not use a web socket client.
     ///
     /// # Returns
     ///
-    /// A subscription ID.
+    /// The subscription.
+    ///
+    /// # Errors
+    ///
+    /// * If ws_client is `None`.
     pub async fn subscribe_new_head<R: RpcReturn>(&self) -> TransportResult<Subscription<R>> {
         let id: U256 = self
             .instrument_function("eth_subscribe", ("newHeads",))
@@ -601,8 +616,13 @@ impl InstrumentedClient {
                     .logger()
                     .error("Failed to subscribe new head", &[err])
             })?;
-
-        self.ws_client.as_ref().unwrap().get_subscription(id).await
+        if let Some(ws_client) = self.ws_client.as_ref() {
+            ws_client.get_subscription(id).await
+        } else {
+            Err(TransportError::UnsupportedFeature(
+                "http client does not support eth_subscribe calls.",
+            ))
+        }
     }
 
     /// Retrieves the currently suggested gas price.
