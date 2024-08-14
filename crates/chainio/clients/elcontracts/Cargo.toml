@@ -11,6 +11,7 @@ license-file.workspace = true
 [dependencies]
 alloy-contract.workspace = true
 alloy-primitives.workspace = true
+alloy-rpc-types.workspace = true
 eigen-logging.workspace = true
 eigen-types.workspace = true
 eigen-utils.workspace = true

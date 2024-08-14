@@ -2053,6 +2053,7 @@ dependencies = [
  "alloy-eips",
  "alloy-primitives",
  "alloy-provider",
+ "alloy-rpc-types",
  "alloy-signer-local",
  "eigen-logging",
  "eigen-testing-utils",

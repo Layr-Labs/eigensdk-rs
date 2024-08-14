@@ -2,6 +2,8 @@ use crate::error::ElContractsError;
 use crate::reader::ELChainReader;
 use alloy_primitives::FixedBytes;
 use alloy_primitives::{Address, TxHash, U256};
+use eigen_logging::logger::Logger;
+use eigen_logging::tracing_logger::TracingLogger;
 pub use eigen_types::operator::Operator;
 use eigen_utils::{
     binding::{
@@ -19,6 +21,7 @@ pub const GAS_LIMIT_REGISTER_AS_OPERATOR_DELEGATION_MANAGER: u128 = 300000;
 
 #[derive(Debug, Clone)]
 pub struct ELChainWriter {
+    logger: TracingLogger,
     delegation_manager: Address,
     strategy_manager: Address,
     el_chain_reader: ELChainReader,
@@ -28,6 +31,7 @@ pub struct ELChainWriter {
 
 impl ELChainWriter {
     pub fn new(
+        logger: TracingLogger,
         delegation_manager: Address,
         strategy_manager: Address,
         el_chain_reader: ELChainReader,
@@ -35,6 +39,7 @@ impl ELChainWriter {
         signer: String,
     ) -> Self {
         Self {
+            logger,
             delegation_manager,
             strategy_manager,
             el_chain_reader,
@@ -47,9 +52,12 @@ impl ELChainWriter {
         &self,
         operator: Operator,
     ) -> Result<FixedBytes<32>, ElContractsError> {
-        info!(
-            "registering operator {:?} to EigenLayer",
-            operator.has_address()
+        self.logger.info(
+            &format!(
+                "registering operator {} to EigenLayer",
+                operator.has_address()
+            ),
+            &["eigen-client-elcontracts.register_as_operator"],
         );
         let op_details = OperatorDetails {
             earningsReceiver: operator.has_earnings_receiver_address(),
@@ -82,11 +90,24 @@ impl ELChainWriter {
                         let hash = receipt.transaction_hash;
                         match tx_status {
                             true => {
+                                self.logger.info(
+                                    &format!(
+                                        "Successfully included tx_hash : {}",
+                                        receipt.transaction_hash
+                                    ),
+                                    &["eigen_client_elcontracts.register_as_operator"],
+                                );
                                 info!(tx_hash = %receipt.transaction_hash, "tx successfully included");
                                 Ok(hash)
                             }
                             false => {
-                                info!(tx_hash = %receipt.transaction_hash, "failed to register operator");
+                                self.logger.info(
+                                    &format!(
+                                        "Failed to register operator {}",
+                                        receipt.transaction_hash
+                                    ),
+                                    &["eigen_client_elcontracts.register_as_operator"],
+                                );
                                 Ok(hash)
                             }
                         }
@@ -104,9 +125,12 @@ impl ELChainWriter {
         &self,
         operator: Operator,
     ) -> Result<TxHash, ElContractsError> {
-        info!(
-            "updating operator detils of operator {:?} to EigenLayer",
-            operator.has_address()
+        self.logger.info(
+            &format!(
+                "updating operator detils of operator {:?} to EigenLayer",
+                operator.has_address()
+            ),
+            &["eigen_client_elcontracts.update_operator_details"],
         );
         let operator_details = OperatorDetails {
             earningsReceiver: operator.has_earnings_receiver_address(),
@@ -142,9 +166,12 @@ impl ELChainWriter {
         strategy_addr: Address,
         amount: U256,
     ) -> Result<TxHash, ElContractsError> {
-        info!(
-            "depositing {:?} tokens into strategy {:?}",
-            amount, strategy_addr
+        self.logger.info(
+            &format!(
+                "depositing {:?} tokens into strategy {:?}",
+                amount, strategy_addr
+            ),
+            &["eigen_client_elcontracts.deposit_erc20_into_strategy"],
         );
         let tokens_result = self
             .el_chain_reader
@@ -173,9 +200,12 @@ impl ELChainWriter {
 
                 let tx = deposit_contract_call.send().await?;
 
-                info!(
-                    "deposited {:?} tokens into strategy {:?}",
-                    amount, strategy_addr
+                self.logger.info(
+                    &format!(
+                        "deposited {:?} tokens into strategy {:?}",
+                        amount, strategy_addr
+                    ),
+                    &["eigen_client_elcontracts.deposit_erc20_into_strategy"],
                 );
                 Ok(*tx.tx_hash())
             }
@@ -187,7 +217,11 @@ impl ELChainWriter {
 #[cfg(test)]
 mod tests {
 
+    use std::str::FromStr;
+
     use super::*;
+    use alloy_provider::{network::TransactionBuilder, Provider};
+    use alloy_rpc_types::TransactionRequest;
     use alloy_signer_local::PrivateKeySigner;
     use eigen_logging::get_test_logger;
     use eigen_testing_utils::anvil_constants::{self};
@@ -208,6 +242,7 @@ mod tests {
             _0: slasher_address,
         } = slasher_address_return;
         let service_manager_address = anvil_constants::get_service_manager_address().await;
+        let strategy_manager_address = anvil_constants::get_strategy_manager_address().await;
         let service_manager_contract = mockAvsServiceManager::new(
             service_manager_address,
             anvil_constants::ANVIL_RPC_URL.clone(),
@@ -255,5 +290,47 @@ mod tests {
             .is_operator_registered(operator_address)
             .await
             .unwrap());
+        let provider = get_signer(
+            operator_pvt_key.to_string(),
+            &"http://localhost:8545".to_string(),
+        );
+        let new_operator = PrivateKeySigner::from_str(
+            "0x4e8494055dd1b2128689a2c7d733823ba16adae8883004f143fde838b4342d6b",
+        )
+        .unwrap();
+        let eth_tx = TransactionRequest::default()
+            .with_to(new_operator.address())
+            .with_value(U256::from(1e18));
+        let tx_hash = provider
+            .send_transaction(eth_tx)
+            .await
+            .unwrap()
+            .watch()
+            .await
+            .unwrap();
+
+        let el_chain_writer = ELChainWriter::new(
+            get_test_logger().clone(),
+            delegation_manager_address,
+            strategy_manager_address,
+            el_chain_reader,
+            "http://localhost:8545".to_string(),
+            "0x4e8494055dd1b2128689a2c7d733823ba16adae8883004f143fde838b4342d6b".to_string(),
+        );
+
+        let operator = Operator::new(
+            new_operator.address(),
+            new_operator.address(),
+            Address::ZERO,
+            0u32,
+            None,
+        );
+        el_chain_writer
+            .register_as_operator(operator)
+            .await
+            .unwrap();
     }
+
+    // #[test]
+    // fn test_
 }
