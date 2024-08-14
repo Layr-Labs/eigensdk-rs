@@ -5,8 +5,8 @@ use alloy_provider::{Provider, ProviderBuilder, RootProvider};
 use alloy_pubsub::{PubSubFrontend, Subscription};
 use alloy_rlp::Encodable;
 use alloy_rpc_types_eth::{
-    pubsub::SubscriptionResult, Block, BlockNumberOrTag, FeeHistory, Filter, Header, Log,
-    SyncStatus, Transaction, TransactionReceipt, TransactionRequest,
+    Block, BlockNumberOrTag, FeeHistory, Filter, Header, Log, SyncStatus, Transaction,
+    TransactionReceipt, TransactionRequest,
 };
 use alloy_transport::TransportResult;
 use alloy_transport_http::{Client, Http};
@@ -786,10 +786,9 @@ mod tests {
     use alloy_node_bindings::Anvil;
     use alloy_primitives::{bytes, TxKind::Call, U256};
     use alloy_provider::network::TxSignerSync;
-    use alloy_rpc_types_eth::pubsub::SubscriptionResult;
-    use alloy_rpc_types_eth::BlockId;
-    use alloy_rpc_types_eth::BlockNumberOrTag;
-    use alloy_rpc_types_eth::BlockTransactionsKind;
+    use alloy_rpc_types_eth::{
+        pubsub::SubscriptionResult, BlockId, BlockNumberOrTag, BlockTransactionsKind,
+    };
     use eigen_signer::signer::Config;
     use eigen_testing_utils::anvil_constants::ANVIL_RPC_URL;
     use serial_test::serial;
@@ -940,6 +939,7 @@ mod tests {
 
         assert_eq!(tx_count, expected_tx_count as u64);
     }
+
     /// This test tests the following methods
     /// * `send_transaction`
     /// * `transaction_by_hash`
