@@ -418,6 +418,6 @@ mod tests {
         let fake_avs_registry_service =
             FakeAvsRegistryService::new(block_number, vec![test_operator_1]);
         let logger = get_test_logger();
-        // BlsAggregatorService::new(avs_registry_service);
+        BlsAggregatorService::new(fake_avs_registry_service);
     }
 }
