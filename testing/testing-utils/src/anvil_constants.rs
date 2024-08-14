@@ -88,7 +88,7 @@ pub async fn get_delegation_manager_address() -> Address {
     address
 }
 
-/// Strategy Mananger contract address
+/// Strategy Manager contract address
 pub async fn get_strategy_manager_address() -> Address {
     let contracts_registry = ContractsRegistry::new(CONTRACTS_REGISTRY, (*ANVIL_RPC_URL).clone());
 
@@ -103,6 +103,50 @@ pub async fn get_strategy_manager_address() -> Address {
     address
 }
 
+/// Slasher contract address
+pub async fn get_slasher_address() -> Address {
+    let contracts_registry = ContractsRegistry::new(CONTRACTS_REGISTRY, (*ANVIL_RPC_URL).clone());
+
+    let val = contracts_registry
+        .contracts("slasher".to_string())
+        .call()
+        .await
+        .unwrap();
+
+    let contractsReturn { _0: address } = val;
+
+    address
+}
+
+/// Slasher contract address
+pub async fn get_avs_directory_address() -> Address {
+    let contracts_registry = ContractsRegistry::new(CONTRACTS_REGISTRY, (*ANVIL_RPC_URL).clone());
+
+    let val = contracts_registry
+        .contracts("avsDirectory".to_string())
+        .call()
+        .await
+        .unwrap();
+
+    let contractsReturn { _0: address } = val;
+
+    address
+}
+
+/// Rewards coordinator contract address
+pub async fn get_rewards_coordinator_address() -> Address {
+    let contracts_registry = ContractsRegistry::new(CONTRACTS_REGISTRY, (*ANVIL_RPC_URL).clone());
+
+    let val = contracts_registry
+        .contracts("rewardsCoordinator".to_string())
+        .call()
+        .await
+        .unwrap();
+
+    let contractsReturn { _0: address } = val;
+
+    address
+}
 /// erc20 mock strategy contract address
 pub async fn get_erc20_mock_strategy() -> Address {
     let contracts_registry = ContractsRegistry::new(CONTRACTS_REGISTRY, (*ANVIL_RPC_URL).clone());

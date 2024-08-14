@@ -1,3 +1,5 @@
+use std::ops::Add;
+
 use crate::error::ElContractsError;
 use crate::reader::ELChainReader;
 use alloy_primitives::FixedBytes;
@@ -25,6 +27,7 @@ pub struct ELChainWriter {
     delegation_manager: Address,
     strategy_manager: Address,
     el_chain_reader: ELChainReader,
+    rewards_coordinator: Address,
     provider: String,
     signer: String,
 }
@@ -34,15 +37,25 @@ impl ELChainWriter {
         logger: TracingLogger,
         delegation_manager: Address,
         strategy_manager: Address,
-        el_chain_reader: ELChainReader,
+        avs_directory: Address,
+        rewards_coordinator: Address,
+        slasher: Address,
         provider: String,
         signer: String,
     ) -> Self {
+        let el_chain_reader = ELChainReader::new(
+            logger.clone(),
+            slasher,
+            delegation_manager,
+            avs_directory,
+            provider.clone(),
+        );
         Self {
             logger,
             delegation_manager,
             strategy_manager,
             el_chain_reader,
+            rewards_coordinator,
             provider,
             signer,
         }
@@ -243,6 +256,116 @@ mod tests {
         } = slasher_address_return;
         let service_manager_address = anvil_constants::get_service_manager_address().await;
         let strategy_manager_address = anvil_constants::get_strategy_manager_address().await;
+        let avs_directory_address = anvil_constants::get_avs_directory_address().await;
+        let rewards_coordinator_address = anvil_constants::get_rewards_coordinator_address().await;
+        let service_manager_contract = mockAvsServiceManager::new(
+            service_manager_address,
+            anvil_constants::ANVIL_RPC_URL.clone(),
+        );
+        let operator_pvt_key = "59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d";
+        let operator: PrivateKeySigner = (operator_pvt_key)
+            .parse()
+            .expect("failed to generate wallet");
+        let avs_directory_address_return = service_manager_contract
+            .avsDirectory()
+            .call()
+            .await
+            .unwrap();
+        let mockAvsServiceManager::avsDirectoryReturn {
+            _0: avs_directory_address,
+        } = avs_directory_address_return;
+
+        let el_chain_reader = ELChainReader::new(
+            get_test_logger().clone(),
+            slasher_address,
+            delegation_manager_address,
+            avs_directory_address,
+            "http://localhost:8545".to_string(),
+        );
+
+        let contract_registry = ContractsRegistry::new(
+            anvil_constants::CONTRACTS_REGISTRY,
+            anvil_constants::ANVIL_RPC_URL.clone(),
+        );
+        // Use these value in tests when needed
+        let operator_index = "1".parse().unwrap();
+        let get_test_values_return = contract_registry
+            .get_test_values("test_register_operator".to_string(), operator_index)
+            .call()
+            .await
+            .unwrap();
+        let get_test_valuesReturn {
+            _0: _timestamp,
+            _1: _blocknumber,
+            _2: _index,
+        } = get_test_values_return;
+
+        // operator who registered at index 1
+        let operator_address = operator.address();
+        assert!(el_chain_reader
+            .is_operator_registered(operator_address)
+            .await
+            .unwrap());
+        let provider = get_signer(
+            operator_pvt_key.to_string(),
+            &"http://localhost:8545".to_string(),
+        );
+        let new_operator = PrivateKeySigner::from_str(
+            "0x4e8494055dd1b2128689a2c7d733823ba16adae8883004f143fde838b4342d6b",
+        )
+        .unwrap();
+        let eth_tx = TransactionRequest::default()
+            .with_to(new_operator.address())
+            .with_value(U256::from(1e18));
+        let tx_hash = provider
+            .send_transaction(eth_tx)
+            .await
+            .unwrap()
+            .watch()
+            .await
+            .unwrap();
+
+        let el_chain_writer = ELChainWriter::new(
+            get_test_logger().clone(),
+            delegation_manager_address,
+            strategy_manager_address,
+            avs_directory_address,
+            rewards_coordinator_address,
+            slasher_address,
+            "http://localhost:8545".to_string(),
+            "0x4e8494055dd1b2128689a2c7d733823ba16adae8883004f143fde838b4342d6b".to_string(),
+        );
+
+        let operator = Operator::new(
+            new_operator.address(),
+            new_operator.address(),
+            Address::ZERO,
+            0u32,
+            None,
+        );
+        el_chain_writer
+            .register_as_operator(operator)
+            .await
+            .unwrap();
+    }
+
+    #[tokio::test]
+    async fn test_update_operator_details() {
+        let delegation_manager_address = anvil_constants::get_delegation_manager_address().await;
+        let delegation_manager_contract = DelegationManager::new(
+            delegation_manager_address,
+            anvil_constants::ANVIL_RPC_URL.clone(),
+        );
+        let slasher_address_return = delegation_manager_contract.slasher().call().await.unwrap();
+        let DelegationManager::slasherReturn {
+            _0: slasher_address,
+        } = slasher_address_return;
+        let service_manager_address = anvil_constants::get_service_manager_address().await;
+        let strategy_manager_address = anvil_constants::get_strategy_manager_address().await;
+        let slasher_address = anvil_constants::get_slasher_address().await;
+        let avs_directory_address = anvil_constants::get_avs_directory_address().await;
+        let rewards_coordinator_address = anvil_constants::get_registry_coordinator_address().await;
+
         let service_manager_contract = mockAvsServiceManager::new(
             service_manager_address,
             anvil_constants::ANVIL_RPC_URL.clone(),
@@ -294,43 +417,27 @@ mod tests {
             operator_pvt_key.to_string(),
             &"http://localhost:8545".to_string(),
         );
-        let new_operator = PrivateKeySigner::from_str(
-            "0x4e8494055dd1b2128689a2c7d733823ba16adae8883004f143fde838b4342d6b",
-        )
-        .unwrap();
-        let eth_tx = TransactionRequest::default()
-            .with_to(new_operator.address())
-            .with_value(U256::from(1e18));
-        let tx_hash = provider
-            .send_transaction(eth_tx)
-            .await
-            .unwrap()
-            .watch()
-            .await
-            .unwrap();
 
         let el_chain_writer = ELChainWriter::new(
             get_test_logger().clone(),
             delegation_manager_address,
             strategy_manager_address,
-            el_chain_reader,
+            avs_directory_address,
+            rewards_coordinator_address,
+            slasher_address,
             "http://localhost:8545".to_string(),
-            "0x4e8494055dd1b2128689a2c7d733823ba16adae8883004f143fde838b4342d6b".to_string(),
+            "59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d".to_string(),
         );
-
         let operator = Operator::new(
-            new_operator.address(),
-            new_operator.address(),
+            operator.address(),
+            operator.address(),
             Address::ZERO,
-            0u32,
+            150u32,
             None,
         );
         el_chain_writer
-            .register_as_operator(operator)
+            .update_operator_details(operator)
             .await
             .unwrap();
     }
-
-    // #[test]
-    // fn test_
 }
