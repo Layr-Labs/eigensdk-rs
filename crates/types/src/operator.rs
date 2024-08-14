@@ -1,9 +1,11 @@
 use alloy_primitives::{Address, FixedBytes, U256};
 use ark_serialize::CanonicalSerialize;
-use eigen_crypto_bls::{BlsG1Point, BlsG2Point};
+use eigen_crypto_bls::{BlsG1Point, BlsG2Point, BlsKeyPair};
 use ethers::{types::U64, utils::keccak256};
 use num_bigint::BigUint;
 use std::collections::HashMap;
+
+use crate::test::TestOperator;
 const MAX_NUMBER_OF_QUORUMS: usize = 192;
 
 pub type OperatorId = FixedBytes<32>;
@@ -26,6 +28,15 @@ pub fn bitmap_to_quorum_ids(quorum_bitmaps: U256) -> Vec<u8> {
 pub struct OperatorPubKeys {
     pub g1_pub_key: BlsG1Point,
     pub g2_pub_key: BlsG2Point,
+}
+
+impl From<BlsKeyPair> for OperatorPubKeys {
+    fn from(keypair: BlsKeyPair) -> Self {
+        Self {
+            g1_pub_key: keypair.public_key(),
+            g2_pub_key: keypair.public_key_g2(),
+        }
+    }
 }
 
 pub struct Operator {
