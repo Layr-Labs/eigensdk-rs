@@ -26,12 +26,12 @@ k256.workspace = true
 num-bigint.workspace = true
 rand.workspace = true
 rand_core.workspace = true
+rust-bls-bn254.workspace = true
 serde.workspace = true
 serde_json.workspace = true
 thiserror.workspace = true
 tokio.workspace = true
 uuid.workspace = true
-rust-bls-bn254.workspace = true
 
 
 [dev-dependencies]

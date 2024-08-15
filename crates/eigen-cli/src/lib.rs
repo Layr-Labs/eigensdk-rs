@@ -269,11 +269,13 @@ mod test {
     #[case(BlsKeystoreType::Scrypt)]
     #[case(BlsKeystoreType::Pbkdf2)]
     fn test_blskeystore_generation(#[case] keystore_type: BlsKeystoreType) {
+        let output_dir = tempdir().unwrap();
+        let output_path = output_dir.path().join("keystore.json");
         let subcommand = EigenKeyCommand::BlsConvert {
             key_type: keystore_type,
             secret_key: "000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"
                 .to_string(),
-            output_path: "./keystore.json".to_string(),
+            output_path: output_path.to_str().unwrap().to_string(),
             password: Some("testpassword".to_string()),
         };
 
@@ -281,19 +283,12 @@ mod test {
 
         execute_command(command).unwrap();
 
-        std::process::Command::new("chmod")
-            .arg("u+w") // Add write permission for the user (owner)
-            .arg("./keystore.json")
-            .status()
-            .expect("Failed to change file permissions");
-
-        let keystore_instance = Keystore::from_file("./keystore.json").unwrap();
+        let keystore_instance = Keystore::from_file(output_path.to_str().unwrap()).unwrap();
         let decrypted_key = keystore_instance.decrypt("testpassword").unwrap();
         let original_secret_key =
             hex::decode("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f")
                 .unwrap();
         assert_eq!(original_secret_key.as_slice(), decrypted_key);
-        std::fs::remove_file("./keystore.json").unwrap();
     }
 
     #[rstest]
