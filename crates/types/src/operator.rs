@@ -109,12 +109,12 @@ pub type Socket = String;
 
 pub type QuorumNum = u8;
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct OperatorInfo {
     pub pub_keys: Option<OperatorPubKeys>,
 }
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct OperatorAvsState {
     pub operator_id: [u8; 32],
     pub operator_info: OperatorInfo,
@@ -129,6 +129,7 @@ pub fn operator_id_from_g1_pub_key(pub_key: BlsG1Point) -> [u8; 32] {
     keccak256(bytes)
 }
 
+#[derive(Debug)]
 pub struct QuorumAvsState {
     pub quorum_num: u8,
     pub total_stake: U256,

@@ -93,7 +93,7 @@ impl AvsRegistryService for FakeAvsRegistryService {
                 },
             );
         }
-        todo!()
+        quorum_avs_state
     }
 
     async fn get_operator_info(&self, operator_id: [u8; 32]) -> Option<OperatorPubKeys> {
