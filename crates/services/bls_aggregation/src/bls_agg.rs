@@ -76,7 +76,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
     }
 
     pub async fn initialize_new_task<S: AvsRegistryService>(
-        self,
+        &self,
         task_index: TaskIndex,
         task_created_block: u32,
         quorum_nums: Vec<u8>,
