@@ -1,5 +1,6 @@
 use crate::error::ElContractsError;
 use alloy_primitives::{Address, FixedBytes, U256};
+use alloy_transport::TransportErrorKind;
 use eigen_logging::tracing_logger::TracingLogger;
 use eigen_types::operator::Operator;
 use eigen_utils::{
@@ -42,7 +43,7 @@ impl ELChainReader {
         delegation_manager: Address,
         avs_directory: Address,
         client: &String,
-    ) -> Result<Self, ElContractsError> {
+    ) -> Result<Self, ElContractsError<TransportErrorKind>> {
         let provider = get_provider(client);
 
         let contract_delegation_manager = DelegationManager::new(delegation_manager, provider);
@@ -73,7 +74,7 @@ impl ELChainReader {
         delegation_approver: Address,
         approve_salt: FixedBytes<32>,
         expiry: U256,
-    ) -> Result<FixedBytes<32>, ElContractsError> {
+    ) -> Result<FixedBytes<32>, ElContractsError<TransportErrorKind>> {
         let provider = get_provider(&self.provider);
         let contract_delegation_manager = DelegationManager::new(self.delegation_manager, provider);
         let delegation_approval_digest_hash_result = contract_delegation_manager
@@ -104,7 +105,7 @@ impl ELChainReader {
         avs: Address,
         salt: FixedBytes<32>,
         expiry: U256,
-    ) -> Result<FixedBytes<32>, ElContractsError> {
+    ) -> Result<FixedBytes<32>, ElContractsError<TransportErrorKind>> {
         let provider = get_provider(&self.provider);
 
         let contract_avs_directory = AVSDirectory::new(self.avs_directory, provider);
@@ -129,7 +130,7 @@ impl ELChainReader {
         &self,
         operator_addr: Address,
         strategy_addr: Address,
-    ) -> Result<U256, ElContractsError> {
+    ) -> Result<U256, ElContractsError<TransportErrorKind>> {
         let provider = get_provider(&self.provider);
 
         let contract_delegation_manager = DelegationManager::new(self.delegation_manager, provider);
@@ -152,13 +153,11 @@ impl ELChainReader {
     pub async fn operator_is_frozen(
         &self,
         operator_addr: Address,
-    ) -> Result<bool, ElContractsError> {
+    ) -> Result<bool, ElContractsError<TransportErrorKind>> {
         let provider = get_provider(&self.provider);
 
         let contract_slasher = ISlasher::new(self.slasher, provider);
-
         let operator_is_frozen_result = contract_slasher.isFrozen(operator_addr).call().await;
-
         match operator_is_frozen_result {
             Ok(operator_is_frozen) => {
                 let ISlasher::isFrozenReturn { _0: is_froze } = operator_is_frozen;
@@ -172,7 +171,7 @@ impl ELChainReader {
         &self,
         operator_addr: Address,
         service_manager_addr: Address,
-    ) -> Result<u32, ElContractsError> {
+    ) -> Result<u32, ElContractsError<TransportErrorKind>> {
         let provider = get_provider(&self.provider);
 
         let contract_slasher = ISlasher::new(self.slasher, provider);
@@ -198,7 +197,7 @@ impl ELChainReader {
     pub async fn get_strategy_and_underlying_erc20_token(
         &self,
         strategy_addr: Address,
-    ) -> Result<(Address, Address, Address), ElContractsError> {
+    ) -> Result<(Address, Address, Address), ElContractsError<TransportErrorKind>> {
         let provider = get_provider(&self.provider);
 
         let contract_strategy = IStrategy::new(strategy_addr, &provider);
@@ -227,7 +226,7 @@ impl ELChainReader {
     pub async fn get_operator_details(
         &self,
         operator: Address,
-    ) -> Result<Operator, ElContractsError> {
+    ) -> Result<Operator, ElContractsError<TransportErrorKind>> {
         let provider = get_provider(&self.provider);
 
         let contract_delegation_manager =
@@ -246,7 +245,7 @@ impl ELChainReader {
 
                 Ok(Operator::new(
                     operator,
-                    operator_details.earningsReceiver,
+                    operator_details.__deprecated_earningsReceiver,
                     operator_details.delegationApprover,
                     operator_details.stakerOptOutWindowBlocks,
                     None,
@@ -259,7 +258,7 @@ impl ELChainReader {
     pub async fn is_operator_registered(
         &self,
         operator: Address,
-    ) -> Result<bool, ElContractsError> {
+    ) -> Result<bool, ElContractsError<TransportErrorKind>> {
         let provider = get_provider(&self.provider);
 
         let contract_delegation_manager = DelegationManager::new(self.delegation_manager, provider);

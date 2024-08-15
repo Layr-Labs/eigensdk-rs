@@ -1,4 +1,5 @@
 use alloy_contract::Error as AlloyError;
+use alloy_transport::TransportErrorKind;
 use eigen_client_elcontracts::error::ElContractsError;
 use eigen_crypto_bls::error::BlsError;
 use thiserror::Error;
@@ -143,8 +144,8 @@ pub enum AvsRegistryError {
     BlsError(String),
 }
 
-impl From<ElContractsError> for AvsRegistryError {
-    fn from(err: ElContractsError) -> Self {
+impl From<ElContractsError<TransportErrorKind>> for AvsRegistryError {
+    fn from(err: ElContractsError<TransportErrorKind>) -> Self {
         AvsRegistryError::ElContractsError(err.to_string())
     }
 }

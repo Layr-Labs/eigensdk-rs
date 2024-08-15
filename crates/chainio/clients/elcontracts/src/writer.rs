@@ -3,6 +3,7 @@ use crate::reader::ELChainReader;
 use alloy_primitives::FixedBytes;
 use alloy_primitives::{Address, TxHash, U256};
 use alloy_provider::WalletProvider;
+use alloy_transport::TransportErrorKind;
 use eigen_logging::logger::Logger;
 use eigen_logging::tracing_logger::TracingLogger;
 pub use eigen_types::operator::Operator;
@@ -65,7 +66,7 @@ impl ELChainWriter {
     pub async fn register_as_operator(
         &self,
         operator: Operator,
-    ) -> Result<FixedBytes<32>, ElContractsError> {
+    ) -> Result<FixedBytes<32>, ElContractsError<TransportErrorKind>> {
         self.logger.info(
             &format!(
                 "registering operator {} to EigenLayer",
@@ -138,7 +139,7 @@ impl ELChainWriter {
     pub async fn update_operator_details(
         &self,
         operator: Operator,
-    ) -> Result<TxHash, ElContractsError> {
+    ) -> Result<TxHash, ElContractsError<TransportErrorKind>> {
         self.logger.info(
             &format!(
                 "updating operator detils of operator {:?} to EigenLayer",
@@ -179,7 +180,7 @@ impl ELChainWriter {
         &self,
         strategy_addr: Address,
         amount: U256,
-    ) -> Result<TxHash, ElContractsError> {
+    ) -> Result<TxHash, ElContractsError<TransportErrorKind>> {
         self.logger.info(
             &format!(
                 "depositing {:?} tokens into strategy {:?}",
@@ -193,6 +194,7 @@ impl ELChainWriter {
             .await;
         match tokens_result {
             Ok(tokens) => {
+                self.logger.info(&format!("tokens {:?}", tokens), &[""]);
                 let (_, underlying_token_contract, underlying_token) = tokens;
                 let provider = get_signer(self.signer.clone(), &self.provider);
 
@@ -230,11 +232,11 @@ impl ELChainWriter {
     pub async fn set_claimed_for(
         &self,
         claimer: Address,
-    ) -> Result<FixedBytes<32>, ElContractsError> {
+    ) -> Result<FixedBytes<32>, ElContractsError<TransportErrorKind>> {
         let provider = get_signer(self.signer.clone(), &self.provider);
 
         let contract_rewards_coordinator =
-            RewardsCoordinator::new(self.rewards_coordinator, provider);
+            RewardsCoordinator::new(self.rewards_coordinator, &provider);
 
         let set_claimer_for_call = contract_rewards_coordinator.setClaimerFor(claimer);
 
@@ -270,7 +272,7 @@ impl ELChainWriter {
         &self,
         recipient: Address,
         claim: RewardsMerkleClaim,
-    ) -> Result<FixedBytes<32>, ElContractsError> {
+    ) -> Result<FixedBytes<32>, ElContractsError<TransportErrorKind>> {
         let provider = get_signer(self.signer.clone(), &self.provider);
 
         let contract_rewards_coordinator =
@@ -303,10 +305,10 @@ impl ELChainWriter {
     /// TODO(supernova): This method is not availabe in dev branch of eigenlayer-contracts, so skipping this till then
     pub fn force_deregister_from_operator_set(
         &self,
-        operator: Address,
-        avs: Address,
-        operator_set_ids: Vec<u32>,
-        operator_signature: AVSDirectory::SignatureWithSaltAndExpiry,
+        _operator: Address,
+        _avs: Address,
+        _operator_set_ids: Vec<u32>,
+        _operator_signature: AVSDirectory::SignatureWithSaltAndExpiry,
     ) {
         //     let provider = get_signer(self.signer.clone(), &self.provider);
         //     let contract_avs_directory = AVSDirectory::new(self.el_chain_reader.get_avs_directory_address(),provider);
@@ -470,7 +472,7 @@ mod tests {
             service_manager_address,
             anvil_constants::ANVIL_RPC_URL.clone(),
         );
-        let operator_pvt_key = "59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d";
+        let operator_pvt_key = "0x5de4111afa1a4b94908f83103eb1f1706367c2e68ca870fc3fb9a804cdab365a";
         let operator: PrivateKeySigner = (operator_pvt_key)
             .parse()
             .expect("failed to generate wallet");
@@ -526,7 +528,7 @@ mod tests {
             rewards_coordinator_address,
             slasher_address,
             "http://localhost:8545".to_string(),
-            "59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d".to_string(),
+            "0x5de4111afa1a4b94908f83103eb1f1706367c2e68ca870fc3fb9a804cdab365a".to_string(),
         );
         let operator = Operator::new(
             operator.address(),
@@ -539,5 +541,56 @@ mod tests {
             .update_operator_details(operator)
             .await
             .unwrap();
+    }
+
+    #[tokio::test]
+    async fn test_operator_is_frozen() {
+        let delegation_manager_address = anvil_constants::get_delegation_manager_address().await;
+        let delegation_manager_contract = DelegationManager::new(
+            delegation_manager_address,
+            anvil_constants::ANVIL_RPC_URL.clone(),
+        );
+        let slasher_address_return = delegation_manager_contract.slasher().call().await.unwrap();
+        let DelegationManager::slasherReturn {
+            _0: slasher_address,
+        } = slasher_address_return;
+        let service_manager_address = anvil_constants::get_service_manager_address().await;
+        let strategy_manager_address = anvil_constants::get_strategy_manager_address().await;
+        let slasher_address = anvil_constants::get_slasher_address().await;
+        let avs_directory_address = anvil_constants::get_avs_directory_address().await;
+        let rewards_coordinator_address = anvil_constants::get_registry_coordinator_address().await;
+
+        let service_manager_contract = mockAvsServiceManager::new(
+            service_manager_address,
+            anvil_constants::ANVIL_RPC_URL.clone(),
+        );
+        let operator_pvt_key = "0x5de4111afa1a4b94908f83103eb1f1706367c2e68ca870fc3fb9a804cdab365a";
+        let operator: PrivateKeySigner = (operator_pvt_key)
+            .parse()
+            .expect("failed to generate wallet");
+        let avs_directory_address_return = service_manager_contract
+            .avsDirectory()
+            .call()
+            .await
+            .unwrap();
+        let mockAvsServiceManager::avsDirectoryReturn {
+            _0: avs_directory_address,
+        } = avs_directory_address_return;
+
+        let el_chain_reader = ELChainReader::new(
+            get_test_logger().clone(),
+            slasher_address,
+            delegation_manager_address,
+            avs_directory_address,
+            "http://localhost:8545".to_string(),
+        );
+
+        assert_eq!(
+            false,
+            el_chain_reader
+                .operator_is_frozen(operator.address())
+                .await
+                .unwrap()
+        );
     }
 }

@@ -1,8 +1,9 @@
 use alloy_contract::Error as AlloyError;
+use alloy_json_rpc::RpcError as AlloyRpcError;
 use thiserror::Error;
 
 #[derive(Debug, Error)]
-pub enum ElContractsError {
+pub enum ElContractsError<E> {
     /// Get slasher address
     #[error("failed to get slasher address")]
     GetSlasher,
@@ -69,10 +70,21 @@ pub enum ElContractsError {
 
     #[error("Alloy contract error")]
     AlloyContractError(AlloyError),
+
+    #[error("Alloy rpc error {0}")]
+    AlloyJsonRpcError(AlloyRpcError<E>),
 }
 
-impl From<AlloyError> for ElContractsError {
+impl From<AlloyError> for ElContractsError<alloy_transport::TransportErrorKind> {
     fn from(value: AlloyError) -> Self {
         ElContractsError::AlloyContractError(value)
+    }
+}
+
+impl From<AlloyRpcError<alloy_transport::TransportErrorKind>>
+    for ElContractsError<alloy_transport::TransportErrorKind>
+{
+    fn from(value: AlloyRpcError<alloy_transport::TransportErrorKind>) -> Self {
+        ElContractsError::AlloyJsonRpcError(value)
     }
 }

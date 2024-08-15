@@ -206,11 +206,11 @@ mod test {
         let expected_addresses: ContractAddresses = serde_json::from_str(
             r#"{
             "avs": {
-              "bls-apk-registry": "0x84ea74d481ee0a5332c457a4d796187f6ba67feb",
-              "index-registry": "0x9e545e3c0baab3e08cdfd552c960a1050f373042",
-              "registry-coordinator": "0xc3e53f4d16ae77db1c982e75a937b9f60fe63690",
-              "service-manager": "0x67d269191c92caf3cd7723f116c85e6e9bf55933",
-              "stake-registry": "0xa82ff9afd8f496c3d6ac40e2a0f282e47488cfc9"
+              "bls-apk-registry": "0x1613beb3b2c4f22ee086b2b38c1476a3ce7f78e8",
+              "index-registry": "0x851356ae760d987e095750cceb3bc6014560891c",
+              "registry-coordinator": "0xa82ff9afd8f496c3d6ac40e2a0f282e47488cfc9",
+              "service-manager": "0x84ea74d481ee0a5332c457a4d796187f6ba67feb",
+              "stake-registry": "0xf5059a5d33d5853360d16c683c16e67980206f36"
             },
             "eigenlayer": {
               "delegation-manager": "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
@@ -242,16 +242,16 @@ mod test {
         let expected_addresses: ContractAddresses = serde_json::from_str(
             r#"{
             "avs": {
-              "bls-apk-registry": "0x84ea74d481ee0a5332c457a4d796187f6ba67feb",
-              "index-registry": "0x9e545e3c0baab3e08cdfd552c960a1050f373042",
-              "registry-coordinator": "0xc3e53f4d16ae77db1c982e75a937b9f60fe63690",
-              "service-manager": "0x67d269191c92caf3cd7723f116c85e6e9bf55933",
-              "stake-registry": "0xa82ff9afd8f496c3d6ac40e2a0f282e47488cfc9"
+              "bls-apk-registry": "0x1613beb3b2c4f22ee086b2b38c1476a3ce7f78e8",
+              "index-registry": "0x851356ae760d987e095750cceb3bc6014560891c",
+              "registry-coordinator": "0xa82ff9afd8f496c3d6ac40e2a0f282e47488cfc9",
+              "service-manager": "0x84ea74d481ee0a5332c457a4d796187f6ba67feb",
+              "stake-registry": "0xf5059a5d33d5853360d16c683c16e67980206f36"
             },
             "eigenlayer": {
-              "delegation-manager": "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
-              "slasher": "0xa513E6E4b8f2a923D98304ec87F64353C4D5C853",
-              "strategy-manager": "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707"
+              "delegation-manager": "0xdc64a140aa3e981100a9beca4e685f962f0cf6c9",
+              "slasher": "0xa513e6e4b8f2a923d98304ec87f64353c4d5c853",
+              "strategy-manager": "0x5fc8d32690cc91d4c39d9d3abcbd16989f875707"
             },
             "network": {
               "chain-id": "31337",

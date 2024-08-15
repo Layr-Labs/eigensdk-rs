@@ -13,6 +13,7 @@ alloy-primitives.workspace = true
 alloy-provider.workspace = true
 alloy-transport-http.workspace = true
 alloy-rpc-types.workspace = true
+alloy-transport.workspace = true
 num-bigint = "0.4.4"
 reqwest.workspace = true
 eigen-types.workspace = true
