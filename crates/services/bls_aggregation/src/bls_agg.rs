@@ -4,17 +4,16 @@ use ark_ec::{AffineRepr, CurveGroup};
 use eigen_crypto_bls::BlsG1Point;
 use eigen_crypto_bls::{BlsG2Point, Signature};
 use eigen_crypto_bn254::utils::verify_message;
-use eigen_services_avsregistry::chaincaller::AvsRegistryServiceChainCaller;
 use eigen_services_avsregistry::AvsRegistryService;
 use eigen_types::{
     avs::{SignedTaskResponseDigest, TaskIndex, TaskResponseDigest},
     operator::{OperatorAvsState, QuorumThresholdPercentage, QuorumThresholdPercentages},
 };
-use parking_lot::lock_api::Mutex;
 use parking_lot::{RwLock, RwLockReadGuard, RwLockWriteGuard};
 use std::collections::HashMap;
 use std::sync::Arc;
 use tokio::sync::mpsc::{self, UnboundedReceiver, UnboundedSender};
+use tokio::sync::Mutex;
 use tokio::time::{self, Duration};
 
 #[allow(unused)]
@@ -46,7 +45,7 @@ where
     A: Clone,
 {
     aggregated_response_sender: UnboundedSender<BlsAggregationServiceResponse>,
-    pub aggregated_response_receiver: Arc<UnboundedReceiver<BlsAggregationServiceResponse>>,
+    pub aggregated_response_receiver: Arc<Mutex<UnboundedReceiver<BlsAggregationServiceResponse>>>,
     signed_task_response:
         Arc<RwLock<HashMap<TaskIndex, UnboundedSender<SignedTaskResponseDigest>>>>,
 
@@ -58,7 +57,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         let (tx, rx) = tokio::sync::mpsc::unbounded_channel();
         Self {
             aggregated_response_sender: tx,
-            aggregated_response_receiver: Arc::new(rx),
+            aggregated_response_receiver: Arc::new(Mutex::new(rx)),
             signed_task_response: Arc::new(RwLock::new(HashMap::new())),
             avs_registry_service,
         }
@@ -472,13 +471,14 @@ mod tests {
             non_signer_stake_indices: vec![],
         };
 
-        assert_eq!(
-            expected_agg_service_response,
+        let response = {
             bls_agg_service
                 .aggregated_response_receiver
+                .lock()
+                .await
                 .recv()
                 .await
-                .unwrap()
-        );
+        };
+        assert_eq!(expected_agg_service_response, response.unwrap());
     }
 }
