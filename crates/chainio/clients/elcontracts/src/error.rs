@@ -67,6 +67,12 @@ pub enum ElContractsError {
     #[error("Failed to update metadata uri")]
     UpdateMetadataUri,
 
-    #[error("Alloy contract error: {0}")]
-    AlloyContractError(#[from] AlloyError),
+    #[error("Alloy contract error")]
+    AlloyContractError(AlloyError),
+}
+
+impl From<AlloyError> for ElContractsError {
+    fn from(value: AlloyError) -> Self {
+        ElContractsError::AlloyContractError(value)
+    }
 }

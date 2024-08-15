@@ -4,13 +4,16 @@ use crate::error::ElContractsError;
 use crate::reader::ELChainReader;
 use alloy_primitives::FixedBytes;
 use alloy_primitives::{Address, TxHash, U256};
+use alloy_provider::network::{NetworkWallet, ReceiptResponse};
+use alloy_provider::WalletProvider;
 use eigen_logging::logger::Logger;
 use eigen_logging::tracing_logger::TracingLogger;
 pub use eigen_types::operator::Operator;
+use eigen_utils::binding::RewardsCoordinator::RewardsMerkleClaim;
 use eigen_utils::{
     binding::{
         DelegationManager::{self},
-        StrategyManager, IERC20,
+        RewardsCoordinator, StrategyManager, IERC20,
     },
     get_signer,
 };
@@ -73,7 +76,7 @@ impl ELChainWriter {
             &["eigen-client-elcontracts.register_as_operator"],
         );
         let op_details = OperatorDetails {
-            earningsReceiver: operator.has_earnings_receiver_address(),
+            __deprecated_earningsReceiver: operator.has_earnings_receiver_address(),
             delegationApprover: operator.has_delegation_approver_address(),
             stakerOptOutWindowBlocks: operator.has_staker_opt_out_window_blocks(),
         };
@@ -146,7 +149,7 @@ impl ELChainWriter {
             &["eigen_client_elcontracts.update_operator_details"],
         );
         let operator_details = OperatorDetails {
-            earningsReceiver: operator.has_earnings_receiver_address(),
+            __deprecated_earningsReceiver: operator.has_earnings_receiver_address(),
             delegationApprover: operator.has_delegation_approver_address(),
             stakerOptOutWindowBlocks: operator.has_staker_opt_out_window_blocks(),
         };
@@ -223,6 +226,79 @@ impl ELChainWriter {
                 Ok(*tx.tx_hash())
             }
             Err(e) => Err(e),
+        }
+    }
+
+    pub async fn set_claimed_for(
+        &self,
+        claimer: Address,
+    ) -> Result<FixedBytes<32>, ElContractsError> {
+        let provider = get_signer(self.signer.clone(), &self.provider);
+
+        let contract_rewards_coordinator =
+            RewardsCoordinator::new(self.rewards_coordinator, provider);
+
+        let set_claimer_for_call = contract_rewards_coordinator.setClaimerFor(claimer);
+
+        let receipt = set_claimer_for_call.send().await?.get_receipt().await?;
+        let hash = receipt.transaction_hash;
+        match receipt.status() {
+            true => {
+                self.logger.info(
+                    &format!(
+                        "Successfully set {} as claimer for {}",
+                        claimer,
+                        provider.default_signer_address()
+                    ),
+                    &["eigen-client-elcontracts.set_claimed_for"],
+                );
+                Ok(hash)
+            }
+            false => {
+                self.logger.info(
+                    &format!(
+                        "Failed to set {} as claimer for {}",
+                        claimer,
+                        provider.default_signer_address()
+                    ),
+                    &["eigen-client-elcontracts.set_claimed_for"],
+                );
+                Ok(hash)
+            }
+        }
+    }
+
+    pub async fn process_claim(
+        &self,
+        recipient: Address,
+        claim: RewardsMerkleClaim,
+    ) -> Result<FixedBytes<32>, ElContractsError> {
+        let provider = get_signer(self.signer.clone(), &self.provider);
+
+        let contract_rewards_coordinator =
+            RewardsCoordinator::new(self.rewards_coordinator, &provider);
+        let process_claim_call = contract_rewards_coordinator.processClaim(claim, recipient);
+
+        let receipt = process_claim_call.send().await?.get_receipt().await?;
+
+        let hash = receipt.transaction_hash;
+
+        match receipt.status() {
+            true => {
+                self.logger.info(
+                    &format!("Successfully processed claim for recipient {} ", recipient),
+                    &["eigen-client-elcontracts.process_claim"],
+                );
+                Ok(hash)
+            }
+
+            false => {
+                self.logger.info(
+                    &format!("Failed to  process claim for recipient {} ", recipient),
+                    &["eigen-client-elcontracts.process_claim"],
+                );
+                Ok(hash)
+            }
         }
     }
 }
