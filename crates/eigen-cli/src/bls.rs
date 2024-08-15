@@ -2,7 +2,7 @@ use crate::args::BlsKeystoreType;
 use crate::EigenBlsKeyStoreError;
 use rust_bls_bn254::keystores::{pbkdf2_keystore::Pbkdf2Keystore, scrypt_keystore::ScryptKeystore};
 
-/// BlsKeystore types  
+/// BlsKeystore   
 pub enum BlsKeystore {
     Pbkdf2,
     Scrypt,
