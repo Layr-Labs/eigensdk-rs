@@ -1,10 +1,7 @@
-use std::ops::Add;
-
 use crate::error::ElContractsError;
 use crate::reader::ELChainReader;
 use alloy_primitives::FixedBytes;
 use alloy_primitives::{Address, TxHash, U256};
-use alloy_provider::network::{NetworkWallet, ReceiptResponse};
 use alloy_provider::WalletProvider;
 use eigen_logging::logger::Logger;
 use eigen_logging::tracing_logger::TracingLogger;
@@ -12,6 +9,7 @@ pub use eigen_types::operator::Operator;
 use eigen_utils::binding::RewardsCoordinator::RewardsMerkleClaim;
 use eigen_utils::{
     binding::{
+        AVSDirectory,
         DelegationManager::{self},
         RewardsCoordinator, StrategyManager, IERC20,
     },
@@ -300,6 +298,32 @@ impl ELChainWriter {
                 Ok(hash)
             }
         }
+    }
+
+    /// TODO(supernova): This method is not availabe in dev branch of eigenlayer-contracts, so skipping this till then
+    pub fn force_deregister_from_operator_set(
+        &self,
+        operator: Address,
+        avs: Address,
+        operator_set_ids: Vec<u32>,
+        operator_signature: AVSDirectory::SignatureWithSaltAndExpiry,
+    ) {
+        //     let provider = get_signer(self.signer.clone(), &self.provider);
+        //     let contract_avs_directory = AVSDirectory::new(self.el_chain_reader.get_avs_directory_address(),provider);
+        //     // contract_avs_directory
+
+        todo!()
+    }
+
+    /// TODO(supernova): This method is not available in dev branch of eigenlayer-contracts , so skipping till then
+    pub fn set_operator_commission_bips(&self) {
+        // let provider = get_signer(self.signer.clone(), &self.provider);
+
+        // let contract_rewards_coordinator =
+        //     RewardsCoordinator::new(self.rewards_coordinator, &provider);
+
+        // let tx = contract_rewards_coordinator.setOpe
+        todo!()
     }
 }
 

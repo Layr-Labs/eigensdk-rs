@@ -32,6 +32,10 @@ impl ELChainReader {
         }
     }
 
+    pub fn get_avs_directory_address(&self) -> Address {
+        self.avs_directory
+    }
+
     /// Builds a new [`ELChainReader`] instance .
     pub async fn build(
         _logger: TracingLogger,
