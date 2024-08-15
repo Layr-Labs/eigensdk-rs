@@ -45,7 +45,7 @@ pub struct BlsAggregatorService<A: AvsRegistryService>
 where
     A: Clone,
 {
-    aggregated_response_sender: Arc<UnboundedSender<BlsAggregationServiceResponse>>,
+    aggregated_response_sender: UnboundedSender<BlsAggregationServiceResponse>,
     pub aggregated_response_receiver: Arc<UnboundedReceiver<BlsAggregationServiceResponse>>,
     signed_task_response:
         Arc<RwLock<HashMap<TaskIndex, UnboundedSender<SignedTaskResponseDigest>>>>,
@@ -57,7 +57,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
     pub fn new(avs_registry_service: A) -> Self {
         let (tx, rx) = tokio::sync::mpsc::unbounded_channel();
         Self {
-            aggregated_response_sender: Arc::new(tx),
+            aggregated_response_sender: tx,
             aggregated_response_receiver: Arc::new(rx),
             signed_task_response: Arc::new(RwLock::new(HashMap::new())),
             avs_registry_service,
