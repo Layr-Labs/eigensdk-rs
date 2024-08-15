@@ -17,8 +17,10 @@ use once_cell::sync::OnceCell;
 use std::sync::Arc;
 use tracing_logger::TracingLogger;
 
+/// [`NoopLogger`](for testing) OnceCell instance that can be initialized once
 static TEST_LOGGER: OnceCell<Arc<(dyn Logger + 'static)>> = OnceCell::new();
 
+///  [`TracingLogger`] OnceCell instance that can be initialized once
 static LOGGER: OnceCell<Arc<(dyn Logger + 'static)>> = OnceCell::new();
 
 /// Initializes the test logger at the start using ctor.
