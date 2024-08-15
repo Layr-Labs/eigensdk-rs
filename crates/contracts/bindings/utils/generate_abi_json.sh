@@ -12,6 +12,7 @@ cd $CONTRACT_PATH
 forge build
 
 cp $CONTRACT_PATH/out/RegistryCoordinator.sol/RegistryCoordinator.json ../json/RegistryCoordinator.json
+cp $CONTRACT_PATH/out/ECDSAStakeRegistry.sol/ECDSAStakeRegistry.json ../json/ECDSAStakeRegistry.json
 cp $CONTRACT_PATH/out/OperatorStateRetriever.sol/OperatorStateRetriever.json ../json/OperatorStateRetriever.json
 cp $CONTRACT_PATH/out/StakeRegistry.sol/StakeRegistry.json ../json/StakeRegistry.json
 cp $CONTRACT_PATH/out/BLSApkRegistry.sol/BLSApkRegistry.json ../json/BLSApkRegistry.json
@@ -25,6 +26,7 @@ cp $CONTRACT_PATH/out/EigenPodManager.sol/EigenPodManager.json ../json/EigenPodM
 cp $CONTRACT_PATH/out/IStrategy.sol/IStrategy.json ../json/IStrategy.json
 cp $CONTRACT_PATH/out/AVSDirectory.sol/AVSDirectory.json ../json/AVSDirectory.json
 cp $CONTRACT_PATH/out/IRegistryCoordinator.sol/IRegistryCoordinator.json ../json/IRegistryCoordinator.json
+cp $CONTRACT_PATH/out/RewardsCoordinator.sol/RewardsCoordinator.json ../json/RewardsCoordinator.json
 
 
 
