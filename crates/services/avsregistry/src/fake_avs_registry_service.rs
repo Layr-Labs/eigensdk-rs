@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use alloy_primitives::{BlockNumber, Bytes, FixedBytes, U256};
 use ark_bn254::G1Projective;
 use ark_ec::CurveGroup;
-use eigen_client_avsregistry::{error::AvsRegistryError, reader::AvsRegistryChainReader};
+use eigen_client_avsregistry::error::AvsRegistryError;
 use eigen_crypto_bls::{
     alloy_registry_g1_point_to_g1_affine, convert_to_g1_point, BlsG1Point, OperatorId, PublicKey,
 };

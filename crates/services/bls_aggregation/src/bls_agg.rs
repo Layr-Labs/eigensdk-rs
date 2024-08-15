@@ -368,24 +368,15 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
 
 #[cfg(test)]
 mod tests {
-    use alloy_primitives::{BlockNumber, B256, U256};
+    use alloy_primitives::{B256, U256};
     use core::panic;
     use eigen_crypto_bls::BlsKeyPair;
     use eigen_logging::get_test_logger;
-    use eigen_services_avsregistry::AvsRegistryService;
-    use eigen_services_avsregistry::{
-        chaincaller::AvsRegistryServiceChainCaller,
-        fake_avs_registry_service::FakeAvsRegistryService,
-    };
+    use eigen_services_avsregistry::fake_avs_registry_service::FakeAvsRegistryService;
     use eigen_types::operator::QuorumThresholdPercentages;
-    use eigen_types::{
-        avs::TaskIndex,
-        operator::{QuorumNum, QuorumThresholdPercentage},
-        test::TestOperator,
-    };
+    use eigen_types::{avs::TaskIndex, test::TestOperator};
     use sha2::{Digest, Sha256};
     use std::collections::HashMap;
-    use std::sync::Arc;
     use std::time::Duration;
     use std::vec;
 
