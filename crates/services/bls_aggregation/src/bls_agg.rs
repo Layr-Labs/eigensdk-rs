@@ -10,6 +10,7 @@ use eigen_types::{
     avs::{SignedTaskResponseDigest, TaskIndex, TaskResponseDigest},
     operator::{OperatorAvsState, QuorumThresholdPercentage, QuorumThresholdPercentages},
 };
+use parking_lot::lock_api::Mutex;
 use parking_lot::{RwLock, RwLockReadGuard, RwLockWriteGuard};
 use std::collections::HashMap;
 use std::sync::Arc;
@@ -17,7 +18,7 @@ use tokio::sync::mpsc::{self, UnboundedReceiver, UnboundedSender};
 use tokio::time::{self, Duration};
 
 #[allow(unused)]
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BlsAggregationServiceResponse {
     task_index: TaskIndex,
     task_response_digest: TaskResponseDigest,
@@ -39,22 +40,25 @@ pub struct AggregatedOperators {
     pub signers_operator_ids_set: HashMap<FixedBytes<32>, bool>,
 }
 
-#[derive(Debug)]
-pub struct BlsAggregatorService<A: AvsRegistryService> {
-    aggregated_response_sender: UnboundedSender<BlsAggregationServiceResponse>,
-    pub aggregated_response_receiver: UnboundedReceiver<BlsAggregationServiceResponse>,
+#[derive(Debug, Clone)]
+pub struct BlsAggregatorService<A: AvsRegistryService>
+where
+    A: Clone,
+{
+    aggregated_response_sender: Arc<UnboundedSender<BlsAggregationServiceResponse>>,
+    pub aggregated_response_receiver: Arc<UnboundedReceiver<BlsAggregationServiceResponse>>,
     signed_task_response:
         Arc<RwLock<HashMap<TaskIndex, UnboundedSender<SignedTaskResponseDigest>>>>,
 
     avs_registry_service: A,
 }
 
-impl<A: AvsRegistryService + Send + Sync + 'static> BlsAggregatorService<A> {
+impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService<A> {
     pub fn new(avs_registry_service: A) -> Self {
         let (tx, rx) = tokio::sync::mpsc::unbounded_channel();
         Self {
-            aggregated_response_sender: tx,
-            aggregated_response_receiver: rx,
+            aggregated_response_sender: Arc::new(tx),
+            aggregated_response_receiver: Arc::new(rx),
             signed_task_response: Arc::new(RwLock::new(HashMap::new())),
             avs_registry_service,
         }
@@ -72,8 +76,8 @@ impl<A: AvsRegistryService + Send + Sync + 'static> BlsAggregatorService<A> {
         self.signed_task_response.read()
     }
 
-    pub async fn initialize_new_task(
-        self: Arc<Self>,
+    pub async fn initialize_new_task<S: AvsRegistryService>(
+        self,
         task_index: TaskIndex,
         task_created_block: u32,
         quorum_nums: Vec<u8>,
@@ -277,7 +281,7 @@ impl<A: AvsRegistryService + Send + Sync + 'static> BlsAggregatorService<A> {
 
                             let indices = self
                                 .avs_registry_service
-                                .get_avs_registry()
+                                // .get_avs_registry()
                                 .get_check_signatures_indices(
                                     task_created_block,
                                     quorum_nums.clone(),
@@ -369,7 +373,12 @@ mod tests {
     use core::panic;
     use eigen_crypto_bls::BlsKeyPair;
     use eigen_logging::get_test_logger;
-    use eigen_services_avsregistry::fake_avs_registry_service::FakeAvsRegistryService;
+    use eigen_services_avsregistry::AvsRegistryService;
+    use eigen_services_avsregistry::{
+        chaincaller::AvsRegistryServiceChainCaller,
+        fake_avs_registry_service::FakeAvsRegistryService,
+    };
+    use eigen_types::operator::QuorumThresholdPercentages;
     use eigen_types::{
         avs::TaskIndex,
         operator::{QuorumNum, QuorumThresholdPercentage},
@@ -377,6 +386,9 @@ mod tests {
     };
     use sha2::{Digest, Sha256};
     use std::collections::HashMap;
+    use std::sync::Arc;
+    use std::time::Duration;
+    use std::vec;
 
     use super::BlsAggregatorService;
 
@@ -395,18 +407,22 @@ mod tests {
         B256::from_slice(hasher.finalize().as_ref())
     }
 
-    #[test]
-    fn one_quorum_one_operator_one_correct_signature() {
+    #[tokio::test]
+    async fn one_quorum_one_operator_one_correct_signature() {
         let test_operator_1 = TestOperator {
             operator_id: U256::from(1).into(),
             stake_per_quorum: HashMap::from([(0u8, U256::from(100)), (1u8, U256::from(200))]),
-            bls_keypair: new_bls_key_pair_panics("0x1".into()),
+            bls_keypair: new_bls_key_pair_panics(
+                "13710126902690889134622698668747132666439281256983827313388062967626731803599"
+                    .into(),
+            ),
         };
 
-        let block_number: BlockNumber = 1;
+        let block_number = 1;
         let task_index: TaskIndex = 0;
-        let quorum_numbers: QuorumNum = 0;
-        let quorum_threshold_percentages: QuorumThresholdPercentage = 100;
+        let quorum_numbers = vec![0];
+        let quorum_threshold_percentages: QuorumThresholdPercentages = vec![100];
+        let time_to_expiry = Duration::from_secs(1);
         let task_response = 123; // Initialize with appropriate data
 
         // Compute the TaskResponseDigest as the SHA-256 sum of the TaskResponse (previously converting the taskresponse into a JSON string)
@@ -416,8 +432,53 @@ mod tests {
             .bls_keypair
             .sign_message(task_response_digest.as_ref());
         let fake_avs_registry_service =
-            FakeAvsRegistryService::new(block_number, vec![test_operator_1]);
+            FakeAvsRegistryService::new(block_number, vec![test_operator_1.clone()]);
         let logger = get_test_logger();
-        BlsAggregatorService::new(fake_avs_registry_service);
+        let mut bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
+        bls_agg_service
+            .initialize_new_task::<FakeAvsRegistryService>(
+                task_index,
+                block_number as u32,
+                quorum_numbers,
+                quorum_threshold_percentages,
+                time_to_expiry,
+            )
+            .await;
+
+        bls_agg_service
+            .process_new_signature(
+                task_index,
+                task_response_digest,
+                bls_signature,
+                test_operator_1.operator_id,
+            )
+            .await;
+
+        //     require.Equal(t, wantAggregationServiceResponse, gotAggregationServiceResponse)
+        //     require.EqualValues(t, taskIndex, gotAggregationServiceResponse.TaskIndex)
+        use crate::bls_agg::BlsAggregationServiceResponse;
+        let expected_agg_service_response = BlsAggregationServiceResponse {
+            task_index,
+            task_response_digest,
+            non_signers_pub_keys_g1: vec![],
+            quorum_apks_g1: vec![test_operator_1.bls_keypair.public_key()],
+            signers_apk_g2: test_operator_1.bls_keypair.public_key_g2(),
+            signers_agg_sig_g1: test_operator_1
+                .bls_keypair
+                .sign_message(task_response_digest.as_ref()),
+            non_signer_quorum_bitmap_indices: vec![],
+            quorum_apk_indices: vec![],
+            total_stake_indices: vec![],
+            non_signer_stake_indices: vec![],
+        };
+
+        assert_eq!(
+            expected_agg_service_response,
+            bls_agg_service
+                .aggregated_response_receiver
+                .recv()
+                .await
+                .unwrap()
+        );
     }
 }

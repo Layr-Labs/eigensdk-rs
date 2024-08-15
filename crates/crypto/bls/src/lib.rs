@@ -24,7 +24,7 @@ pub type PublicKey = G1Affine;
 pub type BlsSignature = G1Affine;
 pub type OperatorId = B256;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BlsG1Point {
     g1: G1Affine,
 }
@@ -39,7 +39,7 @@ impl BlsG1Point {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BlsG2Point {
     g2: G2Affine,
 }
@@ -55,6 +55,7 @@ impl BlsG2Point {
 }
 
 /// Bls key pair with public key on G1
+#[derive(Clone)]
 pub struct BlsKeyPair {
     /// Private Key
     priv_key: Fr,
@@ -219,7 +220,7 @@ pub fn convert_to_registry_g2_point(g2: G2Affine) -> Result<G2PointRegistry, Bls
 }
 
 /// Signature instance on [`G1Affine`]
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Signature {
     g1_point: BlsG1Point,
 }

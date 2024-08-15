@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use alloy_primitives::{BlockNumber, Bytes, FixedBytes, U256};
 use ark_bn254::G1Projective;
 use ark_ec::CurveGroup;
-use eigen_client_avsregistry::reader::AvsRegistryChainReader;
+use eigen_client_avsregistry::{error::AvsRegistryError, reader::AvsRegistryChainReader};
 use eigen_crypto_bls::{
     alloy_registry_g1_point_to_g1_affine, convert_to_g1_point, BlsG1Point, OperatorId, PublicKey,
 };
@@ -11,10 +11,13 @@ use eigen_types::{
     operator::{OperatorAvsState, OperatorInfo, OperatorPubKeys, QuorumAvsState, QuorumNum},
     test::TestOperator,
 };
-use eigen_utils::binding::BLSApkRegistry::G1Point;
+use eigen_utils::binding::{
+    BLSApkRegistry::G1Point, OperatorStateRetriever::CheckSignaturesIndices,
+};
 
 use crate::AvsRegistryService;
 
+#[derive(Clone)]
 pub struct FakeAvsRegistryService {
     operators: HashMap<BlockNumber, HashMap<OperatorId, OperatorAvsState>>,
 }
@@ -50,10 +53,6 @@ impl AvsRegistryService for FakeAvsRegistryService {
         _quorum_nums: Bytes,
     ) -> HashMap<FixedBytes<32>, OperatorAvsState> {
         self.operators.get(&(block_number as u64)).unwrap().clone()
-    }
-
-    fn get_avs_registry(&self) -> AvsRegistryChainReader {
-        todo!()
     }
 
     async fn get_quorums_avs_state_at_block(
@@ -99,5 +98,19 @@ impl AvsRegistryService for FakeAvsRegistryService {
 
     async fn get_operator_info(&self, operator_id: [u8; 32]) -> Option<OperatorPubKeys> {
         todo!()
+    }
+
+    async fn get_check_signatures_indices(
+        &self,
+        _reference_block_number: u32,
+        _quorum_numbers: Vec<u8>,
+        _non_signer_operator_ids: Vec<FixedBytes<32>>,
+    ) -> Result<CheckSignaturesIndices, AvsRegistryError> {
+        Ok(CheckSignaturesIndices {
+            nonSignerQuorumBitmapIndices: vec![],
+            quorumApkIndices: vec![],
+            totalStakeIndices: vec![],
+            nonSignerStakeIndices: vec![],
+        })
     }
 }

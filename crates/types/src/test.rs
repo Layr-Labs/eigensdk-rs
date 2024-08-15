@@ -5,8 +5,15 @@ use std::collections::HashMap;
 
 type StakeAmount = U256;
 
+#[derive(Clone)]
 pub struct TestOperator {
     pub operator_id: B256,
     pub stake_per_quorum: HashMap<QuorumNum, StakeAmount>,
     pub bls_keypair: BlsKeyPair,
+}
+
+impl TestOperator {
+    pub fn get_bls_keypair(&self) -> &BlsKeyPair {
+        &self.bls_keypair
+    }
 }

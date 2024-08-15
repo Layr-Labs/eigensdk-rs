@@ -1,13 +1,15 @@
 use alloy_primitives::{Bytes, FixedBytes, U256};
 use ark_bn254::G1Projective;
 use ark_ec::CurveGroup;
-use eigen_client_avsregistry::reader::AvsRegistryChainReader;
+use eigen_client_avsregistry::{error::AvsRegistryError, reader::AvsRegistryChainReader};
 use eigen_crypto_bls::{
     alloy_registry_g1_point_to_g1_affine, convert_to_g1_point, BlsG1Point, PublicKey,
 };
 use eigen_services_operatorsinfo::operatorsinfo_inmemory::OperatorInfoServiceInMemory;
 use eigen_types::operator::{OperatorAvsState, OperatorInfo, OperatorPubKeys, QuorumAvsState};
-use eigen_utils::binding::BLSApkRegistry::G1Point;
+use eigen_utils::binding::{
+    BLSApkRegistry::G1Point, OperatorStateRetriever::CheckSignaturesIndices,
+};
 use std::collections::HashMap;
 
 use crate::AvsRegistryService;
@@ -31,10 +33,6 @@ impl AvsRegistryServiceChainCaller {
 }
 
 impl AvsRegistryService for AvsRegistryServiceChainCaller {
-    fn get_avs_registry(&self) -> AvsRegistryChainReader {
-        self.avs_registry.clone()
-    }
-
     async fn get_operators_avs_state_at_block(
         &self,
         block_num: u32,
@@ -123,6 +121,21 @@ impl AvsRegistryService for AvsRegistryServiceChainCaller {
 
         self.operators_info_service
             .get_operator_info(operator_addr)
+            .await
+    }
+
+    async fn get_check_signatures_indices(
+        &self,
+        reference_block_number: u32,
+        quorum_numbers: Vec<u8>,
+        non_signer_operator_ids: Vec<FixedBytes<32>>,
+    ) -> Result<CheckSignaturesIndices, AvsRegistryError> {
+        self.avs_registry
+            .get_check_signatures_indices(
+                reference_block_number,
+                quorum_numbers,
+                non_signer_operator_ids,
+            )
             .await
     }
 }
