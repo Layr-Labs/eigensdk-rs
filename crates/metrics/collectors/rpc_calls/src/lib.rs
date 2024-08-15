@@ -3,7 +3,7 @@
     issue_tracker_base_url = "https://github.com/Layr-Labs/eigensdk-rs/issues/"
 )]
 #![cfg_attr(not(test), warn(unused_crate_dependencies))]
-use eigen_logging::{logger::Logger, EigenLogger};
+use eigen_logging::logger::{Logger, SharedLogger};
 use eigen_metrics_derive::Metrics;
 use metrics::{Counter, Histogram, Key, Label};
 
@@ -28,11 +28,11 @@ pub struct RpcCallsMetrics {
     /// All things related to Metrics <> Rpc call Analytics
     rpc_calls: RpcCalls,
 
-    logger: EigenLogger,
+    logger: SharedLogger,
 }
 
 impl RpcCallsMetrics {
-    pub fn new(logger: EigenLogger) -> Self {
+    pub fn new(logger: SharedLogger) -> Self {
         let rpc_calls = Self {
             rpc_calls: RpcCalls {
                 rpc_request_duration_seconds: metrics::register_histogram!(
@@ -73,17 +73,10 @@ impl RpcCallsMetrics {
         );
 
         metrics::histogram!(key.to_string(), duration);
-        match (&self.logger.tracing_logger, &self.logger.noop_logger) {
-            (Some(tracing_logger), _) => tracing_logger.debug(
-                "set rpc requet duration seconds , methods : {} , client_version: {}, duration: {} ",
-                &["eigen-metrics-collectors-rpc-calls.set_rpc_request_duration_seconds"],
-            ),
-            (_, Some(noop_logger)) => noop_logger.debug(
-                "set rpc requet duration seconds , methods : {} , client_version: {}, duration: {} ",
-                &["eigen-metrics-collectors-rpc-calls.set_rpc_request_duration_seconds"],
-            ),
-            _ => println!("Both TracingLogger and NoopLogger are None"),
-        }
+        self.logger.debug(
+            "set rpc requet duration seconds , methods : {} , client_version: {}, duration: {} ",
+            "eigen-metrics-collectors-rpc-calls.set_rpc_request_duration_seconds",
+        );
     }
 
     /// set_rpc_request_total
@@ -102,16 +95,9 @@ impl RpcCallsMetrics {
         );
 
         metrics::counter!(key.to_string(), rpc_request_total);
-        match (&self.logger.tracing_logger, &self.logger.noop_logger) {
-            (Some(tracing_logger), _) => tracing_logger.debug(
-                "set rpc request total ",
-                &["eigen-metrics-collectors-rpc-calls.set_rpc_request_total"],
-            ),
-            (_, Some(noop_logger)) => noop_logger.debug(
-                "set rpc request total ",
-                &["eigen-metrics-collectors-rpc-calls.set_rpc_request_total"],
-            ),
-            _ => println!("Both TracingLogger and NoopLogger are None"),
-        }
+        self.logger.debug(
+            "set rpc request total ",
+            "eigen-metrics-collectors-rpc-calls.set_rpc_request_total",
+        );
     }
 }

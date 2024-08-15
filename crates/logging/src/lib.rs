@@ -14,81 +14,34 @@ use log_level::LogLevel;
 use logger::Logger;
 use noop_logger::NoopLogger;
 use once_cell::sync::OnceCell;
+use std::sync::Arc;
 use tracing_logger::TracingLogger;
 
-static TEST_LOGGER: OnceCell<EigenLogger> = OnceCell::new();
+static TEST_LOGGER: OnceCell<Arc<(dyn Logger + 'static)>> = OnceCell::new();
 
-static LOGGER: OnceCell<EigenLogger> = OnceCell::new();
-
-#[derive(Debug, Clone, Default)]
-pub struct EigenLogger {
-    pub noop_logger: Option<NoopLogger>,
-
-    pub tracing_logger: Option<TracingLogger>,
-}
-
-impl EigenLogger {
-    pub fn new_noop_logger(noop_logger: NoopLogger) -> Self {
-        EigenLogger {
-            noop_logger: Some(noop_logger),
-            tracing_logger: None,
-        }
-    }
-
-    pub fn new_tracing_logger(tracing_logger: TracingLogger) -> Self {
-        EigenLogger {
-            noop_logger: None,
-            tracing_logger: Some(tracing_logger),
-        }
-    }
-}
+static LOGGER: OnceCell<Arc<(dyn Logger + 'static)>> = OnceCell::new();
 
 /// Initializes the test logger at the start using ctor.
 #[ctor]
 fn init_test_logger() {
     TEST_LOGGER.get_or_init(|| {
-        EigenLogger::new_noop_logger(NoopLogger::new_text_logger(
-            false,
-            String::from(""),
-            LogLevel::Debug,
-            false,
-        ))
+        NoopLogger::new_text_logger(false, String::from(""), LogLevel::Debug, false)
     });
 }
 
 /// get the initialized test logger
-pub fn get_test_logger() -> EigenLogger {
-    EigenLogger::new_noop_logger(
-        TEST_LOGGER
-            .get()
-            .expect("Logger not initialized")
-            .noop_logger
-            .clone()
-            .unwrap(),
-    )
+pub fn get_test_logger() -> Arc<dyn Logger> {
+    TEST_LOGGER.get().expect("Logger not initialized").clone()
 }
 
 /// Use this to initialize the tracer. It can only be initialized once.
 /// Set the tracing level according to [`LogLevel`]
 pub fn init_logger(log_level: LogLevel) {
-    LOGGER.get_or_init(|| {
-        EigenLogger::new_tracing_logger(TracingLogger::new_text_logger(
-            false,
-            String::from(""),
-            log_level,
-            false,
-        ))
-    });
+    LOGGER
+        .get_or_init(|| TracingLogger::new_text_logger(false, String::from(""), log_level, false));
 }
 
 /// get the initialized logger
-pub fn get_logger() -> EigenLogger {
-    EigenLogger::new_tracing_logger(
-        LOGGER
-            .get()
-            .expect("Logger not initialized")
-            .tracing_logger
-            .clone()
-            .unwrap(),
-    )
+pub fn get_logger() -> Arc<dyn Logger> {
+    LOGGER.get().expect("Logger not initialized").clone()
 }

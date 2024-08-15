@@ -1,6 +1,6 @@
 use super::log_level::LogLevel;
 use super::logger::Logger;
-use std::fmt::Debug;
+use std::{fmt::Debug, sync::Arc};
 use tracing::{debug, error, info, trace, warn};
 
 // SLoggerOptions are options when creating a new SLogger.
@@ -20,15 +20,13 @@ pub struct TracingLogger {
     pub time_format: String,
 }
 
-impl Logger for TracingLogger {
-    type LoggerType = TracingLogger;
-
-    fn new_text_logger(
+impl TracingLogger {
+    pub fn new_text_logger(
         no_color: bool,
         time_format: String,
         level: LogLevel,
         add_source: bool,
-    ) -> Self {
+    ) -> Arc<dyn Logger> {
         let tracing_level = match level {
             LogLevel::Fatal => tracing::Level::ERROR,
             LogLevel::Error => tracing::Level::ERROR,
@@ -45,57 +43,48 @@ impl Logger for TracingLogger {
         )
         .expect("setting default subscriber failed");
 
-        TracingLogger {
+        Arc::new(TracingLogger {
             add_source,
             level,
             time_format,
-        }
+        })
+    }
+}
+
+pub fn create_tracing_logger(
+    no_color: bool,
+    time_format: String,
+    level: LogLevel,
+    add_source: bool,
+) -> Arc<dyn Logger> {
+    TracingLogger::new_text_logger(no_color, time_format, level, add_source)
+}
+
+impl Logger for TracingLogger {
+    // type LoggerType = TracingLogger;
+
+    fn debug(&self, msg: &str, tags: &str) {
+        debug!("{} {:?}", msg, [tags]);
     }
 
-    fn new_json_logger(
-        no_color: bool,
-        time_format: String,
-        level: LogLevel,
-        add_source: bool,
-    ) -> Self {
-        tracing::subscriber::set_global_default(
-            tracing_subscriber::fmt::Subscriber::builder()
-                .with_max_level(tracing::Level::TRACE)
-                .with_ansi(no_color)
-                .json()
-                .finish(),
-        )
-        .expect("setting default subscriber failed");
-
-        TracingLogger {
-            add_source,
-            level,
-            time_format,
-        }
+    fn info(&self, msg: &str, tags: &str) {
+        info!("{} {:?}", msg, [tags]);
     }
 
-    fn debug(&self, msg: &str, tags: &[impl Debug]) {
-        debug!("{} {:?}", msg, tags);
+    fn warn(&self, msg: &str, tags: &str) {
+        warn!("{} {:?}", msg, [tags]);
     }
 
-    fn info(&self, msg: &str, tags: &[impl Debug]) {
-        info!("{} {:?}", msg, tags);
+    fn error(&self, msg: &str, tags: &str) {
+        error!("{} {:?}", msg, [tags]);
     }
 
-    fn warn(&self, msg: &str, tags: &[impl Debug]) {
-        warn!("{} {:?}", msg, tags);
+    fn fatal(&self, msg: &str, tags: &str) {
+        error!("{} {:?}", msg, [tags]);
+        panic!("Fatal error occurred: {} {:?}", msg, [tags]);
     }
 
-    fn error(&self, msg: &str, tags: &[impl Debug]) {
-        error!("{} {:?}", msg, tags);
-    }
-
-    fn fatal(&self, msg: &str, tags: &[impl Debug]) {
-        error!("{} {:?}", msg, tags);
-        panic!("Fatal error occurred: {} {:?}", msg, tags);
-    }
-
-    fn log(&self, msg: &str, tags: &[impl Debug]) {
+    fn log(&self, msg: &str, tags: &str) {
         match self.level {
             LogLevel::Fatal => {
                 error!("Fatal");
@@ -129,11 +118,9 @@ impl Logger for TracingLogger {
 mod tests {
     use crate::get_test_logger;
 
-    use super::*;
-
     #[test]
     fn test_log() {
         let logger = get_test_logger();
-        logger.noop_logger.unwrap().log("Log", &["info logged"]);
+        logger.log("Log", "info logged");
     }
 }

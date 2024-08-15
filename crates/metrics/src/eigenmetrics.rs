@@ -1,7 +1,8 @@
-use eigen_logging::{logger::Logger, EigenLogger};
+use eigen_logging::logger::{tags_as_debug, Logger, SharedLogger};
 use eigen_metrics_derive::Metrics;
 use metrics::Gauge;
-
+use std::fmt::Debug;
+use std::sync::Arc;
 /// TODO(supernova): fee_earned_total is not yet implemented . As its not yet turned on
 // Performance Metrics
 #[derive(Clone, Metrics)]
@@ -23,11 +24,11 @@ pub struct EigenPerformanceMetrics {
     /// The score is calculated based on the performance of the AVS Node and the performance of the backing services.
     eigen_metrics: EigenPerformance,
 
-    logger: EigenLogger,
+    logger: SharedLogger,
 }
 
 impl EigenPerformanceMetrics {
-    pub fn new(logger: EigenLogger) -> Self {
+    pub fn new(logger: SharedLogger) -> Self {
         let eigen_metrics_metrics = Self {
             eigen_metrics: EigenPerformance {
                 performance_score: metrics::register_gauge!("eigen_performance_score"),
@@ -49,18 +50,10 @@ impl EigenPerformanceMetrics {
     }
 
     pub fn set_performance_score(&self, score: f64) {
-        match (&self.logger.tracing_logger, &self.logger.noop_logger) {
-            (Some(tracing_logger), _) => tracing_logger.debug(
-                &format!("set performance score , new score {}", score),
-                &["eigen-metrics.set_performance_score"],
-            ),
-            (_, Some(noop_logger)) => noop_logger.debug(
-                &format!("set performance score , new score {}", score),
-                &["eigen-metrics.set_performance_score"],
-            ),
-            _ => println!("Both TracingLogger and NoopLogger are None"),
-        }
-
+        self.logger.debug(
+            &format!("set performance score , new score {}", score),
+            "eigen-metrics.set_performance_score",
+        );
         self.eigen_metrics.performance_score.set(score)
     }
 }

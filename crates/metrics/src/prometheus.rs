@@ -1,4 +1,4 @@
-use eigen_logging::{logger::Logger, EigenLogger};
+use eigen_logging::logger::{Logger, SharedLogger};
 use hyper::{
     body::Body,
     service::{make_service_fn, service_fn},
@@ -21,19 +21,12 @@ fn init_registry() -> PrometheusHandle {
 async fn serve_metrics(
     addr: SocketAddr,
     handle: PrometheusHandle,
-    logger: EigenLogger,
+    logger: SharedLogger,
 ) -> eyre::Result<()> {
-    match (&logger.tracing_logger, &logger.noop_logger) {
-        (Some(tracing_logger), _) => tracing_logger.info(
-            &format!("Starting metrics server at port {}", addr),
-            &["eigen-metrics.serve_metrics"],
-        ),
-        (_, Some(noop_logger)) => noop_logger.info(
-            &format!("Starting metrics server at port {}", addr),
-            &["eigen-metrics.serve_metrics"],
-        ),
-        _ => println!("Both TracingLogger and NoopLogger are None"),
-    }
+    logger.info(
+        &format!("Starting metrics server at port {}", addr),
+        "eigen-metrics.serve_metrics",
+    );
     let make_svc = make_service_fn(move |_| {
         let handle = handle.clone();
 

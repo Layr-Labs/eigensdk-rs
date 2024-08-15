@@ -1,7 +1,7 @@
 use alloy_signer::Signer;
 use alloy_signer_local::PrivateKeySigner;
 use eigen_client_elcontracts::reader::ELChainReader;
-use eigen_logging::EigenLogger;
+use eigen_logging::logger::SharedLogger;
 use eigen_utils::binding::RegistryCoordinator::{
     self, G1Point as RegistryG1Point, G2Point as RegistryG2Point, PubkeyRegistrationParams,
 };
@@ -26,7 +26,7 @@ pub const GAS_LIMIT_REGISTER_OPERATOR_REGISTRY_COORDINATOR: u128 = 2000000;
 /// AvsRegistry Writer
 #[derive(Debug)]
 pub struct AvsRegistryChainWriter {
-    logger: EigenLogger,
+    logger: SharedLogger,
     service_manager_addr: Address,
     registry_coordinator_addr: Address,
     operator_state_retriever_addr: Address,
@@ -40,7 +40,7 @@ pub struct AvsRegistryChainWriter {
 impl AvsRegistryChainWriter {
     /// build avs registry chain writer instance
     pub async fn build_avs_registry_chain_writer(
-        logger: EigenLogger,
+        logger: SharedLogger,
         provider: String,
         signer: String,
         registry_coordinator_addr: Address,
