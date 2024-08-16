@@ -168,18 +168,11 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
 
         let start = Instant::now();
         loop {
-            // tokio::select! {
-            //     _ = &mut task_expired_timer => {
-            //         // todo tracing
-            //         println!("time expired");
-            //         break;
-            //     },
-            // _ = async {} => {
+            // TODO: implement expiry time without busy wait
             let now = Instant::now();
             if now - start > time_to_expiry {
                 break;
             }
-            let mut aggregate_response: AggregatedOperators;
             let response = match aggregated_operators.get(&signed_task_digest.task_response_digest)
             {
                 None => {
@@ -197,10 +190,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                             (G2Affine::zero() + operator_g2_pubkey.g2()).into(),
                         ),
                         signers_agg_sig_g1: signed_task_digest.bls_signature.clone(),
-                        signers_operator_ids_set: HashMap::from([(
-                            signed_task_digest.operator_id,
-                            true,
-                        )]),
+                        signers_operator_ids_set: HashMap::new(), // TODO: check this against go implementation
                         signers_total_stake_per_quorum: operator_state.stake_per_quorum.clone(),
                     }
                 }
@@ -220,69 +210,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                     response
                 }
             };
-            aggregate_response = response.clone();
-            if aggregated_operators.contains_key(&signed_task_digest.task_response_digest) {
-                aggregate_response.signers_agg_sig_g1 = Signature::new(
-                    (aggregate_response
-                        .signers_agg_sig_g1
-                        .g1_point()
-                        .g1()
-                        .into_group()
-                        + signed_task_digest.bls_signature.g1_point().g1())
-                    .into_affine(),
-                );
-
-                if let Some(op_avs_state) =
-                    operator_state_avs.get_mut(&signed_task_digest.operator_id)
-                {
-                    if let Some(pub_key) = &op_avs_state.operator_info.pub_keys {
-                        aggregate_response.signers_apk_g2 = BlsG2Point::new(
-                            (aggregate_response.signers_apk_g2.g2() + pub_key.g2_pub_key.g2())
-                                .into(),
-                        );
-                    }
-                }
-
-                aggregate_response
-                    .signers_operator_ids_set
-                    .insert(FixedBytes(*signed_task_digest.operator_id), true);
-
-                if let Some(state_avs) = operator_state_avs.get(&signed_task_digest.operator_id) {
-                    for (quorum_num, stake) in state_avs.stake_per_quorum.clone() {
-                        if aggregate_response
-                            .signers_total_stake_per_quorum
-                            .get(&quorum_num)
-                            .is_some()
-                        {
-                            aggregate_response
-                                .signers_total_stake_per_quorum
-                                .insert(quorum_num, U256::from(0));
-                        }
-                        aggregate_response.signers_total_stake_per_quorum.insert(
-                            quorum_num,
-                            aggregate_response.signers_total_stake_per_quorum[&quorum_num] + stake,
-                        );
-                    }
-                }
-            } else {
-                dbg!("else");
-                let mut operator_id_set = HashMap::new();
-                operator_id_set.insert(signed_task_digest.operator_id, true);
-                // first operator
-
-                if let Some(avs_state) =
-                    operator_state_avs.get(&signed_task_digest.operator_id.clone())
-                {
-                    aggregate_response = AggregatedOperators {
-                        signers_agg_sig_g1: signed_task_digest.bls_signature.clone(),
-                        // bls_keypair.public_key_g2
-                        signers_apk_g2: bls_keypair.public_key_g2,
-                        // BlsG2Point::new(G2Affine::zero()),
-                        signers_operator_ids_set: operator_id_set,
-                        signers_total_stake_per_quorum: avs_state.stake_per_quorum.clone(),
-                    };
-                }
-            }
+            let aggregate_response = response.clone();
 
             aggregated_operators.insert(
                 signed_task_digest.task_response_digest,
@@ -343,8 +271,6 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                 let _ = self
                     .aggregated_response_sender
                     .send(bls_aggregation_service_response);
-                //     }
-                // }
             }
         }
     }
