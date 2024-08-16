@@ -78,26 +78,21 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
             // error
         }
 
-        let (tx, mut rx) = mpsc::unbounded_channel();
+        let (tx, rx) = mpsc::unbounded_channel();
         task_channel.insert(task_index, tx);
         let self_clone = self.clone();
-        let mut i = 0;
         tokio::spawn(async move {
-            while let Some(signed_response) = rx.recv().await {
-                dbg!(i);
-                i += 1;
-                // Process each signed response here
-                self_clone
-                    .single_task_aggregator(
-                        task_index,
-                        task_created_block,
-                        quorum_nums.clone(),
-                        quorum_threshold_percentages.clone(),
-                        time_to_expiry,
-                        signed_response,
-                    )
-                    .await;
-            }
+            // Process each signed response here
+            self_clone
+                .single_task_aggregator(
+                    task_index,
+                    task_created_block,
+                    quorum_nums.clone(),
+                    quorum_threshold_percentages.clone(),
+                    time_to_expiry,
+                    rx,
+                )
+                .await;
         });
     }
 
@@ -129,7 +124,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         quorum_nums: Vec<u8>,
         quorum_threshold_percentages: QuorumThresholdPercentages,
         time_to_expiry: Duration,
-        signed_task_digest: SignedTaskResponseDigest,
+        mut rx: UnboundedReceiver<SignedTaskResponseDigest>,
     ) {
         let mut quorum_threshold_percentage_map = HashMap::new();
 
@@ -158,21 +153,15 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                 quorum_apks_g1.push(val.agg_pub_key_g1.clone());
             }
         }
-
-        let task_expired_timer = time::sleep(time_to_expiry);
-
-        tokio::pin!(task_expired_timer);
         let mut aggregated_operators: HashMap<FixedBytes<32>, AggregatedOperators> = HashMap::new();
-        self.verify_signature(task_index, &signed_task_digest, &operator_state_avs)
-            .await; // handle error
 
-        let start = Instant::now();
-        loop {
-            // TODO: implement expiry time without busy wait
-            let now = Instant::now();
-            if now - start > time_to_expiry {
-                break;
-            }
+        // TODO: add recv time expire
+        // let task_expired_timer = time::sleep(time_to_expiry);
+        // tokio::pin!(task_expired_timer);
+        // tokio::select! {}
+        while let Some(signed_task_digest) = rx.recv().await {
+            self.verify_signature(task_index, &signed_task_digest, &operator_state_avs)
+                .await; // handle error
 
             let operator_state = operator_state_avs
                 .get(&signed_task_digest.operator_id)
@@ -345,17 +334,18 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
 #[cfg(test)]
 mod tests {
     use alloy_primitives::{B256, U256};
+    use ark_bn254::G1Affine;
     use core::panic;
-    use eigen_crypto_bls::BlsKeyPair;
+    use eigen_crypto_bls::{BlsG1Point, BlsG2Point, BlsKeyPair, Signature};
     use eigen_services_avsregistry::fake_avs_registry_service::FakeAvsRegistryService;
-    use eigen_types::operator::QuorumThresholdPercentages;
+    use eigen_types::operator::{QuorumNum, QuorumThresholdPercentages};
     use eigen_types::{avs::TaskIndex, test::TestOperator};
     use sha2::{Digest, Sha256};
     use std::collections::HashMap;
     use std::time::Duration;
     use std::vec;
 
-    use super::BlsAggregatorService;
+    use super::{BlsAggregationServiceResponse, BlsAggregatorService};
 
     fn new_bls_key_pair_panics(hex_key: String) -> BlsKeyPair {
         let keypair = BlsKeyPair::new(hex_key);
@@ -373,7 +363,7 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn one_quorum_one_operator_one_correct_signature() {
+    async fn test_1_quorum_1_operator_1_correct_signature() {
         let test_operator_1 = TestOperator {
             operator_id: U256::from(1).into(),
             stake_per_quorum: HashMap::from([(0u8, U256::from(100)), (1u8, U256::from(200))]),
@@ -418,7 +408,6 @@ mod tests {
             )
             .await;
 
-        use crate::bls_agg::BlsAggregationServiceResponse;
         let expected_agg_service_response = BlsAggregationServiceResponse {
             task_index,
             task_response_digest,
@@ -443,5 +432,353 @@ mod tests {
 
         assert_eq!(expected_agg_service_response, response.clone().unwrap());
         assert_eq!(task_index, response.unwrap().task_index);
+    }
+
+    #[tokio::test]
+    async fn test_1_quorum_3_operator_3_correct_signatures() {
+        let test_operator_1 = TestOperator {
+            operator_id: U256::from(1).into(),
+            stake_per_quorum: HashMap::from([(0u8, U256::from(100)), (1u8, U256::from(200))]),
+            bls_keypair: new_bls_key_pair_panics(
+                "13710126902690889134622698668747132666439281256983827313388062967626731803599"
+                    .into(),
+            ),
+        };
+        let test_operator_2 = TestOperator {
+            operator_id: U256::from(2).into(),
+            stake_per_quorum: HashMap::from([(0u8, U256::from(100)), (1u8, U256::from(200))]),
+            bls_keypair: new_bls_key_pair_panics(
+                "14610126902690889134622698668747132666439281256983827313388062967626731803500"
+                    .into(),
+            ),
+        };
+        let test_operator_3 = TestOperator {
+            operator_id: U256::from(3).into(),
+            stake_per_quorum: HashMap::from([(0u8, U256::from(300)), (1u8, U256::from(100))]),
+            bls_keypair: new_bls_key_pair_panics(
+                "15610126902690889134622698668747132666439281256983827313388062967626731803501"
+                    .into(),
+            ),
+        };
+        let test_operators = vec![
+            test_operator_1.clone(),
+            test_operator_2.clone(),
+            test_operator_3.clone(),
+        ];
+        let block_number = 1;
+        let task_index = 0;
+        let quorum_numbers: Vec<QuorumNum> = vec![0];
+        let quorum_threshold_percentages: QuorumThresholdPercentages = vec![100u8];
+        let time_to_expiry = Duration::from_secs(1);
+        let task_response = 123; // Initialize with appropriate data
+        let task_response_digest = hash(task_response);
+
+        let fake_avs_registry_service = FakeAvsRegistryService::new(block_number, test_operators);
+        let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
+
+        bls_agg_service
+            .initialize_new_task::<FakeAvsRegistryService>(
+                task_index,
+                block_number as u32,
+                quorum_numbers,
+                quorum_threshold_percentages,
+                time_to_expiry,
+            )
+            .await;
+        let bls_sig_op_1 = test_operator_1
+            .bls_keypair
+            .sign_message(task_response_digest.as_ref());
+        let bls_sig_op_2 = test_operator_2
+            .bls_keypair
+            .sign_message(task_response_digest.as_ref());
+        let bls_sig_op_3 = test_operator_3
+            .bls_keypair
+            .sign_message(task_response_digest.as_ref());
+
+        let quorum_apks_g1 = BlsG1Point::new(
+            (test_operator_1.bls_keypair.public_key().g1()
+                + test_operator_2.bls_keypair.public_key().g1()
+                + test_operator_3.bls_keypair.public_key().g1())
+            .into(),
+        );
+
+        let signers_apk_g2: BlsG2Point = BlsG2Point::new(
+            (test_operator_1.bls_keypair.public_key_g2().g2()
+                + test_operator_2.bls_keypair.public_key_g2().g2()
+                + test_operator_3.bls_keypair.public_key_g2().g2())
+            .into(),
+        );
+
+        let signers_agg_sig_g1 = Signature::new(
+            (bls_sig_op_1.g1_point().g1()
+                + bls_sig_op_2.g1_point().g1()
+                + bls_sig_op_3.g1_point().g1())
+            .into(),
+        );
+
+        let expected_agg_service_response = BlsAggregationServiceResponse {
+            task_index,
+            task_response_digest,
+            non_signers_pub_keys_g1: vec![],
+            quorum_apks_g1: vec![quorum_apks_g1],
+            signers_apk_g2,
+            signers_agg_sig_g1,
+            non_signer_quorum_bitmap_indices: vec![],
+            quorum_apk_indices: vec![],
+            total_stake_indices: vec![],
+            non_signer_stake_indices: vec![],
+        };
+
+        let response = bls_agg_service
+            .aggregated_response_receiver
+            .lock()
+            .await
+            .recv()
+            .await;
+        assert_eq!(expected_agg_service_response, response.clone().unwrap());
+        assert_eq!(task_index, response.unwrap().task_index);
+    }
+
+    // 	blsSigOp1 := testOperator1.BlsKeypair.SignMessage(taskResponseDigest)
+    // 	err = blsAggServ.ProcessNewSignature(context.Background(), taskIndex, taskResponse, blsSigOp1, testOperator1.OperatorId)
+    // 	require.Nil(t, err)
+    // 	blsSigOp2 := testOperator2.BlsKeypair.SignMessage(taskResponseDigest)
+    // 	err = blsAggServ.ProcessNewSignature(context.Background(), taskIndex, taskResponse, blsSigOp2, testOperator2.OperatorId)
+    // 	require.Nil(t, err)
+    // 	blsSigOp3 := testOperator3.BlsKeypair.SignMessage(taskResponseDigest)
+    // 	err = blsAggServ.ProcessNewSignature(context.Background(), taskIndex, taskResponse, blsSigOp3, testOperator3.OperatorId)
+    // 	require.Nil(t, err)
+
+    // 	wantAggregationServiceResponse := BlsAggregationServiceResponse{
+    // 		Err:                 nil,
+    // 		TaskIndex:           taskIndex,
+    // 		TaskResponse:        taskResponse,
+    // 		TaskResponseDigest:  taskResponseDigest,
+    // 		NonSignersPubkeysG1: []*bls.G1Point{},
+    // 		QuorumApksG1: []*bls.G1Point{testOperator1.BlsKeypair.GetPubKeyG1().
+    // 			Add(testOperator2.BlsKeypair.GetPubKeyG1()).
+    // 			Add(testOperator3.BlsKeypair.GetPubKeyG1()),
+    // 		},
+    // 		SignersApkG2: testOperator1.BlsKeypair.GetPubKeyG2().
+    // 			Add(testOperator2.BlsKeypair.GetPubKeyG2()).
+    // 			Add(testOperator3.BlsKeypair.GetPubKeyG2()),
+    // 		SignersAggSigG1: testOperator1.BlsKeypair.SignMessage(taskResponseDigest).
+    // 			Add(testOperator2.BlsKeypair.SignMessage(taskResponseDigest)).
+    // 			Add(testOperator3.BlsKeypair.SignMessage(taskResponseDigest)),
+    // 	}
+    // 	gotAggregationServiceResponse := <-blsAggServ.aggregatedResponsesC
+    // 	require.Equal(t, wantAggregationServiceResponse, gotAggregationServiceResponse)
+    // 	require.EqualValues(t, taskIndex, gotAggregationServiceResponse.TaskIndex)
+    // })
+
+    #[tokio::test]
+    async fn test_2_quorum_2_operator_2_correct_signatures() {
+        let test_operator_1 = TestOperator {
+            operator_id: U256::from(1).into(),
+            stake_per_quorum: HashMap::from([(0u8, U256::from(100)), (1u8, U256::from(200))]),
+            bls_keypair: new_bls_key_pair_panics(
+                "13710126902690889134622698668747132666439281256983827313388062967626731803599"
+                    .into(),
+            ),
+        };
+        let test_operator_2 = TestOperator {
+            operator_id: U256::from(2).into(),
+            stake_per_quorum: HashMap::from([(0u8, U256::from(100)), (1u8, U256::from(200))]),
+            bls_keypair: new_bls_key_pair_panics(
+                "14610126902690889134622698668747132666439281256983827313388062967626731803500"
+                    .into(),
+            ),
+        };
+        let test_operators = vec![test_operator_1.clone(), test_operator_2.clone()];
+        let block_number = 1;
+        let task_index = 0;
+        let quorum_numbers: Vec<QuorumNum> = vec![0, 1];
+        let quorum_threshold_percentages: QuorumThresholdPercentages = vec![100u8, 100u8];
+        let time_to_expiry = Duration::from_secs(1);
+        let task_response = 123; // Initialize with appropriate data
+        let task_response_digest = hash(task_response);
+
+        let fake_avs_registry_service = FakeAvsRegistryService::new(block_number, test_operators);
+        let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
+
+        bls_agg_service
+            .initialize_new_task::<FakeAvsRegistryService>(
+                task_index,
+                block_number as u32,
+                quorum_numbers,
+                quorum_threshold_percentages,
+                time_to_expiry,
+            )
+            .await;
+        let bls_sig_op_1 = test_operator_1
+            .bls_keypair
+            .sign_message(task_response_digest.as_ref());
+        bls_agg_service
+            .process_new_signature(
+                task_index,
+                task_response_digest,
+                bls_sig_op_1,
+                test_operator_1.operator_id,
+            )
+            .await;
+
+        let bls_sig_op_2 = test_operator_2
+            .bls_keypair
+            .sign_message(task_response_digest.as_ref());
+        bls_agg_service
+            .process_new_signature(
+                task_index,
+                task_response_digest,
+                bls_sig_op_2,
+                test_operator_1.operator_id,
+            )
+            .await;
+
+        let quorum_apks_g1: BlsG1Point = BlsG1Point::new(
+            (G1Affine::identity()
+                + test_operator_1.bls_keypair.public_key().g1()
+                + test_operator_2.bls_keypair.public_key().g1())
+            .into(),
+        );
+        let signers_apk_g2 = BlsG2Point::new(
+            (test_operator_1.bls_keypair.public_key_g2().g2()
+                + test_operator_2.bls_keypair.public_key_g2().g2())
+            .into(),
+        );
+        let expected_agg_service_response = BlsAggregationServiceResponse {
+            task_index,
+            task_response_digest,
+            non_signers_pub_keys_g1: vec![],
+            quorum_apks_g1: vec![quorum_apks_g1.clone(), quorum_apks_g1],
+            signers_apk_g2,
+            signers_agg_sig_g1: test_operator_1
+                .bls_keypair
+                .sign_message(task_response_digest.as_ref()),
+            non_signer_quorum_bitmap_indices: vec![],
+            quorum_apk_indices: vec![],
+            total_stake_indices: vec![],
+            non_signer_stake_indices: vec![],
+        };
+
+        let response = bls_agg_service
+            .aggregated_response_receiver
+            .lock()
+            .await
+            .recv()
+            .await;
+        assert_eq!(expected_agg_service_response, response.unwrap());
+    }
+
+    #[tokio::test]
+    async fn test_2_concurrent_tasks_2_quorum_2_operator_2_correct_signatures() {
+        let test_operator_1 = TestOperator {
+            operator_id: U256::from(1).into(),
+            stake_per_quorum: HashMap::from([(0u8, U256::from(100)), (1u8, U256::from(200))]),
+            bls_keypair: new_bls_key_pair_panics(
+                "13710126902690889134622698668747132666439281256983827313388062967626731803599"
+                    .into(),
+            ),
+        };
+        let test_operator_2 = TestOperator {
+            operator_id: U256::from(2).into(),
+            stake_per_quorum: HashMap::from([(0u8, U256::from(100)), (1u8, U256::from(200))]),
+            bls_keypair: new_bls_key_pair_panics(
+                "14610126902690889134622698668747132666439281256983827313388062967626731803500"
+                    .into(),
+            ),
+        };
+        let test_operators = vec![test_operator_1.clone(), test_operator_2.clone()];
+        let block_number = 1;
+        let quorum_numbers: Vec<QuorumNum> = vec![0, 1];
+        let quorum_threshold_percentages: QuorumThresholdPercentages = vec![100u8, 100u8];
+        let time_to_expiry = Duration::from_secs(1);
+
+        let fake_avs_registry_service = FakeAvsRegistryService::new(block_number, test_operators);
+        let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
+
+        // initialize 2 concurrent tasks
+        let task_index_1 = 0;
+        let task_1_response = 123; // Initialize with appropriate data
+        let task_1_response_digest = hash(task_1_response);
+        bls_agg_service
+            .initialize_new_task::<FakeAvsRegistryService>(
+                task_index_1,
+                block_number as u32,
+                quorum_numbers.clone(),
+                quorum_threshold_percentages.clone(),
+                time_to_expiry.clone(),
+            )
+            .await;
+
+        let task_index_2 = 0;
+        let task_2_response = 123; // Initialize with appropriate data
+        let task_2_response_digest = hash(task_2_response);
+        bls_agg_service
+            .initialize_new_task::<FakeAvsRegistryService>(
+                task_index_2,
+                block_number as u32,
+                quorum_numbers,
+                quorum_threshold_percentages,
+                time_to_expiry,
+            )
+            .await;
+
+        // let bls_sig_op_1 = test_operator_1
+        //     .bls_keypair
+        //     .sign_message(task_response_digest.as_ref());
+        // bls_agg_service
+        //     .process_new_signature(
+        //         task_index,
+        //         task_response_digest,
+        //         bls_sig_op_1,
+        //         test_operator_1.operator_id,
+        //     )
+        //     .await;
+
+        // let bls_sig_op_2 = test_operator_2
+        //     .bls_keypair
+        //     .sign_message(task_response_digest.as_ref());
+        // bls_agg_service
+        //     .process_new_signature(
+        //         task_index,
+        //         task_response_digest,
+        //         bls_sig_op_2,
+        //         test_operator_1.operator_id,
+        //     )
+        //     .await;
+
+        // let quorum_apks_g1: BlsG1Point = BlsG1Point::new(
+        //     (G1Affine::identity()
+        //         + test_operator_1.bls_keypair.public_key().g1()
+        //         + test_operator_2.bls_keypair.public_key().g1())
+        //     .into(),
+        // );
+        // let signers_apk_g2 = BlsG2Point::new(
+        //     (test_operator_1.bls_keypair.public_key_g2().g2()
+        //         + test_operator_2.bls_keypair.public_key_g2().g2())
+        //     .into(),
+        // );
+        // let expected_agg_service_response = BlsAggregationServiceResponse {
+        //     task_index,
+        //     task_response_digest,
+        //     non_signers_pub_keys_g1: vec![],
+        //     quorum_apks_g1: vec![quorum_apks_g1.clone(), quorum_apks_g1],
+        //     signers_apk_g2,
+        //     signers_agg_sig_g1: test_operator_1
+        //         .bls_keypair
+        //         .sign_message(task_response_digest.as_ref()),
+        //     non_signer_quorum_bitmap_indices: vec![],
+        //     quorum_apk_indices: vec![],
+        //     total_stake_indices: vec![],
+        //     non_signer_stake_indices: vec![],
+        // };
+
+        // let response = bls_agg_service
+        //     .aggregated_response_receiver
+        //     .lock()
+        //     .await
+        //     .recv()
+        //     .await;
+        // assert_eq!(expected_agg_service_response, response.unwrap());
     }
 }
