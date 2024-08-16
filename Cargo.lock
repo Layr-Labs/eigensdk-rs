@@ -2228,6 +2228,7 @@ dependencies = [
  "eigen-types",
  "parking_lot",
  "sha2",
+ "thiserror",
  "tokio",
 ]
 
