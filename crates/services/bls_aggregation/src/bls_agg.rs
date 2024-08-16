@@ -208,7 +208,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                                     .signers_total_stake_per_quorum
                                     .entry(*quorum_num)
                                     .and_modify(|v| *v += stake)
-                                    .or_insert(U256::ZERO);
+                                    .or_insert(*stake);
                             }
                             digest_aggregated_operators
                         }
