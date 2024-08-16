@@ -1,6 +1,6 @@
 use alloy_primitives::{FixedBytes, U256};
 use ark_bn254::G2Affine;
-use ark_ec::{AffineRepr, CurveGroup};
+use ark_ec::AffineRepr;
 use eigen_crypto_bls::BlsG1Point;
 use eigen_crypto_bls::{BlsG2Point, Signature};
 use eigen_crypto_bn254::utils::verify_message;
@@ -9,7 +9,7 @@ use eigen_types::{
     avs::{SignedTaskResponseDigest, TaskIndex, TaskResponseDigest},
     operator::{OperatorAvsState, QuorumThresholdPercentage, QuorumThresholdPercentages},
 };
-use parking_lot::{RwLock, RwLockReadGuard, RwLockWriteGuard};
+use parking_lot::RwLock;
 use std::collections::HashMap;
 use std::sync::Arc;
 use std::time::Instant;
@@ -137,7 +137,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
             quorum_threshold_percentage_map.insert(*quorum_number, quorum_threshold_percentages[i]);
         }
 
-        let mut operator_state_avs = self
+        let operator_state_avs = self
             .avs_registry_service
             .get_operators_avs_state_at_block(task_created_block, quorum_nums.clone().into())
             .await;
@@ -164,7 +164,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         tokio::pin!(task_expired_timer);
         let mut aggregated_operators: HashMap<FixedBytes<32>, AggregatedOperators> = HashMap::new();
         self.verify_signature(task_index, &signed_task_digest, &operator_state_avs)
-            .await;
+            .await; // handle error
 
         let start = Instant::now();
         loop {
@@ -173,59 +173,72 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
             if now - start > time_to_expiry {
                 break;
             }
-            let response = match aggregated_operators.get(&signed_task_digest.task_response_digest)
-            {
-                None => {
-                    let operator_state = operator_state_avs
-                        .get(&signed_task_digest.operator_id)
-                        .unwrap();
-                    let operator_g2_pubkey: BlsG2Point = operator_state
-                        .operator_info
-                        .pub_keys
-                        .clone()
-                        .unwrap()
-                        .g2_pub_key;
-                    &AggregatedOperators {
-                        signers_apk_g2: BlsG2Point::new(
-                            (G2Affine::zero() + operator_g2_pubkey.g2()).into(),
-                        ),
-                        signers_agg_sig_g1: signed_task_digest.bls_signature.clone(),
-                        signers_operator_ids_set: HashMap::new(), // TODO: check this against go implementation
-                        signers_total_stake_per_quorum: operator_state.stake_per_quorum.clone(),
-                    }
-                }
-                Some(response) => {
-                    // TODO: add this
-                    // digestAggregatedOperators.signersAggSigG1.Add(signedTaskResponseDigest.BlsSignature)
-                    // digestAggregatedOperators.signersApkG2.Add(operatorsAvsStateDict[signedTaskResponseDigest.OperatorId].OperatorInfo.Pubkeys.G2Pubkey)
-                    // digestAggregatedOperators.signersOperatorIdsSet[signedTaskResponseDigest.OperatorId] = true
-                    // for quorumNum, stake := range operatorsAvsStateDict[signedTaskResponseDigest.OperatorId].StakePerQuorum {
-                    //     if _, ok := digestAggregatedOperators.signersTotalStakePerQuorum[quorumNum]; !ok {
-                    //         // if we haven't seen this quorum before, initialize its signed stake to 0
-                    //         // possible if previous operators who sent us signatures were not part of this quorum
-                    //         digestAggregatedOperators.signersTotalStakePerQuorum[quorumNum] = big.NewInt(0)
-                    //     }
-                    //     digestAggregatedOperators.signersTotalStakePerQuorum[quorumNum].Add(digestAggregatedOperators.signersTotalStakePerQuorum[quorumNum], stake)
-                    // }
-                    response
-                }
-            };
-            let aggregate_response = response.clone();
 
+            let operator_state = operator_state_avs
+                .get(&signed_task_digest.operator_id)
+                .unwrap();
+            let operator_g2_pubkey = operator_state
+                .operator_info
+                .pub_keys
+                .clone()
+                .unwrap()
+                .g2_pub_key
+                .g2();
+
+            let response =
+                match aggregated_operators.get_mut(&signed_task_digest.task_response_digest) {
+                    None => {
+                        &AggregatedOperators {
+                            signers_apk_g2: BlsG2Point::new(
+                                (G2Affine::zero() + operator_g2_pubkey).into(),
+                            ),
+                            signers_agg_sig_g1: signed_task_digest.bls_signature.clone(),
+                            signers_operator_ids_set: HashMap::new(), // TODO: check this against go implementation
+                            signers_total_stake_per_quorum: operator_state.stake_per_quorum.clone(),
+                        }
+                    }
+                    Some(digest_aggregated_operators) => {
+                        digest_aggregated_operators.signers_agg_sig_g1 = Signature::new(
+                            (digest_aggregated_operators
+                                .signers_agg_sig_g1
+                                .g1_point()
+                                .g1()
+                                + signed_task_digest.bls_signature.g1_point().g1())
+                            .into(),
+                        );
+                        digest_aggregated_operators.signers_apk_g2 = BlsG2Point::new(
+                            (digest_aggregated_operators.signers_apk_g2.g2() + operator_g2_pubkey)
+                                .into(),
+                        );
+                        digest_aggregated_operators
+                            .signers_operator_ids_set
+                            .insert(signed_task_digest.operator_id, true);
+                        for (quorum_num, stake) in operator_state.stake_per_quorum.iter() {
+                            digest_aggregated_operators
+                                .signers_total_stake_per_quorum
+                                .entry(*quorum_num)
+                                .and_modify(|v| *v += stake)
+                                .or_insert(U256::ZERO);
+                        }
+                        digest_aggregated_operators
+                    }
+                };
+
+            let digest_aggregated_operators = response.clone();
             aggregated_operators.insert(
                 signed_task_digest.task_response_digest,
-                aggregate_response.clone(),
+                digest_aggregated_operators.clone(),
             );
 
             // check stake threshold
             if self.check_if_stake_thresholds_met(
-                aggregate_response.signers_total_stake_per_quorum,
+                digest_aggregated_operators.signers_total_stake_per_quorum,
                 total_stake_per_quorum.clone(),
                 quorum_threshold_percentage_map.clone(),
             ) {
                 let mut non_signers_operators_ids: Vec<FixedBytes<32>> = vec![];
-                for (i, op_info) in &operator_state_avs {
-                    if aggregate_response
+                for (i, op_info) in operator_state_avs.iter() {
+                    if digest_aggregated_operators
                         .signers_operator_ids_set
                         .contains_key(&op_info.operator_id)
                     {
@@ -260,8 +273,8 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                     task_response_digest: signed_task_digest.task_response_digest,
                     non_signers_pub_keys_g1: non_signers_g1_pub_keys,
                     quorum_apks_g1: quorum_apks_g1.clone(),
-                    signers_apk_g2: aggregate_response.signers_apk_g2,
-                    signers_agg_sig_g1: aggregate_response.signers_agg_sig_g1,
+                    signers_apk_g2: digest_aggregated_operators.signers_apk_g2,
+                    signers_agg_sig_g1: digest_aggregated_operators.signers_agg_sig_g1,
                     non_signer_quorum_bitmap_indices: indices.clone().quorumApkIndices,
                     quorum_apk_indices: indices.quorumApkIndices,
                     total_stake_indices: indices.totalStakeIndices,
