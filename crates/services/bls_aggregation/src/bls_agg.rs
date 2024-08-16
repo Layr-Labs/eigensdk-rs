@@ -65,6 +65,13 @@ where
 }
 
 impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService<A> {
+    /// Creates a new instance of the BlsAggregatorService with the given AVS registry service
+    ///
+    /// Creates a tokio unbounded_channel to send and received aggregated responses.
+    ///
+    /// # Arguments
+    ///
+    /// * `avs_registry_service` - The AVS registry service
     pub fn new(avs_registry_service: A) -> Self {
         let (tx, rx) = tokio::sync::mpsc::unbounded_channel();
         Self {
@@ -120,7 +127,14 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         });
     }
 
-    /// Processs signatures
+    /// Processs signatures received from the channel
+    ///
+    /// # Arguments
+    ///
+    /// * `task_index` - The index of the task
+    /// * `task_response_digest` - The digest of the task response
+    /// * `bls_signature` - The BLS signature of the task response
+    /// * `operator_id` - The operator ID of the operator that signed the task response
     pub async fn process_new_signature(
         &self,
         task_index: TaskIndex,
