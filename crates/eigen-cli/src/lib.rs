@@ -3,10 +3,12 @@
     issue_tracker_base_url = "https://github.com/Layr-Labs/eigensdk-rs/issues/"
 )]
 pub mod args;
+pub mod bls;
 mod convert;
 pub mod eigen_address;
 mod generate;
 mod operator_id;
+
 use eth_keystore::KeystoreError;
 use tokio::runtime::Runtime;
 
@@ -16,10 +18,13 @@ use alloy_json_rpc::RpcError;
 use alloy_transport::TransportErrorKind;
 use args::{Commands, EigenKeyCommand};
 use ark_serialize::SerializationError;
+use bls::BlsKeystore;
+use colored::*;
 use convert::store;
 use eigen_crypto_bls::error::BlsError;
 use generate::KeyGenerator;
 use operator_id::derive_operator_id;
+use rust_bls_bn254::{errors::KeystoreError as BlsKeystoreError, mnemonics::Mnemonic};
 use thiserror::Error;
 
 pub const ANVIL_RPC_URL: &str = "http://localhost:8545";
@@ -53,6 +58,36 @@ pub enum EigenKeyCliError {
     BLSError(BlsError),
     #[error("serialization error")]
     SerializationError(SerializationError),
+    #[error("Bls Keystore error")]
+    EigenBlsKeyStoreError(EigenBlsKeyStoreError),
+}
+
+impl From<EigenBlsKeyStoreError> for EigenKeyCliError {
+    fn from(e: EigenBlsKeyStoreError) -> EigenKeyCliError {
+        EigenKeyCliError::EigenBlsKeyStoreError(e)
+    }
+}
+
+/// BlsKeyStore errors
+#[derive(Error, Debug)]
+pub enum EigenBlsKeyStoreError {
+    #[error("Invalid secret key : Failed to decode key to hex {0} ")]
+    InvalidSecretKeyFromHexError(String),
+
+    #[error("KeyStore Error : {0}")]
+    BlsKeystoreError(String),
+}
+
+impl From<BlsKeystoreError> for EigenBlsKeyStoreError {
+    fn from(e: BlsKeystoreError) -> EigenBlsKeyStoreError {
+        EigenBlsKeyStoreError::BlsKeystoreError(e.to_string())
+    }
+}
+
+impl From<hex::FromHexError> for EigenBlsKeyStoreError {
+    fn from(e: hex::FromHexError) -> EigenBlsKeyStoreError {
+        EigenBlsKeyStoreError::InvalidSecretKeyFromHexError(e.to_string())
+    }
 }
 
 /// Executes an `egnkey` subcommand.
@@ -83,6 +118,36 @@ pub fn execute_egnkey_subcommand(subcommand: EigenKeyCommand) -> Result<(), Eige
             let operator_id =
                 derive_operator_id(private_key).map_err(EigenKeyCliError::BLSError)?;
             println!("{}", operator_id);
+            Ok(())
+        }
+
+        EigenKeyCommand::BlsConvert {
+            key_type,
+            secret_key,
+            output_path,
+            password,
+        } => {
+            BlsKeystore::from(key_type).new_keystore(
+                secret_key,
+                output_path,
+                password.as_deref(),
+            )?;
+            Ok(())
+        }
+        EigenKeyCommand::CreateNewMnemonicFromDefaultWordList { language } => {
+            let word_list = language.try_from().1;
+            let mnemonic = Mnemonic::get_mnemonic_without_word_path(word_list, None).unwrap();
+
+            println!("New mnemonic generated : {}", mnemonic);
+            println!("{}", "Please store it safely!".red().bold());
+            Ok(())
+        }
+        EigenKeyCommand::CreateNewMnemonicFromPath { language, path } => {
+            let language_string = language.try_from().0;
+
+            let mnemonic = Mnemonic::get_mnemonic(language_string, &path, None).unwrap();
+            println!("New mnemonic generated : {}", mnemonic);
+            println!("{}", "Please store it safely!".red().bold());
             Ok(())
         }
     }
@@ -123,7 +188,7 @@ pub fn execute_command(command: Commands) -> Result<(), EigenCliError> {
 #[cfg(test)]
 mod test {
     use super::ANVIL_RPC_URL;
-    use crate::args::EigenKeyCommand;
+    use crate::args::{BlsKeystoreType, EigenKeyCommand, MnemonicLanguage};
     use crate::convert::store;
     use crate::eigen_address::ContractAddresses;
     use crate::{
@@ -138,40 +203,51 @@ mod test {
     use eth_keystore::decrypt_key;
     use k256::SecretKey;
     use rstest::rstest;
+    use rust_bls_bn254::keystores::base_keystore::Keystore;
     use std::fs;
     use tempfile::tempdir;
 
     #[rstest]
-    #[case(KeyType::Ecdsa)]
-    #[case(KeyType::Bls)]
-    fn test_generate_key(#[case] key_type: KeyType) {
+    #[case(BlsKeystoreType::Scrypt)]
+    #[case(BlsKeystoreType::Pbkdf2)]
+    fn test_blskeystore_generation(#[case] keystore_type: BlsKeystoreType) {
         let output_dir = tempdir().unwrap();
-        let output_path = output_dir.path();
-        let subcommand = EigenKeyCommand::Generate {
-            key_type: key_type.clone(),
-            num_keys: 1,
-            output_dir: output_path.to_str().map(String::from),
+        let output_path = output_dir.path().join("keystore.json");
+        let subcommand = EigenKeyCommand::BlsConvert {
+            key_type: keystore_type,
+            secret_key: "000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"
+                .to_string(),
+            output_path: output_path.to_str().unwrap().to_string(),
+            password: Some("testpassword".to_string()),
         };
+
         let command = Commands::EigenKey { subcommand };
 
         execute_command(command).unwrap();
 
-        let private_key_hex = fs::read_to_string(output_path.join(PRIVATE_KEY_HEX_FILE)).unwrap();
-        let password = fs::read_to_string(output_path.join(PASSWORD_FILE)).unwrap();
-        let key_name = match key_type {
-            KeyType::Ecdsa => "ecdsa",
-            KeyType::Bls => "bls",
-        };
-        let key_path = output_path
-            .join(DEFAULT_KEY_FOLDER)
-            .join(format!("1.{}.key.json", key_name));
+        let keystore_instance = Keystore::from_file(output_path.to_str().unwrap()).unwrap();
+        let decrypted_key = keystore_instance.decrypt("testpassword").unwrap();
+        let original_secret_key =
+            hex::decode("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f")
+                .unwrap();
+        assert_eq!(original_secret_key.as_slice(), decrypted_key);
+    }
 
-        let decrypted_bytes = decrypt_key(key_path, password).unwrap();
-        let decrypted_private_key = SecretKey::from_slice(&decrypted_bytes).unwrap().to_bytes();
+    #[rstest]
+    #[case(MnemonicLanguage::English)]
+    #[case(MnemonicLanguage::Italian)]
+    #[case(MnemonicLanguage::ChineseSimplified)]
+    #[case(MnemonicLanguage::ChineseTraditional)]
+    #[case(MnemonicLanguage::Spanish)]
+    #[case(MnemonicLanguage::Korean)]
+    #[case(MnemonicLanguage::Portuguese)]
+    #[case(MnemonicLanguage::Czech)]
+    fn test_new_mnemonic_from_default_word_list(#[case] language: MnemonicLanguage) {
+        let subcommand = EigenKeyCommand::CreateNewMnemonicFromDefaultWordList { language };
 
-        let private_key = hex::decode(private_key_hex).unwrap();
+        let command = Commands::EigenKey { subcommand };
 
-        assert_eq!(private_key, decrypted_private_key.as_slice());
+        execute_command(command).unwrap();
     }
 
     #[test]
@@ -270,5 +346,38 @@ mod test {
         .unwrap();
 
         assert_eq!(expected_addresses, addresses);
+    }
+
+    #[rstest]
+    #[case(KeyType::Ecdsa)]
+    #[case(KeyType::Bls)]
+    fn test_generate_key(#[case] key_type: KeyType) {
+        let output_dir = tempdir().unwrap();
+        let output_path = output_dir.path();
+        let subcommand = EigenKeyCommand::Generate {
+            key_type: key_type.clone(),
+            num_keys: 1,
+            output_dir: output_path.to_str().map(String::from),
+        };
+        let command = Commands::EigenKey { subcommand };
+
+        execute_command(command).unwrap();
+
+        let private_key_hex = fs::read_to_string(output_path.join(PRIVATE_KEY_HEX_FILE)).unwrap();
+        let password = fs::read_to_string(output_path.join(PASSWORD_FILE)).unwrap();
+        let key_name = match key_type {
+            KeyType::Ecdsa => "ecdsa",
+            KeyType::Bls => "bls",
+        };
+        let key_path = output_path
+            .join(DEFAULT_KEY_FOLDER)
+            .join(format!("1.{}.key.json", key_name));
+
+        let decrypted_bytes = decrypt_key(key_path, password).unwrap();
+        let decrypted_private_key = SecretKey::from_slice(&decrypted_bytes).unwrap().to_bytes();
+
+        let private_key = hex::decode(private_key_hex).unwrap();
+
+        assert_eq!(private_key, decrypted_private_key.as_slice());
     }
 }
