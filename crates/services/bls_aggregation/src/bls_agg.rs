@@ -1002,4 +1002,104 @@ mod tests {
         assert_eq!(expected_agg_service_response, response.clone().unwrap());
         assert_eq!(task_index, response.unwrap().task_index);
     }
+
+    #[tokio::test]
+    async fn test_2_quorums_2_operators_which_just_take_1_quorum_2_correct_signatures() {
+        let test_operator_1 = TestOperator {
+            operator_id: U256::from(1).into(),
+            // Note the quorums is [0, 1], but operator id 1 just stake 0.
+            stake_per_quorum: HashMap::from([(0u8, U256::from(100))]),
+            bls_keypair: new_bls_key_pair_panics(
+                "13710126902690889134622698668747132666439281256983827313388062967626731803599"
+                    .into(),
+            ),
+        };
+        let test_operator_2 = TestOperator {
+            operator_id: U256::from(2).into(),
+            // Note the quorums is [0, 1], but operator id 2 just stake 1.
+            stake_per_quorum: HashMap::from([(1u8, U256::from(200))]),
+            bls_keypair: new_bls_key_pair_panics(
+                "14610126902690889134622698668747132666439281256983827313388062967626731803500"
+                    .into(),
+            ),
+        };
+
+        let test_operators = vec![test_operator_1.clone(), test_operator_2.clone()];
+        let block_number = 1;
+        let task_index = 0;
+        let quorum_numbers: Vec<QuorumNum> = vec![0, 1];
+        let quorum_threshold_percentages: QuorumThresholdPercentages = vec![100u8, 100u8];
+        let time_to_expiry = Duration::from_secs(1);
+        let task_response = 123; // Initialize with appropriate data
+        let task_response_digest = hash(task_response);
+
+        let fake_avs_registry_service = FakeAvsRegistryService::new(block_number, test_operators);
+        let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
+
+        bls_agg_service
+            .initialize_new_task::<FakeAvsRegistryService>(
+                task_index,
+                block_number as u32,
+                quorum_numbers,
+                quorum_threshold_percentages,
+                time_to_expiry,
+            )
+            .await;
+
+        let bls_sig_op_1 = test_operator_1
+            .bls_keypair
+            .sign_message(task_response_digest.as_ref());
+        bls_agg_service
+            .process_new_signature(
+                task_index,
+                task_response_digest,
+                bls_sig_op_1.clone(),
+                test_operator_1.operator_id,
+            )
+            .await;
+
+        let bls_sig_op_2 = test_operator_2
+            .bls_keypair
+            .sign_message(task_response_digest.as_ref());
+        bls_agg_service
+            .process_new_signature(
+                task_index,
+                task_response_digest,
+                bls_sig_op_2.clone(),
+                test_operator_2.operator_id,
+            )
+            .await;
+        let signers_apk_g2 = BlsG2Point::new(
+            (test_operator_1.bls_keypair.public_key_g2().g2()
+                + test_operator_2.bls_keypair.public_key_g2().g2())
+            .into(),
+        );
+        let signers_agg_sig_g1 =
+            Signature::new((bls_sig_op_1.g1_point().g1() + bls_sig_op_2.g1_point().g1()).into());
+        let expected_agg_service_response = BlsAggregationServiceResponse {
+            task_index,
+            task_response_digest,
+            non_signers_pub_keys_g1: vec![],
+            quorum_apks_g1: vec![
+                test_operator_1.bls_keypair.public_key(),
+                test_operator_2.bls_keypair.public_key(),
+            ],
+            signers_apk_g2,
+            signers_agg_sig_g1,
+            non_signer_quorum_bitmap_indices: vec![],
+            quorum_apk_indices: vec![],
+            total_stake_indices: vec![],
+            non_signer_stake_indices: vec![],
+        };
+
+        let response = bls_agg_service
+            .aggregated_response_receiver
+            .lock()
+            .await
+            .recv()
+            .await;
+
+        assert_eq!(expected_agg_service_response, response.clone().unwrap());
+        assert_eq!(task_index, response.unwrap().task_index);
+    }
 }
