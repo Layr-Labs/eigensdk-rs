@@ -3,7 +3,8 @@ use alloy_primitives::{Address, Bytes, FixedBytes, B256, U256};
 use alloy_provider::Provider;
 use alloy_rpc_types::Filter;
 use ark_ff::Zero;
-use eigen_logging::{logger::Logger, tracing_logger::TracingLogger};
+use eigen_logging::logger::{Logger, SharedLogger};
+use eigen_logging::tracing_logger::TracingLogger;
 use eigen_types::operator::{bitmap_to_quorum_ids, OperatorPubKeys};
 use eigen_utils::NEW_PUBKEY_REGISTRATION_EVENT;
 use eigen_utils::{
@@ -13,16 +14,30 @@ use eigen_utils::{
 use num_bigint::BigInt;
 use std::collections::HashMap;
 use std::fmt::Debug;
+use std::sync::Arc;
 
 /// Avs Registry chainreader
-#[derive(Debug, Clone, Default)]
+#[derive(Debug, Clone)]
 pub struct AvsRegistryChainReader {
-    logger: TracingLogger,
+    logger: SharedLogger,
     bls_apk_registry_addr: Address,
     registry_coordinator_addr: Address,
     operator_state_retriever: Address,
     stake_registry_addr: Address,
     provider: String,
+}
+
+impl Default for AvsRegistryChainReader {
+    fn default() -> Self {
+        AvsRegistryChainReader {
+            logger: Arc::new(TracingLogger::default()),
+            bls_apk_registry_addr: Default::default(),
+            registry_coordinator_addr: Default::default(),
+            operator_state_retriever: Default::default(),
+            stake_registry_addr: Default::default(),
+            provider: String::new(),
+        }
+    }
 }
 
 trait AvsRegistryReader {
@@ -32,7 +47,7 @@ trait AvsRegistryReader {
 impl AvsRegistryChainReader {
     /// New AvsRegistryChainReader instance
     pub async fn new(
-        logger: TracingLogger,
+        logger: SharedLogger,
         registry_coordinator_addr: Address,
         operator_state_retriever_addr: Address,
         http_provider_url: String,
@@ -397,8 +412,9 @@ impl AvsRegistryChainReader {
                                             i,
                                             to_block
                                         ),
-                                        &["eigen-client-avsregistry.reader.query_existing_registered_operator_pub_keys"]
+                                        "eigen-client-avsregistry.reader.query_existing_registered_operator_pub_keys"
                                     );
+
                                     for pub_key_reg in logs
                                         .iter()
                                         .map(|v| {
@@ -497,14 +513,14 @@ impl AvsRegistryChainReader {
                         }
                     }
                     self.logger.debug(
-                        &format!(
-                            "num_transaction_logs : {} , from_block: {} , to_block: {}",
-                            logs.len(),
-                            i,
-                            to_block
-                        ),
-                        &["eigen-client-avsregistry.reader.query_existing_registered_operator_sockets"],
-                    );
+                    &format!(
+                        "num_transaction_logs : {} , from_block: {} , to_block: {}",
+                        logs.len(),
+                        i,
+                        to_block
+                    ),
+                    "eigen-client-avsregistry.reader.query_existing_registered_operator_sockets",
+                );
 
                     i += query_block_range;
                 }
@@ -539,7 +555,7 @@ mod tests {
 
         let holesky_provider = "https://ethereum-holesky.blockpi.network/v1/rpc/public";
         AvsRegistryChainReader::new(
-            get_test_logger().clone(),
+            get_test_logger(),
             holesky_registry_coordinator,
             holesky_operator_state_retriever,
             holesky_provider.to_string(),

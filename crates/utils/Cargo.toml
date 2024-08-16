@@ -7,7 +7,7 @@ repository.workspace = true
 
 [dependencies]
 alloy-network.workspace = true
-alloy-provider = {workspace = true , features = ["ws"]}
+alloy-provider = {workspace = true, features = ["ws"]}
 alloy-transport-http.workspace = true
 reqwest.workspace = true
 alloy-contract.workspace = true
