@@ -113,7 +113,6 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                 operator_id,
             };
             let _x = sender.send(task);
-            println!("task sent");
         }
     }
 
@@ -165,7 +164,6 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
             if time_elapsed > time_to_expiry {
                 break;
             }
-            dbg!(&signed_task_digest);
             self.verify_signature(task_index, &signed_task_digest, &operator_state_avs)
                 .await; // handle error
 
@@ -232,22 +230,23 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                 quorum_threshold_percentage_map.clone(),
             ) {
                 let mut non_signers_operators_ids: Vec<FixedBytes<32>> = vec![];
-                for (i, op_info) in operator_state_avs.iter() {
+                for operator_id in operator_state_avs.keys() {
                     if !digest_aggregated_operators
                         .signers_operator_ids_set
-                        .contains_key(&op_info.operator_id)
+                        .contains_key(operator_id)
                     {
-                        non_signers_operators_ids.push(*i);
+                        non_signers_operators_ids.push(*operator_id);
                     }
                 }
 
-                non_signers_operators_ids.sort_by(|a, b| a.cmp(b));
+                non_signers_operators_ids.sort();
+                dbg!(&non_signers_operators_ids);
 
-                let mut non_signers_g1_pub_keys: Vec<BlsG1Point> = vec![];
+                let mut non_signers_pub_keys_g1: Vec<BlsG1Point> = vec![];
                 for operator_id in non_signers_operators_ids.iter() {
                     if let Some(operator) = operator_state_avs.get(operator_id) {
                         if let Some(keys) = &operator.operator_info.pub_keys {
-                            non_signers_g1_pub_keys.push(keys.g1_pub_key.clone());
+                            non_signers_pub_keys_g1.push(keys.g1_pub_key.clone());
                         }
                     }
                 }
@@ -266,7 +265,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                 let bls_aggregation_service_response = BlsAggregationServiceResponse {
                     task_index,
                     task_response_digest: signed_task_digest.task_response_digest,
-                    non_signers_pub_keys_g1: non_signers_g1_pub_keys,
+                    non_signers_pub_keys_g1,
                     quorum_apks_g1: quorum_apks_g1.clone(),
                     signers_apk_g2: digest_aggregated_operators.signers_apk_g2,
                     signers_agg_sig_g1: digest_aggregated_operators.signers_agg_sig_g1,
@@ -310,7 +309,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         );
 
         if !signature_verified {
-            todo!() // throw incorrect signature error
+            // todo!() // throw incorrect signature error
         }
     }
 
@@ -636,7 +635,7 @@ mod tests {
                 task_index,
                 task_response_digest,
                 bls_sig_op_2,
-                test_operator_1.operator_id,
+                test_operator_2.operator_id,
             )
             .await;
 
