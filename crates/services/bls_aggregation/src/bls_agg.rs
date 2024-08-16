@@ -946,6 +946,9 @@ mod tests {
         let time_to_expiry = Duration::from_secs(1);
         let task_response = 123; // Initialize with appropriate data
         let task_response_digest = hash(task_response);
+        let bls_sig_op_1 = test_operator_1
+            .bls_keypair
+            .sign_message(task_response_digest.as_ref());
 
         let fake_avs_registry_service = FakeAvsRegistryService::new(block_number, test_operators);
         let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
@@ -959,9 +962,6 @@ mod tests {
                 time_to_expiry,
             )
             .await;
-        let bls_sig_op_1 = test_operator_1
-            .bls_keypair
-            .sign_message(task_response_digest.as_ref());
         bls_agg_service
             .process_new_signature(
                 task_index,
@@ -982,7 +982,7 @@ mod tests {
         let expected_agg_service_response = BlsAggregationServiceResponse {
             task_index,
             task_response_digest,
-            non_signers_pub_keys_g1: vec![], //
+            non_signers_pub_keys_g1: vec![test_operator_2.bls_keypair.public_key()], //
             quorum_apks_g1: vec![quorum_apks_g1],
             signers_apk_g2,
             signers_agg_sig_g1: bls_sig_op_1,
@@ -998,9 +998,6 @@ mod tests {
             .await
             .recv()
             .await;
-
-        dbg!(&expected_agg_service_response);
-        dbg!(&response);
 
         assert_eq!(expected_agg_service_response, response.clone().unwrap());
         assert_eq!(task_index, response.unwrap().task_index);
