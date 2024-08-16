@@ -240,7 +240,6 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                 }
 
                 non_signers_operators_ids.sort();
-                dbg!(&non_signers_operators_ids);
 
                 let mut non_signers_pub_keys_g1: Vec<BlsG1Point> = vec![];
                 for operator_id in non_signers_operators_ids.iter() {
@@ -309,7 +308,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         );
 
         if !signature_verified {
-            // todo!() // throw incorrect signature error
+            todo!() // throw incorrect signature error
         }
     }
 
@@ -570,8 +569,7 @@ mod tests {
             .await
             .recv()
             .await;
-        dbg!(&expected_agg_service_response);
-        dbg!(&response.clone().unwrap());
+
         assert_eq!(expected_agg_service_response, response.clone().unwrap());
         assert_eq!(task_index, response.unwrap().task_index);
     }
@@ -650,15 +648,26 @@ mod tests {
                 + test_operator_2.bls_keypair.public_key_g2().g2())
             .into(),
         );
+        let signers_agg_sig_g1 = Signature::new(
+            (test_operator_1
+                .bls_keypair
+                .sign_message(task_response_digest.as_ref())
+                .g1_point()
+                .g1()
+                + test_operator_2
+                    .bls_keypair
+                    .sign_message(task_response_digest.as_ref())
+                    .g1_point()
+                    .g1())
+            .into(),
+        );
         let expected_agg_service_response = BlsAggregationServiceResponse {
             task_index,
             task_response_digest,
             non_signers_pub_keys_g1: vec![],
             quorum_apks_g1: vec![quorum_apks_g1.clone(), quorum_apks_g1],
             signers_apk_g2,
-            signers_agg_sig_g1: test_operator_1
-                .bls_keypair
-                .sign_message(task_response_digest.as_ref()),
+            signers_agg_sig_g1,
             non_signer_quorum_bitmap_indices: vec![],
             quorum_apk_indices: vec![],
             total_stake_indices: vec![],
@@ -671,6 +680,7 @@ mod tests {
             .await
             .recv()
             .await;
+
         assert_eq!(expected_agg_service_response, response.unwrap());
     }
 
@@ -787,29 +797,52 @@ mod tests {
                 + test_operator_2.bls_keypair.public_key_g2().g2())
             .into(),
         );
+        let signers_agg_sig_g1_task_1 = Signature::new(
+            (test_operator_1
+                .bls_keypair
+                .sign_message(task_1_response_digest.as_ref())
+                .g1_point()
+                .g1()
+                + test_operator_2
+                    .bls_keypair
+                    .sign_message(task_1_response_digest.as_ref())
+                    .g1_point()
+                    .g1())
+            .into(),
+        );
         let expected_response_task_1 = BlsAggregationServiceResponse {
             task_index: task_1_index,
             task_response_digest: task_1_response_digest,
             non_signers_pub_keys_g1: vec![],
             quorum_apks_g1: vec![quorum_apks_g1.clone(), quorum_apks_g1.clone()],
             signers_apk_g2: signers_apk_g2.clone(),
-            signers_agg_sig_g1: test_operator_1
-                .bls_keypair
-                .sign_message(task_1_response_digest.as_ref()),
+            signers_agg_sig_g1: signers_agg_sig_g1_task_1,
             non_signer_quorum_bitmap_indices: vec![],
             quorum_apk_indices: vec![],
             total_stake_indices: vec![],
             non_signer_stake_indices: vec![],
         };
+
+        let signers_agg_sig_g1_task_2 = Signature::new(
+            (test_operator_1
+                .bls_keypair
+                .sign_message(task_2_response_digest.as_ref())
+                .g1_point()
+                .g1()
+                + test_operator_2
+                    .bls_keypair
+                    .sign_message(task_2_response_digest.as_ref())
+                    .g1_point()
+                    .g1())
+            .into(),
+        );
         let expected_response_task_2 = BlsAggregationServiceResponse {
             task_index: task_2_index,
             task_response_digest: task_2_response_digest,
             non_signers_pub_keys_g1: vec![],
             quorum_apks_g1: vec![quorum_apks_g1.clone(), quorum_apks_g1.clone()],
             signers_apk_g2,
-            signers_agg_sig_g1: test_operator_1
-                .bls_keypair
-                .sign_message(task_2_response_digest.as_ref()),
+            signers_agg_sig_g1: signers_agg_sig_g1_task_2,
             non_signer_quorum_bitmap_indices: vec![],
             quorum_apk_indices: vec![],
             total_stake_indices: vec![],
