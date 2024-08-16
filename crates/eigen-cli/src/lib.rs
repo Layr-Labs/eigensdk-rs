@@ -16,7 +16,7 @@ use crate::eigen_address::ContractAddresses;
 use alloy_contract::Error as ContractError;
 use alloy_json_rpc::RpcError;
 use alloy_transport::TransportErrorKind;
-use args::{Commands, EigenKeyCommand, MnemonicLanguage};
+use args::{Commands, EigenKeyCommand};
 use ark_serialize::SerializationError;
 use bls::BlsKeystore;
 use colored::*;
@@ -24,11 +24,7 @@ use convert::store;
 use eigen_crypto_bls::error::BlsError;
 use generate::KeyGenerator;
 use operator_id::derive_operator_id;
-use rust_bls_bn254::{
-    errors::KeystoreError as BlsKeystoreError, mnemonics::Mnemonic, CHINESE_SIMPLIFIED_WORD_LIST,
-    CHINESE_TRADITIONAL_WORD_LIST, CZECH_WORD_LIST, ENGLISH_WORD_LIST, ITALIAN_WORD_LIST,
-    KOREAN_WORD_LIST, PORTUGUESE_WORD_LIST, SPANISH_WORD_LIST,
-};
+use rust_bls_bn254::{errors::KeystoreError as BlsKeystoreError, mnemonics::Mnemonic};
 use thiserror::Error;
 
 pub const ANVIL_RPC_URL: &str = "http://localhost:8545";
@@ -138,72 +134,18 @@ pub fn execute_egnkey_subcommand(subcommand: EigenKeyCommand) -> Result<(), Eige
             )?;
             Ok(())
         }
-        EigenKeyCommand::CreateNewMnemonic { language, path } => {
-            let mnemonic = match language {
-                MnemonicLanguage::English => {
-                    if let Some(path_) = path {
-                        Mnemonic::get_mnemonic("english", &path_, None).unwrap()
-                    } else {
-                        Mnemonic::get_mnemonic_without_word_path(ENGLISH_WORD_LIST, None).unwrap()
-                    }
-                }
-                MnemonicLanguage::ChineseSimplified => {
-                    if let Some(path_) = path {
-                        Mnemonic::get_mnemonic("chinese_simplified", &path_, None).unwrap()
-                    } else {
-                        Mnemonic::get_mnemonic_without_word_path(CHINESE_SIMPLIFIED_WORD_LIST, None)
-                            .unwrap()
-                    }
-                }
-                MnemonicLanguage::ChineseTraditional => {
-                    if let Some(path_) = path {
-                        Mnemonic::get_mnemonic("chinese_traditional", &path_, None).unwrap()
-                    } else {
-                        Mnemonic::get_mnemonic_without_word_path(
-                            CHINESE_TRADITIONAL_WORD_LIST,
-                            None,
-                        )
-                        .unwrap()
-                    }
-                }
-                MnemonicLanguage::Czech => {
-                    if let Some(path_) = path {
-                        Mnemonic::get_mnemonic("czech", &path_, None).unwrap()
-                    } else {
-                        Mnemonic::get_mnemonic_without_word_path(CZECH_WORD_LIST, None).unwrap()
-                    }
-                }
-                MnemonicLanguage::Italian => {
-                    if let Some(path_) = path {
-                        Mnemonic::get_mnemonic("italian", &path_, None).unwrap()
-                    } else {
-                        Mnemonic::get_mnemonic_without_word_path(ITALIAN_WORD_LIST, None).unwrap()
-                    }
-                }
-                MnemonicLanguage::Korean => {
-                    if let Some(path_) = path {
-                        Mnemonic::get_mnemonic("korean", &path_, None).unwrap()
-                    } else {
-                        Mnemonic::get_mnemonic_without_word_path(KOREAN_WORD_LIST, None).unwrap()
-                    }
-                }
-                MnemonicLanguage::Portuguese => {
-                    if let Some(path_) = path {
-                        Mnemonic::get_mnemonic("portuguese", &path_, None).unwrap()
-                    } else {
-                        Mnemonic::get_mnemonic_without_word_path(PORTUGUESE_WORD_LIST, None)
-                            .unwrap()
-                    }
-                }
-                MnemonicLanguage::Spanish => {
-                    if let Some(path_) = path {
-                        Mnemonic::get_mnemonic("spanish", &path_, None).unwrap()
-                    } else {
-                        Mnemonic::get_mnemonic_without_word_path(SPANISH_WORD_LIST, None).unwrap()
-                    }
-                }
-            };
+        EigenKeyCommand::CreateNewMnemonicFromDefaultWordList { language } => {
+            let word_list = language.try_from().1;
+            let mnemonic = Mnemonic::get_mnemonic_without_word_path(word_list, None).unwrap();
 
+            println!("New mnemonic generated : {}", mnemonic);
+            println!("{}", "Please store it safely!".red().bold());
+            Ok(())
+        }
+        EigenKeyCommand::CreateNewMnemonicFromPath { language, path } => {
+            let language_string = language.try_from().0;
+
+            let mnemonic = Mnemonic::get_mnemonic(language_string, &path, None).unwrap();
             println!("New mnemonic generated : {}", mnemonic);
             println!("{}", "Please store it safely!".red().bold());
             Ok(())
@@ -300,11 +242,8 @@ mod test {
     #[case(MnemonicLanguage::Korean)]
     #[case(MnemonicLanguage::Portuguese)]
     #[case(MnemonicLanguage::Czech)]
-    fn test_new_mnemonic(#[case] language: MnemonicLanguage) {
-        let subcommand = EigenKeyCommand::CreateNewMnemonic {
-            language,
-            path: None,
-        };
+    fn test_new_mnemonic_from_default_word_list(#[case] language: MnemonicLanguage) {
+        let subcommand = EigenKeyCommand::CreateNewMnemonicFromDefaultWordList { language };
 
         let command = Commands::EigenKey { subcommand };
 
