@@ -916,4 +916,33 @@ mod tests {
 
         // assert_eq!(expected_agg_service_response, response.clone().unwrap());
     }
+
+    #[tokio::test]
+    async fn test_tokio_channel() {
+        use tokio::sync::mpsc;
+        use tokio::time::timeout;
+        use tokio::time::{sleep, Duration};
+
+        let (tx, mut rx) = mpsc::channel(100);
+
+        tokio::spawn(async move {
+            // if we uncomment this, we get a timeout error
+            // sleep(Duration::from_millis(100)).await;
+            tx.send("hello").await.unwrap();
+        });
+
+        let received = timeout(Duration::from_millis(10), rx.recv()).await;
+
+        match received {
+            Ok(received) => {
+                println!("Received: {received:?}");
+                assert_eq!(Some("hello"), received);
+            }
+            Err(_) => {
+                println!("did not receive value within 10 ms");
+            }
+        }
+
+        assert_eq!(None, rx.recv().await);
+    }
 }
