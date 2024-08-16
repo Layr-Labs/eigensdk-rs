@@ -7,7 +7,10 @@ use eigen_crypto_bls::{
     alloy_registry_g1_point_to_g1_affine, alloy_registry_g2_point_to_g2_affine, BlsG1Point,
     BlsG2Point,
 };
-use eigen_logging::{logger::Logger, tracing_logger::TracingLogger};
+use eigen_logging::{
+    logger::{Logger, SharedLogger},
+    tracing_logger::TracingLogger,
+};
 use eigen_types::operator::{operator_id_from_g1_pub_key, OperatorPubKeys};
 use eigen_utils::{
     binding::BLSApkRegistry::{self, G1Point, G2Point},
@@ -24,7 +27,7 @@ use tokio::sync::{
 #[allow(dead_code)]
 #[derive(Debug, Clone)]
 pub struct OperatorInfoServiceInMemory {
-    logger: TracingLogger,
+    logger: SharedLogger,
     avs_registry_reader: AvsRegistryChainReader,
     ws: String,
     pub_keys: UnboundedSender<OperatorsInfoMessage>,
@@ -40,7 +43,7 @@ enum OperatorsInfoMessage {
 
 impl OperatorInfoServiceInMemory {
     pub async fn new(
-        logger: TracingLogger,
+        logger: SharedLogger,
         avs_registry_chain_reader: AvsRegistryChainReader,
         web_socket: String,
     ) -> Self {
@@ -108,7 +111,7 @@ impl OperatorInfoServiceInMemory {
                 if shutdown_rx.has_changed().unwrap_or(false) {
                     self_clone.logger.info(
                         "shutdown of operators info service ",
-                        &["eigen-services-operatorsinfo.start_service"],
+                        "eigen-services-operatorsinfo.start_service",
                     );
                     break;
                 }
@@ -134,13 +137,15 @@ impl OperatorInfoServiceInMemory {
                         )),
                     };
                     // Send message
+
                     self_clone.logger.debug(
                         &format!(
                             "New pub key found  operator_address : {:?} , operator_pub_keys : {:?}",
                             event_data.operator, operator_pub_key
                         ),
-                        &["eigen-services-operatorsinfo.start_service"],
+                        "eigen-services-operatorsinfo.start_service",
                     );
+
                     let _ = pub_keys.send(OperatorsInfoMessage::InsertOperatorInfo(
                         event_data.operator,
                         operator_pub_key,
@@ -174,7 +179,13 @@ impl OperatorInfoServiceInMemory {
         for (i, address) in operator_address.iter().enumerate() {
             let message =
                 OperatorsInfoMessage::InsertOperatorInfo(*address, operator_pub_keys[i].clone());
-            self.logger.debug(&format!("New pub key found  operator_address : {:?} , operator_pub_keys : {:?}",operator_address,operator_pub_keys), &["eigen-services-operatorsinfo.query_past_registered_operator_events_and_fill_db"]);
+            self.logger.debug(
+                &format!(
+                    "New pub key found  operator_address : {:?} , operator_pub_keys : {:?}",
+                    operator_address, operator_pub_keys
+                ),
+                "eigen-services-operatorsinfo.query_past_registered_operator_events_and_fill_db",
+            );
             let _ = self.pub_keys.send(message);
         }
     }

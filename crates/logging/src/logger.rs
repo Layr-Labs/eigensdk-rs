@@ -1,28 +1,17 @@
-use super::log_level::LogLevel;
 use std::fmt::Debug;
+use std::sync::Arc;
 
-pub trait Logger {
-    type LoggerType: Logger;
+pub type SharedLogger = Arc<dyn Logger>;
 
-    fn new_text_logger(
-        no_color: bool,
-        time_format: String,
-        level: LogLevel,
-        add_source: bool,
-    ) -> Self::LoggerType;
+pub fn tags_as_debug<'a>(tags: &'a [&'a str]) -> Vec<&'a dyn Debug> {
+    tags.iter().map(|tag| tag as &dyn Debug).collect()
+}
 
-    fn new_json_logger(
-        no_color: bool,
-        time_format: String,
-        level: LogLevel,
-        add_source: bool,
-    ) -> Self::LoggerType;
-
-    fn debug(&self, msg: &str, args: &[impl Debug]);
-    fn info(&self, msg: &str, args: &[impl Debug]);
-    fn warn(&self, msg: &str, args: &[impl Debug]);
-    fn error(&self, msg: &str, args: &[impl Debug]);
-    fn fatal(&self, msg: &str, args: &[impl Debug]);
-
-    fn log(&self, msg: &str, args: &[impl Debug]);
+pub trait Logger: Debug + Send + Sync {
+    fn debug(&self, msg: &str, args: &str);
+    fn info(&self, msg: &str, args: &str);
+    fn warn(&self, msg: &str, args: &str);
+    fn error(&self, msg: &str, args: &str);
+    fn fatal(&self, msg: &str, args: &str);
+    fn log(&self, msg: &str, args: &str);
 }

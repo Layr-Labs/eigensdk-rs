@@ -4,10 +4,11 @@ use alloy_primitives::Address;
 use alloy_provider::{PendingTransactionBuilder, Provider, ProviderBuilder, RootProvider};
 use alloy_rpc_types_eth::{TransactionInput, TransactionReceipt, TransactionRequest};
 use alloy_signer_local::PrivateKeySigner;
-use eigen_logging::{logger::Logger, tracing_logger::TracingLogger};
+use eigen_logging::logger::Logger;
 use eigen_signer::signer::Config;
 use k256::ecdsa::SigningKey;
 use reqwest::Url;
+use std::sync::Arc;
 use thiserror::Error;
 
 static FALLBACK_GAS_TIP_CAP: u128 = 5_000_000_000;
@@ -30,7 +31,7 @@ pub enum TxManagerError {
 }
 
 pub struct SimpleTxManager<'log> {
-    logger: &'log TracingLogger,
+    logger: &'log Arc<dyn Logger>,
     gas_limit_multiplier: f64,
     private_key: String,
     provider: RootProvider<Transport>,
@@ -54,13 +55,13 @@ impl<'log> SimpleTxManager<'log> {
     ///
     /// - If the URL is invalid.
     pub fn new(
-        logger: &'log TracingLogger,
+        logger: &'log Arc<dyn Logger>,
         gas_limit_multiplier: f64,
         private_key: &str,
         rpc_url: &str,
     ) -> Result<SimpleTxManager<'log>, TxManagerError> {
         let url = Url::parse(rpc_url)
-            .inspect_err(|err| logger.error("Failed to parse url", &[err]))
+            .inspect_err(|err| logger.error("Failed to parse url", &err.to_string()))
             .map_err(|_| TxManagerError::InvalidUrlError)?;
         let provider = ProviderBuilder::new().on_http(url);
         Ok(SimpleTxManager {
@@ -82,7 +83,10 @@ impl<'log> SimpleTxManager<'log> {
     /// - If the private key is invalid.
     pub fn get_address(&self) -> Result<Address, TxManagerError> {
         let private_key_signing_key = SigningKey::from_slice(self.private_key.as_bytes())
-            .inspect_err(|err| self.logger.error("Failed to parse private key", &[err]))
+            .inspect_err(|err| {
+                self.logger
+                    .error("Failed to parse private key", &err.to_string())
+            })
             .map_err(|_| TxManagerError::AddressError)?;
         Ok(Address::from_private_key(&private_key_signing_key))
     }
@@ -94,7 +98,10 @@ impl<'log> SimpleTxManager<'log> {
     fn create_local_signer(&self) -> Result<PrivateKeySigner, TxManagerError> {
         let config = Config::PrivateKey(self.private_key.clone());
         Config::signer_from_config(config)
-            .inspect_err(|err| self.logger.error("Failed to create signer", &[err]))
+            .inspect_err(|err| {
+                self.logger
+                    .error("Failed to create signer", &err.to_string())
+            })
             .map_err(|_| TxManagerError::SignerError)
     }
 
@@ -115,12 +122,12 @@ impl<'log> SimpleTxManager<'log> {
         tx: &mut TransactionRequest,
     ) -> Result<TransactionReceipt, TxManagerError> {
         // Estimating gas and nonce
-        self.logger.debug("Estimating gas and nonce", &[()]);
+        self.logger.debug("Estimating gas and nonce", "");
 
-        let tx = self
-            .estimate_gas_and_nonce(tx)
-            .await
-            .inspect_err(|err| self.logger.error("Failed to estimate gas", &[err]))?;
+        let tx = self.estimate_gas_and_nonce(tx).await.inspect_err(|err| {
+            self.logger
+                .error("Failed to estimate gas", &err.to_string())
+        })?;
 
         let signer = self.create_local_signer()?;
         let wallet = EthereumWallet::from(signer);
@@ -130,7 +137,7 @@ impl<'log> SimpleTxManager<'log> {
             .await
             .inspect_err(|err| {
                 self.logger
-                    .error("Failed to build and sign transaction", &[err])
+                    .error("Failed to build and sign transaction", &err.to_string())
             })
             .map_err(|_| TxManagerError::SendTxError)?;
 
@@ -139,11 +146,11 @@ impl<'log> SimpleTxManager<'log> {
             .provider
             .send_transaction(signed_tx.into())
             .await
-            .inspect_err(|err| self.logger.error("Failed to get receipt", &[err]))
+            .inspect_err(|err| self.logger.error("Failed to get receipt", &err.to_string()))
             .map_err(|_| TxManagerError::SendTxError)?;
 
         self.logger
-            .debug("Transaction sent. Pending transaction: ", &[&pending_tx]);
+            .debug("Transaction sent. Pending transaction: ", "");
 
         // wait for the transaction to be mined
         SimpleTxManager::wait_for_receipt(self, pending_tx).await
@@ -173,7 +180,7 @@ impl<'log> SimpleTxManager<'log> {
         let gas_tip_cap = self.provider.get_max_priority_fee_per_gas().await
         .inspect_err(|err|
             self.logger.info("eth_maxPriorityFeePerGas is unsupported by current backend, using fallback gasTipCap",
-            &[err]))
+            &err.to_string()))
         .unwrap_or(FALLBACK_GAS_TIP_CAP);
 
         let header = self
@@ -184,10 +191,7 @@ impl<'log> SimpleTxManager<'log> {
             .flatten()
             .map(|block| block.header)
             .ok_or(TxManagerError::SendTxError)
-            .inspect_err(|_| {
-                self.logger
-                    .error("Failed to get latest block header", &[()])
-            })?;
+            .inspect_err(|_| self.logger.error("Failed to get latest block header", ""))?;
 
         // 2*baseFee + gas_tip_cap makes sure that the tx remains includeable for 6 consecutive 100% full blocks.
         // see https://www.blocknative.com/blog/eip-1559-fees
@@ -260,7 +264,7 @@ impl<'log> SimpleTxManager<'log> {
         pending_tx
             .get_receipt()
             .await
-            .inspect_err(|err| self.logger.error("Failed to get receipt", &[err]))
+            .inspect_err(|err| self.logger.error("Failed to get receipt", &err.to_string()))
             .map_err(|_| TxManagerError::WaitForReceiptError)
     }
 }
@@ -289,7 +293,7 @@ mod tests {
         let logger = get_test_logger();
 
         let simple_tx_manager =
-            SimpleTxManager::new(logger, 1.0, PRIVATE_KEY, rpc_url.as_str()).unwrap();
+            SimpleTxManager::new(&logger, 1.0, PRIVATE_KEY, rpc_url.as_str()).unwrap();
 
         // Create two users, Alice and Bob.
         let _alice = anvil.addresses()[0];
@@ -325,7 +329,7 @@ mod tests {
         // Create a provider.
         let logger = get_test_logger();
         let simple_tx_manager =
-            SimpleTxManager::new(logger, 1.0, PRIVATE_KEY, rpc_url.as_str()).unwrap();
+            SimpleTxManager::new(&logger, 1.0, PRIVATE_KEY, rpc_url.as_str()).unwrap();
 
         // Create two users, Alice and Bob.
         let _alice = anvil.addresses()[0];

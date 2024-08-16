@@ -5,7 +5,6 @@ use ethers::{types::U64, utils::keccak256};
 use num_bigint::BigUint;
 use std::collections::HashMap;
 
-use crate::test::TestOperator;
 const MAX_NUMBER_OF_QUORUMS: usize = 192;
 
 pub type OperatorId = FixedBytes<32>;
