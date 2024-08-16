@@ -220,61 +220,62 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                         digest_aggregated_operators.clone(),
                     );
 
-                    // check stake threshold
-                    if self.check_if_stake_thresholds_met(
+                    if !self.check_if_stake_thresholds_met(
                         digest_aggregated_operators.signers_total_stake_per_quorum,
                         total_stake_per_quorum.clone(),
                         quorum_threshold_percentage_map.clone(),
                     ) {
-                        let mut non_signers_operators_ids: Vec<FixedBytes<32>> = vec![];
-                        for operator_id in operator_state_avs.keys() {
-                            if !digest_aggregated_operators
-                                .signers_operator_ids_set
-                                .contains_key(operator_id)
-                            {
-                                non_signers_operators_ids.push(*operator_id);
-                            }
-                        }
-
-                        non_signers_operators_ids.sort();
-
-                        let mut non_signers_pub_keys_g1: Vec<BlsG1Point> = vec![];
-                        for operator_id in non_signers_operators_ids.iter() {
-                            if let Some(operator) = operator_state_avs.get(operator_id) {
-                                if let Some(keys) = &operator.operator_info.pub_keys {
-                                    non_signers_pub_keys_g1.push(keys.g1_pub_key.clone());
-                                }
-                            }
-                        }
-
-                        let indices = self
-                            .avs_registry_service
-                            // .get_avs_registry()
-                            .get_check_signatures_indices(
-                                task_created_block,
-                                quorum_nums.clone(),
-                                non_signers_operators_ids,
-                            )
-                            .await
-                            .unwrap();
-
-                        let bls_aggregation_service_response = BlsAggregationServiceResponse {
-                            task_index,
-                            task_response_digest: signed_task_digest.task_response_digest,
-                            non_signers_pub_keys_g1,
-                            quorum_apks_g1: quorum_apks_g1.clone(),
-                            signers_apk_g2: digest_aggregated_operators.signers_apk_g2,
-                            signers_agg_sig_g1: digest_aggregated_operators.signers_agg_sig_g1,
-                            non_signer_quorum_bitmap_indices: indices.clone().quorumApkIndices,
-                            quorum_apk_indices: indices.quorumApkIndices,
-                            total_stake_indices: indices.totalStakeIndices,
-                            non_signer_stake_indices: indices.nonSignerStakeIndices,
-                        };
-
-                        let _ = self
-                            .aggregated_response_sender
-                            .send(bls_aggregation_service_response);
+                        continue;
                     }
+
+                    let mut non_signers_operators_ids: Vec<FixedBytes<32>> = vec![];
+                    for operator_id in operator_state_avs.keys() {
+                        if !digest_aggregated_operators
+                            .signers_operator_ids_set
+                            .contains_key(operator_id)
+                        {
+                            non_signers_operators_ids.push(*operator_id);
+                        }
+                    }
+
+                    non_signers_operators_ids.sort();
+
+                    let mut non_signers_pub_keys_g1: Vec<BlsG1Point> = vec![];
+                    for operator_id in non_signers_operators_ids.iter() {
+                        if let Some(operator) = operator_state_avs.get(operator_id) {
+                            if let Some(keys) = &operator.operator_info.pub_keys {
+                                dbg!("pushing", keys.g1_pub_key.clone());
+                                non_signers_pub_keys_g1.push(keys.g1_pub_key.clone());
+                            }
+                        }
+                    }
+
+                    let indices = self
+                        .avs_registry_service
+                        .get_check_signatures_indices(
+                            task_created_block,
+                            quorum_nums.clone(),
+                            non_signers_operators_ids,
+                        )
+                        .await
+                        .unwrap();
+
+                    let bls_aggregation_service_response = BlsAggregationServiceResponse {
+                        task_index,
+                        task_response_digest: signed_task_digest.task_response_digest,
+                        non_signers_pub_keys_g1,
+                        quorum_apks_g1: quorum_apks_g1.clone(),
+                        signers_apk_g2: digest_aggregated_operators.signers_apk_g2,
+                        signers_agg_sig_g1: digest_aggregated_operators.signers_agg_sig_g1,
+                        non_signer_quorum_bitmap_indices: indices.clone().quorumApkIndices,
+                        quorum_apk_indices: indices.quorumApkIndices,
+                        total_stake_indices: indices.totalStakeIndices,
+                        non_signer_stake_indices: indices.nonSignerStakeIndices,
+                    };
+
+                    let _ = self
+                        .aggregated_response_sender
+                        .send(bls_aggregation_service_response);
                 }
                 Ok(None) => {
                     // channel closed
@@ -321,25 +322,23 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         total_stake_per_quorum: HashMap<u8, U256>,
         quorum_threshold_percentages_map: HashMap<u8, QuorumThresholdPercentage>,
     ) -> bool {
-        let Some((quorum_num, quorum_threshold_percentage)) =
-            quorum_threshold_percentages_map.into_iter().next()
-        else {
-            return true;
-        };
+        for (quorum_num, quorum_threshold_percentage) in quorum_threshold_percentages_map {
+            let Some(signed_stake_by_quorum) = signed_stake_per_quorum.get(&quorum_num) else {
+                return false;
+            };
 
-        // TODO: check if quorum num <= u8 max assert
-        let Some(signed_stake_by_quorum) = signed_stake_per_quorum.get(&quorum_num) else {
-            return false;
-        };
+            let Some(total_stake_by_quorum) = total_stake_per_quorum.get(&quorum_num) else {
+                return false;
+            };
 
-        let Some(total_stake_by_quorum) = total_stake_per_quorum.get(&quorum_num) else {
-            return false;
-        };
+            let signed_stake = signed_stake_by_quorum * U256::from(100);
+            let threshold_stake = *total_stake_by_quorum * U256::from(quorum_threshold_percentage);
 
-        let signed_stake = signed_stake_by_quorum * U256::from(100);
-        let threshold_stake = *total_stake_by_quorum * U256::from(quorum_threshold_percentage);
-
-        signed_stake >= threshold_stake
+            if signed_stake < threshold_stake {
+                return false;
+            }
+        }
+        true
     }
 }
 
@@ -918,5 +917,92 @@ mod tests {
         //     .await;
 
         // assert_eq!(expected_agg_service_response, response.clone().unwrap());
+    }
+
+    #[tokio::test]
+    async fn test_1_quorum_2_operator_1_signatures_50_quorum() {
+        // 1 quorum 2 operator 1 correct signature quorumThreshold 50% - verified
+        let test_operator_1 = TestOperator {
+            operator_id: U256::from(1).into(),
+            stake_per_quorum: HashMap::from([(0u8, U256::from(100)), (1u8, U256::from(200))]),
+            bls_keypair: new_bls_key_pair_panics(
+                "13710126902690889134622698668747132666439281256983827313388062967626731803599"
+                    .into(),
+            ),
+        };
+        let test_operator_2 = TestOperator {
+            operator_id: U256::from(2).into(),
+            stake_per_quorum: HashMap::from([(0u8, U256::from(100)), (1u8, U256::from(200))]),
+            bls_keypair: new_bls_key_pair_panics(
+                "14610126902690889134622698668747132666439281256983827313388062967626731803500"
+                    .into(),
+            ),
+        };
+        let test_operators = vec![test_operator_1.clone(), test_operator_2.clone()];
+        let block_number = 1;
+        let task_index = 0;
+        let quorum_numbers: Vec<QuorumNum> = vec![0];
+        let quorum_threshold_percentages: QuorumThresholdPercentages = vec![50u8];
+        let time_to_expiry = Duration::from_secs(1);
+        let task_response = 123; // Initialize with appropriate data
+        let task_response_digest = hash(task_response);
+
+        let fake_avs_registry_service = FakeAvsRegistryService::new(block_number, test_operators);
+        let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
+
+        bls_agg_service
+            .initialize_new_task::<FakeAvsRegistryService>(
+                task_index,
+                block_number as u32,
+                quorum_numbers,
+                quorum_threshold_percentages,
+                time_to_expiry,
+            )
+            .await;
+        let bls_sig_op_1 = test_operator_1
+            .bls_keypair
+            .sign_message(task_response_digest.as_ref());
+        bls_agg_service
+            .process_new_signature(
+                task_index,
+                task_response_digest,
+                bls_sig_op_1.clone(),
+                test_operator_1.operator_id,
+            )
+            .await;
+
+        let quorum_apks_g1 = BlsG1Point::new(
+            (test_operator_1.bls_keypair.public_key().g1()
+                + test_operator_2.bls_keypair.public_key().g1())
+            .into(),
+        );
+
+        let signers_apk_g2: BlsG2Point = test_operator_1.bls_keypair.public_key_g2();
+
+        let expected_agg_service_response = BlsAggregationServiceResponse {
+            task_index,
+            task_response_digest,
+            non_signers_pub_keys_g1: vec![], //
+            quorum_apks_g1: vec![quorum_apks_g1],
+            signers_apk_g2,
+            signers_agg_sig_g1: bls_sig_op_1,
+            non_signer_quorum_bitmap_indices: vec![],
+            quorum_apk_indices: vec![],
+            total_stake_indices: vec![],
+            non_signer_stake_indices: vec![],
+        };
+
+        let response = bls_agg_service
+            .aggregated_response_receiver
+            .lock()
+            .await
+            .recv()
+            .await;
+
+        dbg!(&expected_agg_service_response);
+        dbg!(&response);
+
+        assert_eq!(expected_agg_service_response, response.clone().unwrap());
+        assert_eq!(task_index, response.unwrap().task_index);
     }
 }
