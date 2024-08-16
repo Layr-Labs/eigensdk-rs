@@ -712,7 +712,7 @@ mod tests {
         let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
 
         // initialize 2 concurrent tasks
-        let task_1_index = 0;
+        let task_1_index = 1;
         let task_1_response = 123; // Initialize with appropriate data
         let task_1_response_digest = hash(task_1_response);
         bls_agg_service
@@ -725,8 +725,8 @@ mod tests {
             )
             .await;
 
-        let task_2_index = 0;
-        let task_2_response = 123; // Initialize with appropriate data
+        let task_2_index = 2;
+        let task_2_response = 234; // Initialize with appropriate data
         let task_2_response_digest = hash(task_2_response);
         bls_agg_service
             .initialize_new_task::<FakeAvsRegistryService>(
@@ -740,7 +740,7 @@ mod tests {
 
         let bls_sig_task_1_op_1 = test_operator_1
             .bls_keypair
-            .sign_message(task_2_response_digest.as_ref());
+            .sign_message(task_1_response_digest.as_ref());
         bls_agg_service
             .process_new_signature(
                 task_1_index,
