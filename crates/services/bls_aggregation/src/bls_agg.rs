@@ -65,6 +65,19 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         }
     }
 
+    ///  Creates a new task meant to process new signed task responses for a task tokio channel.
+    ///
+    /// # Arguments
+    ///
+    /// * `task_index` - The index of the task
+    /// * `task_created_block` - The block number at which the task was created
+    /// * `quorum_nums` - The quorum numbers for the task
+    /// * `quorum_threshold_percentages` - The quorum threshold percentages for the task
+    /// * `time_to_expiry` - The timemetout for the task reader to expire
+    ///
+    /// # Error
+    ///
+    /// Returns error if the task index already exists
     pub async fn initialize_new_task<S: AvsRegistryService>(
         &self,
         task_index: TaskIndex,
