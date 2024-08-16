@@ -418,8 +418,6 @@ mod tests {
             )
             .await;
 
-        //     require.Equal(t, wantAggregationServiceResponse, gotAggregationServiceResponse)
-        //     require.EqualValues(t, taskIndex, gotAggregationServiceResponse.TaskIndex)
         use crate::bls_agg::BlsAggregationServiceResponse;
         let expected_agg_service_response = BlsAggregationServiceResponse {
             task_index,
@@ -442,8 +440,8 @@ mod tests {
             .await
             .recv()
             .await;
-        dbg!(&expected_agg_service_response);
-        dbg!(&response);
-        assert_eq!(expected_agg_service_response, response.unwrap());
+
+        assert_eq!(expected_agg_service_response, response.clone().unwrap());
+        assert_eq!(task_index, response.unwrap().task_index);
     }
 }
