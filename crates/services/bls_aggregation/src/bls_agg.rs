@@ -435,8 +435,8 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
     ) -> bool {
         for (quorum_num, quorum_threshold_percentage) in quorum_threshold_percentages_map {
             let (Some(signed_stake_by_quorum), Some(total_stake_by_quorum)) = (
-                signed_stake_per_quorum.get(&quorum_num),
-                total_stake_per_quorum.get(&quorum_num),
+                signed_stake_per_quorum.get(quorum_num),
+                total_stake_per_quorum.get(quorum_num),
             ) else {
                 return false;
             };
