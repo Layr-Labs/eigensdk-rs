@@ -3,7 +3,7 @@
     issue_tracker_base_url = "https://github.com/Layr-Labs/eigensdk-rs/issues/"
 )]
 #![cfg_attr(not(test), warn(unused_crate_dependencies))]
-use eigen_logging::{logger::Logger, tracing_logger::TracingLogger};
+use eigen_logging::logger::SharedLogger;
 use eigen_metrics_derive::Metrics;
 use metrics::{Gauge, Key, Label};
 
@@ -24,11 +24,11 @@ pub struct RegisteredStakesMetrics {
     /// Most commonly represents a weighted combination of delegated shares in the DelegationManager EigenLayer contract.
     registered_stakes: RegisteredStakes,
 
-    logger: TracingLogger,
+    logger: SharedLogger,
 }
 
 impl RegisteredStakesMetrics {
-    pub fn new(logger: TracingLogger) -> Self {
+    pub fn new(logger: SharedLogger) -> Self {
         let gauge = Self {
             registered_stakes: RegisteredStakes {
                 registered_stake: metrics::register_gauge!("eigen_registered_stakes"),
@@ -54,7 +54,7 @@ impl RegisteredStakesMetrics {
                 "set registered stakes , quorum_name: {} , quorum_number: {} , value: {}  ",
                 quorum_name, quorum_number, value
             ),
-            &["eigen-metrics-collectors-economic.set_stake"],
+            "eigen-metrics-collectors-economic.set_stake",
         );
 
         // Register or retrieve the gauge with the specified key and set the value
