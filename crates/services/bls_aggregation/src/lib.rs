@@ -4,3 +4,4 @@
 )]
 
 pub mod bls_agg;
+mod bls_agg_test;

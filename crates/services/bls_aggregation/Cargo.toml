@@ -22,5 +22,6 @@ thiserror.workspace = true
 tokio = { workspace = true, features = ["full"] }
 
 [dev-dependencies]
+alloy-node-bindings.workspace = true
 eigen-logging.workspace = true
 sha2 = "0.10.8"

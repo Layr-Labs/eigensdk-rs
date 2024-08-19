@@ -2218,6 +2218,7 @@ dependencies = [
 name = "eigen-services-blsaggregation"
 version = "0.0.1-alpha"
 dependencies = [
+ "alloy-node-bindings",
  "alloy-primitives",
  "ark-bn254",
  "ark-ec",
