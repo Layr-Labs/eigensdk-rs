@@ -4,11 +4,10 @@ use alloy_primitives::Address;
 use alloy_provider::{PendingTransactionBuilder, Provider, ProviderBuilder, RootProvider};
 use alloy_rpc_types_eth::{TransactionInput, TransactionReceipt, TransactionRequest};
 use alloy_signer_local::PrivateKeySigner;
-use eigen_logging::logger::Logger;
+use eigen_logging::logger::SharedLogger;
 use eigen_signer::signer::Config;
 use k256::ecdsa::SigningKey;
 use reqwest::Url;
-use std::sync::Arc;
 use thiserror::Error;
 
 static FALLBACK_GAS_TIP_CAP: u128 = 5_000_000_000;
@@ -30,14 +29,14 @@ pub enum TxManagerError {
     InvalidUrlError,
 }
 
-pub struct SimpleTxManager<'log> {
-    logger: &'log Arc<dyn Logger>,
+pub struct SimpleTxManager {
+    logger: SharedLogger,
     gas_limit_multiplier: f64,
     private_key: String,
     provider: RootProvider<Transport>,
 }
 
-impl<'log> SimpleTxManager<'log> {
+impl SimpleTxManager {
     /// Creates a new SimpleTxManager.
     ///
     /// # Arguments
@@ -55,11 +54,11 @@ impl<'log> SimpleTxManager<'log> {
     ///
     /// - If the URL is invalid.
     pub fn new(
-        logger: &'log Arc<dyn Logger>,
+        logger: SharedLogger,
         gas_limit_multiplier: f64,
         private_key: &str,
         rpc_url: &str,
-    ) -> Result<SimpleTxManager<'log>, TxManagerError> {
+    ) -> Result<SimpleTxManager, TxManagerError> {
         let url = Url::parse(rpc_url)
             .inspect_err(|err| logger.error("Failed to parse url", &err.to_string()))
             .map_err(|_| TxManagerError::InvalidUrlError)?;
@@ -149,9 +148,10 @@ impl<'log> SimpleTxManager<'log> {
             .inspect_err(|err| self.logger.error("Failed to get receipt", &err.to_string()))
             .map_err(|_| TxManagerError::SendTxError)?;
 
-        self.logger
-            .debug("Transaction sent. Pending transaction: ", "");
-
+        selfc.logger.debug(
+            "Transaction sent. Pending transaction: ",
+            &pending_tx.tx_hash().to_string(),
+        );
         // wait for the transaction to be mined
         SimpleTxManager::wait_for_receipt(self, pending_tx).await
     }
