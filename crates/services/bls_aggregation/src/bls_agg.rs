@@ -923,7 +923,7 @@ mod tests {
         assert_eq!(expected_response_task_2, task_2_response.unwrap());
     }
 
-    // #[tokio::test]
+    #[tokio::test]
     async fn test_1_quorum_1_operator_0_signatures_task_expired() {
         let test_operator_1 = TestOperator {
             operator_id: U256::from(1).into(),
@@ -954,16 +954,15 @@ mod tests {
             )
             .await;
 
-        // TODO: we need to raise an error when the times expires in order to execute this test
-        // let expected_response = BlsAggregationServiceResponse::TaskExpiredError;
-        // let response = bls_agg_service
-        //     .aggregated_response_receiver
-        //     .lock()
-        //     .await
-        //     .recv()
-        //     .await;
+        let expected_response = Err(BlsAggregationServiceError::Timeout);
+        let response = bls_agg_service
+            .aggregated_response_receiver
+            .lock()
+            .await
+            .recv()
+            .await;
 
-        // assert_eq!(expected_agg_service_response, response.clone().unwrap());
+        assert_eq!(response.unwrap(), expected_response);
     }
 
     #[tokio::test]
