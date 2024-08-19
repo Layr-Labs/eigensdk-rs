@@ -40,6 +40,12 @@ pub enum BlsAggregationServiceError {
     TaskExpired,
     #[error("task not found error")]
     TaskNotFound,
+    #[error("incorrect signature error")]
+    IncorrectSignature,
+    #[error("operator public key not found")]
+    OperatorPublicKeyNotFound,
+    #[error("operator not found")]
+    OperatorNotFound,
 }
 
 #[derive(Debug, Clone)]
@@ -200,8 +206,9 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         loop {
             match timeout(time_to_expiry, rx.recv()).await {
                 Ok(Some(signed_task_digest)) => {
+                    // TODO: handle error
                     self.verify_signature(task_index, &signed_task_digest, &operator_state_avs)
-                        .await; // handle error
+                        .await;
 
                     let operator_state = operator_state_avs
                         .get(&signed_task_digest.operator_id)
@@ -339,14 +346,14 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         _task_index: TaskIndex,
         signed_task_response_digest: &SignedTaskResponseDigest,
         operator_avs_state: &HashMap<FixedBytes<32>, OperatorAvsState>,
-    ) {
+    ) -> Result<(), BlsAggregationServiceError> {
         let Some(operator_state) = operator_avs_state.get(&signed_task_response_digest.operator_id)
         else {
-            todo!() // throw error operator not found
+            return Err(BlsAggregationServiceError::OperatorNotFound);
         };
 
         let Some(pub_keys) = &operator_state.operator_info.pub_keys else {
-            todo!() // throw error operator pub key not found
+            return Err(BlsAggregationServiceError::OperatorPublicKeyNotFound);
         };
 
         let signature_verified = verify_message(
@@ -356,8 +363,9 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         );
 
         if !signature_verified {
-            todo!() // throw incorrect signature error
+            return Err(BlsAggregationServiceError::IncorrectSignature);
         }
+        Ok(())
     }
 
     pub fn check_if_stake_thresholds_met(
@@ -398,6 +406,7 @@ mod tests {
     use std::collections::HashMap;
     use std::time::Duration;
     use std::vec;
+    use tokio::time::timeout;
 
     use super::{BlsAggregationServiceError, BlsAggregationServiceResponse, BlsAggregatorService};
 
