@@ -43,12 +43,6 @@ pub enum BlsAggregationServiceError {
     TaskNotFound,
     #[error("signature verification error")]
     SignatureVerificationError(SignatureVerificationError),
-    #[error("incorrect signature error")]
-    IncorrectSignature,
-    #[error("operator public key not found")]
-    OperatorPublicKeyNotFound,
-    #[error("operator not found")]
-    OperatorNotFound,
     #[error("channel was closed")]
     ChannelClosed,
     #[error("error sending to channel")]
@@ -176,8 +170,11 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
             operator_id,
             signature_verification_channel: tx,
         };
-        // TODO: handle possible errors
-        let _x = sender.send(task);
+
+        // send the task to the aggregator thread
+        sender
+            .send(task)
+            .map_err(|_| BlsAggregationServiceError::ChannelError)?;
 
         // return the signature verification result
         rx.recv()
@@ -218,12 +215,12 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
 
         let operator_state_avs = self
             .avs_registry_service
-            .get_operators_avs_state_at_block(task_created_block, quorum_nums.clone().into())
+            .get_operators_avs_state_at_block(task_created_block, &quorum_nums)
             .await;
         // TODO: throw erro if
         let quorums_avs_stake = self
             .avs_registry_service
-            .get_quorums_avs_state_at_block(quorum_nums.clone().into(), task_created_block)
+            .get_quorums_avs_state_at_block(&quorum_nums, task_created_block)
             .await;
         // TODO: throw erro if != nil
 
@@ -261,7 +258,9 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
             signed_task_digest
                 .signature_verification_channel
                 .send(verification_result)
-                .await;
+                .await
+                .map_err(|_| BlsAggregationServiceError::ChannelError)?;
+
             let operator_state = operator_state_avs
                 .get(&signed_task_digest.operator_id)
                 .unwrap();
@@ -319,9 +318,9 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
             );
 
             if !self.check_if_stake_thresholds_met(
-                digest_aggregated_operators.signers_total_stake_per_quorum,
-                total_stake_per_quorum.clone(),
-                quorum_threshold_percentage_map.clone(),
+                &digest_aggregated_operators.signers_total_stake_per_quorum,
+                &total_stake_per_quorum,
+                &quorum_threshold_percentage_map,
             ) {
                 continue;
             }
@@ -430,9 +429,9 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
     /// Returns `true` if the stake thresholds are met for all the members, otherwise `false`.
     pub fn check_if_stake_thresholds_met(
         &self,
-        signed_stake_per_quorum: HashMap<u8, U256>,
-        total_stake_per_quorum: HashMap<u8, U256>,
-        quorum_threshold_percentages_map: HashMap<u8, QuorumThresholdPercentage>,
+        signed_stake_per_quorum: &HashMap<u8, U256>,
+        total_stake_per_quorum: &HashMap<u8, U256>,
+        quorum_threshold_percentages_map: &HashMap<u8, QuorumThresholdPercentage>,
     ) -> bool {
         for (quorum_num, quorum_threshold_percentage) in quorum_threshold_percentages_map {
             let (Some(signed_stake_by_quorum), Some(total_stake_by_quorum)) = (
@@ -443,7 +442,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
             };
 
             let signed_stake = signed_stake_by_quorum * U256::from(100);
-            let threshold_stake = *total_stake_by_quorum * U256::from(quorum_threshold_percentage);
+            let threshold_stake = *total_stake_by_quorum * U256::from(*quorum_threshold_percentage);
 
             if signed_stake < threshold_stake {
                 return false;
@@ -500,7 +499,6 @@ mod tests {
 
         // Compute the TaskResponseDigest as the SHA-256 sum of the TaskResponse (previously converting the taskresponse into a JSON string)
         let task_response_digest = hash(task_response);
-        // assert!(task_response_digest.is_ok());
         let bls_signature = test_operator_1
             .bls_keypair
             .sign_message(task_response_digest.as_ref());
