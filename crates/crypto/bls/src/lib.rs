@@ -50,7 +50,7 @@ impl BlsG2Point {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 /// Bls key pair with public key on G1
 pub struct BlsKeyPair {
     /// Private Key
