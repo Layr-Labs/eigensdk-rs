@@ -1,8 +1,8 @@
 use std::collections::HashMap;
 
 use alloy_primitives::{BlockNumber, Bytes, FixedBytes, U256};
-use ark_bn254::G1Projective;
-use ark_ec::CurveGroup;
+use ark_bn254::{G1Affine, G1Projective};
+use ark_ec::{short_weierstrass::Affine, AffineRepr, CurveGroup};
 use eigen_client_avsregistry::error::AvsRegistryError;
 use eigen_crypto_bls::{
     alloy_registry_g1_point_to_g1_affine, convert_to_g1_point, BlsG1Point, OperatorId, PublicKey,
@@ -63,7 +63,7 @@ impl AvsRegistryService for FakeAvsRegistryService {
         let operator_avs_state = self.operators.get(&(block_num as u64)).unwrap();
         let mut quorum_avs_state: HashMap<QuorumNum, QuorumAvsState> = HashMap::new();
         for quorum_num in quorum_nums {
-            let mut pub_key_g1 = G1Projective::from(PublicKey::identity());
+            let mut pub_key_g1 = G1Projective::from(PublicKey::zero());
             let mut total_stake = U256::ZERO;
             for operator in operator_avs_state.values() {
                 // only include operators that have a stake in this quorum
@@ -77,18 +77,23 @@ impl AvsRegistryService for FakeAvsRegistryService {
                     None => {}
                 }
             }
-            let g1_point = convert_to_g1_point(pub_key_g1.into_affine()).unwrap();
+
+            // this check is needed because the conversion into affine fails if pub_key_g1 is zero.
+            let agg_pub_key_g1 = if pub_key_g1 == G1Projective::from(PublicKey::zero()) {
+                BlsG1Point::new(Affine::zero())
+            } else {
+                let g1_point = convert_to_g1_point(pub_key_g1.into_affine()).unwrap();
+                BlsG1Point::new(alloy_registry_g1_point_to_g1_affine(G1Point {
+                    X: g1_point.X,
+                    Y: g1_point.Y,
+                }))
+            };
             quorum_avs_state.insert(
                 quorum_num,
                 QuorumAvsState {
-                    quorum_num: quorum_num,
+                    quorum_num,
                     total_stake,
-                    agg_pub_key_g1: BlsG1Point::new(alloy_registry_g1_point_to_g1_affine(
-                        G1Point {
-                            X: g1_point.X,
-                            Y: g1_point.Y,
-                        },
-                    )),
+                    agg_pub_key_g1,
                     block_num,
                 },
             );
