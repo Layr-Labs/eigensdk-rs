@@ -24,4 +24,6 @@ tokio = { workspace = true, features = ["full"] }
 [dev-dependencies]
 alloy-node-bindings.workspace = true
 eigen-logging.workspace = true
+eigen-testing-utils.workspace = true
+eigen-utils.workspace = true
 sha2 = "0.10.8"
