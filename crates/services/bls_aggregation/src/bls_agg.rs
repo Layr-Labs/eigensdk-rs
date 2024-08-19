@@ -411,7 +411,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
             signed_task_response_digest.task_response_digest.as_slice(),
             signed_task_response_digest.bls_signature.g1_point().g1(),
         )
-        .then(|| ())
+        .then_some(())
         .ok_or(SignatureVerificationError::IncorrectSignature)
     }
 
