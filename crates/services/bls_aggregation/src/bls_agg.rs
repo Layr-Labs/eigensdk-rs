@@ -49,6 +49,8 @@ pub enum BlsAggregationServiceError {
     ChannelError,
     #[error("Avs Registry Error")]
     RegistryError,
+    #[error("duplicate task index error")]
+    DuplicateTaskIndex,
 }
 
 #[derive(Debug, Clone)]
@@ -113,11 +115,11 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         quorum_nums: Vec<u8>,
         quorum_threshold_percentages: QuorumThresholdPercentages,
         time_to_expiry: Duration,
-    ) {
+    ) -> Result<(), BlsAggregationServiceError> {
         let mut task_channel = self.signed_task_response.write();
 
         if task_channel.contains_key(&task_index) {
-            // error
+            return Err(BlsAggregationServiceError::DuplicateTaskIndex);
         }
 
         let (tx, rx) = mpsc::unbounded_channel();
@@ -139,6 +141,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                     println!("Error: {:?}", err);
                 });
         });
+        Ok(())
     }
 
     /// Processs signatures received from the channel and sends
@@ -257,7 +260,6 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                 .verify_signature(task_index, &signed_task_digest, &operator_state_avs)
                 .await;
 
-            // TODO: handle error
             signed_task_digest
                 .signature_verification_channel
                 .send(verification_result)
@@ -389,9 +391,9 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
     /// # Error
     ///
     /// Returns error:
-    /// - `BlsAggregationServiceError::OperatorNotFound` if the operator is not found,
-    /// - `BlsAggregationServiceError::OperatorPublicKeyNotFound` if the operator public key is not found,
-    /// - `BlsAggregationServiceError::IncorrectSignature` if the signature is incorrect.
+    /// - `SignatureVerificationError::OperatorNotFound` if the operator is not found,
+    /// - `SignatureVerificationError::OperatorPublicKeyNotFound` if the operator public key is not found,
+    /// - `SignatureVerificationError::IncorrectSignature` if the signature is incorrect.
     pub async fn verify_signature(
         &self,
         _task_index: TaskIndex,
@@ -514,7 +516,8 @@ mod tests {
                 quorum_threshold_percentages,
                 time_to_expiry,
             )
-            .await;
+            .await
+            .unwrap();
 
         bls_agg_service
             .process_new_signature(
@@ -605,7 +608,8 @@ mod tests {
                 quorum_threshold_percentages,
                 time_to_expiry,
             )
-            .await;
+            .await
+            .unwrap();
         let bls_sig_op_1 = test_operator_1
             .bls_keypair
             .sign_message(task_response_digest.as_ref());
@@ -730,7 +734,8 @@ mod tests {
                 quorum_threshold_percentages,
                 time_to_expiry,
             )
-            .await;
+            .await
+            .unwrap();
         let bls_sig_op_1 = test_operator_1
             .bls_keypair
             .sign_message(task_response_digest.as_ref());
@@ -843,7 +848,8 @@ mod tests {
                 quorum_threshold_percentages.clone(),
                 time_to_expiry.clone(),
             )
-            .await;
+            .await
+            .unwrap();
 
         let task_2_index = 2;
         let task_2_response = 234; // Initialize with appropriate data
@@ -856,7 +862,8 @@ mod tests {
                 quorum_threshold_percentages,
                 time_to_expiry,
             )
-            .await;
+            .await
+            .unwrap();
 
         let bls_sig_task_1_op_1 = test_operator_1
             .bls_keypair
@@ -1028,7 +1035,8 @@ mod tests {
                 quorum_threshold_percentages,
                 time_to_expiry,
             )
-            .await;
+            .await
+            .unwrap();
 
         let response = bls_agg_service
             .aggregated_response_receiver
@@ -1084,7 +1092,8 @@ mod tests {
                 quorum_threshold_percentages,
                 time_to_expiry,
             )
-            .await;
+            .await
+            .unwrap();
         bls_agg_service
             .process_new_signature(
                 task_index,
@@ -1171,7 +1180,8 @@ mod tests {
                 quorum_threshold_percentages,
                 time_to_expiry,
             )
-            .await;
+            .await
+            .unwrap();
         bls_agg_service
             .process_new_signature(
                 task_index,
@@ -1236,7 +1246,8 @@ mod tests {
                 quorum_threshold_percentages,
                 time_to_expiry,
             )
-            .await;
+            .await
+            .unwrap();
 
         let bls_sig_op_1 = test_operator_1
             .bls_keypair
@@ -1355,7 +1366,8 @@ mod tests {
                 quorum_threshold_percentages,
                 time_to_expiry,
             )
-            .await;
+            .await
+            .unwrap();
 
         let bls_sig_op_1 = test_operator_1
             .bls_keypair
@@ -1484,7 +1496,8 @@ mod tests {
                 quorum_threshold_percentages,
                 time_to_expiry,
             )
-            .await;
+            .await
+            .unwrap();
 
         let bls_sig_op_1 = test_operator_1
             .bls_keypair
@@ -1558,7 +1571,8 @@ mod tests {
                 quorum_threshold_percentages,
                 time_to_expiry,
             )
-            .await;
+            .await
+            .unwrap();
 
         let bls_sig_op_1 = test_operator_1
             .bls_keypair
@@ -1628,7 +1642,8 @@ mod tests {
                 quorum_threshold_percentages,
                 time_to_expiry,
             )
-            .await;
+            .await
+            .unwrap();
 
         let bls_sig_op_1 = test_operator_1
             .bls_keypair
@@ -1728,7 +1743,8 @@ mod tests {
                 quorum_threshold_percentages,
                 time_to_expiry,
             )
-            .await;
+            .await
+            .unwrap();
 
         let task_response_1 = 123; // Initialize with appropriate data
         let task_response_1_digest = hash(task_response_1);
@@ -1806,7 +1822,8 @@ mod tests {
                 quorum_threshold_percentages,
                 time_to_expiry,
             )
-            .await;
+            .await
+            .unwrap();
 
         let result = bls_agg_service
             .process_new_signature(
