@@ -341,6 +341,21 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         }
     }
 
+    /// Verifies the signature of the task response given a `operator_avs_state`.
+    /// If the signature is correct, it returns `Ok(())`, otherwise it returns an error.
+    ///
+    /// # Arguments
+    ///
+    /// * `task_index` - The index of the task
+    /// * `signed_task_response_digest` - The signed task response digest
+    /// * `operator_avs_state` - The operator AVS state used to get the `operator_state`.
+    ///
+    /// # Error
+    ///
+    /// Returns error:
+    /// - `BlsAggregationServiceError::OperatorNotFound` if the operator is not found,
+    /// - `BlsAggregationServiceError::OperatorPublicKeyNotFound` if the operator public key is not found,
+    /// - `BlsAggregationServiceError::IncorrectSignature` if the signature is incorrect.
     pub async fn verify_signature(
         &self,
         _task_index: TaskIndex,
@@ -356,18 +371,27 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
             return Err(BlsAggregationServiceError::OperatorPublicKeyNotFound);
         };
 
-        let signature_verified = verify_message(
+        verify_message(
             pub_keys.g2_pub_key.g2(),
             signed_task_response_digest.task_response_digest.as_slice(),
             signed_task_response_digest.bls_signature.g1_point().g1(),
-        );
-
-        if !signature_verified {
-            return Err(BlsAggregationServiceError::IncorrectSignature);
-        }
-        Ok(())
+        )
+        .then(|| ())
+        .ok_or(BlsAggregationServiceError::IncorrectSignature)
     }
 
+    /// Checks if the stake thresholds are met for the given set of quorum members.
+    ///
+    /// # Arguments
+    ///
+    /// * `signed_stake_per_quorum` - The signed stake per quorum
+    /// * `total_stake_per_quorum` - The total stake per quorum
+    /// * `quorum_threshold_percentages_map` - The quorum threshold percentages map,
+    /// containing the quorum number and the quorum threshold percentage.
+    ///
+    /// # Returns
+    ///
+    /// Returns `true` if the stake thresholds are met for all the members, otherwise `false`.
     pub fn check_if_stake_thresholds_met(
         &self,
         signed_stake_per_quorum: HashMap<u8, U256>,
@@ -375,11 +399,10 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         quorum_threshold_percentages_map: HashMap<u8, QuorumThresholdPercentage>,
     ) -> bool {
         for (quorum_num, quorum_threshold_percentage) in quorum_threshold_percentages_map {
-            let Some(signed_stake_by_quorum) = signed_stake_per_quorum.get(&quorum_num) else {
-                return false;
-            };
-
-            let Some(total_stake_by_quorum) = total_stake_per_quorum.get(&quorum_num) else {
+            let (Some(signed_stake_by_quorum), Some(total_stake_by_quorum)) = (
+                signed_stake_per_quorum.get(&quorum_num),
+                total_stake_per_quorum.get(&quorum_num),
+            ) else {
                 return false;
             };
 
