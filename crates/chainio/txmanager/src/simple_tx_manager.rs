@@ -148,7 +148,7 @@ impl SimpleTxManager {
             .inspect_err(|err| self.logger.error("Failed to get receipt", &err.to_string()))
             .map_err(|_| TxManagerError::SendTxError)?;
 
-        selfc.logger.debug(
+        self.logger.debug(
             "Transaction sent. Pending transaction: ",
             &pending_tx.tx_hash().to_string(),
         );
