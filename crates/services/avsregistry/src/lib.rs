@@ -18,12 +18,12 @@ pub trait AvsRegistryService {
     fn get_operators_avs_state_at_block(
         &self,
         block_num: u32,
-        quorum_nums: &Vec<u8>,
+        quorum_nums: &[u8],
     ) -> impl std::future::Future<Output = HashMap<FixedBytes<32>, OperatorAvsState>> + Send;
 
     fn get_quorums_avs_state_at_block(
         &self,
-        quorum_nums: &Vec<u8>,
+        quorum_nums: &[u8],
         block_num: u32,
     ) -> impl std::future::Future<Output = HashMap<u8, QuorumAvsState>> + Send;
 

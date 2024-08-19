@@ -1,4 +1,4 @@
-use alloy_primitives::{FixedBytes, U256};
+use alloy_primitives::{Bytes, FixedBytes, U256};
 use ark_bn254::G1Projective;
 use ark_ec::CurveGroup;
 use eigen_client_avsregistry::{error::AvsRegistryError, reader::AvsRegistryChainReader};
@@ -36,13 +36,13 @@ impl AvsRegistryService for AvsRegistryServiceChainCaller {
     async fn get_operators_avs_state_at_block(
         &self,
         block_num: u32,
-        quorum_nums: &Vec<u8>,
+        quorum_nums: &[u8],
     ) -> HashMap<FixedBytes<32>, OperatorAvsState> {
         let mut operators_avs_state: HashMap<FixedBytes<32>, OperatorAvsState> = HashMap::new();
 
         let operators_stakes_in_quorums = self
             .avs_registry
-            .get_operators_stake_in_quorums_at_block(block_num, quorum_nums.clone().into())
+            .get_operators_stake_in_quorums_at_block(block_num, Bytes::from(Vec::from(quorum_nums)))
             .await
             .unwrap();
 
@@ -73,7 +73,7 @@ impl AvsRegistryService for AvsRegistryServiceChainCaller {
 
     async fn get_quorums_avs_state_at_block(
         &self,
-        quorum_nums: &Vec<u8>,
+        quorum_nums: &[u8],
         block_num: u32,
     ) -> HashMap<u8, QuorumAvsState> {
         let operators_avs_state = self

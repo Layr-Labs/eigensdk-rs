@@ -46,14 +46,14 @@ impl AvsRegistryService for FakeAvsRegistryService {
     async fn get_operators_avs_state_at_block(
         &self,
         block_number: u32,
-        _quorum_nums: &Vec<u8>,
+        _quorum_nums: &[u8],
     ) -> HashMap<FixedBytes<32>, OperatorAvsState> {
         self.operators.get(&(block_number as u64)).unwrap().clone()
     }
 
     async fn get_quorums_avs_state_at_block(
         &self,
-        quorum_nums: &Vec<u8>,
+        quorum_nums: &[u8],
         block_num: u32,
     ) -> HashMap<u8, QuorumAvsState> {
         let operator_avs_state = self.operators.get(&(block_num as u64)).unwrap();
@@ -63,7 +63,7 @@ impl AvsRegistryService for FakeAvsRegistryService {
             let mut total_stake = U256::ZERO;
             for operator in operator_avs_state.values() {
                 // only include operators that have a stake in this quorum
-                if let Some(stake) = operator.stake_per_quorum.get(&quorum_num) {
+                if let Some(stake) = operator.stake_per_quorum.get(quorum_num) {
                     if let Some(pub_keys) = &operator.operator_info.pub_keys {
                         pub_key_g1 += pub_keys.g1_pub_key.g1();
                         total_stake += stake;

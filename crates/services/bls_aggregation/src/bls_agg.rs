@@ -93,7 +93,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         }
     }
 
-    ///  Creates a new task meant to process new signed task responses for a task tokio channel.
+    ///   Creates a new task meant to process new signed task responses for a task tokio channel.
     ///
     /// # Arguments
     ///
@@ -383,7 +383,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
     /// * `task_index` - The index of the task
     /// * `signed_task_response_digest` - The signed task response digest
     /// * `operator_avs_state` - A hashmap containing the staked of all the operator indexed by operator_id.
-    ///  This is used to get the `operator_state` to obtain the operator public key.
+    ///   This is used to get the `operator_state` to obtain the operator public key.
     ///
     /// # Error
     ///
@@ -422,7 +422,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
     /// * `signed_stake_per_quorum` - The signed stake per quorum.
     /// * `total_stake_per_quorum` - The total stake per quorum.
     /// * `quorum_threshold_percentages_map` - The quorum threshold percentages map,
-    /// containing the quorum id as a key and its corresponding quorum threshold percentage.
+    ///   containing the quorum id as a key and its corresponding quorum threshold percentage.
     ///
     /// # Returns
     ///
