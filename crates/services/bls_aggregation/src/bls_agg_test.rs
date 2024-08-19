@@ -16,6 +16,5 @@ pub mod integration_test {
 
         // TODO: integration tests need a `chainio/client` builder to construct the clients.
         // Will implement this builder and integration test in a following PR.
-        todo!()
     }
 }

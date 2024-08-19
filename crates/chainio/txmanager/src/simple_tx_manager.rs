@@ -293,7 +293,7 @@ mod tests {
         let logger = get_test_logger();
 
         let simple_tx_manager =
-            SimpleTxManager::new(&logger, 1.0, PRIVATE_KEY, rpc_url.as_str()).unwrap();
+            SimpleTxManager::new(logger, 1.0, PRIVATE_KEY, rpc_url.as_str()).unwrap();
 
         // Create two users, Alice and Bob.
         let _alice = anvil.addresses()[0];
@@ -329,7 +329,7 @@ mod tests {
         // Create a provider.
         let logger = get_test_logger();
         let simple_tx_manager =
-            SimpleTxManager::new(&logger, 1.0, PRIVATE_KEY, rpc_url.as_str()).unwrap();
+            SimpleTxManager::new(logger, 1.0, PRIVATE_KEY, rpc_url.as_str()).unwrap();
 
         // Create two users, Alice and Bob.
         let _alice = anvil.addresses()[0];
