@@ -1,19 +1,15 @@
 use std::collections::HashMap;
 
 use alloy_primitives::{BlockNumber, Bytes, FixedBytes, U256};
-use ark_bn254::{G1Affine, G1Projective};
+use ark_bn254::G1Projective;
 use ark_ec::{short_weierstrass::Affine, AffineRepr, CurveGroup};
 use eigen_client_avsregistry::error::AvsRegistryError;
-use eigen_crypto_bls::{
-    alloy_registry_g1_point_to_g1_affine, convert_to_g1_point, BlsG1Point, OperatorId, PublicKey,
-};
+use eigen_crypto_bls::{BlsG1Point, OperatorId, PublicKey};
 use eigen_types::{
     operator::{OperatorAvsState, OperatorInfo, OperatorPubKeys, QuorumAvsState, QuorumNum},
     test::TestOperator,
 };
-use eigen_utils::binding::{
-    BLSApkRegistry::G1Point, OperatorStateRetriever::CheckSignaturesIndices,
-};
+use eigen_utils::binding::OperatorStateRetriever::CheckSignaturesIndices;
 
 use crate::AvsRegistryService;
 
@@ -67,14 +63,11 @@ impl AvsRegistryService for FakeAvsRegistryService {
             let mut total_stake = U256::ZERO;
             for operator in operator_avs_state.values() {
                 // only include operators that have a stake in this quorum
-                match operator.stake_per_quorum.get(&quorum_num) {
-                    Some(stake) => {
-                        if let Some(pub_keys) = &operator.operator_info.pub_keys {
-                            pub_key_g1 += pub_keys.g1_pub_key.g1();
-                            total_stake += stake;
-                        }
+                if let Some(stake) = operator.stake_per_quorum.get(&quorum_num) {
+                    if let Some(pub_keys) = &operator.operator_info.pub_keys {
+                        pub_key_g1 += pub_keys.g1_pub_key.g1();
+                        total_stake += stake;
                     }
-                    None => {}
                 }
             }
 

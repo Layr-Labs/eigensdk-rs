@@ -178,12 +178,12 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
             .avs_registry_service
             .get_operators_avs_state_at_block(task_created_block, quorum_nums.clone().into())
             .await;
-        // throw erro if
+        // TODO: throw erro if
         let quorums_avs_stake = self
             .avs_registry_service
             .get_quorums_avs_state_at_block(quorum_nums.clone().into(), task_created_block)
             .await;
-        // throw erro if != nil
+        // TODO: throw erro if != nil
         let mut total_stake_per_quorum = HashMap::new();
 
         for (quorum_num, quorum_avs_stake) in &quorums_avs_stake {
@@ -286,7 +286,6 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                     for operator_id in non_signers_operators_ids.iter() {
                         if let Some(operator) = operator_state_avs.get(operator_id) {
                             if let Some(keys) = &operator.operator_info.pub_keys {
-                                dbg!("pushing", keys.g1_pub_key.clone());
                                 non_signers_pub_keys_g1.push(keys.g1_pub_key.clone());
                             }
                         }
@@ -1640,5 +1639,52 @@ mod tests {
             Err(BlsAggregationServiceError::TaskExpired),
             response.unwrap()
         );
+    }
+
+    #[tokio::test]
+    async fn test_1_quorum_1_operator_1_invalid_signature() {
+        let test_operator_1 = TestOperator {
+            operator_id: U256::from(1).into(),
+            stake_per_quorum: HashMap::from([(0u8, U256::from(100)), (1u8, U256::from(200))]),
+            bls_keypair: new_bls_key_pair_panics(
+                "13710126902690889134622698668747132666439281256983827313388062967626731803599"
+                    .into(),
+            ),
+        };
+
+        let block_number = 1;
+        let task_index = 0;
+        let quorum_numbers = vec![0];
+        let quorum_threshold_percentages: QuorumThresholdPercentages = vec![100];
+        let time_to_expiry = Duration::from_secs(1);
+        let task_response = 123; // Initialize with appropriate data
+
+        let wrong_task_response_digest = hash(task_response + 1);
+        let bls_signature = test_operator_1
+            .bls_keypair
+            .sign_message(wrong_task_response_digest.as_ref());
+        let fake_avs_registry_service =
+            FakeAvsRegistryService::new(block_number, vec![test_operator_1.clone()]);
+        let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
+        bls_agg_service
+            .initialize_new_task::<FakeAvsRegistryService>(
+                task_index,
+                block_number as u32,
+                quorum_numbers,
+                quorum_threshold_percentages,
+                time_to_expiry,
+            )
+            .await;
+
+        let result = bls_agg_service
+            .process_new_signature(
+                task_index,
+                wrong_task_response_digest,
+                bls_signature,
+                test_operator_1.operator_id,
+            )
+            .await;
+
+        assert_eq!(Err(BlsAggregationServiceError::TaskExpired), result);
     }
 }
