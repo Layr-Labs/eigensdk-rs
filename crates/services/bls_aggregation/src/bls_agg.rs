@@ -313,7 +313,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
             let mut non_signers_operators_ids: Vec<FixedBytes<32>> = operator_state_avs
                 .keys()
                 .filter(|operator_id| {
-                    digest_aggregated_operators
+                    !digest_aggregated_operators
                         .signers_operator_ids_set
                         .contains_key(*operator_id)
                 })
