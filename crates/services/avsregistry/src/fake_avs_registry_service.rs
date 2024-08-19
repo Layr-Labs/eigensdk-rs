@@ -82,11 +82,7 @@ impl AvsRegistryService for FakeAvsRegistryService {
             let agg_pub_key_g1 = if pub_key_g1 == G1Projective::from(PublicKey::zero()) {
                 BlsG1Point::new(Affine::zero())
             } else {
-                let g1_point = convert_to_g1_point(pub_key_g1.into_affine()).unwrap();
-                BlsG1Point::new(alloy_registry_g1_point_to_g1_affine(G1Point {
-                    X: g1_point.X,
-                    Y: g1_point.Y,
-                }))
+                BlsG1Point::new(pub_key_g1.into_affine())
             };
             quorum_avs_state.insert(
                 quorum_num,

@@ -1448,6 +1448,73 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn test_2_quorums_2_operators_where_1_operator_just_take_1_quorum_1_signature_task_expired(
+    ) {
+        let test_operator_1 = TestOperator {
+            operator_id: U256::from(1).into(),
+            // Note the quorums is [0, 1], but operator id 1 just stake 0.
+            stake_per_quorum: HashMap::from([(0u8, U256::from(100))]),
+            bls_keypair: new_bls_key_pair_panics(
+                "13710126902690889134622698668747132666439281256983827313388062967626731803599"
+                    .into(),
+            ),
+        };
+        let test_operator_2 = TestOperator {
+            operator_id: U256::from(2).into(),
+            // Note the quorums is [0, 1], but operator id 2 just stake 1.
+            stake_per_quorum: HashMap::from([(1u8, U256::from(200))]),
+            bls_keypair: new_bls_key_pair_panics(
+                "14610126902690889134622698668747132666439281256983827313388062967626731803500"
+                    .into(),
+            ),
+        };
+
+        let block_number = 1;
+        let task_index = 0;
+        let quorum_numbers: Vec<QuorumNum> = vec![0, 1];
+        let quorum_threshold_percentages: QuorumThresholdPercentages = vec![100, 100];
+        let time_to_expiry = Duration::from_secs(1);
+        let task_response = 123; // Initialize with appropriate data
+        let task_response_digest = hash(task_response);
+        let test_operators = vec![test_operator_1.clone(), test_operator_2.clone()];
+
+        let fake_avs_registry_service = FakeAvsRegistryService::new(block_number, test_operators);
+        let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
+
+        bls_agg_service
+            .initialize_new_task::<FakeAvsRegistryService>(
+                task_index,
+                block_number as u32,
+                quorum_numbers,
+                quorum_threshold_percentages,
+                time_to_expiry,
+            )
+            .await;
+
+        let bls_sig_op_1 = test_operator_1
+            .bls_keypair
+            .sign_message(task_response_digest.as_ref());
+        bls_agg_service
+            .process_new_signature(
+                task_index,
+                task_response_digest,
+                bls_sig_op_1,
+                test_operator_1.operator_id,
+            )
+            .await
+            .unwrap();
+
+        let response = bls_agg_service
+            .aggregated_response_receiver
+            .lock()
+            .await
+            .recv()
+            .await;
+
+        assert_eq!(Err(BlsAggregationServiceError::Timeout), response.unwrap());
+    }
+
+    #[tokio::test]
     async fn send_signature_of_task_not_initialized() {
         let test_operator_1 = TestOperator {
             operator_id: U256::from(1).into(),
