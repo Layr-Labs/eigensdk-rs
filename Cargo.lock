@@ -2295,6 +2295,8 @@ dependencies = [
  "eigen-crypto-bls",
  "ethers",
  "num-bigint 0.4.6",
+ "thiserror",
+ "tokio",
 ]
 
 [[package]]

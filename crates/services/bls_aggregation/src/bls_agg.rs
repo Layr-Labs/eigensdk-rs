@@ -5,6 +5,7 @@ use eigen_crypto_bls::BlsG1Point;
 use eigen_crypto_bls::{BlsG2Point, Signature};
 use eigen_crypto_bn254::utils::verify_message;
 use eigen_services_avsregistry::AvsRegistryService;
+use eigen_types::avs::SignatureVerificationError;
 use eigen_types::{
     avs::{SignedTaskResponseDigest, TaskIndex, TaskResponseDigest},
     operator::{OperatorAvsState, QuorumThresholdPercentage, QuorumThresholdPercentages},
@@ -40,6 +41,8 @@ pub enum BlsAggregationServiceError {
     TaskExpired,
     #[error("task not found error")]
     TaskNotFound,
+    #[error("signature verification error")]
+    SignatureVerificationError(SignatureVerificationError),
     #[error("incorrect signature error")]
     IncorrectSignature,
     #[error("operator public key not found")]
@@ -48,7 +51,7 @@ pub enum BlsAggregationServiceError {
     OperatorNotFound,
     #[error("channel was closed")]
     ChannelClosed,
-    #[error("error sendinq to channel")]
+    #[error("error sending to channel")]
     ChannelError,
     #[error("Avs Registry Error")]
     RegistryError,
@@ -166,13 +169,21 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
             .get(&task_index)
             .ok_or(BlsAggregationServiceError::TaskNotFound)?;
 
+        let (tx, mut rx) = mpsc::channel(1);
         let task = SignedTaskResponseDigest {
             task_response_digest,
             bls_signature,
             operator_id,
+            signature_verification_channel: tx,
         };
+        // TODO: handle possible errors
         let _x = sender.send(task);
-        Ok(())
+
+        // return the signature verification result
+        rx.recv()
+            .await
+            .unwrap()
+            .map_err(BlsAggregationServiceError::SignatureVerificationError)
     }
 
     /// Processes each signed task responses given a task_index for a single task.
@@ -242,8 +253,14 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                 .map_err(|_| BlsAggregationServiceError::TaskExpired)?
                 .ok_or(BlsAggregationServiceError::ChannelClosed)?;
 
+            let verification_result = self
+                .verify_signature(task_index, &signed_task_digest, &operator_state_avs)
+                .await;
+
             // TODO: handle error
-            self.verify_signature(task_index, &signed_task_digest, &operator_state_avs)
+            signed_task_digest
+                .signature_verification_channel
+                .send(verification_result)
                 .await;
 
             let operator_state = operator_state_avs
@@ -381,14 +398,14 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         _task_index: TaskIndex,
         signed_task_response_digest: &SignedTaskResponseDigest,
         operator_avs_state: &HashMap<FixedBytes<32>, OperatorAvsState>,
-    ) -> Result<(), BlsAggregationServiceError> {
+    ) -> Result<(), SignatureVerificationError> {
         let Some(operator_state) = operator_avs_state.get(&signed_task_response_digest.operator_id)
         else {
-            return Err(BlsAggregationServiceError::OperatorNotFound);
+            return Err(SignatureVerificationError::OperatorNotFound);
         };
 
         let Some(pub_keys) = &operator_state.operator_info.pub_keys else {
-            return Err(BlsAggregationServiceError::OperatorPublicKeyNotFound);
+            return Err(SignatureVerificationError::OperatorPublicKeyNotFound);
         };
 
         verify_message(
@@ -397,7 +414,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
             signed_task_response_digest.bls_signature.g1_point().g1(),
         )
         .then(|| ())
-        .ok_or(BlsAggregationServiceError::IncorrectSignature)
+        .ok_or(SignatureVerificationError::IncorrectSignature)
     }
 
     /// Checks if the stake thresholds are met for the given set of quorum members.
