@@ -340,14 +340,12 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
 
             non_signers_operators_ids.sort();
 
-            let mut non_signers_pub_keys_g1: Vec<BlsG1Point> = vec![];
-            for operator_id in non_signers_operators_ids.iter() {
-                if let Some(operator) = operator_state_avs.get(operator_id) {
-                    if let Some(keys) = &operator.operator_info.pub_keys {
-                        non_signers_pub_keys_g1.push(keys.g1_pub_key.clone());
-                    }
-                }
-            }
+            let non_signers_pub_keys_g1: Vec<BlsG1Point> = non_signers_operators_ids
+                .iter()
+                .filter_map(|operator_id| operator_state_avs.get(operator_id))
+                .filter_map(|operator_avs_state| operator_avs_state.operator_info.pub_keys.clone())
+                .map(|pub_keys| pub_keys.g1_pub_key)
+                .collect();
 
             let indices = self
                 .avs_registry_service
