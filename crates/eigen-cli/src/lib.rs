@@ -22,7 +22,7 @@ use bls::BlsKeystore;
 use colored::*;
 use convert::store;
 use eigen_crypto_bls::error::BlsError;
-use generate::KeyGenerator;
+pub use generate::KeyGenerator;
 use operator_id::derive_operator_id;
 use rust_bls_bn254::{errors::KeystoreError as BlsKeystoreError, mnemonics::Mnemonic};
 use thiserror::Error;
