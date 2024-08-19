@@ -7,10 +7,7 @@ use eigen_crypto_bls::{
     alloy_registry_g1_point_to_g1_affine, alloy_registry_g2_point_to_g2_affine, BlsG1Point,
     BlsG2Point,
 };
-use eigen_logging::{
-    logger::{Logger, SharedLogger},
-    tracing_logger::TracingLogger,
-};
+use eigen_logging::{logger::SharedLogger, tracing_logger::TracingLogger};
 use eigen_types::operator::{bitmap_to_quorum_ids, OperatorPubKeys};
 use eigen_utils::NEW_PUBKEY_REGISTRATION_EVENT;
 use eigen_utils::{

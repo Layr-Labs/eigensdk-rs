@@ -7,10 +7,7 @@ use eigen_crypto_bls::{
     alloy_registry_g1_point_to_g1_affine, alloy_registry_g2_point_to_g2_affine, BlsG1Point,
     BlsG2Point,
 };
-use eigen_logging::{
-    logger::{Logger, SharedLogger},
-    tracing_logger::TracingLogger,
-};
+use eigen_logging::logger::SharedLogger;
 use eigen_types::operator::{operator_id_from_g1_pub_key, OperatorPubKeys};
 use eigen_utils::{
     binding::BLSApkRegistry::{self, G1Point, G2Point},
@@ -36,7 +33,7 @@ pub struct OperatorInfoServiceInMemory {
 #[allow(dead_code)]
 #[derive(Debug)]
 enum OperatorsInfoMessage {
-    InsertOperatorInfo(Address, OperatorPubKeys),
+    InsertOperatorInfo(Address, Box<OperatorPubKeys>),
     Remove(Address),
     Get(Address, Sender<Option<OperatorPubKeys>>),
 }
@@ -56,7 +53,7 @@ impl OperatorInfoServiceInMemory {
             while let Some(cmd) = pubkeys_rx.recv().await {
                 match cmd {
                     OperatorsInfoMessage::InsertOperatorInfo(addr, keys) => {
-                        operator_info_data.insert(addr, keys.clone());
+                        operator_info_data.insert(addr, *keys.clone());
                         let operator_id = operator_id_from_g1_pub_key(keys.g1_pub_key);
                         operator_addr_to_id.insert(addr, operator_id);
                     }
@@ -148,7 +145,7 @@ impl OperatorInfoServiceInMemory {
 
                     let _ = pub_keys.send(OperatorsInfoMessage::InsertOperatorInfo(
                         event_data.operator,
-                        operator_pub_key,
+                        Box::new(operator_pub_key),
                     ));
                 }
             }
@@ -177,8 +174,10 @@ impl OperatorInfoServiceInMemory {
             .await
             .unwrap();
         for (i, address) in operator_address.iter().enumerate() {
-            let message =
-                OperatorsInfoMessage::InsertOperatorInfo(*address, operator_pub_keys[i].clone());
+            let message = OperatorsInfoMessage::InsertOperatorInfo(
+                *address,
+                Box::new(operator_pub_keys[i].clone()),
+            );
             self.logger.debug(
                 &format!(
                     "New pub key found  operator_address : {:?} , operator_pub_keys : {:?}",
