@@ -112,18 +112,6 @@ impl AvsRegistryService for AvsRegistryServiceChainCaller {
         quorums_avs_state
     }
 
-    async fn get_operator_info(&self, operator_id: [u8; 32]) -> Option<OperatorPubKeys> {
-        let operator_addr = self
-            .avs_registry
-            .get_operator_from_id(operator_id)
-            .await
-            .unwrap();
-
-        self.operators_info_service
-            .get_operator_info(operator_addr)
-            .await
-    }
-
     async fn get_check_signatures_indices(
         &self,
         reference_block_number: u32,
@@ -136,6 +124,20 @@ impl AvsRegistryService for AvsRegistryServiceChainCaller {
                 quorum_numbers,
                 non_signer_operator_ids,
             )
+            .await
+    }
+}
+
+impl AvsRegistryServiceChainCaller {
+    async fn get_operator_info(&self, operator_id: [u8; 32]) -> Option<OperatorPubKeys> {
+        let operator_addr = self
+            .avs_registry
+            .get_operator_from_id(operator_id)
+            .await
+            .unwrap();
+
+        self.operators_info_service
+            .get_operator_info(operator_addr)
             .await
     }
 }

@@ -7,7 +7,7 @@ use std::collections::HashMap;
 
 use alloy_primitives::{Bytes, FixedBytes};
 use eigen_client_avsregistry::error::AvsRegistryError;
-use eigen_types::operator::{OperatorAvsState, OperatorPubKeys, QuorumAvsState};
+use eigen_types::operator::{OperatorAvsState, QuorumAvsState};
 use eigen_utils::binding::OperatorStateRetriever::CheckSignaturesIndices;
 // #![cfg_attr(not(test), warn(unused_crate_dependencies))]
 
@@ -26,11 +26,6 @@ pub trait AvsRegistryService {
         quorum_nums: Bytes,
         block_num: u32,
     ) -> impl std::future::Future<Output = HashMap<u8, QuorumAvsState>> + Send;
-
-    fn get_operator_info(
-        &self,
-        operator_id: [u8; 32],
-    ) -> impl std::future::Future<Output = Option<OperatorPubKeys>> + Send;
 
     /// Get Signature indices
     fn get_check_signatures_indices(

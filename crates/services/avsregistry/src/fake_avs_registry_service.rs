@@ -90,10 +90,6 @@ impl AvsRegistryService for FakeAvsRegistryService {
         quorum_avs_state
     }
 
-    async fn get_operator_info(&self, operator_id: [u8; 32]) -> Option<OperatorPubKeys> {
-        todo!()
-    }
-
     async fn get_check_signatures_indices(
         &self,
         _reference_block_number: u32,
