@@ -1,7 +1,6 @@
 use alloy_primitives::{FixedBytes, U256};
 use ark_bn254::G2Affine;
 use ark_ec::AffineRepr;
-use eigen_client_avsregistry::error::AvsRegistryError;
 use eigen_crypto_bls::BlsG1Point;
 use eigen_crypto_bls::{BlsG2Point, Signature};
 use eigen_crypto_bn254::utils::verify_message;
@@ -52,7 +51,7 @@ pub enum BlsAggregationServiceError {
     #[error("error sendinq to channel")]
     ChannelError,
     #[error("Avs Registry Error")]
-    RegistryError(AvsRegistryError),
+    RegistryError,
 }
 
 #[derive(Debug, Clone)]
@@ -129,7 +128,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         let self_clone = self.clone();
         tokio::spawn(async move {
             // Process each signed response here
-            self_clone
+            let _ = self_clone
                 .single_task_aggregator(
                     task_index,
                     task_created_block,
@@ -138,7 +137,10 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                     time_to_expiry,
                     rx,
                 )
-                .await;
+                .await
+                .inspect_err(|err| {
+                    println!("Error: {:?}", err);
+                });
         });
     }
 
@@ -214,7 +216,10 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
             .await;
         // TODO: throw erro if != nil
 
-        let total_stake_per_quorum: HashMap<_, _> = quorums_avs_stake.iter().collect();
+        let total_stake_per_quorum: HashMap<_, _> = quorums_avs_stake
+            .iter()
+            .map(|(k, v)| (*k, v.total_stake))
+            .collect();
 
         let mut quorum_apks_g1: Vec<BlsG1Point> = vec![];
         for quorum_number in quorum_nums.iter() {
@@ -227,15 +232,15 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         loop {
             let signed_task_digest = timeout(time_to_expiry, rx.recv())
                 .await
-                .inspect_err(|err| {
+                .inspect_err(|_err| {
                     // timeout
                     println!("expire");
                     let _ = self
                         .aggregated_response_sender
                         .send(Err(BlsAggregationServiceError::TaskExpired));
                 })
-                .map_err(|| BlsAggregationServiceError::TaskExpired)?
-                .ok_or(|| BlsAggregationServiceError::ChannelClosed)?;
+                .map_err(|_| BlsAggregationServiceError::TaskExpired)?
+                .ok_or(BlsAggregationServiceError::ChannelClosed)?;
 
             // TODO: handle error
             self.verify_signature(task_index, &signed_task_digest, &operator_state_avs)
@@ -305,15 +310,17 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                 continue;
             }
 
-            let non_signers_operators_ids: Vec<FixedBytes<32>> = operator_state_avs
+            let mut non_signers_operators_ids: Vec<FixedBytes<32>> = operator_state_avs
                 .keys()
                 .filter(|operator_id| {
                     digest_aggregated_operators
                         .signers_operator_ids_set
-                        .contains_key(operator_id)
+                        .contains_key(*operator_id)
                 })
-                .sort()
-                .collect();
+                .cloned()
+                .collect::<Vec<_>>();
+
+            non_signers_operators_ids.sort();
 
             let mut non_signers_pub_keys_g1: Vec<BlsG1Point> = vec![];
             for operator_id in non_signers_operators_ids.iter() {
@@ -332,7 +339,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                     non_signers_operators_ids,
                 )
                 .await
-                .map_err(|err| BlsAggregationServiceError::RegistryError(err))?;
+                .map_err(|_err| BlsAggregationServiceError::RegistryError)?;
 
             let bls_aggregation_service_response = BlsAggregationServiceResponse {
                 task_index,

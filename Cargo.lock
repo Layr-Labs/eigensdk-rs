@@ -2221,6 +2221,7 @@ dependencies = [
  "alloy-primitives",
  "ark-bn254",
  "ark-ec",
+ "eigen-client-avsregistry",
  "eigen-crypto-bls",
  "eigen-crypto-bn254",
  "eigen-logging",
