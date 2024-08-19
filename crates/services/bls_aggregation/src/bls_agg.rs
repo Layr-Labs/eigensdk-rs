@@ -262,7 +262,6 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                 .signature_verification_channel
                 .send(verification_result)
                 .await;
-
             let operator_state = operator_state_avs
                 .get(&signed_task_digest.operator_id)
                 .unwrap();
@@ -460,6 +459,7 @@ mod tests {
     use ark_bn254::G1Affine;
     use eigen_crypto_bls::{BlsG1Point, BlsG2Point, BlsKeyPair, Signature};
     use eigen_services_avsregistry::fake_avs_registry_service::FakeAvsRegistryService;
+    use eigen_types::avs::SignatureVerificationError::IncorrectSignature;
     use eigen_types::operator::{QuorumNum, QuorumThresholdPercentages};
     use eigen_types::{avs::TaskIndex, test::TestOperator};
     use sha2::{Digest, Sha256};
@@ -1795,7 +1795,7 @@ mod tests {
         let wrong_task_response_digest = hash(task_response + 1);
         let bls_signature = test_operator_1
             .bls_keypair
-            .sign_message(wrong_task_response_digest.as_ref());
+            .sign_message(hash(task_response).as_ref());
         let fake_avs_registry_service =
             FakeAvsRegistryService::new(block_number, vec![test_operator_1.clone()]);
         let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
@@ -1818,7 +1818,12 @@ mod tests {
             )
             .await;
 
-        assert_eq!(Err(BlsAggregationServiceError::TaskExpired), result);
+        assert_eq!(
+            Err(BlsAggregationServiceError::SignatureVerificationError(
+                IncorrectSignature
+            )),
+            result
+        );
     }
 
     #[tokio::test]
