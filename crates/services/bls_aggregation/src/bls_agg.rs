@@ -38,6 +38,8 @@ pub struct BlsAggregationServiceResponse {
 pub enum BlsAggregationServiceError {
     #[error("timeout error")]
     Timeout,
+    #[error("task not found error")]
+    TaskNotFound,
 }
 
 #[derive(Debug, Clone)]
@@ -141,17 +143,20 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         task_response_digest: TaskResponseDigest,
         bls_signature: Signature,
         operator_id: FixedBytes<32>,
-    ) {
+    ) -> Result<(), BlsAggregationServiceError> {
         let task_channel = self.signed_task_response.read();
 
-        if let Some(sender) = task_channel.get(&task_index) {
-            let task = SignedTaskResponseDigest {
-                task_response_digest,
-                bls_signature,
-                operator_id,
-            };
-            let _x = sender.send(task);
-        }
+        let sender = task_channel
+            .get(&task_index)
+            .ok_or(BlsAggregationServiceError::TaskNotFound)?;
+
+        let task = SignedTaskResponseDigest {
+            task_response_digest,
+            bls_signature,
+            operator_id,
+        };
+        let _x = sender.send(task);
+        Ok(())
     }
 
     pub async fn single_task_aggregator(
@@ -452,7 +457,8 @@ mod tests {
                 bls_signature,
                 test_operator_1.operator_id,
             )
-            .await;
+            .await
+            .unwrap();
 
         let expected_agg_service_response = BlsAggregationServiceResponse {
             task_index,
@@ -544,7 +550,8 @@ mod tests {
                 bls_sig_op_1.clone(),
                 test_operator_1.operator_id,
             )
-            .await;
+            .await
+            .unwrap();
 
         let bls_sig_op_2 = test_operator_2
             .bls_keypair
@@ -556,7 +563,8 @@ mod tests {
                 bls_sig_op_2.clone(),
                 test_operator_2.operator_id,
             )
-            .await;
+            .await
+            .unwrap();
 
         let bls_sig_op_3 = test_operator_3
             .bls_keypair
@@ -568,7 +576,8 @@ mod tests {
                 bls_sig_op_3.clone(),
                 test_operator_3.operator_id,
             )
-            .await;
+            .await
+            .unwrap();
         let quorum_apks_g1 = BlsG1Point::new(
             (test_operator_1.bls_keypair.public_key().g1()
                 + test_operator_2.bls_keypair.public_key().g1()
@@ -666,7 +675,8 @@ mod tests {
                 bls_sig_op_1,
                 test_operator_1.operator_id,
             )
-            .await;
+            .await
+            .unwrap();
 
         let bls_sig_op_2 = test_operator_2
             .bls_keypair
@@ -678,7 +688,8 @@ mod tests {
                 bls_sig_op_2,
                 test_operator_2.operator_id,
             )
-            .await;
+            .await
+            .unwrap();
 
         let quorum_apks_g1: BlsG1Point = BlsG1Point::new(
             (G1Affine::identity()
@@ -791,7 +802,8 @@ mod tests {
                 bls_sig_task_1_op_1,
                 test_operator_1.operator_id,
             )
-            .await;
+            .await
+            .unwrap();
 
         let bls_sig_task_1_op_2 = test_operator_2
             .bls_keypair
@@ -803,7 +815,8 @@ mod tests {
                 bls_sig_task_1_op_2,
                 test_operator_2.operator_id,
             )
-            .await;
+            .await
+            .unwrap();
 
         let bls_sig_task_2_op_1 = test_operator_1
             .bls_keypair
@@ -815,7 +828,8 @@ mod tests {
                 bls_sig_task_2_op_1,
                 test_operator_1.operator_id,
             )
-            .await;
+            .await
+            .unwrap();
 
         let bls_sig_task_2_op_2 = test_operator_2
             .bls_keypair
@@ -827,7 +841,8 @@ mod tests {
                 bls_sig_task_2_op_2,
                 test_operator_2.operator_id,
             )
-            .await;
+            .await
+            .unwrap();
 
         let quorum_apks_g1: BlsG1Point = BlsG1Point::new(
             (G1Affine::identity()
@@ -1009,7 +1024,8 @@ mod tests {
                 bls_sig_op_1.clone(),
                 test_operator_1.operator_id,
             )
-            .await;
+            .await
+            .unwrap();
 
         let quorum_apks_g1 = BlsG1Point::new(
             (test_operator_1.bls_keypair.public_key().g1()
@@ -1099,7 +1115,8 @@ mod tests {
                 bls_sig_op_1.clone(),
                 test_operator_1.operator_id,
             )
-            .await;
+            .await
+            .unwrap();
 
         let bls_sig_op_2 = test_operator_2
             .bls_keypair
@@ -1111,7 +1128,8 @@ mod tests {
                 bls_sig_op_2.clone(),
                 test_operator_2.operator_id,
             )
-            .await;
+            .await
+            .unwrap();
         let signers_apk_g2 = BlsG2Point::new(
             (test_operator_1.bls_keypair.public_key_g2().g2()
                 + test_operator_2.bls_keypair.public_key_g2().g2())
@@ -1216,7 +1234,8 @@ mod tests {
                 bls_sig_op_1.clone(),
                 test_operator_1.operator_id,
             )
-            .await;
+            .await
+            .unwrap();
 
         let bls_sig_op_2 = test_operator_2
             .bls_keypair
@@ -1228,7 +1247,8 @@ mod tests {
                 bls_sig_op_2.clone(),
                 test_operator_2.operator_id,
             )
-            .await;
+            .await
+            .unwrap();
         let signers_apk_g2 = BlsG2Point::new(
             (test_operator_1.bls_keypair.public_key_g2().g2()
                 + test_operator_2.bls_keypair.public_key_g2().g2())
@@ -1343,7 +1363,8 @@ mod tests {
                 bls_sig_op_1.clone(),
                 test_operator_1.operator_id,
             )
-            .await;
+            .await
+            .unwrap();
 
         let bls_sig_op_2 = test_operator_2
             .bls_keypair
@@ -1356,7 +1377,8 @@ mod tests {
                 bls_sig_op_2.clone(),
                 test_operator_2.operator_id,
             )
-            .await;
+            .await
+            .unwrap();
 
         let response = bls_agg_service
             .aggregated_response_receiver
@@ -1413,7 +1435,8 @@ mod tests {
                 bls_sig_op_1.clone(),
                 test_operator_1.operator_id,
             )
-            .await;
+            .await
+            .unwrap();
 
         let response = bls_agg_service
             .aggregated_response_receiver
@@ -1422,5 +1445,42 @@ mod tests {
             .recv()
             .await;
         assert_eq!(Err(BlsAggregationServiceError::Timeout), response.unwrap());
+    }
+
+    #[tokio::test]
+    async fn send_signature_of_task_not_initialized() {
+        let test_operator_1 = TestOperator {
+            operator_id: U256::from(1).into(),
+            // Note the quorums is [0, 1], but operator id 1 just stake 0.
+            stake_per_quorum: HashMap::from([(0u8, U256::from(100))]),
+            bls_keypair: new_bls_key_pair_panics(
+                "13710126902690889134622698668747132666439281256983827313388062967626731803599"
+                    .into(),
+            ),
+        };
+
+        let block_number = 1;
+        let task_index = 0;
+        let task_response = 123; // Initialize with appropriate data
+        let task_response_digest = hash(task_response);
+
+        let fake_avs_registry_service =
+            FakeAvsRegistryService::new(block_number, vec![test_operator_1.clone()]);
+        let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
+
+        let bls_sig_op_1 = test_operator_1
+            .bls_keypair
+            .sign_message(task_response_digest.as_ref());
+
+        let result = bls_agg_service
+            .process_new_signature(
+                task_index,
+                task_response_digest,
+                bls_sig_op_1.clone(),
+                test_operator_1.operator_id,
+            )
+            .await;
+
+        assert_eq!(Err(BlsAggregationServiceError::TaskNotFound), result);
     }
 }
