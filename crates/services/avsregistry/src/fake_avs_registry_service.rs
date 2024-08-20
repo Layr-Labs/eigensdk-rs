@@ -42,7 +42,6 @@ impl FakeAvsRegistryService {
 }
 
 impl AvsRegistryService for FakeAvsRegistryService {
-    // TODO: change this so that it returns a Result
     async fn get_operators_avs_state_at_block(
         &self,
         block_number: u32,
