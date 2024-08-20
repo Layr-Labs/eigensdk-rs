@@ -10,11 +10,18 @@ license-file.workspace = true
 
 [dependencies]
 alloy-primitives.workspace = true
+ark-bn254.workspace = true
+ark-ec.workspace = true
+eigen-client-avsregistry.workspace = true
 eigen-crypto-bls.workspace = true
 eigen-crypto-bn254.workspace = true
-eigen-logging.workspace = true
 eigen-services-avsregistry.workspace = true
 eigen-types.workspace = true
 parking_lot.workspace = true
+thiserror.workspace = true
 tokio = { workspace = true, features = ["full"] }
 
+[dev-dependencies]
+alloy-node-bindings.workspace = true
+eigen-logging.workspace = true
+sha2 = "0.10.8"

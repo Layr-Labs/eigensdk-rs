@@ -65,7 +65,6 @@ eigen-client-fireblocks = { path = "crates/chainio/clients/fireblocks" }
 eigen-contract-bindings = { path = "crates/contracts/bindings/" }
 eigen-crypto-bls = { path = "crates/crypto/bls/" }
 eigen-crypto-bn254 = { path = "crates/crypto/bn254/" }
-eigen-crypto-keystore = { path = "crates/crypto/keystore/" }
 eigen-logging = { path = "crates/logging/" }
 eigen-metrics = { version = "0.0.1-alpha", path = "crates/metrics/" }
 eigen-metrics-collectors-economic = { path = "crates/metrics/collectors/economic" }
@@ -109,10 +108,11 @@ tokio = { version = "1.37.0", features = ["test-util", "full", "sync"] }
 tracing = "0.1.40"
 tracing-subscriber = { version = "0.3", features = ["json"] }
 url = "2.5.2"
-uuid = { version = "1.10.0", features = ["v4"] }
 
 #misc
 rust-bls-bn254 = {git = "https://github.com/Layr-Labs/rust-bls-bn254.git", rev = "be3ef87", features = ["std"] }
+uuid = { version = "1.10.0", features = ["v4"] }
+
 
 #misc 
 parking_lot = "0.12"
