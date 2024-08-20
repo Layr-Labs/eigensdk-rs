@@ -338,10 +338,17 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                 .g2_pub_key
                 .g2();
 
-            let response = match aggregated_operators
+            let digest_aggregated_operators = aggregated_operators
                 .get_mut(&signed_task_digest.task_response_digest)
-            {
-                None => &AggregatedOperators {
+                .map(|digest_aggregated_operators| {
+                    BlsAggregatorService::<A>::aggregate_new_operator(
+                        digest_aggregated_operators,
+                        operator_state.clone(),
+                        signed_task_digest.clone(),
+                    )
+                    .clone()
+                })
+                .unwrap_or(AggregatedOperators {
                     signers_apk_g2: BlsG2Point::new((G2Affine::zero() + operator_g2_pubkey).into()),
                     signers_agg_sig_g1: signed_task_digest.bls_signature.clone(),
                     signers_operator_ids_set: HashMap::from([(
@@ -349,17 +356,8 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                         true,
                     )]),
                     signers_total_stake_per_quorum: operator_state.stake_per_quorum.clone(),
-                },
-                Some(digest_aggregated_operators) => {
-                    BlsAggregatorService::<A>::aggregate_new_operator(
-                        digest_aggregated_operators,
-                        operator_state.clone(),
-                        signed_task_digest.clone(),
-                    )
-                }
-            };
+                });
 
-            let digest_aggregated_operators = response.clone();
             aggregated_operators.insert(
                 signed_task_digest.task_response_digest,
                 digest_aggregated_operators.clone(),
