@@ -2220,6 +2220,7 @@ version = "0.0.1-alpha"
 dependencies = [
  "alloy-node-bindings",
  "alloy-primitives",
+ "alloy-provider",
  "ark-bn254",
  "ark-ec",
  "eigen-client-avsregistry",
@@ -2227,6 +2228,7 @@ dependencies = [
  "eigen-crypto-bn254",
  "eigen-logging",
  "eigen-services-avsregistry",
+ "eigen-services-operatorsinfo",
  "eigen-testing-utils",
  "eigen-types",
  "eigen-utils",
