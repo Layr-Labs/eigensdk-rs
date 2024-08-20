@@ -294,3 +294,106 @@ impl AvsRegistryChainWriter {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::AvsRegistryChainWriter;
+    use alloy_primitives::{Address, Bytes, FixedBytes, B256, U256};
+    use eigen_logging::get_test_logger;
+    use hex::FromHex;
+    use std::str::FromStr;
+    const HOLESKY_REGISTRY_COORDINATOR: &str = "0x53012C69A189cfA2D9d29eb6F19B32e0A2EA3490";
+    const HOLESKY_OPERATOR_STATE_RETRIEVER: &str = "0xB4baAfee917fb4449f5ec64804217bccE9f46C67";
+    const HOLESKY_STAKE_REGISTRY: &str = "0xBDACD5998989Eec814ac7A0f0f6596088AA2a270";
+    const HOLESKY_BLS_APK_REGISTRY: &str = "0x066cF95c1bf0927124DFB8B02B401bc23A79730D";
+
+    async fn build_avs_registry_chain_reader() -> AvsRegistryChainWriter {
+        let holesky_registry_coordinator =
+            Address::from_str(HOLESKY_REGISTRY_COORDINATOR).expect("failed to parse address");
+        let holesky_operator_state_retriever =
+            Address::from_str(HOLESKY_OPERATOR_STATE_RETRIEVER).expect("failed to parse address");
+
+        let holesky_provider = "https://ethereum-holesky.blockpi.network/v1/rpc/public";
+
+        AvsRegistryChainWriter::build_avs_registry_chain_writer(
+            get_test_logger(),
+            "".to_string(),
+            "".to_string(),
+            holesky_registry_coordinator,
+            holesky_operator_state_retriever,
+        )
+        .await
+        .unwrap()
+        /*
+        AvsRegistryChainWriter::new(
+            get_test_logger(),
+            holesky_registry_coordinator,
+            holesky_operator_state_retriever,
+            holesky_provider.to_string(),
+        .to_string())
+        .await
+        .unwrap()
+        */
+    }
+
+    #[tokio::test]
+    async fn test_get_quorum_count() {
+        let avs_reader = build_avs_registry_chain_reader().await;
+
+        //let _ = avs_reader.get_quorum_count().await.unwrap();
+    }
+
+    /*
+    #[tokio::test]
+    async fn test_get_operators_stake_in_quorums_at_block() {
+        let avs_reader = build_avs_registry_chain_reader().await;
+
+        let quorum_number = Bytes::from_hex("0x00").expect("bytes parse");
+        let _ = avs_reader
+            .get_operators_stake_in_quorums_at_block(1245063, quorum_number)
+            .await
+            .unwrap();
+    }
+
+    #[tokio::test]
+    async fn test_get_operators_stake_in_quorums_at_block_operator_id() {
+        let avs_reader = build_avs_registry_chain_reader().await;
+
+        let operator_id = U256::from_str(
+            "35344093966194310405039483339636912150346494903629410125452342281826147822033",
+        )
+        .unwrap();
+
+        let _ = avs_reader
+            .get_operators_stake_in_quorums_at_block_operator_id(1245842, operator_id.into())
+            .await
+            .unwrap();
+    }
+
+    #[tokio::test]
+    async fn test_get_operators_stake_in_quorums_at_current_block() {
+        let avs_reader = build_avs_registry_chain_reader().await;
+        let quorum_number = Bytes::from_hex("0x00").expect("bytes parse");
+
+        let _ = avs_reader
+            .get_operators_stake_in_quorums_at_current_block(quorum_number)
+            .await
+            .unwrap();
+    }
+
+    #[tokio::test]
+    async fn test_get_operators_stake_in_quorums_of_operator_at_block() {
+        let avs_reader = build_avs_registry_chain_reader().await;
+
+        let operator_id = U256::from_str(
+            "35344093966194310405039483339636912150346494903629410125452342281826147822033",
+        )
+        .unwrap();
+
+        let _ = avs_reader
+            .get_operators_stake_in_quorums_of_operator_at_block((operator_id).into(), 1246078)
+            .await
+            .unwrap();
+    }
+    */
+}
