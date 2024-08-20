@@ -458,7 +458,6 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
 #[cfg(test)]
 mod tests {
     use alloy_primitives::{B256, U256};
-    use ark_bn254::G1Affine;
     use eigen_crypto_bls::{BlsG1Point, BlsG2Point, BlsKeyPair, Signature};
     use eigen_services_avsregistry::fake_avs_registry_service::FakeAvsRegistryService;
     use eigen_types::avs::SignatureVerificationError::IncorrectSignature;
@@ -480,6 +479,33 @@ mod tests {
         let mut hasher = Sha256::new();
         hasher.update(task_response.to_be_bytes());
         B256::from_slice(hasher.finalize().as_ref())
+    }
+
+    fn aggregate_g1_public_keys(operators: &Vec<TestOperator>) -> BlsG1Point {
+        operators
+            .iter()
+            .map(|op| op.bls_keypair.public_key().g1())
+            .reduce(|a, b| (a + b).into())
+            .map(|agg| BlsG1Point::new(agg))
+            .unwrap()
+    }
+
+    fn aggregate_g2_public_keys(operators: &Vec<TestOperator>) -> BlsG2Point {
+        operators
+            .iter()
+            .map(|op| op.bls_keypair.public_key_g2().g2())
+            .reduce(|a, b| (a + b).into())
+            .map(|agg| BlsG2Point::new(agg))
+            .unwrap()
+    }
+
+    fn aggregate_g1_signatures(signatures: &Vec<Signature>) -> Signature {
+        let agg = signatures
+            .iter()
+            .map(|s| s.g1_point().g1())
+            .reduce(|a, b| (a + b).into())
+            .unwrap();
+        Signature::new(agg)
     }
 
     #[tokio::test]
@@ -589,6 +615,7 @@ mod tests {
             test_operator_2.clone(),
             test_operator_3.clone(),
         ];
+
         let block_number = 1;
         let task_index = 0;
         let quorum_numbers: Vec<QuorumNum> = vec![0];
@@ -597,7 +624,8 @@ mod tests {
         let task_response = 123; // Initialize with appropriate data
         let task_response_digest = hash(task_response);
 
-        let fake_avs_registry_service = FakeAvsRegistryService::new(block_number, test_operators);
+        let fake_avs_registry_service =
+            FakeAvsRegistryService::new(block_number, test_operators.clone());
         let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
 
         bls_agg_service
@@ -648,26 +676,11 @@ mod tests {
             )
             .await
             .unwrap();
-        let quorum_apks_g1 = BlsG1Point::new(
-            (test_operator_1.bls_keypair.public_key().g1()
-                + test_operator_2.bls_keypair.public_key().g1()
-                + test_operator_3.bls_keypair.public_key().g1())
-            .into(),
-        );
 
-        let signers_apk_g2: BlsG2Point = BlsG2Point::new(
-            (test_operator_1.bls_keypair.public_key_g2().g2()
-                + test_operator_2.bls_keypair.public_key_g2().g2()
-                + test_operator_3.bls_keypair.public_key_g2().g2())
-            .into(),
-        );
-
-        let signers_agg_sig_g1 = Signature::new(
-            (bls_sig_op_1.g1_point().g1()
-                + bls_sig_op_2.g1_point().g1()
-                + bls_sig_op_3.g1_point().g1())
-            .into(),
-        );
+        let quorum_apks_g1 = aggregate_g1_public_keys(&test_operators);
+        let signers_apk_g2 = aggregate_g2_public_keys(&test_operators);
+        let signers_agg_sig_g1 =
+            aggregate_g1_signatures(&vec![bls_sig_op_1, bls_sig_op_2, bls_sig_op_3]);
 
         let expected_agg_service_response = BlsAggregationServiceResponse {
             task_index,
@@ -723,7 +736,8 @@ mod tests {
         let task_response = 123; // Initialize with appropriate data
         let task_response_digest = hash(task_response);
 
-        let fake_avs_registry_service = FakeAvsRegistryService::new(block_number, test_operators);
+        let fake_avs_registry_service =
+            FakeAvsRegistryService::new(block_number, test_operators.clone());
         let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
 
         bls_agg_service
@@ -743,7 +757,7 @@ mod tests {
             .process_new_signature(
                 task_index,
                 task_response_digest,
-                bls_sig_op_1,
+                bls_sig_op_1.clone(),
                 test_operator_1.operator_id,
             )
             .await
@@ -756,36 +770,16 @@ mod tests {
             .process_new_signature(
                 task_index,
                 task_response_digest,
-                bls_sig_op_2,
+                bls_sig_op_2.clone(),
                 test_operator_2.operator_id,
             )
             .await
             .unwrap();
 
-        let quorum_apks_g1: BlsG1Point = BlsG1Point::new(
-            (G1Affine::identity()
-                + test_operator_1.bls_keypair.public_key().g1()
-                + test_operator_2.bls_keypair.public_key().g1())
-            .into(),
-        );
-        let signers_apk_g2 = BlsG2Point::new(
-            (test_operator_1.bls_keypair.public_key_g2().g2()
-                + test_operator_2.bls_keypair.public_key_g2().g2())
-            .into(),
-        );
-        let signers_agg_sig_g1 = Signature::new(
-            (test_operator_1
-                .bls_keypair
-                .sign_message(task_response_digest.as_ref())
-                .g1_point()
-                .g1()
-                + test_operator_2
-                    .bls_keypair
-                    .sign_message(task_response_digest.as_ref())
-                    .g1_point()
-                    .g1())
-            .into(),
-        );
+        let quorum_apks_g1 = aggregate_g1_public_keys(&test_operators);
+        let signers_apk_g2 = aggregate_g2_public_keys(&test_operators);
+        let signers_agg_sig_g1 = aggregate_g1_signatures(&vec![bls_sig_op_1, bls_sig_op_2]);
+
         let expected_agg_service_response = BlsAggregationServiceResponse {
             task_index,
             task_response_digest,
@@ -833,7 +827,8 @@ mod tests {
         let quorum_threshold_percentages: QuorumThresholdPercentages = vec![100u8, 100u8];
         let time_to_expiry = Duration::from_secs(1);
 
-        let fake_avs_registry_service = FakeAvsRegistryService::new(block_number, test_operators);
+        let fake_avs_registry_service =
+            FakeAvsRegistryService::new(block_number, test_operators.clone());
         let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
 
         // initialize 2 concurrent tasks
@@ -872,7 +867,7 @@ mod tests {
             .process_new_signature(
                 task_1_index,
                 task_1_response_digest,
-                bls_sig_task_1_op_1,
+                bls_sig_task_1_op_1.clone(),
                 test_operator_1.operator_id,
             )
             .await
@@ -885,7 +880,7 @@ mod tests {
             .process_new_signature(
                 task_1_index,
                 task_1_response_digest.clone(),
-                bls_sig_task_1_op_2,
+                bls_sig_task_1_op_2.clone(),
                 test_operator_2.operator_id,
             )
             .await
@@ -898,7 +893,7 @@ mod tests {
             .process_new_signature(
                 task_2_index,
                 task_2_response_digest,
-                bls_sig_task_2_op_1,
+                bls_sig_task_2_op_1.clone(),
                 test_operator_1.operator_id,
             )
             .await
@@ -911,36 +906,17 @@ mod tests {
             .process_new_signature(
                 task_2_index,
                 task_2_response_digest,
-                bls_sig_task_2_op_2,
+                bls_sig_task_2_op_2.clone(),
                 test_operator_2.operator_id,
             )
             .await
             .unwrap();
 
-        let quorum_apks_g1: BlsG1Point = BlsG1Point::new(
-            (G1Affine::identity()
-                + test_operator_1.bls_keypair.public_key().g1()
-                + test_operator_2.bls_keypair.public_key().g1())
-            .into(),
-        );
-        let signers_apk_g2 = BlsG2Point::new(
-            (test_operator_1.bls_keypair.public_key_g2().g2()
-                + test_operator_2.bls_keypair.public_key_g2().g2())
-            .into(),
-        );
-        let signers_agg_sig_g1_task_1 = Signature::new(
-            (test_operator_1
-                .bls_keypair
-                .sign_message(task_1_response_digest.as_ref())
-                .g1_point()
-                .g1()
-                + test_operator_2
-                    .bls_keypair
-                    .sign_message(task_1_response_digest.as_ref())
-                    .g1_point()
-                    .g1())
-            .into(),
-        );
+        let quorum_apks_g1 = aggregate_g1_public_keys(&test_operators);
+        let signers_apk_g2 = aggregate_g2_public_keys(&test_operators);
+        let signers_agg_sig_g1_task_1 =
+            aggregate_g1_signatures(&vec![bls_sig_task_1_op_1, bls_sig_task_1_op_2]);
+
         let expected_response_task_1 = BlsAggregationServiceResponse {
             task_index: task_1_index,
             task_response_digest: task_1_response_digest,
@@ -954,19 +930,9 @@ mod tests {
             non_signer_stake_indices: vec![],
         };
 
-        let signers_agg_sig_g1_task_2 = Signature::new(
-            (test_operator_1
-                .bls_keypair
-                .sign_message(task_2_response_digest.as_ref())
-                .g1_point()
-                .g1()
-                + test_operator_2
-                    .bls_keypair
-                    .sign_message(task_2_response_digest.as_ref())
-                    .g1_point()
-                    .g1())
-            .into(),
-        );
+        let signers_agg_sig_g1_task_2 =
+            aggregate_g1_signatures(&vec![bls_sig_task_2_op_1, bls_sig_task_2_op_2]);
+
         let expected_response_task_2 = BlsAggregationServiceResponse {
             task_index: task_2_index,
             task_response_digest: task_2_response_digest,
@@ -1081,7 +1047,8 @@ mod tests {
             .bls_keypair
             .sign_message(task_response_digest.as_ref());
 
-        let fake_avs_registry_service = FakeAvsRegistryService::new(block_number, test_operators);
+        let fake_avs_registry_service =
+            FakeAvsRegistryService::new(block_number, test_operators.clone());
         let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
 
         bls_agg_service
@@ -1104,11 +1071,7 @@ mod tests {
             .await
             .unwrap();
 
-        let quorum_apks_g1 = BlsG1Point::new(
-            (test_operator_1.bls_keypair.public_key().g1()
-                + test_operator_2.bls_keypair.public_key().g1())
-            .into(),
-        );
+        let quorum_apks_g1 = aggregate_g1_public_keys(&test_operators);
 
         let signers_apk_g2: BlsG2Point = test_operator_1.bls_keypair.public_key_g2();
 
@@ -1235,7 +1198,8 @@ mod tests {
         let task_response = 123; // Initialize with appropriate data
         let task_response_digest = hash(task_response);
 
-        let fake_avs_registry_service = FakeAvsRegistryService::new(block_number, test_operators);
+        let fake_avs_registry_service =
+            FakeAvsRegistryService::new(block_number, test_operators.clone());
         let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
 
         bls_agg_service
@@ -1274,13 +1238,10 @@ mod tests {
             )
             .await
             .unwrap();
-        let signers_apk_g2 = BlsG2Point::new(
-            (test_operator_1.bls_keypair.public_key_g2().g2()
-                + test_operator_2.bls_keypair.public_key_g2().g2())
-            .into(),
-        );
-        let signers_agg_sig_g1 =
-            Signature::new((bls_sig_op_1.g1_point().g1() + bls_sig_op_2.g1_point().g1()).into());
+
+        let signers_apk_g2 = aggregate_g2_public_keys(&test_operators);
+        let signers_agg_sig_g1 = aggregate_g1_signatures(&vec![bls_sig_op_1, bls_sig_op_2]);
+
         let expected_agg_service_response = BlsAggregationServiceResponse {
             task_index,
             task_response_digest,
@@ -1355,7 +1316,8 @@ mod tests {
         let task_response = 123; // Initialize with appropriate data
         let task_response_digest = hash(task_response);
 
-        let fake_avs_registry_service = FakeAvsRegistryService::new(block_number, test_operators);
+        let fake_avs_registry_service =
+            FakeAvsRegistryService::new(block_number, test_operators.clone());
         let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
 
         bls_agg_service
@@ -1394,30 +1356,19 @@ mod tests {
             )
             .await
             .unwrap();
-        let signers_apk_g2 = BlsG2Point::new(
-            (test_operator_1.bls_keypair.public_key_g2().g2()
-                + test_operator_2.bls_keypair.public_key_g2().g2())
-            .into(),
-        );
-        let signers_agg_sig_g1 =
-            Signature::new((bls_sig_op_1.g1_point().g1() + bls_sig_op_2.g1_point().g1()).into());
+        let signers_apk_g2 =
+            aggregate_g2_public_keys(&vec![test_operator_1.clone(), test_operator_2.clone()]);
+        let signers_agg_sig_g1 = aggregate_g1_signatures(&vec![bls_sig_op_1, bls_sig_op_2]);
+        let quorum_apks_g1 = vec![
+            aggregate_g1_public_keys(&vec![test_operator_1, test_operator_3.clone()]),
+            aggregate_g1_public_keys(&vec![test_operator_2, test_operator_3.clone()]),
+        ];
+
         let expected_agg_service_response = BlsAggregationServiceResponse {
             task_index,
             task_response_digest,
             non_signers_pub_keys_g1: vec![test_operator_3.bls_keypair.public_key()],
-            quorum_apks_g1: vec![
-                // TODO: in Go it adds each public key to G1Point::zero()
-                BlsG1Point::new(
-                    (test_operator_1.bls_keypair.public_key().g1()
-                        + test_operator_3.bls_keypair.public_key().g1())
-                    .into(),
-                ),
-                BlsG1Point::new(
-                    (test_operator_2.bls_keypair.public_key().g1()
-                        + test_operator_3.bls_keypair.public_key().g1())
-                    .into(),
-                ),
-            ],
+            quorum_apks_g1,
             signers_apk_g2,
             signers_agg_sig_g1,
             non_signer_quorum_bitmap_indices: vec![],
