@@ -467,7 +467,12 @@ mod tests {
     use std::collections::HashMap;
     use std::time::Duration;
     use std::vec;
-
+    const PRIVATE_KEY_1: &str =
+        "13710126902690889134622698668747132666439281256983827313388062967626731803599";
+    const PRIVATE_KEY_2: &str =
+        "14610126902690889134622698668747132666439281256983827313388062967626731803500";
+    const PRIVATE_KEY_3: &str =
+        "15610126902690889134622698668747132666439281256983827313388062967626731803501";
     use super::{BlsAggregationServiceError, BlsAggregationServiceResponse, BlsAggregatorService};
 
     fn new_bls_key_pair_panics(hex_key: String) -> BlsKeyPair {
@@ -513,10 +518,7 @@ mod tests {
         let test_operator_1 = TestOperator {
             operator_id: U256::from(1).into(),
             stake_per_quorum: HashMap::from([(0u8, U256::from(100)), (1u8, U256::from(200))]),
-            bls_keypair: new_bls_key_pair_panics(
-                "13710126902690889134622698668747132666439281256983827313388062967626731803599"
-                    .into(),
-            ),
+            bls_keypair: BlsKeyPair::new(PRIVATE_KEY_1.into()).unwrap(),
         };
 
         let block_number = 1;
@@ -589,26 +591,17 @@ mod tests {
         let test_operator_1 = TestOperator {
             operator_id: U256::from(1).into(),
             stake_per_quorum: HashMap::from([(0u8, U256::from(100)), (1u8, U256::from(200))]),
-            bls_keypair: new_bls_key_pair_panics(
-                "13710126902690889134622698668747132666439281256983827313388062967626731803599"
-                    .into(),
-            ),
+            bls_keypair: BlsKeyPair::new(PRIVATE_KEY_1.into()).unwrap(),
         };
         let test_operator_2 = TestOperator {
             operator_id: U256::from(2).into(),
             stake_per_quorum: HashMap::from([(0u8, U256::from(100)), (1u8, U256::from(200))]),
-            bls_keypair: new_bls_key_pair_panics(
-                "14610126902690889134622698668747132666439281256983827313388062967626731803500"
-                    .into(),
-            ),
+            bls_keypair: BlsKeyPair::new(PRIVATE_KEY_2.into()).unwrap(),
         };
         let test_operator_3 = TestOperator {
             operator_id: U256::from(3).into(),
             stake_per_quorum: HashMap::from([(0u8, U256::from(300)), (1u8, U256::from(100))]),
-            bls_keypair: new_bls_key_pair_panics(
-                "15610126902690889134622698668747132666439281256983827313388062967626731803501"
-                    .into(),
-            ),
+            bls_keypair: BlsKeyPair::new(PRIVATE_KEY_3.into()).unwrap(),
         };
         let test_operators = vec![
             test_operator_1.clone(),
@@ -714,18 +707,12 @@ mod tests {
         let test_operator_1 = TestOperator {
             operator_id: U256::from(1).into(),
             stake_per_quorum: HashMap::from([(0u8, U256::from(100)), (1u8, U256::from(200))]),
-            bls_keypair: new_bls_key_pair_panics(
-                "13710126902690889134622698668747132666439281256983827313388062967626731803599"
-                    .into(),
-            ),
+            bls_keypair: BlsKeyPair::new(PRIVATE_KEY_1.into()).unwrap(),
         };
         let test_operator_2 = TestOperator {
             operator_id: U256::from(2).into(),
             stake_per_quorum: HashMap::from([(0u8, U256::from(100)), (1u8, U256::from(200))]),
-            bls_keypair: new_bls_key_pair_panics(
-                "14610126902690889134622698668747132666439281256983827313388062967626731803500"
-                    .into(),
-            ),
+            bls_keypair: BlsKeyPair::new(PRIVATE_KEY_2.into()).unwrap(),
         };
         let test_operators = vec![test_operator_1.clone(), test_operator_2.clone()];
         let block_number = 1;
@@ -808,18 +795,12 @@ mod tests {
         let test_operator_1 = TestOperator {
             operator_id: U256::from(1).into(),
             stake_per_quorum: HashMap::from([(0u8, U256::from(100)), (1u8, U256::from(200))]),
-            bls_keypair: new_bls_key_pair_panics(
-                "13710126902690889134622698668747132666439281256983827313388062967626731803599"
-                    .into(),
-            ),
+            bls_keypair: BlsKeyPair::new(PRIVATE_KEY_1.into()).unwrap(),
         };
         let test_operator_2 = TestOperator {
             operator_id: U256::from(2).into(),
             stake_per_quorum: HashMap::from([(0u8, U256::from(100)), (1u8, U256::from(200))]),
-            bls_keypair: new_bls_key_pair_panics(
-                "14610126902690889134622698668747132666439281256983827313388062967626731803500"
-                    .into(),
-            ),
+            bls_keypair: BlsKeyPair::new(PRIVATE_KEY_2.into()).unwrap(),
         };
         let test_operators = vec![test_operator_1.clone(), test_operator_2.clone()];
         let block_number = 1;
@@ -977,10 +958,7 @@ mod tests {
         let test_operator_1 = TestOperator {
             operator_id: U256::from(1).into(),
             stake_per_quorum: HashMap::from([(0u8, U256::from(100)), (1u8, U256::from(200))]),
-            bls_keypair: new_bls_key_pair_panics(
-                "13710126902690889134622698668747132666439281256983827313388062967626731803599"
-                    .into(),
-            ),
+            bls_keypair: BlsKeyPair::new(PRIVATE_KEY_1.into()).unwrap(),
         };
 
         let block_number = 1;
@@ -1022,18 +1000,12 @@ mod tests {
         let test_operator_1 = TestOperator {
             operator_id: U256::from(1).into(),
             stake_per_quorum: HashMap::from([(0u8, U256::from(100)), (1u8, U256::from(200))]),
-            bls_keypair: new_bls_key_pair_panics(
-                "13710126902690889134622698668747132666439281256983827313388062967626731803599"
-                    .into(),
-            ),
+            bls_keypair: BlsKeyPair::new(PRIVATE_KEY_1.into()).unwrap(),
         };
         let test_operator_2 = TestOperator {
             operator_id: U256::from(2).into(),
             stake_per_quorum: HashMap::from([(0u8, U256::from(100)), (1u8, U256::from(200))]),
-            bls_keypair: new_bls_key_pair_panics(
-                "14610126902690889134622698668747132666439281256983827313388062967626731803500"
-                    .into(),
-            ),
+            bls_keypair: BlsKeyPair::new(PRIVATE_KEY_2.into()).unwrap(),
         };
         let test_operators = vec![test_operator_1.clone(), test_operator_2.clone()];
         let block_number = 1;
@@ -1107,18 +1079,12 @@ mod tests {
         let test_operator_1 = TestOperator {
             operator_id: U256::from(1).into(),
             stake_per_quorum: HashMap::from([(0u8, U256::from(100)), (1u8, U256::from(200))]),
-            bls_keypair: new_bls_key_pair_panics(
-                "13710126902690889134622698668747132666439281256983827313388062967626731803599"
-                    .into(),
-            ),
+            bls_keypair: BlsKeyPair::new(PRIVATE_KEY_1.into()).unwrap(),
         };
         let test_operator_2 = TestOperator {
             operator_id: U256::from(2).into(),
             stake_per_quorum: HashMap::from([(0u8, U256::from(100)), (1u8, U256::from(200))]),
-            bls_keypair: new_bls_key_pair_panics(
-                "14610126902690889134622698668747132666439281256983827313388062967626731803500"
-                    .into(),
-            ),
+            bls_keypair: BlsKeyPair::new(PRIVATE_KEY_2.into()).unwrap(),
         };
         let test_operators = vec![test_operator_1.clone(), test_operator_2.clone()];
         let block_number = 1;
@@ -1174,19 +1140,13 @@ mod tests {
             operator_id: U256::from(1).into(),
             // Note the quorums is [0, 1], but operator id 1 just stake 0.
             stake_per_quorum: HashMap::from([(0u8, U256::from(100))]),
-            bls_keypair: new_bls_key_pair_panics(
-                "13710126902690889134622698668747132666439281256983827313388062967626731803599"
-                    .into(),
-            ),
+            bls_keypair: BlsKeyPair::new(PRIVATE_KEY_1.into()).unwrap(),
         };
         let test_operator_2 = TestOperator {
             operator_id: U256::from(2).into(),
             // Note the quorums is [0, 1], but operator id 2 just stake 1.
             stake_per_quorum: HashMap::from([(1u8, U256::from(200))]),
-            bls_keypair: new_bls_key_pair_panics(
-                "14610126902690889134622698668747132666439281256983827313388062967626731803500"
-                    .into(),
-            ),
+            bls_keypair: BlsKeyPair::new(PRIVATE_KEY_2.into()).unwrap(),
         };
 
         let test_operators = vec![test_operator_1.clone(), test_operator_2.clone()];
@@ -1278,29 +1238,20 @@ mod tests {
             operator_id: U256::from(1).into(),
             // Note the quorums is [0, 1], but operator id 1 just stake 0.
             stake_per_quorum: HashMap::from([(0u8, U256::from(100))]),
-            bls_keypair: new_bls_key_pair_panics(
-                "13710126902690889134622698668747132666439281256983827313388062967626731803599"
-                    .into(),
-            ),
+            bls_keypair: BlsKeyPair::new(PRIVATE_KEY_1.into()).unwrap(),
         };
         let test_operator_2 = TestOperator {
             operator_id: U256::from(2).into(),
             // Note the quorums is [0, 1], but operator id 2 just stake 1.
             stake_per_quorum: HashMap::from([(1u8, U256::from(200))]),
-            bls_keypair: new_bls_key_pair_panics(
-                "14610126902690889134622698668747132666439281256983827313388062967626731803500"
-                    .into(),
-            ),
+            bls_keypair: BlsKeyPair::new(PRIVATE_KEY_2.into()).unwrap(),
         };
 
         let test_operator_3 = TestOperator {
             operator_id: U256::from(3).into(),
             // Note the quorums is [0, 1], but operator id 3 just stake 0.
             stake_per_quorum: HashMap::from([(0u8, U256::from(100)), (1u8, U256::from(200))]),
-            bls_keypair: new_bls_key_pair_panics(
-                "15710126902690889134622698668747132666439281256983827313388062967626731803599"
-                    .into(),
-            ),
+            bls_keypair: BlsKeyPair::new(PRIVATE_KEY_3.into()).unwrap(),
         };
 
         let test_operators = vec![
@@ -1398,29 +1349,20 @@ mod tests {
             operator_id: U256::from(1).into(),
             // Note the quorums is [0, 1], but operator id 1 just stake 0.
             stake_per_quorum: HashMap::from([(0u8, U256::from(100))]),
-            bls_keypair: new_bls_key_pair_panics(
-                "13710126902690889134622698668747132666439281256983827313388062967626731803599"
-                    .into(),
-            ),
+            bls_keypair: BlsKeyPair::new(PRIVATE_KEY_1.into()).unwrap(),
         };
         let test_operator_2 = TestOperator {
             operator_id: U256::from(2).into(),
             // Note the quorums is [0, 1], but operator id 2 just stake 1.
             stake_per_quorum: HashMap::from([(1u8, U256::from(200))]),
-            bls_keypair: new_bls_key_pair_panics(
-                "14610126902690889134622698668747132666439281256983827313388062967626731803500"
-                    .into(),
-            ),
+            bls_keypair: BlsKeyPair::new(PRIVATE_KEY_2.into()).unwrap(),
         };
 
         let test_operator_3 = TestOperator {
             operator_id: U256::from(3).into(),
             // Note the quorums is [0, 1], but operator id 3 just stake 0.
             stake_per_quorum: HashMap::from([(0u8, U256::from(100)), (1u8, U256::from(200))]),
-            bls_keypair: new_bls_key_pair_panics(
-                "15710126902690889134622698668747132666439281256983827313388062967626731803599"
-                    .into(),
-            ),
+            bls_keypair: BlsKeyPair::new(PRIVATE_KEY_3.into()).unwrap(),
         };
 
         let test_operators = vec![
@@ -1496,10 +1438,7 @@ mod tests {
             operator_id: U256::from(1).into(),
             // Note the quorums is [0, 1], but operator id 1 just stake 0.
             stake_per_quorum: HashMap::from([(0u8, U256::from(100))]),
-            bls_keypair: new_bls_key_pair_panics(
-                "13710126902690889134622698668747132666439281256983827313388062967626731803599"
-                    .into(),
-            ),
+            bls_keypair: BlsKeyPair::new(PRIVATE_KEY_1.into()).unwrap(),
         };
 
         let block_number = 1;
@@ -1558,19 +1497,13 @@ mod tests {
             operator_id: U256::from(1).into(),
             // Note the quorums is [0, 1], but operator id 1 just stake 0.
             stake_per_quorum: HashMap::from([(0u8, U256::from(100))]),
-            bls_keypair: new_bls_key_pair_panics(
-                "13710126902690889134622698668747132666439281256983827313388062967626731803599"
-                    .into(),
-            ),
+            bls_keypair: BlsKeyPair::new(PRIVATE_KEY_1.into()).unwrap(),
         };
         let test_operator_2 = TestOperator {
             operator_id: U256::from(2).into(),
             // Note the quorums is [0, 1], but operator id 2 just stake 1.
             stake_per_quorum: HashMap::from([(1u8, U256::from(200))]),
-            bls_keypair: new_bls_key_pair_panics(
-                "14610126902690889134622698668747132666439281256983827313388062967626731803500"
-                    .into(),
-            ),
+            bls_keypair: BlsKeyPair::new(PRIVATE_KEY_2.into()).unwrap(),
         };
 
         let block_number = 1;
@@ -1628,10 +1561,7 @@ mod tests {
             operator_id: U256::from(1).into(),
             // Note the quorums is [0, 1], but operator id 1 just stake 0.
             stake_per_quorum: HashMap::from([(0u8, U256::from(100))]),
-            bls_keypair: new_bls_key_pair_panics(
-                "13710126902690889134622698668747132666439281256983827313388062967626731803599"
-                    .into(),
-            ),
+            bls_keypair: BlsKeyPair::new(PRIVATE_KEY_1.into()).unwrap(),
         };
 
         let block_number = 1;
@@ -1664,18 +1594,12 @@ mod tests {
         let test_operator_1 = TestOperator {
             operator_id: U256::from(1).into(),
             stake_per_quorum: HashMap::from([(0u8, U256::from(100)), (1u8, U256::from(200))]),
-            bls_keypair: new_bls_key_pair_panics(
-                "13710126902690889134622698668747132666439281256983827313388062967626731803599"
-                    .into(),
-            ),
+            bls_keypair: BlsKeyPair::new(PRIVATE_KEY_1.into()).unwrap(),
         };
         let test_operator_2 = TestOperator {
             operator_id: U256::from(2).into(),
             stake_per_quorum: HashMap::from([(0u8, U256::from(100)), (1u8, U256::from(200))]),
-            bls_keypair: new_bls_key_pair_panics(
-                "14610126902690889134622698668747132666439281256983827313388062967626731803500"
-                    .into(),
-            ),
+            bls_keypair: BlsKeyPair::new(PRIVATE_KEY_2.into()).unwrap(),
         };
         let test_operators = vec![test_operator_1.clone(), test_operator_2.clone()];
         let block_number = 1;
@@ -1745,10 +1669,7 @@ mod tests {
         let test_operator_1 = TestOperator {
             operator_id: U256::from(1).into(),
             stake_per_quorum: HashMap::from([(0u8, U256::from(100)), (1u8, U256::from(200))]),
-            bls_keypair: new_bls_key_pair_panics(
-                "13710126902690889134622698668747132666439281256983827313388062967626731803599"
-                    .into(),
-            ),
+            bls_keypair: BlsKeyPair::new(PRIVATE_KEY_1.into()).unwrap(),
         };
 
         let block_number = 1;
@@ -1792,7 +1713,4 @@ mod tests {
             result
         );
     }
-
-    #[tokio::test]
-    async fn test() {}
 }
