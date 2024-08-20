@@ -273,11 +273,11 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         >,
         mut rx: UnboundedReceiver<SignedTaskResponseDigest>,
     ) -> Result<(), BlsAggregationServiceError> {
-        let mut quorum_threshold_percentage_map = HashMap::new();
-
-        for (i, quorum_number) in quorum_nums.iter().enumerate() {
-            quorum_threshold_percentage_map.insert(*quorum_number, quorum_threshold_percentages[i]);
-        }
+        let quorum_threshold_percentage_map: HashMap<u8, u8> = quorum_nums
+            .iter()
+            .enumerate()
+            .map(|(i, quorum_number)| (*quorum_number, quorum_threshold_percentages[i]))
+            .collect();
 
         let operator_state_avs = avs_registry_service
             .get_operators_avs_state_at_block(task_created_block, &quorum_nums)
