@@ -37,17 +37,16 @@ impl AvsRegistryService for AvsRegistryServiceChainCaller {
         &self,
         block_num: u32,
         quorum_nums: &[u8],
-    ) -> HashMap<FixedBytes<32>, OperatorAvsState> {
+    ) -> Result<HashMap<FixedBytes<32>, OperatorAvsState>, AvsRegistryError> {
         let mut operators_avs_state: HashMap<FixedBytes<32>, OperatorAvsState> = HashMap::new();
 
         let operators_stakes_in_quorums = self
             .avs_registry
             .get_operators_stake_in_quorums_at_block(block_num, Bytes::from(Vec::from(quorum_nums)))
-            .await
-            .unwrap();
+            .await?;
 
         if operators_stakes_in_quorums.len() != quorum_nums.len() {
-            // throw error
+            // TODO: throw error
         }
 
         for (quorum_id, quorum_num) in quorum_nums.iter().enumerate() {
@@ -68,17 +67,17 @@ impl AvsRegistryService for AvsRegistryServiceChainCaller {
             }
         }
 
-        operators_avs_state
+        Ok(operators_avs_state)
     }
 
     async fn get_quorums_avs_state_at_block(
         &self,
         quorum_nums: &[u8],
         block_num: u32,
-    ) -> HashMap<u8, QuorumAvsState> {
+    ) -> Result<HashMap<u8, QuorumAvsState>, AvsRegistryError> {
         let operators_avs_state = self
             .get_operators_avs_state_at_block(block_num, quorum_nums)
-            .await;
+            .await?;
 
         let mut quorums_avs_state: HashMap<u8, QuorumAvsState> = HashMap::new();
 
@@ -109,7 +108,7 @@ impl AvsRegistryService for AvsRegistryServiceChainCaller {
                 },
             );
         }
-        quorums_avs_state
+        Ok(quorums_avs_state)
     }
 
     async fn get_check_signatures_indices(
