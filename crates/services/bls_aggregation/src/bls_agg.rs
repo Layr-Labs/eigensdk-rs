@@ -250,6 +250,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
     /// * `quorum_nums` - The quorum numbers for the task
     /// * `quorum_threshold_percentages` - The quorum threshold percentages for the task
     /// * `time_to_expiry` - The timeout for the task reader to expire
+    /// * `aggregated_response_sender` - The sender channel for the aggregated responses
     /// * `rx` - The receiver channel for the signed task responses
     #[allow(clippy::too_many_arguments)]
     pub async fn single_task_aggregator(
