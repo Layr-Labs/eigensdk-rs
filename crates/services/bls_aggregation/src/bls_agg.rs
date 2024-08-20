@@ -35,6 +35,7 @@ pub struct BlsAggregationServiceResponse {
     non_signer_stake_indices: Vec<Vec<u32>>,
 }
 
+/// Possible errors raised in BLS aggregation
 #[derive(Error, Debug, Clone, PartialEq, Eq)]
 pub enum BlsAggregationServiceError {
     #[error("task expired error")]
@@ -189,6 +190,49 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
             .map_err(BlsAggregationServiceError::SignatureVerificationError)
     }
 
+    /// Adds a new operator to the aggregated operators by aggregating its public key, signature and stake.
+    ///
+    /// # Arguments
+    ///
+    /// - `aggregated_operators` - Contains the information of all the aggregated operators.
+    /// - `operator_state` - The state of the operator, contains information about its stake.
+    /// - `signed_task_digest` - Contains the id and signature of the new operator.
+    ///
+    /// # Returns
+    ///
+    /// The given aggregated operators, aggregated with the new operator info.
+    fn aggregate_new_operator(
+        aggregated_operators: &mut AggregatedOperators,
+        operator_state: OperatorAvsState,
+        signed_task_digest: SignedTaskResponseDigest,
+    ) -> &mut AggregatedOperators {
+        aggregated_operators.signers_agg_sig_g1 = Signature::new(
+            (aggregated_operators.signers_agg_sig_g1.g1_point().g1()
+                + signed_task_digest.bls_signature.g1_point().g1())
+            .into(),
+        );
+        let operator_g2_pubkey = operator_state
+            .operator_info
+            .pub_keys
+            .clone()
+            .unwrap()
+            .g2_pub_key
+            .g2();
+        aggregated_operators.signers_apk_g2 =
+            BlsG2Point::new((aggregated_operators.signers_apk_g2.g2() + operator_g2_pubkey).into());
+        aggregated_operators
+            .signers_operator_ids_set
+            .insert(signed_task_digest.operator_id, true);
+        for (quorum_num, stake) in operator_state.stake_per_quorum.iter() {
+            aggregated_operators
+                .signers_total_stake_per_quorum
+                .entry(*quorum_num)
+                .and_modify(|v| *v += stake)
+                .or_insert(*stake);
+        }
+        aggregated_operators
+    }
+
     /// Processes each signed task responses given a task_index for a single task.
     ///
     /// It reads the signed task responses from the receiver channel and aggregates them.
@@ -290,29 +334,11 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                     signers_total_stake_per_quorum: operator_state.stake_per_quorum.clone(),
                 },
                 Some(digest_aggregated_operators) => {
-                    digest_aggregated_operators.signers_agg_sig_g1 = Signature::new(
-                        (digest_aggregated_operators
-                            .signers_agg_sig_g1
-                            .g1_point()
-                            .g1()
-                            + signed_task_digest.bls_signature.g1_point().g1())
-                        .into(),
-                    );
-                    digest_aggregated_operators.signers_apk_g2 = BlsG2Point::new(
-                        (digest_aggregated_operators.signers_apk_g2.g2() + operator_g2_pubkey)
-                            .into(),
-                    );
-                    digest_aggregated_operators
-                        .signers_operator_ids_set
-                        .insert(signed_task_digest.operator_id, true);
-                    for (quorum_num, stake) in operator_state.stake_per_quorum.iter() {
-                        digest_aggregated_operators
-                            .signers_total_stake_per_quorum
-                            .entry(*quorum_num)
-                            .and_modify(|v| *v += stake)
-                            .or_insert(*stake);
-                    }
-                    digest_aggregated_operators
+                    BlsAggregatorService::<A>::aggregate_new_operator(
+                        digest_aggregated_operators,
+                        operator_state.clone(),
+                        signed_task_digest.clone(),
+                    )
                 }
             };
 
@@ -475,12 +501,7 @@ mod tests {
         "15610126902690889134622698668747132666439281256983827313388062967626731803501";
     use super::{BlsAggregationServiceError, BlsAggregationServiceResponse, BlsAggregatorService};
 
-    fn new_bls_key_pair_panics(hex_key: String) -> BlsKeyPair {
-        BlsKeyPair::new(hex_key).unwrap()
-    }
-
     fn hash(task_response: u64) -> B256 {
-        // TODO: add marshalling
         let mut hasher = Sha256::new();
         hasher.update(task_response.to_be_bytes());
         B256::from_slice(hasher.finalize().as_ref())
