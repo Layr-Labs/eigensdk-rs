@@ -317,23 +317,13 @@ mod tests {
 
         AvsRegistryChainWriter::build_avs_registry_chain_writer(
             get_test_logger(),
-            "".to_string(),
-            "".to_string(),
+            holesky_provider.to_string(),
+            "".to_string(), // TODO!
             holesky_registry_coordinator,
             holesky_operator_state_retriever,
         )
         .await
         .unwrap()
-        /*
-        AvsRegistryChainWriter::new(
-            get_test_logger(),
-            holesky_registry_coordinator,
-            holesky_operator_state_retriever,
-            holesky_provider.to_string(),
-        .to_string())
-        .await
-        .unwrap()
-        */
     }
 
     #[tokio::test]
