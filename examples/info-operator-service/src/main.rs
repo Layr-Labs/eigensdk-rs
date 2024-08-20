@@ -1,7 +1,5 @@
 use alloy_primitives::address;
-use eigen_client_avsregistry::{
-    reader::AvsRegistryChainReader, subscriber::AvsRegistryChainSubscriber,
-};
+use eigen_client_avsregistry::reader::AvsRegistryChainReader;
 use eigen_services_operatorsinfo::operatorsinfo_inmemory::OperatorInfoServiceInMemory;
 use std::sync::Arc;
 use tokio::sync::watch;
@@ -33,7 +31,7 @@ async fn main() {
     ));
 
     let operators_info_clone = Arc::clone(&operators_info);
-    let (shutdown_tx, shutdown_rx) = watch::channel(());
+    let (_shutdown_tx, shutdown_rx) = watch::channel(());
 
     // start the service with a particular block range
     // from block : 1536406

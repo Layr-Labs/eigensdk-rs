@@ -253,7 +253,7 @@ mod tests {
         let (shutdown_tx, shutdown_rx) = watch::channel(());
 
         // Use a timeout to ensure the test does not run indefinitely
-        let _ = tokio::spawn({
+        let _handle = tokio::spawn({
             async move {
                 let shutdown_rx = shutdown_rx.clone();
                 operators_info_service_in_memory

@@ -1,5 +1,4 @@
 use alloy_primitives::keccak256;
-use ark_ec::CurveGroup;
 use eigen_crypto_bls::{error::BlsError, BlsKeyPair};
 
 /// Derives an operator ID from a private key
