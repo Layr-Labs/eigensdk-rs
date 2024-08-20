@@ -213,10 +213,10 @@ mod test {
     fn test_blskeystore_generation(#[case] keystore_type: BlsKeystoreType) {
         let output_dir = tempdir().unwrap();
         let output_path = output_dir.path().join("keystore.json");
+        let key = "12248929636257230549931416853095037629726205319386239410403476017439825112537";
         let subcommand = EigenKeyCommand::BlsConvert {
             key_type: keystore_type,
-            secret_key: "000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"
-                .to_string(),
+            secret_key: key.to_string(),
             output_path: output_path.to_str().unwrap().to_string(),
             password: Some("testpassword".to_string()),
         };
@@ -227,10 +227,11 @@ mod test {
 
         let keystore_instance = Keystore::from_file(output_path.to_str().unwrap()).unwrap();
         let decrypted_key = keystore_instance.decrypt("testpassword").unwrap();
-        let original_secret_key =
-            hex::decode("000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f")
-                .unwrap();
-        assert_eq!(original_secret_key.as_slice(), decrypted_key);
+        let fr_key: String = decrypted_key
+            .iter()
+            .map(|&value| value as u8 as char)
+            .collect();
+        assert_eq!(fr_key, key);
     }
 
     #[rstest]
