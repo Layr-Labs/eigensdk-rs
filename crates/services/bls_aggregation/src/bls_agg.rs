@@ -157,6 +157,13 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
     /// * `task_response_digest` - The digest of the task response
     /// * `bls_signature` - The BLS signature of the task response
     /// * `operator_id` - The operator ID of the operator that signed the task response
+    ///
+    /// # Errors
+    ///
+    /// Returns error:
+    /// * `TaskNotFound` - If the task is not found.
+    /// * `ChannelError` - If there is an error while sending the task through the channel.
+    /// * `SignatureVerificationError` - If the signature verification fails.
     pub async fn process_new_signature(
         &self,
         task_index: TaskIndex,
