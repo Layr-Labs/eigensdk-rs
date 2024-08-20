@@ -275,22 +275,22 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
             .await
             .map_err(|_| BlsAggregationServiceError::RegistryError)?;
 
-        let quorums_avs_stake = avs_registry_service
+        let quorums_avs_state = avs_registry_service
             .get_quorums_avs_state_at_block(&quorum_nums, task_created_block)
             .await
             .map_err(|_| BlsAggregationServiceError::RegistryError)?;
 
-        let total_stake_per_quorum: HashMap<_, _> = quorums_avs_stake
+        let total_stake_per_quorum: HashMap<_, _> = quorums_avs_state
             .iter()
             .map(|(k, v)| (*k, v.total_stake))
             .collect();
 
-        let mut quorum_apks_g1: Vec<BlsG1Point> = vec![];
-        for quorum_number in quorum_nums.iter() {
-            if let Some(val) = quorums_avs_stake.get(quorum_number) {
-                quorum_apks_g1.push(val.agg_pub_key_g1.clone());
-            }
-        }
+        let quorum_apks_g1: Vec<BlsG1Point> = quorum_nums
+            .iter()
+            .filter_map(|quorum_num| quorums_avs_state.get(quorum_num))
+            .map(|avs_state| avs_state.agg_pub_key_g1.clone())
+            .collect();
+
         let mut aggregated_operators: HashMap<FixedBytes<32>, AggregatedOperators> = HashMap::new();
 
         loop {
