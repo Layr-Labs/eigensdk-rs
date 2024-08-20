@@ -35,6 +35,7 @@ pub struct BlsAggregationServiceResponse {
     non_signer_stake_indices: Vec<Vec<u32>>,
 }
 
+/// Possible errors raised in BLS aggregation
 #[derive(Error, Debug, Clone, PartialEq, Eq)]
 pub enum BlsAggregationServiceError {
     #[error("task expired error")]
@@ -61,7 +62,7 @@ pub struct AggregatedOperators {
     pub signers_operator_ids_set: HashMap<FixedBytes<32>, bool>,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug)]
 pub struct BlsAggregatorService<A: AvsRegistryService>
 where
     A: Clone,
@@ -108,7 +109,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
     /// # Error
     ///
     /// Returns error if the task index already exists
-    pub async fn initialize_new_task<S: AvsRegistryService>(
+    pub async fn initialize_new_task(
         &self,
         task_index: TaskIndex,
         task_created_block: u32,
@@ -124,22 +125,25 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
 
         let (tx, rx) = mpsc::unbounded_channel();
         task_channel.insert(task_index, tx);
-        let self_clone = self.clone();
+
+        let avs_registry_service = self.avs_registry_service.clone();
+        let aggregated_response_sender = self.aggregated_response_sender.clone();
         tokio::spawn(async move {
             // Process each signed response here
-            let _ = self_clone
-                .single_task_aggregator(
-                    task_index,
-                    task_created_block,
-                    quorum_nums.clone(),
-                    quorum_threshold_percentages.clone(),
-                    time_to_expiry,
-                    rx,
-                )
-                .await
-                .inspect_err(|err| {
-                    println!("Error: {:?}", err);
-                });
+            let _ = BlsAggregatorService::<A>::single_task_aggregator(
+                avs_registry_service,
+                task_index,
+                task_created_block,
+                quorum_nums.clone(),
+                quorum_threshold_percentages.clone(),
+                time_to_expiry,
+                aggregated_response_sender,
+                rx,
+            )
+            .await
+            .inspect_err(|err| {
+                println!("Error: {:?}", err);
+            });
         });
         Ok(())
     }
@@ -189,6 +193,49 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
             .map_err(BlsAggregationServiceError::SignatureVerificationError)
     }
 
+    /// Adds a new operator to the aggregated operators by aggregating its public key, signature and stake.
+    ///
+    /// # Arguments
+    ///
+    /// - `aggregated_operators` - Contains the information of all the aggregated operators.
+    /// - `operator_state` - The state of the operator, contains information about its stake.
+    /// - `signed_task_digest` - Contains the id and signature of the new operator.
+    ///
+    /// # Returns
+    ///
+    /// The given aggregated operators, aggregated with the new operator info.
+    fn aggregate_new_operator(
+        aggregated_operators: &mut AggregatedOperators,
+        operator_state: OperatorAvsState,
+        signed_task_digest: SignedTaskResponseDigest,
+    ) -> &mut AggregatedOperators {
+        aggregated_operators.signers_agg_sig_g1 = Signature::new(
+            (aggregated_operators.signers_agg_sig_g1.g1_point().g1()
+                + signed_task_digest.bls_signature.g1_point().g1())
+            .into(),
+        );
+        let operator_g2_pubkey = operator_state
+            .operator_info
+            .pub_keys
+            .clone()
+            .unwrap()
+            .g2_pub_key
+            .g2();
+        aggregated_operators.signers_apk_g2 =
+            BlsG2Point::new((aggregated_operators.signers_apk_g2.g2() + operator_g2_pubkey).into());
+        aggregated_operators
+            .signers_operator_ids_set
+            .insert(signed_task_digest.operator_id, true);
+        for (quorum_num, stake) in operator_state.stake_per_quorum.iter() {
+            aggregated_operators
+                .signers_total_stake_per_quorum
+                .entry(*quorum_num)
+                .and_modify(|v| *v += stake)
+                .or_insert(*stake);
+        }
+        aggregated_operators
+    }
+
     /// Processes each signed task responses given a task_index for a single task.
     ///
     /// It reads the signed task responses from the receiver channel and aggregates them.
@@ -204,13 +251,17 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
     /// * `quorum_threshold_percentages` - The quorum threshold percentages for the task
     /// * `time_to_expiry` - The timeout for the task reader to expire
     /// * `rx` - The receiver channel for the signed task responses
+    #[allow(clippy::too_many_arguments)]
     pub async fn single_task_aggregator(
-        &self,
+        avs_registry_service: A,
         task_index: TaskIndex,
         task_created_block: u32,
         quorum_nums: Vec<u8>,
         quorum_threshold_percentages: QuorumThresholdPercentages,
         time_to_expiry: Duration,
+        aggregated_response_sender: UnboundedSender<
+            Result<BlsAggregationServiceResponse, BlsAggregationServiceError>,
+        >,
         mut rx: UnboundedReceiver<SignedTaskResponseDigest>,
     ) -> Result<(), BlsAggregationServiceError> {
         let mut quorum_threshold_percentage_map = HashMap::new();
@@ -219,16 +270,15 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
             quorum_threshold_percentage_map.insert(*quorum_number, quorum_threshold_percentages[i]);
         }
 
-        let operator_state_avs = self
-            .avs_registry_service
+        let operator_state_avs = avs_registry_service
             .get_operators_avs_state_at_block(task_created_block, &quorum_nums)
-            .await;
-        // TODO: throw erro if
-        let quorums_avs_stake = self
-            .avs_registry_service
+            .await
+            .map_err(|_| BlsAggregationServiceError::RegistryError)?;
+
+        let quorums_avs_stake = avs_registry_service
             .get_quorums_avs_state_at_block(&quorum_nums, task_created_block)
-            .await;
-        // TODO: throw erro if != nil
+            .await
+            .map_err(|_| BlsAggregationServiceError::RegistryError)?;
 
         let total_stake_per_quorum: HashMap<_, _> = quorums_avs_stake
             .iter()
@@ -249,16 +299,18 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                 .inspect_err(|_err| {
                     // timeout
                     println!("expire");
-                    let _ = self
-                        .aggregated_response_sender
+                    let _ = aggregated_response_sender
                         .send(Err(BlsAggregationServiceError::TaskExpired));
                 })
                 .map_err(|_| BlsAggregationServiceError::TaskExpired)?
                 .ok_or(BlsAggregationServiceError::ChannelClosed)?;
 
-            let verification_result = self
-                .verify_signature(task_index, &signed_task_digest, &operator_state_avs)
-                .await;
+            let verification_result = BlsAggregatorService::<A>::verify_signature(
+                task_index,
+                &signed_task_digest,
+                &operator_state_avs,
+            )
+            .await;
 
             signed_task_digest
                 .signature_verification_channel
@@ -269,6 +321,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
             let operator_state = operator_state_avs
                 .get(&signed_task_digest.operator_id)
                 .unwrap();
+
             let operator_g2_pubkey = operator_state
                 .operator_info
                 .pub_keys
@@ -290,29 +343,11 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                     signers_total_stake_per_quorum: operator_state.stake_per_quorum.clone(),
                 },
                 Some(digest_aggregated_operators) => {
-                    digest_aggregated_operators.signers_agg_sig_g1 = Signature::new(
-                        (digest_aggregated_operators
-                            .signers_agg_sig_g1
-                            .g1_point()
-                            .g1()
-                            + signed_task_digest.bls_signature.g1_point().g1())
-                        .into(),
-                    );
-                    digest_aggregated_operators.signers_apk_g2 = BlsG2Point::new(
-                        (digest_aggregated_operators.signers_apk_g2.g2() + operator_g2_pubkey)
-                            .into(),
-                    );
-                    digest_aggregated_operators
-                        .signers_operator_ids_set
-                        .insert(signed_task_digest.operator_id, true);
-                    for (quorum_num, stake) in operator_state.stake_per_quorum.iter() {
-                        digest_aggregated_operators
-                            .signers_total_stake_per_quorum
-                            .entry(*quorum_num)
-                            .and_modify(|v| *v += stake)
-                            .or_insert(*stake);
-                    }
-                    digest_aggregated_operators
+                    BlsAggregatorService::<A>::aggregate_new_operator(
+                        digest_aggregated_operators,
+                        operator_state.clone(),
+                        signed_task_digest.clone(),
+                    )
                 }
             };
 
@@ -322,7 +357,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                 digest_aggregated_operators.clone(),
             );
 
-            if !self.check_if_stake_thresholds_met(
+            if !BlsAggregatorService::<A>::check_if_stake_thresholds_met(
                 &digest_aggregated_operators.signers_total_stake_per_quorum,
                 &total_stake_per_quorum,
                 &quorum_threshold_percentage_map,
@@ -330,52 +365,91 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                 continue;
             }
 
-            let mut non_signers_operators_ids: Vec<FixedBytes<32>> = operator_state_avs
-                .keys()
-                .filter(|operator_id| {
-                    !digest_aggregated_operators
-                        .signers_operator_ids_set
-                        .contains_key(*operator_id)
-                })
-                .cloned()
-                .collect::<Vec<_>>();
-
-            non_signers_operators_ids.sort();
-
-            let non_signers_pub_keys_g1: Vec<BlsG1Point> = non_signers_operators_ids
-                .iter()
-                .filter_map(|operator_id| operator_state_avs.get(operator_id))
-                .filter_map(|operator_avs_state| operator_avs_state.operator_info.pub_keys.clone())
-                .map(|pub_keys| pub_keys.g1_pub_key)
-                .collect();
-
-            let indices = self
-                .avs_registry_service
-                .get_check_signatures_indices(
-                    task_created_block,
-                    quorum_nums.clone(),
-                    non_signers_operators_ids,
-                )
-                .await
-                .map_err(|_err| BlsAggregationServiceError::RegistryError)?;
-
-            let bls_aggregation_service_response = BlsAggregationServiceResponse {
+            let bls_aggregation_service_response = BlsAggregatorService::build_aggregated_response(
                 task_index,
-                task_response_digest: signed_task_digest.task_response_digest,
-                non_signers_pub_keys_g1,
-                quorum_apks_g1: quorum_apks_g1.clone(),
-                signers_apk_g2: digest_aggregated_operators.signers_apk_g2,
-                signers_agg_sig_g1: digest_aggregated_operators.signers_agg_sig_g1,
-                non_signer_quorum_bitmap_indices: indices.clone().quorumApkIndices,
-                quorum_apk_indices: indices.quorumApkIndices,
-                total_stake_indices: indices.totalStakeIndices,
-                non_signer_stake_indices: indices.nonSignerStakeIndices,
-            };
+                task_created_block,
+                signed_task_digest,
+                &operator_state_avs,
+                digest_aggregated_operators,
+                &avs_registry_service,
+                &quorum_apks_g1,
+                &quorum_nums,
+            )
+            .await?;
 
-            self.aggregated_response_sender
+            aggregated_response_sender
                 .send(Ok(bls_aggregation_service_response))
                 .map_err(|_| BlsAggregationServiceError::ChannelError)?;
         }
+    }
+
+    /// Builds the aggregated response containing all the aggregation info.
+    ///
+    /// # Arguments
+    ///
+    /// * `task_index` - The index of the task.
+    /// * `task_created_block` - The block in which the task was created.
+    /// * `signed_task_digest` - The signed task.
+    /// * `operator_state_avs` - A hashmap with the operator state per operator id.
+    /// * `digest_aggregated_operators` - The aggregated operators.
+    /// * `avs_registry_service` - The avs registry service.
+    /// * `quorum_apks_g1` - The quorum aggregated public keys.
+    /// * `quorum_nums` - The quorum numbers.
+    ///
+    /// # Returns
+    ///
+    /// The BLS aggregation service response.
+    #[allow(clippy::too_many_arguments)]
+    async fn build_aggregated_response(
+        task_index: TaskIndex,
+        task_created_block: u32,
+        signed_task_digest: SignedTaskResponseDigest,
+        operator_state_avs: &HashMap<FixedBytes<32>, OperatorAvsState>,
+        digest_aggregated_operators: AggregatedOperators,
+        avs_registry_service: &A,
+        quorum_apks_g1: &[BlsG1Point],
+        quorum_nums: &[u8],
+    ) -> Result<BlsAggregationServiceResponse, BlsAggregationServiceError> {
+        let mut non_signers_operators_ids: Vec<FixedBytes<32>> = operator_state_avs
+            .keys()
+            .filter(|operator_id| {
+                !digest_aggregated_operators
+                    .signers_operator_ids_set
+                    .contains_key(*operator_id)
+            })
+            .cloned()
+            .collect::<Vec<_>>();
+
+        non_signers_operators_ids.sort();
+
+        let non_signers_pub_keys_g1: Vec<BlsG1Point> = non_signers_operators_ids
+            .iter()
+            .filter_map(|operator_id| operator_state_avs.get(operator_id))
+            .filter_map(|operator_avs_state| operator_avs_state.operator_info.pub_keys.clone())
+            .map(|pub_keys| pub_keys.g1_pub_key)
+            .collect();
+
+        let indices = avs_registry_service
+            .get_check_signatures_indices(
+                task_created_block,
+                quorum_nums.into(),
+                non_signers_operators_ids,
+            )
+            .await
+            .map_err(|_err| BlsAggregationServiceError::RegistryError)?;
+
+        Ok(BlsAggregationServiceResponse {
+            task_index,
+            task_response_digest: signed_task_digest.task_response_digest,
+            non_signers_pub_keys_g1,
+            quorum_apks_g1: quorum_apks_g1.into(),
+            signers_apk_g2: digest_aggregated_operators.signers_apk_g2,
+            signers_agg_sig_g1: digest_aggregated_operators.signers_agg_sig_g1,
+            non_signer_quorum_bitmap_indices: indices.clone().quorumApkIndices,
+            quorum_apk_indices: indices.quorumApkIndices,
+            total_stake_indices: indices.totalStakeIndices,
+            non_signer_stake_indices: indices.nonSignerStakeIndices,
+        })
     }
 
     /// Verifies the signature of the task response given a `operator_avs_state`.
@@ -395,7 +469,6 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
     /// - `SignatureVerificationError::OperatorPublicKeyNotFound` if the operator public key is not found,
     /// - `SignatureVerificationError::IncorrectSignature` if the signature is incorrect.
     pub async fn verify_signature(
-        &self,
         _task_index: TaskIndex,
         signed_task_response_digest: &SignedTaskResponseDigest,
         operator_avs_state: &HashMap<FixedBytes<32>, OperatorAvsState>,
@@ -431,7 +504,6 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
     ///
     /// Returns `true` if the stake thresholds are met for all the members, otherwise `false`.
     pub fn check_if_stake_thresholds_met(
-        &self,
         signed_stake_per_quorum: &HashMap<u8, U256>,
         total_stake_per_quorum: &HashMap<u8, U256>,
         quorum_threshold_percentages_map: &HashMap<u8, QuorumThresholdPercentage>,
@@ -458,7 +530,6 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
 #[cfg(test)]
 mod tests {
     use alloy_primitives::{B256, U256};
-    use ark_bn254::G1Affine;
     use eigen_crypto_bls::{BlsG1Point, BlsG2Point, BlsKeyPair, Signature};
     use eigen_services_avsregistry::fake_avs_registry_service::FakeAvsRegistryService;
     use eigen_types::avs::SignatureVerificationError::IncorrectSignature;
@@ -468,18 +539,45 @@ mod tests {
     use std::collections::HashMap;
     use std::time::Duration;
     use std::vec;
-
+    const PRIVATE_KEY_1: &str =
+        "13710126902690889134622698668747132666439281256983827313388062967626731803599";
+    const PRIVATE_KEY_2: &str =
+        "14610126902690889134622698668747132666439281256983827313388062967626731803500";
+    const PRIVATE_KEY_3: &str =
+        "15610126902690889134622698668747132666439281256983827313388062967626731803501";
     use super::{BlsAggregationServiceError, BlsAggregationServiceResponse, BlsAggregatorService};
 
-    fn new_bls_key_pair_panics(hex_key: String) -> BlsKeyPair {
-        BlsKeyPair::new(hex_key).unwrap()
-    }
-
     fn hash(task_response: u64) -> B256 {
-        // TODO: add marshalling
         let mut hasher = Sha256::new();
         hasher.update(task_response.to_be_bytes());
         B256::from_slice(hasher.finalize().as_ref())
+    }
+
+    fn aggregate_g1_public_keys(operators: &Vec<TestOperator>) -> BlsG1Point {
+        operators
+            .iter()
+            .map(|op| op.bls_keypair.public_key().g1())
+            .reduce(|a, b| (a + b).into())
+            .map(|agg| BlsG1Point::new(agg))
+            .unwrap()
+    }
+
+    fn aggregate_g2_public_keys(operators: &Vec<TestOperator>) -> BlsG2Point {
+        operators
+            .iter()
+            .map(|op| op.bls_keypair.public_key_g2().g2())
+            .reduce(|a, b| (a + b).into())
+            .map(|agg| BlsG2Point::new(agg))
+            .unwrap()
+    }
+
+    fn aggregate_g1_signatures(signatures: &Vec<Signature>) -> Signature {
+        let agg = signatures
+            .iter()
+            .map(|s| s.g1_point().g1())
+            .reduce(|a, b| (a + b).into())
+            .unwrap();
+        Signature::new(agg)
     }
 
     #[tokio::test]
@@ -487,10 +585,7 @@ mod tests {
         let test_operator_1 = TestOperator {
             operator_id: U256::from(1).into(),
             stake_per_quorum: HashMap::from([(0u8, U256::from(100)), (1u8, U256::from(200))]),
-            bls_keypair: new_bls_key_pair_panics(
-                "13710126902690889134622698668747132666439281256983827313388062967626731803599"
-                    .into(),
-            ),
+            bls_keypair: BlsKeyPair::new(PRIVATE_KEY_1.into()).unwrap(),
         };
 
         let block_number = 1;
@@ -500,7 +595,6 @@ mod tests {
         let time_to_expiry = Duration::from_secs(1);
         let task_response = 123; // Initialize with appropriate data
 
-        // Compute the TaskResponseDigest as the SHA-256 sum of the TaskResponse (previously converting the taskresponse into a JSON string)
         let task_response_digest = hash(task_response);
         let bls_signature = test_operator_1
             .bls_keypair
@@ -509,7 +603,7 @@ mod tests {
             FakeAvsRegistryService::new(block_number, vec![test_operator_1.clone()]);
         let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
         bls_agg_service
-            .initialize_new_task::<FakeAvsRegistryService>(
+            .initialize_new_task(
                 task_index,
                 block_number as u32,
                 quorum_numbers,
@@ -563,32 +657,24 @@ mod tests {
         let test_operator_1 = TestOperator {
             operator_id: U256::from(1).into(),
             stake_per_quorum: HashMap::from([(0u8, U256::from(100)), (1u8, U256::from(200))]),
-            bls_keypair: new_bls_key_pair_panics(
-                "13710126902690889134622698668747132666439281256983827313388062967626731803599"
-                    .into(),
-            ),
+            bls_keypair: BlsKeyPair::new(PRIVATE_KEY_1.into()).unwrap(),
         };
         let test_operator_2 = TestOperator {
             operator_id: U256::from(2).into(),
             stake_per_quorum: HashMap::from([(0u8, U256::from(100)), (1u8, U256::from(200))]),
-            bls_keypair: new_bls_key_pair_panics(
-                "14610126902690889134622698668747132666439281256983827313388062967626731803500"
-                    .into(),
-            ),
+            bls_keypair: BlsKeyPair::new(PRIVATE_KEY_2.into()).unwrap(),
         };
         let test_operator_3 = TestOperator {
             operator_id: U256::from(3).into(),
             stake_per_quorum: HashMap::from([(0u8, U256::from(300)), (1u8, U256::from(100))]),
-            bls_keypair: new_bls_key_pair_panics(
-                "15610126902690889134622698668747132666439281256983827313388062967626731803501"
-                    .into(),
-            ),
+            bls_keypair: BlsKeyPair::new(PRIVATE_KEY_3.into()).unwrap(),
         };
         let test_operators = vec![
             test_operator_1.clone(),
             test_operator_2.clone(),
             test_operator_3.clone(),
         ];
+
         let block_number = 1;
         let task_index = 0;
         let quorum_numbers: Vec<QuorumNum> = vec![0];
@@ -597,11 +683,12 @@ mod tests {
         let task_response = 123; // Initialize with appropriate data
         let task_response_digest = hash(task_response);
 
-        let fake_avs_registry_service = FakeAvsRegistryService::new(block_number, test_operators);
+        let fake_avs_registry_service =
+            FakeAvsRegistryService::new(block_number, test_operators.clone());
         let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
 
         bls_agg_service
-            .initialize_new_task::<FakeAvsRegistryService>(
+            .initialize_new_task(
                 task_index,
                 block_number as u32,
                 quorum_numbers,
@@ -648,26 +735,11 @@ mod tests {
             )
             .await
             .unwrap();
-        let quorum_apks_g1 = BlsG1Point::new(
-            (test_operator_1.bls_keypair.public_key().g1()
-                + test_operator_2.bls_keypair.public_key().g1()
-                + test_operator_3.bls_keypair.public_key().g1())
-            .into(),
-        );
 
-        let signers_apk_g2: BlsG2Point = BlsG2Point::new(
-            (test_operator_1.bls_keypair.public_key_g2().g2()
-                + test_operator_2.bls_keypair.public_key_g2().g2()
-                + test_operator_3.bls_keypair.public_key_g2().g2())
-            .into(),
-        );
-
-        let signers_agg_sig_g1 = Signature::new(
-            (bls_sig_op_1.g1_point().g1()
-                + bls_sig_op_2.g1_point().g1()
-                + bls_sig_op_3.g1_point().g1())
-            .into(),
-        );
+        let quorum_apks_g1 = aggregate_g1_public_keys(&test_operators);
+        let signers_apk_g2 = aggregate_g2_public_keys(&test_operators);
+        let signers_agg_sig_g1 =
+            aggregate_g1_signatures(&vec![bls_sig_op_1, bls_sig_op_2, bls_sig_op_3]);
 
         let expected_agg_service_response = BlsAggregationServiceResponse {
             task_index,
@@ -701,18 +773,12 @@ mod tests {
         let test_operator_1 = TestOperator {
             operator_id: U256::from(1).into(),
             stake_per_quorum: HashMap::from([(0u8, U256::from(100)), (1u8, U256::from(200))]),
-            bls_keypair: new_bls_key_pair_panics(
-                "13710126902690889134622698668747132666439281256983827313388062967626731803599"
-                    .into(),
-            ),
+            bls_keypair: BlsKeyPair::new(PRIVATE_KEY_1.into()).unwrap(),
         };
         let test_operator_2 = TestOperator {
             operator_id: U256::from(2).into(),
             stake_per_quorum: HashMap::from([(0u8, U256::from(100)), (1u8, U256::from(200))]),
-            bls_keypair: new_bls_key_pair_panics(
-                "14610126902690889134622698668747132666439281256983827313388062967626731803500"
-                    .into(),
-            ),
+            bls_keypair: BlsKeyPair::new(PRIVATE_KEY_2.into()).unwrap(),
         };
         let test_operators = vec![test_operator_1.clone(), test_operator_2.clone()];
         let block_number = 1;
@@ -723,11 +789,12 @@ mod tests {
         let task_response = 123; // Initialize with appropriate data
         let task_response_digest = hash(task_response);
 
-        let fake_avs_registry_service = FakeAvsRegistryService::new(block_number, test_operators);
+        let fake_avs_registry_service =
+            FakeAvsRegistryService::new(block_number, test_operators.clone());
         let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
 
         bls_agg_service
-            .initialize_new_task::<FakeAvsRegistryService>(
+            .initialize_new_task(
                 task_index,
                 block_number as u32,
                 quorum_numbers,
@@ -743,7 +810,7 @@ mod tests {
             .process_new_signature(
                 task_index,
                 task_response_digest,
-                bls_sig_op_1,
+                bls_sig_op_1.clone(),
                 test_operator_1.operator_id,
             )
             .await
@@ -756,36 +823,16 @@ mod tests {
             .process_new_signature(
                 task_index,
                 task_response_digest,
-                bls_sig_op_2,
+                bls_sig_op_2.clone(),
                 test_operator_2.operator_id,
             )
             .await
             .unwrap();
 
-        let quorum_apks_g1: BlsG1Point = BlsG1Point::new(
-            (G1Affine::identity()
-                + test_operator_1.bls_keypair.public_key().g1()
-                + test_operator_2.bls_keypair.public_key().g1())
-            .into(),
-        );
-        let signers_apk_g2 = BlsG2Point::new(
-            (test_operator_1.bls_keypair.public_key_g2().g2()
-                + test_operator_2.bls_keypair.public_key_g2().g2())
-            .into(),
-        );
-        let signers_agg_sig_g1 = Signature::new(
-            (test_operator_1
-                .bls_keypair
-                .sign_message(task_response_digest.as_ref())
-                .g1_point()
-                .g1()
-                + test_operator_2
-                    .bls_keypair
-                    .sign_message(task_response_digest.as_ref())
-                    .g1_point()
-                    .g1())
-            .into(),
-        );
+        let quorum_apks_g1 = aggregate_g1_public_keys(&test_operators);
+        let signers_apk_g2 = aggregate_g2_public_keys(&test_operators);
+        let signers_agg_sig_g1 = aggregate_g1_signatures(&vec![bls_sig_op_1, bls_sig_op_2]);
+
         let expected_agg_service_response = BlsAggregationServiceResponse {
             task_index,
             task_response_digest,
@@ -814,18 +861,12 @@ mod tests {
         let test_operator_1 = TestOperator {
             operator_id: U256::from(1).into(),
             stake_per_quorum: HashMap::from([(0u8, U256::from(100)), (1u8, U256::from(200))]),
-            bls_keypair: new_bls_key_pair_panics(
-                "13710126902690889134622698668747132666439281256983827313388062967626731803599"
-                    .into(),
-            ),
+            bls_keypair: BlsKeyPair::new(PRIVATE_KEY_1.into()).unwrap(),
         };
         let test_operator_2 = TestOperator {
             operator_id: U256::from(2).into(),
             stake_per_quorum: HashMap::from([(0u8, U256::from(100)), (1u8, U256::from(200))]),
-            bls_keypair: new_bls_key_pair_panics(
-                "14610126902690889134622698668747132666439281256983827313388062967626731803500"
-                    .into(),
-            ),
+            bls_keypair: BlsKeyPair::new(PRIVATE_KEY_2.into()).unwrap(),
         };
         let test_operators = vec![test_operator_1.clone(), test_operator_2.clone()];
         let block_number = 1;
@@ -833,7 +874,8 @@ mod tests {
         let quorum_threshold_percentages: QuorumThresholdPercentages = vec![100u8, 100u8];
         let time_to_expiry = Duration::from_secs(1);
 
-        let fake_avs_registry_service = FakeAvsRegistryService::new(block_number, test_operators);
+        let fake_avs_registry_service =
+            FakeAvsRegistryService::new(block_number, test_operators.clone());
         let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
 
         // initialize 2 concurrent tasks
@@ -841,7 +883,7 @@ mod tests {
         let task_1_response = 123; // Initialize with appropriate data
         let task_1_response_digest = hash(task_1_response);
         bls_agg_service
-            .initialize_new_task::<FakeAvsRegistryService>(
+            .initialize_new_task(
                 task_1_index,
                 block_number as u32,
                 quorum_numbers.clone(),
@@ -855,7 +897,7 @@ mod tests {
         let task_2_response = 234; // Initialize with appropriate data
         let task_2_response_digest = hash(task_2_response);
         bls_agg_service
-            .initialize_new_task::<FakeAvsRegistryService>(
+            .initialize_new_task(
                 task_2_index,
                 block_number as u32,
                 quorum_numbers,
@@ -872,7 +914,7 @@ mod tests {
             .process_new_signature(
                 task_1_index,
                 task_1_response_digest,
-                bls_sig_task_1_op_1,
+                bls_sig_task_1_op_1.clone(),
                 test_operator_1.operator_id,
             )
             .await
@@ -885,7 +927,7 @@ mod tests {
             .process_new_signature(
                 task_1_index,
                 task_1_response_digest.clone(),
-                bls_sig_task_1_op_2,
+                bls_sig_task_1_op_2.clone(),
                 test_operator_2.operator_id,
             )
             .await
@@ -898,7 +940,7 @@ mod tests {
             .process_new_signature(
                 task_2_index,
                 task_2_response_digest,
-                bls_sig_task_2_op_1,
+                bls_sig_task_2_op_1.clone(),
                 test_operator_1.operator_id,
             )
             .await
@@ -911,36 +953,17 @@ mod tests {
             .process_new_signature(
                 task_2_index,
                 task_2_response_digest,
-                bls_sig_task_2_op_2,
+                bls_sig_task_2_op_2.clone(),
                 test_operator_2.operator_id,
             )
             .await
             .unwrap();
 
-        let quorum_apks_g1: BlsG1Point = BlsG1Point::new(
-            (G1Affine::identity()
-                + test_operator_1.bls_keypair.public_key().g1()
-                + test_operator_2.bls_keypair.public_key().g1())
-            .into(),
-        );
-        let signers_apk_g2 = BlsG2Point::new(
-            (test_operator_1.bls_keypair.public_key_g2().g2()
-                + test_operator_2.bls_keypair.public_key_g2().g2())
-            .into(),
-        );
-        let signers_agg_sig_g1_task_1 = Signature::new(
-            (test_operator_1
-                .bls_keypair
-                .sign_message(task_1_response_digest.as_ref())
-                .g1_point()
-                .g1()
-                + test_operator_2
-                    .bls_keypair
-                    .sign_message(task_1_response_digest.as_ref())
-                    .g1_point()
-                    .g1())
-            .into(),
-        );
+        let quorum_apks_g1 = aggregate_g1_public_keys(&test_operators);
+        let signers_apk_g2 = aggregate_g2_public_keys(&test_operators);
+        let signers_agg_sig_g1_task_1 =
+            aggregate_g1_signatures(&vec![bls_sig_task_1_op_1, bls_sig_task_1_op_2]);
+
         let expected_response_task_1 = BlsAggregationServiceResponse {
             task_index: task_1_index,
             task_response_digest: task_1_response_digest,
@@ -954,19 +977,9 @@ mod tests {
             non_signer_stake_indices: vec![],
         };
 
-        let signers_agg_sig_g1_task_2 = Signature::new(
-            (test_operator_1
-                .bls_keypair
-                .sign_message(task_2_response_digest.as_ref())
-                .g1_point()
-                .g1()
-                + test_operator_2
-                    .bls_keypair
-                    .sign_message(task_2_response_digest.as_ref())
-                    .g1_point()
-                    .g1())
-            .into(),
-        );
+        let signers_agg_sig_g1_task_2 =
+            aggregate_g1_signatures(&vec![bls_sig_task_2_op_1, bls_sig_task_2_op_2]);
+
         let expected_response_task_2 = BlsAggregationServiceResponse {
             task_index: task_2_index,
             task_response_digest: task_2_response_digest,
@@ -1011,10 +1024,7 @@ mod tests {
         let test_operator_1 = TestOperator {
             operator_id: U256::from(1).into(),
             stake_per_quorum: HashMap::from([(0u8, U256::from(100)), (1u8, U256::from(200))]),
-            bls_keypair: new_bls_key_pair_panics(
-                "13710126902690889134622698668747132666439281256983827313388062967626731803599"
-                    .into(),
-            ),
+            bls_keypair: BlsKeyPair::new(PRIVATE_KEY_1.into()).unwrap(),
         };
 
         let block_number = 1;
@@ -1028,7 +1038,7 @@ mod tests {
             FakeAvsRegistryService::new(block_number, vec![test_operator_1.clone()]);
         let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
         bls_agg_service
-            .initialize_new_task::<FakeAvsRegistryService>(
+            .initialize_new_task(
                 task_index,
                 block_number as u32,
                 quorum_numbers,
@@ -1056,18 +1066,12 @@ mod tests {
         let test_operator_1 = TestOperator {
             operator_id: U256::from(1).into(),
             stake_per_quorum: HashMap::from([(0u8, U256::from(100)), (1u8, U256::from(200))]),
-            bls_keypair: new_bls_key_pair_panics(
-                "13710126902690889134622698668747132666439281256983827313388062967626731803599"
-                    .into(),
-            ),
+            bls_keypair: BlsKeyPair::new(PRIVATE_KEY_1.into()).unwrap(),
         };
         let test_operator_2 = TestOperator {
             operator_id: U256::from(2).into(),
             stake_per_quorum: HashMap::from([(0u8, U256::from(100)), (1u8, U256::from(200))]),
-            bls_keypair: new_bls_key_pair_panics(
-                "14610126902690889134622698668747132666439281256983827313388062967626731803500"
-                    .into(),
-            ),
+            bls_keypair: BlsKeyPair::new(PRIVATE_KEY_2.into()).unwrap(),
         };
         let test_operators = vec![test_operator_1.clone(), test_operator_2.clone()];
         let block_number = 1;
@@ -1081,11 +1085,12 @@ mod tests {
             .bls_keypair
             .sign_message(task_response_digest.as_ref());
 
-        let fake_avs_registry_service = FakeAvsRegistryService::new(block_number, test_operators);
+        let fake_avs_registry_service =
+            FakeAvsRegistryService::new(block_number, test_operators.clone());
         let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
 
         bls_agg_service
-            .initialize_new_task::<FakeAvsRegistryService>(
+            .initialize_new_task(
                 task_index,
                 block_number as u32,
                 quorum_numbers,
@@ -1104,11 +1109,7 @@ mod tests {
             .await
             .unwrap();
 
-        let quorum_apks_g1 = BlsG1Point::new(
-            (test_operator_1.bls_keypair.public_key().g1()
-                + test_operator_2.bls_keypair.public_key().g1())
-            .into(),
-        );
+        let quorum_apks_g1 = aggregate_g1_public_keys(&test_operators);
 
         let signers_apk_g2: BlsG2Point = test_operator_1.bls_keypair.public_key_g2();
 
@@ -1144,18 +1145,12 @@ mod tests {
         let test_operator_1 = TestOperator {
             operator_id: U256::from(1).into(),
             stake_per_quorum: HashMap::from([(0u8, U256::from(100)), (1u8, U256::from(200))]),
-            bls_keypair: new_bls_key_pair_panics(
-                "13710126902690889134622698668747132666439281256983827313388062967626731803599"
-                    .into(),
-            ),
+            bls_keypair: BlsKeyPair::new(PRIVATE_KEY_1.into()).unwrap(),
         };
         let test_operator_2 = TestOperator {
             operator_id: U256::from(2).into(),
             stake_per_quorum: HashMap::from([(0u8, U256::from(100)), (1u8, U256::from(200))]),
-            bls_keypair: new_bls_key_pair_panics(
-                "14610126902690889134622698668747132666439281256983827313388062967626731803500"
-                    .into(),
-            ),
+            bls_keypair: BlsKeyPair::new(PRIVATE_KEY_2.into()).unwrap(),
         };
         let test_operators = vec![test_operator_1.clone(), test_operator_2.clone()];
         let block_number = 1;
@@ -1173,7 +1168,7 @@ mod tests {
         let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
 
         bls_agg_service
-            .initialize_new_task::<FakeAvsRegistryService>(
+            .initialize_new_task(
                 task_index,
                 block_number as u32,
                 quorum_numbers,
@@ -1211,19 +1206,13 @@ mod tests {
             operator_id: U256::from(1).into(),
             // Note the quorums is [0, 1], but operator id 1 just stake 0.
             stake_per_quorum: HashMap::from([(0u8, U256::from(100))]),
-            bls_keypair: new_bls_key_pair_panics(
-                "13710126902690889134622698668747132666439281256983827313388062967626731803599"
-                    .into(),
-            ),
+            bls_keypair: BlsKeyPair::new(PRIVATE_KEY_1.into()).unwrap(),
         };
         let test_operator_2 = TestOperator {
             operator_id: U256::from(2).into(),
             // Note the quorums is [0, 1], but operator id 2 just stake 1.
             stake_per_quorum: HashMap::from([(1u8, U256::from(200))]),
-            bls_keypair: new_bls_key_pair_panics(
-                "14610126902690889134622698668747132666439281256983827313388062967626731803500"
-                    .into(),
-            ),
+            bls_keypair: BlsKeyPair::new(PRIVATE_KEY_2.into()).unwrap(),
         };
 
         let test_operators = vec![test_operator_1.clone(), test_operator_2.clone()];
@@ -1235,11 +1224,12 @@ mod tests {
         let task_response = 123; // Initialize with appropriate data
         let task_response_digest = hash(task_response);
 
-        let fake_avs_registry_service = FakeAvsRegistryService::new(block_number, test_operators);
+        let fake_avs_registry_service =
+            FakeAvsRegistryService::new(block_number, test_operators.clone());
         let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
 
         bls_agg_service
-            .initialize_new_task::<FakeAvsRegistryService>(
+            .initialize_new_task(
                 task_index,
                 block_number as u32,
                 quorum_numbers,
@@ -1274,13 +1264,10 @@ mod tests {
             )
             .await
             .unwrap();
-        let signers_apk_g2 = BlsG2Point::new(
-            (test_operator_1.bls_keypair.public_key_g2().g2()
-                + test_operator_2.bls_keypair.public_key_g2().g2())
-            .into(),
-        );
-        let signers_agg_sig_g1 =
-            Signature::new((bls_sig_op_1.g1_point().g1() + bls_sig_op_2.g1_point().g1()).into());
+
+        let signers_apk_g2 = aggregate_g2_public_keys(&test_operators);
+        let signers_agg_sig_g1 = aggregate_g1_signatures(&vec![bls_sig_op_1, bls_sig_op_2]);
+
         let expected_agg_service_response = BlsAggregationServiceResponse {
             task_index,
             task_response_digest,
@@ -1317,29 +1304,20 @@ mod tests {
             operator_id: U256::from(1).into(),
             // Note the quorums is [0, 1], but operator id 1 just stake 0.
             stake_per_quorum: HashMap::from([(0u8, U256::from(100))]),
-            bls_keypair: new_bls_key_pair_panics(
-                "13710126902690889134622698668747132666439281256983827313388062967626731803599"
-                    .into(),
-            ),
+            bls_keypair: BlsKeyPair::new(PRIVATE_KEY_1.into()).unwrap(),
         };
         let test_operator_2 = TestOperator {
             operator_id: U256::from(2).into(),
             // Note the quorums is [0, 1], but operator id 2 just stake 1.
             stake_per_quorum: HashMap::from([(1u8, U256::from(200))]),
-            bls_keypair: new_bls_key_pair_panics(
-                "14610126902690889134622698668747132666439281256983827313388062967626731803500"
-                    .into(),
-            ),
+            bls_keypair: BlsKeyPair::new(PRIVATE_KEY_2.into()).unwrap(),
         };
 
         let test_operator_3 = TestOperator {
             operator_id: U256::from(3).into(),
             // Note the quorums is [0, 1], but operator id 3 just stake 0.
             stake_per_quorum: HashMap::from([(0u8, U256::from(100)), (1u8, U256::from(200))]),
-            bls_keypair: new_bls_key_pair_panics(
-                "15710126902690889134622698668747132666439281256983827313388062967626731803599"
-                    .into(),
-            ),
+            bls_keypair: BlsKeyPair::new(PRIVATE_KEY_3.into()).unwrap(),
         };
 
         let test_operators = vec![
@@ -1355,11 +1333,12 @@ mod tests {
         let task_response = 123; // Initialize with appropriate data
         let task_response_digest = hash(task_response);
 
-        let fake_avs_registry_service = FakeAvsRegistryService::new(block_number, test_operators);
+        let fake_avs_registry_service =
+            FakeAvsRegistryService::new(block_number, test_operators.clone());
         let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
 
         bls_agg_service
-            .initialize_new_task::<FakeAvsRegistryService>(
+            .initialize_new_task(
                 task_index,
                 block_number as u32,
                 quorum_numbers,
@@ -1394,30 +1373,19 @@ mod tests {
             )
             .await
             .unwrap();
-        let signers_apk_g2 = BlsG2Point::new(
-            (test_operator_1.bls_keypair.public_key_g2().g2()
-                + test_operator_2.bls_keypair.public_key_g2().g2())
-            .into(),
-        );
-        let signers_agg_sig_g1 =
-            Signature::new((bls_sig_op_1.g1_point().g1() + bls_sig_op_2.g1_point().g1()).into());
+        let signers_apk_g2 =
+            aggregate_g2_public_keys(&vec![test_operator_1.clone(), test_operator_2.clone()]);
+        let signers_agg_sig_g1 = aggregate_g1_signatures(&vec![bls_sig_op_1, bls_sig_op_2]);
+        let quorum_apks_g1 = vec![
+            aggregate_g1_public_keys(&vec![test_operator_1, test_operator_3.clone()]),
+            aggregate_g1_public_keys(&vec![test_operator_2, test_operator_3.clone()]),
+        ];
+
         let expected_agg_service_response = BlsAggregationServiceResponse {
             task_index,
             task_response_digest,
             non_signers_pub_keys_g1: vec![test_operator_3.bls_keypair.public_key()],
-            quorum_apks_g1: vec![
-                // TODO: in Go it adds each public key to G1Point::zero()
-                BlsG1Point::new(
-                    (test_operator_1.bls_keypair.public_key().g1()
-                        + test_operator_3.bls_keypair.public_key().g1())
-                    .into(),
-                ),
-                BlsG1Point::new(
-                    (test_operator_2.bls_keypair.public_key().g1()
-                        + test_operator_3.bls_keypair.public_key().g1())
-                    .into(),
-                ),
-            ],
+            quorum_apks_g1,
             signers_apk_g2,
             signers_agg_sig_g1,
             non_signer_quorum_bitmap_indices: vec![],
@@ -1447,29 +1415,20 @@ mod tests {
             operator_id: U256::from(1).into(),
             // Note the quorums is [0, 1], but operator id 1 just stake 0.
             stake_per_quorum: HashMap::from([(0u8, U256::from(100))]),
-            bls_keypair: new_bls_key_pair_panics(
-                "13710126902690889134622698668747132666439281256983827313388062967626731803599"
-                    .into(),
-            ),
+            bls_keypair: BlsKeyPair::new(PRIVATE_KEY_1.into()).unwrap(),
         };
         let test_operator_2 = TestOperator {
             operator_id: U256::from(2).into(),
             // Note the quorums is [0, 1], but operator id 2 just stake 1.
             stake_per_quorum: HashMap::from([(1u8, U256::from(200))]),
-            bls_keypair: new_bls_key_pair_panics(
-                "14610126902690889134622698668747132666439281256983827313388062967626731803500"
-                    .into(),
-            ),
+            bls_keypair: BlsKeyPair::new(PRIVATE_KEY_2.into()).unwrap(),
         };
 
         let test_operator_3 = TestOperator {
             operator_id: U256::from(3).into(),
             // Note the quorums is [0, 1], but operator id 3 just stake 0.
             stake_per_quorum: HashMap::from([(0u8, U256::from(100)), (1u8, U256::from(200))]),
-            bls_keypair: new_bls_key_pair_panics(
-                "15710126902690889134622698668747132666439281256983827313388062967626731803599"
-                    .into(),
-            ),
+            bls_keypair: BlsKeyPair::new(PRIVATE_KEY_3.into()).unwrap(),
         };
 
         let test_operators = vec![
@@ -1489,7 +1448,7 @@ mod tests {
         let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
 
         bls_agg_service
-            .initialize_new_task::<FakeAvsRegistryService>(
+            .initialize_new_task(
                 task_index,
                 block_number as u32,
                 quorum_numbers,
@@ -1545,10 +1504,7 @@ mod tests {
             operator_id: U256::from(1).into(),
             // Note the quorums is [0, 1], but operator id 1 just stake 0.
             stake_per_quorum: HashMap::from([(0u8, U256::from(100))]),
-            bls_keypair: new_bls_key_pair_panics(
-                "13710126902690889134622698668747132666439281256983827313388062967626731803599"
-                    .into(),
-            ),
+            bls_keypair: BlsKeyPair::new(PRIVATE_KEY_1.into()).unwrap(),
         };
 
         let block_number = 1;
@@ -1564,7 +1520,7 @@ mod tests {
         let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
 
         bls_agg_service
-            .initialize_new_task::<FakeAvsRegistryService>(
+            .initialize_new_task(
                 task_index,
                 block_number as u32,
                 quorum_numbers,
@@ -1607,19 +1563,13 @@ mod tests {
             operator_id: U256::from(1).into(),
             // Note the quorums is [0, 1], but operator id 1 just stake 0.
             stake_per_quorum: HashMap::from([(0u8, U256::from(100))]),
-            bls_keypair: new_bls_key_pair_panics(
-                "13710126902690889134622698668747132666439281256983827313388062967626731803599"
-                    .into(),
-            ),
+            bls_keypair: BlsKeyPair::new(PRIVATE_KEY_1.into()).unwrap(),
         };
         let test_operator_2 = TestOperator {
             operator_id: U256::from(2).into(),
             // Note the quorums is [0, 1], but operator id 2 just stake 1.
             stake_per_quorum: HashMap::from([(1u8, U256::from(200))]),
-            bls_keypair: new_bls_key_pair_panics(
-                "14610126902690889134622698668747132666439281256983827313388062967626731803500"
-                    .into(),
-            ),
+            bls_keypair: BlsKeyPair::new(PRIVATE_KEY_2.into()).unwrap(),
         };
 
         let block_number = 1;
@@ -1635,7 +1585,7 @@ mod tests {
         let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
 
         bls_agg_service
-            .initialize_new_task::<FakeAvsRegistryService>(
+            .initialize_new_task(
                 task_index,
                 block_number as u32,
                 quorum_numbers,
@@ -1677,10 +1627,7 @@ mod tests {
             operator_id: U256::from(1).into(),
             // Note the quorums is [0, 1], but operator id 1 just stake 0.
             stake_per_quorum: HashMap::from([(0u8, U256::from(100))]),
-            bls_keypair: new_bls_key_pair_panics(
-                "13710126902690889134622698668747132666439281256983827313388062967626731803599"
-                    .into(),
-            ),
+            bls_keypair: BlsKeyPair::new(PRIVATE_KEY_1.into()).unwrap(),
         };
 
         let block_number = 1;
@@ -1713,18 +1660,12 @@ mod tests {
         let test_operator_1 = TestOperator {
             operator_id: U256::from(1).into(),
             stake_per_quorum: HashMap::from([(0u8, U256::from(100)), (1u8, U256::from(200))]),
-            bls_keypair: new_bls_key_pair_panics(
-                "13710126902690889134622698668747132666439281256983827313388062967626731803599"
-                    .into(),
-            ),
+            bls_keypair: BlsKeyPair::new(PRIVATE_KEY_1.into()).unwrap(),
         };
         let test_operator_2 = TestOperator {
             operator_id: U256::from(2).into(),
             stake_per_quorum: HashMap::from([(0u8, U256::from(100)), (1u8, U256::from(200))]),
-            bls_keypair: new_bls_key_pair_panics(
-                "14610126902690889134622698668747132666439281256983827313388062967626731803500"
-                    .into(),
-            ),
+            bls_keypair: BlsKeyPair::new(PRIVATE_KEY_2.into()).unwrap(),
         };
         let test_operators = vec![test_operator_1.clone(), test_operator_2.clone()];
         let block_number = 1;
@@ -1736,7 +1677,7 @@ mod tests {
         let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
 
         bls_agg_service
-            .initialize_new_task::<FakeAvsRegistryService>(
+            .initialize_new_task(
                 task_index,
                 block_number as u32,
                 quorum_numbers,
@@ -1794,10 +1735,7 @@ mod tests {
         let test_operator_1 = TestOperator {
             operator_id: U256::from(1).into(),
             stake_per_quorum: HashMap::from([(0u8, U256::from(100)), (1u8, U256::from(200))]),
-            bls_keypair: new_bls_key_pair_panics(
-                "13710126902690889134622698668747132666439281256983827313388062967626731803599"
-                    .into(),
-            ),
+            bls_keypair: BlsKeyPair::new(PRIVATE_KEY_1.into()).unwrap(),
         };
 
         let block_number = 1;
@@ -1815,7 +1753,7 @@ mod tests {
             FakeAvsRegistryService::new(block_number, vec![test_operator_1.clone()]);
         let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
         bls_agg_service
-            .initialize_new_task::<FakeAvsRegistryService>(
+            .initialize_new_task(
                 task_index,
                 block_number as u32,
                 quorum_numbers,
@@ -1841,7 +1779,4 @@ mod tests {
             result
         );
     }
-
-    #[tokio::test]
-    async fn test() {}
 }
