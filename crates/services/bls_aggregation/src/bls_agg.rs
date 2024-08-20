@@ -109,7 +109,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
     /// # Error
     ///
     /// Returns error if the task index already exists
-    pub async fn initialize_new_task<S: AvsRegistryService>(
+    pub async fn initialize_new_task(
         &self,
         task_index: TaskIndex,
         task_created_block: u32,
@@ -319,6 +319,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
             let operator_state = operator_state_avs
                 .get(&signed_task_digest.operator_id)
                 .unwrap();
+
             let operator_g2_pubkey = operator_state
                 .operator_info
                 .pub_keys
@@ -561,7 +562,7 @@ mod tests {
             FakeAvsRegistryService::new(block_number, vec![test_operator_1.clone()]);
         let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
         bls_agg_service
-            .initialize_new_task::<FakeAvsRegistryService>(
+            .initialize_new_task(
                 task_index,
                 block_number as u32,
                 quorum_numbers,
@@ -646,7 +647,7 @@ mod tests {
         let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
 
         bls_agg_service
-            .initialize_new_task::<FakeAvsRegistryService>(
+            .initialize_new_task(
                 task_index,
                 block_number as u32,
                 quorum_numbers,
@@ -752,7 +753,7 @@ mod tests {
         let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
 
         bls_agg_service
-            .initialize_new_task::<FakeAvsRegistryService>(
+            .initialize_new_task(
                 task_index,
                 block_number as u32,
                 quorum_numbers,
@@ -841,7 +842,7 @@ mod tests {
         let task_1_response = 123; // Initialize with appropriate data
         let task_1_response_digest = hash(task_1_response);
         bls_agg_service
-            .initialize_new_task::<FakeAvsRegistryService>(
+            .initialize_new_task(
                 task_1_index,
                 block_number as u32,
                 quorum_numbers.clone(),
@@ -855,7 +856,7 @@ mod tests {
         let task_2_response = 234; // Initialize with appropriate data
         let task_2_response_digest = hash(task_2_response);
         bls_agg_service
-            .initialize_new_task::<FakeAvsRegistryService>(
+            .initialize_new_task(
                 task_2_index,
                 block_number as u32,
                 quorum_numbers,
@@ -996,7 +997,7 @@ mod tests {
             FakeAvsRegistryService::new(block_number, vec![test_operator_1.clone()]);
         let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
         bls_agg_service
-            .initialize_new_task::<FakeAvsRegistryService>(
+            .initialize_new_task(
                 task_index,
                 block_number as u32,
                 quorum_numbers,
@@ -1048,7 +1049,7 @@ mod tests {
         let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
 
         bls_agg_service
-            .initialize_new_task::<FakeAvsRegistryService>(
+            .initialize_new_task(
                 task_index,
                 block_number as u32,
                 quorum_numbers,
@@ -1126,7 +1127,7 @@ mod tests {
         let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
 
         bls_agg_service
-            .initialize_new_task::<FakeAvsRegistryService>(
+            .initialize_new_task(
                 task_index,
                 block_number as u32,
                 quorum_numbers,
@@ -1187,7 +1188,7 @@ mod tests {
         let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
 
         bls_agg_service
-            .initialize_new_task::<FakeAvsRegistryService>(
+            .initialize_new_task(
                 task_index,
                 block_number as u32,
                 quorum_numbers,
@@ -1296,7 +1297,7 @@ mod tests {
         let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
 
         bls_agg_service
-            .initialize_new_task::<FakeAvsRegistryService>(
+            .initialize_new_task(
                 task_index,
                 block_number as u32,
                 quorum_numbers,
@@ -1406,7 +1407,7 @@ mod tests {
         let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
 
         bls_agg_service
-            .initialize_new_task::<FakeAvsRegistryService>(
+            .initialize_new_task(
                 task_index,
                 block_number as u32,
                 quorum_numbers,
@@ -1478,7 +1479,7 @@ mod tests {
         let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
 
         bls_agg_service
-            .initialize_new_task::<FakeAvsRegistryService>(
+            .initialize_new_task(
                 task_index,
                 block_number as u32,
                 quorum_numbers,
@@ -1543,7 +1544,7 @@ mod tests {
         let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
 
         bls_agg_service
-            .initialize_new_task::<FakeAvsRegistryService>(
+            .initialize_new_task(
                 task_index,
                 block_number as u32,
                 quorum_numbers,
@@ -1635,7 +1636,7 @@ mod tests {
         let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
 
         bls_agg_service
-            .initialize_new_task::<FakeAvsRegistryService>(
+            .initialize_new_task(
                 task_index,
                 block_number as u32,
                 quorum_numbers,
@@ -1711,7 +1712,7 @@ mod tests {
             FakeAvsRegistryService::new(block_number, vec![test_operator_1.clone()]);
         let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
         bls_agg_service
-            .initialize_new_task::<FakeAvsRegistryService>(
+            .initialize_new_task(
                 task_index,
                 block_number as u32,
                 quorum_numbers,
