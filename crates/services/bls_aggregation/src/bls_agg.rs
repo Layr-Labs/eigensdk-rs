@@ -191,6 +191,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                 .send(task)
                 .map_err(|_| BlsAggregationServiceError::ChannelError)?;
             rx
+            // release the lock
         };
 
         // return the signature verification result
