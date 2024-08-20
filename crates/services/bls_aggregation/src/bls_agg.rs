@@ -62,7 +62,7 @@ pub struct AggregatedOperators {
     pub signers_operator_ids_set: HashMap<FixedBytes<32>, bool>,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug)]
 pub struct BlsAggregatorService<A: AvsRegistryService>
 where
     A: Clone,
@@ -125,22 +125,25 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
 
         let (tx, rx) = mpsc::unbounded_channel();
         task_channel.insert(task_index, tx);
-        let self_clone = self.clone();
+
+        let avs_registry_service = self.avs_registry_service.clone();
+        let aggregated_response_sender = self.aggregated_response_sender.clone();
         tokio::spawn(async move {
             // Process each signed response here
-            let _ = self_clone
-                .single_task_aggregator(
-                    task_index,
-                    task_created_block,
-                    quorum_nums.clone(),
-                    quorum_threshold_percentages.clone(),
-                    time_to_expiry,
-                    rx,
-                )
-                .await
-                .inspect_err(|err| {
-                    println!("Error: {:?}", err);
-                });
+            let _ = BlsAggregatorService::<A>::single_task_aggregator(
+                avs_registry_service,
+                task_index,
+                task_created_block,
+                quorum_nums.clone(),
+                quorum_threshold_percentages.clone(),
+                time_to_expiry,
+                aggregated_response_sender,
+                rx,
+            )
+            .await
+            .inspect_err(|err| {
+                println!("Error: {:?}", err);
+            });
         });
         Ok(())
     }
@@ -249,12 +252,15 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
     /// * `time_to_expiry` - The timeout for the task reader to expire
     /// * `rx` - The receiver channel for the signed task responses
     pub async fn single_task_aggregator(
-        &self,
+        avs_registry_service: A,
         task_index: TaskIndex,
         task_created_block: u32,
         quorum_nums: Vec<u8>,
         quorum_threshold_percentages: QuorumThresholdPercentages,
         time_to_expiry: Duration,
+        aggregated_response_sender: UnboundedSender<
+            Result<BlsAggregationServiceResponse, BlsAggregationServiceError>,
+        >,
         mut rx: UnboundedReceiver<SignedTaskResponseDigest>,
     ) -> Result<(), BlsAggregationServiceError> {
         let mut quorum_threshold_percentage_map = HashMap::new();
@@ -263,13 +269,11 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
             quorum_threshold_percentage_map.insert(*quorum_number, quorum_threshold_percentages[i]);
         }
 
-        let operator_state_avs = self
-            .avs_registry_service
+        let operator_state_avs = avs_registry_service
             .get_operators_avs_state_at_block(task_created_block, &quorum_nums)
             .await;
         // TODO: throw erro if
-        let quorums_avs_stake = self
-            .avs_registry_service
+        let quorums_avs_stake = avs_registry_service
             .get_quorums_avs_state_at_block(&quorum_nums, task_created_block)
             .await;
         // TODO: throw erro if != nil
@@ -293,16 +297,18 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                 .inspect_err(|_err| {
                     // timeout
                     println!("expire");
-                    let _ = self
-                        .aggregated_response_sender
+                    let _ = aggregated_response_sender
                         .send(Err(BlsAggregationServiceError::TaskExpired));
                 })
                 .map_err(|_| BlsAggregationServiceError::TaskExpired)?
                 .ok_or(BlsAggregationServiceError::ChannelClosed)?;
 
-            let verification_result = self
-                .verify_signature(task_index, &signed_task_digest, &operator_state_avs)
-                .await;
+            let verification_result = BlsAggregatorService::<A>::verify_signature(
+                task_index,
+                &signed_task_digest,
+                &operator_state_avs,
+            )
+            .await;
 
             signed_task_digest
                 .signature_verification_channel
@@ -348,7 +354,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                 digest_aggregated_operators.clone(),
             );
 
-            if !self.check_if_stake_thresholds_met(
+            if !BlsAggregatorService::<A>::check_if_stake_thresholds_met(
                 &digest_aggregated_operators.signers_total_stake_per_quorum,
                 &total_stake_per_quorum,
                 &quorum_threshold_percentage_map,
@@ -375,8 +381,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                 .map(|pub_keys| pub_keys.g1_pub_key)
                 .collect();
 
-            let indices = self
-                .avs_registry_service
+            let indices = avs_registry_service
                 .get_check_signatures_indices(
                     task_created_block,
                     quorum_nums.clone(),
@@ -398,7 +403,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                 non_signer_stake_indices: indices.nonSignerStakeIndices,
             };
 
-            self.aggregated_response_sender
+            aggregated_response_sender
                 .send(Ok(bls_aggregation_service_response))
                 .map_err(|_| BlsAggregationServiceError::ChannelError)?;
         }
@@ -421,7 +426,6 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
     /// - `SignatureVerificationError::OperatorPublicKeyNotFound` if the operator public key is not found,
     /// - `SignatureVerificationError::IncorrectSignature` if the signature is incorrect.
     pub async fn verify_signature(
-        &self,
         _task_index: TaskIndex,
         signed_task_response_digest: &SignedTaskResponseDigest,
         operator_avs_state: &HashMap<FixedBytes<32>, OperatorAvsState>,
@@ -457,7 +461,6 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
     ///
     /// Returns `true` if the stake thresholds are met for all the members, otherwise `false`.
     pub fn check_if_stake_thresholds_met(
-        &self,
         signed_stake_per_quorum: &HashMap<u8, U256>,
         total_stake_per_quorum: &HashMap<u8, U256>,
         quorum_threshold_percentages_map: &HashMap<u8, QuorumThresholdPercentage>,
