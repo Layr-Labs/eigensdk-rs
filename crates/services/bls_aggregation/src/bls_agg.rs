@@ -302,18 +302,17 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
 
         let mut aggregated_operators: HashMap<FixedBytes<32>, AggregatedOperators> = HashMap::new();
 
-        loop {
-            let signed_task_digest = timeout(time_to_expiry, rx.recv())
-                .await
-                .inspect_err(|_err| {
-                    // timeout
-                    println!("expire");
-                    let _ = aggregated_response_sender
-                        .send(Err(BlsAggregationServiceError::TaskExpired));
-                })
-                .map_err(|_| BlsAggregationServiceError::TaskExpired)?
-                .ok_or(BlsAggregationServiceError::ChannelClosed)?;
-
+        // iterate over the signed task responses receive from the channel, until the time to expiry is reached or the channel is closed
+        while let Some(signed_task_digest) = timeout(time_to_expiry, rx.recv())
+            .await
+            .inspect_err(|_err| {
+                // timeout
+                println!("expire");
+                let _ =
+                    aggregated_response_sender.send(Err(BlsAggregationServiceError::TaskExpired));
+            })
+            .map_err(|_| BlsAggregationServiceError::TaskExpired)?
+        {
             let verification_result = BlsAggregatorService::<A>::verify_signature(
                 task_index,
                 &signed_task_digest,
@@ -390,6 +389,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                 .send(Ok(bls_aggregation_service_response))
                 .map_err(|_| BlsAggregationServiceError::ChannelError)?;
         }
+        Err(BlsAggregationServiceError::ChannelClosed)
     }
 
     /// Builds the aggregated response containing all the aggregation info.
