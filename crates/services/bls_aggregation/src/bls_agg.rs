@@ -364,51 +364,90 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                 continue;
             }
 
-            let mut non_signers_operators_ids: Vec<FixedBytes<32>> = operator_state_avs
-                .keys()
-                .filter(|operator_id| {
-                    !digest_aggregated_operators
-                        .signers_operator_ids_set
-                        .contains_key(*operator_id)
-                })
-                .cloned()
-                .collect::<Vec<_>>();
-
-            non_signers_operators_ids.sort();
-
-            let non_signers_pub_keys_g1: Vec<BlsG1Point> = non_signers_operators_ids
-                .iter()
-                .filter_map(|operator_id| operator_state_avs.get(operator_id))
-                .filter_map(|operator_avs_state| operator_avs_state.operator_info.pub_keys.clone())
-                .map(|pub_keys| pub_keys.g1_pub_key)
-                .collect();
-
-            let indices = avs_registry_service
-                .get_check_signatures_indices(
-                    task_created_block,
-                    quorum_nums.clone(),
-                    non_signers_operators_ids,
-                )
-                .await
-                .map_err(|_err| BlsAggregationServiceError::RegistryError)?;
-
-            let bls_aggregation_service_response = BlsAggregationServiceResponse {
+            let bls_aggregation_service_response = BlsAggregatorService::build_aggregated_response(
                 task_index,
-                task_response_digest: signed_task_digest.task_response_digest,
-                non_signers_pub_keys_g1,
-                quorum_apks_g1: quorum_apks_g1.clone(),
-                signers_apk_g2: digest_aggregated_operators.signers_apk_g2,
-                signers_agg_sig_g1: digest_aggregated_operators.signers_agg_sig_g1,
-                non_signer_quorum_bitmap_indices: indices.clone().quorumApkIndices,
-                quorum_apk_indices: indices.quorumApkIndices,
-                total_stake_indices: indices.totalStakeIndices,
-                non_signer_stake_indices: indices.nonSignerStakeIndices,
-            };
+                task_created_block,
+                signed_task_digest,
+                &operator_state_avs,
+                digest_aggregated_operators,
+                &avs_registry_service,
+                &quorum_apks_g1,
+                &quorum_nums,
+            )
+            .await?;
 
             aggregated_response_sender
                 .send(Ok(bls_aggregation_service_response))
                 .map_err(|_| BlsAggregationServiceError::ChannelError)?;
         }
+    }
+
+    /// Builds the aggregated response containing all the aggregation info.
+    ///
+    /// # Arguments
+    ///
+    /// * `task_index` - The index of the task.
+    /// * `task_created_block` - The block in which the task was created.
+    /// * `signed_task_digest` - The signed task.
+    /// * `operator_state_avs` - A hashmap with the operator state per operator id.
+    /// * `digest_aggregated_operators` - The aggregated operators.
+    /// * `avs_registry_service` - The avs registry service.
+    /// * `quorum_apks_g1` - The quorum aggregated public keys.
+    /// * `quorum_nums` - The quorum numbers.
+    ///
+    /// # Returns
+    ///
+    /// The BLS aggregation service response.
+    async fn build_aggregated_response(
+        task_index: TaskIndex,
+        task_created_block: u32,
+        signed_task_digest: SignedTaskResponseDigest,
+        operator_state_avs: &HashMap<FixedBytes<32>, OperatorAvsState>,
+        digest_aggregated_operators: AggregatedOperators,
+        avs_registry_service: &A,
+        quorum_apks_g1: &[BlsG1Point],
+        quorum_nums: &[u8],
+    ) -> Result<BlsAggregationServiceResponse, BlsAggregationServiceError> {
+        let mut non_signers_operators_ids: Vec<FixedBytes<32>> = operator_state_avs
+            .keys()
+            .filter(|operator_id| {
+                !digest_aggregated_operators
+                    .signers_operator_ids_set
+                    .contains_key(*operator_id)
+            })
+            .cloned()
+            .collect::<Vec<_>>();
+
+        non_signers_operators_ids.sort();
+
+        let non_signers_pub_keys_g1: Vec<BlsG1Point> = non_signers_operators_ids
+            .iter()
+            .filter_map(|operator_id| operator_state_avs.get(operator_id))
+            .filter_map(|operator_avs_state| operator_avs_state.operator_info.pub_keys.clone())
+            .map(|pub_keys| pub_keys.g1_pub_key)
+            .collect();
+
+        let indices = avs_registry_service
+            .get_check_signatures_indices(
+                task_created_block,
+                quorum_nums.into(),
+                non_signers_operators_ids,
+            )
+            .await
+            .map_err(|_err| BlsAggregationServiceError::RegistryError)?;
+
+        Ok(BlsAggregationServiceResponse {
+            task_index,
+            task_response_digest: signed_task_digest.task_response_digest,
+            non_signers_pub_keys_g1,
+            quorum_apks_g1: quorum_apks_g1.into(),
+            signers_apk_g2: digest_aggregated_operators.signers_apk_g2,
+            signers_agg_sig_g1: digest_aggregated_operators.signers_agg_sig_g1,
+            non_signer_quorum_bitmap_indices: indices.clone().quorumApkIndices,
+            quorum_apk_indices: indices.quorumApkIndices,
+            total_stake_indices: indices.totalStakeIndices,
+            non_signer_stake_indices: indices.nonSignerStakeIndices,
+        })
     }
 
     /// Verifies the signature of the task response given a `operator_avs_state`.
@@ -554,7 +593,6 @@ mod tests {
         let time_to_expiry = Duration::from_secs(1);
         let task_response = 123; // Initialize with appropriate data
 
-        // Compute the TaskResponseDigest as the SHA-256 sum of the TaskResponse (previously converting the taskresponse into a JSON string)
         let task_response_digest = hash(task_response);
         let bls_signature = test_operator_1
             .bls_keypair
