@@ -3,25 +3,41 @@ use alloy_primitives::{Address, Bytes, FixedBytes, B256, U256};
 use alloy_provider::Provider;
 use alloy_rpc_types::Filter;
 use ark_ff::Zero;
-use eigen_logging::{logger::Logger, tracing_logger::TracingLogger};
+use eigen_logging::logger::{Logger, SharedLogger};
+use eigen_logging::tracing_logger::TracingLogger;
 use eigen_types::operator::{bitmap_to_quorum_ids, OperatorPubKeys};
+use eigen_utils::NEW_PUBKEY_REGISTRATION_EVENT;
 use eigen_utils::{
     binding::{BLSApkRegistry, OperatorStateRetriever, RegistryCoordinator, StakeRegistry},
-    get_provider,
+    get_provider, get_ws_provider,
 };
 use num_bigint::BigInt;
 use std::collections::HashMap;
 use std::fmt::Debug;
+use std::sync::Arc;
 
 /// Avs Registry chainreader
-#[derive(Debug, Clone, Default)]
+#[derive(Debug, Clone)]
 pub struct AvsRegistryChainReader {
-    logger: TracingLogger,
+    logger: SharedLogger,
     bls_apk_registry_addr: Address,
     registry_coordinator_addr: Address,
     operator_state_retriever: Address,
     stake_registry_addr: Address,
     provider: String,
+}
+
+impl Default for AvsRegistryChainReader {
+    fn default() -> Self {
+        AvsRegistryChainReader {
+            logger: Arc::new(TracingLogger::default()),
+            bls_apk_registry_addr: Default::default(),
+            registry_coordinator_addr: Default::default(),
+            operator_state_retriever: Default::default(),
+            stake_registry_addr: Default::default(),
+            provider: String::new(),
+        }
+    }
 }
 
 trait AvsRegistryReader {
@@ -31,19 +47,17 @@ trait AvsRegistryReader {
 impl AvsRegistryChainReader {
     /// New AvsRegistryChainReader instance
     pub async fn new(
-        logger: TracingLogger,
+        logger: SharedLogger,
         registry_coordinator_addr: Address,
         operator_state_retriever_addr: Address,
-        provider_url: String,
+        http_provider_url: String,
     ) -> Result<AvsRegistryChainReader, AvsRegistryError> {
-        let provider = get_provider(&provider_url);
+        let provider = get_provider(&http_provider_url);
 
         let contract_registry_coordinator =
             RegistryCoordinator::new(registry_coordinator_addr, &provider);
-
         let bls_apk_registry_addr_result =
             contract_registry_coordinator.blsApkRegistry().call().await;
-
         match bls_apk_registry_addr_result {
             Ok(bls_apk_registry_return) => {
                 let RegistryCoordinator::blsApkRegistryReturn {
@@ -65,7 +79,7 @@ impl AvsRegistryChainReader {
                             registry_coordinator_addr,
                             operator_state_retriever: operator_state_retriever_addr,
                             stake_registry_addr,
-                            provider: provider_url.clone(),
+                            provider: http_provider_url.clone(),
                         })
                     }
                     Err(_) => Err(AvsRegistryError::GetStakeRegistry),
@@ -359,77 +373,82 @@ impl AvsRegistryChainReader {
     }
 
     /// Queies existing operators from for a particular block range
-    /// Queies existing operators from for a particular block range
     pub async fn query_existing_registered_operator_pub_keys(
         &self,
         start_block: u64,
         mut stop_block: u64,
+        ws_url: String,
     ) -> Result<(Vec<Address>, Vec<OperatorPubKeys>), AvsRegistryError> {
-        let provider = get_provider(&self.provider);
+        let provider_ws_result = get_ws_provider(&ws_url).await;
 
-        let query_block_range = 1024;
-        let current_block_number_result = provider.get_block_number().await;
+        match provider_ws_result {
+            Ok(provider) => {
+                let query_block_range = 1024;
+                let current_block_number_result = provider.get_block_number().await;
 
-        match current_block_number_result {
-            Ok(current_block_number) => {
-                if stop_block.is_zero() {
-                    stop_block = current_block_number;
-                }
-                let mut i = start_block;
-                let mut operator_addresses: Vec<Address> = vec![];
-                let mut operator_pub_keys: Vec<OperatorPubKeys> = vec![];
-                while i <= stop_block {
-                    let mut to_block = i + (query_block_range - 1);
-                    if to_block > stop_block {
-                        to_block = stop_block;
-                    }
-                    let filter = Filter::new()
-                        .select(i..to_block)
-                        .event("NewPubkeyRegistration(address,(uint256,uint256),(uint256[2],uint256[2]))")
-                        .address(self.bls_apk_registry_addr);
+                match current_block_number_result {
+                    Ok(current_block_number) => {
+                        if stop_block.is_zero() {
+                            stop_block = current_block_number;
+                        }
+                        let mut i = start_block;
+                        let mut operator_addresses: Vec<Address> = vec![];
+                        let mut operator_pub_keys: Vec<OperatorPubKeys> = vec![];
+                        while i <= stop_block {
+                            let to_block = std::cmp::min(i + (query_block_range - 1), stop_block);
+                            let filter = Filter::new()
+                                .select(i..to_block)
+                                .event(NEW_PUBKEY_REGISTRATION_EVENT)
+                                .address(self.bls_apk_registry_addr);
 
-                    let logs_result = provider.get_logs(&filter).await;
+                            let logs_result = provider.get_logs(&filter).await;
 
-                    match logs_result {
-                        Ok(logs) => {
-                            self.logger.debug(
-                                &format!(
-                                    "numTransactionLogs: {}, fromBlock: {}, toBlock: {}",
-                                    logs.len(),
-                                    i,
-                                    to_block
-                                ),
-                                &["eigen-client-avsregistry.reader.query_existing_registered_operator_pub_keys"]
-                            );
-                            for v_log in logs.iter() {
-                                if let Ok(pub_key_reg) =
-                                    v_log.log_decode::<BLSApkRegistry::NewPubkeyRegistration>()
-                                {
-                                    let data = pub_key_reg.data();
-                                    let operator_addr = data.operator;
-                                    operator_addresses.push(operator_addr);
-                                    let g1_pub_key = data.pubkeyG1.clone();
-                                    let g2_pub_key = data.pubkeyG2.clone();
+                            match logs_result {
+                                Ok(logs) => {
+                                    self.logger.debug(
+                                        &format!(
+                                            "numTransactionLogs: {}, fromBlock: {}, toBlock: {}",
+                                            logs.len(),
+                                            i,
+                                            to_block
+                                        ),
+                                        "eigen-client-avsregistry.reader.query_existing_registered_operator_pub_keys"
+                                    );
 
-                                    let operator_pub_key = OperatorPubKeys {
-                                        g1_pub_key,
-                                        g2_pub_key,
-                                    };
-
-                                    operator_pub_keys.push(operator_pub_key);
+                                    for pub_key_reg in logs
+                                        .iter()
+                                        .map(|v| {
+                                            v.log_decode::<BLSApkRegistry::NewPubkeyRegistration>()
+                                        })
+                                        .filter_map(Result::ok)
+                                    {
+                                        let data = pub_key_reg.data();
+                                        let operator_addr = data.operator;
+                                        operator_addresses.push(operator_addr);
+                                        let g1_pub_key = data.pubkeyG1.clone();
+                                        let g2_pub_key = data.pubkeyG2.clone();
+                                        let operator_pub_key = OperatorPubKeys {
+                                            g1_pub_key,
+                                            g2_pub_key,
+                                        };
+                                        operator_pub_keys.push(operator_pub_key);
+                                    }
+                                }
+                                Err(e) => {
+                                    return Err(AvsRegistryError::AlloyContractError(
+                                        alloy_contract::Error::TransportError(e),
+                                    ))
                                 }
                             }
+                            i += query_block_range;
                         }
-                        Err(e) => {
-                            return Err(AvsRegistryError::AlloyContractError(
-                                alloy_contract::Error::TransportError(e),
-                            ))
-                        }
-                    }
-                    i += query_block_range;
-                }
 
-                Ok((operator_addresses, operator_pub_keys))
+                        Ok((operator_addresses, operator_pub_keys))
+                    }
+                    Err(e) => Err(AvsRegistryError::AlloyContractError(
+                        alloy_contract::Error::TransportError(e),
+                    )),
+                }
             }
             Err(e) => Err(AvsRegistryError::AlloyContractError(
                 alloy_contract::Error::TransportError(e),
@@ -494,14 +513,14 @@ impl AvsRegistryChainReader {
                         }
                     }
                     self.logger.debug(
-                        &format!(
-                            "num_transaction_logs : {} , from_block: {} , to_block: {}",
-                            logs.len(),
-                            i,
-                            to_block
-                        ),
-                        &["eigen-client-avsregistry.reader.query_existing_registered_operator_sockets"],
-                    );
+                    &format!(
+                        "num_transaction_logs : {} , from_block: {} , to_block: {}",
+                        logs.len(),
+                        i,
+                        to_block
+                    ),
+                    "eigen-client-avsregistry.reader.query_existing_registered_operator_sockets",
+                );
 
                     i += query_block_range;
                 }
@@ -536,7 +555,7 @@ mod tests {
 
         let holesky_provider = "https://ethereum-holesky.blockpi.network/v1/rpc/public";
         AvsRegistryChainReader::new(
-            get_test_logger().clone(),
+            get_test_logger(),
             holesky_registry_coordinator,
             holesky_operator_state_retriever,
             holesky_provider.to_string(),
