@@ -1,20 +1,16 @@
 use alloy_primitives::{Bytes, FixedBytes, U256};
 use ark_bn254::G1Projective;
-use ark_ec::CurveGroup;
+use ark_ec::{short_weierstrass::Affine, AffineRepr, CurveGroup};
 use eigen_client_avsregistry::{error::AvsRegistryError, reader::AvsRegistryChainReader};
-use eigen_crypto_bls::{
-    alloy_registry_g1_point_to_g1_affine, convert_to_g1_point, BlsG1Point, PublicKey,
-};
+use eigen_crypto_bls::{BlsG1Point, PublicKey};
 use eigen_services_operatorsinfo::operatorsinfo_inmemory::OperatorInfoServiceInMemory;
 use eigen_types::operator::{OperatorAvsState, OperatorInfo, OperatorPubKeys, QuorumAvsState};
-use eigen_utils::binding::{
-    BLSApkRegistry::G1Point, OperatorStateRetriever::CheckSignaturesIndices,
-};
+use eigen_utils::binding::OperatorStateRetriever::CheckSignaturesIndices;
 use std::collections::HashMap;
 
 use crate::AvsRegistryService;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct AvsRegistryServiceChainCaller {
     avs_registry: AvsRegistryChainReader,
     operators_info_service: OperatorInfoServiceInMemory,
@@ -93,18 +89,18 @@ impl AvsRegistryService for AvsRegistryServiceChainCaller {
                     }
                 }
             }
-            let g1_point = convert_to_g1_point(pub_key_g1.into_affine()).unwrap();
+            let agg_pub_key_g1 = if pub_key_g1 == G1Projective::from(PublicKey::zero()) {
+                BlsG1Point::new(Affine::zero())
+            } else {
+                BlsG1Point::new(pub_key_g1.into_affine())
+            };
+
             quorums_avs_state.insert(
                 *quorum_num,
                 QuorumAvsState {
                     quorum_num: *quorum_num,
                     total_stake,
-                    agg_pub_key_g1: BlsG1Point::new(alloy_registry_g1_point_to_g1_affine(
-                        G1Point {
-                            X: g1_point.X,
-                            Y: g1_point.Y,
-                        },
-                    )),
+                    agg_pub_key_g1,
                     block_num,
                 },
             );
