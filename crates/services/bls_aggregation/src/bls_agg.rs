@@ -157,6 +157,13 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
     /// * `task_response_digest` - The digest of the task response
     /// * `bls_signature` - The BLS signature of the task response
     /// * `operator_id` - The operator ID of the operator that signed the task response
+    ///
+    /// # Errors
+    ///
+    /// Returns error:
+    /// * `TaskNotFound` - If the task is not found.
+    /// * `ChannelError` - If there is an error while sending the task through the channel.
+    /// * `SignatureVerificationError` - If the signature verification fails.
     pub async fn process_new_signature(
         &self,
         task_index: TaskIndex,
@@ -184,6 +191,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                 .send(task)
                 .map_err(|_| BlsAggregationServiceError::ChannelError)?;
             rx
+            // release the lock
         };
 
         // return the signature verification result
@@ -265,11 +273,11 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         >,
         mut rx: UnboundedReceiver<SignedTaskResponseDigest>,
     ) -> Result<(), BlsAggregationServiceError> {
-        let mut quorum_threshold_percentage_map = HashMap::new();
-
-        for (i, quorum_number) in quorum_nums.iter().enumerate() {
-            quorum_threshold_percentage_map.insert(*quorum_number, quorum_threshold_percentages[i]);
-        }
+        let quorum_threshold_percentage_map: HashMap<u8, u8> = quorum_nums
+            .iter()
+            .enumerate()
+            .map(|(i, quorum_number)| (*quorum_number, quorum_threshold_percentages[i]))
+            .collect();
 
         let operator_state_avs = avs_registry_service
             .get_operators_avs_state_at_block(task_created_block, &quorum_nums)
@@ -294,18 +302,17 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
 
         let mut aggregated_operators: HashMap<FixedBytes<32>, AggregatedOperators> = HashMap::new();
 
-        loop {
-            let signed_task_digest = timeout(time_to_expiry, rx.recv())
-                .await
-                .inspect_err(|_err| {
-                    // timeout
-                    println!("expire");
-                    let _ = aggregated_response_sender
-                        .send(Err(BlsAggregationServiceError::TaskExpired));
-                })
-                .map_err(|_| BlsAggregationServiceError::TaskExpired)?
-                .ok_or(BlsAggregationServiceError::ChannelClosed)?;
-
+        // iterate over the signed task responses receive from the channel, until the time to expiry is reached or the channel is closed
+        while let Some(signed_task_digest) = timeout(time_to_expiry, rx.recv())
+            .await
+            .inspect_err(|_err| {
+                // timeout
+                println!("expire");
+                let _ =
+                    aggregated_response_sender.send(Err(BlsAggregationServiceError::TaskExpired));
+            })
+            .map_err(|_| BlsAggregationServiceError::TaskExpired)?
+        {
             let verification_result = BlsAggregatorService::<A>::verify_signature(
                 task_index,
                 &signed_task_digest,
@@ -331,10 +338,17 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                 .g2_pub_key
                 .g2();
 
-            let response = match aggregated_operators
+            let digest_aggregated_operators = aggregated_operators
                 .get_mut(&signed_task_digest.task_response_digest)
-            {
-                None => &AggregatedOperators {
+                .map(|digest_aggregated_operators| {
+                    BlsAggregatorService::<A>::aggregate_new_operator(
+                        digest_aggregated_operators,
+                        operator_state.clone(),
+                        signed_task_digest.clone(),
+                    )
+                    .clone()
+                })
+                .unwrap_or(AggregatedOperators {
                     signers_apk_g2: BlsG2Point::new((G2Affine::zero() + operator_g2_pubkey).into()),
                     signers_agg_sig_g1: signed_task_digest.bls_signature.clone(),
                     signers_operator_ids_set: HashMap::from([(
@@ -342,17 +356,8 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                         true,
                     )]),
                     signers_total_stake_per_quorum: operator_state.stake_per_quorum.clone(),
-                },
-                Some(digest_aggregated_operators) => {
-                    BlsAggregatorService::<A>::aggregate_new_operator(
-                        digest_aggregated_operators,
-                        operator_state.clone(),
-                        signed_task_digest.clone(),
-                    )
-                }
-            };
+                });
 
-            let digest_aggregated_operators = response.clone();
             aggregated_operators.insert(
                 signed_task_digest.task_response_digest,
                 digest_aggregated_operators.clone(),
@@ -382,6 +387,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                 .send(Ok(bls_aggregation_service_response))
                 .map_err(|_| BlsAggregationServiceError::ChannelError)?;
         }
+        Err(BlsAggregationServiceError::ChannelClosed)
     }
 
     /// Builds the aggregated response containing all the aggregation info.
