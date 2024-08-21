@@ -364,7 +364,7 @@ mod tests {
     async fn test_register_operator() {
         let avs_writer = build_avs_registry_chain_writer().await;
         let bls_key_pair = BlsKeyPair::new(
-            "13710126902690889134622698668747132666439281256983827313388062967626731803599".into(),
+            "86245596270685705884472351211857039932300464725915589549000044251545453106920".into(),
         )
         .unwrap();
         let digest_hash: FixedBytes<32> = FixedBytes::from([
@@ -383,60 +383,27 @@ mod tests {
                 "".into(),
             )
             .await;
+
         assert!(res.is_ok());
     }
 
-    /*
     #[tokio::test]
-    async fn test_get_operators_stake_in_quorums_at_block() {
-        let avs_reader = build_avs_registry_chain_reader().await;
+    async fn test_update_stake() {
+        let avs_writer = build_avs_registry_chain_writer().await;
+        let operator_id = Address::from_str("11bbe715d9786aca3a7b391704a03d88754d5942").unwrap();
+        let res = avs_writer
+            .update_stakes_of_operator_subset_for_all_quorums(vec![operator_id])
+            .await;
 
-        let quorum_number = Bytes::from_hex("0x00").expect("bytes parse");
-        let _ = avs_reader
-            .get_operators_stake_in_quorums_at_block(1245063, quorum_number)
-            .await
-            .unwrap();
+        assert!(res.is_ok());
     }
 
     #[tokio::test]
-    async fn test_get_operators_stake_in_quorums_at_block_operator_id() {
-        let avs_reader = build_avs_registry_chain_reader().await;
+    async fn test_deregister_operator() {
+        let avs_writer = build_avs_registry_chain_writer().await;
+        let quorum_nums = Bytes::from([1]);
+        let res = avs_writer.deregister_operator(quorum_nums).await;
 
-        let operator_id = U256::from_str(
-            "35344093966194310405039483339636912150346494903629410125452342281826147822033",
-        )
-        .unwrap();
-
-        let _ = avs_reader
-            .get_operators_stake_in_quorums_at_block_operator_id(1245842, operator_id.into())
-            .await
-            .unwrap();
+        assert!(res.is_ok());
     }
-
-    #[tokio::test]
-    async fn test_get_operators_stake_in_quorums_at_current_block() {
-        let avs_reader = build_avs_registry_chain_reader().await;
-        let quorum_number = Bytes::from_hex("0x00").expect("bytes parse");
-
-        let _ = avs_reader
-            .get_operators_stake_in_quorums_at_current_block(quorum_number)
-            .await
-            .unwrap();
-    }
-
-    #[tokio::test]
-    async fn test_get_operators_stake_in_quorums_of_operator_at_block() {
-        let avs_reader = build_avs_registry_chain_reader().await;
-
-        let operator_id = U256::from_str(
-            "35344093966194310405039483339636912150346494903629410125452342281826147822033",
-        )
-        .unwrap();
-
-        let _ = avs_reader
-            .get_operators_stake_in_quorums_of_operator_at_block((operator_id).into(), 1246078)
-            .await
-            .unwrap();
-    }
-    */
 }
