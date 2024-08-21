@@ -129,12 +129,21 @@ impl AvsRegistryService for AvsRegistryServiceChainCaller {
 }
 
 impl AvsRegistryServiceChainCaller {
+    /// Get the operator info from the operator id
+    ///
+    /// # Arguments
+    ///
+    /// * `operator_id` - The operator id
+    ///
+    /// # Returns
+    ///
+    /// The operator public keys
     async fn get_operator_info(&self, operator_id: [u8; 32]) -> Option<OperatorPubKeys> {
         let operator_addr = self
             .avs_registry
             .get_operator_from_id(operator_id)
             .await
-            .unwrap();
+            .ok()?;
 
         self.operators_info_service
             .get_operator_info(operator_addr)
