@@ -2249,6 +2249,7 @@ dependencies = [
  "eigen-types",
  "eigen-utils",
  "futures-util",
+ "thiserror",
  "tokio",
 ]
 

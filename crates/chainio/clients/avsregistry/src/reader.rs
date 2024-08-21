@@ -430,6 +430,9 @@ impl AvsRegistryChainReader {
                                         operator_addresses.push(operator_addr);
                                         let g1_pub_key = data.pubkeyG1.clone();
                                         let g2_pub_key = data.pubkeyG2.clone();
+                                        println!("operator address {}", operator_addr);
+                                        println!("g1 pub key {:?}", g1_pub_key);
+                                        println!("g2 pub key {:?}", g2_pub_key);
                                         let operator_pub_key = OperatorPubKeys {
                                             g1_pub_key: BlsG1Point::new(
                                                 alloy_registry_g1_point_to_g1_affine(g1_pub_key),
@@ -438,6 +441,7 @@ impl AvsRegistryChainReader {
                                                 alloy_registry_g2_point_to_g2_affine(g2_pub_key),
                                             ),
                                         };
+                                        println!("hghg");
                                         operator_pub_keys.push(operator_pub_key);
                                     }
                                 }

@@ -20,7 +20,7 @@ eigen-types.workspace = true
 eigen-utils.workspace = true
 futures-util.workspace = true
 tokio = { workspace = true, features = ["rt-multi-thread", "macros"] }
-
+thiserror.workspace = true
 [dev-dependencies]
 eigen-testing-utils.workspace = true
 eigen-logging.workspace = true

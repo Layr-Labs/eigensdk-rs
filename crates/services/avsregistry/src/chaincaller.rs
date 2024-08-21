@@ -139,5 +139,6 @@ impl AvsRegistryServiceChainCaller {
         self.operators_info_service
             .get_operator_info(operator_addr)
             .await
+            .unwrap()
     }
 }

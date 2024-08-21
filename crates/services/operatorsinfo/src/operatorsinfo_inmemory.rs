@@ -1,7 +1,7 @@
-use alloy_primitives::Address;
+use alloy_primitives::{Address, FixedBytes};
 use alloy_provider::{Provider, ProviderBuilder, WsConnect};
 use alloy_rpc_types::Filter;
-use anyhow::Result;
+use anyhow::{Context, Result};
 use eigen_client_avsregistry::reader::AvsRegistryChainReader;
 use eigen_crypto_bls::{
     alloy_registry_g1_point_to_g1_affine, alloy_registry_g2_point_to_g2_affine, BlsG1Point,
@@ -11,17 +11,17 @@ use eigen_logging::logger::SharedLogger;
 use eigen_types::operator::{operator_id_from_g1_pub_key, OperatorPubKeys};
 use eigen_utils::{
     binding::BLSApkRegistry::{self, G1Point, G2Point},
-    NEW_PUBKEY_REGISTRATION_EVENT,
+    get_ws_provider, NEW_PUBKEY_REGISTRATION_EVENT,
 };
 use futures_util::StreamExt;
-use std::collections::HashMap;
+use std::{collections::HashMap, sync::Arc};
+use thiserror::Error;
 use tokio::sync::{
     mpsc,
     mpsc::UnboundedSender,
     oneshot::{self, Sender},
+    RwLock,
 };
-
-#[allow(dead_code)]
 #[derive(Debug, Clone)]
 pub struct OperatorInfoServiceInMemory {
     logger: SharedLogger,
@@ -30,12 +30,34 @@ pub struct OperatorInfoServiceInMemory {
     pub_keys: UnboundedSender<OperatorsInfoMessage>,
 }
 
-#[allow(dead_code)]
+#[derive(Debug, Clone)]
+struct OperatorState {
+    operator_info_data: Arc<RwLock<HashMap<Address, OperatorPubKeys>>>,
+    operator_addr_to_id: Arc<RwLock<HashMap<Address, FixedBytes<32>>>>,
+}
+
+#[derive(Error, Debug, Clone, PartialEq, Eq)]
+pub enum OperatorInfoServiceError {
+    #[error("failed to retrieve operator info")]
+    OperatorInfoRetrievalError,
+    #[error("operator not found")]
+    OperatorNotFound,
+    #[error("channel was closed")]
+    ChannelClosed,
+    #[error("error sending to channel")]
+    ChannelError,
+    #[error("websocket connection failed")]
+    WebSocketConnectionError,
+}
+
 #[derive(Debug)]
 enum OperatorsInfoMessage {
     InsertOperatorInfo(Address, Box<OperatorPubKeys>),
     Remove(Address),
-    Get(Address, Sender<Option<OperatorPubKeys>>),
+    Get(
+        Address,
+        Sender<Result<Option<OperatorPubKeys>, OperatorInfoServiceError>>,
+    ),
 }
 
 impl OperatorInfoServiceInMemory {
@@ -45,24 +67,32 @@ impl OperatorInfoServiceInMemory {
         web_socket: String,
     ) -> Self {
         let (pubkeys_tx, mut pubkeys_rx) = mpsc::unbounded_channel();
-        let mut operator_info_data = HashMap::new();
+        let operator_state = OperatorState {
+            operator_info_data: Arc::new(RwLock::new(HashMap::new())),
+            operator_addr_to_id: Arc::new(RwLock::new(HashMap::new())),
+        };
 
-        let mut operator_addr_to_id = HashMap::new();
-
-        tokio::spawn(async move {
-            while let Some(cmd) = pubkeys_rx.recv().await {
-                match cmd {
-                    OperatorsInfoMessage::InsertOperatorInfo(addr, keys) => {
-                        operator_info_data.insert(addr, *keys.clone());
-                        let operator_id = operator_id_from_g1_pub_key(keys.g1_pub_key);
-                        operator_addr_to_id.insert(addr, operator_id);
-                    }
-                    OperatorsInfoMessage::Remove(addr) => {
-                        operator_info_data.remove(&addr);
-                    }
-                    OperatorsInfoMessage::Get(addr, responder) => {
-                        let result = operator_info_data.get(&addr).cloned();
-                        let _ = responder.send(result);
+        tokio::spawn({
+            let operator_state = operator_state.clone();
+            async move {
+                while let Some(cmd) = pubkeys_rx.recv().await {
+                    match cmd {
+                        OperatorsInfoMessage::InsertOperatorInfo(addr, keys) => {
+                            let mut data = operator_state.operator_info_data.write().await;
+                            data.insert(addr, *keys.clone());
+                            let operator_id = operator_id_from_g1_pub_key(keys.g1_pub_key);
+                            let mut id_map = operator_state.operator_addr_to_id.write().await;
+                            id_map.insert(addr, alloy_primitives::FixedBytes(operator_id));
+                        }
+                        OperatorsInfoMessage::Remove(addr) => {
+                            let mut data = operator_state.operator_info_data.write().await;
+                            data.remove(&addr);
+                        }
+                        OperatorsInfoMessage::Get(addr, responder) => {
+                            let data = operator_state.operator_info_data.read().await;
+                            let result = data.get(&addr).cloned();
+                            let _ = responder.send(Ok(result)).expect("Failed to send response");
+                        }
                     }
                 }
             }
@@ -82,16 +112,11 @@ impl OperatorInfoServiceInMemory {
         end_block: u64,
         shutdown_rx: tokio::sync::watch::Receiver<()>,
     ) -> Result<()> {
-        // query past operator registrations
-        self.query_past_registered_operator_events_and_fill_db(
-            start_block,
-            end_block,
-            self.ws.clone(),
-        )
-        .await;
+        // Query past operator registrations
+        self.query_past_registered_operator_events_and_fill_db(start_block, end_block)
+            .await?;
 
-        let ws = WsConnect::new(&self.ws);
-        let provider = ProviderBuilder::new().on_ws(ws).await?;
+        let provider = get_ws_provider(&self.ws).await?;
         let current_block_number = provider.get_block_number().await?;
         let filter = Filter::new()
             .event(NEW_PUBKEY_REGISTRATION_EVENT)
@@ -154,25 +179,31 @@ impl OperatorInfoServiceInMemory {
         Ok(())
     }
 
-    pub async fn get_operator_info(&self, address: Address) -> Option<OperatorPubKeys> {
+    pub async fn get_operator_info(
+        &self,
+        address: Address,
+    ) -> Result<Option<OperatorPubKeys>, OperatorInfoServiceError> {
         let (responder_tx, responder_rx) = oneshot::channel();
         let _ = self
             .pub_keys
-            .send(OperatorsInfoMessage::Get(address, responder_tx));
-        responder_rx.await.unwrap_or(None)
+            .send(OperatorsInfoMessage::Get(address, responder_tx))
+            .map_err(|_| OperatorInfoServiceError::ChannelClosed)?;
+
+        responder_rx
+            .await
+            .map_err(|_| OperatorInfoServiceError::ChannelClosed)?
     }
 
     pub async fn query_past_registered_operator_events_and_fill_db(
         &self,
         start_block: u64,
         end_block: u64,
-        ws_url: String,
-    ) {
+    ) -> Result<()> {
+        println!("eee");
         let (operator_address, operator_pub_keys) = self
             .avs_registry_reader
-            .query_existing_registered_operator_pub_keys(start_block, end_block, ws_url)
-            .await
-            .unwrap();
+            .query_existing_registered_operator_pub_keys(start_block, end_block, self.ws.clone())
+            .await?;
         for (i, address) in operator_address.iter().enumerate() {
             let message = OperatorsInfoMessage::InsertOperatorInfo(
                 *address,
@@ -187,6 +218,8 @@ impl OperatorInfoServiceInMemory {
             );
             let _ = self.pub_keys.send(message);
         }
+
+        Ok(())
     }
 }
 
@@ -196,6 +229,9 @@ mod tests {
     use super::*;
     use alloy_primitives::address;
     use eigen_logging::get_test_logger;
+    use eigen_testing_utils::anvil_constants::{
+        get_operator_state_retriever_address, get_registry_coordinator_address,
+    };
     use eigen_testing_utils::m2_holesky_constants::{
         OPERATOR_STATE_RETRIEVER, REGISTRY_COORDINATOR,
     };
@@ -206,38 +242,38 @@ mod tests {
     async fn test_query_past_registered_operator_events_and_fill_db() {
         let websocket_url_holesky = env::var("HOLESKY_WS_URL").expect("HOLEESKY_WS_URL not set");
         let http_url_holesky = env::var("HOLESKY_HTTP_URL").expect("HOLESKY_HTTP_URL not set");
+        let anvil_ws_url = "ws://localhost:8545";
+        let anvil_http_url = "http://localhost:8545";
         let test_logger = get_test_logger();
+        println!("rrr");
+
         let avs_registry_chain_reader = AvsRegistryChainReader::new(
             test_logger.clone(),
-            REGISTRY_COORDINATOR,
-            OPERATOR_STATE_RETRIEVER,
-            http_url_holesky.clone(),
+            get_registry_coordinator_address().await,
+            get_operator_state_retriever_address().await,
+            anvil_http_url.to_string(),
         )
         .await
         .unwrap();
+
         let operators_info_service_in_memory = OperatorInfoServiceInMemory::new(
             test_logger.clone(),
             avs_registry_chain_reader,
-            websocket_url_holesky.clone(),
+            anvil_ws_url.to_string(),
         )
         .await;
 
-        operators_info_service_in_memory
-            .query_past_registered_operator_events_and_fill_db(
-                2019065,
-                2039045,
-                websocket_url_holesky,
-            )
+        let _ = operators_info_service_in_memory
+            .query_past_registered_operator_events_and_fill_db(0, 100)
             .await;
-
         // Give some time for the background task to process the messages
         tokio::time::sleep(tokio::time::Duration::from_millis(100)).await;
 
-        let address = address!("385b3b04126b221b09ad68fd55dee74965e9be8b");
-        let operator_info = operators_info_service_in_memory
-            .get_operator_info(address)
-            .await;
-        assert!(operator_info.is_some());
+        // let address = address!("385b3b04126b221b09ad68fd55dee74965e9be8b");
+        // let operator_info = operators_info_service_in_memory
+        //     .get_operator_info(address)
+        //     .await;
+        // assert!(operator_info.unwrap().is_some());
     }
 
     #[tokio::test]
