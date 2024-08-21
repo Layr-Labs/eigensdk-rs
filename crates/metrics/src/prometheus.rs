@@ -1,4 +1,4 @@
-use eigen_logging::logger::{Logger, SharedLogger};
+use eigen_logging::logger::SharedLogger;
 use hyper::{
     body::Body,
     service::{make_service_fn, service_fn},
