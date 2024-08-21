@@ -452,7 +452,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
             quorum_apks_g1: quorum_apks_g1.into(),
             signers_apk_g2: digest_aggregated_operators.signers_apk_g2,
             signers_agg_sig_g1: digest_aggregated_operators.signers_agg_sig_g1,
-            non_signer_quorum_bitmap_indices: indices.clone().quorumApkIndices,
+            non_signer_quorum_bitmap_indices: indices.clone().nonSignerQuorumBitmapIndices,
             quorum_apk_indices: indices.quorumApkIndices,
             total_stake_indices: indices.totalStakeIndices,
             non_signer_stake_indices: indices.nonSignerStakeIndices,
