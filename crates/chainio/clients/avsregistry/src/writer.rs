@@ -130,6 +130,7 @@ impl AvsRegistryChainWriter {
     ) -> Result<TxHash, AvsRegistryError> {
         let provider = get_signer(self.signer.clone(), &self.provider);
         let wallet = PrivateKeySigner::from_str(&self.signer).expect("failed to generate wallet ");
+
         // tracing info
         info!(avs_service_manager = %self.service_manager_addr, operator= %wallet.address(),quorum_numbers = ?quorum_numbers,"quorum_numbers,registering operator with the AVS's registry coordinator");
         let contract_registry_coordinator =
@@ -204,7 +205,6 @@ impl AvsRegistryChainWriter {
 
                 let tx_call = contract_call.gas(GAS_LIMIT_REGISTER_OPERATOR_REGISTRY_COORDINATOR);
                 let tx_result = tx_call.send().await;
-
                 match tx_result {
                     Ok(tx) => {
                         info!(tx_hash = ?tx,"Succesfully deregistered operator with the AVS's registry coordinator" );
@@ -298,27 +298,28 @@ impl AvsRegistryChainWriter {
 #[cfg(test)]
 mod tests {
     use super::AvsRegistryChainWriter;
-    use alloy_primitives::{Address, Bytes, FixedBytes, B256, U256};
+    use alloy_primitives::{Address, Bytes, FixedBytes, U256};
+    use eigen_crypto_bls::BlsKeyPair;
     use eigen_logging::get_test_logger;
-    use hex::FromHex;
     use std::str::FromStr;
     const HOLESKY_REGISTRY_COORDINATOR: &str = "0x53012C69A189cfA2D9d29eb6F19B32e0A2EA3490";
     const HOLESKY_OPERATOR_STATE_RETRIEVER: &str = "0xB4baAfee917fb4449f5ec64804217bccE9f46C67";
     const HOLESKY_STAKE_REGISTRY: &str = "0xBDACD5998989Eec814ac7A0f0f6596088AA2a270";
     const HOLESKY_BLS_APK_REGISTRY: &str = "0x066cF95c1bf0927124DFB8B02B401bc23A79730D";
 
-    async fn build_avs_registry_chain_reader() -> AvsRegistryChainWriter {
+    async fn build_avs_registry_chain_writer() -> AvsRegistryChainWriter {
         let holesky_registry_coordinator =
             Address::from_str(HOLESKY_REGISTRY_COORDINATOR).expect("failed to parse address");
         let holesky_operator_state_retriever =
             Address::from_str(HOLESKY_OPERATOR_STATE_RETRIEVER).expect("failed to parse address");
 
         let holesky_provider = "https://ethereum-holesky.blockpi.network/v1/rpc/public";
-
+        let private_key =
+            "bead471191bea97fc3aeac36c9d74c895e8a6242602e144e43152f96219e96e8".to_string();
         AvsRegistryChainWriter::build_avs_registry_chain_writer(
             get_test_logger(),
             holesky_provider.to_string(),
-            "".to_string(), // TODO!
+            private_key,
             holesky_registry_coordinator,
             holesky_operator_state_retriever,
         )
@@ -327,10 +328,29 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn test_get_quorum_count() {
-        let avs_reader = build_avs_registry_chain_reader().await;
+    async fn test_register_operator() {
+        let avs_writer = build_avs_registry_chain_writer().await;
+        let bls_key_pair = BlsKeyPair::new(
+            "13710126902690889134622698668747132666439281256983827313388062967626731803599".into(),
+        )
+        .unwrap();
+        let digest_hash: FixedBytes<32> = FixedBytes::from([
+            0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02,
+            0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02,
+            0x02, 0x02, 0x02, 0x02,
+        ]);
+        let quorum_nums = Bytes::from([0]);
 
-        //let _ = avs_reader.get_quorum_count().await.unwrap();
+        let res = avs_writer
+            .register_operator_in_quorum_with_avs_registry_coordinator(
+                bls_key_pair,
+                digest_hash,
+                U256::from(6300),
+                quorum_nums,
+                "".into(),
+            )
+            .await;
+        assert!(res.is_ok());
     }
 
     /*
