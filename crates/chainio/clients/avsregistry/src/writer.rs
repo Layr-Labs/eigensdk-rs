@@ -122,6 +122,18 @@ impl AvsRegistryChainWriter {
     }
 
     /// Register operator in quorum with avs registry coordinator
+    ///
+    /// # Arguments
+    ///
+    /// * `bls_key_pair` - bls key pair of the operator
+    /// * `operator_to_avs_registration_sig_salt` - salt for the signature
+    /// * `operator_to_avs_registration_sig_expiry` - expiry for the signature
+    /// * `quorum_numbers` - quorum numbers
+    /// * `socket` - socket used for calling the contract with `registerOperator` function
+    ///
+    /// # Returns
+    ///
+    /// * `Result<TxHash, AvsRegistryError>` - transaction hash of the register operator transaction
     pub async fn register_operator_in_quorum_with_avs_registry_coordinator(
         &self,
         bls_key_pair: BlsKeyPair,
@@ -212,11 +224,22 @@ impl AvsRegistryChainWriter {
         Ok(*tx.tx_hash())
     }
 
-    /// update_stakes_of_entire_operator_set_for_quorums is used by avs teams running https://github.com/Layr-Labs/avs-sync
-    /// to updates the stake of their entire operator set.
-    /// Because of high gas costs of this operation, it typically needs to be called for every quorum, or perhaps for a
-    /// small grouping of quorums
-    /// (highly dependent on number of operators per quorum)
+    /// Updates the stake of their entire operator set
+    ///
+    /// Is used by avs teams running https://github.com/Layr-Labs/avs-sync to updates
+    /// the stake of their entire operator set.
+    /// Because of high gas costs of this operation, it typically needs to be called
+    /// for every quorum, or perhaps for a small grouping of quorums
+    /// (highly dependent on number of operators per quorum).
+    ///
+    /// # Arguments
+    ///
+    /// * `operators_per_quorum` - A vector of vectors of addresses, where each inner vector represents the operators in a quorum
+    /// * `quorum_number` - The quorum number to update the stakes for
+    ///
+    /// # Returns
+    ///
+    /// * `TxHash` - The transaction hash of the transaction that was sent to update the stakes
     pub async fn update_stakes_of_entire_operator_set_for_quorums(
         &self,
         operators_per_quorum: Vec<Vec<Address>>,
@@ -240,6 +263,16 @@ impl AvsRegistryChainWriter {
     }
 
     /// Update stakes of operator subset for all quorums
+    ///
+    /// This function is used to update the stakes of a subset of operators for all quorums.
+    ///
+    /// # Arguments
+    ///
+    /// * `operators` - The list of operators to update the stakes for.
+    ///
+    /// # Returns
+    ///
+    /// * `TxHash` - The transaction hash of the update stakes of operator subset for all quorums transaction.
     pub async fn update_stakes_of_operator_subset_for_all_quorums(
         &self,
         operators: Vec<Address>,
@@ -263,6 +296,16 @@ impl AvsRegistryChainWriter {
     }
 
     /// Deregister operator
+    ///
+    /// This function is used to deregister an operator from the AVS's registry coordinator.
+    ///
+    /// # Arguments
+    ///
+    /// * `quorum_numbers` - The quorum numbers of the operator to be deregistered.
+    ///
+    /// # Returns
+    ///
+    /// * `TxHash` - The transaction hash of the deregister operator transaction.
     pub async fn deregister_operator(
         &self,
         quorum_numbers: Bytes,
