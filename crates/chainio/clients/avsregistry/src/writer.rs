@@ -137,86 +137,79 @@ impl AvsRegistryChainWriter {
         info!(avs_service_manager = %self.service_manager_addr, operator= %wallet.address(),quorum_numbers = ?quorum_numbers,"quorum_numbers,registering operator with the AVS's registry coordinator");
         let contract_registry_coordinator =
             RegistryCoordinator::new(self.registry_coordinator_addr, provider);
-        let g1_hashes_msg_to_sign_return_result = contract_registry_coordinator
+        let g1_hashes_msg_to_sign_return = contract_registry_coordinator
             .pubkeyRegistrationMessageHash(wallet.address())
             .call()
-            .await;
+            .await
+            .map_err(|_| AvsRegistryError::PubKeyRegistrationMessageHash)?;
 
-        match g1_hashes_msg_to_sign_return_result {
-            Ok(g1_hashes_msg_to_sign_return) => {
-                let RegistryCoordinator::pubkeyRegistrationMessageHashReturn {
-                    _0: g1_hashes_msg_to_sign,
-                } = g1_hashes_msg_to_sign_return;
-                let sig = bls_key_pair
-                    .sign_hashed_to_curve_message(alloy_g1_point_to_g1_affine(
-                        g1_hashes_msg_to_sign,
-                    ))
-                    .g1_point();
-                let alloy_g1_point_signed_msg = convert_to_g1_point(sig.g1())?;
+        let RegistryCoordinator::pubkeyRegistrationMessageHashReturn {
+            _0: g1_hashes_msg_to_sign,
+        } = g1_hashes_msg_to_sign_return;
+        let sig = bls_key_pair
+            .sign_hashed_to_curve_message(alloy_g1_point_to_g1_affine(g1_hashes_msg_to_sign))
+            .g1_point();
+        let alloy_g1_point_signed_msg = convert_to_g1_point(sig.g1())?;
 
-                let g1_pub_key_bn254 = convert_to_g1_point(bls_key_pair.public_key().g1())?;
+        let g1_pub_key_bn254 = convert_to_g1_point(bls_key_pair.public_key().g1())?;
 
-                let g2_pub_key_bn254 = convert_to_g2_point(bls_key_pair.public_key_g2().g2())?;
+        let g2_pub_key_bn254 = convert_to_g2_point(bls_key_pair.public_key_g2().g2())?;
 
-                let pub_key_reg_params = PubkeyRegistrationParams {
-                    pubkeyRegistrationSignature: alloy_g1_point_signed_msg,
-                    pubkeyG1: g1_pub_key_bn254,
-                    pubkeyG2: g2_pub_key_bn254,
-                };
+        let pub_key_reg_params = PubkeyRegistrationParams {
+            pubkeyRegistrationSignature: alloy_g1_point_signed_msg,
+            pubkeyG1: g1_pub_key_bn254,
+            pubkeyG2: g2_pub_key_bn254,
+        };
 
-                let msg_to_sign = self
-                    .el_reader
-                    .calculate_operator_avs_registration_digest_hash(
-                        wallet.address(),
-                        self.service_manager_addr,
-                        operator_to_avs_registration_sig_salt,
-                        operator_to_avs_registration_sig_expiry,
-                    )
-                    .await?;
+        let msg_to_sign = self
+            .el_reader
+            .calculate_operator_avs_registration_digest_hash(
+                wallet.address(),
+                self.service_manager_addr,
+                operator_to_avs_registration_sig_salt,
+                operator_to_avs_registration_sig_expiry,
+            )
+            .await?;
 
-                let operator_signature = wallet
-                    .sign_hash(&msg_to_sign)
-                    .await
-                    .expect("failed to sign message");
+        let operator_signature = wallet
+            .sign_hash(&msg_to_sign)
+            .await
+            .expect("failed to sign message");
 
-                let operator_signature_with_salt_and_expiry = SignatureWithSaltAndExpiry {
-                    signature: operator_signature.as_bytes().into(),
-                    salt: operator_to_avs_registration_sig_salt,
-                    expiry: operator_to_avs_registration_sig_expiry,
-                };
+        let operator_signature_with_salt_and_expiry = SignatureWithSaltAndExpiry {
+            signature: operator_signature.as_bytes().into(),
+            salt: operator_to_avs_registration_sig_salt,
+            expiry: operator_to_avs_registration_sig_expiry,
+        };
 
-                let contract_call = contract_registry_coordinator.registerOperator(
-                    quorum_numbers.clone(),
-                    socket,
-                    PubkeyRegistrationParams {
-                        pubkeyRegistrationSignature: RegistryG1Point {
-                            X: pub_key_reg_params.pubkeyRegistrationSignature.X,
-                            Y: pub_key_reg_params.pubkeyRegistrationSignature.Y,
-                        },
-                        pubkeyG1: RegistryG1Point {
-                            X: pub_key_reg_params.pubkeyG1.X,
-                            Y: pub_key_reg_params.pubkeyG1.Y,
-                        },
-                        pubkeyG2: RegistryG2Point {
-                            X: pub_key_reg_params.pubkeyG2.X,
-                            Y: pub_key_reg_params.pubkeyG2.Y,
-                        },
-                    },
-                    operator_signature_with_salt_and_expiry,
-                );
+        let contract_call = contract_registry_coordinator.registerOperator(
+            quorum_numbers.clone(),
+            socket,
+            PubkeyRegistrationParams {
+                pubkeyRegistrationSignature: RegistryG1Point {
+                    X: pub_key_reg_params.pubkeyRegistrationSignature.X,
+                    Y: pub_key_reg_params.pubkeyRegistrationSignature.Y,
+                },
+                pubkeyG1: RegistryG1Point {
+                    X: pub_key_reg_params.pubkeyG1.X,
+                    Y: pub_key_reg_params.pubkeyG1.Y,
+                },
+                pubkeyG2: RegistryG2Point {
+                    X: pub_key_reg_params.pubkeyG2.X,
+                    Y: pub_key_reg_params.pubkeyG2.Y,
+                },
+            },
+            operator_signature_with_salt_and_expiry,
+        );
 
-                let tx_call = contract_call.gas(GAS_LIMIT_REGISTER_OPERATOR_REGISTRY_COORDINATOR);
-                let tx_result = tx_call.send().await;
-                match tx_result {
-                    Ok(tx) => {
-                        info!(tx_hash = ?tx,"Succesfully deregistered operator with the AVS's registry coordinator" );
-                        Ok(*tx.tx_hash())
-                    }
-                    Err(e) => Err(AvsRegistryError::AlloyContractError(e)),
-                }
-            }
-            Err(_) => Err(AvsRegistryError::PubKeyRegistrationMessageHash),
-        }
+        let tx_call = contract_call.gas(GAS_LIMIT_REGISTER_OPERATOR_REGISTRY_COORDINATOR);
+        let tx = tx_call
+            .send()
+            .await
+            .map_err(|e| AvsRegistryError::AlloyContractError(e))?;
+
+        info!(tx_hash = ?tx,"Succesfully deregistered operator with the AVS's registry coordinator" );
+        Ok(*tx.tx_hash())
     }
 
     /// update_stakes_of_entire_operator_set_for_quorums is used by avs teams running https://github.com/Layr-Labs/avs-sync
@@ -237,15 +230,13 @@ impl AvsRegistryChainWriter {
         let contract_call = contract_registry_coordinator
             .updateOperatorsForQuorum(operators_per_quorum, quorum_number.clone());
 
-        let tx_result = contract_call.send().await;
+        let tx = contract_call
+            .send()
+            .await
+            .map_err(|e| AvsRegistryError::AlloyContractError(e))?;
 
-        match tx_result {
-            Ok(tx) => {
-                info!(tx_hash = ?tx, quorum_numbers = %quorum_number," update stakes for entire operator set tx" );
-                return Ok(*tx.tx_hash());
-            }
-            Err(e) => Err(AvsRegistryError::AlloyContractError(e)),
-        }
+        info!(tx_hash = ?tx, quorum_numbers = %quorum_number," update stakes for entire operator set tx" );
+        Ok(*tx.tx_hash())
     }
 
     /// Update stakes of operator subset for all quorums
@@ -262,15 +253,13 @@ impl AvsRegistryChainWriter {
 
         let contract_call = contract_registry_coordinator.updateOperators(operators);
 
-        let tx_result = contract_call.send().await;
+        let tx = contract_call
+            .send()
+            .await
+            .map_err(|e| AvsRegistryError::AlloyContractError(e))?;
 
-        match tx_result {
-            Ok(tx) => {
-                info!(tx_hash = ?tx,"succesfully updated stakes of operator subset for all quorums" );
-                Ok(*tx.tx_hash())
-            }
-            Err(e) => Err(AvsRegistryError::AlloyContractError(e)),
-        }
+        info!(tx_hash = ?tx,"succesfully updated stakes of operator subset for all quorums" );
+        Ok(*tx.tx_hash())
     }
 
     /// Deregister operator
@@ -286,14 +275,13 @@ impl AvsRegistryChainWriter {
 
         let contract_call = contract_registry_coordinator.deregisterOperator(quorum_numbers);
 
-        let tx_result = contract_call.send().await;
-        match tx_result {
-            Ok(tx) => {
-                info!(tx_hash = ?tx,"succesfully deregistered operator with the AVS's registry coordinator" );
-                Ok(*tx.tx_hash())
-            }
-            Err(e) => Err(AvsRegistryError::AlloyContractError(e)),
-        }
+        let tx = contract_call
+            .send()
+            .await
+            .map_err(|e| AvsRegistryError::AlloyContractError(e))?;
+
+        info!(tx_hash = ?tx,"succesfully deregistered operator with the AVS's registry coordinator" );
+        Ok(*tx.tx_hash())
     }
 }
 
