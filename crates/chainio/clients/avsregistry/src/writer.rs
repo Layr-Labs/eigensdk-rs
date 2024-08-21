@@ -1,24 +1,22 @@
+use crate::error::AvsRegistryError;
+use alloy_primitives::{Address, Bytes, FixedBytes, TxHash, U256};
 use alloy_signer::Signer;
 use alloy_signer_local::PrivateKeySigner;
 use eigen_client_elcontracts::reader::ELChainReader;
+use eigen_crypto_bls::{
+    alloy_g1_point_to_g1_affine, convert_to_g1_point, convert_to_g2_point, BlsKeyPair,
+};
 use eigen_logging::logger::SharedLogger;
 use eigen_utils::binding::RegistryCoordinator::{
     self, G1Point as RegistryG1Point, G2Point as RegistryG2Point, PubkeyRegistrationParams,
 };
-use std::str::FromStr;
-
-use alloy_primitives::{Address, Bytes, FixedBytes, TxHash, U256};
-use eigen_crypto_bls::{
-    alloy_g1_point_to_g1_affine, convert_to_g1_point, convert_to_g2_point, BlsKeyPair,
-};
-use tracing::info;
-use RegistryCoordinator::SignatureWithSaltAndExpiry;
-
-use crate::error::AvsRegistryError;
 use eigen_utils::{
     binding::{ServiceManagerBase, StakeRegistry},
     get_provider, get_signer,
 };
+use std::str::FromStr;
+use tracing::info;
+use RegistryCoordinator::SignatureWithSaltAndExpiry;
 
 /// Gas limit for registerOperator in [`RegistryCoordinator`]
 pub const GAS_LIMIT_REGISTER_OPERATOR_REGISTRY_COORDINATOR: u128 = 2000000;
