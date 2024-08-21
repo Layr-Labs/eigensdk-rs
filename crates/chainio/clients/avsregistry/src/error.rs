@@ -141,6 +141,10 @@ pub enum AvsRegistryError {
     /// BlsError compatibility
     #[error("BlsError :{0}")]
     BlsError(String),
+
+    /// Invalid Quorum Numbers
+    #[error("Invalid number of quorum numbers")]
+    InvalidQuorumNums,
 }
 
 impl From<ElContractsError> for AvsRegistryError {

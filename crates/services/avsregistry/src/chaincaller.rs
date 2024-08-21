@@ -46,7 +46,8 @@ impl AvsRegistryService for AvsRegistryServiceChainCaller {
             .await?;
 
         if operators_stakes_in_quorums.len() != quorum_nums.len() {
-            // TODO: throw error
+            // the list of quorum nums and the list of operators stakes in quorums should have the same length
+            return Err(AvsRegistryError::InvalidQuorumNums);
         }
 
         for (quorum_id, quorum_num) in quorum_nums.iter().enumerate() {
