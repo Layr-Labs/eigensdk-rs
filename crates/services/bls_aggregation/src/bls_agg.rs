@@ -197,7 +197,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         // return the signature verification result
         rx.recv()
             .await
-            .unwrap()
+            .ok_or(BlsAggregationServiceError::ChannelClosed)?
             .map_err(BlsAggregationServiceError::SignatureVerificationError)
     }
 
