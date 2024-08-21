@@ -65,72 +65,60 @@ impl AvsRegistryChainWriter {
         let contract_registry_coordinator =
             RegistryCoordinator::new(registry_coordinator_addr, &fill_provider);
 
-        let service_manager_addr_result =
-            contract_registry_coordinator.serviceManager().call().await;
+        let service_manager_addr = contract_registry_coordinator
+            .serviceManager()
+            .call()
+            .await
+            .map_err(|e| AvsRegistryError::AlloyContractError(e))?;
 
-        match service_manager_addr_result {
-            Ok(service_manager_addr) => {
-                let RegistryCoordinator::serviceManagerReturn {
-                    _0: service_manager,
-                } = service_manager_addr;
-                let contract_service_manager_base =
-                    ServiceManagerBase::new(service_manager, &fill_provider);
+        let RegistryCoordinator::serviceManagerReturn {
+            _0: service_manager,
+        } = service_manager_addr;
+        let contract_service_manager_base =
+            ServiceManagerBase::new(service_manager, &fill_provider);
 
-                let bls_apk_registry_addr_result =
-                    contract_registry_coordinator.blsApkRegistry().call().await;
+        let bls_apk_registry_addr_result = contract_registry_coordinator
+            .blsApkRegistry()
+            .call()
+            .await
+            .map_err(|e| AvsRegistryError::AlloyContractError(e))?;
 
-                match bls_apk_registry_addr_result {
-                    Ok(bls_apk_registry_addr) => {
-                        let RegistryCoordinator::blsApkRegistryReturn {
-                            _0: bls_apk_registry,
-                        } = bls_apk_registry_addr;
-                        let stake_registry_addr =
-                            contract_registry_coordinator.stakeRegistry().call().await?;
-                        let RegistryCoordinator::stakeRegistryReturn { _0: stake_registry } =
-                            stake_registry_addr;
-                        let contract_stake_registry =
-                            StakeRegistry::new(stake_registry, &fill_provider);
+        let RegistryCoordinator::blsApkRegistryReturn {
+            _0: bls_apk_registry,
+        } = bls_apk_registry_addr_result;
+        let stake_registry_addr = contract_registry_coordinator.stakeRegistry().call().await?;
+        let RegistryCoordinator::stakeRegistryReturn { _0: stake_registry } = stake_registry_addr;
+        let contract_stake_registry = StakeRegistry::new(stake_registry, &fill_provider);
 
-                        let delegation_manager_return =
-                            contract_stake_registry.delegation().call().await?;
+        let delegation_manager_return = contract_stake_registry.delegation().call().await?;
 
-                        let StakeRegistry::delegationReturn {
-                            _0: delegation_manager_addr,
-                        } = delegation_manager_return;
-                        let avs_directory_addr =
-                            contract_service_manager_base.avsDirectory().call().await?;
+        let StakeRegistry::delegationReturn {
+            _0: delegation_manager_addr,
+        } = delegation_manager_return;
+        let avs_directory_addr = contract_service_manager_base.avsDirectory().call().await?;
 
-                        let ServiceManagerBase::avsDirectoryReturn { _0: avs_directory } =
-                            avs_directory_addr;
+        let ServiceManagerBase::avsDirectoryReturn { _0: avs_directory } = avs_directory_addr;
 
-                        let el_reader_result = ELChainReader::build(
-                            logger.clone(),
-                            delegation_manager_addr,
-                            avs_directory,
-                            &provider,
-                        )
-                        .await;
+        let el_reader = ELChainReader::build(
+            logger.clone(),
+            delegation_manager_addr,
+            avs_directory,
+            &provider,
+        )
+        .await
+        .map_err(|e| AvsRegistryError::ElContractsError(e.to_string()))?;
 
-                        match el_reader_result {
-                            Ok(el_reader) => Ok(AvsRegistryChainWriter {
-                                logger,
-                                service_manager_addr: service_manager,
-                                registry_coordinator_addr,
-                                operator_state_retriever_addr,
-                                stake_registry_addr: stake_registry,
-                                bls_apk_registry_addr: bls_apk_registry,
-                                el_reader,
-                                provider: provider.clone(),
-                                signer: signer.clone(),
-                            }),
-                            Err(e) => Err(AvsRegistryError::ElContractsError(e.to_string())),
-                        }
-                    }
-                    Err(e) => Err(AvsRegistryError::AlloyContractError(e)),
-                }
-            }
-            Err(e) => Err(AvsRegistryError::AlloyContractError(e)),
-        }
+        Ok(AvsRegistryChainWriter {
+            logger,
+            service_manager_addr: service_manager,
+            registry_coordinator_addr,
+            operator_state_retriever_addr,
+            stake_registry_addr: stake_registry,
+            bls_apk_registry_addr: bls_apk_registry,
+            el_reader,
+            provider: provider.clone(),
+            signer: signer.clone(),
+        })
     }
 
     /// Register operator in quorum with avs registry coordinator
