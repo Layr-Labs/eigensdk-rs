@@ -1,12 +1,14 @@
 #[cfg(test)]
 pub mod integration_test {
-    use crate::bls_agg::BlsAggregatorService;
-    use alloy_primitives::{Bytes, FixedBytes, B256, U256};
+    use crate::bls_agg::{BlsAggregationServiceResponse, BlsAggregatorService};
+    use alloy_primitives::{hex, Bytes, FixedBytes, B256, U256};
     use alloy_provider::Provider;
     use eigen_client_avsregistry::{
         reader::AvsRegistryChainReader, writer::AvsRegistryChainWriter,
     };
-    use eigen_crypto_bls::BlsKeyPair;
+    use eigen_crypto_bls::{
+        convert_to_bls_checker_g1_point, convert_to_bls_checker_g2_point, BlsKeyPair,
+    };
     use eigen_logging::get_test_logger;
     use eigen_services_avsregistry::chaincaller::AvsRegistryServiceChainCaller;
     use eigen_services_operatorsinfo::operatorsinfo_inmemory::OperatorInfoServiceInMemory;
@@ -15,7 +17,10 @@ pub mod integration_test {
         get_service_manager_address,
     };
     use eigen_types::{avs::TaskIndex, operator::QuorumThresholdPercentages};
-    use eigen_utils::{binding::mockAvsServiceManager, get_provider};
+    use eigen_utils::{
+        binding::IBLSSignatureChecker::{self, G1Point, NonSignerStakesAndSignature},
+        get_provider,
+    };
     use sha2::{Digest, Sha256};
     use std::time::Duration;
     use tokio::sync::watch;
@@ -41,7 +46,7 @@ pub mod integration_test {
         .unwrap();
         let quorum_nums = Bytes::from([0]);
 
-        // create avs clients to interact with contracts deployed on anvil
+        // Create avs clients to interact with contracts deployed on anvil
         let avs_registry_reader = AvsRegistryChainReader::new(
             get_test_logger(),
             registry_coordinator_address,
@@ -60,7 +65,7 @@ pub mod integration_test {
         .await
         .unwrap();
 
-        // create aggregation service
+        // Create aggregation service
         let operators_info = OperatorInfoServiceInMemory::new(
             get_test_logger(),
             avs_registry_reader.clone(),
@@ -79,7 +84,7 @@ pub mod integration_test {
 
         let bls_agg_service = BlsAggregatorService::new(avs_registry_service);
 
-        // register operator
+        // Register operator
         avs_writer
             .register_operator_in_quorum_with_avs_registry_coordinator(
                 bls_key_pair.clone(),
@@ -90,21 +95,16 @@ pub mod integration_test {
             )
             .await
             .unwrap();
+        let operator_id =
+            hex!("48beccce16ccdf8000c13d5af5f91c7c3dac6c47b339d993d229af1500dbe4a9").into();
 
-        // this query advances the block number by 1
-        let operators = avs_registry_reader
-            .get_operators_stake_in_quorums_at_current_block(quorum_nums.clone())
-            .await
-            .unwrap();
-        let operator_id = operators[0][0].operatorId;
-
-        // create the task related parameters
+        // Create the task related parameters
         let current_block_num = provider.get_block_number().await.unwrap();
         let task_index: TaskIndex = 0;
         let quorum_threshold_percentages: QuorumThresholdPercentages = vec![100];
         let time_to_expiry = Duration::from_secs(1);
 
-        // initialize the task
+        // Initialize the task
         bls_agg_service
             .initialize_new_task(
                 task_index,
@@ -116,21 +116,16 @@ pub mod integration_test {
             .await
             .unwrap();
 
-        // compute the signature and send it to the aggregation service
+        // Compute the signature and send it to the aggregation service
         let task_response = 123; // Initialize with appropriate data
         let task_response_digest = hash(task_response); // es igual
         let bls_signature = bls_key_pair.sign_message(task_response_digest.as_ref()); // es igual
         bls_agg_service
-            .process_new_signature(
-                task_index,
-                task_response_digest,
-                bls_signature,
-                operator_id.into(),
-            )
+            .process_new_signature(task_index, task_response_digest, bls_signature, operator_id)
             .await
             .unwrap();
 
-        // wait for the response from the aggregation service and check the signature
+        // Wait for the response from the aggregation service
         let bls_agg_response = bls_agg_service
             .aggregated_response_receiver
             .lock()
@@ -143,8 +138,44 @@ pub mod integration_test {
         // Send the shutdown signal to the OperatorInfoServiceInMemory
         let _ = shutdown_tx.send(());
 
-        // TODO: check the response signature with `service_manager.checkSignatures()`
-        let service_manager =
-            mockAvsServiceManager::new(service_manager_address, get_provider(&http_endpoint));
+        // Check the response
+        let service_manager = IBLSSignatureChecker::new(service_manager_address, provider);
+        service_manager
+            .checkSignatures(
+                task_response_digest,
+                quorum_nums,
+                current_block_num as u32,
+                agg_response_to_non_signer_stakes_and_signature(bls_agg_response),
+            )
+            .call()
+            .await
+            .unwrap();
+    }
+
+    fn agg_response_to_non_signer_stakes_and_signature(
+        agg_response: BlsAggregationServiceResponse,
+    ) -> NonSignerStakesAndSignature {
+        let non_signer_pubkeys: Vec<G1Point> = agg_response
+            .non_signers_pub_keys_g1
+            .iter()
+            .map(|point| convert_to_bls_checker_g1_point(point.g1()).unwrap())
+            .collect();
+        let quorum_apks = agg_response
+            .quorum_apks_g1
+            .iter()
+            .map(|point| convert_to_bls_checker_g1_point(point.g1()).unwrap())
+            .collect();
+
+        NonSignerStakesAndSignature {
+            nonSignerPubkeys: non_signer_pubkeys,
+            quorumApks: quorum_apks,
+            apkG2: convert_to_bls_checker_g2_point(agg_response.signers_apk_g2.g2()).unwrap(),
+            sigma: convert_to_bls_checker_g1_point(agg_response.signers_agg_sig_g1.g1_point().g1())
+                .unwrap(),
+            nonSignerQuorumBitmapIndices: agg_response.non_signer_quorum_bitmap_indices,
+            quorumApkIndices: agg_response.quorum_apk_indices,
+            totalStakeIndices: agg_response.total_stake_indices,
+            nonSignerStakeIndices: agg_response.non_signer_stake_indices,
+        }
     }
 }

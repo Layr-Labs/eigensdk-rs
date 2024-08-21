@@ -23,16 +23,16 @@ use tokio::time::{timeout, Duration};
 #[allow(unused)]
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BlsAggregationServiceResponse {
-    task_index: TaskIndex,
-    task_response_digest: TaskResponseDigest,
-    non_signers_pub_keys_g1: Vec<BlsG1Point>,
-    quorum_apks_g1: Vec<BlsG1Point>,
-    signers_apk_g2: BlsG2Point,
-    signers_agg_sig_g1: Signature,
-    non_signer_quorum_bitmap_indices: Vec<u32>,
-    quorum_apk_indices: Vec<u32>,
-    total_stake_indices: Vec<u32>,
-    non_signer_stake_indices: Vec<Vec<u32>>,
+    pub task_index: TaskIndex,
+    pub task_response_digest: TaskResponseDigest,
+    pub non_signers_pub_keys_g1: Vec<BlsG1Point>,
+    pub quorum_apks_g1: Vec<BlsG1Point>,
+    pub signers_apk_g2: BlsG2Point,
+    pub signers_agg_sig_g1: Signature,
+    pub non_signer_quorum_bitmap_indices: Vec<u32>,
+    pub quorum_apk_indices: Vec<u32>,
+    pub total_stake_indices: Vec<u32>,
+    pub non_signer_stake_indices: Vec<Vec<u32>>,
 }
 
 /// Possible errors raised in BLS aggregation

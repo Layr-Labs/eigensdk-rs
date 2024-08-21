@@ -13,6 +13,9 @@ use ark_bn254::{Fq, Fr, G1Affine, G1Projective, G2Affine, G2Projective};
 use ark_ec::{AffineRepr, CurveGroup};
 use ark_ff::{fields::PrimeField, BigInt, BigInteger256, Fp2};
 use eigen_crypto_bn254::utils::map_to_curve;
+use eigen_utils::binding::IBLSSignatureChecker::{
+    G1Point as G1PointChecker, G2Point as G2PointChecker,
+};
 use eigen_utils::binding::{
     BLSApkRegistry,
     RegistryCoordinator::{self},
@@ -131,6 +134,57 @@ pub fn convert_to_g1_point(g1: G1Affine) -> Result<G1Point, BlsError> {
         })
     } else {
         Err(BlsError::InvalidG1Affine)
+    }
+}
+
+/// Convert [`G1Affine`] to  Alloy [`G1Point`]
+pub fn convert_to_bls_checker_g1_point(g1: G1Affine) -> Result<G1PointChecker, BlsError> {
+    let x_point_result = g1.x();
+    let y_point_result = g1.y();
+
+    if let (Some(x_point), Some(y_point)) = (x_point_result, y_point_result) {
+        let x = BigInt::new(x_point.into_bigint().0);
+        let y = BigInt::new(y_point.into_bigint().0);
+
+        let x_u256 = U256::from_limbs(x.0);
+        let y_u256 = U256::from_limbs(y.0);
+
+        Ok(G1PointChecker {
+            X: x_u256,
+            Y: y_u256,
+        })
+    } else {
+        Err(BlsError::InvalidG1Affine)
+    }
+}
+
+/// Convert [`G1Affine`] to  Alloy [`G1Point`]
+pub fn convert_to_bls_checker_g2_point(g2: G2Affine) -> Result<G2PointChecker, BlsError> {
+    let x_point_result = g2.x();
+    let y_point_result = g2.y();
+
+    if let (Some(x_point), Some(y_point)) = (x_point_result, y_point_result) {
+        let x_point_c0 = x_point.c0;
+        let x_point_c1 = x_point.c1;
+        let y_point_c0 = y_point.c0;
+        let y_point_c1 = y_point.c1;
+
+        let x_0 = BigInt::new(x_point_c0.into_bigint().0);
+        let x_1 = BigInt::new(x_point_c1.into_bigint().0);
+        let y_0 = BigInt::new(y_point_c0.into_bigint().0);
+        let y_1 = BigInt::new(y_point_c1.into_bigint().0);
+
+        let x_u256_0 = U256::from_limbs(x_0.0);
+        let x_u256_1 = U256::from_limbs(x_1.0);
+        let y_u256_0 = U256::from_limbs(y_0.0);
+        let y_u256_1 = U256::from_limbs(y_1.0);
+
+        Ok(G2PointChecker {
+            X: [x_u256_1, x_u256_0],
+            Y: [y_u256_1, y_u256_0],
+        })
+    } else {
+        Err(BlsError::InvalidG2Affine)
     }
 }
 
