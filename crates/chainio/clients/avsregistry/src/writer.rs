@@ -69,7 +69,7 @@ impl AvsRegistryChainWriter {
             .serviceManager()
             .call()
             .await
-            .map_err(|e| AvsRegistryError::AlloyContractError(e))?;
+            .map_err(AvsRegistryError::AlloyContractError)?;
 
         let RegistryCoordinator::serviceManagerReturn {
             _0: service_manager,
@@ -81,7 +81,7 @@ impl AvsRegistryChainWriter {
             .blsApkRegistry()
             .call()
             .await
-            .map_err(|e| AvsRegistryError::AlloyContractError(e))?;
+            .map_err(AvsRegistryError::AlloyContractError)?;
 
         let RegistryCoordinator::blsApkRegistryReturn {
             _0: bls_apk_registry,
@@ -218,7 +218,7 @@ impl AvsRegistryChainWriter {
         let tx = tx_call
             .send()
             .await
-            .map_err(|e| AvsRegistryError::AlloyContractError(e))?;
+            .map_err(AvsRegistryError::AlloyContractError)?;
 
         info!(tx_hash = ?tx,"Succesfully deregistered operator with the AVS's registry coordinator" );
         Ok(*tx.tx_hash())
@@ -256,7 +256,7 @@ impl AvsRegistryChainWriter {
         let tx = contract_call
             .send()
             .await
-            .map_err(|e| AvsRegistryError::AlloyContractError(e))?;
+            .map_err(AvsRegistryError::AlloyContractError)?;
 
         info!(tx_hash = ?tx, quorum_numbers = %quorum_number," update stakes for entire operator set tx" );
         Ok(*tx.tx_hash())
@@ -289,7 +289,7 @@ impl AvsRegistryChainWriter {
         let tx = contract_call
             .send()
             .await
-            .map_err(|e| AvsRegistryError::AlloyContractError(e))?;
+            .map_err(AvsRegistryError::AlloyContractError)?;
 
         info!(tx_hash = ?tx,"succesfully updated stakes of operator subset for all quorums" );
         Ok(*tx.tx_hash())
@@ -321,7 +321,7 @@ impl AvsRegistryChainWriter {
         let tx = contract_call
             .send()
             .await
-            .map_err(|e| AvsRegistryError::AlloyContractError(e))?;
+            .map_err(AvsRegistryError::AlloyContractError)?;
 
         info!(tx_hash = ?tx,"succesfully deregistered operator with the AVS's registry coordinator" );
         Ok(*tx.tx_hash())
