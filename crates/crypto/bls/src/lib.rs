@@ -240,7 +240,7 @@ pub fn alloy_registry_g2_point_to_g2_affine(g2_point: G2PointRegistry) -> G2Affi
         BigInteger256::new(g2_point.Y[1].into_limbs()).into(),
         BigInteger256::new(g2_point.Y[0].into_limbs()).into(),
     );
-    G2Affine::new_unchecked(x_fp2, y_fp2)
+    G2Affine::new(x_fp2, y_fp2)
 }
 
 /// Convert [`G2Affine`] to [`G2Point`]
