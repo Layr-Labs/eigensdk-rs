@@ -331,7 +331,18 @@ impl AvsRegistryChainReader {
         Ok(operator_status == 1)
     }
 
-    /// Queies existing operators from for a particular block range
+    /// Queries existing operators from for a particular block range.
+    ///
+    /// # Arguments
+    ///
+    /// * `start_block` - The block number to start querying from.
+    /// * `stop_block` - The block number to stop querying at.
+    /// * `ws_url` - The websocket url to use for querying.
+    ///
+    /// # Returns
+    ///
+    /// * (`Vec<Address>`, `Vec<OperatorPubKeys>`) - A vector of operator addresses and its
+    /// corresponding operator pub keys.
     pub async fn query_existing_registered_operator_pub_keys(
         &self,
         start_block: u64,
@@ -394,6 +405,16 @@ impl AvsRegistryChainReader {
 
     /// Query existing operator sockets
     /// TODO Update bindings and then update this function
+    ///
+    /// # Arguments
+    ///
+    /// * `start_block` - Start block number
+    /// * `stop_block` - Stop block number
+    ///
+    /// # Returns
+    ///
+    /// * `HashMap<FixedBytes<32>, String>` - Operator Id to socket mapping containing all the operator
+    /// sockets registered in the given block range
     pub async fn query_existing_registered_operator_sockets(
         &self,
         start_block: u64,
