@@ -39,6 +39,22 @@ pub struct AvsRegistryChainWriter {
 
 impl AvsRegistryChainWriter {
     /// build avs registry chain writer instance
+    ///
+    /// # Arguments
+    ///
+    /// * `logger` - SharedLogger used for logging
+    /// * `provider` - provider string
+    /// * `signer` - signer string
+    /// * `registry_coordinator_addr` - registry coordinator address
+    /// * `operator_state_retriever_addr` - operator state retriever address
+    ///
+    /// # Returns
+    ///
+    /// * `Result<Self, AvsRegistryError>` - a new AvsRegistryChainWriter
+    ///
+    /// # Errors
+    ///
+    /// * `AvsRegistryError` - if any error occurs
     pub async fn build_avs_registry_chain_writer(
         logger: SharedLogger,
         provider: String,
