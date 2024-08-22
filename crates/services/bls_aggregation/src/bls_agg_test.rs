@@ -30,6 +30,7 @@ pub mod integration_test {
     };
     use serial_test::serial;
     use sha2::{Digest, Sha256};
+    use std::process::{Command, Stdio};
     use std::time::Duration;
     use tokio::sync::watch;
 
@@ -159,8 +160,16 @@ pub mod integration_test {
         let operator_id =
             hex!("48beccce16ccdf8000c13d5af5f91c7c3dac6c47b339d993d229af1500dbe4a9").into();
 
-        // Create the task related parameters
         let current_block_num = provider.get_block_number().await.unwrap();
+
+        // Advance the block number by 1
+        Command::new("cast")
+            .args(&["rpc", "anvil_mine", "1", "--rpc-url", &http_endpoint])
+            .stdout(Stdio::null())
+            .output()
+            .expect("Failed to execute command");
+
+        // Create the task related parameters
         let task_index: TaskIndex = 0;
         let quorum_threshold_percentages: QuorumThresholdPercentages = vec![100];
         let time_to_expiry = Duration::from_secs(1);
@@ -347,8 +356,16 @@ pub mod integration_test {
             .await
             .unwrap();
 
-        // Create the task related parameters
         let current_block_num = provider.get_block_number().await.unwrap();
+
+        // Advance the block number by 1
+        Command::new("cast")
+            .args(&["rpc", "anvil_mine", "1", "--rpc-url", &http_endpoint])
+            .stdout(Stdio::null())
+            .output()
+            .expect("Failed to execute command");
+
+        // Create the task related parameters
         let task_index: TaskIndex = 0;
         let quorum_threshold_percentages: QuorumThresholdPercentages = vec![100, 100];
         let time_to_expiry = Duration::from_secs(1);
