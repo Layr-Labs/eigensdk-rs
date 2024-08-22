@@ -33,7 +33,8 @@ pub struct AvsRegistryChainReader {
 impl Default for AvsRegistryChainReader {
     fn default() -> Self {
         AvsRegistryChainReader {
-            logger: Arc::new(TracingLogger::default()),
+            logger: Arc::new(
+              ::default()),
             bls_apk_registry_addr: Default::default(),
             registry_coordinator_addr: Default::default(),
             operator_state_retriever: Default::default(),
