@@ -25,7 +25,7 @@ use tokio_util::sync::CancellationToken;
 #[derive(Debug, Clone)]
 pub struct OperatorInfoServiceInMemory {
     logger: SharedLogger,
-    avs_registry_reader: AvsRegistryChainReader,
+    pub avs_registry_reader: AvsRegistryChainReader,
     ws: String,
     pub_keys: UnboundedSender<OperatorsInfoMessage>,
 }

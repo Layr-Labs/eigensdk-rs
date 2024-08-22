@@ -12,7 +12,6 @@
 // const WS_HOLESKY_PROIVIDER: &str = "wss://holesky.drpc.org";
 // use eigen_logging::get_test_logger;
 
-
 // #[tokio::main]
 // async fn main() {
 //     let avs_registry_chain_reader = AvsRegistryChainReader::new(
@@ -35,7 +34,6 @@
 
 //     let operators_info_clone = Arc::clone(&operators_info);
 //     let (shutdown_tx, shutdown_rx) = watch::channel(());
-
 
 //     // start the service with a particular block range
 //     // from block : 1536406

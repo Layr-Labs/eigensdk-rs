@@ -12,7 +12,6 @@ use crate::AvsRegistryService;
 
 #[derive(Debug, Clone)]
 pub struct AvsRegistryServiceChainCaller {
-    avs_registry: AvsRegistryChainReader,
     operators_info_service: OperatorInfoServiceInMemory,
 }
 
@@ -21,14 +20,9 @@ impl AvsRegistryServiceChainCaller {
     ///
     /// # Arguments
     ///
-    /// * `avs_registry` - The AVS registry chain reader
     /// * `operators_info_service` - The operator info service
-    pub fn new(
-        avs_registry: AvsRegistryChainReader,
-        operators_info_service: OperatorInfoServiceInMemory,
-    ) -> Self {
+    pub fn new(operators_info_service: OperatorInfoServiceInMemory) -> Self {
         Self {
-            avs_registry,
             operators_info_service,
         }
     }
@@ -53,7 +47,8 @@ impl AvsRegistryService for AvsRegistryServiceChainCaller {
         let mut operators_avs_state: HashMap<FixedBytes<32>, OperatorAvsState> = HashMap::new();
 
         let operators_stakes_in_quorums = self
-            .avs_registry
+            .operators_info_service
+            .avs_registry_reader
             .get_operators_stake_in_quorums_at_block(block_num, Bytes::from(Vec::from(quorum_nums)))
             .await?;
 
@@ -153,7 +148,8 @@ impl AvsRegistryService for AvsRegistryServiceChainCaller {
         quorum_numbers: Vec<u8>,
         non_signer_operator_ids: Vec<FixedBytes<32>>,
     ) -> Result<CheckSignaturesIndices, AvsRegistryError> {
-        self.avs_registry
+        self.operators_info_service
+            .avs_registry_reader
             .get_check_signatures_indices(
                 reference_block_number,
                 quorum_numbers,
@@ -175,7 +171,8 @@ impl AvsRegistryServiceChainCaller {
     /// The operator public keys
     async fn get_operator_info(&self, operator_id: [u8; 32]) -> Option<OperatorPubKeys> {
         let operator_addr = self
-            .avs_registry
+            .operators_info_service
+            .avs_registry_reader
             .get_operator_from_id(operator_id)
             .await
             .ok()?;
