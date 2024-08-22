@@ -249,7 +249,6 @@ impl AvsRegistryChainWriter {
         let provider = get_signer(self.signer.clone(), &self.provider);
         let contract_registry_coordinator =
             RegistryCoordinator::new(self.registry_coordinator_addr, provider);
-
         let contract_call = contract_registry_coordinator
             .updateOperatorsForQuorum(operators_per_quorum, quorum_number.clone());
 
@@ -376,9 +375,21 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn test_update_stake() {
+    async fn test_avs_writer_methods() {
         let avs_writer = build_avs_registry_chain_writer().await;
+        let quorum_nums = Bytes::from([0]);
         let operator_id = Address::from_str("70997970C51812dc3A010C7d01b50e0d17dc79C8").unwrap();
+        test_register_operator(&avs_writer, quorum_nums.clone()).await;
+        test_update_stake_of_operator_subset(&avs_writer, operator_id).await;
+        test_update_stake_of_entire_operator_set(&avs_writer, operator_id, quorum_nums.clone())
+            .await;
+        test_deregister_operator(&avs_writer, quorum_nums).await;
+    }
+
+    async fn test_update_stake_of_operator_subset(
+        avs_writer: &AvsRegistryChainWriter,
+        operator_id: Address,
+    ) {
         let tx_hash = avs_writer
             .update_stakes_of_operator_subset_for_all_quorums(vec![operator_id])
             .await
@@ -388,9 +399,21 @@ mod tests {
         assert!(tx_status);
     }
 
-    #[tokio::test]
-    async fn test_register_and_deregister_operator() {
-        let avs_writer = build_avs_registry_chain_writer().await;
+    async fn test_update_stake_of_entire_operator_set(
+        avs_writer: &AvsRegistryChainWriter,
+        operator_id: Address,
+        quorum_nums: Bytes,
+    ) {
+        let tx_hash = avs_writer
+            .update_stakes_of_entire_operator_set_for_quorums(vec![vec![operator_id]], quorum_nums)
+            .await
+            .unwrap();
+
+        let tx_status = get_transaction_status(tx_hash).await;
+        assert!(tx_status);
+    }
+
+    async fn test_register_operator(avs_writer: &AvsRegistryChainWriter, quorum_nums: Bytes) {
         let bls_key_pair = BlsKeyPair::new(
             "86245596270685705884472351211857039932300464725915589549000044251545453106920".into(),
         )
@@ -401,7 +424,6 @@ mod tests {
             0x02, 0x02, 0x02, 0x05,
         ]);
 
-        let quorum_nums = Bytes::from([0]);
         // this is set to U256::MAX so that the registry does not take the signature as expired.
         let signature_expiry = U256::MAX;
         let tx_hash = avs_writer
@@ -417,7 +439,9 @@ mod tests {
 
         let tx_status = get_transaction_status(tx_hash).await;
         assert!(tx_status);
+    }
 
+    async fn test_deregister_operator(avs_writer: &AvsRegistryChainWriter, quorum_nums: Bytes) {
         let tx_hash = avs_writer.deregister_operator(quorum_nums).await.unwrap();
 
         let tx_status = get_transaction_status(tx_hash).await;
