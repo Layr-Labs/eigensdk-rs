@@ -1,8 +1,7 @@
-use eigen_logging::logger::{tags_as_debug, Logger, SharedLogger};
+use eigen_logging::logger::SharedLogger;
 use eigen_metrics_derive::Metrics;
 use metrics::Gauge;
 use std::fmt::Debug;
-use std::sync::Arc;
 /// TODO(supernova): fee_earned_total is not yet implemented . As its not yet turned on
 // Performance Metrics
 #[derive(Clone, Metrics)]
