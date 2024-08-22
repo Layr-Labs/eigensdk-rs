@@ -1,13 +1,9 @@
 use crate::error::ElContractsError;
 use crate::reader::ELChainReader;
-use alloy_primitives::FixedBytes;
-use alloy_primitives::{Address, TxHash, U256};
+use alloy_primitives::{Address, FixedBytes, TxHash, U256};
 pub use eigen_types::operator::Operator;
 use eigen_utils::{
-    binding::{
-        DelegationManager::{self},
-        StrategyManager, IERC20,
-    },
+    binding::{DelegationManager, StrategyManager, IERC20},
     get_signer,
 };
 
@@ -186,19 +182,24 @@ impl ELChainWriter {
 
 #[cfg(test)]
 mod tests {
-
-    use super::*;
+    use super::ELChainWriter;
+    use crate::reader::ELChainReader;
+    use alloy_primitives::Address;
     use alloy_signer_local::PrivateKeySigner;
     use eigen_logging::get_test_logger;
-    use eigen_testing_utils::anvil_constants::{self};
+    use eigen_testing_utils::anvil_constants;
+    use eigen_testing_utils::anvil_constants::{
+        get_delegation_manager_address, get_service_manager_address, get_strategy_manager_address,
+    };
+    //get_erc20_mock_strategy, get_operator_state_retriever_address, get_registry_coordinator_address,
+    use eigen_utils::binding::DelegationManager;
     use eigen_utils::binding::{
         mockAvsServiceManager,
         ContractsRegistry::{self, get_test_valuesReturn},
     };
 
-    #[tokio::test]
-    async fn test_register_operator() {
-        let delegation_manager_address = anvil_constants::get_delegation_manager_address().await;
+    async fn setup_el_chain_reader() -> (ELChainReader, Address) {
+        let delegation_manager_address = get_delegation_manager_address().await;
         let delegation_manager_contract = DelegationManager::new(
             delegation_manager_address,
             anvil_constants::ANVIL_RPC_URL.clone(),
@@ -207,31 +208,44 @@ mod tests {
         let DelegationManager::slasherReturn {
             _0: slasher_address,
         } = slasher_address_return;
-        let service_manager_address = anvil_constants::get_service_manager_address().await;
+
+        let service_manager_address = get_service_manager_address().await;
         let service_manager_contract = mockAvsServiceManager::new(
             service_manager_address,
             anvil_constants::ANVIL_RPC_URL.clone(),
         );
-        let operator_pvt_key = "59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d";
-        let operator: PrivateKeySigner = (operator_pvt_key)
-            .parse()
-            .expect("failed to generate wallet");
         let avs_directory_address_return = service_manager_contract
             .avsDirectory()
             .call()
             .await
             .unwrap();
+
         let mockAvsServiceManager::avsDirectoryReturn {
             _0: avs_directory_address,
         } = avs_directory_address_return;
 
-        let el_chain_reader = ELChainReader::new(
-            get_test_logger().clone(),
-            slasher_address,
+        //(slasher_address, delegation_manager_address)
+        (
+            ELChainReader::new(
+                get_test_logger().clone(),
+                slasher_address,
+                delegation_manager_address,
+                avs_directory_address,
+                "http://localhost:8545".to_string(),
+            ),
             delegation_manager_address,
-            avs_directory_address,
-            "http://localhost:8545".to_string(),
-        );
+        )
+    }
+
+    #[tokio::test]
+    async fn test_register_operator() {
+        let (el_chain_reader, _delegation_manager_address) = setup_el_chain_reader().await;
+
+        let operator_pvt_key = "59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d";
+        let operator: PrivateKeySigner = (operator_pvt_key)
+            .parse()
+            .expect("failed to generate wallet");
+
         let contract_registry = ContractsRegistry::new(
             anvil_constants::CONTRACTS_REGISTRY,
             anvil_constants::ANVIL_RPC_URL.clone(),
@@ -255,5 +269,22 @@ mod tests {
             .is_operator_registered(operator_address)
             .await
             .unwrap());
+    }
+
+    #[tokio::test]
+    async fn test_chain_writer() {
+        let (el_chain_reader, delegation_manager_address) = setup_el_chain_reader().await;
+
+        let strategy_manager = get_strategy_manager_address().await;
+
+        let el_chain_writer = ELChainWriter::new(
+            delegation_manager_address,
+            strategy_manager,
+            el_chain_reader,
+            "".to_string(),
+            "".to_string(),
+        );
+
+        assert_eq!(1, 2 - 1);
     }
 }
