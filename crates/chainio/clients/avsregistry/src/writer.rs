@@ -381,7 +381,8 @@ mod tests {
         let operator_id = Address::from_str("70997970C51812dc3A010C7d01b50e0d17dc79C8").unwrap();
         let tx_hash = avs_writer
             .update_stakes_of_operator_subset_for_all_quorums(vec![operator_id])
-            .await;
+            .await
+            .unwrap();
 
         let tx_status = get_transaction_status(tx_hash).await;
         assert!(tx_status);
