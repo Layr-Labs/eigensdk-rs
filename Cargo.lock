@@ -2050,7 +2050,6 @@ dependencies = [
  "eigen-types",
  "eigen-utils",
  "hex",
- "lazy_static",
  "num-bigint 0.4.6",
  "once_cell",
  "reqwest 0.12.5",
