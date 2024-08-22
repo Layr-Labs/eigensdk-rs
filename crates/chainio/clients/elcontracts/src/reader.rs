@@ -303,7 +303,7 @@ mod tests {
         let service_manager_address = anvil_constants::get_service_manager_address().await;
         let service_manager_contract = mockAvsServiceManager::new(
             service_manager_address,
-            anvil_constants::ANVIL_RPC_URL.clone(),
+            get_provider(&"http://localhost:8545"),
         );
         let avs_directory_address_return = service_manager_contract
             .avsDirectory()
@@ -325,8 +325,6 @@ mod tests {
 
     #[tokio::test]
     async fn test_calculate_delegation_approval_digest_hash() {
-        // Introduce a 2-second delay
-        sleep(Duration::from_secs(2)).await;
         let el_chain_reader = build_el_chain_reader().await;
         let operator: Address = address!("5eb15C0992734B5e77c888D713b4FC67b3D679A2");
 

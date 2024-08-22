@@ -2241,16 +2241,23 @@ dependencies = [
  "alloy-primitives",
  "alloy-provider",
  "alloy-rpc-types",
+ "alloy-signer-local",
  "anyhow",
+ "ark-bn254",
+ "ark-ff 0.4.2",
+ "ark-std 0.4.0",
  "eigen-client-avsregistry",
+ "eigen-client-elcontracts",
  "eigen-crypto-bls",
  "eigen-logging",
  "eigen-testing-utils",
  "eigen-types",
  "eigen-utils",
+ "futures",
  "futures-util",
  "thiserror",
  "tokio",
+ "tokio-util",
 ]
 
 [[package]]

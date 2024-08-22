@@ -1,7 +1,7 @@
 use alloy_primitives::{Address, FixedBytes};
-use alloy_provider::{Provider, ProviderBuilder, WsConnect};
+use alloy_provider::Provider;
 use alloy_rpc_types::Filter;
-use anyhow::{Context, Result};
+use anyhow::Result;
 use eigen_client_avsregistry::reader::AvsRegistryChainReader;
 use eigen_crypto_bls::{
     alloy_registry_g1_point_to_g1_affine, alloy_registry_g2_point_to_g2_affine, BlsG1Point,
@@ -17,11 +17,11 @@ use futures_util::StreamExt;
 use std::{collections::HashMap, sync::Arc};
 use thiserror::Error;
 use tokio::sync::{
-    mpsc,
-    mpsc::UnboundedSender,
+    mpsc::{self, UnboundedSender},
     oneshot::{self, Sender},
     RwLock,
 };
+use tokio_util::sync::CancellationToken;
 #[derive(Debug, Clone)]
 pub struct OperatorInfoServiceInMemory {
     logger: SharedLogger,
@@ -53,6 +53,7 @@ pub enum OperatorInfoServiceError {
 #[derive(Debug)]
 enum OperatorsInfoMessage {
     InsertOperatorInfo(Address, Box<OperatorPubKeys>),
+    #[allow(dead_code)]
     Remove(Address),
     Get(
         Address,
@@ -108,73 +109,82 @@ impl OperatorInfoServiceInMemory {
 
     pub async fn start_service(
         &self,
+        cancellation_token: &CancellationToken,
         start_block: u64,
         end_block: u64,
-        shutdown_rx: tokio::sync::watch::Receiver<()>,
     ) -> Result<()> {
         // Query past operator registrations
         self.query_past_registered_operator_events_and_fill_db(start_block, end_block)
-            .await?;
-
-        let provider = get_ws_provider(&self.ws).await?;
-        let current_block_number = provider.get_block_number().await?;
+            .await
+            .unwrap();
+        let provider = get_ws_provider(&self.ws).await.unwrap();
+        let current_block_number = provider.get_block_number().await.unwrap();
         let filter = Filter::new()
             .event(NEW_PUBKEY_REGISTRATION_EVENT)
             .from_block(current_block_number);
 
-        let subcription_new_operator_registration_stream = provider.subscribe_logs(&filter).await?;
-        let mut stream = subcription_new_operator_registration_stream.into_stream();
+        let subcription_new_operator_registration_stream =
+            provider.subscribe_logs(&filter).await.unwrap();
+        let mut stream = subcription_new_operator_registration_stream
+            .into_stream()
+            .fuse();
 
-        let shutdown_rx = shutdown_rx.clone();
         let pub_keys = self.pub_keys.clone();
         let self_clone = self.clone();
-        tokio::spawn(async move {
-            while let Some(log) = stream.next().await {
-                if shutdown_rx.has_changed().unwrap_or(false) {
-                    self_clone.logger.info(
-                        "shutdown of operators info service ",
-                        "eigen-services-operatorsinfo.start_service",
-                    );
+
+        loop {
+            tokio::select! {
+                _ = cancellation_token.cancelled() => {
+                    self.logger.info("Cancellation signal received, stopping the stream.", "eigen-services-operatorsinfo.start_service");
                     break;
-                }
+                },
+                log = stream.next() => {
+                    match log {
+                        Some(log) => {
 
-                let data = log
-                    .log_decode::<BLSApkRegistry::NewPubkeyRegistration>()
-                    .ok();
+                            let data = log
+                                .log_decode::<BLSApkRegistry::NewPubkeyRegistration>()
+                                .ok();
 
-                if let Some(new_pub_key_event) = data {
-                    let event_data = new_pub_key_event.data();
-                    let operator_pub_key = OperatorPubKeys {
-                        g1_pub_key: BlsG1Point::new(alloy_registry_g1_point_to_g1_affine(
-                            G1Point {
-                                X: event_data.pubkeyG1.X,
-                                Y: event_data.pubkeyG1.Y,
-                            },
-                        )),
-                        g2_pub_key: BlsG2Point::new(alloy_registry_g2_point_to_g2_affine(
-                            G2Point {
-                                X: event_data.pubkeyG2.X,
-                                Y: event_data.pubkeyG2.Y,
-                            },
-                        )),
-                    };
-                    // Send message
+                            if let Some(new_pub_key_event) = data {
+                                let event_data = new_pub_key_event.data();
+                                let operator_pub_key = OperatorPubKeys {
+                                    g1_pub_key: BlsG1Point::new(alloy_registry_g1_point_to_g1_affine(
+                                        G1Point {
+                                            X: event_data.pubkeyG1.X,
+                                            Y: event_data.pubkeyG1.Y,
+                                        },
+                                    )),
+                                    g2_pub_key: BlsG2Point::new(alloy_registry_g2_point_to_g2_affine(
+                                        G2Point {
+                                            X: event_data.pubkeyG2.X,
+                                            Y: event_data.pubkeyG2.Y,
+                                        },
+                                    )),
+                                };
+                                // Send message
 
-                    self_clone.logger.debug(
-                        &format!(
-                            "New pub key found  operator_address : {:?} , operator_pub_keys : {:?}",
-                            event_data.operator, operator_pub_key
-                        ),
-                        "eigen-services-operatorsinfo.start_service",
-                    );
+                                self_clone.logger.debug(
+                                    &format!(
+                                        "New pub key found  operator_address : {:?} , operator_pub_keys : {:?}",
+                                        event_data.operator, operator_pub_key
+                                    ),
+                                    "eigen-services-operatorsinfo.start_service",
+                                );
 
-                    let _ = pub_keys.send(OperatorsInfoMessage::InsertOperatorInfo(
-                        event_data.operator,
-                        Box::new(operator_pub_key),
-                    ));
-                }
+                                let _ = pub_keys.send(OperatorsInfoMessage::InsertOperatorInfo(
+                                    event_data.operator,
+                                    Box::new(operator_pub_key),
+                                ));
+                            }
+                        },
+                        None => {
+                            break;
+                        }
+                    }
+                },
             }
-        });
+        }
 
         Ok(())
     }
@@ -184,14 +194,15 @@ impl OperatorInfoServiceInMemory {
         address: Address,
     ) -> Result<Option<OperatorPubKeys>, OperatorInfoServiceError> {
         let (responder_tx, responder_rx) = oneshot::channel();
+
         let _ = self
             .pub_keys
             .send(OperatorsInfoMessage::Get(address, responder_tx))
             .map_err(|_| OperatorInfoServiceError::ChannelClosed)?;
-
-        responder_rx
+        let s = responder_rx
             .await
-            .map_err(|_| OperatorInfoServiceError::ChannelClosed)?
+            .map_err(|_| OperatorInfoServiceError::ChannelClosed)?;
+        s
     }
 
     pub async fn query_past_registered_operator_events_and_fill_db(
@@ -199,7 +210,6 @@ impl OperatorInfoServiceInMemory {
         start_block: u64,
         end_block: u64,
     ) -> Result<()> {
-        println!("eee");
         let (operator_address, operator_pub_keys) = self
             .avs_registry_reader
             .query_existing_registered_operator_pub_keys(start_block, end_block, self.ws.clone())
@@ -227,25 +237,37 @@ impl OperatorInfoServiceInMemory {
 mod tests {
 
     use super::*;
-    use alloy_primitives::address;
+    use alloy_primitives::{address, Bytes, U256};
+    use alloy_signer_local::PrivateKeySigner;
+    use ark_bn254::Fr;
+    use ark_std::{rand, UniformRand};
+    use eigen_client_avsregistry::writer::AvsRegistryChainWriter;
+    use eigen_client_elcontracts::{reader::ELChainReader, writer::ELChainWriter};
+    use eigen_crypto_bls::BlsKeyPair;
     use eigen_logging::get_test_logger;
     use eigen_testing_utils::anvil_constants::{
+        get_avs_directory_address, get_delegation_manager_address,
         get_operator_state_retriever_address, get_registry_coordinator_address,
+        get_strategy_manager_address,
     };
-    use eigen_testing_utils::m2_holesky_constants::{
-        OPERATOR_STATE_RETRIEVER, REGISTRY_COORDINATOR,
-    };
-    use std::env;
-    use tokio::sync::watch;
+    use eigen_types::operator::Operator;
+    use eigen_utils::get_provider;
+    use rand::rngs::OsRng;
+    use std::str::FromStr;
+    use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
     #[tokio::test]
     async fn test_query_past_registered_operator_events_and_fill_db() {
-        let websocket_url_holesky = env::var("HOLESKY_WS_URL").expect("HOLEESKY_WS_URL not set");
-        let http_url_holesky = env::var("HOLESKY_HTTP_URL").expect("HOLESKY_HTTP_URL not set");
         let anvil_ws_url = "ws://localhost:8545";
         let anvil_http_url = "http://localhost:8545";
         let test_logger = get_test_logger();
-        println!("rrr");
+        let mut rng = OsRng;
+        let sk = Fr::rand(&mut rng);
+        register_operator(
+            "0x7c852118294e51e653712a81e05800f419141751be58f605c371e15141b007a6",
+            "202646553755999769005569871314544341631930435075911377994162443131009480062",
+        )
+        .await;
 
         let avs_registry_chain_reader = AvsRegistryChainReader::new(
             test_logger.clone(),
@@ -264,60 +286,211 @@ mod tests {
         .await;
 
         let _ = operators_info_service_in_memory
-            .query_past_registered_operator_events_and_fill_db(0, 100)
+            .query_past_registered_operator_events_and_fill_db(
+                0,
+                get_provider(&anvil_http_url)
+                    .get_block_number()
+                    .await
+                    .unwrap(),
+            )
             .await;
-        // Give some time for the background task to process the messages
-        tokio::time::sleep(tokio::time::Duration::from_millis(100)).await;
 
-        // let address = address!("385b3b04126b221b09ad68fd55dee74965e9be8b");
-        // let operator_info = operators_info_service_in_memory
-        //     .get_operator_info(address)
-        //     .await;
-        // assert!(operator_info.unwrap().is_some());
+        let address = address!("90f79bf6eb2c4f870365e785982e1f101e93b906");
+        let operator_info = operators_info_service_in_memory
+            .get_operator_info(address)
+            .await;
+        assert!(operator_info.unwrap().is_some());
     }
 
     #[tokio::test]
-    async fn test_start_service() {
-        let websocket_url_holesky = env::var("HOLESKY_WS_URL").expect("HOLEESKY_WS_URL not set");
-        let http_url_holesky = env::var("HOLESKY_HTTP_URL").expect("HOLESKY_HTTP_URL not set");
+    async fn test_start_service_1_operator_register() {
+        let anvil_ws_url = "ws://localhost:8545";
+        let anvil_http_url = "http://localhost:8545";
         let test_logger = get_test_logger();
         let avs_registry_chain_reader = AvsRegistryChainReader::new(
             test_logger.clone(),
-            REGISTRY_COORDINATOR,
-            OPERATOR_STATE_RETRIEVER,
-            http_url_holesky.clone(),
+            get_registry_coordinator_address().await,
+            get_operator_state_retriever_address().await,
+            anvil_http_url.to_string(),
         )
         .await
         .unwrap();
         let operators_info_service_in_memory = OperatorInfoServiceInMemory::new(
             test_logger.clone(),
             avs_registry_chain_reader,
-            websocket_url_holesky.clone(),
+            anvil_ws_url.to_string(),
         )
         .await;
+        let clone_operators_info = operators_info_service_in_memory.clone();
 
-        let (shutdown_tx, shutdown_rx) = watch::channel(());
-
-        // Use a timeout to ensure the test does not run indefinitely
-        let _ = tokio::spawn({
-            async move {
-                let shutdown_rx = shutdown_rx.clone();
-                operators_info_service_in_memory
-                    .start_service(2019065, 2039045, shutdown_rx)
-                    .await
-                    .unwrap();
-            }
+        let token = tokio_util::sync::CancellationToken::new().clone();
+        let cancel_token = token.clone();
+        let _ = tokio::spawn(async move {
+            let _ = clone_operators_info
+                .start_service(
+                    &token,
+                    0,
+                    get_provider(&anvil_http_url)
+                        .get_block_number()
+                        .await
+                        .unwrap(),
+                )
+                .await;
         });
+        register_operator(
+            "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80",
+            "12248929636257230549931416853095037629726205319386239410403476017439825112537",
+        )
+        .await;
+        tokio::time::sleep(Duration::from_secs(1)).await; // need to wait atleast 1 second to get the event processed
 
-        // Wait some time to simulate some operations
-        tokio::time::sleep(tokio::time::Duration::from_millis(1000)).await;
+        let _ = cancel_token.clone().cancel();
 
-        // // Send the shutdown signal
-        let _ = shutdown_tx.send(());
+        let address = address!("f39fd6e51aad88f6f4ce6ab8827279cfffb92266");
+        let operator_info = operators_info_service_in_memory
+            .get_operator_info(address)
+            .await;
+        assert!(operator_info.unwrap().is_some());
+    }
 
-        // TODO (supernova): Call Register Operator to emit the NewPubkeyRegistration event , so the subscriber catches it.
-        // Blocked : https://github.com/Layr-Labs/eigensdk-rs/issues/49
-        // // Wait for the service to finish
-        // let _ = service_handle.await;
+    #[tokio::test]
+    async fn test_start_service_2_operator_register() {
+        let anvil_ws_url = "ws://localhost:8545";
+        let anvil_http_url = "http://localhost:8545";
+        let test_logger = get_test_logger();
+        let avs_registry_chain_reader = AvsRegistryChainReader::new(
+            test_logger.clone(),
+            get_registry_coordinator_address().await,
+            get_operator_state_retriever_address().await,
+            anvil_http_url.to_string(),
+        )
+        .await
+        .unwrap();
+        let operators_info_service_in_memory = OperatorInfoServiceInMemory::new(
+            test_logger.clone(),
+            avs_registry_chain_reader,
+            anvil_ws_url.to_string(),
+        )
+        .await;
+        let clone_operators_info = operators_info_service_in_memory.clone();
+
+        let token = tokio_util::sync::CancellationToken::new().clone();
+        let cancel_token = token.clone();
+        let _ = tokio::spawn(async move {
+            let _ = clone_operators_info
+                .start_service(
+                    &token,
+                    0,
+                    get_provider(&anvil_http_url)
+                        .get_block_number()
+                        .await
+                        .unwrap(),
+                )
+                .await;
+        });
+        register_operator(
+            "0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d",
+            "1328790040692576325258580129229001772890358018148159309458854770206210226319",
+        )
+        .await;
+        register_operator(
+            "0x5de4111afa1a4b94908f83103eb1f1706367c2e68ca870fc3fb9a804cdab365a",
+            "8949062771264691130193054363356855357736539613420316273398900351143637925935",
+        )
+        .await;
+        tokio::time::sleep(Duration::from_secs(1)).await; // need to wait atleast 1 second to get the event processed
+
+        let _ = cancel_token.clone().cancel();
+
+        let address = address!("70997970c51812dc3a010c7d01b50e0d17dc79c8");
+        let operator_info = operators_info_service_in_memory
+            .get_operator_info(address)
+            .await;
+        assert!(operator_info.unwrap().is_some());
+
+        let address_2 = address!("3c44cdddb6a900fa2b585dd299e03d12fa4293bc");
+        let operator_info_2 = operators_info_service_in_memory
+            .get_operator_info(address_2)
+            .await;
+        assert!(operator_info_2.unwrap().is_some());
+    }
+
+    pub async fn register_operator(pvt_key: &str, bls_key: &str) {
+        let anvil_http_url = "http://localhost:8545";
+
+        let delegation_manager_address = get_delegation_manager_address().await;
+        let avs_directory_address = get_avs_directory_address().await;
+        let strategy_manager_address = get_strategy_manager_address().await;
+        let el_chain_reader = ELChainReader::new(
+            get_test_logger(),
+            Address::ZERO,
+            delegation_manager_address,
+            avs_directory_address,
+            anvil_http_url.to_string(),
+        );
+        let signer = PrivateKeySigner::from_str(&pvt_key.to_string()).unwrap();
+
+        let el_chain_writer = ELChainWriter::new(
+            delegation_manager_address,
+            strategy_manager_address,
+            el_chain_reader,
+            anvil_http_url.to_string(),
+            pvt_key.to_string(),
+        );
+
+        let operator_details = Operator::new(
+            signer.address(),
+            signer.address(),
+            signer.address(),
+            3,
+            Some("eigensdk-rs".to_string()),
+        );
+
+        let hash = el_chain_writer
+            .register_as_operator(operator_details)
+            .await
+            .unwrap();
+
+        let avs_registry_writer = AvsRegistryChainWriter::build_avs_registry_chain_writer(
+            get_test_logger(),
+            anvil_http_url.to_string(),
+            pvt_key.to_string(),
+            get_registry_coordinator_address().await,
+            get_operator_state_retriever_address().await,
+        )
+        .await
+        .unwrap();
+
+        let bls_key_pair = BlsKeyPair::new(bls_key.to_string()).unwrap();
+        let salt: FixedBytes<32> = FixedBytes::from([
+            0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02,
+            0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02,
+            0x02, 0x02, 0x02, 0x02,
+        ]);
+        let now = SystemTime::now();
+        let mut expiry: U256 = U256::from(0);
+        // Convert SystemTime to a Duration since the UNIX epoch
+        if let Ok(duration_since_epoch) = now.duration_since(UNIX_EPOCH) {
+            // Convert the duration to seconds
+            let seconds = duration_since_epoch.as_secs(); // Returns a u64
+
+            // Convert seconds to U256
+            expiry = U256::from(seconds) + U256::from(10000);
+        } else {
+            println!("System time seems to be before the UNIX epoch.");
+        }
+        let quorum_numbers = Bytes::from_str("0x00").unwrap();
+        let socket = "socket";
+
+        let hash = avs_registry_writer
+            .register_operator_in_quorum_with_avs_registry_coordinator(
+                bls_key_pair,
+                salt,
+                expiry,
+                quorum_numbers,
+                socket.to_string(),
+            )
+            .await
+            .unwrap();
     }
 }
