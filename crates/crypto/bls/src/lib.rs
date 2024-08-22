@@ -179,12 +179,12 @@ pub fn alloy_registry_g1_point_to_g1_affine(g1_point: G1PointRegistry) -> G1Affi
 /// Convert [`G1Point`] to [`G1Affine`]
 pub fn alloy_registry_g2_point_to_g2_affine(g2_point: G2PointRegistry) -> G2Affine {
     let x_fp2 = Fp2::new(
-        BigInteger256::new(g2_point.X[0].into_limbs()).into(),
         BigInteger256::new(g2_point.X[1].into_limbs()).into(),
+        BigInteger256::new(g2_point.X[0].into_limbs()).into(),
     );
     let y_fp2 = Fp2::new(
-        BigInteger256::new(g2_point.Y[0].into_limbs()).into(),
         BigInteger256::new(g2_point.Y[1].into_limbs()).into(),
+        BigInteger256::new(g2_point.Y[0].into_limbs()).into(),
     );
     G2Affine::new_unchecked(x_fp2, y_fp2)
 }
@@ -449,5 +449,58 @@ mod tests {
             &message,
             signature.g1_point().g1()
         ));
+    }
+
+    #[test]
+    fn test_alloy_registry_g2_point_to_g2_affine() {
+        let registry_g2_point = G2PointRegistry {
+            X: [
+                U256::from_str(
+                    "5757009320127825712028542414399286695979413866882055578475552905478799178978",
+                )
+                .unwrap(),
+                U256::from_str(
+                    "21244616545128868564944750577089226156588822099825362793595203506897139322148",
+                )
+                .unwrap(),
+            ],
+            Y: [
+                U256::from_str(
+                    "14151879035050941576498647371309462393327101480686968228451570672809612016186",
+                )
+                .unwrap(),
+                U256::from_str(
+                    "3459884663217117850014821742383597128426843416583591466170557027357262534805",
+                )
+                .unwrap(),
+            ],
+        };
+
+        let g2_affine = alloy_registry_g2_point_to_g2_affine(registry_g2_point);
+        let expected_g2_affine = G2Affine {
+            x: Fq2::new(
+                Fq::from_str(
+                    "21244616545128868564944750577089226156588822099825362793595203506897139322148",
+                )
+                .unwrap(),
+                Fq::from_str(
+                    "5757009320127825712028542414399286695979413866882055578475552905478799178978",
+                )
+                .unwrap(),
+            ),
+            y: Fq2::new(
+                Fq::from_str(
+                    "3459884663217117850014821742383597128426843416583591466170557027357262534805",
+                )
+                .unwrap(),
+                Fq::from_str(
+                    "14151879035050941576498647371309462393327101480686968228451570672809612016186",
+                )
+                .unwrap(),
+            ),
+            infinity: false,
+        };
+
+        assert_eq!(g2_affine, expected_g2_affine);
     }
 }

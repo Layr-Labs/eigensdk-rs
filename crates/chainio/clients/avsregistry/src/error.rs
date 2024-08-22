@@ -11,7 +11,7 @@ pub enum AvsRegistryError {
     GetBlsApkRegistry,
 
     /// Failed to get quorum count
-    #[error("Faield to get quorum count")]
+    #[error("Failed to get quorum count")]
     GetQuorumCount,
 
     /// Failed to ger operator state
@@ -141,6 +141,10 @@ pub enum AvsRegistryError {
     /// BlsError compatibility
     #[error("BlsError :{0}")]
     BlsError(String),
+
+    /// Invalid Quorum Numbers
+    #[error("Invalid number of quorum numbers")]
+    InvalidQuorumNums,
 }
 
 impl From<ElContractsError> for AvsRegistryError {

@@ -42,21 +42,26 @@ impl FakeAvsRegistryService {
 }
 
 impl AvsRegistryService for FakeAvsRegistryService {
-    // TODO: change this so that it returns a Result
     async fn get_operators_avs_state_at_block(
         &self,
         block_number: u32,
         _quorum_nums: &[u8],
-    ) -> HashMap<FixedBytes<32>, OperatorAvsState> {
-        self.operators.get(&(block_number as u64)).unwrap().clone()
+    ) -> Result<HashMap<FixedBytes<32>, OperatorAvsState>, AvsRegistryError> {
+        self.operators
+            .get(&(block_number as u64))
+            .ok_or(AvsRegistryError::GetOperatorState)
+            .cloned()
     }
 
     async fn get_quorums_avs_state_at_block(
         &self,
         quorum_nums: &[u8],
         block_num: u32,
-    ) -> HashMap<u8, QuorumAvsState> {
-        let operator_avs_state = self.operators.get(&(block_num as u64)).unwrap();
+    ) -> Result<HashMap<u8, QuorumAvsState>, AvsRegistryError> {
+        let operator_avs_state = self
+            .operators
+            .get(&(block_num as u64))
+            .ok_or(AvsRegistryError::GetOperatorState)?;
         let mut quorum_avs_state: HashMap<QuorumNum, QuorumAvsState> = HashMap::new();
         for quorum_num in quorum_nums {
             let mut pub_key_g1 = G1Projective::from(PublicKey::zero());
@@ -87,7 +92,7 @@ impl AvsRegistryService for FakeAvsRegistryService {
                 },
             );
         }
-        quorum_avs_state
+        Ok(quorum_avs_state)
     }
 
     async fn get_check_signatures_indices(
