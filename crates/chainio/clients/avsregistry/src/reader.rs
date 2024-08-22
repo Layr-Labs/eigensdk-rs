@@ -3,7 +3,7 @@ use alloy_primitives::{Address, Bytes, FixedBytes, B256, U256};
 use alloy_provider::Provider;
 use alloy_rpc_types::Filter;
 use ark_ff::Zero;
-use eigen_logging::logger::{Logger, SharedLogger};
+use eigen_logging::logger::SharedLogger;
 use eigen_logging::tracing_logger::TracingLogger;
 use eigen_types::operator::{bitmap_to_quorum_ids, OperatorPubKeys};
 use eigen_utils::NEW_PUBKEY_REGISTRATION_EVENT;
