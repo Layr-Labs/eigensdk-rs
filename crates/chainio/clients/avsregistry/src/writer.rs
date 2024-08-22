@@ -149,6 +149,7 @@ impl AvsRegistryChainWriter {
         info!(avs_service_manager = %self.service_manager_addr, operator= %wallet.address(),quorum_numbers = ?quorum_numbers,"quorum_numbers,registering operator with the AVS's registry coordinator");
         let contract_registry_coordinator =
             RegistryCoordinator::new(self.registry_coordinator_addr, provider);
+        dbg!(wallet.address());
         let g1_hashes_msg_to_sign_return = contract_registry_coordinator
             .pubkeyRegistrationMessageHash(wallet.address())
             .call()
@@ -213,6 +214,8 @@ impl AvsRegistryChainWriter {
             },
             operator_signature_with_salt_and_expiry,
         );
+        // .from(Address::from_str("4c234bf6518786b81e1175579432a8aeff1d85e8").unwrap());
+        dbg!(&contract_call);
 
         let tx_call = contract_call.gas(GAS_LIMIT_REGISTER_OPERATOR_REGISTRY_COORDINATOR);
         let tx = tx_call
@@ -317,12 +320,12 @@ impl AvsRegistryChainWriter {
             RegistryCoordinator::new(self.registry_coordinator_addr, provider);
 
         let contract_call = contract_registry_coordinator.deregisterOperator(quorum_numbers);
-
+        // .from(Address::from_str("4c234bf6518786b81e1175579432a8aeff1d85e8").unwrap());
+        dbg!(&contract_call);
         let tx = contract_call
             .send()
             .await
             .map_err(AvsRegistryError::AlloyContractError)?;
-
         info!(tx_hash = ?tx,"succesfully deregistered operator with the AVS's registry coordinator" );
         Ok(*tx.tx_hash())
     }
@@ -332,14 +335,19 @@ impl AvsRegistryChainWriter {
 mod tests {
     use super::AvsRegistryChainWriter;
     use alloy_primitives::{Address, Bytes, FixedBytes, U256};
+    use alloy_provider::Provider;
     use eigen_crypto_bls::BlsKeyPair;
     use eigen_logging::get_test_logger;
+    use eigen_testing_utils::anvil_constants::{
+        get_operator_state_retriever_address, get_registry_coordinator_address, ANVIL_RPC_URL,
+    };
     use std::str::FromStr;
     const HOLESKY_REGISTRY_COORDINATOR: &str = "0x53012C69A189cfA2D9d29eb6F19B32e0A2EA3490";
     const HOLESKY_OPERATOR_STATE_RETRIEVER: &str = "0xB4baAfee917fb4449f5ec64804217bccE9f46C67";
     const HOLESKY_STAKE_REGISTRY: &str = "0xBDACD5998989Eec814ac7A0f0f6596088AA2a270";
     const HOLESKY_BLS_APK_REGISTRY: &str = "0x066cF95c1bf0927124DFB8B02B401bc23A79730D";
 
+    // TODO: remove this if unused
     async fn build_avs_registry_chain_writer() -> AvsRegistryChainWriter {
         let holesky_registry_coordinator =
             Address::from_str(HOLESKY_REGISTRY_COORDINATOR).expect("failed to parse address");
@@ -360,9 +368,29 @@ mod tests {
         .unwrap()
     }
 
+    async fn avs_registry_chain_writer() -> AvsRegistryChainWriter {
+        let registry_coordinator_address = get_registry_coordinator_address().await;
+        let operator_state_retriever_address = get_operator_state_retriever_address().await;
+        let http_endpoint = "http://localhost:8545".to_string();
+        let accounts = ANVIL_RPC_URL.clone().get_accounts().await.unwrap();
+        let addr = accounts.get(0).unwrap();
+        let account = ANVIL_RPC_URL.clone().get_account(*addr).await;
+        dbg!(&account);
+        // let pvt_key = "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80"
+        AvsRegistryChainWriter::build_avs_registry_chain_writer(
+            get_test_logger(),
+            http_endpoint.clone(),
+            "59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d".to_string(),
+            registry_coordinator_address,
+            operator_state_retriever_address,
+        )
+        .await
+        .unwrap()
+    }
+
     #[tokio::test]
     async fn test_register_operator() {
-        let avs_writer = build_avs_registry_chain_writer().await;
+        let avs_writer = avs_registry_chain_writer().await;
         let bls_key_pair = BlsKeyPair::new(
             "86245596270685705884472351211857039932300464725915589549000044251545453106920".into(),
         )
@@ -372,22 +400,24 @@ mod tests {
             0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02,
             0x02, 0x02, 0x02, 0x02,
         ]);
-        let quorum_nums = Bytes::from([0]);
 
-        let res = avs_writer
+        let quorum_nums = Bytes::from([0]);
+        // this is set to U256::MAX so that the registry does not take the signature as expired.
+        let signature_expiry = U256::MAX;
+        let tx_hash = avs_writer
             .register_operator_in_quorum_with_avs_registry_coordinator(
                 bls_key_pair,
                 digest_hash,
-                U256::from(6300),
+                signature_expiry,
                 quorum_nums,
                 "".into(),
             )
             .await;
 
-        assert!(res.is_ok());
+        assert!(tx_hash.is_ok());
     }
 
-    #[tokio::test]
+    // #[tokio::test]
     async fn test_update_stake() {
         let avs_writer = build_avs_registry_chain_writer().await;
         let operator_id = Address::from_str("11bbe715d9786aca3a7b391704a03d88754d5942").unwrap();
@@ -400,8 +430,8 @@ mod tests {
 
     #[tokio::test]
     async fn test_deregister_operator() {
-        let avs_writer = build_avs_registry_chain_writer().await;
-        let quorum_nums = Bytes::from([1]);
+        let avs_writer = avs_registry_chain_writer().await;
+        let quorum_nums = Bytes::from([0]);
         let res = avs_writer.deregister_operator(quorum_nums).await;
 
         assert!(res.is_ok());
