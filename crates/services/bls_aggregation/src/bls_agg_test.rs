@@ -13,12 +13,9 @@ pub mod integration_test {
     use eigen_logging::get_test_logger;
     use eigen_services_avsregistry::chaincaller::AvsRegistryServiceChainCaller;
     use eigen_services_operatorsinfo::operatorsinfo_inmemory::OperatorInfoServiceInMemory;
-    use eigen_testing_utils::{
-        anvil_constants::{
-            get_operator_state_retriever_address, get_registry_coordinator_address,
-            get_service_manager_address,
-        },
-        m2_holesky_constants::StrategyBase_ETHx,
+    use eigen_testing_utils::anvil_constants::{
+        get_erc20_mock_strategy, get_operator_state_retriever_address,
+        get_registry_coordinator_address, get_service_manager_address,
     };
     use eigen_types::{avs::TaskIndex, operator::QuorumThresholdPercentages};
     use eigen_utils::{
@@ -135,7 +132,7 @@ pub mod integration_test {
             kickBIPsOfTotalStake: 1000,
         };
         let strategy_params = StrategyParams {
-            strategy: StrategyBase_ETHx,
+            strategy: get_erc20_mock_strategy().await,
             multiplier: 1,
         };
 
@@ -267,7 +264,7 @@ pub mod integration_test {
             kickBIPsOfTotalStake: 1,
         };
         let strategy_params = vec![StrategyParams {
-            strategy: StrategyBase_ETHx,
+            strategy: get_erc20_mock_strategy().await,
             multiplier: 1,
         }];
 
