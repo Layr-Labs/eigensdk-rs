@@ -198,6 +198,11 @@ mod tests {
         ContractsRegistry::{self, get_test_valuesReturn},
     };
 
+    /// Returns a new instance of ELChainWriter and the address of the delegation manager contract
+    ///
+    /// # Returns
+    ///
+    /// A tuple containing an instance of ELChainWriter and the address of the delegation manager contract
     async fn setup_el_chain_reader() -> (ELChainReader, Address) {
         let delegation_manager_address = get_delegation_manager_address().await;
         let delegation_manager_contract = DelegationManager::new(
@@ -224,7 +229,6 @@ mod tests {
             _0: avs_directory_address,
         } = avs_directory_address_return;
 
-        //(slasher_address, delegation_manager_address)
         (
             ELChainReader::new(
                 get_test_logger().clone(),
@@ -274,6 +278,8 @@ mod tests {
     #[tokio::test]
     async fn test_chain_writer() {
         let (el_chain_reader, delegation_manager_address) = setup_el_chain_reader().await;
+        let http_endpoint = "http://localhost:8545".to_string();
+        let signer = "59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d".to_string(); // TODO: retrieve this from anvil
 
         let strategy_manager = get_strategy_manager_address().await;
 
@@ -281,8 +287,8 @@ mod tests {
             delegation_manager_address,
             strategy_manager,
             el_chain_reader,
-            "".to_string(),
-            "".to_string(),
+            http_endpoint,
+            signer,
         );
 
         assert_eq!(1, 2 - 1);
