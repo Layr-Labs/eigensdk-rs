@@ -28,4 +28,5 @@ eigen-testing-utils.workspace = true
 eigen-utils.workspace = true
 eigen-services-operatorsinfo.workspace = true
 alloy-provider.workspace = true
+serial_test = "3.1"
 sha2 = "0.10.8"
