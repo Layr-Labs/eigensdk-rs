@@ -329,6 +329,7 @@ impl AvsRegistryChainWriter {
 #[cfg(test)]
 mod tests {
     use super::AvsRegistryChainWriter;
+    use alloy_node_bindings::Anvil;
     use alloy_primitives::{Address, Bytes, FixedBytes, U256};
     use alloy_provider::Provider;
     use eigen_crypto_bls::BlsKeyPair;
@@ -336,16 +337,19 @@ mod tests {
     use eigen_testing_utils::anvil_constants::{
         get_operator_state_retriever_address, get_registry_coordinator_address, ANVIL_RPC_URL,
     };
-    use std::{str::FromStr, thread, time::Duration};
+    use std::time::Duration;
+    use tokio::time::sleep;
 
-    async fn build_avs_registry_chain_writer() -> AvsRegistryChainWriter {
+    const ANVIL_HTTP_URL: &str = "http://localhost:8545";
+
+    async fn build_avs_registry_chain_writer(private_key: String) -> AvsRegistryChainWriter {
         let registry_coordinator_address = get_registry_coordinator_address().await;
         let operator_state_retriever_address = get_operator_state_retriever_address().await;
-        let http_endpoint = "http://localhost:8545".to_string();
+
         AvsRegistryChainWriter::build_avs_registry_chain_writer(
             get_test_logger(),
-            http_endpoint.clone(),
-            "59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d".to_string(), // TODO: retrieve this from anvil
+            ANVIL_HTTP_URL.to_string(),
+            private_key,
             registry_coordinator_address,
             operator_state_retriever_address,
         )
@@ -364,7 +368,7 @@ mod tests {
     /// A bool indicating wether the transaction was successful or not.
     async fn get_transaction_status(tx_hash: FixedBytes<32>) -> bool {
         // this sleep is needed so that we wait for the tx to be processed
-        thread::sleep(Duration::from_millis(500));
+        sleep(Duration::from_millis(500)).await;
         ANVIL_RPC_URL
             .clone()
             .get_transaction_receipt(tx_hash)
@@ -376,12 +380,17 @@ mod tests {
 
     #[tokio::test]
     async fn test_avs_writer_methods() {
-        let avs_writer = build_avs_registry_chain_writer().await;
+        let anvil = Anvil::new().try_spawn().unwrap();
+        let private_key = anvil.keys().get(0).unwrap();
+        let private_key_hex = hex::encode(private_key.to_bytes());
+        let private_key_decimal = U256::from_be_bytes(private_key.to_bytes().into()).to_string();
+        let avs_writer = build_avs_registry_chain_writer(private_key_hex).await;
+        let operator_id = anvil.addresses().get(0).unwrap();
+
         let quorum_nums = Bytes::from([0]);
-        let operator_id = Address::from_str("70997970C51812dc3A010C7d01b50e0d17dc79C8").unwrap();
-        test_register_operator(&avs_writer, quorum_nums.clone()).await;
-        test_update_stake_of_operator_subset(&avs_writer, operator_id).await;
-        test_update_stake_of_entire_operator_set(&avs_writer, operator_id, quorum_nums.clone())
+        test_register_operator(&avs_writer, private_key_decimal, quorum_nums.clone()).await;
+        test_update_stake_of_operator_subset(&avs_writer, *operator_id).await;
+        test_update_stake_of_entire_operator_set(&avs_writer, *operator_id, quorum_nums.clone())
             .await;
         test_deregister_operator(&avs_writer, quorum_nums).await;
     }
@@ -413,16 +422,13 @@ mod tests {
         assert!(tx_status);
     }
 
-    async fn test_register_operator(avs_writer: &AvsRegistryChainWriter, quorum_nums: Bytes) {
-        let bls_key_pair = BlsKeyPair::new(
-            "86245596270685705884472351211857039932300464725915589549000044251545453106920".into(),
-        )
-        .unwrap();
-        let digest_hash: FixedBytes<32> = FixedBytes::from([
-            0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02,
-            0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02,
-            0x02, 0x02, 0x02, 0x05,
-        ]);
+    async fn test_register_operator(
+        avs_writer: &AvsRegistryChainWriter,
+        private_key_decimal: String,
+        quorum_nums: Bytes,
+    ) {
+        let bls_key_pair = BlsKeyPair::new(private_key_decimal).unwrap();
+        let digest_hash: FixedBytes<32> = FixedBytes::from([0x02; 32]);
 
         // this is set to U256::MAX so that the registry does not take the signature as expired.
         let signature_expiry = U256::MAX;

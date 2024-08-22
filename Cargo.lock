@@ -2036,6 +2036,7 @@ version = "0.0.1-alpha"
 dependencies = [
  "alloy-contract",
  "alloy-network",
+ "alloy-node-bindings",
  "alloy-primitives",
  "alloy-provider",
  "alloy-rpc-types",
