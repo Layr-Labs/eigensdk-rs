@@ -215,7 +215,7 @@ pub mod integration_test {
 
     #[tokio::test]
     #[serial]
-    async fn test_2_quorums_1_operator() {
+    async fn test_2_quorums_2_operators() {
         let registry_coordinator_address = get_registry_coordinator_address().await;
         let operator_state_retriever_address = get_operator_state_retriever_address().await;
         let service_manager_address = get_service_manager_address().await;
@@ -223,13 +223,26 @@ pub mod integration_test {
         let ws_endpoint = "ws://localhost:8545".to_string();
         let provider = get_provider(&http_endpoint);
         let salt: FixedBytes<32> = FixedBytes::from([0x02; 32]);
-        let bls_key_pair = BlsKeyPair::new(
+
+        let private_key_1 =
+            "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80".to_string();
+        let bls_key_pair_1 = BlsKeyPair::new(
             "13710126902690889134622698668747132666439281256983827313388062967626731803599".into(),
         )
         .unwrap();
+        let operator_id_1 =
+            hex!("48beccce16ccdf8000c13d5af5f91c7c3dac6c47b339d993d229af1500dbe4a9").into();
+
+        let private_key_2 =
+            "59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d".to_string();
+        let bls_key_pair_2 = BlsKeyPair::new(
+            "14610126902690889134622698668747132666439281256983827313388062967626731803500".into(),
+        )
+        .unwrap();
+        let operator_id_2 =
+            hex!("7213614953817d00866957a5f866c67a5fb8d4e392af501701f7ab35294dc4b3").into();
         let quorum_nums = Bytes::from([0u8, 1u8]);
 
-        // create quorums
         let contract_registry_coordinator = RegistryCoordinator::new(
             registry_coordinator_address,
             get_signer(
@@ -237,30 +250,28 @@ pub mod integration_test {
                 &http_endpoint,
             ),
         );
+
+        // TODO: check quorum params
         let operator_set_params = OperatorSetParam {
             maxOperatorCount: 10,
-            kickBIPsOfOperatorStake: 100,
-            kickBIPsOfTotalStake: 1000,
+            kickBIPsOfOperatorStake: 1,
+            kickBIPsOfTotalStake: 1,
         };
-        let strategy_params = StrategyParams {
+        let strategy_params = vec![StrategyParams {
             strategy: StrategyBase_ETHx,
             multiplier: 1,
-        };
+        }];
 
+        // Create quorum 0
         let _ = contract_registry_coordinator
-            .createQuorum(
-                operator_set_params.clone(),
-                0,
-                vec![strategy_params.clone()],
-            )
-            .gas(GAS_LIMIT_REGISTER_OPERATOR_REGISTRY_COORDINATOR)
+            .createQuorum(operator_set_params.clone(), 0, strategy_params.clone())
             .send()
             .await
             .unwrap();
 
+        // Create quorum 1
         let _ = contract_registry_coordinator
-            .createQuorum(operator_set_params, 0, vec![strategy_params])
-            .gas(GAS_LIMIT_REGISTER_OPERATOR_REGISTRY_COORDINATOR)
+            .createQuorum(operator_set_params, 0, strategy_params)
             .send()
             .await
             .unwrap();
@@ -271,15 +282,6 @@ pub mod integration_test {
             registry_coordinator_address,
             operator_state_retriever_address,
             http_endpoint.clone(),
-        )
-        .await
-        .unwrap();
-        let avs_writer = AvsRegistryChainWriter::build_avs_registry_chain_writer(
-            get_test_logger(),
-            http_endpoint.clone(),
-            "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80".to_string(),
-            registry_coordinator_address,
-            operator_state_retriever_address,
         )
         .await
         .unwrap();
@@ -303,30 +305,47 @@ pub mod integration_test {
 
         let bls_agg_service = BlsAggregatorService::new(avs_registry_service);
 
-        // Register operator
+        // Register operators
+        let avs_writer = AvsRegistryChainWriter::build_avs_registry_chain_writer(
+            get_test_logger(),
+            http_endpoint.clone(),
+            private_key_1,
+            registry_coordinator_address,
+            operator_state_retriever_address,
+        )
+        .await
+        .unwrap();
         avs_writer
             .register_operator_in_quorum_with_avs_registry_coordinator(
-                bls_key_pair.clone(),
+                bls_key_pair_1.clone(),
                 salt,
                 U256::from_be_slice(&[0xff; 32]), // TODO: check expiry time
                 Bytes::from([0]),
-                "socket".to_string(),
+                "1".to_string(),
             )
             .await
             .unwrap();
 
+        let avs_writer = AvsRegistryChainWriter::build_avs_registry_chain_writer(
+            get_test_logger(),
+            http_endpoint.clone(),
+            private_key_2,
+            registry_coordinator_address,
+            operator_state_retriever_address,
+        )
+        .await
+        .unwrap();
+        // TODO: check. The operator is being registered with stake 0 in the quorum
         avs_writer
             .register_operator_in_quorum_with_avs_registry_coordinator(
-                bls_key_pair.clone(),
+                bls_key_pair_2.clone(),
                 salt,
                 U256::from_be_slice(&[0xff; 32]), // TODO: check expiry time
                 Bytes::from([1]),
-                "socket".to_string(),
+                "2".to_string(),
             )
             .await
             .unwrap();
-        let operator_id =
-            hex!("48beccce16ccdf8000c13d5af5f91c7c3dac6c47b339d993d229af1500dbe4a9").into();
 
         // Create the task related parameters
         let current_block_num = provider.get_block_number().await.unwrap();
@@ -349,9 +368,26 @@ pub mod integration_test {
         // Compute the signature and send it to the aggregation service
         let task_response = 123; // Initialize with appropriate data
         let task_response_digest = hash(task_response);
-        let bls_signature = bls_key_pair.sign_message(task_response_digest.as_ref());
+
+        let bls_signature_1 = bls_key_pair_1.sign_message(task_response_digest.as_ref());
         bls_agg_service
-            .process_new_signature(task_index, task_response_digest, bls_signature, operator_id)
+            .process_new_signature(
+                task_index,
+                task_response_digest,
+                bls_signature_1,
+                operator_id_1,
+            )
+            .await
+            .unwrap();
+
+        let bls_signature_2 = bls_key_pair_2.sign_message(task_response_digest.as_ref());
+        bls_agg_service
+            .process_new_signature(
+                task_index,
+                task_response_digest,
+                bls_signature_2,
+                operator_id_2,
+            )
             .await
             .unwrap();
 

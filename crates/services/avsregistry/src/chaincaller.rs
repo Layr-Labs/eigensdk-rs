@@ -81,7 +81,12 @@ impl AvsRegistryService for AvsRegistryServiceChainCaller {
             let mut pub_key_g1 = G1Projective::from(PublicKey::identity());
             let mut total_stake: U256 = U256::from(0);
             for operator in operators_avs_state.values() {
-                if !operator.stake_per_quorum[quorum_num].is_zero() {
+                if !operator
+                    .stake_per_quorum
+                    .get(quorum_num)
+                    .unwrap_or(&U256::ZERO)
+                    .is_zero()
+                {
                     if let Some(pub_keys) = &operator.operator_info.pub_keys {
                         pub_key_g1 += pub_keys.g1_pub_key.g1();
                         total_stake += operator.stake_per_quorum[quorum_num];
@@ -89,6 +94,7 @@ impl AvsRegistryService for AvsRegistryServiceChainCaller {
                 }
             }
             let agg_pub_key_g1 = if pub_key_g1 == G1Projective::from(PublicKey::zero()) {
+                // TODO: check this. What should the apk be for a quorum without stakers?
                 BlsG1Point::new(Affine::zero())
             } else {
                 BlsG1Point::new(pub_key_g1.into_affine())
