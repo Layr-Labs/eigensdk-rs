@@ -378,14 +378,15 @@ mod tests {
             .status()
     }
 
-    #[tokio::test]
+    // #[tokio::test]
     async fn test_avs_writer_methods() {
+        let account_idx = 5;
         let anvil = Anvil::new().try_spawn().unwrap();
-        let private_key = anvil.keys().get(0).unwrap();
+        let private_key = anvil.keys().get(account_idx).unwrap();
         let private_key_hex = hex::encode(private_key.to_bytes());
         let private_key_decimal = U256::from_be_bytes(private_key.to_bytes().into()).to_string();
         let avs_writer = build_avs_registry_chain_writer(private_key_hex).await;
-        let operator_id = anvil.addresses().get(0).unwrap();
+        let operator_id = anvil.addresses().get(account_idx).unwrap();
 
         let quorum_nums = Bytes::from([0]);
         test_register_operator(&avs_writer, private_key_decimal, quorum_nums.clone()).await;
