@@ -1,13 +1,14 @@
-use std::{collections::HashMap, ops::Add};
-
 use crate::{error::AvsRegistryError, reader::AvsRegistryReader};
 use alloy_primitives::{Address, Bytes, FixedBytes};
 use eigen_crypto_bls::BlsKeyPair;
 use eigen_types::{operator::OperatorPubKeys, test::TestOperator};
 use eigen_utils::binding::OperatorStateRetriever;
+use std::collections::HashMap;
 
 const OPERATOR_STAKE: u128 = 123;
 
+/// This struct is used to test AvsRegistryServiceChainCaller methods.
+#[derive(Debug)]
 pub struct FakeAvsRegistryReader {
     operator_address: Address,
     operator_pubkeys: BlsKeyPair,
@@ -15,6 +16,16 @@ pub struct FakeAvsRegistryReader {
 }
 
 impl FakeAvsRegistryReader {
+    /// Creates a FakeAvsRegistryReader
+    ///
+    /// # Arguments
+    ///
+    /// * `operator` - A TestOperator.
+    /// * `operator_address` - The operator address.
+    ///
+    /// # Returns
+    ///
+    /// A FakeAvsRegistryReader
     pub fn new(operator: TestOperator, operator_address: Address) -> Self {
         Self {
             operator_address,
