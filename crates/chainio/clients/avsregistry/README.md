@@ -1,8 +1,8 @@
 # AvsRegistry
 
-Reader , writer and subscribing methods to interact with avs registry contracts 
+Reader , writer and subscribing methods to interact with avs registry contracts
 
-## Example 
+## Example
 
 - [get_operator_from_id](https://github.com/Layr-Labs/eigensdk-rs/blob/main/examples/avsregistry-read/examples/get_operator_from_id.rs)
 - [get_operator_id](https://github.com/Layr-Labs/eigensdk-rs/blob/main/examples/avsregistry-read/examples/get_operator_id.rs)
