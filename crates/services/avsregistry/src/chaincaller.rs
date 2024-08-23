@@ -4,7 +4,6 @@ use ark_ec::{short_weierstrass::Affine, AffineRepr, CurveGroup};
 use eigen_client_avsregistry::{error::AvsRegistryError, reader::AvsRegistryReader};
 use eigen_crypto_bls::{BlsG1Point, PublicKey};
 use eigen_services_operatorsinfo::operator_info::OperatorInfoService;
-use eigen_services_operatorsinfo::operatorsinfo_inmemory::OperatorInfoServiceInMemory;
 use eigen_types::operator::{OperatorAvsState, OperatorInfo, OperatorPubKeys, QuorumAvsState};
 use eigen_utils::binding::OperatorStateRetriever::CheckSignaturesIndices;
 use std::collections::HashMap;
