@@ -2143,10 +2143,13 @@ dependencies = [
  "ark-bn254",
  "ark-ec",
  "ark-ff 0.4.2",
+ "ark-serialize 0.4.2",
  "ark-std 0.4.0",
  "eigen-crypto-bn254",
  "eigen-utils",
  "rand",
+ "serde",
+ "serde_json",
  "thiserror",
  "tokio",
 ]
