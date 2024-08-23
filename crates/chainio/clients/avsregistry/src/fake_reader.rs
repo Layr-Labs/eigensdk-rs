@@ -6,6 +6,8 @@ use eigen_crypto_bls::BlsKeyPair;
 use eigen_types::{operator::OperatorPubKeys, test::TestOperator};
 use eigen_utils::binding::OperatorStateRetriever;
 
+const OPERATOR_STAKE: u128 = 123;
+
 pub struct FakeAvsRegistryReader {
     operator_address: Address,
     operator_pubkeys: BlsKeyPair,
@@ -31,7 +33,7 @@ impl AvsRegistryReader for FakeAvsRegistryReader {
         Ok(vec![vec![OperatorStateRetriever::Operator {
             operator: self.operator_address,
             operatorId: self.operator_id,
-            stake: 0,
+            stake: OPERATOR_STAKE,
         }]])
     }
     async fn get_check_signatures_indices(

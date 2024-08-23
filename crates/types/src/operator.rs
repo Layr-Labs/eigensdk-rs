@@ -128,7 +128,7 @@ pub fn operator_id_from_g1_pub_key(pub_key: BlsG1Point) -> Result<[u8; 32], Seri
     Ok(keccak256(bytes))
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Eq)]
 pub struct QuorumAvsState {
     pub quorum_num: u8,
     pub total_stake: U256,
