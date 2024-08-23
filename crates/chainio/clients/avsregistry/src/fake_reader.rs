@@ -36,14 +36,16 @@ impl AvsRegistryReader for FakeAvsRegistryReader {
             stake: OPERATOR_STAKE,
         }]])
     }
+
     async fn get_check_signatures_indices(
         &self,
         _reference_block_number: u32,
         _quorum_numbers: Vec<u8>,
         _non_signer_operator_ids: Vec<FixedBytes<32>>,
     ) -> Result<OperatorStateRetriever::CheckSignaturesIndices, AvsRegistryError> {
-        todo!()
+        unimplemented!()
     }
+
     async fn get_operator_from_id(
         &self,
         _operator_id: [u8; 32],
@@ -56,7 +58,7 @@ impl AvsRegistryReader for FakeAvsRegistryReader {
         _start_block: u64,
         _stop_block: u64,
     ) -> Result<HashMap<FixedBytes<32>, String>, AvsRegistryError> {
-        todo!()
+        unimplemented!()
     }
 
     async fn query_existing_registered_operator_pub_keys(
@@ -65,6 +67,6 @@ impl AvsRegistryReader for FakeAvsRegistryReader {
         mut _stop_block: u64,
         _ws_url: String,
     ) -> Result<(Vec<Address>, Vec<OperatorPubKeys>), AvsRegistryError> {
-        todo!()
+        unimplemented!()
     }
 }

@@ -63,13 +63,15 @@ impl<R: AvsRegistryReader, S: OperatorInfoService> AvsRegistryService
 
         for (quorum_id, quorum_num) in quorum_nums.iter().enumerate() {
             for operator in &operators_stakes_in_quorums[quorum_id] {
-                let info = self.get_operator_info(*operator.operatorId).await;
+                let info = self.get_operator_info(*operator.operatorId).await?;
                 let stake_per_quorum = HashMap::new();
                 let avs_state = operators_avs_state
                     .entry(FixedBytes(*operator.operatorId))
                     .or_insert_with(|| OperatorAvsState {
                         operator_id: *operator.operatorId,
-                        operator_info: OperatorInfo { pub_keys: info },
+                        operator_info: OperatorInfo {
+                            pub_keys: Some(info),
+                        },
                         stake_per_quorum,
                         block_num: block_num.into(),
                     });
@@ -172,15 +174,16 @@ impl<R: AvsRegistryReader, S: OperatorInfoService> AvsRegistryServiceChainCaller
     /// # Returns
     ///
     /// The operator public keys
-    async fn get_operator_info(&self, operator_id: [u8; 32]) -> Option<OperatorPubKeys> {
-        let operator_addr = self
-            .avs_registry
-            .get_operator_from_id(operator_id)
-            .await
-            .ok()?;
+    async fn get_operator_info(
+        &self,
+        operator_id: [u8; 32],
+    ) -> Result<OperatorPubKeys, AvsRegistryError> {
+        let operator_addr = self.avs_registry.get_operator_from_id(operator_id).await?;
+
         self.operators_info_service
             .get_operator_info(operator_addr)
             .await
+            .ok_or(AvsRegistryError::GetOperatorInfo)
     }
 }
 
@@ -194,118 +197,107 @@ mod tests {
     use super::AvsRegistryServiceChainCaller;
     use alloy_primitives::{Address, FixedBytes, U256};
     use eigen_client_avsregistry::fake_reader::FakeAvsRegistryReader;
+    use eigen_client_avsregistry::reader::AvsRegistryReader;
     use eigen_crypto_bls::BlsKeyPair;
     use eigen_services_operatorsinfo::fake_operator_info::FakeOperatorInfoService;
+    use eigen_services_operatorsinfo::operator_info::OperatorInfoService;
     use eigen_types::operator::{OperatorAvsState, OperatorInfo, OperatorPubKeys, QuorumAvsState};
     use eigen_types::test::TestOperator;
 
-    #[tokio::test]
-    async fn test_get_operator_info() {
-        let bls_keypair = BlsKeyPair::new(
-            "13710126902690889134622698668747132666439281256983827313388062967626731803599".into(),
-        )
-        .unwrap();
-        let operator_id = FixedBytes::<32>::from_slice(
-            hex::decode("48beccce16ccdf8000c13d5af5f91c7c3dac6c47b339d993d229af1500dbe4a9")
-                .unwrap()
-                .as_slice(),
-        );
-        let operator_address =
-            Address::from_str("0xa0Ee7A142d267C1f36714E4a8F75612F20a79720").unwrap();
-        let test_operator_1 = TestOperator {
+    const PRIVATE_KEY_DECIMAL: &str =
+        "13710126902690889134622698668747132666439281256983827313388062967626731803599";
+    const OPERATOR_ID: &str = "48beccce16ccdf8000c13d5af5f91c7c3dac6c47b339d993d229af1500dbe4a9";
+    const OPERATOR_ADDRESS: &str = "0xa0Ee7A142d267C1f36714E4a8F75612F20a79720";
+    fn build_test_operator() -> TestOperator {
+        let bls_keypair = BlsKeyPair::new(PRIVATE_KEY_DECIMAL.into()).unwrap();
+        let operator_id =
+            FixedBytes::<32>::from_slice(hex::decode(OPERATOR_ID).unwrap().as_slice());
+        TestOperator {
             operator_id,
             bls_keypair: bls_keypair.clone(),
             stake_per_quorum: HashMap::from([(1u8, U256::from(123))]),
-        };
-        let avs_registry = FakeAvsRegistryReader::new(test_operator_1, operator_address);
-        let operator_info_service = FakeOperatorInfoService::new(bls_keypair.clone());
-        let service = AvsRegistryServiceChainCaller::new(avs_registry, operator_info_service);
-        let operator_info = service.get_operator_info(operator_id.into()).await;
+        }
+    }
+
+    fn build_avs_registry_service_chaincaller<R: AvsRegistryReader, S: OperatorInfoService>(
+        test_operator: TestOperator,
+    ) -> AvsRegistryServiceChainCaller<FakeAvsRegistryReader, FakeOperatorInfoService> {
+        let operator_address = Address::from_str(OPERATOR_ADDRESS).unwrap();
+        let avs_registry = FakeAvsRegistryReader::new(test_operator.clone(), operator_address);
+        let operator_info_service = FakeOperatorInfoService::new(test_operator.bls_keypair.clone());
+        AvsRegistryServiceChainCaller::new(avs_registry, operator_info_service)
+    }
+
+    #[tokio::test]
+    async fn test_get_operator_info() {
+        let test_operator = build_test_operator();
+        let bls_keypair = test_operator.bls_keypair.clone();
+
+        let service = build_avs_registry_service_chaincaller::<
+            FakeAvsRegistryReader,
+            FakeOperatorInfoService,
+        >(test_operator.clone());
+        let operator_info = service
+            .get_operator_info(test_operator.operator_id.into())
+            .await
+            .unwrap();
         let expected_operator_info = Some(OperatorPubKeys::from(bls_keypair));
-        assert_eq!(expected_operator_info, operator_info);
+        assert_eq!(expected_operator_info, Some(operator_info));
     }
 
     #[tokio::test]
     async fn test_get_operator_avs_state() {
-        let bls_keypair = BlsKeyPair::new(
-            "13710126902690889134622698668747132666439281256983827313388062967626731803599".into(),
-        )
-        .unwrap();
-        let operator_id = FixedBytes::<32>::from_slice(
-            hex::decode("48beccce16ccdf8000c13d5af5f91c7c3dac6c47b339d993d229af1500dbe4a9")
-                .unwrap()
-                .as_slice(),
-        );
-        let operator_address =
-            Address::from_str("0xa0Ee7A142d267C1f36714E4a8F75612F20a79720").unwrap();
-        let test_operator_1 = TestOperator {
-            operator_id: operator_id.clone(),
-            bls_keypair: bls_keypair.clone(),
-            stake_per_quorum: HashMap::from([(1u8, U256::from(123))]),
-        };
-        let avs_registry = FakeAvsRegistryReader::new(test_operator_1, operator_address);
-        let operator_info_service = FakeOperatorInfoService::new(bls_keypair.clone());
-        let service = AvsRegistryServiceChainCaller::new(avs_registry, operator_info_service);
+        let test_operator = build_test_operator();
+        let service = build_avs_registry_service_chaincaller::<
+            FakeAvsRegistryReader,
+            FakeOperatorInfoService,
+        >(test_operator.clone());
+
         let operator_avs_state = service
             .get_operators_avs_state_at_block(1, &[1u8])
             .await
             .unwrap();
 
         let expected_operator_avs_state = OperatorAvsState {
-            operator_id: operator_id.into(),
+            operator_id: test_operator.operator_id.into(),
             operator_info: OperatorInfo {
-                pub_keys: Some(OperatorPubKeys::from(bls_keypair)),
+                pub_keys: Some(OperatorPubKeys::from(test_operator.bls_keypair)),
             },
-            stake_per_quorum: HashMap::from([(1u8, U256::from(123))]),
+            stake_per_quorum: test_operator.stake_per_quorum,
             block_num: 1.into(),
         };
-        let operator_id = FixedBytes::<32>::from_slice(
-            hex::decode("48beccce16ccdf8000c13d5af5f91c7c3dac6c47b339d993d229af1500dbe4a9")
-                .unwrap()
-                .as_slice(),
-        );
-
-        let operator_state = operator_avs_state.get(&operator_id).unwrap();
+        let operator_state = operator_avs_state.get(&test_operator.operator_id).unwrap();
         assert_eq!(expected_operator_avs_state, *operator_state);
     }
 
     #[tokio::test]
     async fn test_get_quorum_avs_state() {
-        let bls_keypair = BlsKeyPair::new(
-            "13710126902690889134622698668747132666439281256983827313388062967626731803599".into(),
-        )
-        .unwrap();
-        let operator_id = FixedBytes::<32>::from_slice(
-            hex::decode("48beccce16ccdf8000c13d5af5f91c7c3dac6c47b339d993d229af1500dbe4a9")
-                .unwrap()
-                .as_slice(),
-        );
-        let operator_address =
-            Address::from_str("0xa0Ee7A142d267C1f36714E4a8F75612F20a79720").unwrap();
-        let test_operator_1 = TestOperator {
-            operator_id,
-            bls_keypair: bls_keypair.clone(),
-            stake_per_quorum: HashMap::from([(1u8, U256::from(123))]),
-        };
+        let test_operator = build_test_operator();
         let quorum_num = 1;
-        let block_num = 1;
-        let avs_registry = FakeAvsRegistryReader::new(test_operator_1, operator_address);
-        let operator_info_service = FakeOperatorInfoService::new(bls_keypair.clone());
-        let service = AvsRegistryServiceChainCaller::new(avs_registry, operator_info_service);
+        let block_num = 1u32;
+        let service = build_avs_registry_service_chaincaller::<
+            FakeAvsRegistryReader,
+            FakeOperatorInfoService,
+        >(test_operator.clone());
         let quorum_state_per_number = service
             .get_quorums_avs_state_at_block(&[quorum_num], 1)
             .await
             .unwrap();
 
+        let total_stake = test_operator
+            .stake_per_quorum
+            .get(&(block_num as u8))
+            .unwrap();
+
         let expected_quorum_state = QuorumAvsState {
             quorum_num,
-            total_stake: U256::from(123),
-            agg_pub_key_g1: bls_keypair.public_key(),
+            total_stake: *total_stake,
+            agg_pub_key_g1: test_operator.bls_keypair.public_key(),
             block_num,
         };
-        assert_eq!(
-            expected_quorum_state,
-            *quorum_state_per_number.get(&(block_num as u8)).unwrap()
-        );
+        let expected_quorum_state_per_number =
+            HashMap::from([(block_num as u8, expected_quorum_state)]);
+
+        assert_eq!(expected_quorum_state_per_number, quorum_state_per_number);
     }
 }
