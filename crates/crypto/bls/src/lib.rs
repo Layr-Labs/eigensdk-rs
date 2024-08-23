@@ -11,16 +11,20 @@ pub mod error;
 use crate::error::BlsError;
 use ark_bn254::{Fq, Fr, G1Affine, G1Projective, G2Affine, G2Projective};
 use ark_ec::{AffineRepr, CurveGroup};
-use ark_ff::{fields::PrimeField, BigInt, BigInteger256};
+use ark_ff::{fields::PrimeField, BigInt, BigInteger256, Fp2};
 use eigen_crypto_bn254::utils::map_to_curve;
-use eigen_utils::binding::RegistryCoordinator::{self};
+use eigen_utils::binding::{
+    BLSApkRegistry,
+    RegistryCoordinator::{self},
+};
+use BLSApkRegistry::{G1Point as G1PointRegistry, G2Point as G2PointRegistry};
 use RegistryCoordinator::{G1Point, G2Point};
 pub type PrivateKey = Fr;
 pub type PublicKey = G1Affine;
 pub type BlsSignature = G1Affine;
 pub type OperatorId = B256;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BlsG1Point {
     g1: G1Affine,
 }
@@ -35,7 +39,7 @@ impl BlsG1Point {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BlsG2Point {
     g2: G2Affine,
 }
@@ -50,8 +54,8 @@ impl BlsG2Point {
     }
 }
 
-#[derive(Debug)]
 /// Bls key pair with public key on G1
+#[derive(Debug, Clone)]
 pub struct BlsKeyPair {
     /// Private Key
     priv_key: Fr,
@@ -163,8 +167,60 @@ pub fn convert_to_g2_point(g2: G2Affine) -> Result<G2Point, BlsError> {
     }
 }
 
+/// Convert [`G1Point`] to [`G1Affine`]
+pub fn alloy_registry_g1_point_to_g1_affine(g1_point: G1PointRegistry) -> G1Affine {
+    let x_point = g1_point.X.into_limbs();
+    let x = Fq::new(BigInteger256::new(x_point));
+    let y_point = g1_point.Y.into_limbs();
+    let y = Fq::new(BigInteger256::new(y_point));
+    G1Affine::new(x, y)
+}
+
+/// Convert [`G1Point`] to [`G1Affine`]
+pub fn alloy_registry_g2_point_to_g2_affine(g2_point: G2PointRegistry) -> G2Affine {
+    let x_fp2 = Fp2::new(
+        BigInteger256::new(g2_point.X[1].into_limbs()).into(),
+        BigInteger256::new(g2_point.X[0].into_limbs()).into(),
+    );
+    let y_fp2 = Fp2::new(
+        BigInteger256::new(g2_point.Y[1].into_limbs()).into(),
+        BigInteger256::new(g2_point.Y[0].into_limbs()).into(),
+    );
+    G2Affine::new(x_fp2, y_fp2)
+}
+
+/// Convert [`G2Affine`] to [`G2Point`]
+pub fn convert_to_registry_g2_point(g2: G2Affine) -> Result<G2PointRegistry, BlsError> {
+    let x_point_result = g2.x();
+    let y_point_result = g2.y();
+
+    if let (Some(x_point), Some(y_point)) = (x_point_result, y_point_result) {
+        let x_point_c0 = x_point.c0;
+        let x_point_c1 = x_point.c1;
+        let y_point_c0 = y_point.c0;
+        let y_point_c1 = y_point.c1;
+
+        let x_0 = BigInt::new(x_point_c0.into_bigint().0);
+        let x_1 = BigInt::new(x_point_c1.into_bigint().0);
+        let y_0 = BigInt::new(y_point_c0.into_bigint().0);
+        let y_1 = BigInt::new(y_point_c1.into_bigint().0);
+
+        let x_u256_0 = U256::from_limbs(x_0.0);
+        let x_u256_1 = U256::from_limbs(x_1.0);
+        let y_u256_0 = U256::from_limbs(y_0.0);
+        let y_u256_1 = U256::from_limbs(y_1.0);
+
+        Ok(G2PointRegistry {
+            X: [x_u256_1, x_u256_0],
+            Y: [y_u256_1, y_u256_0],
+        })
+    } else {
+        Err(BlsError::InvalidG2Affine)
+    }
+}
+
 /// Signature instance on [`G1Affine`]
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Signature {
     g1_point: BlsG1Point,
 }
@@ -393,5 +449,58 @@ mod tests {
             &message,
             signature.g1_point().g1()
         ));
+    }
+
+    #[test]
+    fn test_alloy_registry_g2_point_to_g2_affine() {
+        let registry_g2_point = G2PointRegistry {
+            X: [
+                U256::from_str(
+                    "5757009320127825712028542414399286695979413866882055578475552905478799178978",
+                )
+                .unwrap(),
+                U256::from_str(
+                    "21244616545128868564944750577089226156588822099825362793595203506897139322148",
+                )
+                .unwrap(),
+            ],
+            Y: [
+                U256::from_str(
+                    "14151879035050941576498647371309462393327101480686968228451570672809612016186",
+                )
+                .unwrap(),
+                U256::from_str(
+                    "3459884663217117850014821742383597128426843416583591466170557027357262534805",
+                )
+                .unwrap(),
+            ],
+        };
+
+        let g2_affine = alloy_registry_g2_point_to_g2_affine(registry_g2_point);
+        let expected_g2_affine = G2Affine {
+            x: Fq2::new(
+                Fq::from_str(
+                    "21244616545128868564944750577089226156588822099825362793595203506897139322148",
+                )
+                .unwrap(),
+                Fq::from_str(
+                    "5757009320127825712028542414399286695979413866882055578475552905478799178978",
+                )
+                .unwrap(),
+            ),
+            y: Fq2::new(
+                Fq::from_str(
+                    "3459884663217117850014821742383597128426843416583591466170557027357262534805",
+                )
+                .unwrap(),
+                Fq::from_str(
+                    "14151879035050941576498647371309462393327101480686968228451570672809612016186",
+                )
+                .unwrap(),
+            ),
+            infinity: false,
+        };
+
+        assert_eq!(g2_affine, expected_g2_affine);
     }
 }

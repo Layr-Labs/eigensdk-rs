@@ -10,6 +10,8 @@ license-file.workspace = true
 
 [dependencies]
 alloy-primitives.workspace = true
+ark-bn254.workspace = true
+ark-ec.workspace = true
 eigen-chainio-utils.workspace = true
 eigen-client-avsregistry.workspace = true
 eigen-crypto-bls.workspace = true
