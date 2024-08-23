@@ -23,7 +23,7 @@ cleanup() {
     fi
 }
 trap 'cleanup $LINENO "$BASH_COMMAND"' EXIT
-
+cleanup
 # start an anvil instance in the background that has eigenlayer contracts deployed
 # we start anvil in the background so that we can run the below script
 # anvil --load-state avs-and-eigenlayer-deployed-anvil-state.json &
@@ -38,3 +38,4 @@ cd ../../contracts
 cast rpc anvil_mine 200 --rpc-url http://localhost:8545 > /dev/null
 echo "Anvil is ready. Advanced chain to block-number:" $(cast block-number)
 
+docker attach anvil

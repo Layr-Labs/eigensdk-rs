@@ -15,9 +15,9 @@ reset-anvil:
 	-docker rm anvil
 
 pr: reset-anvil ## 
-	$(MAKE) start-anvil-chain-with-contracts-deployed
-	docker start anvil
-	cargo test --workspace
+	$(MAKE) start-anvil-chain-with-contracts-deployed &
+	sleep 4
+	cargo test --workspace integration_test
 	cargo clippy --workspace --lib --examples --tests --benches --all-features
 	cargo +nightly fmt -- --check
 	docker stop anvil
