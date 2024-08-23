@@ -56,18 +56,12 @@ impl ELChainWriter {
 
         let contract_delegation_manager = DelegationManager::new(self.delegation_manager, provider);
 
-        let binding = match operator.has_metadata_url() {
-            Some(metadata) => {
-                let contract_call =
-                    contract_delegation_manager.registerAsOperator(op_details, metadata);
-                contract_call.gas(300000)
-            }
-            None => {
-                let contract_call =
-                    contract_delegation_manager.registerAsOperator(op_details, "".to_string());
-                contract_call.gas(300000)
-            }
+        let binding = {
+            let contract_call = contract_delegation_manager
+                .registerAsOperator(op_details, operator.has_metadata_url().unwrap_or_default());
+            contract_call.gas(300000)
         };
+
         let binding_tx_result = binding.send().await;
         match binding_tx_result {
             Ok(binding_tx) => {
@@ -185,18 +179,22 @@ mod tests {
     use super::ELChainWriter;
     use crate::reader::ELChainReader;
     use alloy_primitives::Address;
+    use alloy_provider::Provider;
     use alloy_signer_local::PrivateKeySigner;
+    use anvil_constants::{ANVIL_RPC_URL, CONTRACTS_REGISTRY};
     use eigen_logging::get_test_logger;
     use eigen_testing_utils::anvil_constants;
     use eigen_testing_utils::anvil_constants::{
         get_delegation_manager_address, get_service_manager_address, get_strategy_manager_address,
     };
-    //get_erc20_mock_strategy, get_operator_state_retriever_address, get_registry_coordinator_address,
+    use eigen_types::operator::Operator;
     use eigen_utils::binding::DelegationManager;
     use eigen_utils::binding::{
         mockAvsServiceManager,
         ContractsRegistry::{self, get_test_valuesReturn},
     };
+    use std::str::FromStr;
+    //get_erc20_mock_strategy, get_operator_state_retriever_address, get_registry_coordinator_address,
 
     /// Returns a new instance of ELChainWriter and the address of the delegation manager contract
     ///
@@ -250,10 +248,7 @@ mod tests {
             .parse()
             .expect("failed to generate wallet");
 
-        let contract_registry = ContractsRegistry::new(
-            anvil_constants::CONTRACTS_REGISTRY,
-            anvil_constants::ANVIL_RPC_URL.clone(),
-        );
+        let contract_registry = ContractsRegistry::new(CONTRACTS_REGISTRY, ANVIL_RPC_URL.clone());
         // Use these value in tests when needed
         let operator_index = "1".parse().unwrap();
         let get_test_values_return = contract_registry
@@ -291,6 +286,40 @@ mod tests {
             signer,
         );
 
-        assert_eq!(1, 2 - 1);
+        // define an operator
+        let wallet = PrivateKeySigner::from_str(
+            "bead471191bea97fc3aeac36c9d74c895e8a6242602e144e43152f96219e96e8",
+        )
+        .expect("no key");
+
+        let operator = Operator::new(
+            wallet.address(),
+            wallet.address(),
+            wallet.address(),
+            3,
+            Some("eigensdk-rs".to_string()),
+        );
+
+        let tx_hash = el_chain_writer
+            .register_as_operator(operator)
+            .await
+            .unwrap();
+
+        // this sleep is needed so that we wait for the tx to be processed
+        tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
+        let receipt = ANVIL_RPC_URL
+            .get_transaction_receipt(tx_hash)
+            .await
+            .unwrap();
+        assert!(receipt.unwrap().status());
+
+        // FIX this:
+        //     Transaction: 0xb497b163bef1f1f23dcc6bdc1cbaae653cb438dd3244940016c07a62642a8591
+        //     Gas used: 32928
+        //     Error: reverted with: revert: DelegationManager.registerAsOperator: caller is already actively delegated
+        //
+        //     Block Number: 3
+        //     Block Hash: 0xb0c83305d8e65348b62b9a214499055409cda27b08d036f9dbc42f7f3b883d82
+        //     Block Time: "Thu, 22 Aug 2024 19:49:06 +0000"
     }
 }
