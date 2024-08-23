@@ -378,7 +378,7 @@ mod tests {
             .status()
     }
 
-    // #[tokio::test]
+    #[tokio::test]
     async fn test_avs_writer_methods() {
         let account_idx = 5;
         let anvil = Anvil::new().try_spawn().unwrap();
