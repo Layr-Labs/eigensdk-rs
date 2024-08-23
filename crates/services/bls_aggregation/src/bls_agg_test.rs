@@ -27,7 +27,14 @@ pub mod integration_test {
     use serial_test::serial;
     use sha2::{Digest, Sha256};
     use std::time::Duration;
+    use std::{
+        process::{Command, Stdio},
+        thread::sleep,
+    };
     use tokio::sync::watch;
+
+    const PRIVATE_KEY_1: &str = "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
+    const PRIVATE_KEY_2: &str = "59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d";
 
     fn hash(task_response: u64) -> B256 {
         let mut hasher = Sha256::new();
@@ -97,25 +104,6 @@ pub mod integration_test {
         .await
         .unwrap();
 
-        // Create aggregation service
-        let operators_info = OperatorInfoServiceInMemory::new(
-            get_test_logger(),
-            avs_registry_reader.clone(),
-            ws_endpoint,
-        )
-        .await;
-
-        let (shutdown_tx, shutdown_rx) = watch::channel(());
-        operators_info
-            .start_service(0, 0, shutdown_rx)
-            .await
-            .unwrap();
-
-        let avs_registry_service =
-            AvsRegistryServiceChainCaller::new(avs_registry_reader.clone(), operators_info);
-
-        let bls_agg_service = BlsAggregatorService::new(avs_registry_service);
-
         // create quorum
         let contract_registry_coordinator = RegistryCoordinator::new(
             registry_coordinator_address,
@@ -151,10 +139,40 @@ pub mod integration_test {
             )
             .await
             .unwrap();
+
+        // Sleep is needed so registered operators are accesible to the OperatorInfoServiceInMemory
+        sleep(Duration::from_millis(500));
+
+        // Create aggregation service
+        let operators_info = OperatorInfoServiceInMemory::new(
+            get_test_logger(),
+            avs_registry_reader.clone(),
+            ws_endpoint,
+        )
+        .await;
+
+        let (shutdown_tx, shutdown_rx) = watch::channel(());
+        operators_info
+            .start_service(0, 0, shutdown_rx)
+            .await
+            .unwrap();
+
+        let avs_registry_service =
+            AvsRegistryServiceChainCaller::new(avs_registry_reader.clone(), operators_info);
+
+        let bls_agg_service = BlsAggregatorService::new(avs_registry_service);
+
         let operator_id =
             hex!("48beccce16ccdf8000c13d5af5f91c7c3dac6c47b339d993d229af1500dbe4a9").into();
 
         let current_block_num = provider.get_block_number().await.unwrap();
+
+        // Advance the block number by 1
+        Command::new("cast")
+            .args(&["rpc", "anvil_mine", "1", "--rpc-url", &http_endpoint])
+            .stdout(Stdio::null())
+            .output()
+            .expect("Failed to execute command");
 
         // Create the task related parameters
         let task_index: TaskIndex = 0;
@@ -220,8 +238,6 @@ pub mod integration_test {
         let provider = get_provider(&http_endpoint);
         let salt: FixedBytes<32> = FixedBytes::from([0x02; 32]);
 
-        let private_key_1 =
-            "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80".to_string();
         let bls_key_pair_1 = BlsKeyPair::new(
             "13710126902690889134622698668747132666439281256983827313388062967626731803599".into(),
         )
@@ -229,8 +245,6 @@ pub mod integration_test {
         let operator_id_1 =
             hex!("48beccce16ccdf8000c13d5af5f91c7c3dac6c47b339d993d229af1500dbe4a9").into();
 
-        let private_key_2 =
-            "59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d".to_string();
         let bls_key_pair_2 = BlsKeyPair::new(
             "14610126902690889134622698668747132666439281256983827313388062967626731803500".into(),
         )
@@ -243,7 +257,7 @@ pub mod integration_test {
 
         let contract_registry_coordinator = RegistryCoordinator::new(
             registry_coordinator_address,
-            get_signer(private_key_1.clone(), &http_endpoint),
+            get_signer(PRIVATE_KEY_1.to_string(), &http_endpoint),
         );
 
         // TODO: check quorum params
@@ -277,12 +291,47 @@ pub mod integration_test {
         let avs_writer = AvsRegistryChainWriter::build_avs_registry_chain_writer(
             get_test_logger(),
             http_endpoint.clone(),
-            private_key_1,
+            PRIVATE_KEY_1.to_string(),
             registry_coordinator_address,
             operator_state_retriever_address,
         )
         .await
         .unwrap();
+
+        // Register operator
+        avs_writer
+            .register_operator_in_quorum_with_avs_registry_coordinator(
+                bls_key_pair_1.clone(),
+                salt,
+                U256::from_be_slice(&[0xff; 32]), // TODO: check expiry time
+                quorum_nums.clone(),
+                "socket".to_string(),
+            )
+            .await
+            .unwrap();
+
+        let avs_writer = AvsRegistryChainWriter::build_avs_registry_chain_writer(
+            get_test_logger(),
+            http_endpoint.clone(),
+            PRIVATE_KEY_2.to_string(),
+            registry_coordinator_address,
+            operator_state_retriever_address,
+        )
+        .await
+        .unwrap();
+        avs_writer
+            .register_operator_in_quorum_with_avs_registry_coordinator(
+                bls_key_pair_2.clone(),
+                salt,
+                U256::from_be_slice(&[0xff; 32]), // TODO: check expiry time
+                quorum_nums.clone(),
+                "socket".to_string(),
+            )
+            .await
+            .unwrap();
+
+        // Sleep is needed so registered operators are accesible to the OperatorInfoServiceInMemory
+        sleep(Duration::from_millis(500));
 
         // Create aggregation service
         let operators_info = OperatorInfoServiceInMemory::new(
@@ -303,39 +352,14 @@ pub mod integration_test {
 
         let bls_agg_service = BlsAggregatorService::new(avs_registry_service);
 
-        // Register operator
-        avs_writer
-            .register_operator_in_quorum_with_avs_registry_coordinator(
-                bls_key_pair_1.clone(),
-                salt,
-                U256::from_be_slice(&[0xff; 32]), // TODO: check expiry time
-                quorum_nums.clone(),
-                "socket".to_string(),
-            )
-            .await
-            .unwrap();
-
-        let avs_writer = AvsRegistryChainWriter::build_avs_registry_chain_writer(
-            get_test_logger(),
-            http_endpoint.clone(),
-            private_key_2,
-            registry_coordinator_address,
-            operator_state_retriever_address,
-        )
-        .await
-        .unwrap();
-        avs_writer
-            .register_operator_in_quorum_with_avs_registry_coordinator(
-                bls_key_pair_2.clone(),
-                salt,
-                U256::from_be_slice(&[0xff; 32]), // TODO: check expiry time
-                quorum_nums.clone(),
-                "socket".to_string(),
-            )
-            .await
-            .unwrap();
-
         let current_block_num = provider.get_block_number().await.unwrap();
+
+        // Advance the block number by 1
+        Command::new("cast")
+            .args(&["rpc", "anvil_mine", "1", "--rpc-url", &http_endpoint])
+            .stdout(Stdio::null())
+            .output()
+            .expect("Failed to execute command");
 
         // Create the task related parameters
         let task_index: TaskIndex = 0;
@@ -417,8 +441,6 @@ pub mod integration_test {
         let provider = get_provider(&http_endpoint);
         let salt: FixedBytes<32> = FixedBytes::from([0x02; 32]);
 
-        let private_key_1 =
-            "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80".to_string();
         let bls_key_pair_1 = BlsKeyPair::new(
             "13710126902690889134622698668747132666439281256983827313388062967626731803599".into(),
         )
@@ -426,8 +448,6 @@ pub mod integration_test {
         let operator_id_1 =
             hex!("48beccce16ccdf8000c13d5af5f91c7c3dac6c47b339d993d229af1500dbe4a9").into();
 
-        let private_key_2 =
-            "59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d".to_string();
         let bls_key_pair_2 = BlsKeyPair::new(
             "14610126902690889134622698668747132666439281256983827313388062967626731803500".into(),
         )
@@ -440,7 +460,7 @@ pub mod integration_test {
 
         let contract_registry_coordinator = RegistryCoordinator::new(
             registry_coordinator_address,
-            get_signer(private_key_1.clone(), &http_endpoint),
+            get_signer(PRIVATE_KEY_1.to_string(), &http_endpoint),
         );
 
         // TODO: check quorum params
@@ -481,12 +501,48 @@ pub mod integration_test {
         let avs_writer = AvsRegistryChainWriter::build_avs_registry_chain_writer(
             get_test_logger(),
             http_endpoint.clone(),
-            private_key_1,
+            PRIVATE_KEY_1.to_string(),
             registry_coordinator_address,
             operator_state_retriever_address,
         )
         .await
         .unwrap();
+
+        // Register operator
+        avs_writer
+            .register_operator_in_quorum_with_avs_registry_coordinator(
+                bls_key_pair_1.clone(),
+                salt,
+                U256::from_be_slice(&[0xff; 32]), // TODO: check expiry time
+                Bytes::from([2]),
+                "socket".to_string(),
+            )
+            .await
+            .unwrap();
+
+        let avs_writer = AvsRegistryChainWriter::build_avs_registry_chain_writer(
+            // TODO: check if needed
+            get_test_logger(),
+            http_endpoint.clone(),
+            PRIVATE_KEY_2.to_string(),
+            registry_coordinator_address,
+            operator_state_retriever_address,
+        )
+        .await
+        .unwrap();
+        avs_writer
+            .register_operator_in_quorum_with_avs_registry_coordinator(
+                bls_key_pair_2.clone(),
+                salt,
+                U256::from_be_slice(&[0xff; 32]), // TODO: check expiry time
+                Bytes::from([3]),
+                "socket".to_string(),
+            )
+            .await
+            .unwrap();
+
+        // Sleep is needed so registered operators are accesible to the OperatorInfoServiceInMemory
+        sleep(Duration::from_millis(500));
 
         // Create aggregation service
         let operators_info = OperatorInfoServiceInMemory::new(
@@ -507,39 +563,14 @@ pub mod integration_test {
 
         let bls_agg_service = BlsAggregatorService::new(avs_registry_service);
 
-        // Register operator
-        avs_writer
-            .register_operator_in_quorum_with_avs_registry_coordinator(
-                bls_key_pair_1.clone(),
-                salt,
-                U256::from_be_slice(&[0xff; 32]), // TODO: check expiry time
-                Bytes::from([1]),
-                "socket".to_string(),
-            )
-            .await
-            .unwrap();
-
-        let avs_writer = AvsRegistryChainWriter::build_avs_registry_chain_writer(
-            get_test_logger(),
-            http_endpoint.clone(),
-            private_key_2,
-            registry_coordinator_address,
-            operator_state_retriever_address,
-        )
-        .await
-        .unwrap();
-        avs_writer
-            .register_operator_in_quorum_with_avs_registry_coordinator(
-                bls_key_pair_2.clone(),
-                salt,
-                U256::from_be_slice(&[0xff; 32]), // TODO: check expiry time
-                Bytes::from([2]),
-                "socket".to_string(),
-            )
-            .await
-            .unwrap();
-
         let current_block_num = provider.get_block_number().await.unwrap();
+
+        // Advance the block number by 1
+        Command::new("cast")
+            .args(&["rpc", "anvil_mine", "1", "--rpc-url", &http_endpoint])
+            .stdout(Stdio::null())
+            .output()
+            .expect("Failed to execute command");
 
         // Create the task related parameters
         let task_index: TaskIndex = 0;
