@@ -9,7 +9,7 @@ pub struct FakeOperatorInfoService {
 }
 
 impl FakeOperatorInfoService {
-    fn new(pubkeys: BlsKeyPair) -> Self {
+    pub fn new(pubkeys: BlsKeyPair) -> Self {
         Self {
             pubkeys: OperatorInfo {
                 pub_keys: Some(OperatorPubKeys::from(pubkeys)),

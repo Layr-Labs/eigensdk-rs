@@ -188,22 +188,18 @@ impl<R: AvsRegistryReader, S: OperatorInfoService> AvsRegistryServiceChainCaller
 #[cfg(test)]
 mod tests {
     use std::collections::HashMap;
+    use std::str::FromStr;
 
     use super::AvsRegistryServiceChainCaller;
-    use alloy_primitives::{Bytes, FixedBytes, U256};
-    use eigen_client_avsregistry::reader::AvsRegistryChainReader;
-    use eigen_client_avsregistry::writer::AvsRegistryChainWriter;
+    use alloy_primitives::{Address, FixedBytes};
+    use eigen_client_avsregistry::fake_reader::FakeAvsRegistryReader;
     use eigen_crypto_bls::BlsKeyPair;
-    use eigen_logging::get_test_logger;
-    use eigen_services_operatorsinfo::operatorsinfo_inmemory::OperatorInfoServiceInMemory;
-    use eigen_testing_utils::anvil_constants::{
-        get_operator_state_retriever_address, get_registry_coordinator_address,
-    };
+    use eigen_services_operatorsinfo::fake_operator_info::FakeOperatorInfoService;
     use eigen_types::operator::OperatorPubKeys;
     use eigen_types::test::TestOperator;
 
     #[tokio::test]
-    async fn test_get_operator_keys() {
+    async fn test_get_operator_info() {
         let bls_keypair = BlsKeyPair::new(
             "13710126902690889134622698668747132666439281256983827313388062967626731803599".into(),
         )
@@ -213,122 +209,18 @@ mod tests {
                 .unwrap()
                 .as_slice(),
         );
-
+        let operator_address =
+            Address::from_str("0xa0Ee7A142d267C1f36714E4a8F75612F20a79720").unwrap();
         let test_operator_1 = TestOperator {
             operator_id,
             bls_keypair: bls_keypair.clone(),
             stake_per_quorum: HashMap::default(),
         };
-
-        let registry_coordinator_addr = get_registry_coordinator_address().await;
-        let operator_state_retriever_addr = get_operator_state_retriever_address().await;
-
-        let avs_writer = AvsRegistryChainWriter::build_avs_registry_chain_writer(
-            get_test_logger(),
-            "http://localhost:8545".into(),
-            "2a871d0798f97d79848a013d4936a73bf4cc922c825d33c1cf7073dff6d409c6".into(),
-            registry_coordinator_addr,
-            operator_state_retriever_addr,
-        )
-        .await
-        .unwrap();
-        let quorum_nums = Bytes::from([0]);
-        let salt = [0x02; 32].into();
-        avs_writer
-            .register_operator_in_quorum_with_avs_registry_coordinator(
-                bls_keypair,
-                salt,
-                U256::MAX,
-                quorum_nums,
-                "".into(),
-            )
-            .await
-            .unwrap();
-
-        let reader = AvsRegistryChainReader::new(
-            get_test_logger(),
-            registry_coordinator_addr,
-            operator_state_retriever_addr,
-            "http://localhost:8545".into(),
-        )
-        .await
-        .unwrap();
-
-        let op_info_service = OperatorInfoServiceInMemory::new(
-            get_test_logger(),
-            reader.clone(),
-            "ws://localhost:8545".into(),
-        )
-        .await;
-        let (tx, rx) = tokio::sync::watch::channel(());
-        op_info_service.start_service(200, 205, rx).await.unwrap();
-
-        let avs_registry_service = AvsRegistryServiceChainCaller::new(reader, op_info_service);
-        let operator_info = avs_registry_service
-            .get_operator_info(test_operator_1.operator_id.into())
-            .await
-            .unwrap();
-        let expected_operator_info = OperatorPubKeys::from(test_operator_1.bls_keypair);
-
-        assert_eq!(operator_info, expected_operator_info);
+        let avs_registry = FakeAvsRegistryReader::new(test_operator_1, operator_address);
+        let operator_info_service = FakeOperatorInfoService::new(bls_keypair.clone());
+        let service = AvsRegistryServiceChainCaller::new(avs_registry, operator_info_service);
+        let operator_info = service.get_operator_info(operator_id.into()).await;
+        let expected_operator_info = Some(OperatorPubKeys::from(bls_keypair));
+        assert_eq!(expected_operator_info, operator_info);
     }
 }
-
-// func TestAvsRegistryServiceChainCaller_getOperatorPubkeys(t *testing.T) {
-// 	logger := testutils.GetTestLogger()
-// 	testOperator1 := fakes.TestOperator{
-// 		OperatorAddr: common.HexToAddress("0x1"),
-// 		OperatorId:   types.OperatorId{1},
-// 		OperatorInfo: types.OperatorInfo{
-// 			Pubkeys: types.OperatorPubkeys{
-// 				G1Pubkey: bls.NewG1Point(big.NewInt(1), big.NewInt(1)),
-// 				G2Pubkey: bls.NewG2Point(
-// 					[2]*big.Int{big.NewInt(1), big.NewInt(1)},
-// 					[2]*big.Int{big.NewInt(1), big.NewInt(1)},
-// 				),
-// 			},
-// 			Socket: "localhost:8080",
-// 		},
-// 	}
-
-// 	// TODO(samlaf): add error test cases
-// 	var tests = []struct {
-// 		name             string
-// 		operator         *fakes.TestOperator
-// 		queryOperatorId  types.OperatorId
-// 		wantErr          error
-// 		wantOperatorInfo types.OperatorInfo
-// 	}{
-// 		{
-// 			name:             "should return operator info",
-// 			operator:         &testOperator1,
-// 			queryOperatorId:  testOperator1.OperatorId,
-// 			wantErr:          nil,
-// 			wantOperatorInfo: testOperator1.OperatorInfo,
-// 		},
-// 	}
-
-// 	for _, tt := range tests {
-// 		t.Run(tt.name, func(t *testing.T) {
-// 			// Create mocks
-// 			mockAvsRegistryReader := fakes.NewFakeAVSRegistryReader(tt.operator, nil)
-// 			mockOperatorsInfoService := newFakeOperatorInfoService(tt.operator.OperatorInfo)
-
-// 			// Create a new instance of the avsregistry service
-// 			service := NewAvsRegistryServiceChainCaller(mockAvsRegistryReader, mockOperatorsInfoService, logger)
-
-// 			// Call the GetOperatorPubkeys method with the test operator address
-// 			gotOperatorInfo, gotErr := service.getOperatorInfo(context.Background(), tt.queryOperatorId)
-// 			if !errors.Is(gotErr, tt.wantErr) {
-// 				t.Fatalf("GetOperatorPubkeys returned wrong error. Got: %v, want: %v.", gotErr, tt.wantErr)
-// 			}
-// 			if tt.wantErr == nil && !reflect.DeepEqual(tt.wantOperatorInfo, gotOperatorInfo) {
-// 				t.Fatalf(
-// 					"GetOperatorPubkeys returned wrong operator pubkeys. Got: %v, want: %v.",
-// 					gotOperatorInfo,
-// 					tt.wantOperatorInfo,
-// 				)
-// 			}
-// 		})
-// 	}
-// }

@@ -42,30 +42,37 @@ impl Default for AvsRegistryChainReader {
     }
 }
 
+/// TODO: add docs
 pub trait AvsRegistryReader {
+    /// Gets operator's stake from block number and quorum
     fn get_operators_stake_in_quorums_at_block(
         &self,
         block_number: u32,
         quorum_numbers: Bytes,
     ) -> impl Future<Output = Result<Vec<Vec<OperatorStateRetriever::Operator>>, AvsRegistryError>>;
 
+    /// Gets check signature indices from block number, quorum numbers and non signer operator ids
     fn get_check_signatures_indices(
         &self,
         reference_block_number: u32,
         quorum_numbers: Vec<u8>,
         non_signer_operator_ids: Vec<FixedBytes<32>>,
     ) -> impl Future<Output = Result<OperatorStateRetriever::CheckSignaturesIndices, AvsRegistryError>>;
+
+    /// Gets operator from id
     fn get_operator_from_id(
         &self,
         operator_id: [u8; 32],
     ) -> impl Future<Output = Result<Address, AvsRegistryError>>;
 
+    /// Queries registered operators sockets
     fn query_existing_registered_operator_sockets(
         &self,
         start_block: u64,
         stop_block: u64,
     ) -> impl Future<Output = Result<HashMap<FixedBytes<32>, String>, AvsRegistryError>>;
 
+    /// Queries registered operators public keys
     fn query_existing_registered_operator_pub_keys(
         &self,
         start_block: u64,
