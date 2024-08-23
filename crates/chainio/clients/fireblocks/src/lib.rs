@@ -58,7 +58,7 @@ impl FireblocksWallet {
         match chain_id_result {
             Ok(chain_id) => Ok(Self {
                 fireblocks_client,
-                vault_account_name: vault_account_name,
+                vault_account_name,
                 chain_id,
                 provider,
                 vault_account: None,

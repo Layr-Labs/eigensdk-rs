@@ -9,10 +9,9 @@ use eigen_crypto_bls::{
 };
 use eigen_logging::{logger::SharedLogger, tracing_logger::TracingLogger};
 use eigen_types::operator::{bitmap_to_quorum_ids, OperatorPubKeys};
-use eigen_utils::NEW_PUBKEY_REGISTRATION_EVENT;
 use eigen_utils::{
     binding::{BLSApkRegistry, OperatorStateRetriever, RegistryCoordinator, StakeRegistry},
-    get_provider, get_ws_provider,
+    get_provider, get_ws_provider, NEW_PUBKEY_REGISTRATION_EVENT,
 };
 use num_bigint::BigInt;
 use std::collections::HashMap;
