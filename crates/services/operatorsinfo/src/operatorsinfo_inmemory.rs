@@ -53,8 +53,14 @@ impl OperatorInfoServiceInMemory {
             while let Some(cmd) = pubkeys_rx.recv().await {
                 match cmd {
                     OperatorsInfoMessage::InsertOperatorInfo(addr, keys) => {
+                        let Ok(operator_id) = operator_id_from_g1_pub_key(keys.clone().g1_pub_key)
+                            .inspect_err(|err| {
+                                println!("Error: {:?}", err);
+                            })
+                        else {
+                            return;
+                        };
                         operator_info_data.insert(addr, *keys.clone());
-                        let operator_id = operator_id_from_g1_pub_key(keys.g1_pub_key);
                         operator_addr_to_id.insert(addr, operator_id);
                     }
                     OperatorsInfoMessage::Remove(addr) => {

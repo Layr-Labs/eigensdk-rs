@@ -1,5 +1,5 @@
 use alloy_primitives::{Address, FixedBytes, U256};
-use ark_serialize::CanonicalSerialize;
+use ark_serialize::{CanonicalSerialize, SerializationError};
 use eigen_crypto_bls::{BlsG1Point, BlsG2Point, BlsKeyPair};
 use ethers::{types::U64, utils::keccak256};
 use num_bigint::BigUint;
@@ -121,11 +121,11 @@ pub struct OperatorAvsState {
     pub block_num: U64,
 }
 
-pub fn operator_id_from_g1_pub_key(pub_key: BlsG1Point) -> [u8; 32] {
+pub fn operator_id_from_g1_pub_key(pub_key: BlsG1Point) -> Result<[u8; 32], SerializationError> {
     let mut bytes = Vec::new();
     let g1 = pub_key.g1();
-    g1.serialize_uncompressed(&mut bytes).unwrap(); // check unwrap
-    keccak256(bytes)
+    g1.serialize_uncompressed(&mut bytes)?;
+    Ok(keccak256(bytes))
 }
 
 #[derive(Debug)]
