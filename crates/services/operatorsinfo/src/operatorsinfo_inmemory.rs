@@ -21,6 +21,8 @@ use tokio::sync::{
     oneshot::{self, Sender},
 };
 
+use crate::operator_info::OperatorInfoService;
+
 #[allow(dead_code)]
 #[derive(Debug, Clone)]
 pub struct OperatorInfoServiceInMemory {
@@ -36,6 +38,16 @@ enum OperatorsInfoMessage {
     InsertOperatorInfo(Address, Box<OperatorPubKeys>),
     Remove(Address),
     Get(Address, Sender<Option<OperatorPubKeys>>),
+}
+
+impl OperatorInfoService for OperatorInfoServiceInMemory {
+    async fn get_operator_info(&self, address: Address) -> Option<OperatorPubKeys> {
+        let (responder_tx, responder_rx) = oneshot::channel();
+        let _ = self
+            .pub_keys
+            .send(OperatorsInfoMessage::Get(address, responder_tx));
+        responder_rx.await.unwrap_or(None)
+    }
 }
 
 impl OperatorInfoServiceInMemory {
@@ -153,14 +165,6 @@ impl OperatorInfoServiceInMemory {
         });
 
         Ok(())
-    }
-
-    pub async fn get_operator_info(&self, address: Address) -> Option<OperatorPubKeys> {
-        let (responder_tx, responder_rx) = oneshot::channel();
-        let _ = self
-            .pub_keys
-            .send(OperatorsInfoMessage::Get(address, responder_tx));
-        responder_rx.await.unwrap_or(None)
     }
 
     pub async fn query_past_registered_operator_events_and_fill_db(

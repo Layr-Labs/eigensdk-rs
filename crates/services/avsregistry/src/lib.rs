@@ -20,18 +20,18 @@ pub trait AvsRegistryService {
         quorum_nums: &[u8],
     ) -> impl std::future::Future<
         Output = Result<HashMap<FixedBytes<32>, OperatorAvsState>, AvsRegistryError>,
-    > + Send;
+    >;
 
     fn get_quorums_avs_state_at_block(
         &self,
         quorum_nums: &[u8],
         block_num: u32,
-    ) -> impl std::future::Future<Output = Result<HashMap<u8, QuorumAvsState>, AvsRegistryError>> + Send;
+    ) -> impl std::future::Future<Output = Result<HashMap<u8, QuorumAvsState>, AvsRegistryError>>;
 
     fn get_check_signatures_indices(
         &self,
         reference_block_number: u32,
         quorum_numbers: Vec<u8>,
         non_signer_operator_ids: Vec<FixedBytes<32>>,
-    ) -> impl std::future::Future<Output = Result<CheckSignaturesIndices, AvsRegistryError>> + Send;
+    ) -> impl std::future::Future<Output = Result<CheckSignaturesIndices, AvsRegistryError>>;
 }

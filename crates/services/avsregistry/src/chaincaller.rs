@@ -1,11 +1,9 @@
 use alloy_primitives::{Bytes, FixedBytes, U256};
 use ark_bn254::G1Projective;
 use ark_ec::{short_weierstrass::Affine, AffineRepr, CurveGroup};
-use eigen_client_avsregistry::{
-    error::AvsRegistryError,
-    reader::{AvsRegistryChainReader, AvsRegistryReader},
-};
+use eigen_client_avsregistry::{error::AvsRegistryError, reader::AvsRegistryReader};
 use eigen_crypto_bls::{BlsG1Point, PublicKey};
+use eigen_services_operatorsinfo::operator_info::OperatorInfoService;
 use eigen_services_operatorsinfo::operatorsinfo_inmemory::OperatorInfoServiceInMemory;
 use eigen_types::operator::{OperatorAvsState, OperatorInfo, OperatorPubKeys, QuorumAvsState};
 use eigen_utils::binding::OperatorStateRetriever::CheckSignaturesIndices;
@@ -14,22 +12,19 @@ use std::collections::HashMap;
 use crate::AvsRegistryService;
 
 #[derive(Debug, Clone)]
-pub struct AvsRegistryServiceChainCaller {
-    avs_registry: AvsRegistryChainReader,
-    operators_info_service: OperatorInfoServiceInMemory,
+pub struct AvsRegistryServiceChainCaller<R: AvsRegistryReader, S: OperatorInfoService> {
+    avs_registry: R,
+    operators_info_service: S,
 }
 
-impl AvsRegistryServiceChainCaller {
+impl<R: AvsRegistryReader, S: OperatorInfoService> AvsRegistryServiceChainCaller<R, S> {
     /// Create a new instance of the AvsRegistryServiceChainCaller
     ///
     /// # Arguments
     ///
     /// * `avs_registry` - The AVS registry chain reader
     /// * `operators_info_service` - The operator info service
-    pub fn new(
-        avs_registry: AvsRegistryChainReader,
-        operators_info_service: OperatorInfoServiceInMemory,
-    ) -> Self {
+    pub fn new(avs_registry: R, operators_info_service: S) -> Self {
         Self {
             avs_registry,
             operators_info_service,
@@ -37,7 +32,9 @@ impl AvsRegistryServiceChainCaller {
     }
 }
 
-impl AvsRegistryService for AvsRegistryServiceChainCaller {
+impl<R: AvsRegistryReader, S: OperatorInfoService> AvsRegistryService
+    for AvsRegistryServiceChainCaller<R, S>
+{
     /// Get the operators AVS state at a specific block number
     ///
     /// # Arguments
@@ -166,7 +163,7 @@ impl AvsRegistryService for AvsRegistryServiceChainCaller {
     }
 }
 
-impl AvsRegistryServiceChainCaller {
+impl<R: AvsRegistryReader, S: OperatorInfoService> AvsRegistryServiceChainCaller<R, S> {
     /// Get the operator info from the operator id
     ///
     /// # Arguments

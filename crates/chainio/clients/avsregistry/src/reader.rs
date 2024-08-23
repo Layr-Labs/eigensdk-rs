@@ -14,9 +14,9 @@ use eigen_utils::{
     get_provider, get_ws_provider, NEW_PUBKEY_REGISTRATION_EVENT,
 };
 use num_bigint::BigInt;
-use std::collections::HashMap;
 use std::fmt::Debug;
 use std::sync::Arc;
+use std::{collections::HashMap, future::Future};
 
 /// Avs Registry chainreader
 #[derive(Debug, Clone)]
@@ -43,34 +43,35 @@ impl Default for AvsRegistryChainReader {
 }
 
 pub trait AvsRegistryReader {
-    async fn get_operators_stake_in_quorums_at_block(
+    fn get_operators_stake_in_quorums_at_block(
         &self,
         block_number: u32,
         quorum_numbers: Bytes,
-    ) -> Result<Vec<Vec<OperatorStateRetriever::Operator>>, AvsRegistryError>;
-    async fn get_check_signatures_indices(
+    ) -> impl Future<Output = Result<Vec<Vec<OperatorStateRetriever::Operator>>, AvsRegistryError>>;
+
+    fn get_check_signatures_indices(
         &self,
         reference_block_number: u32,
         quorum_numbers: Vec<u8>,
         non_signer_operator_ids: Vec<FixedBytes<32>>,
-    ) -> Result<OperatorStateRetriever::CheckSignaturesIndices, AvsRegistryError>;
-    async fn get_operator_from_id(
+    ) -> impl Future<Output = Result<OperatorStateRetriever::CheckSignaturesIndices, AvsRegistryError>>;
+    fn get_operator_from_id(
         &self,
         operator_id: [u8; 32],
-    ) -> Result<Address, AvsRegistryError>;
+    ) -> impl Future<Output = Result<Address, AvsRegistryError>>;
 
-    async fn query_existing_registered_operator_sockets(
+    fn query_existing_registered_operator_sockets(
         &self,
         start_block: u64,
         stop_block: u64,
-    ) -> Result<HashMap<FixedBytes<32>, String>, AvsRegistryError>;
+    ) -> impl Future<Output = Result<HashMap<FixedBytes<32>, String>, AvsRegistryError>>;
 
-    async fn query_existing_registered_operator_pub_keys(
+    fn query_existing_registered_operator_pub_keys(
         &self,
         start_block: u64,
         stop_block: u64,
         ws_url: String,
-    ) -> Result<(Vec<Address>, Vec<OperatorPubKeys>), AvsRegistryError>;
+    ) -> impl Future<Output = Result<(Vec<Address>, Vec<OperatorPubKeys>), AvsRegistryError>>;
 }
 
 impl AvsRegistryReader for AvsRegistryChainReader {
