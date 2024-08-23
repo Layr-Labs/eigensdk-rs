@@ -207,7 +207,7 @@ impl AvsRegistryChainWriter {
 
                 match tx_result {
                     Ok(tx) => {
-                        info!(tx_hash = ?tx,"Succesfully deregistered operator with the AVS's registry coordinator" );
+                        info!(tx_hash = ?tx,"Sent transaction to deregister operator in the AVS's registry coordinator" );
                         Ok(*tx.tx_hash())
                     }
                     Err(e) => Err(AvsRegistryError::AlloyContractError(e)),
