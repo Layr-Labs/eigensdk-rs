@@ -1,9 +1,8 @@
 use crate::{error::AvsRegistryError, reader::AvsRegistryReader};
 use alloy_primitives::{Address, Bytes, FixedBytes};
 use eigen_crypto_bls::BlsKeyPair;
-use eigen_types::{operator::OperatorPubKeys, test::TestOperator};
+use eigen_types::test::TestOperator;
 use eigen_utils::binding::OperatorStateRetriever;
-use std::collections::HashMap;
 
 const OPERATOR_STAKE: u128 = 123;
 
@@ -62,22 +61,5 @@ impl AvsRegistryReader for FakeAvsRegistryReader {
         _operator_id: [u8; 32],
     ) -> Result<Address, AvsRegistryError> {
         Ok(self.operator_address)
-    }
-
-    async fn query_existing_registered_operator_sockets(
-        &self,
-        _start_block: u64,
-        _stop_block: u64,
-    ) -> Result<HashMap<FixedBytes<32>, String>, AvsRegistryError> {
-        unimplemented!()
-    }
-
-    async fn query_existing_registered_operator_pub_keys(
-        &self,
-        _start_block: u64,
-        mut _stop_block: u64,
-        _ws_url: String,
-    ) -> Result<(Vec<Address>, Vec<OperatorPubKeys>), AvsRegistryError> {
-        unimplemented!()
     }
 }

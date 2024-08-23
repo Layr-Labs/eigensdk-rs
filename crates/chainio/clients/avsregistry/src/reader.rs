@@ -51,7 +51,7 @@ pub trait AvsRegistryReader {
         quorum_numbers: Bytes,
     ) -> impl Future<Output = Result<Vec<Vec<OperatorStateRetriever::Operator>>, AvsRegistryError>>;
 
-    /// Gets check signature indices from block number, quorum numbers and non signer operator ids
+    /// Gets check signature indices
     fn get_check_signatures_indices(
         &self,
         reference_block_number: u32,
@@ -64,21 +64,6 @@ pub trait AvsRegistryReader {
         &self,
         operator_id: [u8; 32],
     ) -> impl Future<Output = Result<Address, AvsRegistryError>>;
-
-    /// Queries registered operators sockets
-    fn query_existing_registered_operator_sockets(
-        &self,
-        start_block: u64,
-        stop_block: u64,
-    ) -> impl Future<Output = Result<HashMap<FixedBytes<32>, String>, AvsRegistryError>>;
-
-    /// Queries registered operators public keys
-    fn query_existing_registered_operator_pub_keys(
-        &self,
-        start_block: u64,
-        stop_block: u64,
-        ws_url: String,
-    ) -> impl Future<Output = Result<(Vec<Address>, Vec<OperatorPubKeys>), AvsRegistryError>>;
 }
 
 impl AvsRegistryReader for AvsRegistryChainReader {
@@ -153,10 +138,76 @@ impl AvsRegistryReader for AvsRegistryChainReader {
 
         Ok(operator_address)
     }
+}
+
+impl AvsRegistryChainReader {
+    /// New AvsRegistryChainReader instance
+    pub async fn new(
+        logger: SharedLogger,
+        registry_coordinator_addr: Address,
+        operator_state_retriever_addr: Address,
+        http_provider_url: String,
+    ) -> Result<AvsRegistryChainReader, AvsRegistryError> {
+        let provider = get_provider(&http_provider_url);
+
+        let contract_registry_coordinator =
+            RegistryCoordinator::new(registry_coordinator_addr, &provider);
+        let bls_apk_registry_addr_result =
+            contract_registry_coordinator.blsApkRegistry().call().await;
+        match bls_apk_registry_addr_result {
+            Ok(bls_apk_registry_return) => {
+                let RegistryCoordinator::blsApkRegistryReturn {
+                    _0: bls_apk_registry_addr,
+                } = bls_apk_registry_return;
+
+                let stake_registry_addr_result =
+                    contract_registry_coordinator.stakeRegistry().call().await;
+
+                match stake_registry_addr_result {
+                    Ok(stake_registry_return) => {
+                        let RegistryCoordinator::stakeRegistryReturn {
+                            _0: stake_registry_addr,
+                        } = stake_registry_return;
+
+                        Ok(AvsRegistryChainReader {
+                            logger,
+                            bls_apk_registry_addr,
+                            registry_coordinator_addr,
+                            operator_state_retriever: operator_state_retriever_addr,
+                            stake_registry_addr,
+                            provider: http_provider_url.clone(),
+                        })
+                    }
+                    Err(_) => Err(AvsRegistryError::GetStakeRegistry),
+                }
+            }
+
+            Err(_) => Err(AvsRegistryError::GetBlsApkRegistry),
+        }
+    }
+
+    /// Get quorum count
+    pub async fn get_quorum_count(&self) -> Result<u8, AvsRegistryError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_registry_coordinator =
+            RegistryCoordinator::new(self.registry_coordinator_addr, provider);
+
+        let quorum_count_result = contract_registry_coordinator.quorumCount().call().await;
+
+        match quorum_count_result {
+            Ok(quorum_count) => {
+                let RegistryCoordinator::quorumCountReturn { _0: quorum } = quorum_count;
+                Ok(quorum)
+            }
+
+            Err(_) => Err(AvsRegistryError::GetQuorumCount),
+        }
+    }
 
     /// Query existing operator sockets
     /// TODO Update bindings and then update this function
-    async fn query_existing_registered_operator_sockets(
+    pub async fn query_existing_registered_operator_sockets(
         &self,
         start_block: u64,
         stop_block: u64,
@@ -233,7 +284,7 @@ impl AvsRegistryReader for AvsRegistryChainReader {
     }
 
     /// Queies existing operators from for a particular block range
-    async fn query_existing_registered_operator_pub_keys(
+    pub async fn query_existing_registered_operator_pub_keys(
         &self,
         start_block: u64,
         mut stop_block: u64,
@@ -319,74 +370,6 @@ impl AvsRegistryReader for AvsRegistryChainReader {
             )),
         }
     }
-}
-
-impl AvsRegistryChainReader {
-    /// New AvsRegistryChainReader instance
-    pub async fn new(
-        logger: SharedLogger,
-        registry_coordinator_addr: Address,
-        operator_state_retriever_addr: Address,
-        http_provider_url: String,
-    ) -> Result<AvsRegistryChainReader, AvsRegistryError> {
-        let provider = get_provider(&http_provider_url);
-
-        let contract_registry_coordinator =
-            RegistryCoordinator::new(registry_coordinator_addr, &provider);
-        let bls_apk_registry_addr_result =
-            contract_registry_coordinator.blsApkRegistry().call().await;
-        match bls_apk_registry_addr_result {
-            Ok(bls_apk_registry_return) => {
-                let RegistryCoordinator::blsApkRegistryReturn {
-                    _0: bls_apk_registry_addr,
-                } = bls_apk_registry_return;
-
-                let stake_registry_addr_result =
-                    contract_registry_coordinator.stakeRegistry().call().await;
-
-                match stake_registry_addr_result {
-                    Ok(stake_registry_return) => {
-                        let RegistryCoordinator::stakeRegistryReturn {
-                            _0: stake_registry_addr,
-                        } = stake_registry_return;
-
-                        Ok(AvsRegistryChainReader {
-                            logger,
-                            bls_apk_registry_addr,
-                            registry_coordinator_addr,
-                            operator_state_retriever: operator_state_retriever_addr,
-                            stake_registry_addr,
-                            provider: http_provider_url.clone(),
-                        })
-                    }
-                    Err(_) => Err(AvsRegistryError::GetStakeRegistry),
-                }
-            }
-
-            Err(_) => Err(AvsRegistryError::GetBlsApkRegistry),
-        }
-    }
-
-    /// Get quorum count
-    pub async fn get_quorum_count(&self) -> Result<u8, AvsRegistryError> {
-        let provider = get_provider(&self.provider);
-
-        let contract_registry_coordinator =
-            RegistryCoordinator::new(self.registry_coordinator_addr, provider);
-
-        let quorum_count_result = contract_registry_coordinator.quorumCount().call().await;
-
-        match quorum_count_result {
-            Ok(quorum_count) => {
-                let RegistryCoordinator::quorumCountReturn { _0: quorum } = quorum_count;
-                Ok(quorum)
-            }
-
-            Err(_) => Err(AvsRegistryError::GetQuorumCount),
-        }
-    }
-
-    // trait
 
     /// Get operators stake in quorums at block operator id
     pub async fn get_operators_stake_in_quorums_at_block_operator_id(

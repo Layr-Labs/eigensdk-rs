@@ -2,7 +2,7 @@ use alloy_primitives::Address;
 use alloy_provider::{Provider, ProviderBuilder, WsConnect};
 use alloy_rpc_types::Filter;
 use anyhow::Result;
-use eigen_client_avsregistry::reader::{AvsRegistryChainReader, AvsRegistryReader};
+use eigen_client_avsregistry::reader::AvsRegistryChainReader;
 use eigen_crypto_bls::{
     alloy_registry_g1_point_to_g1_affine, alloy_registry_g2_point_to_g2_affine, BlsG1Point,
     BlsG2Point,
