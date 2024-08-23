@@ -6,6 +6,7 @@ use eigen_utils::{
     binding::{AVSDirectory, DelegationManager, ISlasher, IStrategy, IERC20},
     get_provider,
 };
+
 #[derive(Debug, Clone)]
 pub struct ELChainReader {
     _logger: SharedLogger,
@@ -121,6 +122,16 @@ impl ELChainReader {
         }
     }
 
+    /// Get the operator's shares in a strategy
+    ///
+    /// # Arguments
+    ///
+    /// * `operator_addr` - The operator's address
+    /// * `strategy_addr` - The strategy's address
+    ///
+    /// # Returns
+    ///
+    /// * `U256` - The operator's shares in the strategy
     pub async fn get_operator_shares_in_strategy(
         &self,
         operator_addr: Address,
