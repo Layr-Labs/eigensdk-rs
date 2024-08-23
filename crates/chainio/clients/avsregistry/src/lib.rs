@@ -19,3 +19,5 @@ pub mod writer;
 
 /// Avs registry error message
 pub mod error;
+
+pub mod fake_reader;

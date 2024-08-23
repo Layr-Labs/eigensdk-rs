@@ -2,7 +2,7 @@ use alloy_primitives::Address;
 use alloy_provider::{Provider, ProviderBuilder, WsConnect};
 use alloy_rpc_types::Filter;
 use anyhow::Result;
-use eigen_client_avsregistry::reader::AvsRegistryChainReader;
+use eigen_client_avsregistry::reader::{AvsRegistryChainReader, AvsRegistryReader};
 use eigen_crypto_bls::{
     alloy_registry_g1_point_to_g1_affine, alloy_registry_g2_point_to_g2_affine, BlsG1Point,
     BlsG2Point,
@@ -54,7 +54,7 @@ impl OperatorInfoServiceInMemory {
                 match cmd {
                     OperatorsInfoMessage::InsertOperatorInfo(addr, keys) => {
                         operator_info_data.insert(addr, *keys.clone());
-                        let operator_id = operator_id_from_g1_pub_key(keys.g1_pub_key);
+                        let operator_id = operator_id_from_g1_pub_key(keys.g1_pub_key).unwrap();
                         operator_addr_to_id.insert(addr, operator_id);
                     }
                     OperatorsInfoMessage::Remove(addr) => {
@@ -62,6 +62,7 @@ impl OperatorInfoServiceInMemory {
                     }
                     OperatorsInfoMessage::Get(addr, responder) => {
                         let result = operator_info_data.get(&addr).cloned();
+                        dbg!(&result);
                         let _ = responder.send(result);
                     }
                 }

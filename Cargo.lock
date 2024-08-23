@@ -2234,8 +2234,11 @@ dependencies = [
  "eigen-crypto-bn254",
  "eigen-logging",
  "eigen-services-operatorsinfo",
+ "eigen-testing-utils",
  "eigen-types",
  "eigen-utils",
+ "hex",
+ "tokio",
 ]
 
 [[package]]

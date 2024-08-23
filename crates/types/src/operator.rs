@@ -1,11 +1,11 @@
 use alloy_primitives::{Address, FixedBytes, U256};
-use eigen_crypto_bls::{BlsG1Point, BlsG2Point};
-use eigen_utils::binding::BLSApkRegistry;
+use ark_serialize::{CanonicalSerialize, SerializationError};
+use eigen_crypto_bls::{BlsG1Point, BlsG2Point, BlsKeyPair};
 use ethers::{types::U64, utils::keccak256};
 use num_bigint::BigUint;
 use std::collections::HashMap;
+
 const MAX_NUMBER_OF_QUORUMS: usize = 192;
-use ark_serialize::CanonicalSerialize;
 
 pub type OperatorId = FixedBytes<32>;
 
@@ -23,10 +23,19 @@ pub fn bitmap_to_quorum_ids(quorum_bitmaps: U256) -> Vec<u8> {
     quorum_ids
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct OperatorPubKeys {
     pub g1_pub_key: BlsG1Point,
     pub g2_pub_key: BlsG2Point,
+}
+
+impl From<BlsKeyPair> for OperatorPubKeys {
+    fn from(keypair: BlsKeyPair) -> Self {
+        Self {
+            g1_pub_key: keypair.public_key(),
+            g2_pub_key: keypair.public_key_g2(),
+        }
+    }
 }
 
 pub struct Operator {
@@ -99,10 +108,12 @@ pub type Socket = String;
 
 pub type QuorumNum = u8;
 
+#[derive(Clone, Debug)]
 pub struct OperatorInfo {
     pub pub_keys: Option<OperatorPubKeys>,
 }
 
+#[derive(Clone, Debug)]
 pub struct OperatorAvsState {
     pub operator_id: [u8; 32],
     pub operator_info: OperatorInfo,
@@ -110,13 +121,14 @@ pub struct OperatorAvsState {
     pub block_num: U64,
 }
 
-pub fn operator_id_from_g1_pub_key(pub_key: BlsG1Point) -> [u8; 32] {
+pub fn operator_id_from_g1_pub_key(pub_key: BlsG1Point) -> Result<[u8; 32], SerializationError> {
     let mut bytes = Vec::new();
     let g1 = pub_key.g1();
-    g1.serialize_uncompressed(&mut bytes).unwrap(); // check unwrap
-    keccak256(bytes)
+    g1.serialize_uncompressed(&mut bytes)?;
+    Ok(keccak256(bytes))
 }
 
+#[derive(Debug)]
 pub struct QuorumAvsState {
     pub quorum_num: u8,
     pub total_stake: U256,
