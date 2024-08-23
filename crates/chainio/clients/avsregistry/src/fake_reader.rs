@@ -28,7 +28,11 @@ impl AvsRegistryReader for FakeAvsRegistryReader {
         _block_number: u32,
         _quorum_numbers: Bytes,
     ) -> Result<Vec<Vec<OperatorStateRetriever::Operator>>, AvsRegistryError> {
-        todo!()
+        Ok(vec![vec![OperatorStateRetriever::Operator {
+            operator: self.operator_address,
+            operatorId: self.operator_id,
+            stake: 0,
+        }]])
     }
     async fn get_check_signatures_indices(
         &self,

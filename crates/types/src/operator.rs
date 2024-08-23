@@ -108,12 +108,12 @@ pub type Socket = String;
 
 pub type QuorumNum = u8;
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub struct OperatorInfo {
     pub pub_keys: Option<OperatorPubKeys>,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub struct OperatorAvsState {
     pub operator_id: [u8; 32],
     pub operator_info: OperatorInfo,
