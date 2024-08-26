@@ -78,7 +78,7 @@ pub mod integration_test {
 
     fn mine_anvil_block() {
         Command::new("cast")
-            .args(&["rpc", "anvil_mine", "1", "--rpc-url", HTTP_ENDPOINT])
+            .args(["rpc", "anvil_mine", "1", "--rpc-url", HTTP_ENDPOINT])
             .stdout(Stdio::null())
             .output()
             .expect("Failed to execute command");
@@ -451,6 +451,11 @@ pub mod integration_test {
             strategy: get_erc20_mock_strategy().await,
             multiplier: 1,
         }];
+        let _ = contract_registry_coordinator
+            .createQuorum(operator_set_params.clone(), 0, strategy_params.clone())
+            .send()
+            .await
+            .unwrap();
         let _ = contract_registry_coordinator
             .createQuorum(operator_set_params.clone(), 0, strategy_params.clone())
             .send()
