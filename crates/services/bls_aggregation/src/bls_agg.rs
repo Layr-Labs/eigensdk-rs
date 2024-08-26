@@ -910,10 +910,6 @@ mod tests {
         let signers_apk_g2 = aggregate_g2_public_keys(&test_operators);
         let signers_agg_sig_g1 = aggregate_g1_signatures(&vec![bls_sig_op_1.clone(), bls_sig_op_1]);
 
-        dbg!(&quorum_apks_g1);
-        dbg!(&signers_apk_g2);
-        dbg!(&signers_agg_sig_g1);
-
         let expected_agg_service_response = BlsAggregationServiceResponse {
             task_index,
             task_response_digest,
@@ -926,7 +922,6 @@ mod tests {
             total_stake_indices: vec![],
             non_signer_stake_indices: vec![],
         };
-        dbg!(&expected_agg_service_response);
 
         let response = bls_agg_service
             .aggregated_response_receiver
