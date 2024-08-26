@@ -2263,7 +2263,6 @@ dependencies = [
  "alloy-provider",
  "alloy-rpc-types",
  "anyhow",
- "ark-serialize 0.4.2",
  "eigen-client-avsregistry",
  "eigen-crypto-bls",
  "eigen-logging",

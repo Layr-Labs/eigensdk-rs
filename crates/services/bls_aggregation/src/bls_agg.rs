@@ -560,25 +560,25 @@ mod tests {
         B256::from_slice(hasher.finalize().as_ref())
     }
 
-    fn aggregate_g1_public_keys(operators: &Vec<TestOperator>) -> BlsG1Point {
+    fn aggregate_g1_public_keys(operators: &[TestOperator]) -> BlsG1Point {
         operators
             .iter()
             .map(|op| op.bls_keypair.public_key().g1())
             .reduce(|a, b| (a + b).into())
-            .map(|agg| BlsG1Point::new(agg))
+            .map(BlsG1Point::new)
             .unwrap()
     }
 
-    fn aggregate_g2_public_keys(operators: &Vec<TestOperator>) -> BlsG2Point {
+    fn aggregate_g2_public_keys(operators: &[TestOperator]) -> BlsG2Point {
         operators
             .iter()
             .map(|op| op.bls_keypair.public_key_g2().g2())
             .reduce(|a, b| (a + b).into())
-            .map(|agg| BlsG2Point::new(agg))
+            .map(BlsG2Point::new)
             .unwrap()
     }
 
-    fn aggregate_g1_signatures(signatures: &Vec<Signature>) -> Signature {
+    fn aggregate_g1_signatures(signatures: &[Signature]) -> Signature {
         let agg = signatures
             .iter()
             .map(|s| s.g1_point().g1())
@@ -838,7 +838,7 @@ mod tests {
 
         let quorum_apks_g1 = aggregate_g1_public_keys(&test_operators);
         let signers_apk_g2 = aggregate_g2_public_keys(&test_operators);
-        let signers_agg_sig_g1 = aggregate_g1_signatures(&vec![bls_sig_op_1, bls_sig_op_2]);
+        let signers_agg_sig_g1 = aggregate_g1_signatures(&[bls_sig_op_1, bls_sig_op_2]);
 
         let expected_agg_service_response = BlsAggregationServiceResponse {
             task_index,
@@ -895,7 +895,7 @@ mod tests {
                 block_number as u32,
                 quorum_numbers.clone(),
                 quorum_threshold_percentages.clone(),
-                time_to_expiry.clone(),
+                time_to_expiry,
             )
             .await
             .unwrap();
@@ -933,7 +933,7 @@ mod tests {
         bls_agg_service
             .process_new_signature(
                 task_1_index,
-                task_1_response_digest.clone(),
+                task_1_response_digest,
                 bls_sig_task_1_op_2.clone(),
                 test_operator_2.operator_id,
             )
@@ -969,7 +969,7 @@ mod tests {
         let quorum_apks_g1 = aggregate_g1_public_keys(&test_operators);
         let signers_apk_g2 = aggregate_g2_public_keys(&test_operators);
         let signers_agg_sig_g1_task_1 =
-            aggregate_g1_signatures(&vec![bls_sig_task_1_op_1, bls_sig_task_1_op_2]);
+            aggregate_g1_signatures(&[bls_sig_task_1_op_1, bls_sig_task_1_op_2]);
 
         let expected_response_task_1 = BlsAggregationServiceResponse {
             task_index: task_1_index,
@@ -985,7 +985,7 @@ mod tests {
         };
 
         let signers_agg_sig_g1_task_2 =
-            aggregate_g1_signatures(&vec![bls_sig_task_2_op_1, bls_sig_task_2_op_2]);
+            aggregate_g1_signatures(&[bls_sig_task_2_op_1, bls_sig_task_2_op_2]);
 
         let expected_response_task_2 = BlsAggregationServiceResponse {
             task_index: task_2_index,
@@ -1273,7 +1273,7 @@ mod tests {
             .unwrap();
 
         let signers_apk_g2 = aggregate_g2_public_keys(&test_operators);
-        let signers_agg_sig_g1 = aggregate_g1_signatures(&vec![bls_sig_op_1, bls_sig_op_2]);
+        let signers_agg_sig_g1 = aggregate_g1_signatures(&[bls_sig_op_1, bls_sig_op_2]);
 
         let expected_agg_service_response = BlsAggregationServiceResponse {
             task_index,
@@ -1382,7 +1382,7 @@ mod tests {
             .unwrap();
         let signers_apk_g2 =
             aggregate_g2_public_keys(&vec![test_operator_1.clone(), test_operator_2.clone()]);
-        let signers_agg_sig_g1 = aggregate_g1_signatures(&vec![bls_sig_op_1, bls_sig_op_2]);
+        let signers_agg_sig_g1 = aggregate_g1_signatures(&[bls_sig_op_1, bls_sig_op_2]);
         let quorum_apks_g1 = vec![
             aggregate_g1_public_keys(&vec![test_operator_1, test_operator_3.clone()]),
             aggregate_g1_public_keys(&vec![test_operator_2, test_operator_3.clone()]),
