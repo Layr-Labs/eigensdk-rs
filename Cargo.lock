@@ -2079,6 +2079,31 @@ dependencies = [
 [[package]]
 name = "eigen-client-eth"
 version = "0.0.1-alpha"
+dependencies = [
+ "alloy-consensus",
+ "alloy-eips",
+ "alloy-json-rpc",
+ "alloy-node-bindings",
+ "alloy-primitives",
+ "alloy-provider",
+ "alloy-pubsub",
+ "alloy-rlp",
+ "alloy-rpc-types-eth",
+ "alloy-transport",
+ "alloy-transport-http",
+ "alloy-transport-ws",
+ "async-trait",
+ "eigen-logging",
+ "eigen-metrics-collectors-rpc-calls",
+ "eigen-signer",
+ "eigen-testing-utils",
+ "hex",
+ "once_cell",
+ "serial_test",
+ "thiserror",
+ "tokio",
+ "url",
+]
 
 [[package]]
 name = "eigen-client-fireblocks"
@@ -2243,6 +2268,7 @@ dependencies = [
  "alloy-provider",
  "alloy-rpc-types",
  "anyhow",
+ "ark-serialize 0.4.2",
  "eigen-client-avsregistry",
  "eigen-crypto-bls",
  "eigen-logging",
@@ -5307,9 +5333,9 @@ dependencies = [
 
 [[package]]
 name = "scc"
-version = "2.1.16"
+version = "2.1.14"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "aeb7ac86243095b70a7920639507b71d51a63390d1ba26c4f60a552fbb914a37"
+checksum = "79da19444d9da7a9a82b80ecf059eceba6d3129d84a8610fd25ff2364f255466"
 dependencies = [
  "sdd",
 ]

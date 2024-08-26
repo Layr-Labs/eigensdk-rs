@@ -17,6 +17,12 @@ pub struct AvsRegistryServiceChainCaller {
 }
 
 impl AvsRegistryServiceChainCaller {
+    /// Create a new instance of the AvsRegistryServiceChainCaller
+    ///
+    /// # Arguments
+    ///
+    /// * `avs_registry` - The AVS registry chain reader
+    /// * `operators_info_service` - The operator info service
     pub fn new(
         avs_registry: AvsRegistryChainReader,
         operators_info_service: OperatorInfoServiceInMemory,
@@ -29,6 +35,16 @@ impl AvsRegistryServiceChainCaller {
 }
 
 impl AvsRegistryService for AvsRegistryServiceChainCaller {
+    /// Get the operators AVS state at a specific block number
+    ///
+    /// # Arguments
+    ///
+    /// * `block_num` - The block number to get the AVS state at
+    /// * `quorum_nums` - The list of quorum numbers
+    ///
+    /// # Returns
+    ///
+    /// A hashmap containing the operator ID and the operator AVS state
     async fn get_operators_avs_state_at_block(
         &self,
         block_num: u32,
@@ -42,7 +58,8 @@ impl AvsRegistryService for AvsRegistryServiceChainCaller {
             .await?;
 
         if operators_stakes_in_quorums.len() != quorum_nums.len() {
-            // TODO: throw error
+            // the list of quorum nums and the list of operators stakes in quorums should have the same length
+            return Err(AvsRegistryError::InvalidQuorumNums);
         }
 
         for (quorum_id, quorum_num) in quorum_nums.iter().enumerate() {
@@ -66,6 +83,16 @@ impl AvsRegistryService for AvsRegistryServiceChainCaller {
         Ok(operators_avs_state)
     }
 
+    /// Get the quorum AVS state at a specific block
+    ///
+    /// # Arguments
+    ///
+    /// * `quorum_nums` - The list of quorum numbers
+    /// * `block_num` - The block number
+    ///
+    /// # Returns
+    ///
+    /// A hashmap containing the quorum number and the quorum AVS state.
     async fn get_quorums_avs_state_at_block(
         &self,
         quorum_nums: &[u8],
@@ -75,44 +102,51 @@ impl AvsRegistryService for AvsRegistryServiceChainCaller {
             .get_operators_avs_state_at_block(block_num, quorum_nums)
             .await?;
 
-        let mut quorums_avs_state: HashMap<u8, QuorumAvsState> = HashMap::new();
-
-        for quorum_num in quorum_nums.iter() {
-            let mut pub_key_g1 = G1Projective::from(PublicKey::identity());
-            let mut total_stake: U256 = U256::from(0);
-            for operator in operators_avs_state.values() {
-                if !operator
-                    .stake_per_quorum
-                    .get(quorum_num)
-                    .unwrap_or(&U256::ZERO)
-                    .is_zero()
-                {
-                    if let Some(pub_keys) = &operator.operator_info.pub_keys {
-                        pub_key_g1 += pub_keys.g1_pub_key.g1();
-                        total_stake += operator.stake_per_quorum[quorum_num];
+        Ok(quorum_nums
+            .iter()
+            .map(|quorum_num| {
+                let mut pub_key_g1 = G1Projective::from(PublicKey::identity());
+                let mut total_stake: U256 = U256::from(0);
+                for operator in operators_avs_state.values() {
+                    if !operator.stake_per_quorum[quorum_num].is_zero() {
+                        if let Some(pub_keys) = &operator.operator_info.pub_keys {
+                            pub_key_g1 += pub_keys.g1_pub_key.g1();
+                            total_stake += operator.stake_per_quorum[quorum_num];
+                        }
                     }
                 }
-            }
-            let agg_pub_key_g1 = if pub_key_g1 == G1Projective::from(PublicKey::zero()) {
-                // TODO: check this. What should the apk be for a quorum without stakers?
-                BlsG1Point::new(Affine::zero())
-            } else {
-                BlsG1Point::new(pub_key_g1.into_affine())
-            };
+                let agg_pub_key_g1 = if pub_key_g1 == G1Projective::from(PublicKey::zero()) {
+                    BlsG1Point::new(Affine::zero())
+                } else {
+                    BlsG1Point::new(pub_key_g1.into_affine())
+                };
 
-            quorums_avs_state.insert(
-                *quorum_num,
-                QuorumAvsState {
-                    quorum_num: *quorum_num,
-                    total_stake,
-                    agg_pub_key_g1,
-                    block_num,
-                },
-            );
-        }
-        Ok(quorums_avs_state)
+                (
+                    *quorum_num,
+                    QuorumAvsState {
+                        quorum_num: *quorum_num,
+                        total_stake,
+                        agg_pub_key_g1,
+                        block_num,
+                    },
+                )
+            })
+            .collect())
     }
 
+    /// Get the signatures indices of quorum members for a specific block and checks
+    /// if the indices are valid
+    ///
+    /// # Arguments
+    ///
+    /// * `reference_block_number` - The reference block number
+    /// * `quorum_numbers` - The list of quorum numbers
+    /// * `non_signer_operator_ids` - The list of non-signer operator ids
+    ///
+    /// # Returns
+    ///
+    /// A struct containing the indices of the quorum members that signed,
+    /// and the ones that didn't
     async fn get_check_signatures_indices(
         &self,
         reference_block_number: u32,
@@ -130,12 +164,21 @@ impl AvsRegistryService for AvsRegistryServiceChainCaller {
 }
 
 impl AvsRegistryServiceChainCaller {
+    /// Get the operator info from the operator id
+    ///
+    /// # Arguments
+    ///
+    /// * `operator_id` - The operator id
+    ///
+    /// # Returns
+    ///
+    /// The operator public keys
     async fn get_operator_info(&self, operator_id: [u8; 32]) -> Option<OperatorPubKeys> {
         let operator_addr = self
             .avs_registry
             .get_operator_from_id(operator_id)
             .await
-            .unwrap();
+            .ok()?;
 
         self.operators_info_service
             .get_operator_info(operator_addr)
