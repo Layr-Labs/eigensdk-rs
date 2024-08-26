@@ -272,18 +272,19 @@ mod tests {
 
     #[tokio::test]
     async fn test_chain_writer() {
-        let (el_chain_reader, delegation_manager_address) = setup_el_chain_reader().await;
+        let (el_chain_reader, _) = setup_el_chain_reader().await;
         let http_endpoint = "http://localhost:8545".to_string();
-        let signer = "59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d".to_string(); // TODO: retrieve this from anvil
-
+        let operator_addr = Address::from_str("90F79bf6EB2c4f870365E785982E1f101E93b906").unwrap();
+        let operator_private_key =
+            "7c852118294e51e653712a81e05800f419141751be58f605c371e15141b007a6".to_string();
         let strategy_manager = get_strategy_manager_address().await;
 
         let el_chain_writer = ELChainWriter::new(
-            delegation_manager_address,
+            operator_addr,
             strategy_manager,
             el_chain_reader,
             http_endpoint,
-            signer,
+            operator_private_key,
         );
 
         // define an operator
