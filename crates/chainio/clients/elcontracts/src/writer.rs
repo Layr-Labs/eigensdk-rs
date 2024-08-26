@@ -185,7 +185,6 @@ mod tests {
         ContractsRegistry::{self, get_test_valuesReturn},
     };
     use std::str::FromStr;
-    //get_erc20_mock_strategy, get_operator_state_retriever_address, get_registry_coordinator_address,
 
     /// Returns a new instance of ELChainWriter and the address of the delegation manager contract
     ///
