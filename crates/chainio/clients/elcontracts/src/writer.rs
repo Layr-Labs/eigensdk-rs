@@ -101,21 +101,19 @@ impl ELChainWriter {
         let contract_call_modify_operator_details =
             contract_delegation_manager.modifyOperatorDetails(operator_details);
 
-        let modify_operator_tx_result = contract_call_modify_operator_details.send().await;
+        let modify_operator_tx = contract_call_modify_operator_details
+            .send()
+            .await
+            .map_err(|e| ElContractsError::AlloyContractError(e))?;
 
-        match modify_operator_tx_result {
-            Ok(modify_operator_tx) => {
-                info!(tx_hash = %modify_operator_tx.tx_hash(), operator = %operator.has_address(), "updated operator details tx");
+        info!(tx_hash = %modify_operator_tx.tx_hash(), operator = %operator.has_address(), "updated operator details tx");
 
-                let contract_call_update_metadata_uri = contract_delegation_manager
-                    .updateOperatorMetadataURI(operator.has_metadata_url().unwrap_or_default());
+        let contract_call_update_metadata_uri = contract_delegation_manager
+            .updateOperatorMetadataURI(operator.has_metadata_url().unwrap_or_default());
 
-                let metadata_tx = contract_call_update_metadata_uri.send().await?;
+        let metadata_tx = contract_call_update_metadata_uri.send().await?;
 
-                Ok(*metadata_tx.tx_hash())
-            }
-            Err(e) => Err(ElContractsError::AlloyContractError(e)),
-        }
+        Ok(*metadata_tx.tx_hash())
     }
 
     pub async fn deposit_erc20_into_strategy(
@@ -291,8 +289,36 @@ mod tests {
             Some("eigensdk-rs".to_string()),
         );
 
+        // First test: register as an operator
         let tx_hash = el_chain_writer
             .register_as_operator(operator)
+            .await
+            .unwrap();
+
+        // this sleep is needed so that we wait for the tx to be processed
+        tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
+        let receipt = ANVIL_RPC_URL
+            .get_transaction_receipt(tx_hash)
+            .await
+            .unwrap();
+        assert!(receipt.unwrap().status());
+
+        let wallet_modified = PrivateKeySigner::from_str(
+            "2a871d0798f97d79848a013d4936a73bf4cc922c825d33c1cf7073dff6d409c6",
+        )
+        .expect("no key");
+
+        let operator_modified = Operator::new(
+            wallet_modified.address(),
+            wallet_modified.address(),
+            wallet_modified.address(),
+            3,
+            Some("eigensdk-rs".to_string()),
+        );
+
+        // Second test: update operator details
+        let tx_hash = el_chain_writer
+            .update_operator_details(operator_modified)
             .await
             .unwrap();
 
