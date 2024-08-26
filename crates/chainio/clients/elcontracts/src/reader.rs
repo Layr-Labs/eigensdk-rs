@@ -195,8 +195,21 @@ impl ELChainReader {
         }
     }
 
-    /// GetStrategyAndUnderlyingERC20Token returns the strategy contract, the erc20 bindings for the underlying token
-    /// and the underlying token address
+    /// GetStrategyAndUnderlyingERC20Token
+    ///
+    /// # Arguments
+    ///
+    /// * `strategy_addr` - The strategy's address
+    ///
+    /// # Returns
+    ///
+    /// - the strategy contract,
+    /// - the erc20 bindings for the underlying token
+    /// - and the underlying token address
+    ///
+    /// # Errors
+    ///
+    /// * `ElContractsError` - if the call to the contract fails
     pub async fn get_strategy_and_underlying_erc20_token(
         &self,
         strategy_addr: Address,
