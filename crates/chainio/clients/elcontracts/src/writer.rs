@@ -62,32 +62,23 @@ impl ELChainWriter {
             contract_call.gas(300000)
         };
 
-        let binding_tx_result = binding.send().await;
-        match binding_tx_result {
-            Ok(binding_tx) => {
-                let receipt_result = binding_tx.get_receipt().await;
-                match receipt_result {
-                    Ok(receipt) => {
-                        let tx_status = receipt.status();
-                        let hash = receipt.transaction_hash;
-                        match tx_status {
-                            true => {
-                                info!(tx_hash = %receipt.transaction_hash, "tx successfully included");
-                                Ok(hash)
-                            }
-                            false => {
-                                info!(tx_hash = %receipt.transaction_hash, "failed to register operator");
-                                Ok(hash)
-                            }
-                        }
-                    }
-                    Err(e) => Err(ElContractsError::AlloyContractError(
-                        alloy_contract::Error::TransportError(e),
-                    )),
-                }
-            }
-            Err(e) => Err(ElContractsError::AlloyContractError(e)),
-        }
+        let binding_tx = binding
+            .send()
+            .await
+            .map_err(|e| ElContractsError::AlloyContractError(e))?;
+
+        let receipt = binding_tx.get_receipt().await.map_err(|e| {
+            ElContractsError::AlloyContractError(alloy_contract::Error::TransportError(e))
+        })?;
+
+        let tx_status = receipt.status();
+        let hash = receipt.transaction_hash;
+        if tx_status {
+            info!(tx_hash = %receipt.transaction_hash, "tx successfully included");
+        } else {
+            info!(tx_hash = %receipt.transaction_hash, "failed to register operator");
+        };
+        Ok(hash)
     }
 
     pub async fn update_operator_details(
