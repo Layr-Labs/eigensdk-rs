@@ -145,7 +145,7 @@ impl ELChainReader {
             .operatorShares(operator_addr, strategy_addr)
             .call()
             .await
-            .map_err(|e| ElContractsError::AlloyContractError(e))?;
+            .map_err(ElContractsError::AlloyContractError)?;
 
         let DelegationManager::operatorSharesReturn { _0: shares } = operator_shares_in_strategy;
         Ok(shares)
