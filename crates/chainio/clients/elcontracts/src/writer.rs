@@ -167,7 +167,7 @@ impl ELChainWriter {
 mod tests {
     use super::ELChainWriter;
     use crate::reader::ELChainReader;
-    use alloy_primitives::Address;
+    use alloy_primitives::{Address, U256};
     use alloy_provider::Provider;
     use alloy_signer_local::PrivateKeySigner;
     use anvil_constants::{ANVIL_RPC_URL, CONTRACTS_REGISTRY};
@@ -329,5 +329,23 @@ mod tests {
             .await
             .unwrap();
         assert!(receipt.unwrap().status());
+
+        // Third test: deposit_erc20_into_strategy
+        let amount = U256::from_str("100").unwrap();
+        let strategy_addr = Address::default(); // TODO!!!
+        let tx_hash = el_chain_writer
+            .deposit_erc20_into_strategy(strategy_addr, amount)
+            .await
+            .unwrap();
+        /*
+
+        // this sleep is needed so that we wait for the tx to be processed
+        tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
+        let receipt = ANVIL_RPC_URL
+            .get_transaction_receipt(tx_hash)
+            .await
+            .unwrap();
+        assert!(receipt.unwrap().status());
+        */
     }
 }
