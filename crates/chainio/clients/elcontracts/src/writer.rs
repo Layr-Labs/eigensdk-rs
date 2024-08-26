@@ -313,14 +313,5 @@ mod tests {
             .await
             .unwrap();
         assert!(receipt.unwrap().status());
-
-        // FIX this:
-        //     Transaction: 0xb497b163bef1f1f23dcc6bdc1cbaae653cb438dd3244940016c07a62642a8591
-        //     Gas used: 32928
-        //     Error: reverted with: revert: DelegationManager.registerAsOperator: caller is already actively delegated
-        //
-        //     Block Number: 3
-        //     Block Hash: 0xb0c83305d8e65348b62b9a214499055409cda27b08d036f9dbc42f7f3b883d82
-        //     Block Time: "Thu, 22 Aug 2024 19:49:06 +0000"
     }
 }
