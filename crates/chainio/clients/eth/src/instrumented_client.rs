@@ -313,8 +313,8 @@ impl InstrumentedClient {
     /// * `block_count` - The number of blocks to include in the collection.
     /// * `last_block` - The last block number to include in the collection.
     /// * `reward_percentiles` - A sorted list of percentage points used to
-    /// sample the effective priority fees per gas from each block. The samples are
-    /// taken in ascending order and weighted by gas usage. The list is sorted increasingly.
+    ///   sample the effective priority fees per gas from each block. The samples are
+    ///   taken in ascending order and weighted by gas usage. The list is sorted increasingly.
     pub async fn fee_history(
         &self,
         block_count: u64,
