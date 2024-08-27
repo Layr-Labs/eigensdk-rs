@@ -359,11 +359,9 @@ impl AvsRegistryChainReader {
         let current_block_number = provider.get_block_number().await.map_err(|e| {
             AvsRegistryError::AlloyContractError(alloy_contract::Error::TransportError(e))
         })?;
-
         if stop_block.is_zero() {
             stop_block = current_block_number;
         }
-
         let mut i = start_block;
         let mut operator_addresses: Vec<Address> = vec![];
         let mut operator_pub_keys: Vec<OperatorPubKeys> = vec![];
