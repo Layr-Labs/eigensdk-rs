@@ -49,7 +49,9 @@ pub trait AvsRegistryReader {
         &self,
         block_number: u32,
         quorum_numbers: Bytes,
-    ) -> impl Future<Output = Result<Vec<Vec<OperatorStateRetriever::Operator>>, AvsRegistryError>>;
+    ) -> impl Future<Output = Result<Vec<Vec<OperatorStateRetriever::Operator>>, AvsRegistryError>>
+           + Send
+           + Sync;
 
     /// Gets check signature indices
     fn get_check_signatures_indices(
@@ -57,13 +59,14 @@ pub trait AvsRegistryReader {
         reference_block_number: u32,
         quorum_numbers: Vec<u8>,
         non_signer_operator_ids: Vec<FixedBytes<32>>,
-    ) -> impl Future<Output = Result<OperatorStateRetriever::CheckSignaturesIndices, AvsRegistryError>>;
+    ) -> impl Future<Output = Result<OperatorStateRetriever::CheckSignaturesIndices, AvsRegistryError>>
+           + Send;
 
     /// Gets operator from id
     fn get_operator_from_id(
         &self,
         operator_id: [u8; 32],
-    ) -> impl Future<Output = Result<Address, AvsRegistryError>>;
+    ) -> impl Future<Output = Result<Address, AvsRegistryError>> + Send;
 }
 
 impl AvsRegistryReader for AvsRegistryChainReader {
@@ -202,172 +205,6 @@ impl AvsRegistryChainReader {
             }
 
             Err(_) => Err(AvsRegistryError::GetQuorumCount),
-        }
-    }
-
-    /// Query existing operator sockets
-    /// TODO Update bindings and then update this function
-    pub async fn query_existing_registered_operator_sockets(
-        &self,
-        start_block: u64,
-        stop_block: u64,
-    ) -> Result<HashMap<FixedBytes<32>, String>, AvsRegistryError> {
-        let provider = get_provider(&self.provider);
-
-        let mut operator_id_to_socket = HashMap::new();
-
-        let query_block_range = 10000;
-
-        let mut i = start_block;
-
-        while i <= stop_block {
-            let mut to_block = i + (query_block_range - 1);
-            if to_block > stop_block {
-                to_block = stop_block;
-            }
-
-            let mut filter = Filter::new()
-                .select(start_block..to_block)
-                .event("OperatorSocketUpdate(bytes32,string)")
-                .address(self.registry_coordinator_addr);
-            if stop_block == 0 {
-                let current_block_number_result = provider.get_block_number().await;
-
-                match current_block_number_result {
-                    Ok(current_block_number) => {
-                        filter = filter.clone().select(start_block..current_block_number);
-                    }
-
-                    Err(e) => {
-                        return Err(AvsRegistryError::AlloyContractError(
-                            alloy_contract::Error::TransportError(e),
-                        ))
-                    }
-                }
-            };
-
-            let logs_result = provider.get_logs(&filter).await;
-
-            match logs_result {
-                Ok(logs) => {
-                    for v_log in logs.iter() {
-                        let socket_update_filter_option = v_log
-                            .log_decode::<RegistryCoordinator::OperatorSocketUpdate>()
-                            .ok();
-                        if let Some(socket_update_filter) = socket_update_filter_option {
-                            let data = socket_update_filter.data();
-                            let operator_id = data.operatorId;
-                            let socket = &data.socket;
-                            operator_id_to_socket.insert(operator_id, socket.clone());
-                        }
-                    }
-                    self.logger.debug(
-                    &format!(
-                        "num_transaction_logs : {} , from_block: {} , to_block: {}",
-                        logs.len(),
-                        i,
-                        to_block
-                    ),
-                    "eigen-client-avsregistry.reader.query_existing_registered_operator_sockets",
-                );
-
-                    i += query_block_range;
-                }
-                Err(e) => {
-                    return Err(AvsRegistryError::AlloyContractError(
-                        alloy_contract::Error::TransportError(e),
-                    ))
-                }
-            }
-        }
-        Ok(operator_id_to_socket)
-    }
-
-    /// Queies existing operators from for a particular block range
-    pub async fn query_existing_registered_operator_pub_keys(
-        &self,
-        start_block: u64,
-        mut stop_block: u64,
-        ws_url: String,
-    ) -> Result<(Vec<Address>, Vec<OperatorPubKeys>), AvsRegistryError> {
-        let provider_ws_result = get_ws_provider(&ws_url).await;
-
-        match provider_ws_result {
-            Ok(provider) => {
-                let query_block_range = 1024;
-                let current_block_number_result = provider.get_block_number().await;
-
-                match current_block_number_result {
-                    Ok(current_block_number) => {
-                        if stop_block.is_zero() {
-                            stop_block = current_block_number;
-                        }
-                        let mut i = start_block;
-                        let mut operator_addresses: Vec<Address> = vec![];
-                        let mut operator_pub_keys: Vec<OperatorPubKeys> = vec![];
-                        while i <= stop_block {
-                            let to_block = std::cmp::min(i + (query_block_range - 1), stop_block);
-                            let filter = Filter::new()
-                                .select(i..to_block)
-                                .event(NEW_PUBKEY_REGISTRATION_EVENT)
-                                .address(self.bls_apk_registry_addr);
-
-                            let logs_result = provider.get_logs(&filter).await;
-
-                            match logs_result {
-                                Ok(logs) => {
-                                    self.logger.debug(
-                                        &format!(
-                                            "numTransactionLogs: {}, fromBlock: {}, toBlock: {}",
-                                            logs.len(),
-                                            i,
-                                            to_block
-                                        ),
-                                        "eigen-client-avsregistry.reader.query_existing_registered_operator_pub_keys"
-                                    );
-
-                                    for pub_key_reg in logs
-                                        .iter()
-                                        .map(|v| {
-                                            v.log_decode::<BLSApkRegistry::NewPubkeyRegistration>()
-                                        })
-                                        .filter_map(Result::ok)
-                                    {
-                                        let data = pub_key_reg.data();
-                                        let operator_addr = data.operator;
-                                        operator_addresses.push(operator_addr);
-                                        let g1_pub_key = data.pubkeyG1.clone();
-                                        let g2_pub_key = data.pubkeyG2.clone();
-                                        let operator_pub_key = OperatorPubKeys {
-                                            g1_pub_key: BlsG1Point::new(
-                                                alloy_registry_g1_point_to_g1_affine(g1_pub_key),
-                                            ),
-                                            g2_pub_key: BlsG2Point::new(
-                                                alloy_registry_g2_point_to_g2_affine(g2_pub_key),
-                                            ),
-                                        };
-                                        operator_pub_keys.push(operator_pub_key);
-                                    }
-                                }
-                                Err(e) => {
-                                    return Err(AvsRegistryError::AlloyContractError(
-                                        alloy_contract::Error::TransportError(e),
-                                    ))
-                                }
-                            }
-                            i += query_block_range;
-                        }
-
-                        Ok((operator_addresses, operator_pub_keys))
-                    }
-                    Err(e) => Err(AvsRegistryError::AlloyContractError(
-                        alloy_contract::Error::TransportError(e),
-                    )),
-                }
-            }
-            Err(e) => Err(AvsRegistryError::AlloyContractError(
-                alloy_contract::Error::TransportError(e),
-            )),
         }
     }
 
@@ -561,6 +398,172 @@ impl AvsRegistryChainReader {
         } = operator_status_return;
 
         Ok(operator_status == 1)
+    }
+
+    /// Queies existing operators from for a particular block range
+    pub async fn query_existing_registered_operator_pub_keys(
+        &self,
+        start_block: u64,
+        mut stop_block: u64,
+        ws_url: String,
+    ) -> Result<(Vec<Address>, Vec<OperatorPubKeys>), AvsRegistryError> {
+        let provider_ws_result = get_ws_provider(&ws_url).await;
+
+        match provider_ws_result {
+            Ok(provider) => {
+                let query_block_range = 1024;
+                let current_block_number_result = provider.get_block_number().await;
+
+                match current_block_number_result {
+                    Ok(current_block_number) => {
+                        if stop_block.is_zero() {
+                            stop_block = current_block_number;
+                        }
+                        let mut i = start_block;
+                        let mut operator_addresses: Vec<Address> = vec![];
+                        let mut operator_pub_keys: Vec<OperatorPubKeys> = vec![];
+                        while i <= stop_block {
+                            let to_block = std::cmp::min(i + (query_block_range - 1), stop_block);
+                            let filter = Filter::new()
+                                .select(i..to_block)
+                                .event(NEW_PUBKEY_REGISTRATION_EVENT)
+                                .address(self.bls_apk_registry_addr);
+
+                            let logs_result = provider.get_logs(&filter).await;
+
+                            match logs_result {
+                                Ok(logs) => {
+                                    self.logger.debug(
+                                        &format!(
+                                            "numTransactionLogs: {}, fromBlock: {}, toBlock: {}",
+                                            logs.len(),
+                                            i,
+                                            to_block
+                                        ),
+                                        "eigen-client-avsregistry.reader.query_existing_registered_operator_pub_keys"
+                                    );
+
+                                    for pub_key_reg in logs
+                                        .iter()
+                                        .map(|v| {
+                                            v.log_decode::<BLSApkRegistry::NewPubkeyRegistration>()
+                                        })
+                                        .filter_map(Result::ok)
+                                    {
+                                        let data = pub_key_reg.data();
+                                        let operator_addr = data.operator;
+                                        operator_addresses.push(operator_addr);
+                                        let g1_pub_key = data.pubkeyG1.clone();
+                                        let g2_pub_key = data.pubkeyG2.clone();
+                                        let operator_pub_key = OperatorPubKeys {
+                                            g1_pub_key: BlsG1Point::new(
+                                                alloy_registry_g1_point_to_g1_affine(g1_pub_key),
+                                            ),
+                                            g2_pub_key: BlsG2Point::new(
+                                                alloy_registry_g2_point_to_g2_affine(g2_pub_key),
+                                            ),
+                                        };
+                                        operator_pub_keys.push(operator_pub_key);
+                                    }
+                                }
+                                Err(e) => {
+                                    return Err(AvsRegistryError::AlloyContractError(
+                                        alloy_contract::Error::TransportError(e),
+                                    ))
+                                }
+                            }
+                            i += query_block_range;
+                        }
+
+                        Ok((operator_addresses, operator_pub_keys))
+                    }
+                    Err(e) => Err(AvsRegistryError::AlloyContractError(
+                        alloy_contract::Error::TransportError(e),
+                    )),
+                }
+            }
+            Err(e) => Err(AvsRegistryError::AlloyContractError(
+                alloy_contract::Error::TransportError(e),
+            )),
+        }
+    }
+
+    /// Query existing operator sockets
+    /// TODO Update bindings and then update this function
+    pub async fn query_existing_registered_operator_sockets(
+        &self,
+        start_block: u64,
+        stop_block: u64,
+    ) -> Result<HashMap<FixedBytes<32>, String>, AvsRegistryError> {
+        let provider = get_provider(&self.provider);
+
+        let mut operator_id_to_socket = HashMap::new();
+
+        let query_block_range = 10000;
+
+        let mut i = start_block;
+
+        while i <= stop_block {
+            let mut to_block = i + (query_block_range - 1);
+            if to_block > stop_block {
+                to_block = stop_block;
+            }
+
+            let mut filter = Filter::new()
+                .select(start_block..to_block)
+                .event("OperatorSocketUpdate(bytes32,string)")
+                .address(self.registry_coordinator_addr);
+            if stop_block == 0 {
+                let current_block_number_result = provider.get_block_number().await;
+
+                match current_block_number_result {
+                    Ok(current_block_number) => {
+                        filter = filter.clone().select(start_block..current_block_number);
+                    }
+
+                    Err(e) => {
+                        return Err(AvsRegistryError::AlloyContractError(
+                            alloy_contract::Error::TransportError(e),
+                        ))
+                    }
+                }
+            };
+
+            let logs_result = provider.get_logs(&filter).await;
+
+            match logs_result {
+                Ok(logs) => {
+                    for v_log in logs.iter() {
+                        let socket_update_filter_option = v_log
+                            .log_decode::<RegistryCoordinator::OperatorSocketUpdate>()
+                            .ok();
+                        if let Some(socket_update_filter) = socket_update_filter_option {
+                            let data = socket_update_filter.data();
+                            let operator_id = data.operatorId;
+                            let socket = &data.socket;
+                            operator_id_to_socket.insert(operator_id, socket.clone());
+                        }
+                    }
+                    self.logger.debug(
+                    &format!(
+                        "num_transaction_logs : {} , from_block: {} , to_block: {}",
+                        logs.len(),
+                        i,
+                        to_block
+                    ),
+                    "eigen-client-avsregistry.reader.query_existing_registered_operator_sockets",
+                );
+
+                    i += query_block_range;
+                }
+                Err(e) => {
+                    return Err(AvsRegistryError::AlloyContractError(
+                        alloy_contract::Error::TransportError(e),
+                    ))
+                }
+            }
+        }
+        Ok(operator_id_to_socket)
     }
 }
 

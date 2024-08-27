@@ -11,7 +11,7 @@ pub enum AvsRegistryError {
     GetBlsApkRegistry,
 
     /// Failed to get quorum count
-    #[error("Faield to get quorum count")]
+    #[error("Failed to get quorum count")]
     GetQuorumCount,
 
     /// Failed to ger operator state

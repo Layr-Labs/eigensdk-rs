@@ -2241,13 +2241,19 @@ dependencies = [
 name = "eigen-services-blsaggregation"
 version = "0.0.1-alpha"
 dependencies = [
+ "alloy-node-bindings",
  "alloy-primitives",
+ "ark-bn254",
+ "ark-ec",
+ "eigen-client-avsregistry",
  "eigen-crypto-bls",
  "eigen-crypto-bn254",
  "eigen-logging",
  "eigen-services-avsregistry",
  "eigen-types",
  "parking_lot",
+ "sha2",
+ "thiserror",
  "tokio",
 ]
 
@@ -2313,6 +2319,8 @@ dependencies = [
  "eigen-crypto-bls",
  "ethers",
  "num-bigint 0.4.6",
+ "thiserror",
+ "tokio",
 ]
 
 [[package]]
