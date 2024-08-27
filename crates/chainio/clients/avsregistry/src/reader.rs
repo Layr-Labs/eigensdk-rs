@@ -49,9 +49,9 @@ pub trait AvsRegistryReader {
         &self,
         block_number: u32,
         quorum_numbers: Bytes,
-    ) -> impl Future<Output = Result<Vec<Vec<OperatorStateRetriever::Operator>>, AvsRegistryError>>
-           + Send
-           + Sync;
+    ) -> impl Future<Output = Result<Vec<Vec<OperatorStateRetriever::Operator>>, AvsRegistryError>>;
+    //           + Send
+    //           + Sync;
 
     /// Gets check signature indices
     fn get_check_signatures_indices(
