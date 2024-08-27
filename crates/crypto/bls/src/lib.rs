@@ -220,7 +220,7 @@ pub fn alloy_registry_g1_point_to_g1_affine(g1_point: G1PointRegistry) -> G1Affi
     let x = Fq::new(BigInteger256::new(x_point));
     let y_point = g1_point.Y.into_limbs();
     let y = Fq::new(BigInteger256::new(y_point));
-    G1Affine::new_unchecked(x, y)
+    G1Affine::new(x, y)
 }
 
 /// Convert [`G1Point`] to [`G1Affine`]
@@ -233,7 +233,7 @@ pub fn alloy_registry_g2_point_to_g2_affine(g2_point: G2PointRegistry) -> G2Affi
         BigInteger256::new(g2_point.Y[1].into_limbs()).into(),
         BigInteger256::new(g2_point.Y[0].into_limbs()).into(),
     );
-    G2Affine::new_unchecked(x_fp2, y_fp2)
+    G2Affine::new(x_fp2, y_fp2)
 }
 
 /// Convert [`G2Affine`] to [`G2Point`]

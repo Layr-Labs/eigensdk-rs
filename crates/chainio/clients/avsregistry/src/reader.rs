@@ -7,13 +7,11 @@ use eigen_crypto_bls::{
     alloy_registry_g1_point_to_g1_affine, alloy_registry_g2_point_to_g2_affine, BlsG1Point,
     BlsG2Point,
 };
-use eigen_logging::get_logger;
 use eigen_logging::{logger::SharedLogger, tracing_logger::TracingLogger};
 use eigen_types::operator::{bitmap_to_quorum_ids, OperatorPubKeys};
-use eigen_utils::NEW_PUBKEY_REGISTRATION_EVENT;
 use eigen_utils::{
     binding::{BLSApkRegistry, OperatorStateRetriever, RegistryCoordinator, StakeRegistry},
-    get_provider, get_ws_provider,
+    get_provider, get_ws_provider, NEW_PUBKEY_REGISTRATION_EVENT,
 };
 use num_bigint::BigInt;
 use std::collections::HashMap;
