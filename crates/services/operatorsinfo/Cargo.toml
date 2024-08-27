@@ -14,12 +14,12 @@ alloy-provider = { workspace = true, features = ["ws"] }
 alloy-rpc-types.workspace = true
 anyhow = "1.0.83"
 eigen-client-avsregistry.workspace = true
+eigen-crypto-bls.workspace = true
 eigen-logging.workspace = true
 eigen-types.workspace = true
 eigen-utils.workspace = true
 futures-util.workspace = true
 tokio = { workspace = true, features = ["rt-multi-thread", "macros"] }
-
 
 [dev-dependencies]
 eigen-testing-utils.workspace = true

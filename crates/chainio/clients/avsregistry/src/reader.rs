@@ -3,13 +3,15 @@ use alloy_primitives::{Address, Bytes, FixedBytes, B256, U256};
 use alloy_provider::Provider;
 use alloy_rpc_types::Filter;
 use ark_ff::Zero;
-use eigen_logging::logger::SharedLogger;
-use eigen_logging::tracing_logger::TracingLogger;
+use eigen_crypto_bls::{
+    alloy_registry_g1_point_to_g1_affine, alloy_registry_g2_point_to_g2_affine, BlsG1Point,
+    BlsG2Point,
+};
+use eigen_logging::{logger::SharedLogger, tracing_logger::TracingLogger};
 use eigen_types::operator::{bitmap_to_quorum_ids, OperatorPubKeys};
-use eigen_utils::NEW_PUBKEY_REGISTRATION_EVENT;
 use eigen_utils::{
     binding::{BLSApkRegistry, OperatorStateRetriever, RegistryCoordinator, StakeRegistry},
-    get_provider, get_ws_provider,
+    get_provider, get_ws_provider, NEW_PUBKEY_REGISTRATION_EVENT,
 };
 use num_bigint::BigInt;
 use std::collections::HashMap;
@@ -361,9 +363,11 @@ impl AvsRegistryChainReader {
         if stop_block.is_zero() {
             stop_block = current_block_number;
         }
+
         let mut i = start_block;
         let mut operator_addresses: Vec<Address> = vec![];
         let mut operator_pub_keys: Vec<OperatorPubKeys> = vec![];
+
         while i <= stop_block {
             let to_block = std::cmp::min(i + (query_block_range - 1), stop_block);
             let filter = Filter::new()
@@ -392,8 +396,8 @@ impl AvsRegistryChainReader {
                 let g1_pub_key = data.pubkeyG1.clone();
                 let g2_pub_key = data.pubkeyG2.clone();
                 let operator_pub_key = OperatorPubKeys {
-                    g1_pub_key,
-                    g2_pub_key,
+                    g1_pub_key: BlsG1Point::new(alloy_registry_g1_point_to_g1_affine(g1_pub_key)),
+                    g2_pub_key: BlsG2Point::new(alloy_registry_g2_point_to_g2_affine(g2_pub_key)),
                 };
                 operator_pub_keys.push(operator_pub_key);
             }
