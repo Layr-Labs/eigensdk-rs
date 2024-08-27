@@ -277,7 +277,8 @@ mod tests {
                     .await
                     .unwrap();
             }
-        });
+        })
+        .await;
 
         // Wait some time to simulate some operations
         tokio::time::sleep(tokio::time::Duration::from_millis(1000)).await;
