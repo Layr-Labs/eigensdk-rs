@@ -21,9 +21,7 @@ impl AvsRegistryServiceChainCaller {
     /// # Arguments
     ///
     /// * `operators_info_service` - The operator info service
-    pub fn new(
-        operators_info_service: OperatorInfoServiceInMemory,
-    ) -> Self {
+    pub fn new(operators_info_service: OperatorInfoServiceInMemory) -> Self {
         Self {
             operators_info_service,
         }

@@ -81,7 +81,8 @@ impl OperatorInfoServiceInMemory {
                         OperatorsInfoMessage::InsertOperatorInfo(addr, keys) => {
                             let mut data = operator_state.operator_info_data.write().await;
                             data.insert(addr, *keys.clone());
-                            let operator_id = operator_id_from_g1_pub_key(keys.g1_pub_key);
+                            let operator_id = operator_id_from_g1_pub_key(keys.g1_pub_key)
+                                .expect("Failed to get operator id from g1 pub key");
                             let mut id_map = operator_state.operator_addr_to_id.write().await;
                             id_map.insert(addr, alloy_primitives::FixedBytes(operator_id));
                         }
