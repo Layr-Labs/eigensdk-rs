@@ -2071,6 +2071,7 @@ dependencies = [
  "eigen-types",
  "eigen-utils",
  "once_cell",
+ "serial_test",
  "thiserror",
  "tokio",
  "tracing",
