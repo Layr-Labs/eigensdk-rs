@@ -19,3 +19,7 @@ pub mod writer;
 
 /// Avs registry error message
 pub mod error;
+
+#[allow(dead_code)]
+/// Fake avs registry module
+pub mod fake_reader;

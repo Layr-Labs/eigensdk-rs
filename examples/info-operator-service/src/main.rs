@@ -1,5 +1,6 @@
 use alloy_primitives::address;
 use eigen_client_avsregistry::reader::AvsRegistryChainReader;
+use eigen_services_operatorsinfo::operator_info::OperatorInfoService;
 use eigen_services_operatorsinfo::operatorsinfo_inmemory::OperatorInfoServiceInMemory;
 use std::sync::Arc;
 use tokio::sync::watch;

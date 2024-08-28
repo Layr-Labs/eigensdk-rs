@@ -13,6 +13,7 @@ alloy-primitives.workspace = true
 alloy-provider = { workspace = true, features = ["ws"] }
 alloy-rpc-types.workspace = true
 anyhow = "1.0.83"
+async-trait.workspace = true
 eigen-client-avsregistry.workspace = true
 eigen-crypto-bls.workspace = true
 eigen-logging.workspace = true

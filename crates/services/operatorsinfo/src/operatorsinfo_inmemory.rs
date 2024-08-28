@@ -2,6 +2,7 @@ use alloy_primitives::Address;
 use alloy_provider::{Provider, ProviderBuilder, WsConnect};
 use alloy_rpc_types::Filter;
 use anyhow::Result;
+use async_trait::async_trait;
 use eigen_client_avsregistry::reader::AvsRegistryChainReader;
 use eigen_crypto_bls::{
     alloy_registry_g1_point_to_g1_affine, alloy_registry_g2_point_to_g2_affine, BlsG1Point,
@@ -21,6 +22,8 @@ use tokio::sync::{
     oneshot::{self, Sender},
 };
 
+use crate::operator_info::OperatorInfoService;
+
 #[allow(dead_code)]
 #[derive(Debug, Clone)]
 pub struct OperatorInfoServiceInMemory {
@@ -36,6 +39,17 @@ enum OperatorsInfoMessage {
     InsertOperatorInfo(Address, Box<OperatorPubKeys>),
     Remove(Address),
     Get(Address, Sender<Option<OperatorPubKeys>>),
+}
+
+#[async_trait]
+impl OperatorInfoService for OperatorInfoServiceInMemory {
+    async fn get_operator_info(&self, address: Address) -> Option<OperatorPubKeys> {
+        let (responder_tx, responder_rx) = oneshot::channel();
+        let _ = self
+            .pub_keys
+            .send(OperatorsInfoMessage::Get(address, responder_tx));
+        responder_rx.await.unwrap_or(None)
+    }
 }
 
 impl OperatorInfoServiceInMemory {
@@ -68,6 +82,7 @@ impl OperatorInfoServiceInMemory {
                     }
                     OperatorsInfoMessage::Get(addr, responder) => {
                         let result = operator_info_data.get(&addr).cloned();
+                        dbg!(&result);
                         let _ = responder.send(result);
                     }
                 }
@@ -158,14 +173,6 @@ impl OperatorInfoServiceInMemory {
         });
 
         Ok(())
-    }
-
-    pub async fn get_operator_info(&self, address: Address) -> Option<OperatorPubKeys> {
-        let (responder_tx, responder_rx) = oneshot::channel();
-        let _ = self
-            .pub_keys
-            .send(OperatorsInfoMessage::Get(address, responder_tx));
-        responder_rx.await.unwrap_or(None)
     }
 
     pub async fn query_past_registered_operator_events_and_fill_db(

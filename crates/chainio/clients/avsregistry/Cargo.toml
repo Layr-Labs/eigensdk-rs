@@ -15,20 +15,19 @@ alloy-primitives.workspace = true
 alloy-provider.workspace = true
 alloy-rpc-types.workspace = true
 alloy-signer.workspace = true
-alloy-signer-local.workspace = true
+async-trait.workspace = true
 alloy-transport-http.workspace = true
-ark-ff.workspace = true
-eigen-client-elcontracts.workspace = true
-eigen-crypto-bls.workspace = true
-eigen-logging.workspace = true
-eigen-types.workspace = true
-eigen-utils.workspace = true
 num-bigint = "0.4.4"
 reqwest.workspace = true
+eigen-types.workspace = true
+eigen-crypto-bls.workspace = true
+ark-ff.workspace = true
+eigen-client-elcontracts.workspace = true
+eigen-utils.workspace = true
+eigen-logging.workspace = true
 thiserror.workspace = true
 tracing.workspace = true
-[lints]
-workspace = true
+alloy-signer-local.workspace = true
 
 [dev-dependencies]
 hex = "0.4.3"

@@ -4,6 +4,7 @@
 )]
 #![cfg_attr(not(test), warn(unused_crate_dependencies))]
 
+pub mod fake_operator_info;
+pub mod operator_info;
 pub mod operatorsinfo_inmemory;
-
 pub struct OperatorPubKeysService {}
