@@ -16,8 +16,11 @@ use tokio::time::{sleep, Duration};
 /// Local anvil ContractsRegistry which contains a mapping of all locally deployed EL contracts.
 pub const CONTRACTS_REGISTRY: Address = address!("5FbDB2315678afecb367f032d93F642f64180aa3");
 
-/// Local anvil rpc url
+/// Local anvil rpc http url
 pub const ANVIL_HTTP_URL: &str = "http://localhost:8545";
+
+/// Local anvil rpc WS url
+pub const ANVIL_WS_URL: &str = "ws://localhost:8545";
 
 #[allow(clippy::type_complexity)]
 /// Local anvil rpc url alloy instance

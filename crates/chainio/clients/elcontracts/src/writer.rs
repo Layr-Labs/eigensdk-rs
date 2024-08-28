@@ -190,7 +190,7 @@ mod tests {
     use super::*;
     use alloy_signer_local::PrivateKeySigner;
     use eigen_logging::get_test_logger;
-    use eigen_testing_utils::anvil_constants::{self};
+    use eigen_testing_utils::anvil_constants::{self, ANVIL_HTTP_URL};
     use eigen_utils::binding::{
         mockAvsServiceManager,
         ContractsRegistry::{self, get_test_valuesReturn},
@@ -230,7 +230,7 @@ mod tests {
             slasher_address,
             delegation_manager_address,
             avs_directory_address,
-            "http://localhost:8545".to_string(),
+            ANVIL_HTTP_URL.to_string(),
         );
         let contract_registry = ContractsRegistry::new(
             anvil_constants::CONTRACTS_REGISTRY,

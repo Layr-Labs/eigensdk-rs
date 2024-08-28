@@ -278,13 +278,12 @@ impl ELChainReader {
 /// Anvil tests
 #[cfg(test)]
 mod tests {
-
     use super::*;
     use alloy_eips::eip1898::BlockNumberOrTag::Number;
     use alloy_primitives::{address, keccak256};
     use alloy_provider::Provider;
     use eigen_logging::get_test_logger;
-    use eigen_testing_utils::anvil_constants::{self, ANVIL_RPC_URL};
+    use eigen_testing_utils::anvil_constants::{self, ANVIL_HTTP_URL, ANVIL_RPC_URL};
     use eigen_utils::binding::mockAvsServiceManager;
     use tokio::time::{sleep, Duration};
     use AVSDirectory::calculateOperatorAVSRegistrationDigestHashReturn;
@@ -319,7 +318,7 @@ mod tests {
             slasher_address,
             delegation_manager_address,
             avs_directory_address,
-            "http://localhost:8545".to_string(),
+            ANVIL_HTTP_URL.to_string(),
         )
     }
 
