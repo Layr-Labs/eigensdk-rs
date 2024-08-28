@@ -240,57 +240,6 @@ pub fn convert_to_registry_g2_point(g2: G2Affine) -> Result<G2PointRegistry, Bls
     let x_point_result = g2.x();
     let y_point_result = g2.y();
 
-    let (Some(x_point), Some(y_point)) = (x_point_result, y_point_result) else {
-        return Err(BlsError::InvalidG2Affine);
-    };
-    let x_point_c0 = x_point.c0;
-    let x_point_c1 = x_point.c1;
-    let y_point_c0 = y_point.c0;
-    let y_point_c1 = y_point.c1;
-
-    let x_0 = BigInt::new(x_point_c0.into_bigint().0);
-    let x_1 = BigInt::new(x_point_c1.into_bigint().0);
-    let y_0 = BigInt::new(y_point_c0.into_bigint().0);
-    let y_1 = BigInt::new(y_point_c1.into_bigint().0);
-
-    let x_u256_0 = U256::from_limbs(x_0.0);
-    let x_u256_1 = U256::from_limbs(x_1.0);
-    let y_u256_0 = U256::from_limbs(y_0.0);
-    let y_u256_1 = U256::from_limbs(y_1.0);
-
-    Ok(G2PointRegistry {
-        X: [x_u256_1, x_u256_0],
-        Y: [y_u256_1, y_u256_0],
-    })
-}
-
-/// Convert [`G1Point`] to [`G1Affine`]
-pub fn alloy_registry_g1_point_to_g1_affine(g1_point: G1PointRegistry) -> G1Affine {
-    let x_point = g1_point.X.into_limbs();
-    let x = Fq::new(BigInteger256::new(x_point));
-    let y_point = g1_point.Y.into_limbs();
-    let y = Fq::new(BigInteger256::new(y_point));
-    G1Affine::new(x, y)
-}
-
-/// Convert [`G1Point`] to [`G1Affine`]
-pub fn alloy_registry_g2_point_to_g2_affine(g2_point: G2PointRegistry) -> G2Affine {
-    let x_fp2 = Fp2::new(
-        BigInteger256::new(g2_point.X[1].into_limbs()).into(),
-        BigInteger256::new(g2_point.X[0].into_limbs()).into(),
-    );
-    let y_fp2 = Fp2::new(
-        BigInteger256::new(g2_point.Y[1].into_limbs()).into(),
-        BigInteger256::new(g2_point.Y[0].into_limbs()).into(),
-    );
-    G2Affine::new(x_fp2, y_fp2)
-}
-
-/// Convert [`G2Affine`] to [`G2Point`]
-pub fn convert_to_registry_g2_point(g2: G2Affine) -> Result<G2PointRegistry, BlsError> {
-    let x_point_result = g2.x();
-    let y_point_result = g2.y();
-
     if let (Some(x_point), Some(y_point)) = (x_point_result, y_point_result) {
         let x_point_c0 = x_point.c0;
         let x_point_c1 = x_point.c1;
