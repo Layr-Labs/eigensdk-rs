@@ -6,3 +6,4 @@
 
 pub mod avs;
 pub mod operator;
+pub mod test;

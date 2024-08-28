@@ -3,6 +3,10 @@ use alloy_provider::{Provider, ProviderBuilder, WsConnect};
 use alloy_rpc_types::Filter;
 use anyhow::Result;
 use eigen_client_avsregistry::reader::AvsRegistryChainReader;
+use eigen_crypto_bls::{
+    alloy_registry_g1_point_to_g1_affine, alloy_registry_g2_point_to_g2_affine, BlsG1Point,
+    BlsG2Point,
+};
 use eigen_logging::logger::SharedLogger;
 use eigen_types::operator::{operator_id_from_g1_pub_key, OperatorPubKeys};
 use eigen_utils::{
@@ -29,7 +33,7 @@ pub struct OperatorInfoServiceInMemory {
 #[allow(dead_code)]
 #[derive(Debug)]
 enum OperatorsInfoMessage {
-    InsertOperatorInfo(Address, OperatorPubKeys),
+    InsertOperatorInfo(Address, Box<OperatorPubKeys>),
     Remove(Address),
     Get(Address, Sender<Option<OperatorPubKeys>>),
 }
@@ -49,8 +53,14 @@ impl OperatorInfoServiceInMemory {
             while let Some(cmd) = pubkeys_rx.recv().await {
                 match cmd {
                     OperatorsInfoMessage::InsertOperatorInfo(addr, keys) => {
-                        operator_info_data.insert(addr, keys.clone());
-                        let operator_id = operator_id_from_g1_pub_key(keys.g1_pub_key);
+                        let Ok(operator_id) = operator_id_from_g1_pub_key(keys.clone().g1_pub_key)
+                            .inspect_err(|err| {
+                                println!("Error: {:?}", err);
+                            })
+                        else {
+                            return;
+                        };
+                        operator_info_data.insert(addr, *keys.clone());
                         operator_addr_to_id.insert(addr, operator_id);
                     }
                     OperatorsInfoMessage::Remove(addr) => {
@@ -116,14 +126,18 @@ impl OperatorInfoServiceInMemory {
                 if let Some(new_pub_key_event) = data {
                     let event_data = new_pub_key_event.data();
                     let operator_pub_key = OperatorPubKeys {
-                        g1_pub_key: G1Point {
-                            X: event_data.pubkeyG1.X,
-                            Y: event_data.pubkeyG1.Y,
-                        },
-                        g2_pub_key: G2Point {
-                            X: event_data.pubkeyG2.X,
-                            Y: event_data.pubkeyG2.Y,
-                        },
+                        g1_pub_key: BlsG1Point::new(alloy_registry_g1_point_to_g1_affine(
+                            G1Point {
+                                X: event_data.pubkeyG1.X,
+                                Y: event_data.pubkeyG1.Y,
+                            },
+                        )),
+                        g2_pub_key: BlsG2Point::new(alloy_registry_g2_point_to_g2_affine(
+                            G2Point {
+                                X: event_data.pubkeyG2.X,
+                                Y: event_data.pubkeyG2.Y,
+                            },
+                        )),
                     };
                     // Send message
 
@@ -137,7 +151,7 @@ impl OperatorInfoServiceInMemory {
 
                     let _ = pub_keys.send(OperatorsInfoMessage::InsertOperatorInfo(
                         event_data.operator,
-                        operator_pub_key,
+                        Box::new(operator_pub_key),
                     ));
                 }
             }
@@ -166,8 +180,10 @@ impl OperatorInfoServiceInMemory {
             .await
             .unwrap();
         for (i, address) in operator_address.iter().enumerate() {
-            let message =
-                OperatorsInfoMessage::InsertOperatorInfo(*address, operator_pub_keys[i].clone());
+            let message = OperatorsInfoMessage::InsertOperatorInfo(
+                *address,
+                Box::new(operator_pub_keys[i].clone()),
+            );
             self.logger.debug(
                 &format!(
                     "New pub key found  operator_address : {:?} , operator_pub_keys : {:?}",
@@ -261,7 +277,8 @@ mod tests {
                     .await
                     .unwrap();
             }
-        });
+        })
+        .await;
 
         // Wait some time to simulate some operations
         tokio::time::sleep(tokio::time::Duration::from_millis(1000)).await;
