@@ -44,6 +44,7 @@ impl Default for AvsRegistryChainReader {
 }
 
 #[async_trait]
+/// Common methods for AvsRegistryChainReader
 pub trait AvsRegistryReader {
     /// Get operators stake in quorums at a particular block
     ///
@@ -475,7 +476,7 @@ impl AvsRegistryChainReader {
     /// # Returns
     ///
     /// * (`Vec<Address>`, `Vec<OperatorPubKeys>`) - A vector of operator addresses and its
-    /// corresponding operator pub keys.
+    ///   corresponding operator pub keys.
     pub async fn query_existing_registered_operator_pub_keys(
         &self,
         start_block: u64,
@@ -547,7 +548,7 @@ impl AvsRegistryChainReader {
     /// # Returns
     ///
     /// * `HashMap<FixedBytes<32>, String>` - Operator Id to socket mapping containing all the operator
-    /// sockets registered in the given block range
+    ///   sockets registered in the given block range
     pub async fn query_existing_registered_operator_sockets(
         &self,
         start_block: u64,

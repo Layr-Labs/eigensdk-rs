@@ -65,7 +65,7 @@ impl ELChainWriter {
         let binding_tx = binding
             .send()
             .await
-            .map_err(|e| ElContractsError::AlloyContractError(e))?;
+            .map_err(ElContractsError::AlloyContractError)?;
 
         let receipt = binding_tx.get_receipt().await.map_err(|e| {
             ElContractsError::AlloyContractError(alloy_contract::Error::TransportError(e))
@@ -104,7 +104,7 @@ impl ELChainWriter {
         let modify_operator_tx = contract_call_modify_operator_details
             .send()
             .await
-            .map_err(|e| ElContractsError::AlloyContractError(e))?;
+            .map_err(ElContractsError::AlloyContractError)?;
 
         info!(tx_hash = %modify_operator_tx.tx_hash(), operator = %operator.has_address(), "updated operator details tx");
 
