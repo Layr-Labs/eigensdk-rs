@@ -157,7 +157,7 @@ pub fn alloy_g1_point_to_g1_affine(g1_point: G1Point) -> G1Affine {
     let x = Fq::new(BigInteger256::new(x_point));
     let y_point = g1_point.Y.into_limbs();
     let y = Fq::new(BigInteger256::new(y_point));
-    G1Affine::new_unchecked(x, y)
+    G1Affine::new(x, y)
 }
 
 /// Convert [`G1Affine`] to  Alloy [`G1Point`]

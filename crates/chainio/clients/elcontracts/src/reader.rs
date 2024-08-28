@@ -12,7 +12,7 @@ pub struct ELChainReader {
     slasher: Address,
     delegation_manager: Address,
     avs_directory: Address,
-    provider: String,
+    pub provider: String,
 }
 
 impl ELChainReader {
@@ -200,7 +200,6 @@ impl ELChainReader {
         let contract_strategy = IStrategy::new(strategy_addr, &provider);
 
         let underlying_token_result = contract_strategy.underlyingToken().call().await;
-
         match underlying_token_result {
             Ok(underlying_token) => {
                 let IStrategy::underlyingTokenReturn {

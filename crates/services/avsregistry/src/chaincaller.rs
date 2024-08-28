@@ -52,6 +52,8 @@ impl AvsRegistryService for AvsRegistryServiceChainCaller {
             .get_operators_stake_in_quorums_at_block(block_num, Bytes::from(Vec::from(quorum_nums)))
             .await?;
 
+        println!("operator stakes in quorums {:?}",operators_stakes_in_quorums);
+
         if operators_stakes_in_quorums.len() != quorum_nums.len() {
             // the list of quorum nums and the list of operators stakes in quorums should have the same length
             return Err(AvsRegistryError::InvalidQuorumNums);
@@ -96,19 +98,20 @@ impl AvsRegistryService for AvsRegistryServiceChainCaller {
         let operators_avs_state = self
             .get_operators_avs_state_at_block(block_num, quorum_nums)
             .await?;
-
         Ok(quorum_nums
             .iter()
             .map(|quorum_num| {
                 let mut pub_key_g1 = G1Projective::from(PublicKey::identity());
                 let mut total_stake: U256 = U256::from(0);
                 for operator in operators_avs_state.values() {
+                    println!("quorum_num {:?}",quorum_num);
                     if !operator.stake_per_quorum[quorum_num].is_zero() {
                         if let Some(pub_keys) = &operator.operator_info.pub_keys {
                             pub_key_g1 += pub_keys.g1_pub_key.g1();
                             total_stake += operator.stake_per_quorum[quorum_num];
                         }
                     }
+                    
                 }
                 let agg_pub_key_g1 = if pub_key_g1 == G1Projective::from(PublicKey::zero()) {
                     BlsG1Point::new(Affine::zero())
