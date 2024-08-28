@@ -3,6 +3,7 @@ use alloy_primitives::{Address, Bytes, FixedBytes, B256, U256};
 use alloy_provider::Provider;
 use alloy_rpc_types::Filter;
 use ark_ff::Zero;
+use async_trait::async_trait;
 use eigen_crypto_bls::{
     alloy_registry_g1_point_to_g1_affine, alloy_registry_g2_point_to_g2_affine, BlsG1Point,
     BlsG2Point,
@@ -42,12 +43,139 @@ impl Default for AvsRegistryChainReader {
     }
 }
 
-trait AvsRegistryReader {
-    fn get_quorum_count() -> Result<u8, String>;
+#[async_trait]
+pub trait AvsRegistryReader {
+    /// Get operators stake in quorums at a particular block
+    ///
+    /// # Arguments
+    ///
+    /// * `block_number` - The block number.
+    /// * `quorum_numbers` - The list of quorum numbers.
+    ///
+    /// # Returns
+    ///
+    /// A vector of operators, containing each operator's address, id and stake.
+    async fn get_operators_stake_in_quorums_at_block(
+        &self,
+        block_number: u32,
+        quorum_numbers: Bytes,
+    ) -> Result<Vec<Vec<OperatorStateRetriever::Operator>>, AvsRegistryError>;
+
+    /// Get signature indices
+    ///
+    /// # Arguments
+    ///
+    /// * `reference_block_number` - The block number.
+    /// * `quorum_numbers` - The list of quorum numbers.
+    /// * `non_signer_operator_ids` -  The list of non-signer operator ids.
+    ///
+    /// # Returns
+    ///
+    /// A struct containing the indices of the quorum members that signed,
+    /// and the ones that didn't
+    async fn get_check_signatures_indices(
+        &self,
+        reference_block_number: u32,
+        quorum_numbers: Vec<u8>,
+        non_signer_operator_ids: Vec<FixedBytes<32>>,
+    ) -> Result<OperatorStateRetriever::CheckSignaturesIndices, AvsRegistryError>;
+
+    /// Get operator from operator id
+    ///
+    /// # Arguments
+    ///
+    /// * `operator_id` - The operator id.
+    ///
+    /// # Returns
+    ///
+    /// The operator address.
+    async fn get_operator_from_id(
+        &self,
+        operator_id: [u8; 32],
+    ) -> Result<Address, AvsRegistryError>;
+}
+
+#[async_trait]
+impl AvsRegistryReader for AvsRegistryChainReader {
+    async fn get_operators_stake_in_quorums_at_block(
+        &self,
+        block_number: u32,
+        quorum_numbers: Bytes,
+    ) -> Result<Vec<Vec<OperatorStateRetriever::Operator>>, AvsRegistryError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_operator_state_retriever =
+            OperatorStateRetriever::new(self.operator_state_retriever, provider);
+        let operator_state_result = contract_operator_state_retriever
+            .getOperatorState_0(self.registry_coordinator_addr, quorum_numbers, block_number)
+            .call()
+            .await;
+
+        match operator_state_result {
+            Ok(operator_state) => {
+                let OperatorStateRetriever::getOperatorState_0Return { _0: quorum } =
+                    operator_state;
+                Ok(quorum)
+            }
+            Err(_) => Err(AvsRegistryError::GetOperatorState),
+        }
+    }
+
+    async fn get_check_signatures_indices(
+        &self,
+        reference_block_number: u32,
+        quorum_numbers: Vec<u8>,
+        non_signer_operator_ids: Vec<FixedBytes<32>>,
+    ) -> Result<OperatorStateRetriever::CheckSignaturesIndices, AvsRegistryError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_operator_state_retriever =
+            OperatorStateRetriever::new(self.operator_state_retriever, provider);
+
+        let check_signature_indices = contract_operator_state_retriever
+            .getCheckSignaturesIndices(
+                self.registry_coordinator_addr,
+                reference_block_number,
+                quorum_numbers.into(),
+                non_signer_operator_ids,
+            )
+            .call()
+            .await?;
+        let OperatorStateRetriever::getCheckSignaturesIndicesReturn { _0: indices } =
+            check_signature_indices;
+        Ok(indices)
+    }
+
+    async fn get_operator_from_id(
+        &self,
+        operator_id: [u8; 32],
+    ) -> Result<Address, AvsRegistryError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_registry_coordinator =
+            RegistryCoordinator::new(self.registry_coordinator_addr, &provider);
+
+        let operator_address_return = contract_registry_coordinator
+            .getOperatorFromId(operator_id.into())
+            .call()
+            .await?;
+        let RegistryCoordinator::getOperatorFromIdReturn {
+            _0: operator_address,
+        } = operator_address_return;
+
+        Ok(operator_address)
+    }
 }
 
 impl AvsRegistryChainReader {
-    /// New AvsRegistryChainReader instance
+    /// Create a new instance of the AvsRegistryChainReader
+    ///
+    /// # Arguments
+    ///
+    /// * `logger` - A reference to the logger.
+    /// * `registry_coordinator_addr` - The address of the RegistryCoordinator contract.
+    /// * `operator_state_retriever_addr` - The address of the OperatorStateRetriever contract.
+    /// * `http_provider_url` - The http provider url.
     pub async fn new(
         logger: SharedLogger,
         registry_coordinator_addr: Address,
@@ -89,6 +217,10 @@ impl AvsRegistryChainReader {
     }
 
     /// Get quorum count
+    ///
+    /// # Returns
+    ///
+    /// The total quorum count read from the RegistryCoordinator.
     pub async fn get_quorum_count(&self) -> Result<u8, AvsRegistryError> {
         let provider = get_provider(&self.provider);
 
@@ -105,28 +237,18 @@ impl AvsRegistryChainReader {
         Ok(quorum)
     }
 
-    /// Get operators stake in quorums at a particular block
-    pub async fn get_operators_stake_in_quorums_at_block(
-        &self,
-        block_number: u32,
-        quorum_numbers: Bytes,
-    ) -> Result<Vec<Vec<OperatorStateRetriever::Operator>>, AvsRegistryError> {
-        let provider = get_provider(&self.provider);
-
-        let contract_operator_state_retriever =
-            OperatorStateRetriever::new(self.operator_state_retriever, provider);
-
-        let operator_state = contract_operator_state_retriever
-            .getOperatorState_0(self.registry_coordinator_addr, quorum_numbers, block_number)
-            .call()
-            .await
-            .map_err(|_| AvsRegistryError::GetOperatorState)?;
-
-        let OperatorStateRetriever::getOperatorState_0Return { _0: quorum } = operator_state;
-        Ok(quorum)
-    }
-
     /// Get operators stake in quorums at block operator id
+    ///
+    /// # Arguments
+    ///
+    /// * `block_number` - The block number.
+    /// * `operator_id` - The operator id.
+    ///
+    /// # Returns
+    ///
+    /// - a bitmap of the quorums the operator was registered for at `block_number`.
+    /// - for each of the quorums mentioned above, a vector of the operators registered for
+    ///   that quorum at `block_number`, containing each operator's `operatorId` and `stake`.
     pub async fn get_operators_stake_in_quorums_at_block_operator_id(
         &self,
         block_number: u32,
@@ -137,7 +259,7 @@ impl AvsRegistryChainReader {
         let contract_operator_state_retriever =
             OperatorStateRetriever::new(self.operator_state_retriever, provider);
 
-        let operator_state_with_registry_coordinator_and_oeprator_id =
+        let operator_state_with_registry_coordinator_and_operator_id =
             contract_operator_state_retriever
                 .getOperatorState_1(self.registry_coordinator_addr, operator_id, block_number)
                 .call()
@@ -149,11 +271,20 @@ impl AvsRegistryChainReader {
         let OperatorStateRetriever::getOperatorState_1Return {
             _0: stake,
             _1: operator_state,
-        } = operator_state_with_registry_coordinator_and_oeprator_id;
+        } = operator_state_with_registry_coordinator_and_operator_id;
         Ok((stake, operator_state))
     }
 
     /// Get operators stake in quorums at current block
+    ///
+    /// # Arguments
+    ///
+    /// * `quorum_numbers` - The list of quorum numbers.
+    ///
+    /// # Returns
+    ///
+    /// For each quorum in `quorum_numbers`, a vector of the operators registered for
+    /// that quorum at the current block, containing each operator's `operatorId` and `stake`.
     pub async fn get_operators_stake_in_quorums_at_current_block(
         &self,
         quorum_numbers: Bytes,
@@ -175,6 +306,18 @@ impl AvsRegistryChainReader {
     }
 
     /// Get operators stake in quorums of operator at block
+    ///
+    /// # Arguments
+    ///
+    /// * `operator_id` - The operator id.
+    /// * `block_number` - The block number.
+    ///
+    /// # Returns
+    ///
+    /// - a vector of the quorum numbers the operator was registered for at `block_number`.
+    /// - for each of the quorums mentioned above, a vector of the operators registered for
+    ///   that quorum at `block_number`, containing each operator's `operatorId` and `stake`.
+
     pub async fn get_operators_stake_in_quorums_of_operator_at_block(
         &self,
         operator_id: B256,
@@ -191,6 +334,16 @@ impl AvsRegistryChainReader {
     }
 
     /// Get operators stake in quorums of operator at current block
+    ///
+    /// # Arguments
+    ///
+    /// * `operator_id` - The operator id.
+    ///
+    /// # Returns
+    ///
+    /// - a vector of the quorum numbers the operator was registered for at the current block.
+    /// - for each of the quorums mentioned above, a vector of the operators registered for
+    ///   that quorum at the current block, containing each operator's `operatorId` and `stake`.
     pub async fn get_operators_stake_in_quorums_of_operator_at_current_block(
         &self,
         operator_id: B256,
@@ -212,7 +365,16 @@ impl AvsRegistryChainReader {
         .await
     }
 
-    /// Get operator stake in quorums of operator at current block
+    /// Get operator's stake in quorums at current block
+    ///
+    /// # Arguments
+    ///
+    /// * `operator_id` - The operator id.
+    ///
+    /// # Returns
+    ///
+    /// A hashmap containing the quorum numbers that the operator is registered for,
+    /// and the amount staked on each quorum.
     pub async fn get_operator_stake_in_quorums_of_operator_at_current_block(
         &self,
         operator_id: B256,
@@ -246,33 +408,15 @@ impl AvsRegistryChainReader {
         Ok(quorum_stakes)
     }
 
-    /// Get Signature indices
-    pub async fn get_check_signatures_indices(
-        &self,
-        reference_block_number: u32,
-        quorum_numbers: Vec<u8>,
-        non_signer_operator_ids: Vec<FixedBytes<32>>,
-    ) -> Result<OperatorStateRetriever::CheckSignaturesIndices, AvsRegistryError> {
-        let provider = get_provider(&self.provider);
-
-        let contract_operator_state_retriever =
-            OperatorStateRetriever::new(self.operator_state_retriever, provider);
-
-        let check_signature_indices = contract_operator_state_retriever
-            .getCheckSignaturesIndices(
-                self.registry_coordinator_addr,
-                reference_block_number,
-                quorum_numbers.into(),
-                non_signer_operator_ids,
-            )
-            .call()
-            .await?;
-        let OperatorStateRetriever::getCheckSignaturesIndicesReturn { _0: indices } =
-            check_signature_indices;
-        Ok(indices)
-    }
-
-    /// Get Operator Id
+    /// Get operator id
+    ///
+    /// # Arguments
+    ///
+    /// * `operator_address` - The operator address.
+    ///
+    /// # Returns
+    ///
+    /// The operator id.
     pub async fn get_operator_id(
         &self,
         operator_address: Address,
@@ -290,28 +434,15 @@ impl AvsRegistryChainReader {
         Ok(operator_id)
     }
 
-    /// Get Operator from operator id
-    pub async fn get_operator_from_id(
-        &self,
-        operator_id: [u8; 32],
-    ) -> Result<Address, AvsRegistryError> {
-        let provider = get_provider(&self.provider);
-
-        let contract_registry_coordinator =
-            RegistryCoordinator::new(self.registry_coordinator_addr, &provider);
-
-        let operator_address_return = contract_registry_coordinator
-            .getOperatorFromId(operator_id.into())
-            .call()
-            .await?;
-
-        let RegistryCoordinator::getOperatorFromIdReturn {
-            _0: operator_address,
-        } = operator_address_return;
-        Ok(operator_address)
-    }
-
     /// Check if operator is registered
+    ///
+    /// # Arguments
+    ///
+    /// * `operator_address` - The operator address.
+    ///
+    /// # Returns
+    ///
+    /// True if the operator is registered, false otherwise.
     pub async fn is_operator_registered(
         &self,
         operator_address: Address,
@@ -405,8 +536,8 @@ impl AvsRegistryChainReader {
         Ok((operator_addresses, operator_pub_keys))
     }
 
+    /// TODO: Update bindings and then update this function
     /// Query existing operator sockets
-    /// TODO Update bindings and then update this function
     ///
     /// # Arguments
     ///

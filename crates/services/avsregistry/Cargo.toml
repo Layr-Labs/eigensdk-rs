@@ -12,8 +12,13 @@ license-file.workspace = true
 alloy-primitives.workspace = true
 ark-bn254.workspace = true
 ark-ec.workspace = true
+async-trait.workspace = true
 eigen-client-avsregistry.workspace = true
 eigen-crypto-bls.workspace = true
 eigen-services-operatorsinfo.workspace = true
 eigen-types.workspace = true
 eigen-utils.workspace = true
+
+[dev-dependencies]
+hex.workspace = true
+tokio.workspace = true

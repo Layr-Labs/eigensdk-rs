@@ -10,7 +10,7 @@ license-file.workspace = true
 
 [dependencies]
 alloy-primitives.workspace = true
-ark-serialize = "0.4.2"
+ark-serialize.workspace = true
 eigen-crypto-bls.workspace = true
 ethers.workspace = true
 num-bigint = "0.4.4"
