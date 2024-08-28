@@ -15,3 +15,5 @@ eigen-logging.workspace = true
 eigen-services-operatorsinfo.workspace = true
 tokio = {workspace = true, features =["full"]}
 tracing.workspace = true
+tokio-util = "0.7.11"
+

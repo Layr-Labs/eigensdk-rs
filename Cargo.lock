@@ -2266,6 +2266,7 @@ dependencies = [
  "alloy-provider",
  "alloy-rpc-types",
  "alloy-signer-local",
+ "alloy-sol-types",
  "anyhow",
  "ark-bn254",
  "ark-ff 0.4.2",
@@ -3653,6 +3654,7 @@ dependencies = [
  "eigen-logging",
  "eigen-services-operatorsinfo",
  "tokio",
+ "tokio-util",
  "tracing",
 ]
 

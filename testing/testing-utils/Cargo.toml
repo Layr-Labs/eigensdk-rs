@@ -13,8 +13,8 @@ workspace = true
 
 [dependencies]
 alloy-primitives.workspace = true
-eigen-utils.workspace = true
-once_cell.workspace = true
 alloy-provider.workspace = true
 alloy-transport-http.workspace = true
 alloy-network.workspace = true
+eigen-utils.workspace = true
+once_cell.workspace = true

@@ -150,7 +150,6 @@ impl ELChainWriter {
             .el_chain_reader
             .get_strategy_and_underlying_erc20_token(strategy_addr)
             .await;
-        println!("tokens result {:?}",tokens_result);
         match tokens_result {
             Ok(tokens) => {
                 let (_, underlying_token_contract, underlying_token) = tokens;

@@ -215,6 +215,7 @@ impl OperatorInfoServiceInMemory {
             .avs_registry_reader
             .query_existing_registered_operator_pub_keys(start_block, end_block, self.ws.clone())
             .await?;
+        println!("operator_address found :{:?}",operator_address);
         for (i, address) in operator_address.iter().enumerate() {
             let message = OperatorsInfoMessage::InsertOperatorInfo(
                 *address,
@@ -238,24 +239,29 @@ impl OperatorInfoServiceInMemory {
 mod tests {
 
     use super::*;
-    use alloy_primitives::{address, Bytes, U256};
+    use alloy_primitives::hex::{self, FromHex};
+    use alloy_primitives::{address, Bytes, TxHash, B256, U256};
+    use alloy_rpc_types::{BlockHashOrNumber, BlockNumberOrTag, Topic};
     use alloy_signer_local::PrivateKeySigner;
     use ark_bn254::Fr;
     use ark_std::{rand, UniformRand};
     use eigen_client_avsregistry::writer::AvsRegistryChainWriter;
     use eigen_client_elcontracts::{reader::ELChainReader, writer::ELChainWriter};
-    use eigen_crypto_bls::BlsKeyPair;
+    use eigen_crypto_bls::{convert_to_g1_point, BlsKeyPair};
     use eigen_logging::get_test_logger;
     use eigen_testing_utils::anvil_constants::{
         get_avs_directory_address, get_delegation_manager_address,
         get_operator_state_retriever_address, get_registry_coordinator_address,
         get_strategy_manager_address,
     };
+    use eigen_testing_utils::m2_holesky_constants::{OPERATOR_STATE_RETRIEVER, REGISTRY_COORDINATOR};
     use eigen_types::operator::Operator;
     use eigen_utils::get_provider;
     use rand::rngs::OsRng;
+    use std::io::Read;
     use std::str::FromStr;
     use std::time::{Duration, SystemTime, UNIX_EPOCH};
+    use alloy_sol_types::SolEvent;
 
     #[tokio::test]
     async fn test_query_past_registered_operator_events_and_fill_db() {
@@ -494,4 +500,9 @@ mod tests {
             .await
             .unwrap();
     }
+
+
+
+
+
 }
