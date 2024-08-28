@@ -3650,9 +3650,15 @@ name = "info-operator-service"
 version = "0.0.1-alpha"
 dependencies = [
  "alloy-primitives",
+ "alloy-provider",
+ "alloy-signer-local",
  "eigen-client-avsregistry",
+ "eigen-client-elcontracts",
+ "eigen-crypto-bls",
  "eigen-logging",
  "eigen-services-operatorsinfo",
+ "eigen-testing-utils",
+ "eigen-utils",
  "tokio",
  "tokio-util",
  "tracing",
