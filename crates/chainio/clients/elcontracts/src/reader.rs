@@ -6,6 +6,7 @@ use eigen_utils::{
     binding::{AVSDirectory, DelegationManager, ISlasher, IStrategy, IERC20},
     get_provider,
 };
+
 #[derive(Debug, Clone)]
 pub struct ELChainReader {
     _logger: SharedLogger,
@@ -121,6 +122,16 @@ impl ELChainReader {
         }
     }
 
+    /// Get the operator's shares in a strategy
+    ///
+    /// # Arguments
+    ///
+    /// * `operator_addr` - The operator's address
+    /// * `strategy_addr` - The strategy's address
+    ///
+    /// # Returns
+    ///
+    /// * `U256` - The operator's shares in the strategy
     pub async fn get_operator_shares_in_strategy(
         &self,
         operator_addr: Address,
@@ -130,19 +141,14 @@ impl ELChainReader {
 
         let contract_delegation_manager = DelegationManager::new(self.delegation_manager, provider);
 
-        let operator_shares_in_strategy_result = contract_delegation_manager
+        let operator_shares_in_strategy = contract_delegation_manager
             .operatorShares(operator_addr, strategy_addr)
             .call()
-            .await;
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
 
-        match operator_shares_in_strategy_result {
-            Ok(operator_shares_in_strategy) => {
-                let DelegationManager::operatorSharesReturn { _0: shares } =
-                    operator_shares_in_strategy;
-                Ok(shares)
-            }
-            Err(e) => Err(ElContractsError::AlloyContractError(e)),
-        }
+        let DelegationManager::operatorSharesReturn { _0: shares } = operator_shares_in_strategy;
+        Ok(shares)
     }
 
     pub async fn operator_is_frozen(
@@ -189,8 +195,21 @@ impl ELChainReader {
         }
     }
 
-    /// GetStrategyAndUnderlyingERC20Token returns the strategy contract, the erc20 bindings for the underlying token
-    /// and the underlying token address
+    /// Get strategy and underlying ERC-20 token
+    ///
+    /// # Arguments
+    ///
+    /// * `strategy_addr` - The strategy's address
+    ///
+    /// # Returns
+    ///
+    /// - the strategy contract,
+    /// - the erc20 bindings for the underlying token
+    /// - and the underlying token address
+    ///
+    /// # Errors
+    ///
+    /// * `ElContractsError` - if the call to the contract fails
     pub async fn get_strategy_and_underlying_erc20_token(
         &self,
         strategy_addr: Address,
@@ -275,20 +294,21 @@ impl ELChainReader {
     }
 }
 
-/// Anvil tests
 #[cfg(test)]
 mod tests {
-
-    use super::*;
+    use super::ELChainReader;
     use alloy_eips::eip1898::BlockNumberOrTag::Number;
-    use alloy_primitives::{address, keccak256};
+    use alloy_primitives::{address, keccak256, Address, FixedBytes, U256};
     use alloy_provider::Provider;
     use eigen_logging::get_test_logger;
     use eigen_testing_utils::anvil_constants::{self, ANVIL_RPC_URL};
-    use eigen_utils::binding::mockAvsServiceManager;
+    use eigen_utils::binding::{
+        mockAvsServiceManager, AVSDirectory,
+        AVSDirectory::calculateOperatorAVSRegistrationDigestHashReturn, DelegationManager,
+        DelegationManager::calculateDelegationApprovalDigestHashReturn,
+    };
+    use serial_test::serial;
     use tokio::time::{sleep, Duration};
-    use AVSDirectory::calculateOperatorAVSRegistrationDigestHashReturn;
-    use DelegationManager::calculateDelegationApprovalDigestHashReturn;
 
     async fn build_el_chain_reader() -> ELChainReader {
         let delegation_manager_address = anvil_constants::get_delegation_manager_address().await;
@@ -324,6 +344,7 @@ mod tests {
     }
 
     #[tokio::test]
+    #[serial]
     async fn test_calculate_delegation_approval_digest_hash() {
         // Introduce a 2-second delay
         sleep(Duration::from_secs(2)).await;
@@ -334,11 +355,7 @@ mod tests {
 
         let delegation_approver = Address::ZERO;
 
-        let approve_salt: FixedBytes<32> = FixedBytes::from([
-            0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02,
-            0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02,
-            0x02, 0x02, 0x02, 0x02,
-        ]);
+        let approve_salt: FixedBytes<32> = FixedBytes::from([0x02; 32]);
         let current_block_number = ANVIL_RPC_URL.clone().get_block_number().await.unwrap();
         let block_info = ANVIL_RPC_URL
             .clone()
@@ -346,85 +363,79 @@ mod tests {
             .await
             .unwrap();
 
-        if let Some(block) = block_info {
-            let timestamp = block.header.timestamp;
-            let expiry = U256::from::<u64>(timestamp + 100);
-            let calculate_digest_hash = el_chain_reader
-                .calculate_delegation_approval_digest_hash(
-                    staker,
-                    operator,
-                    delegation_approver,
-                    approve_salt,
-                    expiry,
-                )
-                .await
-                .unwrap();
+        let Some(block) = block_info else { return };
+        let timestamp = block.header.timestamp;
+        let expiry = U256::from::<u64>(timestamp + 100);
+        let calculate_digest_hash = el_chain_reader
+            .calculate_delegation_approval_digest_hash(
+                staker,
+                operator,
+                delegation_approver,
+                approve_salt,
+                expiry,
+            )
+            .await
+            .unwrap();
 
-            // Directly calling the function through bindings to compare with the sdk .
-            let delegation_manager_address =
-                anvil_constants::get_delegation_manager_address().await;
-            let delegation_manager_contract = DelegationManager::new(
-                delegation_manager_address,
-                anvil_constants::ANVIL_RPC_URL.clone(),
-            );
+        // Directly calling the function through bindings to compare with the sdk .
+        let delegation_manager_address = anvil_constants::get_delegation_manager_address().await;
+        let delegation_manager_contract = DelegationManager::new(
+            delegation_manager_address,
+            anvil_constants::ANVIL_RPC_URL.clone(),
+        );
 
-            let hash = delegation_manager_contract
-                .calculateDelegationApprovalDigestHash(
-                    staker,
-                    operator,
-                    delegation_approver,
-                    approve_salt,
-                    expiry,
-                )
-                .call()
-                .await
-                .unwrap();
+        let hash = delegation_manager_contract
+            .calculateDelegationApprovalDigestHash(
+                staker,
+                operator,
+                delegation_approver,
+                approve_salt,
+                expiry,
+            )
+            .call()
+            .await
+            .unwrap();
 
-            let calculateDelegationApprovalDigestHashReturn { _0: digest_hash } = hash;
+        let calculateDelegationApprovalDigestHashReturn { _0: digest_hash } = hash;
 
-            assert_eq!(digest_hash, calculate_digest_hash);
-        }
+        assert_eq!(digest_hash, calculate_digest_hash);
     }
 
     #[tokio::test]
+    #[serial]
     async fn test_calculate_operator_avs_registration_digest_hash() {
-        // a 2 se
         sleep(Duration::from_secs(2)).await;
         let el_chain_reader = build_el_chain_reader().await;
         let operator: Address = address!("5eb15C0992734B5e77c888D713b4FC67b3D679A2");
         let avs = Address::from_slice(&keccak256("avs ")[0..20]);
-        let salt: FixedBytes<32> = FixedBytes::from([
-            0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02,
-            0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02,
-            0x02, 0x02, 0x02, 0x02,
-        ]);
+        let salt: FixedBytes<32> = FixedBytes::from([0x02; 32]);
         let current_block_number = ANVIL_RPC_URL.clone().get_block_number().await.unwrap();
         let block_info = ANVIL_RPC_URL
             .clone()
             .get_block_by_number(Number(current_block_number), true)
             .await
             .unwrap();
-        if let Some(block) = block_info {
-            let timestamp = block.header.timestamp;
-            let expiry = U256::from::<u64>(timestamp + 100);
-            let operator_hash = el_chain_reader
-                .calculate_operator_avs_registration_digest_hash(operator, avs, salt, expiry)
-                .await
-                .unwrap();
+        let Some(block) = block_info else { return };
 
-            // Using bindings directly to compare with sdk's output
-            let avs_registry_contract =
-                AVSDirectory::new(el_chain_reader.avs_directory, ANVIL_RPC_URL.clone());
-            let operator_hash_from_bindings = avs_registry_contract
-                .calculateOperatorAVSRegistrationDigestHash(operator, avs, salt, expiry)
-                .call()
-                .await
-                .unwrap();
+        let timestamp = block.header.timestamp;
+        let expiry = U256::from::<u64>(timestamp + 100);
+        let operator_hash = el_chain_reader
+            .calculate_operator_avs_registration_digest_hash(operator, avs, salt, expiry)
+            .await
+            .unwrap();
 
-            let calculateOperatorAVSRegistrationDigestHashReturn { _0: hash } =
-                operator_hash_from_bindings;
+        // Using bindings directly to compare with sdk's output
+        let avs_registry_contract =
+            AVSDirectory::new(el_chain_reader.avs_directory, ANVIL_RPC_URL.clone());
+        let operator_hash_from_bindings = avs_registry_contract
+            .calculateOperatorAVSRegistrationDigestHash(operator, avs, salt, expiry)
+            .call()
+            .await
+            .unwrap();
 
-            assert_eq!(hash, operator_hash);
-        }
+        let calculateOperatorAVSRegistrationDigestHashReturn { _0: hash } =
+            operator_hash_from_bindings;
+
+        assert_eq!(hash, operator_hash);
     }
 }
