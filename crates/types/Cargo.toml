@@ -12,7 +12,6 @@ license-file.workspace = true
 alloy-primitives.workspace = true
 ark-serialize = "0.4.2"
 eigen-crypto-bls.workspace = true
-eigen-utils.workspace = true
 ethers.workspace = true
 num-bigint = "0.4.4"
 thiserror.workspace = true
