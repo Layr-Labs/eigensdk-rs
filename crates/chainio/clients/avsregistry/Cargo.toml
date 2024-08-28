@@ -29,7 +29,6 @@ alloy-signer.workspace = true
 alloy-signer-local.workspace = true
 alloy-contract.workspace = true
 
-
 [dev-dependencies]
 tokio = {version = "1.37.0" , features = ["test-util", "full","sync"] }
 hex = "0.4.3"
