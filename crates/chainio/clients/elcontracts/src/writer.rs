@@ -172,9 +172,9 @@ mod tests {
     use alloy_signer_local::PrivateKeySigner;
     use anvil_constants::{ANVIL_RPC_URL, CONTRACTS_REGISTRY};
     use eigen_logging::get_test_logger;
-    use eigen_testing_utils::anvil_constants;
     use eigen_testing_utils::anvil_constants::{
-        get_delegation_manager_address, get_service_manager_address, get_strategy_manager_address,
+        self, get_delegation_manager_address, get_erc20_mock_strategy, get_service_manager_address,
+        get_strategy_manager_address,
     };
     use eigen_types::operator::Operator;
     use eigen_utils::binding::DelegationManager;
@@ -332,12 +332,11 @@ mod tests {
 
         // Third test: deposit_erc20_into_strategy
         let amount = U256::from_str("100").unwrap();
-        let strategy_addr = Address::default(); // TODO change this!!!
+        let strategy_addr = get_erc20_mock_strategy().await;
         let tx_hash = el_chain_writer
             .deposit_erc20_into_strategy(strategy_addr, amount)
             .await
             .unwrap();
-        /*
 
         // this sleep is needed so that we wait for the tx to be processed
         tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
@@ -346,6 +345,5 @@ mod tests {
             .await
             .unwrap();
         assert!(receipt.unwrap().status());
-        */
     }
 }
