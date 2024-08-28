@@ -45,14 +45,34 @@ impl Default for AvsRegistryChainReader {
 
 #[async_trait]
 pub trait AvsRegistryReader {
-    /// Gets operator's stake from block number and quorum
+    /// Get operators stake in quorums at a particular block
+    ///
+    /// # Arguments
+    ///
+    /// * `block_number` - The block number.
+    /// * `quorum_numbers` - The list of quorum numbers.
+    ///
+    /// # Returns
+    ///
+    /// A vector of operators structs containing the address, id and stake.
     async fn get_operators_stake_in_quorums_at_block(
         &self,
         block_number: u32,
         quorum_numbers: Bytes,
     ) -> Result<Vec<Vec<OperatorStateRetriever::Operator>>, AvsRegistryError>;
 
-    /// Gets check signature indices
+    /// Get signature indices
+    ///
+    /// # Arguments
+    ///
+    /// * `reference_block_number` - The block number.
+    /// * `quorum_numbers` - The list of quorum numbers.
+    /// * `non_signer_operator_ids` -  The list of non-signer operator ids.
+    ///
+    /// # Returns
+    ///
+    /// A struct containing the indices of the quorum members that signed,
+    /// and the ones that didn't
     async fn get_check_signatures_indices(
         &self,
         reference_block_number: u32,
@@ -60,7 +80,15 @@ pub trait AvsRegistryReader {
         non_signer_operator_ids: Vec<FixedBytes<32>>,
     ) -> Result<OperatorStateRetriever::CheckSignaturesIndices, AvsRegistryError>;
 
-    /// Gets operator from id
+    /// Get operator from operator id
+    ///
+    /// # Arguments
+    ///
+    /// * `operator_id` - The operator id.
+    ///
+    /// # Returns
+    ///
+    /// The operator address.
     async fn get_operator_from_id(
         &self,
         operator_id: [u8; 32],
@@ -69,7 +97,6 @@ pub trait AvsRegistryReader {
 
 #[async_trait]
 impl AvsRegistryReader for AvsRegistryChainReader {
-    /// Get operators stake in quorums at a particular block
     async fn get_operators_stake_in_quorums_at_block(
         &self,
         block_number: u32,
@@ -94,7 +121,6 @@ impl AvsRegistryReader for AvsRegistryChainReader {
         }
     }
 
-    /// Get Signature indices
     async fn get_check_signatures_indices(
         &self,
         reference_block_number: u32,
@@ -120,7 +146,6 @@ impl AvsRegistryReader for AvsRegistryChainReader {
         Ok(indices)
     }
 
-    /// Get Operator from operator id
     async fn get_operator_from_id(
         &self,
         operator_id: [u8; 32],

@@ -17,18 +17,51 @@ pub mod fake_avs_registry_service;
 
 #[async_trait]
 pub trait AvsRegistryService {
+    /// Get the operators AVS state at a specific block number
+    ///
+    /// # Arguments
+    ///
+    /// * `block_num` - The block number to get the AVS state at
+    /// * `quorum_nums` - The list of quorum numbers
+    ///
+    /// # Returns
+    ///
+    /// A hashmap containing the operator ID and the operator AVS state
     async fn get_operators_avs_state_at_block(
         &self,
         block_num: u32,
         quorum_nums: &[u8],
     ) -> Result<HashMap<FixedBytes<32>, OperatorAvsState>, AvsRegistryError>;
 
+    /// Get the quorum AVS state at a specific block
+    ///
+    /// # Arguments
+    ///
+    /// * `quorum_nums` - The list of quorum numbers
+    /// * `block_num` - The block number
+    ///
+    /// # Returns
+    ///
+    /// A hashmap containing the quorum number and the quorum AVS state.
     async fn get_quorums_avs_state_at_block(
         &self,
         quorum_nums: &[u8],
         block_num: u32,
     ) -> Result<HashMap<u8, QuorumAvsState>, AvsRegistryError>;
 
+    /// Get the signatures indices of quorum members for a specific block and checks
+    /// if the indices are valid
+    ///
+    /// # Arguments
+    ///
+    /// * `reference_block_number` - The reference block number
+    /// * `quorum_numbers` - The list of quorum numbers
+    /// * `non_signer_operator_ids` - The list of non-signer operator ids
+    ///
+    /// # Returns
+    ///
+    /// A struct containing the indices of the quorum members that signed,
+    /// and the ones that didn't
     async fn get_check_signatures_indices(
         &self,
         reference_block_number: u32,
