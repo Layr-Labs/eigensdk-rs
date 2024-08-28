@@ -252,7 +252,9 @@ impl AvsRegistryChainReader {
     ///
     /// # Returns
     ///
-    /// A tuple with the stake and a vector with the operators, containing each operator's address, id and stake.
+    /// - a bitmap of the quorums the operator was registered for at `block_number`.
+    /// - for each of the quorums mentioned above, a vector of the operators registered for
+    ///   that quorum at `block_number`, containing each operator's `operatorId` and `stake`.
     pub async fn get_operators_stake_in_quorums_at_block_operator_id(
         &self,
         block_number: u32,
@@ -262,19 +264,19 @@ impl AvsRegistryChainReader {
 
         let contract_operator_state_retriever =
             OperatorStateRetriever::new(self.operator_state_retriever, provider);
-        let operator_state_with_registry_coordinator_and_oeprator_id_result =
+        let operator_state_with_registry_coordinator_and_operator_id_result =
             contract_operator_state_retriever
                 .getOperatorState_1(self.registry_coordinator_addr, operator_id, block_number)
                 .call()
                 .await;
 
-        match operator_state_with_registry_coordinator_and_oeprator_id_result {
+        match operator_state_with_registry_coordinator_and_operator_id_result {
             Ok(operator_state_with_registry_coordinator_and_oeprator_id) => {
                 let OperatorStateRetriever::getOperatorState_1Return {
-                    _0: stake,
+                    _0: quorum_bitmaps,
                     _1: operator_state,
                 } = operator_state_with_registry_coordinator_and_oeprator_id;
-                Ok((stake, operator_state))
+                Ok((quorum_bitmaps, operator_state))
             }
             Err(_) => Err(AvsRegistryError::GetOperatorStateWithRegistryCoordinatorAndOperatorId),
         }
@@ -288,7 +290,8 @@ impl AvsRegistryChainReader {
     ///
     /// # Returns
     ///
-    /// A vector with the operators, containing each operator's address, id and stake.
+    /// For each quorum in `quorum_numbers`, a vector of the operators registered for
+    /// that quorum at the current block, containing each operator's `operatorId` and `stake`.
     pub async fn get_operators_stake_in_quorums_at_current_block(
         &self,
         quorum_numbers: Bytes,
@@ -330,7 +333,10 @@ impl AvsRegistryChainReader {
     ///
     /// # Returns
     ///
-    /// A tuple with the quorum numbers and a vector of operators, containing each operator's address, id and stake.
+    /// - a vector of the quorum numbers the operator was registered for at `block_number`.
+    /// - for each of the quorums mentioned above, a vector of the operators registered for
+    ///   that quorum at `block_number`, containing each operator's `operatorId` and `stake`.
+
     pub async fn get_operators_stake_in_quorums_of_operator_at_block(
         &self,
         operator_id: B256,
@@ -359,7 +365,9 @@ impl AvsRegistryChainReader {
     ///
     /// # Returns
     ///
-    /// A tuple with the quorum numbers and a vector of operators, containing each operator's address, id and stake
+    /// - a vector of the quorum numbers the operator was registered for at the current block.
+    /// - for each of the quorums mentioned above, a vector of the operators registered for
+    ///   that quorum at the current block, containing each operator's `operatorId` and `stake`.
     pub async fn get_operators_stake_in_quorums_of_operator_at_current_block(
         &self,
         operator_id: B256,
@@ -402,7 +410,8 @@ impl AvsRegistryChainReader {
     ///
     /// # Returns
     ///
-    /// A hashmap containing the quorum numbers and stakes.
+    /// A hashmap containing the quorum numbers that the operator is registered for,
+    /// and the amount staked on each quorum.
     pub async fn get_operator_stake_in_quorums_of_operator_at_current_block(
         &self,
         operator_id: B256,
@@ -502,8 +511,8 @@ impl AvsRegistryChainReader {
     ///
     /// # Returns
     ///
-    /// A tuple containing a vector with the operators addresses and
-    /// a vector with the public keys.
+    /// - a vector of the operators addresses registered at the block range
+    /// - a vector with those operators public keys.
     pub async fn query_existing_registered_operator_pub_keys(
         &self,
         start_block: u64,
@@ -601,7 +610,8 @@ impl AvsRegistryChainReader {
     ///
     /// # Returns
     ///
-    /// A hashmap containing the operator ids and their sockets.
+    /// A hashmap containing the ids of the operators registered at the block range
+    /// and their sockets.
     pub async fn query_existing_registered_operator_sockets(
         &self,
         start_block: u64,
