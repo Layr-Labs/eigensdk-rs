@@ -2317,6 +2317,7 @@ dependencies = [
  "alloy-primitives",
  "ark-serialize 0.4.2",
  "eigen-crypto-bls",
+ "eigen-utils",
  "ethers",
  "num-bigint 0.4.6",
  "thiserror",
