@@ -16,6 +16,9 @@ use tokio::time::{sleep, Duration};
 /// Local anvil ContractsRegistry which contains a mapping of all locally deployed EL contracts.
 pub const CONTRACTS_REGISTRY: Address = address!("5FbDB2315678afecb367f032d93F642f64180aa3");
 
+/// Local anvil rpc url
+pub const ANVIL_HTTP_URL: &str = "http://localhost:8545";
+
 #[allow(clippy::type_complexity)]
 /// Local anvil rpc url alloy instance
 pub static ANVIL_RPC_URL: Lazy<
@@ -28,7 +31,7 @@ pub static ANVIL_RPC_URL: Lazy<
         Http<Client>,
         Ethereum,
     >,
-> = Lazy::new(|| get_provider("http://localhost:8545"));
+> = Lazy::new(|| get_provider(ANVIL_HTTP_URL));
 
 /// Service Manager contract address
 pub async fn get_service_manager_address() -> Address {

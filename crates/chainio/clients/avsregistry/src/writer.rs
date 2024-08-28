@@ -335,10 +335,8 @@ mod tests {
     use eigen_logging::get_test_logger;
     use eigen_testing_utils::anvil_constants::{
         get_operator_state_retriever_address, get_registry_coordinator_address,
-        get_transaction_status,
+        get_transaction_status, ANVIL_HTTP_URL,
     };
-
-    const ANVIL_HTTP_URL: &str = "http://localhost:8545";
 
     async fn build_avs_registry_chain_writer(private_key: String) -> AvsRegistryChainWriter {
         let registry_coordinator_address = get_registry_coordinator_address().await;
@@ -373,6 +371,7 @@ mod tests {
         test_deregister_operator(&avs_writer, quorum_nums).await;
     }
 
+    // this function is caller from test_avs_writer_methods
     async fn test_update_stake_of_operator_subset(
         avs_writer: &AvsRegistryChainWriter,
         operator_id: Address,
@@ -386,6 +385,7 @@ mod tests {
         assert!(tx_status);
     }
 
+    // this function is caller from test_avs_writer_methods
     async fn test_update_stake_of_entire_operator_set(
         avs_writer: &AvsRegistryChainWriter,
         operator_id: Address,
@@ -400,6 +400,7 @@ mod tests {
         assert!(tx_status);
     }
 
+    // this function is caller from test_avs_writer_methods
     async fn test_register_operator(
         avs_writer: &AvsRegistryChainWriter,
         private_key_decimal: String,
@@ -425,6 +426,7 @@ mod tests {
         assert!(tx_status);
     }
 
+    // this function is caller from test_avs_writer_methods
     async fn test_deregister_operator(avs_writer: &AvsRegistryChainWriter, quorum_nums: Bytes) {
         let tx_hash = avs_writer.deregister_operator(quorum_nums).await.unwrap();
 
