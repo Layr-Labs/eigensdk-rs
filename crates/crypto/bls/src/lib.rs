@@ -132,7 +132,7 @@ pub fn convert_to_g1_point(g1: G1Affine) -> Result<G1Point, BlsError> {
     })
 }
 
-/// Convert [`G1Affine`] to  Alloy [`G1Point`]
+/// Convert [`G1Affine`] to  Alloy [`G1PointChecker`]
 pub fn convert_to_bls_checker_g1_point(g1: G1Affine) -> Result<G1PointChecker, BlsError> {
     let x_point_result = g1.x();
     let y_point_result = g1.y();
@@ -152,7 +152,7 @@ pub fn convert_to_bls_checker_g1_point(g1: G1Affine) -> Result<G1PointChecker, B
     })
 }
 
-/// Convert [`G1Affine`] to  Alloy [`G1Point`]
+/// Convert [`G2Affine`] to  Alloy [`G2PointChecker`]
 pub fn convert_to_bls_checker_g2_point(g2: G2Affine) -> Result<G2PointChecker, BlsError> {
     let x_point_result = g2.x();
     let y_point_result = g2.y();
@@ -213,7 +213,7 @@ pub fn convert_to_g2_point(g2: G2Affine) -> Result<G2Point, BlsError> {
     })
 }
 
-/// Convert [`G1Point`] to [`G1Affine`]
+/// Convert [`G1PointRegistry`] to [`G1Affine`]
 pub fn alloy_registry_g1_point_to_g1_affine(g1_point: G1PointRegistry) -> G1Affine {
     let x_point = g1_point.X.into_limbs();
     let x = Fq::new(BigInteger256::new(x_point));
@@ -222,7 +222,7 @@ pub fn alloy_registry_g1_point_to_g1_affine(g1_point: G1PointRegistry) -> G1Affi
     G1Affine::new(x, y)
 }
 
-/// Convert [`G1Point`] to [`G1Affine`]
+/// Convert [`G2PointRegistry`] to [`G2Affine`]
 pub fn alloy_registry_g2_point_to_g2_affine(g2_point: G2PointRegistry) -> G2Affine {
     let x_fp2 = Fp2::new(
         BigInteger256::new(g2_point.X[1].into_limbs()).into(),
@@ -235,7 +235,7 @@ pub fn alloy_registry_g2_point_to_g2_affine(g2_point: G2PointRegistry) -> G2Affi
     G2Affine::new(x_fp2, y_fp2)
 }
 
-/// Convert [`G2Affine`] to [`G2Point`]
+/// Convert [`G2Affine`] to [`G2PointRegistry`]
 pub fn convert_to_registry_g2_point(g2: G2Affine) -> Result<G2PointRegistry, BlsError> {
     let x_point_result = g2.x();
     let y_point_result = g2.y();
