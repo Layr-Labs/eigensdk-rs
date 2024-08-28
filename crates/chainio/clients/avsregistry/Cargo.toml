@@ -9,11 +9,14 @@ repository.workspace = true
 license-file.workspace = true
 
 [dependencies]
+alloy-contract.workspace = true
+alloy-network.workspace = true
 alloy-primitives.workspace = true
 alloy-provider.workspace = true
-alloy-transport-http.workspace = true
 alloy-rpc-types.workspace = true
+alloy-signer.workspace = true
 async-trait.workspace = true
+alloy-transport-http.workspace = true
 num-bigint = "0.4.4"
 reqwest.workspace = true
 eigen-types.workspace = true
@@ -24,12 +27,9 @@ eigen-utils.workspace = true
 eigen-logging.workspace = true
 thiserror.workspace = true
 tracing.workspace = true
-alloy-network.workspace = true
-alloy-signer.workspace = true
 alloy-signer-local.workspace = true
-alloy-contract.workspace = true
 
 [dev-dependencies]
-tokio = {version = "1.37.0" , features = ["test-util", "full","sync"] }
 hex = "0.4.3"
 once_cell.workspace = true
+tokio = {version = "1.37.0" , features = ["test-util", "full","sync"] }
