@@ -1,8 +1,8 @@
-use std::future::Future;
-
 use alloy_primitives::Address;
+use async_trait::async_trait;
 use eigen_types::operator::OperatorPubKeys;
 
+#[async_trait]
 pub trait OperatorInfoService {
-    fn get_operator_info(&self, address: Address) -> impl Future<Output = Option<OperatorPubKeys>>;
+    async fn get_operator_info(&self, address: Address) -> Option<OperatorPubKeys>;
 }

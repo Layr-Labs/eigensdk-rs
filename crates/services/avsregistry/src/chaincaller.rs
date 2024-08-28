@@ -1,6 +1,7 @@
 use alloy_primitives::{Bytes, FixedBytes, U256};
 use ark_bn254::G1Projective;
 use ark_ec::{short_weierstrass::Affine, AffineRepr, CurveGroup};
+use async_trait::async_trait;
 use eigen_client_avsregistry::{error::AvsRegistryError, reader::AvsRegistryReader};
 use eigen_crypto_bls::{BlsG1Point, PublicKey};
 use eigen_services_operatorsinfo::operator_info::OperatorInfoService;
@@ -31,7 +32,8 @@ impl<R: AvsRegistryReader, S: OperatorInfoService> AvsRegistryServiceChainCaller
     }
 }
 
-impl<R: AvsRegistryReader, S: OperatorInfoService> AvsRegistryService
+#[async_trait]
+impl<R: AvsRegistryReader + Sync, S: OperatorInfoService + Sync> AvsRegistryService
     for AvsRegistryServiceChainCaller<R, S>
 {
     /// Get the operators AVS state at a specific block number

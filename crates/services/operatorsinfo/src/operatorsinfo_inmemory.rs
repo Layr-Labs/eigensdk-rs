@@ -2,6 +2,7 @@ use alloy_primitives::Address;
 use alloy_provider::{Provider, ProviderBuilder, WsConnect};
 use alloy_rpc_types::Filter;
 use anyhow::Result;
+use async_trait::async_trait;
 use eigen_client_avsregistry::reader::AvsRegistryChainReader;
 use eigen_crypto_bls::{
     alloy_registry_g1_point_to_g1_affine, alloy_registry_g2_point_to_g2_affine, BlsG1Point,
@@ -40,6 +41,7 @@ enum OperatorsInfoMessage {
     Get(Address, Sender<Option<OperatorPubKeys>>),
 }
 
+#[async_trait]
 impl OperatorInfoService for OperatorInfoServiceInMemory {
     async fn get_operator_info(&self, address: Address) -> Option<OperatorPubKeys> {
         let (responder_tx, responder_rx) = oneshot::channel();

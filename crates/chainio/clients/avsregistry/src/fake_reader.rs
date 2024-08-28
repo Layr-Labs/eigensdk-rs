@@ -1,5 +1,6 @@
 use crate::{error::AvsRegistryError, reader::AvsRegistryReader};
 use alloy_primitives::{Address, Bytes, FixedBytes};
+use async_trait::async_trait;
 use eigen_crypto_bls::BlsKeyPair;
 use eigen_types::test::TestOperator;
 use eigen_utils::binding::OperatorStateRetriever;
@@ -34,6 +35,7 @@ impl FakeAvsRegistryReader {
     }
 }
 
+#[async_trait]
 impl AvsRegistryReader for FakeAvsRegistryReader {
     async fn get_operators_stake_in_quorums_at_block(
         &self,

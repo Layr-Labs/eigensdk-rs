@@ -3,6 +3,7 @@ use std::collections::HashMap;
 use alloy_primitives::{BlockNumber, FixedBytes, U256};
 use ark_bn254::G1Projective;
 use ark_ec::{short_weierstrass::Affine, AffineRepr, CurveGroup};
+use async_trait::async_trait;
 use eigen_client_avsregistry::error::AvsRegistryError;
 use eigen_crypto_bls::{BlsG1Point, OperatorId, PublicKey};
 use eigen_types::{
@@ -41,6 +42,7 @@ impl FakeAvsRegistryService {
     }
 }
 
+#[async_trait]
 impl AvsRegistryService for FakeAvsRegistryService {
     async fn get_operators_avs_state_at_block(
         &self,

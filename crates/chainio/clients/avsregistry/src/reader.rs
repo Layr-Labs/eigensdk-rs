@@ -3,6 +3,7 @@ use alloy_primitives::{Address, Bytes, FixedBytes, B256, U256};
 use alloy_provider::Provider;
 use alloy_rpc_types::Filter;
 use ark_ff::Zero;
+use async_trait::async_trait;
 use eigen_crypto_bls::{
     alloy_registry_g1_point_to_g1_affine, alloy_registry_g2_point_to_g2_affine, BlsG1Point,
     BlsG2Point,
@@ -14,9 +15,9 @@ use eigen_utils::{
     get_provider, get_ws_provider, NEW_PUBKEY_REGISTRATION_EVENT,
 };
 use num_bigint::BigInt;
+use std::collections::HashMap;
 use std::fmt::Debug;
 use std::sync::Arc;
-use std::{collections::HashMap, future::Future};
 
 /// Avs Registry chainreader
 #[derive(Debug, Clone)]
@@ -42,33 +43,31 @@ impl Default for AvsRegistryChainReader {
     }
 }
 
-/// TODO: add docs
+#[async_trait]
 pub trait AvsRegistryReader {
     /// Gets operator's stake from block number and quorum
-    fn get_operators_stake_in_quorums_at_block(
+    async fn get_operators_stake_in_quorums_at_block(
         &self,
         block_number: u32,
         quorum_numbers: Bytes,
-    ) -> impl Future<Output = Result<Vec<Vec<OperatorStateRetriever::Operator>>, AvsRegistryError>>;
-    //           + Send
-    //           + Sync;
+    ) -> Result<Vec<Vec<OperatorStateRetriever::Operator>>, AvsRegistryError>;
 
     /// Gets check signature indices
-    fn get_check_signatures_indices(
+    async fn get_check_signatures_indices(
         &self,
         reference_block_number: u32,
         quorum_numbers: Vec<u8>,
         non_signer_operator_ids: Vec<FixedBytes<32>>,
-    ) -> impl Future<Output = Result<OperatorStateRetriever::CheckSignaturesIndices, AvsRegistryError>>
-           + Send;
+    ) -> Result<OperatorStateRetriever::CheckSignaturesIndices, AvsRegistryError>;
 
     /// Gets operator from id
-    fn get_operator_from_id(
+    async fn get_operator_from_id(
         &self,
         operator_id: [u8; 32],
-    ) -> impl Future<Output = Result<Address, AvsRegistryError>> + Send;
+    ) -> Result<Address, AvsRegistryError>;
 }
 
+#[async_trait]
 impl AvsRegistryReader for AvsRegistryChainReader {
     /// Get operators stake in quorums at a particular block
     async fn get_operators_stake_in_quorums_at_block(
