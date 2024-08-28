@@ -331,14 +331,12 @@ mod tests {
     use super::AvsRegistryChainWriter;
     use alloy_node_bindings::Anvil;
     use alloy_primitives::{Address, Bytes, FixedBytes, U256};
-    use alloy_provider::Provider;
     use eigen_crypto_bls::BlsKeyPair;
     use eigen_logging::get_test_logger;
     use eigen_testing_utils::anvil_constants::{
-        get_operator_state_retriever_address, get_registry_coordinator_address, ANVIL_RPC_URL,
+        get_operator_state_retriever_address, get_registry_coordinator_address,
+        get_transaction_status,
     };
-    use std::time::Duration;
-    use tokio::time::sleep;
 
     const ANVIL_HTTP_URL: &str = "http://localhost:8545";
 
@@ -355,27 +353,6 @@ mod tests {
         )
         .await
         .unwrap()
-    }
-
-    /// Retrieves the status of a transaction from its hash.
-    ///
-    /// # Arguments
-    ///
-    /// `tx_hash` - The hash of the transaction.
-    ///
-    /// # Returns
-    ///
-    /// A bool indicating wether the transaction was successful or not.
-    async fn get_transaction_status(tx_hash: FixedBytes<32>) -> bool {
-        // this sleep is needed so that we wait for the tx to be processed
-        sleep(Duration::from_millis(500)).await;
-        ANVIL_RPC_URL
-            .clone()
-            .get_transaction_receipt(tx_hash)
-            .await
-            .unwrap()
-            .unwrap()
-            .status()
     }
 
     #[tokio::test]

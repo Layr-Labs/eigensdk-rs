@@ -2308,6 +2308,7 @@ dependencies = [
  "alloy-transport-http",
  "eigen-utils",
  "once_cell",
+ "tokio",
 ]
 
 [[package]]
