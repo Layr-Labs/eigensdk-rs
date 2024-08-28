@@ -17,5 +17,5 @@ rust-bls-bn254.workspace = true
 
 
 [dev-dependencies]
-tokio = { workspace = true, features = ["full"] }
 rand = "0.8.4"
+tokio = { workspace = true, features = ["full"] }

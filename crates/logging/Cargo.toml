@@ -8,5 +8,5 @@ repository.workspace = true
 [dependencies]
 ctor = "0.2.8"
 once_cell.workspace = true
-tracing-subscriber.workspace = true
 tracing.workspace = true
+tracing-subscriber.workspace = true
