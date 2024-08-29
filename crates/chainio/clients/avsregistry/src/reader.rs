@@ -9,7 +9,7 @@ use eigen_crypto_bls::{
     BlsG2Point,
 };
 use eigen_logging::get_logger;
-use eigen_logging::{logger::SharedLogger, tracing_logger::TracingLogger};
+use eigen_logging::logger::SharedLogger;
 use eigen_types::operator::{bitmap_to_quorum_ids, OperatorPubKeys};
 use eigen_utils::{
     binding::{BLSApkRegistry, OperatorStateRetriever, RegistryCoordinator, StakeRegistry},
@@ -18,7 +18,6 @@ use eigen_utils::{
 use num_bigint::BigInt;
 use std::collections::HashMap;
 use std::fmt::Debug;
-use std::sync::Arc;
 
 /// Avs Registry chainreader
 #[derive(Debug, Clone)]

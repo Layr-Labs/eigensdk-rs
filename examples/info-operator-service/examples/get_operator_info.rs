@@ -2,6 +2,7 @@ use alloy_primitives::{address, Bytes, FixedBytes};
 use alloy_primitives::{Address, U256};
 use alloy_signer_local::PrivateKeySigner;
 use eigen_client_avsregistry::{reader::AvsRegistryChainReader, writer::AvsRegistryChainWriter};
+use eigen_services_operatorsinfo::operator_info::OperatorInfoService;
 use eigen_services_operatorsinfo::operatorsinfo_inmemory::OperatorInfoServiceInMemory;
 use eigen_testing_utils::anvil_constants::{
     get_avs_directory_address, get_delegation_manager_address,
@@ -62,8 +63,7 @@ async fn main() {
     // query any operator info from their address
     let res = operators_info
         .get_operator_info(address!("f39fd6e51aad88f6f4ce6ab8827279cfffb92266"))
-        .await
-        .unwrap();
+        .await;
     println!("public key for operator is  : {:?}", res.unwrap());
 }
 
@@ -80,7 +80,7 @@ pub async fn register_operator(pvt_key: &str, bls_key: &str) {
         avs_directory_address,
         anvil_http_url.to_string(),
     );
-    let signer = PrivateKeySigner::from_str(&pvt_key.to_string()).unwrap();
+    let signer = PrivateKeySigner::from_str(pvt_key).unwrap();
 
     let el_chain_writer = ELChainWriter::new(
         delegation_manager_address,

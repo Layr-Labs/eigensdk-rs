@@ -25,6 +25,7 @@ impl<R: AvsRegistryReader, S: OperatorInfoService> AvsRegistryServiceChainCaller
     /// * `operators_info_service` - The operator info service
     pub fn new(avs_registry: R, operators_info_service: S) -> Self {
         Self {
+            avs_registry,
             operators_info_service,
         }
     }
@@ -42,8 +43,7 @@ impl<R: AvsRegistryReader + Sync, S: OperatorInfoService + Sync> AvsRegistryServ
         let mut operators_avs_state: HashMap<FixedBytes<32>, OperatorAvsState> = HashMap::new();
 
         let operators_stakes_in_quorums = self
-            .operators_info_service
-            .avs_registry_reader
+            .avs_registry
             .get_operators_stake_in_quorums_at_block(block_num, Bytes::from(Vec::from(quorum_nums)))
             .await?;
 
@@ -121,8 +121,7 @@ impl<R: AvsRegistryReader + Sync, S: OperatorInfoService + Sync> AvsRegistryServ
         quorum_numbers: Vec<u8>,
         non_signer_operator_ids: Vec<FixedBytes<32>>,
     ) -> Result<CheckSignaturesIndices, AvsRegistryError> {
-        self.operators_info_service
-            .avs_registry_reader
+        self.avs_registry
             .get_check_signatures_indices(
                 reference_block_number,
                 quorum_numbers,
@@ -142,6 +141,7 @@ impl<R: AvsRegistryReader, S: OperatorInfoService> AvsRegistryServiceChainCaller
         self.operators_info_service
             .get_operator_info(operator_addr)
             .await
+            .unwrap_or(None)
             .ok_or(AvsRegistryError::GetOperatorInfo)
     }
 }
@@ -156,10 +156,8 @@ mod tests {
     use super::AvsRegistryServiceChainCaller;
     use alloy_primitives::{Address, FixedBytes, U256};
     use eigen_client_avsregistry::fake_reader::FakeAvsRegistryReader;
-    use eigen_client_avsregistry::reader::AvsRegistryReader;
     use eigen_crypto_bls::BlsKeyPair;
     use eigen_services_operatorsinfo::fake_operator_info::FakeOperatorInfoService;
-    use eigen_services_operatorsinfo::operator_info::OperatorInfoService;
     use eigen_types::operator::{OperatorAvsState, OperatorInfo, OperatorPubKeys, QuorumAvsState};
     use eigen_types::test::TestOperator;
 
@@ -178,7 +176,7 @@ mod tests {
         }
     }
 
-    fn build_avs_registry_service_chaincaller<R: AvsRegistryReader, S: OperatorInfoService>(
+    fn build_avs_registry_service_chaincaller(
         test_operator: TestOperator,
     ) -> AvsRegistryServiceChainCaller<FakeAvsRegistryReader, FakeOperatorInfoService> {
         let operator_address = Address::from_str(OPERATOR_ADDRESS).unwrap();
@@ -192,10 +190,7 @@ mod tests {
         let test_operator = build_test_operator();
         let bls_keypair = test_operator.bls_keypair.clone();
 
-        let service = build_avs_registry_service_chaincaller::<
-            FakeAvsRegistryReader,
-            FakeOperatorInfoService,
-        >(test_operator.clone());
+        let service = build_avs_registry_service_chaincaller(test_operator.clone());
         let operator_info = service
             .get_operator_info(test_operator.operator_id.into())
             .await
@@ -207,10 +202,7 @@ mod tests {
     #[tokio::test]
     async fn test_get_operator_avs_state() {
         let test_operator = build_test_operator();
-        let service = build_avs_registry_service_chaincaller::<
-            FakeAvsRegistryReader,
-            FakeOperatorInfoService,
-        >(test_operator.clone());
+        let service = build_avs_registry_service_chaincaller(test_operator.clone());
 
         let operator_avs_state = service
             .get_operators_avs_state_at_block(1, &[1u8])
@@ -234,10 +226,7 @@ mod tests {
         let test_operator = build_test_operator();
         let quorum_num = 1;
         let block_num = 1u32;
-        let service = build_avs_registry_service_chaincaller::<
-            FakeAvsRegistryReader,
-            FakeOperatorInfoService,
-        >(test_operator.clone());
+        let service = build_avs_registry_service_chaincaller(test_operator.clone());
         let quorum_state_per_number = service
             .get_quorums_avs_state_at_block(&[quorum_num], 1)
             .await

@@ -68,12 +68,19 @@ enum OperatorsInfoMessage {
 
 #[async_trait]
 impl OperatorInfoService for OperatorInfoServiceInMemory {
-    async fn get_operator_info(&self, address: Address) -> Option<OperatorPubKeys> {
+    async fn get_operator_info(
+        &self,
+        address: Address,
+    ) -> Result<Option<OperatorPubKeys>, OperatorInfoServiceError> {
         let (responder_tx, responder_rx) = oneshot::channel();
+
         let _ = self
             .pub_keys
-            .send(OperatorsInfoMessage::Get(address, responder_tx));
-        responder_rx.await.unwrap_or(None)
+            .send(OperatorsInfoMessage::Get(address, responder_tx))
+            .map_err(|_| OperatorInfoServiceError::ChannelClosed)?;
+        responder_rx
+            .await
+            .map_err(|_| OperatorInfoServiceError::ChannelClosed)?
     }
 }
 
@@ -109,7 +116,7 @@ impl OperatorInfoServiceInMemory {
                         OperatorsInfoMessage::Get(addr, responder) => {
                             let data = operator_state.operator_info_data.read().await;
                             let result = data.get(&addr).cloned();
-                            let _ = responder.send(Ok(result)).expect("Failed to send response");
+                            responder.send(Ok(result)).expect("Failed to send response");
                         }
                     }
                 }
@@ -238,29 +245,19 @@ impl OperatorInfoServiceInMemory {
 mod tests {
 
     use super::*;
-    use alloy_primitives::hex::{self, FromHex};
-    use alloy_primitives::{address, Bytes, TxHash, B256, U256};
-    use alloy_rpc_types::{BlockHashOrNumber, BlockNumberOrTag, Topic};
+    use alloy_primitives::{address, Bytes, U256};
     use alloy_signer_local::PrivateKeySigner;
-    use alloy_sol_types::SolEvent;
-    use ark_bn254::Fr;
-    use ark_std::{rand, UniformRand};
     use eigen_client_avsregistry::writer::AvsRegistryChainWriter;
     use eigen_client_elcontracts::{reader::ELChainReader, writer::ELChainWriter};
-    use eigen_crypto_bls::{convert_to_g1_point, BlsKeyPair};
+    use eigen_crypto_bls::BlsKeyPair;
     use eigen_logging::get_test_logger;
     use eigen_testing_utils::anvil_constants::{
         get_avs_directory_address, get_delegation_manager_address,
         get_operator_state_retriever_address, get_registry_coordinator_address,
         get_strategy_manager_address,
     };
-    use eigen_testing_utils::m2_holesky_constants::{
-        OPERATOR_STATE_RETRIEVER, REGISTRY_COORDINATOR,
-    };
     use eigen_types::operator::Operator;
     use eigen_utils::get_provider;
-    use rand::rngs::OsRng;
-    use std::io::Read;
     use std::str::FromStr;
     use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
@@ -269,8 +266,6 @@ mod tests {
         let anvil_ws_url = "ws://localhost:8545";
         let anvil_http_url = "http://localhost:8545";
         let test_logger = get_test_logger();
-        let mut rng = OsRng;
-        let sk = Fr::rand(&mut rng);
         register_operator(
             "0x7c852118294e51e653712a81e05800f419141751be58f605c371e15141b007a6",
             "202646553755999769005569871314544341631930435075911377994162443131009480062",
@@ -296,7 +291,7 @@ mod tests {
         let _ = operators_info_service_in_memory
             .query_past_registered_operator_events_and_fill_db(
                 0,
-                get_provider(&anvil_http_url)
+                get_provider(anvil_http_url)
                     .get_block_number()
                     .await
                     .unwrap(),
@@ -333,12 +328,12 @@ mod tests {
 
         let token = tokio_util::sync::CancellationToken::new().clone();
         let cancel_token = token.clone();
-        let _ = tokio::spawn(async move {
+        tokio::spawn(async move {
             let _ = clone_operators_info
                 .start_service(
                     &token,
                     0,
-                    get_provider(&anvil_http_url)
+                    get_provider(anvil_http_url)
                         .get_block_number()
                         .await
                         .unwrap(),
@@ -352,7 +347,7 @@ mod tests {
         .await;
         tokio::time::sleep(Duration::from_secs(1)).await; // need to wait atleast 1 second to get the event processed
 
-        let _ = cancel_token.clone().cancel();
+        cancel_token.clone().cancel();
 
         let address = address!("f39fd6e51aad88f6f4ce6ab8827279cfffb92266");
         let operator_info = operators_info_service_in_memory
@@ -384,12 +379,12 @@ mod tests {
 
         let token = tokio_util::sync::CancellationToken::new().clone();
         let cancel_token = token.clone();
-        let _ = tokio::spawn(async move {
+        tokio::spawn(async move {
             let _ = clone_operators_info
                 .start_service(
                     &token,
                     0,
-                    get_provider(&anvil_http_url)
+                    get_provider(anvil_http_url)
                         .get_block_number()
                         .await
                         .unwrap(),
@@ -408,7 +403,7 @@ mod tests {
         .await;
         tokio::time::sleep(Duration::from_secs(1)).await; // need to wait atleast 1 second to get the event processed
 
-        let _ = cancel_token.clone().cancel();
+        cancel_token.clone().cancel();
 
         let address = address!("70997970c51812dc3a010c7d01b50e0d17dc79c8");
         let operator_info = operators_info_service_in_memory
@@ -436,7 +431,7 @@ mod tests {
             avs_directory_address,
             anvil_http_url.to_string(),
         );
-        let signer = PrivateKeySigner::from_str(&pvt_key.to_string()).unwrap();
+        let signer = PrivateKeySigner::from_str(pvt_key).unwrap();
 
         let el_chain_writer = ELChainWriter::new(
             delegation_manager_address,
@@ -454,7 +449,7 @@ mod tests {
             Some("eigensdk-rs".to_string()),
         );
 
-        let hash = el_chain_writer
+        el_chain_writer
             .register_as_operator(operator_details)
             .await
             .unwrap();
@@ -490,7 +485,7 @@ mod tests {
         let quorum_numbers = Bytes::from_str("0x00").unwrap();
         let socket = "socket";
 
-        let hash = avs_registry_writer
+        let _ = avs_registry_writer
             .register_operator_in_quorum_with_avs_registry_coordinator(
                 bls_key_pair,
                 salt,

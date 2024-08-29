@@ -295,7 +295,7 @@ impl ELChainReader {
 
 #[cfg(test)]
 mod tests {
-    use super::ELChainReader;
+    use super::*;
     use alloy_eips::eip1898::BlockNumberOrTag::Number;
     use alloy_primitives::{address, keccak256, Address, FixedBytes, U256};
     use alloy_provider::Provider;
