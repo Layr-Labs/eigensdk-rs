@@ -2147,10 +2147,13 @@ dependencies = [
  "ark-bn254",
  "ark-ec",
  "ark-ff 0.4.2",
+ "ark-serialize 0.4.2",
  "ark-std 0.4.0",
  "eigen-crypto-bn254",
  "eigen-utils",
  "rand",
+ "serde",
+ "serde_json",
  "thiserror",
  "tokio",
 ]
@@ -2269,16 +2272,23 @@ dependencies = [
  "alloy-primitives",
  "alloy-provider",
  "alloy-rpc-types",
+ "alloy-signer-local",
  "anyhow",
+ "ark-bn254",
+ "ark-ff 0.4.2",
+ "ark-std 0.4.0",
  "async-trait",
  "eigen-client-avsregistry",
+ "eigen-client-elcontracts",
  "eigen-crypto-bls",
  "eigen-logging",
  "eigen-testing-utils",
  "eigen-types",
  "eigen-utils",
  "futures-util",
+ "thiserror",
  "tokio",
+ "tokio-util",
 ]
 
 [[package]]
@@ -3647,10 +3657,17 @@ name = "info-operator-service"
 version = "0.0.1-alpha"
 dependencies = [
  "alloy-primitives",
+ "alloy-provider",
+ "alloy-signer-local",
  "eigen-client-avsregistry",
+ "eigen-client-elcontracts",
+ "eigen-crypto-bls",
  "eigen-logging",
  "eigen-services-operatorsinfo",
+ "eigen-testing-utils",
+ "eigen-utils",
  "tokio",
+ "tokio-util",
  "tracing",
 ]
 

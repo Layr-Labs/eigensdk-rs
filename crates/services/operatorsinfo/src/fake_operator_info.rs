@@ -3,7 +3,7 @@ use async_trait::async_trait;
 use eigen_crypto_bls::BlsKeyPair;
 use eigen_types::operator::{OperatorInfo, OperatorPubKeys};
 
-use crate::operator_info::OperatorInfoService;
+use crate::{operator_info::OperatorInfoService, operatorsinfo_inmemory::OperatorInfoServiceError};
 
 pub struct FakeOperatorInfoService {
     pub pubkeys: OperatorInfo,
@@ -21,7 +21,10 @@ impl FakeOperatorInfoService {
 
 #[async_trait]
 impl OperatorInfoService for FakeOperatorInfoService {
-    async fn get_operator_info(&self, _address: Address) -> Option<OperatorPubKeys> {
-        self.pubkeys.pub_keys.clone()
+    async fn get_operator_info(
+        &self,
+        _address: Address,
+    ) -> Result<Option<OperatorPubKeys>, OperatorInfoServiceError> {
+        Ok(self.pubkeys.pub_keys.clone())
     }
 }
