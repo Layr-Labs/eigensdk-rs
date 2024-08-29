@@ -12,9 +12,9 @@ repository.workspace = true
 workspace = true
 
 [dependencies]
+alloy-network.workspace = true
 alloy-primitives.workspace = true
 alloy-provider.workspace = true
 alloy-transport-http.workspace = true
-alloy-network.workspace = true
 eigen-utils.workspace = true
 once_cell.workspace = true

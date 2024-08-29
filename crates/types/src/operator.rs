@@ -23,7 +23,7 @@ pub fn bitmap_to_quorum_ids(quorum_bitmaps: U256) -> Vec<u8> {
     quorum_ids
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct OperatorPubKeys {
     pub g1_pub_key: BlsG1Point,
     pub g2_pub_key: BlsG2Point,
@@ -108,12 +108,12 @@ pub type Socket = String;
 
 pub type QuorumNum = u8;
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub struct OperatorInfo {
     pub pub_keys: Option<OperatorPubKeys>,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub struct OperatorAvsState {
     pub operator_id: [u8; 32],
     pub operator_info: OperatorInfo,
@@ -128,7 +128,7 @@ pub fn operator_id_from_g1_pub_key(pub_key: BlsG1Point) -> Result<[u8; 32], Seri
     Ok(keccak256(bytes))
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Eq)]
 pub struct QuorumAvsState {
     pub quorum_num: u8,
     pub total_stake: U256,

@@ -2,6 +2,7 @@ use alloy_primitives::{Address, FixedBytes};
 use alloy_provider::Provider;
 use alloy_rpc_types::Filter;
 use anyhow::Result;
+use async_trait::async_trait;
 use eigen_client_avsregistry::reader::AvsRegistryChainReader;
 use eigen_crypto_bls::{
     alloy_registry_g1_point_to_g1_affine, alloy_registry_g2_point_to_g2_affine, BlsG1Point,
@@ -22,6 +23,10 @@ use tokio::sync::{
     RwLock,
 };
 use tokio_util::sync::CancellationToken;
+
+use crate::operator_info::OperatorInfoService;
+
+#[allow(dead_code)]
 #[derive(Debug, Clone)]
 pub struct OperatorInfoServiceInMemory {
     logger: SharedLogger,
@@ -59,6 +64,17 @@ enum OperatorsInfoMessage {
         Address,
         Sender<Result<Option<OperatorPubKeys>, OperatorInfoServiceError>>,
     ),
+}
+
+#[async_trait]
+impl OperatorInfoService for OperatorInfoServiceInMemory {
+    async fn get_operator_info(&self, address: Address) -> Option<OperatorPubKeys> {
+        let (responder_tx, responder_rx) = oneshot::channel();
+        let _ = self
+            .pub_keys
+            .send(OperatorsInfoMessage::Get(address, responder_tx));
+        responder_rx.await.unwrap_or(None)
+    }
 }
 
 impl OperatorInfoServiceInMemory {
@@ -188,22 +204,6 @@ impl OperatorInfoServiceInMemory {
         }
 
         Ok(())
-    }
-
-    pub async fn get_operator_info(
-        &self,
-        address: Address,
-    ) -> Result<Option<OperatorPubKeys>, OperatorInfoServiceError> {
-        let (responder_tx, responder_rx) = oneshot::channel();
-
-        let _ = self
-            .pub_keys
-            .send(OperatorsInfoMessage::Get(address, responder_tx))
-            .map_err(|_| OperatorInfoServiceError::ChannelClosed)?;
-        let s = responder_rx
-            .await
-            .map_err(|_| OperatorInfoServiceError::ChannelClosed)?;
-        s
     }
 
     pub async fn query_past_registered_operator_events_and_fill_db(

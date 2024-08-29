@@ -2043,6 +2043,7 @@ dependencies = [
  "alloy-signer-local",
  "alloy-transport-http",
  "ark-ff 0.4.2",
+ "async-trait",
  "eigen-client-elcontracts",
  "eigen-crypto-bls",
  "eigen-logging",
@@ -2071,6 +2072,7 @@ dependencies = [
  "eigen-types",
  "eigen-utils",
  "once_cell",
+ "serial_test",
  "thiserror",
  "tokio",
  "tracing",
@@ -2231,11 +2233,14 @@ dependencies = [
  "alloy-primitives",
  "ark-bn254",
  "ark-ec",
+ "async-trait",
  "eigen-client-avsregistry",
  "eigen-crypto-bls",
  "eigen-services-operatorsinfo",
  "eigen-types",
  "eigen-utils",
+ "hex",
+ "tokio",
 ]
 
 [[package]]
@@ -2271,6 +2276,7 @@ dependencies = [
  "ark-bn254",
  "ark-ff 0.4.2",
  "ark-std 0.4.0",
+ "async-trait",
  "eigen-client-avsregistry",
  "eigen-client-elcontracts",
  "eigen-crypto-bls",
