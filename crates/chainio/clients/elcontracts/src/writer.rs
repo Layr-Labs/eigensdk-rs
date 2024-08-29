@@ -65,7 +65,7 @@ impl ELChainWriter {
         let binding_tx = binding
             .send()
             .await
-            .map_err(|e| ElContractsError::AlloyContractError(e))?;
+            .map_err(ElContractsError::AlloyContractError)?;
 
         let receipt = binding_tx.get_receipt().await.map_err(|e| {
             ElContractsError::AlloyContractError(alloy_contract::Error::TransportError(e))
@@ -104,7 +104,7 @@ impl ELChainWriter {
         let modify_operator_tx = contract_call_modify_operator_details
             .send()
             .await
-            .map_err(|e| ElContractsError::AlloyContractError(e))?;
+            .map_err(ElContractsError::AlloyContractError)?;
 
         info!(tx_hash = %modify_operator_tx.tx_hash(), operator = %operator.has_address(), "updated operator details tx");
 
@@ -174,13 +174,13 @@ mod tests {
     use eigen_logging::get_test_logger;
     use eigen_testing_utils::anvil_constants::{
         self, get_delegation_manager_address, get_erc20_mock_strategy, get_service_manager_address,
-        get_strategy_manager_address,
+        get_strategy_manager_address, ANVIL_HTTP_URL,
     };
     use eigen_types::operator::Operator;
-    use eigen_utils::binding::DelegationManager;
     use eigen_utils::binding::{
         mockAvsServiceManager,
         ContractsRegistry::{self, get_test_valuesReturn},
+        DelegationManager,
     };
     use std::str::FromStr;
 
@@ -221,7 +221,7 @@ mod tests {
                 slasher_address,
                 delegation_manager_address,
                 avs_directory_address,
-                "http://localhost:8545".to_string(),
+                ANVIL_HTTP_URL.to_string(),
             ),
             delegation_manager_address,
         )
