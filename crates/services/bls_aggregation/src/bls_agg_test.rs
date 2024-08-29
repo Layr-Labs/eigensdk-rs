@@ -31,12 +31,13 @@ pub mod integration_test {
         thread::sleep,
         time::Duration,
     };
-    use tokio::sync::watch;
+    use tokio::task;
+    use tokio_util::sync::CancellationToken;
 
     const PRIVATE_KEY_1: &str = "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80"; // the owner addr
     const PRIVATE_KEY_2: &str = "59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d";
     const BLS_KEY_1: &str =
-        "13710126902690889134622698668747132666439281256983827313388062967626731803599";
+        "1371012690269088913462269866874713266643928125698382731338806296762673180359922";
     const BLS_KEY_2: &str =
         "14610126902690889134622698668747132666439281256983827313388062967626731803500";
 
@@ -161,11 +162,10 @@ pub mod integration_test {
         )
         .await;
 
-        let (shutdown_tx, shutdown_rx) = watch::channel(());
-        operators_info
-            .start_service(0, 0, shutdown_rx)
-            .await
-            .unwrap();
+        let cancellation_token = CancellationToken::new();
+        let operators_info_clone = operators_info.clone();
+        let token_clone = cancellation_token.clone();
+        task::spawn(async move { operators_info_clone.start_service(&token_clone, 0, 0).await });
 
         let avs_registry_service =
             AvsRegistryServiceChainCaller::new(avs_registry_reader.clone(), operators_info);
@@ -210,7 +210,7 @@ pub mod integration_test {
             .unwrap();
 
         // Send the shutdown signal to the OperatorInfoServiceInMemory
-        let _ = shutdown_tx.send(());
+        cancellation_token.cancel();
 
         // Check the response
         let service_manager = IBLSSignatureChecker::new(service_manager_address, provider);
@@ -330,11 +330,10 @@ pub mod integration_test {
         )
         .await;
 
-        let (shutdown_tx, shutdown_rx) = watch::channel(());
-        operators_info
-            .start_service(0, 0, shutdown_rx)
-            .await
-            .unwrap();
+        let cancellation_token = CancellationToken::new();
+        let operators_info_clone = operators_info.clone();
+        let token_clone = cancellation_token.clone();
+        task::spawn(async move { operators_info_clone.start_service(&token_clone, 0, 0).await });
 
         let avs_registry_service =
             AvsRegistryServiceChainCaller::new(avs_registry_reader.clone(), operators_info);
@@ -398,7 +397,7 @@ pub mod integration_test {
             .unwrap();
 
         // Send the shutdown signal to the OperatorInfoServiceInMemory
-        let _ = shutdown_tx.send(());
+        cancellation_token.cancel();
 
         // Check the response
         let service_manager = IBLSSignatureChecker::new(service_manager_address, provider);
@@ -531,11 +530,10 @@ pub mod integration_test {
         )
         .await;
 
-        let (shutdown_tx, shutdown_rx) = watch::channel(());
-        operators_info
-            .start_service(0, 0, shutdown_rx)
-            .await
-            .unwrap();
+        let cancellation_token = CancellationToken::new();
+        let operators_info_clone = operators_info.clone();
+        let token_clone = cancellation_token.clone();
+        task::spawn(async move { operators_info_clone.start_service(&token_clone, 0, 0).await });
 
         let avs_registry_service =
             AvsRegistryServiceChainCaller::new(avs_registry_reader.clone(), operators_info);
@@ -599,7 +597,7 @@ pub mod integration_test {
             .unwrap();
 
         // Send the shutdown signal to the OperatorInfoServiceInMemory
-        let _ = shutdown_tx.send(());
+        cancellation_token.cancel();
 
         // Check the response
         let service_manager = IBLSSignatureChecker::new(service_manager_address, provider);
@@ -729,11 +727,10 @@ pub mod integration_test {
         )
         .await;
 
-        let (shutdown_tx, shutdown_rx) = watch::channel(());
-        operators_info
-            .start_service(0, 0, shutdown_rx)
-            .await
-            .unwrap();
+        let cancellation_token = CancellationToken::new();
+        let operators_info_clone = operators_info.clone();
+        let token_clone = cancellation_token.clone();
+        task::spawn(async move { operators_info_clone.start_service(&token_clone, 0, 0).await });
 
         let avs_registry_service =
             AvsRegistryServiceChainCaller::new(avs_registry_reader.clone(), operators_info);
@@ -797,7 +794,7 @@ pub mod integration_test {
             .unwrap();
 
         // Send the shutdown signal to the OperatorInfoServiceInMemory
-        let _ = shutdown_tx.send(());
+        cancellation_token.cancel();
 
         // Check the response
         let service_manager = IBLSSignatureChecker::new(service_manager_address, provider);
@@ -900,11 +897,10 @@ pub mod integration_test {
         )
         .await;
 
-        let (shutdown_tx, shutdown_rx) = watch::channel(());
-        operators_info
-            .start_service(0, 0, shutdown_rx)
-            .await
-            .unwrap();
+        let cancellation_token = CancellationToken::new();
+        let operators_info_clone = operators_info.clone();
+        let token_clone = cancellation_token.clone();
+        task::spawn(async move { operators_info_clone.start_service(&token_clone, 0, 0).await });
 
         let avs_registry_service =
             AvsRegistryServiceChainCaller::new(avs_registry_reader.clone(), operators_info);
@@ -957,7 +953,7 @@ pub mod integration_test {
             .unwrap();
 
         // Send the shutdown signal to the OperatorInfoServiceInMemory
-        let _ = shutdown_tx.send(());
+        cancellation_token.cancel();
 
         // Check the response
         let service_manager = IBLSSignatureChecker::new(service_manager_address, provider);

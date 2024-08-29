@@ -288,7 +288,6 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
             .get_quorums_avs_state_at_block(&quorum_nums, task_created_block)
             .await
             .map_err(|_| BlsAggregationServiceError::RegistryError)?;
-
         let total_stake_per_quorum: HashMap<_, _> = quorums_avs_state
             .iter()
             .map(|(k, v)| (*k, v.total_stake))

@@ -110,6 +110,21 @@ pub async fn get_strategy_manager_address() -> Address {
     address
 }
 
+/// Avs Directory contract address
+pub async fn get_avs_directory_address() -> Address {
+    let contracts_registry = ContractsRegistry::new(CONTRACTS_REGISTRY, (*ANVIL_RPC_URL).clone());
+
+    let val = contracts_registry
+        .contracts("avsDirectory".to_string())
+        .call()
+        .await
+        .unwrap();
+
+    let contractsReturn { _0: address } = val;
+
+    address
+}
+
 /// erc20 mock strategy contract address
 pub async fn get_erc20_mock_strategy() -> Address {
     let contracts_registry = ContractsRegistry::new(CONTRACTS_REGISTRY, (*ANVIL_RPC_URL).clone());

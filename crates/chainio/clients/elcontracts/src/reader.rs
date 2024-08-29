@@ -13,7 +13,7 @@ pub struct ELChainReader {
     slasher: Address,
     delegation_manager: Address,
     avs_directory: Address,
-    provider: String,
+    pub provider: String,
 }
 
 impl ELChainReader {
@@ -219,7 +219,6 @@ impl ELChainReader {
         let contract_strategy = IStrategy::new(strategy_addr, &provider);
 
         let underlying_token_result = contract_strategy.underlyingToken().call().await;
-
         match underlying_token_result {
             Ok(underlying_token) => {
                 let IStrategy::underlyingTokenReturn {
@@ -296,7 +295,7 @@ impl ELChainReader {
 
 #[cfg(test)]
 mod tests {
-    use super::ELChainReader;
+    use super::*;
     use alloy_eips::eip1898::BlockNumberOrTag::Number;
     use alloy_primitives::{address, keccak256, Address, FixedBytes, U256};
     use alloy_provider::Provider;
@@ -323,7 +322,7 @@ mod tests {
         let service_manager_address = anvil_constants::get_service_manager_address().await;
         let service_manager_contract = mockAvsServiceManager::new(
             service_manager_address,
-            anvil_constants::ANVIL_RPC_URL.clone(),
+            get_provider(&"http://localhost:8545"),
         );
         let avs_directory_address_return = service_manager_contract
             .avsDirectory()
@@ -346,8 +345,6 @@ mod tests {
     #[tokio::test]
     #[serial]
     async fn test_calculate_delegation_approval_digest_hash() {
-        // Introduce a 2-second delay
-        sleep(Duration::from_secs(2)).await;
         let el_chain_reader = build_el_chain_reader().await;
         let operator: Address = address!("5eb15C0992734B5e77c888D713b4FC67b3D679A2");
 

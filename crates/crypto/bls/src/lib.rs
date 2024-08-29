@@ -9,9 +9,10 @@ use ark_std::str::FromStr;
 pub mod error;
 
 use crate::error::BlsError;
-use ark_bn254::{Fq, Fr, G1Affine, G1Projective, G2Affine, G2Projective};
+use ark_bn254::{g1::G1Affine, Fq, Fr, G1Projective, G2Affine, G2Projective};
 use ark_ec::{AffineRepr, CurveGroup};
 use ark_ff::{fields::PrimeField, BigInt, BigInteger256, Fp2};
+use ark_serialize::{CanonicalDeserialize, CanonicalSerialize};
 use eigen_crypto_bn254::utils::map_to_curve;
 use eigen_utils::binding::IBLSSignatureChecker::{
     G1Point as G1PointChecker, G2Point as G2PointChecker,
@@ -20,6 +21,8 @@ use eigen_utils::binding::{
     BLSApkRegistry,
     RegistryCoordinator::{self},
 };
+use serde::de::{self, Visitor};
+use serde::{Deserialize, Serialize};
 use BLSApkRegistry::{G1Point as G1PointRegistry, G2Point as G2PointRegistry};
 use RegistryCoordinator::{G1Point, G2Point};
 pub type PrivateKey = Fr;
@@ -30,6 +33,50 @@ pub type OperatorId = B256;
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BlsG1Point {
     g1: G1Affine,
+}
+
+impl Serialize for BlsG1Point {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        let mut buffer = Vec::new();
+        self.g1().serialize_uncompressed(&mut buffer).unwrap();
+        serializer.serialize_bytes(&buffer)
+    }
+}
+
+impl<'de> Deserialize<'de> for BlsG1Point {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        struct BlsG1PointVisitor;
+
+        impl<'de> Visitor<'de> for BlsG1PointVisitor {
+            type Value = BlsG1Point;
+
+            fn expecting(&self, formatter: &mut ark_std::fmt::Formatter) -> std::fmt::Result {
+                formatter.write_str("a byte array representing a G1Affine point")
+            }
+
+            fn visit_seq<A>(self, mut seq: A) -> Result<Self::Value, A::Error>
+            where
+                A: serde::de::SeqAccess<'de>,
+            {
+                let mut buffer = Vec::new();
+
+                while let Some(value) = seq.next_element()? {
+                    buffer.push(value);
+                }
+
+                let g1 = G1Affine::deserialize_uncompressed(&*buffer).map_err(de::Error::custom)?;
+                Ok(BlsG1Point { g1 })
+            }
+        }
+
+        deserializer.deserialize_seq(BlsG1PointVisitor)
+    }
 }
 
 impl BlsG1Point {
@@ -266,7 +313,7 @@ pub fn convert_to_registry_g2_point(g2: G2Affine) -> Result<G2PointRegistry, Bls
 }
 
 /// Signature instance on [`G1Affine`]
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Signature {
     g1_point: BlsG1Point,
 }
@@ -547,5 +594,26 @@ mod tests {
         };
 
         assert_eq!(g2_affine, expected_g2_affine);
+    }
+
+    #[test]
+    fn test_serialize_deserialize_bls_g1_point() {
+        let bls_priv_key =
+            "12248929636257230549931416853095037629726205319386239410403476017439825112537";
+        let bls_key_pair = BlsKeyPair::new(bls_priv_key.to_string()).unwrap();
+
+        let original_point = bls_key_pair.public_key();
+        // Serialize the BlsG1Point to a JSON string
+        let serialized = serde_json::to_string(&original_point).expect("Failed to serialize");
+
+        // Deserialize the JSON string back to a BlsG1Point
+        let deserialized: BlsG1Point =
+            serde_json::from_str(&serialized).expect("Failed to deserialize");
+
+        // Check that the deserialized point matches the original
+        assert_eq!(
+            original_point, deserialized,
+            "The deserialized point does not match the original"
+        );
     }
 }

@@ -22,7 +22,6 @@ impl<R: AvsRegistryReader, S: OperatorInfoService> AvsRegistryServiceChainCaller
     ///
     /// # Arguments
     ///
-    /// * `avs_registry` - The AVS registry chain reader
     /// * `operators_info_service` - The operator info service
     pub fn new(avs_registry: R, operators_info_service: S) -> Self {
         Self {
@@ -84,7 +83,6 @@ impl<R: AvsRegistryReader + Sync, S: OperatorInfoService + Sync> AvsRegistryServ
         let operators_avs_state = self
             .get_operators_avs_state_at_block(block_num, quorum_nums)
             .await?;
-
         Ok(quorum_nums
             .iter()
             .map(|quorum_num| {
@@ -148,6 +146,7 @@ impl<R: AvsRegistryReader, S: OperatorInfoService> AvsRegistryServiceChainCaller
         self.operators_info_service
             .get_operator_info(operator_addr)
             .await
+            .unwrap_or(None)
             .ok_or(AvsRegistryError::GetOperatorInfo)
     }
 }
@@ -162,10 +161,8 @@ mod tests {
     use super::AvsRegistryServiceChainCaller;
     use alloy_primitives::{Address, FixedBytes, U256};
     use eigen_client_avsregistry::fake_reader::FakeAvsRegistryReader;
-    use eigen_client_avsregistry::reader::AvsRegistryReader;
     use eigen_crypto_bls::BlsKeyPair;
     use eigen_services_operatorsinfo::fake_operator_info::FakeOperatorInfoService;
-    use eigen_services_operatorsinfo::operator_info::OperatorInfoService;
     use eigen_types::operator::{OperatorAvsState, OperatorInfo, OperatorPubKeys, QuorumAvsState};
     use eigen_types::test::TestOperator;
 
@@ -184,7 +181,7 @@ mod tests {
         }
     }
 
-    fn build_avs_registry_service_chaincaller<R: AvsRegistryReader, S: OperatorInfoService>(
+    fn build_avs_registry_service_chaincaller(
         test_operator: TestOperator,
     ) -> AvsRegistryServiceChainCaller<FakeAvsRegistryReader, FakeOperatorInfoService> {
         let operator_address = Address::from_str(OPERATOR_ADDRESS).unwrap();
@@ -198,10 +195,7 @@ mod tests {
         let test_operator = build_test_operator();
         let bls_keypair = test_operator.bls_keypair.clone();
 
-        let service = build_avs_registry_service_chaincaller::<
-            FakeAvsRegistryReader,
-            FakeOperatorInfoService,
-        >(test_operator.clone());
+        let service = build_avs_registry_service_chaincaller(test_operator.clone());
         let operator_info = service
             .get_operator_info(test_operator.operator_id.into())
             .await
@@ -213,10 +207,7 @@ mod tests {
     #[tokio::test]
     async fn test_get_operator_avs_state() {
         let test_operator = build_test_operator();
-        let service = build_avs_registry_service_chaincaller::<
-            FakeAvsRegistryReader,
-            FakeOperatorInfoService,
-        >(test_operator.clone());
+        let service = build_avs_registry_service_chaincaller(test_operator.clone());
 
         let operator_avs_state = service
             .get_operators_avs_state_at_block(1, &[1u8])
@@ -240,10 +231,7 @@ mod tests {
         let test_operator = build_test_operator();
         let quorum_num = 1;
         let block_num = 1u32;
-        let service = build_avs_registry_service_chaincaller::<
-            FakeAvsRegistryReader,
-            FakeOperatorInfoService,
-        >(test_operator.clone());
+        let service = build_avs_registry_service_chaincaller(test_operator.clone());
         let quorum_state_per_number = service
             .get_quorums_avs_state_at_block(&[quorum_num], 1)
             .await

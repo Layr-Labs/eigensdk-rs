@@ -25,3 +25,7 @@ pr: reset-anvil ##
 fireblocks-tests:
 	$(MAKE) start-anvil-chain-with-contracts-deployed > /dev/null &
 	cargo test --workspace --features fireblock-tests
+
+start-anvil: reset-anvil ##
+			 $(MAKE) start-anvil-chain-with-contracts-deployed
+			 docker start anvil
