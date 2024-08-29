@@ -2036,6 +2036,7 @@ version = "0.0.1-alpha"
 dependencies = [
  "alloy-contract",
  "alloy-network",
+ "alloy-node-bindings",
  "alloy-primitives",
  "alloy-provider",
  "alloy-rpc-types",
@@ -2047,6 +2048,7 @@ dependencies = [
  "eigen-client-elcontracts",
  "eigen-crypto-bls",
  "eigen-logging",
+ "eigen-testing-utils",
  "eigen-types",
  "eigen-utils",
  "hex",
@@ -2322,6 +2324,7 @@ dependencies = [
  "alloy-transport-http",
  "eigen-utils",
  "once_cell",
+ "tokio",
 ]
 
 [[package]]

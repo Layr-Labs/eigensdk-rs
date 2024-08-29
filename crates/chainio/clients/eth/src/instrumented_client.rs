@@ -824,13 +824,10 @@ mod tests {
         pubsub::SubscriptionResult, BlockId, BlockNumberOrTag, BlockTransactionsKind,
     };
     use eigen_signer::signer::Config;
-    use eigen_testing_utils::anvil_constants::ANVIL_RPC_URL;
+    use eigen_testing_utils::anvil_constants::{ANVIL_HTTP_URL, ANVIL_RPC_URL, ANVIL_WS_URL};
     use serial_test::serial;
     use std::{thread, time};
     use tokio;
-
-    const ANVIL_HTTP_URL: &str = "http://localhost:8545";
-    const ANVIL_WS_URL: &str = "ws://localhost:8545";
 
     #[tokio::test]
     #[serial]

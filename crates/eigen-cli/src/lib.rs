@@ -27,8 +27,6 @@ use operator_id::derive_operator_id;
 use rust_bls_bn254::{errors::KeystoreError as BlsKeystoreError, mnemonics::Mnemonic};
 use thiserror::Error;
 
-pub const ANVIL_RPC_URL: &str = "http://localhost:8545";
-
 /// Possible errors raised while executing a CLI command
 #[derive(Error, Debug)]
 pub enum EigenCliError {
@@ -187,7 +185,6 @@ pub fn execute_command(command: Commands) -> Result<(), EigenCliError> {
 
 #[cfg(test)]
 mod test {
-    use super::ANVIL_RPC_URL;
     use crate::args::{BlsKeystoreType, EigenKeyCommand, MnemonicLanguage};
     use crate::convert::store;
     use crate::eigen_address::ContractAddresses;
@@ -198,7 +195,7 @@ mod test {
         operator_id::derive_operator_id,
     };
     use eigen_testing_utils::anvil_constants::{
-        get_registry_coordinator_address, get_service_manager_address,
+        get_registry_coordinator_address, get_service_manager_address, ANVIL_HTTP_URL,
     };
     use eth_keystore::decrypt_key;
     use k256::SecretKey;
@@ -304,7 +301,7 @@ mod test {
         let addresses = ContractAddresses::get_addresses(
             Some(service_manager_address),
             None,
-            ANVIL_RPC_URL.into(),
+            ANVIL_HTTP_URL.into(),
         )
         .await
         .unwrap();
@@ -341,7 +338,7 @@ mod test {
         let addresses = ContractAddresses::get_addresses(
             None,
             Some(registry_coordinator_address),
-            ANVIL_RPC_URL.into(),
+            ANVIL_HTTP_URL.into(),
         )
         .await
         .unwrap();

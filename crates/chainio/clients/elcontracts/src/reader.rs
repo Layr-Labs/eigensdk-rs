@@ -300,7 +300,7 @@ mod tests {
     use alloy_primitives::{address, keccak256, Address, FixedBytes, U256};
     use alloy_provider::Provider;
     use eigen_logging::get_test_logger;
-    use eigen_testing_utils::anvil_constants::{self, ANVIL_RPC_URL};
+    use eigen_testing_utils::anvil_constants::{self, ANVIL_HTTP_URL, ANVIL_RPC_URL};
     use eigen_utils::binding::{
         mockAvsServiceManager, AVSDirectory,
         AVSDirectory::calculateOperatorAVSRegistrationDigestHashReturn, DelegationManager,
@@ -338,7 +338,7 @@ mod tests {
             slasher_address,
             delegation_manager_address,
             avs_directory_address,
-            "http://localhost:8545".to_string(),
+            ANVIL_HTTP_URL.to_string(),
         )
     }
 
