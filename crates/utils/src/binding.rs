@@ -115,8 +115,15 @@ sol!(
     "../../crates/contracts/bindings/utils/json/IBLSSignatureChecker.json"
 );
 
-// Anvil utilities
+// https://github.com/Layr-Labs/eigenlayer-contracts/blob/dev/src/contracts/core/RewardsCoordinator.sol
+sol!(
+    #[allow(missing_docs)]
+    #[sol(rpc)]
+    RewardsCoordinator,
+    "../../crates/contracts/bindings/utils/json/RewardsCoordinator.json"
+);
 
+// Anvil utilities
 sol!(
     #[allow(missing_docs)]
     #[sol(rpc)]
