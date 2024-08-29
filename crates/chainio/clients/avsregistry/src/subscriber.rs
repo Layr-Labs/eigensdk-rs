@@ -57,3 +57,34 @@ impl AvsRegistryChainSubscriber {
         Ok(filter)
     }
 }
+
+#[cfg(test)]
+mod test {
+    use super::AvsRegistryChainSubscriber;
+    use eigen_testing_utils::anvil_constants::{get_registry_coordinator_address, ANVIL_HTTP_URL};
+    use eigen_utils::{binding::RegistryCoordinator, get_provider};
+
+    #[tokio::test]
+    async fn test_get_new_pub_key_registration_filter() {
+        let registry_coordinator_addr = get_registry_coordinator_address().await;
+        let fill_provider = get_provider(ANVIL_HTTP_URL);
+        let contract_registry_coordinator =
+            RegistryCoordinator::new(registry_coordinator_addr, fill_provider);
+        let bls_apk_registry_addr = contract_registry_coordinator
+            .blsApkRegistry()
+            .call()
+            .await
+            .unwrap()
+            ._0;
+
+        let subscriber = AvsRegistryChainSubscriber::new(ANVIL_HTTP_URL.to_string());
+        subscriber.build(bls_apk_registry_addr);
+
+        assert!(subscriber
+            .get_new_pub_key_registration_filter()
+            .await
+            .is_ok());
+
+        // TODO: cause an event and check if its logged
+    }
+}
