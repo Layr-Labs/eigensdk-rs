@@ -243,7 +243,6 @@ impl OperatorInfoServiceInMemory {
 
 #[cfg(test)]
 mod tests {
-
     use super::*;
     use alloy_primitives::{address, Bytes, U256};
     use alloy_signer_local::PrivateKeySigner;
@@ -258,6 +257,7 @@ mod tests {
     };
     use eigen_types::operator::Operator;
     use eigen_utils::get_provider;
+    use serial_test::serial;
     use std::str::FromStr;
     use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
@@ -306,6 +306,7 @@ mod tests {
     }
 
     #[tokio::test]
+    #[serial]
     async fn test_start_service_1_operator_register() {
         let anvil_ws_url = "ws://localhost:8545";
         let anvil_http_url = "http://localhost:8545";
@@ -357,6 +358,7 @@ mod tests {
     }
 
     #[tokio::test]
+    #[serial]
     async fn test_start_service_2_operator_register() {
         let anvil_ws_url = "ws://localhost:8545";
         let anvil_http_url = "http://localhost:8545";

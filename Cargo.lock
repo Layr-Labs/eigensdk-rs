@@ -2286,6 +2286,7 @@ dependencies = [
  "eigen-types",
  "eigen-utils",
  "futures-util",
+ "serial_test",
  "thiserror",
  "tokio",
  "tokio-util",
