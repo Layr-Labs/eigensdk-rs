@@ -143,6 +143,8 @@ impl OperatorInfoServiceInMemory {
             .unwrap();
         let provider = get_ws_provider(&self.ws).await.unwrap();
         let current_block_number = provider.get_block_number().await.unwrap();
+
+        // Subscribe to new pubkey registration events
         let filter = Filter::new()
             .event(NEW_PUBKEY_REGISTRATION_EVENT)
             .from_block(current_block_number);
