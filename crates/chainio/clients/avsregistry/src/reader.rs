@@ -8,7 +8,6 @@ use eigen_crypto_bls::{
     alloy_registry_g1_point_to_g1_affine, alloy_registry_g2_point_to_g2_affine, BlsG1Point,
     BlsG2Point,
 };
-use eigen_logging::get_logger;
 use eigen_logging::logger::SharedLogger;
 use eigen_types::operator::{bitmap_to_quorum_ids, OperatorPubKeys};
 use eigen_utils::{
@@ -28,19 +27,6 @@ pub struct AvsRegistryChainReader {
     operator_state_retriever: Address,
     stake_registry_addr: Address,
     provider: String,
-}
-
-impl Default for AvsRegistryChainReader {
-    fn default() -> Self {
-        AvsRegistryChainReader {
-            logger: get_logger(),
-            bls_apk_registry_addr: Default::default(),
-            registry_coordinator_addr: Default::default(),
-            operator_state_retriever: Default::default(),
-            stake_registry_addr: Default::default(),
-            provider: String::new(),
-        }
-    }
 }
 
 #[async_trait]
@@ -614,8 +600,6 @@ mod tests {
     use std::str::FromStr;
     const HOLESKY_REGISTRY_COORDINATOR: &str = "0x53012C69A189cfA2D9d29eb6F19B32e0A2EA3490";
     const HOLESKY_OPERATOR_STATE_RETRIEVER: &str = "0xB4baAfee917fb4449f5ec64804217bccE9f46C67";
-    const HOLESKY_STAKE_REGISTRY: &str = "0xBDACD5998989Eec814ac7A0f0f6596088AA2a270";
-    const HOLESKY_BLS_APK_REGISTRY: &str = "0x066cF95c1bf0927124DFB8B02B401bc23A79730D";
 
     async fn build_avs_registry_chain_reader() -> AvsRegistryChainReader {
         let holesky_registry_coordinator =
