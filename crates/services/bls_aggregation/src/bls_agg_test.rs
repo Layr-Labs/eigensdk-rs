@@ -16,10 +16,7 @@ pub mod integration_test {
         get_erc20_mock_strategy, get_operator_state_retriever_address,
         get_registry_coordinator_address, get_service_manager_address,
     };
-    use eigen_types::{
-        avs::TaskIndex,
-        operator::{operator_id_from_g1_pub_key, QuorumThresholdPercentages},
-    };
+    use eigen_types::{avs::TaskIndex, operator::QuorumThresholdPercentages};
     use eigen_utils::{
         binding::{
             IBLSSignatureChecker::{self, G1Point, NonSignerStakesAndSignature},
