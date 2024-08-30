@@ -16,7 +16,10 @@ pub mod integration_test {
         get_erc20_mock_strategy, get_operator_state_retriever_address,
         get_registry_coordinator_address, get_service_manager_address,
     };
-    use eigen_types::{avs::TaskIndex, operator::QuorumThresholdPercentages};
+    use eigen_types::{
+        avs::TaskIndex,
+        operator::{operator_id_from_g1_pub_key, QuorumThresholdPercentages},
+    };
     use eigen_utils::{
         binding::{
             IBLSSignatureChecker::{self, G1Point, NonSignerStakesAndSignature},
@@ -98,7 +101,7 @@ pub mod integration_test {
 
         let bls_key_pair = BlsKeyPair::new(BLS_KEY_1.to_string()).unwrap();
         let operator_id =
-            hex!("48beccce16ccdf8000c13d5af5f91c7c3dac6c47b339d993d229af1500dbe4a9").into();
+            hex!("fd329fe7e54f459b9c104064efe0172db113a50b5f394949b4ef80b3c34ca7f5").into();
 
         // Create avs clients to interact with contracts deployed on anvil
         let avs_registry_reader = AvsRegistryChainReader::new(
@@ -152,7 +155,7 @@ pub mod integration_test {
             .unwrap();
 
         // Sleep is needed so registered operators are accesible to the OperatorInfoServiceInMemory
-        sleep(Duration::from_millis(500));
+        sleep(Duration::from_secs(1));
 
         // Create aggregation service
         let operators_info = OperatorInfoServiceInMemory::new(
@@ -237,7 +240,7 @@ pub mod integration_test {
 
         let bls_key_pair_1 = BlsKeyPair::new(BLS_KEY_1.to_string()).unwrap();
         let operator_id_1 =
-            hex!("48beccce16ccdf8000c13d5af5f91c7c3dac6c47b339d993d229af1500dbe4a9").into();
+            hex!("fd329fe7e54f459b9c104064efe0172db113a50b5f394949b4ef80b3c34ca7f5").into();
 
         let bls_key_pair_2 = BlsKeyPair::new(BLS_KEY_2.to_string()).unwrap();
         let operator_id_2 =
@@ -320,7 +323,7 @@ pub mod integration_test {
             .unwrap();
 
         // Sleep is needed so registered operators are accesible to the OperatorInfoServiceInMemory
-        sleep(Duration::from_millis(500));
+        sleep(Duration::from_secs(1));
 
         // Create aggregation service
         let operators_info = OperatorInfoServiceInMemory::new(
@@ -426,7 +429,7 @@ pub mod integration_test {
 
         let bls_key_pair_1 = BlsKeyPair::new(BLS_KEY_1.to_string()).unwrap();
         let operator_id_1 =
-            hex!("48beccce16ccdf8000c13d5af5f91c7c3dac6c47b339d993d229af1500dbe4a9").into();
+            hex!("fd329fe7e54f459b9c104064efe0172db113a50b5f394949b4ef80b3c34ca7f5").into();
 
         let bls_key_pair_2 = BlsKeyPair::new(BLS_KEY_2.to_string()).unwrap();
         let operator_id_2 =
@@ -520,7 +523,7 @@ pub mod integration_test {
             .unwrap();
 
         // Sleep is needed so registered operators are accesible to the OperatorInfoServiceInMemory
-        sleep(Duration::from_millis(500));
+        sleep(Duration::from_secs(1));
 
         // Create aggregation service
         let operators_info = OperatorInfoServiceInMemory::new(
@@ -628,7 +631,7 @@ pub mod integration_test {
 
         let bls_key_pair_1 = BlsKeyPair::new(BLS_KEY_1.to_string()).unwrap();
         let operator_id_1 =
-            hex!("48beccce16ccdf8000c13d5af5f91c7c3dac6c47b339d993d229af1500dbe4a9").into();
+            hex!("fd329fe7e54f459b9c104064efe0172db113a50b5f394949b4ef80b3c34ca7f5").into();
 
         let bls_key_pair_2 = BlsKeyPair::new(BLS_KEY_2.to_string()).unwrap();
         let operator_id_2 =
@@ -717,7 +720,7 @@ pub mod integration_test {
             .unwrap();
 
         // Sleep is needed so registered operators are accesible to the OperatorInfoServiceInMemory
-        sleep(Duration::from_millis(500));
+        sleep(Duration::from_secs(1));
 
         // Create aggregation service
         let operators_info = OperatorInfoServiceInMemory::new(
@@ -823,7 +826,7 @@ pub mod integration_test {
 
         let bls_key_pair_1 = BlsKeyPair::new(BLS_KEY_1.to_string()).unwrap();
         let operator_id_1 =
-            hex!("48beccce16ccdf8000c13d5af5f91c7c3dac6c47b339d993d229af1500dbe4a9").into();
+            hex!("fd329fe7e54f459b9c104064efe0172db113a50b5f394949b4ef80b3c34ca7f5").into();
 
         let quorum_nums = Bytes::from([0u8, 1u8]);
         let quorum_threshold_percentages: QuorumThresholdPercentages = vec![100, 100];
@@ -887,7 +890,7 @@ pub mod integration_test {
             .unwrap();
 
         // Sleep is needed so registered operators are accesible to the OperatorInfoServiceInMemory
-        sleep(Duration::from_millis(500));
+        sleep(Duration::from_secs(1));
 
         // Create aggregation service
         let operators_info = OperatorInfoServiceInMemory::new(
