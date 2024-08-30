@@ -39,6 +39,11 @@ jobs:
       - name: Install rustfmt for nightly
         run: rustup component add rustfmt --toolchain nightly
 
+      - name: Install testing tools
+        uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-llvm-cov
+
       - name: Cache Rust dependencies
         uses: Swatinem/rust-cache@v2
         with:
@@ -52,6 +57,12 @@ jobs:
       - name: docker
         uses: docker-practice/actions-setup-docker@master
 
-      - name: Run make pr
+      - name: Run tests and generate code coverage
         run: make pr
 
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: lcov.info
+          fail_ci_if_error: true

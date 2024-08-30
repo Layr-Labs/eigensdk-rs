@@ -22,6 +22,12 @@ pr: reset-anvil ##
 	cargo +nightly fmt -- --check
 	docker stop anvil
 
+coverage: reset-anvil ##
+	$(MAKE) start-anvil-chain-with-contracts-deployed > /dev/null &
+	sleep 4 # needed to wait for anvil setup to finish
+	cargo llvm-cov --lcov --output-path lcov.info
+	docker stop anvil
+
 fireblocks-tests:
 	$(MAKE) start-anvil-chain-with-contracts-deployed > /dev/null &
 	cargo test --workspace --features fireblock-tests
