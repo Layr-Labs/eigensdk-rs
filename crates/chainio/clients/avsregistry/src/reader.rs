@@ -8,7 +8,6 @@ use eigen_crypto_bls::{
     alloy_registry_g1_point_to_g1_affine, alloy_registry_g2_point_to_g2_affine, BlsG1Point,
     BlsG2Point,
 };
-use eigen_logging::get_logger;
 use eigen_logging::logger::SharedLogger;
 use eigen_types::operator::{bitmap_to_quorum_ids, OperatorPubKeys};
 use eigen_utils::{
@@ -28,19 +27,6 @@ pub struct AvsRegistryChainReader {
     operator_state_retriever: Address,
     stake_registry_addr: Address,
     provider: String,
-}
-
-impl Default for AvsRegistryChainReader {
-    fn default() -> Self {
-        AvsRegistryChainReader {
-            logger: get_logger(),
-            bls_apk_registry_addr: Default::default(),
-            registry_coordinator_addr: Default::default(),
-            operator_state_retriever: Default::default(),
-            stake_registry_addr: Default::default(),
-            provider: String::new(),
-        }
-    }
 }
 
 #[async_trait]
