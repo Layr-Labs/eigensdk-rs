@@ -38,3 +38,4 @@ cd ../../contracts
 cast rpc anvil_mine 200 --rpc-url http://localhost:8545 > /dev/null
 echo "Anvil is ready. Advanced chain to block-number:" $(cast block-number)
 
+docker attach anvil
