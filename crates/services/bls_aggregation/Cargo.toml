@@ -23,5 +23,11 @@ tokio = { workspace = true, features = ["full"] }
 
 [dev-dependencies]
 alloy-node-bindings.workspace = true
+alloy-provider.workspace = true
 eigen-logging.workspace = true
+eigen-testing-utils.workspace = true
+eigen-utils.workspace = true
+eigen-services-operatorsinfo.workspace = true
+serial_test = "3.1"
 sha2 = "0.10.8"
+tokio-util = "0.7.11"
