@@ -2035,14 +2035,12 @@ name = "eigen-client-avsregistry"
 version = "0.0.1-alpha"
 dependencies = [
  "alloy-contract",
- "alloy-network",
  "alloy-node-bindings",
  "alloy-primitives",
  "alloy-provider",
  "alloy-rpc-types",
  "alloy-signer",
  "alloy-signer-local",
- "alloy-transport-http",
  "ark-ff 0.4.2",
  "async-trait",
  "eigen-client-elcontracts",
@@ -2054,7 +2052,6 @@ dependencies = [
  "hex",
  "num-bigint 0.4.6",
  "once_cell",
- "reqwest 0.12.5",
  "thiserror",
  "tokio",
  "tracing",
