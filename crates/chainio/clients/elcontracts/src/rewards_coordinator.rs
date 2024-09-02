@@ -3,7 +3,7 @@ use alloy_primitives::{Address, FixedBytes};
 use crate::error::ElContractsError;
 use alloy_provider::WalletProvider;
 use eigen_logging::logger::SharedLogger;
-use eigen_utils::binding::RewardsCoordinator;
+use eigen_utils::binding::RewardsCoordinator::{self, RewardsMerkleClaim};
 use eigen_utils::get_signer;
 
 #[derive(Debug, Clone)]
@@ -49,44 +49,44 @@ impl ELRewardsCoordinator {
         }
         Ok(hash)
     }
-}
-
-/*
 
     pub async fn process_claim(
         &self,
         recipient: Address,
         claim: RewardsMerkleClaim,
-    ) -> Result<FixedBytes<32>, ElContractsError<TransportErrorKind>> {
+    ) -> Result<FixedBytes<32>, ElContractsError> {
         let provider = get_signer(self.signer.clone(), &self.provider);
 
         let contract_rewards_coordinator =
             RewardsCoordinator::new(self.rewards_coordinator, &provider);
         let process_claim_call = contract_rewards_coordinator.processClaim(claim, recipient);
 
-        let receipt = process_claim_call.send().await?.get_receipt().await?;
+        let receipt = process_claim_call
+            .send()
+            .await?
+            .get_receipt()
+            .await
+            .map_err(|e| {
+                ElContractsError::AlloyContractError(alloy_contract::Error::TransportError(e))
+            })?;
 
         let hash = receipt.transaction_hash;
-
-        match receipt.status() {
-            true => {
-                self.logger.info(
-                    &format!("Successfully processed claim for recipient {} ", recipient),
-                    &["eigen-client-elcontracts.process_claim"],
-                );
-                Ok(hash)
-            }
-
-            false => {
-                self.logger.info(
-                    &format!("Failed to  process claim for recipient {} ", recipient),
-                    &["eigen-client-elcontracts.process_claim"],
-                );
-                Ok(hash)
-            }
-        }
+        if receipt.status() {
+            self.logger.info(
+                &format!("Successfully processed claim for recipient {recipient}"),
+                "eigen-client-elcontracts.process_claim",
+            );
+        } else {
+            self.logger.info(
+                &format!("Failed to  process claim for recipient {recipient}"),
+                "eigen-client-elcontracts.process_claim",
+            );
+        };
+        Ok(hash)
     }
+}
 
+/*
     /// TODO(supernova): This method is not availabe in dev branch of eigenlayer-contracts, so skipping this till then
     pub fn force_deregister_from_operator_set(
         &self,
