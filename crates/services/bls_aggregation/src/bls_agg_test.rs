@@ -16,10 +16,7 @@ pub mod integration_test {
         get_erc20_mock_strategy, get_operator_state_retriever_address,
         get_registry_coordinator_address, get_service_manager_address,
     };
-    use eigen_types::{
-        avs::TaskIndex,
-        operator::{operator_id_from_g1_pub_key, QuorumThresholdPercentages},
-    };
+    use eigen_types::{avs::TaskIndex, operator::QuorumThresholdPercentages};
     use eigen_utils::{
         binding::{
             IBLSSignatureChecker::{self, G1Point, NonSignerStakesAndSignature},
@@ -122,6 +119,18 @@ pub mod integration_test {
         .await
         .unwrap();
 
+        let operators_info = OperatorInfoServiceInMemory::new(
+            get_test_logger(),
+            avs_registry_reader.clone(),
+            WS_ENDPOINT.to_string(),
+        )
+        .await;
+
+        let cancellation_token = CancellationToken::new();
+        let operators_info_clone = operators_info.clone();
+        let token_clone = cancellation_token.clone();
+        task::spawn(async move { operators_info_clone.start_service(&token_clone, 0, 0).await });
+
         // Create quorum
         let contract_registry_coordinator = RegistryCoordinator::new(
             registry_coordinator_address,
@@ -155,21 +164,9 @@ pub mod integration_test {
             .unwrap();
 
         // Sleep is needed so registered operators are accesible to the OperatorInfoServiceInMemory
-        sleep(Duration::from_secs(1));
+        sleep(Duration::from_millis(500));
 
         // Create aggregation service
-        let operators_info = OperatorInfoServiceInMemory::new(
-            get_test_logger(),
-            avs_registry_reader.clone(),
-            WS_ENDPOINT.to_string(),
-        )
-        .await;
-
-        let cancellation_token = CancellationToken::new();
-        let operators_info_clone = operators_info.clone();
-        let token_clone = cancellation_token.clone();
-        task::spawn(async move { operators_info_clone.start_service(&token_clone, 0, 0).await });
-
         let avs_registry_service =
             AvsRegistryServiceChainCaller::new(avs_registry_reader.clone(), operators_info);
 
@@ -289,6 +286,22 @@ pub mod integration_test {
         )
         .await
         .unwrap();
+        let operators_info = OperatorInfoServiceInMemory::new(
+            get_test_logger(),
+            avs_registry_reader.clone(),
+            WS_ENDPOINT.to_string(),
+        )
+        .await;
+
+        let current_block_num = provider.get_block_number().await.unwrap();
+        let cancellation_token = CancellationToken::new();
+        let operators_info_clone = operators_info.clone();
+        let token_clone = cancellation_token.clone();
+        task::spawn(async move {
+            operators_info_clone
+                .start_service(&token_clone, 0, current_block_num)
+                .await
+        });
 
         // Register operator
         avs_writer
@@ -323,21 +336,9 @@ pub mod integration_test {
             .unwrap();
 
         // Sleep is needed so registered operators are accesible to the OperatorInfoServiceInMemory
-        sleep(Duration::from_secs(1));
+        sleep(Duration::from_millis(500));
 
         // Create aggregation service
-        let operators_info = OperatorInfoServiceInMemory::new(
-            get_test_logger(),
-            avs_registry_reader.clone(),
-            WS_ENDPOINT.to_string(),
-        )
-        .await;
-
-        let cancellation_token = CancellationToken::new();
-        let operators_info_clone = operators_info.clone();
-        let token_clone = cancellation_token.clone();
-        task::spawn(async move { operators_info_clone.start_service(&token_clone, 0, 0).await });
-
         let avs_registry_service =
             AvsRegistryServiceChainCaller::new(avs_registry_reader.clone(), operators_info);
 
@@ -489,6 +490,18 @@ pub mod integration_test {
         .await
         .unwrap();
 
+        let operators_info = OperatorInfoServiceInMemory::new(
+            get_test_logger(),
+            avs_registry_reader.clone(),
+            WS_ENDPOINT.to_string(),
+        )
+        .await;
+
+        let cancellation_token = CancellationToken::new();
+        let operators_info_clone = operators_info.clone();
+        let token_clone = cancellation_token.clone();
+        task::spawn(async move { operators_info_clone.start_service(&token_clone, 0, 0).await });
+
         // Register operator
         avs_writer
             .register_operator_in_quorum_with_avs_registry_coordinator(
@@ -523,21 +536,9 @@ pub mod integration_test {
             .unwrap();
 
         // Sleep is needed so registered operators are accesible to the OperatorInfoServiceInMemory
-        sleep(Duration::from_secs(1));
+        sleep(Duration::from_millis(500));
 
         // Create aggregation service
-        let operators_info = OperatorInfoServiceInMemory::new(
-            get_test_logger(),
-            avs_registry_reader.clone(),
-            WS_ENDPOINT.to_string(),
-        )
-        .await;
-
-        let cancellation_token = CancellationToken::new();
-        let operators_info_clone = operators_info.clone();
-        let token_clone = cancellation_token.clone();
-        task::spawn(async move { operators_info_clone.start_service(&token_clone, 0, 0).await });
-
         let avs_registry_service =
             AvsRegistryServiceChainCaller::new(avs_registry_reader.clone(), operators_info);
 
@@ -686,6 +687,18 @@ pub mod integration_test {
         .await
         .unwrap();
 
+        let operators_info = OperatorInfoServiceInMemory::new(
+            get_test_logger(),
+            avs_registry_reader.clone(),
+            WS_ENDPOINT.to_string(),
+        )
+        .await;
+
+        let cancellation_token = CancellationToken::new();
+        let operators_info_clone = operators_info.clone();
+        let token_clone = cancellation_token.clone();
+        task::spawn(async move { operators_info_clone.start_service(&token_clone, 0, 0).await });
+
         // Register operator
         avs_writer
             .register_operator_in_quorum_with_avs_registry_coordinator(
@@ -720,21 +733,9 @@ pub mod integration_test {
             .unwrap();
 
         // Sleep is needed so registered operators are accesible to the OperatorInfoServiceInMemory
-        sleep(Duration::from_secs(1));
+        sleep(Duration::from_millis(500));
 
         // Create aggregation service
-        let operators_info = OperatorInfoServiceInMemory::new(
-            get_test_logger(),
-            avs_registry_reader.clone(),
-            WS_ENDPOINT.to_string(),
-        )
-        .await;
-
-        let cancellation_token = CancellationToken::new();
-        let operators_info_clone = operators_info.clone();
-        let token_clone = cancellation_token.clone();
-        task::spawn(async move { operators_info_clone.start_service(&token_clone, 0, 0).await });
-
         let avs_registry_service =
             AvsRegistryServiceChainCaller::new(avs_registry_reader.clone(), operators_info);
 
@@ -877,6 +878,18 @@ pub mod integration_test {
         .await
         .unwrap();
 
+        let operators_info = OperatorInfoServiceInMemory::new(
+            get_test_logger(),
+            avs_registry_reader.clone(),
+            WS_ENDPOINT.to_string(),
+        )
+        .await;
+
+        let cancellation_token = CancellationToken::new();
+        let operators_info_clone = operators_info.clone();
+        let token_clone = cancellation_token.clone();
+        task::spawn(async move { operators_info_clone.start_service(&token_clone, 0, 0).await });
+
         // Register operator
         avs_writer
             .register_operator_in_quorum_with_avs_registry_coordinator(
@@ -890,21 +903,9 @@ pub mod integration_test {
             .unwrap();
 
         // Sleep is needed so registered operators are accesible to the OperatorInfoServiceInMemory
-        sleep(Duration::from_secs(1));
+        sleep(Duration::from_millis(500));
 
         // Create aggregation service
-        let operators_info = OperatorInfoServiceInMemory::new(
-            get_test_logger(),
-            avs_registry_reader.clone(),
-            WS_ENDPOINT.to_string(),
-        )
-        .await;
-
-        let cancellation_token = CancellationToken::new();
-        let operators_info_clone = operators_info.clone();
-        let token_clone = cancellation_token.clone();
-        task::spawn(async move { operators_info_clone.start_service(&token_clone, 0, 0).await });
-
         let avs_registry_service =
             AvsRegistryServiceChainCaller::new(avs_registry_reader.clone(), operators_info);
 
