@@ -50,30 +50,18 @@ jobs:
           cache-on-failure: true
       - name: clippy
         uses: dtolnay/rust-toolchain@clippy
-        
+
       - name: docker
         uses: docker-practice/actions-setup-docker@master
 
       - name: Run tests and generate code coverage
         run: make coverage
 
-      - name: Find coverage comment
-        continue-on-error: true
-        uses: peter-evans/find-comment@v3
-        id: fc
-        with:
-          issue-number: ${{ github.event.pull_request.number }}
-          comment-author: 'github-actions[bot]'
-          body-includes: Coverage
-        
-      - name: Create markdown file
-        run: echo "### Coverage:" > coverage-comment.md
+      - name: Post coverage summary
+        run: lcov --summary lcov.info | tee coverage-summary.txt
 
-      - name: Create or update coverage comment
-        continue-on-error: true
-        uses: peter-evans/create-or-update-comment@v4
-        with:
-          comment-id: ${{ steps.fc.outputs.comment-id }}
-          issue-number: ${{ github.event.pull_request.number }}
-          body-path: coverage-comment.md
-          edit-mode: replace
+      - name: Upload coverage report
+          uses: actions/upload-artifact@v3
+          with:
+            name: coverage-summary
+            path: ./coverage-summary.txt
