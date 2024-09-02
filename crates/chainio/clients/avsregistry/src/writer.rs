@@ -220,7 +220,7 @@ impl AvsRegistryChainWriter {
             .await
             .map_err(AvsRegistryError::AlloyContractError)?;
 
-        info!(tx_hash = ?tx,"Sent transaction to deregister operator in the AVS's registry coordinator" );
+        info!(tx_hash = ?tx,"Sent transaction to register operator in the AVS's registry coordinator" );
         Ok(*tx.tx_hash())
     }
 
