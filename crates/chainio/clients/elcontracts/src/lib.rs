@@ -8,4 +8,5 @@
 
 pub mod error;
 pub mod reader;
+pub mod rewards_coordinator;
 pub mod writer;
