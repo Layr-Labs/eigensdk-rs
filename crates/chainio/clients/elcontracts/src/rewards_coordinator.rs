@@ -3,7 +3,10 @@ use alloy_primitives::{Address, FixedBytes};
 use crate::error::ElContractsError;
 use alloy_provider::WalletProvider;
 use eigen_logging::logger::SharedLogger;
-use eigen_utils::binding::RewardsCoordinator::{self, RewardsMerkleClaim};
+use eigen_utils::binding::{
+    AVSDirectory,
+    RewardsCoordinator::{self, RewardsMerkleClaim},
+};
 use eigen_utils::get_signer;
 
 #[derive(Debug, Clone)]
@@ -84,9 +87,7 @@ impl ELRewardsCoordinator {
         };
         Ok(hash)
     }
-}
 
-/*
     /// TODO(supernova): This method is not availabe in dev branch of eigenlayer-contracts, so skipping this till then
     pub fn force_deregister_from_operator_set(
         &self,
@@ -112,4 +113,4 @@ impl ELRewardsCoordinator {
         // let tx = contract_rewards_coordinator.setOpe
         todo!()
     }
-*/
+}
