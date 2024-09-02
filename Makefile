@@ -24,8 +24,9 @@ fireblocks-tests:
 	$(MAKE) start-anvil-chain-with-contracts-deployed > /dev/null &
 	cargo test --workspace --features fireblock-tests
 
-clippy:
-	cargo clippy --workspace --all-features  --tests --examples -- -D warnings
+lint:
+	cargo fmt --all -- --check \
+		&& cargo clippy --workspace --all-features --benches --examples --tests -- -D warnings
 
 start-anvil: reset-anvil ##
 			 $(MAKE) start-anvil-chain-with-contracts-deployed

@@ -23,7 +23,7 @@ jobs:
       run: cargo fmt --all -- --check
 
     - name: Run clippy
-      run: make clippy
+      run: cargo clippy --workspace --all-features --benches --examples --tests -- -D warnings
 
   test:
     name: Run Integration Tests
