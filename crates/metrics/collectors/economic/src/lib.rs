@@ -4,40 +4,24 @@
 )]
 #![cfg_attr(not(test), warn(unused_crate_dependencies))]
 use eigen_logging::logger::SharedLogger;
-use eigen_metrics_derive::Metrics;
-use metrics::{Gauge, Key, Label};
-
-#[derive(Clone, Metrics)]
-#[metrics(scope = "eigen.registeredstakes")]
-pub struct RegisteredStakes {
-    #[metric(
-        rename = "eigen_registered_stakes",
-        describe = " A gauge with weighted delegation of delegated shares in delegation manager contract "
-    )]
-    registered_stake: Gauge,
-}
+use metrics::{describe_gauge, gauge, Key, Label};
 
 /// RegisteredStakes Metrics with logger
 #[derive(Debug)]
 pub struct RegisteredStakesMetrics {
-    /// Operator stakes in AVS registry contract.
-    /// Most commonly represents a weighted combination of delegated shares in the DelegationManager EigenLayer contract.
-    registered_stakes: RegisteredStakes,
-
     logger: SharedLogger,
 }
 
 impl RegisteredStakesMetrics {
+    /// Operator stakes in AVS registry contract.
+    /// Most commonly represents a weighted combination of delegated shares in the DelegationManager EigenLayer contract.
     pub fn new(logger: SharedLogger) -> Self {
-        let gauge = Self {
-            registered_stakes: RegisteredStakes {
-                registered_stake: metrics::register_gauge!("eigen_registered_stakes"),
-            },
-            logger,
-        };
-        RegisteredStakes::describe();
+        describe_gauge!(
+            "eigen_registered_stakes",
+            "A gauge with weighted delegation of delegated shares in delegation manager contract"
+        );
 
-        gauge
+        Self { logger }
     }
 
     pub fn set_stake(&self, quorum_number: &str, quorum_name: &str, value: f64) {
@@ -49,6 +33,7 @@ impl RegisteredStakesMetrics {
                 Label::new("quorum_name", quorum_name.to_string()),
             ],
         );
+        gauge!(key.to_string()).set(value);
         self.logger.debug(
             &format!(
                 "set registered stakes , quorum_name: {} , quorum_number: {} , value: {}  ",
@@ -56,12 +41,5 @@ impl RegisteredStakesMetrics {
             ),
             "eigen-metrics-collectors-economic.set_stake",
         );
-
-        // Register or retrieve the gauge with the specified key and set the value
-        metrics::gauge!(key.to_string(), value);
-    }
-
-    pub fn registered_stakes(&self) -> Gauge {
-        self.registered_stakes.registered_stake.clone()
     }
 }

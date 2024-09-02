@@ -7,5 +7,4 @@ repository.workspace = true
 
 [dependencies]
 eigen-logging.workspace = true
-eigen-metrics-derive.workspace = true
 metrics.workspace = true
