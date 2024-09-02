@@ -61,7 +61,7 @@ jobs:
         run: lcov --summary lcov.info | tee coverage-summary.txt
 
       - name: Upload coverage report
-          uses: actions/upload-artifact@v3
-          with:
-            name: coverage-summary
-            path: ./coverage-summary.txt
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-summary
+          path: ./coverage-summary.txt
