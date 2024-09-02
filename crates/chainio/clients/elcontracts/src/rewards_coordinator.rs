@@ -88,7 +88,8 @@ impl ELRewardsCoordinator {
         Ok(hash)
     }
 
-    /// TODO(supernova): This method is not availabe in dev branch of eigenlayer-contracts, so skipping this till then
+    /// TODO(supernova): This method is not availabe in dev branch of eigenlayer-contracts,
+    /// so skipping this till then
     pub fn force_deregister_from_operator_set(
         &self,
         _operator: Address,
@@ -97,13 +98,15 @@ impl ELRewardsCoordinator {
         _operator_signature: AVSDirectory::SignatureWithSaltAndExpiry,
     ) {
         //     let provider = get_signer(self.signer.clone(), &self.provider);
-        //     let contract_avs_directory = AVSDirectory::new(self.el_chain_reader.get_avs_directory_address(),provider);
+        //     let contract_avs_directory =
+        //          AVSDirectory::new(self.el_chain_reader.get_avs_directory_address(),provider);
         //     // contract_avs_directory
 
         todo!()
     }
 
-    /// TODO(supernova): This method is not available in dev branch of eigenlayer-contracts , so skipping till then
+    /// TODO(supernova): This method is not available in dev branch of eigenlayer-contracts,
+    /// so skipping till then
     pub fn set_operator_commission_bips(&self) {
         // let provider = get_signer(self.signer.clone(), &self.provider);
 
@@ -114,3 +117,6 @@ impl ELRewardsCoordinator {
         todo!()
     }
 }
+
+#[cfg(test)]
+mod tests {}
