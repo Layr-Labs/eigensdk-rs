@@ -9,20 +9,74 @@ use ark_std::str::FromStr;
 pub mod error;
 
 use crate::error::BlsError;
-use ark_bn254::{Fq, Fr, G1Affine, G1Projective, G2Affine, G2Projective};
+use ark_bn254::{g1::G1Affine, Fq, Fr, G1Projective, G2Affine, G2Projective};
 use ark_ec::{AffineRepr, CurveGroup};
-use ark_ff::{fields::PrimeField, BigInt, BigInteger256};
+use ark_ff::{fields::PrimeField, BigInt, BigInteger256, Fp2};
+use ark_serialize::{CanonicalDeserialize, CanonicalSerialize};
 use eigen_crypto_bn254::utils::map_to_curve;
-use eigen_utils::binding::RegistryCoordinator::{self};
+use eigen_utils::binding::IBLSSignatureChecker::{
+    G1Point as G1PointChecker, G2Point as G2PointChecker,
+};
+use eigen_utils::binding::{
+    BLSApkRegistry,
+    RegistryCoordinator::{self},
+};
+use serde::de::{self, Visitor};
+use serde::{Deserialize, Serialize};
+use BLSApkRegistry::{G1Point as G1PointRegistry, G2Point as G2PointRegistry};
 use RegistryCoordinator::{G1Point, G2Point};
 pub type PrivateKey = Fr;
 pub type PublicKey = G1Affine;
 pub type BlsSignature = G1Affine;
 pub type OperatorId = B256;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BlsG1Point {
     g1: G1Affine,
+}
+
+impl Serialize for BlsG1Point {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        let mut buffer = Vec::new();
+        self.g1().serialize_uncompressed(&mut buffer).unwrap();
+        serializer.serialize_bytes(&buffer)
+    }
+}
+
+impl<'de> Deserialize<'de> for BlsG1Point {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        struct BlsG1PointVisitor;
+
+        impl<'de> Visitor<'de> for BlsG1PointVisitor {
+            type Value = BlsG1Point;
+
+            fn expecting(&self, formatter: &mut ark_std::fmt::Formatter) -> std::fmt::Result {
+                formatter.write_str("a byte array representing a G1Affine point")
+            }
+
+            fn visit_seq<A>(self, mut seq: A) -> Result<Self::Value, A::Error>
+            where
+                A: serde::de::SeqAccess<'de>,
+            {
+                let mut buffer = Vec::new();
+
+                while let Some(value) = seq.next_element()? {
+                    buffer.push(value);
+                }
+
+                let g1 = G1Affine::deserialize_uncompressed(&*buffer).map_err(de::Error::custom)?;
+                Ok(BlsG1Point { g1 })
+            }
+        }
+
+        deserializer.deserialize_seq(BlsG1PointVisitor)
+    }
 }
 
 impl BlsG1Point {
@@ -35,7 +89,7 @@ impl BlsG1Point {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BlsG2Point {
     g2: G2Affine,
 }
@@ -50,8 +104,8 @@ impl BlsG2Point {
     }
 }
 
-#[derive(Debug)]
 /// Bls key pair with public key on G1
+#[derive(Debug, Clone)]
 pub struct BlsKeyPair {
     /// Private Key
     priv_key: Fr,
@@ -62,17 +116,12 @@ pub struct BlsKeyPair {
 impl BlsKeyPair {
     /// Input [`Fr`] as a [`String`]
     pub fn new(fr: String) -> Result<Self, BlsError> {
-        let sk_result = Fr::from_str(&fr);
-        match sk_result {
-            Ok(sk) => {
-                let pk = G1Projective::from(G1Affine::generator()) * sk;
-                Ok(Self {
-                    priv_key: sk,
-                    pub_key: BlsG1Point::new(pk.into_affine()),
-                })
-            }
-            Err(_) => Err(BlsError::InvalidBlsPrivateKey),
-        }
+        let sk = Fr::from_str(&fr).map_err(|_| BlsError::InvalidBlsPrivateKey)?;
+        let pk = G1Projective::from(G1Affine::generator()) * sk;
+        Ok(Self {
+            priv_key: sk,
+            pub_key: BlsG1Point::new(pk.into_affine()),
+        })
     }
 
     /// Get public key on G1
@@ -114,20 +163,69 @@ pub fn convert_to_g1_point(g1: G1Affine) -> Result<G1Point, BlsError> {
     let x_point_result = g1.x();
     let y_point_result = g1.y();
 
-    if let (Some(x_point), Some(y_point)) = (x_point_result, y_point_result) {
-        let x = BigInt::new(x_point.into_bigint().0);
-        let y = BigInt::new(y_point.into_bigint().0);
+    let (Some(x_point), Some(y_point)) = (x_point_result, y_point_result) else {
+        return Err(BlsError::InvalidG1Affine);
+    };
 
-        let x_u256 = U256::from_limbs(x.0);
-        let y_u256 = U256::from_limbs(y.0);
+    let x = BigInt::new(x_point.into_bigint().0);
+    let y = BigInt::new(y_point.into_bigint().0);
 
-        Ok(G1Point {
-            X: x_u256,
-            Y: y_u256,
-        })
-    } else {
-        Err(BlsError::InvalidG1Affine)
-    }
+    let x_u256 = U256::from_limbs(x.0);
+    let y_u256 = U256::from_limbs(y.0);
+
+    Ok(G1Point {
+        X: x_u256,
+        Y: y_u256,
+    })
+}
+
+/// Convert [`G1Affine`] to  Alloy [`G1PointChecker`]
+pub fn convert_to_bls_checker_g1_point(g1: G1Affine) -> Result<G1PointChecker, BlsError> {
+    let x_point_result = g1.x();
+    let y_point_result = g1.y();
+
+    let (Some(x_point), Some(y_point)) = (x_point_result, y_point_result) else {
+        return Err(BlsError::InvalidG1Affine);
+    };
+    let x = BigInt::new(x_point.into_bigint().0);
+    let y = BigInt::new(y_point.into_bigint().0);
+
+    let x_u256 = U256::from_limbs(x.0);
+    let y_u256 = U256::from_limbs(y.0);
+
+    Ok(G1PointChecker {
+        X: x_u256,
+        Y: y_u256,
+    })
+}
+
+/// Convert [`G2Affine`] to  Alloy [`G2PointChecker`]
+pub fn convert_to_bls_checker_g2_point(g2: G2Affine) -> Result<G2PointChecker, BlsError> {
+    let x_point_result = g2.x();
+    let y_point_result = g2.y();
+
+    let (Some(x_point), Some(y_point)) = (x_point_result, y_point_result) else {
+        return Err(BlsError::InvalidG2Affine);
+    };
+    let x_point_c0 = x_point.c0;
+    let x_point_c1 = x_point.c1;
+    let y_point_c0 = y_point.c0;
+    let y_point_c1 = y_point.c1;
+
+    let x_0 = BigInt::new(x_point_c0.into_bigint().0);
+    let x_1 = BigInt::new(x_point_c1.into_bigint().0);
+    let y_0 = BigInt::new(y_point_c0.into_bigint().0);
+    let y_1 = BigInt::new(y_point_c1.into_bigint().0);
+
+    let x_u256_0 = U256::from_limbs(x_0.0);
+    let x_u256_1 = U256::from_limbs(x_1.0);
+    let y_u256_0 = U256::from_limbs(y_0.0);
+    let y_u256_1 = U256::from_limbs(y_1.0);
+
+    Ok(G2PointChecker {
+        X: [x_u256_1, x_u256_0],
+        Y: [y_u256_1, y_u256_0],
+    })
 }
 
 /// Convert [`G2Affine`] to [`G2Point`]
@@ -137,6 +235,57 @@ pub fn convert_to_g2_point(g2: G2Affine) -> Result<G2Point, BlsError> {
 
     let y_point_result = g2.y();
     // let y_point_c1 = g2.y().unwrap().c1;
+
+    let (Some(x_point), Some(y_point)) = (x_point_result, y_point_result) else {
+        return Err(BlsError::InvalidG2Affine);
+    };
+    let x_point_c0 = x_point.c0;
+    let x_point_c1 = x_point.c1;
+    let y_point_c0 = y_point.c0;
+    let y_point_c1 = y_point.c1;
+
+    let x_0 = BigInt::new(x_point_c0.into_bigint().0);
+    let x_1 = BigInt::new(x_point_c1.into_bigint().0);
+    let y_0 = BigInt::new(y_point_c0.into_bigint().0);
+    let y_1 = BigInt::new(y_point_c1.into_bigint().0);
+
+    let x_u256_0 = U256::from_limbs(x_0.0);
+    let x_u256_1 = U256::from_limbs(x_1.0);
+    let y_u256_0 = U256::from_limbs(y_0.0);
+    let y_u256_1 = U256::from_limbs(y_1.0);
+
+    Ok(G2Point {
+        X: [x_u256_1, x_u256_0],
+        Y: [y_u256_1, y_u256_0],
+    })
+}
+
+/// Convert [`G1PointRegistry`] to [`G1Affine`]
+pub fn alloy_registry_g1_point_to_g1_affine(g1_point: G1PointRegistry) -> G1Affine {
+    let x_point = g1_point.X.into_limbs();
+    let x = Fq::new(BigInteger256::new(x_point));
+    let y_point = g1_point.Y.into_limbs();
+    let y = Fq::new(BigInteger256::new(y_point));
+    G1Affine::new(x, y)
+}
+
+/// Convert [`G2PointRegistry`] to [`G2Affine`]
+pub fn alloy_registry_g2_point_to_g2_affine(g2_point: G2PointRegistry) -> G2Affine {
+    let x_fp2 = Fp2::new(
+        BigInteger256::new(g2_point.X[1].into_limbs()).into(),
+        BigInteger256::new(g2_point.X[0].into_limbs()).into(),
+    );
+    let y_fp2 = Fp2::new(
+        BigInteger256::new(g2_point.Y[1].into_limbs()).into(),
+        BigInteger256::new(g2_point.Y[0].into_limbs()).into(),
+    );
+    G2Affine::new(x_fp2, y_fp2)
+}
+
+/// Convert [`G2Affine`] to [`G2PointRegistry`]
+pub fn convert_to_registry_g2_point(g2: G2Affine) -> Result<G2PointRegistry, BlsError> {
+    let x_point_result = g2.x();
+    let y_point_result = g2.y();
 
     if let (Some(x_point), Some(y_point)) = (x_point_result, y_point_result) {
         let x_point_c0 = x_point.c0;
@@ -154,7 +303,7 @@ pub fn convert_to_g2_point(g2: G2Affine) -> Result<G2Point, BlsError> {
         let y_u256_0 = U256::from_limbs(y_0.0);
         let y_u256_1 = U256::from_limbs(y_1.0);
 
-        Ok(G2Point {
+        Ok(G2PointRegistry {
             X: [x_u256_1, x_u256_0],
             Y: [y_u256_1, y_u256_0],
         })
@@ -164,7 +313,7 @@ pub fn convert_to_g2_point(g2: G2Affine) -> Result<G2Point, BlsError> {
 }
 
 /// Signature instance on [`G1Affine`]
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Signature {
     g1_point: BlsG1Point,
 }
@@ -183,7 +332,6 @@ impl Signature {
 
 #[cfg(test)]
 mod tests {
-
     use super::*;
     use ark_bn254::Fq2;
     use eigen_crypto_bn254::utils::verify_message;
@@ -393,5 +541,79 @@ mod tests {
             &message,
             signature.g1_point().g1()
         ));
+    }
+
+    #[test]
+    fn test_alloy_registry_g2_point_to_g2_affine() {
+        let registry_g2_point = G2PointRegistry {
+            X: [
+                U256::from_str(
+                    "5757009320127825712028542414399286695979413866882055578475552905478799178978",
+                )
+                .unwrap(),
+                U256::from_str(
+                    "21244616545128868564944750577089226156588822099825362793595203506897139322148",
+                )
+                .unwrap(),
+            ],
+            Y: [
+                U256::from_str(
+                    "14151879035050941576498647371309462393327101480686968228451570672809612016186",
+                )
+                .unwrap(),
+                U256::from_str(
+                    "3459884663217117850014821742383597128426843416583591466170557027357262534805",
+                )
+                .unwrap(),
+            ],
+        };
+
+        let g2_affine = alloy_registry_g2_point_to_g2_affine(registry_g2_point);
+        let expected_g2_affine = G2Affine {
+            x: Fq2::new(
+                Fq::from_str(
+                    "21244616545128868564944750577089226156588822099825362793595203506897139322148",
+                )
+                .unwrap(),
+                Fq::from_str(
+                    "5757009320127825712028542414399286695979413866882055578475552905478799178978",
+                )
+                .unwrap(),
+            ),
+            y: Fq2::new(
+                Fq::from_str(
+                    "3459884663217117850014821742383597128426843416583591466170557027357262534805",
+                )
+                .unwrap(),
+                Fq::from_str(
+                    "14151879035050941576498647371309462393327101480686968228451570672809612016186",
+                )
+                .unwrap(),
+            ),
+            infinity: false,
+        };
+
+        assert_eq!(g2_affine, expected_g2_affine);
+    }
+
+    #[test]
+    fn test_serialize_deserialize_bls_g1_point() {
+        let bls_priv_key =
+            "12248929636257230549931416853095037629726205319386239410403476017439825112537";
+        let bls_key_pair = BlsKeyPair::new(bls_priv_key.to_string()).unwrap();
+
+        let original_point = bls_key_pair.public_key();
+        // Serialize the BlsG1Point to a JSON string
+        let serialized = serde_json::to_string(&original_point).expect("Failed to serialize");
+
+        // Deserialize the JSON string back to a BlsG1Point
+        let deserialized: BlsG1Point =
+            serde_json::from_str(&serialized).expect("Failed to deserialize");
+
+        // Check that the deserialized point matches the original
+        assert_eq!(
+            original_point, deserialized,
+            "The deserialized point does not match the original"
+        );
     }
 }

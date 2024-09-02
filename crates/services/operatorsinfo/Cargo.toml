@@ -9,18 +9,27 @@ repository.workspace = true
 license-file.workspace = true
 
 [dependencies]
+async-trait.workspace = true
 alloy-primitives.workspace = true
 alloy-provider = { workspace = true, features = ["ws"] }
 alloy-rpc-types.workspace = true
 anyhow = "1.0.83"
 eigen-client-avsregistry.workspace = true
+eigen-crypto-bls.workspace = true
 eigen-logging.workspace = true
 eigen-types.workspace = true
 eigen-utils.workspace = true
 futures-util.workspace = true
 tokio = { workspace = true, features = ["rt-multi-thread", "macros"] }
-
+thiserror.workspace = true
+tokio-util = "0.7.11"
 
 [dev-dependencies]
+alloy-signer-local.workspace = true
 eigen-testing-utils.workspace = true
 eigen-logging.workspace = true
+eigen-client-elcontracts.workspace = true
+ark-bn254.workspace = true
+ark-std = {version = "0.4.0", default-features = false}
+ark-ff.workspace = true
+serial_test.workspace = true

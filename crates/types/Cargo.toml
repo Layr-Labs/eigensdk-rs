@@ -9,10 +9,12 @@ repository.workspace = true
 license-file.workspace = true
 
 [dependencies]
+alloy-primitives.workspace = true
+ark-serialize.workspace = true
+eigen-crypto-bls.workspace = true
 ethers.workspace = true
 num-bigint = "0.4.4"
-eigen-crypto-bls.workspace = true
-alloy-primitives.workspace = true
-eigen-utils.workspace = true
+thiserror.workspace = true
+tokio.workspace = true
 
 [dev-dependencies]

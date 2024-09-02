@@ -16,10 +16,6 @@ use alloy_signer_local::PrivateKeySigner;
 use alloy_transport::TransportErrorKind;
 use alloy_transport_http::{Client, Http};
 use reqwest::Url;
-use std::fs;
-pub fn read_file(path: &str) -> String {
-    fs::read_to_string(path).unwrap()
-}
 
 #[allow(clippy::type_complexity)]
 pub fn get_signer(

@@ -19,8 +19,8 @@ impl BlsKeystore {
     ) -> Result<(), EigenBlsKeyStoreError> {
         match self {
             BlsKeystore::Pbkdf2 => {
-                let key_hex = hex::decode(secret_key)?;
-                let bls_key = key_hex.as_slice();
+                let secret_in_bytes = secret_key.into_bytes();
+                let bls_key = secret_in_bytes.as_slice();
                 let mut keystore = Pbkdf2Keystore::new();
                 keystore.encrypt(
                     bls_key,
@@ -33,8 +33,8 @@ impl BlsKeystore {
                 Ok(())
             }
             BlsKeystore::Scrypt => {
-                let key_hex = hex::decode(secret_key)?;
-                let bls_key = key_hex.as_slice();
+                let secret_in_bytes = secret_key.into_bytes();
+                let bls_key = secret_in_bytes.as_slice();
                 let mut keystore = ScryptKeystore::new();
                 keystore.encrypt(
                     bls_key,
