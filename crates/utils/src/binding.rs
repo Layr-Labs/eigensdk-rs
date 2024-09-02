@@ -117,6 +117,7 @@ sol!(
 
 // https://github.com/Layr-Labs/eigenlayer-contracts/blob/dev/src/contracts/core/RewardsCoordinator.sol
 sol!(
+    #[allow(clippy::too_many_arguments)]
     #[allow(missing_docs)]
     #[sol(rpc)]
     RewardsCoordinator,
