@@ -7,6 +7,24 @@ on:
     branches: [main]
 
 jobs:
+  lint:
+    name: Run Lints
+    runs-on: ubuntu-latest
+    steps:
+    - name: Install Rust
+      uses: dtolnay/rust-toolchain@1.80.1
+      with:
+          components: rustfmt, clippy
+
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    
+    - name: Run cargo fmt
+      run: cargo fmt --all -- --check
+
+    - name: Run clippy
+      run: cargo clippy --workspace --all-features --benches --examples --tests -- -D warnings
+
   test:
     name: Run Integration Tests
     runs-on: ubuntu-latest
