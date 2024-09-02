@@ -22,6 +22,7 @@ lazy_static! {
     static ref SIGNATURE_EXPIRY: U256 = U256::from(86400);
 }
 #[tokio::main]
+#[allow(clippy::expect_used)]
 async fn main() -> Result<()> {
     let holesky_provider = "https://ethereum-holesky.blockpi.network/v1/rpc/public";
     let pvt_key = "bead471191bea97fc3aeac36c9d74c895e8a6242602e144e43152f96219e96e8";
@@ -39,8 +40,7 @@ async fn main() -> Result<()> {
     // Create a new key pair instance using the secret key
     let bls_key_pair = BlsKeyPair::new(
         "12248929636257230549931416853095037629726205319386239410403476017439825112537".to_string(),
-    )
-    .unwrap();
+    )?;
 
     let digest_hash: FixedBytes<32> = FixedBytes::from([
         0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02,
@@ -104,7 +104,6 @@ async fn main() -> Result<()> {
             quorum_nums,
             "65.109.158.181:33078;31078".to_string(), // socket
         )
-        .await
-        .unwrap();
+        .await?;
     Ok(())
 }

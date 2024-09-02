@@ -5,6 +5,7 @@ use eigen_testing_utils::m2_holesky_constants::{OPERATOR_STATE_RETRIEVER, REGIST
 use eyre::Result;
 
 #[tokio::main]
+#[allow(clippy::expect_used)]
 async fn main() -> Result<()> {
     let holesky_provider = "https://holesky.drpc.org";
     let avs_registry = AvsRegistryChainReader::new(
@@ -23,8 +24,7 @@ async fn main() -> Result<()> {
             to_block,
             holesky_provider.to_string(),
         )
-        .await
-        .unwrap();
+        .await?;
 
     println!(
         "operator state from block: {:?} to block: {:?} is {:?}",

@@ -7,6 +7,7 @@ use eyre::Result;
 use std::str::FromStr;
 
 #[tokio::main]
+#[allow(clippy::expect_used)]
 async fn main() -> Result<()> {
     let holesky_provider = "https://holesky.drpc.org";
     let avs_registry = AvsRegistryChainReader::new(
@@ -24,8 +25,7 @@ async fn main() -> Result<()> {
             )
             .expect("wrong operator id"),
         )
-        .await
-        .unwrap();
+        .await?;
 
     println!("operator state at current block is {:?}", operators_state);
 
