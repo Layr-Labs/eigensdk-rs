@@ -1,9 +1,9 @@
 //! Anvil utilities
 use alloy_network::Ethereum;
-use alloy_primitives::{address, Address, FixedBytes};
+use alloy_primitives::{address, Address};
 use alloy_provider::{
     fillers::{ChainIdFiller, FillProvider, GasFiller, JoinFill, NonceFiller},
-    Provider, RootProvider,
+    RootProvider,
 };
 use alloy_transport_http::{Client, Http};
 use eigen_utils::{
@@ -11,7 +11,6 @@ use eigen_utils::{
     get_provider,
 };
 use once_cell::sync::Lazy;
-use tokio::time::{sleep, Duration};
 
 /// Local anvil ContractsRegistry which contains a mapping of all locally deployed EL contracts.
 pub const CONTRACTS_REGISTRY: Address = address!("5FbDB2315678afecb367f032d93F642f64180aa3");
@@ -155,23 +154,19 @@ pub async fn get_proxy_admin() -> Address {
     address
 }
 
-/// Retrieves the status of a transaction from its hash.
-///
-/// # Arguments
-///
-/// `tx_hash` - The hash of the transaction.
-///
-/// # Returns
-///
-/// A bool indicating wether the transaction was successful or not.
-pub async fn get_transaction_status(tx_hash: FixedBytes<32>) -> bool {
-    // this sleep is needed so that we wait for the tx to be processed
-    sleep(Duration::from_millis(500)).await;
-    ANVIL_RPC_URL
-        .clone()
-        .get_transaction_receipt(tx_hash)
-        .await
-        .unwrap()
-        .unwrap()
-        .status()
+/// Avs Directory contract address
+pub async fn get_rewards_coordinator_address() -> Address {
+    let contracts_registry = ContractsRegistry::new(CONTRACTS_REGISTRY, (*ANVIL_RPC_URL).clone());
+
+    todo!()
+
+    //let val = contracts_registry
+    //    .contracts("avsDirectory".to_string())
+    //    .call()
+    //    .await
+    //    .unwrap();
+
+    //let contractsReturn { _0: address } = val;
+
+    //address
 }
