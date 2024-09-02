@@ -2063,12 +2063,9 @@ version = "0.0.1-alpha"
 dependencies = [
  "alloy-contract",
  "alloy-eips",
- "alloy-json-rpc",
  "alloy-primitives",
  "alloy-provider",
- "alloy-rpc-types",
  "alloy-signer-local",
- "alloy-transport",
  "eigen-logging",
  "eigen-testing-utils",
  "eigen-types",
