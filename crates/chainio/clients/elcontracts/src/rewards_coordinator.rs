@@ -1,21 +1,24 @@
-use alloy_primitives::{Address, FixedBytes, TxHash, U256};
+use alloy_primitives::{Address, FixedBytes};
+//use alloy_provider::provider::wallet::WalletProvider;
+use crate::error::ElContractsError;
+use alloy_provider::WalletProvider;
 use eigen_logging::logger::SharedLogger;
-use eigen_utils::binding::RewardsCoordinator::RewardsMerkleClaim;
+use eigen_utils::binding::RewardsCoordinator;
 use eigen_utils::get_signer;
 
 #[derive(Debug, Clone)]
 pub struct ELRewardsCoordinator {
+    rewards_coordinator: Address,
     provider: String,
     signer: String,
     logger: SharedLogger,
 }
 
-/*
 impl ELRewardsCoordinator {
     pub async fn set_claimed_for(
         &self,
         claimer: Address,
-    ) -> Result<FixedBytes<32>, ElContractsError<TransportErrorKind>> {
+    ) -> Result<FixedBytes<32>, ElContractsError> {
         let provider = get_signer(self.signer.clone(), &self.provider);
 
         let contract_rewards_coordinator =
@@ -23,35 +26,30 @@ impl ELRewardsCoordinator {
 
         let set_claimer_for_call = contract_rewards_coordinator.setClaimerFor(claimer);
 
-        let receipt = set_claimer_for_call.send().await?.get_receipt().await?;
+        let receipt = set_claimer_for_call
+            .send()
+            .await?
+            .get_receipt()
+            .await
+            .map_err(|e| {
+                ElContractsError::AlloyContractError(alloy_contract::Error::TransportError(e))
+            })?;
         let hash = receipt.transaction_hash;
-        match receipt.status() {
-            true => {
-                self.logger.info(
-                    &format!(
-                        "Successfully set {} as claimer for {}",
-                        claimer,
-                        provider.default_signer_address()
-                    ),
-                    &["eigen-client-elcontracts.set_claimed_for"],
-                );
-                Ok(hash)
-            }
-            false => {
-                self.logger.info(
-                    &format!(
-                        "Failed to set {} as claimer for {}",
-                        claimer,
-                        provider.default_signer_address()
-                    ),
-                    &["eigen-client-elcontracts.set_claimed_for"],
-                );
-                Ok(hash)
-            }
+        let signer_address = provider.default_signer_address();
+        if receipt.status() {
+            self.logger.info(
+                &format!("Successfully set {claimer} as claimer for {signer_address}"),
+                "eigen-client-elcontracts.set_claimed_for",
+            );
+        } else {
+            self.logger.info(
+                &format!("Failed to set {claimer} as claimer for {signer_address}"),
+                "eigen-client-elcontracts.set_claimed_for",
+            );
         }
+        Ok(hash)
     }
 }
-*/
 
 /*
 
