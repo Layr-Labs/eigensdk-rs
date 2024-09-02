@@ -43,7 +43,7 @@ impl KeyGenerator {
         };
         let dir_path = Path::new(&dir_name);
         let key_path = dir_path.join(DEFAULT_KEY_FOLDER);
-        fs::create_dir_all(&key_path).map_err(EigenKeyCliError::FileError)?;
+        fs::create_dir_all(key_path).map_err(EigenKeyCliError::FileError)?;
 
         self.generate_keys(num_keys, dir_path)
     }
