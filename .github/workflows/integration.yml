@@ -58,11 +58,4 @@ jobs:
         uses: docker-practice/actions-setup-docker@master
 
       - name: Run tests and generate code coverage
-        run: make pr
-
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: lcov.info
-          fail_ci_if_error: true
+        run: make coverage
