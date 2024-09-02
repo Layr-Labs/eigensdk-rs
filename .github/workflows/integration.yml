@@ -36,9 +36,6 @@ jobs:
       - name: Install nightly Rust
         run: rustup toolchain install nightly
   
-      - name: Install rustfmt for nightly
-        run: rustup component add rustfmt --toolchain nightly
-
       - name: Install testing tools
         uses: taiki-e/install-action@v2
         with:
@@ -48,8 +45,6 @@ jobs:
         uses: Swatinem/rust-cache@v2
         with:
           cache-on-failure: true
-      - name: clippy
-        uses: dtolnay/rust-toolchain@clippy
 
       - name: docker
         uses: docker-practice/actions-setup-docker@master
