@@ -41,6 +41,9 @@ jobs:
         with:
           tool: cargo-llvm-cov
 
+      - name: Install lcov
+        run: sudo apt-get update && sudo apt-get install lcov
+
       - name: Cache Rust dependencies
         uses: Swatinem/rust-cache@v2
         with:
