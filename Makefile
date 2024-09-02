@@ -28,6 +28,11 @@ coverage: reset-anvil ##
 	cargo llvm-cov --lcov --output-path lcov.info
 	docker stop anvil
 
+deps:
+	@if ! command -v cargo-llvm-cov &> /dev/null; then \
+		cargo install cargo-llvm-cov; \
+	fi
+
 fireblocks-tests:
 	$(MAKE) start-anvil-chain-with-contracts-deployed > /dev/null &
 	cargo test --workspace --features fireblock-tests
