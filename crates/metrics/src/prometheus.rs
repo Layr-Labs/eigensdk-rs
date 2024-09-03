@@ -3,7 +3,7 @@ use metrics_util::MetricKindMask;
 use std::{net::SocketAddr, time::Duration};
 
 #[allow(unused)]
-fn init_registry(socket_addr: SocketAddr) {
+pub fn init_registry(socket_addr: SocketAddr) {
     PrometheusBuilder::new()
         .with_http_listener(socket_addr)
         .idle_timeout(
