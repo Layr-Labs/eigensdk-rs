@@ -7,8 +7,6 @@ repository.workspace = true
 
 [dependencies]
 eigen-logging.workspace = true
-eyre.workspace = true
-hyper.workspace = true
 metrics.workspace = true
 metrics-exporter-prometheus.workspace = true
 metrics-util = "0.17.0"

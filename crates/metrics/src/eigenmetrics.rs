@@ -1,5 +1,5 @@
 use eigen_logging::logger::SharedLogger;
-use metrics::{describe_gauge, gauge, Gauge};
+use metrics::{describe_gauge, gauge};
 use std::fmt::Debug;
 
 // TODO(supernova) : feeearnedtotal is not turned on yet,so not implemented yet

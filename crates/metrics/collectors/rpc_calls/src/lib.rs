@@ -4,12 +4,11 @@
 )]
 #![cfg_attr(not(test), warn(unused_crate_dependencies))]
 use eigen_logging::logger::SharedLogger;
-use metrics::{describe_counter, describe_histogram, Counter, Histogram, IntoLabels, Key, Label};
+use metrics::{describe_counter, describe_histogram, Key, Label};
 
 /// RpcCallsMetrics
 #[derive(Debug)]
 pub struct RpcCallsMetrics {
-    /// All things related to Metrics <> Rpc call Analytics
     logger: SharedLogger,
 }
 
