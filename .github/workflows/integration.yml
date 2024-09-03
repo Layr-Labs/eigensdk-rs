@@ -7,11 +7,29 @@ on:
     branches: [main]
 
 jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@1.80.1
+        with:
+            components: rustfmt, clippy
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up cargo cache
+        uses: Swatinem/rust-cache@v2
+
+      - name: Run cargo check
+        run: cargo check --workspace --all-features --all-targets
+
   lint:
     name: Run Lints
     runs-on: ubuntu-latest
     steps:
-    - name: Install Rust
+      - name: Install Rust
       uses: dtolnay/rust-toolchain@1.80.1
       with:
           components: rustfmt, clippy
