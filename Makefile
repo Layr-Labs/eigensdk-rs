@@ -23,7 +23,7 @@ pr: reset-anvil ##
 coverage: reset-anvil ##
 	$(MAKE) start-anvil-chain-with-contracts-deployed > /dev/null &
 	sleep 4 # needed to wait for anvil setup to finish
-	cargo llvm-cov --lcov --output-path lcov.info
+	cargo llvm-cov --lcov --output-path lcov.info --ignore-filename-regex='fireblocks/' --workspace
 	docker stop anvil
 
 deps:
