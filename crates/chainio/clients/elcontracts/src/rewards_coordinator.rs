@@ -133,4 +133,50 @@ impl ELRewardsCoordinator {
 }
 
 #[cfg(test)]
-mod tests {}
+mod tests {
+    use super::super::writer::ELChainWriter;
+    use super::ELRewardsCoordinator;
+    use crate::reader::ELChainReader;
+    use alloy_primitives::{Address, U256};
+    use alloy_provider::Provider;
+    use alloy_signer_local::PrivateKeySigner;
+    use anvil_constants::{ANVIL_RPC_URL, CONTRACTS_REGISTRY};
+    use eigen_logging::get_test_logger;
+    use eigen_testing_utils::anvil_constants::{
+        self, get_delegation_manager_address, get_erc20_mock_strategy, get_proxy_admin,
+        get_rewards_coordinator_address, get_service_manager_address, get_strategy_manager_address,
+        ANVIL_HTTP_URL,
+    };
+    use eigen_types::operator::Operator;
+    use eigen_utils::binding::{
+        mockAvsServiceManager,
+        ContractsRegistry::{self, get_test_valuesReturn},
+        DelegationManager,
+    };
+    use std::str::FromStr;
+
+    #[tokio::test]
+    async fn test_set_claimed_for() {
+        let logger = get_test_logger();
+
+        let rewards_coordinator = get_rewards_coordinator_address().await;
+        let proxy_admin = get_proxy_admin().await;
+
+        println!("Address rewards_coordinator: {}", rewards_coordinator);
+        println!("Address proxy_admin: {}", proxy_admin);
+        //let rewards_coordinator_obj = ELRewardsCoordinator::new(rewards_coordinator, provider, signer, logger);
+        /*
+        {
+            rewards_coordinator: Address,
+            provider: String,
+            signer: String,
+            logger: SharedLogger,
+        }
+        */
+
+        //let rewards_coordinator = ELRewardsCoordinator {
+        //    rewards_coordinator: Address::from_hex("0x").unwrap();
+        //    }
+        //};
+    }
+}
