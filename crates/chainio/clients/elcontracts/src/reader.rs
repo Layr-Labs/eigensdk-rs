@@ -322,7 +322,7 @@ mod tests {
         let service_manager_address = anvil_constants::get_service_manager_address().await;
         let service_manager_contract = mockAvsServiceManager::new(
             service_manager_address,
-            get_provider(&"http://localhost:8545"),
+            get_provider("http://localhost:8545"),
         );
         let avs_directory_address_return = service_manager_contract
             .avsDirectory()
