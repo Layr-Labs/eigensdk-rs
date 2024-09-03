@@ -334,9 +334,9 @@ mod tests {
     use eigen_crypto_bls::BlsKeyPair;
     use eigen_logging::get_test_logger;
     use eigen_testing_utils::anvil_constants::{
-        get_operator_state_retriever_address, get_registry_coordinator_address,
-        get_transaction_status, ANVIL_HTTP_URL,
+        get_operator_state_retriever_address, get_registry_coordinator_address, ANVIL_HTTP_URL,
     };
+    use eigen_testing_utils::transaction::get_transaction_status;
 
     async fn build_avs_registry_chain_writer(private_key: String) -> AvsRegistryChainWriter {
         let registry_coordinator_address = get_registry_coordinator_address().await;
