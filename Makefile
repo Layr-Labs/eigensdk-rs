@@ -14,14 +14,14 @@ reset-anvil:
 	-docker stop anvil
 	-docker rm anvil
 
-pr: reset-anvil ##
-	$(MAKE) start-anvil-chain-with-contracts-deployed > /dev/null &
+pr:
+	$(MAKE) start-anvil > /dev/null &
 	sleep 4 # needed to wait for anvil setup to finish
 	cargo test --workspace
 	docker stop anvil
 
-coverage: reset-anvil ##
-	$(MAKE) start-anvil-chain-with-contracts-deployed > /dev/null &
+coverage:
+	$(MAKE) start-anvil > /dev/null &
 	sleep 4 # needed to wait for anvil setup to finish
 	cargo llvm-cov --lcov --output-path lcov.info --ignore-filename-regex='fireblocks/' --workspace
 	docker stop anvil
@@ -32,7 +32,7 @@ deps:
 	fi
 
 fireblocks-tests:
-	$(MAKE) start-anvil-chain-with-contracts-deployed > /dev/null &
+	$(MAKE) start-anvil > /dev/null &
 	cargo test --workspace --features fireblock-tests
 
 lint:
@@ -40,5 +40,4 @@ lint:
 		&& cargo clippy --workspace --all-features --benches --examples --tests -- -D warnings
 
 start-anvil: reset-anvil ##
-			 $(MAKE) start-anvil-chain-with-contracts-deployed
-			 docker start anvil
+	$(MAKE) start-anvil-chain-with-contracts-deployed
