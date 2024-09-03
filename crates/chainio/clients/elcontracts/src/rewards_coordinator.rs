@@ -18,6 +18,20 @@ pub struct ELRewardsCoordinator {
 }
 
 impl ELRewardsCoordinator {
+    pub fn new(
+        rewards_coordinator: Address,
+        provider: String,
+        signer: String,
+        logger: SharedLogger,
+    ) -> Self {
+        Self {
+            rewards_coordinator,
+            provider,
+            signer,
+            logger,
+        }
+    }
+
     pub async fn set_claimed_for(
         &self,
         claimer: Address,
