@@ -158,15 +158,13 @@ pub async fn get_proxy_admin() -> Address {
 pub async fn get_rewards_coordinator_address() -> Address {
     let contracts_registry = ContractsRegistry::new(CONTRACTS_REGISTRY, (*ANVIL_RPC_URL).clone());
 
-    todo!()
+    let val = contracts_registry
+        .contracts("rewardsCoordinator".to_string())
+        .call()
+        .await
+        .unwrap();
 
-    //let val = contracts_registry
-    //    .contracts("avsDirectory".to_string())
-    //    .call()
-    //    .await
-    //    .unwrap();
+    let contractsReturn { _0: address } = val;
 
-    //let contractsReturn { _0: address } = val;
-
-    //address
+    address
 }
