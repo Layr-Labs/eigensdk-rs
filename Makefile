@@ -18,8 +18,6 @@ pr: reset-anvil ##
 	$(MAKE) start-anvil-chain-with-contracts-deployed > /dev/null &
 	sleep 4 # needed to wait for anvil setup to finish
 	cargo test --workspace
-	cargo clippy --workspace --lib --examples --tests --benches --all-features
-	cargo +nightly fmt -- --check
 	docker stop anvil
 
 coverage: reset-anvil ##
@@ -36,6 +34,10 @@ deps:
 fireblocks-tests:
 	$(MAKE) start-anvil-chain-with-contracts-deployed > /dev/null &
 	cargo test --workspace --features fireblock-tests
+
+lint:
+	cargo fmt --all -- --check \
+		&& cargo clippy --workspace --all-features --benches --examples --tests -- -D warnings
 
 start-anvil: reset-anvil ##
 			 $(MAKE) start-anvil-chain-with-contracts-deployed
