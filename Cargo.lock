@@ -2327,7 +2327,9 @@ dependencies = [
  "alloy-provider",
  "alloy-transport-http",
  "eigen-utils",
+ "eyre",
  "once_cell",
+ "serde_json",
  "tokio",
 ]
 

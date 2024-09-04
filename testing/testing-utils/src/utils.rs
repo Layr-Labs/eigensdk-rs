@@ -8,11 +8,14 @@ pub fn get_folder_and_json_name(test_name: &str) -> (String, String) {
 }
 
 
-pub fn get_workspace_root() -> anyhow::Result<PathBuf> {
-    let current_dir = env::current_dir()?;
+pub fn get_workspace_root() -> eyre::Result<String> {
+    let current_dir = env::current_dir()?.into_os_string().into_string().map_err(|_|
+        eyre::eyre!("Failed to convert current directory to string")
+    )?;
     let cmd_output = Command::new("cargo")
         .args(["metadata", "--format-version=1"])
         .output()?;
+
 
     if !cmd_output.status.success() {
         return Ok(current_dir);
@@ -27,5 +30,18 @@ pub fn get_workspace_root() -> anyhow::Result<PathBuf> {
         },
         None => return Ok(current_dir),
     };
-    Ok(PathBuf::from(path))
+
+    Ok(String::from(path))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_get_workspace_root() {
+        let workspace_root = get_workspace_root().unwrap();
+        println!("workspace: {}", workspace_root);
+        //assert_eq!(workspace_root, env::current_dir().unwrap().to_str().unwrap());
+    }
 }
