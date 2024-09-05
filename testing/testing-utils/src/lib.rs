@@ -13,6 +13,7 @@ pub mod mainnet_constants;
 pub mod m2_holesky_constants;
 
 /// Anvil constants
+#[allow(clippy::unwrap_used)]
 pub mod anvil_constants;
 
 /// Test data read from JSON files, used for compliance testing.
