@@ -143,7 +143,8 @@ impl AvsRegistryChainWriter {
         socket: String,
     ) -> Result<TxHash, AvsRegistryError> {
         let provider = get_signer(self.signer.clone(), &self.provider);
-        let wallet = PrivateKeySigner::from_str(&self.signer).expect("failed to generate wallet ");
+        let wallet = PrivateKeySigner::from_str(&self.signer)
+            .map_err(|_| AvsRegistryError::InvalidPrivateKey)?;
 
         // tracing info
         info!(avs_service_manager = %self.service_manager_addr, operator= %wallet.address(),quorum_numbers = ?quorum_numbers,"quorum_numbers,registering operator with the AVS's registry coordinator");
@@ -186,7 +187,7 @@ impl AvsRegistryChainWriter {
         let operator_signature = wallet
             .sign_hash(&msg_to_sign)
             .await
-            .expect("failed to sign message");
+            .map_err(|_| AvsRegistryError::InvalidSignature)?;
 
         let operator_signature_with_salt_and_expiry = SignatureWithSaltAndExpiry {
             signature: operator_signature.as_bytes().into(),

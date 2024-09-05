@@ -5,6 +5,7 @@ use eigen_testing_utils::m2_holesky_constants::{OPERATOR_STATE_RETRIEVER, REGIST
 use eyre::Result;
 
 #[tokio::main]
+#[allow(clippy::expect_used)]
 async fn main() -> Result<()> {
     let holesky_provider = "https://holesky.drpc.org";
     let avs_registry = AvsRegistryChainReader::new(
@@ -16,7 +17,7 @@ async fn main() -> Result<()> {
     .await
     .expect("failed to build avs registry chain reader");
 
-    let quorum_count = avs_registry.get_quorum_count().await.unwrap();
+    let quorum_count = avs_registry.get_quorum_count().await?;
 
     println!("quorum count is :{:?}", quorum_count);
     Ok(())
