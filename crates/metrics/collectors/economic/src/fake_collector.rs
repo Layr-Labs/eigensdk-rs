@@ -4,7 +4,6 @@ use crate::error::CollectorMetricError;
 
 use alloy_primitives::{Address, FixedBytes, U256};
 use eigen_client_avsregistry::reader::AvsRegistryChainReader;
-use eigen_client_elcontracts::reader::ELChainReader;
 use eigen_logging::logger::SharedLogger;
 use eigen_types::operator::OperatorId;
 use metrics::{describe_gauge, gauge, Key, Label};
@@ -16,7 +15,6 @@ pub struct FakeCollector {
     logger: SharedLogger,
     operator_addr: Address,
     operator_id: OperatorId,
-    el_reader: ELChainReader,
     avs_registry_reader: AvsRegistryChainReader,
     quorum_names: HashMap<u64, String>,
     avs_name: String,
@@ -29,7 +27,6 @@ impl FakeCollector {
         logger: SharedLogger,
         operator_addr: Address,
         operator_id: OperatorId,
-        el_reader: ELChainReader,
         avs_registry_reader: AvsRegistryChainReader,
         quorum_names: HashMap<u64, String>,
         avs_name: &str,
@@ -47,7 +44,6 @@ impl FakeCollector {
         Self {
             logger,
             operator_addr,
-            el_reader,
             avs_registry_reader,
             operator_id,
             quorum_names,

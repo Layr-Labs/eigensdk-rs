@@ -24,7 +24,6 @@ mod tests {
     use alloy_primitives::Address;
     use alloy_primitives::FixedBytes;
     use eigen_client_avsregistry::reader::AvsRegistryChainReader;
-    use eigen_client_elcontracts::reader::ELChainReader;
     use eigen_metrics_collectors_economic::fake_collector::FakeCollector;
     use eigen_metrics_collectors_rpc_calls::RpcCallsMetrics;
     use eigen_testing_utils::anvil_constants;
@@ -41,13 +40,6 @@ mod tests {
         let operator_addr = Address::ZERO;
         let operator_id = FixedBytes::<32>::default();
         let http_anvil = "http://localhost:8545";
-        let el_reader = ELChainReader::new(
-            get_test_logger(),
-            Address::ZERO,
-            anvil_constants::get_delegation_manager_address().await,
-            anvil_constants::get_avs_directory_address().await,
-            http_anvil.to_string(),
-        );
         let avs_registry_reader = AvsRegistryChainReader::new(
             get_test_logger(),
             anvil_constants::get_registry_coordinator_address().await,
@@ -64,7 +56,6 @@ mod tests {
             get_test_logger(),
             operator_addr,
             operator_id,
-            el_reader,
             avs_registry_reader,
             quorums_names,
             avs_name,
