@@ -1,0 +1,16 @@
+[package]
+name = "compliance-test"
+description = "Compliance tests between implementations"
+
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+repository.workspace = true
+license-file.workspace = true
+
+[dependencies]
+
+[lints]
+workspace = true
+
+[dev-dependencies]

@@ -1642,6 +1642,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "compliance-test"
+version = "0.0.1-alpha"
+
+[[package]]
 name = "const-hex"
 version = "1.12.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
