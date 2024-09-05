@@ -99,9 +99,8 @@ impl FakeCollector {
                     Label::new("avs_name", self.avs_name.to_string()),
                 ],
             );
-            let s = BigInt::from(stake).to_string();
-            // println!("len of vec{}",s.len());
-            gauge!(key.to_string()).set(f64::from(U256::from_str(&s).unwrap()));
+            let u256_intermediate = U256::from_str(&stake.to_string())?;
+            gauge!(key.to_string()).set(f64::from(u256_intermediate));
         }
 
         Ok(())
