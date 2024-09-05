@@ -2261,12 +2261,17 @@ dependencies = [
 name = "eigen-metrics"
 version = "0.0.1-alpha"
 dependencies = [
+ "alloy-primitives",
+ "eigen-client-avsregistry",
+ "eigen-client-elcontracts",
  "eigen-logging",
  "eigen-metrics-collectors-economic",
  "eigen-metrics-collectors-rpc-calls",
+ "eigen-testing-utils",
  "metrics",
  "metrics-exporter-prometheus",
  "metrics-util",
+ "num-bigint 0.4.6",
  "reqwest 0.12.5",
  "tokio",
 ]
@@ -2275,8 +2280,16 @@ dependencies = [
 name = "eigen-metrics-collectors-economic"
 version = "0.0.1-alpha"
 dependencies = [
+ "alloy-primitives",
+ "eigen-client-avsregistry",
+ "eigen-client-elcontracts",
  "eigen-logging",
+ "eigen-testing-utils",
+ "eigen-types",
  "metrics",
+ "num-bigint 0.4.6",
+ "thiserror",
+ "tokio",
 ]
 
 [[package]]

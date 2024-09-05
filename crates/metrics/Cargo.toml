@@ -10,9 +10,14 @@ eigen-logging.workspace = true
 metrics.workspace = true
 metrics-exporter-prometheus.workspace = true
 metrics-util = "0.17.0"
+alloy-primitives.workspace = true
 
 [dev-dependencies]
 eigen-metrics-collectors-economic.workspace = true 
 eigen-metrics-collectors-rpc-calls.workspace = true
 reqwest = "0.12.4"
 tokio.workspace = true
+eigen-client-elcontracts.workspace = true
+eigen-testing-utils.workspace = true
+eigen-client-avsregistry.workspace = true
+num-bigint.workspace = true
