@@ -253,7 +253,8 @@ mod tests {
 
     #[tokio::test]
     async fn test_get_operator_avs_state() {
-        let file = File::open("../../../compliance/testdata/getOperatorsAvsState.json").unwrap();
+        let test_data_path = std::env::var("TEST_DATA_PATH").unwrap();
+        let file = File::open(test_data_path).unwrap();
         let reader = BufReader::new(file);
         let data: TestData = serde_json::from_reader(reader).unwrap();
 
