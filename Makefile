@@ -20,7 +20,7 @@ pr:
 	cargo test --workspace
 	docker stop anvil
 
-coverage:
+run-coverage:
 	$(MAKE) start-anvil > /dev/null &
 	sleep 4 # needed to wait for anvil setup to finish
 	cargo llvm-cov --lcov --output-path lcov.info --ignore-filename-regex='fireblocks/' --workspace
