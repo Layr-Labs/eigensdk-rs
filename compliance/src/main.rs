@@ -5,24 +5,13 @@
     issue_tracker_base_url = "https://github.com/Layr-Labs/eigensdk-rs/issues/"
 )]
 
-use std::fs::File;
-use std::io::{self, BufRead};
-use std::path::Path;
-use std::process::Command;
+mod run_tests;
+mod utils;
 
-
-/// Reads a file line by line and returns an iterator over the lines.
-fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>>
-where
-    P: AsRef<Path>,
-{
-    let file = File::open(filename)?;
-    Ok(io::BufReader::new(file).lines())
-}
+use run_tests::{run_go_test, run_rust_test};
+use utils::read_lines;
 
 fn main() {
-    // Statements here are executed when the compiled binary is called.
-
     let Ok(lines) = read_lines("./function_list.txt") else {
         return;
     };
@@ -34,29 +23,18 @@ fn main() {
 
 fn process_line(line: &str) {
     println!("Run tests: {line}");
-    let ret_rust = Command::new("cargo")
-            .current_dir("./Eigen/eigen-rs-lambda")
-            .arg("test")
-            .arg("-p")
-            .arg("eigen-services-blsaggregation")
-            .arg(line)
-            .arg("--")
-            .arg("--nocapture")
-            .output()
-            .expect("failed to execute process");
+    let ret_rust = run_rust_test(
+        "./Eigen/eigen-rs-lambda",
+        "eigen-services-blsaggregation",
+        line,
+    );
 
     println!("status rust: {}", ret_rust.status);
 
-
-    // go test ./... -run TestAvsRegistryServiceChainCaller_GetOperatorsAvsState -v -args -data="./xzy.json"
-    let ret_go = Command::new("go")
-            .current_dir("./Eigen/eigensdk-go_lambda")
-            .arg("test")
-            .arg("./...")
-            .arg("-run")
-            .arg("TestAvsRegistryServiceChainCaller_GetOperatorsAvsState")
-            .output()
-            .expect("failed to execute process");
+    let ret_go = run_go_test(
+        "./Eigen/eigensdk-go_lambda",
+        "TestAvsRegistryServiceChainCaller_GetOperatorsAvsState",
+    );
 
     println!("status go: {}", ret_go.status);
     println!("stdout go: {}", String::from_utf8_lossy(&ret_go.stdout));
