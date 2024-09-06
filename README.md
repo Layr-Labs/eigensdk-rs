@@ -76,6 +76,11 @@ Run the tests with coverage instrumentations:
 make run-coverage
 ```
 
+Open the coverage html report in a web browser:
+```
+open target/llvm-cov/html/index.html
+```
+
 ## Supported Rust Version
 Rolling `MSRV` policy of 6 months. The current `MSRV` is 1.79
 
