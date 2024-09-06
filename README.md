@@ -68,20 +68,12 @@ Here's how to generate test coverage reports:
 
 Install llvm tools:
 ```
-rustup component add llvm-tools-preview
+make deps
 ```
 
 Run the tests with coverage instrumentations:
 ```
-cargo clean && mkdir -p coverage/ && rm -r coverage/*
-CARGO_INCREMENTAL=0 RUSTFLAGS='-Cinstrument-coverage' LLVM_PROFILE_FILE='coverage/cargo-test-%p-%m.profraw' cargo test --no-fail-fast
-```
-
-Install coverage report tool and run it:
-```
-cargo install grcov
-grcov . --binary-path ./target/debug/deps/ -s . -t html --branch --ignore-not-existing --ignore '../*' --ignore "/*" -o target/coverage/
-
+make run-coverage
 ```
 
 ## Supported Rust Version
