@@ -23,8 +23,9 @@ pr:
 run-coverage:
 	$(MAKE) start-anvil > /dev/null &
 	sleep 4 # needed to wait for anvil setup to finish
-	cargo llvm-cov --lcov --output-path lcov.info --ignore-filename-regex='fireblocks/' --workspace
+	cargo llvm-cov --html --ignore-filename-regex='fireblocks/' --workspace
 	docker stop anvil
+	open target/llvm-cov/index.html
 
 deps:
 	@if ! command -v cargo-llvm-cov &> /dev/null; then \
