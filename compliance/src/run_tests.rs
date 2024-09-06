@@ -18,9 +18,9 @@ pub(crate) fn run_rust_test(
 }
 
 // go test ./... -run TestAvsRegistryServiceChainCaller_GetOperatorsAvsState -v -args -data="./xzy.json"
-pub(crate) fn run_go_test(rust_repo_path: &str, test_name: &str) -> Result<Output, Error> {
+pub(crate) fn run_go_test(go_repo_path: &str, test_name: &str) -> Result<Output, Error> {
     Command::new("go")
-        .current_dir(rust_repo_path)
+        .current_dir(go_repo_path)
         .arg("test")
         .arg("./...")
         .arg("-run")

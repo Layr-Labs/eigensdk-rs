@@ -9,6 +9,7 @@ mod run_tests;
 mod utils;
 
 use run_tests::{run_go_test, run_rust_test};
+use std::io::Error;
 use utils::read_lines;
 
 fn main() {
@@ -16,29 +17,33 @@ fn main() {
         return;
     };
 
-    for line in lines.flatten() {
-        process_line(&line);
+    let rust_sdk_path = std::env::var("RUST_SDK_PATH").unwrap_or("../".to_string());
+    let go_sdk_path = std::env::var("GO_SDK_PATH").unwrap_or("../".to_string());
+
+    for line in lines.map_while(Result::ok) {
+        let _ = process_line(&line, rust_sdk_path.as_str(), go_sdk_path.as_str());
     }
 }
 
-fn process_line(line: &str) {
+fn process_line(line: &str, rust_sdk_path: &str, go_sdk_path: &str) -> Result<u8, Error> {
     println!("Run tests: {line}");
     let ret_rust = run_rust_test(
-        "./Eigen/eigen-rs-lambda",
+        rust_sdk_path,
         "eigen-services-blsaggregation",
         line,
-    );
+    )?;
 
     println!("status rust: {}", ret_rust.status);
 
     let ret_go = run_go_test(
-        "./Eigen/eigensdk-go_lambda",
+        go_sdk_path,
         "TestAvsRegistryServiceChainCaller_GetOperatorsAvsState",
-    );
+    )?;
 
     println!("status go: {}", ret_go.status);
     println!("stdout go: {}", String::from_utf8_lossy(&ret_go.stdout));
     println!("stderr go: {}", String::from_utf8_lossy(&ret_go.stderr));
 
     //cargo test -p eigen-services-blsaggregation "$line" -- --nocapture
+    Ok(0)
 }

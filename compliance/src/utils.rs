@@ -5,7 +5,7 @@ use std::{
 };
 
 /// Reads a file line by line and returns an iterator over the lines.
-pub fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>>
+pub(crate) fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>>
 where
     P: AsRef<Path>,
 {
