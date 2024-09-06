@@ -25,6 +25,7 @@ run-coverage:
 	sleep 4 # needed to wait for anvil setup to finish
 	cargo llvm-cov --html --ignore-filename-regex='fireblocks/' --workspace
 	docker stop anvil
+	cargo llvm-cov report --lcov > info.cov
 	open target/llvm-cov/index.html
 
 deps:
