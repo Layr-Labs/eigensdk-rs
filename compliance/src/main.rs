@@ -13,6 +13,10 @@ use run_tests::{run_go_test, run_rust_test};
 use std::io::Error;
 use utils::read_lines;
 
+// TODO! test:
+// go: TestAvsRegistryServiceChainCaller_GetOperatorsAvsState
+// rust: test_get_operator_avs_state
+
 fn main() {
     let _ = dotenvy::dotenv();
     let rust_sdk_path = std::env::var("RUST_SDK_PATH").unwrap_or("../".to_string());

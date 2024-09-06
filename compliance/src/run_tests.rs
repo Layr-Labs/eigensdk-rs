@@ -6,8 +6,10 @@ pub(crate) fn run_rust_test(
     package_name: &str,
     test_name: &str,
 ) -> Result<Output, Error> {
+    // TODO: send TEST_DATA_PATH env var
     Command::new("cargo")
         .current_dir(rust_repo_path)
+        .env("TEST_DATA_PATH", "/bin")
         .arg("test")
         .arg("-p")
         .arg(package_name)
@@ -19,6 +21,7 @@ pub(crate) fn run_rust_test(
 
 // go test ./... -run TestAvsRegistryServiceChainCaller_GetOperatorsAvsState -v -args -data="./xzy.json"
 pub(crate) fn run_go_test(go_repo_path: &str, test_name: &str) -> Result<Output, Error> {
+    // TODO: send TEST_DATA_PATH env var
     Command::new("go")
         .current_dir(go_repo_path)
         .arg("test")

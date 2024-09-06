@@ -1,0 +1,36 @@
+{
+  "input": {
+    "query_quorum_numbers": [1],
+    "query_block_num": 1,
+    "operator": {
+      "operator_addr": "0x1",
+      "operator_id": "0x1",
+      "operator_info": {
+        "pubkeys": {
+          "g1_pubkey": {
+            "x": 1,
+            "y": 1
+          },
+          "g2_pubkey": {
+            "x": [1, 1],
+            "y": [1, 1]
+          }
+        },
+        "socket": "localhost:8080"
+      }
+    }
+  },
+  "output": {
+    "operators_avs_state": [
+      {
+        "operator_addr": "0x1",
+        "operator_id": "0x1",
+        "stake_per_quorum": {
+          "quorum": 1,
+          "stake": 123
+        },
+        "block_number": 1
+      }
+    ]
+  }
+}
