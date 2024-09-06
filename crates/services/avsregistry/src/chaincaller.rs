@@ -175,11 +175,11 @@ mod tests {
         "13710126902690889134622698668747132666439281256983827313388062967626731803599";
     const OPERATOR_ID: &str = "48beccce16ccdf8000c13d5af5f91c7c3dac6c47b339d993d229af1500dbe4a9";
     const OPERATOR_ADDRESS: &str = "0xa0Ee7A142d267C1f36714E4a8F75612F20a79720";
-    fn build_test_operator(operator_id: &str, pubkeys: OperatorPubKeys) -> FakeOperator {
-        let operator_id = B256::from_str(operator_id).unwrap();
+
+    fn build_test_operator() -> FakeOperator {
         FakeOperator {
-            operator_id,
-            pubkeys,
+            operator_id: B256::from_str(OPERATOR_ID).unwrap(),
+            pubkeys: OperatorPubKeys::from(BlsKeyPair::new(PRIVATE_KEY_DECIMAL.into()).unwrap()),
             stake_per_quorum: HashMap::from([(1u8, U256::from(123))]),
         }
     }
@@ -195,16 +195,14 @@ mod tests {
 
     #[tokio::test]
     async fn test_get_operator_info() {
-        let bls_keypair =
-            OperatorPubKeys::from(BlsKeyPair::new(PRIVATE_KEY_DECIMAL.into()).unwrap());
-        let test_operator = build_test_operator(OPERATOR_ID, bls_keypair.clone());
+        let test_operator = build_test_operator();
 
         let service = build_avs_registry_service_chaincaller(test_operator.clone());
         let operator_info = service
             .get_operator_info(test_operator.operator_id.into())
             .await
             .unwrap();
-        let expected_operator_info = Some(OperatorPubKeys::from(bls_keypair));
+        let expected_operator_info = Some(test_operator.pubkeys);
         assert_eq!(expected_operator_info, Some(operator_info));
     }
 
@@ -218,7 +216,7 @@ mod tests {
     #[derive(Deserialize, Debug)]
     struct Operator {
         operator_addr: String,
-        operator_id: String,
+        operator_id: B256,
         operator_info: SerdeOperatorInfo,
     }
 
@@ -259,8 +257,12 @@ mod tests {
         let reader = BufReader::new(file);
         let data: TestData = serde_json::from_reader(reader).unwrap();
 
-        let pubkeys = data.input.operator.operator_info.pubkeys;
-        let test_operator = build_test_operator(data.input.operator.operator_id.as_str(), pubkeys);
+        let test_operator = FakeOperator {
+            operator_id: data.input.operator.operator_id,
+            pubkeys: data.input.operator.operator_info.pubkeys,
+            stake_per_quorum: HashMap::from([(1u8, U256::from(123))]),
+        };
+
         let service = build_avs_registry_service_chaincaller(test_operator.clone());
 
         let operator_avs_state = service
@@ -272,14 +274,12 @@ mod tests {
             .unwrap();
 
         let expected_operator_avs_state = OperatorAvsState {
-            operator_id: B256::from_str(data.input.operator.operator_id.as_str())
-                .unwrap()
-                .into(),
+            operator_id: data.input.operator.operator_id.into(),
             operator_info: OperatorInfo {
                 pub_keys: Some(test_operator.pubkeys),
             },
             stake_per_quorum: test_operator.stake_per_quorum,
-            block_num: 1.into(),
+            block_num: data.input.query_block_num.into(),
         };
         let operator_state = operator_avs_state.get(&test_operator.operator_id).unwrap();
         assert_eq!(expected_operator_avs_state, *operator_state);
@@ -287,8 +287,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_get_quorum_avs_state() {
-        let pubkeys = OperatorPubKeys::from(BlsKeyPair::new(PRIVATE_KEY_DECIMAL.into()).unwrap());
-        let test_operator = build_test_operator(OPERATOR_ID, pubkeys);
+        let test_operator = build_test_operator();
         let quorum_num = 1;
         let block_num = 1u32;
         let service = build_avs_registry_service_chaincaller(test_operator.clone());
