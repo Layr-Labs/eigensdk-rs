@@ -1,19 +1,18 @@
 use alloy_primitives::Address;
 use async_trait::async_trait;
-use eigen_crypto_bls::BlsKeyPair;
 use eigen_types::operator::{OperatorInfo, OperatorPubKeys};
 
 use crate::{operator_info::OperatorInfoService, operatorsinfo_inmemory::OperatorInfoServiceError};
 
 pub struct FakeOperatorInfoService {
-    pub pubkeys: OperatorInfo,
+    pub operator_info: OperatorInfo,
 }
 
 impl FakeOperatorInfoService {
-    pub fn new(pubkeys: BlsKeyPair) -> Self {
+    pub fn new(pub_keys: OperatorPubKeys) -> Self {
         Self {
-            pubkeys: OperatorInfo {
-                pub_keys: Some(OperatorPubKeys::from(pubkeys)),
+            operator_info: OperatorInfo {
+                pub_keys: Some(pub_keys),
             },
         }
     }
@@ -25,6 +24,6 @@ impl OperatorInfoService for FakeOperatorInfoService {
         &self,
         _address: Address,
     ) -> Result<Option<OperatorPubKeys>, OperatorInfoServiceError> {
-        Ok(self.pubkeys.pub_keys.clone())
+        Ok(self.operator_info.pub_keys.clone())
     }
 }

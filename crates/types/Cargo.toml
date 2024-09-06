@@ -16,5 +16,6 @@ ethers.workspace = true
 num-bigint = "0.4.4"
 thiserror.workspace = true
 tokio.workspace = true
+serde.workspace = true
 
 [dev-dependencies]

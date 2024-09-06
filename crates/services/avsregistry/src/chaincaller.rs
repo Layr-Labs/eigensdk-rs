@@ -162,39 +162,41 @@ mod tests {
 
     use super::AvsRegistryServiceChainCaller;
     use alloy_primitives::{Address, B256, U256};
-    use eigen_client_avsregistry::fake_reader::FakeAvsRegistryReader;
+    use eigen_client_avsregistry::fake_reader::{FakeAvsRegistryReader, FakeOperator};
     use eigen_crypto_bls::{BlsG1Point, BlsKeyPair};
     use eigen_services_operatorsinfo::fake_operator_info::FakeOperatorInfoService;
     use eigen_types::operator::{
         OperatorAvsState, OperatorInfo, OperatorPubKeys, QuorumAvsState, QuorumNum,
     };
     use eigen_types::test::TestOperator;
+    use serde::Deserialize;
 
     const PRIVATE_KEY_DECIMAL: &str =
         "13710126902690889134622698668747132666439281256983827313388062967626731803599";
     const OPERATOR_ID: &str = "48beccce16ccdf8000c13d5af5f91c7c3dac6c47b339d993d229af1500dbe4a9";
     const OPERATOR_ADDRESS: &str = "0xa0Ee7A142d267C1f36714E4a8F75612F20a79720";
-    fn build_test_operator(operator_id: &str, bls_keypair: BlsKeyPair) -> TestOperator {
+    fn build_test_operator(operator_id: &str, pubkeys: OperatorPubKeys) -> FakeOperator {
         let operator_id = B256::from_str(operator_id).unwrap();
-        TestOperator {
+        FakeOperator {
             operator_id,
-            bls_keypair,
+            pubkeys,
             stake_per_quorum: HashMap::from([(1u8, U256::from(123))]),
         }
     }
 
     fn build_avs_registry_service_chaincaller(
-        test_operator: TestOperator,
+        test_operator: FakeOperator,
     ) -> AvsRegistryServiceChainCaller<FakeAvsRegistryReader, FakeOperatorInfoService> {
         let operator_address = Address::from_str(OPERATOR_ADDRESS).unwrap();
         let avs_registry = FakeAvsRegistryReader::new(test_operator.clone(), operator_address);
-        let operator_info_service = FakeOperatorInfoService::new(test_operator.bls_keypair.clone());
+        let operator_info_service = FakeOperatorInfoService::new(test_operator.pubkeys);
         AvsRegistryServiceChainCaller::new(avs_registry, operator_info_service)
     }
 
     #[tokio::test]
     async fn test_get_operator_info() {
-        let bls_keypair = BlsKeyPair::new(PRIVATE_KEY_DECIMAL.into()).unwrap();
+        let bls_keypair =
+            OperatorPubKeys::from(BlsKeyPair::new(PRIVATE_KEY_DECIMAL.into()).unwrap());
         let test_operator = build_test_operator(OPERATOR_ID, bls_keypair.clone());
 
         let service = build_avs_registry_service_chaincaller(test_operator.clone());
@@ -205,8 +207,6 @@ mod tests {
         let expected_operator_info = Some(OperatorPubKeys::from(bls_keypair));
         assert_eq!(expected_operator_info, Some(operator_info));
     }
-
-    use serde::Deserialize;
 
     #[derive(Deserialize, Debug)]
     struct Input {
@@ -224,21 +224,9 @@ mod tests {
 
     #[derive(Deserialize, Debug)]
     struct SerdeOperatorInfo {
-        pubkeys: PubKeys,
+        pubkeys: OperatorPubKeys,
         socket: String,
     }
-
-    #[derive(Deserialize, Debug)]
-    struct PubKeys {
-        g1_pubkey: BlsG1Point,
-        // g2_pubkey: G2PubKey,
-    }
-
-    // #[derive(Deserialize, Debug)]
-    // struct G2PubKey {
-    //     x: Vec<u64>,
-    //     y: Vec<u64>,
-    // }
 
     #[derive(Deserialize, Debug)]
     struct Output {
@@ -271,18 +259,7 @@ mod tests {
         let reader = BufReader::new(file);
         let data: TestData = serde_json::from_reader(reader).unwrap();
 
-        let bls_keypair = data.input.operator.operator_info.pubkeys;
-        // OperatorPubKeys {
-        //     g1_pub_key: pubkeys.g1_pubkey,
-        //     g2_pub_key: Some(BlsG2Point::new(Affine::from_coordinates(
-        //         G1Projective::new(
-        //             U256::from(pubkeys.g2_pubkey.x[0]),
-        //             U256::from(pubkeys.g2_pubkey.y[0]),
-        //             U256::from(1),
-        //         )
-        //         .into_affine(),
-        //     ))),
-        // };
+        let pubkeys = data.input.operator.operator_info.pubkeys;
         let test_operator = build_test_operator(data.input.operator.operator_id.as_str(), pubkeys);
         let service = build_avs_registry_service_chaincaller(test_operator.clone());
 
@@ -299,7 +276,7 @@ mod tests {
                 .unwrap()
                 .into(),
             operator_info: OperatorInfo {
-                pub_keys: Some(OperatorPubKeys::from(test_operator.bls_keypair)),
+                pub_keys: Some(test_operator.pubkeys),
             },
             stake_per_quorum: test_operator.stake_per_quorum,
             block_num: 1.into(),
@@ -310,8 +287,8 @@ mod tests {
 
     #[tokio::test]
     async fn test_get_quorum_avs_state() {
-        let bls_keypair = BlsKeyPair::new(PRIVATE_KEY_DECIMAL.into()).unwrap();
-        let test_operator = build_test_operator(OPERATOR_ID, bls_keypair.clone());
+        let pubkeys = OperatorPubKeys::from(BlsKeyPair::new(PRIVATE_KEY_DECIMAL.into()).unwrap());
+        let test_operator = build_test_operator(OPERATOR_ID, pubkeys);
         let quorum_num = 1;
         let block_num = 1u32;
         let service = build_avs_registry_service_chaincaller(test_operator.clone());
@@ -328,7 +305,7 @@ mod tests {
         let expected_quorum_state = QuorumAvsState {
             quorum_num,
             total_stake: *total_stake,
-            agg_pub_key_g1: test_operator.bls_keypair.public_key(),
+            agg_pub_key_g1: test_operator.pubkeys.g1_pub_key,
             block_num,
         };
         let expected_quorum_state_per_number =

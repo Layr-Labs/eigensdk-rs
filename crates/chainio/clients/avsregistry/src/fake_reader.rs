@@ -1,8 +1,13 @@
+use std::collections::HashMap;
+
 use crate::{error::AvsRegistryError, reader::AvsRegistryReader};
-use alloy_primitives::{Address, Bytes, FixedBytes};
+use alloy_primitives::{Address, Bytes, FixedBytes, U256};
 use async_trait::async_trait;
-use eigen_crypto_bls::BlsKeyPair;
-use eigen_types::test::TestOperator;
+use eigen_crypto_bls::{BlsKeyPair, OperatorId};
+use eigen_types::{
+    operator::{OperatorPubKeys, QuorumNum},
+    test::TestOperator,
+};
 use eigen_utils::binding::OperatorStateRetriever;
 
 const OPERATOR_STAKE: u128 = 123;
@@ -11,8 +16,15 @@ const OPERATOR_STAKE: u128 = 123;
 #[derive(Debug)]
 pub struct FakeAvsRegistryReader {
     operator_address: Address,
-    operator_pubkeys: BlsKeyPair,
+    operator_pubkeys: OperatorPubKeys,
     operator_id: FixedBytes<32>,
+}
+
+#[derive(Debug, Clone)]
+pub struct FakeOperator {
+    pub operator_id: OperatorId,
+    pub pubkeys: OperatorPubKeys,
+    pub stake_per_quorum: HashMap<QuorumNum, U256>,
 }
 
 impl FakeAvsRegistryReader {
@@ -26,11 +38,11 @@ impl FakeAvsRegistryReader {
     /// # Returns
     ///
     /// A FakeAvsRegistryReader
-    pub fn new(operator: TestOperator, operator_address: Address) -> Self {
+    pub fn new(operator: FakeOperator, operator_address: Address) -> Self {
         Self {
             operator_address,
             operator_id: operator.operator_id,
-            operator_pubkeys: operator.bls_keypair,
+            operator_pubkeys: operator.pubkeys,
         }
     }
 }

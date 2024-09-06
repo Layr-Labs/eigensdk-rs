@@ -3,6 +3,7 @@ use ark_serialize::{CanonicalSerialize, SerializationError};
 use eigen_crypto_bls::{BlsG1Point, BlsG2Point, BlsKeyPair};
 use ethers::{types::U64, utils::keccak256};
 use num_bigint::BigUint;
+use serde::Deserialize;
 use std::collections::HashMap;
 
 const MAX_NUMBER_OF_QUORUMS: usize = 192;
@@ -23,7 +24,7 @@ pub fn bitmap_to_quorum_ids(quorum_bitmaps: U256) -> Vec<u8> {
     quorum_ids
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Deserialize)]
 pub struct OperatorPubKeys {
     pub g1_pub_key: BlsG1Point,
     pub g2_pub_key: BlsG2Point,
