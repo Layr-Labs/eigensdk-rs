@@ -9,6 +9,8 @@ repository.workspace = true
 license-file.workspace = true
 
 [dependencies]
+convert_case = "0.6.0"
+dotenvy = "0.15.7"
 
 [lints]
 workspace = true
