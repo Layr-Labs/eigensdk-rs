@@ -154,29 +154,31 @@ impl<R: AvsRegistryReader, S: OperatorInfoService> AvsRegistryServiceChainCaller
 #[cfg(test)]
 mod tests {
     use std::collections::HashMap;
+    use std::fs::File;
+    use std::io::BufReader;
     use std::str::FromStr;
 
     use crate::AvsRegistryService;
 
     use super::AvsRegistryServiceChainCaller;
-    use alloy_primitives::{Address, FixedBytes, U256};
+    use alloy_primitives::{Address, B256, U256};
     use eigen_client_avsregistry::fake_reader::FakeAvsRegistryReader;
-    use eigen_crypto_bls::BlsKeyPair;
+    use eigen_crypto_bls::{BlsG1Point, BlsKeyPair};
     use eigen_services_operatorsinfo::fake_operator_info::FakeOperatorInfoService;
-    use eigen_types::operator::{OperatorAvsState, OperatorInfo, OperatorPubKeys, QuorumAvsState};
+    use eigen_types::operator::{
+        OperatorAvsState, OperatorInfo, OperatorPubKeys, QuorumAvsState, QuorumNum,
+    };
     use eigen_types::test::TestOperator;
 
     const PRIVATE_KEY_DECIMAL: &str =
         "13710126902690889134622698668747132666439281256983827313388062967626731803599";
     const OPERATOR_ID: &str = "48beccce16ccdf8000c13d5af5f91c7c3dac6c47b339d993d229af1500dbe4a9";
     const OPERATOR_ADDRESS: &str = "0xa0Ee7A142d267C1f36714E4a8F75612F20a79720";
-    fn build_test_operator() -> TestOperator {
-        let bls_keypair = BlsKeyPair::new(PRIVATE_KEY_DECIMAL.into()).unwrap();
-        let operator_id =
-            FixedBytes::<32>::from_slice(hex::decode(OPERATOR_ID).unwrap().as_slice());
+    fn build_test_operator(operator_id: &str, bls_keypair: BlsKeyPair) -> TestOperator {
+        let operator_id = B256::from_str(operator_id).unwrap();
         TestOperator {
             operator_id,
-            bls_keypair: bls_keypair.clone(),
+            bls_keypair,
             stake_per_quorum: HashMap::from([(1u8, U256::from(123))]),
         }
     }
@@ -192,8 +194,8 @@ mod tests {
 
     #[tokio::test]
     async fn test_get_operator_info() {
-        let test_operator = build_test_operator();
-        let bls_keypair = test_operator.bls_keypair.clone();
+        let bls_keypair = BlsKeyPair::new(PRIVATE_KEY_DECIMAL.into()).unwrap();
+        let test_operator = build_test_operator(OPERATOR_ID, bls_keypair.clone());
 
         let service = build_avs_registry_service_chaincaller(test_operator.clone());
         let operator_info = service
@@ -204,18 +206,98 @@ mod tests {
         assert_eq!(expected_operator_info, Some(operator_info));
     }
 
+    use serde::Deserialize;
+
+    #[derive(Deserialize, Debug)]
+    struct Input {
+        query_quorum_numbers: Vec<QuorumNum>,
+        query_block_num: u32,
+        operator: Operator,
+    }
+
+    #[derive(Deserialize, Debug)]
+    struct Operator {
+        operator_addr: String,
+        operator_id: String,
+        operator_info: SerdeOperatorInfo,
+    }
+
+    #[derive(Deserialize, Debug)]
+    struct SerdeOperatorInfo {
+        pubkeys: PubKeys,
+        socket: String,
+    }
+
+    #[derive(Deserialize, Debug)]
+    struct PubKeys {
+        g1_pubkey: BlsG1Point,
+        // g2_pubkey: G2PubKey,
+    }
+
+    // #[derive(Deserialize, Debug)]
+    // struct G2PubKey {
+    //     x: Vec<u64>,
+    //     y: Vec<u64>,
+    // }
+
+    #[derive(Deserialize, Debug)]
+    struct Output {
+        operators_avs_state: Vec<SerdeOperatorAvsState>,
+    }
+
+    #[derive(Deserialize, Debug)]
+    struct SerdeOperatorAvsState {
+        operator_addr: String,
+        operator_id: String,
+        stake_per_quorum: StakePerQuorum,
+        block_number: u64,
+    }
+
+    #[derive(Deserialize, Debug)]
+    struct StakePerQuorum {
+        quorum: u64,
+        stake: u64,
+    }
+
+    #[derive(Deserialize, Debug)]
+    struct TestData {
+        input: Input,
+        output: Output,
+    }
+
     #[tokio::test]
     async fn test_get_operator_avs_state() {
-        let test_operator = build_test_operator();
+        let file = File::open("../../../compliance/testdata/getOperatorsAvsState.json").unwrap();
+        let reader = BufReader::new(file);
+        let data: TestData = serde_json::from_reader(reader).unwrap();
+
+        let bls_keypair = data.input.operator.operator_info.pubkeys;
+        // OperatorPubKeys {
+        //     g1_pub_key: pubkeys.g1_pubkey,
+        //     g2_pub_key: Some(BlsG2Point::new(Affine::from_coordinates(
+        //         G1Projective::new(
+        //             U256::from(pubkeys.g2_pubkey.x[0]),
+        //             U256::from(pubkeys.g2_pubkey.y[0]),
+        //             U256::from(1),
+        //         )
+        //         .into_affine(),
+        //     ))),
+        // };
+        let test_operator = build_test_operator(data.input.operator.operator_id.as_str(), pubkeys);
         let service = build_avs_registry_service_chaincaller(test_operator.clone());
 
         let operator_avs_state = service
-            .get_operators_avs_state_at_block(1, &[1u8])
+            .get_operators_avs_state_at_block(
+                data.input.query_block_num,
+                data.input.query_quorum_numbers.as_slice(),
+            )
             .await
             .unwrap();
 
         let expected_operator_avs_state = OperatorAvsState {
-            operator_id: test_operator.operator_id.into(),
+            operator_id: B256::from_str(data.input.operator.operator_id.as_str())
+                .unwrap()
+                .into(),
             operator_info: OperatorInfo {
                 pub_keys: Some(OperatorPubKeys::from(test_operator.bls_keypair)),
             },
@@ -228,7 +310,8 @@ mod tests {
 
     #[tokio::test]
     async fn test_get_quorum_avs_state() {
-        let test_operator = build_test_operator();
+        let bls_keypair = BlsKeyPair::new(PRIVATE_KEY_DECIMAL.into()).unwrap();
+        let test_operator = build_test_operator(OPERATOR_ID, bls_keypair.clone());
         let quorum_num = 1;
         let block_num = 1u32;
         let service = build_avs_registry_service_chaincaller(test_operator.clone());

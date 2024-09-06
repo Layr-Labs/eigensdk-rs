@@ -1644,6 +1644,9 @@ dependencies = [
 [[package]]
 name = "compliance-test"
 version = "0.0.1-alpha"
+dependencies = [
+ "serde_json",
+]
 
 [[package]]
 name = "const-hex"
@@ -2243,6 +2246,8 @@ dependencies = [
  "eigen-types",
  "eigen-utils",
  "hex",
+ "serde",
+ "serde_json",
  "tokio",
 ]
 
