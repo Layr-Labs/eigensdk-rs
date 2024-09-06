@@ -73,7 +73,7 @@ make deps
 
 Run the tests with coverage instrumentations:
 ```
-make run-coverage
+make coverage
 ```
 
 Open the coverage html report in a web browser:
