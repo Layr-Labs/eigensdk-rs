@@ -1,8 +1,0 @@
-{
-    "input": {
-        "query_quorum_numbers": [
-            1
-        ],
-        "query_block_num": 1
-    }
-}
