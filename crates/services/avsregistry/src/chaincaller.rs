@@ -54,6 +54,7 @@ impl<R: AvsRegistryReader + Sync, S: OperatorInfoService + Sync> AvsRegistryServ
 
         for (quorum_id, quorum_num) in quorum_nums.iter().enumerate() {
             for operator in &operators_stakes_in_quorums[quorum_id] {
+                // BUG! check this. Should it be indexed by quorum_num?
                 let info = self.get_operator_info(*operator.operatorId).await?;
                 let stake_per_quorum = HashMap::new();
                 let avs_state = operators_avs_state
@@ -210,45 +211,11 @@ mod tests {
     struct Input {
         query_quorum_numbers: Vec<QuorumNum>,
         query_block_num: u32,
-        operator: Operator,
-    }
-
-    #[derive(Deserialize, Debug)]
-    struct Operator {
-        operator_addr: String,
-        operator_id: B256,
-        operator_info: SerdeOperatorInfo,
-    }
-
-    #[derive(Deserialize, Debug)]
-    struct SerdeOperatorInfo {
-        pubkeys: OperatorPubKeys,
-        socket: String,
-    }
-
-    #[derive(Deserialize, Debug)]
-    struct Output {
-        operators_avs_state: Vec<SerdeOperatorAvsState>,
-    }
-
-    #[derive(Deserialize, Debug)]
-    struct SerdeOperatorAvsState {
-        operator_addr: String,
-        operator_id: String,
-        stake_per_quorum: StakePerQuorum,
-        block_number: u64,
-    }
-
-    #[derive(Deserialize, Debug)]
-    struct StakePerQuorum {
-        quorum: u64,
-        stake: u64,
     }
 
     #[derive(Deserialize, Debug)]
     struct TestData {
         input: Input,
-        output: Output,
     }
 
     #[tokio::test]
@@ -258,29 +225,34 @@ mod tests {
         let reader = BufReader::new(file);
         let data: TestData = serde_json::from_reader(reader).unwrap();
 
-        let test_operator = FakeOperator {
-            operator_id: data.input.operator.operator_id,
-            pubkeys: data.input.operator.operator_info.pubkeys,
-            stake_per_quorum: HashMap::from([(1u8, U256::from(123))]),
-        };
-
+        let block_num = data.input.query_block_num;
+        let quorum_nums = data.input.query_quorum_numbers.as_slice();
+        let test_operator = build_test_operator();
         let service = build_avs_registry_service_chaincaller(test_operator.clone());
 
         let operator_avs_state = service
-            .get_operators_avs_state_at_block(
-                data.input.query_block_num,
-                data.input.query_quorum_numbers.as_slice(),
-            )
+            .get_operators_avs_state_at_block(block_num, quorum_nums)
             .await
             .unwrap();
 
+        // get the expected stakes for the selected quorums
+        let expected_stake_per_quorum = quorum_nums
+            .into_iter()
+            .filter_map(|key| {
+                test_operator
+                    .stake_per_quorum
+                    .get(&key)
+                    .map(|value| (*key, value.clone()))
+            })
+            .collect();
+
         let expected_operator_avs_state = OperatorAvsState {
-            operator_id: data.input.operator.operator_id.into(),
+            operator_id: test_operator.operator_id.into(),
             operator_info: OperatorInfo {
                 pub_keys: Some(test_operator.pubkeys),
             },
-            stake_per_quorum: test_operator.stake_per_quorum,
-            block_num: data.input.query_block_num.into(),
+            stake_per_quorum: expected_stake_per_quorum,
+            block_num: block_num.into(),
         };
         let operator_state = operator_avs_state.get(&test_operator.operator_id).unwrap();
         assert_eq!(expected_operator_avs_state, *operator_state);
