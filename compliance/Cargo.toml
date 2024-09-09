@@ -1,0 +1,27 @@
+[package]
+name = "compliance"
+description = "Compliance tests"
+
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+repository.workspace = true
+license-file.workspace = true
+
+[dependencies]
+
+[dev-dependencies]
+alloy-primitives.workspace = true
+ark-bn254.workspace = true
+ark-ec.workspace = true
+async-trait.workspace = true
+eigen-client-avsregistry.workspace = true
+eigen-crypto-bls.workspace = true
+eigen-services-operatorsinfo.workspace = true
+eigen-services-avsregistry.workspace = true
+eigen-types.workspace = true
+eigen-utils.workspace = true
+hex.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+tokio.workspace = true
