@@ -538,7 +538,6 @@ mod tests {
     use alloy_primitives::{B256, U256};
     use eigen_crypto_bls::{BlsG1Point, BlsG2Point, BlsKeyPair, Signature};
     use eigen_services_avsregistry::fake_avs_registry_service::FakeAvsRegistryService;
-    use eigen_testing_utils::utils::get_folder_and_json_name;
     use eigen_types::avs::SignatureVerificationError::IncorrectSignature;
     use eigen_types::operator::{QuorumNum, QuorumThresholdPercentages};
     use eigen_types::{avs::TaskIndex, test::TestOperator};
@@ -589,14 +588,6 @@ mod tests {
 
     #[tokio::test]
     async fn test_1_quorum_1_operator_1_correct_signature() {
-        let func_name = std::thread::current()
-            .name()
-            .map(|s| s.to_string())
-            .unwrap();
-        let (folder, json_name) = get_folder_and_json_name(func_name.as_str());
-        let base_folder = println!("folder: {}", folder);
-        println!("json name: {}", json_name);
-
         let test_operator_1 = TestOperator {
             operator_id: U256::from(1).into(),
             stake_per_quorum: HashMap::from([(0u8, U256::from(100)), (1u8, U256::from(200))]),
