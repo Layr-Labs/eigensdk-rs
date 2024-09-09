@@ -1,6 +1,6 @@
 use std::io::Error;
-use std::str::Utf8Error;
 use std::process::{Command, Output};
+use std::str::Utf8Error;
 
 pub(crate) fn run_rust_test(rust_repo_path: &str, test_name: &str) -> Result<Output, Error> {
     // TODO: send TEST_DATA_PATH env var
@@ -36,4 +36,10 @@ pub(crate) fn parse_go_output(stdout: &[u8]) -> Result<Vec<String>, Utf8Error> {
         .collect::<Vec<String>>())
 }
 
-//pub(crate) fn parse_rust_output(stdout: &[u8]) -> Result<Vec<String>, Error> {
+pub(crate) fn parse_rust_output(stdout: &[u8]) -> Result<Vec<String>, Utf8Error> {
+    Ok(std::str::from_utf8(stdout)?
+        .lines()
+        .filter(|line| line.contains("... ok"))
+        .map(|line| line.to_string())
+        .collect::<Vec<String>>())
+}

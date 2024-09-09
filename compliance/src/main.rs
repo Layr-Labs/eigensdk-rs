@@ -9,7 +9,7 @@ mod run_tests;
 mod utils;
 
 use convert_case::{Case, Casing};
-use run_tests::{parse_go_output, run_go_test, run_rust_test};
+use run_tests::{parse_go_output, parse_rust_output, run_go_test, run_rust_test};
 use std::io::Error;
 use utils::read_lines;
 
@@ -42,13 +42,21 @@ fn process_line(line: &str, rust_sdk_path: &str, go_sdk_path: &str) -> Result<u8
     println!("{}", rust_function_test);
     println!("{}", go_function_test);
 
-    let ret_rust = run_rust_test(rust_sdk_path, &rust_function_test);
-    println!("status rust: {}", ret_rust?.status);
+    let ret_rust = run_rust_test(rust_sdk_path, &rust_function_test)?;
+    let ret_rust_parsed = parse_rust_output(&ret_rust.stdout).unwrap();
 
     let ret_go = run_go_test(go_sdk_path, &go_function_test)?;
-    let ret_parsed = parse_go_output(&ret_go.stdout).unwrap();
+    let ret_go_parsed = parse_go_output(&ret_go.stdout).unwrap();
 
-    println!("count tests run: {}", ret_parsed.len());
+    println!("status rust: {}", ret_rust.status);
+    println!("output rust: {}", ret_rust_parsed[0]);
+    println!("count tests run: {}", ret_rust_parsed.len());
+
+    println!("==============");
+
+    println!("status go: {}", ret_go.status);
+    println!("output go: {}", ret_go_parsed[0]);
+    println!("count tests run: {}", ret_go_parsed.len());
 
     // TODO! check if the test was run in the go/rust output and if the status is 0
     Ok(0)
