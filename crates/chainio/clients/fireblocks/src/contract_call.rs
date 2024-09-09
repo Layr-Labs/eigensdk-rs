@@ -105,7 +105,6 @@ impl ContractCall for Client {
         let contract_call_result = self
             .post_request(&format!("/v1/transactions/{}", contract_call_request), None)
             .await;
-        println!("contract call rquest: {:?}", contract_call_result);
         match contract_call_result {
             Ok(contract_call) => {
                 let contract_call_req: ContractCallRequest =

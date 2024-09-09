@@ -203,7 +203,6 @@ impl FireblocksWallet {
             .fireblocks_client
             .get_transaction(tx_id.clone())
             .await?;
-
         match fireblocks_tx.status() {
             Status::Completed => {
                 let provider = get_provider(&self.provider);
@@ -371,12 +370,12 @@ mod tests {
         );
         let mut fireblocks_wallet = FireblocksWallet::new(
             client,
-            "https://ethereum-sepolia.rpc.subquery.network/public".to_string(),
+            "https://holesky.drpc.org".to_string(),
             "vault-name".to_string(),
         )
         .await
         .unwrap();
-        let tx_id = "10d377ac-0655-45c3-9d05-4fe0887787f3";
+        let tx_id = "39155aaa-cae7-45d8-824b-b74aef68edc0";
         let _ = fireblocks_wallet
             .get_transaction_receipt(tx_id.to_string())
             .await
