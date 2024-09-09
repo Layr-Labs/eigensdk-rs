@@ -1646,15 +1646,11 @@ name = "compliance"
 version = "0.0.1-alpha"
 dependencies = [
  "alloy-primitives",
- "ark-bn254",
- "ark-ec",
- "async-trait",
  "eigen-client-avsregistry",
  "eigen-crypto-bls",
  "eigen-services-avsregistry",
  "eigen-services-operatorsinfo",
  "eigen-types",
- "eigen-utils",
  "hex",
  "serde",
  "serde_json",

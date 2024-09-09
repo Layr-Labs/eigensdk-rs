@@ -53,7 +53,7 @@ pub mod test {
     }
 
     #[tokio::test]
-    async fn test_get_operator_avs_state() {
+    async fn test_get_operators_avs_state() {
         let test_data_path = std::env::var("TEST_DATA_PATH").unwrap();
         let file = File::open(test_data_path).unwrap();
         let reader = BufReader::new(file);
