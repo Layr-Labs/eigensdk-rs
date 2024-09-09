@@ -1,11 +1,6 @@
 #[cfg(test)]
 pub mod test {
-    use std::collections::HashMap;
-    use std::fs::File;
-    use std::io::BufReader;
-    use std::str::FromStr;
-
-    use alloy_primitives::{Address, FixedBytes, U256};
+    use alloy_primitives::{Address, B256, U256};
     use eigen_client_avsregistry::fake_reader::FakeAvsRegistryReader;
     use eigen_crypto_bls::BlsKeyPair;
     use eigen_services_avsregistry::{
@@ -15,6 +10,10 @@ pub mod test {
     use eigen_types::operator::{OperatorAvsState, OperatorInfo, OperatorPubKeys, QuorumNum};
     use eigen_types::test::TestOperator;
     use serde::Deserialize;
+    use std::collections::HashMap;
+    use std::fs::File;
+    use std::io::BufReader;
+    use std::str::FromStr;
 
     const PRIVATE_KEY_DECIMAL: &str =
         "13710126902690889134622698668747132666439281256983827313388062967626731803599";
@@ -32,26 +31,6 @@ pub mod test {
         input: Input,
     }
 
-    fn build_test_operator() -> TestOperator {
-        let bls_keypair = BlsKeyPair::new(PRIVATE_KEY_DECIMAL.into()).unwrap();
-        let operator_id =
-            FixedBytes::<32>::from_slice(hex::decode(OPERATOR_ID).unwrap().as_slice());
-        TestOperator {
-            operator_id,
-            bls_keypair: bls_keypair.clone(),
-            stake_per_quorum: HashMap::from([(1u8, U256::from(123))]),
-        }
-    }
-
-    fn build_avs_registry_service_chaincaller(
-        test_operator: TestOperator,
-    ) -> AvsRegistryServiceChainCaller<FakeAvsRegistryReader, FakeOperatorInfoService> {
-        let operator_address = Address::from_str(OPERATOR_ADDRESS).unwrap();
-        let avs_registry = FakeAvsRegistryReader::new(test_operator.clone(), operator_address);
-        let operator_info_service = FakeOperatorInfoService::new(test_operator.bls_keypair.clone());
-        AvsRegistryServiceChainCaller::new(avs_registry, operator_info_service)
-    }
-
     #[tokio::test]
     async fn test_get_operators_avs_state() {
         let test_data_path = std::env::var("TEST_DATA_PATH").unwrap();
@@ -61,8 +40,16 @@ pub mod test {
 
         let block_num = data.input.block_num;
         let quorum_nums = data.input.quorum_numbers.as_slice();
-        let test_operator = build_test_operator();
-        let service = build_avs_registry_service_chaincaller(test_operator.clone());
+        let test_operator = TestOperator {
+            operator_id: B256::from_str(OPERATOR_ID).unwrap(),
+            bls_keypair: BlsKeyPair::new(PRIVATE_KEY_DECIMAL.into()).unwrap(),
+            stake_per_quorum: HashMap::from([(1u8, U256::from(123))]),
+        };
+
+        let operator_address = Address::from_str(OPERATOR_ADDRESS).unwrap();
+        let avs_registry = FakeAvsRegistryReader::new(test_operator.clone(), operator_address);
+        let operator_info_service = FakeOperatorInfoService::new(test_operator.bls_keypair.clone());
+        let service = AvsRegistryServiceChainCaller::new(avs_registry, operator_info_service);
 
         let operator_avs_state = service
             .get_operators_avs_state_at_block(block_num, quorum_nums)
