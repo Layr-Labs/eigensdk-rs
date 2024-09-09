@@ -92,44 +92,40 @@ impl Collector {
 
         gauge!("e_slashing_status").set(operator_is_frozen_float);
 
-        let operator_id_res = self.init_operator_id().await;
-
-        match operator_id_res {
-            Ok(_) => {
-                let quorum_stake_map = self
-                    .avs_registry_reader
-                    .get_operator_stake_in_quorums_of_operator_at_current_block(self.operator_id)
-                    .await?;
-                for (quorum_num, stake) in quorum_stake_map {
-                    let quorum_name_for_quorum_num = self.quorum_names.get(&(quorum_num as u64));
-                    let key;
-                    if let Some(quorum_name) = quorum_name_for_quorum_num {
-                        key = Key::from_parts(
-                            "eigen_registered_stakes",
-                            vec![
-                                Label::new("quorum_number", quorum_num.to_string()),
-                                Label::new("quorum_name", quorum_name.to_string()),
-                                Label::new("avs_name", self.avs_name.to_string()),
-                            ],
-                        );
-                    } else {
-                        key = Key::from_parts(
-                            "eigen_registered_stakes",
-                            vec![
-                                Label::new("quorum_number", quorum_num.to_string()),
-                                Label::new("quorum_name", "".to_string()),
-                                Label::new("avs_name", self.avs_name.to_string()),
-                            ],
-                        );
-                    }
-                    let u256_intermediate = U256::from_str(&stake.to_string())?;
-                    gauge!(key.to_string()).set(f64::from(u256_intermediate));
-                }
+        self.init_operator_id().await.inspect_err(|e| {
+            self.logger.warn(
+                &format!("Failed to fetch and cache operator id. Skipping collection of registeredStake metric. , err {}", e),
+                "eigen-metrics-collectors-economic.collect"
+            );
+        })?;
+        let quorum_stake_map = self
+            .avs_registry_reader
+            .get_operator_stake_in_quorums_of_operator_at_current_block(self.operator_id)
+            .await?;
+        for (quorum_num, stake) in quorum_stake_map {
+            let quorum_name_for_quorum_num = self.quorum_names.get(&(quorum_num as u64));
+            let key;
+            if let Some(quorum_name) = quorum_name_for_quorum_num {
+                key = Key::from_parts(
+                    "eigen_registered_stakes",
+                    vec![
+                        Label::new("quorum_number", quorum_num.to_string()),
+                        Label::new("quorum_name", quorum_name.to_string()),
+                        Label::new("avs_name", self.avs_name.to_string()),
+                    ],
+                );
+            } else {
+                key = Key::from_parts(
+                    "eigen_registered_stakes",
+                    vec![
+                        Label::new("quorum_number", quorum_num.to_string()),
+                        Label::new("quorum_name", "".to_string()),
+                        Label::new("avs_name", self.avs_name.to_string()),
+                    ],
+                );
             }
-            Err(e) => {
-                self.logger.warn(&format!("Failed to fetch and cache operator id. Skipping collection of registeredStake metric. , err {}",e),"eigen-metrics-collectors-economic.collect");
-                return Err(e);
-            }
+            let u256_intermediate = U256::from_str(&stake.to_string())?;
+            gauge!(key.to_string()).set(f64::from(u256_intermediate));
         }
 
         Ok(())
