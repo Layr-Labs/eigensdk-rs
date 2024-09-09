@@ -9,13 +9,17 @@ mod run_tests;
 mod utils;
 
 use convert_case::{Case, Casing};
-use run_tests::{run_go_test, run_rust_test};
+use run_tests::{parse_go_output, run_go_test, run_rust_test};
 use std::io::Error;
 use utils::read_lines;
 
 // TODO! test:
 // go: TestAvsRegistryServiceChainCaller_GetOperatorsAvsState
 // rust: test_get_operator_avs_state
+//
+//
+// TestAvsRegistryServiceChainCaller_GetOperatorAvsState
+// TestAvsRegistryServiceChainCaller_GetOperatorsAvsState
 
 fn main() {
     let _ = dotenvy::dotenv();
@@ -33,17 +37,19 @@ fn main() {
 
 fn process_line(line: &str, rust_sdk_path: &str, go_sdk_path: &str) -> Result<u8, Error> {
     println!("Run tests: {line}");
-    let ret_rust = run_rust_test(rust_sdk_path, "eigen-services-blsaggregation", line);
+    let rust_function_test = format!("test_{}", line.to_case(Case::Snake));
+    let go_function_test = line.to_case(Case::Pascal).to_string();
+    println!("{}", rust_function_test);
+    println!("{}", go_function_test);
 
-    println!("status rust: {}", ret_rust.unwrap().status);
+    let ret_rust = run_rust_test(rust_sdk_path, &rust_function_test);
+    println!("status rust: {}", ret_rust?.status);
 
-    let ret_go = run_go_test(
-        go_sdk_path,
-        "TestAvsRegistryServiceChainCaller_GetOperatorsAvsState",
-    )?;
+    let ret_go = run_go_test(go_sdk_path, &go_function_test)?;
+    let ret_parsed = parse_go_output(&ret_go.stdout).unwrap();
 
-    println!("status go: {}", ret_go.status);
+    println!("count tests run: {}", ret_parsed.len());
 
-    //cargo test -p eigen-services-blsaggregation "$line" -- --nocapture
+    // TODO! check if the test was run in the go/rust output and if the status is 0
     Ok(0)
 }

@@ -205,7 +205,7 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn test_get_operator_avs_state() {
+    async fn test_get_operators_avs_state() {
         let test_operator = build_test_operator();
         let service = build_avs_registry_service_chaincaller(test_operator.clone());
 

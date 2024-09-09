@@ -1,1 +1,1 @@
-test_1_quorum_1_operator_1_correct_signature
+get_operators_avs_state
