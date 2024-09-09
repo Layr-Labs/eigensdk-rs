@@ -235,23 +235,15 @@ mod tests {
             .await
             .unwrap();
 
-        // get the expected stakes for the selected quorums
-        let expected_stake_per_quorum = quorum_nums
-            .into_iter()
-            .filter_map(|key| {
-                test_operator
-                    .stake_per_quorum
-                    .get(&key)
-                    .map(|value| (*key, value.clone()))
-            })
-            .collect();
-
         let expected_operator_avs_state = OperatorAvsState {
             operator_id: test_operator.operator_id.into(),
             operator_info: OperatorInfo {
                 pub_keys: Some(test_operator.pubkeys),
             },
-            stake_per_quorum: expected_stake_per_quorum,
+            stake_per_quorum: HashMap::from([(
+                data.input.query_quorum_numbers[0],
+                U256::from(123),
+            )]),
             block_num: block_num.into(),
         };
         let operator_state = operator_avs_state.get(&test_operator.operator_id).unwrap();
