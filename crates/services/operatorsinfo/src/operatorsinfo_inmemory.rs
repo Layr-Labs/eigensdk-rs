@@ -259,15 +259,9 @@ mod tests {
     };
     use eigen_types::operator::Operator;
     use eigen_utils::get_provider;
-    use serde::Deserialize;
     use serial_test::serial;
-    use std::{
-        env,
-        fs::File,
-        io::BufReader,
-        str::FromStr,
-        time::{Duration, SystemTime, UNIX_EPOCH},
-    };
+    use std::str::FromStr;
+    use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
     #[tokio::test]
     async fn test_query_past_registered_operator_events_and_fill_db() {
@@ -313,38 +307,9 @@ mod tests {
         assert!(operator_info.unwrap().is_some());
     }
 
-    #[derive(Deserialize, Debug)]
-    struct TestData {
-        input: Input,
-        // output: BlsAggregationServiceResponse,
-    }
-
-    #[derive(Deserialize, Debug)]
-    struct Input {
-        pvt_key: String,
-        bls_key: String,
-    }
-
     #[tokio::test]
     #[serial]
     async fn test_start_service_1_operator_register() {
-        let test_data: TestData = match env::var("TEST_DATA_PATH") {
-            Ok(path) => {
-                let file = File::open(path).unwrap();
-                let reader = BufReader::new(file);
-                serde_json::from_reader(reader).unwrap()
-            }
-            Err(_) => {
-                TestData {
-                    input: Input {
-                        pvt_key:
-                            "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80".to_string(),
-                        bls_key: "12248929636257230549931416853095037629726205319386239410403476017439825112537".to_string(),
-                    },
-                }
-            }
-        };
-
         let anvil_ws_url = "ws://localhost:8545";
         let anvil_http_url = "http://localhost:8545";
         let test_logger = get_test_logger();
@@ -379,8 +344,8 @@ mod tests {
                 .await;
         });
         register_operator(
-            test_data.input.pvt_key.as_str(),
-            test_data.input.bls_key.as_str(),
+            "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80",
+            "12248929636257230549931416853095037629726205319386239410403476017439825112537",
         )
         .await;
         tokio::time::sleep(Duration::from_secs(1)).await; // need to wait atleast 1 second to get the event processed
