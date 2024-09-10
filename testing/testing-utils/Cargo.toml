@@ -18,4 +18,5 @@ alloy-provider.workspace = true
 alloy-transport-http.workspace = true
 eigen-utils.workspace = true
 once_cell.workspace = true
+serde.workspace = true
 tokio.workspace = true

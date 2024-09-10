@@ -14,3 +14,6 @@ pub mod m2_holesky_constants;
 
 /// Anvil constants
 pub mod anvil_constants;
+
+/// Test data read from JSON files, used for compliance testing.
+pub mod test_data;

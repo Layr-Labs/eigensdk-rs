@@ -2346,6 +2346,7 @@ dependencies = [
  "alloy-transport-http",
  "eigen-utils",
  "once_cell",
+ "serde",
  "tokio",
 ]
 

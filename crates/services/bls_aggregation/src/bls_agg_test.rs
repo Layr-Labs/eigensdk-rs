@@ -16,6 +16,7 @@ pub mod integration_test {
         get_erc20_mock_strategy, get_operator_state_retriever_address,
         get_registry_coordinator_address, get_service_manager_address,
     };
+    use eigen_testing_utils::test_data::TestData;
     use eigen_types::{
         avs::TaskIndex,
         operator::{QuorumNum, QuorumThresholdPercentages},
@@ -92,12 +93,6 @@ pub mod integration_test {
     }
 
     #[derive(Deserialize, Debug)]
-    struct TestData {
-        input: Input,
-        // output: BlsAggregationServiceResponse,
-    }
-
-    #[derive(Deserialize, Debug)]
     struct Input {
         bls_key: String,
         quorum_numbers: Vec<QuorumNum>,
@@ -109,7 +104,7 @@ pub mod integration_test {
     async fn test_bls_agg() {
         // test 1 quorum, 1 operator
         // if TEST_DATA_PATH is set, load the test data from the json file
-        let test_data: TestData = match env::var("TEST_DATA_PATH") {
+        let test_data: TestData<Input> = match env::var("TEST_DATA_PATH") {
             Ok(path) => {
                 let file = File::open(path).unwrap();
                 let reader = BufReader::new(file);
