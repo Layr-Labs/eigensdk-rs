@@ -104,6 +104,50 @@ impl BlsG2Point {
     }
 }
 
+impl Serialize for BlsG2Point {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        let mut buffer = Vec::new();
+        self.g2().serialize_uncompressed(&mut buffer).unwrap();
+        serializer.serialize_bytes(&buffer)
+    }
+}
+
+impl<'de> Deserialize<'de> for BlsG2Point {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        struct BlsG2PointVisitor;
+
+        impl<'de> Visitor<'de> for BlsG2PointVisitor {
+            type Value = BlsG2Point;
+
+            fn expecting(&self, formatter: &mut ark_std::fmt::Formatter) -> std::fmt::Result {
+                formatter.write_str("a byte array representing a G1Affine point")
+            }
+
+            fn visit_seq<A>(self, mut seq: A) -> Result<Self::Value, A::Error>
+            where
+                A: serde::de::SeqAccess<'de>,
+            {
+                let mut buffer = Vec::new();
+
+                while let Some(value) = seq.next_element()? {
+                    buffer.push(value);
+                }
+
+                let g2 = G2Affine::deserialize_uncompressed(&*buffer).map_err(de::Error::custom)?;
+                Ok(BlsG2Point { g2 })
+            }
+        }
+
+        deserializer.deserialize_seq(BlsG2PointVisitor)
+    }
+}
+
 /// Bls key pair with public key on G1
 #[derive(Debug, Clone)]
 pub struct BlsKeyPair {
