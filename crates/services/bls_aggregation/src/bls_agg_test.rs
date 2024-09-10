@@ -31,9 +31,7 @@ pub mod integration_test {
     use serde::Deserialize;
     use serial_test::serial;
     use sha2::{Digest, Sha256};
-    use std::{env, io::BufReader};
     use std::{
-        fs::File,
         process::{Command, Stdio},
         thread::sleep,
         time::Duration,
@@ -104,23 +102,12 @@ pub mod integration_test {
     async fn test_bls_agg() {
         // test 1 quorum, 1 operator
         // if TEST_DATA_PATH is set, load the test data from the json file
-        let test_data: TestData<Input> = match env::var("TEST_DATA_PATH") {
-            Ok(path) => {
-                let file = File::open(path).unwrap();
-                let reader = BufReader::new(file);
-                serde_json::from_reader(reader).unwrap()
-            }
-            Err(_) => {
-                // use default values
-                TestData {
-                    input: Input {
-                        bls_key: BLS_KEY_1.to_string(),
-                        quorum_numbers: vec![0],
-                        quorum_threshold_percentages: vec![100_u8],
-                    },
-                }
-            }
+        let default_input = Input {
+            bls_key: BLS_KEY_1.to_string(),
+            quorum_numbers: vec![0],
+            quorum_threshold_percentages: vec![100_u8],
         };
+        let test_data: TestData<Input> = TestData::new(default_input);
 
         let registry_coordinator_address = get_registry_coordinator_address().await;
         let operator_state_retriever_address = get_operator_state_retriever_address().await;

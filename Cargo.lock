@@ -2347,6 +2347,7 @@ dependencies = [
  "eigen-utils",
  "once_cell",
  "serde",
+ "serde_json",
  "tokio",
 ]
 
