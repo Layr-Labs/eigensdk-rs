@@ -1,7 +1,5 @@
-use crate::client::AssetID;
 use crate::client::Client;
 use crate::error::FireBlockError;
-use crate::status::Status;
 use crate::transaction::TransactionRequest;
 use crate::transaction::TransactionResponse;
 use serde::{Deserialize, Serialize};
@@ -107,36 +105,6 @@ pub enum PeerType {
     COMPOUND,
     END_USER_WALLET,
     CONTRACT,
-}
-
-/// Contract Call Request
-#[derive(Serialize, Deserialize, Debug)]
-#[serde(rename_all = "camelCase")]
-pub struct ContractCallRequest {
-    /// Type of Operation
-    operation: TransactionOperation,
-    /// Tx id
-    external_tx_id: String,
-    /// [`AssetID`]
-    asset_id: AssetID,
-    /// Source [`Account`]
-    source: Account,
-    /// Destination [`Account`]
-    destination: Account,
-    /// Amount
-    amount: String,
-    /// Any extra parameters
-    extra_parameters: Option<ExtraParameters>,
-    /// Replacement tx hash
-    replace_tx_by_hash: String,
-}
-
-#[allow(unused)]
-pub struct ContractCallResponse {
-    /// Response id
-    id: String,
-    /// Response [`Status`]
-    status: Status,
 }
 
 #[allow(async_fn_in_trait)]
