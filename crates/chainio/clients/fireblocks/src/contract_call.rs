@@ -147,6 +147,8 @@ mod tests {
     #[cfg(feature = "fireblock-tests")]
     use super::*;
     #[cfg(feature = "fireblock-tests")]
+    use crate::client::AssetID;
+    #[cfg(feature = "fireblock-tests")]
     use std::env;
 
     #[tokio::test]
