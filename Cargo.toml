@@ -1,6 +1,5 @@
 [workspace]
 members = [
-    "compliance",
     "crates/chainio/clients/avsregistry/",
     "crates/chainio/clients/elcontracts/",
     "crates/chainio/clients/eth/",

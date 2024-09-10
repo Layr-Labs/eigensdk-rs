@@ -156,15 +156,18 @@ mod tests {
     use std::collections::HashMap;
     use std::str::FromStr;
 
-    use crate::AvsRegistryService;
-
     use super::AvsRegistryServiceChainCaller;
+    use crate::AvsRegistryService;
     use alloy_primitives::{Address, FixedBytes, U256};
     use eigen_client_avsregistry::fake_reader::FakeAvsRegistryReader;
     use eigen_crypto_bls::BlsKeyPair;
     use eigen_services_operatorsinfo::fake_operator_info::FakeOperatorInfoService;
-    use eigen_types::operator::{OperatorAvsState, OperatorInfo, OperatorPubKeys, QuorumAvsState};
+    use eigen_testing_utils::test_data::TestData;
+    use eigen_types::operator::{
+        OperatorAvsState, OperatorInfo, OperatorPubKeys, QuorumAvsState, QuorumNum,
+    };
     use eigen_types::test::TestOperator;
+    use serde::Deserialize;
 
     const PRIVATE_KEY_DECIMAL: &str =
         "13710126902690889134622698668747132666439281256983827313388062967626731803599";
@@ -204,13 +207,28 @@ mod tests {
         assert_eq!(expected_operator_info, Some(operator_info));
     }
 
+    #[derive(Deserialize, Debug)]
+    struct Input {
+        quorum_numbers: Vec<QuorumNum>,
+        block_num: u32,
+    }
+
     #[tokio::test]
     async fn test_get_operators_avs_state() {
+        let default_input = Input {
+            quorum_numbers: vec![1],
+            block_num: 1,
+        };
+        let test_data: TestData<Input> = TestData::new(default_input);
+
         let test_operator = build_test_operator();
         let service = build_avs_registry_service_chaincaller(test_operator.clone());
 
         let operator_avs_state = service
-            .get_operators_avs_state_at_block(1, &[1u8])
+            .get_operators_avs_state_at_block(
+                test_data.input.block_num,
+                &test_data.input.quorum_numbers,
+            )
             .await
             .unwrap();
 
@@ -220,7 +238,7 @@ mod tests {
                 pub_keys: Some(OperatorPubKeys::from(test_operator.bls_keypair)),
             },
             stake_per_quorum: test_operator.stake_per_quorum,
-            block_num: 1.into(),
+            block_num: test_data.input.block_num.into(),
         };
         let operator_state = operator_avs_state.get(&test_operator.operator_id).unwrap();
         assert_eq!(expected_operator_avs_state, *operator_state);

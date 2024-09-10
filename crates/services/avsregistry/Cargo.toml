@@ -20,5 +20,7 @@ eigen-types.workspace = true
 eigen-utils.workspace = true
 
 [dev-dependencies]
+eigen-testing-utils.workspace = true
 hex.workspace = true
 tokio.workspace = true
+serde.workspace = true

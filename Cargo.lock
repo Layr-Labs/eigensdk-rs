@@ -1642,22 +1642,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "compliance"
-version = "0.0.1-alpha"
-dependencies = [
- "alloy-primitives",
- "eigen-client-avsregistry",
- "eigen-crypto-bls",
- "eigen-services-avsregistry",
- "eigen-services-operatorsinfo",
- "eigen-types",
- "hex",
- "serde",
- "serde_json",
- "tokio",
-]
-
-[[package]]
 name = "const-hex"
 version = "1.12.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2252,9 +2236,11 @@ dependencies = [
  "eigen-client-avsregistry",
  "eigen-crypto-bls",
  "eigen-services-operatorsinfo",
+ "eigen-testing-utils",
  "eigen-types",
  "eigen-utils",
  "hex",
+ "serde",
  "tokio",
 ]
 
