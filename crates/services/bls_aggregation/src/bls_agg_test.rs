@@ -30,11 +30,7 @@ pub mod integration_test {
     use serde::Deserialize;
     use serial_test::serial;
     use sha2::{Digest, Sha256};
-    use std::{
-        env,
-        io::{BufReader, Write},
-        path,
-    };
+    use std::{env, io::BufReader};
     use std::{
         fs::File,
         process::{Command, Stdio},
@@ -104,13 +100,14 @@ pub mod integration_test {
     #[derive(Deserialize, Debug)]
     struct Input {
         bls_key: String,
-        quorum_nums: Vec<QuorumNum>,
+        quorum_numbers: Vec<QuorumNum>,
         quorum_threshold_percentages: QuorumThresholdPercentages,
     }
 
     #[tokio::test]
     #[serial]
-    async fn test_1_quorum_1_operator() {
+    async fn test_bls_agg() {
+        // test 1 quorum, 1 operator
         // if TEST_DATA_PATH is set, load the test data from the json file
         let test_data: TestData = match env::var("TEST_DATA_PATH") {
             Ok(path) => {
@@ -123,7 +120,7 @@ pub mod integration_test {
                 TestData {
                     input: Input {
                         bls_key: BLS_KEY_1.to_string(),
-                        quorum_nums: vec![0],
+                        quorum_numbers: vec![0],
                         quorum_threshold_percentages: vec![100_u8],
                     },
                 }
@@ -135,7 +132,7 @@ pub mod integration_test {
         let service_manager_address = get_service_manager_address().await;
         let provider = get_provider(HTTP_ENDPOINT);
         let salt: FixedBytes<32> = FixedBytes::from([0x02; 32]);
-        let quorum_nums = Bytes::from(test_data.input.quorum_nums);
+        let quorum_nums = Bytes::from(test_data.input.quorum_numbers);
         let quorum_threshold_percentages: QuorumThresholdPercentages =
             test_data.input.quorum_threshold_percentages;
 
