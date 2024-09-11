@@ -14,8 +14,6 @@ jobs:
     steps:
       - name: Install Rust
         uses: dtolnay/rust-toolchain@1.80.1
-        with:
-            components: rustfmt, clippy
 
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -39,6 +37,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       
+      - name: Set up cargo cache
+        uses: Swatinem/rust-cache@v2
+
       - name: Run cargo fmt
         run: cargo fmt --all -- --check
 
@@ -125,9 +126,3 @@ jobs:
 
       - name: Run tests and generate code coverage
         run: make fireblocks-tests
-
-      - name: Upload coverage report
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-summary
-          path: lcov.info

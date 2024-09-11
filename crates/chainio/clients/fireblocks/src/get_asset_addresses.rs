@@ -81,7 +81,7 @@ mod tests {
         let api_url = env::var("FIREBLOCKS_API_URL").expect("FIREBLOCKS_API_URL not set");
         let private_key =
             std::fs::read_to_string(private_key_path).expect("Failed to read private key file");
-        let vault_id = "1";
+        let vault_id = "13";
         let asset_id: AssetID = AssetID::EthTest5;
         let client = Client::new(
             api_key.to_string(),
