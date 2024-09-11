@@ -10,7 +10,6 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
-    environment: testing
     steps:
       - name: Install Rust
         uses: dtolnay/rust-toolchain@1.80.1
@@ -27,7 +26,6 @@ jobs:
   lint:
     name: Run Lints
     runs-on: ubuntu-latest
-    environment: testing
     steps:
       - name: Install Rust
         uses: dtolnay/rust-toolchain@1.80.1
@@ -49,14 +47,7 @@ jobs:
   test:
     name: Run Tests
     runs-on: ubuntu-latest
-    environment: testing
-    env:
-      HOLESKY_WS_URL: ${{ secrets.HOLESKY_WS_URL }}
-      HOLESKY_HTTP_URL: ${{ secrets.HOLESKY_HTTP_URL }}
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
       - name: Install Rust
         uses: actions-rs/toolchain@v1
         with:
@@ -120,6 +111,9 @@ jobs:
         uses: Swatinem/rust-cache@v2
         with:
           cache-on-failure: true
+
+      - name: Install Foundry
+        run: cargo install --git https://github.com/foundry-rs/foundry --profile release --locked foundry-cast anvil
 
       - name: docker
         uses: docker-practice/actions-setup-docker@master
