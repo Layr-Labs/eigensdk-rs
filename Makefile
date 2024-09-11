@@ -33,10 +33,7 @@ deps:
 	fi
 
 fireblocks-tests:
-	$(MAKE) start-anvil > /dev/null &
-	sleep 4 # needed to wait for anvil setup to finish
 	cargo test --package eigen-client-fireblocks --features fireblock-tests
-	docker stop anvil
 
 lint:
 	cargo fmt --all -- --check \
