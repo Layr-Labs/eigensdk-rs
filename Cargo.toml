@@ -44,6 +44,9 @@ rust.unreachable_pub = "warn"
 rust.unused_must_use = "deny"
 rust.rust_2018_idioms = { level = "deny", priority = -1 }
 rustdoc.all = "warn"
+clippy.unwrap_used = "warn"
+clippy.expect_used = "warn"
+clippy.todo = "warn"
 
 [workspace.dependencies]
 ark-bn254 = "0.4.0"
@@ -109,11 +112,13 @@ tracing-subscriber = { version = "0.3", features = ["json"] }
 url = "2.5.2"
 
 #misc
-rust-bls-bn254 = {git = "https://github.com/Layr-Labs/rust-bls-bn254.git", rev = "be3ef87", features = ["std"] }
+rust-bls-bn254 = { git = "https://github.com/Layr-Labs/rust-bls-bn254.git", rev = "be3ef87", features = [
+    "std",
+] }
 uuid = { version = "1.10.0", features = ["v4"] }
 
 
-#misc 
+#misc
 parking_lot = "0.12"
 
 #alloy
@@ -128,7 +133,8 @@ alloy-network = { version = "0.1", default-features = false }
 alloy-node-bindings = { version = "0.1", default-features = false }
 alloy-primitives = "0.7.2"
 alloy-provider = { version = "0.1", default-features = false, features = [
-    "reqwest", "ws"
+    "reqwest",
+    "ws",
 ] }
 alloy-pubsub = { version = "0.1", default-features = false }
 alloy-rlp = "0.3.4"

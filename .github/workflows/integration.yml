@@ -1,4 +1,4 @@
-name: Integration Tests
+name: Tests
 
 on:
   push:
@@ -7,10 +7,46 @@ on:
     branches: [main]
 
 jobs:
-  test:
-    name: Run Integration Tests
+  build:
+    name: Build
     runs-on: ubuntu-latest
-    environment: testing
+    steps:
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@1.80.1
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up cargo cache
+        uses: Swatinem/rust-cache@v2
+
+      - name: Run cargo check
+        run: cargo check --workspace --all-features --all-targets
+
+  lint:
+    name: Run Lints
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@1.80.1
+        with:
+            components: rustfmt, clippy
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Set up cargo cache
+        uses: Swatinem/rust-cache@v2
+
+      - name: Run cargo fmt
+        run: cargo fmt --all -- --check
+
+      - name: Run clippy
+        run: cargo clippy --workspace --all-features --benches --examples --tests -- -D warnings
+
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
 
     env:
       HOLESKY_WS_URL: ${{ secrets.HOLESKY_WS_URL }}
@@ -36,22 +72,27 @@ jobs:
       - name: Install nightly Rust
         run: rustup toolchain install nightly
   
-      - name: Install rustfmt for nightly
-        run: rustup component add rustfmt --toolchain nightly
+      - name: Install testing tools
+        uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-llvm-cov
 
       - name: Cache Rust dependencies
         uses: Swatinem/rust-cache@v2
         with:
           cache-on-failure: true
-      - name: clippy
-        uses: dtolnay/rust-toolchain@clippy
-        
+
       - name: Install Foundry
-        run: cargo install --git https://github.com/foundry-rs/foundry --profile release --locked forge cast chisel anvil
+        run: cargo install --git https://github.com/foundry-rs/foundry --profile release --locked foundry-cast anvil
 
       - name: docker
         uses: docker-practice/actions-setup-docker@master
 
-      - name: Run make pr
-        run: make pr
+      - name: Run tests and generate code coverage
+        run: make coverage
 
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-summary
+          path: lcov.info

@@ -224,10 +224,7 @@ mod test {
 
         let keystore_instance = Keystore::from_file(output_path.to_str().unwrap()).unwrap();
         let decrypted_key = keystore_instance.decrypt("testpassword").unwrap();
-        let fr_key: String = decrypted_key
-            .iter()
-            .map(|&value| value as u8 as char)
-            .collect();
+        let fr_key: String = decrypted_key.iter().map(|&value| value as char).collect();
         assert_eq!(fr_key, key);
     }
 

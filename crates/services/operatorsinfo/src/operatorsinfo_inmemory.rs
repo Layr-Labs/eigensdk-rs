@@ -264,6 +264,7 @@ mod tests {
     use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
     #[tokio::test]
+    #[serial]
     async fn test_query_past_registered_operator_events_and_fill_db() {
         let anvil_ws_url = "ws://localhost:8545";
         let anvil_http_url = "http://localhost:8545";
