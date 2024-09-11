@@ -279,7 +279,7 @@ mod test {
     }
 
     #[tokio::test]
-    async fn test_egnaddrs_with_service_manager_flag() {
+    async fn test_egn_addrs_with_service_manager_flag() {
         let test_data = TestData::new(Input {
             service_manager_address: get_service_manager_address().await,
         });
@@ -316,7 +316,7 @@ mod test {
     }
 
     #[tokio::test]
-    async fn test_egnaddrs_with_registry_coordinator_flag() {
+    async fn test_egn_addrs_with_registry_coordinator_flag() {
         let registry_coordinator_address = get_registry_coordinator_address().await;
 
         let expected_addresses: ContractAddresses = serde_json::from_str(
