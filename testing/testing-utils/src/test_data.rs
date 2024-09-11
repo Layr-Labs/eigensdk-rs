@@ -14,17 +14,14 @@ pub struct TestData<T> {
 impl<T: DeserializeOwned> TestData<T> {
     /// Create a new instance of `TestData` with the given input data.
     pub fn new(default_input: T) -> Self {
-        match env::var("TEST_DATA_PATH") {
-            Ok(path) => {
-                let file = File::open(path).unwrap();
-                let reader = BufReader::new(file);
-                serde_json::from_reader(reader).unwrap()
-            }
-            Err(_) => {
-                // use default values
-                TestData {
-                    input: default_input,
-                }
+        if let Ok(path) = env::var("TEST_DATA_PATH") {
+            let file = File::open(path).unwrap();
+            let reader = BufReader::new(file);
+            serde_json::from_reader(reader).unwrap()
+        } else {
+            // use default values
+            TestData {
+                input: default_input,
             }
         }
     }
