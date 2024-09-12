@@ -660,4 +660,25 @@ mod tests {
             "The deserialized point does not match the original"
         );
     }
+
+    #[test]
+    fn test_serialize_deserialize_bls_g2_point() {
+        let bls_priv_key =
+            "12248929636257230549931416853095037629726205319386239410403476017439825112537";
+        let bls_key_pair = BlsKeyPair::new(bls_priv_key.to_string()).unwrap();
+
+        let original_point = bls_key_pair.public_key_g2();
+        // Serialize the BlsG2Point to a JSON string
+        let serialized = serde_json::to_string(&original_point).expect("Failed to serialize");
+
+        // Deserialize the JSON string back to a BlsG2Point
+        let deserialized: BlsG2Point =
+            serde_json::from_str(&serialized).expect("Failed to deserialize");
+
+        // Check that the deserialized point matches the original
+        assert_eq!(
+            original_point, deserialized,
+            "The deserialized point does not match the original"
+        );
+    }
 }
