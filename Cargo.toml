@@ -14,7 +14,6 @@ members = [
     "crates/metrics/",
     "crates/metrics/collectors/economic/",
     "crates/metrics/collectors/rpc_calls/",
-    "crates/metrics/metrics-derive",
     "crates/services/avsregistry/",
     "crates/services/bls_aggregation/",
     "crates/services/operatorsinfo/",
@@ -73,7 +72,6 @@ eigen-logging = { path = "crates/logging/" }
 eigen-metrics = { version = "0.0.1-alpha", path = "crates/metrics/" }
 eigen-metrics-collectors-economic = { path = "crates/metrics/collectors/economic" }
 eigen-metrics-collectors-rpc-calls = { path = "crates/metrics/collectors/rpc_calls" }
-eigen-metrics-derive = { path = "crates/metrics/metrics-derive" }
 eigen-services-avsregistry = { path = "crates/services/avsregistry" }
 eigen-services-bls_aggregation = { path = "crates/services/bls_aggregation" }
 eigen-services-operatorsinfo = { path = "crates/services/operatorsinfo" }
@@ -92,8 +90,8 @@ hex-literal = "0.4.1"
 hyper = "0.14.25"
 info-operator-service = { path = "examples/info-operator-service" }
 k256 = "0.13.3"
-metrics = "0.21.1"
-metrics-exporter-prometheus = "0.12.0"
+metrics = "0.23.0"
+metrics-exporter-prometheus = "0.15.3"
 num-bigint = "0.4.6"
 once_cell = "1.17"
 prometheus-client = "0.22.2"

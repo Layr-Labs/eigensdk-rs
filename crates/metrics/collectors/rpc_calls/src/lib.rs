@@ -4,57 +4,26 @@
 )]
 #![cfg_attr(not(test), warn(unused_crate_dependencies))]
 use eigen_logging::logger::SharedLogger;
-use eigen_metrics_derive::Metrics;
-use metrics::{Counter, Histogram, Key, Label};
-
-#[derive(Clone, Metrics)]
-#[metrics(scope = "eigen.rpcmetrics")]
-pub struct RpcCalls {
-    #[metric(
-        rename = "eigen_rpc_request_duration_seconds",
-        describe = " Duration of json-rpc <method> in seconds from Ethereum Execution client <client> "
-    )]
-    rpc_request_duration_seconds: Histogram,
-    #[metric(
-        rename = "eigen_rpc_request_total",
-        describe = "Total of json-rpc <method> requests from Ethereum Execution client <client> "
-    )]
-    rpc_request_total: Counter,
-}
+use metrics::{describe_counter, describe_histogram, Key, Label};
 
 /// RpcCallsMetrics
 #[derive(Debug)]
 pub struct RpcCallsMetrics {
-    /// All things related to Metrics <> Rpc call Analytics
-    rpc_calls: RpcCalls,
-
     logger: SharedLogger,
 }
 
 impl RpcCallsMetrics {
     pub fn new(logger: SharedLogger) -> Self {
-        let rpc_calls = Self {
-            rpc_calls: RpcCalls {
-                rpc_request_duration_seconds: metrics::register_histogram!(
-                    "eigen_rpc_request_duration_seconds"
-                ),
-                rpc_request_total: metrics::register_counter!("eigen_rpc_request_total"),
-            },
+        describe_histogram!(
+            "eigen_rpc_request_duration_seconds",
+            "Duration of json-rpc <method> in seconds from Ethereum Execution client <client>"
+        );
+        describe_counter!(
+            "eigen_rpc_request_total",
+            "Total of json-rpc <method> requests from Ethereum Execution client <client>"
+        );
 
-            logger,
-        };
-
-        RpcCalls::describe();
-
-        rpc_calls
-    }
-
-    pub fn rpc_request_duration_seconds(&self) -> Histogram {
-        self.rpc_calls.rpc_request_duration_seconds.clone()
-    }
-
-    pub fn rpc_request_total(&self) -> Counter {
-        self.rpc_calls.rpc_request_total.clone()
+        Self { logger }
     }
 
     /// set_rpc_request_duration_seconds
@@ -67,12 +36,12 @@ impl RpcCallsMetrics {
         let key = Key::from_parts(
             "eigen_rpc_request_duration_seconds",
             vec![
-                Label::new("method", method.to_string()),
+                Label::new("method ", method.to_string()),
                 Label::new("client_version", client_version.to_string()),
             ],
         );
 
-        metrics::histogram!(key.to_string(), duration);
+        metrics::histogram!(key.to_string()).record(duration);
         self.logger.debug(
             "set rpc requet duration seconds , methods : {} , client_version: {}, duration: {} ",
             "eigen-metrics-collectors-rpc-calls.set_rpc_request_duration_seconds",
@@ -94,7 +63,7 @@ impl RpcCallsMetrics {
             ],
         );
 
-        metrics::counter!(key.to_string(), rpc_request_total);
+        metrics::counter!(key.to_string()).absolute(rpc_request_total);
         self.logger.debug(
             "set rpc request total ",
             "eigen-metrics-collectors-rpc-calls.set_rpc_request_total",

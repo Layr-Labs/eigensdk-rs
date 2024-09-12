@@ -1,55 +1,33 @@
-use eigen_logging::logger::SharedLogger;
-use hyper::{
-    body::Body,
-    service::{make_service_fn, service_fn},
-    Request, Response, Server,
-};
-use metrics_exporter_prometheus::{PrometheusBuilder, PrometheusHandle};
-use std::{convert::Infallible, net::SocketAddr};
+use metrics_exporter_prometheus::PrometheusBuilder;
+use metrics_util::MetricKindMask;
+use std::{net::SocketAddr, time::Duration};
 
 #[allow(unused)]
-fn init_registry() -> PrometheusHandle {
-    let recorder = PrometheusBuilder::new().build_recorder();
-    let handle = recorder.handle();
-    let boxed_recorder = Box::new(recorder);
-    let static_recorder: &'static dyn metrics::Recorder = Box::leak(boxed_recorder);
-    metrics::set_recorder(static_recorder).expect("failed to set metrics recorder");
-    handle
-}
-
-#[allow(unused)]
-async fn serve_metrics(
-    addr: SocketAddr,
-    handle: PrometheusHandle,
-    logger: SharedLogger,
-) -> eyre::Result<()> {
-    logger.info(
-        &format!("Starting metrics server at port {}", addr),
-        "eigen-metrics.serve_metrics",
-    );
-    let make_svc = make_service_fn(move |_| {
-        let handle = handle.clone();
-
-        async move {
-            Ok::<_, Infallible>(service_fn(move |_: Request<Body>| {
-                let metrics = handle.render();
-                async move { Ok::<_, Infallible>(Response::new(Body::from(metrics))) }
-            }))
-        }
-    });
-
-    let server = Server::bind(&addr).serve(make_svc);
-    server.await?;
-    Ok(())
+pub fn init_registry(socket_addr: SocketAddr) {
+    PrometheusBuilder::new()
+        .with_http_listener(socket_addr)
+        .idle_timeout(
+            MetricKindMask::COUNTER | MetricKindMask::HISTOGRAM,
+            Some(Duration::from_secs(10)),
+        )
+        .install()
+        .expect("failed to install Prometheus recorder");
 }
 
 #[cfg(test)]
 
 mod tests {
+    use std::collections::HashMap;
+
     use super::*;
     use crate::eigenmetrics::EigenPerformanceMetrics;
-    use eigen_metrics_collectors_economic::RegisteredStakesMetrics;
+    use alloy_primitives::Address;
+    use alloy_primitives::FixedBytes;
+    use eigen_client_avsregistry::reader::AvsRegistryChainReader;
+    use eigen_metrics_collectors_economic::fake_collector::FakeCollector;
     use eigen_metrics_collectors_rpc_calls::RpcCallsMetrics;
+    use eigen_testing_utils::anvil_constants;
+    use num_bigint::BigInt;
     use tokio::time::sleep;
     use tokio::time::Duration;
 
@@ -57,19 +35,57 @@ mod tests {
     async fn test_prometheus_server() {
         use eigen_logging::get_test_logger;
         let socket: SocketAddr = "127.0.0.1:9091".parse().unwrap();
-        let handle = init_registry();
+        init_registry(socket);
 
-        // Initialize EigenMetrics
+        let operator_addr = Address::ZERO;
+        let operator_id = FixedBytes::<32>::default();
+        let http_anvil = "http://localhost:8545";
+        let avs_registry_reader = AvsRegistryChainReader::new(
+            get_test_logger(),
+            anvil_constants::get_registry_coordinator_address().await,
+            anvil_constants::get_operator_state_retriever_address().await,
+            http_anvil.to_string(),
+        )
+        .await
+        .unwrap();
+
+        let mut quorums_names = HashMap::new();
+        quorums_names.insert(1, "rust".to_string());
+        let avs_name = "eigensdk-rs";
+        let mut collector = FakeCollector::new(
+            get_test_logger(),
+            operator_addr,
+            operator_id,
+            avs_registry_reader,
+            quorums_names,
+            avs_name,
+        );
+
+        collector.set_stake("1", "first", avs_name, 2.0);
+        sleep(Duration::from_secs(1)).await;
+        let client = reqwest::Client::new();
+        let mut body = get_metrics_body(&client, "http://127.0.0.1:9091/metrics").await;
+
+        assert!(body.contains("eigen_registered_stakes"));
+        assert!(body.contains("quorum_number___1"));
+        assert!(body.contains("quorum_name___first"));
+        assert!(body.contains("avs_name___eigensdk_rs"));
+        assert!(body.contains("eigen_registered_stakes___quorum_number___1__quorum_name___first__avs_name___eigensdk_rs__ 2"));
+
+        let is_operator_frozen: bool = true;
+        let mut quorum_stake_map = HashMap::new();
+        quorum_stake_map.insert(1, BigInt::from(23));
+        let _ = collector
+            .collect(is_operator_frozen, quorum_stake_map)
+            .await;
+
+        body = get_metrics_body(&client, "http://127.0.0.1:9091/metrics").await;
+
+        assert!(body.contains("eigen_registered_stakes___quorum_number___1__quorum_name___rust__avs_name___eigensdk_rs__ 23"));
+
+        // Initialize all the metrics
         let metrics = EigenPerformanceMetrics::new(get_test_logger());
-        let registered_metrics = RegisteredStakesMetrics::new(get_test_logger());
         let rpc_calls = RpcCallsMetrics::new(get_test_logger());
-
-        // Run the metrics server in a background task
-        let server_handle = tokio::spawn(async move {
-            serve_metrics(socket, handle, get_test_logger())
-                .await
-                .unwrap();
-        });
 
         sleep(Duration::from_secs(1)).await;
 
@@ -87,21 +103,15 @@ mod tests {
         let mut body = resp.text().await.unwrap();
         assert!(body.contains("eigen_performance_score 100"));
 
-        metrics.performance_score().set(80.0);
+        metrics.set_performance_score(80.0);
         rpc_calls.set_rpc_request_duration_seconds("eth_getBlockByNumber", "rethv1.0.3", 100.0);
         rpc_calls.set_rpc_request_total("eth_getBlockByNumber", "rethv1.0.3", 10);
-        registered_metrics.set_stake("4th", "hello Eigen", 8.0);
 
         sleep(Duration::from_secs(1)).await;
 
         body = get_metrics_body(&client, "http://127.0.0.1:9091/metrics").await;
         assert!(body.contains("eigen_performance_score 80"));
-        assert!(body.contains(
-            "Key_eigen_registered_stakes___quorum_number___4th__quorum_name___hello_Eigen__ 8"
-        ));
-        assert!(body.contains("eigen_rpc_request_duration_seconds___method___eth_getBlockByNumber__client_version___rethv1_0_3__{quantile=\"1\"} 100"));
+        assert!(body.contains("eigen_rpc_request_duration_seconds___method____eth_getBlockByNumber__client_version___rethv1_0_3__{quantile=\"1\"} 100"));
         assert!(body.contains("eigen_rpc_request_total___method___eth_getBlockByNumber__client_version___rethv1_0_3__ 10"));
-        // Shutdown the server
-        server_handle.abort();
     }
 }

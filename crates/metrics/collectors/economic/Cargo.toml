@@ -6,6 +6,15 @@ rust-version.workspace = true
 repository.workspace = true
 
 [dependencies]
+alloy-primitives.workspace = true
 eigen-logging.workspace = true
-eigen-metrics-derive.workspace = true
+eigen-types.workspace = true
+eigen-client-elcontracts.workspace = true
+eigen-client-avsregistry.workspace = true
+thiserror.workspace = true
 metrics.workspace = true
+num-bigint.workspace = true
+
+[dev-dependencies]
+tokio.workspace = true
+eigen-testing-utils.workspace = true

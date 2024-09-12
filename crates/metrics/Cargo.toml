@@ -7,14 +7,17 @@ repository.workspace = true
 
 [dependencies]
 eigen-logging.workspace = true
-eigen-metrics-derive.workspace = true
-eyre.workspace = true
-hyper.workspace = true
 metrics.workspace = true
 metrics-exporter-prometheus.workspace = true
+metrics-util = "0.17.0"
 
 [dev-dependencies]
+alloy-primitives.workspace = true
 eigen-metrics-collectors-economic.workspace = true 
 eigen-metrics-collectors-rpc-calls.workspace = true
+eigen-client-elcontracts.workspace = true
+eigen-testing-utils.workspace = true
+eigen-client-avsregistry.workspace = true
+num-bigint.workspace = true
 reqwest = "0.12.4"
 tokio.workspace = true
