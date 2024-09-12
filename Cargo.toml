@@ -36,7 +36,7 @@ authors = ["Eigen Layer contributors"]
 rust-version = "1.79"
 repository = "https://github.com/Layr-Labs/eigensdk-rs"
 homepage = ""
-license-file = "LICENSE.txt"
+license-file = "LICENSE"
 
 [workspace.lints]
 rust.missing_debug_implementations = "warn"
