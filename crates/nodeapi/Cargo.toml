@@ -1,0 +1,17 @@
+[package]
+name = "eigen-nodeapi"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+repository.workspace = true
+
+[dependencies]
+serde_json.workspace =true
+ntex = { version = "2.0", features = ["tokio"] }
+serde.workspace = true
+tracing.workspace = true
+thiserror.workspace = true
+
+[dev-dependencies]
+reqwest.workspace = true
+tokio.workspace = true

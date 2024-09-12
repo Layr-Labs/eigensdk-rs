@@ -194,13 +194,16 @@ mod test {
         generate::{KeyGenerator, DEFAULT_KEY_FOLDER, PASSWORD_FILE, PRIVATE_KEY_HEX_FILE},
         operator_id::derive_operator_id,
     };
+    use alloy_primitives::Address;
     use eigen_testing_utils::anvil_constants::{
         get_registry_coordinator_address, get_service_manager_address, ANVIL_HTTP_URL,
     };
+    use eigen_testing_utils::test_data::TestData;
     use eth_keystore::decrypt_key;
     use k256::SecretKey;
     use rstest::rstest;
     use rust_bls_bn254::keystores::base_keystore::Keystore;
+    use serde::Deserialize;
     use std::fs;
     use tempfile::tempdir;
 
@@ -270,10 +273,16 @@ mod test {
         assert_eq!(private_key, decrypted_key);
     }
 
-    #[tokio::test]
-    async fn test_egnaddrs_with_service_manager_flag() {
-        let service_manager_address = get_service_manager_address().await;
+    #[derive(Deserialize, Debug)]
+    struct Input {
+        service_manager_address: Address,
+    }
 
+    #[tokio::test]
+    async fn test_egn_addrs_with_service_manager_flag() {
+        let test_data = TestData::new(Input {
+            service_manager_address: get_service_manager_address().await,
+        });
         let expected_addresses: ContractAddresses = serde_json::from_str(
             r#"{
             "avs": {
@@ -296,7 +305,7 @@ mod test {
         )
         .unwrap();
         let addresses = ContractAddresses::get_addresses(
-            Some(service_manager_address),
+            Some(test_data.input.service_manager_address),
             None,
             ANVIL_HTTP_URL.into(),
         )
@@ -307,7 +316,7 @@ mod test {
     }
 
     #[tokio::test]
-    async fn test_egnaddrs_with_registry_coordinator_flag() {
+    async fn test_egn_addrs_with_registry_coordinator_flag() {
         let registry_coordinator_address = get_registry_coordinator_address().await;
 
         let expected_addresses: ContractAddresses = serde_json::from_str(

@@ -11,6 +11,7 @@ use eigen_types::{
     operator::{OperatorAvsState, QuorumThresholdPercentage, QuorumThresholdPercentages},
 };
 use parking_lot::RwLock;
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::sync::Arc;
 use thiserror::Error;
@@ -21,7 +22,7 @@ use tokio::sync::{
 use tokio::time::{timeout, Duration};
 
 #[allow(unused)]
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct BlsAggregationServiceResponse {
     pub task_index: TaskIndex,
     pub task_response_digest: TaskResponseDigest,

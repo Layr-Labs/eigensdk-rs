@@ -104,6 +104,50 @@ impl BlsG2Point {
     }
 }
 
+impl Serialize for BlsG2Point {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        let mut buffer = Vec::new();
+        self.g2().serialize_uncompressed(&mut buffer).unwrap();
+        serializer.serialize_bytes(&buffer)
+    }
+}
+
+impl<'de> Deserialize<'de> for BlsG2Point {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        struct BlsG2PointVisitor;
+
+        impl<'de> Visitor<'de> for BlsG2PointVisitor {
+            type Value = BlsG2Point;
+
+            fn expecting(&self, formatter: &mut ark_std::fmt::Formatter) -> std::fmt::Result {
+                formatter.write_str("a byte array representing a G1Affine point")
+            }
+
+            fn visit_seq<A>(self, mut seq: A) -> Result<Self::Value, A::Error>
+            where
+                A: serde::de::SeqAccess<'de>,
+            {
+                let mut buffer = Vec::new();
+
+                while let Some(value) = seq.next_element()? {
+                    buffer.push(value);
+                }
+
+                let g2 = G2Affine::deserialize_uncompressed(&*buffer).map_err(de::Error::custom)?;
+                Ok(BlsG2Point { g2 })
+            }
+        }
+
+        deserializer.deserialize_seq(BlsG2PointVisitor)
+    }
+}
+
 /// Bls key pair with public key on G1
 #[derive(Debug, Clone)]
 pub struct BlsKeyPair {
@@ -608,6 +652,27 @@ mod tests {
 
         // Deserialize the JSON string back to a BlsG1Point
         let deserialized: BlsG1Point =
+            serde_json::from_str(&serialized).expect("Failed to deserialize");
+
+        // Check that the deserialized point matches the original
+        assert_eq!(
+            original_point, deserialized,
+            "The deserialized point does not match the original"
+        );
+    }
+
+    #[test]
+    fn test_serialize_deserialize_bls_g2_point() {
+        let bls_priv_key =
+            "12248929636257230549931416853095037629726205319386239410403476017439825112537";
+        let bls_key_pair = BlsKeyPair::new(bls_priv_key.to_string()).unwrap();
+
+        let original_point = bls_key_pair.public_key_g2();
+        // Serialize the BlsG2Point to a JSON string
+        let serialized = serde_json::to_string(&original_point).expect("Failed to serialize");
+
+        // Deserialize the JSON string back to a BlsG2Point
+        let deserialized: BlsG2Point =
             serde_json::from_str(&serialized).expect("Failed to deserialize");
 
         // Check that the deserialized point matches the original
