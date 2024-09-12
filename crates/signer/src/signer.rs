@@ -150,7 +150,7 @@ mod test {
     }
 
     #[tokio::test]
-    async fn sign_transaction_with_kms_signer() {
+    async fn test_sign_transaction_with_kms_signer() {
         // Start the container running Localstack
         let _container = start_localstack_container().await;
 
@@ -201,7 +201,7 @@ mod test {
     }
 
     #[tokio::test]
-    async fn sign_legacy_transaction_with_web3_signer() {
+    async fn test_sign_legacy_transaction_with_web3_signer() {
         let anvil = Anvil::default().spawn();
 
         let endpoint = anvil.endpoint();
