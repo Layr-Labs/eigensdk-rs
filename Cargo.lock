@@ -2470,15 +2470,6 @@ name = "eigen-nodeapi"
 version = "0.0.1-alpha"
 dependencies = [
  "actix-web",
- "alloy-contract",
- "alloy-json-rpc",
- "alloy-network",
- "alloy-provider",
- "alloy-pubsub",
- "alloy-signer-local",
- "alloy-sol-types",
- "alloy-transport",
- "alloy-transport-http",
  "reqwest 0.12.5",
  "serde",
  "serde_json",
