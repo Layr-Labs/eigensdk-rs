@@ -176,6 +176,15 @@ mod tests {
         operator_address: String,
     }
 
+    #[derive(Deserialize, Debug)]
+    struct InputOperatorAvsState {
+        quorum_numbers: Vec<QuorumNum>,
+        block_num: u32,
+        private_key_decimal: String,
+        operator_id: String,
+        operator_address: String,
+    }
+
     const PRIVATE_KEY_DECIMAL: &str =
         "13710126902690889134622698668747132666439281256983827313388062967626731803599";
     const OPERATOR_ID: &str = "48beccce16ccdf8000c13d5af5f91c7c3dac6c47b339d993d229af1500dbe4a9";
@@ -229,30 +238,25 @@ mod tests {
         assert_eq!(expected_operator_info, Some(operator_info));
     }
 
-    #[derive(Deserialize, Debug)]
-    struct Input {
-        quorum_numbers: Vec<QuorumNum>,
-        block_num: u32,
-        private_key_decimal: String, // TODO!!!! replace this in the JSON
-        operator_id: String,         // TODO!!!! replace this in the JSON
-    }
-
     #[tokio::test]
     async fn test_get_operators_avs_state() {
-        let default_input = Input {
+        let default_input = InputOperatorAvsState {
             quorum_numbers: vec![1],
             block_num: 1,
             private_key_decimal: PRIVATE_KEY_DECIMAL.to_owned(),
             operator_id: OPERATOR_ID.to_owned(),
+            operator_address: OPERATOR_ADDRESS.to_owned(),
         };
-        let test_data: TestData<Input> = TestData::new(default_input);
+        let test_data: TestData<InputOperatorAvsState> = TestData::new(default_input);
 
         let test_operator = build_test_operator(
             test_data.input.private_key_decimal.as_str(),
             test_data.input.operator_id.as_str(),
         );
-        let service =
-            build_avs_registry_service_chaincaller(test_operator.clone(), OPERATOR_ADDRESS);
+        let service = build_avs_registry_service_chaincaller(
+            test_operator.clone(),
+            test_data.input.operator_address.as_str(),
+        );
 
         let operator_avs_state = service
             .get_operators_avs_state_at_block(
