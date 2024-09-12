@@ -6,7 +6,7 @@
 
 pub mod error;
 
-use ntex::web::{self, types::Path, App, HttpResponse, HttpServer, Responder};
+use ntex::web::{self, App, HttpResponse, HttpServer, Responder};
 
 use error::NodeApiError;
 use serde::{Deserialize, Serialize};
