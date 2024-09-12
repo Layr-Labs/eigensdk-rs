@@ -21,3 +21,4 @@ actix-web = "4.9.0"
 serde.workspace = true
 tracing.workspace = true
 tokio.workspace = true
+thiserror.workspace = true
