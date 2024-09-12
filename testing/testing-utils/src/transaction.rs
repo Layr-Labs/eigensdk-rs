@@ -19,7 +19,7 @@ pub async fn get_transaction_status(tx_hash: FixedBytes<32>) -> bool {
         .clone()
         .get_transaction_receipt(tx_hash)
         .await
-        .unwrap()
-        .unwrap()
-        .status()
+        .unwrap_or(None)
+        .map(|receipt| receipt.status())
+        .unwrap_or(false)
 }
