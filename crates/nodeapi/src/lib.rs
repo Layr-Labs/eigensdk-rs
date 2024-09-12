@@ -6,7 +6,8 @@
 
 pub mod error;
 
-use actix_web::{web, App, HttpResponse, HttpServer, Responder};
+use ntex::web::{self, types::Path, App, HttpResponse, HttpServer, Responder};
+
 use error::NodeApiError;
 use serde::{Deserialize, Serialize};
 use tracing::info;
@@ -33,7 +34,7 @@ pub struct NodeService {
     status: ServiceStatus,
 }
 
-#[derive(Clone)]
+#[derive(Clone, Deserialize)]
 pub struct NodeApi {
     node_name: String,
     node_version: String,
@@ -145,17 +146,17 @@ impl NodeApi {
 }
 
 #[allow(unused)]
-pub async fn node_info(api: web::Data<NodeApi>) -> impl Responder {
+pub async fn node_info(api: web::types::State<NodeApi>) -> impl Responder {
     let response = serde_json::json!({
         "node_name": api.node_name,
         "node_version": api.node_version,
         "spec_version": "v0.0.1",
     });
-    HttpResponse::Ok().json(response)
+    HttpResponse::Ok().json(&response)
 }
 
 #[allow(unused)]
-pub async fn health_check(api: web::Data<NodeApi>) -> impl Responder {
+pub async fn health_check(api: web::types::State<NodeApi>) -> impl Responder {
     let health = &api.health;
 
     match health {
@@ -166,13 +167,16 @@ pub async fn health_check(api: web::Data<NodeApi>) -> impl Responder {
 }
 
 #[allow(unused)]
-pub async fn list_services(api: web::Data<NodeApi>) -> impl Responder {
+pub async fn list_services(api: web::types::State<NodeApi>) -> impl Responder {
     let services = &api.services;
-    HttpResponse::Ok().json(serde_json::json!({ "services": *services }))
+    HttpResponse::Ok().json(&serde_json::json!({ "services": *services }))
 }
 
 #[allow(unused)]
-pub async fn service_health(api: web::Data<NodeApi>, path: web::Path<String>) -> impl Responder {
+pub async fn service_health(
+    api: web::types::State<NodeApi>,
+    path: web::types::Path<String>,
+) -> impl Responder {
     let service_id = path.into_inner();
     let services = &api.services;
 
@@ -190,13 +194,10 @@ pub async fn service_health(api: web::Data<NodeApi>, path: web::Path<String>) ->
 /// Function to create the Actix HTTP server
 /// This function sets up the server and routes.
 /// External users can call this function to create and run the server.
-pub fn create_server(
-    api: NodeApi,
-    ip_port_addr: String,
-) -> std::io::Result<actix_web::dev::Server> {
+pub fn create_server(api: NodeApi, ip_port_addr: String) -> std::io::Result<ntex::server::Server> {
     let server = HttpServer::new(move || {
         App::new()
-            .app_data(web::Data::new(api.clone())) // Use the provided NodeApi instance
+            .state(api.clone()) // Use the provided NodeApi instance
             .route("/eigen/node", web::get().to(node_info))
             .route("/eigen/node/health", web::get().to(health_check))
             .route("/eigen/node/services", web::get().to(list_services))
@@ -215,8 +216,7 @@ pub fn create_server(
 mod tests {
 
     use super::*;
-    use actix_web::dev::Service;
-    use actix_web::{http, test};
+    use ntex::{http, web::test};
     use reqwest::Client;
     #[tokio::test]
     async fn test_node_handler() {
@@ -229,7 +229,7 @@ mod tests {
         );
 
         let app = App::new()
-            .app_data(web::Data::new(node_api.clone()))
+            .state(node_api.clone())
             .route("/eigen/node", web::get().to(node_info));
         let app = test::init_service(app).await;
 
@@ -293,7 +293,7 @@ mod tests {
         for (node_api, expected_status, expected_body) in tests {
             let app = test::init_service(
                 App::new()
-                    .app_data(web::Data::new(node_api.clone()))
+                    .state(node_api.clone())
                     .route("/eigen/node/services", web::get().to(list_services)),
             )
             .await;
@@ -329,7 +329,7 @@ mod tests {
         );
 
         // Initialize the app with the NodeApi
-        let app = test::init_service(App::new().app_data(web::Data::new(node_api.clone())).route(
+        let app = test::init_service(App::new().state(node_api.clone()).route(
             "/eigen/node/services/{id}/health",
             web::get().to(service_health),
         ))
@@ -354,7 +354,7 @@ mod tests {
         assert_eq!(body.len(), 0);
     }
 
-    #[tokio::test]
+    #[ntex::test]
     async fn test_create_server() -> std::io::Result<()> {
         // Create a NodeApi instance and register a service
         let mut node_api = NodeApi::new("test_node", "v1.0.0");
@@ -370,7 +370,7 @@ mod tests {
         let server = create_server(node_api.clone(), ip_port_addr.clone())?;
 
         // Start the server in a background task
-        tokio::spawn(server);
+        ntex::rt::spawn(server);
 
         // Give the server some time to start up
         tokio::time::sleep(std::time::Duration::from_millis(500)).await;
