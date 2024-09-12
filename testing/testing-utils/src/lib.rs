@@ -16,5 +16,8 @@ pub mod m2_holesky_constants;
 #[allow(clippy::unwrap_used)]
 pub mod anvil_constants;
 
+/// Test data read from JSON files, used for compliance testing.
+pub mod test_data;
+
 /// Transaction utilities for testing.
 pub mod transaction;

@@ -16,7 +16,11 @@ pub mod integration_test {
         get_erc20_mock_strategy, get_operator_state_retriever_address,
         get_registry_coordinator_address, get_service_manager_address,
     };
-    use eigen_types::{avs::TaskIndex, operator::QuorumThresholdPercentages};
+    use eigen_testing_utils::test_data::TestData;
+    use eigen_types::{
+        avs::TaskIndex,
+        operator::{QuorumNum, QuorumThresholdPercentages},
+    };
     use eigen_utils::{
         binding::{
             IBLSSignatureChecker::{self, G1Point, NonSignerStakesAndSignature},
@@ -24,6 +28,7 @@ pub mod integration_test {
         },
         get_provider, get_signer,
     };
+    use serde::Deserialize;
     use serial_test::serial;
     use sha2::{Digest, Sha256};
     use std::{
@@ -85,18 +90,35 @@ pub mod integration_test {
             .expect("Failed to execute command");
     }
 
+    #[derive(Deserialize, Debug)]
+    struct Input {
+        bls_key: String,
+        quorum_numbers: Vec<QuorumNum>,
+        quorum_threshold_percentages: QuorumThresholdPercentages,
+    }
+
     #[tokio::test]
     #[serial]
-    async fn test_1_quorum_1_operator() {
+    async fn test_bls_agg() {
+        // test 1 quorum, 1 operator
+        // if TEST_DATA_PATH is set, load the test data from the json file
+        let default_input = Input {
+            bls_key: BLS_KEY_1.to_string(),
+            quorum_numbers: vec![0],
+            quorum_threshold_percentages: vec![100_u8],
+        };
+        let test_data: TestData<Input> = TestData::new(default_input);
+
         let registry_coordinator_address = get_registry_coordinator_address().await;
         let operator_state_retriever_address = get_operator_state_retriever_address().await;
         let service_manager_address = get_service_manager_address().await;
         let provider = get_provider(HTTP_ENDPOINT);
         let salt: FixedBytes<32> = FixedBytes::from([0x02; 32]);
-        let quorum_nums = Bytes::from([0]);
-        let quorum_threshold_percentages: QuorumThresholdPercentages = vec![100];
+        let quorum_nums = Bytes::from(test_data.input.quorum_numbers);
+        let quorum_threshold_percentages: QuorumThresholdPercentages =
+            test_data.input.quorum_threshold_percentages;
 
-        let bls_key_pair = BlsKeyPair::new(BLS_KEY_1.to_string()).unwrap();
+        let bls_key_pair = BlsKeyPair::new(test_data.input.bls_key).unwrap();
         let operator_id =
             hex!("fd329fe7e54f459b9c104064efe0172db113a50b5f394949b4ef80b3c34ca7f5").into();
 

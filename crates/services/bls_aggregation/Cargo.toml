@@ -20,6 +20,8 @@ eigen-types.workspace = true
 parking_lot.workspace = true
 thiserror.workspace = true
 tokio = { workspace = true, features = ["full"] }
+serde_json.workspace = true
+serde.workspace = true
 
 [dev-dependencies]
 alloy-node-bindings.workspace = true

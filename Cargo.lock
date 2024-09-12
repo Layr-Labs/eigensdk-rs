@@ -2236,9 +2236,11 @@ dependencies = [
  "eigen-client-avsregistry",
  "eigen-crypto-bls",
  "eigen-services-operatorsinfo",
+ "eigen-testing-utils",
  "eigen-types",
  "eigen-utils",
  "hex",
+ "serde",
  "tokio",
 ]
 
@@ -2261,6 +2263,8 @@ dependencies = [
  "eigen-types",
  "eigen-utils",
  "parking_lot",
+ "serde",
+ "serde_json",
  "serial_test",
  "sha2",
  "thiserror",
@@ -2328,6 +2332,8 @@ dependencies = [
  "alloy-transport-http",
  "eigen-utils",
  "once_cell",
+ "serde",
+ "serde_json",
  "tokio",
 ]
 
