@@ -21,6 +21,7 @@ members = [
     "crates/signer/",
     "crates/types/",
     "crates/utils/",
+    "crates/nodeapi/",
     "examples/anvil-utils",
     "examples/avsregistry-read",
     "examples/avsregistry-write",
@@ -80,6 +81,7 @@ eigen-signer = { path = "crates/signer/" }
 eigen-testing-utils = { path = "testing/testing-utils" }
 eigen-types = { path = "crates/types/" }
 eigen-utils = { path = "crates/utils/" }
+eigen-nodeapi = {path = "crates/nodeapi/"}
 eth-keystore = "0.5.0"
 ethers = "2.0.14"
 ethers-signers = "2.0.14"
