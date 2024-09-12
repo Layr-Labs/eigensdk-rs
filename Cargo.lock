@@ -2314,6 +2314,7 @@ dependencies = [
  "async-trait",
  "aws-config",
  "aws-sdk-kms",
+ "eigen-testing-utils",
  "eth-keystore",
  "serde",
  "testcontainers",
