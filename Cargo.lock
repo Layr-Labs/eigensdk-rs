@@ -2102,6 +2102,33 @@ dependencies = [
 ]
 
 [[package]]
+name = "eigen"
+version = "0.0.1-alpha"
+dependencies = [
+ "eigen-chainio-txmanager",
+ "eigen-chainio-utils",
+ "eigen-client-avsregistry",
+ "eigen-client-elcontracts",
+ "eigen-client-eth",
+ "eigen-client-fireblocks",
+ "eigen-contract-bindings",
+ "eigen-crypto-bls",
+ "eigen-crypto-bn254",
+ "eigen-logging",
+ "eigen-metrics",
+ "eigen-metrics-collectors-economic",
+ "eigen-metrics-collectors-rpc-calls",
+ "eigen-nodeapi",
+ "eigen-services-avsregistry",
+ "eigen-services-blsaggregation",
+ "eigen-services-operatorsinfo",
+ "eigen-signer",
+ "eigen-testing-utils",
+ "eigen-types",
+ "eigen-utils",
+]
+
+[[package]]
 name = "eigen-chainio-txmanager"
 version = "0.0.1-alpha"
 dependencies = [

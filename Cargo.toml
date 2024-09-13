@@ -21,6 +21,7 @@ members = [
     "crates/types/",
     "crates/utils/",
     "crates/nodeapi/",
+    "crates/eigen/",
     "examples/anvil-utils",
     "examples/avsregistry-read",
     "examples/avsregistry-write",
@@ -73,7 +74,7 @@ eigen-metrics = { version = "0.0.1-alpha", path = "crates/metrics/" }
 eigen-metrics-collectors-economic = { path = "crates/metrics/collectors/economic" }
 eigen-metrics-collectors-rpc-calls = { path = "crates/metrics/collectors/rpc_calls" }
 eigen-services-avsregistry = { path = "crates/services/avsregistry" }
-eigen-services-bls_aggregation = { path = "crates/services/bls_aggregation" }
+eigen-services-blsaggregation = { path = "crates/services/bls_aggregation" }
 eigen-services-operatorsinfo = { path = "crates/services/operatorsinfo" }
 eigen-signer = { path = "crates/signer/" }
 eigen-testing-utils = { path = "testing/testing-utils" }
