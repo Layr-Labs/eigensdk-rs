@@ -212,7 +212,7 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn test_get_operator_info() {
+    async fn test_get_operator_pubkeys() {
         let default_input = InputOperatorInfo {
             private_key_decimal: PRIVATE_KEY_DECIMAL.to_owned(),
             operator_id: OPERATOR_ID.to_owned(),
