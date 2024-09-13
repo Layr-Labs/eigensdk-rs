@@ -58,7 +58,6 @@ ark-serialize = "0.4.2"
 async-trait = "0.1.81"
 aws-config = "1.5.4"
 aws-sdk-kms = "1.37.0"
-bn254 = { git = "https://github.com/sedaprotocol/bn254" }
 clap = { version = "4.5.11", features = ["derive"] }
 eigen-chainio-txmanager = { path = "crates/chainio/txmanager/" }
 eigen-chainio-utils = { path = "crates/chainio/utils/" }
@@ -100,7 +99,6 @@ quote = "1.0"
 rand = "0.8"
 rand_core = "0.6"
 reqwest = "0.12.4"
-reth = { git = "https://github.com/paradigmxyz/reth" }
 rstest = "0.22.0"
 serde = { version = "1.0.197", features = ["derive"] }
 serde_json = "1.0.121"
@@ -115,7 +113,7 @@ tracing-subscriber = { version = "0.3", features = ["json"] }
 url = "2.5.2"
 
 #misc
-rust-bls-bn254 = { git = "https://github.com/Layr-Labs/rust-bls-bn254.git", rev = "be3ef87", features = [
+rust-bls-bn254 = { version = "0.2.0", features = [
     "std",
 ] }
 uuid = { version = "1.10.0", features = ["v4"] }
