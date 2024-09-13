@@ -1,9 +1,11 @@
 [package]
-name = "eigen"
+name = "eigensdk"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 repository.workspace = true
+description = "SDK for eigenlayer"
+license-file.workspace = true
 
 [dependencies]
 eigen-chainio-txmanager = {workspace = true, optional = true}

@@ -4,6 +4,8 @@ version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 repository.workspace = true
+description = "eigenlayer economic metrics"
+license-file.workspace = true
 
 [dependencies]
 alloy-primitives.workspace = true

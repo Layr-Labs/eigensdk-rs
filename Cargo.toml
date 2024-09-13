@@ -21,7 +21,7 @@ members = [
     "crates/types/",
     "crates/utils/",
     "crates/nodeapi/",
-    "crates/eigen/",
+    "crates/eigensdk/",
     "examples/anvil-utils",
     "examples/avsregistry-read",
     "examples/avsregistry-write",
