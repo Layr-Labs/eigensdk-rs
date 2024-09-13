@@ -23,5 +23,6 @@ url.workspace = true
 [dev-dependencies]
 alloy-node-bindings.workspace = true
 aws-config.workspace = true
+eigen-testing-utils.workspace = true
 testcontainers.workspace = true
 tokio.workspace = true
