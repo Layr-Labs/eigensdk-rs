@@ -596,6 +596,7 @@ impl AvsRegistryChainReader {
 mod tests {
     use super::*;
     use eigen_logging::get_test_logger;
+    use eigen_testing_utils::anvil_constants::ANVIL_HTTP_URL;
     use hex::FromHex;
     use std::str::FromStr;
     const HOLESKY_REGISTRY_COORDINATOR: &str = "0x53012C69A189cfA2D9d29eb6F19B32e0A2EA3490";
@@ -673,6 +674,17 @@ mod tests {
 
         let _ = avs_reader
             .get_operators_stake_in_quorums_of_operator_at_block((operator_id).into(), 1246078)
+            .await
+            .unwrap();
+    }
+
+    #[tokio::test]
+    async fn test_query_existing_registered_operator_sockets() {
+        let avs_reader = build_avs_registry_chain_reader().await;
+        let provider = get_provider(ANVIL_HTTP_URL);
+        let current_block_num = provider.get_block_number().await.unwrap();
+        let _ = avs_reader
+            .query_existing_registered_operator_sockets(0, current_block_num)
             .await
             .unwrap();
     }
