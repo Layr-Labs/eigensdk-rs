@@ -276,12 +276,14 @@ mod test {
     #[derive(Deserialize, Debug)]
     struct Input {
         service_manager_address: Address,
+        rpc_url: String,
     }
 
     #[tokio::test]
     async fn test_egn_addrs_with_service_manager_flag() {
         let test_data = TestData::new(Input {
             service_manager_address: get_service_manager_address().await,
+            rpc_url: ANVIL_HTTP_URL.into(),
         });
         let expected_addresses: ContractAddresses = serde_json::from_str(
             r#"{
@@ -307,7 +309,7 @@ mod test {
         let addresses = ContractAddresses::get_addresses(
             Some(test_data.input.service_manager_address),
             None,
-            ANVIL_HTTP_URL.into(),
+            test_data.input.rpc_url,
         )
         .await
         .unwrap();
