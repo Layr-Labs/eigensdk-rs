@@ -103,7 +103,9 @@ jobs:
       - name: Create private key file
         run: printf "%b" "$FIREBLOCKS_PRIVATE_KEY" > fireblocks_secret.key
       
-    
+      - name: print wc
+        run: cat fireblocks_secret.key | wc
+
       - name: Set environment variable for private key path
         run: echo "FIREBLOCKS_PRIVATE_KEY_PATH=$(pwd)/fireblocks_secret.key" >> $GITHUB_ENV
         
