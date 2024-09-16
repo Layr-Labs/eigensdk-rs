@@ -78,6 +78,7 @@ mod test {
         config::{Credentials, SharedCredentialsProvider},
         types::KeyMetadata,
     };
+    use eigen_testing_utils::test_data::TestData;
     use std::str::FromStr;
     use testcontainers::{
         core::{IntoContainerPort, WaitFor},
@@ -149,7 +150,7 @@ mod test {
     }
 
     #[tokio::test]
-    async fn sign_transaction_with_aws_signer() {
+    async fn test_sign_transaction_with_kms_signer() {
         // Start the container running Localstack
         let _container = start_localstack_container().await;
 
@@ -161,6 +162,17 @@ mod test {
             localstack_endpoint,
         )
         .await;
+
+        let default_tx = TxLegacy {
+            to: address!("d8dA6BF26964aF9D7eEd9e03E53415D37aA96045").into(),
+            value: U256::from(1_000_000_000),
+            gas_limit: 2_000_000,
+            nonce: 0,
+            gas_price: 21_000_000_000,
+            input: bytes!(),
+            chain_id: Some(1),
+        };
+        let mut test_data: TestData<TxLegacy> = TestData::new(default_tx);
 
         // Create an AWS KMS Client
         let client = aws_sdk_kms::Client::new(&config);
@@ -175,22 +187,12 @@ mod test {
             .await
             .unwrap();
 
-        let mut tx = TxLegacy {
-            to: address!("d8dA6BF26964aF9D7eEd9e03E53415D37aA96045").into(),
-            value: U256::from(1_000_000_000),
-            gas_limit: 2_000_000,
-            nonce: 0,
-            gas_price: 21_000_000_000,
-            input: bytes!(),
-            chain_id: Some(1),
-        };
-
         // Sign the transaction
-        let signature = signer.sign_transaction(&mut tx).await.unwrap();
+        let signature = signer.sign_transaction(&mut test_data.input).await.unwrap();
 
         // Recover the address
         let mut encoded_tx = Vec::new();
-        tx.encode_for_signing(&mut encoded_tx);
+        test_data.input.encode_for_signing(&mut encoded_tx);
         let prehash = keccak256(encoded_tx);
         let recovered_address = signature.recover_address_from_prehash(&prehash).unwrap();
 
@@ -199,7 +201,7 @@ mod test {
     }
 
     #[tokio::test]
-    async fn sign_legacy_transaction_with_web3_signer() {
+    async fn test_sign_legacy_transaction_with_web3_signer() {
         let anvil = Anvil::default().spawn();
 
         let endpoint = anvil.endpoint();

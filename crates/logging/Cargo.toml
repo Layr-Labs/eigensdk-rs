@@ -4,6 +4,8 @@ version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 repository.workspace = true
+description = "logging utilities"
+license-file.workspace = true
 
 [dependencies]
 ctor = "0.2.8"
