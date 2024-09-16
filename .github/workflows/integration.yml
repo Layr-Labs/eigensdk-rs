@@ -84,7 +84,6 @@ jobs:
   fireblock-tests:
     name: Run Fireblocks tests
     runs-on: ubuntu-latest
-    environment: testing
     env:
       HOLESKY_WS_URL: ${{ secrets.HOLESKY_WS_URL }}
       HOLESKY_HTTP_URL: ${{ secrets.HOLESKY_HTTP_URL }}
