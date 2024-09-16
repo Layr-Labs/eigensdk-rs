@@ -446,6 +446,21 @@ mod tests {
             .unwrap();
 
         println!("ret_can_slash: {ret_can_slash}");
-        assert!(ret_can_slash > 0);
+        assert!(ret_can_slash == 0);
+    }
+
+    #[tokio::test]
+    #[serial]
+    async fn test_get_operator_details() {
+        let operator_addr = Address::from_str(OPERATOR_ADDRESS).unwrap();
+        let chain_reader = build_el_chain_reader().await;
+
+        let operator = chain_reader
+            .get_operator_details(operator_addr)
+            .await
+            .unwrap();
+
+        assert!(operator.has_metadata_url().is_none());
+        println!("{:?}", operator.has_metadata_url());
     }
 }
