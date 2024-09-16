@@ -89,6 +89,7 @@ jobs:
       HOLESKY_HTTP_URL: ${{ secrets.HOLESKY_HTTP_URL }}
       FIREBLOCKS_API_KEY: ${{ secrets.FIREBLOCKS_API_KEY }}
       FIREBLOCKS_API_URL: ${{ secrets.FIREBLOCKS_API_URL }}
+      FIREBLOCKS_PRIVATE_KEY: ${{ secrets.FIREBLOCKS_PRIVATE_KEY }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -99,7 +100,8 @@ jobs:
           toolchain: stable
         
       - name: Create private key file
-        run: echo "${{ secrets.FIREBLOCKS_PRIVATE_KEY }}" > fireblocks_secret.key
+        run: printf "%b" "$FIREBLOCKS_PRIVATE_KEY" > fireblocks_secret.key
+      
     
       - name: Set environment variable for private key path
         run: echo "FIREBLOCKS_PRIVATE_KEY_PATH=$(pwd)/fireblocks_secret.key" >> $GITHUB_ENV
