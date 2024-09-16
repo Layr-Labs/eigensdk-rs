@@ -48,7 +48,7 @@ impl ELChainReader {
             .slasher()
             .call()
             .await
-            .map_err(|e| ElContractsError::AlloyContractError(e))?;
+            .map_err(ElContractsError::AlloyContractError)?;
 
         let DelegationManager::slasherReturn { _0: slasher_addr } = slasher;
 
@@ -81,7 +81,7 @@ impl ELChainReader {
             )
             .call()
             .await
-            .map_err(|e| ElContractsError::AlloyContractError(e))?;
+            .map_err(ElContractsError::AlloyContractError)?;
 
         let DelegationManager::calculateDelegationApprovalDigestHashReturn { _0: digest_hash } =
             delegation_approval_digest_hash;
@@ -104,7 +104,7 @@ impl ELChainReader {
             .calculateOperatorAVSRegistrationDigestHash(operator, avs, salt, expiry)
             .call()
             .await
-            .map_err(|e| ElContractsError::AlloyContractError(e))?;
+            .map_err(ElContractsError::AlloyContractError)?;
 
         let AVSDirectory::calculateOperatorAVSRegistrationDigestHashReturn { _0: avs_hash } =
             operator_avs_registration_digest_hash;
@@ -153,7 +153,7 @@ impl ELChainReader {
             .isFrozen(operator_addr)
             .call()
             .await
-            .map_err(|e| ElContractsError::AlloyContractError(e))?;
+            .map_err(ElContractsError::AlloyContractError)?;
 
         let ISlasher::isFrozenReturn { _0: is_froze } = operator_is_frozen;
         Ok(is_froze)
@@ -172,7 +172,7 @@ impl ELChainReader {
             .contractCanSlashOperatorUntilBlock(operator_addr, service_manager_addr)
             .call()
             .await
-            .map_err(|e| ElContractsError::AlloyContractError(e))?;
+            .map_err(ElContractsError::AlloyContractError)?;
 
         let ISlasher::contractCanSlashOperatorUntilBlockReturn { _0: can_slash } =
             service_manager_can_slash_operator_until_block;
@@ -207,7 +207,7 @@ impl ELChainReader {
             .underlyingToken()
             .call()
             .await
-            .map_err(|e| ElContractsError::AlloyContractError(e))?;
+            .map_err(ElContractsError::AlloyContractError)?;
 
         let IStrategy::underlyingTokenReturn {
             _0: underlying_token_addr,
@@ -235,7 +235,7 @@ impl ELChainReader {
             .operatorDetails(operator)
             .call()
             .await
-            .map_err(|e| ElContractsError::AlloyContractError(e))?;
+            .map_err(ElContractsError::AlloyContractError)?;
 
         let DelegationManager::operatorDetailsReturn {
             _0: operator_details,
@@ -262,7 +262,7 @@ impl ELChainReader {
             .isOperator(operator)
             .call()
             .await
-            .map_err(|e| ElContractsError::AlloyContractError(e))?;
+            .map_err(ElContractsError::AlloyContractError)?;
 
         let DelegationManager::isOperatorReturn { _0: is_operator_is } = is_operator;
         Ok(is_operator_is)
@@ -419,7 +419,7 @@ mod tests {
 
     #[tokio::test]
     #[serial]
-    async fn check_strategy() {
+    async fn check_strategy_shares_and_operator_frozen() {
         let operator_addr = Address::from_str(OPERATOR_ADDRESS).unwrap();
         let strategy_addr = get_erc20_mock_strategy().await;
 
@@ -429,6 +429,23 @@ mod tests {
             .await
             .unwrap();
 
-        println!("Shares: {shares}");
+        let zero = U256::ZERO;
+        assert!(shares > zero);
+
+        // test if operator is frozen
+        let frozen = chain_reader
+            .operator_is_frozen(operator_addr)
+            .await
+            .unwrap();
+        assert!(!frozen);
+
+        let service_manager_address = anvil_constants::get_service_manager_address().await;
+        let ret_can_slash = chain_reader
+            .service_manager_can_slash_operator_until_block(operator_addr, service_manager_address)
+            .await
+            .unwrap();
+
+        println!("ret_can_slash: {ret_can_slash}");
+        assert!(ret_can_slash > 0);
     }
 }
