@@ -529,7 +529,7 @@ impl AvsRegistryChainReader {
     /// # Arguments
     ///
     /// * `start_block` - Start block number
-    /// * `stop_block` - Stop block number
+    /// * `stop_block` - Stop block number. If zero is passed, then the current block number is used.
     ///
     /// # Returns
     ///
@@ -543,27 +543,23 @@ impl AvsRegistryChainReader {
         let provider = get_provider(&self.provider);
 
         let mut operator_id_to_socket = HashMap::new();
+        let query_block_range = 1024;
 
-        let query_block_range = 10000;
+        let stop_block = if stop_block == 0 {
+            provider.get_block_number().await.map_err(|e| {
+                AvsRegistryError::AlloyContractError(alloy_contract::Error::TransportError(e))
+            })?
+        } else {
+            stop_block
+        };
 
-        let mut i = start_block;
+        for i in (start_block..=stop_block).step_by(query_block_range as usize) {
+            let to_block = i + query_block_range - 1;
 
-        while i <= stop_block {
-            let mut to_block = i + (query_block_range - 1);
-            if to_block > stop_block {
-                to_block = stop_block;
-            }
-
-            let mut filter = Filter::new()
-                .select(start_block..to_block)
+            let filter = Filter::new()
+                .select(i..to_block)
                 .event("OperatorSocketUpdate(bytes32,string)")
                 .address(self.registry_coordinator_addr);
-            if stop_block == 0 {
-                let current_block_number = provider.get_block_number().await.map_err(|e| {
-                    AvsRegistryError::AlloyContractError(alloy_contract::Error::TransportError(e))
-                })?;
-                filter = filter.clone().select(start_block..current_block_number);
-            };
 
             let logs = provider.get_logs(&filter).await.map_err(|e| {
                 AvsRegistryError::AlloyContractError(alloy_contract::Error::TransportError(e))
@@ -585,8 +581,6 @@ impl AvsRegistryChainReader {
                 &format!("num_transaction_logs : {len} , from_block: {i} , to_block: {to_block}"),
                 "eigen-client-avsregistry.reader.query_existing_registered_operator_sockets",
             );
-
-            i += query_block_range;
         }
         Ok(operator_id_to_socket)
     }
@@ -596,7 +590,6 @@ impl AvsRegistryChainReader {
 mod tests {
     use super::*;
     use eigen_logging::get_test_logger;
-    use eigen_testing_utils::anvil_constants::ANVIL_HTTP_URL;
     use hex::FromHex;
     use std::str::FromStr;
     const HOLESKY_REGISTRY_COORDINATOR: &str = "0x53012C69A189cfA2D9d29eb6F19B32e0A2EA3490";
@@ -681,10 +674,9 @@ mod tests {
     #[tokio::test]
     async fn test_query_existing_registered_operator_sockets() {
         let avs_reader = build_avs_registry_chain_reader().await;
-        let provider = get_provider(ANVIL_HTTP_URL);
-        let current_block_num = provider.get_block_number().await.unwrap();
+
         let _ = avs_reader
-            .query_existing_registered_operator_sockets(0, current_block_num)
+            .query_existing_registered_operator_sockets(0, 1000)
             .await
             .unwrap();
     }
