@@ -1,7 +1,6 @@
 [package]
 name = "info-operator-service"
 description = "Example demonstrating the operatorsinfo crate"
-
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
