@@ -660,6 +660,15 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn test_is_operator_registered() {
+        let avs_reader = build_avs_registry_chain_reader().await;
+        let address = Address::from_str(HOLESKY_REGISTRY_COORDINATOR).unwrap();
+
+        let is_registered = avs_reader.is_operator_registered(address).await.unwrap();
+        assert_eq!(is_registered, false);
+    }
+
+    #[tokio::test]
     async fn test_get_operators_stake_in_quorums_of_operator_at_block() {
         let avs_reader = build_avs_registry_chain_reader().await;
 
