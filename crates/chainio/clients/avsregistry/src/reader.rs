@@ -529,7 +529,7 @@ impl AvsRegistryChainReader {
     /// # Arguments
     ///
     /// * `start_block` - Start block number
-    /// * `stop_block` - Stop block number. If zero is passed, then the current block number is used.
+    /// * `stop_block` - Stop block number. If zero is passed, then the current block number is fetched and used.
     ///
     /// # Returns
     ///
@@ -543,6 +543,9 @@ impl AvsRegistryChainReader {
         let provider = get_provider(&self.provider);
 
         let mut operator_id_to_socket = HashMap::new();
+
+        // The block range of eth_getLogs is limited to 1024
+        // https://docs.blockpi.io/documentations/api-reference/arbitrum/eth_getlogs
         let query_block_range = 1024;
 
         let stop_block = if stop_block == 0 {
@@ -553,11 +556,11 @@ impl AvsRegistryChainReader {
             stop_block
         };
 
-        for i in (start_block..=stop_block).step_by(query_block_range as usize) {
-            let to_block = i + query_block_range - 1;
+        for from_block in (start_block..=stop_block).step_by(query_block_range as usize) {
+            let to_block = (from_block + query_block_range - 1).min(stop_block);
 
             let filter = Filter::new()
-                .select(i..to_block)
+                .select(from_block..to_block)
                 .event("OperatorSocketUpdate(bytes32,string)")
                 .address(self.registry_coordinator_addr);
 
@@ -578,7 +581,7 @@ impl AvsRegistryChainReader {
             }
             let len = logs.len();
             self.logger.debug(
-                &format!("num_transaction_logs : {len} , from_block: {i} , to_block: {to_block}"),
+                &format!("num_transaction_logs : {len} , from_block: {from_block} , to_block: {to_block}"),
                 "eigen-client-avsregistry.reader.query_existing_registered_operator_sockets",
             );
         }
@@ -676,7 +679,7 @@ mod tests {
         let avs_reader = build_avs_registry_chain_reader().await;
 
         let _ = avs_reader
-            .query_existing_registered_operator_sockets(0, 1000)
+            .query_existing_registered_operator_sockets(0, 2000)
             .await
             .unwrap();
     }
