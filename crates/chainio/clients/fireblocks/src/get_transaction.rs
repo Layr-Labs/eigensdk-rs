@@ -125,7 +125,7 @@ mod tests {
         let api_url = env::var("FIREBLOCKS_API_URL").expect("FIREBLOCKS_API_URL not set");
         let private_key =
             std::fs::read_to_string(private_key_path).expect("Failed to read private key file");
-        let tx_id = "10d377ac-0655-45c3-9d05-4fe0887787f3";
+        let tx_id = "4f182a65-07a0-46aa-b8aa-d047ab94f0aa";
 
         let client = Client::new(
             api_key.to_string(),
