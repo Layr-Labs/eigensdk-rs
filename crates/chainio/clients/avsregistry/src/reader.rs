@@ -660,6 +660,21 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn test_get_operator_stake_in_quorums_of_operator_at_current_block() {
+        let avs_reader = build_avs_registry_chain_reader().await;
+        let operator_id = U256::from_str(
+            "35344093966194310405039483339636912150346494903629410125452342281826147822033",
+        )
+        .unwrap();
+
+        let stakes = avs_reader
+            .get_operator_stake_in_quorums_of_operator_at_current_block(operator_id.into())
+            .await
+            .unwrap();
+        assert_eq!(stakes.len(), 0);
+    }
+
+    #[tokio::test]
     async fn test_is_operator_registered() {
         let avs_reader = build_avs_registry_chain_reader().await;
         let address = Address::from_str(HOLESKY_REGISTRY_COORDINATOR).unwrap();
