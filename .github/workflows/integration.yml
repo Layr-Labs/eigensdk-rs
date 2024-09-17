@@ -47,43 +47,6 @@ jobs:
   test:
     name: Run Tests
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Install Rust
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-  
-      - name: Install testing tools
-        uses: taiki-e/install-action@v2
-        with:
-          tool: cargo-llvm-cov
-
-      - name: Cache Rust dependencies
-        uses: Swatinem/rust-cache@v2
-        with:
-          cache-on-failure: true
-        
-      - name: Install Foundry
-        run: cargo install --git https://github.com/foundry-rs/foundry --profile release --locked foundry-cast anvil
-  
-      - name: docker
-        uses: docker-practice/actions-setup-docker@master
-
-      - name: Run tests and generate code coverage
-        run: make coverage
-
-      - name: Upload coverage report
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-summary
-          path: lcov.info
-
-  fireblock-tests:
-    name: Run Fireblocks tests
-    runs-on: ubuntu-latest
     env:
       HOLESKY_WS_URL: ${{ secrets.HOLESKY_WS_URL }}
       HOLESKY_HTTP_URL: ${{ secrets.HOLESKY_HTTP_URL }}
@@ -98,19 +61,13 @@ jobs:
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
-        
+      
       - name: Create private key file
         run: printf "%b" "$FIREBLOCKS_PRIVATE_KEY" > fireblocks_secret.key
-      
-      - name: print wc
-        run: cat fireblocks_secret.key | wc
 
       - name: Set environment variable for private key path
         run: echo "FIREBLOCKS_PRIVATE_KEY_PATH=$(pwd)/fireblocks_secret.key" >> $GITHUB_ENV
-        
-      - name: Install nightly Rust
-        run: rustup toolchain install nightly
-  
+
       - name: Install testing tools
         uses: taiki-e/install-action@v2
         with:
@@ -121,5 +78,17 @@ jobs:
         with:
           cache-on-failure: true
 
-      - name: Run fireblocks tests
-        run: make fireblocks-tests
+      - name: Install Foundry
+        run: cargo install --git https://github.com/foundry-rs/foundry --profile release --locked foundry-cast anvil
+
+      - name: docker
+        uses: docker-practice/actions-setup-docker@master
+
+      - name: Run tests and generate code coverage
+        run: make coverage
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-summary
+          path: lcov.info
