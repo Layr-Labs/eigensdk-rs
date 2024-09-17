@@ -696,7 +696,7 @@ mod tests {
         let address = Address::from_str(HOLESKY_REGISTRY_COORDINATOR).unwrap();
 
         let is_registered = avs_reader.is_operator_registered(address).await.unwrap();
-        assert_eq!(is_registered, false);
+        assert!(!is_registered);
     }
 
     #[tokio::test]
