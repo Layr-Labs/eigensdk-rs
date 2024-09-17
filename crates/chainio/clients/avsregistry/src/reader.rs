@@ -660,6 +660,22 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn test_get_operators_stake_in_quorums_of_operator_at_current_block() {
+        let avs_reader = build_avs_registry_chain_reader().await;
+        let operator_id = U256::from_str(
+            "35344093966194310405039483339636912150346494903629410125452342281826147822033",
+        )
+        .unwrap();
+
+        let (quorums, operators) = avs_reader
+            .get_operators_stake_in_quorums_of_operator_at_current_block(operator_id.into())
+            .await
+            .unwrap();
+        assert_eq!(quorums.len(), 0);
+        assert_eq!(operators.len(), 0);
+    }
+
+    #[tokio::test]
     async fn test_get_operator_stake_in_quorums_of_operator_at_current_block() {
         let avs_reader = build_avs_registry_chain_reader().await;
         let operator_id = U256::from_str(
