@@ -68,6 +68,9 @@ jobs:
       - name: Set environment variable for private key path
         run: echo "FIREBLOCKS_PRIVATE_KEY_PATH=$(pwd)/fireblocks_secret.key" >> $GITHUB_ENV
 
+      - name: Install nightly Rust
+        run: rustup toolchain install nightly
+
       - name: Install testing tools
         uses: taiki-e/install-action@v2
         with:
