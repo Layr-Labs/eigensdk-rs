@@ -32,4 +32,5 @@ eigen-utils.workspace = true
 eigen-services-operatorsinfo.workspace = true
 serial_test = "3.1"
 sha2 = "0.10.8"
+testcontainers.workspace = true
 tokio-util = "0.7.11"

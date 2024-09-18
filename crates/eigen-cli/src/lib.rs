@@ -195,6 +195,7 @@ mod test {
         operator_id::derive_operator_id,
     };
     use alloy_primitives::Address;
+    use eigen_testing_utils::anvil::start_anvil_container;
     use eigen_testing_utils::anvil_constants::{
         get_registry_coordinator_address, get_service_manager_address, ANVIL_HTTP_URL,
     };
@@ -281,8 +282,10 @@ mod test {
 
     #[tokio::test]
     async fn test_egn_addrs_with_service_manager_flag() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+
         let test_data = TestData::new(Input {
-            service_manager_address: get_service_manager_address().await,
+            service_manager_address: get_service_manager_address(http_endpoint).await,
             rpc_url: ANVIL_HTTP_URL.into(),
         });
         let expected_addresses: ContractAddresses = serde_json::from_str(
@@ -319,7 +322,9 @@ mod test {
 
     #[tokio::test]
     async fn test_egn_addrs_with_registry_coordinator_flag() {
-        let registry_coordinator_address = get_registry_coordinator_address().await;
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+
+        let registry_coordinator_address = get_registry_coordinator_address(http_endpoint).await;
 
         let expected_addresses: ContractAddresses = serde_json::from_str(
             r#"{

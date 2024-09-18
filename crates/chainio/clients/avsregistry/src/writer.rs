@@ -334,14 +334,19 @@ mod tests {
     use alloy_primitives::{Address, Bytes, FixedBytes, U256};
     use eigen_crypto_bls::BlsKeyPair;
     use eigen_logging::get_test_logger;
+    use eigen_testing_utils::anvil::start_anvil_container;
     use eigen_testing_utils::anvil_constants::{
         get_operator_state_retriever_address, get_registry_coordinator_address, ANVIL_HTTP_URL,
     };
     use eigen_testing_utils::transaction::get_transaction_status;
 
     async fn build_avs_registry_chain_writer(private_key: String) -> AvsRegistryChainWriter {
-        let registry_coordinator_address = get_registry_coordinator_address().await;
-        let operator_state_retriever_address = get_operator_state_retriever_address().await;
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+
+        let registry_coordinator_address =
+            get_registry_coordinator_address(http_endpoint.clone()).await;
+        let operator_state_retriever_address =
+            get_operator_state_retriever_address(http_endpoint).await;
 
         AvsRegistryChainWriter::build_avs_registry_chain_writer(
             get_test_logger(),

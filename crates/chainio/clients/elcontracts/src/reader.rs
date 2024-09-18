@@ -300,26 +300,29 @@ mod tests {
     use alloy_primitives::{address, keccak256, Address, FixedBytes, U256};
     use alloy_provider::Provider;
     use eigen_logging::get_test_logger;
-    use eigen_testing_utils::anvil_constants::{self, ANVIL_HTTP_URL, ANVIL_RPC_URL};
+    use eigen_testing_utils::{
+        anvil::start_anvil_container,
+        anvil_constants::{
+            get_delegation_manager_address, get_service_manager_address, ANVIL_HTTP_URL,
+            ANVIL_RPC_URL,
+        },
+    };
     use eigen_utils::binding::{
         mockAvsServiceManager, AVSDirectory,
         AVSDirectory::calculateOperatorAVSRegistrationDigestHashReturn, DelegationManager,
         DelegationManager::calculateDelegationApprovalDigestHashReturn,
     };
-    use serial_test::serial;
-    use tokio::time::{sleep, Duration};
 
-    async fn build_el_chain_reader() -> ELChainReader {
-        let delegation_manager_address = anvil_constants::get_delegation_manager_address().await;
-        let delegation_manager_contract = DelegationManager::new(
-            delegation_manager_address,
-            anvil_constants::ANVIL_RPC_URL.clone(),
-        );
+    async fn build_el_chain_reader(http_endpoint: String) -> ELChainReader {
+        let delegation_manager_address =
+            get_delegation_manager_address(http_endpoint.clone()).await;
+        let delegation_manager_contract =
+            DelegationManager::new(delegation_manager_address, ANVIL_RPC_URL.clone());
         let slasher_address_return = delegation_manager_contract.slasher().call().await.unwrap();
         let DelegationManager::slasherReturn {
             _0: slasher_address,
         } = slasher_address_return;
-        let service_manager_address = anvil_constants::get_service_manager_address().await;
+        let service_manager_address = get_service_manager_address(http_endpoint).await;
         let service_manager_contract = mockAvsServiceManager::new(
             service_manager_address,
             get_provider("http://localhost:8545"),
@@ -343,9 +346,10 @@ mod tests {
     }
 
     #[tokio::test]
-    #[serial]
     async fn test_calculate_delegation_approval_digest_hash() {
-        let el_chain_reader = build_el_chain_reader().await;
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+
+        let el_chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
         let operator: Address = address!("5eb15C0992734B5e77c888D713b4FC67b3D679A2");
 
         let staker = operator;
@@ -375,11 +379,9 @@ mod tests {
             .unwrap();
 
         // Directly calling the function through bindings to compare with the sdk .
-        let delegation_manager_address = anvil_constants::get_delegation_manager_address().await;
-        let delegation_manager_contract = DelegationManager::new(
-            delegation_manager_address,
-            anvil_constants::ANVIL_RPC_URL.clone(),
-        );
+        let delegation_manager_address = get_delegation_manager_address(http_endpoint).await;
+        let delegation_manager_contract =
+            DelegationManager::new(delegation_manager_address, ANVIL_RPC_URL.clone());
 
         let hash = delegation_manager_contract
             .calculateDelegationApprovalDigestHash(
@@ -399,10 +401,10 @@ mod tests {
     }
 
     #[tokio::test]
-    #[serial]
     async fn test_calculate_operator_avs_registration_digest_hash() {
-        sleep(Duration::from_secs(2)).await;
-        let el_chain_reader = build_el_chain_reader().await;
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+
+        let el_chain_reader = build_el_chain_reader(http_endpoint).await;
         let operator: Address = address!("5eb15C0992734B5e77c888D713b4FC67b3D679A2");
         let avs = Address::from_slice(&keccak256("avs ")[0..20]);
         let salt: FixedBytes<32> = FixedBytes::from([0x02; 32]);

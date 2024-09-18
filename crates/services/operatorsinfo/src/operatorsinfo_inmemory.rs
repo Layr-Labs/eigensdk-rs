@@ -252,6 +252,7 @@ mod tests {
     use eigen_client_elcontracts::{reader::ELChainReader, writer::ELChainWriter};
     use eigen_crypto_bls::BlsKeyPair;
     use eigen_logging::get_test_logger;
+    use eigen_testing_utils::anvil::start_anvil_container;
     use eigen_testing_utils::anvil_constants::{
         get_avs_directory_address, get_delegation_manager_address,
         get_operator_state_retriever_address, get_registry_coordinator_address,
@@ -266,8 +267,7 @@ mod tests {
     #[tokio::test]
     #[serial]
     async fn test_query_past_registered_operator_events_and_fill_db() {
-        let anvil_ws_url = "ws://localhost:8545";
-        let anvil_http_url = "http://localhost:8545";
+        let (_container, http_endpoint, ws_endpoint) = start_anvil_container().await;
         let test_logger = get_test_logger();
         register_operator(
             "0x7c852118294e51e653712a81e05800f419141751be58f605c371e15141b007a6",
@@ -277,9 +277,9 @@ mod tests {
 
         let avs_registry_chain_reader = AvsRegistryChainReader::new(
             test_logger.clone(),
-            get_registry_coordinator_address().await,
-            get_operator_state_retriever_address().await,
-            anvil_http_url.to_string(),
+            get_registry_coordinator_address(http_endpoint.clone()).await,
+            get_operator_state_retriever_address(http_endpoint.clone()).await,
+            http_endpoint.clone(),
         )
         .await
         .unwrap();
@@ -287,14 +287,14 @@ mod tests {
         let operators_info_service_in_memory = OperatorInfoServiceInMemory::new(
             test_logger.clone(),
             avs_registry_chain_reader,
-            anvil_ws_url.to_string(),
+            ws_endpoint,
         )
         .await;
 
         let _ = operators_info_service_in_memory
             .query_past_registered_operator_events_and_fill_db(
                 0,
-                get_provider(anvil_http_url)
+                get_provider(http_endpoint.as_str())
                     .get_block_number()
                     .await
                     .unwrap(),
@@ -311,21 +311,20 @@ mod tests {
     #[tokio::test]
     #[serial]
     async fn test_start_service_1_operator_register() {
-        let anvil_ws_url = "ws://localhost:8545";
-        let anvil_http_url = "http://localhost:8545";
+        let (_container, http_endpoint, ws_endpoint) = start_anvil_container().await;
         let test_logger = get_test_logger();
         let avs_registry_chain_reader = AvsRegistryChainReader::new(
             test_logger.clone(),
-            get_registry_coordinator_address().await,
-            get_operator_state_retriever_address().await,
-            anvil_http_url.to_string(),
+            get_registry_coordinator_address(http_endpoint.clone()).await,
+            get_operator_state_retriever_address(http_endpoint.clone()).await,
+            http_endpoint.clone(),
         )
         .await
         .unwrap();
         let operators_info_service_in_memory = OperatorInfoServiceInMemory::new(
             test_logger.clone(),
             avs_registry_chain_reader,
-            anvil_ws_url.to_string(),
+            ws_endpoint,
         )
         .await;
         let clone_operators_info = operators_info_service_in_memory.clone();
@@ -337,7 +336,7 @@ mod tests {
                 .start_service(
                     &token,
                     0,
-                    get_provider(anvil_http_url)
+                    get_provider(http_endpoint.as_str())
                         .get_block_number()
                         .await
                         .unwrap(),
@@ -363,21 +362,20 @@ mod tests {
     #[tokio::test]
     #[serial]
     async fn test_start_service_2_operator_register() {
-        let anvil_ws_url = "ws://localhost:8545";
-        let anvil_http_url = "http://localhost:8545";
+        let (_container, http_endpoint, ws_endpoint) = start_anvil_container().await;
         let test_logger = get_test_logger();
         let avs_registry_chain_reader = AvsRegistryChainReader::new(
             test_logger.clone(),
-            get_registry_coordinator_address().await,
-            get_operator_state_retriever_address().await,
-            anvil_http_url.to_string(),
+            get_registry_coordinator_address(http_endpoint.clone()).await,
+            get_operator_state_retriever_address(http_endpoint.clone()).await,
+            http_endpoint.clone(),
         )
         .await
         .unwrap();
         let operators_info_service_in_memory = OperatorInfoServiceInMemory::new(
             test_logger.clone(),
             avs_registry_chain_reader,
-            anvil_ws_url.to_string(),
+            ws_endpoint,
         )
         .await;
         let clone_operators_info = operators_info_service_in_memory.clone();
@@ -389,7 +387,7 @@ mod tests {
                 .start_service(
                     &token,
                     0,
-                    get_provider(anvil_http_url)
+                    get_provider(http_endpoint.as_str())
                         .get_block_number()
                         .await
                         .unwrap(),
@@ -424,17 +422,17 @@ mod tests {
     }
 
     pub async fn register_operator(pvt_key: &str, bls_key: &str) {
-        let anvil_http_url = "http://localhost:8545";
-
-        let delegation_manager_address = get_delegation_manager_address().await;
-        let avs_directory_address = get_avs_directory_address().await;
-        let strategy_manager_address = get_strategy_manager_address().await;
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let delegation_manager_address =
+            get_delegation_manager_address(http_endpoint.clone()).await;
+        let avs_directory_address = get_avs_directory_address(http_endpoint.clone()).await;
+        let strategy_manager_address = get_strategy_manager_address(http_endpoint.clone()).await;
         let el_chain_reader = ELChainReader::new(
             get_test_logger(),
             Address::ZERO,
             delegation_manager_address,
             avs_directory_address,
-            anvil_http_url.to_string(),
+            http_endpoint.to_string(),
         );
         let signer = PrivateKeySigner::from_str(pvt_key).unwrap();
 
@@ -442,7 +440,7 @@ mod tests {
             delegation_manager_address,
             strategy_manager_address,
             el_chain_reader,
-            anvil_http_url.to_string(),
+            http_endpoint.to_string(),
             pvt_key.to_string(),
         );
 
@@ -461,10 +459,10 @@ mod tests {
 
         let avs_registry_writer = AvsRegistryChainWriter::build_avs_registry_chain_writer(
             get_test_logger(),
-            anvil_http_url.to_string(),
+            http_endpoint.to_string(),
             pvt_key.to_string(),
-            get_registry_coordinator_address().await,
-            get_operator_state_retriever_address().await,
+            get_registry_coordinator_address(http_endpoint.clone()).await,
+            get_operator_state_retriever_address(http_endpoint.clone()).await,
         )
         .await
         .unwrap();

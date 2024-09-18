@@ -155,20 +155,24 @@ mod tests {
     use alloy_primitives::{Address, FixedBytes};
     use eigen_client_avsregistry::reader::AvsRegistryChainReader;
     use eigen_logging::get_test_logger;
-    use eigen_testing_utils::anvil_constants;
+    use eigen_testing_utils::{
+        anvil::start_anvil_container,
+        anvil_constants::{get_operator_state_retriever_address, get_registry_coordinator_address},
+    };
 
     use crate::fake_collector::FakeCollector;
 
     #[tokio::test]
     async fn test_init_operator_id() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+
         let operator_addr = Address::ZERO;
         let operator_id = FixedBytes::<32>::default();
-        let http_anvil = "http://localhost:8545";
         let avs_registry_reader = AvsRegistryChainReader::new(
             get_test_logger(),
-            anvil_constants::get_registry_coordinator_address().await,
-            anvil_constants::get_operator_state_retriever_address().await,
-            http_anvil.to_string(),
+            get_registry_coordinator_address(http_endpoint.clone()).await,
+            get_operator_state_retriever_address(http_endpoint.clone()).await,
+            http_endpoint,
         )
         .await
         .unwrap();

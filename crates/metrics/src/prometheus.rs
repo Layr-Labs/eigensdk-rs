@@ -26,25 +26,29 @@ mod tests {
     use eigen_client_avsregistry::reader::AvsRegistryChainReader;
     use eigen_metrics_collectors_economic::fake_collector::FakeCollector;
     use eigen_metrics_collectors_rpc_calls::RpcCallsMetrics;
-    use eigen_testing_utils::anvil_constants;
+    use eigen_testing_utils::anvil::start_anvil_container;
+    use eigen_testing_utils::anvil_constants::{
+        get_operator_state_retriever_address, get_registry_coordinator_address,
+    };
     use num_bigint::BigInt;
     use tokio::time::sleep;
     use tokio::time::Duration;
 
     #[tokio::test]
     async fn test_prometheus_server() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+
         use eigen_logging::get_test_logger;
         let socket: SocketAddr = "127.0.0.1:9091".parse().unwrap();
         init_registry(socket);
 
         let operator_addr = Address::ZERO;
         let operator_id = FixedBytes::<32>::default();
-        let http_anvil = "http://localhost:8545";
         let avs_registry_reader = AvsRegistryChainReader::new(
             get_test_logger(),
-            anvil_constants::get_registry_coordinator_address().await,
-            anvil_constants::get_operator_state_retriever_address().await,
-            http_anvil.to_string(),
+            get_registry_coordinator_address(http_endpoint.clone()).await,
+            get_operator_state_retriever_address(http_endpoint.clone()).await,
+            http_endpoint.to_string(),
         )
         .await
         .unwrap();

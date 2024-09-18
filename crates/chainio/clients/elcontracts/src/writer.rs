@@ -172,9 +172,12 @@ mod tests {
     use alloy_signer_local::PrivateKeySigner;
     use anvil_constants::{ANVIL_RPC_URL, CONTRACTS_REGISTRY};
     use eigen_logging::get_test_logger;
-    use eigen_testing_utils::anvil_constants::{
-        self, get_delegation_manager_address, get_erc20_mock_strategy, get_service_manager_address,
-        get_strategy_manager_address, ANVIL_HTTP_URL,
+    use eigen_testing_utils::{
+        anvil::start_anvil_container,
+        anvil_constants::{
+            self, get_delegation_manager_address, get_erc20_mock_strategy,
+            get_service_manager_address, get_strategy_manager_address, ANVIL_HTTP_URL,
+        },
     };
     use eigen_types::operator::Operator;
     use eigen_utils::binding::{
@@ -189,8 +192,9 @@ mod tests {
     /// # Returns
     ///
     /// A tuple containing an instance of ELChainWriter and the address of the delegation manager contract
-    async fn setup_el_chain_reader() -> (ELChainReader, Address) {
-        let delegation_manager_address = get_delegation_manager_address().await;
+    async fn setup_el_chain_reader(http_endpoint: String) -> (ELChainReader, Address) {
+        let delegation_manager_address =
+            get_delegation_manager_address(http_endpoint.clone()).await;
         let delegation_manager_contract = DelegationManager::new(
             delegation_manager_address,
             anvil_constants::ANVIL_RPC_URL.clone(),
@@ -200,7 +204,7 @@ mod tests {
             _0: slasher_address,
         } = slasher_address_return;
 
-        let service_manager_address = get_service_manager_address().await;
+        let service_manager_address = get_service_manager_address(http_endpoint).await;
         let service_manager_contract = mockAvsServiceManager::new(
             service_manager_address,
             anvil_constants::ANVIL_RPC_URL.clone(),
@@ -229,7 +233,10 @@ mod tests {
 
     #[tokio::test]
     async fn test_register_operator() {
-        let (el_chain_reader, _delegation_manager_address) = setup_el_chain_reader().await;
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+
+        let (el_chain_reader, _delegation_manager_address) =
+            setup_el_chain_reader(http_endpoint).await;
 
         let operator_pvt_key = "59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d";
         let operator: PrivateKeySigner = (operator_pvt_key)
@@ -260,18 +267,19 @@ mod tests {
 
     #[tokio::test]
     async fn test_chain_writer() {
-        let (el_chain_reader, _) = setup_el_chain_reader().await;
-        let http_endpoint = "http://localhost:8545".to_string();
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+
+        let (el_chain_reader, _) = setup_el_chain_reader(http_endpoint.clone()).await;
         let operator_addr = Address::from_str("90F79bf6EB2c4f870365E785982E1f101E93b906").unwrap();
         let operator_private_key =
             "7c852118294e51e653712a81e05800f419141751be58f605c371e15141b007a6".to_string();
-        let strategy_manager = get_strategy_manager_address().await;
+        let strategy_manager = get_strategy_manager_address(http_endpoint.clone()).await;
 
         let el_chain_writer = ELChainWriter::new(
             operator_addr,
             strategy_manager,
             el_chain_reader,
-            http_endpoint,
+            http_endpoint.clone(),
             operator_private_key,
         );
 
@@ -332,7 +340,7 @@ mod tests {
 
         // Third test: deposit_erc20_into_strategy
         let amount = U256::from_str("100").unwrap();
-        let strategy_addr = get_erc20_mock_strategy().await;
+        let strategy_addr = get_erc20_mock_strategy(http_endpoint).await;
         let tx_hash = el_chain_writer
             .deposit_erc20_into_strategy(strategy_addr, amount)
             .await
