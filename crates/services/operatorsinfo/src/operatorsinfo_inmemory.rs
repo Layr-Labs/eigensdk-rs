@@ -95,11 +95,13 @@ impl OperatorInfoServiceInMemory {
             operator_info_data: Arc::new(RwLock::new(HashMap::new())),
             operator_addr_to_id: Arc::new(RwLock::new(HashMap::new())),
         };
+        dbg!("Starting operator info service");
 
         tokio::spawn({
             let operator_state = operator_state.clone();
             async move {
                 while let Some(cmd) = pubkeys_rx.recv().await {
+                    dbg!("received msg", &cmd);
                     match cmd {
                         OperatorsInfoMessage::InsertOperatorInfo(addr, keys) => {
                             let mut data = operator_state.operator_info_data.write().await;
@@ -268,6 +270,7 @@ mod tests {
         let (_container, http_endpoint, ws_endpoint) = start_anvil_container().await;
         let test_logger = get_test_logger();
         register_operator(
+            http_endpoint.clone(),
             "0x7c852118294e51e653712a81e05800f419141751be58f605c371e15141b007a6",
             "202646553755999769005569871314544341631930435075911377994162443131009480062",
         )
@@ -289,20 +292,19 @@ mod tests {
         )
         .await;
 
+        let end_block = get_provider(http_endpoint.as_str())
+            .get_block_number()
+            .await
+            .unwrap();
         let _ = operators_info_service_in_memory
-            .query_past_registered_operator_events_and_fill_db(
-                0,
-                get_provider(http_endpoint.as_str())
-                    .get_block_number()
-                    .await
-                    .unwrap(),
-            )
+            .query_past_registered_operator_events_and_fill_db(0, end_block)
             .await;
 
         let address = address!("90f79bf6eb2c4f870365e785982e1f101e93b906");
         let operator_info = operators_info_service_in_memory
             .get_operator_info(address)
             .await;
+        dbg!(&operator_info);
         assert!(operator_info.unwrap().is_some());
     }
 
@@ -328,12 +330,13 @@ mod tests {
 
         let token = tokio_util::sync::CancellationToken::new().clone();
         let cancel_token = token.clone();
+        let cloned_http_endpoint = http_endpoint.clone();
         tokio::spawn(async move {
             let _ = clone_operators_info
                 .start_service(
                     &token,
                     0,
-                    get_provider(http_endpoint.as_str())
+                    get_provider(cloned_http_endpoint.as_str())
                         .get_block_number()
                         .await
                         .unwrap(),
@@ -341,6 +344,7 @@ mod tests {
                 .await;
         });
         register_operator(
+            http_endpoint,
             "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80",
             "12248929636257230549931416853095037629726205319386239410403476017439825112537",
         )
@@ -378,12 +382,13 @@ mod tests {
 
         let token = tokio_util::sync::CancellationToken::new().clone();
         let cancel_token = token.clone();
+        let cloned_http_endpoint = http_endpoint.clone();
         tokio::spawn(async move {
             let _ = clone_operators_info
                 .start_service(
                     &token,
                     0,
-                    get_provider(http_endpoint.as_str())
+                    get_provider(cloned_http_endpoint.as_str())
                         .get_block_number()
                         .await
                         .unwrap(),
@@ -391,11 +396,13 @@ mod tests {
                 .await;
         });
         register_operator(
+            http_endpoint.clone(),
             "0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d",
             "1328790040692576325258580129229001772890358018148159309458854770206210226319",
         )
         .await;
         register_operator(
+            http_endpoint,
             "0x5de4111afa1a4b94908f83103eb1f1706367c2e68ca870fc3fb9a804cdab365a",
             "8949062771264691130193054363356855357736539613420316273398900351143637925935",
         )
@@ -417,8 +424,7 @@ mod tests {
         assert!(operator_info_2.unwrap().is_some());
     }
 
-    pub async fn register_operator(pvt_key: &str, bls_key: &str) {
-        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+    pub async fn register_operator(http_endpoint: String, pvt_key: &str, bls_key: &str) {
         let delegation_manager_address =
             get_delegation_manager_address(http_endpoint.clone()).await;
         let avs_directory_address = get_avs_directory_address(http_endpoint.clone()).await;
