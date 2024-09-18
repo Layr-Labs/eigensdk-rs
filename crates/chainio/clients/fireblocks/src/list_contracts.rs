@@ -53,23 +53,18 @@ pub trait ListContracts {
 
 impl ListContracts for Client {
     async fn list_contracts(&self) -> Result<WhitelistedContractResponse, FireBlockError> {
-        let list_contracts_result = self.get_request("/v1/contracts").await;
-        match list_contracts_result {
-            Ok(list_contracts_object) => {
-                if list_contracts_object.trim() == "[]" {
-                    return Ok(WhitelistedContractResponse {
-                        contracts: Vec::new(),
-                    });
-                }
-                let serialized_tx: Result<Vec<WhitelistedContract>, _> =
-                    serde_json::from_str(&list_contracts_object);
-                match serialized_tx {
-                    Ok(contracts) => Ok(WhitelistedContractResponse { contracts }),
-                    Err(e) => Err(FireBlockError::SerdeError(e)),
-                }
-            }
-            Err(e) => Err(e),
+        let list_contracts_object = self.get_request("/v1/contracts").await?;
+
+        if list_contracts_object.trim() == "[]" {
+            return Ok(WhitelistedContractResponse {
+                contracts: Vec::new(),
+            });
         }
+
+        let contracts: Vec<WhitelistedContract> =
+            serde_json::from_str(&list_contracts_object).map_err(FireBlockError::SerdeError)?;
+
+        Ok(WhitelistedContractResponse { contracts })
     }
 }
 
