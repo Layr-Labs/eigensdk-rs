@@ -14,18 +14,9 @@ reset-anvil:
 	-docker stop anvil
 	-docker rm anvil
 
-pr:
-	$(MAKE) start-anvil > /dev/null &
-	sleep 4 # needed to wait for anvil setup to finish
-	cargo test --workspace
-	docker stop anvil
-
 coverage:
-	$(MAKE) start-anvil > /dev/null &
-	sleep 4 # needed to wait for anvil setup to finish
 	cargo llvm-cov --lcov --output-path lcov.info --workspace --features fireblock-tests
 	cargo llvm-cov report --html
-	docker stop anvil
 
 deps:
 	@if ! command -v cargo-llvm-cov &> /dev/null; then \
