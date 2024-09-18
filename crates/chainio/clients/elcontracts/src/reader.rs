@@ -33,7 +33,7 @@ impl ELChainReader {
         }
     }
 
-    /// Builds a new [`ELChainReader`] instance .
+    /// Builds a new `ELChainReader` instance .
     pub async fn build(
         _logger: SharedLogger,
         delegation_manager: Address,
@@ -44,23 +44,21 @@ impl ELChainReader {
 
         let contract_delegation_manager = DelegationManager::new(delegation_manager, provider);
 
-        let slasher_result = contract_delegation_manager.slasher().call().await;
+        let slasher = contract_delegation_manager
+            .slasher()
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
 
-        match slasher_result {
-            Ok(slasher) => {
-                let DelegationManager::slasherReturn { _0: slasher_addr } = slasher;
+        let DelegationManager::slasherReturn { _0: slasher_addr } = slasher;
 
-                Ok(Self {
-                    _logger,
-                    avs_directory,
-                    slasher: slasher_addr,
-                    delegation_manager,
-                    provider: client.to_string(),
-                })
-            }
-
-            Err(e) => Err(ElContractsError::AlloyContractError(e)),
-        }
+        Ok(Self {
+            _logger,
+            avs_directory,
+            slasher: slasher_addr,
+            delegation_manager,
+            provider: client.to_string(),
+        })
     }
 
     pub async fn calculate_delegation_approval_digest_hash(
@@ -73,7 +71,7 @@ impl ELChainReader {
     ) -> Result<FixedBytes<32>, ElContractsError> {
         let provider = get_provider(&self.provider);
         let contract_delegation_manager = DelegationManager::new(self.delegation_manager, provider);
-        let delegation_approval_digest_hash_result = contract_delegation_manager
+        let delegation_approval_digest_hash = contract_delegation_manager
             .calculateDelegationApprovalDigestHash(
                 staker,
                 operator,
@@ -82,17 +80,13 @@ impl ELChainReader {
                 expiry,
             )
             .call()
-            .await;
-        match delegation_approval_digest_hash_result {
-            Ok(delegation_approval_digest_hash) => {
-                let DelegationManager::calculateDelegationApprovalDigestHashReturn {
-                    _0: digest_hash,
-                } = delegation_approval_digest_hash;
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
 
-                Ok(digest_hash)
-            }
-            Err(e) => Err(ElContractsError::AlloyContractError(e)),
-        }
+        let DelegationManager::calculateDelegationApprovalDigestHashReturn { _0: digest_hash } =
+            delegation_approval_digest_hash;
+
+        Ok(digest_hash)
     }
 
     pub async fn calculate_operator_avs_registration_digest_hash(
@@ -106,20 +100,16 @@ impl ELChainReader {
 
         let contract_avs_directory = AVSDirectory::new(self.avs_directory, provider);
 
-        let operator_avs_registration_digest_hash_result = contract_avs_directory
+        let operator_avs_registration_digest_hash = contract_avs_directory
             .calculateOperatorAVSRegistrationDigestHash(operator, avs, salt, expiry)
             .call()
-            .await;
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
 
-        match operator_avs_registration_digest_hash_result {
-            Ok(operator_avs_registration_digest_hash) => {
-                let AVSDirectory::calculateOperatorAVSRegistrationDigestHashReturn { _0: avs_hash } =
-                    operator_avs_registration_digest_hash;
+        let AVSDirectory::calculateOperatorAVSRegistrationDigestHashReturn { _0: avs_hash } =
+            operator_avs_registration_digest_hash;
 
-                Ok(avs_hash)
-            }
-            Err(e) => Err(ElContractsError::AlloyContractError(e)),
-        }
+        Ok(avs_hash)
     }
 
     /// Get the operator's shares in a strategy
@@ -159,15 +149,14 @@ impl ELChainReader {
 
         let contract_slasher = ISlasher::new(self.slasher, provider);
 
-        let operator_is_frozen_result = contract_slasher.isFrozen(operator_addr).call().await;
+        let operator_is_frozen = contract_slasher
+            .isFrozen(operator_addr)
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
 
-        match operator_is_frozen_result {
-            Ok(operator_is_frozen) => {
-                let ISlasher::isFrozenReturn { _0: is_froze } = operator_is_frozen;
-                Ok(is_froze)
-            }
-            Err(e) => Err(ElContractsError::AlloyContractError(e)),
-        }
+        let ISlasher::isFrozenReturn { _0: is_froze } = operator_is_frozen;
+        Ok(is_froze)
     }
 
     pub async fn service_manager_can_slash_operator_until_block(
@@ -179,20 +168,16 @@ impl ELChainReader {
 
         let contract_slasher = ISlasher::new(self.slasher, provider);
 
-        let service_manager_can_slash_operator_until_block_result = contract_slasher
+        let service_manager_can_slash_operator_until_block = contract_slasher
             .contractCanSlashOperatorUntilBlock(operator_addr, service_manager_addr)
             .call()
-            .await;
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
 
-        match service_manager_can_slash_operator_until_block_result {
-            Ok(service_manager_can_slash_operator_until_block) => {
-                let ISlasher::contractCanSlashOperatorUntilBlockReturn { _0: can_slash } =
-                    service_manager_can_slash_operator_until_block;
+        let ISlasher::contractCanSlashOperatorUntilBlockReturn { _0: can_slash } =
+            service_manager_can_slash_operator_until_block;
 
-                Ok(can_slash)
-            }
-            Err(e) => Err(ElContractsError::AlloyContractError(e)),
-        }
+        Ok(can_slash)
     }
 
     /// Get strategy and underlying ERC-20 token
@@ -218,24 +203,23 @@ impl ELChainReader {
 
         let contract_strategy = IStrategy::new(strategy_addr, &provider);
 
-        let underlying_token_result = contract_strategy.underlyingToken().call().await;
-        match underlying_token_result {
-            Ok(underlying_token) => {
-                let IStrategy::underlyingTokenReturn {
-                    _0: underlying_token_addr,
-                } = underlying_token;
+        let underlying_token = contract_strategy
+            .underlyingToken()
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
 
-                let contract_ierc20 = IERC20::new(underlying_token_addr, &provider);
+        let IStrategy::underlyingTokenReturn {
+            _0: underlying_token_addr,
+        } = underlying_token;
 
-                return Ok((
-                    strategy_addr,
-                    underlying_token_addr,
-                    *contract_ierc20.address(),
-                ));
-            }
+        let contract_ierc20 = IERC20::new(underlying_token_addr, &provider);
 
-            Err(e) => Err(ElContractsError::AlloyContractError(e)),
-        }
+        return Ok((
+            strategy_addr,
+            underlying_token_addr,
+            *contract_ierc20.address(),
+        ));
     }
 
     pub async fn get_operator_details(
@@ -247,27 +231,23 @@ impl ELChainReader {
         let contract_delegation_manager =
             DelegationManager::new(self.delegation_manager, &provider);
 
-        let operator_det_result = contract_delegation_manager
+        let operator_det = contract_delegation_manager
             .operatorDetails(operator)
             .call()
-            .await;
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
 
-        match operator_det_result {
-            Ok(operator_det) => {
-                let DelegationManager::operatorDetailsReturn {
-                    _0: operator_details,
-                } = operator_det;
+        let DelegationManager::operatorDetailsReturn {
+            _0: operator_details,
+        } = operator_det;
 
-                Ok(Operator::new(
-                    operator,
-                    operator_details.earningsReceiver,
-                    operator_details.delegationApprover,
-                    operator_details.stakerOptOutWindowBlocks,
-                    None,
-                ))
-            }
-            Err(e) => Err(ElContractsError::AlloyContractError(e)),
-        }
+        Ok(Operator::new(
+            operator,
+            operator_details.earningsReceiver,
+            operator_details.delegationApprover,
+            operator_details.stakerOptOutWindowBlocks,
+            None,
+        ))
     }
 
     pub async fn is_operator_registered(
@@ -278,18 +258,14 @@ impl ELChainReader {
 
         let contract_delegation_manager = DelegationManager::new(self.delegation_manager, provider);
 
-        let is_operator_result = contract_delegation_manager
+        let is_operator = contract_delegation_manager
             .isOperator(operator)
             .call()
-            .await;
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
 
-        match is_operator_result {
-            Ok(is_operator) => {
-                let DelegationManager::isOperatorReturn { _0: is_operator_is } = is_operator;
-                Ok(is_operator_is)
-            }
-            Err(e) => Err(ElContractsError::AlloyContractError(e)),
-        }
+        let DelegationManager::isOperatorReturn { _0: is_operator_is } = is_operator;
+        Ok(is_operator_is)
     }
 }
 
