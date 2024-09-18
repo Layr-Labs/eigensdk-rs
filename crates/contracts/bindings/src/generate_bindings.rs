@@ -6,17 +6,13 @@ mod tests {
     fn generate_bindings(contract_name: &str, input_path: &str, output_path: &str) {
         let coontract: String = format!("../bindings/utils/json/{input_path}").to_string();
 
-        match Abigen::new(&contract_name, coontract) {
-            Ok(v) => {
-                let _ = v
-                    .generate()
-                    .expect("failed to abigen")
-                    .write_to_file(format!("{output_path}/src/{contract_name}.rs"));
-            }
-            Err(e) => {
-                println!("abigenerr{}", e);
-            }
-        }
+        let v = Abigen::new(&contract_name, coontract)
+            .inspect_err(|e| println!("abigenerr{}", e))
+            .unwrap();
+        let _ = v
+            .generate()
+            .expect("failed to abigen")
+            .write_to_file(format!("{output_path}/src/{contract_name}.rs"));
     }
 
     #[test]
