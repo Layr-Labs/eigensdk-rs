@@ -17,6 +17,19 @@ pub struct ELChainReader {
 }
 
 impl ELChainReader {
+    /// Creates a new `ELChainReader` instance with the given parameters.
+    ///
+    /// # Arguments
+    ///
+    /// * `_logger` - The logger to use for logging.
+    /// * `slasher` - The address of the slasher contract.
+    /// * `delegation_manager` - The address of the delegation manager contract.
+    /// * `avs_directory` - The address of the avs directory contract.
+    /// * `provider` - The provider to use for the RPC client.
+    ///
+    /// # Returns
+    ///
+    /// A new `ELChainReader` instance.
     pub fn new(
         _logger: SharedLogger,
         slasher: Address,
@@ -33,7 +46,21 @@ impl ELChainReader {
         }
     }
 
-    /// Builds a new `ELChainReader` instance .
+    /// Builds a new `ELChainReader` instance, getting the slasher address from the delegation manager
+    /// by calling the `slasher()` function and the corresponding Contract function.
+    ///
+    /// # Arguments
+    ///
+    /// * `_logger` - The logger to use for logging.
+    /// * `delegation_manager` - The address of the delegation manager contract.
+    /// * `avs_directory` - The address of the avs directory contract.
+    /// * `client` - The provider to use for the RPC client to call the contracts.
+    ///
+    /// # Returns
+    ///
+    /// A new `ELChainReader` instance.
+    ///
+    /// # Errors
     pub async fn build(
         _logger: SharedLogger,
         delegation_manager: Address,
@@ -61,6 +88,23 @@ impl ELChainReader {
         })
     }
 
+    /// Calculate the delegation approval digest hash
+    ///
+    /// # Arguments
+    ///
+    /// * `staker` - The staker's address
+    /// * `operator` - The operator's address
+    /// * `delegation_approver` - The delegation approver's address
+    /// * `approve_salt` - The approve salt
+    /// * `expiry` - The expiry
+    ///
+    /// # Returns
+    ///
+    /// * `FixedBytes<32>` - The delegation approval digest hash
+    ///
+    /// # Errors
+    ///
+    /// * `ElContractsError` - if the call to the contract fails
     pub async fn calculate_delegation_approval_digest_hash(
         &self,
         staker: Address,
@@ -89,6 +133,22 @@ impl ELChainReader {
         Ok(digest_hash)
     }
 
+    /// Calculate the operator avs registration digest hash
+    ///
+    /// # Arguments
+    ///
+    /// * `operator` - The operator's address
+    /// * `avs` - The avs's address
+    /// * `salt` - The salt
+    /// * `expiry` - The expiry
+    ///
+    /// # Returns
+    ///
+    /// * `FixedBytes<32>` - The operator avs registration digest hash
+    ///
+    /// # Errors
+    ///
+    /// * `ElContractsError` - if the call to the contract fails
     pub async fn calculate_operator_avs_registration_digest_hash(
         &self,
         operator: Address,
@@ -122,6 +182,10 @@ impl ELChainReader {
     /// # Returns
     ///
     /// * `U256` - The operator's shares in the strategy
+    ///
+    /// # Errors
+    ///
+    /// * `ElContractsError` - if the call to the contract fails
     pub async fn get_operator_shares_in_strategy(
         &self,
         operator_addr: Address,
@@ -141,6 +205,17 @@ impl ELChainReader {
         Ok(shares)
     }
 
+    /// Check if the operator is frozen
+    ///
+    /// # Arguments
+    ///
+    /// * `operator_addr` - The operator's address
+    ///
+    /// # Returns
+    ///
+    /// * `bool` - True if the operator is frozen, false otherwise
+    ///
+    /// # Errors
     pub async fn operator_is_frozen(
         &self,
         operator_addr: Address,
@@ -159,6 +234,20 @@ impl ELChainReader {
         Ok(is_froze)
     }
 
+    /// Check if the service manager can slash the operator
+    ///
+    /// # Arguments
+    ///
+    /// * `operator_addr` - The operator's address
+    /// * `service_manager_addr` - The service manager's address
+    ///
+    /// # Returns
+    ///
+    /// * `u32` - The block number until the operator can be slashed
+    ///
+    /// # Errors
+    ///
+    /// * `ElContractsError` - if the call to the contract fails    
     pub async fn service_manager_can_slash_operator_until_block(
         &self,
         operator_addr: Address,
@@ -222,6 +311,19 @@ impl ELChainReader {
         ));
     }
 
+    /// Get the operator's details
+    ///
+    /// # Arguments
+    ///
+    /// * `operator` - The operator's address
+    ///
+    /// # Returns
+    ///
+    /// * `Operator` - The operator's details
+    ///
+    /// # Errors
+    ///
+    /// * `ElContractsError` - if the call to the contract fails
     pub async fn get_operator_details(
         &self,
         operator: Address,
@@ -250,6 +352,19 @@ impl ELChainReader {
         ))
     }
 
+    /// Check if the operator is registered
+    ///
+    /// # Arguments
+    ///
+    /// * `operator` - The operator's address
+    ///
+    /// # Returns
+    ///
+    /// * `bool` - true if the operator is registered, false otherwise
+    ///
+    /// # Errors
+    ///
+    /// * `ElContractsError` - if the call to the contract fails
     pub async fn is_operator_registered(
         &self,
         operator: Address,
