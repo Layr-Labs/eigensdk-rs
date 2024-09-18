@@ -825,12 +825,10 @@ mod tests {
     };
     use eigen_signer::signer::Config;
     use eigen_testing_utils::anvil_constants::{ANVIL_HTTP_URL, ANVIL_RPC_URL, ANVIL_WS_URL};
-    use serial_test::serial;
     use std::{thread, time};
     use tokio;
 
     #[tokio::test]
-    #[serial]
     async fn test_suggest_gas_tip_cap() {
         let instrumented_client = InstrumentedClient::new(ANVIL_HTTP_URL).await.unwrap();
         let fee_per_gas = instrumented_client.suggest_gas_tip_cap().await.unwrap();
@@ -843,7 +841,6 @@ mod tests {
     }
 
     #[tokio::test]
-    #[serial]
     async fn test_gas_price() {
         let instrumented_client = InstrumentedClient::new(ANVIL_HTTP_URL).await.unwrap();
         let gas_price = instrumented_client.suggest_gas_price().await.unwrap();
@@ -852,7 +849,6 @@ mod tests {
     }
 
     #[tokio::test]
-    #[serial]
     async fn test_sync_status() {
         let instrumented_client = InstrumentedClient::new(ANVIL_HTTP_URL).await.unwrap();
         let sync_status = instrumented_client.sync_progress().await.unwrap();
@@ -861,7 +857,6 @@ mod tests {
     }
 
     #[tokio::test]
-    #[serial]
     async fn test_chain_id() {
         let instrumented_client = InstrumentedClient::new(ANVIL_HTTP_URL).await.unwrap();
 
@@ -872,7 +867,6 @@ mod tests {
     }
 
     #[tokio::test]
-    #[serial]
     async fn test_balance_at() {
         let instrumented_client = InstrumentedClient::new(ANVIL_HTTP_URL).await.unwrap();
         let address = ANVIL_RPC_URL.get_accounts().await.unwrap()[0];
@@ -887,7 +881,6 @@ mod tests {
     }
 
     #[tokio::test]
-    #[serial]
     async fn test_subscribe_new_head() {
         let instrumented_client = InstrumentedClient::new_ws(ANVIL_WS_URL).await.unwrap();
         let subscription: TransportResult<Subscription<SubscriptionResult>> =
@@ -896,7 +889,6 @@ mod tests {
     }
 
     #[tokio::test]
-    #[serial]
     async fn test_subscribe_filter_logs() {
         let instrumented_client = InstrumentedClient::new_ws(ANVIL_WS_URL).await.unwrap();
         let address = ANVIL_RPC_URL.clone().get_accounts().await.unwrap()[0];
@@ -909,7 +901,6 @@ mod tests {
     }
 
     #[tokio::test]
-    #[serial]
     async fn test_block_by_hash() {
         let instrumented_client = InstrumentedClient::new(ANVIL_HTTP_URL).await.unwrap();
 
@@ -933,7 +924,6 @@ mod tests {
     }
 
     #[tokio::test]
-    #[serial]
     async fn test_block_by_number() {
         let instrumented_client = InstrumentedClient::new(ANVIL_HTTP_URL).await.unwrap();
         let block_number = 1;
@@ -951,7 +941,6 @@ mod tests {
     }
 
     #[tokio::test]
-    #[serial]
     async fn test_transaction_count() {
         let instrumented_client = InstrumentedClient::new(ANVIL_HTTP_URL).await.unwrap();
 
@@ -977,7 +966,6 @@ mod tests {
     /// * `transaction_receipt`
     /// * `transaction_in_block`
     #[tokio::test]
-    #[serial]
     async fn test_transaction_methods() {
         // create a new anvil instance because otherwise it fails with "nonce too low" error.
         let anvil = Anvil::new().try_spawn().unwrap();
@@ -1034,7 +1022,6 @@ mod tests {
     }
 
     #[tokio::test]
-    #[serial]
     async fn test_estimate_gas() {
         let instrumented_client = InstrumentedClient::new("http:/localhost:8545")
             .await
@@ -1063,7 +1050,6 @@ mod tests {
     }
 
     #[tokio::test]
-    #[serial]
     async fn test_call_contract_and_pending_call_contract() {
         let instrumented_client = InstrumentedClient::new(ANVIL_HTTP_URL).await.unwrap();
 
@@ -1104,7 +1090,6 @@ mod tests {
     }
 
     #[tokio::test]
-    #[serial]
     async fn test_filter_logs() {
         let instrumented_client = InstrumentedClient::new(ANVIL_HTTP_URL).await.unwrap();
         let address = ANVIL_RPC_URL.clone().get_accounts().await.unwrap()[0];
@@ -1117,7 +1102,6 @@ mod tests {
     }
 
     #[tokio::test]
-    #[serial]
     async fn test_storage_at() {
         let instrumented_client = InstrumentedClient::new(ANVIL_HTTP_URL).await.unwrap();
 
@@ -1137,7 +1121,6 @@ mod tests {
     }
 
     #[tokio::test]
-    #[serial]
     async fn test_block_number() {
         let instrumented_client = InstrumentedClient::new(ANVIL_HTTP_URL).await.unwrap();
 
@@ -1148,7 +1131,6 @@ mod tests {
     }
 
     #[tokio::test]
-    #[serial]
     async fn test_code_at() {
         let instrumented_client = InstrumentedClient::new(ANVIL_HTTP_URL).await.unwrap();
         let address = ANVIL_RPC_URL.get_accounts().await.unwrap()[0];
@@ -1163,7 +1145,6 @@ mod tests {
     }
 
     #[tokio::test]
-    #[serial]
     async fn test_fee_history() {
         let instrumented_client = InstrumentedClient::new(ANVIL_HTTP_URL).await.unwrap();
         let block_count = 4;
@@ -1183,7 +1164,6 @@ mod tests {
     }
 
     #[tokio::test]
-    #[serial]
     async fn test_header_by_hash() {
         let instrumented_client = InstrumentedClient::new(ANVIL_HTTP_URL).await.unwrap();
         let hash = ANVIL_RPC_URL
@@ -1207,7 +1187,6 @@ mod tests {
     }
 
     #[tokio::test]
-    #[serial]
     async fn test_header_by_number() {
         let instrumented_client = InstrumentedClient::new(ANVIL_HTTP_URL).await.unwrap();
         let block_number = BlockNumberOrTag::Earliest;
@@ -1228,7 +1207,6 @@ mod tests {
     }
 
     #[tokio::test]
-    #[serial]
     async fn test_nonce_at() {
         let instrumented_client = InstrumentedClient::new(ANVIL_HTTP_URL).await.unwrap();
         let address = ANVIL_RPC_URL.get_accounts().await.unwrap()[0];
@@ -1243,7 +1221,6 @@ mod tests {
     }
 
     #[tokio::test]
-    #[serial]
     async fn test_pending_balance_at() {
         let instrumented_client = InstrumentedClient::new(ANVIL_HTTP_URL).await.unwrap();
         let address = ANVIL_RPC_URL.get_accounts().await.unwrap()[0];
@@ -1259,7 +1236,6 @@ mod tests {
     }
 
     #[tokio::test]
-    #[serial]
     async fn test_pending_code_at() {
         let instrumented_client = InstrumentedClient::new(ANVIL_HTTP_URL).await.unwrap();
         let address = ANVIL_RPC_URL.get_accounts().await.unwrap()[0];
@@ -1272,7 +1248,6 @@ mod tests {
     }
 
     #[tokio::test]
-    #[serial]
     async fn test_pending_nonce_at() {
         let instrumented_client = InstrumentedClient::new(ANVIL_HTTP_URL).await.unwrap();
         let address = ANVIL_RPC_URL.get_accounts().await.unwrap()[0];
@@ -1285,7 +1260,6 @@ mod tests {
     }
 
     #[tokio::test]
-    #[serial]
     async fn test_pending_storage_at() {
         let instrumented_client = InstrumentedClient::new(ANVIL_HTTP_URL).await.unwrap();
         let address = ANVIL_RPC_URL.get_accounts().await.unwrap()[0];
@@ -1303,7 +1277,6 @@ mod tests {
     }
 
     #[tokio::test]
-    #[serial]
     async fn test_pending_transaction_count() {
         let instrumented_client = InstrumentedClient::new(ANVIL_HTTP_URL).await.unwrap();
 

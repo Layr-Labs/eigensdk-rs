@@ -260,12 +260,10 @@ mod tests {
     };
     use eigen_types::operator::Operator;
     use eigen_utils::get_provider;
-    use serial_test::serial;
     use std::str::FromStr;
     use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
     #[tokio::test]
-    #[serial]
     async fn test_query_past_registered_operator_events_and_fill_db() {
         let (_container, http_endpoint, ws_endpoint) = start_anvil_container().await;
         let test_logger = get_test_logger();
@@ -309,7 +307,6 @@ mod tests {
     }
 
     #[tokio::test]
-    #[serial]
     async fn test_start_service_1_operator_register() {
         let (_container, http_endpoint, ws_endpoint) = start_anvil_container().await;
         let test_logger = get_test_logger();
@@ -360,7 +357,6 @@ mod tests {
     }
 
     #[tokio::test]
-    #[serial]
     async fn test_start_service_2_operator_register() {
         let (_container, http_endpoint, ws_endpoint) = start_anvil_container().await;
         let test_logger = get_test_logger();
