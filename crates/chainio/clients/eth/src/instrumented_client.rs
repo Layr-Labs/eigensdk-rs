@@ -50,6 +50,10 @@ impl BackendClient for InstrumentedClient {
     /// # Returns
     ///
     /// The latest block number.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if the RPC call fails.
     async fn block_number(&self) -> Result<BlockNumber, Self::Error> {
         self.instrument_function("eth_blockNumber", ())
             .await
@@ -71,6 +75,10 @@ impl BackendClient for InstrumentedClient {
     /// # Returns
     ///
     /// The block having the given block number.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if the RPC call fails.
     async fn block_by_number(
         &self,
         number: BlockNumberOrTag,
@@ -184,6 +192,10 @@ impl InstrumentedClient {
     /// # Returns
     ///
     /// The chain ID.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if the RPC call fails.
     pub async fn chain_id(&self) -> TransportResult<ChainId> {
         self.instrument_function("eth_chainId", ())
             .await
