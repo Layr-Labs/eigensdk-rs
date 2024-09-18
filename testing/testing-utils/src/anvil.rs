@@ -4,28 +4,30 @@ use testcontainers::{
     ContainerAsync, GenericImage, ImageExt,
 };
 
+const ANVIL_IMAGE: &str = "ghcr.io/foundry-rs/foundry";
+const ANVIL_TAG: &str = "nightly-5b7e4cb3c882b28f3c32ba580de27ce7381f415a";
+const ANVIL_STATE_FILE: &str =
+    "../../../crates/contracts/anvil/contracts_deployed_anvil_state.json";
+
 /// Start an Anvil container for testing with contract state loaded.
 pub async fn start_anvil_container() -> (ContainerAsync<GenericImage>, String, String) {
-    let container = GenericImage::new(
-        "ghcr.io/foundry-rs/foundry",
-        "nightly-5b7e4cb3c882b28f3c32ba580de27ce7381f415a",
-    )
-    .with_wait_for(WaitFor::message_on_stdout("Listening on"))
-    .with_exposed_port(8545.tcp())
-    .with_entrypoint("anvil")
-    .with_mount(testcontainers::core::Mount::bind_mount(
-        "/Users/tomas/Lambda/eigen-rs/crates/contracts/anvil/contracts_deployed_anvil_state.json", // replace with dump path
-        "/contracts_deployed_anvil_state.json",
-    ))
-    .with_cmd([
-        "--host",
-        "0.0.0.0",
-        "--load-state",
-        "/contracts_deployed_anvil_state.json",
-    ])
-    .start()
-    .await
-    .expect("Error starting anvil container");
+    let container = GenericImage::new(ANVIL_IMAGE, ANVIL_TAG)
+        .with_wait_for(WaitFor::message_on_stdout("Listening on"))
+        .with_exposed_port(8545.tcp())
+        .with_entrypoint("anvil")
+        .with_mount(testcontainers::core::Mount::bind_mount(
+            ANVIL_STATE_FILE,
+            "/contracts_deployed_anvil_state.json",
+        ))
+        .with_cmd([
+            "--host",
+            "0.0.0.0",
+            "--load-state",
+            "/contracts_deployed_anvil_state.json",
+        ])
+        .start()
+        .await
+        .expect("Error starting anvil container");
 
     let port = container
         .ports()
