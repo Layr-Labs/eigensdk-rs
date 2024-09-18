@@ -5,6 +5,7 @@ use std::collections::HashMap;
 
 type StakeAmount = U256;
 
+/// Test operator for testing purposes
 #[derive(Clone)]
 pub struct TestOperator {
     pub operator_id: B256,
@@ -13,6 +14,7 @@ pub struct TestOperator {
 }
 
 impl TestOperator {
+    /// Get the BLS keypair of the operator
     pub fn get_bls_keypair(&self) -> &BlsKeyPair {
         &self.bls_keypair
     }

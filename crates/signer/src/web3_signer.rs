@@ -19,6 +19,7 @@ pub struct Web3Signer {
     pub address: Address,
 }
 
+/// Parameters for the `eth_signTransaction` method
 #[derive(Serialize, Clone, Debug)]
 #[serde(rename_all = "camelCase")]
 struct SignTransactionParams {
