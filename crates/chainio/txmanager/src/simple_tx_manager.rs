@@ -135,7 +135,7 @@ impl SimpleTxManager {
     /// # Errors
     ///
     /// * `TxManagerError` - If the transaction cannot be sent, or there is an error
-    /// signing the transaction or estimating gas and nonce.
+    ///   signing the transaction or estimating gas and nonce.
     pub async fn send_tx(
         &self,
         tx: &mut TransactionRequest,
