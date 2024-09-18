@@ -36,8 +36,8 @@ pub static ANVIL_RPC_URL: Lazy<
 > = Lazy::new(|| get_provider(ANVIL_HTTP_URL));
 
 /// Service Manager contract address
-pub async fn get_service_manager_address() -> Address {
-    let contracts_registry = ContractsRegistry::new(CONTRACTS_REGISTRY, (*ANVIL_RPC_URL).clone());
+pub async fn get_service_manager_address(rpc_url: String) -> Address {
+    let contracts_registry = ContractsRegistry::new(CONTRACTS_REGISTRY, get_provider(&rpc_url));
 
     let val = contracts_registry
         .contracts("mockAvsServiceManager".to_string())
@@ -50,8 +50,8 @@ pub async fn get_service_manager_address() -> Address {
 }
 
 /// Registry Coordinator contract address
-pub async fn get_registry_coordinator_address() -> Address {
-    let contracts_registry = ContractsRegistry::new(CONTRACTS_REGISTRY, (*ANVIL_RPC_URL).clone());
+pub async fn get_registry_coordinator_address(rpc_url: String) -> Address {
+    let contracts_registry = ContractsRegistry::new(CONTRACTS_REGISTRY, get_provider(&rpc_url));
 
     let val = contracts_registry
         .contracts("mockAvsRegistryCoordinator".to_string())
@@ -65,8 +65,8 @@ pub async fn get_registry_coordinator_address() -> Address {
 }
 
 /// Operator state retriever contract address
-pub async fn get_operator_state_retriever_address() -> Address {
-    let contracts_registry = ContractsRegistry::new(CONTRACTS_REGISTRY, (*ANVIL_RPC_URL).clone());
+pub async fn get_operator_state_retriever_address(rpc_url: String) -> Address {
+    let contracts_registry = ContractsRegistry::new(CONTRACTS_REGISTRY, get_provider(&rpc_url));
 
     let val = contracts_registry
         .contracts("mockAvsOperatorStateRetriever".to_string())
@@ -80,8 +80,8 @@ pub async fn get_operator_state_retriever_address() -> Address {
 }
 
 /// Delegation Manager contract address
-pub async fn get_delegation_manager_address() -> Address {
-    let contracts_registry = ContractsRegistry::new(CONTRACTS_REGISTRY, (*ANVIL_RPC_URL).clone());
+pub async fn get_delegation_manager_address(rpc_url: String) -> Address {
+    let contracts_registry = ContractsRegistry::new(CONTRACTS_REGISTRY, get_provider(&rpc_url));
 
     let val = contracts_registry
         .contracts("delegationManager".to_string())
@@ -95,8 +95,8 @@ pub async fn get_delegation_manager_address() -> Address {
 }
 
 /// Strategy Mananger contract address
-pub async fn get_strategy_manager_address() -> Address {
-    let contracts_registry = ContractsRegistry::new(CONTRACTS_REGISTRY, (*ANVIL_RPC_URL).clone());
+pub async fn get_strategy_manager_address(rpc_url: String) -> Address {
+    let contracts_registry = ContractsRegistry::new(CONTRACTS_REGISTRY, get_provider(&rpc_url));
 
     let val = contracts_registry
         .contracts("strategyManager".to_string())
@@ -110,8 +110,8 @@ pub async fn get_strategy_manager_address() -> Address {
 }
 
 /// Avs Directory contract address
-pub async fn get_avs_directory_address() -> Address {
-    let contracts_registry = ContractsRegistry::new(CONTRACTS_REGISTRY, (*ANVIL_RPC_URL).clone());
+pub async fn get_avs_directory_address(rpc_url: String) -> Address {
+    let contracts_registry = ContractsRegistry::new(CONTRACTS_REGISTRY, get_provider(&rpc_url));
 
     let val = contracts_registry
         .contracts("avsDirectory".to_string())
@@ -125,8 +125,8 @@ pub async fn get_avs_directory_address() -> Address {
 }
 
 /// erc20 mock strategy contract address
-pub async fn get_erc20_mock_strategy() -> Address {
-    let contracts_registry = ContractsRegistry::new(CONTRACTS_REGISTRY, (*ANVIL_RPC_URL).clone());
+pub async fn get_erc20_mock_strategy(rpc_url: String) -> Address {
+    let contracts_registry = ContractsRegistry::new(CONTRACTS_REGISTRY, get_provider(&rpc_url));
 
     let val = contracts_registry
         .contracts("erc20MockStrategy".to_string())
@@ -140,8 +140,8 @@ pub async fn get_erc20_mock_strategy() -> Address {
 }
 
 /// proxy admin contract address
-pub async fn get_proxy_admin() -> Address {
-    let contracts_registry = ContractsRegistry::new(CONTRACTS_REGISTRY, (*ANVIL_RPC_URL).clone());
+pub async fn get_proxy_admin(rpc_url: String) -> Address {
+    let contracts_registry = ContractsRegistry::new(CONTRACTS_REGISTRY, get_provider(&rpc_url));
 
     let val = contracts_registry
         .contracts("ProxyAdmin".to_string())
