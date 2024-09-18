@@ -302,10 +302,7 @@ mod tests {
     use eigen_logging::get_test_logger;
     use eigen_testing_utils::{
         anvil::start_anvil_container,
-        anvil_constants::{
-            get_delegation_manager_address, get_service_manager_address, ANVIL_HTTP_URL,
-            ANVIL_RPC_URL,
-        },
+        anvil_constants::{get_delegation_manager_address, get_service_manager_address},
     };
     use eigen_utils::binding::{
         mockAvsServiceManager, AVSDirectory,
@@ -317,16 +314,14 @@ mod tests {
         let delegation_manager_address =
             get_delegation_manager_address(http_endpoint.clone()).await;
         let delegation_manager_contract =
-            DelegationManager::new(delegation_manager_address, ANVIL_RPC_URL.clone());
+            DelegationManager::new(delegation_manager_address, get_provider(&http_endpoint));
         let slasher_address_return = delegation_manager_contract.slasher().call().await.unwrap();
         let DelegationManager::slasherReturn {
             _0: slasher_address,
         } = slasher_address_return;
-        let service_manager_address = get_service_manager_address(http_endpoint).await;
-        let service_manager_contract = mockAvsServiceManager::new(
-            service_manager_address,
-            get_provider("http://localhost:8545"),
-        );
+        let service_manager_address = get_service_manager_address(http_endpoint.clone()).await;
+        let service_manager_contract =
+            mockAvsServiceManager::new(service_manager_address, get_provider(&http_endpoint));
         let avs_directory_address_return = service_manager_contract
             .avsDirectory()
             .call()
@@ -341,14 +336,14 @@ mod tests {
             slasher_address,
             delegation_manager_address,
             avs_directory_address,
-            ANVIL_HTTP_URL.to_string(),
+            http_endpoint,
         )
     }
 
     #[tokio::test]
     async fn test_calculate_delegation_approval_digest_hash() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-
+        let provider = get_provider(&http_endpoint);
         let el_chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
         let operator: Address = address!("5eb15C0992734B5e77c888D713b4FC67b3D679A2");
 
@@ -357,9 +352,8 @@ mod tests {
         let delegation_approver = Address::ZERO;
 
         let approve_salt: FixedBytes<32> = FixedBytes::from([0x02; 32]);
-        let current_block_number = ANVIL_RPC_URL.clone().get_block_number().await.unwrap();
-        let block_info = ANVIL_RPC_URL
-            .clone()
+        let current_block_number = provider.get_block_number().await.unwrap();
+        let block_info = provider
             .get_block_by_number(Number(current_block_number), true)
             .await
             .unwrap();
@@ -381,7 +375,7 @@ mod tests {
         // Directly calling the function through bindings to compare with the sdk .
         let delegation_manager_address = get_delegation_manager_address(http_endpoint).await;
         let delegation_manager_contract =
-            DelegationManager::new(delegation_manager_address, ANVIL_RPC_URL.clone());
+            DelegationManager::new(delegation_manager_address, provider);
 
         let hash = delegation_manager_contract
             .calculateDelegationApprovalDigestHash(
@@ -403,14 +397,13 @@ mod tests {
     #[tokio::test]
     async fn test_calculate_operator_avs_registration_digest_hash() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-
-        let el_chain_reader = build_el_chain_reader(http_endpoint).await;
+        let provider = get_provider(&http_endpoint);
+        let el_chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
         let operator: Address = address!("5eb15C0992734B5e77c888D713b4FC67b3D679A2");
         let avs = Address::from_slice(&keccak256("avs ")[0..20]);
         let salt: FixedBytes<32> = FixedBytes::from([0x02; 32]);
-        let current_block_number = ANVIL_RPC_URL.clone().get_block_number().await.unwrap();
-        let block_info = ANVIL_RPC_URL
-            .clone()
+        let current_block_number = provider.get_block_number().await.unwrap();
+        let block_info = provider
             .get_block_by_number(Number(current_block_number), true)
             .await
             .unwrap();
@@ -425,7 +418,7 @@ mod tests {
 
         // Using bindings directly to compare with sdk's output
         let avs_registry_contract =
-            AVSDirectory::new(el_chain_reader.avs_directory, ANVIL_RPC_URL.clone());
+            AVSDirectory::new(el_chain_reader.avs_directory, provider.clone());
         let operator_hash_from_bindings = avs_registry_contract
             .calculateOperatorAVSRegistrationDigestHash(operator, avs, salt, expiry)
             .call()

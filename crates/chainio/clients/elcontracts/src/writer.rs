@@ -170,20 +170,23 @@ mod tests {
     use alloy_primitives::{Address, U256};
     use alloy_provider::Provider;
     use alloy_signer_local::PrivateKeySigner;
-    use anvil_constants::{ANVIL_RPC_URL, CONTRACTS_REGISTRY};
+    use anvil_constants::CONTRACTS_REGISTRY;
     use eigen_logging::get_test_logger;
     use eigen_testing_utils::{
         anvil::start_anvil_container,
         anvil_constants::{
             self, get_delegation_manager_address, get_erc20_mock_strategy,
-            get_service_manager_address, get_strategy_manager_address, ANVIL_HTTP_URL,
+            get_service_manager_address, get_strategy_manager_address,
         },
     };
     use eigen_types::operator::Operator;
-    use eigen_utils::binding::{
-        mockAvsServiceManager,
-        ContractsRegistry::{self, get_test_valuesReturn},
-        DelegationManager,
+    use eigen_utils::{
+        binding::{
+            mockAvsServiceManager,
+            ContractsRegistry::{self, get_test_valuesReturn},
+            DelegationManager,
+        },
+        get_provider,
     };
     use std::str::FromStr;
 
@@ -197,17 +200,17 @@ mod tests {
             get_delegation_manager_address(http_endpoint.clone()).await;
         let delegation_manager_contract = DelegationManager::new(
             delegation_manager_address,
-            anvil_constants::ANVIL_RPC_URL.clone(),
+            get_provider(http_endpoint.as_str()),
         );
         let slasher_address_return = delegation_manager_contract.slasher().call().await.unwrap();
         let DelegationManager::slasherReturn {
             _0: slasher_address,
         } = slasher_address_return;
 
-        let service_manager_address = get_service_manager_address(http_endpoint).await;
+        let service_manager_address = get_service_manager_address(http_endpoint.clone()).await;
         let service_manager_contract = mockAvsServiceManager::new(
             service_manager_address,
-            anvil_constants::ANVIL_RPC_URL.clone(),
+            get_provider(http_endpoint.as_str()),
         );
         let avs_directory_address_return = service_manager_contract
             .avsDirectory()
@@ -225,7 +228,7 @@ mod tests {
                 slasher_address,
                 delegation_manager_address,
                 avs_directory_address,
-                ANVIL_HTTP_URL.to_string(),
+                http_endpoint,
             ),
             delegation_manager_address,
         )
@@ -234,6 +237,7 @@ mod tests {
     #[tokio::test]
     async fn test_register_operator() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let provider = get_provider(&http_endpoint);
 
         let (el_chain_reader, _delegation_manager_address) =
             setup_el_chain_reader(http_endpoint).await;
@@ -243,7 +247,7 @@ mod tests {
             .parse()
             .expect("failed to generate wallet");
 
-        let contract_registry = ContractsRegistry::new(CONTRACTS_REGISTRY, ANVIL_RPC_URL.clone());
+        let contract_registry = ContractsRegistry::new(CONTRACTS_REGISTRY, provider);
         // Use these value in tests when needed
         let operator_index = "1".parse().unwrap();
         let get_test_values_return = contract_registry
@@ -268,6 +272,7 @@ mod tests {
     #[tokio::test]
     async fn test_chain_writer() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let provider = get_provider(&http_endpoint);
 
         let (el_chain_reader, _) = setup_el_chain_reader(http_endpoint.clone()).await;
         let operator_addr = Address::from_str("90F79bf6EB2c4f870365E785982E1f101E93b906").unwrap();
@@ -305,10 +310,7 @@ mod tests {
 
         // this sleep is needed so that we wait for the tx to be processed
         tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
-        let receipt = ANVIL_RPC_URL
-            .get_transaction_receipt(tx_hash)
-            .await
-            .unwrap();
+        let receipt = provider.get_transaction_receipt(tx_hash).await.unwrap();
         assert!(receipt.unwrap().status());
 
         let wallet_modified = PrivateKeySigner::from_str(
@@ -332,10 +334,7 @@ mod tests {
 
         // this sleep is needed so that we wait for the tx to be processed
         tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
-        let receipt = ANVIL_RPC_URL
-            .get_transaction_receipt(tx_hash)
-            .await
-            .unwrap();
+        let receipt = provider.get_transaction_receipt(tx_hash).await.unwrap();
         assert!(receipt.unwrap().status());
 
         // Third test: deposit_erc20_into_strategy
@@ -348,10 +347,7 @@ mod tests {
 
         // this sleep is needed so that we wait for the tx to be processed
         tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
-        let receipt = ANVIL_RPC_URL
-            .get_transaction_receipt(tx_hash)
-            .await
-            .unwrap();
+        let receipt = provider.get_transaction_receipt(tx_hash).await.unwrap();
         assert!(receipt.unwrap().status());
     }
 }
