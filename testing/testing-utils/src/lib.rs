@@ -22,5 +22,6 @@ pub mod test_data;
 /// Transaction utilities for testing.
 pub mod transaction;
 
-/// Anvil utilities
+/// Anvil utilities for tests
+#[allow(clippy::unwrap_used)]
 pub mod anvil;
