@@ -2229,6 +2229,7 @@ dependencies = [
  "eigen-metrics-collectors-rpc-calls",
  "eigen-signer",
  "eigen-testing-utils",
+ "eigen-utils",
  "hex",
  "once_cell",
  "serial_test",

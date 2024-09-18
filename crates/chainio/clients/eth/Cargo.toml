@@ -30,6 +30,7 @@ url.workspace = true
 alloy-node-bindings.workspace = true
 eigen-signer.workspace = true
 eigen-testing-utils.workspace = true
+eigen-utils.workspace = true
 once_cell.workspace = true
 serial_test.workspace = true
 tokio.workspace = true
