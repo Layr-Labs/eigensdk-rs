@@ -824,16 +824,18 @@ mod tests {
         pubsub::SubscriptionResult, BlockId, BlockNumberOrTag, BlockTransactionsKind,
     };
     use eigen_signer::signer::Config;
-    use eigen_testing_utils::anvil_constants::{ANVIL_HTTP_URL, ANVIL_RPC_URL, ANVIL_WS_URL};
+    use eigen_testing_utils::anvil::start_anvil_container;
+    use eigen_utils::get_provider;
     use std::{thread, time};
     use tokio;
 
     #[tokio::test]
     async fn test_suggest_gas_tip_cap() {
-        let instrumented_client = InstrumentedClient::new(ANVIL_HTTP_URL).await.unwrap();
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+
+        let instrumented_client = InstrumentedClient::new(&http_endpoint).await.unwrap();
         let fee_per_gas = instrumented_client.suggest_gas_tip_cap().await.unwrap();
-        let expected_fee_per_gas = ANVIL_RPC_URL
-            .clone()
+        let expected_fee_per_gas = get_provider(&http_endpoint)
             .get_max_priority_fee_per_gas()
             .await
             .unwrap();
@@ -842,25 +844,34 @@ mod tests {
 
     #[tokio::test]
     async fn test_gas_price() {
-        let instrumented_client = InstrumentedClient::new(ANVIL_HTTP_URL).await.unwrap();
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let provider = get_provider(&http_endpoint);
+
+        let instrumented_client = InstrumentedClient::new(&http_endpoint).await.unwrap();
         let gas_price = instrumented_client.suggest_gas_price().await.unwrap();
-        let expected_gas_price = ANVIL_RPC_URL.clone().get_gas_price().await.unwrap();
+        let expected_gas_price = provider.clone().get_gas_price().await.unwrap();
         assert_eq!(gas_price, expected_gas_price as u64);
     }
 
     #[tokio::test]
     async fn test_sync_status() {
-        let instrumented_client = InstrumentedClient::new(ANVIL_HTTP_URL).await.unwrap();
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let provider = get_provider(&http_endpoint);
+
+        let instrumented_client = InstrumentedClient::new(&http_endpoint).await.unwrap();
         let sync_status = instrumented_client.sync_progress().await.unwrap();
-        let expected_sync_status = ANVIL_RPC_URL.clone().syncing().await.unwrap();
+        let expected_sync_status = provider.clone().syncing().await.unwrap();
         assert_eq!(expected_sync_status, sync_status);
     }
 
     #[tokio::test]
     async fn test_chain_id() {
-        let instrumented_client = InstrumentedClient::new(ANVIL_HTTP_URL).await.unwrap();
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let provider = get_provider(&http_endpoint);
 
-        let expected_chain_id = ANVIL_RPC_URL.clone().get_chain_id().await.unwrap();
+        let instrumented_client = InstrumentedClient::new(&http_endpoint).await.unwrap();
+
+        let expected_chain_id = provider.clone().get_chain_id().await.unwrap();
         let chain_id = instrumented_client.chain_id().await.unwrap();
 
         assert_eq!(expected_chain_id, chain_id);
@@ -868,10 +879,13 @@ mod tests {
 
     #[tokio::test]
     async fn test_balance_at() {
-        let instrumented_client = InstrumentedClient::new(ANVIL_HTTP_URL).await.unwrap();
-        let address = ANVIL_RPC_URL.get_accounts().await.unwrap()[0];
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let provider = get_provider(&http_endpoint);
 
-        let expected_balance_at = ANVIL_RPC_URL.get_balance(address).await.unwrap();
+        let instrumented_client = InstrumentedClient::new(&http_endpoint).await.unwrap();
+        let address = provider.get_accounts().await.unwrap()[0];
+
+        let expected_balance_at = provider.get_balance(address).await.unwrap();
         let balance_at = instrumented_client
             .balance_at(address, BlockNumberOrTag::Latest)
             .await
@@ -882,7 +896,9 @@ mod tests {
 
     #[tokio::test]
     async fn test_subscribe_new_head() {
-        let instrumented_client = InstrumentedClient::new_ws(ANVIL_WS_URL).await.unwrap();
+        let (_container, _http_endpoint, ws_endpoint) = start_anvil_container().await;
+
+        let instrumented_client = InstrumentedClient::new_ws(&ws_endpoint).await.unwrap();
         let subscription: TransportResult<Subscription<SubscriptionResult>> =
             instrumented_client.subscribe_new_head().await;
         assert!(subscription.is_ok())
@@ -890,8 +906,11 @@ mod tests {
 
     #[tokio::test]
     async fn test_subscribe_filter_logs() {
-        let instrumented_client = InstrumentedClient::new_ws(ANVIL_WS_URL).await.unwrap();
-        let address = ANVIL_RPC_URL.clone().get_accounts().await.unwrap()[0];
+        let (_container, http_endpoint, ws_endpoint) = start_anvil_container().await;
+        let provider = get_provider(&http_endpoint);
+
+        let instrumented_client = InstrumentedClient::new_ws(&ws_endpoint).await.unwrap();
+        let address = provider.clone().get_accounts().await.unwrap()[0];
         let filter = Filter::new().address(address.to_string().parse::<Address>().unwrap());
 
         let subscription: TransportResult<Subscription<SubscriptionResult>> =
@@ -902,10 +921,13 @@ mod tests {
 
     #[tokio::test]
     async fn test_block_by_hash() {
-        let instrumented_client = InstrumentedClient::new(ANVIL_HTTP_URL).await.unwrap();
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let provider = get_provider(&http_endpoint);
+
+        let instrumented_client = InstrumentedClient::new(&http_endpoint).await.unwrap();
 
         // get the hash from the last block
-        let hash = ANVIL_RPC_URL
+        let hash = provider
             .get_block(BlockId::latest(), BlockTransactionsKind::Hashes)
             .await
             .unwrap()
@@ -914,7 +936,7 @@ mod tests {
             .hash
             .unwrap();
 
-        let expected_block = ANVIL_RPC_URL
+        let expected_block = provider
             .get_block_by_hash(hash, BlockTransactionsKind::Full)
             .await
             .unwrap();
@@ -925,10 +947,13 @@ mod tests {
 
     #[tokio::test]
     async fn test_block_by_number() {
-        let instrumented_client = InstrumentedClient::new(ANVIL_HTTP_URL).await.unwrap();
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let provider = get_provider(&http_endpoint);
+
+        let instrumented_client = InstrumentedClient::new(&http_endpoint).await.unwrap();
         let block_number = 1;
 
-        let expected_block = ANVIL_RPC_URL
+        let expected_block = provider
             .get_block_by_number(block_number.into(), true)
             .await
             .unwrap();
@@ -942,9 +967,12 @@ mod tests {
 
     #[tokio::test]
     async fn test_transaction_count() {
-        let instrumented_client = InstrumentedClient::new(ANVIL_HTTP_URL).await.unwrap();
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let provider = get_provider(&http_endpoint);
 
-        let block = ANVIL_RPC_URL
+        let instrumented_client = InstrumentedClient::new(&http_endpoint).await.unwrap();
+
+        let block = provider
             .get_block(BlockId::latest(), BlockTransactionsKind::Hashes)
             .await
             .unwrap()
@@ -967,6 +995,8 @@ mod tests {
     /// * `transaction_in_block`
     #[tokio::test]
     async fn test_transaction_methods() {
+        let (_container, _http_endpoint, _ws_endpoint) = start_anvil_container().await;
+
         // create a new anvil instance because otherwise it fails with "nonce too low" error.
         let anvil = Anvil::new().try_spawn().unwrap();
         let rpc_url: String = anvil.endpoint().parse().unwrap();
@@ -1023,11 +1053,11 @@ mod tests {
 
     #[tokio::test]
     async fn test_estimate_gas() {
-        let instrumented_client = InstrumentedClient::new("http:/localhost:8545")
-            .await
-            .unwrap();
-        let anvil = ANVIL_RPC_URL.clone();
-        let accounts = anvil.get_accounts().await.unwrap();
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let provider = get_provider(&http_endpoint);
+
+        let instrumented_client = InstrumentedClient::new(&http_endpoint).await.unwrap();
+        let accounts = provider.get_accounts().await.unwrap();
         let from = accounts.first().unwrap();
         let to = accounts.get(1).unwrap();
 
@@ -1044,16 +1074,19 @@ mod tests {
         let tx_request: TransactionRequest = tx.clone().into();
         let tx_request = tx_request.from(*from);
 
-        let expected_estimated_gas = anvil.clone().estimate_gas(&tx_request).await.unwrap();
+        let expected_estimated_gas = provider.clone().estimate_gas(&tx_request).await.unwrap();
         let estimated_gas = instrumented_client.estimate_gas(tx_request).await.unwrap();
         assert_eq!(expected_estimated_gas, estimated_gas.into());
     }
 
     #[tokio::test]
     async fn test_call_contract_and_pending_call_contract() {
-        let instrumented_client = InstrumentedClient::new(ANVIL_HTTP_URL).await.unwrap();
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let provider = get_provider(&http_endpoint);
 
-        let anvil = ANVIL_RPC_URL.clone();
+        let instrumented_client = InstrumentedClient::new(&http_endpoint).await.unwrap();
+
+        let anvil = provider.clone();
         let accounts = anvil.get_accounts().await.unwrap();
         let from = accounts.first().unwrap();
         let to = accounts.get(1).unwrap();
@@ -1091,11 +1124,14 @@ mod tests {
 
     #[tokio::test]
     async fn test_filter_logs() {
-        let instrumented_client = InstrumentedClient::new(ANVIL_HTTP_URL).await.unwrap();
-        let address = ANVIL_RPC_URL.clone().get_accounts().await.unwrap()[0];
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let provider = get_provider(&http_endpoint);
+
+        let instrumented_client = InstrumentedClient::new(&http_endpoint).await.unwrap();
+        let address = provider.clone().get_accounts().await.unwrap()[0];
         let filter = Filter::new().address(address.to_string().parse::<Address>().unwrap());
 
-        let expected_logs = ANVIL_RPC_URL.clone().get_logs(&filter).await.unwrap();
+        let expected_logs = provider.clone().get_logs(&filter).await.unwrap();
         let logs = instrumented_client.filter_logs(filter).await.unwrap();
 
         assert_eq!(expected_logs, logs);
@@ -1103,10 +1139,13 @@ mod tests {
 
     #[tokio::test]
     async fn test_storage_at() {
-        let instrumented_client = InstrumentedClient::new(ANVIL_HTTP_URL).await.unwrap();
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let provider = get_provider(&http_endpoint);
 
-        let account = ANVIL_RPC_URL.clone().get_accounts().await.unwrap()[0];
-        let expected_storage = ANVIL_RPC_URL
+        let instrumented_client = InstrumentedClient::new(&http_endpoint).await.unwrap();
+
+        let account = provider.clone().get_accounts().await.unwrap()[0];
+        let expected_storage = provider
             .clone()
             .get_storage_at(account, U256::ZERO)
             .await
@@ -1122,9 +1161,12 @@ mod tests {
 
     #[tokio::test]
     async fn test_block_number() {
-        let instrumented_client = InstrumentedClient::new(ANVIL_HTTP_URL).await.unwrap();
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let provider = get_provider(&http_endpoint);
 
-        let expected_block_number = ANVIL_RPC_URL.clone().get_block_number().await.unwrap();
+        let instrumented_client = InstrumentedClient::new(&http_endpoint).await.unwrap();
+
+        let expected_block_number = provider.clone().get_block_number().await.unwrap();
         let block_number = instrumented_client.block_number().await.unwrap();
 
         assert_eq!(expected_block_number, block_number);
@@ -1132,10 +1174,13 @@ mod tests {
 
     #[tokio::test]
     async fn test_code_at() {
-        let instrumented_client = InstrumentedClient::new(ANVIL_HTTP_URL).await.unwrap();
-        let address = ANVIL_RPC_URL.get_accounts().await.unwrap()[0];
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let provider = get_provider(&http_endpoint);
 
-        let expected_code = ANVIL_RPC_URL.get_code_at(address).await.unwrap();
+        let instrumented_client = InstrumentedClient::new(&http_endpoint).await.unwrap();
+        let address = provider.get_accounts().await.unwrap()[0];
+
+        let expected_code = provider.get_code_at(address).await.unwrap();
         let code = instrumented_client
             .code_at(address, BlockNumberOrTag::Latest)
             .await
@@ -1146,12 +1191,15 @@ mod tests {
 
     #[tokio::test]
     async fn test_fee_history() {
-        let instrumented_client = InstrumentedClient::new(ANVIL_HTTP_URL).await.unwrap();
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let provider = get_provider(&http_endpoint);
+
+        let instrumented_client = InstrumentedClient::new(&http_endpoint).await.unwrap();
         let block_count = 4;
         let last_block = BlockNumberOrTag::Latest;
         let reward_percentiles = [0.2, 0.3];
 
-        let expected_fee_history = ANVIL_RPC_URL
+        let expected_fee_history = provider
             .get_fee_history(block_count, last_block, &reward_percentiles)
             .await
             .unwrap();
@@ -1165,8 +1213,11 @@ mod tests {
 
     #[tokio::test]
     async fn test_header_by_hash() {
-        let instrumented_client = InstrumentedClient::new(ANVIL_HTTP_URL).await.unwrap();
-        let hash = ANVIL_RPC_URL
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let provider = get_provider(&http_endpoint);
+
+        let instrumented_client = InstrumentedClient::new(&http_endpoint).await.unwrap();
+        let hash = provider
             .get_block(BlockId::latest(), BlockTransactionsKind::Hashes)
             .await
             .unwrap()
@@ -1175,7 +1226,7 @@ mod tests {
             .hash
             .unwrap();
 
-        let expected_header = ANVIL_RPC_URL
+        let expected_header = provider
             .get_block_by_hash(hash, BlockTransactionsKind::Hashes)
             .await
             .unwrap()
@@ -1188,7 +1239,10 @@ mod tests {
 
     #[tokio::test]
     async fn test_header_by_number() {
-        let instrumented_client = InstrumentedClient::new(ANVIL_HTTP_URL).await.unwrap();
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let provider = get_provider(&http_endpoint);
+
+        let instrumented_client = InstrumentedClient::new(&http_endpoint).await.unwrap();
         let block_number = BlockNumberOrTag::Earliest;
 
         let header = instrumented_client
@@ -1196,7 +1250,7 @@ mod tests {
             .await
             .unwrap();
 
-        let expected_header = ANVIL_RPC_URL
+        let expected_header = provider
             .get_block_by_number(block_number, false)
             .await
             .unwrap()
@@ -1208,10 +1262,13 @@ mod tests {
 
     #[tokio::test]
     async fn test_nonce_at() {
-        let instrumented_client = InstrumentedClient::new(ANVIL_HTTP_URL).await.unwrap();
-        let address = ANVIL_RPC_URL.get_accounts().await.unwrap()[0];
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let provider = get_provider(&http_endpoint);
 
-        let expected_nonce = ANVIL_RPC_URL.get_transaction_count(address).await.unwrap();
+        let instrumented_client = InstrumentedClient::new(&http_endpoint).await.unwrap();
+        let address = provider.get_accounts().await.unwrap()[0];
+
+        let expected_nonce = provider.get_transaction_count(address).await.unwrap();
         let nonce = instrumented_client
             .nonce_at(address, BlockNumberOrTag::Latest)
             .await
@@ -1222,11 +1279,14 @@ mod tests {
 
     #[tokio::test]
     async fn test_pending_balance_at() {
-        let instrumented_client = InstrumentedClient::new(ANVIL_HTTP_URL).await.unwrap();
-        let address = ANVIL_RPC_URL.get_accounts().await.unwrap()[0];
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let provider = get_provider(&http_endpoint);
+
+        let instrumented_client = InstrumentedClient::new(&http_endpoint).await.unwrap();
+        let address = provider.get_accounts().await.unwrap()[0];
 
         // TODO: currently comparing "pending" balance with "latest" balance. Check for pending transactions?
-        let expected_balance = ANVIL_RPC_URL.get_balance(address).await.unwrap();
+        let expected_balance = provider.get_balance(address).await.unwrap();
         let balance = instrumented_client
             .pending_balance_at(address)
             .await
@@ -1237,11 +1297,14 @@ mod tests {
 
     #[tokio::test]
     async fn test_pending_code_at() {
-        let instrumented_client = InstrumentedClient::new(ANVIL_HTTP_URL).await.unwrap();
-        let address = ANVIL_RPC_URL.get_accounts().await.unwrap()[0];
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let provider = get_provider(&http_endpoint);
+
+        let instrumented_client = InstrumentedClient::new(&http_endpoint).await.unwrap();
+        let address = provider.get_accounts().await.unwrap()[0];
 
         // TODO: currently comparing "pending" with "latest". Check for pending transactions?
-        let expected_code = ANVIL_RPC_URL.get_code_at(address).await.unwrap();
+        let expected_code = provider.get_code_at(address).await.unwrap();
         let code = instrumented_client.pending_code_at(address).await.unwrap();
 
         assert_eq!(expected_code, code);
@@ -1249,11 +1312,14 @@ mod tests {
 
     #[tokio::test]
     async fn test_pending_nonce_at() {
-        let instrumented_client = InstrumentedClient::new(ANVIL_HTTP_URL).await.unwrap();
-        let address = ANVIL_RPC_URL.get_accounts().await.unwrap()[0];
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let provider = get_provider(&http_endpoint);
+
+        let instrumented_client = InstrumentedClient::new(&http_endpoint).await.unwrap();
+        let address = provider.get_accounts().await.unwrap()[0];
 
         // TODO: currently comparing "pending" with "latest". Check for pending transactions?
-        let expected_pending_nonce_at = ANVIL_RPC_URL.get_transaction_count(address).await.unwrap();
+        let expected_pending_nonce_at = provider.get_transaction_count(address).await.unwrap();
         let pending_nonce_at = instrumented_client.pending_nonce_at(address).await.unwrap();
 
         assert_eq!(expected_pending_nonce_at, pending_nonce_at);
@@ -1261,13 +1327,16 @@ mod tests {
 
     #[tokio::test]
     async fn test_pending_storage_at() {
-        let instrumented_client = InstrumentedClient::new(ANVIL_HTTP_URL).await.unwrap();
-        let address = ANVIL_RPC_URL.get_accounts().await.unwrap()[0];
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let provider = get_provider(&http_endpoint);
+
+        let instrumented_client = InstrumentedClient::new(&http_endpoint).await.unwrap();
+        let address = provider.get_accounts().await.unwrap()[0];
         let key = U256::from(10);
 
         // TODO: currently comparing "pending" with "latest". Check for pending transactions?
         // TODO: set storage and check change
-        let expected_pending_storage_at = ANVIL_RPC_URL.get_storage_at(address, key).await.unwrap();
+        let expected_pending_storage_at = provider.get_storage_at(address, key).await.unwrap();
         let pending_storage_at = instrumented_client
             .pending_storage_at(address, key)
             .await
@@ -1278,9 +1347,12 @@ mod tests {
 
     #[tokio::test]
     async fn test_pending_transaction_count() {
-        let instrumented_client = InstrumentedClient::new(ANVIL_HTTP_URL).await.unwrap();
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let provider = get_provider(&http_endpoint);
 
-        let expected_transaction_count: u64 = ANVIL_RPC_URL
+        let instrumented_client = InstrumentedClient::new(&http_endpoint).await.unwrap();
+
+        let expected_transaction_count: u64 = provider
             .get_block_by_number(BlockNumberOrTag::Pending, false)
             .await
             .unwrap()
