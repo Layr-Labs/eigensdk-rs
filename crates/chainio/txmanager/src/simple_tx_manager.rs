@@ -223,10 +223,8 @@ impl SimpleTxManager {
         // we only estimate if gas_limit is not already set
         if let Some(0) = gas_limit {
             let from = self.get_address()?;
-            let to = match tx.to() {
-                Some(c) => c,
-                None => return Err(TxManagerError::SendTxError),
-            };
+            let to = tx.to().ok_or(TxManagerError::SendTxError)?;
+
             let mut tx_request = TransactionRequest::default()
                 .to(to)
                 .from(from)
@@ -246,10 +244,7 @@ impl SimpleTxManager {
             tx.gas_price().unwrap_or_default() as f64 * self.gas_limit_multiplier;
         let gas_price = gas_price_multiplied as u128;
 
-        let to = match tx.to() {
-            None => return Err(TxManagerError::SendTxError),
-            Some(adress) => adress,
-        };
+        let to = tx.to().ok_or(TxManagerError::SendTxError)?;
 
         let new_tx = TransactionRequest::default()
             .with_to(to)
