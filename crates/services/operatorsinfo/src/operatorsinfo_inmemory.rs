@@ -95,13 +95,11 @@ impl OperatorInfoServiceInMemory {
             operator_info_data: Arc::new(RwLock::new(HashMap::new())),
             operator_addr_to_id: Arc::new(RwLock::new(HashMap::new())),
         };
-        dbg!("Starting operator info service");
 
         tokio::spawn({
             let operator_state = operator_state.clone();
             async move {
                 while let Some(cmd) = pubkeys_rx.recv().await {
-                    dbg!("received msg", &cmd);
                     match cmd {
                         OperatorsInfoMessage::InsertOperatorInfo(addr, keys) => {
                             let mut data = operator_state.operator_info_data.write().await;
@@ -304,7 +302,6 @@ mod tests {
         let operator_info = operators_info_service_in_memory
             .get_operator_info(address)
             .await;
-        dbg!(&operator_info);
         assert!(operator_info.unwrap().is_some());
     }
 
