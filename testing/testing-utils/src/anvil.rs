@@ -40,6 +40,10 @@ pub async fn start_anvil_container() -> (ContainerAsync<GenericImage>, String, S
             "0.0.0.0",
             "--load-state",
             "/contracts_deployed_anvil_state.json",
+            "--base-fee",
+            "0",
+            "--gas-price",
+            "0",
         ])
         .start()
         .await
