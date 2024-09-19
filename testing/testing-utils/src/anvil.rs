@@ -1,4 +1,4 @@
-use std::{env::current_dir, path::PathBuf};
+use std::path::{Path, PathBuf};
 use testcontainers::{
     core::{ExecCommand, IntoContainerPort, WaitFor},
     runners::AsyncRunner,
@@ -7,13 +7,24 @@ use testcontainers::{
 
 const ANVIL_IMAGE: &str = "ghcr.io/foundry-rs/foundry";
 const ANVIL_TAG: &str = "nightly-5b7e4cb3c882b28f3c32ba580de27ce7381f415a";
-const ANVIL_STATE_PATH: &str = "../../crates/contracts/anvil/contracts_deployed_anvil_state.json";
+const ANVIL_STATE_PATH: &str = "./crates/contracts/anvil/contracts_deployed_anvil_state.json"; // relative path from the project root
+
+fn workspace_dir() -> PathBuf {
+    let output = std::process::Command::new(env!("CARGO"))
+        .arg("locate-project")
+        .arg("--workspace")
+        .arg("--message-format=plain")
+        .output()
+        .unwrap()
+        .stdout;
+    let cargo_path = Path::new(std::str::from_utf8(&output).unwrap().trim());
+    cargo_path.parent().unwrap().to_path_buf()
+}
 
 /// Start an Anvil container for testing with contract state loaded.
 pub async fn start_anvil_container() -> (ContainerAsync<GenericImage>, String, String) {
-    let current_dir = current_dir().expect("Failed to get current directory"); // should be root dir
     let relative_path = PathBuf::from(ANVIL_STATE_PATH);
-    let absolute_path = current_dir.join(relative_path);
+    let absolute_path = workspace_dir().join(relative_path);
     let absolute_path_str = absolute_path.to_str().unwrap();
 
     let container = GenericImage::new(ANVIL_IMAGE, ANVIL_TAG)
