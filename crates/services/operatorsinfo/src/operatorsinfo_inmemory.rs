@@ -351,7 +351,7 @@ mod tests {
         )
         .await;
 
-        // need to wait atleast 1 second to get the event processed
+        // need to wait at least 3 seconds to get the event processed
         tokio::time::sleep(tokio::time::Duration::from_secs(3)).await;
 
         cancel_token.clone().cancel();
