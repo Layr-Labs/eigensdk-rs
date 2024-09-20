@@ -460,7 +460,7 @@ mod tests {
             .await
             .unwrap();
 
-        assert!(operator.has_metadata_url().is_none());
-        println!("{:?}", operator.has_metadata_url());
+        assert!(operator.metadata_url.is_none());
+        println!("{:?}", operator.metadata_url);
     }
 }
