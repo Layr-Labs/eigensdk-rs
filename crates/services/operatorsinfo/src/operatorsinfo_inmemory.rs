@@ -261,7 +261,7 @@ mod tests {
     use eigen_types::operator::Operator;
     use eigen_utils::get_provider;
     use std::str::FromStr;
-    use std::time::{Duration, SystemTime, UNIX_EPOCH};
+    use std::time::{SystemTime, UNIX_EPOCH};
 
     #[tokio::test]
     async fn test_query_past_registered_operator_events_and_fill_db() {
@@ -307,6 +307,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_start_service_1_operator_register() {
+        // start anvil in a container
         let (_container, http_endpoint, ws_endpoint) = start_anvil_container().await;
         let test_logger = get_test_logger();
         let avs_registry_chain_reader = AvsRegistryChainReader::new(
@@ -317,6 +318,7 @@ mod tests {
         )
         .await
         .unwrap();
+
         let operators_info_service_in_memory = OperatorInfoServiceInMemory::new(
             test_logger.clone(),
             avs_registry_chain_reader,
@@ -328,6 +330,7 @@ mod tests {
         let token = tokio_util::sync::CancellationToken::new().clone();
         let cancel_token = token.clone();
         let cloned_http_endpoint = http_endpoint.clone();
+
         tokio::spawn(async move {
             let _ = clone_operators_info
                 .start_service(
@@ -340,13 +343,16 @@ mod tests {
                 )
                 .await;
         });
+
         register_operator(
             http_endpoint,
             "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80",
             "12248929636257230549931416853095037629726205319386239410403476017439825112537",
         )
         .await;
-        tokio::time::sleep(Duration::from_secs(1)).await; // need to wait atleast 1 second to get the event processed
+
+        // need to wait atleast 1 second to get the event processed
+        tokio::time::sleep(tokio::time::Duration::from_secs(3)).await;
 
         cancel_token.clone().cancel();
 
@@ -404,7 +410,7 @@ mod tests {
             "8949062771264691130193054363356855357736539613420316273398900351143637925935",
         )
         .await;
-        tokio::time::sleep(Duration::from_secs(1)).await; // need to wait atleast 1 second to get the event processed
+        tokio::time::sleep(tokio::time::Duration::from_secs(3)).await; // need to wait atleast 1 second to get the event processed
 
         cancel_token.clone().cancel();
 
