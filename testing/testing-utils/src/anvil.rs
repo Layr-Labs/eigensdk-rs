@@ -75,4 +75,7 @@ pub async fn mine_anvil_blocks(container: &ContainerAsync<GenericImage>, n: u32)
         ]))
         .await
         .expect("Failed to mine anvil blocks");
+
+    // sleep for 2 seconds to allow the blocks to be fully mined
+    tokio::time::sleep(tokio::time::Duration::from_secs(2)).await;
 }
