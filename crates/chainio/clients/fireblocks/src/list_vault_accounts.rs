@@ -11,11 +11,11 @@ struct Asset {
     total: String,
     balance: String,
     available: String,
-    locked_amount: String,
-    pending: String,
-    frozen: String,
-    staked: String,
-    block_height: String,
+    locked_amount: Option<String>,
+    pending: Option<String>,
+    frozen: Option<String>,
+    staked: Option<String>,
+    block_height: Option<String>,
     #[serde(default)]
     block_hash: Option<String>,
 }

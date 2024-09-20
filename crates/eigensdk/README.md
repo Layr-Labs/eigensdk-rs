@@ -93,6 +93,5 @@ This software is `unaudited`.This is experimental software and is provided on an
 # Security Bugs
 Please report security vulnerabilities to security@eigenlabs.org. Do NOT report security bugs via Github Issues.
 
-## Support
-Join our [telegram](https://t.me/+0_kYjD7TTCRjMjZh) channel .
-
+## Contact
+Telegram - supernovahs444

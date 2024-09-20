@@ -1,44 +1,54 @@
 use serde::{Deserialize, Serialize};
 
-use crate::{
-    client::AssetID,
-    contract_call::{Account, ExtraParams, TransactionOperation},
+use crate::contract_call::{
+    DestinationTransferPeerPath, ExtraParameters, TransactionOperation, TransferPeerPath,
 };
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct TransactionRequest {
-    operation: String,
-    external_tx_id: String,
-    asset_id: AssetID,
-    source: Account,
-    destination: Account,
-    amount: String,
-    extra_parameters: ExtraParams,
-    replace_tx_by_hash: String,
-    gas_price: String,
-    gas_limit: String,
-    max_fee: String,
-    priority_fee: String,
-    fee_level: String,
+    #[serde(rename = "assetId")]
+    pub asset_id: String,
+    pub operation: TransactionOperation,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub external_tx_id: Option<String>,
+    pub source: TransferPeerPath,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub destination: Option<DestinationTransferPeerPath>,
+    pub amount: String,
+    pub extra_parameters: Option<ExtraParameters>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub gas_price: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub gas_limit: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    replace_tx_by_hash: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub note: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "maxFee")]
+    pub max_fee: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[serde(rename = "priorityFee")]
+    priority_fee: Option<String>,
 }
 
 impl TransactionRequest {
     #[allow(clippy::too_many_arguments)]
     pub fn new(
-        operation: String,
-        external_tx_id: String,
-        asset_id: AssetID,
-        source: Account,
-        destination: Account,
+        operation: TransactionOperation,
+        external_tx_id: Option<String>,
+        asset_id: String,
+        source: TransferPeerPath,
+        destination: Option<DestinationTransferPeerPath>,
         amount: String,
-        extra_parameters: ExtraParams,
-        replace_tx_by_hash: String,
-        gas_price: String,
-        gas_limit: String,
-        max_fee: String,
-        priority_fee: String,
-        fee_level: String,
+        extra_parameters: Option<ExtraParameters>,
+        replace_tx_by_hash: Option<String>,
+        gas_price: Option<String>,
+        gas_limit: Option<String>,
+        note: Option<String>,
+        max_fee: Option<String>,
+        priority_fee: Option<String>,
     ) -> Self {
         Self {
             operation,
@@ -51,51 +61,10 @@ impl TransactionRequest {
             replace_tx_by_hash,
             gas_price,
             gas_limit,
+            note,
             max_fee,
             priority_fee,
-            fee_level,
         }
-    }
-
-    pub fn get_contract_call(&mut self) -> Self {
-        self.operation = TransactionOperation::ContractCall.as_str().to_string();
-        self.clone()
-    }
-}
-
-impl std::fmt::Display for TransactionRequest {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(
-            f,
-            "TransactionRequest {{
-    operation: {},
-    external_tx_id: {},
-    asset_id: {},
-    source: {},
-    destination: {},
-    amount: {},
-    extra_parameters: {},
-    replace_tx_by_hash: {},
-    gas_price: {},
-    gas_limit: {},
-    max_fee: {},
-    priority_fee: {},
-    fee_level: {}
-}}",
-            self.operation,
-            self.external_tx_id,
-            self.asset_id,
-            self.source,
-            self.destination,
-            self.amount,
-            self.extra_parameters,
-            self.replace_tx_by_hash,
-            self.gas_price,
-            self.gas_limit,
-            self.max_fee,
-            self.priority_fee,
-            self.fee_level
-        )
     }
 }
 

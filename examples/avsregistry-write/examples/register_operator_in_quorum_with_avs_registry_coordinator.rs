@@ -42,11 +42,7 @@ async fn main() -> Result<()> {
         "12248929636257230549931416853095037629726205319386239410403476017439825112537".to_string(),
     )?;
 
-    let digest_hash: FixedBytes<32> = FixedBytes::from([
-        0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02,
-        0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02,
-        0x02, 0x02,
-    ]);
+    let digest_hash: FixedBytes<32> = FixedBytes::from([0x02; 32]);
 
     // Get the current SystemTime
     let now = SystemTime::now();
@@ -85,13 +81,13 @@ async fn main() -> Result<()> {
     )
     .expect("no key ");
 
-    let operator_details = Operator::new(
-        wallet.address(),
-        wallet.address(),
-        wallet.address(),
-        3,
-        Some("eigensdk-rs".to_string()),
-    );
+    let operator_details = Operator {
+        address: wallet.address(),
+        earnings_receiver_address: wallet.address(),
+        delegation_approver_address: wallet.address(),
+        staker_opt_out_window_blocks: 3,
+        metadata_url: Some("eigensdk-rs".to_string()),
+    };
     // Register the address as operator in delegation manager
     let _s = el_writer.register_as_operator(operator_details).await;
 
