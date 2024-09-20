@@ -89,13 +89,13 @@ pub async fn register_operator(pvt_key: &str, bls_key: &str) {
         pvt_key.to_string(),
     );
 
-    let operator_details = Operator::new(
-        signer.address(),
-        signer.address(),
-        signer.address(),
-        3,
-        Some("eigensdk-rs".to_string()),
-    );
+    let operator_details = Operator {
+        address: signer.address(),
+        earnings_receiver_address: signer.address(),
+        delegation_approver_address: signer.address(),
+        staker_opt_out_window_blocks: 3,
+        metadata_url: Some("eigensdk-rs".to_string()),
+    };
 
     let _ = el_chain_writer
         .register_as_operator(operator_details)

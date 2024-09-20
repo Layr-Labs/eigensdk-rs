@@ -43,14 +43,11 @@ impl ELChainWriter {
         &self,
         operator: Operator,
     ) -> Result<FixedBytes<32>, ElContractsError> {
-        info!(
-            "registering operator {:?} to EigenLayer",
-            operator.has_address()
-        );
+        info!("registering operator {:?} to EigenLayer", operator.address);
         let op_details = OperatorDetails {
-            earningsReceiver: operator.has_earnings_receiver_address(),
-            delegationApprover: operator.has_delegation_approver_address(),
-            stakerOptOutWindowBlocks: operator.has_staker_opt_out_window_blocks(),
+            earningsReceiver: operator.earnings_receiver_address,
+            delegationApprover: operator.delegation_approver_address,
+            stakerOptOutWindowBlocks: operator.staker_opt_out_window_blocks,
         };
         let provider = get_signer(self.signer.clone(), &self.provider);
 
@@ -58,7 +55,7 @@ impl ELChainWriter {
 
         let binding = {
             let contract_call = contract_delegation_manager
-                .registerAsOperator(op_details, operator.has_metadata_url().unwrap_or_default());
+                .registerAsOperator(op_details, operator.metadata_url.unwrap_or_default());
             contract_call.gas(300000)
         };
 
@@ -87,12 +84,12 @@ impl ELChainWriter {
     ) -> Result<TxHash, ElContractsError> {
         info!(
             "updating operator detils of operator {:?} to EigenLayer",
-            operator.has_address()
+            operator.address
         );
         let operator_details = OperatorDetails {
-            earningsReceiver: operator.has_earnings_receiver_address(),
-            delegationApprover: operator.has_delegation_approver_address(),
-            stakerOptOutWindowBlocks: operator.has_staker_opt_out_window_blocks(),
+            earningsReceiver: operator.earnings_receiver_address,
+            delegationApprover: operator.delegation_approver_address,
+            stakerOptOutWindowBlocks: operator.staker_opt_out_window_blocks,
         };
         let provider = get_signer(self.signer.clone(), &self.provider);
 
@@ -106,10 +103,10 @@ impl ELChainWriter {
             .await
             .map_err(ElContractsError::AlloyContractError)?;
 
-        info!(tx_hash = %modify_operator_tx.tx_hash(), operator = %operator.has_address(), "updated operator details tx");
+        info!(tx_hash = %modify_operator_tx.tx_hash(), operator = %operator.address, "updated operator details tx");
 
         let contract_call_update_metadata_uri = contract_delegation_manager
-            .updateOperatorMetadataURI(operator.has_metadata_url().unwrap_or_default());
+            .updateOperatorMetadataURI(operator.metadata_url.unwrap_or_default());
 
         let metadata_tx = contract_call_update_metadata_uri.send().await?;
 
@@ -294,13 +291,13 @@ mod tests {
         )
         .expect("no key");
 
-        let operator = Operator::new(
-            wallet.address(),
-            wallet.address(),
-            wallet.address(),
-            3,
-            Some("eigensdk-rs".to_string()),
-        );
+        let operator = Operator {
+            address: wallet.address(),
+            earnings_receiver_address: wallet.address(),
+            delegation_approver_address: wallet.address(),
+            staker_opt_out_window_blocks: 3,
+            metadata_url: Some("eigensdk-rs".to_string()),
+        };
 
         // First test: register as an operator
         let tx_hash = el_chain_writer
@@ -318,13 +315,13 @@ mod tests {
         )
         .expect("no key");
 
-        let operator_modified = Operator::new(
-            wallet_modified.address(),
-            wallet_modified.address(),
-            wallet_modified.address(),
-            3,
-            Some("eigensdk-rs".to_string()),
-        );
+        let operator_modified = Operator {
+            address: wallet_modified.address(),
+            earnings_receiver_address: wallet_modified.address(),
+            delegation_approver_address: wallet_modified.address(),
+            staker_opt_out_window_blocks: 3,
+            metadata_url: Some("eigensdk-rs".to_string()),
+        };
 
         // Second test: update operator details
         let tx_hash = el_chain_writer
