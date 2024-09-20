@@ -241,13 +241,13 @@ impl ELChainReader {
             _0: operator_details,
         } = operator_det;
 
-        Ok(Operator::new(
-            operator,
-            operator_details.earningsReceiver,
-            operator_details.delegationApprover,
-            operator_details.stakerOptOutWindowBlocks,
-            None,
-        ))
+        Ok(Operator {
+            address: operator,
+            earnings_receiver_address: operator_details.earningsReceiver,
+            delegation_approver_address: operator_details.delegationApprover,
+            staker_opt_out_window_blocks: operator_details.stakerOptOutWindowBlocks,
+            metadata_url: None,
+        })
     }
 
     pub async fn is_operator_registered(
