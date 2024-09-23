@@ -124,17 +124,10 @@ impl ContractCall for Client {
             serde_json::to_string(&transaction_request).map_err(FireBlockError::SerdeError)?;
 
         // Call POST request
-        let contract_call_result = self
+        let contract_call = self
             .post_request("/v1/transactions/", Some(&transaction_json.to_string()))
-            .await;
-        match contract_call_result {
-            Ok(contract_call) => {
-                let contract_call_req: TransactionResponse =
-                    serde_json::from_str(&contract_call).unwrap();
-                Ok(contract_call_req)
-            }
-            Err(e) => Err(e),
-        }
+            .await?;
+        serde_json::from_str(&contract_call).map_err(FireBlockError::SerdeError)
     }
 }
 

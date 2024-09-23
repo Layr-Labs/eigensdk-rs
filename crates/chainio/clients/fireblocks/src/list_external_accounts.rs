@@ -24,23 +24,13 @@ pub trait ListExternalAccounts {
 
 impl ListExternalAccounts for Client {
     async fn list_external_accounts(&self) -> Result<Vec<WhitelistedAccount>, FireBlockError> {
-        let list_external_accounts_result = self.get_request("/v1/external_wallets").await;
+        let list_external_accounts = self.get_request("/v1/external_wallets").await?;
 
-        match list_external_accounts_result {
-            Ok(list_external_accounts) => {
-                if list_external_accounts.trim() == "[]" {
-                    let default_accounts = vec![WhitelistedAccount::default()];
-                    return Ok(default_accounts);
-                }
-                let serialized_tx: Result<Vec<WhitelistedAccount>, _> =
-                    serde_json::from_str(&list_external_accounts);
-                match serialized_tx {
-                    Ok(whitelisted_accounts) => Ok(whitelisted_accounts),
-                    Err(e) => Err(FireBlockError::SerdeError(e)),
-                }
-            }
-            Err(e) => Err(e),
+        if list_external_accounts.trim() == "[]" {
+            let default_accounts = vec![WhitelistedAccount::default()];
+            return Ok(default_accounts);
         }
+        serde_json::from_str(&list_external_accounts).map_err(FireBlockError::SerdeError)
     }
 }
 

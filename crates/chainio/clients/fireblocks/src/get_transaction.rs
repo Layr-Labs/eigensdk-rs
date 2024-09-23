@@ -89,22 +89,11 @@ pub trait GetTransaction {
 
 impl GetTransaction for Client {
     async fn get_transaction(&self, tx_id: String) -> Result<Transaction, FireBlockError> {
-        let transaction_object_result = self
+        let transaction = self
             .get_request(&format!("/v1/transactions/{}", tx_id))
-            .await;
+            .await?;
 
-        match transaction_object_result {
-            Ok(transaction) => {
-                let serialized_tx_result: Result<Transaction, _> =
-                    serde_json::from_str(&transaction);
-
-                match serialized_tx_result {
-                    Ok(serialized_tx) => Ok(serialized_tx),
-                    Err(e) => Err(FireBlockError::SerdeError(e)),
-                }
-            }
-            Err(e) => Err(e),
-        }
+        serde_json::from_str(&transaction).map_err(FireBlockError::SerdeError)
     }
 }
 
