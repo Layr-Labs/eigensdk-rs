@@ -41,8 +41,6 @@ We are actively looking for contributors. Thank you for your interest. We have s
 To test locally :-
 
 
-To test locally and raise a PR :-
-
 You need `foundry` , `docker` and `make` to successfully run it. Also, the `docker` engine has to be running for all the tests to execute correctly.
 ```
 make pr
