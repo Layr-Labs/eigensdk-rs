@@ -524,7 +524,7 @@ impl AvsRegistryChainReader {
     /// # Arguments
     ///
     /// * `start_block` - Start block number
-    /// * `stop_block` - Stop block number
+    /// * `stop_block` - Stop block number. If zero is passed, then the current block number is fetched and used.
     ///
     /// # Returns
     ///
@@ -539,26 +539,25 @@ impl AvsRegistryChainReader {
 
         let mut operator_id_to_socket = HashMap::new();
 
-        let query_block_range = 10000;
+        // The block range of eth_getLogs is limited to 1024
+        // https://docs.blockpi.io/documentations/api-reference/arbitrum/eth_getlogs
+        let query_block_range = 1024;
 
-        let mut i = start_block;
+        let stop_block = if stop_block == 0 {
+            provider.get_block_number().await.map_err(|e| {
+                AvsRegistryError::AlloyContractError(alloy_contract::Error::TransportError(e))
+            })?
+        } else {
+            stop_block
+        };
 
-        while i <= stop_block {
-            let mut to_block = i + (query_block_range - 1);
-            if to_block > stop_block {
-                to_block = stop_block;
-            }
+        for from_block in (start_block..=stop_block).step_by(query_block_range as usize) {
+            let to_block = (from_block + query_block_range - 1).min(stop_block);
 
-            let mut filter = Filter::new()
-                .select(start_block..to_block)
+            let filter = Filter::new()
+                .select(from_block..to_block)
                 .event("OperatorSocketUpdate(bytes32,string)")
                 .address(self.registry_coordinator_addr);
-            if stop_block == 0 {
-                let current_block_number = provider.get_block_number().await.map_err(|e| {
-                    AvsRegistryError::AlloyContractError(alloy_contract::Error::TransportError(e))
-                })?;
-                filter = filter.clone().select(start_block..current_block_number);
-            };
 
             let logs = provider.get_logs(&filter).await.map_err(|e| {
                 AvsRegistryError::AlloyContractError(alloy_contract::Error::TransportError(e))
@@ -577,11 +576,9 @@ impl AvsRegistryChainReader {
             }
             let len = logs.len();
             self.logger.debug(
-                &format!("num_transaction_logs : {len} , from_block: {i} , to_block: {to_block}"),
+                &format!("num_transaction_logs : {len} , from_block: {from_block} , to_block: {to_block}"),
                 "eigen-client-avsregistry.reader.query_existing_registered_operator_sockets",
             );
-
-            i += query_block_range;
         }
         Ok(operator_id_to_socket)
     }
@@ -658,6 +655,46 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn test_get_operators_stake_in_quorums_of_operator_at_current_block() {
+        let avs_reader = build_avs_registry_chain_reader().await;
+        let operator_id = U256::from_str(
+            "35344093966194310405039483339636912150346494903629410125452342281826147822033",
+        )
+        .unwrap();
+
+        let (quorums, operators) = avs_reader
+            .get_operators_stake_in_quorums_of_operator_at_current_block(operator_id.into())
+            .await
+            .unwrap();
+        assert_eq!(quorums.len(), 0);
+        assert_eq!(operators.len(), 0);
+    }
+
+    #[tokio::test]
+    async fn test_get_operator_stake_in_quorums_of_operator_at_current_block() {
+        let avs_reader = build_avs_registry_chain_reader().await;
+        let operator_id = U256::from_str(
+            "35344093966194310405039483339636912150346494903629410125452342281826147822033",
+        )
+        .unwrap();
+
+        let stakes = avs_reader
+            .get_operator_stake_in_quorums_of_operator_at_current_block(operator_id.into())
+            .await
+            .unwrap();
+        assert_eq!(stakes.len(), 0);
+    }
+
+    #[tokio::test]
+    async fn test_is_operator_registered() {
+        let avs_reader = build_avs_registry_chain_reader().await;
+        let address = Address::from_str(HOLESKY_REGISTRY_COORDINATOR).unwrap();
+
+        let is_registered = avs_reader.is_operator_registered(address).await.unwrap();
+        assert!(!is_registered);
+    }
+
+    #[tokio::test]
     async fn test_get_operators_stake_in_quorums_of_operator_at_block() {
         let avs_reader = build_avs_registry_chain_reader().await;
 
@@ -668,6 +705,16 @@ mod tests {
 
         let _ = avs_reader
             .get_operators_stake_in_quorums_of_operator_at_block((operator_id).into(), 1246078)
+            .await
+            .unwrap();
+    }
+
+    #[tokio::test]
+    async fn test_query_existing_registered_operator_sockets() {
+        let avs_reader = build_avs_registry_chain_reader().await;
+
+        let _ = avs_reader
+            .query_existing_registered_operator_sockets(0, 2000)
             .await
             .unwrap();
     }

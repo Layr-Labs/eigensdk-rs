@@ -10,7 +10,6 @@ List of crates in the repository :-
 
 - [eigen-client-avsregistry](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/chainio/clients/avsregistry) - Read, Write and subscribe methods for AvsRegistry
 - [eigen-client-elcontracts](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/chainio/clients/elcontracts) - Convenience methods to call Eigenlayer contracts
-- [eigen-chainio-utils](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/chainio/utils)
 - [eigen-contracts-bindings](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/contracts/bindings) - Generate ethers bindings for Eigen Layer.
 - [eigen-crypto-bls](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/crypto/bls) - bls utilities
 - [eigen-crypto-bn254](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/crypto/bn254) - bn254 utilities
