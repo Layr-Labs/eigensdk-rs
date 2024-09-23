@@ -53,43 +53,35 @@ impl FireblocksWallet {
         vault_account_name: String,
     ) -> Result<FireblocksWallet, error::FireBlockError> {
         let provider_ = get_provider(&provider);
-        let chain_id_result = provider_.get_chain_id().await;
+        let chain_id = provider_.get_chain_id().await.map_err(|e| {
+            FireBlockError::AlloyContractError(alloy_contract::Error::TransportError(e))
+        })?;
 
-        match chain_id_result {
-            Ok(chain_id) => Ok(Self {
-                fireblocks_client,
-                vault_account_name,
-                chain_id,
-                provider,
-                vault_account: None,
-                whitelisted_accounts: HashMap::new(),
-                whitelisted_contracts: HashMap::new(),
-                tx_id_to_nonce: HashMap::new(),
-            }),
-            Err(e) => Err(FireBlockError::AlloyContractError(
-                alloy_contract::Error::TransportError(e),
-            )),
-        }
+        Ok(Self {
+            fireblocks_client,
+            vault_account_name,
+            chain_id,
+            provider,
+            vault_account: None,
+            whitelisted_accounts: HashMap::new(),
+            whitelisted_contracts: HashMap::new(),
+            tx_id_to_nonce: HashMap::new(),
+        })
     }
 
     /// Get Vault Accounts
     pub async fn get_account(&mut self) -> Result<Option<VaultAccount>, FireBlockError> {
         match &self.vault_account {
             None => {
-                let accounts_result = self.fireblocks_client.list_vault_accounts().await;
+                let accounts = self.fireblocks_client.list_vault_accounts().await?;
 
-                match accounts_result {
-                    Ok(accounts) => {
-                        for account in accounts.vault_accounts().iter() {
-                            if account.name().eq(&self.vault_account_name) {
-                                self.vault_account = Some(account.clone());
-                                break;
-                            }
-                        }
-                        Ok(self.vault_account.clone())
+                for account in accounts.vault_accounts().iter() {
+                    if account.name().eq(&self.vault_account_name) {
+                        self.vault_account = Some(account.clone());
+                        break;
                     }
-                    Err(e) => Err(e),
                 }
+                Ok(self.vault_account.clone())
             }
             Some(account) => Ok(Some(account.clone())),
         }
@@ -114,29 +106,23 @@ impl FireblocksWallet {
                     }
                     false => {
                         let whitelisted_accounts;
-                        let accounts_result = self.fireblocks_client.list_external_accounts().await;
+                        let accounts = self.fireblocks_client.list_external_accounts().await?;
 
-                        match accounts_result {
-                            Ok(accounts) => {
-                                for account in accounts.iter() {
-                                    for asset in account.assets.iter() {
-                                        if asset.address.as_ref().unwrap().eq(&address.to_string())
-                                            && asset.status.as_ref().unwrap().as_str() == "APPROVED"
-                                            && *asset.id.as_ref().unwrap()
-                                                == *ASSET_ID_BY_CHAIN.get(&self.chain_id).unwrap()
-                                        {
-                                            self.whitelisted_accounts
-                                                .insert(address, account.clone());
-                                            whitelisted_accounts = account;
-                                            return Ok(whitelisted_accounts.clone());
-                                        }
-                                    }
+                        for account in accounts.iter() {
+                            for asset in account.assets.iter() {
+                                if asset.address.as_ref().unwrap().eq(&address.to_string())
+                                    && asset.status.as_ref().unwrap().as_str() == "APPROVED"
+                                    && *asset.id.as_ref().unwrap()
+                                        == *ASSET_ID_BY_CHAIN.get(&self.chain_id).unwrap()
+                                {
+                                    self.whitelisted_accounts.insert(address, account.clone());
+                                    whitelisted_accounts = account;
+                                    return Ok(whitelisted_accounts.clone());
                                 }
-
-                                Ok(WhitelistedAccount::default())
                             }
-                            Err(e) => Err(e),
                         }
+
+                        Ok(WhitelistedAccount::default())
                     }
                 }
             }
@@ -207,31 +193,20 @@ impl FireblocksWallet {
         match fireblocks_tx.status() {
             Status::Completed => {
                 let provider = get_provider(&self.provider);
-                let hash_result =
-                    alloy_primitives::FixedBytes::<32>::from_str(&fireblocks_tx.tx_hash());
-                match hash_result {
-                    Ok(hash) => {
-                        let tx_hash_result = provider.get_transaction_receipt(hash).await;
+                let hash = alloy_primitives::FixedBytes::<32>::from_str(&fireblocks_tx.tx_hash())
+                    .map_err(|e| FireBlockError::OtherError(e.to_string()))?;
 
-                        match tx_hash_result {
-                            Ok(tx_hash) => {
-                                if let Some(tx) = tx_hash {
-                                    if self.tx_id_to_nonce.contains_key(&tx_id) {
-                                        self.tx_id_to_nonce.remove(&tx_id);
-                                    }
-                                    Ok(tx)
-                                } else {
-                                    Err(FireBlockError::TransactionReceiptNotFound(tx_id))
-                                }
-                            }
-                            Err(e) => Err(FireBlockError::AlloyContractError(
-                                alloy_contract::Error::TransportError(e),
-                            )),
-                        }
-                    }
+                let tx_hash = provider.get_transaction_receipt(hash).await.map_err(|e| {
+                    FireBlockError::AlloyContractError(alloy_contract::Error::TransportError(e))
+                })?;
 
-                    Err(e) => Err(FireBlockError::OtherError(e.to_string())),
+                let tx =
+                    tx_hash.ok_or(FireBlockError::TransactionReceiptNotFound(tx_id.clone()))?;
+
+                if self.tx_id_to_nonce.contains_key(&tx_id) {
+                    self.tx_id_to_nonce.remove(&tx_id);
                 }
+                Ok(tx)
             }
             Status::Failed | Status::Rejected | Status::Cancelled | Status::Blocked => {
                 Err(FireBlockError::TransactionFailed(
@@ -371,12 +346,12 @@ mod tests {
         );
         let mut fireblocks_wallet = FireblocksWallet::new(
             client,
-            "https://ethereum-sepolia.rpc.subquery.network/public".to_string(),
+            "https://holesky.drpc.org".to_string(),
             "vault-name".to_string(),
         )
         .await
         .unwrap();
-        let tx_id = "10d377ac-0655-45c3-9d05-4fe0887787f3";
+        let tx_id = "39155aaa-cae7-45d8-824b-b74aef68edc0";
         let _ = fireblocks_wallet
             .get_transaction_receipt(tx_id.to_string())
             .await

@@ -1,2 +1,0 @@
-# Eigen SDK ChainIo utils
-

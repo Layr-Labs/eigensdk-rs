@@ -11,11 +11,11 @@ struct Asset {
     total: String,
     balance: String,
     available: String,
-    locked_amount: String,
-    pending: String,
-    frozen: String,
-    staked: String,
-    block_height: String,
+    locked_amount: Option<String>,
+    pending: Option<String>,
+    frozen: Option<String>,
+    staked: Option<String>,
+    block_height: Option<String>,
     #[serde(default)]
     block_hash: Option<String>,
 }
@@ -61,20 +61,8 @@ pub trait ListVaultAccounts {
 
 impl ListVaultAccounts for Client {
     async fn list_vault_accounts(&self) -> Result<VaultAccountResponse, FireBlockError> {
-        let list_vault_accounts_result = self.get_request("/v1/vault/accounts_paged").await;
-
-        match list_vault_accounts_result {
-            Ok(list_vault_accounts) => {
-                let vault_accounts_result: Result<VaultAccountResponse, _> =
-                    serde_json::from_str(&list_vault_accounts);
-
-                match vault_accounts_result {
-                    Ok(vault_accounts) => Ok(vault_accounts),
-                    Err(e) => Err(FireBlockError::SerdeError(e)),
-                }
-            }
-            Err(e) => Err(e),
-        }
+        let list_vault_accounts = self.get_request("/v1/vault/accounts_paged").await?;
+        serde_json::from_str(&list_vault_accounts).map_err(FireBlockError::SerdeError)
     }
 }
 

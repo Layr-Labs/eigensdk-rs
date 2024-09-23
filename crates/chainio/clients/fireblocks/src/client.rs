@@ -115,18 +115,11 @@ impl Client {
             body_hash,
         };
 
-        let encoding_key_result = EncodingKey::from_rsa_pem(self.private_key.as_bytes());
-        match encoding_key_result {
-            Ok(encoding_key) => {
-                let token_result = encode(&Header::new(Algorithm::RS256), &claims, &encoding_key);
+        let encoding_key = EncodingKey::from_rsa_pem(self.private_key.as_bytes())
+            .map_err(FireBlockError::JsonWebTokenError)?;
 
-                match token_result {
-                    Ok(token) => Ok(token),
-                    Err(e) => Err(FireBlockError::JsonWebTokenError(e)),
-                }
-            }
-            Err(e) => Err(FireBlockError::JsonWebTokenError(e)),
-        }
+        encode(&Header::new(Algorithm::RS256), &claims, &encoding_key)
+            .map_err(FireBlockError::JsonWebTokenError)
     }
 
     /// GET : Request to the fireblocks endpoint using the given path.

@@ -90,13 +90,13 @@ pub async fn register_operator(pvt_key: &str, bls_key: &str) {
         pvt_key.to_string(),
     );
 
-    let operator_details = Operator::new(
-        signer.address(),
-        signer.address(),
-        signer.address(),
-        3,
-        Some("eigensdk-rs".to_string()),
-    );
+    let operator_details = Operator {
+        address: signer.address(),
+        earnings_receiver_address: signer.address(),
+        delegation_approver_address: signer.address(),
+        staker_opt_out_window_blocks: 3,
+        metadata_url: Some("eigensdk-rs".to_string()),
+    };
 
     let _ = el_chain_writer
         .register_as_operator(operator_details)
@@ -114,11 +114,7 @@ pub async fn register_operator(pvt_key: &str, bls_key: &str) {
     .unwrap();
 
     let bls_key_pair = BlsKeyPair::new(bls_key.to_string()).unwrap();
-    let salt: FixedBytes<32> = FixedBytes::from([
-        0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02,
-        0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02,
-        0x02, 0x02,
-    ]);
+    let salt: FixedBytes<32> = FixedBytes::from([0x02; 32]);
     let now = SystemTime::now();
     let mut expiry: U256 = U256::from(0);
     // Convert SystemTime to a Duration since the UNIX epoch
