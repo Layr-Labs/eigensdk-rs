@@ -8,27 +8,26 @@ description = "SDK for eigenlayer"
 license-file.workspace = true
 
 [dependencies]
-eigen-chainio-txmanager = {workspace = true, optional = true}
-eigen-chainio-utils  = {workspace = true, optional = true}
-eigen-client-avsregistry  = {workspace = true, optional = true}
-eigen-client-elcontracts  = {workspace = true, optional = true}
-eigen-client-eth = {workspace = true, optional = true}
-eigen-client-fireblocks  = {workspace = true, optional = true}
-eigen-contract-bindings  = {workspace = true, optional = true}
-eigen-crypto-bls  = {workspace = true, optional = true}
-eigen-crypto-bn254  = {workspace = true, optional = true}
-eigen-logging  = {workspace = true, optional = true}
-eigen-metrics  = {workspace = true, optional = true}
-eigen-metrics-collectors-economic  = {workspace = true, optional = true}
-eigen-metrics-collectors-rpc-calls  = {workspace = true, optional = true}
-eigen-services-avsregistry  = {workspace = true, optional = true}
-eigen-services-blsaggregation = {workspace = true, optional = true}
-eigen-services-operatorsinfo  = {workspace = true, optional = true}
-eigen-signer  = {workspace = true, optional = true}
-eigen-testing-utils  = {workspace = true, optional = true}
-eigen-types  = {workspace = true, optional = true}
-eigen-utils  = {workspace = true, optional = true}
-eigen-nodeapi  = {workspace = true, optional = true}
+eigen-chainio-txmanager = { workspace = true, optional = true }
+eigen-client-avsregistry = { workspace = true, optional = true }
+eigen-client-elcontracts = { workspace = true, optional = true }
+eigen-client-eth = { workspace = true, optional = true }
+eigen-client-fireblocks = { workspace = true, optional = true }
+eigen-contract-bindings = { workspace = true, optional = true }
+eigen-crypto-bls = { workspace = true, optional = true }
+eigen-crypto-bn254 = { workspace = true, optional = true }
+eigen-logging = { workspace = true, optional = true }
+eigen-metrics = { workspace = true, optional = true }
+eigen-metrics-collectors-economic = { workspace = true, optional = true }
+eigen-metrics-collectors-rpc-calls = { workspace = true, optional = true }
+eigen-services-avsregistry = { workspace = true, optional = true }
+eigen-services-blsaggregation = { workspace = true, optional = true }
+eigen-services-operatorsinfo = { workspace = true, optional = true }
+eigen-signer = { workspace = true, optional = true }
+eigen-testing-utils = { workspace = true, optional = true }
+eigen-types = { workspace = true, optional = true }
+eigen-utils = { workspace = true, optional = true }
+eigen-nodeapi = { workspace = true, optional = true }
 
 
 # Feature configurations
@@ -39,7 +38,6 @@ default = []
 # Full features set for full usage
 full = [
     "chainio-txmanager",
-    "chainio-utils",
     "client-avsregistry",
     "client-elcontracts",
     "client-eth",
@@ -59,7 +57,6 @@ full = [
 
 # Chain IO related features
 chainio-txmanager = ["dep:eigen-chainio-txmanager"]
-chainio-utils = ["dep:eigen-chainio-utils"]
 
 # Client-related features
 client-avsregistry = ["dep:eigen-client-avsregistry"]

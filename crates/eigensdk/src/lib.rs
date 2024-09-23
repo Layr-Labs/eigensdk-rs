@@ -86,10 +86,6 @@ pub use eigen_testing_utils as testing_utils;
 #[doc(inline)]
 pub use eigen_chainio_txmanager as chainio_txmanager;
 
-#[cfg(feature = "chainio-utils")]
-#[doc(inline)]
-pub use eigen_chainio_utils as chainio_utils;
-
 /* ------------------------------------ Metrics Collectors Re-exports -------------------------- */
 
 #[cfg(feature = "metrics-collectors-economic")]
