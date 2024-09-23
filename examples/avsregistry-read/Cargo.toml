@@ -6,7 +6,7 @@ rust-version.workspace = true
 repository.workspace = true
 license-file.workspace = true
 authors.workspace = true
-
+description = "avsregistry read examples"
 
 [lints]
 workspace = true

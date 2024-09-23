@@ -4,6 +4,8 @@ version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 repository.workspace = true
+description = "aws,keystore,web3,private_key signers"
+license-file.workspace = true
 
 [dependencies]
 alloy-consensus.workspace = true
@@ -23,5 +25,6 @@ url.workspace = true
 [dev-dependencies]
 alloy-node-bindings.workspace = true
 aws-config.workspace = true
+eigen-testing-utils.workspace = true
 testcontainers.workspace = true
 tokio.workspace = true

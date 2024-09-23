@@ -41,26 +41,14 @@ impl GetAssetAddresses for Client {
         vault_id: String,
         asset_id: AssetID,
     ) -> Result<AddressesResponse, FireBlockError> {
-        let asset_addresses_result = self
+        let asset_addresses = self
             .get_request(&format!(
                 "/v1/vault/accounts/{}/{}/addresses_paginated",
                 vault_id, asset_id
             ))
-            .await;
+            .await?;
 
-        match asset_addresses_result {
-            Ok(asset_addresses) => {
-                let asset_address_result: Result<AddressesResponse, _> =
-                    serde_json::from_str(&asset_addresses);
-
-                match asset_address_result {
-                    Ok(asset_address) => Ok(asset_address),
-
-                    Err(e) => Err(FireBlockError::SerdeError(e)),
-                }
-            }
-            Err(e) => Err(e),
-        }
+        serde_json::from_str(&asset_addresses).map_err(FireBlockError::SerdeError)
     }
 }
 
@@ -81,7 +69,7 @@ mod tests {
         let api_url = env::var("FIREBLOCKS_API_URL").expect("FIREBLOCKS_API_URL not set");
         let private_key =
             std::fs::read_to_string(private_key_path).expect("Failed to read private key file");
-        let vault_id = "1";
+        let vault_id = "13";
         let asset_id: AssetID = AssetID::EthTest5;
         let client = Client::new(
             api_key.to_string(),

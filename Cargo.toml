@@ -5,7 +5,6 @@ members = [
     "crates/chainio/clients/eth/",
     "crates/chainio/clients/fireblocks/",
     "crates/chainio/txmanager/",
-    "crates/chainio/utils/",
     "crates/contracts/bindings/",
     "crates/crypto/bls/",
     "crates/crypto/bn254/",
@@ -21,6 +20,7 @@ members = [
     "crates/types/",
     "crates/utils/",
     "crates/nodeapi/",
+    "crates/eigensdk/",
     "examples/anvil-utils",
     "examples/avsregistry-read",
     "examples/avsregistry-write",
@@ -36,7 +36,7 @@ authors = ["Eigen Layer contributors"]
 rust-version = "1.79"
 repository = "https://github.com/Layr-Labs/eigensdk-rs"
 homepage = ""
-license-file = "LICENSE.txt"
+license-file = "LICENSE"
 
 [workspace.lints]
 rust.missing_debug_implementations = "warn"
@@ -59,7 +59,6 @@ aws-config = "1.5.4"
 aws-sdk-kms = "1.37.0"
 clap = { version = "4.5.11", features = ["derive"] }
 eigen-chainio-txmanager = { path = "crates/chainio/txmanager/" }
-eigen-chainio-utils = { path = "crates/chainio/utils/" }
 eigen-client-avsregistry = { path = "crates/chainio/clients/avsregistry" }
 eigen-client-elcontracts = { path = "crates/chainio/clients/elcontracts" }
 eigen-client-eth = { path = "crates/chainio/clients/eth" }
@@ -72,13 +71,13 @@ eigen-metrics = { version = "0.0.1-alpha", path = "crates/metrics/" }
 eigen-metrics-collectors-economic = { path = "crates/metrics/collectors/economic" }
 eigen-metrics-collectors-rpc-calls = { path = "crates/metrics/collectors/rpc_calls" }
 eigen-services-avsregistry = { path = "crates/services/avsregistry" }
-eigen-services-bls_aggregation = { path = "crates/services/bls_aggregation" }
+eigen-services-blsaggregation = { path = "crates/services/bls_aggregation" }
 eigen-services-operatorsinfo = { path = "crates/services/operatorsinfo" }
 eigen-signer = { path = "crates/signer/" }
 eigen-testing-utils = { path = "testing/testing-utils" }
 eigen-types = { path = "crates/types/" }
 eigen-utils = { path = "crates/utils/" }
-eigen-nodeapi = {path = "crates/nodeapi/"}
+eigen-nodeapi = { path = "crates/nodeapi/" }
 eth-keystore = "0.5.0"
 ethers = "2.0.14"
 ethers-signers = "2.0.14"
@@ -112,9 +111,7 @@ tracing-subscriber = { version = "0.3", features = ["json"] }
 url = "2.5.2"
 
 #misc
-rust-bls-bn254 = { version = "0.2.0", features = [
-    "std",
-] }
+rust-bls-bn254 = { version = "0.2.0", features = ["std"] }
 uuid = { version = "1.10.0", features = ["v4"] }
 
 

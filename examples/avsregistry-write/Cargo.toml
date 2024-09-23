@@ -6,7 +6,7 @@ rust-version.workspace = true
 repository.workspace = true
 license-file.workspace = true
 authors.workspace = true
-
+description = "avsregistry write examples"
 
 [lints]
 workspace = true
@@ -20,7 +20,6 @@ ark-ec = { version = "0.4.2", default-features = false }
 ark-ff.workspace = true
 ark-serialize = "0.4"
 ark-std = { version = "0.4.0", default-features = false }
-eigen-chainio-utils.workspace = true
 eigen-client-avsregistry.workspace = true
 eigen-client-elcontracts.workspace = true
 eigen-crypto-bls.workspace = true
@@ -32,4 +31,3 @@ eigen-utils.workspace = true
 eyre.workspace = true
 lazy_static = "1.5.0"
 tokio = { workspace = true, features = ["macros", "rt-multi-thread"] }
-

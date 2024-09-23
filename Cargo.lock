@@ -2124,10 +2124,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "eigen-chainio-utils"
-version = "0.0.1-alpha"
-
-[[package]]
 name = "eigen-cli"
 version = "0.0.1-alpha"
 dependencies = [
@@ -2454,6 +2450,7 @@ dependencies = [
  "async-trait",
  "aws-config",
  "aws-sdk-kms",
+ "eigen-testing-utils",
  "eth-keystore",
  "serde",
  "testcontainers",
@@ -2504,6 +2501,32 @@ dependencies = [
  "alloy-transport",
  "alloy-transport-http",
  "reqwest 0.12.7",
+]
+
+[[package]]
+name = "eigensdk"
+version = "0.0.1-alpha"
+dependencies = [
+ "eigen-chainio-txmanager",
+ "eigen-client-avsregistry",
+ "eigen-client-elcontracts",
+ "eigen-client-eth",
+ "eigen-client-fireblocks",
+ "eigen-contract-bindings",
+ "eigen-crypto-bls",
+ "eigen-crypto-bn254",
+ "eigen-logging",
+ "eigen-metrics",
+ "eigen-metrics-collectors-economic",
+ "eigen-metrics-collectors-rpc-calls",
+ "eigen-nodeapi",
+ "eigen-services-avsregistry",
+ "eigen-services-blsaggregation",
+ "eigen-services-operatorsinfo",
+ "eigen-signer",
+ "eigen-testing-utils",
+ "eigen-types",
+ "eigen-utils",
 ]
 
 [[package]]
@@ -2975,7 +2998,6 @@ dependencies = [
  "ark-ff 0.4.2",
  "ark-serialize 0.4.2",
  "ark-std 0.4.0",
- "eigen-chainio-utils",
  "eigen-client-avsregistry",
  "eigen-client-elcontracts",
  "eigen-crypto-bls",

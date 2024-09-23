@@ -1,0 +1,98 @@
+[package]
+name = "eigensdk"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+repository.workspace = true
+description = "SDK for eigenlayer"
+license-file.workspace = true
+
+[dependencies]
+eigen-chainio-txmanager = { workspace = true, optional = true }
+eigen-client-avsregistry = { workspace = true, optional = true }
+eigen-client-elcontracts = { workspace = true, optional = true }
+eigen-client-eth = { workspace = true, optional = true }
+eigen-client-fireblocks = { workspace = true, optional = true }
+eigen-contract-bindings = { workspace = true, optional = true }
+eigen-crypto-bls = { workspace = true, optional = true }
+eigen-crypto-bn254 = { workspace = true, optional = true }
+eigen-logging = { workspace = true, optional = true }
+eigen-metrics = { workspace = true, optional = true }
+eigen-metrics-collectors-economic = { workspace = true, optional = true }
+eigen-metrics-collectors-rpc-calls = { workspace = true, optional = true }
+eigen-services-avsregistry = { workspace = true, optional = true }
+eigen-services-blsaggregation = { workspace = true, optional = true }
+eigen-services-operatorsinfo = { workspace = true, optional = true }
+eigen-signer = { workspace = true, optional = true }
+eigen-testing-utils = { workspace = true, optional = true }
+eigen-types = { workspace = true, optional = true }
+eigen-utils = { workspace = true, optional = true }
+eigen-nodeapi = { workspace = true, optional = true }
+
+
+# Feature configurations
+[features]
+default = []
+
+
+# Full features set for full usage
+full = [
+    "chainio-txmanager",
+    "client-avsregistry",
+    "client-elcontracts",
+    "client-eth",
+    "client-fireblocks",
+    "contract-bindings",
+    "crypto-bls",
+    "crypto-bn254",
+    "logging",
+    "metrics",
+    "services-avsregistry",
+    "services-blsaggregation",
+    "services-operatorsinfo",
+    "signer",
+    "testing-utils",
+    "nodeapi",
+]
+
+# Chain IO related features
+chainio-txmanager = ["dep:eigen-chainio-txmanager"]
+
+# Client-related features
+client-avsregistry = ["dep:eigen-client-avsregistry"]
+client-elcontracts = ["dep:eigen-client-elcontracts"]
+client-eth = ["dep:eigen-client-eth"]
+client-fireblocks = ["dep:eigen-client-fireblocks"]
+
+# Contract-related features
+contract-bindings = ["dep:eigen-contract-bindings"]
+
+# Crypto-related features
+crypto-bls = ["dep:eigen-crypto-bls"]
+crypto-bn254 = ["dep:eigen-crypto-bn254"]
+
+# Metrics and collectors
+metrics = ["dep:eigen-metrics"]
+metrics-collectors-economic = ["dep:eigen-metrics-collectors-economic"]
+metrics-collectors-rpc-calls = ["dep:eigen-metrics-collectors-rpc-calls"]
+
+# Service-related features
+services-avsregistry = ["dep:eigen-services-avsregistry"]
+services-blsaggregation = ["dep:eigen-services-blsaggregation"]
+services-operatorsinfo = ["dep:eigen-services-operatorsinfo"]
+
+# Node API related features
+nodeapi = ["dep:eigen-nodeapi"]
+
+# Logging and utilities
+logging = ["dep:eigen-logging"]
+utils = ["dep:eigen-utils"]
+
+# Testing utilities
+testing-utils = ["dep:eigen-testing-utils"]
+
+# Signer-related features
+signer = ["dep:eigen-signer"]
+
+# types
+types = ["dep:eigen-types"]
