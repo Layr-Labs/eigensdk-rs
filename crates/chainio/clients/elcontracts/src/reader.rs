@@ -287,7 +287,6 @@ mod tests {
         AVSDirectory::calculateOperatorAVSRegistrationDigestHashReturn, DelegationManager,
         DelegationManager::calculateDelegationApprovalDigestHashReturn,
     };
-    use serial_test::serial;
     use std::str::FromStr;
 
     const OPERATOR_ADDRESS: &str = "0xa0Ee7A142d267C1f36714E4a8F75612F20a79720";
