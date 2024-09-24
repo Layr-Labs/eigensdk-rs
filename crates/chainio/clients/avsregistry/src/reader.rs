@@ -539,9 +539,7 @@ impl AvsRegistryChainReader {
 
         let mut operator_id_to_socket = HashMap::new();
 
-        // The block range of eth_getLogs is limited to 1024
-        // https://docs.blockpi.io/documentations/api-reference/arbitrum/eth_getlogs
-        let query_block_range = 1024;
+        let query_block_range = 10000;
 
         let stop_block = if stop_block == 0 {
             provider.get_block_number().await.map_err(|e| {
@@ -714,7 +712,7 @@ mod tests {
         let avs_reader = build_avs_registry_chain_reader().await;
 
         let _ = avs_reader
-            .query_existing_registered_operator_sockets(0, 2000)
+            .query_existing_registered_operator_sockets(0, 1000)
             .await
             .unwrap();
     }
