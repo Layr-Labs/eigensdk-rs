@@ -26,7 +26,7 @@ use tokio_util::sync::CancellationToken;
 
 use crate::operator_info::OperatorInfoService;
 
-/// Fetchs operator information from the registry.
+/// Fetches operator information from the registry.
 /// Loads and stores operators info (addresses and public key) in memory.
 #[allow(dead_code)]
 #[derive(Debug, Clone)]
