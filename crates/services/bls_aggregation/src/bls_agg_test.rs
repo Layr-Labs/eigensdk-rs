@@ -12,11 +12,14 @@ pub mod integration_test {
     use eigen_logging::get_test_logger;
     use eigen_services_avsregistry::chaincaller::AvsRegistryServiceChainCaller;
     use eigen_services_operatorsinfo::operatorsinfo_inmemory::OperatorInfoServiceInMemory;
-    use eigen_testing_utils::anvil_constants::{
-        get_erc20_mock_strategy, get_operator_state_retriever_address,
-        get_registry_coordinator_address, get_service_manager_address,
+    use eigen_testing_utils::{
+        anvil::{mine_anvil_blocks, start_anvil_container},
+        anvil_constants::{
+            get_erc20_mock_strategy, get_operator_state_retriever_address,
+            get_registry_coordinator_address, get_service_manager_address,
+        },
+        test_data::TestData,
     };
-    use eigen_testing_utils::test_data::TestData;
     use eigen_types::{
         avs::TaskIndex,
         operator::{QuorumNum, QuorumThresholdPercentages},
@@ -29,14 +32,9 @@ pub mod integration_test {
         get_provider, get_signer,
     };
     use serde::Deserialize;
-    use serial_test::serial;
     use sha2::{Digest, Sha256};
-    use std::{
-        process::{Command, Stdio},
-        thread::sleep,
-        time::Duration,
-    };
-    use tokio::task;
+    use std::time::Duration;
+    use tokio::{task, time::sleep};
     use tokio_util::sync::CancellationToken;
 
     const PRIVATE_KEY_1: &str = "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80"; // the owner addr
@@ -45,9 +43,6 @@ pub mod integration_test {
         "1371012690269088913462269866874713266643928125698382731338806296762673180359922";
     const BLS_KEY_2: &str =
         "14610126902690889134622698668747132666439281256983827313388062967626731803500";
-
-    const HTTP_ENDPOINT: &str = "http://localhost:8545";
-    const WS_ENDPOINT: &str = "ws://localhost:8545";
 
     fn hash(task_response: u64) -> B256 {
         let mut hasher = Sha256::new();
@@ -82,14 +77,6 @@ pub mod integration_test {
         }
     }
 
-    fn mine_anvil_block() {
-        Command::new("cast")
-            .args(["rpc", "anvil_mine", "1", "--rpc-url", HTTP_ENDPOINT])
-            .stdout(Stdio::null())
-            .output()
-            .expect("Failed to execute command");
-    }
-
     #[derive(Deserialize, Debug)]
     struct Input {
         bls_key: String,
@@ -98,9 +85,10 @@ pub mod integration_test {
     }
 
     #[tokio::test]
-    #[serial]
     async fn test_bls_agg() {
         // test 1 quorum, 1 operator
+        let (container, http_endpoint, ws_endpoint) = start_anvil_container().await;
+
         // if TEST_DATA_PATH is set, load the test data from the json file
         let default_input = Input {
             bls_key: BLS_KEY_1.to_string(),
@@ -109,10 +97,12 @@ pub mod integration_test {
         };
         let test_data: TestData<Input> = TestData::new(default_input);
 
-        let registry_coordinator_address = get_registry_coordinator_address().await;
-        let operator_state_retriever_address = get_operator_state_retriever_address().await;
-        let service_manager_address = get_service_manager_address().await;
-        let provider = get_provider(HTTP_ENDPOINT);
+        let registry_coordinator_address =
+            get_registry_coordinator_address(http_endpoint.clone()).await;
+        let operator_state_retriever_address =
+            get_operator_state_retriever_address(http_endpoint.clone()).await;
+        let service_manager_address = get_service_manager_address(http_endpoint.clone()).await;
+        let provider = get_provider(http_endpoint.as_str());
         let salt: FixedBytes<32> = FixedBytes::from([0x02; 32]);
         let quorum_nums = Bytes::from(test_data.input.quorum_numbers);
         let quorum_threshold_percentages: QuorumThresholdPercentages =
@@ -127,13 +117,13 @@ pub mod integration_test {
             get_test_logger(),
             registry_coordinator_address,
             operator_state_retriever_address,
-            HTTP_ENDPOINT.to_string(),
+            http_endpoint.clone(),
         )
         .await
         .unwrap();
         let avs_writer = AvsRegistryChainWriter::build_avs_registry_chain_writer(
             get_test_logger(),
-            HTTP_ENDPOINT.to_string(),
+            http_endpoint.clone(),
             PRIVATE_KEY_1.to_string(),
             registry_coordinator_address,
             operator_state_retriever_address,
@@ -144,7 +134,7 @@ pub mod integration_test {
         let operators_info = OperatorInfoServiceInMemory::new(
             get_test_logger(),
             avs_registry_reader.clone(),
-            WS_ENDPOINT.to_string(),
+            ws_endpoint,
         )
         .await;
 
@@ -156,7 +146,7 @@ pub mod integration_test {
         // Create quorum
         let contract_registry_coordinator = RegistryCoordinator::new(
             registry_coordinator_address,
-            get_signer(PRIVATE_KEY_1.to_string(), HTTP_ENDPOINT),
+            get_signer(PRIVATE_KEY_1.to_string(), http_endpoint.as_str()),
         );
         let operator_set_params = OperatorSetParam {
             maxOperatorCount: 10,
@@ -164,7 +154,7 @@ pub mod integration_test {
             kickBIPsOfTotalStake: 1000,
         };
         let strategy_params = StrategyParams {
-            strategy: get_erc20_mock_strategy().await,
+            strategy: get_erc20_mock_strategy(http_endpoint.clone()).await,
             multiplier: 1,
         };
         let _ = contract_registry_coordinator
@@ -186,7 +176,7 @@ pub mod integration_test {
             .unwrap();
 
         // Sleep is needed so registered operators are accesible to the OperatorInfoServiceInMemory
-        sleep(Duration::from_millis(500));
+        sleep(Duration::from_secs(3)).await;
 
         // Create aggregation service
         let avs_registry_service =
@@ -194,7 +184,7 @@ pub mod integration_test {
 
         let bls_agg_service = BlsAggregatorService::new(avs_registry_service);
         let current_block_num = provider.get_block_number().await.unwrap();
-        mine_anvil_block();
+        mine_anvil_blocks(&container, 1).await;
 
         // Create the task related parameters
         let task_index: TaskIndex = 0;
@@ -249,12 +239,15 @@ pub mod integration_test {
     }
 
     #[tokio::test]
-    #[serial]
     async fn test_1_quorum_2_operators() {
-        let registry_coordinator_address = get_registry_coordinator_address().await;
-        let operator_state_retriever_address = get_operator_state_retriever_address().await;
-        let service_manager_address = get_service_manager_address().await;
-        let provider = get_provider(HTTP_ENDPOINT);
+        let (container, http_endpoint, ws_endpoint) = start_anvil_container().await;
+
+        let registry_coordinator_address =
+            get_registry_coordinator_address(http_endpoint.clone()).await;
+        let operator_state_retriever_address =
+            get_operator_state_retriever_address(http_endpoint.clone()).await;
+        let service_manager_address = get_service_manager_address(http_endpoint.clone()).await;
+        let provider = get_provider(http_endpoint.as_str());
         let salt: FixedBytes<32> = FixedBytes::from([0x02; 32]);
 
         let bls_key_pair_1 = BlsKeyPair::new(BLS_KEY_1.to_string()).unwrap();
@@ -270,7 +263,7 @@ pub mod integration_test {
 
         let contract_registry_coordinator = RegistryCoordinator::new(
             registry_coordinator_address,
-            get_signer(PRIVATE_KEY_1.to_string(), HTTP_ENDPOINT),
+            get_signer(PRIVATE_KEY_1.to_string(), http_endpoint.as_str()),
         );
 
         // Create quorum
@@ -280,7 +273,7 @@ pub mod integration_test {
             kickBIPsOfTotalStake: 1000,
         };
         let strategy_params = vec![StrategyParams {
-            strategy: get_erc20_mock_strategy().await,
+            strategy: get_erc20_mock_strategy(http_endpoint.clone()).await,
             multiplier: 1,
         }];
         let _ = contract_registry_coordinator
@@ -294,14 +287,14 @@ pub mod integration_test {
             get_test_logger(),
             registry_coordinator_address,
             operator_state_retriever_address,
-            HTTP_ENDPOINT.to_string(),
+            http_endpoint.clone(),
         )
         .await
         .unwrap();
 
         let avs_writer = AvsRegistryChainWriter::build_avs_registry_chain_writer(
             get_test_logger(),
-            HTTP_ENDPOINT.to_string(),
+            http_endpoint.clone(),
             PRIVATE_KEY_1.to_string(),
             registry_coordinator_address,
             operator_state_retriever_address,
@@ -311,7 +304,7 @@ pub mod integration_test {
         let operators_info = OperatorInfoServiceInMemory::new(
             get_test_logger(),
             avs_registry_reader.clone(),
-            WS_ENDPOINT.to_string(),
+            ws_endpoint,
         )
         .await;
 
@@ -339,7 +332,7 @@ pub mod integration_test {
 
         let avs_writer = AvsRegistryChainWriter::build_avs_registry_chain_writer(
             get_test_logger(),
-            HTTP_ENDPOINT.to_string(),
+            http_endpoint,
             PRIVATE_KEY_2.to_string(),
             registry_coordinator_address,
             operator_state_retriever_address,
@@ -358,7 +351,7 @@ pub mod integration_test {
             .unwrap();
 
         // Sleep is needed so registered operators are accesible to the OperatorInfoServiceInMemory
-        sleep(Duration::from_millis(500));
+        sleep(Duration::from_secs(3)).await;
 
         // Create aggregation service
         let avs_registry_service =
@@ -368,11 +361,11 @@ pub mod integration_test {
 
         let current_block_num = provider.get_block_number().await.unwrap();
 
-        mine_anvil_block();
+        mine_anvil_blocks(&container, 1).await;
 
         // Create the task related parameters
         let task_index: TaskIndex = 0;
-        let time_to_expiry = Duration::from_secs(1);
+        let time_to_expiry = Duration::from_secs(3);
 
         // Initialize the task
         bls_agg_service
@@ -440,14 +433,17 @@ pub mod integration_test {
     }
 
     #[tokio::test]
-    #[serial]
     async fn test_2_quorums_2_operators_separated() {
         // operator 1 stakes on quorum 2
         // operator 2 stakes on quorum 3
-        let registry_coordinator_address = get_registry_coordinator_address().await;
-        let operator_state_retriever_address = get_operator_state_retriever_address().await;
-        let service_manager_address = get_service_manager_address().await;
-        let provider = get_provider(HTTP_ENDPOINT);
+        let (container, http_endpoint, ws_endpoint) = start_anvil_container().await;
+
+        let registry_coordinator_address =
+            get_registry_coordinator_address(http_endpoint.clone()).await;
+        let operator_state_retriever_address =
+            get_operator_state_retriever_address(http_endpoint.clone()).await;
+        let service_manager_address = get_service_manager_address(http_endpoint.clone()).await;
+        let provider = get_provider(http_endpoint.as_str());
         let salt: FixedBytes<32> = FixedBytes::from([0x02; 32]);
 
         let bls_key_pair_1 = BlsKeyPair::new(BLS_KEY_1.to_string()).unwrap();
@@ -463,7 +459,7 @@ pub mod integration_test {
 
         let contract_registry_coordinator = RegistryCoordinator::new(
             registry_coordinator_address,
-            get_signer(PRIVATE_KEY_1.to_string(), HTTP_ENDPOINT),
+            get_signer(PRIVATE_KEY_1.to_string(), http_endpoint.as_str()),
         );
 
         // Create quorums
@@ -473,7 +469,7 @@ pub mod integration_test {
             kickBIPsOfTotalStake: 1000,
         };
         let strategy_params = vec![StrategyParams {
-            strategy: get_erc20_mock_strategy().await,
+            strategy: get_erc20_mock_strategy(http_endpoint.clone()).await,
             multiplier: 1,
         }];
         let _ = contract_registry_coordinator
@@ -497,14 +493,14 @@ pub mod integration_test {
             get_test_logger(),
             registry_coordinator_address,
             operator_state_retriever_address,
-            HTTP_ENDPOINT.to_string(),
+            http_endpoint.clone(),
         )
         .await
         .unwrap();
 
         let avs_writer = AvsRegistryChainWriter::build_avs_registry_chain_writer(
             get_test_logger(),
-            HTTP_ENDPOINT.to_string(),
+            http_endpoint.clone(),
             PRIVATE_KEY_1.to_string(),
             registry_coordinator_address,
             operator_state_retriever_address,
@@ -515,7 +511,7 @@ pub mod integration_test {
         let operators_info = OperatorInfoServiceInMemory::new(
             get_test_logger(),
             avs_registry_reader.clone(),
-            WS_ENDPOINT.to_string(),
+            ws_endpoint,
         )
         .await;
 
@@ -539,7 +535,7 @@ pub mod integration_test {
         let avs_writer = AvsRegistryChainWriter::build_avs_registry_chain_writer(
             // TODO: check if needed
             get_test_logger(),
-            HTTP_ENDPOINT.to_string(),
+            http_endpoint,
             PRIVATE_KEY_2.to_string(),
             registry_coordinator_address,
             operator_state_retriever_address,
@@ -558,7 +554,7 @@ pub mod integration_test {
             .unwrap();
 
         // Sleep is needed so registered operators are accesible to the OperatorInfoServiceInMemory
-        sleep(Duration::from_millis(500));
+        sleep(Duration::from_secs(3)).await;
 
         // Create aggregation service
         let avs_registry_service =
@@ -568,7 +564,7 @@ pub mod integration_test {
 
         let current_block_num = provider.get_block_number().await.unwrap();
 
-        mine_anvil_block();
+        mine_anvil_blocks(&container, 1).await;
 
         // Create the task related parameters
         let task_index: TaskIndex = 0;

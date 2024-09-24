@@ -175,20 +175,20 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         bls_signature: Signature,
         operator_id: FixedBytes<32>,
     ) -> Result<(), BlsAggregationServiceError> {
+        let (tx, rx) = mpsc::channel(1);
+        let task = SignedTaskResponseDigest {
+            task_response_digest,
+            bls_signature,
+            operator_id,
+            signature_verification_channel: tx,
+        };
+
         let mut rx = {
             let task_channel = self.signed_task_response.read();
 
             let sender = task_channel
                 .get(&task_index)
                 .ok_or(BlsAggregationServiceError::TaskNotFound)?;
-
-            let (tx, rx) = mpsc::channel(1);
-            let task = SignedTaskResponseDigest {
-                task_response_digest,
-                bls_signature,
-                operator_id,
-                signature_verification_channel: tx,
-            };
 
             // send the task to the aggregator thread
             sender

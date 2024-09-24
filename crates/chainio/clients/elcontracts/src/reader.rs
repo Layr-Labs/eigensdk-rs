@@ -391,35 +391,33 @@ mod tests {
     use alloy_primitives::{address, keccak256, Address, FixedBytes, U256};
     use alloy_provider::Provider;
     use eigen_logging::get_test_logger;
-    use eigen_testing_utils::anvil_constants::{
-        self, get_erc20_mock_strategy, ANVIL_HTTP_URL, ANVIL_RPC_URL,
+    use eigen_testing_utils::{
+        anvil::start_anvil_container,
+        anvil_constants::{
+            get_delegation_manager_address, get_erc20_mock_strategy, get_service_manager_address,
+        },
     };
     use eigen_utils::binding::{
         mockAvsServiceManager, AVSDirectory,
         AVSDirectory::calculateOperatorAVSRegistrationDigestHashReturn, DelegationManager,
         DelegationManager::calculateDelegationApprovalDigestHashReturn,
     };
-    use serial_test::serial;
     use std::str::FromStr;
-    use tokio::time::{sleep, Duration};
 
     const OPERATOR_ADDRESS: &str = "0xa0Ee7A142d267C1f36714E4a8F75612F20a79720";
 
-    async fn build_el_chain_reader() -> ELChainReader {
-        let delegation_manager_address = anvil_constants::get_delegation_manager_address().await;
-        let delegation_manager_contract = DelegationManager::new(
-            delegation_manager_address,
-            anvil_constants::ANVIL_RPC_URL.clone(),
-        );
+    async fn build_el_chain_reader(http_endpoint: String) -> ELChainReader {
+        let delegation_manager_address =
+            get_delegation_manager_address(http_endpoint.clone()).await;
+        let delegation_manager_contract =
+            DelegationManager::new(delegation_manager_address, get_provider(&http_endpoint));
         let slasher_address_return = delegation_manager_contract.slasher().call().await.unwrap();
         let DelegationManager::slasherReturn {
             _0: slasher_address,
         } = slasher_address_return;
-        let service_manager_address = anvil_constants::get_service_manager_address().await;
-        let service_manager_contract = mockAvsServiceManager::new(
-            service_manager_address,
-            get_provider("http://localhost:8545"),
-        );
+        let service_manager_address = get_service_manager_address(http_endpoint.clone()).await;
+        let service_manager_contract =
+            mockAvsServiceManager::new(service_manager_address, get_provider(&http_endpoint));
         let avs_directory_address_return = service_manager_contract
             .avsDirectory()
             .call()
@@ -434,14 +432,15 @@ mod tests {
             slasher_address,
             delegation_manager_address,
             avs_directory_address,
-            ANVIL_HTTP_URL.to_string(),
+            http_endpoint,
         )
     }
 
     #[tokio::test]
-    #[serial]
     async fn test_calculate_delegation_approval_digest_hash() {
-        let el_chain_reader = build_el_chain_reader().await;
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let provider = get_provider(&http_endpoint);
+        let el_chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
         let operator: Address = address!("5eb15C0992734B5e77c888D713b4FC67b3D679A2");
 
         let staker = operator;
@@ -449,9 +448,8 @@ mod tests {
         let delegation_approver = Address::ZERO;
 
         let approve_salt: FixedBytes<32> = FixedBytes::from([0x02; 32]);
-        let current_block_number = ANVIL_RPC_URL.clone().get_block_number().await.unwrap();
-        let block_info = ANVIL_RPC_URL
-            .clone()
+        let current_block_number = provider.get_block_number().await.unwrap();
+        let block_info = provider
             .get_block_by_number(Number(current_block_number), true)
             .await
             .unwrap();
@@ -471,11 +469,9 @@ mod tests {
             .unwrap();
 
         // Directly calling the function through bindings to compare with the sdk .
-        let delegation_manager_address = anvil_constants::get_delegation_manager_address().await;
-        let delegation_manager_contract = DelegationManager::new(
-            delegation_manager_address,
-            anvil_constants::ANVIL_RPC_URL.clone(),
-        );
+        let delegation_manager_address = get_delegation_manager_address(http_endpoint).await;
+        let delegation_manager_contract =
+            DelegationManager::new(delegation_manager_address, provider);
 
         let hash = delegation_manager_contract
             .calculateDelegationApprovalDigestHash(
@@ -495,16 +491,15 @@ mod tests {
     }
 
     #[tokio::test]
-    #[serial]
     async fn test_calculate_operator_avs_registration_digest_hash() {
-        sleep(Duration::from_secs(2)).await;
-        let el_chain_reader = build_el_chain_reader().await;
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let provider = get_provider(&http_endpoint);
+        let el_chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
         let operator: Address = address!("5eb15C0992734B5e77c888D713b4FC67b3D679A2");
         let avs = Address::from_slice(&keccak256("avs ")[0..20]);
         let salt: FixedBytes<32> = FixedBytes::from([0x02; 32]);
-        let current_block_number = ANVIL_RPC_URL.clone().get_block_number().await.unwrap();
-        let block_info = ANVIL_RPC_URL
-            .clone()
+        let current_block_number = provider.get_block_number().await.unwrap();
+        let block_info = provider
             .get_block_by_number(Number(current_block_number), true)
             .await
             .unwrap();
@@ -519,7 +514,7 @@ mod tests {
 
         // Using bindings directly to compare with sdk's output
         let avs_registry_contract =
-            AVSDirectory::new(el_chain_reader.avs_directory, ANVIL_RPC_URL.clone());
+            AVSDirectory::new(el_chain_reader.avs_directory, provider.clone());
         let operator_hash_from_bindings = avs_registry_contract
             .calculateOperatorAVSRegistrationDigestHash(operator, avs, salt, expiry)
             .call()
@@ -533,12 +528,12 @@ mod tests {
     }
 
     #[tokio::test]
-    #[serial]
     async fn check_strategy_shares_and_operator_frozen() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
         let operator_addr = Address::from_str(OPERATOR_ADDRESS).unwrap();
-        let strategy_addr = get_erc20_mock_strategy().await;
+        let strategy_addr = get_erc20_mock_strategy(http_endpoint.clone()).await;
 
-        let chain_reader = build_el_chain_reader().await;
+        let chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
         let shares = chain_reader
             .get_operator_shares_in_strategy(operator_addr, strategy_addr)
             .await
@@ -554,7 +549,7 @@ mod tests {
             .unwrap();
         assert!(!frozen);
 
-        let service_manager_address = anvil_constants::get_service_manager_address().await;
+        let service_manager_address = get_service_manager_address(http_endpoint).await;
         let ret_can_slash = chain_reader
             .service_manager_can_slash_operator_until_block(operator_addr, service_manager_address)
             .await
@@ -565,10 +560,10 @@ mod tests {
     }
 
     #[tokio::test]
-    #[serial]
     async fn test_get_operator_details() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
         let operator_addr = Address::from_str(OPERATOR_ADDRESS).unwrap();
-        let chain_reader = build_el_chain_reader().await;
+        let chain_reader = build_el_chain_reader(http_endpoint).await;
 
         let operator = chain_reader
             .get_operator_details(operator_addr)

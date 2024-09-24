@@ -2225,6 +2225,7 @@ dependencies = [
  "eigen-metrics-collectors-rpc-calls",
  "eigen-signer",
  "eigen-testing-utils",
+ "eigen-utils",
  "hex",
  "once_cell",
  "serial_test",
@@ -2403,6 +2404,7 @@ dependencies = [
  "serde_json",
  "serial_test",
  "sha2",
+ "testcontainers",
  "thiserror",
  "tokio",
  "tokio-util",
@@ -2471,6 +2473,7 @@ dependencies = [
  "once_cell",
  "serde",
  "serde_json",
+ "testcontainers",
  "tokio",
 ]
 
