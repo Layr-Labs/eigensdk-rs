@@ -2124,10 +2124,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "eigen-chainio-utils"
-version = "0.0.1-alpha"
-
-[[package]]
 name = "eigen-cli"
 version = "0.0.1-alpha"
 dependencies = [
@@ -2515,7 +2511,6 @@ name = "eigensdk"
 version = "0.0.1-alpha"
 dependencies = [
  "eigen-chainio-txmanager",
- "eigen-chainio-utils",
  "eigen-client-avsregistry",
  "eigen-client-elcontracts",
  "eigen-client-eth",
@@ -3006,7 +3001,6 @@ dependencies = [
  "ark-ff 0.4.2",
  "ark-serialize 0.4.2",
  "ark-std 0.4.0",
- "eigen-chainio-utils",
  "eigen-client-avsregistry",
  "eigen-client-elcontracts",
  "eigen-crypto-bls",
