@@ -66,7 +66,7 @@ pub async fn start_anvil_container() -> (ContainerAsync<GenericImage>, String, S
 
 /// Mine Anvil blocks.
 pub async fn mine_anvil_blocks(container: &ContainerAsync<GenericImage>, n: u32) {
-    container
+    let mut output = container
         .exec(ExecCommand::new([
             "cast",
             "rpc",
@@ -76,6 +76,7 @@ pub async fn mine_anvil_blocks(container: &ContainerAsync<GenericImage>, n: u32)
         .await
         .expect("Failed to mine anvil blocks");
 
-    // sleep for 2 seconds to allow the blocks to be fully mined
-    tokio::time::sleep(tokio::time::Duration::from_secs(2)).await;
+    // blocking operation until the mining execution finishes
+    output.stdout_to_vec().await.unwrap();
+    assert_eq!(output.exit_code().await.unwrap().unwrap(), 0);
 }
