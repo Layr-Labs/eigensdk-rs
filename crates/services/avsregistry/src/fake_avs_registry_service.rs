@@ -14,12 +14,23 @@ use eigen_utils::binding::OperatorStateRetriever::CheckSignaturesIndices;
 
 use crate::AvsRegistryService;
 
+/// A fake implementation of the `AvsRegistryService` trait that can be used for testing or debug purposes.
 #[derive(Clone)]
 pub struct FakeAvsRegistryService {
     operators: HashMap<BlockNumber, HashMap<OperatorId, OperatorAvsState>>,
 }
 
 impl FakeAvsRegistryService {
+    /// Create a new instance of the `FakeAvsRegistryService` with the given `block_number` and `test_operators`.
+    ///
+    /// # Arguments
+    ///
+    /// * `block_number` - The block number at which the operators are registered.
+    /// * `test_operators` - A list of `TestOperator` instances to be included in the registry.
+    ///
+    /// # Returns
+    ///
+    /// A new instance of the `FakeAvsRegistryService`.
     pub fn new(block_number: BlockNumber, test_operators: Vec<TestOperator>) -> Self {
         let mut state_per_operator_id: HashMap<OperatorId, OperatorAvsState> = HashMap::new();
 

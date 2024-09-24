@@ -5,19 +5,19 @@ use ethers::{types::U64, utils::keccak256};
 use num_bigint::BigUint;
 use std::collections::HashMap;
 
-const MAX_NUMBER_OF_QUORUMS: usize = 192;
+const MAX_NUMBER_OF_QUORUMS: u8 = 192;
 
 pub type OperatorId = FixedBytes<32>;
 
 pub fn bitmap_to_quorum_ids(quorum_bitmaps: U256) -> Vec<u8> {
     let bytes = quorum_bitmaps.to_be_bytes::<32>();
 
-    let mut quorum_ids: Vec<u8> = Vec::with_capacity(MAX_NUMBER_OF_QUORUMS);
+    let mut quorum_ids: Vec<u8> = Vec::with_capacity(usize::from(MAX_NUMBER_OF_QUORUMS));
 
     for i in 0..MAX_NUMBER_OF_QUORUMS {
         let bitmap = BigUint::from_bytes_be(&bytes);
-        if bitmap.bit(i.try_into().unwrap()) {
-            quorum_ids.push(i.try_into().unwrap());
+        if bitmap.bit(u64::from(i)) {
+            quorum_ids.push(i);
         }
     }
     quorum_ids

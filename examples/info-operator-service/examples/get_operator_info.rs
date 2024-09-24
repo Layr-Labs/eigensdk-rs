@@ -1,5 +1,4 @@
-use alloy_primitives::{address, Bytes, FixedBytes};
-use alloy_primitives::{Address, U256};
+use alloy_primitives::{address, Address, Bytes, FixedBytes, U256};
 use alloy_signer_local::PrivateKeySigner;
 use eigen_client_avsregistry::{reader::AvsRegistryChainReader, writer::AvsRegistryChainWriter};
 use eigen_client_elcontracts::{
@@ -8,20 +7,22 @@ use eigen_client_elcontracts::{
 };
 use eigen_crypto_bls::BlsKeyPair;
 use eigen_logging::get_test_logger;
-use eigen_services_operatorsinfo::operator_info::OperatorInfoService;
-use eigen_services_operatorsinfo::operatorsinfo_inmemory::OperatorInfoServiceInMemory;
-use eigen_testing_utils::anvil::start_anvil_container;
-use eigen_testing_utils::anvil_constants::{
-    get_avs_directory_address, get_delegation_manager_address,
-    get_operator_state_retriever_address, get_registry_coordinator_address,
-    get_strategy_manager_address,
+use eigen_services_operatorsinfo::{
+    operator_info::OperatorInfoService, operatorsinfo_inmemory::OperatorInfoServiceInMemory,
+};
+use eigen_testing_utils::{
+    anvil::start_anvil_container,
+    anvil_constants::{
+        get_avs_directory_address, get_delegation_manager_address,
+        get_operator_state_retriever_address, get_registry_coordinator_address,
+        get_strategy_manager_address,
+    },
 };
 use std::{
     str::FromStr,
     time::{SystemTime, UNIX_EPOCH},
 };
-use tokio::task;
-use tokio::time::Duration;
+use tokio::{task, time::Duration};
 use tokio_util::sync::CancellationToken;
 
 #[tokio::main]

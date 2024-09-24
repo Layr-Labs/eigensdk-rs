@@ -1,13 +1,11 @@
 use alloy_primitives::{FixedBytes, U256};
 use ark_bn254::G2Affine;
 use ark_ec::AffineRepr;
-use eigen_crypto_bls::BlsG1Point;
-use eigen_crypto_bls::{BlsG2Point, Signature};
+use eigen_crypto_bls::{BlsG1Point, BlsG2Point, Signature};
 use eigen_crypto_bn254::utils::verify_message;
 use eigen_services_avsregistry::AvsRegistryService;
-use eigen_types::avs::SignatureVerificationError;
 use eigen_types::{
-    avs::{SignedTaskResponseDigest, TaskIndex, TaskResponseDigest},
+    avs::{SignatureVerificationError, SignedTaskResponseDigest, TaskIndex, TaskResponseDigest},
     operator::{OperatorAvsState, QuorumThresholdPercentage, QuorumThresholdPercentages},
 };
 use parking_lot::RwLock;
@@ -15,12 +13,15 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::sync::Arc;
 use thiserror::Error;
-use tokio::sync::{
-    mpsc::{self, UnboundedReceiver, UnboundedSender},
-    Mutex,
+use tokio::{
+    sync::{
+        mpsc::{self, UnboundedReceiver, UnboundedSender},
+        Mutex,
+    },
+    time::{timeout, Duration},
 };
-use tokio::time::{timeout, Duration};
 
+/// The response from the BLS aggregation service
 #[allow(unused)]
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct BlsAggregationServiceResponse {
@@ -55,6 +56,7 @@ pub enum BlsAggregationServiceError {
     DuplicateTaskIndex,
 }
 
+/// Contains the aggregated operators signers information
 #[derive(Debug, Clone)]
 pub struct AggregatedOperators {
     signers_apk_g2: BlsG2Point,
@@ -63,6 +65,7 @@ pub struct AggregatedOperators {
     pub signers_operator_ids_set: HashMap<FixedBytes<32>, bool>,
 }
 
+/// The BLS Aggregator Service main struct
 #[derive(Debug)]
 pub struct BlsAggregatorService<A: AvsRegistryService>
 where
@@ -536,6 +539,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
 
 #[cfg(test)]
 mod tests {
+    use super::{BlsAggregationServiceError, BlsAggregationServiceResponse, BlsAggregatorService};
     use alloy_primitives::{B256, U256};
     use eigen_crypto_bls::{BlsG1Point, BlsG2Point, BlsKeyPair, Signature};
     use eigen_services_avsregistry::fake_avs_registry_service::FakeAvsRegistryService;
@@ -546,13 +550,13 @@ mod tests {
     use std::collections::HashMap;
     use std::time::Duration;
     use std::vec;
+
     const PRIVATE_KEY_1: &str =
         "13710126902690889134622698668747132666439281256983827313388062967626731803599";
     const PRIVATE_KEY_2: &str =
         "14610126902690889134622698668747132666439281256983827313388062967626731803500";
     const PRIVATE_KEY_3: &str =
         "15610126902690889134622698668747132666439281256983827313388062967626731803501";
-    use super::{BlsAggregationServiceError, BlsAggregationServiceResponse, BlsAggregatorService};
 
     fn hash(task_response: u64) -> B256 {
         let mut hasher = Sha256::new();

@@ -5,6 +5,7 @@ use eigen_types::operator::{OperatorInfo, OperatorPubKeys};
 
 use crate::{operator_info::OperatorInfoService, operatorsinfo_inmemory::OperatorInfoServiceError};
 
+/// A fake implementation of the `OperatorInfoService` trait that can be used for testing or debug purposes.
 pub struct FakeOperatorInfoService {
     pub pubkeys: OperatorInfo,
 }
