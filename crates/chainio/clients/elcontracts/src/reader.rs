@@ -304,11 +304,11 @@ impl ELChainReader {
 
         let contract_ierc20 = IERC20::new(underlying_token_addr, &provider);
 
-        return Ok((
+        Ok((
             strategy_addr,
             underlying_token_addr,
             *contract_ierc20.address(),
-        ));
+        ))
     }
 
     /// Get the operator's details
@@ -391,14 +391,19 @@ mod tests {
     use alloy_primitives::{address, keccak256, Address, FixedBytes, U256};
     use alloy_provider::Provider;
     use eigen_logging::get_test_logger;
-    use eigen_testing_utils::anvil_constants::{self, ANVIL_HTTP_URL, ANVIL_RPC_URL};
+    use eigen_testing_utils::anvil_constants::{
+        self, get_erc20_mock_strategy, ANVIL_HTTP_URL, ANVIL_RPC_URL,
+    };
     use eigen_utils::binding::{
         mockAvsServiceManager, AVSDirectory,
         AVSDirectory::calculateOperatorAVSRegistrationDigestHashReturn, DelegationManager,
         DelegationManager::calculateDelegationApprovalDigestHashReturn,
     };
     use serial_test::serial;
+    use std::str::FromStr;
     use tokio::time::{sleep, Duration};
+
+    const OPERATOR_ADDRESS: &str = "0xa0Ee7A142d267C1f36714E4a8F75612F20a79720";
 
     async fn build_el_chain_reader() -> ELChainReader {
         let delegation_manager_address = anvil_constants::get_delegation_manager_address().await;
@@ -451,7 +456,7 @@ mod tests {
             .await
             .unwrap();
 
-        let Some(block) = block_info else { return };
+        let block = block_info.unwrap();
         let timestamp = block.header.timestamp;
         let expiry = U256::from::<u64>(timestamp + 100);
         let calculate_digest_hash = el_chain_reader
@@ -503,7 +508,7 @@ mod tests {
             .get_block_by_number(Number(current_block_number), true)
             .await
             .unwrap();
-        let Some(block) = block_info else { return };
+        let block = block_info.unwrap();
 
         let timestamp = block.header.timestamp;
         let expiry = U256::from::<u64>(timestamp + 100);
@@ -525,5 +530,52 @@ mod tests {
             operator_hash_from_bindings;
 
         assert_eq!(hash, operator_hash);
+    }
+
+    #[tokio::test]
+    #[serial]
+    async fn check_strategy_shares_and_operator_frozen() {
+        let operator_addr = Address::from_str(OPERATOR_ADDRESS).unwrap();
+        let strategy_addr = get_erc20_mock_strategy().await;
+
+        let chain_reader = build_el_chain_reader().await;
+        let shares = chain_reader
+            .get_operator_shares_in_strategy(operator_addr, strategy_addr)
+            .await
+            .unwrap();
+
+        let zero = U256::ZERO;
+        assert!(shares > zero);
+
+        // test if operator is frozen
+        let frozen = chain_reader
+            .operator_is_frozen(operator_addr)
+            .await
+            .unwrap();
+        assert!(!frozen);
+
+        let service_manager_address = anvil_constants::get_service_manager_address().await;
+        let ret_can_slash = chain_reader
+            .service_manager_can_slash_operator_until_block(operator_addr, service_manager_address)
+            .await
+            .unwrap();
+
+        println!("ret_can_slash: {ret_can_slash}");
+        assert!(ret_can_slash == 0);
+    }
+
+    #[tokio::test]
+    #[serial]
+    async fn test_get_operator_details() {
+        let operator_addr = Address::from_str(OPERATOR_ADDRESS).unwrap();
+        let chain_reader = build_el_chain_reader().await;
+
+        let operator = chain_reader
+            .get_operator_details(operator_addr)
+            .await
+            .unwrap();
+
+        assert!(operator.metadata_url.is_none());
+        println!("{:?}", operator.metadata_url);
     }
 }
