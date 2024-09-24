@@ -176,7 +176,7 @@ pub mod integration_test {
             .unwrap();
 
         // Sleep is needed so registered operators are accesible to the OperatorInfoServiceInMemory
-        sleep(Duration::from_millis(500)).await;
+        sleep(Duration::from_secs(3)).await;
 
         // Create aggregation service
         let avs_registry_service =
@@ -351,7 +351,7 @@ pub mod integration_test {
             .unwrap();
 
         // Sleep is needed so registered operators are accesible to the OperatorInfoServiceInMemory
-        sleep(Duration::from_millis(500)).await;
+        sleep(Duration::from_secs(3)).await;
 
         // Create aggregation service
         let avs_registry_service =
@@ -554,7 +554,7 @@ pub mod integration_test {
             .unwrap();
 
         // Sleep is needed so registered operators are accesible to the OperatorInfoServiceInMemory
-        sleep(Duration::from_millis(500)).await;
+        sleep(Duration::from_secs(3)).await;
 
         // Create aggregation service
         let avs_registry_service =
