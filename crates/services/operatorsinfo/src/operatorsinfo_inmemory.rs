@@ -448,7 +448,7 @@ mod tests {
             "8949062771264691130193054363356855357736539613420316273398900351143637925935",
         )
         .await;
-        tokio::time::sleep(tokio::time::Duration::from_secs(3)).await; // need to wait atleast 1 second to get the event processed
+        tokio::time::sleep(tokio::time::Duration::from_secs(3)).await; // need to wait atleast 3 second to get the event processed
 
         cancel_token.clone().cancel();
 
