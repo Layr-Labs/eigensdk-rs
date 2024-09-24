@@ -33,8 +33,8 @@ pub mod integration_test {
     };
     use serde::Deserialize;
     use sha2::{Digest, Sha256};
-    use std::{thread::sleep, time::Duration};
-    use tokio::task;
+    use std::time::Duration;
+    use tokio::{task, time::sleep};
     use tokio_util::sync::CancellationToken;
 
     const PRIVATE_KEY_1: &str = "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80"; // the owner addr
@@ -176,7 +176,7 @@ pub mod integration_test {
             .unwrap();
 
         // Sleep is needed so registered operators are accesible to the OperatorInfoServiceInMemory
-        sleep(Duration::from_millis(500));
+        sleep(Duration::from_millis(500)).await;
 
         // Create aggregation service
         let avs_registry_service =
@@ -351,7 +351,7 @@ pub mod integration_test {
             .unwrap();
 
         // Sleep is needed so registered operators are accesible to the OperatorInfoServiceInMemory
-        sleep(Duration::from_millis(500));
+        sleep(Duration::from_millis(500)).await;
 
         // Create aggregation service
         let avs_registry_service =
@@ -554,7 +554,7 @@ pub mod integration_test {
             .unwrap();
 
         // Sleep is needed so registered operators are accesible to the OperatorInfoServiceInMemory
-        sleep(Duration::from_millis(500));
+        sleep(Duration::from_millis(500)).await;
 
         // Create aggregation service
         let avs_registry_service =
