@@ -93,19 +93,14 @@ impl AvsRegistryReader for AvsRegistryChainReader {
 
         let contract_operator_state_retriever =
             OperatorStateRetriever::new(self.operator_state_retriever, provider);
-        let operator_state_result = contract_operator_state_retriever
+        let operator_state = contract_operator_state_retriever
             .getOperatorState_0(self.registry_coordinator_addr, quorum_numbers, block_number)
             .call()
-            .await;
+            .await
+            .map_err(|_| AvsRegistryError::GetOperatorState)?;
 
-        match operator_state_result {
-            Ok(operator_state) => {
-                let OperatorStateRetriever::getOperatorState_0Return { _0: quorum } =
-                    operator_state;
-                Ok(quorum)
-            }
-            Err(_) => Err(AvsRegistryError::GetOperatorState),
-        }
+        let OperatorStateRetriever::getOperatorState_0Return { _0: quorum } = operator_state;
+        Ok(quorum)
     }
 
     async fn get_check_signatures_indices(

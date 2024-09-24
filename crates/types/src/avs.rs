@@ -6,6 +6,7 @@ pub type TaskIndex = u32;
 
 pub type TaskResponseDigest = FixedBytes<32>;
 
+/// Error type for signature verification
 #[derive(Error, Debug, Clone, PartialEq, Eq)]
 pub enum SignatureVerificationError {
     #[error("incorrect signature error")]
@@ -16,6 +17,7 @@ pub enum SignatureVerificationError {
     OperatorNotFound,
 }
 
+/// Represents a signed task response digest
 #[derive(Debug, Clone)]
 pub struct SignedTaskResponseDigest {
     pub task_response_digest: TaskResponseDigest,

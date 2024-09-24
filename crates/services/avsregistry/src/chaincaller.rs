@@ -137,6 +137,19 @@ impl<R: AvsRegistryReader + Sync, S: OperatorInfoService + Sync> AvsRegistryServ
 }
 
 impl<R: AvsRegistryReader, S: OperatorInfoService> AvsRegistryServiceChainCaller<R, S> {
+    /// Returns the operator info for the given operator id
+    ///
+    /// # Arguments
+    ///
+    /// * `operator_id` - The operator id
+    ///
+    /// # Returns
+    ///
+    /// The operator info
+    ///
+    /// # Errors
+    ///
+    /// An error is returned if the operator info is not found or can not be retrieved
     async fn get_operator_info(
         &self,
         operator_id: [u8; 32],
@@ -190,6 +203,16 @@ mod tests {
     const OPERATOR_ID: &str = "48beccce16ccdf8000c13d5af5f91c7c3dac6c47b339d993d229af1500dbe4a9";
     const OPERATOR_ADDRESS: &str = "0xa0Ee7A142d267C1f36714E4a8F75612F20a79720";
 
+    /// Helper function to build a TestOperator given a private key and an operator id
+    ///
+    /// # Arguments
+    ///
+    /// * `private_key_decimal` - The private key of the operator in decimal format
+    /// * `operator_id` - The operator id
+    ///
+    /// # Returns
+    ///
+    /// The TestOperator element
     fn build_test_operator(private_key_decimal: &str, operator_id: &str) -> TestOperator {
         let bls_keypair = BlsKeyPair::new(private_key_decimal.into()).unwrap();
         let operator_id =

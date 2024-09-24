@@ -26,6 +26,8 @@ use tokio_util::sync::CancellationToken;
 
 use crate::operator_info::OperatorInfoService;
 
+/// Fetches operator information from the registry.
+/// Loads and stores operators info (addresses and public key) in memory.
 #[allow(dead_code)]
 #[derive(Debug, Clone)]
 pub struct OperatorInfoServiceInMemory {
@@ -35,12 +37,14 @@ pub struct OperatorInfoServiceInMemory {
     pub_keys: UnboundedSender<OperatorsInfoMessage>,
 }
 
+/// State of the operator info service.
 #[derive(Debug, Clone)]
 struct OperatorState {
     operator_info_data: Arc<RwLock<HashMap<Address, OperatorPubKeys>>>,
     operator_addr_to_id: Arc<RwLock<HashMap<Address, FixedBytes<32>>>>,
 }
 
+/// Error type for the operator info service.
 #[derive(Error, Debug, Clone, PartialEq, Eq)]
 pub enum OperatorInfoServiceError {
     #[error("failed to retrieve operator info")]
@@ -85,6 +89,17 @@ impl OperatorInfoService for OperatorInfoServiceInMemory {
 }
 
 impl OperatorInfoServiceInMemory {
+    /// Creates a new operator info service given a logger, an avs registry chain reader and a web socket.
+    ///
+    /// # Arguments
+    ///
+    /// * `logger` - A shared logger.
+    /// * `avs_registry_chain_reader` - An avs registry chain reader.
+    /// * `web_socket` - A web socket.
+    ///
+    /// # Returns
+    ///
+    /// A new operator info service.
     pub async fn new(
         logger: SharedLogger,
         avs_registry_chain_reader: AvsRegistryChainReader,
@@ -131,6 +146,17 @@ impl OperatorInfoServiceInMemory {
         }
     }
 
+    /// Starts the operator info service.
+    ///
+    /// # Arguments
+    ///
+    /// * `cancellation_token` - A cancellation token than can be used to stop the service.
+    /// * `start_block` - The start block to query for past operator registrations.
+    /// * `end_block` - The end block to query for past operator registrations.
+    ///
+    /// # Returns
+    ///
+    /// Ok(()) if successful, otherwise an error.
     pub async fn start_service(
         &self,
         cancellation_token: &CancellationToken,
@@ -215,6 +241,18 @@ impl OperatorInfoServiceInMemory {
         Ok(())
     }
 
+    /// Queries past operator registration events and fills the database by sending messages
+    /// to the operator info service channel.
+    /// This information is then stored in OperatorState`.
+    ///
+    /// # Arguments
+    ///
+    /// * `start_block` - The start block to query for past operator registrations.
+    /// * `end_block` - The end block to query for past operator registrations.
+    ///
+    /// # Returns
+    ///
+    /// Ok(()) if successful, otherwise an error.
     pub async fn query_past_registered_operator_events_and_fill_db(
         &self,
         start_block: u64,
@@ -470,23 +508,20 @@ mod tests {
         .unwrap();
 
         let bls_key_pair = BlsKeyPair::new(bls_key.to_string()).unwrap();
-        let salt: FixedBytes<32> = FixedBytes::from([
-            0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02,
-            0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02, 0x02,
-            0x02, 0x02, 0x02, 0x02,
-        ]);
+        let salt: FixedBytes<32> = FixedBytes::from([0x02; 32]);
         let now = SystemTime::now();
-        let mut expiry: U256 = U256::from(0);
-        // Convert SystemTime to a Duration since the UNIX epoch
-        if let Ok(duration_since_epoch) = now.duration_since(UNIX_EPOCH) {
-            // Convert the duration to seconds
-            let seconds = duration_since_epoch.as_secs(); // Returns a u64
 
-            // Convert seconds to U256
-            expiry = U256::from(seconds) + U256::from(10000);
-        } else {
-            println!("System time seems to be before the UNIX epoch.");
-        }
+        // Convert SystemTime to a Duration since the UNIX epoch
+        let duration_since_epoch = now
+            .duration_since(UNIX_EPOCH)
+            .inspect_err(|_| println!("System time seems to be before the UNIX epoch."))
+            .unwrap();
+        // Convert the duration to seconds
+        let seconds = duration_since_epoch.as_secs(); // Returns a u64
+
+        // Convert seconds to U256
+        let expiry = U256::from(seconds) + U256::from(10000);
+
         let quorum_numbers = Bytes::from_str("0x00").unwrap();
         let socket = "socket";
 

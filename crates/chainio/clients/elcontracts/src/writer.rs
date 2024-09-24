@@ -13,6 +13,7 @@ use DelegationManager::OperatorDetails;
 /// Gas limit for registerAsOperator in [`DelegationManager`]
 pub const GAS_LIMIT_REGISTER_AS_OPERATOR_DELEGATION_MANAGER: u128 = 300000;
 
+/// Chain Writer to interact with EigenLayer contracts onchain
 #[derive(Debug, Clone)]
 pub struct ELChainWriter {
     delegation_manager: Address,
@@ -39,6 +40,19 @@ impl ELChainWriter {
         }
     }
 
+    /// Register an operator to EigenLayer
+    ///
+    /// # Arguments
+    ///
+    /// * `operator` - The operator to register
+    ///
+    /// # Returns
+    ///
+    /// * `FixedBytes<32>` - The transaction hash if successful, otherwise an error
+    ///
+    /// # Errors
+    ///
+    /// * `ElContractsError` - if the call to the contract fails
     pub async fn register_as_operator(
         &self,
         operator: Operator,
@@ -78,6 +92,19 @@ impl ELChainWriter {
         Ok(hash)
     }
 
+    /// Update operator details on EigenLayer
+    ///
+    /// # Arguments
+    ///
+    /// * `operator` - The operator to update
+    ///
+    /// # Returns
+    ///
+    /// * `TxHash` - The transaction hash if successful, otherwise an error
+    ///
+    /// # Errors
+    ///
+    /// * `ElContractsError` - if the call to the contract fails
     pub async fn update_operator_details(
         &self,
         operator: Operator,
@@ -113,50 +140,48 @@ impl ELChainWriter {
         Ok(*metadata_tx.tx_hash())
     }
 
+    /// Deposit ERC20 tokens into a strategy on EigenLayer
+    ///
+    /// # Arguments
+    ///
+    /// * `strategy_addr` - The address of the strategy to deposit into
+    /// * `amount` - The amount of tokens to deposit
+    ///
+    /// # Returns
+    ///
+    /// * `TxHash` - The transaction hash if successful, otherwise an error
+    ///
+    /// # Errors
+    ///
+    /// * `ElContractsError` - if the call to the contract fails
     pub async fn deposit_erc20_into_strategy(
         &self,
         strategy_addr: Address,
         amount: U256,
     ) -> Result<TxHash, ElContractsError> {
-        info!(
-            "depositing {:?} tokens into strategy {:?}",
-            amount, strategy_addr
-        );
-        let tokens_result = self
+        info!("depositing {amount:?} tokens into strategy {strategy_addr:?}");
+        let tokens = self
             .el_chain_reader
             .get_strategy_and_underlying_erc20_token(strategy_addr)
-            .await;
-        match tokens_result {
-            Ok(tokens) => {
-                let (_, underlying_token_contract, underlying_token) = tokens;
-                let provider = get_signer(self.signer.clone(), &self.provider);
+            .await?;
+        let (_, underlying_token_contract, underlying_token) = tokens;
+        let provider = get_signer(self.signer.clone(), &self.provider);
 
-                let contract_underlying_token = IERC20::new(underlying_token_contract, &provider);
+        let contract_underlying_token = IERC20::new(underlying_token_contract, &provider);
 
-                let contract_call =
-                    contract_underlying_token.approve(self.strategy_manager, amount);
+        let contract_call = contract_underlying_token.approve(self.strategy_manager, amount);
 
-                let _approve = contract_call.send().await?;
+        let _approve = contract_call.send().await?;
 
-                let contract_strategy_manager =
-                    StrategyManager::new(self.strategy_manager, &provider);
+        let contract_strategy_manager = StrategyManager::new(self.strategy_manager, &provider);
 
-                let deposit_contract_call = contract_strategy_manager.depositIntoStrategy(
-                    strategy_addr,
-                    underlying_token,
-                    amount,
-                );
+        let deposit_contract_call =
+            contract_strategy_manager.depositIntoStrategy(strategy_addr, underlying_token, amount);
 
-                let tx = deposit_contract_call.send().await?;
+        let tx = deposit_contract_call.send().await?;
 
-                info!(
-                    "deposited {:?} tokens into strategy {:?}",
-                    amount, strategy_addr
-                );
-                Ok(*tx.tx_hash())
-            }
-            Err(e) => Err(e),
-        }
+        info!("deposited {amount:?} tokens into strategy {strategy_addr:?}");
+        Ok(*tx.tx_hash())
     }
 }
 

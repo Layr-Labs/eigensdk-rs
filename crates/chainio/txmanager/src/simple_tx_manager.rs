@@ -29,6 +29,7 @@ pub enum TxManagerError {
     InvalidUrlError,
 }
 
+/// A simple transaction manager that encapsulates operations to send transactions to an Ethereum node.
 pub struct SimpleTxManager {
     logger: SharedLogger,
     gas_limit_multiplier: f64,
@@ -41,18 +42,18 @@ impl SimpleTxManager {
     ///
     /// # Arguments
     ///
-    /// - `logger`: The logger to be used.
-    /// - `gas_limit_multiplier`: The gas limit multiplier.
-    /// - `private_key`: The private key of the wallet.
-    /// - `rpc_url`: The RPC URL. It could be an anvil node or any other node.
+    /// * `logger`: The logger to be used.
+    /// * `gas_limit_multiplier`: The gas limit multiplier.
+    /// * `private_key`: The private key of the wallet.
+    /// * `rpc_url`: The RPC URL. It could be an anvil node or any other node.
     ///
     /// # Returns
     ///
-    /// - The SimpleTxManager created.
+    /// * The SimpleTxManager created.
     ///
     /// # Errors
     ///
-    /// - If the URL is invalid.
+    /// * If the URL is invalid.
     pub fn new(
         logger: SharedLogger,
         gas_limit_multiplier: f64,
@@ -90,10 +91,24 @@ impl SimpleTxManager {
         Ok(Address::from_private_key(&private_key_signing_key))
     }
 
+    /// Sets the gas limit multiplier.
+    ///
+    /// # Arguments
+    ///
+    /// * `multiplier` - The gas limit multiplier.
     pub fn with_gas_limit_multiplier(&mut self, multiplier: f64) {
         self.gas_limit_multiplier = multiplier;
     }
 
+    /// Creates a local signer.
+    ///
+    /// # Returns
+    ///
+    /// * `PrivateKeySigner` The local signer.
+    ///
+    /// # Errors
+    ///
+    /// * If the signer cannot be created.
     fn create_local_signer(&self) -> Result<PrivateKeySigner, TxManagerError> {
         let config = Config::PrivateKey(self.private_key.clone());
         Config::signer_from_config(config)
@@ -111,11 +126,16 @@ impl SimpleTxManager {
     ///
     /// # Arguments
     ///
-    /// - `tx`: The transaction to be sent.
+    /// * `tx`: The transaction to be sent.
     ///
     /// # Returns
     ///
-    /// - The transaction receipt.
+    /// * `TransactionReceipt` The transaction receipt.
+    ///
+    /// # Errors
+    ///
+    /// * `TxManagerError` - If the transaction cannot be sent, or there is an error
+    ///   signing the transaction or estimating gas and nonce.
     pub async fn send_tx(
         &self,
         tx: &mut TransactionRequest,
@@ -160,19 +180,19 @@ impl SimpleTxManager {
     ///
     /// # Arguments
     ///
-    /// - `tx`: The transaction for which we want to estimate the gas and nonce.
+    /// * `tx`: The transaction for which we want to estimate the gas and nonce.
     ///
     /// # Returns
     ///
-    /// - The transaction request with the gas and nonce estimated.
+    /// * The transaction request with the gas and nonce estimated.
     ///
     /// # Errors
     ///
-    /// - If the transaction request could not sent of gives an error.
-    /// - If the latest block header could not be retrieved.
-    /// - If the gas price could not be estimated.
-    /// - If the gas limit could not be estimated.
-    /// - If the destination address could not be retrieved.
+    /// * If the transaction request could not sent of gives an error.
+    /// * If the latest block header could not be retrieved.
+    /// * If the gas price could not be estimated.
+    /// * If the gas limit could not be estimated.
+    /// * If the destination address could not be retrieved.
     async fn estimate_gas_and_nonce(
         &self,
         tx: &TransactionRequest,
@@ -203,10 +223,8 @@ impl SimpleTxManager {
         // we only estimate if gas_limit is not already set
         if let Some(0) = gas_limit {
             let from = self.get_address()?;
-            let to = match tx.to() {
-                Some(c) => c,
-                None => return Err(TxManagerError::SendTxError),
-            };
+            let to = tx.to().ok_or(TxManagerError::SendTxError)?;
+
             let mut tx_request = TransactionRequest::default()
                 .to(to)
                 .from(from)
@@ -226,10 +244,7 @@ impl SimpleTxManager {
             tx.gas_price().unwrap_or_default() as f64 * self.gas_limit_multiplier;
         let gas_price = gas_price_multiplied as u128;
 
-        let to = match tx.to() {
-            None => return Err(TxManagerError::SendTxError),
-            Some(adress) => adress,
-        };
+        let to = tx.to().ok_or(TxManagerError::SendTxError)?;
 
         let new_tx = TransactionRequest::default()
             .with_to(to)
@@ -251,12 +266,16 @@ impl SimpleTxManager {
     ///
     /// # Arguments
     ///
-    /// - `pending_tx`: The pending transaction builder we want to wait for.
+    /// * `pending_tx`: The pending transaction builder we want to wait for.
     ///
     /// # Returns
     ///
-    /// - The block number in which the transaction was included.
-    /// - `None` if the transaction was not included in a block or an error ocurred.
+    /// * The block number in which the transaction was included.
+    /// * `None` if the transaction was not included in a block or an error ocurred.
+    ///
+    /// # Errors
+    ///
+    /// * `TxManagerError` - If the transaction receipt cannot be retrieved.
     pub async fn wait_for_receipt(
         &self,
         pending_tx: PendingTransactionBuilder<'_, Transport, Ethereum>,

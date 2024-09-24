@@ -34,13 +34,11 @@ impl KeyGenerator {
         num_keys: u32,
         output_dir: Option<String>,
     ) -> Result<(), EigenKeyCliError> {
-        let dir_name = match output_dir {
-            None => {
-                let id = Uuid::new_v4();
-                format!("{}-{}", self.key_name(), id)
-            }
-            Some(dir) => dir,
-        };
+        let dir_name = output_dir.unwrap_or_else(|| {
+            let id = Uuid::new_v4();
+            format!("{}-{}", self.key_name(), id)
+        });
+
         let dir_path = Path::new(&dir_name);
         let key_path = dir_path.join(DEFAULT_KEY_FOLDER);
         fs::create_dir_all(key_path).map_err(EigenKeyCliError::FileError)?;
