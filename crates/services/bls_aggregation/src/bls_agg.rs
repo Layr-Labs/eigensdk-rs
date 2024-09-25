@@ -322,12 +322,17 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                 &operator_state_avs,
             )
             .await;
+            let verification_failed = verification_result.is_err();
 
             signed_task_digest
                 .signature_verification_channel
                 .send(verification_result)
                 .await
                 .map_err(|_| BlsAggregationServiceError::ChannelError)?;
+
+            if verification_failed {
+                continue;
+            }
 
             let operator_state = operator_state_avs
                 .get(&signed_task_digest.operator_id)
@@ -1788,6 +1793,19 @@ mod tests {
                 IncorrectSignature
             )),
             result
+        );
+
+        // Also test that the aggregator service is not affected by the invalid signature, so the task should expire
+        let response = bls_agg_service
+            .aggregated_response_receiver
+            .lock()
+            .await
+            .recv()
+            .await;
+
+        assert_eq!(
+            Err(BlsAggregationServiceError::TaskExpired),
+            response.unwrap()
         );
     }
 }
