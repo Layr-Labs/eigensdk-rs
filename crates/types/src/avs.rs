@@ -15,6 +15,8 @@ pub enum SignatureVerificationError {
     OperatorPublicKeyNotFound,
     #[error("operator not found")]
     OperatorNotFound,
+    #[error("duplicate signature error")]
+    DuplicateSignature,
 }
 
 /// Represents a signed task response digest

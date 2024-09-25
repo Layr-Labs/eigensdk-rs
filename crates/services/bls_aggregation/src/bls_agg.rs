@@ -316,6 +316,24 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
             })
             .map_err(|_| BlsAggregationServiceError::TaskExpired)?
         {
+            // check if the operator has already signed for this digest
+            if aggregated_operators
+                .get(&signed_task_digest.task_response_digest)
+                .map(|operators| {
+                    operators
+                        .signers_operator_ids_set
+                        .contains_key(&signed_task_digest.operator_id)
+                })
+                .unwrap_or(false)
+            {
+                signed_task_digest
+                    .signature_verification_channel
+                    .send(Err(SignatureVerificationError::DuplicateSignature))
+                    .await
+                    .map_err(|_| BlsAggregationServiceError::ChannelError)?;
+                continue;
+            }
+
             let verification_result = BlsAggregatorService::<A>::verify_signature(
                 task_index,
                 &signed_task_digest,
@@ -548,7 +566,7 @@ mod tests {
     use alloy_primitives::{B256, U256};
     use eigen_crypto_bls::{BlsG1Point, BlsG2Point, BlsKeyPair, Signature};
     use eigen_services_avsregistry::fake_avs_registry_service::FakeAvsRegistryService;
-    use eigen_types::avs::SignatureVerificationError::IncorrectSignature;
+    use eigen_types::avs::SignatureVerificationError::{DuplicateSignature, IncorrectSignature};
     use eigen_types::operator::{QuorumNum, QuorumThresholdPercentages};
     use eigen_types::{avs::TaskIndex, test::TestOperator};
     use sha2::{Digest, Sha256};
@@ -716,15 +734,21 @@ mod tests {
             .await
             .unwrap();
 
-        bls_agg_service
+        let second_signature_processing_result = bls_agg_service
             .process_new_signature(
                 task_index,
                 task_response_digest,
                 bls_signature_1.clone(),
                 test_operator_1.operator_id,
             )
-            .await
-            .unwrap();
+            .await;
+
+        assert_eq!(
+            second_signature_processing_result,
+            Err(BlsAggregationServiceError::SignatureVerificationError(
+                DuplicateSignature
+            ))
+        );
 
         let bls_signature_2 = test_operator_2
             .bls_keypair
