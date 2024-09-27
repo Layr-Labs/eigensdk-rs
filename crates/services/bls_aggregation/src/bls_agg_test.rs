@@ -19,6 +19,7 @@ pub mod integration_test {
             get_registry_coordinator_address, get_service_manager_address,
         },
         test_data::TestData,
+        transaction::wait_transaction,
     };
     use eigen_types::{
         avs::TaskIndex,
@@ -34,7 +35,7 @@ pub mod integration_test {
     use serde::Deserialize;
     use sha2::{Digest, Sha256};
     use std::time::Duration;
-    use tokio::{task, time::sleep};
+    use tokio::task;
     use tokio_util::sync::CancellationToken;
 
     const PRIVATE_KEY_1: &str = "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80"; // the owner addr
@@ -164,7 +165,7 @@ pub mod integration_test {
             .unwrap();
 
         // Register operator
-        avs_writer
+        let tx_hash = avs_writer
             .register_operator_in_quorum_with_avs_registry_coordinator(
                 bls_key_pair.clone(),
                 salt,
@@ -174,9 +175,7 @@ pub mod integration_test {
             )
             .await
             .unwrap();
-
-        // Sleep is needed so registered operators are accesible to the OperatorInfoServiceInMemory
-        sleep(Duration::from_secs(3)).await;
+        wait_transaction(http_endpoint, tx_hash).await.unwrap();
 
         // Create aggregation service
         let avs_registry_service =
@@ -332,14 +331,14 @@ pub mod integration_test {
 
         let avs_writer = AvsRegistryChainWriter::build_avs_registry_chain_writer(
             get_test_logger(),
-            http_endpoint,
+            http_endpoint.clone(),
             PRIVATE_KEY_2.to_string(),
             registry_coordinator_address,
             operator_state_retriever_address,
         )
         .await
         .unwrap();
-        avs_writer
+        let tx_hash = avs_writer
             .register_operator_in_quorum_with_avs_registry_coordinator(
                 bls_key_pair_2.clone(),
                 salt,
@@ -349,9 +348,7 @@ pub mod integration_test {
             )
             .await
             .unwrap();
-
-        // Sleep is needed so registered operators are accesible to the OperatorInfoServiceInMemory
-        sleep(Duration::from_secs(3)).await;
+        wait_transaction(http_endpoint, tx_hash).await.unwrap();
 
         // Create aggregation service
         let avs_registry_service =
@@ -521,7 +518,7 @@ pub mod integration_test {
         task::spawn(async move { operators_info_clone.start_service(&token_clone, 0, 0).await });
 
         // Register operator
-        avs_writer
+        let tx_hash = avs_writer
             .register_operator_in_quorum_with_avs_registry_coordinator(
                 bls_key_pair_1.clone(),
                 salt,
@@ -531,18 +528,22 @@ pub mod integration_test {
             )
             .await
             .unwrap();
+        wait_transaction(http_endpoint.clone(), tx_hash)
+            .await
+            .unwrap();
 
         let avs_writer = AvsRegistryChainWriter::build_avs_registry_chain_writer(
             // TODO: check if needed
             get_test_logger(),
-            http_endpoint,
+            http_endpoint.clone(),
             PRIVATE_KEY_2.to_string(),
             registry_coordinator_address,
             operator_state_retriever_address,
         )
         .await
         .unwrap();
-        avs_writer
+
+        let tx_hash = avs_writer
             .register_operator_in_quorum_with_avs_registry_coordinator(
                 bls_key_pair_2.clone(),
                 salt,
@@ -552,9 +553,7 @@ pub mod integration_test {
             )
             .await
             .unwrap();
-
-        // Sleep is needed so registered operators are accesible to the OperatorInfoServiceInMemory
-        sleep(Duration::from_secs(3)).await;
+        wait_transaction(http_endpoint, tx_hash).await.unwrap();
 
         // Create aggregation service
         let avs_registry_service =

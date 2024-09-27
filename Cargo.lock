@@ -2468,6 +2468,7 @@ dependencies = [
  "alloy-network",
  "alloy-primitives",
  "alloy-provider",
+ "alloy-transport",
  "alloy-transport-http",
  "eigen-utils",
  "once_cell",
@@ -2475,6 +2476,7 @@ dependencies = [
  "serde_json",
  "testcontainers",
  "tokio",
+ "url",
 ]
 
 [[package]]

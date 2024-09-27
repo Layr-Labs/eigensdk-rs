@@ -1,12 +1,15 @@
-use alloy_primitives::FixedBytes;
-use alloy_provider::Provider;
+use alloy_primitives::{FixedBytes, TxHash};
+use alloy_provider::{PendingTransactionBuilder, Provider, ProviderBuilder};
+use alloy_transport::TransportResult;
 use eigen_utils::get_provider;
 use tokio::time::{sleep, Duration};
+use url::Url;
 
 /// Retrieves the status of a transaction from its hash.
 ///
 /// # Arguments
 ///
+/// `rpc_url` - The RPC URL.
 /// `tx_hash` - The hash of the transaction.
 ///
 /// # Returns
@@ -22,4 +25,21 @@ pub async fn get_transaction_status(rpc_url: String, tx_hash: FixedBytes<32>) ->
         .unwrap_or(None)
         .map(|receipt| receipt.status())
         .unwrap_or(false)
+}
+
+/// Wait for a transaction to finish.
+///
+/// # Arguments
+///
+/// `rpc_url` - The RPC URL.
+/// `tx_hash` - The hash of the transaction.
+///
+/// # Returns
+///
+/// A [`TransportResult`] containing the transaction hash.
+pub async fn wait_transaction(rpc_url: String, tx_hash: FixedBytes<32>) -> TransportResult<TxHash> {
+    let url = Url::parse(&rpc_url).unwrap();
+    let root_provider = ProviderBuilder::new().on_http(url);
+    let pending_tx = PendingTransactionBuilder::new(&root_provider, tx_hash);
+    pending_tx.watch().await
 }
