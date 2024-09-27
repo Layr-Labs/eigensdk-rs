@@ -296,6 +296,7 @@ mod tests {
         get_operator_state_retriever_address, get_registry_coordinator_address,
         get_strategy_manager_address,
     };
+    use eigen_testing_utils::transaction::wait_transaction;
     use eigen_types::operator::Operator;
     use eigen_utils::get_provider;
     use std::str::FromStr;
@@ -389,9 +390,6 @@ mod tests {
         )
         .await;
 
-        // need to wait at least 3 seconds to get the event processed
-        tokio::time::sleep(tokio::time::Duration::from_secs(3)).await;
-
         cancel_token.clone().cancel();
 
         let address = address!("f39fd6e51aad88f6f4ce6ab8827279cfffb92266");
@@ -448,7 +446,6 @@ mod tests {
             "8949062771264691130193054363356855357736539613420316273398900351143637925935",
         )
         .await;
-        tokio::time::sleep(tokio::time::Duration::from_secs(3)).await; // need to wait atleast 3 second to get the event processed
 
         cancel_token.clone().cancel();
 
@@ -528,7 +525,7 @@ mod tests {
         let quorum_numbers = Bytes::from_str("0x00").unwrap();
         let socket = "socket";
 
-        let _ = avs_registry_writer
+        let tx_hash = avs_registry_writer
             .register_operator_in_quorum_with_avs_registry_coordinator(
                 bls_key_pair,
                 salt,
@@ -538,5 +535,6 @@ mod tests {
             )
             .await
             .unwrap();
+        wait_transaction(http_endpoint, tx_hash).await.unwrap();
     }
 }
