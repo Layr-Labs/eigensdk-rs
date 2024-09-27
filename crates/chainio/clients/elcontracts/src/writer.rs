@@ -330,9 +330,7 @@ mod tests {
             .register_as_operator(operator)
             .await
             .unwrap();
-        wait_transaction(http_endpoint.clone(), tx_hash)
-            .await
-            .unwrap();
+        wait_transaction(&http_endpoint, tx_hash).await.unwrap();
 
         let receipt = provider.get_transaction_receipt(tx_hash).await.unwrap();
         assert!(receipt.unwrap().status());
@@ -355,9 +353,7 @@ mod tests {
             .update_operator_details(operator_modified)
             .await
             .unwrap();
-        wait_transaction(http_endpoint.clone(), tx_hash)
-            .await
-            .unwrap();
+        wait_transaction(&http_endpoint, tx_hash).await.unwrap();
 
         let receipt = provider.get_transaction_receipt(tx_hash).await.unwrap();
         assert!(receipt.unwrap().status());
@@ -369,7 +365,7 @@ mod tests {
             .deposit_erc20_into_strategy(strategy_addr, amount)
             .await
             .unwrap();
-        wait_transaction(http_endpoint, tx_hash).await.unwrap();
+        wait_transaction(&http_endpoint, tx_hash).await.unwrap();
 
         let receipt = provider.get_transaction_receipt(tx_hash).await.unwrap();
         assert!(receipt.unwrap().status());

@@ -175,7 +175,7 @@ pub mod integration_test {
             )
             .await
             .unwrap();
-        wait_transaction(http_endpoint, tx_hash).await.unwrap();
+        wait_transaction(&http_endpoint, tx_hash).await.unwrap();
 
         // Create aggregation service
         let avs_registry_service =
@@ -348,7 +348,7 @@ pub mod integration_test {
             )
             .await
             .unwrap();
-        wait_transaction(http_endpoint, tx_hash).await.unwrap();
+        wait_transaction(&http_endpoint, tx_hash).await.unwrap();
 
         // Create aggregation service
         let avs_registry_service =
@@ -528,9 +528,7 @@ pub mod integration_test {
             )
             .await
             .unwrap();
-        wait_transaction(http_endpoint.clone(), tx_hash)
-            .await
-            .unwrap();
+        wait_transaction(&http_endpoint, tx_hash).await.unwrap();
 
         let avs_writer = AvsRegistryChainWriter::build_avs_registry_chain_writer(
             // TODO: check if needed
@@ -553,7 +551,7 @@ pub mod integration_test {
             )
             .await
             .unwrap();
-        wait_transaction(http_endpoint, tx_hash).await.unwrap();
+        wait_transaction(&http_endpoint, tx_hash).await.unwrap();
 
         // Create aggregation service
         let avs_registry_service =
