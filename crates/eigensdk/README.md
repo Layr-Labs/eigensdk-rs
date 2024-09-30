@@ -5,14 +5,14 @@ eigensdk-rs is an initiative for rust developers to build AVSs on eigenlayer.
 
 ## Installation
 
-```bash
+ ```bash
 cargo install eigensdk --features full
 ```
-## Overview
+ ## Overview
 
-List of crates in the repository :-
+ List of crates in the repository :-
 
-- [eigen-client-avsregistry](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/chainio/clients/avsregistry) - Read, Write and subscribe methods for AvsRegistry
+ [eigen-client-avsregistry](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/chainio/clients/avsregistry) - Read, Write and subscribe methods for AvsRegistry
 - [eigen-client-elcontracts](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/chainio/clients/elcontracts) - Convenience methods to call Eigenlayer contracts
 - [eigen-contracts-bindings](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/contracts/bindings) - Generate ethers bindings for Eigen Layer.
 - [eigen-crypto-bls](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/crypto/bls) - New bls key pair, sign message, conversion utilites between alloy and arkworks bn254.
@@ -22,6 +22,11 @@ List of crates in the repository :-
 - [eigen-types](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/types) - Common types
 - [eigen-utils](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/utils) - Publicly exportable `m2-mainnet` compatible alloy bindings.
 - [eigen-testing-utils](https://github.com/Layr-Labs/eigensdk-rs/tree/main/testing/testing-utils) - Contains publicly exportable anvil, holesky, mainnet addresses for eigen contracts.
+- [eigen-chainio-txmanager](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/chainio/txmanager) - Simple transaction manager.
+- [eigen-cli](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/eigen-cli) - ECDSA, BLS keystore cli
+- [eigen-nodeapi](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/nodeapi) - NodeApi implementation for EigenLayer.
+- [eigen-logging](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/logging) - Logging utilities
+
 
 ## Examples
 
@@ -40,17 +45,16 @@ We are actively looking for contributors. Thank you for your interest. We have s
 ### PR 
 To test locally :-
 
-
-You need `foundry` , `docker` and `make` to successfully run it. Also, the `docker` engine has to be running for all the tests to execute correctly.
-```
-make pr
+You need `foundry`to successfully to run it.
+```bash
+cargo test
 ```
 
 At least 1 `approving` review is required to merge the PR.
   
 
 ### lint
-```
+```bash
 make lint
 ```
 ### To run fireblocks tests 
@@ -88,7 +92,7 @@ make coverage
 
 Open the coverage html report in a web browser:
 
-```bash
+```sh
 open target/llvm-cov/html/index.html
 ```
 
