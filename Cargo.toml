@@ -30,7 +30,7 @@ members = [
 resolver = "2"
 
 [workspace.package]
-version = "0.0.1-alpha"
+version = "0.1.0"
 edition = "2021"
 authors = ["Eigen Layer contributors"]
 rust-version = "1.79"
@@ -67,7 +67,7 @@ eigen-contract-bindings = { path = "crates/contracts/bindings/" }
 eigen-crypto-bls = { path = "crates/crypto/bls/" }
 eigen-crypto-bn254 = { path = "crates/crypto/bn254/" }
 eigen-logging = { path = "crates/logging/" }
-eigen-metrics = { version = "0.0.1-alpha", path = "crates/metrics/" }
+eigen-metrics = { path = "crates/metrics/" }
 eigen-metrics-collectors-economic = { path = "crates/metrics/collectors/economic" }
 eigen-metrics-collectors-rpc-calls = { path = "crates/metrics/collectors/rpc_calls" }
 eigen-services-avsregistry = { path = "crates/services/avsregistry" }
