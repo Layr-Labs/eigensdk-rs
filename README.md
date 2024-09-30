@@ -2,15 +2,15 @@
 
 eigensdk-rs is an initiative for rust developers to build AVSs on eigenlayer.
 
-
 ## Installation
 
-```bash
+ ```bash
 cargo install eigensdk --features full
 ```
+
 ## Overview
 
-List of crates in the repository :-
+ List of crates in the repository :-
 
 - [eigen-client-avsregistry](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/chainio/clients/avsregistry) - Read, Write and subscribe methods for AvsRegistry
 - [eigen-client-elcontracts](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/chainio/clients/elcontracts) - Convenience methods to call Eigenlayer contracts
@@ -22,6 +22,10 @@ List of crates in the repository :-
 - [eigen-types](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/types) - Common types
 - [eigen-utils](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/utils) - Publicly exportable `m2-mainnet` compatible alloy bindings.
 - [eigen-testing-utils](https://github.com/Layr-Labs/eigensdk-rs/tree/main/testing/testing-utils) - Contains publicly exportable anvil, holesky, mainnet addresses for eigen contracts.
+- [eigen-chainio-txmanager](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/chainio/txmanager) - Simple transaction manager.
+- [eigen-cli](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/eigen-cli) - ECDSA, BLS keystore cli
+- [eigen-nodeapi](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/nodeapi) - NodeApi implementation for EigenLayer.
+- [eigen-logging](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/logging) - Logging utilities
 
 ## Examples
 
@@ -37,23 +41,25 @@ cargo run --example get_quorum_count
 
 We are actively looking for contributors. Thank you for your interest. We have strict ci checks in place. In case of any questions and support, feel free to raise an issue.
 
-### PR 
+### PR
+
 To test locally :-
 
+You need `foundry`to successfully to run it.
 
-You need `foundry` , `docker` and `make` to successfully run it. Also, the `docker` engine has to be running for all the tests to execute correctly.
-```
-make pr
+```bash
+cargo test
 ```
 
 At least 1 `approving` review is required to merge the PR.
   
-
 ### lint
-```
+
+```bash
 make lint
 ```
-### To run fireblocks tests 
+
+### To run fireblocks tests
 
 Add the following variables to your env
 
@@ -88,7 +94,7 @@ make coverage
 
 Open the coverage html report in a web browser:
 
-```bash
+```sh
 open target/llvm-cov/html/index.html
 ```
 
@@ -101,8 +107,8 @@ Rolling `MSRV` policy of 6 months. The current `MSRV` is 1.79
 This software is `unaudited`.This is experimental software and is provided on an "as is" and "as available" basis and may not work at all. It should not be used in production.
 
 ## Credits
-- [eigensdk-go](https://github.com/Layr-Labs/eigensdk-go/tree/master)
 
+- [eigensdk-go](https://github.com/Layr-Labs/eigensdk-go/tree/master)
 
 ## Security Bugs
 
