@@ -19,7 +19,7 @@ $ cargo run --package eigen-cli -- egnaddrs --registry-coordinator 0x9E545E3C0ba
 ```
 
 It then prints the following datastructure:
-```bash
+```json
 {
   "avs": {
     "bls-pubkey-compendium (shared)": "0x322813Fd9A801c5507c9de605d63CEA4f2CE6c44",
