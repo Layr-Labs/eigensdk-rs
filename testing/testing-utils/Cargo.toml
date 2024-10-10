@@ -22,3 +22,4 @@ serde.workspace = true
 serde_json.workspace = true
 tokio.workspace = true
 testcontainers.workspace = true
+alloy.workspace = true

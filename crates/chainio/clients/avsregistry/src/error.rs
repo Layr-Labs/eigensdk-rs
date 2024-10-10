@@ -1,6 +1,7 @@
-use alloy_contract::Error as AlloyError;
+use alloy::contract::Error as AlloyError;
 use eigen_client_elcontracts::error::ElContractsError;
 use eigen_crypto_bls::error::BlsError;
+use num_bigint::ParseBigIntError;
 use thiserror::Error;
 
 /// Error returned by AvsRegistry
@@ -157,6 +158,9 @@ pub enum AvsRegistryError {
     /// Invalid Signature
     #[error("Invalid signature")]
     InvalidSignature,
+
+    #[error("big int error")]
+    ParseBigIntError,
 }
 
 impl From<ElContractsError> for AvsRegistryError {

@@ -13,9 +13,9 @@ use eth_keystore::KeystoreError;
 use tokio::runtime::Runtime;
 
 use crate::eigen_address::ContractAddresses;
-use alloy_contract::Error as ContractError;
-use alloy_json_rpc::RpcError;
-use alloy_transport::TransportErrorKind;
+use alloy::contract::Error as ContractError;
+use alloy::transports::RpcError;
+use alloy::transports::TransportErrorKind;
 use args::{Commands, EigenKeyCommand};
 use ark_serialize::SerializationError;
 use bls::BlsKeystore;

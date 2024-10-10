@@ -1,7 +1,7 @@
 use crate::error::AvsRegistryError;
-use alloy_primitives::{Address, Bytes, FixedBytes, B256, U256};
-use alloy_provider::Provider;
-use alloy_rpc_types::Filter;
+use alloy::primitives::{Address, Bytes, FixedBytes, B256, U256};
+use alloy::providers::Provider;
+use alloy::rpc::types::Filter;
 use ark_ff::Zero;
 use async_trait::async_trait;
 use eigen_crypto_bls::{
@@ -9,14 +9,19 @@ use eigen_crypto_bls::{
     BlsG2Point,
 };
 use eigen_logging::logger::SharedLogger;
-use eigen_types::operator::{bitmap_to_quorum_ids, OperatorPubKeys};
+use eigen_types::operator::{
+    bitmap_to_quorum_ids, bitmap_to_quorum_ids_from_u192, OperatorPubKeys,
+};
 use eigen_utils::{
-    binding::{BLSApkRegistry, OperatorStateRetriever, RegistryCoordinator, StakeRegistry},
     get_provider, get_ws_provider, NEW_PUBKEY_REGISTRATION_EVENT,
+    {
+        blsapkregistry::BLSApkRegistry, operatorstateretriever::OperatorStateRetriever,
+        registrycoordinator::RegistryCoordinator, stakeregistry::StakeRegistry,
+    },
 };
 use num_bigint::BigInt;
-use std::collections::HashMap;
 use std::fmt::Debug;
+use std::{collections::HashMap, str::FromStr};
 
 /// Avs Registry chainreader
 #[derive(Debug, Clone)]
@@ -333,7 +338,7 @@ impl AvsRegistryChainReader {
         let provider = get_provider(&self.provider);
 
         let current_block_number = provider.get_block_number().await.map_err(|e| {
-            AvsRegistryError::AlloyContractError(alloy_contract::Error::TransportError(e))
+            AvsRegistryError::AlloyContractError(alloy::contract::Error::TransportError(e))
         })?;
 
         if current_block_number > u32::MAX.into() {
@@ -373,7 +378,7 @@ impl AvsRegistryChainReader {
 
         let RegistryCoordinator::getCurrentQuorumBitmapReturn { _0: quo } = quorum_bitmap;
 
-        let quorums = bitmap_to_quorum_ids(quo);
+        let quorums = bitmap_to_quorum_ids_from_u192(quo);
 
         let mut quorum_stakes: HashMap<u8, BigInt> = HashMap::new();
 
@@ -385,7 +390,11 @@ impl AvsRegistryChainReader {
                 .await?;
 
             let StakeRegistry::getCurrentStakeReturn { _0: c_stake } = stakes_result;
-            quorum_stakes.insert(*quorum, c_stake.into());
+            quorum_stakes.insert(
+                *quorum,
+                BigInt::from_str(&U256::from(c_stake).to_string())
+                    .map_err(|_| AvsRegistryError::ParseBigIntError)?,
+            );
         }
         Ok(quorum_stakes)
     }
@@ -465,12 +474,12 @@ impl AvsRegistryChainReader {
         ws_url: String,
     ) -> Result<(Vec<Address>, Vec<OperatorPubKeys>), AvsRegistryError> {
         let provider = get_ws_provider(&ws_url).await.map_err(|e| {
-            AvsRegistryError::AlloyContractError(alloy_contract::Error::TransportError(e))
+            AvsRegistryError::AlloyContractError(alloy::contract::Error::TransportError(e))
         })?;
 
         let query_block_range = 1024;
         let current_block_number = provider.get_block_number().await.map_err(|e| {
-            AvsRegistryError::AlloyContractError(alloy_contract::Error::TransportError(e))
+            AvsRegistryError::AlloyContractError(alloy::contract::Error::TransportError(e))
         })?;
         if stop_block.is_zero() {
             stop_block = current_block_number;
@@ -482,12 +491,13 @@ impl AvsRegistryChainReader {
         while i <= stop_block {
             let to_block = std::cmp::min(i + (query_block_range - 1), stop_block);
             let filter = Filter::new()
-                .select(i..to_block)
+                .from_block(i)
+                .to_block(to_block)
                 .event(NEW_PUBKEY_REGISTRATION_EVENT)
                 .address(self.bls_apk_registry_addr);
 
             let logs = provider.get_logs(&filter).await.map_err(|e| {
-                AvsRegistryError::AlloyContractError(alloy_contract::Error::TransportError(e))
+                AvsRegistryError::AlloyContractError(alloy::contract::Error::TransportError(e))
             })?;
 
             let len = logs.len();
@@ -543,7 +553,7 @@ impl AvsRegistryChainReader {
 
         let stop_block = if stop_block == 0 {
             provider.get_block_number().await.map_err(|e| {
-                AvsRegistryError::AlloyContractError(alloy_contract::Error::TransportError(e))
+                AvsRegistryError::AlloyContractError(alloy::contract::Error::TransportError(e))
             })?
         } else {
             stop_block
@@ -553,12 +563,13 @@ impl AvsRegistryChainReader {
             let to_block = (from_block + query_block_range - 1).min(stop_block);
 
             let filter = Filter::new()
-                .select(from_block..to_block)
+                .from_block(from_block)
+                .to_block(to_block)
                 .event("OperatorSocketUpdate(bytes32,string)")
                 .address(self.registry_coordinator_addr);
 
             let logs = provider.get_logs(&filter).await.map_err(|e| {
-                AvsRegistryError::AlloyContractError(alloy_contract::Error::TransportError(e))
+                AvsRegistryError::AlloyContractError(alloy::contract::Error::TransportError(e))
             })?;
 
             for v_log in logs.iter() {

@@ -8,6 +8,7 @@ description = "eigen layer instrumented client "
 license-file.workspace = true
 
 [dependencies]
+alloy.workspace = true
 alloy-consensus.workspace = true
 alloy-eips.workspace = true
 alloy-json-rpc.workspace = true

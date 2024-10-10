@@ -1,7 +1,7 @@
 use crate::web3_signer::Web3Signer;
-use alloy_primitives::Address;
-use alloy_signer_aws::{AwsSigner, AwsSignerError};
-use alloy_signer_local::PrivateKeySigner;
+use alloy::primitives::Address;
+use alloy::signers::aws::{AwsSigner, AwsSignerError};
+use alloy::signers::local::PrivateKeySigner;
 use eth_keystore::decrypt_key;
 use std::path::Path;
 use thiserror::Error;
@@ -66,12 +66,12 @@ impl Config {
 #[cfg(test)]
 mod test {
     use super::Config;
-    use alloy_consensus::{SignableTransaction, TxLegacy};
-    use alloy_network::{TxSigner, TxSignerSync};
+    use alloy::consensus::{SignableTransaction, TxLegacy};
+    use alloy::network::{TxSigner, TxSignerSync};
+    use alloy::signers::local::PrivateKeySigner;
+    use alloy::signers::Signature;
     use alloy_node_bindings::Anvil;
     use alloy_primitives::{address, bytes, hex_literal::hex, keccak256, Address, U256};
-    use alloy_signer::Signature;
-    use alloy_signer_local::PrivateKeySigner;
     use aws_config::{BehaviorVersion, Region, SdkConfig};
     use aws_sdk_kms::{
         self,

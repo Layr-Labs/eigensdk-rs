@@ -1,17 +1,17 @@
 use crate::client::BackendClient;
-use alloy_consensus::TxEnvelope;
-use alloy_json_rpc::{RpcParam, RpcReturn};
-use alloy_primitives::{Address, BlockHash, BlockNumber, Bytes, ChainId, B256, U256, U64};
-use alloy_provider::{Provider, ProviderBuilder, RootProvider};
-use alloy_pubsub::{PubSubFrontend, Subscription};
-use alloy_rlp::Encodable;
-use alloy_rpc_types_eth::{
+use alloy::consensus::TxEnvelope;
+use alloy::providers::{Provider, ProviderBuilder, RootProvider};
+use alloy::pubsub::{PubSubFrontend, Subscription};
+use alloy::rpc::types::eth::{
     Block, BlockNumberOrTag, FeeHistory, Filter, Header, Log, SyncStatus, Transaction,
     TransactionReceipt, TransactionRequest,
 };
-use alloy_transport::{TransportError, TransportResult};
-use alloy_transport_http::{Client, Http};
-use alloy_transport_ws::WsConnect;
+use alloy::transports::http::{Client, Http};
+use alloy::transports::ws::WsConnect;
+use alloy::transports::{TransportError, TransportResult};
+use alloy_json_rpc::{RpcParam, RpcReturn};
+use alloy_primitives::{Address, BlockHash, BlockNumber, Bytes, ChainId, B256, U256, U64};
+use alloy_rlp::Encodable;
 use eigen_logging::get_test_logger;
 use eigen_metrics_collectors_rpc_calls::RpcCallsMetrics as RpcCallsCollector;
 use hex;
@@ -614,7 +614,7 @@ impl InstrumentedClient {
                 )
             })?;
         if let Some(ws_client) = self.ws_client.as_ref() {
-            ws_client.get_subscription(id).await
+            ws_client.get_subscription(id.into()).await
         } else {
             Err(TransportError::UnsupportedFeature(
                 "http client does not support eth_subscribe calls.",
@@ -642,7 +642,7 @@ impl InstrumentedClient {
                     .error("Failed to subscribe new head", err.to_string().as_str())
             })?;
         if let Some(ws_client) = self.ws_client.as_ref() {
-            ws_client.get_subscription(id).await
+            ws_client.get_subscription(id.into()).await
         } else {
             Err(TransportError::UnsupportedFeature(
                 "http client does not support eth_subscribe calls.",
@@ -828,13 +828,13 @@ impl InstrumentedClient {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use alloy_consensus::{SignableTransaction, TxLegacy};
-    use alloy_node_bindings::Anvil;
-    use alloy_primitives::{bytes, TxKind::Call, U256};
-    use alloy_provider::network::TxSignerSync;
-    use alloy_rpc_types_eth::{
+    use alloy::consensus::{SignableTransaction, TxLegacy};
+    use alloy::network::TxSignerSync;
+    use alloy::primitives::{bytes, TxKind::Call, U256};
+    use alloy::rpc::types::eth::{
         pubsub::SubscriptionResult, BlockId, BlockNumberOrTag, BlockTransactionsKind,
     };
+    use alloy_node_bindings::Anvil;
     use eigen_signer::signer::Config;
     use eigen_testing_utils::anvil::start_anvil_container;
     use eigen_utils::get_provider;
@@ -945,8 +945,7 @@ mod tests {
             .unwrap()
             .unwrap()
             .header
-            .hash
-            .unwrap();
+            .hash;
 
         let expected_block = provider
             .get_block_by_hash(hash, BlockTransactionsKind::Full)
@@ -990,7 +989,7 @@ mod tests {
             .unwrap()
             .unwrap();
 
-        let block_hash = block.header.hash.unwrap();
+        let block_hash = block.header.hash;
         let tx_count = instrumented_client
             .transaction_count(B256::from_slice(block_hash.as_slice()))
             .await
@@ -1034,7 +1033,7 @@ mod tests {
         let signer = Config::signer_from_config(config).unwrap();
         let signature = signer.sign_transaction_sync(&mut tx).unwrap();
         let signed_tx = tx.into_signed(signature);
-        let tx: TxEnvelope = signed_tx.into();
+        let tx: TxEnvelope = TxEnvelope::from(signed_tx);
 
         // test send_transaction
         let tx_hash = instrumented_client.send_transaction(tx).await;
@@ -1088,7 +1087,7 @@ mod tests {
 
         let expected_estimated_gas = provider.clone().estimate_gas(&tx_request).await.unwrap();
         let estimated_gas = instrumented_client.estimate_gas(tx_request).await.unwrap();
-        assert_eq!(expected_estimated_gas, estimated_gas.into());
+        assert_eq!(expected_estimated_gas, estimated_gas);
     }
 
     #[tokio::test]
@@ -1235,9 +1234,7 @@ mod tests {
             .unwrap()
             .unwrap()
             .header
-            .hash
-            .unwrap();
-
+            .hash;
         let expected_header = provider
             .get_block_by_hash(hash, BlockTransactionsKind::Hashes)
             .await

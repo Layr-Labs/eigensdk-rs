@@ -1,9 +1,9 @@
-use alloy_eips::BlockNumberOrTag;
-use alloy_network::{Ethereum, EthereumWallet, TransactionBuilder};
-use alloy_primitives::Address;
-use alloy_provider::{PendingTransactionBuilder, Provider, ProviderBuilder, RootProvider};
-use alloy_rpc_types_eth::{TransactionInput, TransactionReceipt, TransactionRequest};
-use alloy_signer_local::PrivateKeySigner;
+use alloy::eips::BlockNumberOrTag;
+use alloy::network::{Ethereum, EthereumWallet, TransactionBuilder};
+use alloy::primitives::{Address, U256};
+use alloy::providers::{PendingTransactionBuilder, Provider, ProviderBuilder, RootProvider};
+use alloy::rpc::types::eth::{TransactionInput, TransactionReceipt, TransactionRequest};
+use alloy::signers::local::PrivateKeySigner;
 use eigen_logging::logger::SharedLogger;
 use eigen_signer::signer::Config;
 use k256::ecdsa::SigningKey;
@@ -12,7 +12,7 @@ use thiserror::Error;
 
 static FALLBACK_GAS_TIP_CAP: u128 = 5_000_000_000;
 
-pub type Transport = alloy_transport_http::Http<reqwest::Client>;
+pub type Transport = alloy::transports::http::Http<reqwest::Client>;
 
 /// Possible errors raised in Tx Manager
 #[derive(Error, Debug)]
@@ -216,7 +216,7 @@ impl SimpleTxManager {
         // 2*baseFee + gas_tip_cap makes sure that the tx remains includeable for 6 consecutive 100% full blocks.
         // see https://www.blocknative.com/blog/eip-1559-fees
         let base_fee = header.base_fee_per_gas.ok_or(TxManagerError::SendTxError)?;
-        let gas_fee_cap = 2 * base_fee + gas_tip_cap;
+        let gas_fee_cap: u128 = (2 * base_fee + U256::from(gas_tip_cap).to::<u64>()).into();
 
         let mut gas_limit = tx.gas_limit();
         let tx_input = tx.input().unwrap_or_default().to_vec();
@@ -231,7 +231,7 @@ impl SimpleTxManager {
                 .value(tx.value().unwrap_or_default())
                 .input(TransactionInput::new(tx_input.clone().into()));
             tx_request.set_max_priority_fee_per_gas(gas_tip_cap);
-            tx_request.set_max_fee_per_gas(gas_fee_cap);
+            tx_request.set_max_fee_per_gas(gas_fee_cap.into());
 
             gas_limit = Some(
                 self.provider
@@ -254,7 +254,7 @@ impl SimpleTxManager {
             .with_input(tx_input)
             .with_chain_id(tx.chain_id().unwrap_or(1))
             .with_max_priority_fee_per_gas(gas_tip_cap)
-            .with_max_fee_per_gas(gas_fee_cap)
+            .with_max_fee_per_gas(gas_fee_cap.into())
             .with_gas_price(gas_price);
 
         Ok(new_tx)
@@ -291,11 +291,11 @@ impl SimpleTxManager {
 #[cfg(test)]
 mod tests {
     use super::SimpleTxManager;
-    use alloy_consensus::TxLegacy;
-    use alloy_network::TransactionBuilder;
+    use alloy::consensus::TxLegacy;
+    use alloy::network::TransactionBuilder;
+    use alloy::rpc::types::eth::TransactionRequest;
     use alloy_node_bindings::Anvil;
     use alloy_primitives::{bytes, TxKind::Call, U256};
-    use alloy_rpc_types_eth::TransactionRequest;
     use eigen_logging::get_test_logger;
     use tokio;
 

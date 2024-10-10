@@ -7,7 +7,7 @@ use alloy_provider::{
 };
 use alloy_transport_http::{Client, Http};
 use eigen_utils::{
-    binding::ContractsRegistry::{self, contractsReturn},
+    contractsregistry::ContractsRegistry::{self, contractsReturn},
     get_provider,
 };
 use once_cell::sync::Lazy;
@@ -22,22 +22,11 @@ pub const ANVIL_HTTP_URL: &str = "http://localhost:8545";
 pub const ANVIL_WS_URL: &str = "ws://localhost:8545";
 
 #[allow(clippy::type_complexity)]
-/// Local anvil rpc url alloy instance
-pub static ANVIL_RPC_URL: Lazy<
-    FillProvider<
-        JoinFill<
-            JoinFill<JoinFill<alloy_provider::Identity, GasFiller>, NonceFiller>,
-            ChainIdFiller,
-        >,
-        RootProvider<Http<Client>>,
-        Http<Client>,
-        Ethereum,
-    >,
-> = Lazy::new(|| get_provider(ANVIL_HTTP_URL));
 
 /// Service Manager contract address
 pub async fn get_service_manager_address(rpc_url: String) -> Address {
-    let contracts_registry = ContractsRegistry::new(CONTRACTS_REGISTRY, get_provider(&rpc_url));
+    let provider = get_provider(ANVIL_HTTP_URL);
+    let contracts_registry = ContractsRegistry::new(CONTRACTS_REGISTRY, provider);
 
     let val = contracts_registry
         .contracts("mockAvsServiceManager".to_string())
