@@ -61,5 +61,5 @@ cargo run --package eigen-cli -- egnkey generate --key-type ecdsa --num-keys <nu
 
 To create `ECDSA` and `BLS` keys in a random folder:
 ```bash
-cargo run --package eigen-cli -- egnkey generate --key-type both --num-keys <num_key>
+cargo run --package eigen-cli -- egnkey generate --key-type ecdsa --num-keys <num_key>
 ```
