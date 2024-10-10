@@ -152,7 +152,7 @@ alloy-transport-http = { version = "0.4.2", features = [
 alloy-transport-ipc = { version = "0.4.2", default-features = false }
 alloy-transport-ws = { version = "0.4.2", default-features = false }
 alloy-trie = "0.6.0"
-alloy = { git = "https://github.com/alloy-rs/alloy", features = ["sol-types", "contract","full","signer-aws"] }
+alloy = { version = "0.4.2", features = ["sol-types", "contract","full","signer-aws"] }
 anvil-utils = { path = "examples/anvil-utils" }
 avsregistry-read = { path = "examples/avsregistry-read" }
 avsregistry-write = { path = "examples/avsregistry-write" }

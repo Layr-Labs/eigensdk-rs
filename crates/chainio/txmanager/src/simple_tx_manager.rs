@@ -231,7 +231,7 @@ impl SimpleTxManager {
                 .value(tx.value().unwrap_or_default())
                 .input(TransactionInput::new(tx_input.clone().into()));
             tx_request.set_max_priority_fee_per_gas(gas_tip_cap);
-            tx_request.set_max_fee_per_gas(gas_fee_cap.into());
+            tx_request.set_max_fee_per_gas(gas_fee_cap);
 
             gas_limit = Some(
                 self.provider
@@ -254,7 +254,7 @@ impl SimpleTxManager {
             .with_input(tx_input)
             .with_chain_id(tx.chain_id().unwrap_or(1))
             .with_max_priority_fee_per_gas(gas_tip_cap)
-            .with_max_fee_per_gas(gas_fee_cap.into())
+            .with_max_fee_per_gas(gas_fee_cap)
             .with_gas_price(gas_price);
 
         Ok(new_tx)

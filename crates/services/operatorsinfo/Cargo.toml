@@ -12,8 +12,6 @@ license-file.workspace = true
 alloy.workspace = true
 async-trait.workspace = true
 alloy-primitives.workspace = true
-alloy-provider = { workspace = true, features = ["ws"] }
-alloy-rpc-types.workspace = true
 anyhow = "1.0.83"
 eigen-client-avsregistry.workspace = true
 eigen-crypto-bls.workspace = true

@@ -1,16 +1,9 @@
 //! Anvil utilities
-use alloy_network::Ethereum;
 use alloy_primitives::{address, Address};
-use alloy_provider::{
-    fillers::{ChainIdFiller, FillProvider, GasFiller, JoinFill, NonceFiller},
-    RootProvider,
-};
-use alloy_transport_http::{Client, Http};
 use eigen_utils::{
     contractsregistry::ContractsRegistry::{self, contractsReturn},
     get_provider,
 };
-use once_cell::sync::Lazy;
 
 /// Local anvil ContractsRegistry which contains a mapping of all locally deployed EL contracts.
 pub const CONTRACTS_REGISTRY: Address = address!("5FbDB2315678afecb367f032d93F642f64180aa3");
@@ -25,7 +18,7 @@ pub const ANVIL_WS_URL: &str = "ws://localhost:8545";
 
 /// Service Manager contract address
 pub async fn get_service_manager_address(rpc_url: String) -> Address {
-    let provider = get_provider(ANVIL_HTTP_URL);
+    let provider = get_provider(&rpc_url);
     let contracts_registry = ContractsRegistry::new(CONTRACTS_REGISTRY, provider);
 
     let val = contracts_registry

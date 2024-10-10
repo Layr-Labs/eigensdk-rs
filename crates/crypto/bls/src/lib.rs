@@ -19,10 +19,6 @@ use eigen_utils::iblssignaturechecker::BN254::{
     G1Point as G1PointChecker, G2Point as G2PointChecker,
 };
 use eigen_utils::registrycoordinator::BN254::{G1Point, G2Point};
-use eigen_utils::{
-    blsapkregistry::BLSApkRegistry,
-    registrycoordinator::RegistryCoordinator::{self},
-};
 use serde::de::{self, Visitor};
 use serde::{Deserialize, Serialize};
 pub type PrivateKey = Fr;

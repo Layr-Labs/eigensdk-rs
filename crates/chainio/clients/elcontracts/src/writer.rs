@@ -7,7 +7,7 @@ use eigen_utils::{
     {
         delegationmanager::{
             DelegationManager::{self},
-            IDelegationManager::{self, OperatorDetails},
+            IDelegationManager::OperatorDetails,
         },
         erc20::ERC20,
         strategymanager::StrategyManager,
@@ -87,7 +87,7 @@ impl ELChainWriter {
         let receipt = binding_tx
             .get_receipt()
             .await
-            .map_err(|e| ElContractsError::AlloyPendingTransactionError((e)))?;
+            .map_err(ElContractsError::AlloyPendingTransactionError)?;
 
         let tx_status = receipt.status();
         let hash = receipt.transaction_hash;

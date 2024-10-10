@@ -10,7 +10,6 @@ license-file.workspace = true
 
 [dependencies]
 alloy.workspace = true
-alloy-contract.workspace = true
 alloy-primitives.workspace = true
 eigen-logging.workspace = true
 eigen-types.workspace = true
