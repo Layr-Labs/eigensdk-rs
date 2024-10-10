@@ -1,4 +1,4 @@
-use alloy_contract::Error as AlloyError;
+use alloy::contract::Error as AlloyError;
 use jsonwebtoken::errors::Error;
 use reqwest::header::InvalidHeaderValue;
 use reqwest::Error as ReqwestError;

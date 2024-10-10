@@ -8,13 +8,7 @@ repository.workspace = true
 license-file.workspace = true
 
 [dependencies]
-alloy-eips.workspace = true
-alloy-network.workspace = true
-alloy-primitives.workspace = true
-alloy-provider.workspace = true
-alloy-rpc-types-eth.workspace = true
-alloy-signer-local.workspace = true
-alloy-transport-http.workspace = true
+alloy.workspace = true
 eigen-logging.workspace = true
 eigen-signer.workspace = true
 k256.workspace = true
@@ -22,6 +16,7 @@ reqwest.workspace = true
 thiserror.workspace = true
 
 [dev-dependencies]
+alloy-primitives.workspace = true
 alloy-consensus.workspace = true
 alloy-node-bindings.workspace = true
 once_cell.workspace = true

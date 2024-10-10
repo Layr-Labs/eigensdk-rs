@@ -7,19 +7,19 @@ use eigen_crypto_bls::{
     alloy_g1_point_to_g1_affine, convert_to_g1_point, convert_to_g2_point, BlsKeyPair,
 };
 use eigen_logging::logger::SharedLogger;
-use eigen_utils::binding::RegistryCoordinator::{
-    self, G1Point as RegistryG1Point, G2Point as RegistryG2Point, PubkeyRegistrationParams,
+use eigen_utils::registrycoordinator::{
+    IBLSApkRegistry::PubkeyRegistrationParams, ISignatureUtils::SignatureWithSaltAndExpiry,
+    RegistryCoordinator, BN254::G1Point as RegistryG1Point, BN254::G2Point as RegistryG2Point,
 };
 use eigen_utils::{
-    binding::{ServiceManagerBase, StakeRegistry},
     get_provider, get_signer,
+    {servicemanagerbase::ServiceManagerBase, stakeregistry::StakeRegistry},
 };
 use std::str::FromStr;
 use tracing::info;
-use RegistryCoordinator::SignatureWithSaltAndExpiry;
 
 /// Gas limit for registerOperator in [`RegistryCoordinator`]
-pub const GAS_LIMIT_REGISTER_OPERATOR_REGISTRY_COORDINATOR: u128 = 2000000;
+pub const GAS_LIMIT_REGISTER_OPERATOR_REGISTRY_COORDINATOR: u64 = 2000000;
 
 /// AvsRegistry Writer
 #[derive(Debug)]
@@ -142,7 +142,7 @@ impl AvsRegistryChainWriter {
         quorum_numbers: Bytes,
         socket: String,
     ) -> Result<TxHash, AvsRegistryError> {
-        let provider = get_signer(self.signer.clone(), &self.provider);
+        let provider = get_signer(&self.signer.clone(), &self.provider);
         let wallet = PrivateKeySigner::from_str(&self.signer)
             .map_err(|_| AvsRegistryError::InvalidPrivateKey)?;
 
@@ -247,7 +247,7 @@ impl AvsRegistryChainWriter {
         quorum_number: Bytes,
     ) -> Result<TxHash, AvsRegistryError> {
         info!(quorum_numbers = %quorum_number, "updating stakes for entire operator set");
-        let provider = get_signer(self.signer.clone(), &self.provider);
+        let provider = get_signer(&self.signer.clone(), &self.provider);
         let contract_registry_coordinator =
             RegistryCoordinator::new(self.registry_coordinator_addr, provider);
         let contract_call = contract_registry_coordinator
@@ -279,7 +279,7 @@ impl AvsRegistryChainWriter {
     ) -> Result<TxHash, AvsRegistryError> {
         info!(operators = ?operators, "updating stakes of operator subset for all quorums");
 
-        let provider = get_signer(self.signer.clone(), &self.provider);
+        let provider = get_signer(&self.signer.clone(), &self.provider);
 
         let contract_registry_coordinator =
             RegistryCoordinator::new(self.registry_coordinator_addr, provider);
@@ -311,7 +311,7 @@ impl AvsRegistryChainWriter {
         quorum_numbers: Bytes,
     ) -> Result<TxHash, AvsRegistryError> {
         info!("deregistering operator with the AVS's registry coordinator");
-        let provider = get_signer(self.signer.clone(), &self.provider);
+        let provider = get_signer(&self.signer.clone(), &self.provider);
 
         let contract_registry_coordinator =
             RegistryCoordinator::new(self.registry_coordinator_addr, provider);

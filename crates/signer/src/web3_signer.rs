@@ -1,8 +1,8 @@
-use alloy_consensus::{SignableTransaction, TxLegacy};
-use alloy_network::TxSigner;
-use alloy_primitives::{Address, Bytes, TxKind, U256};
-use alloy_rpc_client::{ClientBuilder, ReqwestClient, RpcCall};
-use alloy_signer::Signature;
+use alloy::consensus::{SignableTransaction, TxLegacy};
+use alloy::network::TxSigner;
+use alloy::primitives::{Address, Bytes, TxKind, U256};
+use alloy::rpc::client::{ClientBuilder, ReqwestClient, RpcCall};
+use alloy::signers::Signature;
 use async_trait::async_trait;
 use serde::Serialize;
 use url::Url;
@@ -51,7 +51,7 @@ impl TxSigner<Signature> for Web3Signer {
     async fn sign_transaction(
         &self,
         tx: &mut dyn SignableTransaction<Signature>,
-    ) -> alloy_signer::Result<Signature> {
+    ) -> alloy::signers::Result<Signature> {
         let params = SignTransactionParams {
             from: self.address.to_string(),
             to: tx.to(),
@@ -64,10 +64,10 @@ impl TxSigner<Signature> for Web3Signer {
 
         let request: RpcCall<_, Vec<SignTransactionParams>, Bytes> =
             self.client.request("eth_signTransaction", vec![params]);
-        let rlp_encoded_signed_tx = request.await.map_err(alloy_signer::Error::other)?;
+        let rlp_encoded_signed_tx = request.await.map_err(alloy::signers::Error::other)?;
 
         let signed_tx = TxLegacy::decode_signed_fields(&mut rlp_encoded_signed_tx.as_ref())
-            .map_err(alloy_signer::Error::other)?;
+            .map_err(alloy::signers::Error::other)?;
 
         Ok(*signed_tx.signature())
     }
