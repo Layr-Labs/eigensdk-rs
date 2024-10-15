@@ -325,6 +325,24 @@ mod tests {
         )
     }
 
+    async fn new_test_writer(http_endpoint: String) -> ELChainWriter {
+        let (el_chain_reader, _) = setup_el_chain_reader(http_endpoint.clone()).await;
+        let operator_addr = Address::from_str("90F79bf6EB2c4f870365E785982E1f101E93b906").unwrap();
+        let operator_private_key =
+            "7c852118294e51e653712a81e05800f419141751be58f605c371e15141b007a6".to_string();
+        let strategy_manager = get_strategy_manager_address(http_endpoint.clone()).await;
+        let rewards_coordinator = get_rewards_coordinator_address(http_endpoint.clone()).await;
+
+        ELChainWriter::new(
+            operator_addr,
+            strategy_manager,
+            rewards_coordinator,
+            el_chain_reader,
+            http_endpoint.clone(),
+            operator_private_key,
+        )
+    }
+
     #[tokio::test]
     async fn test_register_operator() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
@@ -361,25 +379,11 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn test_chain_writer() {
+    async fn test_register_and_update_operator() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
         let provider = get_provider(&http_endpoint);
 
-        let (el_chain_reader, _) = setup_el_chain_reader(http_endpoint.clone()).await;
-        let operator_addr = Address::from_str("90F79bf6EB2c4f870365E785982E1f101E93b906").unwrap();
-        let operator_private_key =
-            "7c852118294e51e653712a81e05800f419141751be58f605c371e15141b007a6".to_string();
-        let strategy_manager = get_strategy_manager_address(http_endpoint.clone()).await;
-        let rewards_coordinator = get_rewards_coordinator_address(http_endpoint.clone()).await;
-
-        let el_chain_writer = ELChainWriter::new(
-            operator_addr,
-            strategy_manager,
-            rewards_coordinator,
-            el_chain_reader,
-            http_endpoint.clone(),
-            operator_private_key,
-        );
+        let el_chain_writer = new_test_writer(http_endpoint.clone()).await;
 
         // define an operator
         let wallet = PrivateKeySigner::from_str(
@@ -429,8 +433,15 @@ mod tests {
         tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
         let receipt = provider.get_transaction_receipt(tx_hash).await.unwrap();
         assert!(receipt.unwrap().status());
+    }
 
-        // Third test: deposit_erc20_into_strategy
+    #[tokio::test]
+    async fn test_deposit_erc20_into_strategy() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let provider = get_provider(&http_endpoint);
+
+        let el_chain_writer = new_test_writer(http_endpoint.clone()).await;
+
         let amount = U256::from_str("100").unwrap();
         let strategy_addr = get_erc20_mock_strategy(http_endpoint).await;
         let tx_hash = el_chain_writer
@@ -446,25 +457,10 @@ mod tests {
 
     #[tokio::test]
     async fn test_set_claimer_for() {
-        // TODO: refactor test_chain_writer
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
         let provider = get_provider(&http_endpoint);
 
-        let (el_chain_reader, _) = setup_el_chain_reader(http_endpoint.clone()).await;
-        let operator_addr = Address::from_str("90F79bf6EB2c4f870365E785982E1f101E93b906").unwrap();
-        let operator_private_key =
-            "7c852118294e51e653712a81e05800f419141751be58f605c371e15141b007a6".to_string();
-        let strategy_manager = get_strategy_manager_address(http_endpoint.clone()).await;
-        let rewards_coordinator = get_rewards_coordinator_address(http_endpoint.clone()).await;
-
-        let el_chain_writer = ELChainWriter::new(
-            operator_addr,
-            strategy_manager,
-            rewards_coordinator,
-            el_chain_reader,
-            http_endpoint.clone(),
-            operator_private_key,
-        );
+        let el_chain_writer = new_test_writer(http_endpoint.clone()).await;
 
         let claimer = address!("5eb15C0992734B5e77c888D713b4FC67b3D679A2");
 
