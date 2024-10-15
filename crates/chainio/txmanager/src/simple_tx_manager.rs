@@ -294,29 +294,24 @@ mod tests {
     use alloy::consensus::TxLegacy;
     use alloy::network::TransactionBuilder;
     use alloy::rpc::types::eth::TransactionRequest;
-    use alloy_node_bindings::Anvil;
-    use alloy_primitives::{bytes, TxKind::Call, U256};
+    use alloy_primitives::{address, bytes, TxKind::Call, U256};
     use eigen_logging::get_test_logger;
+    use eigen_testing_utils::anvil::start_anvil_container;
     use tokio;
 
     const PRIVATE_KEY: &str = "dcf2cbdd171a21c480aa7f53d77f31bb102282b3ff099c78e3118b37348c72f7";
 
     #[tokio::test]
     async fn test_send_transaction_from_legacy() {
-        // Spin up a local Anvil node.
-        // Ensure `anvil` is available in $PATH.
-        let anvil = Anvil::new().try_spawn().unwrap();
-        let rpc_url: String = anvil.endpoint().parse().unwrap();
-
-        // Create a provider.
+        let (_container, rpc_url, _ws_endpoint) = start_anvil_container().await;
         let logger = get_test_logger();
 
         let simple_tx_manager =
             SimpleTxManager::new(logger, 1.0, PRIVATE_KEY, rpc_url.as_str()).unwrap();
 
         // Create two users, Alice and Bob.
-        let _alice = anvil.addresses()[0];
-        let bob = anvil.addresses()[1];
+        let _alice = address!("f39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+        let bob = address!("70997970C51812dc3A010C7d01b50e0d17dc79C8");
 
         // Test 1: legacy tx
         let tx = TxLegacy {
@@ -340,24 +335,20 @@ mod tests {
 
     #[tokio::test]
     async fn test_send_transaction_from_eip1559() {
-        // Spin up a local Anvil node.
-        // Ensure `anvil` is available in $PATH.
-        let anvil = Anvil::new().try_spawn().unwrap();
-        let rpc_url: String = anvil.endpoint().parse().unwrap();
-
-        // Create a provider.
+        let (_container, rpc_url, _ws_endpoint) = start_anvil_container().await;
         let logger = get_test_logger();
+
         let simple_tx_manager =
             SimpleTxManager::new(logger, 1.0, PRIVATE_KEY, rpc_url.as_str()).unwrap();
 
         // Create two users, Alice and Bob.
-        let _alice = anvil.addresses()[0];
-        let bob = anvil.addresses()[1];
+        let _alice = address!("f39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+        let bob = address!("70997970C51812dc3A010C7d01b50e0d17dc79C8");
 
         let mut tx = TransactionRequest::default()
             .with_to(bob)
             .with_nonce(0)
-            .with_chain_id(anvil.chain_id())
+            .with_chain_id(31337)
             .with_value(U256::from(100))
             .with_gas_limit(21_000)
             .with_max_priority_fee_per_gas(1_000_000_000)
