@@ -258,7 +258,7 @@ mod tests {
     use super::ELChainWriter;
     use crate::reader::ELChainReader;
     use alloy::providers::Provider;
-    use alloy_primitives::{address, Address, U256};
+    use alloy_primitives::{address, Address, FixedBytes, U256};
     use alloy_signer_local::PrivateKeySigner;
     use anvil_constants::CONTRACTS_REGISTRY;
     use eigen_logging::get_test_logger;
@@ -272,12 +272,11 @@ mod tests {
     };
     use eigen_types::operator::Operator;
     use eigen_utils::{
+        contractsregistry::ContractsRegistry::{self, get_test_valuesReturn},
+        delegationmanager::DelegationManager,
         get_provider,
-        {
-            contractsregistry::ContractsRegistry::{self, get_test_valuesReturn},
-            delegationmanager::DelegationManager,
-            mockavsservicemanager::MockAvsServiceManager,
-        },
+        irewardscoordinator::IRewardsCoordinator::{EarnerTreeMerkleLeaf, RewardsMerkleClaim},
+        mockavsservicemanager::MockAvsServiceManager,
     };
     use std::str::FromStr;
 
@@ -459,12 +458,42 @@ mod tests {
     async fn test_set_claimer_for() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
         let provider = get_provider(&http_endpoint);
-
         let el_chain_writer = new_test_writer(http_endpoint.clone()).await;
 
         let claimer = address!("5eb15C0992734B5e77c888D713b4FC67b3D679A2");
 
         let tx_hash = el_chain_writer.set_claimer_for(claimer).await.unwrap();
+
+        // this sleep is needed so that we wait for the tx to be processed
+        tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
+        let receipt = provider.get_transaction_receipt(tx_hash).await.unwrap();
+        assert!(receipt.unwrap().status());
+    }
+
+    #[tokio::test]
+    async fn test_process_claim() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let provider = get_provider(&http_endpoint);
+        let el_chain_writer = new_test_writer(http_endpoint.clone()).await;
+
+        let earner_address = address!("5eb15C0992734B5e77c888D713b4FC67b3D679A2");
+        let claim = RewardsMerkleClaim {
+            rootIndex: 0,
+            earnerIndex: 0,
+            earnerTreeProof: vec![].into(),
+            earnerLeaf: EarnerTreeMerkleLeaf {
+                earner: address!("5eb15C0992734B5e77c888D713b4FC67b3D679A2"),
+                earnerTokenRoot: FixedBytes::from([0; 32]),
+            },
+            tokenIndices: vec![],
+            tokenTreeProofs: vec![],
+            tokenLeaves: vec![],
+        };
+
+        let tx_hash = el_chain_writer
+            .process_claim(earner_address, claim)
+            .await
+            .unwrap();
 
         // this sleep is needed so that we wait for the tx to be processed
         tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
