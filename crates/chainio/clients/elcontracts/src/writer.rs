@@ -3,16 +3,14 @@ use crate::reader::ELChainReader;
 use alloy_primitives::{Address, FixedBytes, TxHash, U256};
 pub use eigen_types::operator::Operator;
 use eigen_utils::{
-    get_signer,
-    {
-        delegationmanager::{
-            DelegationManager::{self},
-            IDelegationManager::OperatorDetails,
-        },
-        erc20::ERC20,
-        irewardscoordinator::IRewardsCoordinator,
-        strategymanager::StrategyManager,
+    delegationmanager::{
+        DelegationManager::{self},
+        IDelegationManager::OperatorDetails,
     },
+    erc20::ERC20,
+    get_signer,
+    irewardscoordinator::IRewardsCoordinator::{self, RewardsMerkleClaim},
+    strategymanager::StrategyManager,
 };
 
 use tracing::info;
@@ -203,7 +201,7 @@ impl ELChainWriter {
     ///
     /// # Returns
     ///
-    /// * `FixedBytes<32>` - The transaction hash if successful, otherwise an error
+    /// * `FixedBytes<32>` - The transaction hash if the operation is sent, otherwise an error
     ///
     /// # Errors
     ///
@@ -220,6 +218,37 @@ impl ELChainWriter {
         let set_claimer_for_call = contract_rewards_coordinator.setClaimerFor(claimer);
 
         let tx = set_claimer_for_call.send().await?;
+        Ok(*tx.tx_hash())
+    }
+
+    /// Process a claim for rewards to a given address.
+    /// This function interacts with the RewardsCoordinator contract to execute the claim operation for a given address.
+    ///
+    /// # Arguments
+    ///
+    /// * `earnerAddress` - The address of the earner for whom to process the claim.
+    /// * `claim` - The RewardsMerkleClaim object containing the claim.
+    ///
+    /// # Returns
+    ///
+    /// * `Result<FixedBytes<32>, ElContractsError>` - The transaction hash if the claim is sent, otherwise an error.
+    ///
+    /// # Errors
+    ///
+    /// * `ElContractsError` - if the call to the contract fails.
+    pub async fn process_claim(
+        &self,
+        earner_address: Address,
+        claim: RewardsMerkleClaim,
+    ) -> Result<FixedBytes<32>, ElContractsError> {
+        let provider = get_signer(&self.signer, &self.provider);
+
+        let contract_rewards_coordinator =
+            IRewardsCoordinator::new(self.rewards_coordinator, &provider);
+
+        let process_claim_call = contract_rewards_coordinator.processClaim(claim, earner_address);
+
+        let tx = process_claim_call.send().await?;
         Ok(*tx.tx_hash())
     }
 }
