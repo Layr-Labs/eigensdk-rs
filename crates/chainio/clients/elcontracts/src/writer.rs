@@ -3,12 +3,18 @@ use crate::reader::ELChainReader;
 use alloy_primitives::{Address, FixedBytes, TxHash, U256};
 pub use eigen_types::operator::Operator;
 use eigen_utils::{
-    binding::{DelegationManager, StrategyManager, IERC20},
     get_signer,
+    {
+        delegationmanager::{
+            DelegationManager::{self},
+            IDelegationManager::OperatorDetails,
+        },
+        erc20::ERC20,
+        strategymanager::StrategyManager,
+    },
 };
 
 use tracing::info;
-use DelegationManager::OperatorDetails;
 
 /// Gas limit for registerAsOperator in [`DelegationManager`]
 pub const GAS_LIMIT_REGISTER_AS_OPERATOR_DELEGATION_MANAGER: u128 = 300000;
@@ -59,11 +65,11 @@ impl ELChainWriter {
     ) -> Result<FixedBytes<32>, ElContractsError> {
         info!("registering operator {:?} to EigenLayer", operator.address);
         let op_details = OperatorDetails {
-            earningsReceiver: operator.earnings_receiver_address,
+            __deprecated_earningsReceiver: operator.earnings_receiver_address,
             delegationApprover: operator.delegation_approver_address,
             stakerOptOutWindowBlocks: operator.staker_opt_out_window_blocks,
         };
-        let provider = get_signer(self.signer.clone(), &self.provider);
+        let provider = get_signer(&self.signer.clone(), &self.provider);
 
         let contract_delegation_manager = DelegationManager::new(self.delegation_manager, provider);
 
@@ -78,9 +84,10 @@ impl ELChainWriter {
             .await
             .map_err(ElContractsError::AlloyContractError)?;
 
-        let receipt = binding_tx.get_receipt().await.map_err(|e| {
-            ElContractsError::AlloyContractError(alloy_contract::Error::TransportError(e))
-        })?;
+        let receipt = binding_tx
+            .get_receipt()
+            .await
+            .map_err(ElContractsError::AlloyPendingTransactionError)?;
 
         let tx_status = receipt.status();
         let hash = receipt.transaction_hash;
@@ -114,11 +121,11 @@ impl ELChainWriter {
             operator.address
         );
         let operator_details = OperatorDetails {
-            earningsReceiver: operator.earnings_receiver_address,
+            __deprecated_earningsReceiver: operator.earnings_receiver_address,
             delegationApprover: operator.delegation_approver_address,
             stakerOptOutWindowBlocks: operator.staker_opt_out_window_blocks,
         };
-        let provider = get_signer(self.signer.clone(), &self.provider);
+        let provider = get_signer(&self.signer.clone(), &self.provider);
 
         let contract_delegation_manager = DelegationManager::new(self.delegation_manager, provider);
 
@@ -165,9 +172,9 @@ impl ELChainWriter {
             .get_strategy_and_underlying_erc20_token(strategy_addr)
             .await?;
         let (_, underlying_token_contract, underlying_token) = tokens;
-        let provider = get_signer(self.signer.clone(), &self.provider);
+        let provider = get_signer(&self.signer.clone(), &self.provider);
 
-        let contract_underlying_token = IERC20::new(underlying_token_contract, &provider);
+        let contract_underlying_token = ERC20::new(underlying_token_contract, &provider);
 
         let contract_call = contract_underlying_token.approve(self.strategy_manager, amount);
 
@@ -189,8 +196,8 @@ impl ELChainWriter {
 mod tests {
     use super::ELChainWriter;
     use crate::reader::ELChainReader;
+    use alloy::providers::Provider;
     use alloy_primitives::{Address, U256};
-    use alloy_provider::Provider;
     use alloy_signer_local::PrivateKeySigner;
     use anvil_constants::CONTRACTS_REGISTRY;
     use eigen_logging::get_test_logger;
@@ -203,12 +210,12 @@ mod tests {
     };
     use eigen_types::operator::Operator;
     use eigen_utils::{
-        binding::{
-            mockAvsServiceManager,
-            ContractsRegistry::{self, get_test_valuesReturn},
-            DelegationManager,
-        },
         get_provider,
+        {
+            contractsregistry::ContractsRegistry::{self, get_test_valuesReturn},
+            delegationmanager::DelegationManager,
+            mockavsservicemanager::MockAvsServiceManager,
+        },
     };
     use std::str::FromStr;
 
@@ -230,7 +237,7 @@ mod tests {
         } = slasher_address_return;
 
         let service_manager_address = get_service_manager_address(http_endpoint.clone()).await;
-        let service_manager_contract = mockAvsServiceManager::new(
+        let service_manager_contract = MockAvsServiceManager::new(
             service_manager_address,
             get_provider(http_endpoint.as_str()),
         );
@@ -240,7 +247,7 @@ mod tests {
             .await
             .unwrap();
 
-        let mockAvsServiceManager::avsDirectoryReturn {
+        let MockAvsServiceManager::avsDirectoryReturn {
             _0: avs_directory_address,
         } = avs_directory_address_return;
 

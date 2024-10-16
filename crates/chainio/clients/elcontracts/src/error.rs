@@ -1,6 +1,6 @@
-use alloy_contract::Error as AlloyError;
+use alloy::contract::Error as AlloyError;
+use alloy::providers::PendingTransactionError;
 use thiserror::Error;
-
 #[derive(Debug, Error)]
 pub enum ElContractsError {
     /// Get slasher address
@@ -69,4 +69,7 @@ pub enum ElContractsError {
 
     #[error("Alloy contract error: {0}")]
     AlloyContractError(#[from] AlloyError),
+
+    #[error("Alloy pending Transaction error {0}")]
+    AlloyPendingTransactionError(#[from] PendingTransactionError),
 }

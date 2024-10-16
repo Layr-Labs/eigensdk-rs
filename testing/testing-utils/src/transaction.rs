@@ -1,8 +1,7 @@
+use alloy::providers::Provider;
 use alloy_primitives::FixedBytes;
-use alloy_provider::Provider;
 use eigen_utils::get_provider;
 use tokio::time::{sleep, Duration};
-
 /// Retrieves the status of a transaction from its hash.
 ///
 /// # Arguments

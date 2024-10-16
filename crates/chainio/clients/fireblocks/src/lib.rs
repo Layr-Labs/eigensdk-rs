@@ -17,10 +17,10 @@ pub mod transaction;
 use std::collections::HashMap;
 use std::str::FromStr;
 
+use alloy::providers::Provider;
+use alloy::rpc::types::transaction::TransactionReceipt;
 use alloy_primitives::Address;
 use alloy_primitives::U64;
-use alloy_provider::Provider;
-use alloy_rpc_types::transaction::TransactionReceipt;
 use client::{Client, ASSET_ID_BY_CHAIN};
 use eigen_utils::get_provider;
 use error::FireBlockError;
@@ -54,7 +54,7 @@ impl FireblocksWallet {
     ) -> Result<FireblocksWallet, error::FireBlockError> {
         let provider_ = get_provider(&provider);
         let chain_id = provider_.get_chain_id().await.map_err(|e| {
-            FireBlockError::AlloyContractError(alloy_contract::Error::TransportError(e))
+            FireBlockError::AlloyContractError(alloy::contract::Error::TransportError(e))
         })?;
 
         Ok(Self {
@@ -197,7 +197,7 @@ impl FireblocksWallet {
                     .map_err(|e| FireBlockError::OtherError(e.to_string()))?;
 
                 let tx_hash = provider.get_transaction_receipt(hash).await.map_err(|e| {
-                    FireBlockError::AlloyContractError(alloy_contract::Error::TransportError(e))
+                    FireBlockError::AlloyContractError(alloy::contract::Error::TransportError(e))
                 })?;
 
                 let tx =

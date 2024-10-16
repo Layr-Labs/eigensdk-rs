@@ -1,6 +1,6 @@
+use alloy::providers::Provider;
+use alloy::rpc::types::Filter;
 use alloy_primitives::{Address, FixedBytes};
-use alloy_provider::Provider;
-use alloy_rpc_types::Filter;
 use anyhow::Result;
 use async_trait::async_trait;
 use eigen_client_avsregistry::reader::AvsRegistryChainReader;
@@ -11,7 +11,10 @@ use eigen_crypto_bls::{
 use eigen_logging::logger::SharedLogger;
 use eigen_types::operator::{operator_id_from_g1_pub_key, OperatorPubKeys};
 use eigen_utils::{
-    binding::BLSApkRegistry::{self, G1Point, G2Point},
+    blsapkregistry::{
+        BLSApkRegistry,
+        BN254::{G1Point, G2Point},
+    },
     get_ws_provider, NEW_PUBKEY_REGISTRATION_EVENT,
 };
 use futures_util::StreamExt;

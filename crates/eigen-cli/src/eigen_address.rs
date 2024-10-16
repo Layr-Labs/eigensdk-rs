@@ -1,10 +1,13 @@
 use crate::EigenAddressCliError;
-use alloy_contract::Error as ContractError;
-use alloy_primitives::Address;
-use alloy_provider::Provider;
+use alloy::contract::Error as ContractError;
+use alloy::primitives::Address;
+use alloy::providers::Provider;
 use eigen_utils::{
-    binding::{DelegationManager, IBLSSignatureChecker, RegistryCoordinator},
     get_provider,
+    {
+        delegationmanager::DelegationManager, iblssignaturechecker::IBLSSignatureChecker,
+        registrycoordinator::RegistryCoordinator,
+    },
 };
 use serde::{Deserialize, Serialize};
 
@@ -112,9 +115,9 @@ impl ContractAddresses {
         client: P,
     ) -> Result<(Address, Address), EigenAddressCliError>
     where
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
+        T: alloy::contract::private::Transport + ::core::clone::Clone,
+        P: alloy::contract::private::Provider<T, N>,
+        N: alloy::contract::private::Network,
     {
         match (registry_coordinator, service_manager) {
             (Some(registry_coord_addr), _) => {
@@ -156,9 +159,9 @@ impl ContractAddresses {
         client: P,
     ) -> Result<EigenLayerAddresses, ContractError>
     where
-        P: alloy_contract::private::Provider<T, N>,
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        N: alloy_contract::private::Network,
+        P: alloy::contract::private::Provider<T, N>,
+        T: alloy::contract::private::Transport + ::core::clone::Clone,
+        N: alloy::contract::private::Network,
     {
         let service_manager = IBLSSignatureChecker::new(service_manager_addr, &client);
         let delegation_manager = service_manager.delegation().call().await?._0;
@@ -188,9 +191,9 @@ impl ContractAddresses {
         client: P,
     ) -> Result<AvsAddresses, ContractError>
     where
-        P: alloy_contract::private::Provider<T, N>,
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        N: alloy_contract::private::Network,
+        P: alloy::contract::private::Provider<T, N>,
+        T: alloy::contract::private::Transport + ::core::clone::Clone,
+        N: alloy::contract::private::Network,
     {
         let registry_coordinator_instance = RegistryCoordinator::new(registry_coordinator, &client);
         let service_manager = registry_coordinator_instance
