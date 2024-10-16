@@ -297,7 +297,7 @@ mod tests {
     use eigen_testing_utils::anvil_constants::{
         get_avs_directory_address, get_delegation_manager_address,
         get_operator_state_retriever_address, get_registry_coordinator_address,
-        get_strategy_manager_address,
+        get_rewards_coordinator_address, get_strategy_manager_address,
     };
     use eigen_types::operator::Operator;
     use eigen_utils::get_provider;
@@ -473,6 +473,8 @@ mod tests {
             get_delegation_manager_address(http_endpoint.clone()).await;
         let avs_directory_address = get_avs_directory_address(http_endpoint.clone()).await;
         let strategy_manager_address = get_strategy_manager_address(http_endpoint.clone()).await;
+        let rewards_coordinator_address =
+            get_rewards_coordinator_address(http_endpoint.clone()).await;
         let el_chain_reader = ELChainReader::new(
             get_test_logger(),
             Address::ZERO,
@@ -485,6 +487,7 @@ mod tests {
         let el_chain_writer = ELChainWriter::new(
             delegation_manager_address,
             strategy_manager_address,
+            rewards_coordinator_address,
             el_chain_reader,
             http_endpoint.to_string(),
             pvt_key.to_string(),

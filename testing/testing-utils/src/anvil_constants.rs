@@ -135,3 +135,18 @@ pub async fn get_proxy_admin(rpc_url: String) -> Address {
 
     address
 }
+
+/// Avs Directory contract address
+pub async fn get_rewards_coordinator_address(rpc_url: String) -> Address {
+    let contracts_registry = ContractsRegistry::new(CONTRACTS_REGISTRY, get_provider(&rpc_url));
+
+    let val = contracts_registry
+        .contracts("rewardsCoordinator".to_string())
+        .call()
+        .await
+        .unwrap();
+
+    let contractsReturn { _0: address } = val;
+
+    address
+}
