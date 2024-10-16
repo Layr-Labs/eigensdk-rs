@@ -24,7 +24,7 @@ pub fn bitmap_to_quorum_ids(quorum_bitmaps: U256) -> Vec<u8> {
 }
 
 pub fn bitmap_to_quorum_ids_from_u192(quorum_bitmaps: U192) -> Vec<u8> {
-    let bytes = quorum_bitmaps.to_be_bytes::<32>();
+    let bytes = quorum_bitmaps.to_be_bytes::<24>();
 
     let mut quorum_ids: Vec<u8> = Vec::with_capacity(usize::from(MAX_NUMBER_OF_QUORUMS));
 
