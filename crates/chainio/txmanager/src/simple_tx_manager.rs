@@ -299,28 +299,26 @@ mod tests {
     use eigen_logging::get_test_logger;
     use tokio;
 
-    const PRIVATE_KEY: &str = "dcf2cbdd171a21c480aa7f53d77f31bb102282b3ff099c78e3118b37348c72f7";
-
     #[tokio::test]
     async fn test_send_transaction_from_legacy() {
-        // Spin up a local Anvil node.
-        // Ensure `anvil` is available in $PATH.
         let anvil = Anvil::new().try_spawn().unwrap();
         let rpc_url: String = anvil.endpoint().parse().unwrap();
-
-        // Create a provider.
         let logger = get_test_logger();
 
-        let simple_tx_manager =
-            SimpleTxManager::new(logger, 1.0, PRIVATE_KEY, rpc_url.as_str()).unwrap();
+        let private_key = anvil.keys().first().unwrap();
+        let simple_tx_manager = SimpleTxManager::new(
+            logger,
+            1.0,
+            private_key.as_scalar_primitive().to_string().as_str(),
+            rpc_url.as_str(),
+        )
+        .unwrap();
 
-        // Create two users, Alice and Bob.
-        let _alice = anvil.addresses()[0];
-        let bob = anvil.addresses()[1];
+        let addresses = anvil.addresses().to_vec();
+        let to = addresses.first().cloned().unwrap();
 
-        // Test 1: legacy tx
         let tx = TxLegacy {
-            to: Call(bob),
+            to: Call(to),
             value: U256::from(1_000_000_000),
             gas_limit: 2_000_000,
             nonce: 0,
@@ -330,34 +328,36 @@ mod tests {
         };
 
         let mut tx_request: TransactionRequest = tx.clone().into();
-        //// send transaction and wait for receipt
+        // send transaction and wait for receipt
         let receipt = simple_tx_manager.send_tx(&mut tx_request).await.unwrap();
         let block_number = receipt.block_number.unwrap();
         println!("Transaction mined in block: {}", block_number);
         assert!(block_number > 0);
-        assert_eq!(receipt.to, Some(bob));
+        assert_eq!(receipt.to, Some(to));
     }
 
     #[tokio::test]
     async fn test_send_transaction_from_eip1559() {
-        // Spin up a local Anvil node.
-        // Ensure `anvil` is available in $PATH.
         let anvil = Anvil::new().try_spawn().unwrap();
         let rpc_url: String = anvil.endpoint().parse().unwrap();
-
-        // Create a provider.
         let logger = get_test_logger();
-        let simple_tx_manager =
-            SimpleTxManager::new(logger, 1.0, PRIVATE_KEY, rpc_url.as_str()).unwrap();
 
-        // Create two users, Alice and Bob.
-        let _alice = anvil.addresses()[0];
-        let bob = anvil.addresses()[1];
+        let private_key = anvil.keys().first().unwrap();
+        let simple_tx_manager = SimpleTxManager::new(
+            logger,
+            1.0,
+            private_key.as_scalar_primitive().to_string().as_str(),
+            rpc_url.as_str(),
+        )
+        .unwrap();
+
+        let addresses = anvil.addresses().to_vec();
+        let to = addresses.first().cloned().unwrap();
 
         let mut tx = TransactionRequest::default()
-            .with_to(bob)
+            .with_to(to)
             .with_nonce(0)
-            .with_chain_id(anvil.chain_id())
+            .with_chain_id(31337)
             .with_value(U256::from(100))
             .with_gas_limit(21_000)
             .with_max_priority_fee_per_gas(1_000_000_000)
@@ -369,6 +369,6 @@ mod tests {
         let block_number = receipt.block_number.unwrap();
         println!("Transaction mined in block: {}", block_number);
         assert!(block_number > 0);
-        assert_eq!(receipt.to, Some(bob));
+        assert_eq!(receipt.to, Some(to));
     }
 }
