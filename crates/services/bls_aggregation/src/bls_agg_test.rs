@@ -1,8 +1,8 @@
 #[cfg(test)]
 pub mod integration_test {
     use crate::bls_agg::{BlsAggregationServiceResponse, BlsAggregatorService};
-    use alloy_primitives::{hex, Bytes, FixedBytes, B256, U256};
-    use alloy_provider::Provider;
+    use alloy::providers::Provider;
+    use alloy_primitives::{aliases::U96, hex, Bytes, FixedBytes, B256, U256};
     use eigen_client_avsregistry::{
         reader::AvsRegistryChainReader, writer::AvsRegistryChainWriter,
     };
@@ -26,11 +26,17 @@ pub mod integration_test {
         operator::{QuorumNum, QuorumThresholdPercentages},
     };
     use eigen_utils::{
-        binding::{
-            IBLSSignatureChecker::{self, G1Point, NonSignerStakesAndSignature},
-            RegistryCoordinator::{self, OperatorSetParam, StrategyParams},
-        },
         get_provider, get_signer,
+        {
+            iblssignaturechecker::{
+                IBLSSignatureChecker::{self, NonSignerStakesAndSignature},
+                BN254::G1Point,
+            },
+            registrycoordinator::{
+                IRegistryCoordinator::OperatorSetParam, IStakeRegistry::StrategyParams,
+                RegistryCoordinator,
+            },
+        },
     };
     use serde::Deserialize;
     use sha2::{Digest, Sha256};
@@ -147,7 +153,7 @@ pub mod integration_test {
         // Create quorum
         let contract_registry_coordinator = RegistryCoordinator::new(
             registry_coordinator_address,
-            get_signer(PRIVATE_KEY_1.to_string(), http_endpoint.as_str()),
+            get_signer(PRIVATE_KEY_1, http_endpoint.as_str()),
         );
         let operator_set_params = OperatorSetParam {
             maxOperatorCount: 10,
@@ -156,10 +162,10 @@ pub mod integration_test {
         };
         let strategy_params = StrategyParams {
             strategy: get_erc20_mock_strategy(http_endpoint.clone()).await,
-            multiplier: 1,
+            multiplier: U96::from(1),
         };
         let _ = contract_registry_coordinator
-            .createQuorum(operator_set_params, 0, vec![strategy_params])
+            .createQuorum(operator_set_params, U96::from(0), vec![strategy_params])
             .send()
             .await
             .unwrap();
@@ -262,7 +268,7 @@ pub mod integration_test {
 
         let contract_registry_coordinator = RegistryCoordinator::new(
             registry_coordinator_address,
-            get_signer(PRIVATE_KEY_1.to_string(), http_endpoint.as_str()),
+            get_signer(PRIVATE_KEY_1, http_endpoint.as_str()),
         );
 
         // Create quorum
@@ -273,10 +279,14 @@ pub mod integration_test {
         };
         let strategy_params = vec![StrategyParams {
             strategy: get_erc20_mock_strategy(http_endpoint.clone()).await,
-            multiplier: 1,
+            multiplier: U96::from(1),
         }];
         let _ = contract_registry_coordinator
-            .createQuorum(operator_set_params.clone(), 0, strategy_params.clone())
+            .createQuorum(
+                operator_set_params.clone(),
+                U96::from(0),
+                strategy_params.clone(),
+            )
             .send()
             .await
             .unwrap();
@@ -456,7 +466,7 @@ pub mod integration_test {
 
         let contract_registry_coordinator = RegistryCoordinator::new(
             registry_coordinator_address,
-            get_signer(PRIVATE_KEY_1.to_string(), http_endpoint.as_str()),
+            get_signer(PRIVATE_KEY_1, http_endpoint.as_str()),
         );
 
         // Create quorums
@@ -467,20 +477,28 @@ pub mod integration_test {
         };
         let strategy_params = vec![StrategyParams {
             strategy: get_erc20_mock_strategy(http_endpoint.clone()).await,
-            multiplier: 1,
+            multiplier: U96::from(1),
         }];
         let _ = contract_registry_coordinator
-            .createQuorum(operator_set_params.clone(), 0, strategy_params.clone())
+            .createQuorum(
+                operator_set_params.clone(),
+                U96::from(0),
+                strategy_params.clone(),
+            )
             .send()
             .await
             .unwrap();
         let _ = contract_registry_coordinator
-            .createQuorum(operator_set_params.clone(), 0, strategy_params.clone())
+            .createQuorum(
+                operator_set_params.clone(),
+                U96::from(0),
+                strategy_params.clone(),
+            )
             .send()
             .await
             .unwrap();
         let _ = contract_registry_coordinator
-            .createQuorum(operator_set_params, 0, strategy_params)
+            .createQuorum(operator_set_params, U96::from(0), strategy_params)
             .send()
             .await
             .unwrap();

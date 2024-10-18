@@ -8,11 +8,9 @@ description = "fireblocks support for eigenlayer"
 license-file.workspace = true
 
 [dependencies]
-alloy-contract.workspace = true
 #alloy
+alloy.workspace = true
 alloy-primitives.workspace = true
-alloy-provider.workspace = true
-alloy-rpc-types.workspace = true
 chrono = "0.4"
 
 #eigen

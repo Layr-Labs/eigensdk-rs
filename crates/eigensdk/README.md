@@ -1,23 +1,31 @@
-# eigen-rs
+# eigensdk-rs
 
-Rust <> EigenLayer developer tools
+eigensdk-rs is an initiative for rust developers to build AVSs on eigenlayer.
 
-![eigen-rs](https://github.com/user-attachments/assets/bf1d1090-db70-487a-a49a-40f727849251)
+## Installation
+
+ ```bash
+cargo install eigensdk --features full
+```
 
 ## Overview
 
-List of crates in the repository :-
+ List of crates in the repository :-
 
 - [eigen-client-avsregistry](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/chainio/clients/avsregistry) - Read, Write and subscribe methods for AvsRegistry
 - [eigen-client-elcontracts](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/chainio/clients/elcontracts) - Convenience methods to call Eigenlayer contracts
 - [eigen-contracts-bindings](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/contracts/bindings) - Generate ethers bindings for Eigen Layer.
-- [eigen-crypto-bls](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/crypto/bls) - bls utilities
-- [eigen-crypto-bn254](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/crypto/bn254) - bn254 utilities
-- [eigen-metrics](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/metrics) - performance , rpc and economic metrics
-- [eigen-services](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/services) - Spawn tokio services for operators info , bls aggregation
+- [eigen-crypto-bls](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/crypto/bls) - New bls key pair, sign message, conversion utilites between alloy and arkworks bn254.
+- [eigen-crypto-bn254](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/crypto/bn254) - verify message on G2, map to curve.
+- [eigen-metrics](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/metrics) - performance, rpc and economic metrics
+- [eigen-services](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/services) - Spawn tokio services for operators info, bls aggregation
 - [eigen-types](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/types) - Common types
 - [eigen-utils](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/utils) - Publicly exportable `m2-mainnet` compatible alloy bindings.
-- [eigen-testing-utils](https://github.com/Layr-Labs/eigensdk-rs/tree/main/testing/testing-utils) - Contains publicly exportable anvil , holesky , mainnet addresses for eigen contracts .
+- [eigen-testing-utils](https://github.com/Layr-Labs/eigensdk-rs/tree/main/testing/testing-utils) - Contains publicly exportable anvil, holesky, mainnet addresses for eigen contracts.
+- [eigen-chainio-txmanager](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/chainio/txmanager) - Simple transaction manager.
+- [eigen-cli](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/eigen-cli) - ECDSA, BLS keystore cli
+- [eigen-nodeapi](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/nodeapi) - NodeApi implementation for EigenLayer.
+- [eigen-logging](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/logging) - Logging utilities
 
 ## Examples
 
@@ -31,20 +39,26 @@ cargo run --example get_quorum_count
 
 ## Contributor Guidelines
 
-We are actively looking for contributors. Thank you for your interest. We have strict ci checks in place. In case of any questions and support , feel free to raise an issue.
+We are actively looking for contributors. Thank you for your interest. We have strict ci checks in place. In case of any questions and support, feel free to raise an issue.
 
 ### PR
 
-To test locally and raise a PR :-
+To test locally :-
 
-You need `foundry` , `docker` and `make` and `nightly rust` to successfully run it. Also, the `docker` engine has to be running for all the tests to execute correctly.
+You need `foundry`to successfully to run it.
 
 ```bash
-make pr
+cargo test
 ```
 
 At least 1 `approving` review is required to merge the PR.
   
+### lint
+
+```bash
+make lint
+```
+
 ### To run fireblocks tests
 
 Add the following variables to your env
@@ -59,8 +73,6 @@ Add the following variables to your env
 make fireblocks-tests
 
 ```
-
-Note: The tests were written using sandbox environment , you would need to modify the testing parameters according to your own asset id's , tx-id etc.
 
 ### Test Coverage
 
@@ -82,7 +94,7 @@ make coverage
 
 Open the coverage html report in a web browser:
 
-```bash
+```sh
 open target/llvm-cov/html/index.html
 ```
 
@@ -96,12 +108,12 @@ This software is `unaudited`.This is experimental software and is provided on an
 
 ## Credits
 
-- [Layer-labs](https://github.com/Layr-Labs/eigensdk-go/tree/master)
+- [eigensdk-go](https://github.com/Layr-Labs/eigensdk-go/tree/master)
 
 ## Security Bugs
 
 Please report security vulnerabilities to <security@eigenlabs.org>. Do NOT report security bugs via Github Issues.
 
-## Contact
+## Support
 
-Telegram - supernovahs444
+Join our [telegram](https://t.me/+0_kYjD7TTCRjMjZh) channel .

@@ -381,7 +381,7 @@ mod tests {
 
         // Test the /eigen/node route
         let resp = client
-            .get(&format!("http://{}/eigen/node", ip_port_addr))
+            .get(format!("http://{}/eigen/node", ip_port_addr))
             .send()
             .await
             .unwrap();
@@ -389,7 +389,7 @@ mod tests {
 
         // Test the /eigen/node/health route
         let resp = client
-            .get(&format!("http://{}/eigen/node/health", ip_port_addr))
+            .get(format!("http://{}/eigen/node/health", ip_port_addr))
             .send()
             .await
             .unwrap();
@@ -397,7 +397,7 @@ mod tests {
 
         // // Test the /eigen/node/services route
         let resp = client
-            .get(&format!("http://{}/eigen/node/services", ip_port_addr))
+            .get(format!("http://{}/eigen/node/services", ip_port_addr))
             .send()
             .await
             .unwrap();
@@ -405,7 +405,7 @@ mod tests {
 
         // Test the /eigen/node/services/{id}/health route
         let resp = client
-            .get(&format!(
+            .get(format!(
                 "http://{}/eigen/node/services/test_service/health",
                 ip_port_addr
             ))

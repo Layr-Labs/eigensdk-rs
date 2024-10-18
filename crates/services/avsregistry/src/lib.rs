@@ -10,7 +10,7 @@ use alloy_primitives::FixedBytes;
 use async_trait::async_trait;
 use eigen_client_avsregistry::error::AvsRegistryError;
 use eigen_types::operator::{OperatorAvsState, QuorumAvsState};
-use eigen_utils::binding::OperatorStateRetriever::CheckSignaturesIndices;
+use eigen_utils::operatorstateretriever::OperatorStateRetriever::CheckSignaturesIndices;
 
 pub mod chaincaller;
 pub mod fake_avs_registry_service;

@@ -3,8 +3,11 @@ use alloy_primitives::{Address, FixedBytes, U256};
 use eigen_logging::logger::SharedLogger;
 use eigen_types::operator::Operator;
 use eigen_utils::{
-    binding::{AVSDirectory, DelegationManager, ISlasher, IStrategy, IERC20},
     get_provider,
+    {
+        avsdirectory::AVSDirectory, delegationmanager::DelegationManager, erc20::ERC20,
+        islasher::ISlasher, istrategy::IStrategy,
+    },
 };
 
 #[derive(Debug, Clone)]
@@ -302,7 +305,7 @@ impl ELChainReader {
             _0: underlying_token_addr,
         } = underlying_token;
 
-        let contract_ierc20 = IERC20::new(underlying_token_addr, &provider);
+        let contract_ierc20 = ERC20::new(underlying_token_addr, &provider);
 
         Ok((
             strategy_addr,
@@ -345,7 +348,7 @@ impl ELChainReader {
 
         Ok(Operator {
             address: operator,
-            earnings_receiver_address: operator_details.earningsReceiver,
+            earnings_receiver_address: operator_details.__deprecated_earningsReceiver,
             delegation_approver_address: operator_details.delegationApprover,
             staker_opt_out_window_blocks: operator_details.stakerOptOutWindowBlocks,
             metadata_url: None,
@@ -387,9 +390,9 @@ impl ELChainReader {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use alloy_eips::eip1898::BlockNumberOrTag::Number;
+    use alloy::eips::eip1898::BlockNumberOrTag::Number;
+    use alloy::providers::Provider;
     use alloy_primitives::{address, keccak256, Address, FixedBytes, U256};
-    use alloy_provider::Provider;
     use eigen_logging::get_test_logger;
     use eigen_testing_utils::{
         anvil::start_anvil_container,
@@ -397,10 +400,12 @@ mod tests {
             get_delegation_manager_address, get_erc20_mock_strategy, get_service_manager_address,
         },
     };
-    use eigen_utils::binding::{
-        mockAvsServiceManager, AVSDirectory,
-        AVSDirectory::calculateOperatorAVSRegistrationDigestHashReturn, DelegationManager,
-        DelegationManager::calculateDelegationApprovalDigestHashReturn,
+    use eigen_utils::{
+        avsdirectory::AVSDirectory,
+        avsdirectory::AVSDirectory::calculateOperatorAVSRegistrationDigestHashReturn,
+        delegationmanager::DelegationManager,
+        delegationmanager::DelegationManager::calculateDelegationApprovalDigestHashReturn,
+        mockavsservicemanager::MockAvsServiceManager,
     };
     use std::str::FromStr;
 
@@ -417,13 +422,13 @@ mod tests {
         } = slasher_address_return;
         let service_manager_address = get_service_manager_address(http_endpoint.clone()).await;
         let service_manager_contract =
-            mockAvsServiceManager::new(service_manager_address, get_provider(&http_endpoint));
+            MockAvsServiceManager::new(service_manager_address, get_provider(&http_endpoint));
         let avs_directory_address_return = service_manager_contract
             .avsDirectory()
             .call()
             .await
             .unwrap();
-        let mockAvsServiceManager::avsDirectoryReturn {
+        let MockAvsServiceManager::avsDirectoryReturn {
             _0: avs_directory_address,
         } = avs_directory_address_return;
 

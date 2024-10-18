@@ -1,11 +1,9 @@
 use crate::{error::AvsRegistryError, reader::AvsRegistryReader};
-use alloy_primitives::{Address, Bytes, FixedBytes};
+use alloy_primitives::{aliases::U96, Address, Bytes, FixedBytes};
 use async_trait::async_trait;
 use eigen_crypto_bls::BlsKeyPair;
 use eigen_types::test::TestOperator;
-use eigen_utils::binding::OperatorStateRetriever;
-
-const OPERATOR_STAKE: u128 = 123;
+use eigen_utils::operatorstateretriever::OperatorStateRetriever;
 
 /// This struct is used to test AvsRegistryServiceChainCaller methods.
 #[derive(Debug)]
@@ -45,7 +43,7 @@ impl AvsRegistryReader for FakeAvsRegistryReader {
         Ok(vec![vec![OperatorStateRetriever::Operator {
             operator: self.operator_address,
             operatorId: self.operator_id,
-            stake: OPERATOR_STAKE,
+            stake: U96::from(123),
         }]])
     }
 

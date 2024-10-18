@@ -1,9 +1,9 @@
 #[derive(Debug)]
 pub struct Client {}
 
-use alloy_eips::BlockNumberOrTag;
-use alloy_primitives::BlockNumber;
-use alloy_rpc_types_eth::Block;
+use alloy::eips::BlockNumberOrTag;
+use alloy::primitives::BlockNumber;
+use alloy::rpc::types::eth::Block;
 
 #[async_trait::async_trait]
 pub trait BackendClient {
