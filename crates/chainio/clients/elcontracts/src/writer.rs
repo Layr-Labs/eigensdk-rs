@@ -269,6 +269,7 @@ mod tests {
             get_rewards_coordinator_address, get_service_manager_address,
             get_strategy_manager_address,
         },
+        transaction::wait_transaction,
     };
     use eigen_types::operator::Operator;
     use eigen_utils::{
@@ -403,9 +404,8 @@ mod tests {
             .register_as_operator(operator)
             .await
             .unwrap();
+        wait_transaction(&http_endpoint, tx_hash).await.unwrap();
 
-        // this sleep is needed so that we wait for the tx to be processed
-        tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
         let receipt = provider.get_transaction_receipt(tx_hash).await.unwrap();
         assert!(receipt.unwrap().status());
 
@@ -427,9 +427,8 @@ mod tests {
             .update_operator_details(operator_modified)
             .await
             .unwrap();
+        wait_transaction(&http_endpoint, tx_hash).await.unwrap();
 
-        // this sleep is needed so that we wait for the tx to be processed
-        tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
         let receipt = provider.get_transaction_receipt(tx_hash).await.unwrap();
         assert!(receipt.unwrap().status());
     }
@@ -442,14 +441,13 @@ mod tests {
         let el_chain_writer = new_test_writer(http_endpoint.clone()).await;
 
         let amount = U256::from_str("100").unwrap();
-        let strategy_addr = get_erc20_mock_strategy(http_endpoint).await;
+        let strategy_addr = get_erc20_mock_strategy(http_endpoint.clone()).await;
         let tx_hash = el_chain_writer
             .deposit_erc20_into_strategy(strategy_addr, amount)
             .await
             .unwrap();
+        wait_transaction(&http_endpoint, tx_hash).await.unwrap();
 
-        // this sleep is needed so that we wait for the tx to be processed
-        tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
         let receipt = provider.get_transaction_receipt(tx_hash).await.unwrap();
         assert!(receipt.unwrap().status());
     }
