@@ -48,7 +48,7 @@ impl ELChainWriter {
         }
     }
 
-    /// Register an operator to EigenLayer
+    /// Register an operator to EigenLayer, and wait for the transaction to be mined.
     ///
     /// # Arguments
     ///
