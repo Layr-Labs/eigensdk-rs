@@ -1,4 +1,4 @@
-use posthog_rs::{Client, Event};
+use posthog_rs::{client, Client, Error, Event};
 
 pub struct TelemetryConfig {
     pub key: String,
@@ -7,17 +7,18 @@ pub struct TelemetryConfig {
 }
 
 impl TelemetryConfig {
-    pub fn new(key: String, user_id: String) -> Self {
-        let client = posthog_rs::client(key);
+    pub fn new(key: &str, user_id: &str) -> Self {
+        let client = client(key);
 
-        Self { key, user_id, client }
+        Self {
+            key: key.to_owned(),
+            user_id: user_id.to_owned(),
+            client,
+        }
     }
 
-    pub fn capture_event(&self) {
-        let event = posthog_rs::Event::new("app_started", "1234");
-        self.client.capture(event).unwrap();
+    pub fn capture_event(&self, event: &str) -> Result<(), Error> {
+        let event = Event::new(event, &self.user_id);
+        self.client.capture(event)
     }
-    let event = posthog_rs::Event::new("app_started", "1234");
-    client.capture(event).unwrap();
-
 }
