@@ -289,7 +289,9 @@ pub mod integration_test {
             )
             .send()
             .await
-            .unwrap();
+            .unwrap()
+            .watch()
+            .await;
 
         // Create avs clients to interact with contracts deployed on anvil
         let avs_registry_reader = AvsRegistryChainReader::new(
@@ -487,7 +489,9 @@ pub mod integration_test {
             )
             .send()
             .await
-            .unwrap();
+            .unwrap()
+            .watch()
+            .await;
         let _ = contract_registry_coordinator
             .createQuorum(
                 operator_set_params.clone(),
@@ -496,12 +500,16 @@ pub mod integration_test {
             )
             .send()
             .await
-            .unwrap();
+            .unwrap()
+            .watch()
+            .await;
         let _ = contract_registry_coordinator
             .createQuorum(operator_set_params, U96::from(0), strategy_params)
             .send()
             .await
-            .unwrap();
+            .unwrap()
+            .watch()
+            .await;
 
         // Create avs clients to interact with contracts deployed on anvil
         let avs_registry_reader = AvsRegistryChainReader::new(
