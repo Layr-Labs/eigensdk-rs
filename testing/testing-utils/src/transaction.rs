@@ -1,7 +1,8 @@
-use alloy_primitives::{FixedBytes, TxHash};
+use alloy_primitives::FixedBytes;
 use alloy_provider::{
     PendingTransactionBuilder, PendingTransactionError, Provider, ProviderBuilder,
 };
+use alloy_rpc_types::eth::TransactionReceipt;
 use alloy_transport::TransportErrorKind;
 use eigen_utils::get_provider;
 use url::Url;
@@ -42,9 +43,9 @@ pub async fn get_transaction_status(rpc_url: String, tx_hash: FixedBytes<32>) ->
 pub async fn wait_transaction(
     rpc_url: &str,
     tx_hash: FixedBytes<32>,
-) -> Result<TxHash, PendingTransactionError> {
+) -> Result<TransactionReceipt, PendingTransactionError> {
     let url = Url::parse(rpc_url).map_err(|_| TransportErrorKind::custom_str("Invalid RPC URL"))?;
     let root_provider = ProviderBuilder::new().on_http(url);
     let pending_tx = PendingTransactionBuilder::new(&root_provider, tx_hash);
-    pending_tx.watch().await
+    pending_tx.get_receipt().await
 }
