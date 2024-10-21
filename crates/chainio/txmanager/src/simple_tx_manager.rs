@@ -1,6 +1,6 @@
 use alloy::eips::BlockNumberOrTag;
 use alloy::network::{Ethereum, EthereumWallet, TransactionBuilder};
-use alloy::primitives::{Address, TxHash, U256};
+use alloy::primitives::{Address, U256};
 use alloy::providers::{PendingTransactionBuilder, Provider, ProviderBuilder, RootProvider};
 use alloy::rpc::types::eth::{TransactionInput, TransactionReceipt, TransactionRequest};
 use alloy::signers::local::PrivateKeySigner;
@@ -120,7 +120,7 @@ impl SimpleTxManager {
     }
 
     /// Send is used to send a transaction to the Ethereum node. It takes an unsigned/signed transaction,
-    /// sends it to the Ethereum node and returns the tx hash. It does not wait for the transaction to be mined.
+    /// sends it to the Ethereum node and waits for the receipt.
     /// If you pass in a signed transaction it will ignore the signature
     /// and re-sign the transaction after adding the nonce and gas limit.
     ///
@@ -136,7 +136,10 @@ impl SimpleTxManager {
     ///
     /// * `TxManagerError` - If the transaction cannot be sent, or there is an error
     ///   signing the transaction or estimating gas and nonce.
-    pub async fn send_tx(&self, tx: &mut TransactionRequest) -> Result<TxHash, TxManagerError> {
+    pub async fn send_tx(
+        &self,
+        tx: &mut TransactionRequest,
+    ) -> Result<TransactionReceipt, TxManagerError> {
         // Estimating gas and nonce
         self.logger.debug("Estimating gas and nonce", "");
 
@@ -170,7 +173,7 @@ impl SimpleTxManager {
             &pending_tx.tx_hash().to_string(),
         );
         // wait for the transaction to be mined
-        Ok(*pending_tx.tx_hash())
+        SimpleTxManager::wait_for_receipt(self, pending_tx).await
     }
 
     /// Estimates the gas and nonce for a transaction.
@@ -293,7 +296,7 @@ mod tests {
     use alloy::primitives::{address, bytes, TxKind::Call, U256};
     use alloy::rpc::types::eth::TransactionRequest;
     use eigen_logging::get_test_logger;
-    use eigen_testing_utils::{anvil::start_anvil_container, transaction::wait_transaction};
+    use eigen_testing_utils::anvil::start_anvil_container;
     use tokio;
 
     #[tokio::test]
@@ -320,8 +323,7 @@ mod tests {
         let mut tx_request: TransactionRequest = tx.into();
 
         // send transaction and wait for receipt
-        let tx_hash = simple_tx_manager.send_tx(&mut tx_request).await.unwrap();
-        let receipt = wait_transaction(&rpc_url, tx_hash).await.unwrap();
+        let receipt = simple_tx_manager.send_tx(&mut tx_request).await.unwrap();
         let block_number = receipt.block_number.unwrap();
         println!("Transaction mined in block: {}", block_number);
         assert!(block_number > 0);
@@ -351,8 +353,7 @@ mod tests {
         tx.set_gas_price(21_000_000_000);
 
         // send transaction and wait for receipt
-        let tx_hash = simple_tx_manager.send_tx(&mut tx).await.unwrap();
-        let receipt = wait_transaction(&rpc_url, tx_hash).await.unwrap();
+        let receipt = simple_tx_manager.send_tx(&mut tx).await.unwrap();
         let block_number = receipt.block_number.unwrap();
         println!("Transaction mined in block: {}", block_number);
         assert!(block_number > 0);
