@@ -13,14 +13,16 @@ alloy.workspace = true
 alloy-primitives.workspace = true
 alloy-signer.workspace = true
 alloy-signer-local.workspace = true
+ark-ff.workspace = true
 async-trait.workspace = true
-num-bigint = "0.4.4"
 eigen-types.workspace = true
 eigen-crypto-bls.workspace = true
-ark-ff.workspace = true
+eigen-telemetry = { workspace = true, optional = true }
 eigen-client-elcontracts.workspace = true
 eigen-utils.workspace = true
 eigen-logging.workspace = true
+num-bigint = "0.4.4"
+posthog-rs = { workspace = true, optional = true }
 thiserror.workspace = true
 tracing.workspace = true
 
@@ -33,3 +35,6 @@ eigen-testing-utils.workspace = true
 hex = "0.4.3"
 once_cell.workspace = true
 tokio = { version = "1.37.0", features = ["test-util", "full", "sync"] }
+
+[features]
+telemetry = ["posthog-rs", "eigen-telemetry"]

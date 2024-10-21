@@ -2319,12 +2319,14 @@ dependencies = [
  "eigen-client-elcontracts",
  "eigen-crypto-bls",
  "eigen-logging",
+ "eigen-telemetry",
  "eigen-testing-utils",
  "eigen-types",
  "eigen-utils",
  "hex",
  "num-bigint 0.4.6",
  "once_cell",
+ "posthog-rs",
  "thiserror",
  "tokio",
  "tracing",
@@ -2596,6 +2598,13 @@ dependencies = [
  "thiserror",
  "tokio",
  "url",
+]
+
+[[package]]
+name = "eigen-telemetry"
+version = "0.1.0"
+dependencies = [
+ "posthog-rs",
 ]
 
 [[package]]
@@ -5247,6 +5256,18 @@ name = "portable-atomic"
 version = "1.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "da544ee218f0d287a911e9c99a39a8c9bc8fcad3cb8db5959940044ecfc67265"
+
+[[package]]
+name = "posthog-rs"
+version = "0.2.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8ad1b35ffe50419992615288c40ee90fbf30da4c6faf251414675ea64e1cdfa3"
+dependencies = [
+ "chrono",
+ "reqwest 0.11.27",
+ "serde",
+ "serde_json",
+]
 
 [[package]]
 name = "powerfmt"

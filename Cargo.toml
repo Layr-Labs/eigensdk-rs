@@ -163,7 +163,4 @@ anvil-utils = { path = "examples/anvil-utils" }
 avsregistry-read = { path = "examples/avsregistry-read" }
 avsregistry-write = { path = "examples/avsregistry-write" }
 
-posthog-rs = { version = "0.2.0", optional = true }
-
-[features]
-telemetry = ["posthog-rs", "eigen-telemetry"]
+posthog-rs = "0.2.0"
