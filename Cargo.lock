@@ -2602,11 +2602,9 @@ dependencies = [
 name = "eigen-testing-utils"
 version = "0.1.0"
 dependencies = [
- "alloy",
  "alloy-primitives",
  "alloy-provider",
  "alloy-transport",
- "alloy-transport-http",
  "eigen-utils",
  "serde",
  "serde_json",
