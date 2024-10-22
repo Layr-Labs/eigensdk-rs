@@ -330,7 +330,7 @@ pub mod integration_test {
         });
 
         // Register operator
-        avs_writer
+        let tx_hash = avs_writer
             .register_operator_in_quorum_with_avs_registry_coordinator(
                 bls_key_pair_1.clone(),
                 salt,
@@ -340,6 +340,7 @@ pub mod integration_test {
             )
             .await
             .unwrap();
+        wait_transaction(&http_endpoint, tx_hash).await.unwrap();
 
         let avs_writer = AvsRegistryChainWriter::build_avs_registry_chain_writer(
             get_test_logger(),
