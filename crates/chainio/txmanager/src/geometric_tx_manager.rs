@@ -1,13 +1,17 @@
 use alloy::eips::BlockNumberOrTag;
-use alloy::network::{Ethereum, EthereumWallet, TransactionBuilder};
+use alloy::network::{Ethereum, EthereumWallet, NetworkWallet, TransactionBuilder};
 use alloy::primitives::{Address, U256};
-use alloy::providers::{PendingTransactionBuilder, Provider, ProviderBuilder, RootProvider};
+use alloy::providers::{
+    PendingTransaction, PendingTransactionBuilder, Provider, ProviderBuilder, RootProvider,
+};
 use alloy::rpc::types::eth::{TransactionInput, TransactionReceipt, TransactionRequest};
 use alloy::signers::local::PrivateKeySigner;
+use alloy::transports::RpcError;
 use eigen_logging::logger::SharedLogger;
 use eigen_signer::signer::Config;
 use k256::ecdsa::SigningKey;
 use reqwest::Url;
+use std::time::Duration;
 use thiserror::Error;
 
 static FALLBACK_GAS_TIP_CAP: u128 = 5_000_000_000;
@@ -30,14 +34,42 @@ pub enum TxManagerError {
 }
 
 /// A simple transaction manager that encapsulates operations to send transactions to an Ethereum node.
-pub struct SimpleTxManager {
+pub struct GeometricTxManager {
     logger: SharedLogger,
-    gas_limit_multiplier: f64,
-    private_key: String,
+    private_key: String, // TODO: should this be a Signer?
     provider: RootProvider<Transport>,
+    params: GeometricTxManagerParams,
 }
 
-impl SimpleTxManager {
+#[derive(Debug)]
+pub struct GeometricTxManagerParams {
+    // TODO: make fields optional and use default values
+    confirmation_blocks: u64,
+    txn_broadcast_timeout: Duration,
+    txn_confirmation_timeout: Duration,
+    max_send_transaction_retry: i32,
+    get_tx_receipt_ticker_duration: Duration,
+    fallback_gas_tip_cap: u64,
+    gas_multiplier: f64,
+    gas_tip_multiplier: f64,
+}
+
+impl Default for GeometricTxManagerParams {
+    fn default() -> Self {
+        GeometricTxManagerParams {
+            confirmation_blocks: 0,
+            txn_broadcast_timeout: Duration::from_secs(2 * 60), // 2 minutes
+            txn_confirmation_timeout: Duration::from_secs(5 * 12), // 5 blocks
+            max_send_transaction_retry: 3,
+            get_tx_receipt_ticker_duration: Duration::from_secs(3),
+            fallback_gas_tip_cap: 5_000_000_000, // 5 gwei
+            gas_multiplier: 1.20,
+            gas_tip_multiplier: 1.25,
+        }
+    }
+}
+
+impl GeometricTxManager {
     /// Creates a new SimpleTxManager.
     ///
     /// # Arguments
@@ -46,6 +78,7 @@ impl SimpleTxManager {
     /// * `gas_limit_multiplier`: The gas limit multiplier.
     /// * `private_key`: The private key of the wallet.
     /// * `rpc_url`: The RPC URL. It could be an anvil node or any other node.
+    /// * `params`: The parameters for the GeometricTxManager.
     ///
     /// # Returns
     ///
@@ -56,19 +89,19 @@ impl SimpleTxManager {
     /// * If the URL is invalid.
     pub fn new(
         logger: SharedLogger,
-        gas_limit_multiplier: f64,
         private_key: &str,
         rpc_url: &str,
-    ) -> Result<SimpleTxManager, TxManagerError> {
+        params: GeometricTxManagerParams,
+    ) -> Result<GeometricTxManager, TxManagerError> {
         let url = Url::parse(rpc_url)
             .inspect_err(|err| logger.error("Failed to parse url", &err.to_string()))
             .map_err(|_| TxManagerError::InvalidUrlError)?;
         let provider = ProviderBuilder::new().on_http(url);
-        Ok(SimpleTxManager {
+        Ok(GeometricTxManager {
             logger,
-            gas_limit_multiplier,
             private_key: private_key.to_string(),
             provider,
+            params,
         })
     }
 
@@ -89,15 +122,6 @@ impl SimpleTxManager {
             })
             .map_err(|_| TxManagerError::AddressError)?;
         Ok(Address::from_private_key(&private_key_signing_key))
-    }
-
-    /// Sets the gas limit multiplier.
-    ///
-    /// # Arguments
-    ///
-    /// * `multiplier` - The gas limit multiplier.
-    pub fn with_gas_limit_multiplier(&mut self, multiplier: f64) {
-        self.gas_limit_multiplier = multiplier;
     }
 
     /// Creates a local signer.
@@ -140,17 +164,10 @@ impl SimpleTxManager {
         &self,
         tx: &mut TransactionRequest,
     ) -> Result<TransactionReceipt, TxManagerError> {
-        // Estimating gas and nonce
-        self.logger.debug("Estimating gas and nonce", "");
-
-        let tx = self.estimate_gas_and_nonce(tx).await.inspect_err(|err| {
-            self.logger
-                .error("Failed to estimate gas", &err.to_string())
-        })?;
-
+        self.logger.debug("new transaction", &format!("{:?}", tx));
+        let from = self.get_address()?;
         let signer = self.create_local_signer()?;
         let wallet = EthereumWallet::from(signer);
-
         let signed_tx = tx
             .build(&wallet)
             .await
@@ -160,104 +177,54 @@ impl SimpleTxManager {
             })
             .map_err(|_| TxManagerError::SendTxError)?;
 
-        // send transaction and get receipt
-        let pending_tx = self
-            .provider
-            .send_transaction(signed_tx.into())
-            .await
-            .inspect_err(|err| self.logger.error("Failed to get receipt", &err.to_string()))
-            .map_err(|_| TxManagerError::SendTxError)?;
+        let mut pending_tx = None;
+        for _ in 0..self.params.max_send_transaction_retry {
+            // TODO: estimate gas tip cap
 
-        self.logger.debug(
-            "Transaction sent. Pending transaction: ",
-            &pending_tx.tx_hash().to_string(),
-        );
-        // wait for the transaction to be mined
-        SimpleTxManager::wait_for_receipt(self, pending_tx).await
-    }
+            // TODO: update gas tip cap
 
-    /// Estimates the gas and nonce for a transaction.
-    ///
-    /// # Arguments
-    ///
-    /// * `tx`: The transaction for which we want to estimate the gas and nonce.
-    ///
-    /// # Returns
-    ///
-    /// * The transaction request with the gas and nonce estimated.
-    ///
-    /// # Errors
-    ///
-    /// * If the transaction request could not sent of gives an error.
-    /// * If the latest block header could not be retrieved.
-    /// * If the gas price could not be estimated.
-    /// * If the gas limit could not be estimated.
-    /// * If the destination address could not be retrieved.
-    async fn estimate_gas_and_nonce(
-        &self,
-        tx: &TransactionRequest,
-    ) -> Result<TransactionRequest, TxManagerError> {
-        let gas_tip_cap = self.provider.get_max_priority_fee_per_gas().await
-        .inspect_err(|err|
-            self.logger.info("eth_maxPriorityFeePerGas is unsupported by current backend, using fallback gasTipCap",
-            &err.to_string()))
-        .unwrap_or(FALLBACK_GAS_TIP_CAP);
+            // send transaction
+            let send_result = self
+                .provider
+                .send_transaction(signed_tx.clone().into())
+                .await;
 
-        let header = self
-            .provider
-            .get_block_by_number(BlockNumberOrTag::Latest, false)
-            .await
-            .ok()
-            .flatten()
-            .map(|block| block.header)
-            .ok_or(TxManagerError::SendTxError)
-            .inspect_err(|_| self.logger.error("Failed to get latest block header", ""))?;
-
-        // 2*baseFee + gas_tip_cap makes sure that the tx remains includeable for 6 consecutive 100% full blocks.
-        // see https://www.blocknative.com/blog/eip-1559-fees
-        let base_fee = header.base_fee_per_gas.ok_or(TxManagerError::SendTxError)?;
-        let gas_fee_cap: u128 = (2 * base_fee + U256::from(gas_tip_cap).to::<u64>()).into();
-
-        let mut gas_limit = tx.gas_limit();
-        let tx_input = tx.input().unwrap_or_default().to_vec();
-        // we only estimate if gas_limit is not already set
-        if let Some(0) = gas_limit {
-            let from = self.get_address()?;
-            let to = tx.to().ok_or(TxManagerError::SendTxError)?;
-
-            let mut tx_request = TransactionRequest::default()
-                .to(to)
-                .from(from)
-                .value(tx.value().unwrap_or_default())
-                .input(TransactionInput::new(tx_input.clone().into()));
-            tx_request.set_max_priority_fee_per_gas(gas_tip_cap);
-            tx_request.set_max_fee_per_gas(gas_fee_cap);
-
-            gas_limit = Some(
-                self.provider
-                    .estimate_gas(&tx_request)
-                    .await
-                    .map_err(|_| TxManagerError::SendTxError)?,
-            );
+            match send_result {
+                Ok(tx) => {
+                    self.logger.debug(
+                        "Transaction sent. Pending transaction: ",
+                        &tx.tx_hash().to_string(),
+                    );
+                    pending_tx = Some(tx);
+                    break;
+                }
+                Err(RpcError::Transport(
+                    // TODO: check if this is the timeout error
+                    alloy::transports::TransportErrorKind::MissingBatchResponse(id),
+                )) => {
+                    self.logger.warn(
+                        "Failed to send transaction due to timeout",
+                        &format!("{:?}", id.as_string()),
+                    );
+                    continue;
+                }
+                Err(e) => {
+                    self.logger
+                        .error("Failed to send transaction", &e.to_string());
+                    return Err(TxManagerError::SendTxError);
+                }
+            };
         }
-        let gas_price_multiplied =
-            tx.gas_price().unwrap_or_default() as f64 * self.gas_limit_multiplier;
-        let gas_price = gas_price_multiplied as u128;
 
-        let to = tx.to().ok_or(TxManagerError::SendTxError)?;
+        let Some(sent_tx) = pending_tx else {
+            self.logger.error(
+                "Failed to send transaction",
+                &signed_tx.tx_hash().to_string(),
+            );
+            return Err(TxManagerError::SendTxError);
+        };
 
-        let new_tx = TransactionRequest::default()
-            .with_to(to)
-            .with_value(tx.value().unwrap_or_default())
-            .with_gas_limit(gas_limit.unwrap_or_default())
-            .with_nonce(tx.nonce().unwrap_or_default())
-            .with_input(tx_input)
-            .with_chain_id(tx.chain_id().unwrap_or(1))
-            .with_max_priority_fee_per_gas(gas_tip_cap)
-            .with_max_fee_per_gas(gas_fee_cap)
-            .with_gas_price(gas_price);
-
-        Ok(new_tx)
+        GeometricTxManager::wait_for_receipt(self, sent_tx).await
     }
 
     /// Waits for the transaction receipt.
@@ -290,7 +257,7 @@ impl SimpleTxManager {
 
 #[cfg(test)]
 mod tests {
-    use super::SimpleTxManager;
+    use super::{GeometricTxManager, GeometricTxManagerParams};
     use alloy::consensus::TxLegacy;
     use alloy::network::TransactionBuilder;
     use alloy::rpc::types::eth::TransactionRequest;
@@ -306,11 +273,11 @@ mod tests {
         let logger = get_test_logger();
 
         let private_key = anvil.keys().first().unwrap();
-        let simple_tx_manager = SimpleTxManager::new(
+        let simple_tx_manager = GeometricTxManager::new(
             logger,
-            1.0,
             private_key.as_scalar_primitive().to_string().as_str(),
             rpc_url.as_str(),
+            GeometricTxManagerParams::default(),
         )
         .unwrap();
 
@@ -343,11 +310,11 @@ mod tests {
         let logger = get_test_logger();
 
         let private_key = anvil.keys().first().unwrap();
-        let simple_tx_manager = SimpleTxManager::new(
+        let simple_tx_manager = GeometricTxManager::new(
             logger,
-            1.0,
             private_key.as_scalar_primitive().to_string().as_str(),
             rpc_url.as_str(),
+            GeometricTxManagerParams::default(),
         )
         .unwrap();
 
