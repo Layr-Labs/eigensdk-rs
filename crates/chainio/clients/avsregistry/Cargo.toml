@@ -22,7 +22,6 @@ eigen-client-elcontracts.workspace = true
 eigen-utils.workspace = true
 eigen-logging.workspace = true
 num-bigint = "0.4.4"
-posthog-rs = { workspace = true, optional = true }
 thiserror.workspace = true
 tracing.workspace = true
 
@@ -37,4 +36,4 @@ once_cell.workspace = true
 tokio = { version = "1.37.0", features = ["test-util", "full", "sync"] }
 
 [features]
-telemetry = ["posthog-rs", "eigen-telemetry"]
+telemetry = ["dep:eigen-telemetry"]

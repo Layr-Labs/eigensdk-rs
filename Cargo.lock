@@ -2326,7 +2326,6 @@ dependencies = [
  "hex",
  "num-bigint 0.4.6",
  "once_cell",
- "posthog-rs",
  "thiserror",
  "tokio",
  "tracing",
