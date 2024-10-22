@@ -105,6 +105,14 @@ impl AvsRegistryReader for AvsRegistryChainReader {
             .map_err(|_| AvsRegistryError::GetOperatorState)?;
 
         let OperatorStateRetriever::getOperatorState_0Return { _0: quorum } = operator_state;
+
+        #[cfg(feature = "telemetry")]
+        {
+            eigen_telemetry::telemetry::Telemetry::capture_event(
+                "get_operators_stake_in_quorums_at_block",
+            )
+            .map_err(|e| AvsRegistryError::TelemetryError(e.to_string()))?;
+        }
         Ok(quorum)
     }
 
