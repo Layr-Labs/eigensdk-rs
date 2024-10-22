@@ -4,7 +4,7 @@ use posthog_rs::{Error, Event};
 pub struct Telemetry {}
 
 impl Telemetry {
-    pub fn new(key: &str, user_id: &str) -> Result<(), TelemetryConfig> {
+    pub fn set_config(key: &str, user_id: &str) -> Result<(), TelemetryConfig> {
         let config = TelemetryConfig::new(key, user_id);
         crate::TELEMETRY_CELL.set(config)?;
         Ok(())
