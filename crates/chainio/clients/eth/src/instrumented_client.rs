@@ -837,9 +837,9 @@ mod tests {
     use alloy_primitives::address;
     use eigen_signer::signer::Config;
     use eigen_testing_utils::anvil::start_anvil_container;
-    use eigen_testing_utils::transaction::wait_transaction;
     use eigen_utils::get_provider;
-    use tokio;
+    use tokio::time::sleep;
+    use tokio::{self, time};
 
     #[tokio::test]
     async fn test_suggest_gas_tip_cap() {
@@ -1038,7 +1038,8 @@ mod tests {
         let tx_by_hash = instrumented_client.transaction_by_hash(tx_hash).await;
         assert!(tx_by_hash.is_ok());
 
-        wait_transaction(&rpc_url, tx_hash).await.unwrap();
+        // this sleep is needed because we have to wait since the transaction is not ready yet
+        sleep(time::Duration::from_secs(1)).await;
 
         // test transaction_receipt
         let receipt = instrumented_client.transaction_receipt(tx_hash).await;
