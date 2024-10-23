@@ -834,12 +834,12 @@ mod tests {
     use alloy::rpc::types::eth::{
         pubsub::SubscriptionResult, BlockId, BlockNumberOrTag, BlockTransactionsKind,
     };
-    use alloy_node_bindings::Anvil;
+    use alloy_primitives::address;
     use eigen_signer::signer::Config;
     use eigen_testing_utils::anvil::start_anvil_container;
     use eigen_utils::get_provider;
-    use std::{thread, time};
-    use tokio;
+    use tokio::time::sleep;
+    use tokio::{self, time};
 
     #[tokio::test]
     async fn test_suggest_gas_tip_cap() {
@@ -1006,29 +1006,23 @@ mod tests {
     /// * `transaction_in_block`
     #[tokio::test]
     async fn test_transaction_methods() {
-        let (_container, _http_endpoint, _ws_endpoint) = start_anvil_container().await;
-
-        // create a new anvil instance because otherwise it fails with "nonce too low" error.
-        let anvil = Anvil::new().try_spawn().unwrap();
-        let rpc_url: String = anvil.endpoint().parse().unwrap();
-
+        let (_container, rpc_url, _ws_endpoint) = start_anvil_container().await;
         let instrumented_client = InstrumentedClient::new(&rpc_url).await.unwrap();
 
-        let addresses = anvil.addresses().to_vec();
-        let private_key = anvil.keys().first().unwrap();
-        let to = addresses.first().unwrap();
         // build the transaction
+        let to = address!("a0Ee7A142d267C1f36714E4a8F75612F20a79720");
         let mut tx = TxLegacy {
-            to: Call(*to),
+            to: Call(to),
             value: U256::from(0),
             gas_limit: 2_000_000,
-            nonce: 0,
+            nonce: 0x69, // nonce queried from the sender account
             gas_price: 21_000_000_000,
             input: bytes!(),
             chain_id: Some(31337),
         };
 
-        let private_key_hex = hex::encode(private_key.to_bytes());
+        let private_key_hex =
+            "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80".to_string();
         let config = Config::PrivateKey(private_key_hex);
         let signer = Config::signer_from_config(config).unwrap();
         let signature = signer.sign_transaction_sync(&mut tx).unwrap();
@@ -1045,7 +1039,7 @@ mod tests {
         assert!(tx_by_hash.is_ok());
 
         // this sleep is needed because we have to wait since the transaction is not ready yet
-        thread::sleep(time::Duration::from_secs(1));
+        sleep(time::Duration::from_secs(1)).await;
 
         // test transaction_receipt
         let receipt = instrumented_client.transaction_receipt(tx_hash).await;

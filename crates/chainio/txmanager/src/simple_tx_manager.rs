@@ -293,41 +293,34 @@ mod tests {
     use super::SimpleTxManager;
     use alloy::consensus::TxLegacy;
     use alloy::network::TransactionBuilder;
+    use alloy::primitives::{address, bytes, TxKind::Call, U256};
     use alloy::rpc::types::eth::TransactionRequest;
-    use alloy_node_bindings::Anvil;
-    use alloy_primitives::{bytes, TxKind::Call, U256};
     use eigen_logging::get_test_logger;
-    use tokio;
+    use eigen_testing_utils::anvil::start_anvil_container;
 
     #[tokio::test]
     async fn test_send_transaction_from_legacy() {
-        let anvil = Anvil::new().try_spawn().unwrap();
-        let rpc_url: String = anvil.endpoint().parse().unwrap();
+        let (_container, rpc_url, _ws_endpoint) = start_anvil_container().await;
         let logger = get_test_logger();
 
-        let private_key = anvil.keys().first().unwrap();
-        let simple_tx_manager = SimpleTxManager::new(
-            logger,
-            1.0,
-            private_key.as_scalar_primitive().to_string().as_str(),
-            rpc_url.as_str(),
-        )
-        .unwrap();
+        let private_key =
+            "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80".to_string();
+        let simple_tx_manager =
+            SimpleTxManager::new(logger, 1.0, private_key.as_str(), rpc_url.as_str()).unwrap();
+        let to = address!("a0Ee7A142d267C1f36714E4a8F75612F20a79720");
 
-        let addresses = anvil.addresses().to_vec();
-        let to = addresses.first().cloned().unwrap();
-
+        let account_nonce = 0x69; // nonce queried from the sender account
         let tx = TxLegacy {
             to: Call(to),
             value: U256::from(1_000_000_000),
             gas_limit: 2_000_000,
-            nonce: 0,
+            nonce: account_nonce,
             gas_price: 21_000_000_000,
             input: bytes!(),
             chain_id: Some(31337),
         };
 
-        let mut tx_request: TransactionRequest = tx.clone().into();
+        let mut tx_request: TransactionRequest = tx.into();
         // send transaction and wait for receipt
         let receipt = simple_tx_manager.send_tx(&mut tx_request).await.unwrap();
         let block_number = receipt.block_number.unwrap();
@@ -338,32 +331,26 @@ mod tests {
 
     #[tokio::test]
     async fn test_send_transaction_from_eip1559() {
-        let anvil = Anvil::new().try_spawn().unwrap();
-        let rpc_url: String = anvil.endpoint().parse().unwrap();
+        let (_container, rpc_url, _ws_endpoint) = start_anvil_container().await;
         let logger = get_test_logger();
 
-        let private_key = anvil.keys().first().unwrap();
-        let simple_tx_manager = SimpleTxManager::new(
-            logger,
-            1.0,
-            private_key.as_scalar_primitive().to_string().as_str(),
-            rpc_url.as_str(),
-        )
-        .unwrap();
+        let private_key =
+            "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80".to_string();
+        let simple_tx_manager =
+            SimpleTxManager::new(logger, 1.0, private_key.as_str(), rpc_url.as_str()).unwrap();
+        let to = address!("a0Ee7A142d267C1f36714E4a8F75612F20a79720");
 
-        let addresses = anvil.addresses().to_vec();
-        let to = addresses.first().cloned().unwrap();
-
+        let account_nonce = 0x69; // nonce queried from the sender account
         let mut tx = TransactionRequest::default()
             .with_to(to)
-            .with_nonce(0)
+            .with_nonce(account_nonce)
             .with_chain_id(31337)
             .with_value(U256::from(100))
             .with_gas_limit(21_000)
             .with_max_priority_fee_per_gas(1_000_000_000)
             .with_max_fee_per_gas(20_000_000_000);
-
         tx.set_gas_price(21_000_000_000);
+
         // send transaction and wait for receipt
         let receipt = simple_tx_manager.send_tx(&mut tx).await.unwrap();
         let block_number = receipt.block_number.unwrap();

@@ -70,7 +70,6 @@ mod test {
     use alloy::network::{TxSigner, TxSignerSync};
     use alloy::signers::local::PrivateKeySigner;
     use alloy::signers::Signature;
-    use alloy_node_bindings::Anvil;
     use alloy_primitives::{address, bytes, hex_literal::hex, keccak256, Address, U256};
     use aws_config::{BehaviorVersion, Region, SdkConfig};
     use aws_sdk_kms::{
@@ -78,6 +77,7 @@ mod test {
         config::{Credentials, SharedCredentialsProvider},
         types::KeyMetadata,
     };
+    use eigen_testing_utils::anvil::start_anvil_container;
     use eigen_testing_utils::test_data::TestData;
     use std::str::FromStr;
     use testcontainers::{
@@ -202,25 +202,24 @@ mod test {
 
     #[tokio::test]
     async fn test_sign_legacy_transaction_with_web3_signer() {
-        let anvil = Anvil::default().spawn();
+        let (_container, endpoint, _ws_endpoint) = start_anvil_container().await;
 
-        let endpoint = anvil.endpoint();
-        let address = anvil.addresses()[0];
+        let address = address!("f39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
         let signer = Config::web3_signer(endpoint, address).unwrap();
         let mut tx = TxLegacy {
-            to: anvil.addresses()[1].into(),
+            to: address!("a0Ee7A142d267C1f36714E4a8F75612F20a79720").into(),
             value: U256::from(1_000_000_000),
             gas_limit: 0x76c0,
             gas_price: 21_000_000_000,
             nonce: 0,
             input: bytes!(),
-            chain_id: Some(anvil.chain_id()),
+            chain_id: Some(31337),
         };
 
         let signature = signer.sign_transaction(&mut tx).await.unwrap();
 
-        let private_key = anvil.keys()[0].clone();
-        let expected_signer = PrivateKeySigner::from_field_bytes(&private_key.to_bytes()).unwrap();
+        let private_key_hex = "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
+        let expected_signer = PrivateKeySigner::from_str(private_key_hex).unwrap();
         let expected_signature = expected_signer.sign_transaction_sync(&mut tx).unwrap();
 
         assert_eq!(signature, expected_signature);
