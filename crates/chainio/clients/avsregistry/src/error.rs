@@ -157,9 +157,14 @@ pub enum AvsRegistryError {
     /// Invalid Signature
     #[error("Invalid signature")]
     InvalidSignature,
+
     /// Parse BigInt
     #[error("big int error")]
     ParseBigIntError,
+
+    /// Telemetry error
+    #[error("Telemetry error")]
+    TelemetryError(String),
 }
 
 impl From<ElContractsError> for AvsRegistryError {
