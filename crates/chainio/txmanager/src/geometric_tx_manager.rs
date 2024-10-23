@@ -1,10 +1,9 @@
-use alloy::network::{Ethereum, EthereumWallet, TransactionBuilder};
+use alloy::network::{Ethereum, EthereumWallet, TransactionBuilder, TxSigner};
 use alloy::providers::{PendingTransactionBuilder, Provider, ProviderBuilder, RootProvider};
 use alloy::rpc::types::eth::{TransactionReceipt, TransactionRequest};
 use alloy::signers::local::PrivateKeySigner;
 use alloy::transports::RpcError;
 use eigen_logging::logger::SharedLogger;
-use eigen_signer::signer::Config;
 use reqwest::Url;
 use std::time::Duration;
 use thiserror::Error;
@@ -29,7 +28,7 @@ pub enum TxManagerError {
 /// A simple transaction manager that encapsulates operations to send transactions to an Ethereum node.
 pub struct GeometricTxManager {
     logger: SharedLogger,
-    private_key: String, // TODO: should this be a Signer?
+    wallet: EthereumWallet,
     provider: RootProvider<Transport>,
     params: GeometricTxManagerParams,
 }
@@ -37,14 +36,14 @@ pub struct GeometricTxManager {
 #[derive(Debug)]
 pub struct GeometricTxManagerParams {
     // TODO: make fields optional and use default values
-    confirmation_blocks: u64,
-    txn_broadcast_timeout: Duration,
-    txn_confirmation_timeout: Duration,
-    max_send_transaction_retry: i32,
-    get_tx_receipt_ticker_duration: Duration,
-    fallback_gas_tip_cap: u64,
-    gas_multiplier: f64,
-    gas_tip_multiplier: f64,
+    pub confirmation_blocks: u64,
+    pub txn_broadcast_timeout: Duration,
+    pub txn_confirmation_timeout: Duration,
+    pub max_send_transaction_retry: i32,
+    pub get_tx_receipt_ticker_duration: Duration,
+    pub fallback_gas_tip_cap: u64,
+    pub gas_multiplier: f64,
+    pub gas_tip_multiplier: f64,
 }
 
 impl Default for GeometricTxManagerParams {
@@ -82,7 +81,7 @@ impl GeometricTxManager {
     /// * If the URL is invalid.
     pub fn new(
         logger: SharedLogger,
-        private_key: &str,
+        signer: PrivateKeySigner,
         rpc_url: &str,
         params: GeometricTxManagerParams,
     ) -> Result<GeometricTxManager, TxManagerError> {
@@ -90,31 +89,13 @@ impl GeometricTxManager {
             .inspect_err(|err| logger.error("Failed to parse url", &err.to_string()))
             .map_err(|_| TxManagerError::InvalidUrlError)?;
         let provider = ProviderBuilder::new().on_http(url);
+        let wallet = EthereumWallet::from(signer);
         Ok(GeometricTxManager {
             logger,
-            private_key: private_key.to_string(),
+            wallet,
             provider,
             params,
         })
-    }
-
-    /// Creates a local signer.
-    ///
-    /// # Returns
-    ///
-    /// * `PrivateKeySigner` The local signer.
-    ///
-    /// # Errors
-    ///
-    /// * `TxManagerError::SignerError` - If the signer cannot be created.
-    fn create_local_signer(&self) -> Result<PrivateKeySigner, TxManagerError> {
-        let config = Config::PrivateKey(self.private_key.clone());
-        Config::signer_from_config(config)
-            .inspect_err(|err| {
-                self.logger
-                    .error("Failed to create signer", &err.to_string())
-            })
-            .map_err(|_| TxManagerError::SignerError)
     }
 
     /// Send is used to send a transaction to the Ethereum node. It takes an unsigned/signed transaction,
@@ -139,12 +120,12 @@ impl GeometricTxManager {
         tx: &mut TransactionRequest,
     ) -> Result<TransactionReceipt, TxManagerError> {
         self.logger.debug("new transaction", &format!("{:?}", tx));
-        let signer = self.create_local_signer()?;
-        let from = signer.address();
-        let wallet = EthereumWallet::from(signer);
+        // let from = signer.address();
+        // let wallet = EthereumWallet::from(signer); // TODO: could be stored in self instead of signer
+        let from = self.wallet.default_signer().address();
         let signed_tx = tx
             .clone()
-            .build(&wallet)
+            .build(&self.wallet)
             .await
             .inspect_err(|err| {
                 self.logger
@@ -232,12 +213,15 @@ impl GeometricTxManager {
 
 #[cfg(test)]
 mod tests {
-    use super::GeometricTxManager;
+    use std::time::Duration;
+
+    use super::{GeometricTxManager, GeometricTxManagerParams};
     use alloy::consensus::TxLegacy;
     use alloy::network::TransactionBuilder;
     use alloy::primitives::{address, bytes, TxKind::Call, U256};
     use alloy::rpc::types::eth::TransactionRequest;
     use eigen_logging::get_test_logger;
+    use eigen_signer::signer::Config;
     use eigen_testing_utils::anvil::start_anvil_container;
 
     const TEST_PRIVATE_KEY: &str =
@@ -247,16 +231,13 @@ mod tests {
     async fn test_send_transaction_from_legacy() {
         let (_container, rpc_url, _ws_endpoint) = start_anvil_container().await;
         let logger = get_test_logger();
+        let config = Config::PrivateKey(TEST_PRIVATE_KEY.to_string());
+        let signer = Config::signer_from_config(config).unwrap();
 
-        let geometric_tx_manager = GeometricTxManager::new(
-            logger,
-            TEST_PRIVATE_KEY,
-            rpc_url.as_str(),
-            Default::default(),
-        )
-        .unwrap();
+        let geometric_tx_manager =
+            GeometricTxManager::new(logger, signer, rpc_url.as_str(), Default::default()).unwrap();
+
         let to = address!("a0Ee7A142d267C1f36714E4a8F75612F20a79720");
-
         let account_nonce = 0x69;
         let tx = TxLegacy {
             to: Call(to),
@@ -268,7 +249,7 @@ mod tests {
             chain_id: Some(31337),
         };
 
-        let mut tx_request: TransactionRequest = tx.clone().into();
+        let mut tx_request: TransactionRequest = tx.into();
         // send transaction and wait for receipt
         let receipt = geometric_tx_manager.send_tx(&mut tx_request).await.unwrap();
         let block_number = receipt.block_number.unwrap();
@@ -281,16 +262,13 @@ mod tests {
     async fn test_send_transaction_from_eip1559() {
         let (_container, rpc_url, _ws_endpoint) = start_anvil_container().await;
         let logger = get_test_logger();
+        let config = Config::PrivateKey(TEST_PRIVATE_KEY.to_string());
+        let signer = Config::signer_from_config(config).unwrap();
 
-        let geometric_tx_manager = GeometricTxManager::new(
-            logger,
-            TEST_PRIVATE_KEY,
-            rpc_url.as_str(),
-            Default::default(),
-        )
-        .unwrap();
+        let geometric_tx_manager =
+            GeometricTxManager::new(logger, signer, rpc_url.as_str(), Default::default()).unwrap();
+
         let to = address!("a0Ee7A142d267C1f36714E4a8F75612F20a79720");
-
         let account_nonce = 0x69;
         let mut tx = TransactionRequest::default()
             .with_to(to)
@@ -299,9 +277,41 @@ mod tests {
             .with_value(U256::from(100))
             .with_gas_limit(21_000)
             .with_max_priority_fee_per_gas(1_000_000_000)
-            .with_max_fee_per_gas(20_000_000_000);
+            .with_max_fee_per_gas(20_000_000_000)
+            .with_gas_price(21_000_000_000);
 
-        tx.set_gas_price(21_000_000_000);
+        // send transaction and wait for receipt
+        let receipt = geometric_tx_manager.send_tx(&mut tx).await.unwrap();
+        let block_number = receipt.block_number.unwrap();
+        println!("Transaction mined in block: {}", block_number);
+        assert!(block_number > 0);
+        assert_eq!(receipt.to, Some(to));
+    }
+
+    #[tokio::test]
+    async fn test_send_transaction_to_congested_network() {
+        let (_container, rpc_url, _ws_endpoint) = start_anvil_container().await;
+        let logger = get_test_logger();
+        let config = Config::PrivateKey(TEST_PRIVATE_KEY.to_string());
+        let signer = Config::signer_from_config(config).unwrap();
+        let mut params = GeometricTxManagerParams::default();
+        params.txn_confirmation_timeout = Duration::from_secs(5);
+
+        let geometric_tx_manager =
+            GeometricTxManager::new(logger, signer, rpc_url.as_str(), Default::default()).unwrap();
+
+        let to = address!("a0Ee7A142d267C1f36714E4a8F75612F20a79720");
+        let account_nonce = 0x69;
+        let mut tx = TransactionRequest::default()
+            .with_to(to)
+            .with_nonce(account_nonce)
+            .with_chain_id(31337)
+            .with_value(U256::from(100))
+            .with_gas_limit(21_000)
+            .with_max_priority_fee_per_gas(1_000_000_000)
+            .with_max_fee_per_gas(20_000_000_000)
+            .with_gas_price(21_000_000_000);
+
         // send transaction and wait for receipt
         let receipt = geometric_tx_manager.send_tx(&mut tx).await.unwrap();
         let block_number = receipt.block_number.unwrap();
