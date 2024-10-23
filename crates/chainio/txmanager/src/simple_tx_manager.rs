@@ -1,12 +1,11 @@
 use alloy::eips::BlockNumberOrTag;
 use alloy::network::{Ethereum, EthereumWallet, TransactionBuilder};
-use alloy::primitives::{Address, U256};
+use alloy::primitives::U256;
 use alloy::providers::{PendingTransactionBuilder, Provider, ProviderBuilder, RootProvider};
 use alloy::rpc::types::eth::{TransactionInput, TransactionReceipt, TransactionRequest};
 use alloy::signers::local::PrivateKeySigner;
 use eigen_logging::logger::SharedLogger;
 use eigen_signer::signer::Config;
-use k256::ecdsa::SigningKey;
 use reqwest::Url;
 use thiserror::Error;
 
@@ -70,25 +69,6 @@ impl SimpleTxManager {
             private_key: private_key.to_string(),
             provider,
         })
-    }
-
-    /// Returns the address of the wallet, beloing to the given private key.
-    ///
-    /// # Returns
-    ///
-    /// - The address of the wallet.
-    ///
-    /// # Errors
-    ///
-    /// - If the private key is invalid.
-    pub fn get_address(&self) -> Result<Address, TxManagerError> {
-        let private_key_signing_key = SigningKey::from_slice(self.private_key.as_bytes())
-            .inspect_err(|err| {
-                self.logger
-                    .error("Failed to parse private key", &err.to_string())
-            })
-            .map_err(|_| TxManagerError::AddressError)?;
-        Ok(Address::from_private_key(&private_key_signing_key))
     }
 
     /// Sets the gas limit multiplier.
@@ -222,7 +202,7 @@ impl SimpleTxManager {
         let tx_input = tx.input().unwrap_or_default().to_vec();
         // we only estimate if gas_limit is not already set
         if let Some(0) = gas_limit {
-            let from = self.get_address()?;
+            let from = self.create_local_signer()?.address();
             let to = tx.to().ok_or(TxManagerError::SendTxError)?;
 
             let mut tx_request = TransactionRequest::default()
