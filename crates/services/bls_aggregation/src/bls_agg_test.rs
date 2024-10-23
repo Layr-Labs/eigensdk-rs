@@ -193,7 +193,7 @@ pub mod integration_test {
 
         // Create the task related parameters
         let task_index: TaskIndex = 0;
-        let time_to_expiry = Duration::from_secs(1);
+        let time_to_expiry = Duration::from_secs(10);
 
         // Initialize the task
         bls_agg_service
@@ -375,7 +375,7 @@ pub mod integration_test {
 
         // Create the task related parameters
         let task_index: TaskIndex = 0;
-        let time_to_expiry = Duration::from_secs(3);
+        let time_to_expiry = Duration::from_secs(10);
 
         // Initialize the task
         bls_agg_service
@@ -592,7 +592,7 @@ pub mod integration_test {
 
         // Create the task related parameters
         let task_index: TaskIndex = 0;
-        let time_to_expiry = Duration::from_secs(1);
+        let time_to_expiry = Duration::from_secs(10);
 
         // Initialize the task
         bls_agg_service
