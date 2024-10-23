@@ -1,10 +1,9 @@
 use alloy::network::{Ethereum, EthereumWallet, TransactionBuilder, TxSigner};
-use alloy::providers::{PendingTransactionBuilder, Provider, ProviderBuilder, RootProvider};
+use alloy::providers::{PendingTransactionBuilder, Provider, RootProvider};
 use alloy::rpc::types::eth::{TransactionReceipt, TransactionRequest};
 use alloy::signers::local::PrivateKeySigner;
 use alloy::transports::RpcError;
 use eigen_logging::logger::SharedLogger;
-use reqwest::Url;
 use std::time::Duration;
 use thiserror::Error;
 
@@ -82,13 +81,9 @@ impl GeometricTxManager {
     pub fn new(
         logger: SharedLogger,
         signer: PrivateKeySigner,
-        rpc_url: &str,
+        provider: RootProvider<Transport>,
         params: GeometricTxManagerParams,
     ) -> Result<GeometricTxManager, TxManagerError> {
-        let url = Url::parse(rpc_url)
-            .inspect_err(|err| logger.error("Failed to parse url", &err.to_string()))
-            .map_err(|_| TxManagerError::InvalidUrlError)?;
-        let provider = ProviderBuilder::new().on_http(url);
         let wallet = EthereumWallet::from(signer);
         Ok(GeometricTxManager {
             logger,
@@ -120,9 +115,7 @@ impl GeometricTxManager {
         tx: &mut TransactionRequest,
     ) -> Result<TransactionReceipt, TxManagerError> {
         self.logger.debug("new transaction", &format!("{:?}", tx));
-        // let from = signer.address();
-        // let wallet = EthereumWallet::from(signer); // TODO: could be stored in self instead of signer
-        let from = self.wallet.default_signer().address();
+        let _from = self.wallet.default_signer().address();
         let signed_tx = tx
             .clone()
             .build(&self.wallet)
@@ -219,6 +212,7 @@ mod tests {
     use alloy::consensus::TxLegacy;
     use alloy::network::TransactionBuilder;
     use alloy::primitives::{address, bytes, TxKind::Call, U256};
+    use alloy::providers::ProviderBuilder;
     use alloy::rpc::types::eth::TransactionRequest;
     use eigen_logging::get_test_logger;
     use eigen_signer::signer::Config;
@@ -233,9 +227,10 @@ mod tests {
         let logger = get_test_logger();
         let config = Config::PrivateKey(TEST_PRIVATE_KEY.to_string());
         let signer = Config::signer_from_config(config).unwrap();
+        let provider = ProviderBuilder::new().on_http(rpc_url.parse().unwrap());
 
         let geometric_tx_manager =
-            GeometricTxManager::new(logger, signer, rpc_url.as_str(), Default::default()).unwrap();
+            GeometricTxManager::new(logger, signer, provider, Default::default()).unwrap();
 
         let to = address!("a0Ee7A142d267C1f36714E4a8F75612F20a79720");
         let account_nonce = 0x69;
@@ -264,9 +259,10 @@ mod tests {
         let logger = get_test_logger();
         let config = Config::PrivateKey(TEST_PRIVATE_KEY.to_string());
         let signer = Config::signer_from_config(config).unwrap();
+        let provider = ProviderBuilder::new().on_http(rpc_url.parse().unwrap());
 
         let geometric_tx_manager =
-            GeometricTxManager::new(logger, signer, rpc_url.as_str(), Default::default()).unwrap();
+            GeometricTxManager::new(logger, signer, provider, Default::default()).unwrap();
 
         let to = address!("a0Ee7A142d267C1f36714E4a8F75612F20a79720");
         let account_nonce = 0x69;
@@ -294,11 +290,12 @@ mod tests {
         let logger = get_test_logger();
         let config = Config::PrivateKey(TEST_PRIVATE_KEY.to_string());
         let signer = Config::signer_from_config(config).unwrap();
+        let provider = ProviderBuilder::new().on_http(rpc_url.parse().unwrap());
         let mut params = GeometricTxManagerParams::default();
         params.txn_confirmation_timeout = Duration::from_secs(5);
 
         let geometric_tx_manager =
-            GeometricTxManager::new(logger, signer, rpc_url.as_str(), Default::default()).unwrap();
+            GeometricTxManager::new(logger, signer, provider, Default::default()).unwrap();
 
         let to = address!("a0Ee7A142d267C1f36714E4a8F75612F20a79720");
         let account_nonce = 0x69;
