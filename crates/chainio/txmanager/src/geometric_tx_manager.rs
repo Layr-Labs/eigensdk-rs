@@ -1,20 +1,13 @@
-use alloy::eips::BlockNumberOrTag;
-use alloy::network::{Ethereum, EthereumWallet, NetworkWallet, TransactionBuilder};
-use alloy::primitives::{Address, U256};
-use alloy::providers::{
-    PendingTransaction, PendingTransactionBuilder, Provider, ProviderBuilder, RootProvider,
-};
-use alloy::rpc::types::eth::{TransactionInput, TransactionReceipt, TransactionRequest};
+use alloy::network::{Ethereum, EthereumWallet, TransactionBuilder};
+use alloy::providers::{PendingTransactionBuilder, Provider, ProviderBuilder, RootProvider};
+use alloy::rpc::types::eth::{TransactionReceipt, TransactionRequest};
 use alloy::signers::local::PrivateKeySigner;
 use alloy::transports::RpcError;
 use eigen_logging::logger::SharedLogger;
 use eigen_signer::signer::Config;
-use k256::ecdsa::SigningKey;
 use reqwest::Url;
 use std::time::Duration;
 use thiserror::Error;
-
-static FALLBACK_GAS_TIP_CAP: u128 = 5_000_000_000;
 
 pub type Transport = alloy::transports::http::Http<reqwest::Client>;
 
@@ -105,25 +98,6 @@ impl GeometricTxManager {
         })
     }
 
-    /// Returns the address of the wallet, belonging to the given private key.
-    ///
-    /// # Returns
-    ///
-    /// - The address of the wallet.
-    ///
-    /// # Errors
-    ///
-    /// - If the private key is invalid.
-    pub fn get_address(&self) -> Result<Address, TxManagerError> {
-        let private_key_signing_key = SigningKey::from_slice(self.private_key.as_bytes())
-            .inspect_err(|err| {
-                self.logger
-                    .error("Failed to parse private key", &err.to_string())
-            })
-            .map_err(|_| TxManagerError::AddressError)?;
-        Ok(Address::from_private_key(&private_key_signing_key))
-    }
-
     /// Creates a local signer.
     ///
     /// # Returns
@@ -165,10 +139,11 @@ impl GeometricTxManager {
         tx: &mut TransactionRequest,
     ) -> Result<TransactionReceipt, TxManagerError> {
         self.logger.debug("new transaction", &format!("{:?}", tx));
-        let from = self.get_address()?;
         let signer = self.create_local_signer()?;
+        let from = signer.address();
         let wallet = EthereumWallet::from(signer);
         let signed_tx = tx
+            .clone()
             .build(&wallet)
             .await
             .inspect_err(|err| {
@@ -257,38 +232,37 @@ impl GeometricTxManager {
 
 #[cfg(test)]
 mod tests {
-    use super::{GeometricTxManager, GeometricTxManagerParams};
+    use super::GeometricTxManager;
     use alloy::consensus::TxLegacy;
     use alloy::network::TransactionBuilder;
+    use alloy::primitives::{address, bytes, TxKind::Call, U256};
     use alloy::rpc::types::eth::TransactionRequest;
-    use alloy_node_bindings::Anvil;
-    use alloy_primitives::{bytes, TxKind::Call, U256};
     use eigen_logging::get_test_logger;
-    use tokio;
+    use eigen_testing_utils::anvil::start_anvil_container;
+
+    const TEST_PRIVATE_KEY: &str =
+        "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
 
     #[tokio::test]
     async fn test_send_transaction_from_legacy() {
-        let anvil = Anvil::new().try_spawn().unwrap();
-        let rpc_url: String = anvil.endpoint().parse().unwrap();
+        let (_container, rpc_url, _ws_endpoint) = start_anvil_container().await;
         let logger = get_test_logger();
 
-        let private_key = anvil.keys().first().unwrap();
-        let simple_tx_manager = GeometricTxManager::new(
+        let geometric_tx_manager = GeometricTxManager::new(
             logger,
-            private_key.as_scalar_primitive().to_string().as_str(),
+            TEST_PRIVATE_KEY,
             rpc_url.as_str(),
-            GeometricTxManagerParams::default(),
+            Default::default(),
         )
         .unwrap();
+        let to = address!("a0Ee7A142d267C1f36714E4a8F75612F20a79720");
 
-        let addresses = anvil.addresses().to_vec();
-        let to = addresses.first().cloned().unwrap();
-
+        let account_nonce = 0x69; // nonce queried from the sender account
         let tx = TxLegacy {
             to: Call(to),
             value: U256::from(1_000_000_000),
             gas_limit: 2_000_000,
-            nonce: 0,
+            nonce: account_nonce,
             gas_price: 21_000_000_000,
             input: bytes!(),
             chain_id: Some(31337),
@@ -296,7 +270,7 @@ mod tests {
 
         let mut tx_request: TransactionRequest = tx.clone().into();
         // send transaction and wait for receipt
-        let receipt = simple_tx_manager.send_tx(&mut tx_request).await.unwrap();
+        let receipt = geometric_tx_manager.send_tx(&mut tx_request).await.unwrap();
         let block_number = receipt.block_number.unwrap();
         println!("Transaction mined in block: {}", block_number);
         assert!(block_number > 0);
@@ -305,25 +279,22 @@ mod tests {
 
     #[tokio::test]
     async fn test_send_transaction_from_eip1559() {
-        let anvil = Anvil::new().try_spawn().unwrap();
-        let rpc_url: String = anvil.endpoint().parse().unwrap();
+        let (_container, rpc_url, _ws_endpoint) = start_anvil_container().await;
         let logger = get_test_logger();
 
-        let private_key = anvil.keys().first().unwrap();
-        let simple_tx_manager = GeometricTxManager::new(
+        let geometric_tx_manager = GeometricTxManager::new(
             logger,
-            private_key.as_scalar_primitive().to_string().as_str(),
+            TEST_PRIVATE_KEY,
             rpc_url.as_str(),
-            GeometricTxManagerParams::default(),
+            Default::default(),
         )
         .unwrap();
+        let to = address!("a0Ee7A142d267C1f36714E4a8F75612F20a79720");
 
-        let addresses = anvil.addresses().to_vec();
-        let to = addresses.first().cloned().unwrap();
-
+        let account_nonce = 0x69; // nonce queried from the sender account
         let mut tx = TransactionRequest::default()
             .with_to(to)
-            .with_nonce(0)
+            .with_nonce(account_nonce)
             .with_chain_id(31337)
             .with_value(U256::from(100))
             .with_gas_limit(21_000)
@@ -332,7 +303,7 @@ mod tests {
 
         tx.set_gas_price(21_000_000_000);
         // send transaction and wait for receipt
-        let receipt = simple_tx_manager.send_tx(&mut tx).await.unwrap();
+        let receipt = geometric_tx_manager.send_tx(&mut tx).await.unwrap();
         let block_number = receipt.block_number.unwrap();
         println!("Transaction mined in block: {}", block_number);
         assert!(block_number > 0);

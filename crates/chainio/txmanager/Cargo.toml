@@ -19,5 +19,6 @@ thiserror.workspace = true
 alloy-primitives.workspace = true
 alloy-consensus.workspace = true
 alloy-node-bindings.workspace = true
+eigen-testing-utils.workspace = true
 once_cell.workspace = true
 tokio.workspace = true

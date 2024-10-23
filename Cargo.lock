@@ -2263,6 +2263,7 @@ dependencies = [
  "alloy-primitives",
  "eigen-logging",
  "eigen-signer",
+ "eigen-testing-utils",
  "k256",
  "once_cell",
  "reqwest 0.12.7",
