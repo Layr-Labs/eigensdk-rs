@@ -152,7 +152,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         Ok(())
     }
 
-    /// Processs signatures received from the channel and sends
+    /// Processes signatures received from the channel and sends
     /// the signed task response to the task channel.
     ///
     /// # Arguments

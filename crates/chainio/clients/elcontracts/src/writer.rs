@@ -48,7 +48,7 @@ impl ELChainWriter {
         }
     }
 
-    /// Register an operator to EigenLayer
+    /// Register an operator to EigenLayer, and wait for the transaction to be mined.
     ///
     /// # Arguments
     ///
@@ -269,6 +269,7 @@ mod tests {
             get_rewards_coordinator_address, get_service_manager_address,
             get_strategy_manager_address,
         },
+        transaction::wait_transaction,
     };
     use eigen_types::operator::Operator;
     use eigen_utils::{
@@ -404,8 +405,6 @@ mod tests {
             .await
             .unwrap();
 
-        // this sleep is needed so that we wait for the tx to be processed
-        tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
         let receipt = provider.get_transaction_receipt(tx_hash).await.unwrap();
         assert!(receipt.unwrap().status());
 
@@ -428,52 +427,42 @@ mod tests {
             .await
             .unwrap();
 
-        // this sleep is needed so that we wait for the tx to be processed
-        tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
-        let receipt = provider.get_transaction_receipt(tx_hash).await.unwrap();
-        assert!(receipt.unwrap().status());
+        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+        assert!(receipt.status());
     }
 
     #[tokio::test]
     async fn test_deposit_erc20_into_strategy() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let provider = get_provider(&http_endpoint);
-
         let el_chain_writer = new_test_writer(http_endpoint.clone()).await;
 
         let amount = U256::from_str("100").unwrap();
-        let strategy_addr = get_erc20_mock_strategy(http_endpoint).await;
+        let strategy_addr = get_erc20_mock_strategy(http_endpoint.clone()).await;
         let tx_hash = el_chain_writer
             .deposit_erc20_into_strategy(strategy_addr, amount)
             .await
             .unwrap();
 
-        // this sleep is needed so that we wait for the tx to be processed
-        tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
-        let receipt = provider.get_transaction_receipt(tx_hash).await.unwrap();
-        assert!(receipt.unwrap().status());
+        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+        assert!(receipt.status());
     }
 
     #[tokio::test]
     async fn test_set_claimer_for() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let provider = get_provider(&http_endpoint);
         let el_chain_writer = new_test_writer(http_endpoint.clone()).await;
 
         let claimer = address!("5eb15C0992734B5e77c888D713b4FC67b3D679A2");
 
         let tx_hash = el_chain_writer.set_claimer_for(claimer).await.unwrap();
 
-        // this sleep is needed so that we wait for the tx to be processed
-        tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
-        let receipt = provider.get_transaction_receipt(tx_hash).await.unwrap();
-        assert!(receipt.unwrap().status());
+        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+        assert!(receipt.status());
     }
 
     #[tokio::test]
     async fn test_process_claim() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let provider = get_provider(&http_endpoint);
         let el_chain_writer = new_test_writer(http_endpoint.clone()).await;
 
         let earner_address = address!("5eb15C0992734B5e77c888D713b4FC67b3D679A2");
@@ -495,9 +484,7 @@ mod tests {
             .await
             .unwrap();
 
-        // this sleep is needed so that we wait for the tx to be processed
-        tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
-        let receipt = provider.get_transaction_receipt(tx_hash).await.unwrap();
-        assert!(receipt.unwrap().status());
+        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+        assert!(receipt.status());
     }
 }
