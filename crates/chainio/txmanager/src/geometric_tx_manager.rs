@@ -106,7 +106,7 @@ impl GeometricTxManager {
     ///
     /// # Errors
     ///
-    /// * If the signer cannot be created.
+    /// * `TxManagerError::SignerError` - If the signer cannot be created.
     fn create_local_signer(&self) -> Result<PrivateKeySigner, TxManagerError> {
         let config = Config::PrivateKey(self.private_key.clone());
         Config::signer_from_config(config)
@@ -257,7 +257,7 @@ mod tests {
         .unwrap();
         let to = address!("a0Ee7A142d267C1f36714E4a8F75612F20a79720");
 
-        let account_nonce = 0x69; // nonce queried from the sender account
+        let account_nonce = 0x69;
         let tx = TxLegacy {
             to: Call(to),
             value: U256::from(1_000_000_000),
@@ -291,7 +291,7 @@ mod tests {
         .unwrap();
         let to = address!("a0Ee7A142d267C1f36714E4a8F75612F20a79720");
 
-        let account_nonce = 0x69; // nonce queried from the sender account
+        let account_nonce = 0x69;
         let mut tx = TransactionRequest::default()
             .with_to(to)
             .with_nonce(account_nonce)
