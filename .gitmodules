@@ -1,6 +1,6 @@
 [submodule "crates/contracts/bindings/utils/middleware"]
 	path = crates/contracts/bindings/utils/middleware
-	url = git@github.com:Layr-Labs/eigenlayer-middleware.git
+	url = https://github.com/Layr-Labs/eigenlayer-middleware
 	branch = m2-mainnet
 [submodule "crates/contracts/lib/forge-std"]
 	path = crates/contracts/lib/forge-std
