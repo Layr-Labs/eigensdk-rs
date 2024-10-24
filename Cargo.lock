@@ -2254,21 +2254,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "eigen-chainio-txmanager"
-version = "0.1.0"
-dependencies = [
- "alloy",
- "eigen-logging",
- "eigen-signer",
- "eigen-testing-utils",
- "k256",
- "once_cell",
- "reqwest 0.12.7",
- "thiserror",
- "tokio",
-]
-
-[[package]]
 name = "eigen-cli"
 version = "0.1.0"
 dependencies = [
@@ -2632,7 +2617,6 @@ dependencies = [
 name = "eigensdk"
 version = "0.1.0"
 dependencies = [
- "eigen-chainio-txmanager",
  "eigen-client-avsregistry",
  "eigen-client-elcontracts",
  "eigen-client-eth",

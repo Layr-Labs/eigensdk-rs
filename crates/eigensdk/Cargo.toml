@@ -8,7 +8,6 @@ description = "SDK for eigenlayer"
 license-file.workspace = true
 
 [dependencies]
-eigen-chainio-txmanager = { workspace = true, optional = true }
 eigen-client-avsregistry = { workspace = true, optional = true }
 eigen-client-elcontracts = { workspace = true, optional = true }
 eigen-client-eth = { workspace = true, optional = true }
@@ -37,7 +36,6 @@ default = []
 
 # Full features set for full usage
 full = [
-    "chainio-txmanager",
     "client-avsregistry",
     "client-elcontracts",
     "client-eth",
@@ -54,9 +52,6 @@ full = [
     "testing-utils",
     "nodeapi",
 ]
-
-# Chain IO related features
-chainio-txmanager = ["dep:eigen-chainio-txmanager"]
 
 # Client-related features
 client-avsregistry = ["dep:eigen-client-avsregistry"]
