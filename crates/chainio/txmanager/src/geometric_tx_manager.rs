@@ -1,11 +1,14 @@
-use alloy::network::{Ethereum, EthereumWallet, TransactionBuilder, TxSigner};
-use alloy::providers::{PendingTransactionBuilder, Provider, RootProvider};
+use alloy::consensus::{Transaction, TxEnvelope};
+use alloy::network::{EthereumWallet, TransactionBuilder, TxSigner};
+use alloy::primitives::TxHash;
+use alloy::providers::{Provider, RootProvider};
 use alloy::rpc::types::eth::{TransactionReceipt, TransactionRequest};
 use alloy::signers::local::PrivateKeySigner;
 use alloy::transports::RpcError;
 use eigen_logging::logger::SharedLogger;
 use std::time::Duration;
 use thiserror::Error;
+use tokio::time::Instant;
 
 pub type Transport = alloy::transports::http::Http<reqwest::Client>;
 
@@ -30,6 +33,24 @@ pub struct GeometricTxManager {
     wallet: EthereumWallet,
     provider: RootProvider<Transport>,
     params: GeometricTxManagerParams,
+}
+
+pub struct TxRequest {
+    pub tx: TxEnvelope,
+    attempts: Vec<(Instant, TxHash)>, // (timestamp, tx_hash)
+}
+
+impl TxRequest {
+    fn new(tx: TxEnvelope) -> Self {
+        TxRequest {
+            tx,
+            attempts: Vec::new(),
+        }
+    }
+
+    fn add_attempt(&mut self, tx_hash: TxHash, requested_at: Instant) {
+        self.attempts.push((requested_at, tx_hash));
+    }
 }
 
 #[derive(Debug)]
@@ -114,7 +135,7 @@ impl GeometricTxManager {
         &self,
         tx: &mut TransactionRequest,
     ) -> Result<TransactionReceipt, TxManagerError> {
-        self.logger.debug("new transaction", &format!("{:?}", tx));
+        self.logger.info("new transaction", &format!("{:?}", tx));
         let _from = self.wallet.default_signer().address();
         let signed_tx = tx
             .clone()
@@ -140,7 +161,7 @@ impl GeometricTxManager {
 
             match send_result {
                 Ok(tx) => {
-                    self.logger.debug(
+                    self.logger.info(
                         "Transaction sent. Pending transaction: ",
                         &tx.tx_hash().to_string(),
                     );
@@ -172,51 +193,102 @@ impl GeometricTxManager {
             );
             return Err(TxManagerError::SendTxError);
         };
-
-        GeometricTxManager::wait_for_receipt(self, sent_tx).await
+        let mut tx_request = TxRequest::new(signed_tx);
+        tx_request.add_attempt(*sent_tx.tx_hash(), Instant::now());
+        self.monitor_tx(tx_request).await
     }
 
-    /// Waits for the transaction receipt.
-    ///
-    /// This is a wrapper around `PendingTransactionBuilder::get_receipt`.
-    ///
-    /// # Arguments
-    ///
-    /// * `pending_tx`: The pending transaction builder we want to wait for.
-    ///
-    /// # Returns
-    ///
-    /// * The block number in which the transaction was included.
-    /// * `None` if the transaction was not included in a block or an error ocurred.
-    ///
-    /// # Errors
-    ///
-    /// * `TxManagerError` - If the transaction receipt cannot be retrieved.
-    pub async fn wait_for_receipt(
+    // waits until the transaction is confirmed (or failed) and resends it with a higher gas price if it
+    // is not mined within a timeout.
+    // It returns the receipt once the transaction has been confirmed.
+    // It returns an error if the transaction fails to be sent.
+    pub async fn monitor_tx(
         &self,
-        pending_tx: PendingTransactionBuilder<'_, Transport, Ethereum>,
+        mut tx: TxRequest,
     ) -> Result<TransactionReceipt, TxManagerError> {
-        pending_tx
-            .get_receipt()
-            .await
-            .inspect_err(|err| self.logger.error("Failed to get receipt", &err.to_string()))
-            .map_err(|_| TxManagerError::WaitForReceiptError)
+        let mut interval = tokio::time::interval(self.params.get_tx_receipt_ticker_duration);
+        // wait for x time, if the tx is not mined, send it again with the gas bumped
+        // iterate until the first tx is mined, or a time deadline is reached
+        // TODO: add loop timeout
+
+        let mut retry_from_failures = 0;
+
+        loop {
+            interval.tick().await;
+
+            // check if any tx got mined
+            if let Some(receipt) = self.ensure_any_tx_confirmed(&tx.attempts).await? {
+                return Ok(receipt);
+            }
+
+            // send new tx with higher gas price
+            self.logger.info(&format!("transaction not mined within timeout, resending with higher gas price, tx_hash={:?}, nonce={:?}", &tx.tx.tx_hash(), tx.tx.nonce()), "");
+
+            // TODO: bump gas price
+            let send_result = self.provider.send_transaction(tx.tx.clone().into()).await;
+            match send_result {
+                Ok(new_tx) => {
+                    self.logger
+                        .info("successfully sent txn: ", &new_tx.tx_hash().to_string());
+                    tx.add_attempt(*new_tx.tx_hash(), Instant::now());
+                }
+                Err(e) => {
+                    if retry_from_failures >= self.params.max_send_transaction_retry {
+                        self.logger
+                            .error("Failed to send transaction after retries", &e.to_string()); // check error
+                        return Err(TxManagerError::SendTxError);
+                    }
+                    self.logger
+                        .error("Failed to send transaction", &e.to_string());
+                    retry_from_failures += 1;
+                    continue;
+                }
+            }
+            self.logger.info(
+                "Transaction sent. Pending transaction: ",
+                &tx.tx.tx_hash().to_string(),
+            );
+        }
+    }
+
+    /// waits until at least one of the transactions is confirmed (mined + confirmationBlocks
+    /// blocks). It returns the receipt of the first transaction that is confirmed (only one tx can ever be mined given they
+    /// all have the same nonce).
+    pub async fn ensure_any_tx_confirmed(
+        &self,
+        attempts: &Vec<(Instant, TxHash)>,
+    ) -> Result<Option<TransactionReceipt>, TxManagerError> {
+        for (_requested_at, tx_hash) in attempts {
+            let receipt = self
+                .provider
+                .get_transaction_receipt(*tx_hash)
+                .await
+                .map_err(|_| {
+                    self.logger.error("Failed to get receipt", "");
+                    TxManagerError::WaitForReceiptError
+                })?;
+
+            if let Some(r) = receipt {
+                return Ok(Some(r));
+            }
+        }
+        Ok(None)
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use std::time::Duration;
-
     use super::{GeometricTxManager, GeometricTxManagerParams};
     use alloy::consensus::TxLegacy;
     use alloy::network::TransactionBuilder;
     use alloy::primitives::{address, bytes, TxKind::Call, U256};
     use alloy::providers::ProviderBuilder;
     use alloy::rpc::types::eth::TransactionRequest;
-    use eigen_logging::get_test_logger;
+    use eigen_logging::log_level::LogLevel;
+    use eigen_logging::{get_logger, get_test_logger, init_logger};
     use eigen_signer::signer::Config;
     use eigen_testing_utils::anvil::start_anvil_container;
+    use std::time::Duration;
 
     const TEST_PRIVATE_KEY: &str =
         "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
@@ -224,7 +296,8 @@ mod tests {
     #[tokio::test]
     async fn test_send_transaction_from_legacy() {
         let (_container, rpc_url, _ws_endpoint) = start_anvil_container().await;
-        let logger = get_test_logger();
+        init_logger(LogLevel::Info);
+        let logger = get_logger();
         let config = Config::PrivateKey(TEST_PRIVATE_KEY.to_string());
         let signer = Config::signer_from_config(config).unwrap();
         let provider = ProviderBuilder::new().on_http(rpc_url.parse().unwrap());
