@@ -11,7 +11,6 @@ license-file.workspace = true
 alloy.workspace = true
 eigen-logging.workspace = true
 eigen-signer.workspace = true
-k256.workspace = true
 reqwest.workspace = true
 thiserror.workspace = true
 tokio.workspace = true

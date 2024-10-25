@@ -8,7 +8,7 @@ use alloy::transports::RpcError;
 use eigen_logging::logger::SharedLogger;
 use std::time::Duration;
 use thiserror::Error;
-use tokio::time::Instant;
+use tokio::time::{timeout, Instant};
 
 pub type Transport = alloy::transports::http::Http<reqwest::Client>;
 
@@ -217,7 +217,13 @@ impl GeometricTxManager {
             interval.tick().await;
 
             // check if any tx got mined
-            if let Some(receipt) = self.ensure_any_tx_confirmed(&tx.attempts).await? {
+            let confirmed_txs = timeout(
+                self.params.txn_confirmation_timeout,
+                self.ensure_any_tx_confirmed(&tx.attempts),
+            )
+            .await
+            .unwrap()?;
+            if let Some(receipt) = confirmed_txs {
                 return Ok(receipt);
             }
 
@@ -258,17 +264,27 @@ impl GeometricTxManager {
         &self,
         attempts: &Vec<(Instant, TxHash)>,
     ) -> Result<Option<TransactionReceipt>, TxManagerError> {
+        let mut interval = tokio::time::interval(self.params.get_tx_receipt_ticker_duration);
         for (_requested_at, tx_hash) in attempts {
+            interval.tick().await;
             let receipt = self
                 .provider
                 .get_transaction_receipt(*tx_hash)
                 .await
-                .map_err(|_| {
-                    self.logger.error("Failed to get receipt", "");
+                .map_err(|e| {
+                    self.logger.error("Failed to get receipt", &e.to_string());
                     TxManagerError::WaitForReceiptError
                 })?;
 
             if let Some(r) = receipt {
+                let block_number = self.provider.get_block_number().await.unwrap_or(0);
+                if r.block_number.unwrap_or(0) + self.params.confirmation_blocks > block_number {
+                    self.logger.info(
+                        "Transaction mined but not enough confirmations at current chain tip",
+                        "",
+                    );
+                    break;
+                }
                 return Ok(Some(r));
             }
         }
@@ -285,7 +301,7 @@ mod tests {
     use alloy::providers::ProviderBuilder;
     use alloy::rpc::types::eth::TransactionRequest;
     use eigen_logging::log_level::LogLevel;
-    use eigen_logging::{get_logger, get_test_logger, init_logger};
+    use eigen_logging::{get_logger, init_logger};
     use eigen_signer::signer::Config;
     use eigen_testing_utils::anvil::start_anvil_container;
     use std::time::Duration;
@@ -329,7 +345,8 @@ mod tests {
     #[tokio::test]
     async fn test_send_transaction_from_eip1559() {
         let (_container, rpc_url, _ws_endpoint) = start_anvil_container().await;
-        let logger = get_test_logger();
+        init_logger(LogLevel::Info);
+        let logger = get_logger();
         let config = Config::PrivateKey(TEST_PRIVATE_KEY.to_string());
         let signer = Config::signer_from_config(config).unwrap();
         let provider = ProviderBuilder::new().on_http(rpc_url.parse().unwrap());
@@ -360,7 +377,8 @@ mod tests {
     #[tokio::test]
     async fn test_send_transaction_to_congested_network() {
         let (_container, rpc_url, _ws_endpoint) = start_anvil_container().await;
-        let logger = get_test_logger();
+        init_logger(LogLevel::Info);
+        let logger = get_logger();
         let config = Config::PrivateKey(TEST_PRIVATE_KEY.to_string());
         let signer = Config::signer_from_config(config).unwrap();
         let provider = ProviderBuilder::new().on_http(rpc_url.parse().unwrap());
@@ -369,6 +387,7 @@ mod tests {
 
         let geometric_tx_manager =
             GeometricTxManager::new(logger, signer, provider, Default::default()).unwrap();
+        // TODO: simulate congested network increasing gas base fee and gas tip needed. Mock the provider
 
         let to = address!("a0Ee7A142d267C1f36714E4a8F75612F20a79720");
         let account_nonce = 0x69;
