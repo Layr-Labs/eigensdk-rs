@@ -23,6 +23,7 @@ eigen-utils.workspace = true
 eigen-logging.workspace = true
 num-bigint = "0.4.4"
 thiserror.workspace = true
+tokio = { workspace = true, optional = true }
 tracing.workspace = true
 
 [lints]
@@ -36,4 +37,4 @@ once_cell.workspace = true
 tokio = { version = "1.37.0", features = ["test-util", "full", "sync"] }
 
 [features]
-telemetry = ["dep:eigen-telemetry"]
+telemetry = ["dep:eigen-telemetry", "dep:tokio"]
