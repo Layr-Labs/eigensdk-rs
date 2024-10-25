@@ -241,7 +241,7 @@ impl GeometricTxManager {
                 Err(e) => {
                     if retry_from_failures >= self.params.max_send_transaction_retry {
                         self.logger
-                            .error("Failed to send transaction after retries", &e.to_string()); // check error
+                            .error("Failed to send transaction after retries", &e.to_string()); // TODO: check error
                         return Err(TxManagerError::SendTxError);
                     }
                     self.logger
@@ -382,11 +382,13 @@ mod tests {
         let config = Config::PrivateKey(TEST_PRIVATE_KEY.to_string());
         let signer = Config::signer_from_config(config).unwrap();
         let provider = ProviderBuilder::new().on_http(rpc_url.parse().unwrap());
-        let mut params = GeometricTxManagerParams::default();
-        params.txn_confirmation_timeout = Duration::from_secs(5);
+        let params = GeometricTxManagerParams {
+            txn_confirmation_timeout: Duration::from_secs(5),
+            ..Default::default()
+        };
 
         let geometric_tx_manager =
-            GeometricTxManager::new(logger, signer, provider, Default::default()).unwrap();
+            GeometricTxManager::new(logger, signer, provider, params).unwrap();
         // TODO: simulate congested network increasing gas base fee and gas tip needed. Mock the provider
 
         let to = address!("a0Ee7A142d267C1f36714E4a8F75612F20a79720");
