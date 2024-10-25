@@ -225,11 +225,15 @@ impl AvsRegistryChainWriter {
 
         #[cfg(feature = "telemetry")]
         {
-            eigen_telemetry::telemetry::Telemetry::capture_event(
-                "register_operator_in_quorum_with_avs_registry_coordinator",
-            )
-            .map_err(|e| AvsRegistryError::TelemetryError(e.to_string()))?;
+            tokio::task::spawn_blocking(move || {
+                eigen_telemetry::telemetry::Telemetry::capture_event(
+                    "register_operator_in_quorum_with_avs_registry_coordinator",
+                )
+                .map_err(|e| AvsRegistryError::TelemetryError(e.to_string()))?;
+            })
+            .await?;
         }
+
         Ok(*tx.tx_hash())
     }
 
