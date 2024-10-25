@@ -108,13 +108,13 @@ impl AvsRegistryReader for AvsRegistryChainReader {
 
         #[cfg(feature = "telemetry")]
         {
-            tokio::task::spawn_blocking(move || {
-                eigen_telemetry::telemetry::Telemetry::capture_event(
+            let _ = tokio::task::spawn_blocking(move || {
+                let _ = eigen_telemetry::telemetry::Telemetry::capture_event(
                     "get_operators_stake_in_quorums_at_block",
                 )
-                .map_err(|e| AvsRegistryError::TelemetryError(e.to_string()))?;
+                .map_err(|e| AvsRegistryError::TelemetryError(e.to_string()));
             })
-            .await?;
+            .await;
         }
         Ok(quorum)
     }
@@ -465,11 +465,12 @@ impl AvsRegistryChainReader {
 
         #[cfg(feature = "telemetry")]
         {
-            tokio::task::spawn_blocking(move || {
-                eigen_telemetry::telemetry::Telemetry::capture_event("is_operator_registered")
-                    .map_err(|e| AvsRegistryError::TelemetryError(e.to_string()))?;
+            let _ = tokio::task::spawn_blocking(move || {
+                let _ =
+                    eigen_telemetry::telemetry::Telemetry::capture_event("is_operator_registered")
+                        .map_err(|e| AvsRegistryError::TelemetryError(e.to_string()));
             })
-            .await?;
+            .await;
         }
 
         Ok(operator_status == 1)
