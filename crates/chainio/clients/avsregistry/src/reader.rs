@@ -460,6 +460,12 @@ impl AvsRegistryChainReader {
             _0: operator_status,
         } = operator_status_return;
 
+        #[cfg(feature = "telemetry")]
+        {
+            eigen_telemetry::telemetry::Telemetry::capture_event("is_operator_registered")
+                .map_err(|e| AvsRegistryError::TelemetryError(e.to_string()))?;
+        }
+
         Ok(operator_status == 1)
     }
 
