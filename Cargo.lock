@@ -2258,9 +2258,6 @@ name = "eigen-chainio-txmanager"
 version = "0.1.0"
 dependencies = [
  "alloy",
- "alloy-consensus",
- "alloy-node-bindings",
- "alloy-primitives",
  "eigen-logging",
  "eigen-signer",
  "eigen-testing-utils",
@@ -2356,7 +2353,6 @@ version = "0.1.0"
 dependencies = [
  "alloy",
  "alloy-json-rpc",
- "alloy-node-bindings",
  "alloy-primitives",
  "alloy-rlp",
  "async-trait",
@@ -2581,7 +2577,6 @@ dependencies = [
  "alloy",
  "alloy-consensus",
  "alloy-network",
- "alloy-node-bindings",
  "alloy-primitives",
  "alloy-rpc-client",
  "alloy-signer",
