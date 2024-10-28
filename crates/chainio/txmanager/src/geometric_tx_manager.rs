@@ -1,11 +1,13 @@
-use alloy::consensus::{Transaction, TxEnvelope};
+use alloy::eips::BlockNumberOrTag;
 use alloy::network::{EthereumWallet, TransactionBuilder, TxSigner};
 use alloy::primitives::TxHash;
 use alloy::providers::{Provider, RootProvider};
 use alloy::rpc::types::eth::{TransactionReceipt, TransactionRequest};
+use alloy::rpc::types::TransactionInput;
 use alloy::signers::local::PrivateKeySigner;
 use alloy::transports::RpcError;
 use eigen_logging::logger::SharedLogger;
+use std::cmp;
 use std::time::Duration;
 use thiserror::Error;
 use tokio::time::{timeout, Instant};
@@ -36,12 +38,12 @@ pub struct GeometricTxManager {
 }
 
 pub struct TxRequest {
-    pub tx: TxEnvelope,
+    pub tx: TransactionRequest,
     attempts: Vec<(Instant, TxHash)>, // (timestamp, tx_hash)
 }
 
 impl TxRequest {
-    fn new(tx: TxEnvelope) -> Self {
+    fn new(tx: TransactionRequest) -> Self {
         TxRequest {
             tx,
             attempts: Vec::new(),
@@ -154,10 +156,7 @@ impl GeometricTxManager {
             // TODO: update gas tip cap
 
             // send transaction
-            let send_result = self
-                .provider
-                .send_transaction(signed_tx.clone().into())
-                .await;
+            let send_result = self.provider.send_tx_envelope(signed_tx.clone()).await;
 
             match send_result {
                 Ok(tx) => {
@@ -186,33 +185,29 @@ impl GeometricTxManager {
             };
         }
 
-        let Some(sent_tx) = pending_tx else {
-            self.logger.error(
-                "Failed to send transaction",
-                &signed_tx.tx_hash().to_string(),
-            );
-            return Err(TxManagerError::SendTxError);
-        };
-        let mut tx_request = TxRequest::new(signed_tx);
-        tx_request.add_attempt(*sent_tx.tx_hash(), Instant::now());
-        self.monitor_tx(tx_request).await
+        match pending_tx {
+            Some(sent_tx) => {
+                let mut tx_request = TxRequest::new(signed_tx.into());
+                tx_request.add_attempt(*sent_tx.tx_hash(), Instant::now());
+                self.monitor_tx(tx_request).await
+            }
+            None => {
+                self.logger.error("Failed to send transaction", "");
+                return Err(TxManagerError::SendTxError);
+            }
+        }
     }
 
-    // waits until the transaction is confirmed (or failed) and resends it with a higher gas price if it
-    // is not mined within a timeout.
-    // It returns the receipt once the transaction has been confirmed.
-    // It returns an error if the transaction fails to be sent.
+    /// waits until the transaction is confirmed (or failed) and resends it with a higher gas price if it
+    /// is not mined within a timeout.
+    /// It returns the receipt once the transaction has been confirmed.
+    /// It returns an error if the transaction fails to be sent.
     pub async fn monitor_tx(
         &self,
         mut tx: TxRequest,
     ) -> Result<TransactionReceipt, TxManagerError> {
         let mut interval = tokio::time::interval(self.params.get_tx_receipt_ticker_duration);
-        // wait for x time, if the tx is not mined, send it again with the gas bumped
-        // iterate until the first tx is mined, or a time deadline is reached
-        // TODO: add loop timeout
-
         let mut retry_from_failures = 0;
-
         loop {
             interval.tick().await;
 
@@ -228,10 +223,12 @@ impl GeometricTxManager {
             }
 
             // send new tx with higher gas price
-            self.logger.info(&format!("transaction not mined within timeout, resending with higher gas price, tx_hash={:?}, nonce={:?}", &tx.tx.tx_hash(), tx.tx.nonce()), "");
-
-            // TODO: bump gas price
-            let send_result = self.provider.send_transaction(tx.tx.clone().into()).await;
+            let new_tx = self.speedup_tx(&tx.tx).await?;
+            self.logger.info(
+                "transaction not mined within timeout, resending with higher gas price",
+                "",
+            );
+            let send_result = self.provider.send_transaction(new_tx.into()).await;
             match send_result {
                 Ok(new_tx) => {
                     self.logger
@@ -250,10 +247,6 @@ impl GeometricTxManager {
                     continue;
                 }
             }
-            self.logger.info(
-                "Transaction sent. Pending transaction: ",
-                &tx.tx.tx_hash().to_string(),
-            );
         }
     }
 
@@ -289,6 +282,87 @@ impl GeometricTxManager {
             }
         }
         Ok(None)
+    }
+
+    // increases the gas price of the existing transaction by specified percentage.
+    // It makes sure the new gas price is not lower than the current gas price.
+    pub async fn speedup_tx(
+        &self,
+        tx: &TransactionRequest,
+    ) -> Result<TransactionRequest, TxManagerError> {
+        let new_gas_tip_cap = {
+            let estimated_gas_tip_cap = self.provider.get_max_priority_fee_per_gas().await
+            .inspect_err(|err|
+                self.logger.info("eth_maxPriorityFeePerGas is unsupported by current backend, using fallback gasTipCap",
+                &err.to_string()))
+            .unwrap_or(self.params.fallback_gas_tip_cap as _);
+            let bumped_gas_tip_cap = self
+                .add_tip_cap_buffer(tx.max_priority_fee_per_gas().unwrap_or(0))
+                .await;
+            cmp::max(estimated_gas_tip_cap, bumped_gas_tip_cap)
+        };
+
+        let new_tx = self.update_gas_tip_cap(tx, new_gas_tip_cap).await?;
+        self.logger.info(
+            &format!(
+                "increasing gas price, max_fee_per_gas={:?}, max_priority_fee_per_gas={:?}",
+                new_tx.max_fee_per_gas, new_tx.max_priority_fee_per_gas
+            ),
+            "",
+        );
+        Ok(new_tx)
+    }
+
+    pub async fn update_gas_tip_cap(
+        &self,
+        tx: &TransactionRequest,
+        new_gas_tip_cap: u128,
+    ) -> Result<TransactionRequest, TxManagerError> {
+        let gas_fee_cap = self.estimate_gas_fee_cap(new_gas_tip_cap).await?;
+        let from = self.wallet.default_signer().address();
+        let to = tx.to().ok_or(TxManagerError::SendTxError)?;
+        let tx_input = tx.input().unwrap_or_default().to_vec();
+
+        let mut new_tx = TransactionRequest::default()
+            .to(to)
+            .from(from)
+            .value(tx.value().unwrap_or_default())
+            .input(TransactionInput::new(tx_input.clone().into()));
+        new_tx.set_max_priority_fee_per_gas(new_gas_tip_cap);
+        new_tx.set_max_fee_per_gas(gas_fee_cap);
+
+        // we reestimate the gas limit because the state of the chain may have changed,
+        // which could cause the previous gas limit to be insufficient
+        let gas_limit = self
+            .provider
+            .estimate_gas(&new_tx)
+            .await
+            .map_err(|_| TxManagerError::SendTxError)?;
+        let gas_limit_buffered = (self.params.gas_multiplier * gas_limit as f64) as u64; // add gas buffer
+
+        let new_tx = new_tx.with_gas_limit(gas_limit_buffered);
+        Ok(new_tx)
+    }
+
+    // returns the gas fee cap for a transaction, calculated as:
+    // gasFeeCap = 2 * baseFee + gasTipCap
+    // Rationale: https://www.blocknative.com/blog/eip-1559-fees
+    pub async fn estimate_gas_fee_cap(&self, gas_tip_cap: u128) -> Result<u128, TxManagerError> {
+        let header = self
+            .provider
+            .get_block_by_number(BlockNumberOrTag::Latest, false)
+            .await
+            .ok()
+            .flatten()
+            .map(|block| block.header)
+            .ok_or(TxManagerError::SendTxError)
+            .inspect_err(|_| self.logger.error("Failed to get latest block header", ""))?;
+        let base_fee = header.base_fee_per_gas.ok_or(TxManagerError::SendTxError)?;
+        Ok(base_fee as u128 * 2 + gas_tip_cap)
+    }
+
+    pub async fn add_tip_cap_buffer(&self, gas_tip_cap: u128) -> u128 {
+        gas_tip_cap * (self.params.gas_tip_multiplier * 100.0) as u128 / 100
     }
 }
 
