@@ -1,4 +1,4 @@
-use alloy_primitives::{FixedBytes, U256};
+use alloy_primitives::{FixedBytes, Uint, U256};
 use ark_bn254::G2Affine;
 use ark_ec::AffineRepr;
 use eigen_crypto_bls::{BlsG1Point, BlsG2Point, Signature};
@@ -18,7 +18,7 @@ use tokio::{
         mpsc::{self, UnboundedReceiver, UnboundedSender},
         Mutex,
     },
-    time::{timeout, Duration},
+    time::Duration,
 };
 
 /// The response from the BLS aggregation service
@@ -48,6 +48,8 @@ pub enum BlsAggregationServiceError {
     SignatureVerificationError(SignatureVerificationError),
     #[error("channel was closed")]
     ChannelClosed,
+    #[error("signatures channel was closed")]
+    SignatureChannelClosed,
     #[error("error sending to channel")]
     ChannelError,
     #[error("Avs Registry Error")]
@@ -275,7 +277,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         aggregated_response_sender: UnboundedSender<
             Result<BlsAggregationServiceResponse, BlsAggregationServiceError>,
         >,
-        mut rx: UnboundedReceiver<SignedTaskResponseDigest>,
+        signatures_rx: UnboundedReceiver<SignedTaskResponseDigest>,
     ) -> Result<(), BlsAggregationServiceError> {
         let quorum_threshold_percentage_map: HashMap<u8, u8> = quorum_nums
             .iter()
@@ -303,117 +305,176 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
             .map(|avs_state| avs_state.agg_pub_key_g1.clone())
             .collect();
 
+        Self::loop_task_aggregator(
+            avs_registry_service,
+            task_index,
+            task_created_block,
+            time_to_expiry,
+            aggregated_response_sender,
+            signatures_rx,
+            operator_state_avs,
+            total_stake_per_quorum,
+            quorum_threshold_percentage_map,
+            quorum_apks_g1,
+            quorum_nums,
+        )
+        .await
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    async fn loop_task_aggregator(
+        avs_registry_service: A,
+        task_index: TaskIndex,
+        task_created_block: u32,
+        time_to_expiry: Duration,
+        aggregated_response_sender: UnboundedSender<
+            Result<BlsAggregationServiceResponse, BlsAggregationServiceError>,
+        >,
+        mut signatures_rx: UnboundedReceiver<SignedTaskResponseDigest>,
+        operator_state_avs: HashMap<FixedBytes<32>, OperatorAvsState>,
+        total_stake_per_quorum: HashMap<u8, Uint<256, 4>>,
+        quorum_threshold_percentage_map: HashMap<u8, u8>,
+        quorum_apks_g1: Vec<BlsG1Point>,
+        quorum_nums: Vec<u8>,
+    ) -> Result<(), BlsAggregationServiceError> {
         let mut aggregated_operators: HashMap<FixedBytes<32>, AggregatedOperators> = HashMap::new();
+        let mut open_window = false;
+        let mut current_aggregated_response: Option<BlsAggregationServiceResponse> = None;
+        let (window_tx, mut window_rx) = tokio::sync::mpsc::unbounded_channel::<bool>();
+        let task_expired_timer = tokio::time::sleep(time_to_expiry);
+        tokio::pin!(task_expired_timer);
 
-        // iterate over the signed task responses receive from the channel, until the time to expiry is reached or the channel is closed
-        while let Some(signed_task_digest) = timeout(time_to_expiry, rx.recv())
-            .await
-            .inspect_err(|_err| {
-                // timeout
-                println!("expire");
-                let _ =
-                    aggregated_response_sender.send(Err(BlsAggregationServiceError::TaskExpired));
-            })
-            .map_err(|_| BlsAggregationServiceError::TaskExpired)?
-        {
-            // check if the operator has already signed for this digest
-            if aggregated_operators
-                .get(&signed_task_digest.task_response_digest)
-                .map(|operators| {
-                    operators
-                        .signers_operator_ids_set
-                        .contains_key(&signed_task_digest.operator_id)
-                })
-                .unwrap_or(false)
-            {
-                signed_task_digest
-                    .signature_verification_channel
-                    .send(Err(SignatureVerificationError::DuplicateSignature))
-                    .await
-                    .map_err(|_| BlsAggregationServiceError::ChannelError)?;
-                continue;
-            }
+        loop {
+            tokio::select! {
+                _ = &mut task_expired_timer => {
+                    // Task expired. If window is open, send aggregated reponse. Else, send error
+                    if open_window {
+                        aggregated_response_sender
+                            .send(Ok(current_aggregated_response.unwrap()))
+                            .map_err(|_| BlsAggregationServiceError::ChannelError)?;
+                    } else {
+                        let _ = aggregated_response_sender.send(Err(BlsAggregationServiceError::TaskExpired));
+                    }
+                    return Ok(());
+                },
+                _ = window_rx.recv() => {
+                    // Window finished. Send aggregated response
+                    aggregated_response_sender
+                        .send(Ok(current_aggregated_response.unwrap()))
+                        .map_err(|_| BlsAggregationServiceError::ChannelError)?;
+                    return Ok(());
+                },
+                signed_task_digest = signatures_rx.recv() =>{
+                    // New signature, aggregate it. If threshold is met, start window
 
-            let verification_result = BlsAggregatorService::<A>::verify_signature(
-                task_index,
-                &signed_task_digest,
-                &operator_state_avs,
-            )
-            .await;
-            let verification_failed = verification_result.is_err();
+                    let Some(digest) = signed_task_digest else {
+                        return Err(BlsAggregationServiceError::SignatureChannelClosed);
+                    };
+                    // check if the operator has already signed for this digest
+                    if aggregated_operators
+                        .get(&digest.task_response_digest)
+                        .map(|operators| {
+                            operators
+                                .signers_operator_ids_set
+                                .contains_key(&digest.operator_id)
+                        })
+                        .unwrap_or(false)
+                    {
+                        digest
+                            .signature_verification_channel
+                            .send(Err(SignatureVerificationError::DuplicateSignature))
+                            .await
+                            .map_err(|_| BlsAggregationServiceError::ChannelError)?;
+                        continue;
+                    }
 
-            signed_task_digest
-                .signature_verification_channel
-                .send(verification_result)
-                .await
-                .map_err(|_| BlsAggregationServiceError::ChannelError)?;
-
-            if verification_failed {
-                continue;
-            }
-
-            let operator_state = operator_state_avs
-                .get(&signed_task_digest.operator_id)
-                .unwrap();
-
-            let operator_g2_pubkey = operator_state
-                .operator_info
-                .pub_keys
-                .clone()
-                .unwrap()
-                .g2_pub_key
-                .g2();
-
-            let digest_aggregated_operators = aggregated_operators
-                .get_mut(&signed_task_digest.task_response_digest)
-                .map(|digest_aggregated_operators| {
-                    BlsAggregatorService::<A>::aggregate_new_operator(
-                        digest_aggregated_operators,
-                        operator_state.clone(),
-                        signed_task_digest.clone(),
+                    let verification_result = BlsAggregatorService::<A>::verify_signature(
+                        task_index,
+                        &digest,
+                        &operator_state_avs,
                     )
-                    .clone()
-                })
-                .unwrap_or(AggregatedOperators {
-                    signers_apk_g2: BlsG2Point::new((G2Affine::zero() + operator_g2_pubkey).into()),
-                    signers_agg_sig_g1: signed_task_digest.bls_signature.clone(),
-                    signers_operator_ids_set: HashMap::from([(
-                        operator_state.operator_id.into(),
-                        true,
-                    )]),
-                    signers_total_stake_per_quorum: operator_state.stake_per_quorum.clone(),
-                });
+                    .await;
+                    let verification_failed = verification_result.is_err();
 
-            aggregated_operators.insert(
-                signed_task_digest.task_response_digest,
-                digest_aggregated_operators.clone(),
-            );
+                    digest
+                        .signature_verification_channel
+                        .send(verification_result)
+                        .await
+                        .map_err(|_| BlsAggregationServiceError::ChannelError)?;
 
-            if !BlsAggregatorService::<A>::check_if_stake_thresholds_met(
-                &digest_aggregated_operators.signers_total_stake_per_quorum,
-                &total_stake_per_quorum,
-                &quorum_threshold_percentage_map,
-            ) {
-                continue;
+                    if verification_failed {
+                        continue;
+                    }
+
+                    let operator_state = operator_state_avs
+                        .get(&digest.operator_id)
+                        .unwrap();
+
+                    let operator_g2_pubkey = operator_state
+                        .operator_info
+                        .pub_keys
+                        .clone()
+                        .unwrap()
+                        .g2_pub_key
+                        .g2();
+
+                    let digest_aggregated_operators = aggregated_operators
+                        .get_mut(&digest.task_response_digest)
+                        .map(|digest_aggregated_operators| {
+                            BlsAggregatorService::<A>::aggregate_new_operator(
+                                digest_aggregated_operators,
+                                operator_state.clone(),
+                                digest.clone(),
+                            )
+                            .clone()
+                        })
+                        .unwrap_or(AggregatedOperators {
+                            signers_apk_g2: BlsG2Point::new((G2Affine::zero() + operator_g2_pubkey).into()),
+                            signers_agg_sig_g1: digest.bls_signature.clone(),
+                            signers_operator_ids_set: HashMap::from([(
+                                operator_state.operator_id.into(),
+                                true,
+                            )]),
+                            signers_total_stake_per_quorum: operator_state.stake_per_quorum.clone(),
+                        });
+
+                    aggregated_operators.insert(
+                        digest.task_response_digest,
+                        digest_aggregated_operators.clone(),
+                    );
+
+                    if !BlsAggregatorService::<A>::check_if_stake_thresholds_met(
+                        &digest_aggregated_operators.signers_total_stake_per_quorum,
+                        &total_stake_per_quorum,
+                        &quorum_threshold_percentage_map,
+                    ) {
+                        continue;
+                    }
+
+                    if !open_window {
+                        open_window = true;
+                        let sender_cloned = window_tx.clone();
+                        tokio::spawn(async move {
+                            tokio::time::sleep(Duration::from_secs(1)).await;
+                            let _ = sender_cloned.send(true);
+                        });
+                    }
+
+                    current_aggregated_response = Some(BlsAggregatorService::build_aggregated_response(
+                        task_index,
+                        task_created_block,
+                        digest,
+                        &operator_state_avs,
+                        digest_aggregated_operators,
+                        &avs_registry_service,
+                        &quorum_apks_g1,
+                        &quorum_nums,
+                    )
+                    .await?);
+
+                }
             }
-
-            let bls_aggregation_service_response = BlsAggregatorService::build_aggregated_response(
-                task_index,
-                task_created_block,
-                signed_task_digest,
-                &operator_state_avs,
-                digest_aggregated_operators,
-                &avs_registry_service,
-                &quorum_apks_g1,
-                &quorum_nums,
-            )
-            .await?;
-
-            aggregated_response_sender
-                .send(Ok(bls_aggregation_service_response))
-                .map_err(|_| BlsAggregationServiceError::ChannelError)?;
         }
-        Err(BlsAggregationServiceError::ChannelClosed)
     }
 
     /// Builds the aggregated response containing all the aggregation info.
