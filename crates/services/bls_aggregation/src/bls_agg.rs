@@ -317,6 +317,64 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
             quorum_threshold_percentage_map,
             quorum_apks_g1,
             quorum_nums,
+            Duration::from_secs(2),
+        )
+        .await
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    pub async fn single_task_aggregator_with_window(
+        avs_registry_service: A,
+        task_index: TaskIndex,
+        task_created_block: u32,
+        quorum_nums: Vec<u8>,
+        quorum_threshold_percentages: QuorumThresholdPercentages,
+        time_to_expiry: Duration,
+        aggregated_response_sender: UnboundedSender<
+            Result<BlsAggregationServiceResponse, BlsAggregationServiceError>,
+        >,
+        signatures_rx: UnboundedReceiver<SignedTaskResponseDigest>,
+        window_duration: Duration,
+    ) -> Result<(), BlsAggregationServiceError> {
+        let quorum_threshold_percentage_map: HashMap<u8, u8> = quorum_nums
+            .iter()
+            .enumerate()
+            .map(|(i, quorum_number)| (*quorum_number, quorum_threshold_percentages[i]))
+            .collect();
+
+        let operator_state_avs = avs_registry_service
+            .get_operators_avs_state_at_block(task_created_block, &quorum_nums)
+            .await
+            .map_err(|_| BlsAggregationServiceError::RegistryError)?;
+
+        let quorums_avs_state = avs_registry_service
+            .get_quorums_avs_state_at_block(&quorum_nums, task_created_block)
+            .await
+            .map_err(|_| BlsAggregationServiceError::RegistryError)?;
+        let total_stake_per_quorum: HashMap<_, _> = quorums_avs_state
+            .iter()
+            .map(|(k, v)| (*k, v.total_stake))
+            .collect();
+
+        let quorum_apks_g1: Vec<BlsG1Point> = quorum_nums
+            .iter()
+            .filter_map(|quorum_num| quorums_avs_state.get(quorum_num))
+            .map(|avs_state| avs_state.agg_pub_key_g1.clone())
+            .collect();
+
+        Self::loop_task_aggregator(
+            avs_registry_service,
+            task_index,
+            task_created_block,
+            time_to_expiry,
+            aggregated_response_sender,
+            signatures_rx,
+            operator_state_avs,
+            total_stake_per_quorum,
+            quorum_threshold_percentage_map,
+            quorum_apks_g1,
+            quorum_nums,
+            window_duration,
         )
         .await
     }
@@ -336,6 +394,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         quorum_threshold_percentage_map: HashMap<u8, u8>,
         quorum_apks_g1: Vec<BlsG1Point>,
         quorum_nums: Vec<u8>,
+        window_duration: Duration,
     ) -> Result<(), BlsAggregationServiceError> {
         let mut aggregated_operators: HashMap<FixedBytes<32>, AggregatedOperators> = HashMap::new();
         let mut open_window = false;
@@ -455,7 +514,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                         open_window = true;
                         let sender_cloned = window_tx.clone();
                         tokio::spawn(async move {
-                            tokio::time::sleep(Duration::from_secs(1)).await;
+                            tokio::time::sleep(window_duration).await;
                             let _ = sender_cloned.send(true);
                         });
                     }
