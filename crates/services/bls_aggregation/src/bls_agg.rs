@@ -2345,7 +2345,7 @@ mod tests {
             process_signature_result
         );
 
-        let signers_apk_g2 = aggregate_g2_public_keys(&vec![test_operator_1.clone()]);
+        let signers_apk_g2 = aggregate_g2_public_keys(&[test_operator_1.clone()]);
         let signers_agg_sig_g1 = aggregate_g1_signatures(&[bls_sig_op_1]);
         let quorum_apks_g1 = vec![aggregate_g1_public_keys(&vec![
             test_operator_1,
@@ -2452,7 +2452,7 @@ mod tests {
             process_signature_result
         );
 
-        let signers_apk_g2 = aggregate_g2_public_keys(&vec![test_operator_1.clone()]);
+        let signers_apk_g2 = aggregate_g2_public_keys(&[test_operator_1.clone()]);
         let signers_agg_sig_g1 = aggregate_g1_signatures(&[bls_sig_op_1]);
         let quorum_apks_g1 = vec![aggregate_g1_public_keys(&vec![
             test_operator_1,
