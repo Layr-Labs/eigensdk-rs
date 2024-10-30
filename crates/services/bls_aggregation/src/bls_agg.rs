@@ -2387,4 +2387,111 @@ mod tests {
         assert_eq!(task_index, response.unwrap().unwrap().task_index);
         assert!(elapsed < time_to_expiry);
     }
+
+    #[tokio::test]
+    async fn test_no_signatures_are_aggregated_after_window() {
+        let test_operator_1 = TestOperator {
+            operator_id: U256::from(1).into(),
+            stake_per_quorum: HashMap::from([(0u8, U256::from(100))]),
+            bls_keypair: BlsKeyPair::new(PRIVATE_KEY_1.into()).unwrap(),
+        };
+        let test_operator_2 = TestOperator {
+            operator_id: U256::from(2).into(),
+            stake_per_quorum: HashMap::from([(0u8, U256::from(100))]),
+            bls_keypair: BlsKeyPair::new(PRIVATE_KEY_2.into()).unwrap(),
+        };
+        let test_operators = vec![test_operator_1.clone(), test_operator_2.clone()];
+        let block_number = 1;
+        let task_index = 0;
+        let task_response = 123;
+        let quorum_numbers: Vec<QuorumNum> = vec![0];
+        let quorum_threshold_percentages: QuorumThresholdPercentages = vec![40_u8];
+        let fake_avs_registry_service = FakeAvsRegistryService::new(block_number, test_operators);
+        let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
+
+        let time_to_expiry = Duration::from_secs(5);
+        let window_duration = Duration::from_secs(1);
+
+        let start = Instant::now();
+        bls_agg_service
+            .initialize_new_task_with_window(
+                task_index,
+                block_number as u32,
+                quorum_numbers,
+                quorum_threshold_percentages,
+                time_to_expiry,
+                window_duration,
+            )
+            .await
+            .unwrap();
+
+        let task_response_1_digest = hash(task_response);
+        let bls_sig_op_1 = test_operator_1
+            .bls_keypair
+            .sign_message(task_response_1_digest.as_ref());
+        bls_agg_service
+            .process_new_signature(
+                task_index,
+                task_response_1_digest,
+                bls_sig_op_1.clone(),
+                test_operator_1.operator_id,
+            )
+            .await
+            .unwrap();
+
+        // quorum reached here, window should be open for 1 second
+        sleep(Duration::from_secs(2)).await;
+
+        let task_response_2_digest = hash(task_response);
+        let bls_sig_op_2 = test_operator_2
+            .bls_keypair
+            .sign_message(task_response_2_digest.as_ref());
+        let process_signature_result = bls_agg_service
+            .process_new_signature(
+                task_index,
+                task_response_2_digest,
+                bls_sig_op_2.clone(),
+                test_operator_2.operator_id,
+            )
+            .await;
+        assert_eq!(
+            Err(BlsAggregationServiceError::ChannelError), // TODO: change this error to be more representative
+            process_signature_result
+        );
+
+        let signers_apk_g2 = aggregate_g2_public_keys(&vec![test_operator_1.clone()]);
+        let signers_agg_sig_g1 = aggregate_g1_signatures(&[bls_sig_op_1]);
+        let quorum_apks_g1 = vec![aggregate_g1_public_keys(&vec![
+            test_operator_1,
+            test_operator_2.clone(),
+        ])];
+
+        let expected_agg_service_response = BlsAggregationServiceResponse {
+            task_index,
+            task_response_digest: task_response_1_digest,
+            non_signers_pub_keys_g1: vec![test_operator_2.bls_keypair.public_key()],
+            quorum_apks_g1,
+            signers_apk_g2,
+            signers_agg_sig_g1,
+            non_signer_quorum_bitmap_indices: vec![],
+            quorum_apk_indices: vec![],
+            total_stake_indices: vec![],
+            non_signer_stake_indices: vec![],
+        };
+
+        let response = bls_agg_service
+            .aggregated_response_receiver
+            .lock()
+            .await
+            .recv()
+            .await;
+
+        let elapsed = start.elapsed();
+        assert_eq!(
+            expected_agg_service_response,
+            response.clone().unwrap().unwrap()
+        );
+        assert_eq!(task_index, response.unwrap().unwrap().task_index);
+        assert!(elapsed < time_to_expiry);
+    }
 }
