@@ -387,7 +387,6 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         loop {
             tokio::select! {
                 _ = &mut task_expired_timer => {
-                    dbg!("task expired");
                     // Task expired. If window is open, send aggregated reponse. Else, send error
                     if open_window {
                         aggregated_response_sender
@@ -400,7 +399,6 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                 },
                 window_finished = window_rx.recv() => {
                     // Window finished. Send aggregated response
-                    dbg!("Window rx received", window_finished);
                     aggregated_response_sender
                         .send(Ok(current_aggregated_response.unwrap()))
                         .map_err(|_| BlsAggregationServiceError::ChannelError)?;
@@ -408,7 +406,6 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                 },
                 signed_task_digest = signatures_rx.recv() =>{
                     // New signature, aggregate it. If threshold is met, start window
-                    dbg!("received signature");
                     let Some(digest) = signed_task_digest else {
                         return Err(BlsAggregationServiceError::SignatureChannelClosed);
                     };
@@ -490,7 +487,6 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                         &total_stake_per_quorum,
                         &quorum_threshold_percentage_map,
                     ) {
-                        dbg!("threshold not met");
                         continue;
                     }
 
@@ -652,8 +648,6 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
             ) else {
                 return false;
             };
-            dbg!("signed_stake_by_quorum", signed_stake_by_quorum);
-            dbg!("total_stake_by_quorum", total_stake_by_quorum);
 
             let signed_stake = signed_stake_by_quorum * U256::from(100);
             let threshold_stake = *total_stake_by_quorum * U256::from(*quorum_threshold_percentage);
@@ -662,7 +656,6 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                 return false;
             }
         }
-        dbg!("thresholds met");
         true
     }
 }
