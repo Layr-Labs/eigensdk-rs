@@ -110,7 +110,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
     /// * `task_created_block` - The block number at which the task was created
     /// * `quorum_nums` - The quorum numbers for the task
     /// * `quorum_threshold_percentages` - The quorum threshold percentages for the task
-    /// * `time_to_expiry` - The timemetout for the task reader to expire
+    /// * `time_to_expiry` - The timeout for the task reader to expire
     ///
     /// # Error
     ///
@@ -142,7 +142,8 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
     /// * `task_created_block` - The block number at which the task was created
     /// * `quorum_nums` - The quorum numbers for the task
     /// * `quorum_threshold_percentages` - The quorum threshold percentages for the task
-    /// * `time_to_expiry` - The timemetout for the task reader to expire
+    /// * `time_to_expiry` - The timeout for the task reader to expire
+    /// * `window_duration` - The duration of the window to wait for signatures after quorum is reached
     ///
     /// # Error
     ///
