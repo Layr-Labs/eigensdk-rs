@@ -123,14 +123,50 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         quorum_threshold_percentages: QuorumThresholdPercentages,
         time_to_expiry: Duration,
     ) -> Result<(), BlsAggregationServiceError> {
-        let mut task_channel = self.signed_task_response.write();
+        self.initialize_new_task_with_window(
+            task_index,
+            task_created_block,
+            quorum_nums,
+            quorum_threshold_percentages,
+            time_to_expiry,
+            Duration::ZERO,
+        )
+        .await
+    }
 
-        if task_channel.contains_key(&task_index) {
-            return Err(BlsAggregationServiceError::DuplicateTaskIndex);
-        }
+    ///   Creates a new task meant to process new signed task responses for a task tokio channel.
+    ///
+    /// # Arguments
+    ///
+    /// * `task_index` - The index of the task
+    /// * `task_created_block` - The block number at which the task was created
+    /// * `quorum_nums` - The quorum numbers for the task
+    /// * `quorum_threshold_percentages` - The quorum threshold percentages for the task
+    /// * `time_to_expiry` - The timemetout for the task reader to expire
+    ///
+    /// # Error
+    ///
+    /// Returns error if the task index already exists
+    pub async fn initialize_new_task_with_window(
+        &self,
+        task_index: TaskIndex,
+        task_created_block: u32,
+        quorum_nums: Vec<u8>,
+        quorum_threshold_percentages: QuorumThresholdPercentages,
+        time_to_expiry: Duration,
+        window_duration: Duration,
+    ) -> Result<(), BlsAggregationServiceError> {
+        let signatures_rx = {
+            let mut task_channel = self.signed_task_response.write();
 
-        let (tx, rx) = mpsc::unbounded_channel();
-        task_channel.insert(task_index, tx);
+            if task_channel.contains_key(&task_index) {
+                return Err(BlsAggregationServiceError::DuplicateTaskIndex);
+            }
+
+            let (signatures_tx, signatures_rx) = mpsc::unbounded_channel();
+            task_channel.insert(task_index, signatures_tx);
+            signatures_rx
+        };
 
         let avs_registry_service = self.avs_registry_service.clone();
         let aggregated_response_sender = self.aggregated_response_sender.clone();
@@ -144,7 +180,8 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                 quorum_threshold_percentages.clone(),
                 time_to_expiry,
                 aggregated_response_sender,
-                rx,
+                signatures_rx,
+                window_duration,
             )
             .await
             .inspect_err(|err| {
@@ -268,33 +305,6 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
     /// * `rx` - The receiver channel for the signed task responses
     #[allow(clippy::too_many_arguments)]
     pub async fn single_task_aggregator(
-        avs_registry_service: A,
-        task_index: TaskIndex,
-        task_created_block: u32,
-        quorum_nums: Vec<u8>,
-        quorum_threshold_percentages: QuorumThresholdPercentages,
-        time_to_expiry: Duration,
-        aggregated_response_sender: UnboundedSender<
-            Result<BlsAggregationServiceResponse, BlsAggregationServiceError>,
-        >,
-        signatures_rx: UnboundedReceiver<SignedTaskResponseDigest>,
-    ) -> Result<(), BlsAggregationServiceError> {
-        Self::single_task_aggregator_with_window(
-            avs_registry_service,
-            task_index,
-            task_created_block,
-            quorum_nums,
-            quorum_threshold_percentages,
-            time_to_expiry,
-            aggregated_response_sender,
-            signatures_rx,
-            Duration::ZERO,
-        )
-        .await
-    }
-
-    #[allow(clippy::too_many_arguments)]
-    pub async fn single_task_aggregator_with_window(
         avs_registry_service: A,
         task_index: TaskIndex,
         task_created_block: u32,
