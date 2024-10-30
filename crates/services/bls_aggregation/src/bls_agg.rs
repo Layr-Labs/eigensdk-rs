@@ -674,6 +674,7 @@ mod tests {
     use std::collections::HashMap;
     use std::time::Duration;
     use std::vec;
+    use tokio::time::Instant;
 
     const PRIVATE_KEY_1: &str =
         "13710126902690889134622698668747132666439281256983827313388062967626731803599";
@@ -2033,5 +2034,138 @@ mod tests {
             Err(BlsAggregationServiceError::TaskExpired),
             response.unwrap()
         );
+    }
+
+    #[tokio::test]
+    async fn test_signatures_are_processed_during_window_after_quorum() {
+        let test_operator_1 = TestOperator {
+            operator_id: U256::from(1).into(),
+            stake_per_quorum: HashMap::from([(0u8, U256::from(100))]),
+            bls_keypair: BlsKeyPair::new(PRIVATE_KEY_1.into()).unwrap(),
+        };
+        let test_operator_2 = TestOperator {
+            operator_id: U256::from(2).into(),
+            stake_per_quorum: HashMap::from([(0u8, U256::from(100))]),
+            bls_keypair: BlsKeyPair::new(PRIVATE_KEY_2.into()).unwrap(),
+        };
+        let test_operator_3 = TestOperator {
+            operator_id: U256::from(3).into(),
+            stake_per_quorum: HashMap::from([(0u8, U256::from(100))]),
+            bls_keypair: BlsKeyPair::new(PRIVATE_KEY_3.into()).unwrap(),
+        };
+        let test_operators = vec![
+            test_operator_1.clone(),
+            test_operator_2.clone(),
+            test_operator_3.clone(),
+        ];
+        let block_number = 1;
+        let task_index = 0;
+        let task_response = 123;
+        let quorum_numbers: Vec<QuorumNum> = vec![0];
+        let quorum_threshold_percentages: QuorumThresholdPercentages = vec![67_u8];
+        let fake_avs_registry_service = FakeAvsRegistryService::new(block_number, test_operators);
+        let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
+
+        let time_to_expiry = Duration::from_secs(5);
+        let window_duration = Duration::from_secs(1);
+
+        let start = Instant::now();
+        bls_agg_service
+            .initialize_new_task_with_window(
+                task_index,
+                block_number as u32,
+                quorum_numbers,
+                quorum_threshold_percentages,
+                time_to_expiry,
+                window_duration,
+            )
+            .await
+            .unwrap();
+
+        let task_response_1_digest = hash(task_response);
+        let bls_sig_op_1 = test_operator_1
+            .bls_keypair
+            .sign_message(task_response_1_digest.as_ref());
+        bls_agg_service
+            .process_new_signature(
+                task_index,
+                task_response_1_digest,
+                bls_sig_op_1.clone(),
+                test_operator_1.operator_id,
+            )
+            .await
+            .unwrap();
+
+        let task_response_2_digest = hash(task_response);
+        let bls_sig_op_2 = test_operator_2
+            .bls_keypair
+            .sign_message(task_response_2_digest.as_ref());
+        bls_agg_service
+            .process_new_signature(
+                task_index,
+                task_response_2_digest,
+                bls_sig_op_2.clone(),
+                test_operator_2.operator_id,
+            )
+            .await
+            .unwrap();
+
+        // quorum reached here, window should be open receiving signatures for 1 second
+
+        let task_response_3_digest = hash(task_response);
+        let bls_sig_op_3 = test_operator_3
+            .bls_keypair
+            .sign_message(task_response_3_digest.as_ref());
+        bls_agg_service
+            .process_new_signature(
+                task_index,
+                task_response_3_digest,
+                bls_sig_op_3.clone(),
+                test_operator_3.operator_id,
+            )
+            .await
+            .unwrap();
+
+        let signers_apk_g2 = aggregate_g2_public_keys(&vec![
+            test_operator_1.clone(),
+            test_operator_2.clone(),
+            test_operator_3.clone(),
+        ]);
+        let signers_agg_sig_g1 =
+            aggregate_g1_signatures(&[bls_sig_op_1, bls_sig_op_2, bls_sig_op_3]);
+        let quorum_apks_g1 = vec![aggregate_g1_public_keys(&vec![
+            test_operator_1,
+            test_operator_2,
+            test_operator_3,
+        ])];
+
+        let expected_agg_service_response = BlsAggregationServiceResponse {
+            task_index,
+            task_response_digest: task_response_3_digest,
+            non_signers_pub_keys_g1: vec![],
+            quorum_apks_g1,
+            signers_apk_g2,
+            signers_agg_sig_g1,
+            non_signer_quorum_bitmap_indices: vec![],
+            quorum_apk_indices: vec![],
+            total_stake_indices: vec![],
+            non_signer_stake_indices: vec![],
+        };
+
+        let response = bls_agg_service
+            .aggregated_response_receiver
+            .lock()
+            .await
+            .recv()
+            .await;
+
+        let elapsed = start.elapsed();
+        assert_eq!(
+            expected_agg_service_response,
+            response.clone().unwrap().unwrap()
+        );
+        assert_eq!(task_index, response.unwrap().unwrap().task_index);
+        assert!(elapsed < time_to_expiry);
+        assert!(elapsed >= window_duration);
     }
 }
