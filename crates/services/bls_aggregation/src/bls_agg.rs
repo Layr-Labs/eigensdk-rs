@@ -397,7 +397,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                     }
                     return Ok(());
                 },
-                window_finished = window_rx.recv() => {
+                _ = window_rx.recv() => {
                     // Window finished. Send aggregated response
                     aggregated_response_sender
                         .send(Ok(current_aggregated_response.unwrap()))
