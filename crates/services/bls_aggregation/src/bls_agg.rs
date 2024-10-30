@@ -387,6 +387,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         loop {
             tokio::select! {
                 _ = &mut task_expired_timer => {
+                    dbg!("task expired");
                     // Task expired. If window is open, send aggregated reponse. Else, send error
                     if open_window {
                         aggregated_response_sender
@@ -397,8 +398,9 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                     }
                     return Ok(());
                 },
-                _ = window_rx.recv() => {
+                window_finished = window_rx.recv() => {
                     // Window finished. Send aggregated response
+                    dbg!("Window rx received", window_finished);
                     aggregated_response_sender
                         .send(Ok(current_aggregated_response.unwrap()))
                         .map_err(|_| BlsAggregationServiceError::ChannelError)?;
@@ -406,7 +408,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                 },
                 signed_task_digest = signatures_rx.recv() =>{
                     // New signature, aggregate it. If threshold is met, start window
-
+                    dbg!("received signature");
                     let Some(digest) = signed_task_digest else {
                         return Err(BlsAggregationServiceError::SignatureChannelClosed);
                     };
@@ -488,6 +490,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                         &total_stake_per_quorum,
                         &quorum_threshold_percentage_map,
                     ) {
+                        dbg!("threshold not met");
                         continue;
                     }
 
@@ -649,6 +652,8 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
             ) else {
                 return false;
             };
+            dbg!("signed_stake_by_quorum", signed_stake_by_quorum);
+            dbg!("total_stake_by_quorum", total_stake_by_quorum);
 
             let signed_stake = signed_stake_by_quorum * U256::from(100);
             let threshold_stake = *total_stake_by_quorum * U256::from(*quorum_threshold_percentage);
@@ -657,6 +662,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                 return false;
             }
         }
+        dbg!("thresholds met");
         true
     }
 }
@@ -674,7 +680,7 @@ mod tests {
     use std::collections::HashMap;
     use std::time::Duration;
     use std::vec;
-    use tokio::time::Instant;
+    use tokio::time::{sleep, Instant};
 
     const PRIVATE_KEY_1: &str =
         "13710126902690889134622698668747132666439281256983827313388062967626731803599";
@@ -2062,7 +2068,7 @@ mod tests {
         let task_index = 0;
         let task_response = 123;
         let quorum_numbers: Vec<QuorumNum> = vec![0];
-        let quorum_threshold_percentages: QuorumThresholdPercentages = vec![67_u8];
+        let quorum_threshold_percentages: QuorumThresholdPercentages = vec![50_u8];
         let fake_avs_registry_service = FakeAvsRegistryService::new(block_number, test_operators);
         let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
 
@@ -2111,7 +2117,7 @@ mod tests {
             .unwrap();
 
         // quorum reached here, window should be open receiving signatures for 1 second
-
+        sleep(Duration::from_millis(500)).await;
         let task_response_3_digest = hash(task_response);
         let bls_sig_op_3 = test_operator_3
             .bls_keypair
@@ -2167,5 +2173,111 @@ mod tests {
         assert_eq!(task_index, response.unwrap().unwrap().task_index);
         assert!(elapsed < time_to_expiry);
         assert!(elapsed >= window_duration);
+    }
+
+    #[tokio::test]
+    async fn test_if_quorum_has_been_reached_and_the_task_expires_during_window_the_response_is_sent(
+    ) {
+        let test_operator_1 = TestOperator {
+            operator_id: U256::from(1).into(),
+            stake_per_quorum: HashMap::from([(0u8, U256::from(100))]),
+            bls_keypair: BlsKeyPair::new(PRIVATE_KEY_1.into()).unwrap(),
+        };
+        let test_operator_2 = TestOperator {
+            operator_id: U256::from(2).into(),
+            stake_per_quorum: HashMap::from([(0u8, U256::from(100))]),
+            bls_keypair: BlsKeyPair::new(PRIVATE_KEY_2.into()).unwrap(),
+        };
+        let test_operators = vec![test_operator_1.clone(), test_operator_2.clone()];
+        let block_number = 1;
+        let task_index = 0;
+        let task_response = 123;
+        let quorum_numbers: Vec<QuorumNum> = vec![0];
+        let quorum_threshold_percentages: QuorumThresholdPercentages = vec![40_u8];
+        let fake_avs_registry_service = FakeAvsRegistryService::new(block_number, test_operators);
+        let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
+
+        let time_to_expiry = Duration::from_secs(2);
+        let window_duration = Duration::from_secs(10);
+
+        let start = Instant::now();
+        bls_agg_service
+            .initialize_new_task_with_window(
+                task_index,
+                block_number as u32,
+                quorum_numbers,
+                quorum_threshold_percentages,
+                time_to_expiry,
+                window_duration,
+            )
+            .await
+            .unwrap();
+
+        let task_response_1_digest = hash(task_response);
+        let bls_sig_op_1 = test_operator_1
+            .bls_keypair
+            .sign_message(task_response_1_digest.as_ref());
+        bls_agg_service
+            .process_new_signature(
+                task_index,
+                task_response_1_digest,
+                bls_sig_op_1.clone(),
+                test_operator_1.operator_id,
+            )
+            .await
+            .unwrap();
+
+        // quorum reached here, window should be open receiving signatures
+
+        let task_response_2_digest = hash(task_response);
+        let bls_sig_op_2 = test_operator_2
+            .bls_keypair
+            .sign_message(task_response_2_digest.as_ref());
+        bls_agg_service
+            .process_new_signature(
+                task_index,
+                task_response_2_digest,
+                bls_sig_op_2.clone(),
+                test_operator_2.operator_id,
+            )
+            .await
+            .unwrap();
+
+        let signers_apk_g2 =
+            aggregate_g2_public_keys(&vec![test_operator_1.clone(), test_operator_2.clone()]);
+        let signers_agg_sig_g1 = aggregate_g1_signatures(&[bls_sig_op_1, bls_sig_op_2]);
+        let quorum_apks_g1 = vec![aggregate_g1_public_keys(&vec![
+            test_operator_1,
+            test_operator_2,
+        ])];
+
+        let expected_agg_service_response = BlsAggregationServiceResponse {
+            task_index,
+            task_response_digest: task_response_2_digest,
+            non_signers_pub_keys_g1: vec![],
+            quorum_apks_g1,
+            signers_apk_g2,
+            signers_agg_sig_g1,
+            non_signer_quorum_bitmap_indices: vec![],
+            quorum_apk_indices: vec![],
+            total_stake_indices: vec![],
+            non_signer_stake_indices: vec![],
+        };
+
+        let response = bls_agg_service
+            .aggregated_response_receiver
+            .lock()
+            .await
+            .recv()
+            .await;
+
+        let elapsed = start.elapsed();
+        assert_eq!(
+            expected_agg_service_response,
+            response.clone().unwrap().unwrap()
+        );
+        assert_eq!(task_index, response.unwrap().unwrap().task_index);
+        assert!(elapsed >= time_to_expiry);
+        assert!(elapsed < window_duration);
     }
 }
