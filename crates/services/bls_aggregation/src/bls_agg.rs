@@ -286,11 +286,17 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         let operator_state_avs = avs_registry_service
             .get_operators_avs_state_at_block(task_created_block, &quorum_nums)
             .await
+            .inspect_err(|e| {
+                dbg!(e);
+            })
             .map_err(|_| BlsAggregationServiceError::RegistryError)?;
 
         let quorums_avs_state = avs_registry_service
             .get_quorums_avs_state_at_block(&quorum_nums, task_created_block)
             .await
+            .inspect_err(|e| {
+                dbg!(e);
+            })
             .map_err(|_| BlsAggregationServiceError::RegistryError)?;
         let total_stake_per_quorum: HashMap<_, _> = quorums_avs_state
             .iter()
