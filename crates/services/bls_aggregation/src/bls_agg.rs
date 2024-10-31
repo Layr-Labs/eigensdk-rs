@@ -1,18 +1,19 @@
+use super::bls_aggregation_service_error::BlsAggregationServiceError;
+use super::bls_aggregation_service_response::BlsAggregationServiceResponse;
 use alloy_primitives::{FixedBytes, Uint, U256};
 use ark_bn254::G2Affine;
 use ark_ec::AffineRepr;
 use eigen_crypto_bls::{BlsG1Point, BlsG2Point, Signature};
 use eigen_crypto_bn254::utils::verify_message;
+use eigen_logging::logger::SharedLogger;
 use eigen_services_avsregistry::AvsRegistryService;
 use eigen_types::{
     avs::{SignatureVerificationError, SignedTaskResponseDigest, TaskIndex, TaskResponseDigest},
     operator::{OperatorAvsState, QuorumThresholdPercentage, QuorumThresholdPercentages},
 };
 use parking_lot::RwLock;
-use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::sync::Arc;
-use thiserror::Error;
 use tokio::{
     sync::{
         mpsc::{self, UnboundedReceiver, UnboundedSender},
@@ -20,43 +21,6 @@ use tokio::{
     },
     time::Duration,
 };
-
-/// The response from the BLS aggregation service
-#[allow(unused)]
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-pub struct BlsAggregationServiceResponse {
-    pub task_index: TaskIndex,
-    pub task_response_digest: TaskResponseDigest,
-    pub non_signers_pub_keys_g1: Vec<BlsG1Point>,
-    pub quorum_apks_g1: Vec<BlsG1Point>,
-    pub signers_apk_g2: BlsG2Point,
-    pub signers_agg_sig_g1: Signature,
-    pub non_signer_quorum_bitmap_indices: Vec<u32>,
-    pub quorum_apk_indices: Vec<u32>,
-    pub total_stake_indices: Vec<u32>,
-    pub non_signer_stake_indices: Vec<Vec<u32>>,
-}
-
-/// Possible errors raised in BLS aggregation
-#[derive(Error, Debug, Clone, PartialEq, Eq)]
-pub enum BlsAggregationServiceError {
-    #[error("task expired error")]
-    TaskExpired,
-    #[error("task not found error")]
-    TaskNotFound,
-    #[error("signature verification error")]
-    SignatureVerificationError(SignatureVerificationError),
-    #[error("channel was closed")]
-    ChannelClosed,
-    #[error("signatures channel was closed")]
-    SignatureChannelClosed,
-    #[error("error sending to channel")]
-    ChannelError,
-    #[error("Avs Registry Error")]
-    RegistryError,
-    #[error("duplicate task index error")]
-    DuplicateTaskIndex,
-}
 
 /// Contains the aggregated operators signers information
 #[derive(Debug, Clone)]
@@ -73,6 +37,7 @@ pub struct BlsAggregatorService<A: AvsRegistryService>
 where
     A: Clone,
 {
+    logger: SharedLogger,
     aggregated_response_sender:
         UnboundedSender<Result<BlsAggregationServiceResponse, BlsAggregationServiceError>>,
     pub aggregated_response_receiver: Arc<
@@ -92,9 +57,10 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
     /// # Arguments
     ///
     /// * `avs_registry_service` - The AVS registry service
-    pub fn new(avs_registry_service: A) -> Self {
+    pub fn new(avs_registry_service: A, logger: SharedLogger) -> Self {
         let (tx, rx) = tokio::sync::mpsc::unbounded_channel();
         Self {
+            logger,
             aggregated_response_sender: tx,
             aggregated_response_receiver: Arc::new(Mutex::new(rx)),
             signed_task_response: Arc::new(RwLock::new(HashMap::new())),
@@ -666,6 +632,7 @@ mod tests {
     use super::{BlsAggregationServiceError, BlsAggregationServiceResponse, BlsAggregatorService};
     use alloy_primitives::{B256, U256};
     use eigen_crypto_bls::{BlsG1Point, BlsG2Point, BlsKeyPair, Signature};
+    use eigen_logging::get_test_logger;
     use eigen_services_avsregistry::fake_avs_registry_service::FakeAvsRegistryService;
     use eigen_types::avs::SignatureVerificationError::{DuplicateSignature, IncorrectSignature};
     use eigen_types::operator::{QuorumNum, QuorumThresholdPercentages};
@@ -737,7 +704,8 @@ mod tests {
             .sign_message(task_response_digest.as_ref());
         let fake_avs_registry_service =
             FakeAvsRegistryService::new(block_number, vec![test_operator_1.clone()]);
-        let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
+        let bls_agg_service =
+            BlsAggregatorService::new(fake_avs_registry_service, get_test_logger());
         bls_agg_service
             .initialize_new_task(
                 task_index,
@@ -811,7 +779,8 @@ mod tests {
 
         let fake_avs_registry_service =
             FakeAvsRegistryService::new(block_number, test_operators.clone());
-        let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
+        let bls_agg_service =
+            BlsAggregatorService::new(fake_avs_registry_service, get_test_logger());
         bls_agg_service
             .initialize_new_task(
                 task_index,
@@ -928,7 +897,8 @@ mod tests {
 
         let fake_avs_registry_service =
             FakeAvsRegistryService::new(block_number, test_operators.clone());
-        let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
+        let bls_agg_service =
+            BlsAggregatorService::new(fake_avs_registry_service, get_test_logger());
 
         bls_agg_service
             .initialize_new_task(
@@ -1034,7 +1004,8 @@ mod tests {
 
         let fake_avs_registry_service =
             FakeAvsRegistryService::new(block_number, test_operators.clone());
-        let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
+        let bls_agg_service =
+            BlsAggregatorService::new(fake_avs_registry_service, get_test_logger());
 
         bls_agg_service
             .initialize_new_task(
@@ -1119,7 +1090,8 @@ mod tests {
 
         let fake_avs_registry_service =
             FakeAvsRegistryService::new(block_number, test_operators.clone());
-        let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
+        let bls_agg_service =
+            BlsAggregatorService::new(fake_avs_registry_service, get_test_logger());
 
         // initialize 2 concurrent tasks
         let task_1_index = 1;
@@ -1279,7 +1251,8 @@ mod tests {
 
         let fake_avs_registry_service =
             FakeAvsRegistryService::new(block_number, vec![test_operator_1.clone()]);
-        let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
+        let bls_agg_service =
+            BlsAggregatorService::new(fake_avs_registry_service, get_test_logger());
         bls_agg_service
             .initialize_new_task(
                 task_index,
@@ -1330,7 +1303,8 @@ mod tests {
 
         let fake_avs_registry_service =
             FakeAvsRegistryService::new(block_number, test_operators.clone());
-        let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
+        let bls_agg_service =
+            BlsAggregatorService::new(fake_avs_registry_service, get_test_logger());
 
         bls_agg_service
             .initialize_new_task(
@@ -1408,7 +1382,8 @@ mod tests {
             .sign_message(task_response_digest.as_ref());
 
         let fake_avs_registry_service = FakeAvsRegistryService::new(block_number, test_operators);
-        let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
+        let bls_agg_service =
+            BlsAggregatorService::new(fake_avs_registry_service, get_test_logger());
 
         bls_agg_service
             .initialize_new_task(
@@ -1469,7 +1444,8 @@ mod tests {
 
         let fake_avs_registry_service =
             FakeAvsRegistryService::new(block_number, test_operators.clone());
-        let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
+        let bls_agg_service =
+            BlsAggregatorService::new(fake_avs_registry_service, get_test_logger());
 
         bls_agg_service
             .initialize_new_task(
@@ -1578,7 +1554,8 @@ mod tests {
 
         let fake_avs_registry_service =
             FakeAvsRegistryService::new(block_number, test_operators.clone());
-        let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
+        let bls_agg_service =
+            BlsAggregatorService::new(fake_avs_registry_service, get_test_logger());
 
         bls_agg_service
             .initialize_new_task(
@@ -1688,7 +1665,8 @@ mod tests {
         let task_response_digest = hash(task_response);
 
         let fake_avs_registry_service = FakeAvsRegistryService::new(block_number, test_operators);
-        let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
+        let bls_agg_service =
+            BlsAggregatorService::new(fake_avs_registry_service, get_test_logger());
 
         bls_agg_service
             .initialize_new_task(
@@ -1760,7 +1738,8 @@ mod tests {
 
         let fake_avs_registry_service =
             FakeAvsRegistryService::new(block_number, vec![test_operator_1.clone()]);
-        let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
+        let bls_agg_service =
+            BlsAggregatorService::new(fake_avs_registry_service, get_test_logger());
 
         bls_agg_service
             .initialize_new_task(
@@ -1825,7 +1804,8 @@ mod tests {
         let test_operators = vec![test_operator_1.clone(), test_operator_2.clone()];
 
         let fake_avs_registry_service = FakeAvsRegistryService::new(block_number, test_operators);
-        let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
+        let bls_agg_service =
+            BlsAggregatorService::new(fake_avs_registry_service, get_test_logger());
 
         bls_agg_service
             .initialize_new_task(
@@ -1880,7 +1860,8 @@ mod tests {
 
         let fake_avs_registry_service =
             FakeAvsRegistryService::new(block_number, vec![test_operator_1.clone()]);
-        let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
+        let bls_agg_service =
+            BlsAggregatorService::new(fake_avs_registry_service, get_test_logger());
 
         let bls_sig_op_1 = test_operator_1
             .bls_keypair
@@ -1917,7 +1898,8 @@ mod tests {
         let quorum_threshold_percentages: QuorumThresholdPercentages = vec![100u8];
         let time_to_expiry = Duration::from_secs(1);
         let fake_avs_registry_service = FakeAvsRegistryService::new(block_number, test_operators);
-        let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
+        let bls_agg_service =
+            BlsAggregatorService::new(fake_avs_registry_service, get_test_logger());
 
         bls_agg_service
             .initialize_new_task(
@@ -1994,7 +1976,8 @@ mod tests {
             .sign_message(hash(task_response).as_ref());
         let fake_avs_registry_service =
             FakeAvsRegistryService::new(block_number, vec![test_operator_1.clone()]);
-        let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
+        let bls_agg_service =
+            BlsAggregatorService::new(fake_avs_registry_service, get_test_logger());
         bls_agg_service
             .initialize_new_task(
                 task_index,
@@ -2064,7 +2047,8 @@ mod tests {
         let quorum_numbers: Vec<QuorumNum> = vec![0];
         let quorum_threshold_percentages: QuorumThresholdPercentages = vec![50_u8];
         let fake_avs_registry_service = FakeAvsRegistryService::new(block_number, test_operators);
-        let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
+        let bls_agg_service =
+            BlsAggregatorService::new(fake_avs_registry_service, get_test_logger());
 
         let time_to_expiry = Duration::from_secs(5);
         let window_duration = Duration::from_secs(1);
@@ -2189,7 +2173,8 @@ mod tests {
         let quorum_numbers: Vec<QuorumNum> = vec![0];
         let quorum_threshold_percentages: QuorumThresholdPercentages = vec![40_u8];
         let fake_avs_registry_service = FakeAvsRegistryService::new(block_number, test_operators);
-        let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
+        let bls_agg_service =
+            BlsAggregatorService::new(fake_avs_registry_service, get_test_logger());
 
         let time_to_expiry = Duration::from_secs(2);
         let window_duration = Duration::from_secs(10);
@@ -2294,7 +2279,8 @@ mod tests {
         let quorum_numbers: Vec<QuorumNum> = vec![0];
         let quorum_threshold_percentages: QuorumThresholdPercentages = vec![40_u8];
         let fake_avs_registry_service = FakeAvsRegistryService::new(block_number, test_operators);
-        let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
+        let bls_agg_service =
+            BlsAggregatorService::new(fake_avs_registry_service, get_test_logger());
 
         let time_to_expiry = Duration::from_secs(2);
         let window_duration = Duration::ZERO;
@@ -2401,7 +2387,8 @@ mod tests {
         let quorum_numbers: Vec<QuorumNum> = vec![0];
         let quorum_threshold_percentages: QuorumThresholdPercentages = vec![40_u8];
         let fake_avs_registry_service = FakeAvsRegistryService::new(block_number, test_operators);
-        let bls_agg_service = BlsAggregatorService::new(fake_avs_registry_service);
+        let bls_agg_service =
+            BlsAggregatorService::new(fake_avs_registry_service, get_test_logger());
 
         let time_to_expiry = Duration::from_secs(5);
         let window_duration = Duration::from_secs(1);
