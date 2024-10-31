@@ -71,15 +71,15 @@ jobs:
       - name: Install nightly Rust
         run: rustup toolchain install nightly
 
-      - name: Install testing tools
-        uses: taiki-e/install-action@v2
-        with:
-          tool: cargo-llvm-cov
-
       - name: Cache Rust dependencies
         uses: Swatinem/rust-cache@v2
         with:
           cache-on-failure: true
+
+      - name: Install testing tools
+        uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-llvm-cov
 
       - name: docker
         uses: docker-practice/actions-setup-docker@master
