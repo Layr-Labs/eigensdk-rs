@@ -47,5 +47,7 @@ pub async fn wait_transaction(
     let url = Url::parse(rpc_url).map_err(|_| TransportErrorKind::custom_str("Invalid RPC URL"))?;
     let root_provider = ProviderBuilder::new().on_http(url);
     let pending_tx = PendingTransactionBuilder::new(&root_provider, tx_hash);
-    pending_tx.get_receipt().await
+    let receipt = pending_tx.get_receipt().await?;
+    debug_assert!(receipt.status());
+    Ok(receipt)
 }
