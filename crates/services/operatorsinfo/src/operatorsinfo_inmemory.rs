@@ -120,6 +120,7 @@ impl OperatorInfoServiceInMemory {
                 while let Some(cmd) = pubkeys_rx.recv().await {
                     match cmd {
                         OperatorsInfoMessage::InsertOperatorInfo(addr, keys) => {
+                            dbg!("Inserting operator info", &addr, &keys);
                             let mut data = operator_state.operator_info_data.write().await;
                             data.insert(addr, *keys.clone());
                             let operator_id = operator_id_from_g1_pub_key(keys.g1_pub_key)
@@ -133,6 +134,7 @@ impl OperatorInfoServiceInMemory {
                         }
                         OperatorsInfoMessage::Get(addr, responder) => {
                             let data = operator_state.operator_info_data.read().await;
+                            dbg!(&data);
                             let result = data.get(&addr).cloned();
                             responder.send(Ok(result)).expect("Failed to send response");
                         }
@@ -173,6 +175,7 @@ impl OperatorInfoServiceInMemory {
         let provider = get_ws_provider(&self.ws).await.unwrap();
         let current_block_number = provider.get_block_number().await.unwrap();
 
+        dbg!("queried past operators");
         // Subscribe to new pubkey registration events
         let filter = Filter::new()
             .event(NEW_PUBKEY_REGISTRATION_EVENT)
@@ -186,7 +189,7 @@ impl OperatorInfoServiceInMemory {
 
         let pub_keys = self.pub_keys.clone();
         let self_clone = self.clone();
-
+        dbg!(&stream);
         loop {
             tokio::select! {
                 _ = cancellation_token.cancelled() => {
@@ -219,7 +222,7 @@ impl OperatorInfoServiceInMemory {
                                 };
                                 // Send message
 
-                                self_clone.logger.debug(
+                                self_clone.logger.info(
                                     &format!(
                                         "New pub key found  operator_address : {:?} , operator_pub_keys : {:?}",
                                         event_data.operator, operator_pub_key
