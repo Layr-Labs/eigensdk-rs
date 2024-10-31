@@ -57,6 +57,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
     /// # Arguments
     ///
     /// * `avs_registry_service` - The AVS registry service
+    /// * `logger` - Logger to log messages
     pub fn new(avs_registry_service: A, logger: SharedLogger) -> Self {
         let (tx, rx) = tokio::sync::mpsc::unbounded_channel();
         Self {
@@ -137,6 +138,14 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
 
         let avs_registry_service = self.avs_registry_service.clone();
         let aggregated_response_sender = self.aggregated_response_sender.clone();
+        self.logger.debug(
+            &format!(
+                "Create task to process new signed task responses for task index: {}",
+                task_index
+            ),
+            "eigen-services-blsaggregation.bls_agg.initialize_new_task_with_window",
+        );
+        let logger = self.logger.clone();
         tokio::spawn(async move {
             // Process each signed response here
             let _ = BlsAggregatorService::<A>::single_task_aggregator(
@@ -149,6 +158,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                 aggregated_response_sender,
                 signatures_rx,
                 window_duration,
+                Some(logger),
             )
             .await
             .inspect_err(|err| {
@@ -196,6 +206,13 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                 .get(&task_index)
                 .ok_or(BlsAggregationServiceError::TaskNotFound)?;
 
+            self.logger.debug(
+                &format!(
+                    "send the task to the aggregator thread for task index: {}",
+                    task_index
+                ),
+                "eigen-services-blsaggregation.bls_agg.process_new_signature",
+            );
             // send the task to the aggregator thread
             sender
                 .send(task)
@@ -204,6 +221,13 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
             // release the lock
         };
 
+        self.logger.debug(
+            &format!(
+                "receive the signature verification result for task index: {}",
+                task_index
+            ),
+            "eigen-services-blsaggregation.bls_agg.process_new_signature",
+        );
         // return the signature verification result
         rx.recv()
             .await
@@ -218,6 +242,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
     /// - `aggregated_operators` - Contains the information of all the aggregated operators.
     /// - `operator_state` - The state of the operator, contains information about its stake.
     /// - `signed_task_digest` - Contains the id and signature of the new operator.
+    /// - `logger` - The logger to log messages. If None, no logs are written.
     ///
     /// # Returns
     ///
@@ -226,6 +251,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         aggregated_operators: &mut AggregatedOperators,
         operator_state: OperatorAvsState,
         signed_task_digest: SignedTaskResponseDigest,
+        logger: Option<SharedLogger>,
     ) -> &mut AggregatedOperators {
         aggregated_operators.signers_agg_sig_g1 = Signature::new(
             (aggregated_operators.signers_agg_sig_g1.g1_point().g1()
@@ -244,6 +270,17 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         aggregated_operators
             .signers_operator_ids_set
             .insert(signed_task_digest.operator_id, true);
+
+        if let Some(logger) = logger {
+            logger.debug(
+                &format!(
+                    "operator {} inserted in signers_operator_ids_set",
+                    signed_task_digest.operator_id
+                ),
+                "eigen-services-blsaggregation.bls_agg.aggregate_new_operator",
+            );
+        }
+
         for (quorum_num, stake) in operator_state.stake_per_quorum.iter() {
             aggregated_operators
                 .signers_total_stake_per_quorum
@@ -269,7 +306,9 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
     /// * `quorum_threshold_percentages` - The quorum threshold percentages for the task
     /// * `time_to_expiry` - The timeout for the task reader to expire
     /// * `aggregated_response_sender` - The sender channel for the aggregated responses
-    /// * `rx` - The receiver channel for the signed task responses
+    /// * `signatures_rx` - The receiver channel for the signed task responses
+    /// * `window_duration` - The duration of the window to wait for signatures after quorum is reached
+    /// * `logger` - The logger to log messages. If None, no logs are written.
     #[allow(clippy::too_many_arguments)]
     pub async fn single_task_aggregator(
         avs_registry_service: A,
@@ -283,6 +322,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         >,
         signatures_rx: UnboundedReceiver<SignedTaskResponseDigest>,
         window_duration: Duration,
+        logger: Option<SharedLogger>,
     ) -> Result<(), BlsAggregationServiceError> {
         let quorum_threshold_percentage_map: HashMap<u8, u8> = quorum_nums
             .iter()
@@ -323,6 +363,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
             quorum_apks_g1,
             quorum_nums,
             window_duration,
+            logger,
         )
         .await
     }
@@ -343,6 +384,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         quorum_apks_g1: Vec<BlsG1Point>,
         quorum_nums: Vec<u8>,
         window_duration: Duration,
+        logger: Option<SharedLogger>,
     ) -> Result<(), BlsAggregationServiceError> {
         let mut aggregated_operators: HashMap<FixedBytes<32>, AggregatedOperators> = HashMap::new();
         let mut open_window = false;
@@ -356,15 +398,45 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                 _ = &mut task_expired_timer => {
                     // Task expired. If window is open, send aggregated reponse. Else, send error
                     if open_window {
+                        if let Some(logger) = logger {
+                            logger.debug(
+                                &format!(
+                                    "task_expired_timer while in the waiting window for task index: {}",
+                                    task_index
+                                ),
+                                "eigen-services-blsaggregation.bls_agg.loop_task_aggregator",
+                            );
+                        }
+
                         aggregated_response_sender
                             .send(Ok(current_aggregated_response.unwrap()))
                             .map_err(|_| BlsAggregationServiceError::ChannelError)?;
                     } else {
+                        if let Some(logger) = logger {
+                            logger.debug(
+                                &format!(
+                                    "task_expired_timer NOT in the waiting window for task index: {}",
+                                    task_index
+                                ),
+                                "eigen-services-blsaggregation.bls_agg.loop_task_aggregator",
+                            );
+                        }
+
                         let _ = aggregated_response_sender.send(Err(BlsAggregationServiceError::TaskExpired));
                     }
                     return Ok(());
                 },
                 _ = window_rx.recv() => {
+                    if let Some(logger) = logger {
+                        logger.debug(
+                            &format!(
+                                "Window finished. Send aggregated response for task index: {}",
+                                task_index
+                            ),
+                            "eigen-services-blsaggregation.bls_agg.loop_task_aggregator",
+                        );
+                    }
+
                     // Window finished. Send aggregated response
                     aggregated_response_sender
                         .send(Ok(current_aggregated_response.unwrap()))
@@ -372,6 +444,16 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                     return Ok(());
                 },
                 signed_task_digest = signatures_rx.recv() =>{
+                    if let Some(ref logger) = logger {
+                        logger.debug(
+                            &format!(
+                                "New signature received for task index: {}",
+                                task_index
+                            ),
+                            "eigen-services-blsaggregation.bls_agg.loop_task_aggregator",
+                        );
+                    }
+
                     // New signature, aggregate it. If threshold is met, start window
                     let Some(digest) = signed_task_digest else {
                         return Err(BlsAggregationServiceError::SignatureChannelClosed);
@@ -398,6 +480,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                         task_index,
                         &digest,
                         &operator_state_avs,
+                        logger.clone(),
                     )
                     .await;
                     let verification_failed = verification_result.is_err();
@@ -431,6 +514,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                                 digest_aggregated_operators,
                                 operator_state.clone(),
                                 digest.clone(),
+                                logger.clone()
                             )
                             .clone()
                         })
@@ -457,9 +541,30 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                         continue;
                     }
 
+                    if let Some(ref logger) = logger {
+                        logger.debug(
+                            &format!(
+                                "Signature threshold is met for task index: {}",
+                                task_index
+                            ),
+                            "eigen-services-blsaggregation.bls_agg.loop_task_aggregator",
+                        );
+                    }
+
                     if !open_window {
                         open_window = true;
                         let sender_cloned = window_tx.clone();
+
+                        if let Some(ref logger) = logger {
+                            logger.debug(
+                                &format!(
+                                    "Create window to wait for new signatures for task index: {}",
+                                    task_index
+                                ),
+                                "eigen-services-blsaggregation.bls_agg.loop_task_aggregator",
+                            );
+                        }
+
                         tokio::spawn(async move {
                             tokio::time::sleep(window_duration).await;
                             let _ = sender_cloned.send(true);
@@ -475,6 +580,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                         &avs_registry_service,
                         &quorum_apks_g1,
                         &quorum_nums,
+                        logger.clone(),
                     )
                     .await?);
 
@@ -495,6 +601,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
     /// * `avs_registry_service` - The avs registry service.
     /// * `quorum_apks_g1` - The quorum aggregated public keys.
     /// * `quorum_nums` - The quorum numbers.
+    /// * `logger` - The logger to log messages. If None, no logs are written.
     ///
     /// # Returns
     ///
@@ -509,7 +616,15 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         avs_registry_service: &A,
         quorum_apks_g1: &[BlsG1Point],
         quorum_nums: &[u8],
+        logger: Option<SharedLogger>,
     ) -> Result<BlsAggregationServiceResponse, BlsAggregationServiceError> {
+        if let Some(ref logger) = logger {
+            logger.debug(
+                &format!("Build aggregated response for task index: {}", task_index),
+                "eigen-services-blsaggregation.bls_agg.build_aggregated_response",
+            );
+        }
+
         let mut non_signers_operators_ids: Vec<FixedBytes<32>> = operator_state_avs
             .keys()
             .filter(|operator_id| {
@@ -561,6 +676,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
     /// * `signed_task_response_digest` - The signed task response digest
     /// * `operator_avs_state` - A hashmap containing the staked of all the operator indexed by operator_id.
     ///   This is used to get the `operator_state` to obtain the operator public key.
+    /// * `logger` - The logger to log messages. If None, no logs are written.
     ///
     /// # Error
     ///
@@ -569,9 +685,10 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
     /// - `SignatureVerificationError::OperatorPublicKeyNotFound` if the operator public key is not found,
     /// - `SignatureVerificationError::IncorrectSignature` if the signature is incorrect.
     pub async fn verify_signature(
-        _task_index: TaskIndex,
+        task_index: TaskIndex,
         signed_task_response_digest: &SignedTaskResponseDigest,
         operator_avs_state: &HashMap<FixedBytes<32>, OperatorAvsState>,
+        logger: Option<SharedLogger>,
     ) -> Result<(), SignatureVerificationError> {
         let Some(operator_state) = operator_avs_state.get(&signed_task_response_digest.operator_id)
         else {
@@ -589,6 +706,28 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         )
         .then_some(())
         .ok_or(SignatureVerificationError::IncorrectSignature)
+        .inspect(|_| {
+            if let Some(logger) = &logger {
+                logger.debug(
+                    &format!(
+                        "Signature verification successful for task index: {}",
+                        task_index
+                    ),
+                    "eigen-services-blsaggregation.bls_agg.verify_signature",
+                );
+            }
+        })
+        .inspect_err(|_| {
+            if let Some(logger) = logger {
+                logger.error(
+                    &format!(
+                        "Signature verification failed for task index: {}",
+                        task_index
+                    ),
+                    "eigen-services-blsaggregation.bls_agg.verify_signature",
+                );
+            }
+        })
     }
 
     /// Checks if the stake thresholds are met for the given set of quorum members.
