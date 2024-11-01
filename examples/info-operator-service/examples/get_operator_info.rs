@@ -17,6 +17,7 @@ use eigen_testing_utils::{
         get_operator_state_retriever_address, get_registry_coordinator_address,
         get_rewards_coordinator_address, get_strategy_manager_address,
     },
+    transaction::wait_transaction,
 };
 use std::{
     str::FromStr,
@@ -124,7 +125,7 @@ pub async fn register_operator(pvt_key: &str, bls_key: &str, http_endpoint: &str
     let quorum_numbers = Bytes::from_str("0x00").unwrap();
     let socket = "socket";
 
-    let _tx_hash = avs_registry_writer
+    let tx_hash = avs_registry_writer
         .register_operator_in_quorum_with_avs_registry_coordinator(
             bls_key_pair,
             salt,
@@ -134,4 +135,5 @@ pub async fn register_operator(pvt_key: &str, bls_key: &str, http_endpoint: &str
         )
         .await
         .unwrap();
+    wait_transaction(http_endpoint, tx_hash).await.unwrap();
 }
