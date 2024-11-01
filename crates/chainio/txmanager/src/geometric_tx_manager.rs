@@ -180,7 +180,7 @@ impl GeometricTxManager {
             };
         }
         self.logger.error("Failed to send transaction", "");
-        return Err(TxManagerError::SendTxError);
+        Err(TxManagerError::SendTxError)
     }
 
     /// waits until the transaction is confirmed (or failed) and resends it with a higher gas price if it
@@ -213,7 +213,7 @@ impl GeometricTxManager {
                 "transaction not mined within timeout, resending with higher gas price",
                 "",
             );
-            let send_result = self.provider.send_transaction(new_tx.into()).await;
+            let send_result = self.provider.send_transaction(new_tx).await;
             match send_result {
                 Ok(new_tx) => {
                     self.logger
