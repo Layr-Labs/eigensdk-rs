@@ -692,10 +692,25 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
     ) -> Result<(), SignatureVerificationError> {
         let Some(operator_state) = operator_avs_state.get(&signed_task_response_digest.operator_id)
         else {
+            if let Some(logger) = &logger {
+                logger.error(
+                    &format!("Operator Not Found for task index: {}", task_index),
+                    "eigen-services-blsaggregation.bls_agg.verify_signature",
+                );
+            }
             return Err(SignatureVerificationError::OperatorNotFound);
         };
 
         let Some(pub_keys) = &operator_state.operator_info.pub_keys else {
+            if let Some(logger) = &logger {
+                logger.error(
+                    &format!(
+                        "Operator Public Key Not Found for task index: {}",
+                        task_index
+                    ),
+                    "eigen-services-blsaggregation.bls_agg.verify_signature",
+                );
+            }
             return Err(SignatureVerificationError::OperatorPublicKeyNotFound);
         };
 
