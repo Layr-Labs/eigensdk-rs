@@ -41,7 +41,7 @@ pub mod integration_test {
     use serde::Deserialize;
     use sha2::{Digest, Sha256};
     use std::time::Duration;
-    use tokio::task;
+    use tokio::{task, time::sleep};
     use tokio_util::sync::CancellationToken;
 
     const PRIVATE_KEY_1: &str = "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80"; // the owner addr
@@ -149,6 +149,8 @@ pub mod integration_test {
         let operators_info_clone = operators_info.clone();
         let token_clone = cancellation_token.clone();
         task::spawn(async move { operators_info_clone.start_service(&token_clone, 0, 0).await });
+        // Sleep to wait for the operator info service to start
+        sleep(Duration::from_secs(1)).await;
 
         // Create quorum
         let contract_registry_coordinator = RegistryCoordinator::new(
@@ -328,6 +330,8 @@ pub mod integration_test {
                 .start_service(&token_clone, 0, current_block_num)
                 .await
         });
+        // Sleep to wait for the operator info service to start
+        sleep(Duration::from_secs(1)).await;
 
         // Register operator
         let tx_hash = avs_writer
@@ -543,6 +547,8 @@ pub mod integration_test {
         let operators_info_clone = operators_info.clone();
         let token_clone = cancellation_token.clone();
         task::spawn(async move { operators_info_clone.start_service(&token_clone, 0, 0).await });
+        // Sleep to wait for the operator info service to start
+        sleep(Duration::from_secs(1)).await;
 
         // Register operator
         let tx_hash = avs_writer
@@ -558,7 +564,6 @@ pub mod integration_test {
         wait_transaction(&http_endpoint, tx_hash).await.unwrap();
 
         let avs_writer = AvsRegistryChainWriter::build_avs_registry_chain_writer(
-            // TODO: check if needed
             get_test_logger(),
             http_endpoint.clone(),
             PRIVATE_KEY_2.to_string(),
