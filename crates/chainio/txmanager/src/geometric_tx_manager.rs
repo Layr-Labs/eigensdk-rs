@@ -1,9 +1,8 @@
 use alloy::eips::BlockNumberOrTag;
-use alloy::network::{EthereumWallet, TransactionBuilder, TxSigner};
+use alloy::network::{EthereumWallet, TransactionBuilder};
 use alloy::primitives::TxHash;
 use alloy::providers::{Provider, RootProvider};
 use alloy::rpc::types::eth::{TransactionReceipt, TransactionRequest};
-use alloy::rpc::types::TransactionInput;
 use alloy::signers::local::PrivateKeySigner;
 use alloy::transports::RpcError;
 use eigen_logging::logger::SharedLogger;
@@ -140,7 +139,8 @@ impl GeometricTxManager {
 
         for _ in 0..self.params.max_send_transaction_retry {
             let estimated_gas_tip_cap = self.estimate_gas_tip_cap().await;
-            let tx = self.update_gas_tip_cap(tx, estimated_gas_tip_cap).await?;
+            self.update_gas_tip_cap(tx, estimated_gas_tip_cap).await?;
+
             let signed_tx = tx
                 .clone()
                 .build(&self.wallet)
@@ -208,12 +208,12 @@ impl GeometricTxManager {
             }
 
             // send new tx with higher gas price
-            let new_tx = self.speedup_tx(&tx.tx).await?;
+            self.speedup_tx(&mut tx.tx).await?;
             self.logger.info(
                 "transaction not mined within timeout, resending with higher gas price",
                 "",
             );
-            let send_result = self.provider.send_transaction(new_tx).await;
+            let send_result = self.provider.send_transaction(tx.tx.clone()).await;
             match send_result {
                 Ok(new_tx) => {
                     self.logger
@@ -271,58 +271,45 @@ impl GeometricTxManager {
 
     // increases the gas price of the existing transaction by specified percentage.
     // It makes sure the new gas price is not lower than the current gas price.
-    pub async fn speedup_tx(
-        &self,
-        tx: &TransactionRequest,
-    ) -> Result<TransactionRequest, TxManagerError> {
+    pub async fn speedup_tx(&self, tx: &mut TransactionRequest) -> Result<(), TxManagerError> {
         let new_gas_tip_cap = {
             let estimated_gas_tip_cap = self.estimate_gas_tip_cap().await;
             let bumped_gas_tip_cap = self
-                .add_tip_cap_buffer(tx.max_priority_fee_per_gas().unwrap_or(0))
+                .add_tip_cap_buffer(tx.max_priority_fee_per_gas.unwrap_or(0))
                 .await;
             cmp::max(estimated_gas_tip_cap, bumped_gas_tip_cap)
         };
 
-        let new_tx = self.update_gas_tip_cap(tx, new_gas_tip_cap).await?;
+        self.update_gas_tip_cap(tx, new_gas_tip_cap).await?;
         self.logger.info(
             &format!(
                 "increasing gas price, max_fee_per_gas={:?}, max_priority_fee_per_gas={:?}",
-                new_tx.max_fee_per_gas, new_tx.max_priority_fee_per_gas
+                tx.max_fee_per_gas, tx.max_priority_fee_per_gas
             ),
             "",
         );
-        Ok(new_tx)
+        Ok(())
     }
 
     pub async fn update_gas_tip_cap(
         &self,
-        tx: &TransactionRequest,
+        tx: &mut TransactionRequest,
         new_gas_tip_cap: u128,
-    ) -> Result<TransactionRequest, TxManagerError> {
+    ) -> Result<(), TxManagerError> {
         let gas_fee_cap = self.estimate_gas_fee_cap(new_gas_tip_cap).await?;
-        let from = self.wallet.default_signer().address();
-        let to = tx.to().ok_or(TxManagerError::SendTxError)?;
-        let tx_input = tx.input().unwrap_or_default().to_vec();
-
-        let mut new_tx = TransactionRequest::default()
-            .to(to)
-            .from(from)
-            .value(tx.value().unwrap_or_default())
-            .input(TransactionInput::new(tx_input.clone().into()));
-        new_tx.set_max_priority_fee_per_gas(new_gas_tip_cap);
-        new_tx.set_max_fee_per_gas(gas_fee_cap);
+        tx.set_max_priority_fee_per_gas(new_gas_tip_cap);
+        tx.set_max_fee_per_gas(gas_fee_cap);
 
         // we reestimate the gas limit because the state of the chain may have changed,
         // which could cause the previous gas limit to be insufficient
         let gas_limit = self
             .provider
-            .estimate_gas(&new_tx)
+            .estimate_gas(tx)
             .await
             .map_err(|_| TxManagerError::SendTxError)?;
         let gas_limit_buffered = (self.params.gas_multiplier * gas_limit as f64) as u64; // add gas buffer
-
-        let new_tx = new_tx.with_gas_limit(gas_limit_buffered);
-        Ok(new_tx)
+        tx.set_gas_limit(gas_limit_buffered);
+        Ok(())
     }
 
     // returns the gas fee cap for a transaction, calculated as:
@@ -358,9 +345,8 @@ impl GeometricTxManager {
 #[cfg(test)]
 mod tests {
     use super::{GeometricTxManager, GeometricTxManagerParams};
-    use alloy::consensus::TxLegacy;
     use alloy::network::TransactionBuilder;
-    use alloy::primitives::{address, bytes, TxKind::Call, U256};
+    use alloy::primitives::{address, U256};
     use alloy::providers::ProviderBuilder;
     use alloy::rpc::types::eth::TransactionRequest;
     use eigen_logging::log_level::LogLevel;
@@ -373,40 +359,7 @@ mod tests {
         "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
 
     #[tokio::test]
-    async fn test_send_transaction_from_legacy() {
-        let (_container, rpc_url, _ws_endpoint) = start_anvil_container().await;
-        init_logger(LogLevel::Info);
-        let logger = get_logger();
-        let config = Config::PrivateKey(TEST_PRIVATE_KEY.to_string());
-        let signer = Config::signer_from_config(config).unwrap();
-        let provider = ProviderBuilder::new().on_http(rpc_url.parse().unwrap());
-
-        let geometric_tx_manager =
-            GeometricTxManager::new(logger, signer, provider, Default::default()).unwrap();
-
-        let to = address!("a0Ee7A142d267C1f36714E4a8F75612F20a79720");
-        let account_nonce = 0x69;
-        let tx = TxLegacy {
-            to: Call(to),
-            value: U256::from(1_000_000_000),
-            gas_limit: 2_000_000,
-            nonce: account_nonce,
-            gas_price: 21_000_000_000,
-            input: bytes!(),
-            chain_id: Some(31337),
-        };
-
-        let mut tx_request: TransactionRequest = tx.into();
-        // send transaction and wait for receipt
-        let receipt = geometric_tx_manager.send_tx(&mut tx_request).await.unwrap();
-        let block_number = receipt.block_number.unwrap();
-        println!("Transaction mined in block: {}", block_number);
-        assert!(block_number > 0);
-        assert_eq!(receipt.to, Some(to));
-    }
-
-    #[tokio::test]
-    async fn test_send_transaction_from_eip1559() {
+    async fn test_send_single_transaction() {
         let (_container, rpc_url, _ws_endpoint) = start_anvil_container().await;
         init_logger(LogLevel::Info);
         let logger = get_logger();
