@@ -143,7 +143,7 @@ impl SimpleTxManager {
         // send transaction and get receipt
         let pending_tx = self
             .provider
-            .send_transaction(signed_tx.into())
+            .send_tx_envelope(signed_tx)
             .await
             .inspect_err(|err| self.logger.error("Failed to get receipt", &err.to_string()))
             .map_err(|_| TxManagerError::SendTxError)?;
@@ -277,6 +277,7 @@ mod tests {
     use alloy::rpc::types::eth::TransactionRequest;
     use eigen_logging::get_test_logger;
     use eigen_testing_utils::anvil::start_anvil_container;
+    use tokio;
 
     #[tokio::test]
     async fn test_send_transaction_from_legacy() {
@@ -299,8 +300,8 @@ mod tests {
             input: bytes!(),
             chain_id: Some(31337),
         };
-
         let mut tx_request: TransactionRequest = tx.into();
+
         // send transaction and wait for receipt
         let receipt = simple_tx_manager.send_tx(&mut tx_request).await.unwrap();
         let block_number = receipt.block_number.unwrap();
