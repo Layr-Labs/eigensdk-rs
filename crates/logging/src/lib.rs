@@ -33,8 +33,7 @@ fn init_test_logger() {
 
 /// get the initialized test logger
 pub fn get_test_logger() -> Arc<dyn Logger> {
-    init_logger(log_level::LogLevel::Info);
-    LOGGER.get().expect("Logger not initialized").clone()
+    TEST_LOGGER.get().expect("Logger not initialized").clone()
 }
 
 /// Use this to initialize the tracer. It can only be initialized once.
