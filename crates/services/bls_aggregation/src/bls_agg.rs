@@ -46,8 +46,8 @@ pub enum BlsAggregationServiceError {
     TaskNotFound,
     #[error("signature verification error")]
     SignatureVerificationError(SignatureVerificationError),
-    #[error("channel was closed")]
-    ChannelClosed,
+    #[error("signatures channel was closed, can't send signatures to aggregator")]
+    SignaturesChannelClosed,
     #[error("error sending to channel")]
     ChannelError,
     #[error("Avs Registry Error")]
@@ -152,7 +152,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         Ok(())
     }
 
-    /// Processs signatures received from the channel and sends
+    /// Processes signatures received from the channel and sends
     /// the signed task response to the task channel.
     ///
     /// # Arguments
@@ -201,7 +201,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         // return the signature verification result
         rx.recv()
             .await
-            .ok_or(BlsAggregationServiceError::ChannelClosed)?
+            .ok_or(BlsAggregationServiceError::SignaturesChannelClosed)?
             .map_err(BlsAggregationServiceError::SignatureVerificationError)
     }
 
@@ -413,7 +413,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                 .send(Ok(bls_aggregation_service_response))
                 .map_err(|_| BlsAggregationServiceError::ChannelError)?;
         }
-        Err(BlsAggregationServiceError::ChannelClosed)
+        Err(BlsAggregationServiceError::SignaturesChannelClosed)
     }
 
     /// Builds the aggregated response containing all the aggregation info.

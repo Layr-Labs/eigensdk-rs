@@ -2583,13 +2583,15 @@ dependencies = [
 name = "eigen-testing-utils"
 version = "0.1.0"
 dependencies = [
- "alloy",
  "alloy-primitives",
+ "alloy-provider",
+ "alloy-rpc-types",
+ "alloy-transport",
  "eigen-utils",
  "serde",
  "serde_json",
  "testcontainers",
- "tokio",
+ "url",
 ]
 
 [[package]]
