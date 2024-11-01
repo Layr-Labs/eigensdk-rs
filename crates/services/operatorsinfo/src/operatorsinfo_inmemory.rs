@@ -1,22 +1,25 @@
 use alloy::providers::Provider;
 use alloy::rpc::types::Filter;
 use alloy_primitives::{Address, FixedBytes};
-use anyhow::Result;
+use ark_serialize::SerializationError;
 use async_trait::async_trait;
-use eigen_client_avsregistry::reader::AvsRegistryChainReader;
+use eigen_client_avsregistry::{error::AvsRegistryError, reader::AvsRegistryChainReader};
 use eigen_crypto_bls::{
     alloy_registry_g1_point_to_g1_affine, alloy_registry_g2_point_to_g2_affine, BlsG1Point,
     BlsG2Point,
 };
 use eigen_logging::logger::SharedLogger;
-use eigen_types::operator::{operator_id_from_g1_pub_key, OperatorPubKeys};
+use eigen_types::operator::{operator_id_from_g1_pub_key, OperatorId, OperatorPubKeys};
 use eigen_utils::{
     blsapkregistry::{
         BLSApkRegistry,
         BN254::{G1Point, G2Point},
     },
-    get_ws_provider, NEW_PUBKEY_REGISTRATION_EVENT,
+    get_ws_provider,
+    registrycoordinator::RegistryCoordinator,
+    NEW_PUBKEY_REGISTRATION_EVENT, OPERATOR_SOCKET_UPDATE,
 };
+use eyre::Result;
 use futures_util::StreamExt;
 use std::{collections::HashMap, sync::Arc};
 use thiserror::Error;
@@ -44,11 +47,12 @@ pub struct OperatorInfoServiceInMemory {
 #[derive(Debug, Clone)]
 struct OperatorState {
     operator_info_data: Arc<RwLock<HashMap<Address, OperatorPubKeys>>>,
-    operator_addr_to_id: Arc<RwLock<HashMap<Address, FixedBytes<32>>>>,
+    operator_addr_to_id: Arc<RwLock<HashMap<Address, OperatorId>>>,
+    socket_dict: Arc<RwLock<HashMap<OperatorId, String>>>,
 }
 
 /// Error type for the operator info service.
-#[derive(Error, Debug, Clone, PartialEq, Eq)]
+#[derive(Error, Debug)]
 pub enum OperatorInfoServiceError {
     #[error("failed to retrieve operator info")]
     OperatorInfoRetrievalError,
@@ -60,11 +64,29 @@ pub enum OperatorInfoServiceError {
     ChannelError,
     #[error("websocket connection failed")]
     WebSocketConnectionError,
+    #[error("AVS Registry Error")]
+    AvsRegistryReader(#[from] AvsRegistryError),
+    #[error("Alloy Transport Error")]
+    AlloyError(#[from] alloy::transports::TransportError),
+    #[error("Socket not found")]
+    SocketNotFound,
+    #[error("ark serialize error")]
+    SerializationError(#[from] SerializationError),
+}
+
+#[derive(Debug)]
+pub struct OperatorSocket {
+    pub id: OperatorId,
+    pub socket: String,
 }
 
 #[derive(Debug)]
 enum OperatorsInfoMessage {
-    InsertOperatorInfo(Address, Box<OperatorPubKeys>),
+    InsertOperatorInfo(
+        Option<Address>,
+        Option<Box<OperatorPubKeys>>,
+        Option<OperatorSocket>,
+    ),
     #[allow(dead_code)]
     Remove(Address),
     Get(
@@ -112,6 +134,7 @@ impl OperatorInfoServiceInMemory {
         let operator_state = OperatorState {
             operator_info_data: Arc::new(RwLock::new(HashMap::new())),
             operator_addr_to_id: Arc::new(RwLock::new(HashMap::new())),
+            socket_dict: Arc::new(RwLock::new(HashMap::new())),
         };
 
         tokio::spawn({
@@ -119,13 +142,20 @@ impl OperatorInfoServiceInMemory {
             async move {
                 while let Some(cmd) = pubkeys_rx.recv().await {
                     match cmd {
-                        OperatorsInfoMessage::InsertOperatorInfo(addr, keys) => {
-                            let mut data = operator_state.operator_info_data.write().await;
-                            data.insert(addr, *keys.clone());
-                            let operator_id = operator_id_from_g1_pub_key(keys.g1_pub_key)
-                                .expect("Failed to get operator id from g1 pub key");
-                            let mut id_map = operator_state.operator_addr_to_id.write().await;
-                            id_map.insert(addr, alloy_primitives::FixedBytes(operator_id));
+                        OperatorsInfoMessage::InsertOperatorInfo(addr, keys, socket_info) => {
+                            if let (Some(addr), Some(keys)) = (addr, keys) {
+                                let mut data = operator_state.operator_info_data.write().await;
+                                data.insert(addr, *keys.clone());
+                                let operator_id =
+                                    operator_id_from_g1_pub_key(keys.g1_pub_key).unwrap(); // todo:remove unwrap/expect
+
+                                let mut id_map = operator_state.operator_addr_to_id.write().await;
+                                id_map.insert(addr, alloy_primitives::FixedBytes(operator_id));
+                            }
+                            let mut socket_data = operator_state.socket_dict.write().await;
+                            if let Some(socket) = socket_info {
+                                socket_data.insert(FixedBytes(*socket.id), socket.socket);
+                            }
                         }
                         OperatorsInfoMessage::Remove(addr) => {
                             let mut data = operator_state.operator_info_data.write().await;
@@ -135,6 +165,7 @@ impl OperatorInfoServiceInMemory {
                             let data = operator_state.operator_info_data.read().await;
                             let result = data.get(&addr).cloned();
                             responder.send(Ok(result)).expect("Failed to send response");
+                            // todo remove expect
                         }
                     }
                 }
@@ -165,25 +196,36 @@ impl OperatorInfoServiceInMemory {
         cancellation_token: &CancellationToken,
         start_block: u64,
         end_block: u64,
-    ) -> Result<()> {
+    ) -> Result<(), OperatorInfoServiceError> {
         // Query past operator registrations
         self.query_past_registered_operator_events_and_fill_db(start_block, end_block)
-            .await
-            .unwrap();
-        let provider = get_ws_provider(&self.ws).await.unwrap();
-        let current_block_number = provider.get_block_number().await.unwrap();
+            .await?;
+
+        let provider = get_ws_provider(&self.ws).await?;
+        let current_block_number = provider.get_block_number().await?;
 
         // Subscribe to new pubkey registration events
-        let filter = Filter::new()
+        let new_pubkey_registration_filter = Filter::new()
             .event(NEW_PUBKEY_REGISTRATION_EVENT)
             .from_block(current_block_number);
 
-        let subcription_new_operator_registration_stream =
-            provider.subscribe_logs(&filter).await.unwrap();
-        let mut stream = subcription_new_operator_registration_stream
+        let operator_socket_update_filter = Filter::new()
+            .event(OPERATOR_SOCKET_UPDATE)
+            .from_block(current_block_number);
+
+        let subcription_new_operator_registration_stream = provider
+            .subscribe_logs(&new_pubkey_registration_filter)
+            .await?;
+        let subscription_operator_socket_update_filter = provider
+            .subscribe_logs(&operator_socket_update_filter)
+            .await?;
+
+        let mut new_operator_registration_stream = subcription_new_operator_registration_stream
             .into_stream()
             .fuse();
-
+        let mut operator_socket_update_stream = subscription_operator_socket_update_filter
+            .into_stream()
+            .fuse();
         let pub_keys = self.pub_keys.clone();
         let self_clone = self.clone();
 
@@ -193,7 +235,7 @@ impl OperatorInfoServiceInMemory {
                     self.logger.info("Cancellation signal received, stopping the stream.", "eigen-services-operatorsinfo.start_service");
                     break;
                 },
-                log = stream.next() => {
+                log = new_operator_registration_stream.next() => {
                     match log {
                         Some(log) => {
 
@@ -228,8 +270,10 @@ impl OperatorInfoServiceInMemory {
                                 );
 
                                 let _ = pub_keys.send(OperatorsInfoMessage::InsertOperatorInfo(
-                                    event_data.operator,
-                                    Box::new(operator_pub_key),
+                                    Some(event_data.operator),
+                                    Some(Box::new(operator_pub_key)),
+                                    None
+
                                 ));
                             }
                         },
@@ -238,6 +282,46 @@ impl OperatorInfoServiceInMemory {
                         }
                     }
                 },
+
+                log =operator_socket_update_stream.next() =>{
+
+                    match log {
+                        Some(log) => {
+
+                            let data = log
+                                .log_decode::<RegistryCoordinator::OperatorSocketUpdate>()
+                                .ok();
+
+                            if let Some(operator_socket_update_event) = data {
+                                let event_data = operator_socket_update_event.data();
+                                let operator_socket = OperatorSocket {
+                                    id: event_data.operatorId,
+                                    socket:event_data.socket.clone()
+                                };
+                                // Send message
+
+                                self_clone.logger.debug(
+                                    &format!(
+                                        "Received new socket registration event  operator_id : {:?} , socket : {:?}",
+                                        event_data.operatorId, event_data.socket
+                                    ),
+                                    "eigen-services-operatorsinfo.start_service",
+                                );
+
+                                let _ = pub_keys.send(OperatorsInfoMessage::InsertOperatorInfo(
+                                    None,
+                                    None,
+                                    Some(OperatorSocket{socket:operator_socket.socket , id:operator_socket.id })
+
+                                ));
+                            }
+                        },
+                        None => {
+                            break;
+                        }
+                    }
+
+                }
             }
         }
 
@@ -260,24 +344,42 @@ impl OperatorInfoServiceInMemory {
         &self,
         start_block: u64,
         end_block: u64,
-    ) -> Result<()> {
-        let (operator_address, operator_pub_keys) = self
+    ) -> Result<(), OperatorInfoServiceError> {
+        // let (operator_address, operator_pub_keys);
+        let handle_1 = self
             .avs_registry_reader
-            .query_existing_registered_operator_pub_keys(start_block, end_block, self.ws.clone())
-            .await?;
+            .query_existing_registered_operator_pub_keys(start_block, end_block, self.ws.clone());
+
+        let handle_2 = self
+            .avs_registry_reader
+            .query_existing_registered_operator_sockets(start_block, end_block);
+
+        let (pub_keys, operator_sockets) = futures::join!(handle_1, handle_2);
+        let (operator_address, operator_pub_keys) = pub_keys?;
+        let socket_map = operator_sockets?;
+
         for (i, address) in operator_address.iter().enumerate() {
-            let message = OperatorsInfoMessage::InsertOperatorInfo(
-                *address,
-                Box::new(operator_pub_keys[i].clone()),
-            );
-            self.logger.debug(
-                &format!(
-                    "New pub key found  operator_address : {:?} , operator_pub_keys : {:?}",
-                    operator_address, operator_pub_keys
-                ),
-                "eigen-services-operatorsinfo.query_past_registered_operator_events_and_fill_db",
-            );
-            let _ = self.pub_keys.send(message);
+            let operator_id = operator_id_from_g1_pub_key(operator_pub_keys[i].g1_pub_key.clone())?;
+            if let Some(socket) = socket_map.get(&operator_id) {
+                let message = OperatorsInfoMessage::InsertOperatorInfo(
+                    Some(*address),
+                    Some(Box::new(operator_pub_keys[i].clone())),
+                    Some(OperatorSocket {
+                        id: FixedBytes(operator_id),
+                        socket: socket.to_string(),
+                    }),
+                );
+                self.logger.debug(
+                    &format!(
+                        "New pub key found  operator_address : {:?} , operator_pub_keys : {:?}",
+                        operator_address, operator_pub_keys
+                    ),
+                    "eigen-services-operatorsinfo.query_past_registered_operator_events_and_fill_db",
+                );
+                let _ = self.pub_keys.send(message);
+            } else {
+                return Err(OperatorInfoServiceError::SocketNotFound);
+            }
         }
 
         Ok(())

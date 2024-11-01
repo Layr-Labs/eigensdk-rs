@@ -184,3 +184,5 @@ pub async fn get_ws_provider(
 /// Emitted when a new pubkey is registered
 pub const NEW_PUBKEY_REGISTRATION_EVENT: &str =
     "NewPubkeyRegistration(address,(uint256,uint256),(uint256[2],uint256[2]))";
+
+pub const OPERATOR_SOCKET_UPDATE: &str = "OperatorSocketUpdate(bytes32,string)";
