@@ -4,7 +4,6 @@ members = [
     "crates/chainio/clients/elcontracts/",
     "crates/chainio/clients/eth/",
     "crates/chainio/clients/fireblocks/",
-    "crates/chainio/txmanager/",
     "crates/contracts/bindings/",
     "crates/crypto/bls/",
     "crates/crypto/bn254/",
@@ -58,7 +57,6 @@ async-trait = "0.1.81"
 aws-config = "1.5.4"
 aws-sdk-kms = "1.37.0"
 clap = { version = "4.5.11", features = ["derive"] }
-eigen-chainio-txmanager = { path = "crates/chainio/txmanager/" }
 eigen-client-avsregistry = { path = "crates/chainio/clients/avsregistry" }
 eigen-client-elcontracts = { path = "crates/chainio/clients/elcontracts" }
 eigen-client-eth = { path = "crates/chainio/clients/eth" }

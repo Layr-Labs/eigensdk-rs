@@ -80,12 +80,6 @@ pub use eigen_nodeapi as nodeapi;
 #[doc(inline)]
 pub use eigen_testing_utils as testing_utils;
 
-/* ------------------------------------ Chain IO Re-exports ------------------------------------ */
-
-#[cfg(feature = "chainio-txmanager")]
-#[doc(inline)]
-pub use eigen_chainio_txmanager as chainio_txmanager;
-
 /* ------------------------------------ Metrics Collectors Re-exports -------------------------- */
 
 #[cfg(feature = "metrics-collectors-economic")]
