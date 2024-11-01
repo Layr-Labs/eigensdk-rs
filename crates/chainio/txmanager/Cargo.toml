@@ -9,6 +9,7 @@ license-file.workspace = true
 
 [dependencies]
 alloy.workspace = true
+async-trait.workspace = true
 eigen-logging.workspace = true
 eigen-signer.workspace = true
 reqwest.workspace = true

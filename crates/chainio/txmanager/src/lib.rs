@@ -4,5 +4,6 @@
 )]
 #![cfg_attr(not(test), warn(unused_crate_dependencies))]
 
+mod fake_backend;
 pub mod geometric_tx_manager;
 pub mod simple_tx_manager;
