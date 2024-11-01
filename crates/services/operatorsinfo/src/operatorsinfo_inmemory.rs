@@ -306,7 +306,8 @@ mod tests {
     use eigen_types::operator::Operator;
     use eigen_utils::get_provider;
     use std::str::FromStr;
-    use std::time::{SystemTime, UNIX_EPOCH};
+    use std::time::{Duration, SystemTime, UNIX_EPOCH};
+    use tokio::time::sleep;
 
     #[tokio::test]
     async fn test_query_past_registered_operator_events_and_fill_db() {
@@ -388,6 +389,8 @@ mod tests {
                 )
                 .await;
         });
+        // Sleep to wait for the operator info service to start
+        sleep(Duration::from_secs(1)).await;
 
         register_operator(
             http_endpoint,
@@ -440,6 +443,9 @@ mod tests {
                 )
                 .await;
         });
+        // Sleep to wait for the operator info service to start
+        sleep(Duration::from_secs(1)).await;
+
         register_operator(
             http_endpoint.clone(),
             "0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d",
