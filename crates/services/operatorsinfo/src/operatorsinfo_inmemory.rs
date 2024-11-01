@@ -425,13 +425,13 @@ mod tests {
         .await;
         let clone_operators_info = operators_info_service_in_memory.clone();
 
-        let token = tokio_util::sync::CancellationToken::new().clone();
-        let cancel_token = token.clone();
+        let cancellation_token = tokio_util::sync::CancellationToken::new();
+        let cloned_token = cancellation_token.clone();
         let cloned_http_endpoint = http_endpoint.clone();
         tokio::spawn(async move {
             let _ = clone_operators_info
                 .start_service(
-                    &token,
+                    &cloned_token,
                     0,
                     get_provider(cloned_http_endpoint.as_str())
                         .get_block_number()
@@ -456,7 +456,7 @@ mod tests {
         )
         .await;
 
-        cancel_token.clone().cancel();
+        cancellation_token.cancel();
 
         let address = address!("70997970c51812dc3a010c7d01b50e0d17dc79c8");
         let operator_info = operators_info_service_in_memory
