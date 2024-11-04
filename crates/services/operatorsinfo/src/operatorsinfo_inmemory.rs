@@ -63,16 +63,15 @@ pub enum OperatorInfoServiceError {
     ChannelClosed,
     #[error("error sending to channel")]
     ChannelError,
-    #[error("websocket connection failed")]
-    WebSocketConnectionError,
-    #[error("AVS Registry Error")]
-    AvsRegistryReader(#[from] AvsRegistryError),
     #[error("Alloy Transport Error")]
     AlloyError(#[from] alloy::transports::TransportError),
     #[error("Socket not found")]
     SocketNotFound,
     #[error("Conversion from pubkey to id  error")]
     OperatorTypes(#[from] OperatorTypesError),
+
+    #[error("Tokio Responder error")]
+    ResponderError(#[from] tokio::sync::oneshot::error::RecvError),
 }
 
 #[derive(Debug)]
@@ -104,26 +103,20 @@ impl OperatorInfoService for OperatorInfoServiceInMemory {
 
         let _ = self
             .pub_keys
-            .send(OperatorsInfoMessage::GetPubKeys(address, responder_tx))
-            .map_err(|_| OperatorInfoServiceError::ChannelClosed)?;
-        Ok(responder_rx
-            .await
-            .map_err(|_| OperatorInfoServiceError::ChannelClosed)?)
+            .send(OperatorsInfoMessage::GetPubKeys(address, responder_tx));
+        Ok(responder_rx.await?)
     }
 
     async fn get_operator_socket(
         &self,
         address: Address,
-    ) -> Result<Option<String>, OperatorInfoServiceError> {
+    ) -> Result<(Option<String>), OperatorInfoServiceError> {
         let (responder_tx, responder_rx) = oneshot::channel();
 
         let _ = self
             .pub_keys
-            .send(OperatorsInfoMessage::GetSockets(address, responder_tx))
-            .map_err(|_| OperatorInfoServiceError::ChannelClosed)?;
-        Ok(responder_rx
-            .await
-            .map_err(|_| OperatorInfoServiceError::ChannelClosed)?)
+            .send(OperatorsInfoMessage::GetSockets(address, responder_tx));
+        Ok(responder_rx.await?)
     }
 }
 
@@ -138,7 +131,8 @@ impl OperatorInfoServiceInMemory {
     ///
     /// # Returns
     ///
-    /// A new operator info service.
+    /// A tuple of 2 elements
+    /// [`Self`] and [`UnboundedReceiver<OperatorInfoServiceError>`] if successfull , else [`OperatorInfoServiceError`]
     pub async fn new(
         logger: SharedLogger,
         avs_registry_chain_reader: AvsRegistryChainReader,
@@ -167,7 +161,7 @@ impl OperatorInfoServiceInMemory {
                                     let mut data = operator_state.operator_info_data.write().await;
                                     data.insert(addr, *keys.clone());
 
-                                    let operator_id = operator_id_from_g1_pub_key(keys.g1_pub_key)?; // Use ? to propagate error
+                                    let operator_id = operator_id_from_g1_pub_key(keys.g1_pub_key)?;
 
                                     let mut id_map =
                                         operator_state.operator_addr_to_id.write().await;
@@ -388,7 +382,6 @@ impl OperatorInfoServiceInMemory {
         start_block: u64,
         end_block: u64,
     ) -> Result<(), OperatorInfoServiceError> {
-        // let (operator_address, operator_pub_keys);
         let handle_1 = self
             .avs_registry_reader
             .query_existing_registered_operator_pub_keys(start_block, end_block, self.ws.clone());

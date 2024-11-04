@@ -86,9 +86,7 @@ pub struct OperatorAvsState {
 pub fn operator_id_from_g1_pub_key(pub_key: BlsG1Point) -> Result<[u8; 32], OperatorTypesError> {
     let x: [u8; 32] = (convert_to_g1_point(pub_key.g1())?.X).to_be_bytes();
     let y: [u8; 32] = convert_to_g1_point(pub_key.g1())?.Y.to_be_bytes();
-    let mut bytes = Vec::with_capacity(x.len() + y.len());
-    bytes.extend_from_slice(&x);
-    bytes.extend_from_slice(&y);
+    let bytes: Vec<u8> = x.iter().cloned().chain(y.iter().cloned()).collect();
     Ok(keccak256(bytes))
 }
 
