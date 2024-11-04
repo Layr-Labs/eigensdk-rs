@@ -8,6 +8,7 @@ use crate::{operator_info::OperatorInfoService, operatorsinfo_inmemory::Operator
 /// A fake implementation of the `OperatorInfoService` trait that can be used for testing or debug purposes.
 pub struct FakeOperatorInfoService {
     pub pubkeys: OperatorInfo,
+    pub socket: String,
 }
 
 impl FakeOperatorInfoService {
@@ -16,6 +17,7 @@ impl FakeOperatorInfoService {
             pubkeys: OperatorInfo {
                 pub_keys: Some(OperatorPubKeys::from(pubkeys)),
             },
+            socket: String::default(),
         }
     }
 }
@@ -27,5 +29,12 @@ impl OperatorInfoService for FakeOperatorInfoService {
         _address: Address,
     ) -> Result<Option<OperatorPubKeys>, OperatorInfoServiceError> {
         Ok(self.pubkeys.pub_keys.clone())
+    }
+
+    async fn get_operator_socket(
+        &self,
+        address: Address,
+    ) -> Result<Option<String>, OperatorInfoServiceError> {
+        Ok(Some(self.socket.clone()))
     }
 }

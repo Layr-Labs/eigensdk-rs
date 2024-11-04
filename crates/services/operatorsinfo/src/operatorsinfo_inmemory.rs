@@ -1,7 +1,6 @@
 use alloy::providers::Provider;
 use alloy::rpc::types::Filter;
 use alloy_primitives::{Address, FixedBytes};
-use ark_serialize::SerializationError;
 use async_trait::async_trait;
 use eigen_client_avsregistry::{error::AvsRegistryError, reader::AvsRegistryChainReader};
 use eigen_crypto_bls::{
@@ -9,7 +8,9 @@ use eigen_crypto_bls::{
     BlsG2Point,
 };
 use eigen_logging::logger::SharedLogger;
-use eigen_types::operator::{operator_id_from_g1_pub_key, OperatorId, OperatorPubKeys};
+use eigen_types::operator::{
+    operator_id_from_g1_pub_key, OperatorId, OperatorPubKeys, OperatorTypesError,
+};
 use eigen_utils::{
     blsapkregistry::{
         BLSApkRegistry,
@@ -70,8 +71,8 @@ pub enum OperatorInfoServiceError {
     AlloyError(#[from] alloy::transports::TransportError),
     #[error("Socket not found")]
     SocketNotFound,
-    #[error("ark serialize error")]
-    SerializationError(#[from] SerializationError),
+    #[error("Conversion from pubkey to id  error")]
+    OperatorTypes(#[from] OperatorTypesError),
 }
 
 #[derive(Debug)]
@@ -89,10 +90,8 @@ enum OperatorsInfoMessage {
     ),
     #[allow(dead_code)]
     Remove(Address),
-    Get(
-        Address,
-        Sender<Result<Option<OperatorPubKeys>, OperatorInfoServiceError>>,
-    ),
+    GetPubKeys(Address, Sender<Option<OperatorPubKeys>>),
+    GetSockets(Address, Sender<Option<String>>),
 }
 
 #[async_trait]
@@ -105,11 +104,26 @@ impl OperatorInfoService for OperatorInfoServiceInMemory {
 
         let _ = self
             .pub_keys
-            .send(OperatorsInfoMessage::Get(address, responder_tx))
+            .send(OperatorsInfoMessage::GetPubKeys(address, responder_tx))
             .map_err(|_| OperatorInfoServiceError::ChannelClosed)?;
-        responder_rx
+        Ok(responder_rx
             .await
-            .map_err(|_| OperatorInfoServiceError::ChannelClosed)?
+            .map_err(|_| OperatorInfoServiceError::ChannelClosed)?)
+    }
+
+    async fn get_operator_socket(
+        &self,
+        address: Address,
+    ) -> Result<Option<String>, OperatorInfoServiceError> {
+        let (responder_tx, responder_rx) = oneshot::channel();
+
+        let _ = self
+            .pub_keys
+            .send(OperatorsInfoMessage::GetSockets(address, responder_tx))
+            .map_err(|_| OperatorInfoServiceError::ChannelClosed)?;
+        Ok(responder_rx
+            .await
+            .map_err(|_| OperatorInfoServiceError::ChannelClosed)?)
     }
 }
 
@@ -161,11 +175,23 @@ impl OperatorInfoServiceInMemory {
                             let mut data = operator_state.operator_info_data.write().await;
                             data.remove(&addr);
                         }
-                        OperatorsInfoMessage::Get(addr, responder) => {
+                        OperatorsInfoMessage::GetPubKeys(addr, responder) => {
                             let data = operator_state.operator_info_data.read().await;
                             let result = data.get(&addr).cloned();
-                            responder.send(Ok(result)).expect("Failed to send response");
-                            // todo remove expect
+                            let _ = responder.send(result);
+                        }
+                        OperatorsInfoMessage::GetSockets(addr, responder) => {
+                            let operator_id = operator_state
+                                .operator_addr_to_id
+                                .read()
+                                .await
+                                .get(&addr)
+                                .cloned();
+                            if let Some(id) = operator_id {
+                                let socket =
+                                    operator_state.socket_dict.read().await.get(&id).cloned();
+                                let _ = responder.send(socket);
+                            }
                         }
                     }
                 }
@@ -353,19 +379,25 @@ impl OperatorInfoServiceInMemory {
         let handle_2 = self
             .avs_registry_reader
             .query_existing_registered_operator_sockets(start_block, end_block);
-
-        let (pub_keys, operator_sockets) = futures::join!(handle_1, handle_2);
-        let (operator_address, operator_pub_keys) = pub_keys?;
-        let socket_map = operator_sockets?;
+        let mut operator_address: Vec<Address> = vec![];
+        let mut socket_map: HashMap<FixedBytes<32>, String> = HashMap::new();
+        let mut operator_pub_keys: Vec<OperatorPubKeys> = vec![];
+        if let Ok(res) = futures::future::try_join(handle_1, handle_2).await {
+            let (pub_keys, operator_sockets) = res;
+            (operator_address, operator_pub_keys) = pub_keys;
+            socket_map = operator_sockets;
+        }
 
         for (i, address) in operator_address.iter().enumerate() {
-            let operator_id = operator_id_from_g1_pub_key(operator_pub_keys[i].g1_pub_key.clone())?;
+            let operator_id = FixedBytes(operator_id_from_g1_pub_key(
+                operator_pub_keys[i].g1_pub_key.clone(),
+            )?);
             if let Some(socket) = socket_map.get(&operator_id) {
                 let message = OperatorsInfoMessage::InsertOperatorInfo(
                     Some(*address),
                     Some(Box::new(operator_pub_keys[i].clone())),
                     Some(OperatorSocket {
-                        id: FixedBytes(operator_id),
+                        id: operator_id,
                         socket: socket.to_string(),
                     }),
                 );
@@ -394,7 +426,7 @@ mod tests {
     use eigen_client_avsregistry::writer::AvsRegistryChainWriter;
     use eigen_client_elcontracts::{reader::ELChainReader, writer::ELChainWriter};
     use eigen_crypto_bls::BlsKeyPair;
-    use eigen_logging::get_test_logger;
+    use eigen_logging::{get_logger, get_test_logger, init_logger};
     use eigen_testing_utils::anvil::start_anvil_container;
     use eigen_testing_utils::anvil_constants::{
         get_avs_directory_address, get_delegation_manager_address,
@@ -409,7 +441,8 @@ mod tests {
     #[tokio::test]
     async fn test_query_past_registered_operator_events_and_fill_db() {
         let (_container, http_endpoint, ws_endpoint) = start_anvil_container().await;
-        let test_logger = get_test_logger();
+        init_logger(eigen_logging::log_level::LogLevel::Debug);
+        let test_logger = get_logger();
         register_operator(
             http_endpoint.clone(),
             "0x7c852118294e51e653712a81e05800f419141751be58f605c371e15141b007a6",
@@ -445,6 +478,12 @@ mod tests {
         let operator_info = operators_info_service_in_memory
             .get_operator_info(address)
             .await;
+        let operator_socket = operators_info_service_in_memory
+            .get_operator_socket(address)
+            .await
+            .unwrap()
+            .unwrap();
+        assert_eq!(operator_socket, "socket");
         assert!(operator_info.unwrap().is_some());
     }
 
@@ -504,6 +543,12 @@ mod tests {
             .get_operator_info(address)
             .await;
         assert!(operator_info.unwrap().is_some());
+        let operator_socket = operators_info_service_in_memory
+            .get_operator_socket(address)
+            .await
+            .unwrap()
+            .unwrap();
+        assert_eq!(operator_socket, "socket");
     }
 
     #[tokio::test]
@@ -568,6 +613,18 @@ mod tests {
             .get_operator_info(address_2)
             .await;
         assert!(operator_info_2.unwrap().is_some());
+        let operator_socket = operators_info_service_in_memory
+            .get_operator_socket(address)
+            .await
+            .unwrap()
+            .unwrap();
+        assert_eq!(operator_socket, "socket");
+        let operator_socket = operators_info_service_in_memory
+            .get_operator_socket(address_2)
+            .await
+            .unwrap()
+            .unwrap();
+        assert_eq!(operator_socket, "socket");
     }
 
     pub async fn register_operator(http_endpoint: String, pvt_key: &str, bls_key: &str) {

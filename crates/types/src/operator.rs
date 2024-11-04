@@ -1,9 +1,16 @@
 use alloy_primitives::{aliases::U192, Address, FixedBytes, U256};
-use ark_serialize::{CanonicalSerialize, SerializationError};
-use eigen_crypto_bls::{BlsG1Point, BlsG2Point, BlsKeyPair};
+use ark_serialize::SerializationError;
+use eigen_crypto_bls::{convert_to_g1_point, error::BlsError, BlsG1Point, BlsG2Point, BlsKeyPair};
 use ethers::{types::U64, utils::keccak256};
 use num_bigint::BigUint;
 use std::collections::HashMap;
+use thiserror::Error;
+
+#[derive(Debug, Error)]
+pub enum OperatorTypesError {
+    #[error("Operator id from pub key conversion failed")]
+    OperatorIdFromPubKey(#[from] BlsError),
+}
 
 const MAX_NUMBER_OF_QUORUMS: u8 = 192;
 
@@ -77,10 +84,12 @@ pub struct OperatorAvsState {
     pub block_num: U64,
 }
 
-pub fn operator_id_from_g1_pub_key(pub_key: BlsG1Point) -> Result<[u8; 32], SerializationError> {
-    let mut bytes = Vec::new();
-    let g1 = pub_key.g1();
-    g1.serialize_uncompressed(&mut bytes)?;
+pub fn operator_id_from_g1_pub_key(pub_key: BlsG1Point) -> Result<[u8; 32], OperatorTypesError> {
+    let x: [u8; 32] = (convert_to_g1_point(pub_key.g1())?.X).to_be_bytes();
+    let y: [u8; 32] = convert_to_g1_point(pub_key.g1())?.Y.to_be_bytes();
+    let mut bytes = Vec::with_capacity(x.len() + y.len());
+    bytes.extend_from_slice(&x);
+    bytes.extend_from_slice(&y);
     Ok(keccak256(bytes))
 }
 

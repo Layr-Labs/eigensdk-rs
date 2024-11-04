@@ -344,6 +344,7 @@ mod tests {
     }
 
     #[tokio::test]
+    #[serial]
     async fn test_register_operator() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
         let provider = get_provider(&http_endpoint);
