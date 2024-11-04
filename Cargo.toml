@@ -111,7 +111,7 @@ tracing-subscriber = { version = "0.3.18", features = ["json"] }
 url = "2.5.2"
 
 #misc
-rust-bls-bn254 = { version = "0.2.0", features = ["std"] }
+rust-bls-bn254 = { git = "https://github.com/Layr-Labs/rust-bls-bn254", rev = "ce3313f" ,features = ["std"] }
 uuid = { version = "1.11.0", features = ["v4"] }
 
 
@@ -119,9 +119,6 @@ uuid = { version = "1.11.0", features = ["v4"] }
 parking_lot = "0.12.3"
 
 #alloy
-alloy-dyn-abi = "0.8.7"
-alloy-eips = { version = "0.5.3", default-features = false }
-alloy-genesis = { version = "0.5.3", default-features = false }
 alloy-json-rpc = { version = "0.5.3", default-features = false }
 alloy-network = { version = "0.5.3", default-features = false }
 alloy-node-bindings = { version = "0.5.3", default-features = false }
@@ -136,7 +133,6 @@ alloy-rpc-client = "0.5.3"
 alloy-rpc-types = { version = "0.5.3", default-features = false, features = [
     "eth",
 ] }
-alloy-rpc-types-eth = "0.5.3"
 alloy-serde = { version = "0.5.3", default-features = false }
 alloy-signer = { version = "0.5.3", default-features = false }
 alloy-signer-aws = "0.5.3"
@@ -148,7 +144,6 @@ alloy-transport-http = { version = "0.5.3", features = [
 ], default-features = false }
 alloy-transport-ipc = { version = "0.5.3", default-features = false }
 alloy-transport-ws = { version = "0.5.3", default-features = false }
-alloy-trie = "0.6.0"
 alloy = { version = "0.5.3", features = ["sol-types", "contract","full","signer-aws"] }
 anvil-utils = { path = "examples/anvil-utils" }
 avsregistry-read = { path = "examples/avsregistry-read" }
