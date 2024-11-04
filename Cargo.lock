@@ -2608,7 +2608,6 @@ name = "eigen-types"
 version = "0.1.0"
 dependencies = [
  "alloy-primitives",
- "ark-serialize 0.4.2",
  "eigen-crypto-bls",
  "ethers",
  "num-bigint 0.4.6",
