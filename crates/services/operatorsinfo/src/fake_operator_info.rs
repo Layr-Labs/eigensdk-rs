@@ -33,7 +33,7 @@ impl OperatorInfoService for FakeOperatorInfoService {
 
     async fn get_operator_socket(
         &self,
-        address: Address,
+        _address: Address,
     ) -> Result<Option<String>, OperatorInfoServiceError> {
         Ok(Some(self.socket.clone()))
     }
