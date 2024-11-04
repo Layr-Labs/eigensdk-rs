@@ -143,67 +143,84 @@ impl OperatorInfoServiceInMemory {
         logger: SharedLogger,
         avs_registry_chain_reader: AvsRegistryChainReader,
         web_socket: String,
-    ) -> Self {
+    ) -> Result<(Self, mpsc::UnboundedReceiver<OperatorInfoServiceError>), OperatorInfoServiceError>
+    {
         let (pubkeys_tx, mut pubkeys_rx) = mpsc::unbounded_channel();
+        let (error_tx, error_rx) = mpsc::unbounded_channel();
+
         let operator_state = OperatorState {
             operator_info_data: Arc::new(RwLock::new(HashMap::new())),
             operator_addr_to_id: Arc::new(RwLock::new(HashMap::new())),
             socket_dict: Arc::new(RwLock::new(HashMap::new())),
         };
 
+        // Spawn a detached task for processing commands
         tokio::spawn({
             let operator_state = operator_state.clone();
+            let error_tx = error_tx.clone();
             async move {
                 while let Some(cmd) = pubkeys_rx.recv().await {
-                    match cmd {
-                        OperatorsInfoMessage::InsertOperatorInfo(addr, keys, socket_info) => {
-                            if let (Some(addr), Some(keys)) = (addr, keys) {
-                                let mut data = operator_state.operator_info_data.write().await;
-                                data.insert(addr, *keys.clone());
-                                let operator_id =
-                                    operator_id_from_g1_pub_key(keys.g1_pub_key).unwrap(); // todo:remove unwrap/expect
+                    if let Err(e) = async {
+                        match cmd {
+                            OperatorsInfoMessage::InsertOperatorInfo(addr, keys, socket_info) => {
+                                if let (Some(addr), Some(keys)) = (addr, keys) {
+                                    let mut data = operator_state.operator_info_data.write().await;
+                                    data.insert(addr, *keys.clone());
 
-                                let mut id_map = operator_state.operator_addr_to_id.write().await;
-                                id_map.insert(addr, alloy_primitives::FixedBytes(operator_id));
+                                    let operator_id = operator_id_from_g1_pub_key(keys.g1_pub_key)?; // Use ? to propagate error
+
+                                    let mut id_map =
+                                        operator_state.operator_addr_to_id.write().await;
+                                    id_map.insert(addr, alloy_primitives::FixedBytes(operator_id));
+                                }
+                                let mut socket_data = operator_state.socket_dict.write().await;
+                                if let Some(socket) = socket_info {
+                                    socket_data.insert(FixedBytes(*socket.id), socket.socket);
+                                }
                             }
-                            let mut socket_data = operator_state.socket_dict.write().await;
-                            if let Some(socket) = socket_info {
-                                socket_data.insert(FixedBytes(*socket.id), socket.socket);
+                            OperatorsInfoMessage::Remove(addr) => {
+                                let mut data = operator_state.operator_info_data.write().await;
+                                data.remove(&addr);
+                            }
+                            OperatorsInfoMessage::GetPubKeys(addr, responder) => {
+                                let data = operator_state.operator_info_data.read().await;
+                                let result = data.get(&addr).cloned();
+                                let _ = responder.send(result);
+                            }
+                            OperatorsInfoMessage::GetSockets(addr, responder) => {
+                                let operator_id = operator_state
+                                    .operator_addr_to_id
+                                    .read()
+                                    .await
+                                    .get(&addr)
+                                    .cloned();
+                                if let Some(id) = operator_id {
+                                    let socket =
+                                        operator_state.socket_dict.read().await.get(&id).cloned();
+                                    let _ = responder.send(socket);
+                                }
                             }
                         }
-                        OperatorsInfoMessage::Remove(addr) => {
-                            let mut data = operator_state.operator_info_data.write().await;
-                            data.remove(&addr);
-                        }
-                        OperatorsInfoMessage::GetPubKeys(addr, responder) => {
-                            let data = operator_state.operator_info_data.read().await;
-                            let result = data.get(&addr).cloned();
-                            let _ = responder.send(result);
-                        }
-                        OperatorsInfoMessage::GetSockets(addr, responder) => {
-                            let operator_id = operator_state
-                                .operator_addr_to_id
-                                .read()
-                                .await
-                                .get(&addr)
-                                .cloned();
-                            if let Some(id) = operator_id {
-                                let socket =
-                                    operator_state.socket_dict.read().await.get(&id).cloned();
-                                let _ = responder.send(socket);
-                            }
-                        }
+                        Ok::<(), OperatorInfoServiceError>(())
+                    }
+                    .await
+                    {
+                        // Send the error to the error channel
+                        let _ = error_tx.send(e);
                     }
                 }
             }
         });
 
-        Self {
-            logger,
-            avs_registry_reader: avs_registry_chain_reader,
-            ws: web_socket,
-            pub_keys: pubkeys_tx,
-        }
+        Ok((
+            Self {
+                logger,
+                avs_registry_reader: avs_registry_chain_reader,
+                ws: web_socket,
+                pub_keys: pubkeys_tx,
+            },
+            error_rx,
+        ))
     }
 
     /// Starts the operator info service.
@@ -464,7 +481,9 @@ mod tests {
             avs_registry_chain_reader,
             ws_endpoint,
         )
-        .await;
+        .await
+        .unwrap()
+        .0;
 
         let end_block = get_provider(http_endpoint.as_str())
             .get_block_number()
@@ -506,7 +525,9 @@ mod tests {
             avs_registry_chain_reader,
             ws_endpoint,
         )
-        .await;
+        .await
+        .unwrap()
+        .0;
         let clone_operators_info = operators_info_service_in_memory.clone();
 
         let token = tokio_util::sync::CancellationToken::new().clone();
@@ -568,7 +589,9 @@ mod tests {
             avs_registry_chain_reader,
             ws_endpoint,
         )
-        .await;
+        .await
+        .unwrap()
+        .0;
         let clone_operators_info = operators_info_service_in_memory.clone();
 
         let token = tokio_util::sync::CancellationToken::new().clone();

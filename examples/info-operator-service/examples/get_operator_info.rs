@@ -40,7 +40,9 @@ async fn main() {
 
     let operators_info =
         OperatorInfoServiceInMemory::new(get_test_logger(), avs_registry_chain_reader, ws_endpoint)
-            .await;
+            .await
+            .unwrap()
+            .0;
 
     let operators_info_clone = operators_info.clone();
     let cancellation_token: CancellationToken = CancellationToken::new();
