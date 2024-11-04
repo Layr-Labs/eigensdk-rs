@@ -299,10 +299,12 @@ mod tests {
         get_operator_state_retriever_address, get_registry_coordinator_address,
         get_rewards_coordinator_address, get_strategy_manager_address,
     };
+    use eigen_testing_utils::transaction::wait_transaction;
     use eigen_types::operator::Operator;
     use eigen_utils::get_provider;
     use std::str::FromStr;
-    use std::time::{SystemTime, UNIX_EPOCH};
+    use std::time::{Duration, SystemTime, UNIX_EPOCH};
+    use tokio::time::sleep;
 
     #[tokio::test]
     async fn test_query_past_registered_operator_events_and_fill_db() {
@@ -384,6 +386,8 @@ mod tests {
                 )
                 .await;
         });
+        // Sleep to wait for the operator info service to start
+        sleep(Duration::from_secs(1)).await;
 
         register_operator(
             http_endpoint,
@@ -391,9 +395,6 @@ mod tests {
             "12248929636257230549931416853095037629726205319386239410403476017439825112537",
         )
         .await;
-
-        // need to wait at least 3 seconds to get the event processed
-        tokio::time::sleep(tokio::time::Duration::from_secs(3)).await;
 
         cancel_token.clone().cancel();
 
@@ -424,13 +425,13 @@ mod tests {
         .await;
         let clone_operators_info = operators_info_service_in_memory.clone();
 
-        let token = tokio_util::sync::CancellationToken::new().clone();
-        let cancel_token = token.clone();
+        let cancellation_token = tokio_util::sync::CancellationToken::new();
+        let cloned_token = cancellation_token.clone();
         let cloned_http_endpoint = http_endpoint.clone();
         tokio::spawn(async move {
             let _ = clone_operators_info
                 .start_service(
-                    &token,
+                    &cloned_token,
                     0,
                     get_provider(cloned_http_endpoint.as_str())
                         .get_block_number()
@@ -439,6 +440,9 @@ mod tests {
                 )
                 .await;
         });
+        // Sleep to wait for the operator info service to start
+        sleep(Duration::from_secs(1)).await;
+
         register_operator(
             http_endpoint.clone(),
             "0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d",
@@ -451,9 +455,8 @@ mod tests {
             "8949062771264691130193054363356855357736539613420316273398900351143637925935",
         )
         .await;
-        tokio::time::sleep(tokio::time::Duration::from_secs(3)).await; // need to wait atleast 3 second to get the event processed
 
-        cancel_token.clone().cancel();
+        cancellation_token.cancel();
 
         let address = address!("70997970c51812dc3a010c7d01b50e0d17dc79c8");
         let operator_info = operators_info_service_in_memory
@@ -534,7 +537,7 @@ mod tests {
         let quorum_numbers = Bytes::from_str("0x00").unwrap();
         let socket = "socket";
 
-        let _ = avs_registry_writer
+        let tx_hash = avs_registry_writer
             .register_operator_in_quorum_with_avs_registry_coordinator(
                 bls_key_pair,
                 salt,
@@ -544,5 +547,6 @@ mod tests {
             )
             .await
             .unwrap();
+        wait_transaction(&http_endpoint, tx_hash).await.unwrap();
     }
 }

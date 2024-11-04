@@ -80,3 +80,20 @@ pub async fn mine_anvil_blocks(container: &ContainerAsync<GenericImage>, n: u32)
     output.stdout_to_vec().await.unwrap();
     assert_eq!(output.exit_code().await.unwrap().unwrap(), 0);
 }
+
+/// Deposit 1 eth to the account in anvil
+pub async fn set_account_balance(container: &ContainerAsync<GenericImage>, address: &str) {
+    let mut output = container
+        .exec(ExecCommand::new([
+            "cast",
+            "rpc",
+            "anvil_setBalance",
+            address,
+            "0xDE0B6B3A7640000", // 1 ETH in WEI
+        ]))
+        .await
+        .expect("Failed to set balance to account");
+
+    // blocking operation until the execution finishes
+    output.stdout_to_vec().await.unwrap();
+}
