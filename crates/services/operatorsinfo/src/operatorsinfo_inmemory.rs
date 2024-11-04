@@ -2,7 +2,7 @@ use alloy::providers::Provider;
 use alloy::rpc::types::Filter;
 use alloy_primitives::{Address, FixedBytes};
 use async_trait::async_trait;
-use eigen_client_avsregistry::{error::AvsRegistryError, reader::AvsRegistryChainReader};
+use eigen_client_avsregistry::reader::AvsRegistryChainReader;
 use eigen_crypto_bls::{
     alloy_registry_g1_point_to_g1_affine, alloy_registry_g2_point_to_g2_affine, BlsG1Point,
     BlsG2Point,
@@ -55,21 +55,12 @@ struct OperatorState {
 /// Error type for the operator info service.
 #[derive(Error, Debug)]
 pub enum OperatorInfoServiceError {
-    #[error("failed to retrieve operator info")]
-    OperatorInfoRetrievalError,
-    #[error("operator not found")]
-    OperatorNotFound,
-    #[error("channel was closed")]
-    ChannelClosed,
-    #[error("error sending to channel")]
-    ChannelError,
     #[error("Alloy Transport Error")]
     AlloyError(#[from] alloy::transports::TransportError),
     #[error("Socket not found")]
     SocketNotFound,
     #[error("Conversion from pubkey to id  error")]
     OperatorTypes(#[from] OperatorTypesError),
-
     #[error("Tokio Responder error")]
     ResponderError(#[from] tokio::sync::oneshot::error::RecvError),
 }
@@ -110,7 +101,7 @@ impl OperatorInfoService for OperatorInfoServiceInMemory {
     async fn get_operator_socket(
         &self,
         address: Address,
-    ) -> Result<(Option<String>), OperatorInfoServiceError> {
+    ) -> Result<Option<String>, OperatorInfoServiceError> {
         let (responder_tx, responder_rx) = oneshot::channel();
 
         let _ = self
