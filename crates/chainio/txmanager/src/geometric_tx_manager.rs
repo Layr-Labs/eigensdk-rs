@@ -11,6 +11,8 @@ use std::time::Duration;
 use thiserror::Error;
 use tokio::time::{timeout, Instant};
 
+use crate::fake_backend::EthBackend;
+
 pub type Transport = alloy::transports::http::Http<reqwest::Client>;
 
 /// Possible errors raised in Tx Manager
@@ -29,10 +31,10 @@ pub enum TxManagerError {
 }
 
 /// A simple transaction manager that encapsulates operations to send transactions to an Ethereum node.
-pub struct GeometricTxManager {
+pub struct GeometricTxManager<Backend: EthBackend> {
     logger: SharedLogger,
     wallet: EthereumWallet,
-    provider: RootProvider<Transport>,
+    backend: Backend,
     params: GeometricTxManagerParams,
 }
 
@@ -81,7 +83,7 @@ impl Default for GeometricTxManagerParams {
     }
 }
 
-impl GeometricTxManager {
+impl<Backend: EthBackend> GeometricTxManager<Backend> {
     /// Creates a new SimpleTxManager.
     ///
     /// # Arguments
@@ -102,14 +104,14 @@ impl GeometricTxManager {
     pub fn new(
         logger: SharedLogger,
         signer: PrivateKeySigner,
-        provider: RootProvider<Transport>,
+        provider: Backend,
         params: GeometricTxManagerParams,
-    ) -> Result<GeometricTxManager, TxManagerError> {
+    ) -> Result<GeometricTxManager<Backend>, TxManagerError> {
         let wallet = EthereumWallet::from(signer);
         Ok(GeometricTxManager {
             logger,
             wallet,
-            provider,
+            backend: provider,
             params,
         })
     }
@@ -151,15 +153,15 @@ impl GeometricTxManager {
                 })
                 .map_err(|_| TxManagerError::SendTxError)?;
 
-            let send_result = self.provider.send_tx_envelope(signed_tx.clone()).await;
+            let send_result = self.backend.send_tx_envelope(signed_tx.clone()).await;
             match send_result {
-                Ok(tx) => {
+                Ok(tx_hash) => {
                     self.logger.info(
                         "Transaction sent. Pending transaction: ",
-                        &tx.tx_hash().to_string(),
+                        &tx_hash.to_string(),
                     );
                     let mut tx_request = TxRequest::new(signed_tx.into());
-                    tx_request.add_attempt(*tx.tx_hash(), Instant::now());
+                    tx_request.add_attempt(tx_hash, Instant::now());
                     return self.monitor_tx(tx_request).await;
                 }
                 Err(RpcError::Transport(
@@ -213,12 +215,20 @@ impl GeometricTxManager {
                 "transaction not mined within timeout, resending with higher gas price",
                 "",
             );
-            let send_result = self.provider.send_transaction(tx.tx.clone()).await;
+
+            let tx_request = tx
+                .tx
+                .clone() // TODO: check clone
+                .build(&self.wallet)
+                .await
+                .map_err(|_| TxManagerError::SendTxError)?;
+
+            let send_result = self.backend.send_tx_envelope(tx_request).await;
             match send_result {
-                Ok(new_tx) => {
+                Ok(tx_hash) => {
                     self.logger
-                        .info("successfully sent txn: ", &new_tx.tx_hash().to_string());
-                    tx.add_attempt(*new_tx.tx_hash(), Instant::now());
+                        .info("successfully sent txn: ", &tx_hash.to_string());
+                    tx.add_attempt(tx_hash, Instant::now());
                 }
                 Err(e) => {
                     if retry_from_failures >= self.params.max_send_transaction_retry {
@@ -245,17 +255,9 @@ impl GeometricTxManager {
         let mut interval = tokio::time::interval(self.params.get_tx_receipt_ticker_duration);
         for (_requested_at, tx_hash) in attempts {
             interval.tick().await;
-            let receipt = self
-                .provider
-                .get_transaction_receipt(*tx_hash)
-                .await
-                .map_err(|e| {
-                    self.logger.error("Failed to get receipt", &e.to_string());
-                    TxManagerError::WaitForReceiptError
-                })?;
-
+            let receipt = self.backend.get_transaction_receipt(*tx_hash).await;
             if let Some(r) = receipt {
-                let block_number = self.provider.get_block_number().await.unwrap_or(0);
+                let block_number = self.backend.get_block_number().await.unwrap_or(0);
                 if r.block_number.unwrap_or(0) + self.params.confirmation_blocks > block_number {
                     self.logger.info(
                         "Transaction mined but not enough confirmations at current chain tip",
@@ -303,7 +305,7 @@ impl GeometricTxManager {
         // we reestimate the gas limit because the state of the chain may have changed,
         // which could cause the previous gas limit to be insufficient
         let gas_limit = self
-            .provider
+            .backend
             .estimate_gas(tx)
             .await
             .map_err(|_| TxManagerError::SendTxError)?;
@@ -317,7 +319,7 @@ impl GeometricTxManager {
     // Rationale: https://www.blocknative.com/blog/eip-1559-fees
     pub async fn estimate_gas_fee_cap(&self, gas_tip_cap: u128) -> Result<u128, TxManagerError> {
         let header = self
-            .provider
+            .backend
             .get_block_by_number(BlockNumberOrTag::Latest, false)
             .await
             .ok()
@@ -330,7 +332,7 @@ impl GeometricTxManager {
     }
 
     pub async fn estimate_gas_tip_cap(&self) -> u128 {
-        self.provider.get_max_priority_fee_per_gas().await
+        self.backend.get_max_priority_fee_per_gas().await
         .inspect_err(|err|
             self.logger.info("eth_maxPriorityFeePerGas is unsupported by current backend, using fallback gasTipCap",
             &err.to_string()))
@@ -344,6 +346,8 @@ impl GeometricTxManager {
 
 #[cfg(test)]
 mod tests {
+    use crate::fake_backend::{AlloyBackend, FakeEthBackend, MiningParams};
+
     use super::{GeometricTxManager, GeometricTxManagerParams};
     use alloy::network::TransactionBuilder;
     use alloy::primitives::{address, U256};
@@ -353,7 +357,9 @@ mod tests {
     use eigen_logging::{get_logger, init_logger};
     use eigen_signer::signer::Config;
     use eigen_testing_utils::anvil::start_anvil_container;
+    use std::sync::Arc;
     use std::time::Duration;
+    use tokio::sync::Mutex;
 
     const TEST_PRIVATE_KEY: &str =
         "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
@@ -366,9 +372,10 @@ mod tests {
         let config = Config::PrivateKey(TEST_PRIVATE_KEY.to_string());
         let signer = Config::signer_from_config(config).unwrap();
         let provider = ProviderBuilder::new().on_http(rpc_url.parse().unwrap());
+        let backend = AlloyBackend { provider };
 
         let geometric_tx_manager =
-            GeometricTxManager::new(logger, signer, provider, Default::default()).unwrap();
+            GeometricTxManager::new(logger, signer, backend, Default::default()).unwrap();
 
         let to = address!("a0Ee7A142d267C1f36714E4a8F75612F20a79720");
         let account_nonce = 0x69;
@@ -392,19 +399,28 @@ mod tests {
 
     #[tokio::test]
     async fn test_send_transaction_to_congested_network() {
-        let (_container, rpc_url, _ws_endpoint) = start_anvil_container().await;
         init_logger(LogLevel::Info);
         let logger = get_logger();
         let config = Config::PrivateKey(TEST_PRIVATE_KEY.to_string());
         let signer = Config::signer_from_config(config).unwrap();
-        let provider = ProviderBuilder::new().on_http(rpc_url.parse().unwrap());
+        let backend = FakeEthBackend {
+            congested_blocks: 0,
+            base_fee_per_gas: 1_000_000_000,
+            mining_params: Arc::new(Mutex::new(MiningParams {
+                block_number: 0,
+                nonce: 0,
+                mempool: Default::default(),
+                mined_txs: Default::default(),
+                gas_tip_cap: 5_000_000_000,
+            })),
+        };
         let params = GeometricTxManagerParams {
             txn_confirmation_timeout: Duration::from_secs(5),
             ..Default::default()
         };
 
         let geometric_tx_manager =
-            GeometricTxManager::new(logger, signer, provider, params).unwrap();
+            GeometricTxManager::new(logger, signer, backend, params).unwrap();
         // TODO: simulate congested network increasing gas base fee and gas tip needed. Mock the provider
 
         let to = address!("a0Ee7A142d267C1f36714E4a8F75612F20a79720");
