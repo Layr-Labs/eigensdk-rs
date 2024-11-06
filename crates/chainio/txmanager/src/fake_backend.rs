@@ -61,7 +61,6 @@ impl FakeEthBackend {
     pub async fn start_mining(&self) {
         let params = self.mining_params.clone();
         tokio::spawn(async move {
-            dbg!("mining...");
             loop {
                 let mut params = params.lock().await;
                 if let Some(tx) = params.mempool.get(&params.nonce).cloned() {
@@ -70,9 +69,6 @@ impl FakeEthBackend {
                         params.mined_txs.insert(*tx.tx_hash(), block_number);
                         params.nonce += 1;
                         params.block_number += 1;
-                        dbg!("mined tx");
-                    } else {
-                        dbg!("tx not mined");
                     }
                 }
                 params.congested_blocks = params.congested_blocks.saturating_sub(1);

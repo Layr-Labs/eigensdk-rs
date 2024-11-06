@@ -356,11 +356,11 @@ mod tests {
     use super::{GeometricTxManager, GeometricTxManagerParams};
     use crate::fake_backend::{AlloyBackend, EthBackend, FakeEthBackend, MiningParams};
     use alloy::network::TransactionBuilder;
-    use alloy::primitives::{address, Address, U256};
+    use alloy::primitives::{address, U256};
     use alloy::providers::ProviderBuilder;
     use alloy::rpc::types::eth::TransactionRequest;
     use eigen_logging::log_level::LogLevel;
-    use eigen_logging::{get_logger, init_logger};
+    use eigen_logging::{get_logger, get_test_logger, init_logger};
     use eigen_signer::signer::Config;
     use eigen_testing_utils::anvil::start_anvil_container;
     use std::sync::Arc;
@@ -369,13 +369,23 @@ mod tests {
 
     const TEST_PRIVATE_KEY: &str =
         "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
-    const TEST_ADDRESS: Address = address!("a0Ee7A142d267C1f36714E4a8F75612F20a79720");
+
+    fn new_test_tx(nonce: u64) -> TransactionRequest {
+        TransactionRequest::default()
+            .with_to(address!("a0Ee7A142d267C1f36714E4a8F75612F20a79720"))
+            .with_nonce(nonce)
+            .with_chain_id(31337)
+            .with_value(U256::from(100))
+            .with_gas_limit(21_000)
+            .with_max_priority_fee_per_gas(1)
+            .with_max_fee_per_gas(20_000_000_000)
+    }
 
     #[tokio::test]
     async fn test_send_single_transaction() {
+        // Send transaction using Alloy RootProvider
         let (_container, rpc_url, _ws_endpoint) = start_anvil_container().await;
-        init_logger(LogLevel::Info);
-        let logger = get_logger();
+        let logger = get_test_logger();
         let config = Config::PrivateKey(TEST_PRIVATE_KEY.to_string());
         let signer = Config::signer_from_config(config).unwrap();
         let provider = ProviderBuilder::new().on_http(rpc_url.parse().unwrap());
@@ -384,19 +394,10 @@ mod tests {
         let geometric_tx_manager =
             GeometricTxManager::new(logger, signer, backend, Default::default());
 
-        let account_nonce = 0x69;
-        let mut tx = TransactionRequest::default()
-            .with_to(TEST_ADDRESS)
-            .with_nonce(account_nonce)
-            .with_chain_id(31337)
-            .with_value(U256::from(100))
-            .with_gas_limit(21_000)
-            .with_max_priority_fee_per_gas(1_000_000_000)
-            .with_max_fee_per_gas(20_000_000_000);
+        let mut tx = new_test_tx(0x69);
 
         // send transaction and wait for receipt
         let receipt = geometric_tx_manager.send_tx(&mut tx).await.unwrap();
-        let block_number = receipt.block_number.unwrap();
         let receipt_from_backend = geometric_tx_manager
             .backend
             .get_transaction_receipt(receipt.transaction_hash)
@@ -404,19 +405,20 @@ mod tests {
             .unwrap();
 
         assert_eq!(receipt, receipt_from_backend);
-        assert!(block_number > 0);
+        assert!(receipt.block_number.unwrap() > 0);
     }
 
     #[tokio::test]
     async fn test_send_transaction_to_congested_network() {
-        init_logger(LogLevel::Info);
+        // Send transaction using FakeEthBackend to simulate congested network
+        init_logger(LogLevel::Info); // TODO: remove
         let logger = get_logger();
         let config = Config::PrivateKey(TEST_PRIVATE_KEY.to_string());
         let signer = Config::signer_from_config(config).unwrap();
         let backend = FakeEthBackend {
             base_fee_per_gas: 1_000_000_000,
             mining_params: Arc::new(Mutex::new(MiningParams {
-                congested_blocks: 0,
+                congested_blocks: 30,
                 block_number: 1,
                 nonce: 0,
                 mempool: Default::default(),
@@ -433,18 +435,10 @@ mod tests {
 
         let geometric_tx_manager = GeometricTxManager::new(logger, signer, backend, params);
 
-        let mut tx = TransactionRequest::default()
-            .with_to(TEST_ADDRESS)
-            .with_nonce(0)
-            .with_chain_id(31337)
-            .with_value(U256::from(100))
-            .with_gas_limit(21_000)
-            .with_max_priority_fee_per_gas(1_000_000_000)
-            .with_max_fee_per_gas(20_000_000_000);
+        let mut tx = new_test_tx(0);
 
         // send transaction and wait for receipt
         let receipt = geometric_tx_manager.send_tx(&mut tx).await.unwrap();
-        let block_number = receipt.block_number.unwrap();
         let receipt_from_backend = geometric_tx_manager
             .backend
             .get_transaction_receipt(receipt.transaction_hash)
@@ -452,6 +446,6 @@ mod tests {
             .unwrap();
 
         assert_eq!(receipt, receipt_from_backend);
-        assert!(block_number > 0);
+        assert!(receipt.block_number.unwrap() > 0);
     }
 }
