@@ -218,9 +218,6 @@ impl<Backend: EthBackend> GeometricTxManager<Backend> {
                 self.ensure_any_tx_confirmed(&tx.attempts),
             )
             .await
-            .inspect_err(|_| {
-                dbg!("timeout fetching txs"); // TODO: remove this dbg
-            })
             .ok()
             .flatten();
 
@@ -377,8 +374,7 @@ mod tests {
     use alloy::primitives::{address, U256};
     use alloy::providers::ProviderBuilder;
     use alloy::rpc::types::eth::TransactionRequest;
-    use eigen_logging::log_level::LogLevel;
-    use eigen_logging::{get_logger, get_test_logger, init_logger};
+    use eigen_logging::get_test_logger;
     use eigen_signer::signer::Config;
     use eigen_testing_utils::anvil::start_anvil_container;
     use std::sync::Arc;
@@ -444,8 +440,7 @@ mod tests {
     #[tokio::test]
     async fn test_send_transaction_to_congested_network() {
         // Send transaction using FakeEthBackend to simulate congested network
-        init_logger(LogLevel::Info); // TODO: remove
-        let logger = get_logger();
+        let logger = get_test_logger();
         let config = Config::PrivateKey(TEST_PRIVATE_KEY.to_string());
         let signer = Config::signer_from_config(config).unwrap();
         let backend = new_fake_backend(3);
@@ -474,8 +469,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_max_priority_fee_per_gas_gets_overwritten() {
-        init_logger(LogLevel::Info); // TODO: remove
-        let logger = get_logger();
+        let logger = get_test_logger();
         let config = Config::PrivateKey(TEST_PRIVATE_KEY.to_string());
         let signer = Config::signer_from_config(config).unwrap();
         let backend = new_fake_backend(0);
@@ -507,8 +501,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_send_3_txs_in_parallel() {
-        init_logger(LogLevel::Info); // TODO: remove
-        let logger = get_logger();
+        let logger = get_test_logger();
         let config = Config::PrivateKey(TEST_PRIVATE_KEY.to_string());
         let signer = Config::signer_from_config(config).unwrap();
         let backend = new_fake_backend(0);
@@ -542,8 +535,7 @@ mod tests {
     #[tokio::test]
     async fn test_send_3_txs_in_parallel_with_inverted_nonces() {
         //TODO: check timeout de send_tx, if something fails it keeps pumping gas forever
-        init_logger(LogLevel::Info); // TODO: remove
-        let logger = get_logger();
+        let logger = get_test_logger();
         let config = Config::PrivateKey(TEST_PRIVATE_KEY.to_string());
         let signer = Config::signer_from_config(config).unwrap();
         let backend = new_fake_backend(0);
@@ -577,8 +569,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_send_3_txs_sequencially() {
-        init_logger(LogLevel::Info); // TODO: remove
-        let logger = get_logger();
+        let logger = get_test_logger();
         let config = Config::PrivateKey(TEST_PRIVATE_KEY.to_string());
         let signer = Config::signer_from_config(config).unwrap();
         let backend = new_fake_backend(0);
@@ -597,8 +588,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_send_tx_with_incorrect_nonce() {
-        init_logger(LogLevel::Info); // TODO: remove
-        let logger = get_logger();
+        let logger = get_test_logger();
         let config = Config::PrivateKey(TEST_PRIVATE_KEY.to_string());
         let signer = Config::signer_from_config(config).unwrap();
         let backend = new_fake_backend(0);
@@ -623,8 +613,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_send_2_txs_with_same_nonce() {
-        init_logger(LogLevel::Info); // TODO: remove
-        let logger = get_logger();
+        let logger = get_test_logger();
         let config = Config::PrivateKey(TEST_PRIVATE_KEY.to_string());
         let signer = Config::signer_from_config(config).unwrap();
         let backend = new_fake_backend(0);
