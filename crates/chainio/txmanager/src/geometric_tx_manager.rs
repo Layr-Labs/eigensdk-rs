@@ -60,6 +60,7 @@ pub struct GeometricTxManagerParams {
     pub confirmation_blocks: u64,
     pub txn_broadcast_timeout: Duration,
     pub txn_confirmation_timeout: Duration,
+    pub txn_send_timeout: Duration,
     pub max_send_transaction_retry: i32,
     pub get_tx_receipt_ticker_duration: Duration,
     pub fallback_gas_tip_cap: u64,
@@ -73,6 +74,7 @@ impl Default for GeometricTxManagerParams {
             confirmation_blocks: 0,
             txn_broadcast_timeout: Duration::from_secs(2 * 60), // 2 minutes
             txn_confirmation_timeout: Duration::from_secs(5 * 12), // 5 blocks
+            txn_send_timeout: Duration::from_secs(2),           // 2 minutes
             max_send_transaction_retry: 3,
             get_tx_receipt_ticker_duration: Duration::from_secs(3),
             fallback_gas_tip_cap: 5_000_000_000, // 5 gwei
@@ -136,7 +138,20 @@ impl<Backend: EthBackend> GeometricTxManager<Backend> {
         &self,
         tx: &mut TransactionRequest,
     ) -> Result<TransactionReceipt, TxManagerError> {
-        self.logger.info("new transaction", &format!("{:?}", tx));
+        timeout(Duration::from_secs(2), self.send_tx_with_retry(tx))
+            .await
+            .map_err(|e| {
+                self.logger
+                    .error("Transaction send failed due to timeout", &e.to_string());
+                TxManagerError::SendTxError
+            })?
+    }
+
+    pub async fn send_tx_with_retry(
+        &self,
+        tx: &mut TransactionRequest,
+    ) -> Result<TransactionReceipt, TxManagerError> {
+        self.logger.info("New transaction", &format!("{:?}", tx));
 
         for _ in 0..self.params.max_send_transaction_retry {
             let estimated_gas_tip_cap = self.estimate_gas_tip_cap().await;
@@ -369,7 +384,7 @@ mod tests {
     use std::sync::Arc;
     use std::time::Duration;
     use tokio::sync::Mutex;
-    use tokio::time::{sleep, timeout};
+    use tokio::time::{sleep, Instant};
 
     const TEST_PRIVATE_KEY: &str =
         "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
@@ -592,17 +607,17 @@ mod tests {
             txn_confirmation_timeout: Duration::from_secs(1),
             ..Default::default()
         };
+        let txn_send_timeout = params.txn_send_timeout;
         let geometric_tx_manager = GeometricTxManager::new(logger, signer, backend, params);
 
         let mut tx = new_test_tx().with_nonce(100);
 
         // Sending this transaction would loop forever, so we expect it to timeout
-        let result = timeout(
-            Duration::from_secs(2),
-            geometric_tx_manager.send_tx(&mut tx),
-        )
-        .await;
+        let now = Instant::now();
+        let result = geometric_tx_manager.send_tx(&mut tx).await;
 
+        let elapsed = now.elapsed();
         assert!(result.is_err());
+        assert_eq!(elapsed.as_secs(), txn_send_timeout.as_secs());
     }
 }
