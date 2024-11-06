@@ -153,7 +153,6 @@ impl<Backend: EthBackend> GeometricTxManager<Backend> {
                 .map_err(|_| TxManagerError::SendTxError)?;
 
             let send_result = self.backend.send_tx_envelope(signed_tx.clone()).await;
-            dbg!(&send_result);
             match send_result {
                 Ok(tx_hash) => {
                     self.logger.info(
@@ -205,12 +204,16 @@ impl<Backend: EthBackend> GeometricTxManager<Backend> {
             )
             .await
             .inspect_err(|_| {
-                dbg!("timeout fetching txs");
+                dbg!("timeout fetching txs"); // TODO: remove this dbg
             })
             .ok()
             .flatten();
 
             if let Some(receipt) = confirmed_txs {
+                self.logger.info(
+                    "Successfully confirmed transaction",
+                    &receipt.transaction_hash.to_string(),
+                );
                 return Ok(receipt);
             }
 
@@ -481,5 +484,36 @@ mod tests {
 
         assert_eq!(receipt, receipt_from_backend);
         assert!(receipt.block_number.unwrap() > 0);
+    }
+
+    #[tokio::test]
+    async fn test_send_3_txs_in_parallel() {
+        init_logger(LogLevel::Info); // TODO: remove
+        let logger = get_logger();
+        let config = Config::PrivateKey(TEST_PRIVATE_KEY.to_string());
+        let signer = Config::signer_from_config(config).unwrap();
+        let backend = new_fake_backend(0);
+        backend.start_mining().await;
+        let params = GeometricTxManagerParams::default();
+        let geometric_tx_manager = Arc::new(Mutex::new(GeometricTxManager::new(
+            logger, signer, backend, params,
+        )));
+
+        let mut handles = vec![];
+        for i in 0..3 {
+            let geometric_tx_manager_clone = geometric_tx_manager.clone();
+            handles.push(tokio::spawn(async move {
+                let mut tx = new_test_tx().with_nonce(i);
+                return geometric_tx_manager_clone
+                    .lock()
+                    .await
+                    .send_tx(&mut tx)
+                    .await
+                    .unwrap();
+            }));
+        }
+        for handle in handles {
+            assert!(handle.await.is_ok());
+        }
     }
 }
