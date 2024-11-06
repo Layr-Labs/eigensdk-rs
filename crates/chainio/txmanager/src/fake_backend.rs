@@ -1,46 +1,14 @@
-use std::sync::Arc;
-
 use alloy::{
     consensus::{ReceiptEnvelope, Transaction, TxEnvelope},
     eips::BlockNumberOrTag,
     primitives::{map::HashMap, Address, BlockNumber, TxHash},
-    providers::{Provider, RootProvider},
     rpc::types::{Block, Header, TransactionReceipt, TransactionRequest},
-    transports::{http::Http, RpcError, TransportErrorKind, TransportResult},
+    transports::{RpcError, TransportErrorKind, TransportResult},
 };
-use reqwest::Client;
+use std::sync::Arc;
 use tokio::sync::Mutex;
 
-#[async_trait::async_trait]
-pub trait EthBackend {
-    /// Get the latest block number.
-    ///
-    /// # Returns
-    ///
-    /// The latest block number.
-    async fn get_block_number(&self) -> Result<BlockNumber, RpcError<TransportErrorKind>>;
-
-    // when not implemented, will txmanager will fall on gasTipCap
-    async fn get_max_priority_fee_per_gas(&self) -> Result<u128, RpcError<TransportErrorKind>>;
-
-    async fn estimate_gas<'a>(
-        &self,
-        tx: &'a TransactionRequest,
-    ) -> Result<u64, RpcError<TransportErrorKind>>;
-
-    async fn get_block_by_number(
-        &self,
-        number: BlockNumberOrTag,
-        hydrate: bool,
-    ) -> Result<Option<Block>, RpcError<TransportErrorKind>>;
-
-    async fn send_tx_envelope(
-        &self,
-        tx: TxEnvelope,
-    ) -> Result<TxHash, RpcError<TransportErrorKind>>;
-
-    async fn get_transaction_receipt(&self, hash: TxHash) -> Option<TransactionReceipt>;
-}
+use crate::eth_backend::EthBackend;
 
 pub struct FakeEthBackend {
     pub base_fee_per_gas: u64,
@@ -154,47 +122,5 @@ impl EthBackend for FakeEthBackend {
                 state_root: None,
                 authorization_list: None,
             })
-    }
-}
-
-pub struct AlloyBackend {
-    pub provider: RootProvider<Http<Client>>,
-}
-
-#[async_trait::async_trait]
-impl EthBackend for AlloyBackend {
-    async fn send_tx_envelope(&self, tx: TxEnvelope) -> TransportResult<TxHash> {
-        Ok(*self.provider.send_tx_envelope(tx).await?.tx_hash())
-    }
-
-    async fn get_block_number(&self) -> Result<BlockNumber, RpcError<TransportErrorKind>> {
-        Ok(self.provider.get_block_number().await?)
-    }
-
-    async fn get_max_priority_fee_per_gas(&self) -> Result<u128, RpcError<TransportErrorKind>> {
-        Ok(self.provider.get_max_priority_fee_per_gas().await?)
-    }
-
-    async fn estimate_gas<'a>(
-        &self,
-        tx: &'a TransactionRequest,
-    ) -> Result<u64, RpcError<TransportErrorKind>> {
-        Ok(self.provider.estimate_gas(tx).await?)
-    }
-
-    async fn get_block_by_number(
-        &self,
-        number: BlockNumberOrTag,
-        hydrate: bool,
-    ) -> Result<Option<Block>, RpcError<TransportErrorKind>> {
-        Ok(self.provider.get_block_by_number(number, hydrate).await?)
-    }
-
-    async fn get_transaction_receipt(&self, hash: TxHash) -> Option<TransactionReceipt> {
-        self.provider
-            .get_transaction_receipt(hash)
-            .await
-            .ok()
-            .flatten()
     }
 }

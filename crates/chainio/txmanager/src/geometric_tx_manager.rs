@@ -10,7 +10,7 @@ use std::time::Duration;
 use thiserror::Error;
 use tokio::time::{timeout, Instant};
 
-use crate::fake_backend::EthBackend;
+use crate::eth_backend::EthBackend;
 
 pub type Transport = alloy::transports::http::Http<reqwest::Client>;
 
@@ -369,7 +369,11 @@ impl<Backend: EthBackend> GeometricTxManager<Backend> {
 #[cfg(test)]
 mod tests {
     use super::{GeometricTxManager, GeometricTxManagerParams};
-    use crate::fake_backend::{AlloyBackend, EthBackend, FakeEthBackend, MiningParams};
+    use crate::{
+        alloy_backend::AlloyBackend,
+        eth_backend::EthBackend,
+        fake_backend::{FakeEthBackend, MiningParams},
+    };
     use alloy::network::TransactionBuilder;
     use alloy::primitives::{address, U256};
     use alloy::providers::ProviderBuilder;
