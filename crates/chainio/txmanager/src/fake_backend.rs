@@ -43,13 +43,13 @@ pub trait EthBackend {
 }
 
 pub struct FakeEthBackend {
-    pub congested_blocks: u64,
     pub base_fee_per_gas: u64,
-    pub mining_params: Arc<Mutex<MiningParams>>,
+    pub mining_params: Arc<Mutex<MiningParams>>, // TODO: use one lock for each param?
 }
 
 pub struct MiningParams {
     pub block_number: u64,
+    pub congested_blocks: u64,
     // we use a single nonce for now because the txmgr only supports a single sender
     pub nonce: u64,
     pub mempool: HashMap<u64, TxEnvelope>,
@@ -58,12 +58,13 @@ pub struct MiningParams {
 }
 
 impl FakeEthBackend {
-    pub async fn start_mining(mut self) {
+    pub async fn start_mining(&self) {
+        let params = self.mining_params.clone();
         tokio::spawn(async move {
+            println!("mining...");
             loop {
-                let mut params = self.mining_params.lock().await;
+                let mut params = params.lock().await;
                 if let Some(tx) = params.mempool.get(&params.nonce).cloned() {
-                    // TODO: refactor to avoid clone
                     if tx.max_priority_fee_per_gas().unwrap() < params.gas_tip_cap {
                         let block_number = params.block_number;
                         params.mined_txs.insert(*tx.tx_hash(), block_number);
@@ -74,8 +75,8 @@ impl FakeEthBackend {
                         dbg!("tx not mined");
                     }
                 }
-                if self.congested_blocks > 0 {
-                    self.congested_blocks -= 1;
+                if params.congested_blocks > 0 {
+                    params.congested_blocks -= 1;
                 }
                 drop(params);
                 tokio::time::sleep(tokio::time::Duration::from_millis(100)).await;
@@ -91,9 +92,10 @@ impl EthBackend for FakeEthBackend {
     }
 
     async fn get_max_priority_fee_per_gas(&self) -> Result<u128, RpcError<TransportErrorKind>> {
-        let prev_gas_tip_cap = self.mining_params.lock().await.gas_tip_cap;
-        if self.congested_blocks > 0 {
-            self.mining_params.lock().await.gas_tip_cap += 1;
+        let mut params = self.mining_params.lock().await;
+        let prev_gas_tip_cap = params.gas_tip_cap;
+        if params.congested_blocks > 0 {
+            params.gas_tip_cap += 1;
         }
         Ok(prev_gas_tip_cap)
     }

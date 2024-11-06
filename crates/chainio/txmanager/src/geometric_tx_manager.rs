@@ -1,7 +1,6 @@
 use alloy::eips::BlockNumberOrTag;
 use alloy::network::{EthereumWallet, TransactionBuilder};
 use alloy::primitives::TxHash;
-use alloy::providers::{Provider, RootProvider};
 use alloy::rpc::types::eth::{TransactionReceipt, TransactionRequest};
 use alloy::signers::local::PrivateKeySigner;
 use alloy::transports::RpcError;
@@ -104,16 +103,16 @@ impl<Backend: EthBackend> GeometricTxManager<Backend> {
     pub fn new(
         logger: SharedLogger,
         signer: PrivateKeySigner,
-        provider: Backend,
+        backend: Backend,
         params: GeometricTxManagerParams,
-    ) -> Result<GeometricTxManager<Backend>, TxManagerError> {
+    ) -> GeometricTxManager<Backend> {
         let wallet = EthereumWallet::from(signer);
-        Ok(GeometricTxManager {
+        GeometricTxManager {
             logger,
             wallet,
-            backend: provider,
+            backend,
             params,
-        })
+        }
     }
 
     /// Send is used to send a transaction to the Ethereum node. It takes an unsigned/signed transaction,
@@ -204,7 +203,8 @@ impl<Backend: EthBackend> GeometricTxManager<Backend> {
                 self.ensure_any_tx_confirmed(&tx.attempts),
             )
             .await
-            .unwrap()?;
+            .unwrap()?; // TODO: remove unwrap, handle timeout case
+
             if let Some(receipt) = confirmed_txs {
                 return Ok(receipt);
             }
@@ -375,7 +375,7 @@ mod tests {
         let backend = AlloyBackend { provider };
 
         let geometric_tx_manager =
-            GeometricTxManager::new(logger, signer, backend, Default::default()).unwrap();
+            GeometricTxManager::new(logger, signer, backend, Default::default());
 
         let to = address!("a0Ee7A142d267C1f36714E4a8F75612F20a79720");
         let account_nonce = 0x69;
@@ -404,9 +404,9 @@ mod tests {
         let config = Config::PrivateKey(TEST_PRIVATE_KEY.to_string());
         let signer = Config::signer_from_config(config).unwrap();
         let backend = FakeEthBackend {
-            congested_blocks: 0,
             base_fee_per_gas: 1_000_000_000,
             mining_params: Arc::new(Mutex::new(MiningParams {
+                congested_blocks: 0,
                 block_number: 0,
                 nonce: 0,
                 mempool: Default::default(),
@@ -415,13 +415,13 @@ mod tests {
             })),
         };
         let params = GeometricTxManagerParams {
-            txn_confirmation_timeout: Duration::from_secs(5),
+            txn_confirmation_timeout: Duration::from_secs(1),
             ..Default::default()
         };
 
-        let geometric_tx_manager =
-            GeometricTxManager::new(logger, signer, backend, params).unwrap();
-        // TODO: simulate congested network increasing gas base fee and gas tip needed. Mock the provider
+        backend.start_mining().await;
+
+        let geometric_tx_manager = GeometricTxManager::new(logger, signer, backend, params);
 
         let to = address!("a0Ee7A142d267C1f36714E4a8F75612F20a79720");
         let account_nonce = 0x69;
