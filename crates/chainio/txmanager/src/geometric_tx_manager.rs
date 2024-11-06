@@ -33,7 +33,7 @@ pub enum TxManagerError {
 pub struct GeometricTxManager<Backend: EthBackend> {
     logger: SharedLogger,
     wallet: EthereumWallet,
-    backend: Backend,
+    pub backend: Backend,
     params: GeometricTxManagerParams,
 }
 
@@ -153,6 +153,7 @@ impl<Backend: EthBackend> GeometricTxManager<Backend> {
                 .map_err(|_| TxManagerError::SendTxError)?;
 
             let send_result = self.backend.send_tx_envelope(signed_tx.clone()).await;
+            dbg!(&send_result);
             match send_result {
                 Ok(tx_hash) => {
                     self.logger.info(
@@ -203,18 +204,22 @@ impl<Backend: EthBackend> GeometricTxManager<Backend> {
                 self.ensure_any_tx_confirmed(&tx.attempts),
             )
             .await
-            .unwrap()?; // TODO: remove unwrap, handle timeout case
+            .inspect_err(|_| {
+                dbg!("timeout fetching txs");
+            })
+            .ok()
+            .flatten();
 
             if let Some(receipt) = confirmed_txs {
                 return Ok(receipt);
             }
 
             // send new tx with higher gas price
-            self.speedup_tx(&mut tx.tx).await?;
             self.logger.info(
                 "transaction not mined within timeout, resending with higher gas price",
                 "",
             );
+            self.speedup_tx(&mut tx.tx).await?;
 
             let tx_request = tx
                 .tx
@@ -251,24 +256,26 @@ impl<Backend: EthBackend> GeometricTxManager<Backend> {
     pub async fn ensure_any_tx_confirmed(
         &self,
         attempts: &Vec<(Instant, TxHash)>,
-    ) -> Result<Option<TransactionReceipt>, TxManagerError> {
+    ) -> Option<TransactionReceipt> {
         let mut interval = tokio::time::interval(self.params.get_tx_receipt_ticker_duration);
-        for (_requested_at, tx_hash) in attempts {
+        loop {
             interval.tick().await;
-            let receipt = self.backend.get_transaction_receipt(*tx_hash).await;
-            if let Some(r) = receipt {
-                let block_number = self.backend.get_block_number().await.unwrap_or(0);
-                if r.block_number.unwrap_or(0) + self.params.confirmation_blocks > block_number {
-                    self.logger.info(
-                        "Transaction mined but not enough confirmations at current chain tip",
-                        "",
-                    );
-                    break;
+            for (_requested_at, tx_hash) in attempts {
+                let receipt = self.backend.get_transaction_receipt(*tx_hash).await;
+                if let Some(r) = receipt {
+                    let block_number = self.backend.get_block_number().await.unwrap_or(0);
+                    if r.block_number.unwrap_or(0) + self.params.confirmation_blocks > block_number
+                    {
+                        self.logger.info(
+                            "Transaction mined but not enough confirmations at current chain tip",
+                            "",
+                        );
+                        break;
+                    }
+                    return Some(r);
                 }
-                return Ok(Some(r));
             }
         }
-        Ok(None)
     }
 
     // increases the gas price of the existing transaction by specified percentage.
@@ -346,11 +353,10 @@ impl<Backend: EthBackend> GeometricTxManager<Backend> {
 
 #[cfg(test)]
 mod tests {
-    use crate::fake_backend::{AlloyBackend, FakeEthBackend, MiningParams};
-
     use super::{GeometricTxManager, GeometricTxManagerParams};
+    use crate::fake_backend::{AlloyBackend, EthBackend, FakeEthBackend, MiningParams};
     use alloy::network::TransactionBuilder;
-    use alloy::primitives::{address, U256};
+    use alloy::primitives::{address, Address, U256};
     use alloy::providers::ProviderBuilder;
     use alloy::rpc::types::eth::TransactionRequest;
     use eigen_logging::log_level::LogLevel;
@@ -363,6 +369,7 @@ mod tests {
 
     const TEST_PRIVATE_KEY: &str =
         "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
+    const TEST_ADDRESS: Address = address!("a0Ee7A142d267C1f36714E4a8F75612F20a79720");
 
     #[tokio::test]
     async fn test_send_single_transaction() {
@@ -377,24 +384,27 @@ mod tests {
         let geometric_tx_manager =
             GeometricTxManager::new(logger, signer, backend, Default::default());
 
-        let to = address!("a0Ee7A142d267C1f36714E4a8F75612F20a79720");
         let account_nonce = 0x69;
         let mut tx = TransactionRequest::default()
-            .with_to(to)
+            .with_to(TEST_ADDRESS)
             .with_nonce(account_nonce)
             .with_chain_id(31337)
             .with_value(U256::from(100))
             .with_gas_limit(21_000)
             .with_max_priority_fee_per_gas(1_000_000_000)
-            .with_max_fee_per_gas(20_000_000_000)
-            .with_gas_price(21_000_000_000);
+            .with_max_fee_per_gas(20_000_000_000);
 
         // send transaction and wait for receipt
         let receipt = geometric_tx_manager.send_tx(&mut tx).await.unwrap();
         let block_number = receipt.block_number.unwrap();
-        println!("Transaction mined in block: {}", block_number);
+        let receipt_from_backend = geometric_tx_manager
+            .backend
+            .get_transaction_receipt(receipt.transaction_hash)
+            .await
+            .unwrap();
+
+        assert_eq!(receipt, receipt_from_backend);
         assert!(block_number > 0);
-        assert_eq!(receipt.to, Some(to));
     }
 
     #[tokio::test]
@@ -407,7 +417,7 @@ mod tests {
             base_fee_per_gas: 1_000_000_000,
             mining_params: Arc::new(Mutex::new(MiningParams {
                 congested_blocks: 0,
-                block_number: 0,
+                block_number: 1,
                 nonce: 0,
                 mempool: Default::default(),
                 mined_txs: Default::default(),
@@ -423,23 +433,25 @@ mod tests {
 
         let geometric_tx_manager = GeometricTxManager::new(logger, signer, backend, params);
 
-        let to = address!("a0Ee7A142d267C1f36714E4a8F75612F20a79720");
-        let account_nonce = 0x69;
         let mut tx = TransactionRequest::default()
-            .with_to(to)
-            .with_nonce(account_nonce)
+            .with_to(TEST_ADDRESS)
+            .with_nonce(0)
             .with_chain_id(31337)
             .with_value(U256::from(100))
             .with_gas_limit(21_000)
             .with_max_priority_fee_per_gas(1_000_000_000)
-            .with_max_fee_per_gas(20_000_000_000)
-            .with_gas_price(21_000_000_000);
+            .with_max_fee_per_gas(20_000_000_000);
 
         // send transaction and wait for receipt
         let receipt = geometric_tx_manager.send_tx(&mut tx).await.unwrap();
         let block_number = receipt.block_number.unwrap();
-        println!("Transaction mined in block: {}", block_number);
+        let receipt_from_backend = geometric_tx_manager
+            .backend
+            .get_transaction_receipt(receipt.transaction_hash)
+            .await
+            .unwrap();
+
+        assert_eq!(receipt, receipt_from_backend);
         assert!(block_number > 0);
-        assert_eq!(receipt.to, Some(to));
     }
 }
