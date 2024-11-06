@@ -620,4 +620,26 @@ mod tests {
         assert!(result.is_err());
         assert_eq!(elapsed.as_secs(), txn_send_timeout.as_secs());
     }
+
+    #[tokio::test]
+    async fn test_send_2_txs_with_same_nonce() {
+        init_logger(LogLevel::Info); // TODO: remove
+        let logger = get_logger();
+        let config = Config::PrivateKey(TEST_PRIVATE_KEY.to_string());
+        let signer = Config::signer_from_config(config).unwrap();
+        let backend = new_fake_backend(0);
+        backend.start_mining().await;
+        let params = GeometricTxManagerParams {
+            txn_confirmation_timeout: Duration::from_secs(1),
+            ..Default::default()
+        };
+        let geometric_tx_manager = GeometricTxManager::new(logger, signer, backend, params);
+        let mut tx = new_test_tx();
+
+        let result = geometric_tx_manager.send_tx(&mut tx).await;
+        assert!(result.is_ok());
+
+        let result = geometric_tx_manager.send_tx(&mut tx).await;
+        assert!(result.is_err());
+    }
 }
