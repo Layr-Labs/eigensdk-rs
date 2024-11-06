@@ -370,15 +370,29 @@ mod tests {
     const TEST_PRIVATE_KEY: &str =
         "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
 
-    fn new_test_tx(nonce: u64) -> TransactionRequest {
+    fn new_test_tx() -> TransactionRequest {
         TransactionRequest::default()
             .with_to(address!("a0Ee7A142d267C1f36714E4a8F75612F20a79720"))
-            .with_nonce(nonce)
+            .with_nonce(0)
             .with_chain_id(31337)
             .with_value(U256::from(100))
             .with_gas_limit(21_000)
             .with_max_priority_fee_per_gas(1)
-            .with_max_fee_per_gas(20_000_000_000)
+            .with_max_fee_per_gas(1_000_000_000)
+    }
+
+    fn new_fake_backend(congested_blocks: u64) -> FakeEthBackend {
+        FakeEthBackend {
+            base_fee_per_gas: 1_000_000_000,
+            mining_params: Arc::new(Mutex::new(MiningParams {
+                congested_blocks,
+                block_number: 1,
+                nonce: 0,
+                mempool: Default::default(),
+                mined_txs: Default::default(),
+                gas_tip_cap: 5_000_000_000,
+            })),
+        }
     }
 
     #[tokio::test]
@@ -391,10 +405,10 @@ mod tests {
         let provider = ProviderBuilder::new().on_http(rpc_url.parse().unwrap());
         let backend = AlloyBackend { provider };
 
-        let geometric_tx_manager =
-            GeometricTxManager::new(logger, signer, backend, Default::default());
+        let params = GeometricTxManagerParams::default();
+        let geometric_tx_manager = GeometricTxManager::new(logger, signer, backend, params);
 
-        let mut tx = new_test_tx(0x69);
+        let mut tx = new_test_tx().with_nonce(0x69);
 
         // send transaction and wait for receipt
         let receipt = geometric_tx_manager.send_tx(&mut tx).await.unwrap();
@@ -415,29 +429,49 @@ mod tests {
         let logger = get_logger();
         let config = Config::PrivateKey(TEST_PRIVATE_KEY.to_string());
         let signer = Config::signer_from_config(config).unwrap();
-        let backend = FakeEthBackend {
-            base_fee_per_gas: 1_000_000_000,
-            mining_params: Arc::new(Mutex::new(MiningParams {
-                congested_blocks: 30,
-                block_number: 1,
-                nonce: 0,
-                mempool: Default::default(),
-                mined_txs: Default::default(),
-                gas_tip_cap: 5_000_000_000,
-            })),
-        };
+        let backend = new_fake_backend(3);
+
+        backend.start_mining().await;
+
         let params = GeometricTxManagerParams {
             txn_confirmation_timeout: Duration::from_secs(1),
             ..Default::default()
         };
+        let geometric_tx_manager = GeometricTxManager::new(logger, signer, backend, params);
+
+        let mut tx = new_test_tx();
+
+        // send transaction and wait for receipt
+        let receipt = geometric_tx_manager.send_tx(&mut tx).await.unwrap();
+        let receipt_from_backend = geometric_tx_manager
+            .backend
+            .get_transaction_receipt(receipt.transaction_hash)
+            .await
+            .unwrap();
+
+        assert_eq!(receipt, receipt_from_backend);
+        assert!(receipt.block_number.unwrap() > 0);
+    }
+
+    #[tokio::test]
+    async fn test_max_priority_fee_per_gas_gets_overwritten() {
+        init_logger(LogLevel::Info); // TODO: remove
+        let logger = get_logger();
+        let config = Config::PrivateKey(TEST_PRIVATE_KEY.to_string());
+        let signer = Config::signer_from_config(config).unwrap();
+        let backend = new_fake_backend(0);
 
         backend.start_mining().await;
 
+        let params = GeometricTxManagerParams::default();
         let geometric_tx_manager = GeometricTxManager::new(logger, signer, backend, params);
 
-        let mut tx = new_test_tx(0);
+        let mut tx = new_test_tx().with_max_fee_per_gas(1);
 
-        // send transaction and wait for receipt
+        // EthBackend returns an error if the tx's max_fee_per_gas is less than the base_fee_per_gas
+        // this test makes sure that even setting a max_fee_per_gas less than the base_fee_per_gas in the
+        // tx still works, because the GeometricTxManager will overwrite it and set the max_fee_per_gas to
+        // a working value
         let receipt = geometric_tx_manager.send_tx(&mut tx).await.unwrap();
         let receipt_from_backend = geometric_tx_manager
             .backend
