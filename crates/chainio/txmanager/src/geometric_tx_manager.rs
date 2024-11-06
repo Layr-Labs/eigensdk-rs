@@ -74,7 +74,7 @@ impl Default for GeometricTxManagerParams {
             confirmation_blocks: 0,
             txn_broadcast_timeout: Duration::from_secs(2 * 60), // 2 minutes
             txn_confirmation_timeout: Duration::from_secs(5 * 12), // 5 blocks
-            txn_send_timeout: Duration::from_secs(2),           // 2 minutes
+            txn_send_timeout: Duration::from_secs(2 * 60),      // 2 minutes
             max_send_transaction_retry: 3,
             get_tx_receipt_ticker_duration: Duration::from_secs(3),
             fallback_gas_tip_cap: 5_000_000_000, // 5 gwei
@@ -138,7 +138,7 @@ impl<Backend: EthBackend> GeometricTxManager<Backend> {
         &self,
         tx: &mut TransactionRequest,
     ) -> Result<TransactionReceipt, TxManagerError> {
-        timeout(Duration::from_secs(2), self.send_tx_with_retry(tx))
+        timeout(self.params.txn_send_timeout, self.send_tx_with_retry(tx))
             .await
             .map_err(|e| {
                 self.logger
@@ -546,6 +546,7 @@ mod tests {
         backend.start_mining().await;
         let params = GeometricTxManagerParams {
             txn_confirmation_timeout: Duration::from_secs(1),
+            txn_send_timeout: Duration::from_secs(2),
             ..Default::default()
         };
         let geometric_tx_manager = Arc::new(Mutex::new(GeometricTxManager::new(
@@ -599,6 +600,7 @@ mod tests {
         backend.start_mining().await;
         let params = GeometricTxManagerParams {
             txn_confirmation_timeout: Duration::from_secs(1),
+            txn_send_timeout: Duration::from_secs(1),
             ..Default::default()
         };
         let txn_send_timeout = params.txn_send_timeout;
