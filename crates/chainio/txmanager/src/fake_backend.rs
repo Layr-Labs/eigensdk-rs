@@ -58,6 +58,7 @@ pub struct MiningParams {
 }
 
 impl FakeEthBackend {
+    #[allow(dead_code)] // only used for testing
     pub async fn start_mining(&self) {
         let params = self.mining_params.clone();
         tokio::spawn(async move {

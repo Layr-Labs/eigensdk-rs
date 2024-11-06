@@ -164,7 +164,7 @@ impl<Backend: EthBackend> GeometricTxManager<Backend> {
                     return self.monitor_tx(tx_request).await;
                 }
                 Err(RpcError::Transport(
-                    // TODO: check if this is the timeout error
+                    // TODO: fix this. Should be timeout error?
                     alloy::transports::TransportErrorKind::MissingBatchResponse(id),
                 )) => {
                     self.logger.warn(
@@ -369,6 +369,7 @@ mod tests {
     use std::sync::Arc;
     use std::time::Duration;
     use tokio::sync::Mutex;
+    use tokio::time::sleep;
 
     const TEST_PRIVATE_KEY: &str =
         "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
@@ -466,7 +467,10 @@ mod tests {
 
         backend.start_mining().await;
 
-        let params = GeometricTxManagerParams::default();
+        let params = GeometricTxManagerParams {
+            txn_confirmation_timeout: Duration::from_secs(1),
+            ..Default::default()
+        };
         let geometric_tx_manager = GeometricTxManager::new(logger, signer, backend, params);
 
         let mut tx = new_test_tx().with_max_fee_per_gas(1);
@@ -494,7 +498,10 @@ mod tests {
         let signer = Config::signer_from_config(config).unwrap();
         let backend = new_fake_backend(0);
         backend.start_mining().await;
-        let params = GeometricTxManagerParams::default();
+        let params = GeometricTxManagerParams {
+            txn_confirmation_timeout: Duration::from_secs(1),
+            ..Default::default()
+        };
         let geometric_tx_manager = Arc::new(Mutex::new(GeometricTxManager::new(
             logger, signer, backend, params,
         )));
@@ -514,6 +521,62 @@ mod tests {
         }
         for handle in handles {
             assert!(handle.await.is_ok());
+        }
+    }
+
+    #[tokio::test]
+    async fn test_send_3_txs_in_parallel_with_inverted_nonces() {
+        //TODO: check timeout de send_tx, if something fails it keeps pumping gas forever
+        init_logger(LogLevel::Info); // TODO: remove
+        let logger = get_logger();
+        let config = Config::PrivateKey(TEST_PRIVATE_KEY.to_string());
+        let signer = Config::signer_from_config(config).unwrap();
+        let backend = new_fake_backend(0);
+        backend.start_mining().await;
+        let params = GeometricTxManagerParams {
+            txn_confirmation_timeout: Duration::from_secs(1),
+            ..Default::default()
+        };
+        let geometric_tx_manager = Arc::new(Mutex::new(GeometricTxManager::new(
+            logger, signer, backend, params,
+        )));
+
+        let mut handles = vec![];
+        for i in (0..3).rev() {
+            let geometric_tx_manager_clone = geometric_tx_manager.clone();
+            handles.push(tokio::spawn(async move {
+                let mut tx = new_test_tx().with_nonce(i);
+                return geometric_tx_manager_clone
+                    .lock()
+                    .await
+                    .send_tx(&mut tx)
+                    .await
+                    .unwrap();
+            }));
+            sleep(Duration::from_secs(1)).await;
+        }
+        for handle in handles {
+            assert!(handle.await.is_ok());
+        }
+    }
+
+    #[tokio::test]
+    async fn test_send_3_txs_sequencially() {
+        init_logger(LogLevel::Info); // TODO: remove
+        let logger = get_logger();
+        let config = Config::PrivateKey(TEST_PRIVATE_KEY.to_string());
+        let signer = Config::signer_from_config(config).unwrap();
+        let backend = new_fake_backend(0);
+        backend.start_mining().await;
+        let params = GeometricTxManagerParams {
+            txn_confirmation_timeout: Duration::from_secs(1),
+            ..Default::default()
+        };
+        let geometric_tx_manager = GeometricTxManager::new(logger, signer, backend, params);
+
+        for i in 0..3 {
+            let mut tx = new_test_tx().with_nonce(i);
+            geometric_tx_manager.send_tx(&mut tx).await.unwrap();
         }
     }
 }
