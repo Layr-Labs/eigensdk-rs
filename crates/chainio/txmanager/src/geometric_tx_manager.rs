@@ -219,7 +219,7 @@ impl<Backend: EthBackend> GeometricTxManager<Backend> {
 
             // send new tx with higher gas price
             self.logger.info(
-                "transaction not mined within timeout, resending with higher gas price",
+                "Transaction not mined within timeout, resending with higher gas price",
                 "",
             );
             self.speedup_tx(&mut tx.tx).await?;
@@ -235,7 +235,7 @@ impl<Backend: EthBackend> GeometricTxManager<Backend> {
             match send_result {
                 Ok(tx_hash) => {
                     self.logger
-                        .info("successfully sent txn: ", &tx_hash.to_string());
+                        .info("Sent transaction attempt with hash: ", &tx_hash.to_string());
                     tx.add_attempt(tx_hash, Instant::now());
                 }
                 Err(e) => {
@@ -295,7 +295,7 @@ impl<Backend: EthBackend> GeometricTxManager<Backend> {
         self.update_gas_tip_cap(tx, new_gas_tip_cap).await?;
         self.logger.info(
             &format!(
-                "increasing gas price, max_fee_per_gas={:?}, max_priority_fee_per_gas={:?}",
+                "Increasing gas price, max_fee_per_gas={:?}, max_priority_fee_per_gas={:?}",
                 tx.max_fee_per_gas, tx.max_priority_fee_per_gas
             ),
             "",
@@ -369,7 +369,7 @@ mod tests {
     use std::sync::Arc;
     use std::time::Duration;
     use tokio::sync::Mutex;
-    use tokio::time::sleep;
+    use tokio::time::{sleep, timeout};
 
     const TEST_PRIVATE_KEY: &str =
         "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
@@ -578,5 +578,31 @@ mod tests {
             let mut tx = new_test_tx().with_nonce(i);
             geometric_tx_manager.send_tx(&mut tx).await.unwrap();
         }
+    }
+
+    #[tokio::test]
+    async fn test_send_tx_with_incorrect_nonce() {
+        init_logger(LogLevel::Info); // TODO: remove
+        let logger = get_logger();
+        let config = Config::PrivateKey(TEST_PRIVATE_KEY.to_string());
+        let signer = Config::signer_from_config(config).unwrap();
+        let backend = new_fake_backend(0);
+        backend.start_mining().await;
+        let params = GeometricTxManagerParams {
+            txn_confirmation_timeout: Duration::from_secs(1),
+            ..Default::default()
+        };
+        let geometric_tx_manager = GeometricTxManager::new(logger, signer, backend, params);
+
+        let mut tx = new_test_tx().with_nonce(100);
+
+        // Sending this transaction would loop forever, so we expect it to timeout
+        let result = timeout(
+            Duration::from_secs(2),
+            geometric_tx_manager.send_tx(&mut tx),
+        )
+        .await;
+
+        assert!(result.is_err());
     }
 }
