@@ -8,7 +8,7 @@ use alloy::{
 };
 use reqwest::Client;
 
-use crate::eth_backend::EthBackend;
+use crate::eth_backend_trait::EthBackend;
 
 pub struct AlloyBackend {
     pub provider: RootProvider<Http<Client>>,

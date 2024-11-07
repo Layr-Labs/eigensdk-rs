@@ -8,7 +8,7 @@ use alloy::{
 use std::sync::Arc;
 use tokio::sync::Mutex;
 
-use crate::eth_backend::EthBackend;
+use crate::eth_backend_trait::EthBackend;
 
 pub struct FakeEthBackend {
     pub base_fee_per_gas: u64,
