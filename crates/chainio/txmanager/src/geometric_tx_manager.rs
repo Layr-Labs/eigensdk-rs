@@ -309,7 +309,7 @@ impl<Backend: EthBackend> GeometricTxManager<Backend> {
     /// - max_priority_fee_per_gas: received as an argument
     /// - max_fee_per_gas: calculated as `2 * base_fee + max_priority_fee`
     /// - gas_limit: calls the json-rpc method eth_estimateGas and
-    /// adds an extra buffer based on gas_multiplier
+    ///   adds an extra buffer based on gas_multiplier
     pub async fn update_gas_params(
         &self,
         tx: &mut TransactionRequest,
