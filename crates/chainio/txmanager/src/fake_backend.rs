@@ -12,7 +12,7 @@ use crate::eth_backend::EthBackend;
 
 pub struct FakeEthBackend {
     pub base_fee_per_gas: u64,
-    pub mining_params: Arc<Mutex<MiningParams>>, // TODO: use one lock for each param?
+    pub mining_params: Arc<Mutex<MiningParams>>,
 }
 
 pub struct MiningParams {
