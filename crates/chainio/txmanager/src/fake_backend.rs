@@ -55,11 +55,13 @@ impl EthBackend for FakeEthBackend {
     }
 
     async fn get_max_priority_fee_per_gas(&self) -> Result<u128, RpcError<TransportErrorKind>> {
-        let mut params = self.mining_params.lock().await;
-        let prev_gas_tip_cap = params.gas_tip_cap;
-        if params.congested_blocks > 0 {
-            params.gas_tip_cap += 1;
-        }
+        let prev_gas_tip_cap = {
+            let mut params = self.mining_params.lock().await;
+            if params.congested_blocks > 0 {
+                params.gas_tip_cap += 1;
+            }
+            params.gas_tip_cap
+        };
         Ok(prev_gas_tip_cap)
     }
 
@@ -91,13 +93,15 @@ impl EthBackend for FakeEthBackend {
                 "tx.max_fee_per_gas < base_fee_per_gas",
             ));
         }
-        let mut params = self.mining_params.lock().await;
         let tx_hash = *tx.tx_hash();
         let nonce = tx.nonce();
-        if nonce < params.nonce {
-            return Err(TransportErrorKind::custom_str("tx.nonce < current nonce"));
+        {
+            let mut params = self.mining_params.lock().await;
+            if nonce < params.nonce {
+                return Err(TransportErrorKind::custom_str("tx.nonce < current nonce"));
+            }
+            params.mempool.insert(nonce, tx);
         }
-        params.mempool.insert(nonce, tx);
         Ok(tx_hash)
     }
 

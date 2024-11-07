@@ -514,21 +514,15 @@ mod tests {
             txn_confirmation_timeout: Duration::from_secs(1),
             ..Default::default()
         };
-        let geometric_tx_manager = Arc::new(Mutex::new(GeometricTxManager::new(
-            logger, signer, backend, params,
-        )));
+        let geometric_tx_manager =
+            Arc::new(GeometricTxManager::new(logger, signer, backend, params));
 
         let mut handles = vec![];
         for i in 0..3 {
             let geometric_tx_manager_clone = geometric_tx_manager.clone();
             handles.push(tokio::spawn(async move {
                 let mut tx = new_test_tx().with_nonce(i);
-                return geometric_tx_manager_clone
-                    .lock()
-                    .await
-                    .send_tx(&mut tx)
-                    .await
-                    .unwrap();
+                return geometric_tx_manager_clone.send_tx(&mut tx).await.unwrap();
             }));
         }
         for handle in handles {
@@ -538,7 +532,6 @@ mod tests {
 
     #[tokio::test]
     async fn test_send_3_txs_in_parallel_with_inverted_nonces() {
-        //TODO: check timeout de send_tx, if something fails it keeps pumping gas forever
         let logger = get_test_logger();
         let config = Config::PrivateKey(TEST_PRIVATE_KEY.to_string());
         let signer = Config::signer_from_config(config).unwrap();
@@ -546,24 +539,18 @@ mod tests {
         backend.start_mining().await;
         let params = GeometricTxManagerParams {
             txn_confirmation_timeout: Duration::from_secs(1),
-            txn_send_timeout: Duration::from_secs(2),
+            txn_send_timeout: Duration::from_secs(20),
             ..Default::default()
         };
-        let geometric_tx_manager = Arc::new(Mutex::new(GeometricTxManager::new(
-            logger, signer, backend, params,
-        )));
+        let geometric_tx_manager =
+            Arc::new(GeometricTxManager::new(logger, signer, backend, params));
 
         let mut handles = vec![];
         for i in (0..3).rev() {
             let geometric_tx_manager_clone = geometric_tx_manager.clone();
+            let mut tx_with_nonce = new_test_tx().with_nonce(i);
             handles.push(tokio::spawn(async move {
-                let mut tx = new_test_tx().with_nonce(i);
-                return geometric_tx_manager_clone
-                    .lock()
-                    .await
-                    .send_tx(&mut tx)
-                    .await
-                    .unwrap();
+                geometric_tx_manager_clone.send_tx(&mut tx_with_nonce).await
             }));
             sleep(Duration::from_secs(1)).await;
         }
