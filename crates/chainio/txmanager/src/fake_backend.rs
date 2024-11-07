@@ -22,7 +22,7 @@ pub struct MiningParams {
     pub nonce: u64,
     pub mempool: HashMap<u64, TxEnvelope>,
     pub mined_txs: HashMap<TxHash, u64>,
-    pub gas_tip_cap: u128,
+    pub max_priority_fee: u128,
 }
 
 impl FakeEthBackend {
@@ -33,7 +33,7 @@ impl FakeEthBackend {
             loop {
                 let mut params = params.lock().await;
                 if let Some(tx) = params.mempool.get(&params.nonce).cloned() {
-                    if tx.max_priority_fee_per_gas().unwrap() >= params.gas_tip_cap {
+                    if tx.max_priority_fee_per_gas().unwrap() >= params.max_priority_fee {
                         let block_number = params.block_number;
                         params.mined_txs.insert(*tx.tx_hash(), block_number);
                         params.nonce += 1;
@@ -55,14 +55,14 @@ impl EthBackend for FakeEthBackend {
     }
 
     async fn get_max_priority_fee_per_gas(&self) -> Result<u128, RpcError<TransportErrorKind>> {
-        let prev_gas_tip_cap = {
+        let prev_max_priority_fee = {
             let mut params = self.mining_params.lock().await;
             if params.congested_blocks > 0 {
-                params.gas_tip_cap += 1;
+                params.max_priority_fee += 1;
             }
-            params.gas_tip_cap
+            params.max_priority_fee
         };
-        Ok(prev_gas_tip_cap)
+        Ok(prev_max_priority_fee)
     }
 
     async fn estimate_gas<'a>(
