@@ -1,14 +1,17 @@
 use alloy::eips::BlockNumberOrTag;
 use alloy::network::{EthereumWallet, TransactionBuilder};
 use alloy::primitives::TxHash;
+use alloy::providers::ProviderBuilder;
 use alloy::rpc::types::eth::{TransactionReceipt, TransactionRequest};
 use alloy::signers::local::PrivateKeySigner;
 use eigen_logging::logger::SharedLogger;
+use reqwest::Url;
 use std::cmp;
 use std::time::Duration;
 use thiserror::Error;
 use tokio::time::{timeout, Instant};
 
+use crate::alloy_backend::AlloyBackend;
 use crate::eth_backend::EthBackend;
 
 pub type Transport = alloy::transports::http::Http<reqwest::Client>;
@@ -83,7 +86,7 @@ impl Default for GeometricTxManagerParams {
     }
 }
 
-impl<Backend: EthBackend> GeometricTxManager<Backend> {
+impl GeometricTxManager<AlloyBackend> {
     /// Creates a new SimpleTxManager.
     ///
     /// # Arguments
@@ -104,18 +107,25 @@ impl<Backend: EthBackend> GeometricTxManager<Backend> {
     pub fn new(
         logger: SharedLogger,
         signer: PrivateKeySigner,
-        backend: Backend,
+        rpc_url: &str,
         params: GeometricTxManagerParams,
-    ) -> GeometricTxManager<Backend> {
+    ) -> Result<GeometricTxManager<AlloyBackend>, TxManagerError> {
         let wallet = EthereumWallet::from(signer);
-        GeometricTxManager {
+        let url = Url::parse(rpc_url)
+            .inspect_err(|err| logger.error("Failed to parse url", &err.to_string()))
+            .map_err(|_| TxManagerError::InvalidUrlError)?;
+        let provider = ProviderBuilder::new().on_http(url);
+        let backend = AlloyBackend { provider };
+        Ok(Self {
             logger,
             wallet,
             backend,
             params,
-        }
+        })
     }
+}
 
+impl<Backend: EthBackend> GeometricTxManager<Backend> {
     /// Send is used to send a transaction to the Ethereum node. It takes an unsigned/signed transaction,
     /// sends it to the Ethereum node and waits for the receipt.
     /// If you pass in a signed transaction it will ignore the signature
@@ -228,7 +238,7 @@ impl<Backend: EthBackend> GeometricTxManager<Backend> {
 
             let tx_request = tx
                 .tx
-                .clone() // TODO: check clone
+                .clone()
                 .build(&self.wallet)
                 .await
                 .map_err(|_| TxManagerError::SendTxError)?;
@@ -372,13 +382,11 @@ impl<Backend: EthBackend> GeometricTxManager<Backend> {
 mod tests {
     use super::{GeometricTxManager, GeometricTxManagerParams};
     use crate::{
-        alloy_backend::AlloyBackend,
         eth_backend::EthBackend,
         fake_backend::{FakeEthBackend, MiningParams},
     };
-    use alloy::network::TransactionBuilder;
+    use alloy::network::{EthereumWallet, TransactionBuilder};
     use alloy::primitives::{address, U256};
-    use alloy::providers::ProviderBuilder;
     use alloy::rpc::types::eth::TransactionRequest;
     use eigen_logging::get_test_logger;
     use eigen_signer::signer::Config;
@@ -402,8 +410,14 @@ mod tests {
             .with_max_fee_per_gas(1_000_000_000)
     }
 
-    fn new_fake_backend(congested_blocks: u64) -> FakeEthBackend {
-        FakeEthBackend {
+    async fn new_geometric_tx_manager(
+        congested_blocks: u64,
+        params: GeometricTxManagerParams,
+    ) -> GeometricTxManager<FakeEthBackend> {
+        let logger = get_test_logger();
+        let config = Config::PrivateKey(TEST_PRIVATE_KEY.to_string());
+        let signer = Config::signer_from_config(config).unwrap();
+        let backend = FakeEthBackend {
             base_fee_per_gas: 1_000_000_000,
             mining_params: Arc::new(Mutex::new(MiningParams {
                 congested_blocks,
@@ -413,6 +427,14 @@ mod tests {
                 mined_txs: Default::default(),
                 max_priority_fee: 5_000_000_000,
             })),
+        };
+        backend.start_mining().await;
+        let wallet = EthereumWallet::from(signer);
+        GeometricTxManager {
+            logger,
+            wallet,
+            backend,
+            params,
         }
     }
 
@@ -423,11 +445,10 @@ mod tests {
         let logger = get_test_logger();
         let config = Config::PrivateKey(TEST_PRIVATE_KEY.to_string());
         let signer = Config::signer_from_config(config).unwrap();
-        let provider = ProviderBuilder::new().on_http(rpc_url.parse().unwrap());
-        let backend = AlloyBackend { provider };
 
         let params = GeometricTxManagerParams::default();
-        let geometric_tx_manager = GeometricTxManager::new(logger, signer, backend, params);
+        let geometric_tx_manager =
+            GeometricTxManager::new(logger, signer, &rpc_url, params).unwrap();
 
         let mut tx = new_test_tx().with_nonce(0x69);
 
@@ -446,18 +467,9 @@ mod tests {
     #[tokio::test]
     async fn test_send_transaction_to_congested_network() {
         // Send transaction using FakeEthBackend to simulate congested network
-        let logger = get_test_logger();
-        let config = Config::PrivateKey(TEST_PRIVATE_KEY.to_string());
-        let signer = Config::signer_from_config(config).unwrap();
-        let backend = new_fake_backend(3);
-
-        backend.start_mining().await;
-
-        let params = GeometricTxManagerParams {
-            txn_confirmation_timeout: Duration::from_secs(1),
-            ..Default::default()
-        };
-        let geometric_tx_manager = GeometricTxManager::new(logger, signer, backend, params);
+        let congested_blocks = 3;
+        let geometric_tx_manager =
+            new_geometric_tx_manager(congested_blocks, GeometricTxManagerParams::default()).await;
 
         let mut tx = new_test_tx();
 
@@ -475,19 +487,8 @@ mod tests {
 
     #[tokio::test]
     async fn test_max_priority_fee_per_gas_gets_overwritten() {
-        let logger = get_test_logger();
-        let config = Config::PrivateKey(TEST_PRIVATE_KEY.to_string());
-        let signer = Config::signer_from_config(config).unwrap();
-        let backend = new_fake_backend(0);
-
-        backend.start_mining().await;
-
-        let params = GeometricTxManagerParams {
-            txn_confirmation_timeout: Duration::from_secs(1),
-            ..Default::default()
-        };
-        let geometric_tx_manager = GeometricTxManager::new(logger, signer, backend, params);
-
+        let geometric_tx_manager =
+            new_geometric_tx_manager(0, GeometricTxManagerParams::default()).await;
         let mut tx = new_test_tx().with_max_fee_per_gas(1);
 
         // EthBackend returns an error if the tx's max_fee_per_gas is less than the base_fee_per_gas
@@ -507,17 +508,8 @@ mod tests {
 
     #[tokio::test]
     async fn test_send_3_txs_in_parallel() {
-        let logger = get_test_logger();
-        let config = Config::PrivateKey(TEST_PRIVATE_KEY.to_string());
-        let signer = Config::signer_from_config(config).unwrap();
-        let backend = new_fake_backend(0);
-        backend.start_mining().await;
-        let params = GeometricTxManagerParams {
-            txn_confirmation_timeout: Duration::from_secs(1),
-            ..Default::default()
-        };
         let geometric_tx_manager =
-            Arc::new(GeometricTxManager::new(logger, signer, backend, params));
+            Arc::new(new_geometric_tx_manager(0, GeometricTxManagerParams::default()).await);
 
         let mut handles = vec![];
         for i in 0..3 {
@@ -534,18 +526,8 @@ mod tests {
 
     #[tokio::test]
     async fn test_send_3_txs_in_parallel_with_inverted_nonces() {
-        let logger = get_test_logger();
-        let config = Config::PrivateKey(TEST_PRIVATE_KEY.to_string());
-        let signer = Config::signer_from_config(config).unwrap();
-        let backend = new_fake_backend(0);
-        backend.start_mining().await;
-        let params = GeometricTxManagerParams {
-            txn_confirmation_timeout: Duration::from_secs(1),
-            txn_send_timeout: Duration::from_secs(20),
-            ..Default::default()
-        };
         let geometric_tx_manager =
-            Arc::new(GeometricTxManager::new(logger, signer, backend, params));
+            Arc::new(new_geometric_tx_manager(0, GeometricTxManagerParams::default()).await);
 
         let mut handles = vec![];
         for i in (0..3).rev() {
@@ -563,16 +545,8 @@ mod tests {
 
     #[tokio::test]
     async fn test_send_3_txs_sequencially() {
-        let logger = get_test_logger();
-        let config = Config::PrivateKey(TEST_PRIVATE_KEY.to_string());
-        let signer = Config::signer_from_config(config).unwrap();
-        let backend = new_fake_backend(0);
-        backend.start_mining().await;
-        let params = GeometricTxManagerParams {
-            txn_confirmation_timeout: Duration::from_secs(1),
-            ..Default::default()
-        };
-        let geometric_tx_manager = GeometricTxManager::new(logger, signer, backend, params);
+        let geometric_tx_manager =
+            new_geometric_tx_manager(0, GeometricTxManagerParams::default()).await;
 
         for i in 0..3 {
             let mut tx = new_test_tx().with_nonce(i);
@@ -582,19 +556,13 @@ mod tests {
 
     #[tokio::test]
     async fn test_send_tx_with_incorrect_nonce() {
-        let logger = get_test_logger();
-        let config = Config::PrivateKey(TEST_PRIVATE_KEY.to_string());
-        let signer = Config::signer_from_config(config).unwrap();
-        let backend = new_fake_backend(0);
-        backend.start_mining().await;
+        let txn_send_timeout = Duration::from_secs(1);
         let params = GeometricTxManagerParams {
             txn_confirmation_timeout: Duration::from_secs(1),
             txn_send_timeout: Duration::from_secs(1),
             ..Default::default()
         };
-        let txn_send_timeout = params.txn_send_timeout;
-        let geometric_tx_manager = GeometricTxManager::new(logger, signer, backend, params);
-
+        let geometric_tx_manager = new_geometric_tx_manager(0, params).await;
         let mut tx = new_test_tx().with_nonce(100);
 
         // Sending this transaction would loop forever, so we expect it to timeout
@@ -608,16 +576,8 @@ mod tests {
 
     #[tokio::test]
     async fn test_send_2_txs_with_same_nonce() {
-        let logger = get_test_logger();
-        let config = Config::PrivateKey(TEST_PRIVATE_KEY.to_string());
-        let signer = Config::signer_from_config(config).unwrap();
-        let backend = new_fake_backend(0);
-        backend.start_mining().await;
-        let params = GeometricTxManagerParams {
-            txn_confirmation_timeout: Duration::from_secs(1),
-            ..Default::default()
-        };
-        let geometric_tx_manager = GeometricTxManager::new(logger, signer, backend, params);
+        let geometric_tx_manager =
+            new_geometric_tx_manager(0, GeometricTxManagerParams::default()).await;
         let mut tx = new_test_tx();
 
         let result = geometric_tx_manager.send_tx(&mut tx).await;
