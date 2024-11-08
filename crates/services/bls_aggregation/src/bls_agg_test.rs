@@ -143,7 +143,9 @@ pub mod integration_test {
             avs_registry_reader.clone(),
             ws_endpoint,
         )
-        .await;
+        .await
+        .unwrap()
+        .0;
 
         let cancellation_token = CancellationToken::new();
         let operators_info_clone = operators_info.clone();
@@ -319,7 +321,9 @@ pub mod integration_test {
             avs_registry_reader.clone(),
             ws_endpoint,
         )
-        .await;
+        .await
+        .unwrap()
+        .0;
 
         let current_block_num = provider.get_block_number().await.unwrap();
         let cancellation_token = CancellationToken::new();
@@ -541,7 +545,9 @@ pub mod integration_test {
             avs_registry_reader.clone(),
             ws_endpoint,
         )
-        .await;
+        .await
+        .unwrap()
+        .0;
 
         let cancellation_token = CancellationToken::new();
         let operators_info_clone = operators_info.clone();

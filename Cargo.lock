@@ -752,12 +752,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "anyhow"
-version = "1.0.92"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "74f37166d7d48a0284b99dd824694c26119c700b53bf0d1540cdb147dbdaaf13"
-
-[[package]]
 name = "ark-bn254"
 version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2727,6 +2721,8 @@ dependencies = [
  "eigen-testing-utils",
  "eigen-types",
  "eigen-utils",
+ "eyre",
+ "futures",
  "futures-util",
  "serial_test",
  "thiserror",
