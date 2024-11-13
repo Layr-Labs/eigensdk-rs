@@ -162,7 +162,8 @@ impl SimpleTxManager {
     /// sends it to the Ethereum node and waits for the receipt.
     /// If you pass in a signed transaction it will ignore the signature
     /// and re-sign the transaction after adding the nonce and gas limit.
-    /// If the transaction fails, it will retry sending the transaction until it gets a receipt.
+    /// If the transaction fails, it will retry sending the transaction until it gets a receipt,
+    /// using an **exponential backoff** strategy.
     /// If no receipt is received after `max_elapsed_time`, it will return an error.
     ///
     /// # Arguments
