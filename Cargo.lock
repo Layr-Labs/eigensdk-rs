@@ -2710,7 +2710,6 @@ dependencies = [
  "alloy",
  "alloy-primitives",
  "alloy-signer-local",
- "anyhow",
  "ark-bn254 0.5.0",
  "ark-ff 0.5.0",
  "ark-std 0.4.0",
@@ -2781,7 +2780,6 @@ name = "eigen-types"
 version = "0.1.0"
 dependencies = [
  "alloy-primitives",
- "ark-serialize 0.5.0",
  "eigen-crypto-bls",
  "ethers",
  "num-bigint 0.4.6",
