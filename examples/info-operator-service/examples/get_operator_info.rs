@@ -21,9 +21,9 @@ use eigen_testing_utils::{
 };
 use std::{
     str::FromStr,
-    time::{SystemTime, UNIX_EPOCH},
+    time::{Duration, SystemTime, UNIX_EPOCH},
 };
-use tokio::task;
+use tokio::{task, time::sleep};
 use tokio_util::sync::CancellationToken;
 
 #[tokio::main]
@@ -46,7 +46,9 @@ async fn main() {
 
     let operators_info =
         OperatorInfoServiceInMemory::new(get_test_logger(), avs_registry_chain_reader, ws_endpoint)
-            .await;
+            .await
+            .unwrap()
+            .0;
 
     let operators_info_clone = operators_info.clone();
     let cancellation_token: CancellationToken = CancellationToken::new();
@@ -58,6 +60,7 @@ async fn main() {
 
     register_operator(operator_private_key, operator_bls_key, &http_endpoint).await;
 
+    sleep(Duration::from_secs(2)).await;
     // send cancel token to stop the service
     cancellation_token.cancel();
 
@@ -119,17 +122,8 @@ pub async fn register_operator(pvt_key: &str, bls_key: &str, http_endpoint: &str
     let bls_key_pair = BlsKeyPair::new(bls_key.to_string()).unwrap();
     let salt: FixedBytes<32> = FixedBytes::from([0x02; 32]);
     let now = SystemTime::now();
-    let mut expiry: U256 = U256::from(0);
-    // Convert SystemTime to a Duration since the UNIX epoch
-    if let Ok(duration_since_epoch) = now.duration_since(UNIX_EPOCH) {
-        // Convert the duration to seconds
-        let seconds = duration_since_epoch.as_secs(); // Returns a u64
-
-        // Convert seconds to U256
-        expiry = U256::from(seconds) + U256::from(10000);
-    } else {
-        println!("System time seems to be before the UNIX epoch.");
-    }
+    let seconds_since_epoch = now.duration_since(UNIX_EPOCH).unwrap().as_secs();
+    let expiry = U256::from(seconds_since_epoch) + U256::from(10000);
     let quorum_numbers = Bytes::from_str("0x00").unwrap();
     let socket = "socket";
 

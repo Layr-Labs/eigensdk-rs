@@ -9,7 +9,6 @@ license-file.workspace = true
 
 [dependencies]
 alloy.workspace = true
-alloy-contract.workspace = true
 alloy-json-rpc.workspace = true
 alloy-primitives.workspace = true
 alloy-provider.workspace = true
