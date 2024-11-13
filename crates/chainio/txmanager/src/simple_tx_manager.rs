@@ -158,6 +158,28 @@ impl SimpleTxManager {
         SimpleTxManager::wait_for_receipt(self, pending_tx).await
     }
 
+    /// Send a transaction to the Ethereum node. It takes an unsigned/signed transaction,
+    /// sends it to the Ethereum node and waits for the receipt.
+    /// If you pass in a signed transaction it will ignore the signature
+    /// and re-sign the transaction after adding the nonce and gas limit.
+    /// If the transaction fails, it will retry sending the transaction until it gets a receipt.
+    /// If no receipt is received after `max_elapsed_time`, it will return an error.
+    ///
+    /// # Arguments
+    ///
+    /// * `tx`: The transaction to be sent.
+    /// * `initial_interval`: The initial interval duration for the backoff.
+    /// * `max_elapsed_time`: The maximum elapsed time for retrying.
+    /// * `multiplier`: The multiplier used to compute the exponential backoff.
+    ///
+    /// # Returns
+    ///
+    /// * `TransactionReceipt` The transaction receipt.
+    ///
+    /// # Errors
+    ///
+    /// * `TxManagerError` - If the transaction cannot be sent, or there is an error
+    ///   signing the transaction or estimating gas and nonce.
     pub async fn send_tx_with_retries(
         &self,
         tx: &mut TransactionRequest,
