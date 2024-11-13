@@ -349,7 +349,7 @@ mod tests {
     use eigen_testing_utils::anvil_constants::{
         get_operator_state_retriever_address, get_registry_coordinator_address,
     };
-    use eigen_testing_utils::transaction::get_transaction_status;
+    use eigen_testing_utils::transaction::wait_transaction;
     use std::str::FromStr;
 
     async fn build_avs_registry_chain_writer(
@@ -415,7 +415,7 @@ mod tests {
             .await
             .unwrap();
 
-        let tx_status = get_transaction_status(http_url, tx_hash).await;
+        let tx_status = wait_transaction(&http_url, tx_hash).await.unwrap().status();
         assert!(tx_status);
     }
 
@@ -431,7 +431,7 @@ mod tests {
             .await
             .unwrap();
 
-        let tx_status = get_transaction_status(http_url, tx_hash).await;
+        let tx_status = wait_transaction(&http_url, tx_hash).await.unwrap().status();
         assert!(tx_status);
     }
 
@@ -458,7 +458,7 @@ mod tests {
             .await
             .unwrap();
 
-        let tx_status = get_transaction_status(http_url, tx_hash).await;
+        let tx_status = wait_transaction(&http_url, tx_hash).await.unwrap().status();
         assert!(tx_status);
     }
 
@@ -470,7 +470,7 @@ mod tests {
     ) {
         let tx_hash = avs_writer.deregister_operator(quorum_nums).await.unwrap();
 
-        let tx_status = get_transaction_status(http_url, tx_hash).await;
+        let tx_status = wait_transaction(&http_url, tx_hash).await.unwrap().status();
         assert!(tx_status);
     }
 }

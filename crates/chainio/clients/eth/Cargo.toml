@@ -20,7 +20,6 @@ thiserror.workspace = true
 url.workspace = true
 
 [dev-dependencies]
-alloy-node-bindings.workspace = true
 eigen-signer.workspace = true
 eigen-testing-utils.workspace = true
 eigen-utils.workspace = true

@@ -9,7 +9,7 @@ use eigen_crypto_bls::BlsKeyPair;
 use eigen_logging::get_test_logger;
 use eigen_testing_utils::m2_holesky_constants::{
     AVS_DIRECTORY_ADDRESS, DELEGATION_MANAGER_ADDRESS, OPERATOR_STATE_RETRIEVER,
-    REGISTRY_COORDINATOR, SLASHER_ADDRESS, STRATEGY_MANAGER_ADDRESS,
+    REGISTRY_COORDINATOR, REWARDS_COORDINATOR, SLASHER_ADDRESS, STRATEGY_MANAGER_ADDRESS,
 };
 use eigen_types::operator::Operator;
 use eyre::Result;
@@ -71,6 +71,7 @@ async fn main() -> Result<()> {
     let el_writer = ELChainWriter::new(
         DELEGATION_MANAGER_ADDRESS,
         STRATEGY_MANAGER_ADDRESS,
+        REWARDS_COORDINATOR,
         el_chain_reader,
         "https://ethereum-holesky.blockpi.network/v1/rpc/public".to_string(),
         "bead471191bea97fc3aeac36c9d74c895e8a6242602e144e43152f96219e96e8".to_string(),

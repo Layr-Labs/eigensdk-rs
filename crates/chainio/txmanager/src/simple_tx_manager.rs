@@ -1,12 +1,11 @@
 use alloy::eips::BlockNumberOrTag;
 use alloy::network::{Ethereum, EthereumWallet, TransactionBuilder};
-use alloy::primitives::{Address, U256};
+use alloy::primitives::U256;
 use alloy::providers::{PendingTransactionBuilder, Provider, ProviderBuilder, RootProvider};
 use alloy::rpc::types::eth::{TransactionInput, TransactionReceipt, TransactionRequest};
 use alloy::signers::local::PrivateKeySigner;
 use eigen_logging::logger::SharedLogger;
 use eigen_signer::signer::Config;
-use k256::ecdsa::SigningKey;
 use reqwest::Url;
 use thiserror::Error;
 
@@ -70,25 +69,6 @@ impl SimpleTxManager {
             private_key: private_key.to_string(),
             provider,
         })
-    }
-
-    /// Returns the address of the wallet, beloing to the given private key.
-    ///
-    /// # Returns
-    ///
-    /// - The address of the wallet.
-    ///
-    /// # Errors
-    ///
-    /// - If the private key is invalid.
-    pub fn get_address(&self) -> Result<Address, TxManagerError> {
-        let private_key_signing_key = SigningKey::from_slice(self.private_key.as_bytes())
-            .inspect_err(|err| {
-                self.logger
-                    .error("Failed to parse private key", &err.to_string())
-            })
-            .map_err(|_| TxManagerError::AddressError)?;
-        Ok(Address::from_private_key(&private_key_signing_key))
     }
 
     /// Sets the gas limit multiplier.
@@ -163,7 +143,7 @@ impl SimpleTxManager {
         // send transaction and get receipt
         let pending_tx = self
             .provider
-            .send_transaction(signed_tx.into())
+            .send_tx_envelope(signed_tx)
             .await
             .inspect_err(|err| self.logger.error("Failed to get receipt", &err.to_string()))
             .map_err(|_| TxManagerError::SendTxError)?;
@@ -222,7 +202,7 @@ impl SimpleTxManager {
         let tx_input = tx.input().unwrap_or_default().to_vec();
         // we only estimate if gas_limit is not already set
         if let Some(0) = gas_limit {
-            let from = self.get_address()?;
+            let from = self.create_local_signer()?.address();
             let to = tx.to().ok_or(TxManagerError::SendTxError)?;
 
             let mut tx_request = TransactionRequest::default()
@@ -278,7 +258,7 @@ impl SimpleTxManager {
     /// * `TxManagerError` - If the transaction receipt cannot be retrieved.
     pub async fn wait_for_receipt(
         &self,
-        pending_tx: PendingTransactionBuilder<'_, Transport, Ethereum>,
+        pending_tx: PendingTransactionBuilder<Transport, Ethereum>,
     ) -> Result<TransactionReceipt, TxManagerError> {
         pending_tx
             .get_receipt()
@@ -293,41 +273,35 @@ mod tests {
     use super::SimpleTxManager;
     use alloy::consensus::TxLegacy;
     use alloy::network::TransactionBuilder;
+    use alloy::primitives::{address, bytes, TxKind::Call, U256};
     use alloy::rpc::types::eth::TransactionRequest;
-    use alloy_node_bindings::Anvil;
-    use alloy_primitives::{bytes, TxKind::Call, U256};
     use eigen_logging::get_test_logger;
+    use eigen_testing_utils::anvil::start_anvil_container;
     use tokio;
 
     #[tokio::test]
     async fn test_send_transaction_from_legacy() {
-        let anvil = Anvil::new().try_spawn().unwrap();
-        let rpc_url: String = anvil.endpoint().parse().unwrap();
+        let (_container, rpc_url, _ws_endpoint) = start_anvil_container().await;
         let logger = get_test_logger();
 
-        let private_key = anvil.keys().first().unwrap();
-        let simple_tx_manager = SimpleTxManager::new(
-            logger,
-            1.0,
-            private_key.as_scalar_primitive().to_string().as_str(),
-            rpc_url.as_str(),
-        )
-        .unwrap();
+        let private_key =
+            "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80".to_string();
+        let simple_tx_manager =
+            SimpleTxManager::new(logger, 1.0, private_key.as_str(), rpc_url.as_str()).unwrap();
+        let to = address!("a0Ee7A142d267C1f36714E4a8F75612F20a79720");
 
-        let addresses = anvil.addresses().to_vec();
-        let to = addresses.first().cloned().unwrap();
-
+        let account_nonce = 0x69; // nonce queried from the sender account
         let tx = TxLegacy {
             to: Call(to),
             value: U256::from(1_000_000_000),
             gas_limit: 2_000_000,
-            nonce: 0,
+            nonce: account_nonce,
             gas_price: 21_000_000_000,
             input: bytes!(),
             chain_id: Some(31337),
         };
+        let mut tx_request: TransactionRequest = tx.into();
 
-        let mut tx_request: TransactionRequest = tx.clone().into();
         // send transaction and wait for receipt
         let receipt = simple_tx_manager.send_tx(&mut tx_request).await.unwrap();
         let block_number = receipt.block_number.unwrap();
@@ -338,32 +312,26 @@ mod tests {
 
     #[tokio::test]
     async fn test_send_transaction_from_eip1559() {
-        let anvil = Anvil::new().try_spawn().unwrap();
-        let rpc_url: String = anvil.endpoint().parse().unwrap();
+        let (_container, rpc_url, _ws_endpoint) = start_anvil_container().await;
         let logger = get_test_logger();
 
-        let private_key = anvil.keys().first().unwrap();
-        let simple_tx_manager = SimpleTxManager::new(
-            logger,
-            1.0,
-            private_key.as_scalar_primitive().to_string().as_str(),
-            rpc_url.as_str(),
-        )
-        .unwrap();
+        let private_key =
+            "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80".to_string();
+        let simple_tx_manager =
+            SimpleTxManager::new(logger, 1.0, private_key.as_str(), rpc_url.as_str()).unwrap();
+        let to = address!("a0Ee7A142d267C1f36714E4a8F75612F20a79720");
 
-        let addresses = anvil.addresses().to_vec();
-        let to = addresses.first().cloned().unwrap();
-
+        let account_nonce = 0x69; // nonce queried from the sender account
         let mut tx = TransactionRequest::default()
             .with_to(to)
-            .with_nonce(0)
+            .with_nonce(account_nonce)
             .with_chain_id(31337)
             .with_value(U256::from(100))
             .with_gas_limit(21_000)
             .with_max_priority_fee_per_gas(1_000_000_000)
             .with_max_fee_per_gas(20_000_000_000);
-
         tx.set_gas_price(21_000_000_000);
+
         // send transaction and wait for receipt
         let receipt = simple_tx_manager.send_tx(&mut tx).await.unwrap();
         let block_number = receipt.block_number.unwrap();

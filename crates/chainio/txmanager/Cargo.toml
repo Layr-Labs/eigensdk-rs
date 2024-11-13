@@ -9,15 +9,13 @@ license-file.workspace = true
 
 [dependencies]
 alloy.workspace = true
+async-trait.workspace = true
 eigen-logging.workspace = true
 eigen-signer.workspace = true
-k256.workspace = true
 reqwest.workspace = true
 thiserror.workspace = true
+tokio.workspace = true
 
 [dev-dependencies]
-alloy-primitives.workspace = true
-alloy-consensus.workspace = true
-alloy-node-bindings.workspace = true
+eigen-testing-utils.workspace = true
 once_cell.workspace = true
-tokio.workspace = true

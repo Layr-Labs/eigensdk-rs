@@ -9,7 +9,6 @@ license-file.workspace = true
 
 [dependencies]
 alloy.workspace =true 
-alloy-consensus.workspace = true
 alloy-network.workspace = true
 alloy-primitives.workspace = true
 alloy-rpc-client.workspace = true
@@ -24,7 +23,6 @@ thiserror.workspace = true
 url.workspace = true
 
 [dev-dependencies]
-alloy-node-bindings.workspace = true
 aws-config.workspace = true
 eigen-testing-utils.workspace = true
 testcontainers.workspace = true

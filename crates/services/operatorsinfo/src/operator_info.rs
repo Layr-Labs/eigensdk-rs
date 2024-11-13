@@ -19,4 +19,9 @@ pub trait OperatorInfoService {
         &self,
         address: Address,
     ) -> Result<Option<OperatorPubKeys>, OperatorInfoServiceError>;
+
+    async fn get_operator_socket(
+        &self,
+        address: Address,
+    ) -> Result<Option<String>, OperatorInfoServiceError>;
 }
