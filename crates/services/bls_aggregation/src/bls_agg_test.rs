@@ -20,6 +20,7 @@ pub mod integration_test {
             get_registry_coordinator_address, get_service_manager_address,
         },
         test_data::TestData,
+        transaction::wait_transaction,
     };
     use eigen_types::{
         avs::TaskIndex,
@@ -149,6 +150,8 @@ pub mod integration_test {
         let operators_info_clone = operators_info.clone();
         let token_clone = cancellation_token.clone();
         task::spawn(async move { operators_info_clone.start_service(&token_clone, 0, 0).await });
+        // Sleep to wait for the operator info service to start
+        sleep(Duration::from_secs(1)).await;
 
         // Create quorum
         let contract_registry_coordinator = RegistryCoordinator::new(
@@ -171,7 +174,7 @@ pub mod integration_test {
             .unwrap();
 
         // Register operator
-        avs_writer
+        let tx_hash = avs_writer
             .register_operator_in_quorum_with_avs_registry_coordinator(
                 bls_key_pair.clone(),
                 salt,
@@ -181,9 +184,7 @@ pub mod integration_test {
             )
             .await
             .unwrap();
-
-        // Sleep is needed so registered operators are accesible to the OperatorInfoServiceInMemory
-        sleep(Duration::from_secs(3)).await;
+        wait_transaction(&http_endpoint, tx_hash).await.unwrap();
 
         // Create aggregation service
         let avs_registry_service =
@@ -195,7 +196,7 @@ pub mod integration_test {
 
         // Create the task related parameters
         let task_index: TaskIndex = 0;
-        let time_to_expiry = Duration::from_secs(1);
+        let time_to_expiry = Duration::from_secs(10);
 
         // Initialize the task
         bls_agg_service
@@ -291,7 +292,9 @@ pub mod integration_test {
             )
             .send()
             .await
-            .unwrap();
+            .unwrap()
+            .watch()
+            .await;
 
         // Create avs clients to interact with contracts deployed on anvil
         let avs_registry_reader = AvsRegistryChainReader::new(
@@ -328,9 +331,11 @@ pub mod integration_test {
                 .start_service(&token_clone, 0, current_block_num)
                 .await
         });
+        // Sleep to wait for the operator info service to start
+        sleep(Duration::from_secs(1)).await;
 
         // Register operator
-        avs_writer
+        let tx_hash = avs_writer
             .register_operator_in_quorum_with_avs_registry_coordinator(
                 bls_key_pair_1.clone(),
                 salt,
@@ -340,17 +345,18 @@ pub mod integration_test {
             )
             .await
             .unwrap();
+        wait_transaction(&http_endpoint, tx_hash).await.unwrap();
 
         let avs_writer = AvsRegistryChainWriter::build_avs_registry_chain_writer(
             get_test_logger(),
-            http_endpoint,
+            http_endpoint.clone(),
             PRIVATE_KEY_2.to_string(),
             registry_coordinator_address,
             operator_state_retriever_address,
         )
         .await
         .unwrap();
-        avs_writer
+        let tx_hash = avs_writer
             .register_operator_in_quorum_with_avs_registry_coordinator(
                 bls_key_pair_2.clone(),
                 salt,
@@ -360,9 +366,7 @@ pub mod integration_test {
             )
             .await
             .unwrap();
-
-        // Sleep is needed so registered operators are accesible to the OperatorInfoServiceInMemory
-        sleep(Duration::from_secs(3)).await;
+        wait_transaction(&http_endpoint, tx_hash).await.unwrap();
 
         // Create aggregation service
         let avs_registry_service =
@@ -376,7 +380,7 @@ pub mod integration_test {
 
         // Create the task related parameters
         let task_index: TaskIndex = 0;
-        let time_to_expiry = Duration::from_secs(3);
+        let time_to_expiry = Duration::from_secs(10);
 
         // Initialize the task
         bls_agg_service
@@ -491,7 +495,9 @@ pub mod integration_test {
             )
             .send()
             .await
-            .unwrap();
+            .unwrap()
+            .watch()
+            .await;
         let _ = contract_registry_coordinator
             .createQuorum(
                 operator_set_params.clone(),
@@ -500,12 +506,16 @@ pub mod integration_test {
             )
             .send()
             .await
-            .unwrap();
+            .unwrap()
+            .watch()
+            .await;
         let _ = contract_registry_coordinator
             .createQuorum(operator_set_params, U96::from(0), strategy_params)
             .send()
             .await
-            .unwrap();
+            .unwrap()
+            .watch()
+            .await;
 
         // Create avs clients to interact with contracts deployed on anvil
         let avs_registry_reader = AvsRegistryChainReader::new(
@@ -538,9 +548,11 @@ pub mod integration_test {
         let operators_info_clone = operators_info.clone();
         let token_clone = cancellation_token.clone();
         task::spawn(async move { operators_info_clone.start_service(&token_clone, 0, 0).await });
+        // Sleep to wait for the operator info service to start
+        sleep(Duration::from_secs(1)).await;
 
         // Register operator
-        avs_writer
+        let tx_hash = avs_writer
             .register_operator_in_quorum_with_avs_registry_coordinator(
                 bls_key_pair_1.clone(),
                 salt,
@@ -550,18 +562,19 @@ pub mod integration_test {
             )
             .await
             .unwrap();
+        wait_transaction(&http_endpoint, tx_hash).await.unwrap();
 
         let avs_writer = AvsRegistryChainWriter::build_avs_registry_chain_writer(
-            // TODO: check if needed
             get_test_logger(),
-            http_endpoint,
+            http_endpoint.clone(),
             PRIVATE_KEY_2.to_string(),
             registry_coordinator_address,
             operator_state_retriever_address,
         )
         .await
         .unwrap();
-        avs_writer
+
+        let tx_hash = avs_writer
             .register_operator_in_quorum_with_avs_registry_coordinator(
                 bls_key_pair_2.clone(),
                 salt,
@@ -571,9 +584,7 @@ pub mod integration_test {
             )
             .await
             .unwrap();
-
-        // Sleep is needed so registered operators are accesible to the OperatorInfoServiceInMemory
-        sleep(Duration::from_secs(3)).await;
+        wait_transaction(&http_endpoint, tx_hash).await.unwrap();
 
         // Create aggregation service
         let avs_registry_service =
@@ -587,7 +598,7 @@ pub mod integration_test {
 
         // Create the task related parameters
         let task_index: TaskIndex = 0;
-        let time_to_expiry = Duration::from_secs(1);
+        let time_to_expiry = Duration::from_secs(10);
 
         // Initialize the task
         bls_agg_service

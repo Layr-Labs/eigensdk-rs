@@ -168,7 +168,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         Ok(())
     }
 
-    /// Processs signatures received from the channel and sends
+    /// Processes signatures received from the channel and sends
     /// the signed task response to the task channel.
     ///
     /// # Arguments
@@ -231,7 +231,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         // return the signature verification result
         rx.recv()
             .await
-            .ok_or(BlsAggregationServiceError::ChannelClosed)?
+            .ok_or(BlsAggregationServiceError::SignaturesChannelClosed)?
             .map_err(BlsAggregationServiceError::SignatureVerificationError)
     }
 
@@ -456,7 +456,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
 
                     // New signature, aggregate it. If threshold is met, start window
                     let Some(digest) = signed_task_digest else {
-                        return Err(BlsAggregationServiceError::SignatureChannelClosed);
+                        return Err(BlsAggregationServiceError::SignaturesChannelClosed);
                     };
                     // check if the operator has already signed for this digest
                     if aggregated_operators
