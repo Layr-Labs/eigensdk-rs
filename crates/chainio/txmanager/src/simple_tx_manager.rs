@@ -1,8 +1,7 @@
-use alloy::consensus::TxEnvelope;
 use alloy::eips::BlockNumberOrTag;
-use alloy::network::{EthereumWallet, TransactionBuilder};
+use alloy::network::{Ethereum, EthereumWallet, TransactionBuilder};
 use alloy::primitives::U256;
-use alloy::providers::{Provider, ProviderBuilder, RootProvider};
+use alloy::providers::{PendingTransactionBuilder, Provider, ProviderBuilder, RootProvider};
 use alloy::rpc::types::eth::{TransactionInput, TransactionReceipt, TransactionRequest};
 use alloy::signers::local::PrivateKeySigner;
 use backoff::{future::retry, ExponentialBackoffBuilder};
@@ -143,7 +142,20 @@ impl SimpleTxManager {
             })
             .map_err(|_| TxManagerError::SendTxError)?;
 
-        self.send_and_wait_receipt(signed_tx).await
+        // send transaction and get receipt
+        let pending_tx = self
+            .provider
+            .send_tx_envelope(signed_tx)
+            .await
+            .inspect_err(|err| self.logger.error("Failed to get receipt", &err.to_string()))
+            .map_err(|_| TxManagerError::SendTxError)?;
+
+        self.logger.debug(
+            "Transaction sent. Pending transaction: ",
+            &pending_tx.tx_hash().to_string(),
+        );
+        // wait for the transaction to be mined
+        SimpleTxManager::wait_for_receipt(self, pending_tx).await
     }
 
     pub async fn send_tx_with_retries(
@@ -163,42 +175,6 @@ impl SimpleTxManager {
             Ok(self.send_tx(&mut cloned_tx).await?)
         })
         .await
-    }
-
-    /// Send the tx and waits for the transaction receipt.
-    ///
-    /// # Arguments
-    ///
-    /// * `signed_tx`: The signed transaction we want to send.
-    ///
-    /// # Returns
-    ///
-    /// * The transaction receipt.
-    ///
-    /// # Errors
-    ///
-    /// * `TxManagerError` - If the transaction cannot be sent or the receipt cannot be retrieved.
-    pub async fn send_and_wait_receipt(
-        &self,
-        signed_tx: TxEnvelope,
-    ) -> Result<TransactionReceipt, TxManagerError> {
-        let pending_tx = self
-            .provider
-            .send_tx_envelope(signed_tx.clone())
-            .await
-            .inspect_err(|err| self.logger.error("Failed to get receipt", &err.to_string()))
-            .map_err(|_| TxManagerError::SendTxError)?;
-
-        self.logger.debug(
-            "Transaction sent. Pending transaction: ",
-            &pending_tx.tx_hash().to_string(),
-        );
-
-        pending_tx
-            .get_receipt()
-            .await
-            .inspect_err(|err| self.logger.error("Failed to get receipt", &err.to_string()))
-            .map_err(|_| TxManagerError::WaitForReceiptError)
     }
 
     /// Estimates the gas and nonce for a transaction.
@@ -283,6 +259,33 @@ impl SimpleTxManager {
             .with_gas_price(gas_price);
 
         Ok(new_tx)
+    }
+
+    /// Waits for the transaction receipt.
+    ///
+    /// This is a wrapper around `PendingTransactionBuilder::get_receipt`.
+    ///
+    /// # Arguments
+    ///
+    /// * `pending_tx`: The pending transaction builder we want to wait for.
+    ///
+    /// # Returns
+    ///
+    /// * The block number in which the transaction was included.
+    /// * `None` if the transaction was not included in a block or an error ocurred.
+    ///
+    /// # Errors
+    ///
+    /// * `TxManagerError` - If the transaction receipt cannot be retrieved.
+    pub async fn wait_for_receipt(
+        &self,
+        pending_tx: PendingTransactionBuilder<'_, Transport, Ethereum>,
+    ) -> Result<TransactionReceipt, TxManagerError> {
+        pending_tx
+            .get_receipt()
+            .await
+            .inspect_err(|err| self.logger.error("Failed to get receipt", &err.to_string()))
+            .map_err(|_| TxManagerError::WaitForReceiptError)
     }
 }
 
