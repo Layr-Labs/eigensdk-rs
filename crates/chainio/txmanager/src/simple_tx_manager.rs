@@ -279,7 +279,7 @@ impl SimpleTxManager {
     /// * `TxManagerError` - If the transaction receipt cannot be retrieved.
     pub async fn wait_for_receipt(
         &self,
-        pending_tx: PendingTransactionBuilder<'_, Transport, Ethereum>,
+        pending_tx: PendingTransactionBuilder<Transport, Ethereum>,
     ) -> Result<TransactionReceipt, TxManagerError> {
         pending_tx
             .get_receipt()

@@ -54,7 +54,7 @@ impl TxSigner<Signature> for Web3Signer {
     ) -> alloy::signers::Result<Signature> {
         let params = SignTransactionParams {
             from: self.address.to_string(),
-            to: tx.to(),
+            to: tx.to().into(),
             value: tx.value(),
             gas: format!("0x{:x}", tx.gas_limit()),
             gas_price: tx.gas_price().map(|price| format!("0x{:x}", price)),
