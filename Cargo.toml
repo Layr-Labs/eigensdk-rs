@@ -47,7 +47,14 @@ rust.rust_2018_idioms = { level = "deny", priority = -1 }
 rustdoc.all = "warn"
 clippy.unwrap_used = "warn"
 clippy.expect_used = "warn"
+clippy.panic = "warn"
 clippy.todo = "warn"
+clippy.indexing_slicing = "warn"
+clippy.string_slice = "warn"
+clippy.panic_in_result_fn = "warn"
+clippy.panicking_overflow_checks = "warn"
+clippy.question_mark = "warn"
+clippy.implicit_return = "allow"
 
 [workspace.dependencies]
 ark-bn254 = "0.5.0"
@@ -112,7 +119,9 @@ tracing-subscriber = { version = "0.3.18", features = ["json"] }
 url = "2.5.2"
 
 #misc
-rust-bls-bn254 = { git = "https://github.com/Layr-Labs/rust-bls-bn254", rev = "ce3313f" ,features = ["std"] }
+rust-bls-bn254 = { git = "https://github.com/Layr-Labs/rust-bls-bn254", rev = "ce3313f", features = [
+    "std",
+] }
 uuid = { version = "1.11.0", features = ["v4"] }
 
 
@@ -145,7 +154,12 @@ alloy-transport-http = { version = "0.5.3", features = [
 ], default-features = false }
 alloy-transport-ipc = { version = "0.5.3", default-features = false }
 alloy-transport-ws = { version = "0.5.3", default-features = false }
-alloy = { version = "0.5.3", features = ["sol-types", "contract","full","signer-aws"] }
+alloy = { version = "0.5.3", features = [
+    "sol-types",
+    "contract",
+    "full",
+    "signer-aws",
+] }
 anvil-utils = { path = "examples/anvil-utils" }
 avsregistry-read = { path = "examples/avsregistry-read" }
 avsregistry-write = { path = "examples/avsregistry-write" }
