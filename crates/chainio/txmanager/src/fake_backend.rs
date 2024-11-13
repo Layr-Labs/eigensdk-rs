@@ -123,7 +123,6 @@ impl EthBackend for FakeEthBackend {
                 from: Address::default(),
                 to: None,
                 contract_address: None,
-                state_root: None,
                 authorization_list: None,
             })
     }
