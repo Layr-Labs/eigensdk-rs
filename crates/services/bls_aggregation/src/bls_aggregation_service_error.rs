@@ -10,10 +10,8 @@ pub enum BlsAggregationServiceError {
     TaskNotFound,
     #[error("signature verification error")]
     SignatureVerificationError(SignatureVerificationError),
-    #[error("channel was closed")]
-    ChannelClosed,
-    #[error("signatures channel was closed")]
-    SignatureChannelClosed,
+    #[error("signatures channel was closed, can't send signatures to aggregator")]
+    SignaturesChannelClosed,
     #[error("error sending to channel")]
     ChannelError,
     #[error("Avs Registry Error")]
