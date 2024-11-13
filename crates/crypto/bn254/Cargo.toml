@@ -12,10 +12,10 @@ license-file.workspace = true
 ark-bn254.workspace = true
 ark-ec.workspace = true
 ark-ff.workspace = true
-num-bigint = "0.4.4"
+num-bigint.workspace = true
 rust-bls-bn254.workspace = true
 
 
 [dev-dependencies]
-rand = "0.8.4"
+rand.workspace = true
 tokio = { workspace = true, features = ["full"] }
