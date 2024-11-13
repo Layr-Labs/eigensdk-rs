@@ -57,6 +57,7 @@ ark-serialize = "0.4.2"
 async-trait = "0.1.81"
 aws-config = "1.5.4"
 aws-sdk-kms = "1.37.0"
+backoff = { version = "0.4.0", features = ["futures", "tokio"] }
 clap = { version = "4.5.11", features = ["derive"] }
 eigen-chainio-txmanager = { path = "crates/chainio/txmanager/" }
 eigen-client-avsregistry = { path = "crates/chainio/clients/avsregistry" }
