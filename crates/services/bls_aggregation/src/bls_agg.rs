@@ -232,6 +232,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
             .signers_operator_ids_set
             .insert(signed_task_digest.operator_id, true);
         for (quorum_num, stake) in operator_state.stake_per_quorum.iter() {
+            // For each quorum the operator has stake in, we aggregate the signature and update the stake
             aggregated_operators.signers_agg_sig_g1 = Signature::new(
                 (aggregated_operators.signers_agg_sig_g1.g1_point().g1()
                     + signed_task_digest.bls_signature.g1_point().g1())
@@ -379,6 +380,9 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                     let mut signers_apk_g2 = BlsG2Point::new(G2Affine::zero());
                     let mut signers_agg_sig_g1 = Signature::new(G1Affine::zero());
                     for _ in 0..operator_state.stake_per_quorum.len() {
+                        // for each quorum the operator has stake in, the signature is aggregated
+                        // see signature verification logic here:
+                        // https://github.com/Layr-Labs/eigenlayer-middleware/blob/7d49b5181b09198ed275783453aa082bb3766990/src/BLSSignatureChecker.sol#L161-L168
                         signers_apk_g2 =
                             BlsG2Point::new((signers_apk_g2.g2() + operator_g2_pubkey).into());
                         signers_agg_sig_g1 = Signature::new(
