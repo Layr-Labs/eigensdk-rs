@@ -671,7 +671,6 @@ pub mod integration_test {
     }
 
     #[tokio::test]
-    // This tests fails because of https://github.com/Layr-Labs/eigensdk-go/issues/261
     async fn test_2_quorums_2_operators_shared() {
         // operator 1 stakes on quorums [0, 1]
         // operator 2 stakes on quorums [1]
@@ -881,7 +880,6 @@ pub mod integration_test {
     }
 
     #[tokio::test]
-    // This tests fails because of https://github.com/Layr-Labs/eigensdk-go/issues/261
     async fn test_2_quorums_1_operator() {
         let (container, http_endpoint, ws_endpoint) = start_anvil_container().await;
 
