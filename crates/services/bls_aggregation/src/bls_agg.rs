@@ -1,5 +1,5 @@
 use alloy_primitives::{FixedBytes, U256};
-use ark_bn254::G2Affine;
+use ark_bn254::{G1Affine, G2Affine};
 use ark_ec::AffineRepr;
 use eigen_crypto_bls::{BlsG1Point, BlsG2Point, Signature};
 use eigen_crypto_bn254::utils::verify_message;
@@ -221,11 +221,6 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         operator_state: OperatorAvsState,
         signed_task_digest: SignedTaskResponseDigest,
     ) -> &mut AggregatedOperators {
-        aggregated_operators.signers_agg_sig_g1 = Signature::new(
-            (aggregated_operators.signers_agg_sig_g1.g1_point().g1()
-                + signed_task_digest.bls_signature.g1_point().g1())
-            .into(),
-        );
         let operator_g2_pubkey = operator_state
             .operator_info
             .pub_keys
@@ -233,12 +228,19 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
             .unwrap()
             .g2_pub_key
             .g2();
-        aggregated_operators.signers_apk_g2 =
-            BlsG2Point::new((aggregated_operators.signers_apk_g2.g2() + operator_g2_pubkey).into());
         aggregated_operators
             .signers_operator_ids_set
             .insert(signed_task_digest.operator_id, true);
         for (quorum_num, stake) in operator_state.stake_per_quorum.iter() {
+            // For each quorum the operator has stake in, we aggregate the signature and update the stake
+            aggregated_operators.signers_agg_sig_g1 = Signature::new(
+                (aggregated_operators.signers_agg_sig_g1.g1_point().g1()
+                    + signed_task_digest.bls_signature.g1_point().g1())
+                .into(),
+            );
+            aggregated_operators.signers_apk_g2 = BlsG2Point::new(
+                (aggregated_operators.signers_apk_g2.g2() + operator_g2_pubkey).into(),
+            );
             aggregated_operators
                 .signers_total_stake_per_quorum
                 .entry(*quorum_num)
@@ -374,14 +376,30 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                     )
                     .clone()
                 })
-                .unwrap_or(AggregatedOperators {
-                    signers_apk_g2: BlsG2Point::new((G2Affine::zero() + operator_g2_pubkey).into()),
-                    signers_agg_sig_g1: signed_task_digest.bls_signature.clone(),
-                    signers_operator_ids_set: HashMap::from([(
-                        operator_state.operator_id.into(),
-                        true,
-                    )]),
-                    signers_total_stake_per_quorum: operator_state.stake_per_quorum.clone(),
+                .unwrap_or_else(|| {
+                    let mut signers_apk_g2 = BlsG2Point::new(G2Affine::zero());
+                    let mut signers_agg_sig_g1 = Signature::new(G1Affine::zero());
+                    for _ in 0..operator_state.stake_per_quorum.len() {
+                        // for each quorum the operator has stake in, the signature is aggregated
+                        // see signature verification logic here:
+                        // https://github.com/Layr-Labs/eigenlayer-middleware/blob/7d49b5181b09198ed275783453aa082bb3766990/src/BLSSignatureChecker.sol#L161-L168
+                        signers_apk_g2 =
+                            BlsG2Point::new((signers_apk_g2.g2() + operator_g2_pubkey).into());
+                        signers_agg_sig_g1 = Signature::new(
+                            (signers_agg_sig_g1.g1_point().g1()
+                                + signed_task_digest.bls_signature.g1_point().g1())
+                            .into(),
+                        );
+                    }
+                    AggregatedOperators {
+                        signers_apk_g2,
+                        signers_agg_sig_g1,
+                        signers_operator_ids_set: HashMap::from([(
+                            operator_state.operator_id.into(),
+                            true,
+                        )]),
+                        signers_total_stake_per_quorum: operator_state.stake_per_quorum.clone(),
+                    }
                 });
 
             aggregated_operators.insert(
@@ -971,8 +989,14 @@ mod tests {
             .unwrap();
 
         let quorum_apks_g1 = aggregate_g1_public_keys(&test_operators);
-        let signers_apk_g2 = aggregate_g2_public_keys(&test_operators);
-        let signers_agg_sig_g1 = aggregate_g1_signatures(&[bls_sig_op_1, bls_sig_op_2]);
+        let signers_apk_g2 =
+            aggregate_g2_public_keys(&[test_operators.clone(), test_operators].concat());
+        let signers_agg_sig_g1 = aggregate_g1_signatures(&[
+            bls_sig_op_1.clone(),
+            bls_sig_op_1,
+            bls_sig_op_2.clone(),
+            bls_sig_op_2,
+        ]);
 
         let expected_agg_service_response = BlsAggregationServiceResponse {
             task_index,
@@ -1101,9 +1125,14 @@ mod tests {
             .unwrap();
 
         let quorum_apks_g1 = aggregate_g1_public_keys(&test_operators);
-        let signers_apk_g2 = aggregate_g2_public_keys(&test_operators);
-        let signers_agg_sig_g1_task_1 =
-            aggregate_g1_signatures(&[bls_sig_task_1_op_1, bls_sig_task_1_op_2]);
+        let signers_apk_g2 =
+            aggregate_g2_public_keys(&[test_operators.clone(), test_operators].concat());
+        let signers_agg_sig_g1_task_1 = aggregate_g1_signatures(&[
+            bls_sig_task_1_op_1.clone(),
+            bls_sig_task_1_op_1,
+            bls_sig_task_1_op_2.clone(),
+            bls_sig_task_1_op_2,
+        ]);
 
         let expected_response_task_1 = BlsAggregationServiceResponse {
             task_index: task_1_index,
@@ -1118,8 +1147,12 @@ mod tests {
             non_signer_stake_indices: vec![],
         };
 
-        let signers_agg_sig_g1_task_2 =
-            aggregate_g1_signatures(&[bls_sig_task_2_op_1, bls_sig_task_2_op_2]);
+        let signers_agg_sig_g1_task_2 = aggregate_g1_signatures(&[
+            bls_sig_task_2_op_1.clone(),
+            bls_sig_task_2_op_1,
+            bls_sig_task_2_op_2.clone(),
+            bls_sig_task_2_op_2,
+        ]);
 
         let expected_response_task_2 = BlsAggregationServiceResponse {
             task_index: task_2_index,
