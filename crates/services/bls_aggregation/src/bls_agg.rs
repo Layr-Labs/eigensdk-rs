@@ -1,5 +1,5 @@
 use alloy_primitives::{FixedBytes, U256};
-use ark_bn254::G2Affine;
+use ark_bn254::{G1Affine, G2Affine};
 use ark_ec::AffineRepr;
 use eigen_crypto_bls::{BlsG1Point, BlsG2Point, Signature};
 use eigen_crypto_bn254::utils::verify_message;
@@ -221,11 +221,6 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         operator_state: OperatorAvsState,
         signed_task_digest: SignedTaskResponseDigest,
     ) -> &mut AggregatedOperators {
-        aggregated_operators.signers_agg_sig_g1 = Signature::new(
-            (aggregated_operators.signers_agg_sig_g1.g1_point().g1()
-                + signed_task_digest.bls_signature.g1_point().g1())
-            .into(),
-        );
         let operator_g2_pubkey = operator_state
             .operator_info
             .pub_keys
@@ -233,12 +228,18 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
             .unwrap()
             .g2_pub_key
             .g2();
-        aggregated_operators.signers_apk_g2 =
-            BlsG2Point::new((aggregated_operators.signers_apk_g2.g2() + operator_g2_pubkey).into());
         aggregated_operators
             .signers_operator_ids_set
             .insert(signed_task_digest.operator_id, true);
         for (quorum_num, stake) in operator_state.stake_per_quorum.iter() {
+            aggregated_operators.signers_agg_sig_g1 = Signature::new(
+                (aggregated_operators.signers_agg_sig_g1.g1_point().g1()
+                    + signed_task_digest.bls_signature.g1_point().g1())
+                .into(),
+            );
+            aggregated_operators.signers_apk_g2 = BlsG2Point::new(
+                (aggregated_operators.signers_apk_g2.g2() + operator_g2_pubkey).into(),
+            );
             aggregated_operators
                 .signers_total_stake_per_quorum
                 .entry(*quorum_num)
@@ -374,14 +375,27 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                     )
                     .clone()
                 })
-                .unwrap_or(AggregatedOperators {
-                    signers_apk_g2: BlsG2Point::new((G2Affine::zero() + operator_g2_pubkey).into()),
-                    signers_agg_sig_g1: signed_task_digest.bls_signature.clone(),
-                    signers_operator_ids_set: HashMap::from([(
-                        operator_state.operator_id.into(),
-                        true,
-                    )]),
-                    signers_total_stake_per_quorum: operator_state.stake_per_quorum.clone(),
+                .unwrap_or_else(|| {
+                    let mut signers_apk_g2 = BlsG2Point::new(G2Affine::zero());
+                    let mut signers_agg_sig_g1 = Signature::new(G1Affine::zero());
+                    for _ in 0..operator_state.stake_per_quorum.len() {
+                        signers_apk_g2 =
+                            BlsG2Point::new((signers_apk_g2.g2() + operator_g2_pubkey).into());
+                        signers_agg_sig_g1 = Signature::new(
+                            (signers_agg_sig_g1.g1_point().g1()
+                                + signed_task_digest.bls_signature.g1_point().g1())
+                            .into(),
+                        );
+                    }
+                    AggregatedOperators {
+                        signers_apk_g2,
+                        signers_agg_sig_g1,
+                        signers_operator_ids_set: HashMap::from([(
+                            operator_state.operator_id.into(),
+                            true,
+                        )]),
+                        signers_total_stake_per_quorum: operator_state.stake_per_quorum.clone(),
+                    }
                 });
 
             aggregated_operators.insert(
