@@ -251,6 +251,37 @@ impl ELChainWriter {
         let tx = process_claim_call.send().await?;
         Ok(*tx.tx_hash())
     }
+
+    /// Checks the claim for rewards at a given `RewardsMerkleClaim`.
+    /// This function interacts with the RewardsCoordinator contract to execute the
+    /// claim operation.
+    ///
+    /// # Arguments
+    ///
+    /// * `claim` - The RewardsMerkleClaim object containing the claim.
+    ///
+    /// # Returns
+    ///
+    /// * `Result<FixedBytes<32>, ElContractsError>` - The transaction hash if the check_claim is sent,
+    ///   otherwise an error.
+    ///
+    /// # Errors
+    ///
+    /// * `ElContractsError` - if the call to the contract fails.
+    pub async fn check_claim(
+        &self,
+        claim: RewardsMerkleClaim,
+    ) -> Result<FixedBytes<32>, ElContractsError> {
+        let provider = get_signer(&self.signer, &self.provider);
+
+        let contract_rewards_coordinator =
+            IRewardsCoordinator::new(self.rewards_coordinator, &provider);
+
+        let process_claim_call = contract_rewards_coordinator.checkClaim(claim);
+
+        let tx = process_claim_call.send().await?;
+        Ok(*tx.tx_hash())
+    }
 }
 
 #[cfg(test)]
