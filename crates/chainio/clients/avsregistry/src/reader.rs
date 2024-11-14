@@ -399,6 +399,35 @@ impl AvsRegistryChainReader {
         Ok(quorum_stakes)
     }
 
+    /*
+        func (r *ChainReader) QueryRegistrationDetail(
+        opts *bind.CallOpts,
+        operatorAddress common.Address,
+        ) ([]bool, error) {
+            operatorId, err := r.GetOperatorId(opts, operatorAddress)
+            if err != nil {
+                return nil, err
+            }
+            value, err := r.registryCoordinator.GetCurrentQuorumBitmap(opts, operatorId)
+            if err != nil {
+                return nil, err
+            }
+            numBits := value.BitLen()
+            var quorums []bool
+            for i := 0; i < numBits; i++ {
+                quorums = append(quorums, value.Int64()&(1<<i) != 0)
+            }
+            return quorums, nil
+        }
+    */
+    pub async fn query_registration_detail(
+        &self,
+        operator_address: Address,
+    ) -> Result<HashMap<u8, BigInt>, AvsRegistryError> {
+        let operator_id = self.get_operator_id(operator_address).await?;
+        todo!()
+    }
+
     /// Get operator id
     ///
     /// # Arguments
