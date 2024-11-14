@@ -985,8 +985,14 @@ mod tests {
             .unwrap();
 
         let quorum_apks_g1 = aggregate_g1_public_keys(&test_operators);
-        let signers_apk_g2 = aggregate_g2_public_keys(&test_operators);
-        let signers_agg_sig_g1 = aggregate_g1_signatures(&[bls_sig_op_1, bls_sig_op_2]);
+        let signers_apk_g2 =
+            aggregate_g2_public_keys(&[test_operators.clone(), test_operators].concat());
+        let signers_agg_sig_g1 = aggregate_g1_signatures(&[
+            bls_sig_op_1.clone(),
+            bls_sig_op_1,
+            bls_sig_op_2.clone(),
+            bls_sig_op_2,
+        ]);
 
         let expected_agg_service_response = BlsAggregationServiceResponse {
             task_index,
@@ -1115,9 +1121,14 @@ mod tests {
             .unwrap();
 
         let quorum_apks_g1 = aggregate_g1_public_keys(&test_operators);
-        let signers_apk_g2 = aggregate_g2_public_keys(&test_operators);
-        let signers_agg_sig_g1_task_1 =
-            aggregate_g1_signatures(&[bls_sig_task_1_op_1, bls_sig_task_1_op_2]);
+        let signers_apk_g2 =
+            aggregate_g2_public_keys(&[test_operators.clone(), test_operators].concat());
+        let signers_agg_sig_g1_task_1 = aggregate_g1_signatures(&[
+            bls_sig_task_1_op_1.clone(),
+            bls_sig_task_1_op_1,
+            bls_sig_task_1_op_2.clone(),
+            bls_sig_task_1_op_2,
+        ]);
 
         let expected_response_task_1 = BlsAggregationServiceResponse {
             task_index: task_1_index,
@@ -1132,8 +1143,12 @@ mod tests {
             non_signer_stake_indices: vec![],
         };
 
-        let signers_agg_sig_g1_task_2 =
-            aggregate_g1_signatures(&[bls_sig_task_2_op_1, bls_sig_task_2_op_2]);
+        let signers_agg_sig_g1_task_2 = aggregate_g1_signatures(&[
+            bls_sig_task_2_op_1.clone(),
+            bls_sig_task_2_op_1,
+            bls_sig_task_2_op_2.clone(),
+            bls_sig_task_2_op_2,
+        ]);
 
         let expected_response_task_2 = BlsAggregationServiceResponse {
             task_index: task_2_index,
