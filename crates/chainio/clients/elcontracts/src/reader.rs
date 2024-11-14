@@ -386,21 +386,21 @@ impl ELChainReader {
         Ok(is_operator_is)
     }
 
-    /// Get the staker's shares
+    /// Get the staker's shares in all of the strategies in which they have nonzero shares
     /// # Arguments
     /// * `staker_address` - The staker's address
     /// * `block_number` - The block number
     ///
     /// # Returns
-    /// * `U96` - The amount of shares the staker has in all of the strategies in which they have nonzero shares
+    /// * `Vec<(Address, U96)>` - An array of tuples containing the strategy address and the amount of shares the staker has in that strategy
     ///
     /// # Errors
     /// * `ElContractsError` - if the call to the contract fails
     pub async fn get_staker_shares(
         &self,
         staker_address: Address,
-        block_number: u32,
-    ) -> Result<U96, ElContractsError> {
+        block_number: u32, // TODO: use block_number
+    ) -> Result<Vec<(Address, U96)>, ElContractsError> {
         // TODO: check if U96 is the correct type for shares
         let provider = get_provider(&self.provider);
 
@@ -411,6 +411,38 @@ impl ELChainReader {
             .call()
             .await
             .map_err(ElContractsError::AlloyContractError)
+    }
+
+    /// Get the delegated operator
+    /// # Arguments
+    /// * `staker_address` - The staker's address
+    /// * `block_number` - The block number
+    ///
+    /// # Returns
+    /// * `Address` - The address of the operator to whom the staker has delegated their shares
+    ///
+    /// # Errors
+    /// * `ElContractsError` - if the call to the contract fails
+    pub async fn get_delegated_operator(
+        &self,
+        staker_address: Address,
+        block_number: u32, // TODO: use block_number
+    ) -> Result<Address, ElContractsError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_delegation_manager = DelegationManager::new(self.delegation_manager, provider);
+
+        let delegated = contract_delegation_manager
+            .delegatedTo(staker_address)
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        let DelegationManager::delegatedToReturn {
+            _0: operator_address,
+        } = delegated;
+
+        Ok(operator_address)
     }
 }
 
