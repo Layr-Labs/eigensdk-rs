@@ -75,6 +75,7 @@ eigen-services-blsaggregation = { path = "crates/services/bls_aggregation" }
 eigen-services-operatorsinfo = { path = "crates/services/operatorsinfo" }
 eigen-signer = { path = "crates/signer/" }
 eigen-testing-utils = { path = "testing/testing-utils" }
+eigen-telemetry = { path = "crates/telemetry/" }
 eigen-types = { path = "crates/types/" }
 eigen-utils = { path = "crates/utils/" }
 eigen-nodeapi = { path = "crates/nodeapi/" }
@@ -112,7 +113,9 @@ tracing-subscriber = { version = "0.3.18", features = ["json"] }
 url = "2.5.2"
 
 #misc
-rust-bls-bn254 = { git = "https://github.com/Layr-Labs/rust-bls-bn254", rev = "ce3313f" ,features = ["std"] }
+rust-bls-bn254 = { git = "https://github.com/Layr-Labs/rust-bls-bn254", rev = "ce3313f", features = [
+    "std",
+] }
 uuid = { version = "1.11.0", features = ["v4"] }
 
 
@@ -145,7 +148,15 @@ alloy-transport-http = { version = "0.5.3", features = [
 ], default-features = false }
 alloy-transport-ipc = { version = "0.5.3", default-features = false }
 alloy-transport-ws = { version = "0.5.3", default-features = false }
-alloy = { version = "0.5.3", features = ["sol-types", "contract","full","signer-aws"] }
+alloy = { version = "0.5.3", features = [
+    "sol-types",
+    "contract",
+    "full",
+    "signer-aws",
+] }
+
 anvil-utils = { path = "examples/anvil-utils" }
 avsregistry-read = { path = "examples/avsregistry-read" }
 avsregistry-write = { path = "examples/avsregistry-write" }
+
+posthog-rs = "0.2.0"

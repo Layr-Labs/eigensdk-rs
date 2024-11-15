@@ -12,6 +12,7 @@ license-file.workspace = true
 alloy.workspace = true
 alloy-primitives.workspace = true
 eigen-logging.workspace = true
+eigen-telemetry = { workspace = true, optional = true }
 eigen-types.workspace = true
 eigen-utils.workspace = true
 thiserror.workspace = true
@@ -26,3 +27,6 @@ eigen-utils.workspace = true
 once_cell.workspace = true
 serial_test.workspace = true
 tokio.workspace = true
+
+[features]
+telemetry = ["dep:eigen-telemetry", "dep:tokio"]
