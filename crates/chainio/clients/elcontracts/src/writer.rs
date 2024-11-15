@@ -38,6 +38,15 @@ impl ELChainWriter {
         provider: String,
         signer: String,
     ) -> Self {
+        #[cfg(feature = "telemetry")]
+        {
+            let _ = tokio::task::spawn_blocking(move || {
+                let _ = eigen_telemetry::telemetry::Telemetry::capture_event("elchainwriter.new")
+                    .map_err(|e| AvsRegistryError::TelemetryError(e.to_string()));
+            })
+            .await;
+        }
+
         Self {
             delegation_manager,
             strategy_manager,
@@ -65,6 +74,17 @@ impl ELChainWriter {
         &self,
         operator: Operator,
     ) -> Result<FixedBytes<32>, ElContractsError> {
+        #[cfg(feature = "telemetry")]
+        {
+            let _ = tokio::task::spawn_blocking(move || {
+                let _ = eigen_telemetry::telemetry::Telemetry::capture_event(
+                    "elchainwriter.register_as_operator",
+                )
+                .map_err(|e| AvsRegistryError::TelemetryError(e.to_string()));
+            })
+            .await;
+        }
+
         info!("registering operator {:?} to EigenLayer", operator.address);
         let op_details = OperatorDetails {
             __deprecated_earningsReceiver: operator.earnings_receiver_address,
@@ -118,6 +138,17 @@ impl ELChainWriter {
         &self,
         operator: Operator,
     ) -> Result<TxHash, ElContractsError> {
+        #[cfg(feature = "telemetry")]
+        {
+            let _ = tokio::task::spawn_blocking(move || {
+                let _ = eigen_telemetry::telemetry::Telemetry::capture_event(
+                    "elchainwriter.update_operator_details",
+                )
+                .map_err(|e| AvsRegistryError::TelemetryError(e.to_string()));
+            })
+            .await;
+        }
+
         info!(
             "updating operator detils of operator {:?} to EigenLayer",
             operator.address
@@ -168,6 +199,17 @@ impl ELChainWriter {
         strategy_addr: Address,
         amount: U256,
     ) -> Result<TxHash, ElContractsError> {
+        #[cfg(feature = "telemetry")]
+        {
+            let _ = tokio::task::spawn_blocking(move || {
+                let _ = eigen_telemetry::telemetry::Telemetry::capture_event(
+                    "elchainwriter.deposit_erc20_into_strategy",
+                )
+                .map_err(|e| AvsRegistryError::TelemetryError(e.to_string()));
+            })
+            .await;
+        }
+
         info!("depositing {amount:?} tokens into strategy {strategy_addr:?}");
         let tokens = self
             .el_chain_reader
@@ -210,6 +252,17 @@ impl ELChainWriter {
         &self,
         claimer: Address,
     ) -> Result<FixedBytes<32>, ElContractsError> {
+        #[cfg(feature = "telemetry")]
+        {
+            let _ = tokio::task::spawn_blocking(move || {
+                let _ = eigen_telemetry::telemetry::Telemetry::capture_event(
+                    "elchainwriter.set_claimer_for",
+                )
+                .map_err(|e| AvsRegistryError::TelemetryError(e.to_string()));
+            })
+            .await;
+        }
+
         let provider = get_signer(&self.signer, &self.provider);
 
         let contract_rewards_coordinator =
@@ -241,6 +294,17 @@ impl ELChainWriter {
         earner_address: Address,
         claim: RewardsMerkleClaim,
     ) -> Result<FixedBytes<32>, ElContractsError> {
+        #[cfg(feature = "telemetry")]
+        {
+            let _ = tokio::task::spawn_blocking(move || {
+                let _ = eigen_telemetry::telemetry::Telemetry::capture_event(
+                    "elchainwriter.process_claim",
+                )
+                .map_err(|e| AvsRegistryError::TelemetryError(e.to_string()));
+            })
+            .await;
+        }
+
         let provider = get_signer(&self.signer, &self.provider);
 
         let contract_rewards_coordinator =

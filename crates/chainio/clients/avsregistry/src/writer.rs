@@ -60,6 +60,17 @@ impl AvsRegistryChainWriter {
         registry_coordinator_addr: Address,
         operator_state_retriever_addr: Address,
     ) -> Result<Self, AvsRegistryError> {
+        #[cfg(feature = "telemetry")]
+        {
+            let _ = tokio::task::spawn_blocking(move || {
+                let _ = eigen_telemetry::telemetry::Telemetry::capture_event(
+                    "avsregistrychainwriter.build_avs_registry_chain_writer",
+                )
+                .map_err(|e| AvsRegistryError::TelemetryError(e.to_string()));
+            })
+            .await;
+        }
+
         let fill_provider = get_provider(&provider);
 
         let contract_registry_coordinator =
@@ -142,6 +153,17 @@ impl AvsRegistryChainWriter {
         quorum_numbers: Bytes,
         socket: String,
     ) -> Result<TxHash, AvsRegistryError> {
+        #[cfg(feature = "telemetry")]
+        {
+            let _ = tokio::task::spawn_blocking(move || {
+                let _ = eigen_telemetry::telemetry::Telemetry::capture_event(
+                    "avsregistrychainwriter.register_operator_in_quorum_with_avs_registry_coordinator",
+                )
+                .map_err(|e| AvsRegistryError::TelemetryError(e.to_string()));
+            })
+            .await;
+        }
+
         let provider = get_signer(&self.signer.clone(), &self.provider);
         let wallet = PrivateKeySigner::from_str(&self.signer)
             .map_err(|_| AvsRegistryError::InvalidPrivateKey)?;
@@ -223,17 +245,6 @@ impl AvsRegistryChainWriter {
 
         info!(tx_hash = ?tx,"Sent transaction to register operator in the AVS's registry coordinator" );
 
-        #[cfg(feature = "telemetry")]
-        {
-            let _ = tokio::task::spawn_blocking(move || {
-                let _ = eigen_telemetry::telemetry::Telemetry::capture_event(
-                    "register_operator_in_quorum_with_avs_registry_coordinator",
-                )
-                .map_err(|e| AvsRegistryError::TelemetryError(e.to_string()));
-            })
-            .await;
-        }
-
         Ok(*tx.tx_hash())
     }
 
@@ -258,6 +269,17 @@ impl AvsRegistryChainWriter {
         operators_per_quorum: Vec<Vec<Address>>,
         quorum_number: Bytes,
     ) -> Result<TxHash, AvsRegistryError> {
+        #[cfg(feature = "telemetry")]
+        {
+            let _ = tokio::task::spawn_blocking(move || {
+                let _ = eigen_telemetry::telemetry::Telemetry::capture_event(
+                    "avsregistrychainwriter.update_stakes_of_entire_operator_set_for_quorums",
+                )
+                .map_err(|e| AvsRegistryError::TelemetryError(e.to_string()));
+            })
+            .await;
+        }
+
         info!(quorum_numbers = %quorum_number, "updating stakes for entire operator set");
         let provider = get_signer(&self.signer.clone(), &self.provider);
         let contract_registry_coordinator =
@@ -289,6 +311,17 @@ impl AvsRegistryChainWriter {
         &self,
         operators: Vec<Address>,
     ) -> Result<TxHash, AvsRegistryError> {
+        #[cfg(feature = "telemetry")]
+        {
+            let _ = tokio::task::spawn_blocking(move || {
+                let _ = eigen_telemetry::telemetry::Telemetry::capture_event(
+                    "avsregistrychainwriter.update_stakes_of_operator_subset_for_all_quorums",
+                )
+                .map_err(|e| AvsRegistryError::TelemetryError(e.to_string()));
+            })
+            .await;
+        }
+
         info!(operators = ?operators, "updating stakes of operator subset for all quorums");
 
         let provider = get_signer(&self.signer.clone(), &self.provider);
@@ -322,6 +355,17 @@ impl AvsRegistryChainWriter {
         &self,
         quorum_numbers: Bytes,
     ) -> Result<TxHash, AvsRegistryError> {
+        #[cfg(feature = "telemetry")]
+        {
+            let _ = tokio::task::spawn_blocking(move || {
+                let _ = eigen_telemetry::telemetry::Telemetry::capture_event(
+                    "avsregistrychainwriter.deregister_operator",
+                )
+                .map_err(|e| AvsRegistryError::TelemetryError(e.to_string()));
+            })
+            .await;
+        }
+
         info!("deregistering operator with the AVS's registry coordinator");
         let provider = get_signer(&self.signer.clone(), &self.provider);
 
