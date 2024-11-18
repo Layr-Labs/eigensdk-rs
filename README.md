@@ -5,7 +5,7 @@ eigensdk-rs is an initiative for rust developers to build AVSs on eigenlayer.
 ## Installation
 
  ```bash
-cargo install eigen-cli
+cargo add eigensdk --features full
 ```
 
 ## Overview
