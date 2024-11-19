@@ -389,6 +389,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
             tokio::select! {
                 _ = &mut task_expired_timer => {
                     // Task expired. If window is open, send aggregated reponse. Else, send error
+                    dbg!("Task expired for task index: {:?}", task_index);
                     if open_window {
                         aggregated_response_sender
                             .send(Ok(current_aggregated_response.unwrap()))
@@ -443,6 +444,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                         .map_err(|_| BlsAggregationServiceError::ChannelError)?;
 
                     if verification_failed {
+                        dbg!("Signature verification failed for digest: {:?}", digest);
                         continue;
                     }
 
@@ -504,6 +506,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                         &total_stake_per_quorum,
                         &quorum_threshold_percentage_map,
                     ) {
+                        dbg!("Stake threshold not met for task index: {:?}", task_index);
                         continue;
                     }
 
@@ -514,6 +517,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                             tokio::time::sleep(window_duration).await;
                             let _ = sender_cloned.send(true);
                         });
+                        dbg!("Opened window for task index: {:?}", task_index);
                     }
 
                     current_aggregated_response = Some(BlsAggregatorService::build_aggregated_response(
