@@ -58,12 +58,28 @@ impl AvsRegistryService for FakeAvsRegistryService {
     async fn get_operators_avs_state_at_block(
         &self,
         block_number: u32,
-        _quorum_nums: &[u8],
+        quorum_nums: &[u8],
     ) -> Result<HashMap<FixedBytes<32>, OperatorAvsState>, AvsRegistryError> {
-        self.operators
+        let mut operators_state = self
+            .operators
             .get(&(block_number as u64))
             .ok_or(AvsRegistryError::GetOperatorState)
-            .cloned()
+            .cloned()?;
+
+        // for each operator, update the stake_per_quorum to remove keys that are not contained in quorum_nums
+        for (_id, operator) in operators_state.iter_mut() {
+            let keys_to_remove: Vec<_> = operator
+                .stake_per_quorum
+                .keys()
+                .filter(|quorum_num| !quorum_nums.contains(quorum_num))
+                .cloned()
+                .collect();
+
+            for quorum_num in keys_to_remove {
+                operator.stake_per_quorum.remove(&quorum_num);
+            }
+        }
+        Ok(operators_state)
     }
 
     async fn get_quorums_avs_state_at_block(
