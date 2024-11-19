@@ -399,33 +399,42 @@ impl AvsRegistryChainReader {
         Ok(quorum_stakes)
     }
 
-    /*
-        func (r *ChainReader) QueryRegistrationDetail(
-        opts *bind.CallOpts,
-        operatorAddress common.Address,
-        ) ([]bool, error) {
-            operatorId, err := r.GetOperatorId(opts, operatorAddress)
-            if err != nil {
-                return nil, err
-            }
-            value, err := r.registryCoordinator.GetCurrentQuorumBitmap(opts, operatorId)
-            if err != nil {
-                return nil, err
-            }
-            numBits := value.BitLen()
-            var quorums []bool
-            for i := 0; i < numBits; i++ {
-                quorums = append(quorums, value.Int64()&(1<<i) != 0)
-            }
-            return quorums, nil
-        }
-    */
+    /// Query registration detail
+    ///
+    /// # Arguments
+    ///
+    /// * `operator_address` - The operator address.
+    ///
+    /// # Returns
+    ///
+    /// A vector of booleans, where each boolean represents if the operator
+    /// is registered for a quorum.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if the operator id cannot be fetched or if the quorum bitmap
     pub async fn query_registration_detail(
         &self,
         operator_address: Address,
-    ) -> Result<HashMap<u8, BigInt>, AvsRegistryError> {
+    ) -> Result<Vec<bool>, AvsRegistryError> {
         let operator_id = self.get_operator_id(operator_address).await?;
-        todo!()
+
+        let provider = get_provider(&self.provider);
+        let registry_coordinator =
+            RegistryCoordinator::new(self.registry_coordinator_addr, &provider);
+        let quorum_bitmap = registry_coordinator
+            .getCurrentQuorumBitmap(operator_id)
+            .call()
+            .await?;
+
+        let inner_value = quorum_bitmap._0.into_limbs()[0];
+
+        let mut quorums = Vec::<bool>::new();
+        for i in 0..64_u64 {
+            let other = inner_value & (1 << i) != 0;
+            quorums.push(other);
+        }
+        Ok(quorums)
     }
 
     /// Get operator id
