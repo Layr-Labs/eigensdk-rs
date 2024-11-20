@@ -89,35 +89,45 @@ interface ERC1967Proxy {
   }
 ]
 ```*/
-#[allow(non_camel_case_types, non_snake_case, clippy::style)]
+#[allow(
+    non_camel_case_types,
+    non_snake_case,
+    clippy::pub_underscore_fields,
+    clippy::style
+)]
 pub mod ERC1967Proxy {
     use super::*;
     use alloy::sol_types as alloy_sol_types;
     /// The creation / init bytecode of the contract.
     ///
     /// ```text
-    ///0x608060405260405161072138038061072183398101604081905261002291610314565b61002e82826000610035565b5050610431565b61003e8361006b565b60008251118061004b5750805b156100665761006483836100ab60201b6100291760201c565b505b505050565b610074816100d7565b6040516001600160a01b038216907fbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b90600090a250565b60606100d083836040518060600160405280602781526020016106fa602791396101a9565b9392505050565b6100ea8161028760201b6100551760201c565b6101515760405162461bcd60e51b815260206004820152602d60248201527f455243313936373a206e657720696d706c656d656e746174696f6e206973206e60448201526c1bdd08184818dbdb9d1c9858dd609a1b60648201526084015b60405180910390fd5b806101887f360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc60001b61029660201b6100641760201c565b80546001600160a01b0319166001600160a01b039290921691909117905550565b60606001600160a01b0384163b6102115760405162461bcd60e51b815260206004820152602660248201527f416464726573733a2064656c65676174652063616c6c20746f206e6f6e2d636f6044820152651b9d1c9858dd60d21b6064820152608401610148565b600080856001600160a01b03168560405161022c91906103e2565b600060405180830381855af49150503d8060008114610267576040519150601f19603f3d011682016040523d82523d6000602084013e61026c565b606091505b50909250905061027d828286610299565b9695505050505050565b6001600160a01b03163b151590565b90565b606083156102a85750816100d0565b8251156102b85782518084602001fd5b8160405162461bcd60e51b815260040161014891906103fe565b634e487b7160e01b600052604160045260246000fd5b60005b838110156103035781810151838201526020016102eb565b838111156100645750506000910152565b6000806040838503121561032757600080fd5b82516001600160a01b038116811461033e57600080fd5b60208401519092506001600160401b038082111561035b57600080fd5b818501915085601f83011261036f57600080fd5b815181811115610381576103816102d2565b604051601f8201601f19908116603f011681019083821181831017156103a9576103a96102d2565b816040528281528860208487010111156103c257600080fd5b6103d38360208301602088016102e8565b80955050505050509250929050565b600082516103f48184602087016102e8565b9190910192915050565b602081526000825180602084015261041d8160408501602087016102e8565b601f01601f19169190910160400192915050565b6102ba806104406000396000f3fe60806040523661001357610011610017565b005b6100115b610027610022610067565b61009f565b565b606061004e838360405180606001604052806027815260200161025e602791396100c3565b9392505050565b6001600160a01b03163b151590565b90565b600061009a7f360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc546001600160a01b031690565b905090565b3660008037600080366000845af43d6000803e8080156100be573d6000f35b3d6000fd5b60606001600160a01b0384163b6101305760405162461bcd60e51b815260206004820152602660248201527f416464726573733a2064656c65676174652063616c6c20746f206e6f6e2d636f6044820152651b9d1c9858dd60d21b60648201526084015b60405180910390fd5b600080856001600160a01b03168560405161014b919061020e565b600060405180830381855af49150503d8060008114610186576040519150601f19603f3d011682016040523d82523d6000602084013e61018b565b606091505b509150915061019b8282866101a5565b9695505050505050565b606083156101b457508161004e565b8251156101c45782518084602001fd5b8160405162461bcd60e51b8152600401610127919061022a565b60005b838110156101f95781810151838201526020016101e1565b83811115610208576000848401525b50505050565b600082516102208184602087016101de565b9190910192915050565b60208152600082518060208401526102498160408501602087016101de565b601f01601f1916919091016040019291505056fe416464726573733a206c6f772d6c6576656c2064656c65676174652063616c6c206661696c6564a264697066735822122001c74ec5e53ef0395112bb62e82fffecb5db4051bfbfb6465874c4e43e445eff64736f6c634300080c0033416464726573733a206c6f772d6c6576656c2064656c65676174652063616c6c206661696c6564
+    ///0x60806040526040516104e73803806104e7833981016040819052610022916102de565b61002e82826000610035565b5050610401565b61003e83610061565b60008251118061004b5750805b1561005c5761005a83836100a1565b505b505050565b61006a816100cd565b6040516001600160a01b038216907fbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b90600090a250565b60606100c683836040518060600160405280602781526020016104c060279139610180565b9392505050565b6001600160a01b0381163b61013f5760405162461bcd60e51b815260206004820152602d60248201527f455243313936373a206e657720696d706c656d656e746174696f6e206973206e60448201526c1bdd08184818dbdb9d1c9858dd609a1b60648201526084015b60405180910390fd5b7f360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc80546001600160a01b0319166001600160a01b0392909216919091179055565b6060600080856001600160a01b03168560405161019d91906103b2565b600060405180830381855af49150503d80600081146101d8576040519150601f19603f3d011682016040523d82523d6000602084013e6101dd565b606091505b5090925090506101ef868383876101f9565b9695505050505050565b60608315610268578251600003610261576001600160a01b0385163b6102615760405162461bcd60e51b815260206004820152601d60248201527f416464726573733a2063616c6c20746f206e6f6e2d636f6e74726163740000006044820152606401610136565b5081610272565b610272838361027a565b949350505050565b81511561028a5781518083602001fd5b8060405162461bcd60e51b815260040161013691906103ce565b634e487b7160e01b600052604160045260246000fd5b60005b838110156102d55781810151838201526020016102bd565b50506000910152565b600080604083850312156102f157600080fd5b82516001600160a01b038116811461030857600080fd5b60208401519092506001600160401b0381111561032457600080fd5b8301601f8101851361033557600080fd5b80516001600160401b0381111561034e5761034e6102a4565b604051601f8201601f19908116603f011681016001600160401b038111828210171561037c5761037c6102a4565b60405281815282820160200187101561039457600080fd5b6103a58260208301602086016102ba565b8093505050509250929050565b600082516103c48184602087016102ba565b9190910192915050565b60208152600082518060208401526103ed8160408501602087016102ba565b601f01601f19169190910160400192915050565b60b18061040f6000396000f3fe608060405236601057600e6013565b005b600e5b601f601b6021565b6058565b565b600060537f360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc546001600160a01b031690565b905090565b3660008037600080366000845af43d6000803e8080156076573d6000f35b3d6000fdfea26469706673582212207335f05f5cc90d38aae97e812ef95e2136001b0e338edffeee723629d6d8b68164736f6c634300081b0033416464726573733a206c6f772d6c6576656c2064656c65676174652063616c6c206661696c6564
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"`\x80`@R`@Qa\x07!8\x03\x80a\x07!\x839\x81\x01`@\x81\x90Ra\0\"\x91a\x03\x14V[a\0.\x82\x82`\0a\x005V[PPa\x041V[a\0>\x83a\0kV[`\0\x82Q\x11\x80a\0KWP\x80[\x15a\0fWa\0d\x83\x83a\0\xAB` \x1Ba\0)\x17` \x1CV[P[PPPV[a\0t\x81a\0\xD7V[`@Q`\x01`\x01`\xA0\x1B\x03\x82\x16\x90\x7F\xBC|\xD7Z \xEE'\xFD\x9A\xDE\xBA\xB3 A\xF7U!M\xBCk\xFF\xA9\x0C\xC0\"[9\xDA.\\-;\x90`\0\x90\xA2PV[``a\0\xD0\x83\x83`@Q\x80``\x01`@R\x80`'\x81R` \x01a\x06\xFA`'\x919a\x01\xA9V[\x93\x92PPPV[a\0\xEA\x81a\x02\x87` \x1Ba\0U\x17` \x1CV[a\x01QW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`-`$\x82\x01R\x7FERC1967: new implementation is n`D\x82\x01Rl\x1B\xDD\x08\x18H\x18\xDB\xDB\x9D\x1C\x98X\xDD`\x9A\x1B`d\x82\x01R`\x84\x01[`@Q\x80\x91\x03\x90\xFD[\x80a\x01\x88\x7F6\x08\x94\xA1;\xA1\xA3!\x06g\xC8(I-\xB9\x8D\xCA> v\xCC75\xA9 \xA3\xCAP]8+\xBC`\0\x1Ba\x02\x96` \x1Ba\0d\x17` \x1CV[\x80T`\x01`\x01`\xA0\x1B\x03\x19\x16`\x01`\x01`\xA0\x1B\x03\x92\x90\x92\x16\x91\x90\x91\x17\x90UPV[```\x01`\x01`\xA0\x1B\x03\x84\x16;a\x02\x11W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`&`$\x82\x01R\x7FAddress: delegate call to non-co`D\x82\x01Re\x1B\x9D\x1C\x98X\xDD`\xD2\x1B`d\x82\x01R`\x84\x01a\x01HV[`\0\x80\x85`\x01`\x01`\xA0\x1B\x03\x16\x85`@Qa\x02,\x91\x90a\x03\xE2V[`\0`@Q\x80\x83\x03\x81\x85Z\xF4\x91PP=\x80`\0\x81\x14a\x02gW`@Q\x91P`\x1F\x19`?=\x01\x16\x82\x01`@R=\x82R=`\0` \x84\x01>a\x02lV[``\x91P[P\x90\x92P\x90Pa\x02}\x82\x82\x86a\x02\x99V[\x96\x95PPPPPPV[`\x01`\x01`\xA0\x1B\x03\x16;\x15\x15\x90V[\x90V[``\x83\x15a\x02\xA8WP\x81a\0\xD0V[\x82Q\x15a\x02\xB8W\x82Q\x80\x84` \x01\xFD[\x81`@QbF\x1B\xCD`\xE5\x1B\x81R`\x04\x01a\x01H\x91\x90a\x03\xFEV[cNH{q`\xE0\x1B`\0R`A`\x04R`$`\0\xFD[`\0[\x83\x81\x10\x15a\x03\x03W\x81\x81\x01Q\x83\x82\x01R` \x01a\x02\xEBV[\x83\x81\x11\x15a\0dWPP`\0\x91\x01RV[`\0\x80`@\x83\x85\x03\x12\x15a\x03'W`\0\x80\xFD[\x82Q`\x01`\x01`\xA0\x1B\x03\x81\x16\x81\x14a\x03>W`\0\x80\xFD[` \x84\x01Q\x90\x92P`\x01`\x01`@\x1B\x03\x80\x82\x11\x15a\x03[W`\0\x80\xFD[\x81\x85\x01\x91P\x85`\x1F\x83\x01\x12a\x03oW`\0\x80\xFD[\x81Q\x81\x81\x11\x15a\x03\x81Wa\x03\x81a\x02\xD2V[`@Q`\x1F\x82\x01`\x1F\x19\x90\x81\x16`?\x01\x16\x81\x01\x90\x83\x82\x11\x81\x83\x10\x17\x15a\x03\xA9Wa\x03\xA9a\x02\xD2V[\x81`@R\x82\x81R\x88` \x84\x87\x01\x01\x11\x15a\x03\xC2W`\0\x80\xFD[a\x03\xD3\x83` \x83\x01` \x88\x01a\x02\xE8V[\x80\x95PPPPPP\x92P\x92\x90PV[`\0\x82Qa\x03\xF4\x81\x84` \x87\x01a\x02\xE8V[\x91\x90\x91\x01\x92\x91PPV[` \x81R`\0\x82Q\x80` \x84\x01Ra\x04\x1D\x81`@\x85\x01` \x87\x01a\x02\xE8V[`\x1F\x01`\x1F\x19\x16\x91\x90\x91\x01`@\x01\x92\x91PPV[a\x02\xBA\x80a\x04@`\09`\0\xF3\xFE`\x80`@R6a\0\x13Wa\0\x11a\0\x17V[\0[a\0\x11[a\0'a\0\"a\0gV[a\0\x9FV[V[``a\0N\x83\x83`@Q\x80``\x01`@R\x80`'\x81R` \x01a\x02^`'\x919a\0\xC3V[\x93\x92PPPV[`\x01`\x01`\xA0\x1B\x03\x16;\x15\x15\x90V[\x90V[`\0a\0\x9A\x7F6\x08\x94\xA1;\xA1\xA3!\x06g\xC8(I-\xB9\x8D\xCA> v\xCC75\xA9 \xA3\xCAP]8+\xBCT`\x01`\x01`\xA0\x1B\x03\x16\x90V[\x90P\x90V[6`\0\x807`\0\x806`\0\x84Z\xF4=`\0\x80>\x80\x80\x15a\0\xBEW=`\0\xF3[=`\0\xFD[```\x01`\x01`\xA0\x1B\x03\x84\x16;a\x010W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`&`$\x82\x01R\x7FAddress: delegate call to non-co`D\x82\x01Re\x1B\x9D\x1C\x98X\xDD`\xD2\x1B`d\x82\x01R`\x84\x01[`@Q\x80\x91\x03\x90\xFD[`\0\x80\x85`\x01`\x01`\xA0\x1B\x03\x16\x85`@Qa\x01K\x91\x90a\x02\x0EV[`\0`@Q\x80\x83\x03\x81\x85Z\xF4\x91PP=\x80`\0\x81\x14a\x01\x86W`@Q\x91P`\x1F\x19`?=\x01\x16\x82\x01`@R=\x82R=`\0` \x84\x01>a\x01\x8BV[``\x91P[P\x91P\x91Pa\x01\x9B\x82\x82\x86a\x01\xA5V[\x96\x95PPPPPPV[``\x83\x15a\x01\xB4WP\x81a\0NV[\x82Q\x15a\x01\xC4W\x82Q\x80\x84` \x01\xFD[\x81`@QbF\x1B\xCD`\xE5\x1B\x81R`\x04\x01a\x01'\x91\x90a\x02*V[`\0[\x83\x81\x10\x15a\x01\xF9W\x81\x81\x01Q\x83\x82\x01R` \x01a\x01\xE1V[\x83\x81\x11\x15a\x02\x08W`\0\x84\x84\x01R[PPPPV[`\0\x82Qa\x02 \x81\x84` \x87\x01a\x01\xDEV[\x91\x90\x91\x01\x92\x91PPV[` \x81R`\0\x82Q\x80` \x84\x01Ra\x02I\x81`@\x85\x01` \x87\x01a\x01\xDEV[`\x1F\x01`\x1F\x19\x16\x91\x90\x91\x01`@\x01\x92\x91PPV\xFEAddress: low-level delegate call failed\xA2dipfsX\"\x12 \x01\xC7N\xC5\xE5>\xF09Q\x12\xBBb\xE8/\xFF\xEC\xB5\xDB@Q\xBF\xBF\xB6FXt\xC4\xE4>D^\xFFdsolcC\0\x08\x0C\x003Address: low-level delegate call failed",
+        b"`\x80`@R`@Qa\x04\xE78\x03\x80a\x04\xE7\x839\x81\x01`@\x81\x90Ra\0\"\x91a\x02\xDEV[a\0.\x82\x82`\0a\x005V[PPa\x04\x01V[a\0>\x83a\0aV[`\0\x82Q\x11\x80a\0KWP\x80[\x15a\0\\Wa\0Z\x83\x83a\0\xA1V[P[PPPV[a\0j\x81a\0\xCDV[`@Q`\x01`\x01`\xA0\x1B\x03\x82\x16\x90\x7F\xBC|\xD7Z \xEE'\xFD\x9A\xDE\xBA\xB3 A\xF7U!M\xBCk\xFF\xA9\x0C\xC0\"[9\xDA.\\-;\x90`\0\x90\xA2PV[``a\0\xC6\x83\x83`@Q\x80``\x01`@R\x80`'\x81R` \x01a\x04\xC0`'\x919a\x01\x80V[\x93\x92PPPV[`\x01`\x01`\xA0\x1B\x03\x81\x16;a\x01?W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`-`$\x82\x01R\x7FERC1967: new implementation is n`D\x82\x01Rl\x1B\xDD\x08\x18H\x18\xDB\xDB\x9D\x1C\x98X\xDD`\x9A\x1B`d\x82\x01R`\x84\x01[`@Q\x80\x91\x03\x90\xFD[\x7F6\x08\x94\xA1;\xA1\xA3!\x06g\xC8(I-\xB9\x8D\xCA> v\xCC75\xA9 \xA3\xCAP]8+\xBC\x80T`\x01`\x01`\xA0\x1B\x03\x19\x16`\x01`\x01`\xA0\x1B\x03\x92\x90\x92\x16\x91\x90\x91\x17\x90UV[```\0\x80\x85`\x01`\x01`\xA0\x1B\x03\x16\x85`@Qa\x01\x9D\x91\x90a\x03\xB2V[`\0`@Q\x80\x83\x03\x81\x85Z\xF4\x91PP=\x80`\0\x81\x14a\x01\xD8W`@Q\x91P`\x1F\x19`?=\x01\x16\x82\x01`@R=\x82R=`\0` \x84\x01>a\x01\xDDV[``\x91P[P\x90\x92P\x90Pa\x01\xEF\x86\x83\x83\x87a\x01\xF9V[\x96\x95PPPPPPV[``\x83\x15a\x02hW\x82Q`\0\x03a\x02aW`\x01`\x01`\xA0\x1B\x03\x85\x16;a\x02aW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`\x1D`$\x82\x01R\x7FAddress: call to non-contract\0\0\0`D\x82\x01R`d\x01a\x016V[P\x81a\x02rV[a\x02r\x83\x83a\x02zV[\x94\x93PPPPV[\x81Q\x15a\x02\x8AW\x81Q\x80\x83` \x01\xFD[\x80`@QbF\x1B\xCD`\xE5\x1B\x81R`\x04\x01a\x016\x91\x90a\x03\xCEV[cNH{q`\xE0\x1B`\0R`A`\x04R`$`\0\xFD[`\0[\x83\x81\x10\x15a\x02\xD5W\x81\x81\x01Q\x83\x82\x01R` \x01a\x02\xBDV[PP`\0\x91\x01RV[`\0\x80`@\x83\x85\x03\x12\x15a\x02\xF1W`\0\x80\xFD[\x82Q`\x01`\x01`\xA0\x1B\x03\x81\x16\x81\x14a\x03\x08W`\0\x80\xFD[` \x84\x01Q\x90\x92P`\x01`\x01`@\x1B\x03\x81\x11\x15a\x03$W`\0\x80\xFD[\x83\x01`\x1F\x81\x01\x85\x13a\x035W`\0\x80\xFD[\x80Q`\x01`\x01`@\x1B\x03\x81\x11\x15a\x03NWa\x03Na\x02\xA4V[`@Q`\x1F\x82\x01`\x1F\x19\x90\x81\x16`?\x01\x16\x81\x01`\x01`\x01`@\x1B\x03\x81\x11\x82\x82\x10\x17\x15a\x03|Wa\x03|a\x02\xA4V[`@R\x81\x81R\x82\x82\x01` \x01\x87\x10\x15a\x03\x94W`\0\x80\xFD[a\x03\xA5\x82` \x83\x01` \x86\x01a\x02\xBAV[\x80\x93PPPP\x92P\x92\x90PV[`\0\x82Qa\x03\xC4\x81\x84` \x87\x01a\x02\xBAV[\x91\x90\x91\x01\x92\x91PPV[` \x81R`\0\x82Q\x80` \x84\x01Ra\x03\xED\x81`@\x85\x01` \x87\x01a\x02\xBAV[`\x1F\x01`\x1F\x19\x16\x91\x90\x91\x01`@\x01\x92\x91PPV[`\xB1\x80a\x04\x0F`\09`\0\xF3\xFE`\x80`@R6`\x10W`\x0E`\x13V[\0[`\x0E[`\x1F`\x1B`!V[`XV[V[`\0`S\x7F6\x08\x94\xA1;\xA1\xA3!\x06g\xC8(I-\xB9\x8D\xCA> v\xCC75\xA9 \xA3\xCAP]8+\xBCT`\x01`\x01`\xA0\x1B\x03\x16\x90V[\x90P\x90V[6`\0\x807`\0\x806`\0\x84Z\xF4=`\0\x80>\x80\x80\x15`vW=`\0\xF3[=`\0\xFD\xFE\xA2dipfsX\"\x12 s5\xF0_\\\xC9\r8\xAA\xE9~\x81.\xF9^!6\0\x1B\x0E3\x8E\xDF\xFE\xEEr6)\xD6\xD8\xB6\x81dsolcC\0\x08\x1B\x003Address: low-level delegate call failed",
     );
     /// The runtime bytecode of the contract, as deployed on the network.
     ///
     /// ```text
-    ///0x60806040523661001357610011610017565b005b6100115b610027610022610067565b61009f565b565b606061004e838360405180606001604052806027815260200161025e602791396100c3565b9392505050565b6001600160a01b03163b151590565b90565b600061009a7f360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc546001600160a01b031690565b905090565b3660008037600080366000845af43d6000803e8080156100be573d6000f35b3d6000fd5b60606001600160a01b0384163b6101305760405162461bcd60e51b815260206004820152602660248201527f416464726573733a2064656c65676174652063616c6c20746f206e6f6e2d636f6044820152651b9d1c9858dd60d21b60648201526084015b60405180910390fd5b600080856001600160a01b03168560405161014b919061020e565b600060405180830381855af49150503d8060008114610186576040519150601f19603f3d011682016040523d82523d6000602084013e61018b565b606091505b509150915061019b8282866101a5565b9695505050505050565b606083156101b457508161004e565b8251156101c45782518084602001fd5b8160405162461bcd60e51b8152600401610127919061022a565b60005b838110156101f95781810151838201526020016101e1565b83811115610208576000848401525b50505050565b600082516102208184602087016101de565b9190910192915050565b60208152600082518060208401526102498160408501602087016101de565b601f01601f1916919091016040019291505056fe416464726573733a206c6f772d6c6576656c2064656c65676174652063616c6c206661696c6564a264697066735822122001c74ec5e53ef0395112bb62e82fffecb5db4051bfbfb6465874c4e43e445eff64736f6c634300080c0033
+    ///0x608060405236601057600e6013565b005b600e5b601f601b6021565b6058565b565b600060537f360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc546001600160a01b031690565b905090565b3660008037600080366000845af43d6000803e8080156076573d6000f35b3d6000fdfea26469706673582212207335f05f5cc90d38aae97e812ef95e2136001b0e338edffeee723629d6d8b68164736f6c634300081b0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static DEPLOYED_BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"`\x80`@R6a\0\x13Wa\0\x11a\0\x17V[\0[a\0\x11[a\0'a\0\"a\0gV[a\0\x9FV[V[``a\0N\x83\x83`@Q\x80``\x01`@R\x80`'\x81R` \x01a\x02^`'\x919a\0\xC3V[\x93\x92PPPV[`\x01`\x01`\xA0\x1B\x03\x16;\x15\x15\x90V[\x90V[`\0a\0\x9A\x7F6\x08\x94\xA1;\xA1\xA3!\x06g\xC8(I-\xB9\x8D\xCA> v\xCC75\xA9 \xA3\xCAP]8+\xBCT`\x01`\x01`\xA0\x1B\x03\x16\x90V[\x90P\x90V[6`\0\x807`\0\x806`\0\x84Z\xF4=`\0\x80>\x80\x80\x15a\0\xBEW=`\0\xF3[=`\0\xFD[```\x01`\x01`\xA0\x1B\x03\x84\x16;a\x010W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`&`$\x82\x01R\x7FAddress: delegate call to non-co`D\x82\x01Re\x1B\x9D\x1C\x98X\xDD`\xD2\x1B`d\x82\x01R`\x84\x01[`@Q\x80\x91\x03\x90\xFD[`\0\x80\x85`\x01`\x01`\xA0\x1B\x03\x16\x85`@Qa\x01K\x91\x90a\x02\x0EV[`\0`@Q\x80\x83\x03\x81\x85Z\xF4\x91PP=\x80`\0\x81\x14a\x01\x86W`@Q\x91P`\x1F\x19`?=\x01\x16\x82\x01`@R=\x82R=`\0` \x84\x01>a\x01\x8BV[``\x91P[P\x91P\x91Pa\x01\x9B\x82\x82\x86a\x01\xA5V[\x96\x95PPPPPPV[``\x83\x15a\x01\xB4WP\x81a\0NV[\x82Q\x15a\x01\xC4W\x82Q\x80\x84` \x01\xFD[\x81`@QbF\x1B\xCD`\xE5\x1B\x81R`\x04\x01a\x01'\x91\x90a\x02*V[`\0[\x83\x81\x10\x15a\x01\xF9W\x81\x81\x01Q\x83\x82\x01R` \x01a\x01\xE1V[\x83\x81\x11\x15a\x02\x08W`\0\x84\x84\x01R[PPPPV[`\0\x82Qa\x02 \x81\x84` \x87\x01a\x01\xDEV[\x91\x90\x91\x01\x92\x91PPV[` \x81R`\0\x82Q\x80` \x84\x01Ra\x02I\x81`@\x85\x01` \x87\x01a\x01\xDEV[`\x1F\x01`\x1F\x19\x16\x91\x90\x91\x01`@\x01\x92\x91PPV\xFEAddress: low-level delegate call failed\xA2dipfsX\"\x12 \x01\xC7N\xC5\xE5>\xF09Q\x12\xBBb\xE8/\xFF\xEC\xB5\xDB@Q\xBF\xBF\xB6FXt\xC4\xE4>D^\xFFdsolcC\0\x08\x0C\x003",
+        b"`\x80`@R6`\x10W`\x0E`\x13V[\0[`\x0E[`\x1F`\x1B`!V[`XV[V[`\0`S\x7F6\x08\x94\xA1;\xA1\xA3!\x06g\xC8(I-\xB9\x8D\xCA> v\xCC75\xA9 \xA3\xCAP]8+\xBCT`\x01`\x01`\xA0\x1B\x03\x16\x90V[\x90P\x90V[6`\0\x807`\0\x806`\0\x84Z\xF4=`\0\x80>\x80\x80\x15`vW=`\0\xF3[=`\0\xFD\xFE\xA2dipfsX\"\x12 s5\xF0_\\\xC9\r8\xAA\xE9~\x81.\xF9^!6\0\x1B\x0E3\x8E\xDF\xFE\xEEr6)\xD6\xD8\xB6\x81dsolcC\0\x08\x1B\x003",
     );
     /**Event with signature `AdminChanged(address,address)` and selector `0x7e644d79422f17c01e4894b5f4f588d331ebfa28653d42ae832dc59e38c9798f`.
-    ```solidity
-    event AdminChanged(address previousAdmin, address newAdmin);
-    ```*/
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+```solidity
+event AdminChanged(address previousAdmin, address newAdmin);
+```*/
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     #[derive(Clone)]
     pub struct AdminChanged {
         #[allow(missing_docs)]
@@ -125,7 +135,12 @@ pub mod ERC1967Proxy {
         #[allow(missing_docs)]
         pub newAdmin: alloy::sol_types::private::Address,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         #[automatically_derived]
@@ -134,15 +149,45 @@ pub mod ERC1967Proxy {
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Address,
             );
-            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (alloy_sol_types::sol_data::FixedBytes<32>,);
             const SIGNATURE: &'static str = "AdminChanged(address,address)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
-                alloy_sol_types::private::B256::new([
-                    126u8, 100u8, 77u8, 121u8, 66u8, 47u8, 23u8, 192u8, 30u8, 72u8, 148u8, 181u8,
-                    244u8, 245u8, 136u8, 211u8, 49u8, 235u8, 250u8, 40u8, 101u8, 61u8, 66u8, 174u8,
-                    131u8, 45u8, 197u8, 158u8, 56u8, 201u8, 121u8, 143u8,
-                ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
+                126u8,
+                100u8,
+                77u8,
+                121u8,
+                66u8,
+                47u8,
+                23u8,
+                192u8,
+                30u8,
+                72u8,
+                148u8,
+                181u8,
+                244u8,
+                245u8,
+                136u8,
+                211u8,
+                49u8,
+                235u8,
+                250u8,
+                40u8,
+                101u8,
+                61u8,
+                66u8,
+                174u8,
+                131u8,
+                45u8,
+                197u8,
+                158u8,
+                56u8,
+                201u8,
+                121u8,
+                143u8,
+            ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -160,11 +205,13 @@ pub mod ERC1967Proxy {
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
-                        Self::SIGNATURE,
-                        topics.0,
-                        Self::SIGNATURE_HASH,
-                    ));
+                    return Err(
+                        alloy_sol_types::Error::invalid_event_signature_hash(
+                            Self::SIGNATURE,
+                            topics.0,
+                            Self::SIGNATURE_HASH,
+                        ),
+                    );
                 }
                 Ok(())
             }
@@ -191,7 +238,9 @@ pub mod ERC1967Proxy {
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
+                out[0usize] = alloy_sol_types::abi::token::WordToken(
+                    Self::SIGNATURE_HASH,
+                );
                 Ok(())
             }
         }
@@ -213,33 +262,73 @@ pub mod ERC1967Proxy {
         }
     };
     /**Event with signature `BeaconUpgraded(address)` and selector `0x1cf3b03a6cf19fa2baba4df148e9dcabedea7f8a5c07840e207e5c089be95d3e`.
-    ```solidity
-    event BeaconUpgraded(address indexed beacon);
-    ```*/
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+```solidity
+event BeaconUpgraded(address indexed beacon);
+```*/
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     #[derive(Clone)]
     pub struct BeaconUpgraded {
         #[allow(missing_docs)]
         pub beacon: alloy::sol_types::private::Address,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         #[automatically_derived]
         impl alloy_sol_types::SolEvent for BeaconUpgraded {
             type DataTuple<'a> = ();
-            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (
                 alloy_sol_types::sol_data::FixedBytes<32>,
                 alloy::sol_types::sol_data::Address,
             );
             const SIGNATURE: &'static str = "BeaconUpgraded(address)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
-                alloy_sol_types::private::B256::new([
-                    28u8, 243u8, 176u8, 58u8, 108u8, 241u8, 159u8, 162u8, 186u8, 186u8, 77u8,
-                    241u8, 72u8, 233u8, 220u8, 171u8, 237u8, 234u8, 127u8, 138u8, 92u8, 7u8, 132u8,
-                    14u8, 32u8, 126u8, 92u8, 8u8, 155u8, 233u8, 93u8, 62u8,
-                ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
+                28u8,
+                243u8,
+                176u8,
+                58u8,
+                108u8,
+                241u8,
+                159u8,
+                162u8,
+                186u8,
+                186u8,
+                77u8,
+                241u8,
+                72u8,
+                233u8,
+                220u8,
+                171u8,
+                237u8,
+                234u8,
+                127u8,
+                138u8,
+                92u8,
+                7u8,
+                132u8,
+                14u8,
+                32u8,
+                126u8,
+                92u8,
+                8u8,
+                155u8,
+                233u8,
+                93u8,
+                62u8,
+            ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -254,11 +343,13 @@ pub mod ERC1967Proxy {
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
-                        Self::SIGNATURE,
-                        topics.0,
-                        Self::SIGNATURE_HASH,
-                    ));
+                    return Err(
+                        alloy_sol_types::Error::invalid_event_signature_hash(
+                            Self::SIGNATURE,
+                            topics.0,
+                            Self::SIGNATURE_HASH,
+                        ),
+                    );
                 }
                 Ok(())
             }
@@ -278,7 +369,9 @@ pub mod ERC1967Proxy {
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
+                out[0usize] = alloy_sol_types::abi::token::WordToken(
+                    Self::SIGNATURE_HASH,
+                );
                 out[1usize] = <alloy::sol_types::sol_data::Address as alloy_sol_types::EventTopic>::encode_topic(
                     &self.beacon,
                 );
@@ -303,33 +396,73 @@ pub mod ERC1967Proxy {
         }
     };
     /**Event with signature `Upgraded(address)` and selector `0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b`.
-    ```solidity
-    event Upgraded(address indexed implementation);
-    ```*/
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+```solidity
+event Upgraded(address indexed implementation);
+```*/
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     #[derive(Clone)]
     pub struct Upgraded {
         #[allow(missing_docs)]
         pub implementation: alloy::sol_types::private::Address,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         #[automatically_derived]
         impl alloy_sol_types::SolEvent for Upgraded {
             type DataTuple<'a> = ();
-            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (
                 alloy_sol_types::sol_data::FixedBytes<32>,
                 alloy::sol_types::sol_data::Address,
             );
             const SIGNATURE: &'static str = "Upgraded(address)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
-                alloy_sol_types::private::B256::new([
-                    188u8, 124u8, 215u8, 90u8, 32u8, 238u8, 39u8, 253u8, 154u8, 222u8, 186u8,
-                    179u8, 32u8, 65u8, 247u8, 85u8, 33u8, 77u8, 188u8, 107u8, 255u8, 169u8, 12u8,
-                    192u8, 34u8, 91u8, 57u8, 218u8, 46u8, 92u8, 45u8, 59u8,
-                ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
+                188u8,
+                124u8,
+                215u8,
+                90u8,
+                32u8,
+                238u8,
+                39u8,
+                253u8,
+                154u8,
+                222u8,
+                186u8,
+                179u8,
+                32u8,
+                65u8,
+                247u8,
+                85u8,
+                33u8,
+                77u8,
+                188u8,
+                107u8,
+                255u8,
+                169u8,
+                12u8,
+                192u8,
+                34u8,
+                91u8,
+                57u8,
+                218u8,
+                46u8,
+                92u8,
+                45u8,
+                59u8,
+            ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -337,20 +470,20 @@ pub mod ERC1967Proxy {
                 topics: <Self::TopicList as alloy_sol_types::SolType>::RustType,
                 data: <Self::DataTuple<'_> as alloy_sol_types::SolType>::RustType,
             ) -> Self {
-                Self {
-                    implementation: topics.1,
-                }
+                Self { implementation: topics.1 }
             }
             #[inline]
             fn check_signature(
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
-                        Self::SIGNATURE,
-                        topics.0,
-                        Self::SIGNATURE_HASH,
-                    ));
+                    return Err(
+                        alloy_sol_types::Error::invalid_event_signature_hash(
+                            Self::SIGNATURE,
+                            topics.0,
+                            Self::SIGNATURE_HASH,
+                        ),
+                    );
                 }
                 Ok(())
             }
@@ -370,7 +503,9 @@ pub mod ERC1967Proxy {
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
+                out[0usize] = alloy_sol_types::abi::token::WordToken(
+                    Self::SIGNATURE_HASH,
+                );
                 out[1usize] = <alloy::sol_types::sol_data::Address as alloy_sol_types::EventTopic>::encode_topic(
                     &self.implementation,
                 );
@@ -395,10 +530,10 @@ pub mod ERC1967Proxy {
         }
     };
     /**Constructor`.
-    ```solidity
-    constructor(address _logic, bytes _data) payable;
-    ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+```solidity
+constructor(address _logic, bytes _data) payable;
+```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct constructorCall {
         pub _logic: alloy::sol_types::private::Address,
@@ -419,7 +554,9 @@ pub mod ERC1967Proxy {
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -450,7 +587,9 @@ pub mod ERC1967Proxy {
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Bytes,
             );
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             #[inline]
             fn new<'a>(
                 tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
@@ -486,19 +625,106 @@ pub mod ERC1967Proxy {
         /// Prefer using `SolInterface` methods instead.
         pub const SELECTORS: &'static [[u8; 32usize]] = &[
             [
-                28u8, 243u8, 176u8, 58u8, 108u8, 241u8, 159u8, 162u8, 186u8, 186u8, 77u8, 241u8,
-                72u8, 233u8, 220u8, 171u8, 237u8, 234u8, 127u8, 138u8, 92u8, 7u8, 132u8, 14u8,
-                32u8, 126u8, 92u8, 8u8, 155u8, 233u8, 93u8, 62u8,
+                28u8,
+                243u8,
+                176u8,
+                58u8,
+                108u8,
+                241u8,
+                159u8,
+                162u8,
+                186u8,
+                186u8,
+                77u8,
+                241u8,
+                72u8,
+                233u8,
+                220u8,
+                171u8,
+                237u8,
+                234u8,
+                127u8,
+                138u8,
+                92u8,
+                7u8,
+                132u8,
+                14u8,
+                32u8,
+                126u8,
+                92u8,
+                8u8,
+                155u8,
+                233u8,
+                93u8,
+                62u8,
             ],
             [
-                126u8, 100u8, 77u8, 121u8, 66u8, 47u8, 23u8, 192u8, 30u8, 72u8, 148u8, 181u8,
-                244u8, 245u8, 136u8, 211u8, 49u8, 235u8, 250u8, 40u8, 101u8, 61u8, 66u8, 174u8,
-                131u8, 45u8, 197u8, 158u8, 56u8, 201u8, 121u8, 143u8,
+                126u8,
+                100u8,
+                77u8,
+                121u8,
+                66u8,
+                47u8,
+                23u8,
+                192u8,
+                30u8,
+                72u8,
+                148u8,
+                181u8,
+                244u8,
+                245u8,
+                136u8,
+                211u8,
+                49u8,
+                235u8,
+                250u8,
+                40u8,
+                101u8,
+                61u8,
+                66u8,
+                174u8,
+                131u8,
+                45u8,
+                197u8,
+                158u8,
+                56u8,
+                201u8,
+                121u8,
+                143u8,
             ],
             [
-                188u8, 124u8, 215u8, 90u8, 32u8, 238u8, 39u8, 253u8, 154u8, 222u8, 186u8, 179u8,
-                32u8, 65u8, 247u8, 85u8, 33u8, 77u8, 188u8, 107u8, 255u8, 169u8, 12u8, 192u8, 34u8,
-                91u8, 57u8, 218u8, 46u8, 92u8, 45u8, 59u8,
+                188u8,
+                124u8,
+                215u8,
+                90u8,
+                32u8,
+                238u8,
+                39u8,
+                253u8,
+                154u8,
+                222u8,
+                186u8,
+                179u8,
+                32u8,
+                65u8,
+                247u8,
+                85u8,
+                33u8,
+                77u8,
+                188u8,
+                107u8,
+                255u8,
+                169u8,
+                12u8,
+                192u8,
+                34u8,
+                91u8,
+                57u8,
+                218u8,
+                46u8,
+                92u8,
+                45u8,
+                59u8,
             ],
         ];
     }
@@ -514,29 +740,39 @@ pub mod ERC1967Proxy {
             match topics.first().copied() {
                 Some(<AdminChanged as alloy_sol_types::SolEvent>::SIGNATURE_HASH) => {
                     <AdminChanged as alloy_sol_types::SolEvent>::decode_raw_log(
-                        topics, data, validate,
-                    )
-                    .map(Self::AdminChanged)
+                            topics,
+                            data,
+                            validate,
+                        )
+                        .map(Self::AdminChanged)
                 }
                 Some(<BeaconUpgraded as alloy_sol_types::SolEvent>::SIGNATURE_HASH) => {
                     <BeaconUpgraded as alloy_sol_types::SolEvent>::decode_raw_log(
-                        topics, data, validate,
-                    )
-                    .map(Self::BeaconUpgraded)
+                            topics,
+                            data,
+                            validate,
+                        )
+                        .map(Self::BeaconUpgraded)
                 }
                 Some(<Upgraded as alloy_sol_types::SolEvent>::SIGNATURE_HASH) => {
-                    <Upgraded as alloy_sol_types::SolEvent>::decode_raw_log(topics, data, validate)
+                    <Upgraded as alloy_sol_types::SolEvent>::decode_raw_log(
+                            topics,
+                            data,
+                            validate,
+                        )
                         .map(Self::Upgraded)
                 }
-                _ => alloy_sol_types::private::Err(alloy_sol_types::Error::InvalidLog {
-                    name: <Self as alloy_sol_types::SolEventInterface>::NAME,
-                    log: alloy_sol_types::private::Box::new(
-                        alloy_sol_types::private::LogData::new_unchecked(
-                            topics.to_vec(),
-                            data.to_vec().into(),
+                _ => {
+                    alloy_sol_types::private::Err(alloy_sol_types::Error::InvalidLog {
+                        name: <Self as alloy_sol_types::SolEventInterface>::NAME,
+                        log: alloy_sol_types::private::Box::new(
+                            alloy_sol_types::private::LogData::new_unchecked(
+                                topics.to_vec(),
+                                data.to_vec().into(),
+                            ),
                         ),
-                    ),
-                }),
+                    })
+                }
             }
         }
     }
@@ -550,7 +786,9 @@ pub mod ERC1967Proxy {
                 Self::BeaconUpgraded(inner) => {
                     alloy_sol_types::private::IntoLogData::to_log_data(inner)
                 }
-                Self::Upgraded(inner) => alloy_sol_types::private::IntoLogData::to_log_data(inner),
+                Self::Upgraded(inner) => {
+                    alloy_sol_types::private::IntoLogData::to_log_data(inner)
+                }
             }
         }
         fn into_log_data(self) -> alloy_sol_types::private::LogData {
@@ -570,7 +808,7 @@ pub mod ERC1967Proxy {
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`ERC1967Proxy`](self) contract instance.
 
-    See the [wrapper's documentation](`ERC1967ProxyInstance`) for more details.*/
+See the [wrapper's documentation](`ERC1967ProxyInstance`) for more details.*/
     #[inline]
     pub const fn new<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -584,9 +822,9 @@ pub mod ERC1967Proxy {
     }
     /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-    Returns a new instance of the contract, if the deployment was successful.
+Returns a new instance of the contract, if the deployment was successful.
 
-    For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
     #[inline]
     pub fn deploy<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -596,15 +834,16 @@ pub mod ERC1967Proxy {
         provider: P,
         _logic: alloy::sol_types::private::Address,
         _data: alloy::sol_types::private::Bytes,
-    ) -> impl ::core::future::Future<Output = alloy_contract::Result<ERC1967ProxyInstance<T, P, N>>>
-    {
+    ) -> impl ::core::future::Future<
+        Output = alloy_contract::Result<ERC1967ProxyInstance<T, P, N>>,
+    > {
         ERC1967ProxyInstance::<T, P, N>::deploy(provider, _logic, _data)
     }
     /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-    and constructor arguments, if any.
+and constructor arguments, if any.
 
-    This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-    the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     #[inline]
     pub fn deploy_builder<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -619,15 +858,15 @@ pub mod ERC1967Proxy {
     }
     /**A [`ERC1967Proxy`](self) instance.
 
-    Contains type-safe methods for interacting with an on-chain instance of the
-    [`ERC1967Proxy`](self) contract located at a given `address`, using a given
-    provider `P`.
+Contains type-safe methods for interacting with an on-chain instance of the
+[`ERC1967Proxy`](self) contract located at a given `address`, using a given
+provider `P`.
 
-    If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
-    documentation on how to provide it), the `deploy` and `deploy_builder` methods can
-    be used to deploy a new instance of the contract.
+If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
+documentation on how to provide it), the `deploy` and `deploy_builder` methods can
+be used to deploy a new instance of the contract.
 
-    See the [module-level documentation](self) for all the available methods.*/
+See the [module-level documentation](self) for all the available methods.*/
     #[derive(Clone)]
     pub struct ERC1967ProxyInstance<T, P, N = alloy_contract::private::Ethereum> {
         address: alloy_sol_types::private::Address,
@@ -638,24 +877,24 @@ pub mod ERC1967Proxy {
     impl<T, P, N> ::core::fmt::Debug for ERC1967ProxyInstance<T, P, N> {
         #[inline]
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-            f.debug_tuple("ERC1967ProxyInstance")
-                .field(&self.address)
-                .finish()
+            f.debug_tuple("ERC1967ProxyInstance").field(&self.address).finish()
         }
     }
     /// Instantiation and getters/setters.
     #[automatically_derived]
     impl<
-            T: alloy_contract::private::Transport + ::core::clone::Clone,
-            P: alloy_contract::private::Provider<T, N>,
-            N: alloy_contract::private::Network,
-        > ERC1967ProxyInstance<T, P, N>
-    {
+        T: alloy_contract::private::Transport + ::core::clone::Clone,
+        P: alloy_contract::private::Provider<T, N>,
+        N: alloy_contract::private::Network,
+    > ERC1967ProxyInstance<T, P, N> {
         /**Creates a new wrapper around an on-chain [`ERC1967Proxy`](self) contract instance.
 
-        See the [wrapper's documentation](`ERC1967ProxyInstance`) for more details.*/
+See the [wrapper's documentation](`ERC1967ProxyInstance`) for more details.*/
         #[inline]
-        pub const fn new(address: alloy_sol_types::private::Address, provider: P) -> Self {
+        pub const fn new(
+            address: alloy_sol_types::private::Address,
+            provider: P,
+        ) -> Self {
             Self {
                 address,
                 provider,
@@ -664,9 +903,9 @@ pub mod ERC1967Proxy {
         }
         /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-        Returns a new instance of the contract, if the deployment was successful.
+Returns a new instance of the contract, if the deployment was successful.
 
-        For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
         #[inline]
         pub async fn deploy(
             provider: P,
@@ -678,10 +917,10 @@ pub mod ERC1967Proxy {
             Ok(Self::new(contract_address, call_builder.provider))
         }
         /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-        and constructor arguments, if any.
+and constructor arguments, if any.
 
-        This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-        the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         #[inline]
         pub fn deploy_builder(
             provider: P,
@@ -692,13 +931,12 @@ pub mod ERC1967Proxy {
                 provider,
                 [
                     &BYTECODE[..],
-                    &alloy_sol_types::SolConstructor::abi_encode(&constructorCall {
-                        _logic,
-                        _data,
-                    })[..],
+                    &alloy_sol_types::SolConstructor::abi_encode(
+                        &constructorCall { _logic, _data },
+                    )[..],
                 ]
-                .concat()
-                .into(),
+                    .concat()
+                    .into(),
             )
         }
         /// Returns a reference to the address.
@@ -736,11 +974,10 @@ pub mod ERC1967Proxy {
     /// Function calls.
     #[automatically_derived]
     impl<
-            T: alloy_contract::private::Transport + ::core::clone::Clone,
-            P: alloy_contract::private::Provider<T, N>,
-            N: alloy_contract::private::Network,
-        > ERC1967ProxyInstance<T, P, N>
-    {
+        T: alloy_contract::private::Transport + ::core::clone::Clone,
+        P: alloy_contract::private::Provider<T, N>,
+        N: alloy_contract::private::Network,
+    > ERC1967ProxyInstance<T, P, N> {
         /// Creates a new call builder using this contract instance's provider and address.
         ///
         /// Note that the call can be any function call, not just those defined in this
@@ -755,11 +992,10 @@ pub mod ERC1967Proxy {
     /// Event filters.
     #[automatically_derived]
     impl<
-            T: alloy_contract::private::Transport + ::core::clone::Clone,
-            P: alloy_contract::private::Provider<T, N>,
-            N: alloy_contract::private::Network,
-        > ERC1967ProxyInstance<T, P, N>
-    {
+        T: alloy_contract::private::Transport + ::core::clone::Clone,
+        P: alloy_contract::private::Provider<T, N>,
+        N: alloy_contract::private::Network,
+    > ERC1967ProxyInstance<T, P, N> {
         /// Creates a new event filter using this contract instance's provider and address.
         ///
         /// Note that the type can be any event, not just those defined in this contract.
@@ -770,11 +1006,15 @@ pub mod ERC1967Proxy {
             alloy_contract::Event::new_sol(&self.provider, &self.address)
         }
         ///Creates a new event filter for the [`AdminChanged`] event.
-        pub fn AdminChanged_filter(&self) -> alloy_contract::Event<T, &P, AdminChanged, N> {
+        pub fn AdminChanged_filter(
+            &self,
+        ) -> alloy_contract::Event<T, &P, AdminChanged, N> {
             self.event_filter::<AdminChanged>()
         }
         ///Creates a new event filter for the [`BeaconUpgraded`] event.
-        pub fn BeaconUpgraded_filter(&self) -> alloy_contract::Event<T, &P, BeaconUpgraded, N> {
+        pub fn BeaconUpgraded_filter(
+            &self,
+        ) -> alloy_contract::Event<T, &P, BeaconUpgraded, N> {
             self.event_filter::<BeaconUpgraded>()
         }
         ///Creates a new event filter for the [`Upgraded`] event.
