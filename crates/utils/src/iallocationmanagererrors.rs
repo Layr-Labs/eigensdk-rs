@@ -6,7 +6,8 @@ interface IAllocationManagerErrors {
     error AlreadySlashedForTimestamp();
     error InputArrayLengthMismatch();
     error InsufficientAllocatableMagnitude();
-    error InvalidExpectedMaxMagnitude();
+    error InvalidAllocationDelay();
+    error InvalidExpectedTotalMagnitude();
     error InvalidOperator();
     error InvalidOperatorSet();
     error InvalidTimestamp();
@@ -42,7 +43,12 @@ interface IAllocationManagerErrors {
   },
   {
     "type": "error",
-    "name": "InvalidExpectedMaxMagnitude",
+    "name": "InvalidAllocationDelay",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "InvalidExpectedTotalMagnitude",
     "inputs": []
   },
   {
@@ -334,13 +340,13 @@ error InsufficientAllocatableMagnitude();
             }
         }
     };
-    /**Custom error with signature `InvalidExpectedMaxMagnitude()` and selector `0x982f66b3`.
+    /**Custom error with signature `InvalidAllocationDelay()` and selector `0xdd181815`.
 ```solidity
-error InvalidExpectedMaxMagnitude();
+error InvalidAllocationDelay();
 ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
-    pub struct InvalidExpectedMaxMagnitude {}
+    pub struct InvalidAllocationDelay {}
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -366,28 +372,92 @@ error InvalidExpectedMaxMagnitude();
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<InvalidExpectedMaxMagnitude>
+        impl ::core::convert::From<InvalidAllocationDelay> for UnderlyingRustTuple<'_> {
+            fn from(value: InvalidAllocationDelay) -> Self {
+                ()
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for InvalidAllocationDelay {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolError for InvalidAllocationDelay {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "InvalidAllocationDelay()";
+            const SELECTOR: [u8; 4] = [221u8, 24u8, 24u8, 21u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+        }
+    };
+    /**Custom error with signature `InvalidExpectedTotalMagnitude()` and selector `0xe8fe818c`.
+```solidity
+error InvalidExpectedTotalMagnitude();
+```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct InvalidExpectedTotalMagnitude {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(
+            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+        ) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<InvalidExpectedTotalMagnitude>
         for UnderlyingRustTuple<'_> {
-            fn from(value: InvalidExpectedMaxMagnitude) -> Self {
+            fn from(value: InvalidExpectedTotalMagnitude) -> Self {
                 ()
             }
         }
         #[automatically_derived]
         #[doc(hidden)]
         impl ::core::convert::From<UnderlyingRustTuple<'_>>
-        for InvalidExpectedMaxMagnitude {
+        for InvalidExpectedTotalMagnitude {
             fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                 Self {}
             }
         }
         #[automatically_derived]
-        impl alloy_sol_types::SolError for InvalidExpectedMaxMagnitude {
+        impl alloy_sol_types::SolError for InvalidExpectedTotalMagnitude {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
             type Token<'a> = <Self::Parameters<
                 'a,
             > as alloy_sol_types::SolType>::Token<'a>;
-            const SIGNATURE: &'static str = "InvalidExpectedMaxMagnitude()";
-            const SELECTOR: [u8; 4] = [152u8, 47u8, 102u8, 179u8];
+            const SIGNATURE: &'static str = "InvalidExpectedTotalMagnitude()";
+            const SELECTOR: [u8; 4] = [232u8, 254u8, 129u8, 140u8];
             #[inline]
             fn new<'a>(
                 tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
@@ -1177,7 +1247,8 @@ error UninitializedAllocationDelay();
         AlreadySlashedForTimestamp(AlreadySlashedForTimestamp),
         InputArrayLengthMismatch(InputArrayLengthMismatch),
         InsufficientAllocatableMagnitude(InsufficientAllocatableMagnitude),
-        InvalidExpectedMaxMagnitude(InvalidExpectedMaxMagnitude),
+        InvalidAllocationDelay(InvalidAllocationDelay),
+        InvalidExpectedTotalMagnitude(InvalidExpectedTotalMagnitude),
         InvalidOperator(InvalidOperator),
         InvalidOperatorSet(InvalidOperatorSet),
         InvalidTimestamp(InvalidTimestamp),
@@ -1208,12 +1279,13 @@ error UninitializedAllocationDelay();
             [78u8, 153u8, 230u8, 207u8],
             [126u8, 197u8, 193u8, 84u8],
             [140u8, 12u8, 47u8, 38u8],
-            [152u8, 47u8, 102u8, 179u8],
             [171u8, 69u8, 137u8, 35u8],
             [183u8, 208u8, 148u8, 151u8],
             [202u8, 117u8, 57u8, 76u8],
             [204u8, 234u8, 158u8, 111u8],
             [216u8, 252u8, 190u8, 48u8],
+            [221u8, 24u8, 24u8, 21u8],
+            [232u8, 254u8, 129u8, 140u8],
             [247u8, 57u8, 88u8, 155u8],
             [250u8, 85u8, 252u8, 129u8],
         ];
@@ -1222,7 +1294,7 @@ error UninitializedAllocationDelay();
     impl alloy_sol_types::SolInterface for IAllocationManagerErrorsErrors {
         const NAME: &'static str = "IAllocationManagerErrorsErrors";
         const MIN_DATA_LENGTH: usize = 0usize;
-        const COUNT: usize = 16usize;
+        const COUNT: usize = 17usize;
         #[inline]
         fn selector(&self) -> [u8; 4] {
             match self {
@@ -1235,8 +1307,11 @@ error UninitializedAllocationDelay();
                 Self::InsufficientAllocatableMagnitude(_) => {
                     <InsufficientAllocatableMagnitude as alloy_sol_types::SolError>::SELECTOR
                 }
-                Self::InvalidExpectedMaxMagnitude(_) => {
-                    <InvalidExpectedMaxMagnitude as alloy_sol_types::SolError>::SELECTOR
+                Self::InvalidAllocationDelay(_) => {
+                    <InvalidAllocationDelay as alloy_sol_types::SolError>::SELECTOR
+                }
+                Self::InvalidExpectedTotalMagnitude(_) => {
+                    <InvalidExpectedTotalMagnitude as alloy_sol_types::SolError>::SELECTOR
                 }
                 Self::InvalidOperator(_) => {
                     <InvalidOperator as alloy_sol_types::SolError>::SELECTOR
@@ -1400,21 +1475,6 @@ error UninitializedAllocationDelay();
                     SameMagnitude
                 },
                 {
-                    fn InvalidExpectedMaxMagnitude(
-                        data: &[u8],
-                        validate: bool,
-                    ) -> alloy_sol_types::Result<IAllocationManagerErrorsErrors> {
-                        <InvalidExpectedMaxMagnitude as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(
-                                IAllocationManagerErrorsErrors::InvalidExpectedMaxMagnitude,
-                            )
-                    }
-                    InvalidExpectedMaxMagnitude
-                },
-                {
                     fn AlreadySlashedForTimestamp(
                         data: &[u8],
                         validate: bool,
@@ -1486,6 +1546,34 @@ error UninitializedAllocationDelay();
                     ModificationAlreadyPending
                 },
                 {
+                    fn InvalidAllocationDelay(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<IAllocationManagerErrorsErrors> {
+                        <InvalidAllocationDelay as alloy_sol_types::SolError>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
+                            .map(IAllocationManagerErrorsErrors::InvalidAllocationDelay)
+                    }
+                    InvalidAllocationDelay
+                },
+                {
+                    fn InvalidExpectedTotalMagnitude(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<IAllocationManagerErrorsErrors> {
+                        <InvalidExpectedTotalMagnitude as alloy_sol_types::SolError>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
+                            .map(
+                                IAllocationManagerErrorsErrors::InvalidExpectedTotalMagnitude,
+                            )
+                    }
+                    InvalidExpectedTotalMagnitude
+                },
+                {
                     fn OnlyDelegationManager(
                         data: &[u8],
                         validate: bool,
@@ -1542,8 +1630,13 @@ error UninitializedAllocationDelay();
                         inner,
                     )
                 }
-                Self::InvalidExpectedMaxMagnitude(inner) => {
-                    <InvalidExpectedMaxMagnitude as alloy_sol_types::SolError>::abi_encoded_size(
+                Self::InvalidAllocationDelay(inner) => {
+                    <InvalidAllocationDelay as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
+                }
+                Self::InvalidExpectedTotalMagnitude(inner) => {
+                    <InvalidExpectedTotalMagnitude as alloy_sol_types::SolError>::abi_encoded_size(
                         inner,
                     )
                 }
@@ -1626,8 +1719,14 @@ error UninitializedAllocationDelay();
                         out,
                     )
                 }
-                Self::InvalidExpectedMaxMagnitude(inner) => {
-                    <InvalidExpectedMaxMagnitude as alloy_sol_types::SolError>::abi_encode_raw(
+                Self::InvalidAllocationDelay(inner) => {
+                    <InvalidAllocationDelay as alloy_sol_types::SolError>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
+                Self::InvalidExpectedTotalMagnitude(inner) => {
+                    <InvalidExpectedTotalMagnitude as alloy_sol_types::SolError>::abi_encode_raw(
                         inner,
                         out,
                     )

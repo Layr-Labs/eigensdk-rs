@@ -4,7 +4,7 @@
 ```solidity
 library IDelegationManagerTypes {
     struct OperatorDetails { address __deprecated_earningsReceiver; address delegationApprover; uint32 __deprecated_stakerOptOutWindowBlocks; }
-    struct Withdrawal { address staker; address delegatedTo; address withdrawer; uint256 nonce; uint32 startTimestamp; address[] strategies; uint256[] scaledShares; }
+    struct Withdrawal { address staker; address delegatedTo; address withdrawer; uint256 nonce; uint32 startTimestamp; address[] strategies; uint256[] scaledSharesToWithdraw; }
 }
 ```*/
 #[allow(
@@ -263,7 +263,7 @@ struct OperatorDetails { address __deprecated_earningsReceiver; address delegati
         }
     };
     /**```solidity
-struct Withdrawal { address staker; address delegatedTo; address withdrawer; uint256 nonce; uint32 startTimestamp; address[] strategies; uint256[] scaledShares; }
+struct Withdrawal { address staker; address delegatedTo; address withdrawer; uint256 nonce; uint32 startTimestamp; address[] strategies; uint256[] scaledSharesToWithdraw; }
 ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -276,7 +276,7 @@ struct Withdrawal { address staker; address delegatedTo; address withdrawer; uin
         pub strategies: alloy::sol_types::private::Vec<
             alloy::sol_types::private::Address,
         >,
-        pub scaledShares: alloy::sol_types::private::Vec<
+        pub scaledSharesToWithdraw: alloy::sol_types::private::Vec<
             alloy::sol_types::private::primitives::aliases::U256,
         >,
     }
@@ -332,7 +332,7 @@ struct Withdrawal { address staker; address delegatedTo; address withdrawer; uin
                     value.nonce,
                     value.startTimestamp,
                     value.strategies,
-                    value.scaledShares,
+                    value.scaledSharesToWithdraw,
                 )
             }
         }
@@ -347,7 +347,7 @@ struct Withdrawal { address staker; address delegatedTo; address withdrawer; uin
                     nonce: tuple.3,
                     startTimestamp: tuple.4,
                     strategies: tuple.5,
-                    scaledShares: tuple.6,
+                    scaledSharesToWithdraw: tuple.6,
                 }
             }
         }
@@ -380,7 +380,9 @@ struct Withdrawal { address staker; address delegatedTo; address withdrawer; uin
                     > as alloy_sol_types::SolType>::tokenize(&self.strategies),
                     <alloy::sol_types::sol_data::Array<
                         alloy::sol_types::sol_data::Uint<256>,
-                    > as alloy_sol_types::SolType>::tokenize(&self.scaledShares),
+                    > as alloy_sol_types::SolType>::tokenize(
+                        &self.scaledSharesToWithdraw,
+                    ),
                 )
             }
             #[inline]
@@ -455,7 +457,7 @@ struct Withdrawal { address staker; address delegatedTo; address withdrawer; uin
             #[inline]
             fn eip712_root_type() -> alloy_sol_types::private::Cow<'static, str> {
                 alloy_sol_types::private::Cow::Borrowed(
-                    "Withdrawal(address staker,address delegatedTo,address withdrawer,uint256 nonce,uint32 startTimestamp,address[] strategies,uint256[] scaledShares)",
+                    "Withdrawal(address staker,address delegatedTo,address withdrawer,uint256 nonce,uint32 startTimestamp,address[] strategies,uint256[] scaledSharesToWithdraw)",
                 )
             }
             #[inline]
@@ -499,7 +501,9 @@ struct Withdrawal { address staker; address delegatedTo; address withdrawer; uin
                         .0,
                     <alloy::sol_types::sol_data::Array<
                         alloy::sol_types::sol_data::Uint<256>,
-                    > as alloy_sol_types::SolType>::eip712_data_word(&self.scaledShares)
+                    > as alloy_sol_types::SolType>::eip712_data_word(
+                            &self.scaledSharesToWithdraw,
+                        )
                         .0,
                 ]
                     .concat()
@@ -535,7 +539,7 @@ struct Withdrawal { address staker; address delegatedTo; address withdrawer; uin
                     + <alloy::sol_types::sol_data::Array<
                         alloy::sol_types::sol_data::Uint<256>,
                     > as alloy_sol_types::EventTopic>::topic_preimage_length(
-                        &rust.scaledShares,
+                        &rust.scaledSharesToWithdraw,
                     )
             }
             #[inline]
@@ -579,7 +583,7 @@ struct Withdrawal { address staker; address delegatedTo; address withdrawer; uin
                 <alloy::sol_types::sol_data::Array<
                     alloy::sol_types::sol_data::Uint<256>,
                 > as alloy_sol_types::EventTopic>::encode_topic_preimage(
-                    &rust.scaledShares,
+                    &rust.scaledSharesToWithdraw,
                     out,
                 );
             }
@@ -749,7 +753,7 @@ library IDelegationManagerTypes {
         uint256 nonce;
         uint32 startTimestamp;
         address[] strategies;
-        uint256[] scaledShares;
+        uint256[] scaledSharesToWithdraw;
     }
 }
 
@@ -762,7 +766,7 @@ interface IDelegationManagerEvents {
     event OperatorSharesDecreased(address indexed operator, address staker, address strategy, uint256 shares);
     event OperatorSharesIncreased(address indexed operator, address staker, address strategy, uint256 shares);
     event SlashingWithdrawalCompleted(bytes32 withdrawalRoot);
-    event SlashingWithdrawalQueued(bytes32 withdrawalRoot, IDelegationManagerTypes.Withdrawal withdrawal, uint256[] sharesToWithdraw);
+    event SlashingWithdrawalQueued(bytes32 withdrawalRoot, IDelegationManagerTypes.Withdrawal withdrawal);
     event StakerDelegated(address indexed staker, address indexed operator);
     event StakerForceUndelegated(address indexed staker, address indexed operator);
     event StakerUndelegated(address indexed staker, address indexed operator);
@@ -1029,17 +1033,11 @@ interface IDelegationManagerEvents {
             "internalType": "contract IStrategy[]"
           },
           {
-            "name": "scaledShares",
+            "name": "scaledSharesToWithdraw",
             "type": "uint256[]",
             "internalType": "uint256[]"
           }
         ]
-      },
-      {
-        "name": "sharesToWithdraw",
-        "type": "uint256[]",
-        "indexed": false,
-        "internalType": "uint256[]"
       }
     ],
     "anonymous": false
@@ -2324,9 +2322,9 @@ event SlashingWithdrawalCompleted(bytes32 withdrawalRoot);
             }
         }
     };
-    /**Event with signature `SlashingWithdrawalQueued(bytes32,(address,address,address,uint256,uint32,address[],uint256[]),uint256[])` and selector `0x26b2aae26516e8719ef50ea2f6831a2efbd4e37dccdf0f6936b27bc08e793e30`.
+    /**Event with signature `SlashingWithdrawalQueued(bytes32,(address,address,address,uint256,uint32,address[],uint256[]))` and selector `0x58883f0678ff43a2c049e6a3a7a8b9b0e9062959f3a99192505888193a0c5fed`.
 ```solidity
-event SlashingWithdrawalQueued(bytes32 withdrawalRoot, IDelegationManagerTypes.Withdrawal withdrawal, uint256[] sharesToWithdraw);
+event SlashingWithdrawalQueued(bytes32 withdrawalRoot, IDelegationManagerTypes.Withdrawal withdrawal);
 ```*/
     #[allow(
         non_camel_case_types,
@@ -2340,10 +2338,6 @@ event SlashingWithdrawalQueued(bytes32 withdrawalRoot, IDelegationManagerTypes.W
         pub withdrawalRoot: alloy::sol_types::private::FixedBytes<32>,
         #[allow(missing_docs)]
         pub withdrawal: <IDelegationManagerTypes::Withdrawal as alloy::sol_types::SolType>::RustType,
-        #[allow(missing_docs)]
-        pub sharesToWithdraw: alloy::sol_types::private::Vec<
-            alloy::sol_types::private::primitives::aliases::U256,
-        >,
     }
     #[allow(
         non_camel_case_types,
@@ -2358,46 +2352,45 @@ event SlashingWithdrawalQueued(bytes32 withdrawalRoot, IDelegationManagerTypes.W
             type DataTuple<'a> = (
                 alloy::sol_types::sol_data::FixedBytes<32>,
                 IDelegationManagerTypes::Withdrawal,
-                alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::Uint<256>>,
             );
             type DataToken<'a> = <Self::DataTuple<
                 'a,
             > as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (alloy_sol_types::sol_data::FixedBytes<32>,);
-            const SIGNATURE: &'static str = "SlashingWithdrawalQueued(bytes32,(address,address,address,uint256,uint32,address[],uint256[]),uint256[])";
+            const SIGNATURE: &'static str = "SlashingWithdrawalQueued(bytes32,(address,address,address,uint256,uint32,address[],uint256[]))";
             const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
-                38u8,
-                178u8,
-                170u8,
-                226u8,
-                101u8,
-                22u8,
-                232u8,
-                113u8,
-                158u8,
-                245u8,
-                14u8,
+                88u8,
+                136u8,
+                63u8,
+                6u8,
+                120u8,
+                255u8,
+                67u8,
                 162u8,
-                246u8,
-                131u8,
-                26u8,
-                46u8,
-                251u8,
-                212u8,
-                227u8,
-                125u8,
-                204u8,
-                223u8,
-                15u8,
-                105u8,
-                54u8,
-                178u8,
-                123u8,
                 192u8,
-                142u8,
-                121u8,
-                62u8,
-                48u8,
+                73u8,
+                230u8,
+                163u8,
+                167u8,
+                168u8,
+                185u8,
+                176u8,
+                233u8,
+                6u8,
+                41u8,
+                89u8,
+                243u8,
+                169u8,
+                145u8,
+                146u8,
+                80u8,
+                88u8,
+                136u8,
+                25u8,
+                58u8,
+                12u8,
+                95u8,
+                237u8,
             ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
@@ -2409,7 +2402,6 @@ event SlashingWithdrawalQueued(bytes32 withdrawalRoot, IDelegationManagerTypes.W
                 Self {
                     withdrawalRoot: data.0,
                     withdrawal: data.1,
-                    sharesToWithdraw: data.2,
                 }
             }
             #[inline]
@@ -2436,9 +2428,6 @@ event SlashingWithdrawalQueued(bytes32 withdrawalRoot, IDelegationManagerTypes.W
                     <IDelegationManagerTypes::Withdrawal as alloy_sol_types::SolType>::tokenize(
                         &self.withdrawal,
                     ),
-                    <alloy::sol_types::sol_data::Array<
-                        alloy::sol_types::sol_data::Uint<256>,
-                    > as alloy_sol_types::SolType>::tokenize(&self.sharesToWithdraw),
                 )
             }
             #[inline]
@@ -3034,38 +3023,38 @@ event StakerUndelegated(address indexed staker, address indexed operator);
                 0u8,
             ],
             [
-                38u8,
-                178u8,
-                170u8,
-                226u8,
-                101u8,
-                22u8,
-                232u8,
-                113u8,
-                158u8,
-                245u8,
-                14u8,
+                88u8,
+                136u8,
+                63u8,
+                6u8,
+                120u8,
+                255u8,
+                67u8,
                 162u8,
-                246u8,
-                131u8,
-                26u8,
-                46u8,
-                251u8,
-                212u8,
-                227u8,
-                125u8,
-                204u8,
-                223u8,
-                15u8,
-                105u8,
-                54u8,
-                178u8,
-                123u8,
                 192u8,
-                142u8,
-                121u8,
-                62u8,
-                48u8,
+                73u8,
+                230u8,
+                163u8,
+                167u8,
+                168u8,
+                185u8,
+                176u8,
+                233u8,
+                6u8,
+                41u8,
+                89u8,
+                243u8,
+                169u8,
+                145u8,
+                146u8,
+                80u8,
+                88u8,
+                136u8,
+                25u8,
+                58u8,
+                12u8,
+                95u8,
+                237u8,
             ],
             [
                 105u8,

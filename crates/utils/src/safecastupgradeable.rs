@@ -21,22 +21,22 @@ pub mod SafeCastUpgradeable {
     /// The creation / init bytecode of the contract.
     ///
     /// ```text
-    ///0x60566037600b82828239805160001a607314602a57634e487b7160e01b600052600060045260246000fd5b30600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600080fdfea2646970667358221220812ee6d6f13fbb99e72df7ffc279cf0a997210049cad52ff48c94c0c921c0ab864736f6c634300081b0033
+    ///0x60556032600b8282823980515f1a607314602657634e487b7160e01b5f525f60045260245ffd5b305f52607381538281f3fe730000000000000000000000000000000000000000301460806040525f5ffdfea26469706673582212204268ce43d18745bf9b995454b2258a7a0ad5a36ffc465fc9591b21d9c6ffd0bc64736f6c634300081b0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"`V`7`\x0B\x82\x82\x829\x80Q`\0\x1A`s\x14`*WcNH{q`\xE0\x1B`\0R`\0`\x04R`$`\0\xFD[0`\0R`s\x81S\x82\x81\xF3\xFEs\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x000\x14`\x80`@R`\0\x80\xFD\xFE\xA2dipfsX\"\x12 \x81.\xE6\xD6\xF1?\xBB\x99\xE7-\xF7\xFF\xC2y\xCF\n\x99r\x10\x04\x9C\xADR\xFFH\xC9L\x0C\x92\x1C\n\xB8dsolcC\0\x08\x1B\x003",
+        b"`U`2`\x0B\x82\x82\x829\x80Q_\x1A`s\x14`&WcNH{q`\xE0\x1B_R_`\x04R`$_\xFD[0_R`s\x81S\x82\x81\xF3\xFEs\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x000\x14`\x80`@R__\xFD\xFE\xA2dipfsX\"\x12 Bh\xCEC\xD1\x87E\xBF\x9B\x99TT\xB2%\x8Az\n\xD5\xA3o\xFCF_\xC9Y\x1B!\xD9\xC6\xFF\xD0\xBCdsolcC\0\x08\x1B\x003",
     );
     /// The runtime bytecode of the contract, as deployed on the network.
     ///
     /// ```text
-    ///0x73000000000000000000000000000000000000000030146080604052600080fdfea2646970667358221220812ee6d6f13fbb99e72df7ffc279cf0a997210049cad52ff48c94c0c921c0ab864736f6c634300081b0033
+    ///0x730000000000000000000000000000000000000000301460806040525f5ffdfea26469706673582212204268ce43d18745bf9b995454b2258a7a0ad5a36ffc465fc9591b21d9c6ffd0bc64736f6c634300081b0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static DEPLOYED_BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"s\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x000\x14`\x80`@R`\0\x80\xFD\xFE\xA2dipfsX\"\x12 \x81.\xE6\xD6\xF1?\xBB\x99\xE7-\xF7\xFF\xC2y\xCF\n\x99r\x10\x04\x9C\xADR\xFFH\xC9L\x0C\x92\x1C\n\xB8dsolcC\0\x08\x1B\x003",
+        b"s\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x000\x14`\x80`@R__\xFD\xFE\xA2dipfsX\"\x12 Bh\xCEC\xD1\x87E\xBF\x9B\x99TT\xB2%\x8Az\n\xD5\xA3o\xFCF_\xC9Y\x1B!\xD9\xC6\xFF\xD0\xBCdsolcC\0\x08\x1B\x003",
     );
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`SafeCastUpgradeable`](self) contract instance.

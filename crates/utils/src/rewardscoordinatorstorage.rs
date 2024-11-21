@@ -1841,11 +1841,11 @@ interface RewardsCoordinatorStorage {
     function calculateEarnerLeafHash(IRewardsCoordinatorTypes.EarnerTreeMerkleLeaf memory leaf) external pure returns (bytes32);
     function calculateTokenLeafHash(IRewardsCoordinatorTypes.TokenTreeMerkleLeaf memory leaf) external pure returns (bytes32);
     function checkClaim(IRewardsCoordinatorTypes.RewardsMerkleClaim memory claim) external view returns (bool);
-    function claimerFor(address earner) external view returns (address claimer);
+    function claimerFor(address) external view returns (address);
     function createAVSRewardsSubmission(IRewardsCoordinatorTypes.RewardsSubmission[] memory rewardsSubmissions) external;
     function createRewardsForAllEarners(IRewardsCoordinatorTypes.RewardsSubmission[] memory rewardsSubmissions) external;
     function createRewardsForAllSubmission(IRewardsCoordinatorTypes.RewardsSubmission[] memory rewardsSubmissions) external;
-    function cumulativeClaimed(address earner, address token) external view returns (uint256 totalClaimed);
+    function cumulativeClaimed(address, address) external view returns (uint256);
     function currRewardsCalculationEndTimestamp() external view returns (uint32);
     function delegationManager() external view returns (address);
     function disableRoot(uint32 rootIndex) external;
@@ -1856,10 +1856,10 @@ interface RewardsCoordinatorStorage {
     function getRootIndexFromHash(bytes32 rootHash) external view returns (uint32);
     function globalOperatorCommissionBips() external view returns (uint16);
     function initialize(address initialOwner, address _pauserRegistry, uint256 initialPausedStatus, address _rewardsUpdater, uint32 _activationDelay, uint16 _globalCommissionBips) external;
-    function isAVSRewardsSubmissionHash(address avs, bytes32 hash) external view returns (bool valid);
-    function isRewardsForAllSubmitter(address submitter) external view returns (bool valid);
-    function isRewardsSubmissionForAllEarnersHash(address avs, bytes32 hash) external view returns (bool valid);
-    function isRewardsSubmissionForAllHash(address avs, bytes32 hash) external view returns (bool valid);
+    function isAVSRewardsSubmissionHash(address, bytes32) external view returns (bool);
+    function isRewardsForAllSubmitter(address) external view returns (bool);
+    function isRewardsSubmissionForAllEarnersHash(address, bytes32) external view returns (bool);
+    function isRewardsSubmissionForAllHash(address, bytes32) external view returns (bool);
     function operatorCommissionBips(address operator, address avs) external view returns (uint16);
     function processClaim(IRewardsCoordinatorTypes.RewardsMerkleClaim memory claim, address recipient) external;
     function rewardsUpdater() external view returns (address);
@@ -1869,7 +1869,7 @@ interface RewardsCoordinatorStorage {
     function setRewardsForAllSubmitter(address _submitter, bool _newValue) external;
     function setRewardsUpdater(address _rewardsUpdater) external;
     function strategyManager() external view returns (address);
-    function submissionNonce(address avs) external view returns (uint256 nonce);
+    function submissionNonce(address) external view returns (uint256);
     function submitRoot(bytes32 root, uint32 rewardsCalculationEndTimestamp) external;
 }
 ```
@@ -2115,14 +2115,14 @@ interface RewardsCoordinatorStorage {
     "name": "claimerFor",
     "inputs": [
       {
-        "name": "earner",
+        "name": "",
         "type": "address",
         "internalType": "address"
       }
     ],
     "outputs": [
       {
-        "name": "claimer",
+        "name": "",
         "type": "address",
         "internalType": "address"
       }
@@ -2290,19 +2290,19 @@ interface RewardsCoordinatorStorage {
     "name": "cumulativeClaimed",
     "inputs": [
       {
-        "name": "earner",
+        "name": "",
         "type": "address",
         "internalType": "address"
       },
       {
-        "name": "token",
+        "name": "",
         "type": "address",
         "internalType": "contract IERC20"
       }
     ],
     "outputs": [
       {
-        "name": "totalClaimed",
+        "name": "",
         "type": "uint256",
         "internalType": "uint256"
       }
@@ -2547,19 +2547,19 @@ interface RewardsCoordinatorStorage {
     "name": "isAVSRewardsSubmissionHash",
     "inputs": [
       {
-        "name": "avs",
+        "name": "",
         "type": "address",
         "internalType": "address"
       },
       {
-        "name": "hash",
+        "name": "",
         "type": "bytes32",
         "internalType": "bytes32"
       }
     ],
     "outputs": [
       {
-        "name": "valid",
+        "name": "",
         "type": "bool",
         "internalType": "bool"
       }
@@ -2571,14 +2571,14 @@ interface RewardsCoordinatorStorage {
     "name": "isRewardsForAllSubmitter",
     "inputs": [
       {
-        "name": "submitter",
+        "name": "",
         "type": "address",
         "internalType": "address"
       }
     ],
     "outputs": [
       {
-        "name": "valid",
+        "name": "",
         "type": "bool",
         "internalType": "bool"
       }
@@ -2590,19 +2590,19 @@ interface RewardsCoordinatorStorage {
     "name": "isRewardsSubmissionForAllEarnersHash",
     "inputs": [
       {
-        "name": "avs",
+        "name": "",
         "type": "address",
         "internalType": "address"
       },
       {
-        "name": "hash",
+        "name": "",
         "type": "bytes32",
         "internalType": "bytes32"
       }
     ],
     "outputs": [
       {
-        "name": "valid",
+        "name": "",
         "type": "bool",
         "internalType": "bool"
       }
@@ -2614,19 +2614,19 @@ interface RewardsCoordinatorStorage {
     "name": "isRewardsSubmissionForAllHash",
     "inputs": [
       {
-        "name": "avs",
+        "name": "",
         "type": "address",
         "internalType": "address"
       },
       {
-        "name": "hash",
+        "name": "",
         "type": "bytes32",
         "internalType": "bytes32"
       }
     ],
     "outputs": [
       {
-        "name": "valid",
+        "name": "",
         "type": "bool",
         "internalType": "bool"
       }
@@ -2837,14 +2837,14 @@ interface RewardsCoordinatorStorage {
     "name": "submissionNonce",
     "inputs": [
       {
-        "name": "avs",
+        "name": "",
         "type": "address",
         "internalType": "address"
       }
     ],
     "outputs": [
       {
-        "name": "nonce",
+        "name": "",
         "type": "uint256",
         "internalType": "uint256"
       }
@@ -8029,18 +8029,18 @@ function checkClaim(IRewardsCoordinatorTypes.RewardsMerkleClaim memory claim) ex
     };
     /**Function with signature `claimerFor(address)` and selector `0x2b9f64a4`.
 ```solidity
-function claimerFor(address earner) external view returns (address claimer);
+function claimerFor(address) external view returns (address);
 ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct claimerForCall {
-        pub earner: alloy::sol_types::private::Address,
+        pub _0: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`claimerFor(address)`](claimerForCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct claimerForReturn {
-        pub claimer: alloy::sol_types::private::Address,
+        pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
         non_camel_case_types,
@@ -8070,14 +8070,14 @@ function claimerFor(address earner) external view returns (address claimer);
             #[doc(hidden)]
             impl ::core::convert::From<claimerForCall> for UnderlyingRustTuple<'_> {
                 fn from(value: claimerForCall) -> Self {
-                    (value.earner,)
+                    (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for claimerForCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self { earner: tuple.0 }
+                    Self { _0: tuple.0 }
                 }
             }
         }
@@ -8101,14 +8101,14 @@ function claimerFor(address earner) external view returns (address claimer);
             #[doc(hidden)]
             impl ::core::convert::From<claimerForReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: claimerForReturn) -> Self {
-                    (value.claimer,)
+                    (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for claimerForReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self { claimer: tuple.0 }
+                    Self { _0: tuple.0 }
                 }
             }
         }
@@ -8135,7 +8135,7 @@ function claimerFor(address earner) external view returns (address claimer);
             fn tokenize(&self) -> Self::Token<'_> {
                 (
                     <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
-                        &self.earner,
+                        &self._0,
                     ),
                 )
             }
@@ -8579,19 +8579,19 @@ function createRewardsForAllSubmission(IRewardsCoordinatorTypes.RewardsSubmissio
     };
     /**Function with signature `cumulativeClaimed(address,address)` and selector `0x865c6953`.
 ```solidity
-function cumulativeClaimed(address earner, address token) external view returns (uint256 totalClaimed);
+function cumulativeClaimed(address, address) external view returns (uint256);
 ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct cumulativeClaimedCall {
-        pub earner: alloy::sol_types::private::Address,
-        pub token: alloy::sol_types::private::Address,
+        pub _0: alloy::sol_types::private::Address,
+        pub _1: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`cumulativeClaimed(address,address)`](cumulativeClaimedCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct cumulativeClaimedReturn {
-        pub totalClaimed: alloy::sol_types::private::primitives::aliases::U256,
+        pub _0: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
         non_camel_case_types,
@@ -8628,7 +8628,7 @@ function cumulativeClaimed(address earner, address token) external view returns 
             impl ::core::convert::From<cumulativeClaimedCall>
             for UnderlyingRustTuple<'_> {
                 fn from(value: cumulativeClaimedCall) -> Self {
-                    (value.earner, value.token)
+                    (value._0, value._1)
                 }
             }
             #[automatically_derived]
@@ -8636,10 +8636,7 @@ function cumulativeClaimed(address earner, address token) external view returns 
             impl ::core::convert::From<UnderlyingRustTuple<'_>>
             for cumulativeClaimedCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self {
-                        earner: tuple.0,
-                        token: tuple.1,
-                    }
+                    Self { _0: tuple.0, _1: tuple.1 }
                 }
             }
         }
@@ -8666,7 +8663,7 @@ function cumulativeClaimed(address earner, address token) external view returns 
             impl ::core::convert::From<cumulativeClaimedReturn>
             for UnderlyingRustTuple<'_> {
                 fn from(value: cumulativeClaimedReturn) -> Self {
-                    (value.totalClaimed,)
+                    (value._0,)
                 }
             }
             #[automatically_derived]
@@ -8674,7 +8671,7 @@ function cumulativeClaimed(address earner, address token) external view returns 
             impl ::core::convert::From<UnderlyingRustTuple<'_>>
             for cumulativeClaimedReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self { totalClaimed: tuple.0 }
+                    Self { _0: tuple.0 }
                 }
             }
         }
@@ -8704,10 +8701,10 @@ function cumulativeClaimed(address earner, address token) external view returns 
             fn tokenize(&self) -> Self::Token<'_> {
                 (
                     <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
-                        &self.earner,
+                        &self._0,
                     ),
                     <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
-                        &self.token,
+                        &self._1,
                     ),
                 )
             }
@@ -10022,19 +10019,19 @@ function initialize(address initialOwner, address _pauserRegistry, uint256 initi
     };
     /**Function with signature `isAVSRewardsSubmissionHash(address,bytes32)` and selector `0x6d21117e`.
 ```solidity
-function isAVSRewardsSubmissionHash(address avs, bytes32 hash) external view returns (bool valid);
+function isAVSRewardsSubmissionHash(address, bytes32) external view returns (bool);
 ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct isAVSRewardsSubmissionHashCall {
-        pub avs: alloy::sol_types::private::Address,
-        pub hash: alloy::sol_types::private::FixedBytes<32>,
+        pub _0: alloy::sol_types::private::Address,
+        pub _1: alloy::sol_types::private::FixedBytes<32>,
     }
     ///Container type for the return parameters of the [`isAVSRewardsSubmissionHash(address,bytes32)`](isAVSRewardsSubmissionHashCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct isAVSRewardsSubmissionHashReturn {
-        pub valid: bool,
+        pub _0: bool,
     }
     #[allow(
         non_camel_case_types,
@@ -10071,7 +10068,7 @@ function isAVSRewardsSubmissionHash(address avs, bytes32 hash) external view ret
             impl ::core::convert::From<isAVSRewardsSubmissionHashCall>
             for UnderlyingRustTuple<'_> {
                 fn from(value: isAVSRewardsSubmissionHashCall) -> Self {
-                    (value.avs, value.hash)
+                    (value._0, value._1)
                 }
             }
             #[automatically_derived]
@@ -10079,10 +10076,7 @@ function isAVSRewardsSubmissionHash(address avs, bytes32 hash) external view ret
             impl ::core::convert::From<UnderlyingRustTuple<'_>>
             for isAVSRewardsSubmissionHashCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self {
-                        avs: tuple.0,
-                        hash: tuple.1,
-                    }
+                    Self { _0: tuple.0, _1: tuple.1 }
                 }
             }
         }
@@ -10107,7 +10101,7 @@ function isAVSRewardsSubmissionHash(address avs, bytes32 hash) external view ret
             impl ::core::convert::From<isAVSRewardsSubmissionHashReturn>
             for UnderlyingRustTuple<'_> {
                 fn from(value: isAVSRewardsSubmissionHashReturn) -> Self {
-                    (value.valid,)
+                    (value._0,)
                 }
             }
             #[automatically_derived]
@@ -10115,7 +10109,7 @@ function isAVSRewardsSubmissionHash(address avs, bytes32 hash) external view ret
             impl ::core::convert::From<UnderlyingRustTuple<'_>>
             for isAVSRewardsSubmissionHashReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self { valid: tuple.0 }
+                    Self { _0: tuple.0 }
                 }
             }
         }
@@ -10145,11 +10139,11 @@ function isAVSRewardsSubmissionHash(address avs, bytes32 hash) external view ret
             fn tokenize(&self) -> Self::Token<'_> {
                 (
                     <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
-                        &self.avs,
+                        &self._0,
                     ),
                     <alloy::sol_types::sol_data::FixedBytes<
                         32,
-                    > as alloy_sol_types::SolType>::tokenize(&self.hash),
+                    > as alloy_sol_types::SolType>::tokenize(&self._1),
                 )
             }
             #[inline]
@@ -10166,18 +10160,18 @@ function isAVSRewardsSubmissionHash(address avs, bytes32 hash) external view ret
     };
     /**Function with signature `isRewardsForAllSubmitter(address)` and selector `0x0018572c`.
 ```solidity
-function isRewardsForAllSubmitter(address submitter) external view returns (bool valid);
+function isRewardsForAllSubmitter(address) external view returns (bool);
 ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct isRewardsForAllSubmitterCall {
-        pub submitter: alloy::sol_types::private::Address,
+        pub _0: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`isRewardsForAllSubmitter(address)`](isRewardsForAllSubmitterCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct isRewardsForAllSubmitterReturn {
-        pub valid: bool,
+        pub _0: bool,
     }
     #[allow(
         non_camel_case_types,
@@ -10208,7 +10202,7 @@ function isRewardsForAllSubmitter(address submitter) external view returns (bool
             impl ::core::convert::From<isRewardsForAllSubmitterCall>
             for UnderlyingRustTuple<'_> {
                 fn from(value: isRewardsForAllSubmitterCall) -> Self {
-                    (value.submitter,)
+                    (value._0,)
                 }
             }
             #[automatically_derived]
@@ -10216,7 +10210,7 @@ function isRewardsForAllSubmitter(address submitter) external view returns (bool
             impl ::core::convert::From<UnderlyingRustTuple<'_>>
             for isRewardsForAllSubmitterCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self { submitter: tuple.0 }
+                    Self { _0: tuple.0 }
                 }
             }
         }
@@ -10241,7 +10235,7 @@ function isRewardsForAllSubmitter(address submitter) external view returns (bool
             impl ::core::convert::From<isRewardsForAllSubmitterReturn>
             for UnderlyingRustTuple<'_> {
                 fn from(value: isRewardsForAllSubmitterReturn) -> Self {
-                    (value.valid,)
+                    (value._0,)
                 }
             }
             #[automatically_derived]
@@ -10249,7 +10243,7 @@ function isRewardsForAllSubmitter(address submitter) external view returns (bool
             impl ::core::convert::From<UnderlyingRustTuple<'_>>
             for isRewardsForAllSubmitterReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self { valid: tuple.0 }
+                    Self { _0: tuple.0 }
                 }
             }
         }
@@ -10276,7 +10270,7 @@ function isRewardsForAllSubmitter(address submitter) external view returns (bool
             fn tokenize(&self) -> Self::Token<'_> {
                 (
                     <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
-                        &self.submitter,
+                        &self._0,
                     ),
                 )
             }
@@ -10294,19 +10288,19 @@ function isRewardsForAllSubmitter(address submitter) external view returns (bool
     };
     /**Function with signature `isRewardsSubmissionForAllEarnersHash(address,bytes32)` and selector `0xaebd8bae`.
 ```solidity
-function isRewardsSubmissionForAllEarnersHash(address avs, bytes32 hash) external view returns (bool valid);
+function isRewardsSubmissionForAllEarnersHash(address, bytes32) external view returns (bool);
 ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct isRewardsSubmissionForAllEarnersHashCall {
-        pub avs: alloy::sol_types::private::Address,
-        pub hash: alloy::sol_types::private::FixedBytes<32>,
+        pub _0: alloy::sol_types::private::Address,
+        pub _1: alloy::sol_types::private::FixedBytes<32>,
     }
     ///Container type for the return parameters of the [`isRewardsSubmissionForAllEarnersHash(address,bytes32)`](isRewardsSubmissionForAllEarnersHashCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct isRewardsSubmissionForAllEarnersHashReturn {
-        pub valid: bool,
+        pub _0: bool,
     }
     #[allow(
         non_camel_case_types,
@@ -10343,7 +10337,7 @@ function isRewardsSubmissionForAllEarnersHash(address avs, bytes32 hash) externa
             impl ::core::convert::From<isRewardsSubmissionForAllEarnersHashCall>
             for UnderlyingRustTuple<'_> {
                 fn from(value: isRewardsSubmissionForAllEarnersHashCall) -> Self {
-                    (value.avs, value.hash)
+                    (value._0, value._1)
                 }
             }
             #[automatically_derived]
@@ -10351,10 +10345,7 @@ function isRewardsSubmissionForAllEarnersHash(address avs, bytes32 hash) externa
             impl ::core::convert::From<UnderlyingRustTuple<'_>>
             for isRewardsSubmissionForAllEarnersHashCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self {
-                        avs: tuple.0,
-                        hash: tuple.1,
-                    }
+                    Self { _0: tuple.0, _1: tuple.1 }
                 }
             }
         }
@@ -10379,7 +10370,7 @@ function isRewardsSubmissionForAllEarnersHash(address avs, bytes32 hash) externa
             impl ::core::convert::From<isRewardsSubmissionForAllEarnersHashReturn>
             for UnderlyingRustTuple<'_> {
                 fn from(value: isRewardsSubmissionForAllEarnersHashReturn) -> Self {
-                    (value.valid,)
+                    (value._0,)
                 }
             }
             #[automatically_derived]
@@ -10387,7 +10378,7 @@ function isRewardsSubmissionForAllEarnersHash(address avs, bytes32 hash) externa
             impl ::core::convert::From<UnderlyingRustTuple<'_>>
             for isRewardsSubmissionForAllEarnersHashReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self { valid: tuple.0 }
+                    Self { _0: tuple.0 }
                 }
             }
         }
@@ -10417,11 +10408,11 @@ function isRewardsSubmissionForAllEarnersHash(address avs, bytes32 hash) externa
             fn tokenize(&self) -> Self::Token<'_> {
                 (
                     <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
-                        &self.avs,
+                        &self._0,
                     ),
                     <alloy::sol_types::sol_data::FixedBytes<
                         32,
-                    > as alloy_sol_types::SolType>::tokenize(&self.hash),
+                    > as alloy_sol_types::SolType>::tokenize(&self._1),
                 )
             }
             #[inline]
@@ -10438,19 +10429,19 @@ function isRewardsSubmissionForAllEarnersHash(address avs, bytes32 hash) externa
     };
     /**Function with signature `isRewardsSubmissionForAllHash(address,bytes32)` and selector `0xc46db606`.
 ```solidity
-function isRewardsSubmissionForAllHash(address avs, bytes32 hash) external view returns (bool valid);
+function isRewardsSubmissionForAllHash(address, bytes32) external view returns (bool);
 ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct isRewardsSubmissionForAllHashCall {
-        pub avs: alloy::sol_types::private::Address,
-        pub hash: alloy::sol_types::private::FixedBytes<32>,
+        pub _0: alloy::sol_types::private::Address,
+        pub _1: alloy::sol_types::private::FixedBytes<32>,
     }
     ///Container type for the return parameters of the [`isRewardsSubmissionForAllHash(address,bytes32)`](isRewardsSubmissionForAllHashCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct isRewardsSubmissionForAllHashReturn {
-        pub valid: bool,
+        pub _0: bool,
     }
     #[allow(
         non_camel_case_types,
@@ -10487,7 +10478,7 @@ function isRewardsSubmissionForAllHash(address avs, bytes32 hash) external view 
             impl ::core::convert::From<isRewardsSubmissionForAllHashCall>
             for UnderlyingRustTuple<'_> {
                 fn from(value: isRewardsSubmissionForAllHashCall) -> Self {
-                    (value.avs, value.hash)
+                    (value._0, value._1)
                 }
             }
             #[automatically_derived]
@@ -10495,10 +10486,7 @@ function isRewardsSubmissionForAllHash(address avs, bytes32 hash) external view 
             impl ::core::convert::From<UnderlyingRustTuple<'_>>
             for isRewardsSubmissionForAllHashCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self {
-                        avs: tuple.0,
-                        hash: tuple.1,
-                    }
+                    Self { _0: tuple.0, _1: tuple.1 }
                 }
             }
         }
@@ -10523,7 +10511,7 @@ function isRewardsSubmissionForAllHash(address avs, bytes32 hash) external view 
             impl ::core::convert::From<isRewardsSubmissionForAllHashReturn>
             for UnderlyingRustTuple<'_> {
                 fn from(value: isRewardsSubmissionForAllHashReturn) -> Self {
-                    (value.valid,)
+                    (value._0,)
                 }
             }
             #[automatically_derived]
@@ -10531,7 +10519,7 @@ function isRewardsSubmissionForAllHash(address avs, bytes32 hash) external view 
             impl ::core::convert::From<UnderlyingRustTuple<'_>>
             for isRewardsSubmissionForAllHashReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self { valid: tuple.0 }
+                    Self { _0: tuple.0 }
                 }
             }
         }
@@ -10561,11 +10549,11 @@ function isRewardsSubmissionForAllHash(address avs, bytes32 hash) external view 
             fn tokenize(&self) -> Self::Token<'_> {
                 (
                     <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
-                        &self.avs,
+                        &self._0,
                     ),
                     <alloy::sol_types::sol_data::FixedBytes<
                         32,
-                    > as alloy_sol_types::SolType>::tokenize(&self.hash),
+                    > as alloy_sol_types::SolType>::tokenize(&self._1),
                 )
             }
             #[inline]
@@ -11747,18 +11735,18 @@ function strategyManager() external view returns (address);
     };
     /**Function with signature `submissionNonce(address)` and selector `0xbb7e451f`.
 ```solidity
-function submissionNonce(address avs) external view returns (uint256 nonce);
+function submissionNonce(address) external view returns (uint256);
 ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct submissionNonceCall {
-        pub avs: alloy::sol_types::private::Address,
+        pub _0: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`submissionNonce(address)`](submissionNonceCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct submissionNonceReturn {
-        pub nonce: alloy::sol_types::private::primitives::aliases::U256,
+        pub _0: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
         non_camel_case_types,
@@ -11788,14 +11776,14 @@ function submissionNonce(address avs) external view returns (uint256 nonce);
             #[doc(hidden)]
             impl ::core::convert::From<submissionNonceCall> for UnderlyingRustTuple<'_> {
                 fn from(value: submissionNonceCall) -> Self {
-                    (value.avs,)
+                    (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for submissionNonceCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self { avs: tuple.0 }
+                    Self { _0: tuple.0 }
                 }
             }
         }
@@ -11822,7 +11810,7 @@ function submissionNonce(address avs) external view returns (uint256 nonce);
             impl ::core::convert::From<submissionNonceReturn>
             for UnderlyingRustTuple<'_> {
                 fn from(value: submissionNonceReturn) -> Self {
-                    (value.nonce,)
+                    (value._0,)
                 }
             }
             #[automatically_derived]
@@ -11830,7 +11818,7 @@ function submissionNonce(address avs) external view returns (uint256 nonce);
             impl ::core::convert::From<UnderlyingRustTuple<'_>>
             for submissionNonceReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self { nonce: tuple.0 }
+                    Self { _0: tuple.0 }
                 }
             }
         }
@@ -11857,7 +11845,7 @@ function submissionNonce(address avs) external view returns (uint256 nonce);
             fn tokenize(&self) -> Self::Token<'_> {
                 (
                     <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
-                        &self.avs,
+                        &self._0,
                     ),
                 )
             }
@@ -14921,9 +14909,9 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         ///Creates a new call builder for the [`claimerFor`] function.
         pub fn claimerFor(
             &self,
-            earner: alloy::sol_types::private::Address,
+            _0: alloy::sol_types::private::Address,
         ) -> alloy_contract::SolCallBuilder<T, &P, claimerForCall, N> {
-            self.call_builder(&claimerForCall { earner })
+            self.call_builder(&claimerForCall { _0 })
         }
         ///Creates a new call builder for the [`createAVSRewardsSubmission`] function.
         pub fn createAVSRewardsSubmission(
@@ -14972,15 +14960,10 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         ///Creates a new call builder for the [`cumulativeClaimed`] function.
         pub fn cumulativeClaimed(
             &self,
-            earner: alloy::sol_types::private::Address,
-            token: alloy::sol_types::private::Address,
+            _0: alloy::sol_types::private::Address,
+            _1: alloy::sol_types::private::Address,
         ) -> alloy_contract::SolCallBuilder<T, &P, cumulativeClaimedCall, N> {
-            self.call_builder(
-                &cumulativeClaimedCall {
-                    earner,
-                    token,
-                },
-            )
+            self.call_builder(&cumulativeClaimedCall { _0, _1 })
         }
         ///Creates a new call builder for the [`currRewardsCalculationEndTimestamp`] function.
         pub fn currRewardsCalculationEndTimestamp(
@@ -15090,32 +15073,28 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         ///Creates a new call builder for the [`isAVSRewardsSubmissionHash`] function.
         pub fn isAVSRewardsSubmissionHash(
             &self,
-            avs: alloy::sol_types::private::Address,
-            hash: alloy::sol_types::private::FixedBytes<32>,
+            _0: alloy::sol_types::private::Address,
+            _1: alloy::sol_types::private::FixedBytes<32>,
         ) -> alloy_contract::SolCallBuilder<T, &P, isAVSRewardsSubmissionHashCall, N> {
             self.call_builder(
                 &isAVSRewardsSubmissionHashCall {
-                    avs,
-                    hash,
+                    _0,
+                    _1,
                 },
             )
         }
         ///Creates a new call builder for the [`isRewardsForAllSubmitter`] function.
         pub fn isRewardsForAllSubmitter(
             &self,
-            submitter: alloy::sol_types::private::Address,
+            _0: alloy::sol_types::private::Address,
         ) -> alloy_contract::SolCallBuilder<T, &P, isRewardsForAllSubmitterCall, N> {
-            self.call_builder(
-                &isRewardsForAllSubmitterCall {
-                    submitter,
-                },
-            )
+            self.call_builder(&isRewardsForAllSubmitterCall { _0 })
         }
         ///Creates a new call builder for the [`isRewardsSubmissionForAllEarnersHash`] function.
         pub fn isRewardsSubmissionForAllEarnersHash(
             &self,
-            avs: alloy::sol_types::private::Address,
-            hash: alloy::sol_types::private::FixedBytes<32>,
+            _0: alloy::sol_types::private::Address,
+            _1: alloy::sol_types::private::FixedBytes<32>,
         ) -> alloy_contract::SolCallBuilder<
             T,
             &P,
@@ -15124,16 +15103,16 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         > {
             self.call_builder(
                 &isRewardsSubmissionForAllEarnersHashCall {
-                    avs,
-                    hash,
+                    _0,
+                    _1,
                 },
             )
         }
         ///Creates a new call builder for the [`isRewardsSubmissionForAllHash`] function.
         pub fn isRewardsSubmissionForAllHash(
             &self,
-            avs: alloy::sol_types::private::Address,
-            hash: alloy::sol_types::private::FixedBytes<32>,
+            _0: alloy::sol_types::private::Address,
+            _1: alloy::sol_types::private::FixedBytes<32>,
         ) -> alloy_contract::SolCallBuilder<
             T,
             &P,
@@ -15142,8 +15121,8 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         > {
             self.call_builder(
                 &isRewardsSubmissionForAllHashCall {
-                    avs,
-                    hash,
+                    _0,
+                    _1,
                 },
             )
         }
@@ -15241,9 +15220,9 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         ///Creates a new call builder for the [`submissionNonce`] function.
         pub fn submissionNonce(
             &self,
-            avs: alloy::sol_types::private::Address,
+            _0: alloy::sol_types::private::Address,
         ) -> alloy_contract::SolCallBuilder<T, &P, submissionNonceCall, N> {
-            self.call_builder(&submissionNonceCall { avs })
+            self.call_builder(&submissionNonceCall { _0 })
         }
         ///Creates a new call builder for the [`submitRoot`] function.
         pub fn submitRoot(

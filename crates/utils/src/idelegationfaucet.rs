@@ -4,7 +4,7 @@
 ```solidity
 library IDelegationManagerTypes {
     struct QueuedWithdrawalParams { address[] strategies; uint256[] shares; address withdrawer; }
-    struct Withdrawal { address staker; address delegatedTo; address withdrawer; uint256 nonce; uint32 startTimestamp; address[] strategies; uint256[] scaledShares; }
+    struct Withdrawal { address staker; address delegatedTo; address withdrawer; uint256 nonce; uint32 startTimestamp; address[] strategies; uint256[] scaledSharesToWithdraw; }
 }
 ```*/
 #[allow(
@@ -265,7 +265,7 @@ struct QueuedWithdrawalParams { address[] strategies; uint256[] shares; address 
         }
     };
     /**```solidity
-struct Withdrawal { address staker; address delegatedTo; address withdrawer; uint256 nonce; uint32 startTimestamp; address[] strategies; uint256[] scaledShares; }
+struct Withdrawal { address staker; address delegatedTo; address withdrawer; uint256 nonce; uint32 startTimestamp; address[] strategies; uint256[] scaledSharesToWithdraw; }
 ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
@@ -278,7 +278,7 @@ struct Withdrawal { address staker; address delegatedTo; address withdrawer; uin
         pub strategies: alloy::sol_types::private::Vec<
             alloy::sol_types::private::Address,
         >,
-        pub scaledShares: alloy::sol_types::private::Vec<
+        pub scaledSharesToWithdraw: alloy::sol_types::private::Vec<
             alloy::sol_types::private::primitives::aliases::U256,
         >,
     }
@@ -334,7 +334,7 @@ struct Withdrawal { address staker; address delegatedTo; address withdrawer; uin
                     value.nonce,
                     value.startTimestamp,
                     value.strategies,
-                    value.scaledShares,
+                    value.scaledSharesToWithdraw,
                 )
             }
         }
@@ -349,7 +349,7 @@ struct Withdrawal { address staker; address delegatedTo; address withdrawer; uin
                     nonce: tuple.3,
                     startTimestamp: tuple.4,
                     strategies: tuple.5,
-                    scaledShares: tuple.6,
+                    scaledSharesToWithdraw: tuple.6,
                 }
             }
         }
@@ -382,7 +382,9 @@ struct Withdrawal { address staker; address delegatedTo; address withdrawer; uin
                     > as alloy_sol_types::SolType>::tokenize(&self.strategies),
                     <alloy::sol_types::sol_data::Array<
                         alloy::sol_types::sol_data::Uint<256>,
-                    > as alloy_sol_types::SolType>::tokenize(&self.scaledShares),
+                    > as alloy_sol_types::SolType>::tokenize(
+                        &self.scaledSharesToWithdraw,
+                    ),
                 )
             }
             #[inline]
@@ -457,7 +459,7 @@ struct Withdrawal { address staker; address delegatedTo; address withdrawer; uin
             #[inline]
             fn eip712_root_type() -> alloy_sol_types::private::Cow<'static, str> {
                 alloy_sol_types::private::Cow::Borrowed(
-                    "Withdrawal(address staker,address delegatedTo,address withdrawer,uint256 nonce,uint32 startTimestamp,address[] strategies,uint256[] scaledShares)",
+                    "Withdrawal(address staker,address delegatedTo,address withdrawer,uint256 nonce,uint32 startTimestamp,address[] strategies,uint256[] scaledSharesToWithdraw)",
                 )
             }
             #[inline]
@@ -501,7 +503,9 @@ struct Withdrawal { address staker; address delegatedTo; address withdrawer; uin
                         .0,
                     <alloy::sol_types::sol_data::Array<
                         alloy::sol_types::sol_data::Uint<256>,
-                    > as alloy_sol_types::SolType>::eip712_data_word(&self.scaledShares)
+                    > as alloy_sol_types::SolType>::eip712_data_word(
+                            &self.scaledSharesToWithdraw,
+                        )
                         .0,
                 ]
                     .concat()
@@ -537,7 +541,7 @@ struct Withdrawal { address staker; address delegatedTo; address withdrawer; uin
                     + <alloy::sol_types::sol_data::Array<
                         alloy::sol_types::sol_data::Uint<256>,
                     > as alloy_sol_types::EventTopic>::topic_preimage_length(
-                        &rust.scaledShares,
+                        &rust.scaledSharesToWithdraw,
                     )
             }
             #[inline]
@@ -581,7 +585,7 @@ struct Withdrawal { address staker; address delegatedTo; address withdrawer; uin
                 <alloy::sol_types::sol_data::Array<
                     alloy::sol_types::sol_data::Uint<256>,
                 > as alloy_sol_types::EventTopic>::encode_topic_preimage(
-                    &rust.scaledShares,
+                    &rust.scaledSharesToWithdraw,
                     out,
                 );
             }
@@ -1116,7 +1120,7 @@ library IDelegationManagerTypes {
         uint256 nonce;
         uint32 startTimestamp;
         address[] strategies;
-        uint256[] scaledShares;
+        uint256[] scaledSharesToWithdraw;
     }
 }
 
@@ -1210,7 +1214,7 @@ interface IDelegationFaucet {
             "internalType": "contract IStrategy[]"
           },
           {
-            "name": "scaledShares",
+            "name": "scaledSharesToWithdraw",
             "type": "uint256[]",
             "internalType": "uint256[]"
           }

@@ -10,7 +10,7 @@ interface IAllocationManagerEvents {
 
     event AllocationDelaySet(address operator, uint32 delay, uint32 effectTimestamp);
     event EncumberedMagnitudeUpdated(address operator, address strategy, uint64 encumberedMagnitude);
-    event MaxMagnitudeUpdated(address operator, address strategy, uint64 maxMagnitude);
+    event MaxMagnitudeUpdated(address operator, address strategy, uint64 totalMagnitude);
     event OperatorSetMagnitudeUpdated(address operator, OperatorSet operatorSet, address strategy, uint64 magnitude, uint32 effectTimestamp);
     event OperatorSlashed(address operator, OperatorSet operatorSet, address[] strategies, uint256[] wadSlashed, string description);
 }
@@ -86,7 +86,7 @@ interface IAllocationManagerEvents {
         "internalType": "contract IStrategy"
       },
       {
-        "name": "maxMagnitude",
+        "name": "totalMagnitude",
         "type": "uint64",
         "indexed": false,
         "internalType": "uint64"
@@ -744,7 +744,7 @@ event EncumberedMagnitudeUpdated(address operator, address strategy, uint64 encu
     };
     /**Event with signature `MaxMagnitudeUpdated(address,address,uint64)` and selector `0x1c6458079a41077d003c11faf9bf097e693bd67979e4e6500bac7b29db779b5c`.
 ```solidity
-event MaxMagnitudeUpdated(address operator, address strategy, uint64 maxMagnitude);
+event MaxMagnitudeUpdated(address operator, address strategy, uint64 totalMagnitude);
 ```*/
     #[allow(
         non_camel_case_types,
@@ -759,7 +759,7 @@ event MaxMagnitudeUpdated(address operator, address strategy, uint64 maxMagnitud
         #[allow(missing_docs)]
         pub strategy: alloy::sol_types::private::Address,
         #[allow(missing_docs)]
-        pub maxMagnitude: u64,
+        pub totalMagnitude: u64,
     }
     #[allow(
         non_camel_case_types,
@@ -825,7 +825,7 @@ event MaxMagnitudeUpdated(address operator, address strategy, uint64 maxMagnitud
                 Self {
                     operator: data.0,
                     strategy: data.1,
-                    maxMagnitude: data.2,
+                    totalMagnitude: data.2,
                 }
             }
             #[inline]
@@ -854,7 +854,7 @@ event MaxMagnitudeUpdated(address operator, address strategy, uint64 maxMagnitud
                     ),
                     <alloy::sol_types::sol_data::Uint<
                         64,
-                    > as alloy_sol_types::SolType>::tokenize(&self.maxMagnitude),
+                    > as alloy_sol_types::SolType>::tokenize(&self.totalMagnitude),
                 )
             }
             #[inline]

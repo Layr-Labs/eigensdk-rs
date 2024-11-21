@@ -705,7 +705,7 @@ interface AVSDirectoryStorage {
     function OPERATOR_SET_FORCE_DEREGISTRATION_TYPEHASH() external view returns (bytes32);
     function OPERATOR_SET_REGISTRATION_TYPEHASH() external view returns (bytes32);
     function addStrategiesToOperatorSet(uint32 operatorSetId, address[] memory strategies) external;
-    function avsOperatorStatus(address avs, address operator) external view returns (IAVSDirectoryTypes.OperatorAVSRegistrationStatus);
+    function avsOperatorStatus(address, address) external view returns (IAVSDirectoryTypes.OperatorAVSRegistrationStatus);
     function becomeOperatorSetAVS() external;
     function calculateOperatorAVSRegistrationDigestHash(address operator, address avs, bytes32 salt, uint256 expiry) external view returns (bytes32);
     function calculateOperatorSetForceDeregistrationTypehash(address avs, uint32[] memory operatorSetIds, bytes32 salt, uint256 expiry) external view returns (bytes32);
@@ -724,14 +724,14 @@ interface AVSDirectoryStorage {
     function inTotalOperatorSets(address operator) external view returns (uint256);
     function initialize(address initialOwner, address _pauserRegistry, uint256 initialPausedStatus) external;
     function isMember(address operator, OperatorSet memory operatorSet) external view returns (bool);
-    function isOperatorSet(address avs, uint32 operatorSetId) external view returns (bool);
-    function isOperatorSetAVS(address avs) external view returns (bool);
+    function isOperatorSet(address, uint32) external view returns (bool);
+    function isOperatorSetAVS(address) external view returns (bool);
     function isOperatorSetBatch(OperatorSet[] memory operatorSets) external view returns (bool);
     function isOperatorSlashable(address operator, OperatorSet memory operatorSet) external view returns (bool);
     function migrateOperatorsToOperatorSets(address[] memory operators, uint32[][] memory operatorSetIds) external;
-    function operatorSaltIsSpent(address operator, bytes32 salt) external view returns (bool isSpent);
+    function operatorSaltIsSpent(address, bytes32) external view returns (bool);
     function operatorSetMemberAtIndex(OperatorSet memory operatorSet, uint256 index) external view returns (address);
-    function operatorSetStatus(address operator, address avs, uint32 operatorSetId) external view returns (bool registered, uint32 lastDeregisteredTimestamp);
+    function operatorSetStatus(address, address, uint32) external view returns (bool registered, uint32 lastDeregisteredTimestamp);
     function operatorSetsMemberOfAtIndex(address operator, uint256 index) external view returns (OperatorSet memory);
     function registerOperatorToAVS(address operator, ISignatureUtils.SignatureWithSaltAndExpiry memory operatorSignature) external;
     function registerOperatorToOperatorSets(address operator, uint32[] memory operatorSetIds, ISignatureUtils.SignatureWithSaltAndExpiry memory operatorSignature) external;
@@ -818,12 +818,12 @@ interface AVSDirectoryStorage {
     "name": "avsOperatorStatus",
     "inputs": [
       {
-        "name": "avs",
+        "name": "",
         "type": "address",
         "internalType": "address"
       },
       {
-        "name": "operator",
+        "name": "",
         "type": "address",
         "internalType": "address"
       }
@@ -1307,12 +1307,12 @@ interface AVSDirectoryStorage {
     "name": "isOperatorSet",
     "inputs": [
       {
-        "name": "avs",
+        "name": "",
         "type": "address",
         "internalType": "address"
       },
       {
-        "name": "operatorSetId",
+        "name": "",
         "type": "uint32",
         "internalType": "uint32"
       }
@@ -1331,7 +1331,7 @@ interface AVSDirectoryStorage {
     "name": "isOperatorSetAVS",
     "inputs": [
       {
-        "name": "avs",
+        "name": "",
         "type": "address",
         "internalType": "address"
       }
@@ -1435,19 +1435,19 @@ interface AVSDirectoryStorage {
     "name": "operatorSaltIsSpent",
     "inputs": [
       {
-        "name": "operator",
+        "name": "",
         "type": "address",
         "internalType": "address"
       },
       {
-        "name": "salt",
+        "name": "",
         "type": "bytes32",
         "internalType": "bytes32"
       }
     ],
     "outputs": [
       {
-        "name": "isSpent",
+        "name": "",
         "type": "bool",
         "internalType": "bool"
       }
@@ -1495,17 +1495,17 @@ interface AVSDirectoryStorage {
     "name": "operatorSetStatus",
     "inputs": [
       {
-        "name": "operator",
+        "name": "",
         "type": "address",
         "internalType": "address"
       },
       {
-        "name": "avs",
+        "name": "",
         "type": "address",
         "internalType": "address"
       },
       {
-        "name": "operatorSetId",
+        "name": "",
         "type": "uint32",
         "internalType": "uint32"
       }
@@ -4835,13 +4835,13 @@ function addStrategiesToOperatorSet(uint32 operatorSetId, address[] memory strat
     };
     /**Function with signature `avsOperatorStatus(address,address)` and selector `0x49075da3`.
 ```solidity
-function avsOperatorStatus(address avs, address operator) external view returns (IAVSDirectoryTypes.OperatorAVSRegistrationStatus);
+function avsOperatorStatus(address, address) external view returns (IAVSDirectoryTypes.OperatorAVSRegistrationStatus);
 ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct avsOperatorStatusCall {
-        pub avs: alloy::sol_types::private::Address,
-        pub operator: alloy::sol_types::private::Address,
+        pub _0: alloy::sol_types::private::Address,
+        pub _1: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`avsOperatorStatus(address,address)`](avsOperatorStatusCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
@@ -4884,7 +4884,7 @@ function avsOperatorStatus(address avs, address operator) external view returns 
             impl ::core::convert::From<avsOperatorStatusCall>
             for UnderlyingRustTuple<'_> {
                 fn from(value: avsOperatorStatusCall) -> Self {
-                    (value.avs, value.operator)
+                    (value._0, value._1)
                 }
             }
             #[automatically_derived]
@@ -4892,10 +4892,7 @@ function avsOperatorStatus(address avs, address operator) external view returns 
             impl ::core::convert::From<UnderlyingRustTuple<'_>>
             for avsOperatorStatusCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self {
-                        avs: tuple.0,
-                        operator: tuple.1,
-                    }
+                    Self { _0: tuple.0, _1: tuple.1 }
                 }
             }
         }
@@ -4962,10 +4959,10 @@ function avsOperatorStatus(address avs, address operator) external view returns 
             fn tokenize(&self) -> Self::Token<'_> {
                 (
                     <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
-                        &self.avs,
+                        &self._0,
                     ),
                     <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
-                        &self.operator,
+                        &self._1,
                     ),
                 )
             }
@@ -7526,13 +7523,13 @@ function isMember(address operator, OperatorSet memory operatorSet) external vie
     };
     /**Function with signature `isOperatorSet(address,uint32)` and selector `0x84d76f7b`.
 ```solidity
-function isOperatorSet(address avs, uint32 operatorSetId) external view returns (bool);
+function isOperatorSet(address, uint32) external view returns (bool);
 ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct isOperatorSetCall {
-        pub avs: alloy::sol_types::private::Address,
-        pub operatorSetId: u32,
+        pub _0: alloy::sol_types::private::Address,
+        pub _1: u32,
     }
     ///Container type for the return parameters of the [`isOperatorSet(address,uint32)`](isOperatorSetCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
@@ -7571,17 +7568,14 @@ function isOperatorSet(address avs, uint32 operatorSetId) external view returns 
             #[doc(hidden)]
             impl ::core::convert::From<isOperatorSetCall> for UnderlyingRustTuple<'_> {
                 fn from(value: isOperatorSetCall) -> Self {
-                    (value.avs, value.operatorSetId)
+                    (value._0, value._1)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for isOperatorSetCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self {
-                        avs: tuple.0,
-                        operatorSetId: tuple.1,
-                    }
+                    Self { _0: tuple.0, _1: tuple.1 }
                 }
             }
         }
@@ -7642,11 +7636,11 @@ function isOperatorSet(address avs, uint32 operatorSetId) external view returns 
             fn tokenize(&self) -> Self::Token<'_> {
                 (
                     <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
-                        &self.avs,
+                        &self._0,
                     ),
                     <alloy::sol_types::sol_data::Uint<
                         32,
-                    > as alloy_sol_types::SolType>::tokenize(&self.operatorSetId),
+                    > as alloy_sol_types::SolType>::tokenize(&self._1),
                 )
             }
             #[inline]
@@ -7663,12 +7657,12 @@ function isOperatorSet(address avs, uint32 operatorSetId) external view returns 
     };
     /**Function with signature `isOperatorSetAVS(address)` and selector `0x7673e93a`.
 ```solidity
-function isOperatorSetAVS(address avs) external view returns (bool);
+function isOperatorSetAVS(address) external view returns (bool);
 ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct isOperatorSetAVSCall {
-        pub avs: alloy::sol_types::private::Address,
+        pub _0: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`isOperatorSetAVS(address)`](isOperatorSetAVSCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
@@ -7705,7 +7699,7 @@ function isOperatorSetAVS(address avs) external view returns (bool);
             impl ::core::convert::From<isOperatorSetAVSCall>
             for UnderlyingRustTuple<'_> {
                 fn from(value: isOperatorSetAVSCall) -> Self {
-                    (value.avs,)
+                    (value._0,)
                 }
             }
             #[automatically_derived]
@@ -7713,7 +7707,7 @@ function isOperatorSetAVS(address avs) external view returns (bool);
             impl ::core::convert::From<UnderlyingRustTuple<'_>>
             for isOperatorSetAVSCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self { avs: tuple.0 }
+                    Self { _0: tuple.0 }
                 }
             }
         }
@@ -7773,7 +7767,7 @@ function isOperatorSetAVS(address avs) external view returns (bool);
             fn tokenize(&self) -> Self::Token<'_> {
                 (
                     <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
-                        &self.avs,
+                        &self._0,
                     ),
                 )
             }
@@ -8224,19 +8218,19 @@ function migrateOperatorsToOperatorSets(address[] memory operators, uint32[][] m
     };
     /**Function with signature `operatorSaltIsSpent(address,bytes32)` and selector `0x374823b5`.
 ```solidity
-function operatorSaltIsSpent(address operator, bytes32 salt) external view returns (bool isSpent);
+function operatorSaltIsSpent(address, bytes32) external view returns (bool);
 ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct operatorSaltIsSpentCall {
-        pub operator: alloy::sol_types::private::Address,
-        pub salt: alloy::sol_types::private::FixedBytes<32>,
+        pub _0: alloy::sol_types::private::Address,
+        pub _1: alloy::sol_types::private::FixedBytes<32>,
     }
     ///Container type for the return parameters of the [`operatorSaltIsSpent(address,bytes32)`](operatorSaltIsSpentCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct operatorSaltIsSpentReturn {
-        pub isSpent: bool,
+        pub _0: bool,
     }
     #[allow(
         non_camel_case_types,
@@ -8273,7 +8267,7 @@ function operatorSaltIsSpent(address operator, bytes32 salt) external view retur
             impl ::core::convert::From<operatorSaltIsSpentCall>
             for UnderlyingRustTuple<'_> {
                 fn from(value: operatorSaltIsSpentCall) -> Self {
-                    (value.operator, value.salt)
+                    (value._0, value._1)
                 }
             }
             #[automatically_derived]
@@ -8281,10 +8275,7 @@ function operatorSaltIsSpent(address operator, bytes32 salt) external view retur
             impl ::core::convert::From<UnderlyingRustTuple<'_>>
             for operatorSaltIsSpentCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self {
-                        operator: tuple.0,
-                        salt: tuple.1,
-                    }
+                    Self { _0: tuple.0, _1: tuple.1 }
                 }
             }
         }
@@ -8309,7 +8300,7 @@ function operatorSaltIsSpent(address operator, bytes32 salt) external view retur
             impl ::core::convert::From<operatorSaltIsSpentReturn>
             for UnderlyingRustTuple<'_> {
                 fn from(value: operatorSaltIsSpentReturn) -> Self {
-                    (value.isSpent,)
+                    (value._0,)
                 }
             }
             #[automatically_derived]
@@ -8317,7 +8308,7 @@ function operatorSaltIsSpent(address operator, bytes32 salt) external view retur
             impl ::core::convert::From<UnderlyingRustTuple<'_>>
             for operatorSaltIsSpentReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self { isSpent: tuple.0 }
+                    Self { _0: tuple.0 }
                 }
             }
         }
@@ -8347,11 +8338,11 @@ function operatorSaltIsSpent(address operator, bytes32 salt) external view retur
             fn tokenize(&self) -> Self::Token<'_> {
                 (
                     <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
-                        &self.operator,
+                        &self._0,
                     ),
                     <alloy::sol_types::sol_data::FixedBytes<
                         32,
-                    > as alloy_sol_types::SolType>::tokenize(&self.salt),
+                    > as alloy_sol_types::SolType>::tokenize(&self._1),
                 )
             }
             #[inline]
@@ -8509,14 +8500,14 @@ function operatorSetMemberAtIndex(OperatorSet memory operatorSet, uint256 index)
     };
     /**Function with signature `operatorSetStatus(address,address,uint32)` and selector `0x1e68134e`.
 ```solidity
-function operatorSetStatus(address operator, address avs, uint32 operatorSetId) external view returns (bool registered, uint32 lastDeregisteredTimestamp);
+function operatorSetStatus(address, address, uint32) external view returns (bool registered, uint32 lastDeregisteredTimestamp);
 ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct operatorSetStatusCall {
-        pub operator: alloy::sol_types::private::Address,
-        pub avs: alloy::sol_types::private::Address,
-        pub operatorSetId: u32,
+        pub _0: alloy::sol_types::private::Address,
+        pub _1: alloy::sol_types::private::Address,
+        pub _2: u32,
     }
     ///Container type for the return parameters of the [`operatorSetStatus(address,address,uint32)`](operatorSetStatusCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
@@ -8562,7 +8553,7 @@ function operatorSetStatus(address operator, address avs, uint32 operatorSetId) 
             impl ::core::convert::From<operatorSetStatusCall>
             for UnderlyingRustTuple<'_> {
                 fn from(value: operatorSetStatusCall) -> Self {
-                    (value.operator, value.avs, value.operatorSetId)
+                    (value._0, value._1, value._2)
                 }
             }
             #[automatically_derived]
@@ -8571,9 +8562,9 @@ function operatorSetStatus(address operator, address avs, uint32 operatorSetId) 
             for operatorSetStatusCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {
-                        operator: tuple.0,
-                        avs: tuple.1,
-                        operatorSetId: tuple.2,
+                        _0: tuple.0,
+                        _1: tuple.1,
+                        _2: tuple.2,
                     }
                 }
             }
@@ -8647,14 +8638,14 @@ function operatorSetStatus(address operator, address avs, uint32 operatorSetId) 
             fn tokenize(&self) -> Self::Token<'_> {
                 (
                     <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
-                        &self.operator,
+                        &self._0,
                     ),
                     <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
-                        &self.avs,
+                        &self._1,
                     ),
                     <alloy::sol_types::sol_data::Uint<
                         32,
-                    > as alloy_sol_types::SolType>::tokenize(&self.operatorSetId),
+                    > as alloy_sol_types::SolType>::tokenize(&self._2),
                 )
             }
             #[inline]
@@ -11649,15 +11640,10 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         ///Creates a new call builder for the [`avsOperatorStatus`] function.
         pub fn avsOperatorStatus(
             &self,
-            avs: alloy::sol_types::private::Address,
-            operator: alloy::sol_types::private::Address,
+            _0: alloy::sol_types::private::Address,
+            _1: alloy::sol_types::private::Address,
         ) -> alloy_contract::SolCallBuilder<T, &P, avsOperatorStatusCall, N> {
-            self.call_builder(
-                &avsOperatorStatusCall {
-                    avs,
-                    operator,
-                },
-            )
+            self.call_builder(&avsOperatorStatusCall { _0, _1 })
         }
         ///Creates a new call builder for the [`becomeOperatorSetAVS`] function.
         pub fn becomeOperatorSetAVS(
@@ -11911,22 +11897,17 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         ///Creates a new call builder for the [`isOperatorSet`] function.
         pub fn isOperatorSet(
             &self,
-            avs: alloy::sol_types::private::Address,
-            operatorSetId: u32,
+            _0: alloy::sol_types::private::Address,
+            _1: u32,
         ) -> alloy_contract::SolCallBuilder<T, &P, isOperatorSetCall, N> {
-            self.call_builder(
-                &isOperatorSetCall {
-                    avs,
-                    operatorSetId,
-                },
-            )
+            self.call_builder(&isOperatorSetCall { _0, _1 })
         }
         ///Creates a new call builder for the [`isOperatorSetAVS`] function.
         pub fn isOperatorSetAVS(
             &self,
-            avs: alloy::sol_types::private::Address,
+            _0: alloy::sol_types::private::Address,
         ) -> alloy_contract::SolCallBuilder<T, &P, isOperatorSetAVSCall, N> {
-            self.call_builder(&isOperatorSetAVSCall { avs })
+            self.call_builder(&isOperatorSetAVSCall { _0 })
         }
         ///Creates a new call builder for the [`isOperatorSetBatch`] function.
         pub fn isOperatorSetBatch(
@@ -11979,15 +11960,10 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         ///Creates a new call builder for the [`operatorSaltIsSpent`] function.
         pub fn operatorSaltIsSpent(
             &self,
-            operator: alloy::sol_types::private::Address,
-            salt: alloy::sol_types::private::FixedBytes<32>,
+            _0: alloy::sol_types::private::Address,
+            _1: alloy::sol_types::private::FixedBytes<32>,
         ) -> alloy_contract::SolCallBuilder<T, &P, operatorSaltIsSpentCall, N> {
-            self.call_builder(
-                &operatorSaltIsSpentCall {
-                    operator,
-                    salt,
-                },
-            )
+            self.call_builder(&operatorSaltIsSpentCall { _0, _1 })
         }
         ///Creates a new call builder for the [`operatorSetMemberAtIndex`] function.
         pub fn operatorSetMemberAtIndex(
@@ -12005,15 +11981,15 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         ///Creates a new call builder for the [`operatorSetStatus`] function.
         pub fn operatorSetStatus(
             &self,
-            operator: alloy::sol_types::private::Address,
-            avs: alloy::sol_types::private::Address,
-            operatorSetId: u32,
+            _0: alloy::sol_types::private::Address,
+            _1: alloy::sol_types::private::Address,
+            _2: u32,
         ) -> alloy_contract::SolCallBuilder<T, &P, operatorSetStatusCall, N> {
             self.call_builder(
                 &operatorSetStatusCall {
-                    operator,
-                    avs,
-                    operatorSetId,
+                    _0,
+                    _1,
+                    _2,
                 },
             )
         }

@@ -29,14 +29,14 @@ interface StrategyManagerStorage {
     function getDeposits(address staker) external view returns (address[] memory, uint256[] memory);
     function getStakerStrategyList(address staker) external view returns (address[] memory);
     function initialize(address initialOwner, address initialStrategyWhitelister, address _pauserRegistry, uint256 initialPausedStatus) external;
-    function nonces(address signer) external view returns (uint256 nonce);
+    function nonces(address) external view returns (uint256);
     function removeDepositShares(address staker, address strategy, uint256 depositSharesToRemove) external;
     function removeStrategiesFromDepositWhitelist(address[] memory strategiesToRemoveFromWhitelist) external;
     function setStrategyWhitelister(address newStrategyWhitelister) external;
-    function stakerDepositShares(address staker, address strategy) external view returns (uint256 shares);
-    function stakerStrategyList(address staker, uint256) external view returns (address strategies);
+    function stakerDepositShares(address, address) external view returns (uint256);
+    function stakerStrategyList(address, uint256) external view returns (address);
     function stakerStrategyListLength(address staker) external view returns (uint256);
-    function strategyIsWhitelistedForDeposit(address strategy) external view returns (bool whitelisted);
+    function strategyIsWhitelistedForDeposit(address) external view returns (bool);
     function strategyWhitelister() external view returns (address);
     function withdrawSharesAsTokens(address staker, address strategy, address token, uint256 shares) external;
 }
@@ -305,14 +305,14 @@ interface StrategyManagerStorage {
     "name": "nonces",
     "inputs": [
       {
-        "name": "signer",
+        "name": "",
         "type": "address",
         "internalType": "address"
       }
     ],
     "outputs": [
       {
-        "name": "nonce",
+        "name": "",
         "type": "uint256",
         "internalType": "uint256"
       }
@@ -373,19 +373,19 @@ interface StrategyManagerStorage {
     "name": "stakerDepositShares",
     "inputs": [
       {
-        "name": "staker",
+        "name": "",
         "type": "address",
         "internalType": "address"
       },
       {
-        "name": "strategy",
+        "name": "",
         "type": "address",
         "internalType": "contract IStrategy"
       }
     ],
     "outputs": [
       {
-        "name": "shares",
+        "name": "",
         "type": "uint256",
         "internalType": "uint256"
       }
@@ -397,7 +397,7 @@ interface StrategyManagerStorage {
     "name": "stakerStrategyList",
     "inputs": [
       {
-        "name": "staker",
+        "name": "",
         "type": "address",
         "internalType": "address"
       },
@@ -409,7 +409,7 @@ interface StrategyManagerStorage {
     ],
     "outputs": [
       {
-        "name": "strategies",
+        "name": "",
         "type": "address",
         "internalType": "contract IStrategy"
       }
@@ -440,14 +440,14 @@ interface StrategyManagerStorage {
     "name": "strategyIsWhitelistedForDeposit",
     "inputs": [
       {
-        "name": "strategy",
+        "name": "",
         "type": "address",
         "internalType": "contract IStrategy"
       }
     ],
     "outputs": [
       {
-        "name": "whitelisted",
+        "name": "",
         "type": "bool",
         "internalType": "bool"
       }
@@ -3354,18 +3354,18 @@ function initialize(address initialOwner, address initialStrategyWhitelister, ad
     };
     /**Function with signature `nonces(address)` and selector `0x7ecebe00`.
 ```solidity
-function nonces(address signer) external view returns (uint256 nonce);
+function nonces(address) external view returns (uint256);
 ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct noncesCall {
-        pub signer: alloy::sol_types::private::Address,
+        pub _0: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`nonces(address)`](noncesCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct noncesReturn {
-        pub nonce: alloy::sol_types::private::primitives::aliases::U256,
+        pub _0: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
         non_camel_case_types,
@@ -3395,14 +3395,14 @@ function nonces(address signer) external view returns (uint256 nonce);
             #[doc(hidden)]
             impl ::core::convert::From<noncesCall> for UnderlyingRustTuple<'_> {
                 fn from(value: noncesCall) -> Self {
-                    (value.signer,)
+                    (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for noncesCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self { signer: tuple.0 }
+                    Self { _0: tuple.0 }
                 }
             }
         }
@@ -3428,14 +3428,14 @@ function nonces(address signer) external view returns (uint256 nonce);
             #[doc(hidden)]
             impl ::core::convert::From<noncesReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: noncesReturn) -> Self {
-                    (value.nonce,)
+                    (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for noncesReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self { nonce: tuple.0 }
+                    Self { _0: tuple.0 }
                 }
             }
         }
@@ -3462,7 +3462,7 @@ function nonces(address signer) external view returns (uint256 nonce);
             fn tokenize(&self) -> Self::Token<'_> {
                 (
                     <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
-                        &self.signer,
+                        &self._0,
                     ),
                 )
             }
@@ -3896,19 +3896,19 @@ function setStrategyWhitelister(address newStrategyWhitelister) external;
     };
     /**Function with signature `stakerDepositShares(address,address)` and selector `0xfe243a17`.
 ```solidity
-function stakerDepositShares(address staker, address strategy) external view returns (uint256 shares);
+function stakerDepositShares(address, address) external view returns (uint256);
 ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct stakerDepositSharesCall {
-        pub staker: alloy::sol_types::private::Address,
-        pub strategy: alloy::sol_types::private::Address,
+        pub _0: alloy::sol_types::private::Address,
+        pub _1: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`stakerDepositShares(address,address)`](stakerDepositSharesCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct stakerDepositSharesReturn {
-        pub shares: alloy::sol_types::private::primitives::aliases::U256,
+        pub _0: alloy::sol_types::private::primitives::aliases::U256,
     }
     #[allow(
         non_camel_case_types,
@@ -3945,7 +3945,7 @@ function stakerDepositShares(address staker, address strategy) external view ret
             impl ::core::convert::From<stakerDepositSharesCall>
             for UnderlyingRustTuple<'_> {
                 fn from(value: stakerDepositSharesCall) -> Self {
-                    (value.staker, value.strategy)
+                    (value._0, value._1)
                 }
             }
             #[automatically_derived]
@@ -3953,10 +3953,7 @@ function stakerDepositShares(address staker, address strategy) external view ret
             impl ::core::convert::From<UnderlyingRustTuple<'_>>
             for stakerDepositSharesCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self {
-                        staker: tuple.0,
-                        strategy: tuple.1,
-                    }
+                    Self { _0: tuple.0, _1: tuple.1 }
                 }
             }
         }
@@ -3983,7 +3980,7 @@ function stakerDepositShares(address staker, address strategy) external view ret
             impl ::core::convert::From<stakerDepositSharesReturn>
             for UnderlyingRustTuple<'_> {
                 fn from(value: stakerDepositSharesReturn) -> Self {
-                    (value.shares,)
+                    (value._0,)
                 }
             }
             #[automatically_derived]
@@ -3991,7 +3988,7 @@ function stakerDepositShares(address staker, address strategy) external view ret
             impl ::core::convert::From<UnderlyingRustTuple<'_>>
             for stakerDepositSharesReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self { shares: tuple.0 }
+                    Self { _0: tuple.0 }
                 }
             }
         }
@@ -4021,10 +4018,10 @@ function stakerDepositShares(address staker, address strategy) external view ret
             fn tokenize(&self) -> Self::Token<'_> {
                 (
                     <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
-                        &self.staker,
+                        &self._0,
                     ),
                     <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
-                        &self.strategy,
+                        &self._1,
                     ),
                 )
             }
@@ -4042,19 +4039,19 @@ function stakerDepositShares(address staker, address strategy) external view ret
     };
     /**Function with signature `stakerStrategyList(address,uint256)` and selector `0xcbc2bd62`.
 ```solidity
-function stakerStrategyList(address staker, uint256) external view returns (address strategies);
+function stakerStrategyList(address, uint256) external view returns (address);
 ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct stakerStrategyListCall {
-        pub staker: alloy::sol_types::private::Address,
+        pub _0: alloy::sol_types::private::Address,
         pub _1: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`stakerStrategyList(address,uint256)`](stakerStrategyListCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct stakerStrategyListReturn {
-        pub strategies: alloy::sol_types::private::Address,
+        pub _0: alloy::sol_types::private::Address,
     }
     #[allow(
         non_camel_case_types,
@@ -4091,7 +4088,7 @@ function stakerStrategyList(address staker, uint256) external view returns (addr
             impl ::core::convert::From<stakerStrategyListCall>
             for UnderlyingRustTuple<'_> {
                 fn from(value: stakerStrategyListCall) -> Self {
-                    (value.staker, value._1)
+                    (value._0, value._1)
                 }
             }
             #[automatically_derived]
@@ -4099,10 +4096,7 @@ function stakerStrategyList(address staker, uint256) external view returns (addr
             impl ::core::convert::From<UnderlyingRustTuple<'_>>
             for stakerStrategyListCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self {
-                        staker: tuple.0,
-                        _1: tuple.1,
-                    }
+                    Self { _0: tuple.0, _1: tuple.1 }
                 }
             }
         }
@@ -4127,7 +4121,7 @@ function stakerStrategyList(address staker, uint256) external view returns (addr
             impl ::core::convert::From<stakerStrategyListReturn>
             for UnderlyingRustTuple<'_> {
                 fn from(value: stakerStrategyListReturn) -> Self {
-                    (value.strategies,)
+                    (value._0,)
                 }
             }
             #[automatically_derived]
@@ -4135,7 +4129,7 @@ function stakerStrategyList(address staker, uint256) external view returns (addr
             impl ::core::convert::From<UnderlyingRustTuple<'_>>
             for stakerStrategyListReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self { strategies: tuple.0 }
+                    Self { _0: tuple.0 }
                 }
             }
         }
@@ -4165,7 +4159,7 @@ function stakerStrategyList(address staker, uint256) external view returns (addr
             fn tokenize(&self) -> Self::Token<'_> {
                 (
                     <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
-                        &self.staker,
+                        &self._0,
                     ),
                     <alloy::sol_types::sol_data::Uint<
                         256,
@@ -4316,18 +4310,18 @@ function stakerStrategyListLength(address staker) external view returns (uint256
     };
     /**Function with signature `strategyIsWhitelistedForDeposit(address)` and selector `0x663c1de4`.
 ```solidity
-function strategyIsWhitelistedForDeposit(address strategy) external view returns (bool whitelisted);
+function strategyIsWhitelistedForDeposit(address) external view returns (bool);
 ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct strategyIsWhitelistedForDepositCall {
-        pub strategy: alloy::sol_types::private::Address,
+        pub _0: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`strategyIsWhitelistedForDeposit(address)`](strategyIsWhitelistedForDepositCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct strategyIsWhitelistedForDepositReturn {
-        pub whitelisted: bool,
+        pub _0: bool,
     }
     #[allow(
         non_camel_case_types,
@@ -4358,7 +4352,7 @@ function strategyIsWhitelistedForDeposit(address strategy) external view returns
             impl ::core::convert::From<strategyIsWhitelistedForDepositCall>
             for UnderlyingRustTuple<'_> {
                 fn from(value: strategyIsWhitelistedForDepositCall) -> Self {
-                    (value.strategy,)
+                    (value._0,)
                 }
             }
             #[automatically_derived]
@@ -4366,7 +4360,7 @@ function strategyIsWhitelistedForDeposit(address strategy) external view returns
             impl ::core::convert::From<UnderlyingRustTuple<'_>>
             for strategyIsWhitelistedForDepositCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self { strategy: tuple.0 }
+                    Self { _0: tuple.0 }
                 }
             }
         }
@@ -4391,7 +4385,7 @@ function strategyIsWhitelistedForDeposit(address strategy) external view returns
             impl ::core::convert::From<strategyIsWhitelistedForDepositReturn>
             for UnderlyingRustTuple<'_> {
                 fn from(value: strategyIsWhitelistedForDepositReturn) -> Self {
-                    (value.whitelisted,)
+                    (value._0,)
                 }
             }
             #[automatically_derived]
@@ -4399,7 +4393,7 @@ function strategyIsWhitelistedForDeposit(address strategy) external view returns
             impl ::core::convert::From<UnderlyingRustTuple<'_>>
             for strategyIsWhitelistedForDepositReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self { whitelisted: tuple.0 }
+                    Self { _0: tuple.0 }
                 }
             }
         }
@@ -4426,7 +4420,7 @@ function strategyIsWhitelistedForDeposit(address strategy) external view returns
             fn tokenize(&self) -> Self::Token<'_> {
                 (
                     <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
-                        &self.strategy,
+                        &self._0,
                     ),
                 )
             }
@@ -6290,9 +6284,9 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         ///Creates a new call builder for the [`nonces`] function.
         pub fn nonces(
             &self,
-            signer: alloy::sol_types::private::Address,
+            _0: alloy::sol_types::private::Address,
         ) -> alloy_contract::SolCallBuilder<T, &P, noncesCall, N> {
-            self.call_builder(&noncesCall { signer })
+            self.call_builder(&noncesCall { _0 })
         }
         ///Creates a new call builder for the [`removeDepositShares`] function.
         pub fn removeDepositShares(
@@ -6341,28 +6335,18 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         ///Creates a new call builder for the [`stakerDepositShares`] function.
         pub fn stakerDepositShares(
             &self,
-            staker: alloy::sol_types::private::Address,
-            strategy: alloy::sol_types::private::Address,
+            _0: alloy::sol_types::private::Address,
+            _1: alloy::sol_types::private::Address,
         ) -> alloy_contract::SolCallBuilder<T, &P, stakerDepositSharesCall, N> {
-            self.call_builder(
-                &stakerDepositSharesCall {
-                    staker,
-                    strategy,
-                },
-            )
+            self.call_builder(&stakerDepositSharesCall { _0, _1 })
         }
         ///Creates a new call builder for the [`stakerStrategyList`] function.
         pub fn stakerStrategyList(
             &self,
-            staker: alloy::sol_types::private::Address,
+            _0: alloy::sol_types::private::Address,
             _1: alloy::sol_types::private::primitives::aliases::U256,
         ) -> alloy_contract::SolCallBuilder<T, &P, stakerStrategyListCall, N> {
-            self.call_builder(
-                &stakerStrategyListCall {
-                    staker,
-                    _1,
-                },
-            )
+            self.call_builder(&stakerStrategyListCall { _0, _1 })
         }
         ///Creates a new call builder for the [`stakerStrategyListLength`] function.
         pub fn stakerStrategyListLength(
@@ -6378,7 +6362,7 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         ///Creates a new call builder for the [`strategyIsWhitelistedForDeposit`] function.
         pub fn strategyIsWhitelistedForDeposit(
             &self,
-            strategy: alloy::sol_types::private::Address,
+            _0: alloy::sol_types::private::Address,
         ) -> alloy_contract::SolCallBuilder<
             T,
             &P,
@@ -6387,7 +6371,7 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         > {
             self.call_builder(
                 &strategyIsWhitelistedForDepositCall {
-                    strategy,
+                    _0,
                 },
             )
         }

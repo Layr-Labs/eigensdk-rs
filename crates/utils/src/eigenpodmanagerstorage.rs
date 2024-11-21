@@ -34,13 +34,13 @@ interface EigenPodManagerStorage {
     function getPod(address podOwner) external view returns (address);
     function hasPod(address podOwner) external view returns (bool);
     function numPods() external view returns (uint256);
-    function ownerToPod(address podOwner) external view returns (address);
+    function ownerToPod(address) external view returns (address);
     function pause(uint256 newPausedStatus) external;
     function pauseAll() external;
     function paused(uint8 index) external view returns (bool);
     function paused() external view returns (uint256);
     function pauserRegistry() external view returns (address);
-    function podOwnerDepositShares(address podOwner) external view returns (int256 shares);
+    function podOwnerDepositShares(address) external view returns (int256);
     function recordBeaconChainETHBalanceUpdate(address podOwner, int256 sharesDelta, uint64 proportionPodBalanceDecrease) external;
     function removeDepositShares(address staker, address strategy, uint256 depositSharesToRemove) external;
     function setPauserRegistry(address newPauserRegistry) external;
@@ -204,7 +204,7 @@ interface EigenPodManagerStorage {
     "name": "ownerToPod",
     "inputs": [
       {
-        "name": "podOwner",
+        "name": "",
         "type": "address",
         "internalType": "address"
       }
@@ -288,14 +288,14 @@ interface EigenPodManagerStorage {
     "name": "podOwnerDepositShares",
     "inputs": [
       {
-        "name": "podOwner",
+        "name": "",
         "type": "address",
         "internalType": "address"
       }
     ],
     "outputs": [
       {
-        "name": "shares",
+        "name": "",
         "type": "int256",
         "internalType": "int256"
       }
@@ -3807,12 +3807,12 @@ function numPods() external view returns (uint256);
     };
     /**Function with signature `ownerToPod(address)` and selector `0x9ba06275`.
 ```solidity
-function ownerToPod(address podOwner) external view returns (address);
+function ownerToPod(address) external view returns (address);
 ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct ownerToPodCall {
-        pub podOwner: alloy::sol_types::private::Address,
+        pub _0: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`ownerToPod(address)`](ownerToPodCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
@@ -3848,14 +3848,14 @@ function ownerToPod(address podOwner) external view returns (address);
             #[doc(hidden)]
             impl ::core::convert::From<ownerToPodCall> for UnderlyingRustTuple<'_> {
                 fn from(value: ownerToPodCall) -> Self {
-                    (value.podOwner,)
+                    (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for ownerToPodCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self { podOwner: tuple.0 }
+                    Self { _0: tuple.0 }
                 }
             }
         }
@@ -3913,7 +3913,7 @@ function ownerToPod(address podOwner) external view returns (address);
             fn tokenize(&self) -> Self::Token<'_> {
                 (
                     <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
-                        &self.podOwner,
+                        &self._0,
                     ),
                 )
             }
@@ -4535,18 +4535,18 @@ function pauserRegistry() external view returns (address);
     };
     /**Function with signature `podOwnerDepositShares(address)` and selector `0xd48e8894`.
 ```solidity
-function podOwnerDepositShares(address podOwner) external view returns (int256 shares);
+function podOwnerDepositShares(address) external view returns (int256);
 ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct podOwnerDepositSharesCall {
-        pub podOwner: alloy::sol_types::private::Address,
+        pub _0: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`podOwnerDepositShares(address)`](podOwnerDepositSharesCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct podOwnerDepositSharesReturn {
-        pub shares: alloy::sol_types::private::primitives::aliases::I256,
+        pub _0: alloy::sol_types::private::primitives::aliases::I256,
     }
     #[allow(
         non_camel_case_types,
@@ -4577,7 +4577,7 @@ function podOwnerDepositShares(address podOwner) external view returns (int256 s
             impl ::core::convert::From<podOwnerDepositSharesCall>
             for UnderlyingRustTuple<'_> {
                 fn from(value: podOwnerDepositSharesCall) -> Self {
-                    (value.podOwner,)
+                    (value._0,)
                 }
             }
             #[automatically_derived]
@@ -4585,7 +4585,7 @@ function podOwnerDepositShares(address podOwner) external view returns (int256 s
             impl ::core::convert::From<UnderlyingRustTuple<'_>>
             for podOwnerDepositSharesCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self { podOwner: tuple.0 }
+                    Self { _0: tuple.0 }
                 }
             }
         }
@@ -4612,7 +4612,7 @@ function podOwnerDepositShares(address podOwner) external view returns (int256 s
             impl ::core::convert::From<podOwnerDepositSharesReturn>
             for UnderlyingRustTuple<'_> {
                 fn from(value: podOwnerDepositSharesReturn) -> Self {
-                    (value.shares,)
+                    (value._0,)
                 }
             }
             #[automatically_derived]
@@ -4620,7 +4620,7 @@ function podOwnerDepositShares(address podOwner) external view returns (int256 s
             impl ::core::convert::From<UnderlyingRustTuple<'_>>
             for podOwnerDepositSharesReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self { shares: tuple.0 }
+                    Self { _0: tuple.0 }
                 }
             }
         }
@@ -4647,7 +4647,7 @@ function podOwnerDepositShares(address podOwner) external view returns (int256 s
             fn tokenize(&self) -> Self::Token<'_> {
                 (
                     <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
-                        &self.podOwner,
+                        &self._0,
                     ),
                 )
             }
@@ -7572,9 +7572,9 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         ///Creates a new call builder for the [`ownerToPod`] function.
         pub fn ownerToPod(
             &self,
-            podOwner: alloy::sol_types::private::Address,
+            _0: alloy::sol_types::private::Address,
         ) -> alloy_contract::SolCallBuilder<T, &P, ownerToPodCall, N> {
-            self.call_builder(&ownerToPodCall { podOwner })
+            self.call_builder(&ownerToPodCall { _0 })
         }
         ///Creates a new call builder for the [`pause`] function.
         pub fn pause(
@@ -7611,13 +7611,9 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         ///Creates a new call builder for the [`podOwnerDepositShares`] function.
         pub fn podOwnerDepositShares(
             &self,
-            podOwner: alloy::sol_types::private::Address,
+            _0: alloy::sol_types::private::Address,
         ) -> alloy_contract::SolCallBuilder<T, &P, podOwnerDepositSharesCall, N> {
-            self.call_builder(
-                &podOwnerDepositSharesCall {
-                    podOwner,
-                },
-            )
+            self.call_builder(&podOwnerDepositSharesCall { _0 })
         }
         ///Creates a new call builder for the [`recordBeaconChainETHBalanceUpdate`] function.
         pub fn recordBeaconChainETHBalanceUpdate(
