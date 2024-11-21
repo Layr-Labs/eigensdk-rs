@@ -140,6 +140,7 @@ pub mod mainnetstrategyfactorydeploy;
 pub mod math;
 pub mod mathupgradeable;
 pub mod merkle;
+pub mod mockavsservicemanager;
 pub mod multisendcallonly;
 pub mod ownable;
 pub mod ownableupgradeable;
