@@ -12,8 +12,8 @@ use eigen_utils::{
 
 #[derive(Debug, Clone)]
 pub struct ELChainReader {
-    _logger: SharedLogger,
-    slasher: Address,
+    logger: SharedLogger,
+    allocation_manager: Address,
     delegation_manager: Address,
     avs_directory: Address,
     pub provider: String,
@@ -25,7 +25,7 @@ impl ELChainReader {
     /// # Arguments
     ///
     /// * `_logger` - The logger to use for logging.
-    /// * `slasher` - The address of the slasher contract.
+    /// * `allocation_manager` - The address of the allocation manager contract.
     /// * `delegation_manager` - The address of the delegation manager contract.
     /// * `avs_directory` - The address of the avs directory contract.
     /// * `provider` - The provider to use for the RPC client.
@@ -34,61 +34,19 @@ impl ELChainReader {
     ///
     /// A new `ELChainReader` instance.
     pub fn new(
-        _logger: SharedLogger,
-        slasher: Address,
+        logger: SharedLogger,
+        allocation_manager: Address,
         delegation_manager: Address,
         avs_directory: Address,
         provider: String,
     ) -> Self {
         ELChainReader {
-            _logger,
-            slasher,
+            logger,
+            allocation_manager,
             delegation_manager,
             avs_directory,
             provider,
         }
-    }
-
-    /// Builds a new `ELChainReader` instance, getting the slasher address from the delegation manager
-    /// by calling the `slasher()` function and the corresponding Contract function.
-    ///
-    /// # Arguments
-    ///
-    /// * `_logger` - The logger to use for logging.
-    /// * `delegation_manager` - The address of the delegation manager contract.
-    /// * `avs_directory` - The address of the avs directory contract.
-    /// * `client` - The provider to use for the RPC client to call the contracts.
-    ///
-    /// # Returns
-    ///
-    /// A new `ELChainReader` instance.
-    ///
-    /// # Errors
-    pub async fn build(
-        _logger: SharedLogger,
-        delegation_manager: Address,
-        avs_directory: Address,
-        client: &String,
-    ) -> Result<Self, ElContractsError> {
-        let provider = get_provider(client);
-
-        let contract_delegation_manager = DelegationManager::new(delegation_manager, provider);
-
-        let slasher = contract_delegation_manager
-            .slasher()
-            .call()
-            .await
-            .map_err(ElContractsError::AlloyContractError)?;
-
-        let DelegationManager::slasherReturn { _0: slasher_addr } = slasher;
-
-        Ok(Self {
-            _logger,
-            avs_directory,
-            slasher: slasher_addr,
-            delegation_manager,
-            provider: client.to_string(),
-        })
     }
 
     /// Calculate the delegation approval digest hash
@@ -206,70 +164,6 @@ impl ELChainReader {
 
         let DelegationManager::operatorSharesReturn { _0: shares } = operator_shares_in_strategy;
         Ok(shares)
-    }
-
-    /// Check if the operator is frozen
-    ///
-    /// # Arguments
-    ///
-    /// * `operator_addr` - The operator's address
-    ///
-    /// # Returns
-    ///
-    /// * `bool` - True if the operator is frozen, false otherwise
-    ///
-    /// # Errors
-    pub async fn operator_is_frozen(
-        &self,
-        operator_addr: Address,
-    ) -> Result<bool, ElContractsError> {
-        let provider = get_provider(&self.provider);
-
-        let contract_slasher = ISlasher::new(self.slasher, provider);
-
-        let operator_is_frozen = contract_slasher
-            .isFrozen(operator_addr)
-            .call()
-            .await
-            .map_err(ElContractsError::AlloyContractError)?;
-
-        let ISlasher::isFrozenReturn { _0: is_froze } = operator_is_frozen;
-        Ok(is_froze)
-    }
-
-    /// Check if the service manager can slash the operator
-    ///
-    /// # Arguments
-    ///
-    /// * `operator_addr` - The operator's address
-    /// * `service_manager_addr` - The service manager's address
-    ///
-    /// # Returns
-    ///
-    /// * `u32` - The block number until the operator can be slashed
-    ///
-    /// # Errors
-    ///
-    /// * `ElContractsError` - if the call to the contract fails    
-    pub async fn service_manager_can_slash_operator_until_block(
-        &self,
-        operator_addr: Address,
-        service_manager_addr: Address,
-    ) -> Result<u32, ElContractsError> {
-        let provider = get_provider(&self.provider);
-
-        let contract_slasher = ISlasher::new(self.slasher, provider);
-
-        let service_manager_can_slash_operator_until_block = contract_slasher
-            .contractCanSlashOperatorUntilBlock(operator_addr, service_manager_addr)
-            .call()
-            .await
-            .map_err(ElContractsError::AlloyContractError)?;
-
-        let ISlasher::contractCanSlashOperatorUntilBlockReturn { _0: can_slash } =
-            service_manager_can_slash_operator_until_block;
-
-        Ok(can_slash)
     }
 
     /// Get strategy and underlying ERC-20 token
