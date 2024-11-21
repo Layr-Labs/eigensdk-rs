@@ -1,5 +1,5 @@
 use crate::error::ElContractsError;
-use alloy_primitives::{aliases::U96, Address, FixedBytes, U256};
+use alloy_primitives::{Address, FixedBytes, U256};
 use eigen_logging::logger::SharedLogger;
 use eigen_types::operator::Operator;
 use eigen_utils::{
@@ -399,18 +399,23 @@ impl ELChainReader {
     pub async fn get_staker_shares(
         &self,
         staker_address: Address,
-        block_number: u32, // TODO: use block_number
-    ) -> Result<Vec<(Address, U96)>, ElContractsError> {
-        // TODO: check if U96 is the correct type for shares
+    ) -> Result<(Vec<Address>, Vec<U256>), ElContractsError> {
         let provider = get_provider(&self.provider);
 
         let contract_delegation_manager = DelegationManager::new(self.delegation_manager, provider);
 
-        contract_delegation_manager
-            .getDepositedShares(staker_address) //TODO: add binding
+        let deposited_shares = contract_delegation_manager
+            .getDepositedShares(staker_address)
             .call()
             .await
-            .map_err(ElContractsError::AlloyContractError)
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        let DelegationManager::getDepositedSharesReturn {
+            _0: addresses,
+            _1: shares,
+        } = deposited_shares;
+
+        Ok((addresses, shares))
     }
 
     /// Get the delegated operator
