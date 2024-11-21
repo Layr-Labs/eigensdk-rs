@@ -60,8 +60,6 @@ impl From<BlsKeyPair> for OperatorPubKeys {
 
 pub struct Operator {
     pub address: Address,
-    pub earnings_receiver_address: Address,
-    pub delegation_approver_address: Address,
     pub staker_opt_out_window_blocks: u32,
     pub metadata_url: Option<String>,
 }

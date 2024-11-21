@@ -6,7 +6,7 @@ use eigen_utils::{
     get_provider,
     {
         avsdirectory::AVSDirectory, delegationmanager::DelegationManager, erc20::ERC20,
-        islasher::ISlasher, istrategy::IStrategy,
+        istrategy::IStrategy,
     },
 };
 
@@ -242,9 +242,7 @@ impl ELChainReader {
 
         Ok(Operator {
             address: operator,
-            earnings_receiver_address: operator_details.__deprecated_earningsReceiver,
-            delegation_approver_address: operator_details.delegationApprover,
-            staker_opt_out_window_blocks: operator_details.stakerOptOutWindowBlocks,
+            staker_opt_out_window_blocks: operator_details.__deprecated_stakerOptOutWindowBlocks,
             metadata_url: None,
         })
     }
@@ -325,7 +323,6 @@ impl ELChainReader {
     pub async fn get_delegated_operator(
         &self,
         staker_address: Address,
-        block_number: u32, // TODO: use block_number
     ) -> Result<Address, ElContractsError> {
         let provider = get_provider(&self.provider);
 
@@ -354,9 +351,7 @@ mod tests {
     use eigen_logging::get_test_logger;
     use eigen_testing_utils::{
         anvil::start_anvil_container,
-        anvil_constants::{
-            get_delegation_manager_address, get_erc20_mock_strategy, get_service_manager_address,
-        },
+        anvil_constants::{get_delegation_manager_address, get_service_manager_address},
     };
     use eigen_utils::{
         avsdirectory::AVSDirectory,
@@ -374,10 +369,6 @@ mod tests {
             get_delegation_manager_address(http_endpoint.clone()).await;
         let delegation_manager_contract =
             DelegationManager::new(delegation_manager_address, get_provider(&http_endpoint));
-        let slasher_address_return = delegation_manager_contract.slasher().call().await.unwrap();
-        let DelegationManager::slasherReturn {
-            _0: slasher_address,
-        } = slasher_address_return;
         let service_manager_address = get_service_manager_address(http_endpoint.clone()).await;
         let service_manager_contract =
             MockAvsServiceManager::new(service_manager_address, get_provider(&http_endpoint));
@@ -389,10 +380,16 @@ mod tests {
         let MockAvsServiceManager::avsDirectoryReturn {
             _0: avs_directory_address,
         } = avs_directory_address_return;
+        let allocation_manager_address = delegation_manager_contract
+            .allocationManager()
+            .call()
+            .await
+            .unwrap()
+            ._0;
 
         ELChainReader::new(
             get_test_logger(),
-            slasher_address,
+            allocation_manager_address,
             delegation_manager_address,
             avs_directory_address,
             http_endpoint,
@@ -488,38 +485,6 @@ mod tests {
             operator_hash_from_bindings;
 
         assert_eq!(hash, operator_hash);
-    }
-
-    #[tokio::test]
-    async fn check_strategy_shares_and_operator_frozen() {
-        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let operator_addr = Address::from_str(OPERATOR_ADDRESS).unwrap();
-        let strategy_addr = get_erc20_mock_strategy(http_endpoint.clone()).await;
-
-        let chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
-        let shares = chain_reader
-            .get_operator_shares_in_strategy(operator_addr, strategy_addr)
-            .await
-            .unwrap();
-
-        let zero = U256::ZERO;
-        assert!(shares > zero);
-
-        // test if operator is frozen
-        let frozen = chain_reader
-            .operator_is_frozen(operator_addr)
-            .await
-            .unwrap();
-        assert!(!frozen);
-
-        let service_manager_address = get_service_manager_address(http_endpoint).await;
-        let ret_can_slash = chain_reader
-            .service_manager_can_slash_operator_until_block(operator_addr, service_manager_address)
-            .await
-            .unwrap();
-
-        println!("ret_can_slash: {ret_can_slash}");
-        assert!(ret_can_slash == 0);
     }
 
     #[tokio::test]
