@@ -8,6 +8,13 @@ start-anvil-chain-with-contracts-deployed: ##
 deploy-contracts-to-anvil-and-save-state: ##
 	./crates/contracts/anvil/deploy-contracts-save-anvil-state.sh
 
+deploy-eigenlayer:
+	./crates/contracts/anvil/deploy-eigenlayer.sh
+
+deploy-avs:
+	chmod +x ./crates/contracts/anvil/deploy-avs.sh
+	./crates/contracts/anvil/deploy-avs.sh
+
 __TESTING__: ##
 
 reset-anvil:

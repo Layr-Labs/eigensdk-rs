@@ -10,6 +10,7 @@ import {stdJson} from "forge-std/StdJson.sol";
 import {IAVSDirectory} from "@eigenlayer/contracts/interfaces/IAVSDirectory.sol";
 import {MockAvsServiceManager} from "../../src/MockAvsServiceManager.sol";
 import {IDelegationManager} from "@eigenlayer/contracts/interfaces/IDelegationManager.sol";
+import {IRewardsCoordinator} from "@eigenlayer/contracts/interfaces/IRewardsCoordinator.sol";
 import {Quorum} from "@eigenlayer-middleware/src/interfaces/IECDSAStakeRegistryEventsAndErrors.sol";
 import {UpgradeableProxyLib} from "./UpgradeableProxyLib.sol";
 import {CoreDeploymentLib} from "./CoreDeploymentLib.sol";
@@ -29,10 +30,12 @@ import {
     IStakeRegistry,
     ISocketRegistry
 } from "@eigenlayer-middleware/src/RegistryCoordinator.sol";
+import {IAVSDirectory} from "@eigenlayer/contracts/interfaces/IAVSDirectory.sol";
 import {PauserRegistry, IPauserRegistry} from "@eigenlayer/contracts/permissions/PauserRegistry.sol";
 import {OperatorStateRetriever} from "@eigenlayer-middleware/src/OperatorStateRetriever.sol";
+import {Vm} from "forge-std/Vm.sol";
 
-library IncredibleSquaringDeploymentLib {
+library MockAvsDeploymentLib {
     using stdJson for *;
     using Strings for *;
     using UpgradeableProxyLib for address;
@@ -51,33 +54,36 @@ library IncredibleSquaringDeploymentLib {
         address token;
     }
 
-    struct IncredibleSquaringSetupConfig {
+    struct MockAvsSetupConfig {
         uint256 numQuorums;
         uint256[] operatorParams;
         address operator_addr;
         address contracts_registry_addr;
-        address task_generator_addr;
-        address aggregator_addr;
     }
 
     function deployContracts(
         address proxyAdmin,
         CoreDeploymentLib.DeploymentData memory core,
         address strategy,
-        IncredibleSquaringSetupConfig memory isConfig,
+        MockAvsSetupConfig memory isConfig,
         address admin
     ) internal returns (DeploymentData memory) {
         /// read EL deployment address
         CoreDeploymentLib.DeploymentData memory coredata =
             readCoreDeploymentJson("script/deployments/core/", block.chainid);
 
-        address avsdirectory = coredata.avsDirectory;
-
         DeploymentData memory result;
 
         // First, deploy upgradeable proxy contracts that will point to the implementations.
         result.mockAvsServiceManager = UpgradeableProxyLib.setUpEmptyProxy(proxyAdmin);
-      
+        result.stakeRegistry = UpgradeableProxyLib.setUpEmptyProxy(proxyAdmin);
+        result.registryCoordinator = UpgradeableProxyLib.setUpEmptyProxy(proxyAdmin);
+        result.blsapkRegistry = UpgradeableProxyLib.setUpEmptyProxy(proxyAdmin);
+        result.indexRegistry = UpgradeableProxyLib.setUpEmptyProxy(proxyAdmin);
+        result.socketRegistry = UpgradeableProxyLib.setUpEmptyProxy(proxyAdmin);
+        OperatorStateRetriever operatorStateRetriever = new OperatorStateRetriever();
+        result.strategy = strategy;
+        result.operatorStateRetriever = address(operatorStateRetriever);
         // Deploy the implementation contracts, using the proxy contracts as inputs
         address stakeRegistryImpl = address(
             new StakeRegistry(
@@ -90,7 +96,7 @@ library IncredibleSquaringDeploymentLib {
         address indexRegistryimpl = address(new IndexRegistry(IRegistryCoordinator(result.registryCoordinator)));
         address registryCoordinatorImpl = address(
             new RegistryCoordinator(
-                IServiceManager(result.incredibleSquaringServiceManager),
+                MockAvsServiceManager(result.mockAvsServiceManager),
                 IStakeRegistry(result.stakeRegistry),
                 IBLSApkRegistry(result.blsapkRegistry),
                 IIndexRegistry(result.indexRegistry),
@@ -156,19 +162,13 @@ library IncredibleSquaringDeploymentLib {
         UpgradeableProxyLib.upgrade(result.socketRegistry, socketRegistryImpl);
         UpgradeableProxyLib.upgradeAndCall(result.registryCoordinator, registryCoordinatorImpl, upgradeCall);
         MockAvsServiceManager mockAvsServiceManagerImpl = new MockAvsServiceManager(
-         
+            IRegistryCoordinator(result.registryCoordinator),
+            IAVSDirectory(coredata.avsDirectory),
+            IRewardsCoordinator(coredata.rewardsCoordinator)
         );
-        IncredibleSquaringTaskManager incredibleSquaringTaskManagerImpl =
-            new IncredibleSquaringTaskManager(IRegistryCoordinator(result.registryCoordinator), 30);
-        UpgradeableProxyLib.upgrade(
-            result.incredibleSquaringServiceManager, address(incredibleSquaringServiceManagerImpl)
-        );
-        bytes memory taskmanagerupgradecall = abi.encodeCall(
-            IncredibleSquaringTaskManager.initialize,
-            (IPauserRegistry(address(pausercontract)), admin, isConfig.aggregator_addr, isConfig.task_generator_addr)
-        );
+        bytes memory mockavsmanagerupgradecall = abi.encodeCall(MockAvsServiceManager.initialize, admin);
         UpgradeableProxyLib.upgradeAndCall(
-            result.incredibleSquaringTaskManager, address(incredibleSquaringTaskManagerImpl), (taskmanagerupgradecall)
+            result.mockAvsServiceManager, address(mockAvsServiceManagerImpl), mockavsmanagerupgradecall
         );
 
         verify_deployment(result);
@@ -177,24 +177,19 @@ library IncredibleSquaringDeploymentLib {
     }
 
     function readDeploymentJson(uint256 chainId) internal returns (DeploymentData memory) {
-        return readDeploymentJson("script/deployments/incredible-squaring/", chainId);
+        return readDeploymentJson("script/deployments/mock-avs/", chainId);
     }
 
-    function readIncredibleSquaringConfigJson(string memory directoryPath)
-        internal
-        returns (IncredibleSquaringSetupConfig memory)
-    {
+    function readMockAvsConfigJson(string memory directoryPath) internal returns (MockAvsSetupConfig memory) {
         string memory fileName = string.concat(directoryPath, ".json");
         require(vm.exists(fileName), "Deployment file does not exist");
         string memory json = vm.readFile(fileName);
 
-        IncredibleSquaringSetupConfig memory data;
-        data.numQuorums = json.readUint(".num_quorums");
-        data.operatorParams = json.readUintArray(".operator_params");
-        data.aggregator_addr = json.readAddress(".aggregator_addr");
+        MockAvsSetupConfig memory data;
         data.contracts_registry_addr = json.readAddress(".contracts_registry_addr");
         data.operator_addr = json.readAddress(".operator_addr");
-        data.task_generator_addr = json.readAddress(".task_generator_addr");
+        data.numQuorums = json.readUint(".num_quorums");
+        data.operatorParams = json.readUintArray(".operator_params");
         return data;
     }
 
@@ -209,8 +204,7 @@ library IncredibleSquaringDeploymentLib {
         string memory json = vm.readFile(fileName);
 
         DeploymentData memory data;
-        data.incredibleSquaringServiceManager = json.readAddress(".addresses.IncredibleSquaringServiceManager");
-        data.incredibleSquaringTaskManager = json.readAddress(".addresses.IncredibleSquaringTaskManager");
+        data.mockAvsServiceManager = json.readAddress(".addresses.MockAvsServiceManager");
         data.registryCoordinator = json.readAddress(".addresses.registryCoordinator");
         data.operatorStateRetriever = json.readAddress(".addresses.operatorStateRetriever");
         data.stakeRegistry = json.readAddress(".addresses.stakeRegistry");
@@ -222,11 +216,11 @@ library IncredibleSquaringDeploymentLib {
 
     /// write to default output path
     function writeDeploymentJson(DeploymentData memory data) internal {
-        writeDeploymentJson("script/deployments/incredible-squaring/", block.chainid, data);
+        writeDeploymentJson("script/deployments/mock-avs/", block.chainid, data);
     }
 
     function writeDeploymentJson(string memory outputPath, uint256 chainId, DeploymentData memory data) internal {
-        address proxyAdmin = address(UpgradeableProxyLib.getProxyAdmin(data.incredibleSquaringServiceManager));
+        address proxyAdmin = address(UpgradeableProxyLib.getProxyAdmin(data.mockAvsServiceManager));
 
         string memory deploymentData = _generateDeploymentJson(data, proxyAdmin);
 
@@ -263,12 +257,10 @@ library IncredibleSquaringDeploymentLib {
         return string.concat(
             '{"proxyAdmin":"',
             proxyAdmin.toHexString(),
-            '","IncredibleSquaringServiceManager":"',
-            data.incredibleSquaringServiceManager.toHexString(),
-            '","incredibleSquaringServiceManagerImpl":"',
-            data.incredibleSquaringServiceManager.getImplementation().toHexString(),
-            '","IncredibleSquaringTaskManager":"',
-            data.incredibleSquaringTaskManager.toHexString(),
+            '","MockAvsServiceManager":"',
+            data.mockAvsServiceManager.toHexString(),
+            '","MockAvsServiceManagerImpl":"',
+            data.mockAvsServiceManager.getImplementation().toHexString(),
             '","registryCoordinator":"',
             data.registryCoordinator.toHexString(),
             '","blsapkRegistry":"',
