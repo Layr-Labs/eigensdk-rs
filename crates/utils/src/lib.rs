@@ -142,6 +142,7 @@ pub mod mathupgradeable;
 pub mod merkle;
 pub mod mockavsservicemanager;
 pub mod multisendcallonly;
+pub mod operatorstateretriever;
 pub mod ownable;
 pub mod ownableupgradeable;
 pub mod pausable;

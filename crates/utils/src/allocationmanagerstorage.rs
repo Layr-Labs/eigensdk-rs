@@ -16,6 +16,7 @@ library IAllocationManagerTypes {
 )]
 use crate::iavsdirectory::IAVSDirectory::OperatorSet;
 
+#[allow(non_snake_case)]
 pub mod IAllocationManagerTypes {
     use super::*;
     use alloy::sol_types as alloy_sol_types;

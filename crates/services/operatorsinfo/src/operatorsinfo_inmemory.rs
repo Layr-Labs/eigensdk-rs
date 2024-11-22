@@ -664,10 +664,10 @@ mod tests {
 
         let operator_details = Operator {
             address: signer.address(),
-            earnings_receiver_address: signer.address(),
             delegation_approver_address: signer.address(),
             staker_opt_out_window_blocks: 3,
             metadata_url: Some("eigensdk-rs".to_string()),
+            allocation_delay: 0,
         };
 
         el_chain_writer
