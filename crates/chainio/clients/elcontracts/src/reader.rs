@@ -9,7 +9,7 @@ use eigen_utils::{
 
 #[derive(Debug, Clone)]
 pub struct ELChainReader {
-    logger: SharedLogger,
+    _logger: SharedLogger,
     allocation_manager: Address,
     delegation_manager: Address,
     avs_directory: Address,
@@ -31,19 +31,61 @@ impl ELChainReader {
     ///
     /// A new `ELChainReader` instance.
     pub fn new(
-        logger: SharedLogger,
+        _logger: SharedLogger,
         allocation_manager: Address,
         delegation_manager: Address,
         avs_directory: Address,
         provider: String,
     ) -> Self {
         ELChainReader {
-            logger,
+            _logger,
             allocation_manager,
             delegation_manager,
             avs_directory,
             provider,
         }
+    }
+
+    /// Builds a new `ELChainReader` instance, getting the slasher address from the delegation manager
+    /// by calling the `slasher()` function and the corresponding Contract function.
+    ///
+    /// # Arguments
+    ///
+    /// * `_logger` - The logger to use for logging.
+    /// * `delegation_manager` - The address of the delegation manager contract.
+    /// * `avs_directory` - The address of the avs directory contract.
+    /// * `client` - The provider to use for the RPC client to call the contracts.
+    ///
+    /// # Returns
+    ///
+    /// A new `ELChainReader` instance.
+    ///
+    /// # Errors
+    pub async fn build(
+        _logger: SharedLogger,
+        delegation_manager: Address,
+        avs_directory: Address,
+        client: &String,
+    ) -> Result<Self, ElContractsError> {
+        let provider = get_provider(client);
+
+        let contract_delegation_manager = DelegationManager::new(delegation_manager, provider);
+
+        let DelegationManager::allocationManagerReturn {
+            _0: allocation_manager,
+        } = contract_delegation_manager
+            .allocationManager()
+            .call()
+            .await
+            .unwrap();
+
+        Ok(Self {
+            _logger,
+            avs_directory,
+            allocation_manager,
+            delegation_manager,
+            provider: client.to_string(),
+        })
     }
 
     /// Calculate the delegation approval digest hash
