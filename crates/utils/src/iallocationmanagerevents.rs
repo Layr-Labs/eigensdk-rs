@@ -224,8 +224,8 @@ pub mod IAllocationManagerEvents {
         b"",
     );
     /**```solidity
-struct OperatorSet { address avs; uint32 operatorSetId; }
-```*/
+    struct OperatorSet { address avs; uint32 operatorSetId; }
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct OperatorSet {
@@ -249,9 +249,7 @@ struct OperatorSet { address avs; uint32 operatorSetId; }
         type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address, u32);
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -287,9 +285,9 @@ struct OperatorSet { address avs; uint32 operatorSetId; }
                     <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
                         &self.avs,
                     ),
-                    <alloy::sol_types::sol_data::Uint<
-                        32,
-                    > as alloy_sol_types::SolType>::tokenize(&self.operatorSetId),
+                    <alloy::sol_types::sol_data::Uint<32> as alloy_sol_types::SolType>::tokenize(
+                        &self.operatorSetId,
+                    ),
                 )
             }
             #[inline]
@@ -297,64 +295,50 @@ struct OperatorSet { address avs; uint32 operatorSetId; }
                 if let Some(size) = <Self as alloy_sol_types::SolType>::ENCODED_SIZE {
                     return size;
                 }
-                let tuple = <UnderlyingRustTuple<
-                    '_,
-                > as ::core::convert::From<Self>>::from(self.clone());
-                <UnderlyingSolTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_encoded_size(&tuple)
+                let tuple =
+                    <UnderlyingRustTuple<'_> as ::core::convert::From<Self>>::from(self.clone());
+                <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::abi_encoded_size(&tuple)
             }
             #[inline]
             fn stv_eip712_data_word(&self) -> alloy_sol_types::Word {
                 <Self as alloy_sol_types::SolStruct>::eip712_hash_struct(self)
             }
             #[inline]
-            fn stv_abi_encode_packed_to(
-                &self,
-                out: &mut alloy_sol_types::private::Vec<u8>,
-            ) {
-                let tuple = <UnderlyingRustTuple<
-                    '_,
-                > as ::core::convert::From<Self>>::from(self.clone());
-                <UnderlyingSolTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_encode_packed_to(&tuple, out)
+            fn stv_abi_encode_packed_to(&self, out: &mut alloy_sol_types::private::Vec<u8>) {
+                let tuple =
+                    <UnderlyingRustTuple<'_> as ::core::convert::From<Self>>::from(self.clone());
+                <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::abi_encode_packed_to(
+                    &tuple, out,
+                )
             }
             #[inline]
             fn stv_abi_packed_encoded_size(&self) -> usize {
                 if let Some(size) = <Self as alloy_sol_types::SolType>::PACKED_ENCODED_SIZE {
                     return size;
                 }
-                let tuple = <UnderlyingRustTuple<
-                    '_,
-                > as ::core::convert::From<Self>>::from(self.clone());
-                <UnderlyingSolTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_packed_encoded_size(&tuple)
+                let tuple =
+                    <UnderlyingRustTuple<'_> as ::core::convert::From<Self>>::from(self.clone());
+                <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::abi_packed_encoded_size(
+                    &tuple,
+                )
             }
         }
         #[automatically_derived]
         impl alloy_sol_types::SolType for OperatorSet {
             type RustType = Self;
-            type Token<'a> = <UnderlyingSolTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <UnderlyingSolTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SOL_NAME: &'static str = <Self as alloy_sol_types::SolStruct>::NAME;
-            const ENCODED_SIZE: Option<usize> = <UnderlyingSolTuple<
-                '_,
-            > as alloy_sol_types::SolType>::ENCODED_SIZE;
-            const PACKED_ENCODED_SIZE: Option<usize> = <UnderlyingSolTuple<
-                '_,
-            > as alloy_sol_types::SolType>::PACKED_ENCODED_SIZE;
+            const ENCODED_SIZE: Option<usize> =
+                <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::ENCODED_SIZE;
+            const PACKED_ENCODED_SIZE: Option<usize> =
+                <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::PACKED_ENCODED_SIZE;
             #[inline]
             fn valid_token(token: &Self::Token<'_>) -> bool {
                 <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::valid_token(token)
             }
             #[inline]
             fn detokenize(token: Self::Token<'_>) -> Self::RustType {
-                let tuple = <UnderlyingSolTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::detokenize(token);
+                let tuple = <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::detokenize(token);
                 <Self as ::core::convert::From<UnderlyingRustTuple<'_>>>::from(tuple)
             }
         }
@@ -368,9 +352,9 @@ struct OperatorSet { address avs; uint32 operatorSetId; }
                 )
             }
             #[inline]
-            fn eip712_components() -> alloy_sol_types::private::Vec<
-                alloy_sol_types::private::Cow<'static, str>,
-            > {
+            fn eip712_components(
+            ) -> alloy_sol_types::private::Vec<alloy_sol_types::private::Cow<'static, str>>
+            {
                 alloy_sol_types::private::Vec::new()
             }
             #[inline]
@@ -411,9 +395,7 @@ struct OperatorSet { address avs; uint32 operatorSetId; }
                 rust: &Self::RustType,
                 out: &mut alloy_sol_types::private::Vec<u8>,
             ) {
-                out.reserve(
-                    <Self as alloy_sol_types::EventTopic>::topic_preimage_length(rust),
-                );
+                out.reserve(<Self as alloy_sol_types::EventTopic>::topic_preimage_length(rust));
                 <alloy::sol_types::sol_data::Address as alloy_sol_types::EventTopic>::encode_topic_preimage(
                     &rust.avs,
                     out,
@@ -426,24 +408,17 @@ struct OperatorSet { address avs; uint32 operatorSetId; }
                 );
             }
             #[inline]
-            fn encode_topic(
-                rust: &Self::RustType,
-            ) -> alloy_sol_types::abi::token::WordToken {
+            fn encode_topic(rust: &Self::RustType) -> alloy_sol_types::abi::token::WordToken {
                 let mut out = alloy_sol_types::private::Vec::new();
-                <Self as alloy_sol_types::EventTopic>::encode_topic_preimage(
-                    rust,
-                    &mut out,
-                );
-                alloy_sol_types::abi::token::WordToken(
-                    alloy_sol_types::private::keccak256(out),
-                )
+                <Self as alloy_sol_types::EventTopic>::encode_topic_preimage(rust, &mut out);
+                alloy_sol_types::abi::token::WordToken(alloy_sol_types::private::keccak256(out))
             }
         }
     };
     /**Event with signature `AllocationDelaySet(address,uint32,uint32)` and selector `0x4e85751d6331506c6c62335f207eb31f12a61e570f34f5c17640308785c6d4db`.
-```solidity
-event AllocationDelaySet(address operator, uint32 delay, uint32 effectTimestamp);
-```*/
+    ```solidity
+    event AllocationDelaySet(address operator, uint32 delay, uint32 effectTimestamp);
+    ```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -474,45 +449,15 @@ event AllocationDelaySet(address operator, uint32 delay, uint32 effectTimestamp)
                 alloy::sol_types::sol_data::Uint<32>,
                 alloy::sol_types::sol_data::Uint<32>,
             );
-            type DataToken<'a> = <Self::DataTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (alloy_sol_types::sol_data::FixedBytes<32>,);
             const SIGNATURE: &'static str = "AllocationDelaySet(address,uint32,uint32)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
-                78u8,
-                133u8,
-                117u8,
-                29u8,
-                99u8,
-                49u8,
-                80u8,
-                108u8,
-                108u8,
-                98u8,
-                51u8,
-                95u8,
-                32u8,
-                126u8,
-                179u8,
-                31u8,
-                18u8,
-                166u8,
-                30u8,
-                87u8,
-                15u8,
-                52u8,
-                245u8,
-                193u8,
-                118u8,
-                64u8,
-                48u8,
-                135u8,
-                133u8,
-                198u8,
-                212u8,
-                219u8,
-            ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
+                alloy_sol_types::private::B256::new([
+                    78u8, 133u8, 117u8, 29u8, 99u8, 49u8, 80u8, 108u8, 108u8, 98u8, 51u8, 95u8,
+                    32u8, 126u8, 179u8, 31u8, 18u8, 166u8, 30u8, 87u8, 15u8, 52u8, 245u8, 193u8,
+                    118u8, 64u8, 48u8, 135u8, 133u8, 198u8, 212u8, 219u8,
+                ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -531,13 +476,11 @@ event AllocationDelaySet(address operator, uint32 delay, uint32 effectTimestamp)
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(
-                        alloy_sol_types::Error::invalid_event_signature_hash(
-                            Self::SIGNATURE,
-                            topics.0,
-                            Self::SIGNATURE_HASH,
-                        ),
-                    );
+                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
+                        Self::SIGNATURE,
+                        topics.0,
+                        Self::SIGNATURE_HASH,
+                    ));
                 }
                 Ok(())
             }
@@ -547,12 +490,12 @@ event AllocationDelaySet(address operator, uint32 delay, uint32 effectTimestamp)
                     <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
                         &self.operator,
                     ),
-                    <alloy::sol_types::sol_data::Uint<
-                        32,
-                    > as alloy_sol_types::SolType>::tokenize(&self.delay),
-                    <alloy::sol_types::sol_data::Uint<
-                        32,
-                    > as alloy_sol_types::SolType>::tokenize(&self.effectTimestamp),
+                    <alloy::sol_types::sol_data::Uint<32> as alloy_sol_types::SolType>::tokenize(
+                        &self.delay,
+                    ),
+                    <alloy::sol_types::sol_data::Uint<32> as alloy_sol_types::SolType>::tokenize(
+                        &self.effectTimestamp,
+                    ),
                 )
             }
             #[inline]
@@ -567,9 +510,7 @@ event AllocationDelaySet(address operator, uint32 delay, uint32 effectTimestamp)
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(
-                    Self::SIGNATURE_HASH,
-                );
+                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
                 Ok(())
             }
         }
@@ -591,9 +532,9 @@ event AllocationDelaySet(address operator, uint32 delay, uint32 effectTimestamp)
         }
     };
     /**Event with signature `EncumberedMagnitudeUpdated(address,address,uint64)` and selector `0xacf9095feb3a370c9cf692421c69ef320d4db5c66e6a7d29c7694eb02364fc55`.
-```solidity
-event EncumberedMagnitudeUpdated(address operator, address strategy, uint64 encumberedMagnitude);
-```*/
+    ```solidity
+    event EncumberedMagnitudeUpdated(address operator, address strategy, uint64 encumberedMagnitude);
+    ```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -624,45 +565,15 @@ event EncumberedMagnitudeUpdated(address operator, address strategy, uint64 encu
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Uint<64>,
             );
-            type DataToken<'a> = <Self::DataTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (alloy_sol_types::sol_data::FixedBytes<32>,);
             const SIGNATURE: &'static str = "EncumberedMagnitudeUpdated(address,address,uint64)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
-                172u8,
-                249u8,
-                9u8,
-                95u8,
-                235u8,
-                58u8,
-                55u8,
-                12u8,
-                156u8,
-                246u8,
-                146u8,
-                66u8,
-                28u8,
-                105u8,
-                239u8,
-                50u8,
-                13u8,
-                77u8,
-                181u8,
-                198u8,
-                110u8,
-                106u8,
-                125u8,
-                41u8,
-                199u8,
-                105u8,
-                78u8,
-                176u8,
-                35u8,
-                100u8,
-                252u8,
-                85u8,
-            ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
+                alloy_sol_types::private::B256::new([
+                    172u8, 249u8, 9u8, 95u8, 235u8, 58u8, 55u8, 12u8, 156u8, 246u8, 146u8, 66u8,
+                    28u8, 105u8, 239u8, 50u8, 13u8, 77u8, 181u8, 198u8, 110u8, 106u8, 125u8, 41u8,
+                    199u8, 105u8, 78u8, 176u8, 35u8, 100u8, 252u8, 85u8,
+                ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -681,13 +592,11 @@ event EncumberedMagnitudeUpdated(address operator, address strategy, uint64 encu
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(
-                        alloy_sol_types::Error::invalid_event_signature_hash(
-                            Self::SIGNATURE,
-                            topics.0,
-                            Self::SIGNATURE_HASH,
-                        ),
-                    );
+                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
+                        Self::SIGNATURE,
+                        topics.0,
+                        Self::SIGNATURE_HASH,
+                    ));
                 }
                 Ok(())
             }
@@ -700,9 +609,9 @@ event EncumberedMagnitudeUpdated(address operator, address strategy, uint64 encu
                     <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
                         &self.strategy,
                     ),
-                    <alloy::sol_types::sol_data::Uint<
-                        64,
-                    > as alloy_sol_types::SolType>::tokenize(&self.encumberedMagnitude),
+                    <alloy::sol_types::sol_data::Uint<64> as alloy_sol_types::SolType>::tokenize(
+                        &self.encumberedMagnitude,
+                    ),
                 )
             }
             #[inline]
@@ -717,9 +626,7 @@ event EncumberedMagnitudeUpdated(address operator, address strategy, uint64 encu
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(
-                    Self::SIGNATURE_HASH,
-                );
+                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
                 Ok(())
             }
         }
@@ -735,17 +642,15 @@ event EncumberedMagnitudeUpdated(address operator, address strategy, uint64 encu
         #[automatically_derived]
         impl From<&EncumberedMagnitudeUpdated> for alloy_sol_types::private::LogData {
             #[inline]
-            fn from(
-                this: &EncumberedMagnitudeUpdated,
-            ) -> alloy_sol_types::private::LogData {
+            fn from(this: &EncumberedMagnitudeUpdated) -> alloy_sol_types::private::LogData {
                 alloy_sol_types::SolEvent::encode_log_data(this)
             }
         }
     };
     /**Event with signature `MaxMagnitudeUpdated(address,address,uint64)` and selector `0x1c6458079a41077d003c11faf9bf097e693bd67979e4e6500bac7b29db779b5c`.
-```solidity
-event MaxMagnitudeUpdated(address operator, address strategy, uint64 totalMagnitude);
-```*/
+    ```solidity
+    event MaxMagnitudeUpdated(address operator, address strategy, uint64 totalMagnitude);
+    ```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -776,45 +681,15 @@ event MaxMagnitudeUpdated(address operator, address strategy, uint64 totalMagnit
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Uint<64>,
             );
-            type DataToken<'a> = <Self::DataTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (alloy_sol_types::sol_data::FixedBytes<32>,);
             const SIGNATURE: &'static str = "MaxMagnitudeUpdated(address,address,uint64)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
-                28u8,
-                100u8,
-                88u8,
-                7u8,
-                154u8,
-                65u8,
-                7u8,
-                125u8,
-                0u8,
-                60u8,
-                17u8,
-                250u8,
-                249u8,
-                191u8,
-                9u8,
-                126u8,
-                105u8,
-                59u8,
-                214u8,
-                121u8,
-                121u8,
-                228u8,
-                230u8,
-                80u8,
-                11u8,
-                172u8,
-                123u8,
-                41u8,
-                219u8,
-                119u8,
-                155u8,
-                92u8,
-            ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
+                alloy_sol_types::private::B256::new([
+                    28u8, 100u8, 88u8, 7u8, 154u8, 65u8, 7u8, 125u8, 0u8, 60u8, 17u8, 250u8, 249u8,
+                    191u8, 9u8, 126u8, 105u8, 59u8, 214u8, 121u8, 121u8, 228u8, 230u8, 80u8, 11u8,
+                    172u8, 123u8, 41u8, 219u8, 119u8, 155u8, 92u8,
+                ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -833,13 +708,11 @@ event MaxMagnitudeUpdated(address operator, address strategy, uint64 totalMagnit
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(
-                        alloy_sol_types::Error::invalid_event_signature_hash(
-                            Self::SIGNATURE,
-                            topics.0,
-                            Self::SIGNATURE_HASH,
-                        ),
-                    );
+                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
+                        Self::SIGNATURE,
+                        topics.0,
+                        Self::SIGNATURE_HASH,
+                    ));
                 }
                 Ok(())
             }
@@ -852,9 +725,9 @@ event MaxMagnitudeUpdated(address operator, address strategy, uint64 totalMagnit
                     <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
                         &self.strategy,
                     ),
-                    <alloy::sol_types::sol_data::Uint<
-                        64,
-                    > as alloy_sol_types::SolType>::tokenize(&self.totalMagnitude),
+                    <alloy::sol_types::sol_data::Uint<64> as alloy_sol_types::SolType>::tokenize(
+                        &self.totalMagnitude,
+                    ),
                 )
             }
             #[inline]
@@ -869,9 +742,7 @@ event MaxMagnitudeUpdated(address operator, address strategy, uint64 totalMagnit
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(
-                    Self::SIGNATURE_HASH,
-                );
+                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
                 Ok(())
             }
         }
@@ -893,9 +764,9 @@ event MaxMagnitudeUpdated(address operator, address strategy, uint64 totalMagnit
         }
     };
     /**Event with signature `OperatorSetMagnitudeUpdated(address,(address,uint32),address,uint64,uint32)` and selector `0x8b997e53d7b9e5d923d0a21c60df81e1740860d1a8c66b8c63c5047ae20eaaf6`.
-```solidity
-event OperatorSetMagnitudeUpdated(address operator, OperatorSet operatorSet, address strategy, uint64 magnitude, uint32 effectTimestamp);
-```*/
+    ```solidity
+    event OperatorSetMagnitudeUpdated(address operator, OperatorSet operatorSet, address strategy, uint64 magnitude, uint32 effectTimestamp);
+    ```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -932,45 +803,16 @@ event OperatorSetMagnitudeUpdated(address operator, OperatorSet operatorSet, add
                 alloy::sol_types::sol_data::Uint<64>,
                 alloy::sol_types::sol_data::Uint<32>,
             );
-            type DataToken<'a> = <Self::DataTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (alloy_sol_types::sol_data::FixedBytes<32>,);
-            const SIGNATURE: &'static str = "OperatorSetMagnitudeUpdated(address,(address,uint32),address,uint64,uint32)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
-                139u8,
-                153u8,
-                126u8,
-                83u8,
-                215u8,
-                185u8,
-                229u8,
-                217u8,
-                35u8,
-                208u8,
-                162u8,
-                28u8,
-                96u8,
-                223u8,
-                129u8,
-                225u8,
-                116u8,
-                8u8,
-                96u8,
-                209u8,
-                168u8,
-                198u8,
-                107u8,
-                140u8,
-                99u8,
-                197u8,
-                4u8,
-                122u8,
-                226u8,
-                14u8,
-                170u8,
-                246u8,
-            ]);
+            const SIGNATURE: &'static str =
+                "OperatorSetMagnitudeUpdated(address,(address,uint32),address,uint64,uint32)";
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
+                alloy_sol_types::private::B256::new([
+                    139u8, 153u8, 126u8, 83u8, 215u8, 185u8, 229u8, 217u8, 35u8, 208u8, 162u8,
+                    28u8, 96u8, 223u8, 129u8, 225u8, 116u8, 8u8, 96u8, 209u8, 168u8, 198u8, 107u8,
+                    140u8, 99u8, 197u8, 4u8, 122u8, 226u8, 14u8, 170u8, 246u8,
+                ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -991,13 +833,11 @@ event OperatorSetMagnitudeUpdated(address operator, OperatorSet operatorSet, add
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(
-                        alloy_sol_types::Error::invalid_event_signature_hash(
-                            Self::SIGNATURE,
-                            topics.0,
-                            Self::SIGNATURE_HASH,
-                        ),
-                    );
+                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
+                        Self::SIGNATURE,
+                        topics.0,
+                        Self::SIGNATURE_HASH,
+                    ));
                 }
                 Ok(())
             }
@@ -1007,18 +847,16 @@ event OperatorSetMagnitudeUpdated(address operator, OperatorSet operatorSet, add
                     <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
                         &self.operator,
                     ),
-                    <OperatorSet as alloy_sol_types::SolType>::tokenize(
-                        &self.operatorSet,
-                    ),
+                    <OperatorSet as alloy_sol_types::SolType>::tokenize(&self.operatorSet),
                     <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
                         &self.strategy,
                     ),
-                    <alloy::sol_types::sol_data::Uint<
-                        64,
-                    > as alloy_sol_types::SolType>::tokenize(&self.magnitude),
-                    <alloy::sol_types::sol_data::Uint<
-                        32,
-                    > as alloy_sol_types::SolType>::tokenize(&self.effectTimestamp),
+                    <alloy::sol_types::sol_data::Uint<64> as alloy_sol_types::SolType>::tokenize(
+                        &self.magnitude,
+                    ),
+                    <alloy::sol_types::sol_data::Uint<32> as alloy_sol_types::SolType>::tokenize(
+                        &self.effectTimestamp,
+                    ),
                 )
             }
             #[inline]
@@ -1033,9 +871,7 @@ event OperatorSetMagnitudeUpdated(address operator, OperatorSet operatorSet, add
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(
-                    Self::SIGNATURE_HASH,
-                );
+                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
                 Ok(())
             }
         }
@@ -1051,17 +887,15 @@ event OperatorSetMagnitudeUpdated(address operator, OperatorSet operatorSet, add
         #[automatically_derived]
         impl From<&OperatorSetMagnitudeUpdated> for alloy_sol_types::private::LogData {
             #[inline]
-            fn from(
-                this: &OperatorSetMagnitudeUpdated,
-            ) -> alloy_sol_types::private::LogData {
+            fn from(this: &OperatorSetMagnitudeUpdated) -> alloy_sol_types::private::LogData {
                 alloy_sol_types::SolEvent::encode_log_data(this)
             }
         }
     };
     /**Event with signature `OperatorSlashed(address,(address,uint32),address[],uint256[],string)` and selector `0x80969ad29428d6797ee7aad084f9e4a42a82fc506dcd2ca3b6fb431f85ccebe5`.
-```solidity
-event OperatorSlashed(address operator, OperatorSet operatorSet, address[] strategies, uint256[] wadSlashed, string description);
-```*/
+    ```solidity
+    event OperatorSlashed(address operator, OperatorSet operatorSet, address[] strategies, uint256[] wadSlashed, string description);
+    ```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -1075,13 +909,10 @@ event OperatorSlashed(address operator, OperatorSet operatorSet, address[] strat
         #[allow(missing_docs)]
         pub operatorSet: <OperatorSet as alloy::sol_types::SolType>::RustType,
         #[allow(missing_docs)]
-        pub strategies: alloy::sol_types::private::Vec<
-            alloy::sol_types::private::Address,
-        >,
+        pub strategies: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
         #[allow(missing_docs)]
-        pub wadSlashed: alloy::sol_types::private::Vec<
-            alloy::sol_types::private::primitives::aliases::U256,
-        >,
+        pub wadSlashed:
+            alloy::sol_types::private::Vec<alloy::sol_types::private::primitives::aliases::U256>,
         #[allow(missing_docs)]
         pub description: alloy::sol_types::private::String,
     }
@@ -1102,45 +933,16 @@ event OperatorSlashed(address operator, OperatorSet operatorSet, address[] strat
                 alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::Uint<256>>,
                 alloy::sol_types::sol_data::String,
             );
-            type DataToken<'a> = <Self::DataTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (alloy_sol_types::sol_data::FixedBytes<32>,);
-            const SIGNATURE: &'static str = "OperatorSlashed(address,(address,uint32),address[],uint256[],string)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
-                128u8,
-                150u8,
-                154u8,
-                210u8,
-                148u8,
-                40u8,
-                214u8,
-                121u8,
-                126u8,
-                231u8,
-                170u8,
-                208u8,
-                132u8,
-                249u8,
-                228u8,
-                164u8,
-                42u8,
-                130u8,
-                252u8,
-                80u8,
-                109u8,
-                205u8,
-                44u8,
-                163u8,
-                182u8,
-                251u8,
-                67u8,
-                31u8,
-                133u8,
-                204u8,
-                235u8,
-                229u8,
-            ]);
+            const SIGNATURE: &'static str =
+                "OperatorSlashed(address,(address,uint32),address[],uint256[],string)";
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
+                alloy_sol_types::private::B256::new([
+                    128u8, 150u8, 154u8, 210u8, 148u8, 40u8, 214u8, 121u8, 126u8, 231u8, 170u8,
+                    208u8, 132u8, 249u8, 228u8, 164u8, 42u8, 130u8, 252u8, 80u8, 109u8, 205u8,
+                    44u8, 163u8, 182u8, 251u8, 67u8, 31u8, 133u8, 204u8, 235u8, 229u8,
+                ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -1161,13 +963,11 @@ event OperatorSlashed(address operator, OperatorSet operatorSet, address[] strat
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(
-                        alloy_sol_types::Error::invalid_event_signature_hash(
-                            Self::SIGNATURE,
-                            topics.0,
-                            Self::SIGNATURE_HASH,
-                        ),
-                    );
+                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
+                        Self::SIGNATURE,
+                        topics.0,
+                        Self::SIGNATURE_HASH,
+                    ));
                 }
                 Ok(())
             }
@@ -1203,9 +1003,7 @@ event OperatorSlashed(address operator, OperatorSet operatorSet, address[] strat
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(
-                    Self::SIGNATURE_HASH,
-                );
+                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
                 Ok(())
             }
         }
@@ -1244,174 +1042,29 @@ event OperatorSlashed(address operator, OperatorSet operatorSet, address[] strat
         /// Prefer using `SolInterface` methods instead.
         pub const SELECTORS: &'static [[u8; 32usize]] = &[
             [
-                28u8,
-                100u8,
-                88u8,
-                7u8,
-                154u8,
-                65u8,
-                7u8,
-                125u8,
-                0u8,
-                60u8,
-                17u8,
-                250u8,
-                249u8,
-                191u8,
-                9u8,
-                126u8,
-                105u8,
-                59u8,
-                214u8,
-                121u8,
-                121u8,
-                228u8,
-                230u8,
-                80u8,
-                11u8,
-                172u8,
-                123u8,
-                41u8,
-                219u8,
-                119u8,
-                155u8,
-                92u8,
+                28u8, 100u8, 88u8, 7u8, 154u8, 65u8, 7u8, 125u8, 0u8, 60u8, 17u8, 250u8, 249u8,
+                191u8, 9u8, 126u8, 105u8, 59u8, 214u8, 121u8, 121u8, 228u8, 230u8, 80u8, 11u8,
+                172u8, 123u8, 41u8, 219u8, 119u8, 155u8, 92u8,
             ],
             [
-                78u8,
-                133u8,
-                117u8,
-                29u8,
-                99u8,
-                49u8,
-                80u8,
-                108u8,
-                108u8,
-                98u8,
-                51u8,
-                95u8,
-                32u8,
-                126u8,
-                179u8,
-                31u8,
-                18u8,
-                166u8,
-                30u8,
-                87u8,
-                15u8,
-                52u8,
-                245u8,
-                193u8,
-                118u8,
-                64u8,
-                48u8,
-                135u8,
-                133u8,
-                198u8,
-                212u8,
-                219u8,
+                78u8, 133u8, 117u8, 29u8, 99u8, 49u8, 80u8, 108u8, 108u8, 98u8, 51u8, 95u8, 32u8,
+                126u8, 179u8, 31u8, 18u8, 166u8, 30u8, 87u8, 15u8, 52u8, 245u8, 193u8, 118u8, 64u8,
+                48u8, 135u8, 133u8, 198u8, 212u8, 219u8,
             ],
             [
-                128u8,
-                150u8,
-                154u8,
-                210u8,
-                148u8,
-                40u8,
-                214u8,
-                121u8,
-                126u8,
-                231u8,
-                170u8,
-                208u8,
-                132u8,
-                249u8,
-                228u8,
-                164u8,
-                42u8,
-                130u8,
-                252u8,
-                80u8,
-                109u8,
-                205u8,
-                44u8,
-                163u8,
-                182u8,
-                251u8,
-                67u8,
-                31u8,
-                133u8,
-                204u8,
-                235u8,
-                229u8,
+                128u8, 150u8, 154u8, 210u8, 148u8, 40u8, 214u8, 121u8, 126u8, 231u8, 170u8, 208u8,
+                132u8, 249u8, 228u8, 164u8, 42u8, 130u8, 252u8, 80u8, 109u8, 205u8, 44u8, 163u8,
+                182u8, 251u8, 67u8, 31u8, 133u8, 204u8, 235u8, 229u8,
             ],
             [
-                139u8,
-                153u8,
-                126u8,
-                83u8,
-                215u8,
-                185u8,
-                229u8,
-                217u8,
-                35u8,
-                208u8,
-                162u8,
-                28u8,
-                96u8,
-                223u8,
-                129u8,
-                225u8,
-                116u8,
-                8u8,
-                96u8,
-                209u8,
-                168u8,
-                198u8,
-                107u8,
-                140u8,
-                99u8,
-                197u8,
-                4u8,
-                122u8,
-                226u8,
-                14u8,
-                170u8,
-                246u8,
+                139u8, 153u8, 126u8, 83u8, 215u8, 185u8, 229u8, 217u8, 35u8, 208u8, 162u8, 28u8,
+                96u8, 223u8, 129u8, 225u8, 116u8, 8u8, 96u8, 209u8, 168u8, 198u8, 107u8, 140u8,
+                99u8, 197u8, 4u8, 122u8, 226u8, 14u8, 170u8, 246u8,
             ],
             [
-                172u8,
-                249u8,
-                9u8,
-                95u8,
-                235u8,
-                58u8,
-                55u8,
-                12u8,
-                156u8,
-                246u8,
-                146u8,
-                66u8,
-                28u8,
-                105u8,
-                239u8,
-                50u8,
-                13u8,
-                77u8,
-                181u8,
-                198u8,
-                110u8,
-                106u8,
-                125u8,
-                41u8,
-                199u8,
-                105u8,
-                78u8,
-                176u8,
-                35u8,
-                100u8,
-                252u8,
-                85u8,
+                172u8, 249u8, 9u8, 95u8, 235u8, 58u8, 55u8, 12u8, 156u8, 246u8, 146u8, 66u8, 28u8,
+                105u8, 239u8, 50u8, 13u8, 77u8, 181u8, 198u8, 110u8, 106u8, 125u8, 41u8, 199u8,
+                105u8, 78u8, 176u8, 35u8, 100u8, 252u8, 85u8,
             ],
         ];
     }
@@ -1425,65 +1078,45 @@ event OperatorSlashed(address operator, OperatorSet operatorSet, address[] strat
             validate: bool,
         ) -> alloy_sol_types::Result<Self> {
             match topics.first().copied() {
-                Some(
-                    <AllocationDelaySet as alloy_sol_types::SolEvent>::SIGNATURE_HASH,
-                ) => {
+                Some(<AllocationDelaySet as alloy_sol_types::SolEvent>::SIGNATURE_HASH) => {
                     <AllocationDelaySet as alloy_sol_types::SolEvent>::decode_raw_log(
-                            topics,
-                            data,
-                            validate,
-                        )
-                        .map(Self::AllocationDelaySet)
+                        topics, data, validate,
+                    )
+                    .map(Self::AllocationDelaySet)
                 }
-                Some(
-                    <EncumberedMagnitudeUpdated as alloy_sol_types::SolEvent>::SIGNATURE_HASH,
-                ) => {
+                Some(<EncumberedMagnitudeUpdated as alloy_sol_types::SolEvent>::SIGNATURE_HASH) => {
                     <EncumberedMagnitudeUpdated as alloy_sol_types::SolEvent>::decode_raw_log(
-                            topics,
-                            data,
-                            validate,
-                        )
-                        .map(Self::EncumberedMagnitudeUpdated)
+                        topics, data, validate,
+                    )
+                    .map(Self::EncumberedMagnitudeUpdated)
                 }
-                Some(
-                    <MaxMagnitudeUpdated as alloy_sol_types::SolEvent>::SIGNATURE_HASH,
-                ) => {
+                Some(<MaxMagnitudeUpdated as alloy_sol_types::SolEvent>::SIGNATURE_HASH) => {
                     <MaxMagnitudeUpdated as alloy_sol_types::SolEvent>::decode_raw_log(
-                            topics,
-                            data,
-                            validate,
-                        )
-                        .map(Self::MaxMagnitudeUpdated)
+                        topics, data, validate,
+                    )
+                    .map(Self::MaxMagnitudeUpdated)
                 }
                 Some(
                     <OperatorSetMagnitudeUpdated as alloy_sol_types::SolEvent>::SIGNATURE_HASH,
-                ) => {
-                    <OperatorSetMagnitudeUpdated as alloy_sol_types::SolEvent>::decode_raw_log(
-                            topics,
-                            data,
-                            validate,
-                        )
-                        .map(Self::OperatorSetMagnitudeUpdated)
-                }
+                ) => <OperatorSetMagnitudeUpdated as alloy_sol_types::SolEvent>::decode_raw_log(
+                    topics, data, validate,
+                )
+                .map(Self::OperatorSetMagnitudeUpdated),
                 Some(<OperatorSlashed as alloy_sol_types::SolEvent>::SIGNATURE_HASH) => {
                     <OperatorSlashed as alloy_sol_types::SolEvent>::decode_raw_log(
-                            topics,
-                            data,
-                            validate,
-                        )
-                        .map(Self::OperatorSlashed)
+                        topics, data, validate,
+                    )
+                    .map(Self::OperatorSlashed)
                 }
-                _ => {
-                    alloy_sol_types::private::Err(alloy_sol_types::Error::InvalidLog {
-                        name: <Self as alloy_sol_types::SolEventInterface>::NAME,
-                        log: alloy_sol_types::private::Box::new(
-                            alloy_sol_types::private::LogData::new_unchecked(
-                                topics.to_vec(),
-                                data.to_vec().into(),
-                            ),
+                _ => alloy_sol_types::private::Err(alloy_sol_types::Error::InvalidLog {
+                    name: <Self as alloy_sol_types::SolEventInterface>::NAME,
+                    log: alloy_sol_types::private::Box::new(
+                        alloy_sol_types::private::LogData::new_unchecked(
+                            topics.to_vec(),
+                            data.to_vec().into(),
                         ),
-                    })
-                }
+                    ),
+                }),
             }
         }
     }
@@ -1531,7 +1164,7 @@ event OperatorSlashed(address operator, OperatorSet operatorSet, address[] strat
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`IAllocationManagerEvents`](self) contract instance.
 
-See the [wrapper's documentation](`IAllocationManagerEventsInstance`) for more details.*/
+    See the [wrapper's documentation](`IAllocationManagerEventsInstance`) for more details.*/
     #[inline]
     pub const fn new<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -1545,9 +1178,9 @@ See the [wrapper's documentation](`IAllocationManagerEventsInstance`) for more d
     }
     /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+    Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+    For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
     #[inline]
     pub fn deploy<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -1561,35 +1194,33 @@ For more fine-grained control over the deployment process, use [`deploy_builder`
         IAllocationManagerEventsInstance::<T, P, N>::deploy(provider)
     }
     /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+    and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+    This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+    the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     #[inline]
     pub fn deploy_builder<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
         P: alloy_contract::private::Provider<T, N>,
         N: alloy_contract::private::Network,
-    >(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
+    >(
+        provider: P,
+    ) -> alloy_contract::RawCallBuilder<T, P, N> {
         IAllocationManagerEventsInstance::<T, P, N>::deploy_builder(provider)
     }
     /**A [`IAllocationManagerEvents`](self) instance.
 
-Contains type-safe methods for interacting with an on-chain instance of the
-[`IAllocationManagerEvents`](self) contract located at a given `address`, using a given
-provider `P`.
+    Contains type-safe methods for interacting with an on-chain instance of the
+    [`IAllocationManagerEvents`](self) contract located at a given `address`, using a given
+    provider `P`.
 
-If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
-documentation on how to provide it), the `deploy` and `deploy_builder` methods can
-be used to deploy a new instance of the contract.
+    If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
+    documentation on how to provide it), the `deploy` and `deploy_builder` methods can
+    be used to deploy a new instance of the contract.
 
-See the [module-level documentation](self) for all the available methods.*/
+    See the [module-level documentation](self) for all the available methods.*/
     #[derive(Clone)]
-    pub struct IAllocationManagerEventsInstance<
-        T,
-        P,
-        N = alloy_contract::private::Ethereum,
-    > {
+    pub struct IAllocationManagerEventsInstance<T, P, N = alloy_contract::private::Ethereum> {
         address: alloy_sol_types::private::Address,
         provider: P,
         _network_transport: ::core::marker::PhantomData<(N, T)>,
@@ -1606,18 +1237,16 @@ See the [module-level documentation](self) for all the available methods.*/
     /// Instantiation and getters/setters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > IAllocationManagerEventsInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > IAllocationManagerEventsInstance<T, P, N>
+    {
         /**Creates a new wrapper around an on-chain [`IAllocationManagerEvents`](self) contract instance.
 
-See the [wrapper's documentation](`IAllocationManagerEventsInstance`) for more details.*/
+        See the [wrapper's documentation](`IAllocationManagerEventsInstance`) for more details.*/
         #[inline]
-        pub const fn new(
-            address: alloy_sol_types::private::Address,
-            provider: P,
-        ) -> Self {
+        pub const fn new(address: alloy_sol_types::private::Address, provider: P) -> Self {
             Self {
                 address,
                 provider,
@@ -1626,9 +1255,9 @@ See the [wrapper's documentation](`IAllocationManagerEventsInstance`) for more d
         }
         /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+        Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+        For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
         #[inline]
         pub async fn deploy(
             provider: P,
@@ -1638,10 +1267,10 @@ For more fine-grained control over the deployment process, use [`deploy_builder`
             Ok(Self::new(contract_address, call_builder.provider))
         }
         /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+        and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+        This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+        the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         #[inline]
         pub fn deploy_builder(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
             alloy_contract::RawCallBuilder::new_raw_deploy(
@@ -1684,10 +1313,11 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     /// Function calls.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > IAllocationManagerEventsInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > IAllocationManagerEventsInstance<T, P, N>
+    {
         /// Creates a new call builder using this contract instance's provider and address.
         ///
         /// Note that the call can be any function call, not just those defined in this
@@ -1702,10 +1332,11 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     /// Event filters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > IAllocationManagerEventsInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > IAllocationManagerEventsInstance<T, P, N>
+    {
         /// Creates a new event filter using this contract instance's provider and address.
         ///
         /// Note that the type can be any event, not just those defined in this contract.
@@ -1740,9 +1371,7 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
             self.event_filter::<OperatorSetMagnitudeUpdated>()
         }
         ///Creates a new event filter for the [`OperatorSlashed`] event.
-        pub fn OperatorSlashed_filter(
-            &self,
-        ) -> alloy_contract::Event<T, &P, OperatorSlashed, N> {
+        pub fn OperatorSlashed_filter(&self) -> alloy_contract::Event<T, &P, OperatorSlashed, N> {
             self.event_filter::<OperatorSlashed>()
         }
     }

@@ -55,9 +55,9 @@ pub mod MultiSendCallOnly {
         b"`\x80`@R`\x046\x10a\0\x1DW_5`\xE0\x1C\x80c\x8D\x80\xFF\n\x14a\0!W[__\xFD[a\x004a\0/6`\x04a\0\xBFV[a\x006V[\0[\x80Q` [\x81\x81\x10\x15a\0\xA6W\x80\x83\x01Q`\xF8\x1C`\x01\x82\x01\x84\x01Q``\x1C`\x15\x83\x01\x85\x01Q`5\x84\x01\x86\x01Q`U\x85\x01\x87\x01_\x85_\x81\x14a\0~W`\x01\x81\x14a\0\x1DWa\0\x89V[__\x85\x85\x88\x8AZ\xF1\x91P[P\x80a\0\x93W__\xFD[PP\x80`U\x01\x85\x01\x94PPPPPa\0;V[PPPV[cNH{q`\xE0\x1B_R`A`\x04R`$_\xFD[_` \x82\x84\x03\x12\x15a\0\xCFW__\xFD[\x815g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x81\x11\x15a\0\xE5W__\xFD[\x82\x01`\x1F\x81\x01\x84\x13a\0\xF5W__\xFD[\x805g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x81\x11\x15a\x01\x0FWa\x01\x0Fa\0\xABV[`@Q`\x1F\x82\x01`\x1F\x19\x90\x81\x16`?\x01\x16\x81\x01g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x81\x11\x82\x82\x10\x17\x15a\x01>Wa\x01>a\0\xABV[`@R\x81\x81R\x82\x82\x01` \x01\x86\x10\x15a\x01UW__\xFD[\x81` \x84\x01` \x83\x017_\x91\x81\x01` \x01\x91\x90\x91R\x94\x93PPPPV\xFE\xA2dipfsX\"\x12 `MUp\x15\x81j\xFA\r\x1A\xDD/JRZ\xC1M\x89\x99\x86\xE0J\xED\xD7Y\x152\xAE\xDA>1fdsolcC\0\x08\x1B\x003",
     );
     /**Function with signature `multiSend(bytes)` and selector `0x8d80ff0a`.
-```solidity
-function multiSend(bytes memory transactions) external payable;
-```*/
+    ```solidity
+    function multiSend(bytes memory transactions) external payable;
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct multiSendCall {
@@ -82,9 +82,7 @@ function multiSend(bytes memory transactions) external payable;
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Bytes,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -102,7 +100,9 @@ function multiSend(bytes memory transactions) external payable;
             #[doc(hidden)]
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for multiSendCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self { transactions: tuple.0 }
+                    Self {
+                        transactions: tuple.0,
+                    }
                 }
             }
         }
@@ -113,9 +113,7 @@ function multiSend(bytes memory transactions) external payable;
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -140,14 +138,10 @@ function multiSend(bytes memory transactions) external payable;
         #[automatically_derived]
         impl alloy_sol_types::SolCall for multiSendCall {
             type Parameters<'a> = (alloy::sol_types::sol_data::Bytes,);
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = multiSendReturn;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "multiSend(bytes)";
             const SELECTOR: [u8; 4] = [141u8, 128u8, 255u8, 10u8];
             #[inline]
@@ -169,10 +163,10 @@ function multiSend(bytes memory transactions) external payable;
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
@@ -198,9 +192,7 @@ function multiSend(bytes memory transactions) external payable;
         #[inline]
         fn selector(&self) -> [u8; 4] {
             match self {
-                Self::multiSend(_) => {
-                    <multiSendCall as alloy_sol_types::SolCall>::SELECTOR
-                }
+                Self::multiSend(_) => <multiSendCall as alloy_sol_types::SolCall>::SELECTOR,
             }
         }
         #[inline]
@@ -221,28 +213,22 @@ function multiSend(bytes memory transactions) external payable;
             static DECODE_SHIMS: &[fn(
                 &[u8],
                 bool,
-            ) -> alloy_sol_types::Result<MultiSendCallOnlyCalls>] = &[
-                {
-                    fn multiSend(
-                        data: &[u8],
-                        validate: bool,
-                    ) -> alloy_sol_types::Result<MultiSendCallOnlyCalls> {
-                        <multiSendCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(MultiSendCallOnlyCalls::multiSend)
-                    }
-                    multiSend
-                },
-            ];
+            )
+                -> alloy_sol_types::Result<MultiSendCallOnlyCalls>] = &[{
+                fn multiSend(
+                    data: &[u8],
+                    validate: bool,
+                ) -> alloy_sol_types::Result<MultiSendCallOnlyCalls> {
+                    <multiSendCall as alloy_sol_types::SolCall>::abi_decode_raw(data, validate)
+                        .map(MultiSendCallOnlyCalls::multiSend)
+                }
+                multiSend
+            }];
             let Ok(idx) = Self::SELECTORS.binary_search(&selector) else {
-                return Err(
-                    alloy_sol_types::Error::unknown_selector(
-                        <Self as alloy_sol_types::SolInterface>::NAME,
-                        selector,
-                    ),
-                );
+                return Err(alloy_sol_types::Error::unknown_selector(
+                    <Self as alloy_sol_types::SolInterface>::NAME,
+                    selector,
+                ));
             };
             (unsafe { DECODE_SHIMS.get_unchecked(idx) })(data, validate)
         }
@@ -258,10 +244,7 @@ function multiSend(bytes memory transactions) external payable;
         fn abi_encode_raw(&self, out: &mut alloy_sol_types::private::Vec<u8>) {
             match self {
                 Self::multiSend(inner) => {
-                    <multiSendCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <multiSendCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
                 }
             }
         }
@@ -269,7 +252,7 @@ function multiSend(bytes memory transactions) external payable;
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`MultiSendCallOnly`](self) contract instance.
 
-See the [wrapper's documentation](`MultiSendCallOnlyInstance`) for more details.*/
+    See the [wrapper's documentation](`MultiSendCallOnlyInstance`) for more details.*/
     #[inline]
     pub const fn new<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -283,9 +266,9 @@ See the [wrapper's documentation](`MultiSendCallOnlyInstance`) for more details.
     }
     /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+    Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+    For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
     #[inline]
     pub fn deploy<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -293,35 +276,36 @@ For more fine-grained control over the deployment process, use [`deploy_builder`
         N: alloy_contract::private::Network,
     >(
         provider: P,
-    ) -> impl ::core::future::Future<
-        Output = alloy_contract::Result<MultiSendCallOnlyInstance<T, P, N>>,
-    > {
+    ) -> impl ::core::future::Future<Output = alloy_contract::Result<MultiSendCallOnlyInstance<T, P, N>>>
+    {
         MultiSendCallOnlyInstance::<T, P, N>::deploy(provider)
     }
     /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+    and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+    This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+    the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     #[inline]
     pub fn deploy_builder<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
         P: alloy_contract::private::Provider<T, N>,
         N: alloy_contract::private::Network,
-    >(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
+    >(
+        provider: P,
+    ) -> alloy_contract::RawCallBuilder<T, P, N> {
         MultiSendCallOnlyInstance::<T, P, N>::deploy_builder(provider)
     }
     /**A [`MultiSendCallOnly`](self) instance.
 
-Contains type-safe methods for interacting with an on-chain instance of the
-[`MultiSendCallOnly`](self) contract located at a given `address`, using a given
-provider `P`.
+    Contains type-safe methods for interacting with an on-chain instance of the
+    [`MultiSendCallOnly`](self) contract located at a given `address`, using a given
+    provider `P`.
 
-If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
-documentation on how to provide it), the `deploy` and `deploy_builder` methods can
-be used to deploy a new instance of the contract.
+    If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
+    documentation on how to provide it), the `deploy` and `deploy_builder` methods can
+    be used to deploy a new instance of the contract.
 
-See the [module-level documentation](self) for all the available methods.*/
+    See the [module-level documentation](self) for all the available methods.*/
     #[derive(Clone)]
     pub struct MultiSendCallOnlyInstance<T, P, N = alloy_contract::private::Ethereum> {
         address: alloy_sol_types::private::Address,
@@ -332,24 +316,24 @@ See the [module-level documentation](self) for all the available methods.*/
     impl<T, P, N> ::core::fmt::Debug for MultiSendCallOnlyInstance<T, P, N> {
         #[inline]
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-            f.debug_tuple("MultiSendCallOnlyInstance").field(&self.address).finish()
+            f.debug_tuple("MultiSendCallOnlyInstance")
+                .field(&self.address)
+                .finish()
         }
     }
     /// Instantiation and getters/setters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > MultiSendCallOnlyInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > MultiSendCallOnlyInstance<T, P, N>
+    {
         /**Creates a new wrapper around an on-chain [`MultiSendCallOnly`](self) contract instance.
 
-See the [wrapper's documentation](`MultiSendCallOnlyInstance`) for more details.*/
+        See the [wrapper's documentation](`MultiSendCallOnlyInstance`) for more details.*/
         #[inline]
-        pub const fn new(
-            address: alloy_sol_types::private::Address,
-            provider: P,
-        ) -> Self {
+        pub const fn new(address: alloy_sol_types::private::Address, provider: P) -> Self {
             Self {
                 address,
                 provider,
@@ -358,9 +342,9 @@ See the [wrapper's documentation](`MultiSendCallOnlyInstance`) for more details.
         }
         /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+        Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+        For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
         #[inline]
         pub async fn deploy(
             provider: P,
@@ -370,10 +354,10 @@ For more fine-grained control over the deployment process, use [`deploy_builder`
             Ok(Self::new(contract_address, call_builder.provider))
         }
         /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+        and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+        This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+        the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         #[inline]
         pub fn deploy_builder(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
             alloy_contract::RawCallBuilder::new_raw_deploy(
@@ -416,10 +400,11 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     /// Function calls.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > MultiSendCallOnlyInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > MultiSendCallOnlyInstance<T, P, N>
+    {
         /// Creates a new call builder using this contract instance's provider and address.
         ///
         /// Note that the call can be any function call, not just those defined in this
@@ -441,10 +426,11 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     /// Event filters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > MultiSendCallOnlyInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > MultiSendCallOnlyInstance<T, P, N>
+    {
         /// Creates a new event filter using this contract instance's provider and address.
         ///
         /// Note that the type can be any event, not just those defined in this contract.

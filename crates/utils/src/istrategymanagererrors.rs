@@ -101,9 +101,9 @@ pub mod IStrategyManagerErrors {
         b"",
     );
     /**Custom error with signature `InputArrayLengthMismatch()` and selector `0x43714afd`.
-```solidity
-error InputArrayLengthMismatch();
-```*/
+    ```solidity
+    error InputArrayLengthMismatch();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct InputArrayLengthMismatch {}
@@ -121,9 +121,7 @@ error InputArrayLengthMismatch();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -132,16 +130,14 @@ error InputArrayLengthMismatch();
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<InputArrayLengthMismatch>
-        for UnderlyingRustTuple<'_> {
+        impl ::core::convert::From<InputArrayLengthMismatch> for UnderlyingRustTuple<'_> {
             fn from(value: InputArrayLengthMismatch) -> Self {
                 ()
             }
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<UnderlyingRustTuple<'_>>
-        for InputArrayLengthMismatch {
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for InputArrayLengthMismatch {
             fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                 Self {}
             }
@@ -149,9 +145,7 @@ error InputArrayLengthMismatch();
         #[automatically_derived]
         impl alloy_sol_types::SolError for InputArrayLengthMismatch {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "InputArrayLengthMismatch()";
             const SELECTOR: [u8; 4] = [67u8, 113u8, 74u8, 253u8];
             #[inline]
@@ -167,9 +161,9 @@ error InputArrayLengthMismatch();
         }
     };
     /**Custom error with signature `MaxStrategiesExceeded()` and selector `0x0d0a21c8`.
-```solidity
-error MaxStrategiesExceeded();
-```*/
+    ```solidity
+    error MaxStrategiesExceeded();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct MaxStrategiesExceeded {}
@@ -187,9 +181,7 @@ error MaxStrategiesExceeded();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -213,9 +205,7 @@ error MaxStrategiesExceeded();
         #[automatically_derived]
         impl alloy_sol_types::SolError for MaxStrategiesExceeded {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "MaxStrategiesExceeded()";
             const SELECTOR: [u8; 4] = [13u8, 10u8, 33u8, 200u8];
             #[inline]
@@ -231,9 +221,9 @@ error MaxStrategiesExceeded();
         }
     };
     /**Custom error with signature `OnlyDelegationManager()` and selector `0xf739589b`.
-```solidity
-error OnlyDelegationManager();
-```*/
+    ```solidity
+    error OnlyDelegationManager();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct OnlyDelegationManager {}
@@ -251,9 +241,7 @@ error OnlyDelegationManager();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -277,9 +265,7 @@ error OnlyDelegationManager();
         #[automatically_derived]
         impl alloy_sol_types::SolError for OnlyDelegationManager {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "OnlyDelegationManager()";
             const SELECTOR: [u8; 4] = [247u8, 57u8, 88u8, 155u8];
             #[inline]
@@ -295,9 +281,9 @@ error OnlyDelegationManager();
         }
     };
     /**Custom error with signature `OnlyStrategyWhitelister()` and selector `0x82e8ffe4`.
-```solidity
-error OnlyStrategyWhitelister();
-```*/
+    ```solidity
+    error OnlyStrategyWhitelister();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct OnlyStrategyWhitelister {}
@@ -315,9 +301,7 @@ error OnlyStrategyWhitelister();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -341,9 +325,7 @@ error OnlyStrategyWhitelister();
         #[automatically_derived]
         impl alloy_sol_types::SolError for OnlyStrategyWhitelister {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "OnlyStrategyWhitelister()";
             const SELECTOR: [u8; 4] = [130u8, 232u8, 255u8, 228u8];
             #[inline]
@@ -359,9 +341,9 @@ error OnlyStrategyWhitelister();
         }
     };
     /**Custom error with signature `SharesAmountTooHigh()` and selector `0x4b18b193`.
-```solidity
-error SharesAmountTooHigh();
-```*/
+    ```solidity
+    error SharesAmountTooHigh();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct SharesAmountTooHigh {}
@@ -379,9 +361,7 @@ error SharesAmountTooHigh();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -405,9 +385,7 @@ error SharesAmountTooHigh();
         #[automatically_derived]
         impl alloy_sol_types::SolError for SharesAmountTooHigh {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "SharesAmountTooHigh()";
             const SELECTOR: [u8; 4] = [75u8, 24u8, 177u8, 147u8];
             #[inline]
@@ -423,9 +401,9 @@ error SharesAmountTooHigh();
         }
     };
     /**Custom error with signature `SharesAmountZero()` and selector `0x840c364a`.
-```solidity
-error SharesAmountZero();
-```*/
+    ```solidity
+    error SharesAmountZero();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct SharesAmountZero {}
@@ -443,9 +421,7 @@ error SharesAmountZero();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -469,9 +445,7 @@ error SharesAmountZero();
         #[automatically_derived]
         impl alloy_sol_types::SolError for SharesAmountZero {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "SharesAmountZero()";
             const SELECTOR: [u8; 4] = [132u8, 12u8, 54u8, 74u8];
             #[inline]
@@ -487,9 +461,9 @@ error SharesAmountZero();
         }
     };
     /**Custom error with signature `SignatureExpired()` and selector `0x0819bdcd`.
-```solidity
-error SignatureExpired();
-```*/
+    ```solidity
+    error SignatureExpired();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct SignatureExpired {}
@@ -507,9 +481,7 @@ error SignatureExpired();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -533,9 +505,7 @@ error SignatureExpired();
         #[automatically_derived]
         impl alloy_sol_types::SolError for SignatureExpired {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "SignatureExpired()";
             const SELECTOR: [u8; 4] = [8u8, 25u8, 189u8, 205u8];
             #[inline]
@@ -551,9 +521,9 @@ error SignatureExpired();
         }
     };
     /**Custom error with signature `StakerAddressZero()` and selector `0x16f2ccc9`.
-```solidity
-error StakerAddressZero();
-```*/
+    ```solidity
+    error StakerAddressZero();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct StakerAddressZero {}
@@ -571,9 +541,7 @@ error StakerAddressZero();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -597,9 +565,7 @@ error StakerAddressZero();
         #[automatically_derived]
         impl alloy_sol_types::SolError for StakerAddressZero {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "StakerAddressZero()";
             const SELECTOR: [u8; 4] = [22u8, 242u8, 204u8, 201u8];
             #[inline]
@@ -615,9 +581,9 @@ error StakerAddressZero();
         }
     };
     /**Custom error with signature `StrategyNotFound()` and selector `0x5be2b482`.
-```solidity
-error StrategyNotFound();
-```*/
+    ```solidity
+    error StrategyNotFound();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct StrategyNotFound {}
@@ -635,9 +601,7 @@ error StrategyNotFound();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -661,9 +625,7 @@ error StrategyNotFound();
         #[automatically_derived]
         impl alloy_sol_types::SolError for StrategyNotFound {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "StrategyNotFound()";
             const SELECTOR: [u8; 4] = [91u8, 226u8, 180u8, 130u8];
             #[inline]
@@ -679,9 +641,9 @@ error StrategyNotFound();
         }
     };
     /**Custom error with signature `StrategyNotWhitelisted()` and selector `0x5dfb2ca2`.
-```solidity
-error StrategyNotWhitelisted();
-```*/
+    ```solidity
+    error StrategyNotWhitelisted();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct StrategyNotWhitelisted {}
@@ -699,9 +661,7 @@ error StrategyNotWhitelisted();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -725,9 +685,7 @@ error StrategyNotWhitelisted();
         #[automatically_derived]
         impl alloy_sol_types::SolError for StrategyNotWhitelisted {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "StrategyNotWhitelisted()";
             const SELECTOR: [u8; 4] = [93u8, 251u8, 44u8, 162u8];
             #[inline]
@@ -834,17 +792,17 @@ error StrategyNotWhitelisted();
             static DECODE_SHIMS: &[fn(
                 &[u8],
                 bool,
-            ) -> alloy_sol_types::Result<IStrategyManagerErrorsErrors>] = &[
+            )
+                -> alloy_sol_types::Result<IStrategyManagerErrorsErrors>] = &[
                 {
                     fn SignatureExpired(
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<IStrategyManagerErrorsErrors> {
                         <SignatureExpired as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IStrategyManagerErrorsErrors::SignatureExpired)
+                            data, validate,
+                        )
+                        .map(IStrategyManagerErrorsErrors::SignatureExpired)
                     }
                     SignatureExpired
                 },
@@ -854,10 +812,9 @@ error StrategyNotWhitelisted();
                         validate: bool,
                     ) -> alloy_sol_types::Result<IStrategyManagerErrorsErrors> {
                         <MaxStrategiesExceeded as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IStrategyManagerErrorsErrors::MaxStrategiesExceeded)
+                            data, validate,
+                        )
+                        .map(IStrategyManagerErrorsErrors::MaxStrategiesExceeded)
                     }
                     MaxStrategiesExceeded
                 },
@@ -867,10 +824,9 @@ error StrategyNotWhitelisted();
                         validate: bool,
                     ) -> alloy_sol_types::Result<IStrategyManagerErrorsErrors> {
                         <StakerAddressZero as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IStrategyManagerErrorsErrors::StakerAddressZero)
+                            data, validate,
+                        )
+                        .map(IStrategyManagerErrorsErrors::StakerAddressZero)
                     }
                     StakerAddressZero
                 },
@@ -880,10 +836,9 @@ error StrategyNotWhitelisted();
                         validate: bool,
                     ) -> alloy_sol_types::Result<IStrategyManagerErrorsErrors> {
                         <InputArrayLengthMismatch as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IStrategyManagerErrorsErrors::InputArrayLengthMismatch)
+                            data, validate,
+                        )
+                        .map(IStrategyManagerErrorsErrors::InputArrayLengthMismatch)
                     }
                     InputArrayLengthMismatch
                 },
@@ -893,10 +848,9 @@ error StrategyNotWhitelisted();
                         validate: bool,
                     ) -> alloy_sol_types::Result<IStrategyManagerErrorsErrors> {
                         <SharesAmountTooHigh as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IStrategyManagerErrorsErrors::SharesAmountTooHigh)
+                            data, validate,
+                        )
+                        .map(IStrategyManagerErrorsErrors::SharesAmountTooHigh)
                     }
                     SharesAmountTooHigh
                 },
@@ -906,10 +860,9 @@ error StrategyNotWhitelisted();
                         validate: bool,
                     ) -> alloy_sol_types::Result<IStrategyManagerErrorsErrors> {
                         <StrategyNotFound as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IStrategyManagerErrorsErrors::StrategyNotFound)
+                            data, validate,
+                        )
+                        .map(IStrategyManagerErrorsErrors::StrategyNotFound)
                     }
                     StrategyNotFound
                 },
@@ -919,10 +872,9 @@ error StrategyNotWhitelisted();
                         validate: bool,
                     ) -> alloy_sol_types::Result<IStrategyManagerErrorsErrors> {
                         <StrategyNotWhitelisted as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IStrategyManagerErrorsErrors::StrategyNotWhitelisted)
+                            data, validate,
+                        )
+                        .map(IStrategyManagerErrorsErrors::StrategyNotWhitelisted)
                     }
                     StrategyNotWhitelisted
                 },
@@ -932,10 +884,9 @@ error StrategyNotWhitelisted();
                         validate: bool,
                     ) -> alloy_sol_types::Result<IStrategyManagerErrorsErrors> {
                         <OnlyStrategyWhitelister as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IStrategyManagerErrorsErrors::OnlyStrategyWhitelister)
+                            data, validate,
+                        )
+                        .map(IStrategyManagerErrorsErrors::OnlyStrategyWhitelister)
                     }
                     OnlyStrategyWhitelister
                 },
@@ -945,10 +896,9 @@ error StrategyNotWhitelisted();
                         validate: bool,
                     ) -> alloy_sol_types::Result<IStrategyManagerErrorsErrors> {
                         <SharesAmountZero as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IStrategyManagerErrorsErrors::SharesAmountZero)
+                            data, validate,
+                        )
+                        .map(IStrategyManagerErrorsErrors::SharesAmountZero)
                     }
                     SharesAmountZero
                 },
@@ -958,21 +908,18 @@ error StrategyNotWhitelisted();
                         validate: bool,
                     ) -> alloy_sol_types::Result<IStrategyManagerErrorsErrors> {
                         <OnlyDelegationManager as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IStrategyManagerErrorsErrors::OnlyDelegationManager)
+                            data, validate,
+                        )
+                        .map(IStrategyManagerErrorsErrors::OnlyDelegationManager)
                     }
                     OnlyDelegationManager
                 },
             ];
             let Ok(idx) = Self::SELECTORS.binary_search(&selector) else {
-                return Err(
-                    alloy_sol_types::Error::unknown_selector(
-                        <Self as alloy_sol_types::SolInterface>::NAME,
-                        selector,
-                    ),
-                );
+                return Err(alloy_sol_types::Error::unknown_selector(
+                    <Self as alloy_sol_types::SolInterface>::NAME,
+                    selector,
+                ));
             };
             (unsafe { DECODE_SHIMS.get_unchecked(idx) })(data, validate)
         }
@@ -980,54 +927,34 @@ error StrategyNotWhitelisted();
         fn abi_encoded_size(&self) -> usize {
             match self {
                 Self::InputArrayLengthMismatch(inner) => {
-                    <InputArrayLengthMismatch as alloy_sol_types::SolError>::abi_encoded_size(
-                        inner,
-                    )
+                    <InputArrayLengthMismatch as alloy_sol_types::SolError>::abi_encoded_size(inner)
                 }
                 Self::MaxStrategiesExceeded(inner) => {
-                    <MaxStrategiesExceeded as alloy_sol_types::SolError>::abi_encoded_size(
-                        inner,
-                    )
+                    <MaxStrategiesExceeded as alloy_sol_types::SolError>::abi_encoded_size(inner)
                 }
                 Self::OnlyDelegationManager(inner) => {
-                    <OnlyDelegationManager as alloy_sol_types::SolError>::abi_encoded_size(
-                        inner,
-                    )
+                    <OnlyDelegationManager as alloy_sol_types::SolError>::abi_encoded_size(inner)
                 }
                 Self::OnlyStrategyWhitelister(inner) => {
-                    <OnlyStrategyWhitelister as alloy_sol_types::SolError>::abi_encoded_size(
-                        inner,
-                    )
+                    <OnlyStrategyWhitelister as alloy_sol_types::SolError>::abi_encoded_size(inner)
                 }
                 Self::SharesAmountTooHigh(inner) => {
-                    <SharesAmountTooHigh as alloy_sol_types::SolError>::abi_encoded_size(
-                        inner,
-                    )
+                    <SharesAmountTooHigh as alloy_sol_types::SolError>::abi_encoded_size(inner)
                 }
                 Self::SharesAmountZero(inner) => {
-                    <SharesAmountZero as alloy_sol_types::SolError>::abi_encoded_size(
-                        inner,
-                    )
+                    <SharesAmountZero as alloy_sol_types::SolError>::abi_encoded_size(inner)
                 }
                 Self::SignatureExpired(inner) => {
-                    <SignatureExpired as alloy_sol_types::SolError>::abi_encoded_size(
-                        inner,
-                    )
+                    <SignatureExpired as alloy_sol_types::SolError>::abi_encoded_size(inner)
                 }
                 Self::StakerAddressZero(inner) => {
-                    <StakerAddressZero as alloy_sol_types::SolError>::abi_encoded_size(
-                        inner,
-                    )
+                    <StakerAddressZero as alloy_sol_types::SolError>::abi_encoded_size(inner)
                 }
                 Self::StrategyNotFound(inner) => {
-                    <StrategyNotFound as alloy_sol_types::SolError>::abi_encoded_size(
-                        inner,
-                    )
+                    <StrategyNotFound as alloy_sol_types::SolError>::abi_encoded_size(inner)
                 }
                 Self::StrategyNotWhitelisted(inner) => {
-                    <StrategyNotWhitelisted as alloy_sol_types::SolError>::abi_encoded_size(
-                        inner,
-                    )
+                    <StrategyNotWhitelisted as alloy_sol_types::SolError>::abi_encoded_size(inner)
                 }
             }
         }
@@ -1036,62 +963,38 @@ error StrategyNotWhitelisted();
             match self {
                 Self::InputArrayLengthMismatch(inner) => {
                     <InputArrayLengthMismatch as alloy_sol_types::SolError>::abi_encode_raw(
-                        inner,
-                        out,
+                        inner, out,
                     )
                 }
                 Self::MaxStrategiesExceeded(inner) => {
-                    <MaxStrategiesExceeded as alloy_sol_types::SolError>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <MaxStrategiesExceeded as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
                 }
                 Self::OnlyDelegationManager(inner) => {
-                    <OnlyDelegationManager as alloy_sol_types::SolError>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <OnlyDelegationManager as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
                 }
                 Self::OnlyStrategyWhitelister(inner) => {
                     <OnlyStrategyWhitelister as alloy_sol_types::SolError>::abi_encode_raw(
-                        inner,
-                        out,
+                        inner, out,
                     )
                 }
                 Self::SharesAmountTooHigh(inner) => {
-                    <SharesAmountTooHigh as alloy_sol_types::SolError>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <SharesAmountTooHigh as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
                 }
                 Self::SharesAmountZero(inner) => {
-                    <SharesAmountZero as alloy_sol_types::SolError>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <SharesAmountZero as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
                 }
                 Self::SignatureExpired(inner) => {
-                    <SignatureExpired as alloy_sol_types::SolError>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <SignatureExpired as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
                 }
                 Self::StakerAddressZero(inner) => {
-                    <StakerAddressZero as alloy_sol_types::SolError>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <StakerAddressZero as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
                 }
                 Self::StrategyNotFound(inner) => {
-                    <StrategyNotFound as alloy_sol_types::SolError>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <StrategyNotFound as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
                 }
                 Self::StrategyNotWhitelisted(inner) => {
                     <StrategyNotWhitelisted as alloy_sol_types::SolError>::abi_encode_raw(
-                        inner,
-                        out,
+                        inner, out,
                     )
                 }
             }
@@ -1100,7 +1003,7 @@ error StrategyNotWhitelisted();
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`IStrategyManagerErrors`](self) contract instance.
 
-See the [wrapper's documentation](`IStrategyManagerErrorsInstance`) for more details.*/
+    See the [wrapper's documentation](`IStrategyManagerErrorsInstance`) for more details.*/
     #[inline]
     pub const fn new<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -1114,9 +1017,9 @@ See the [wrapper's documentation](`IStrategyManagerErrorsInstance`) for more det
     }
     /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+    Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+    For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
     #[inline]
     pub fn deploy<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -1130,35 +1033,33 @@ For more fine-grained control over the deployment process, use [`deploy_builder`
         IStrategyManagerErrorsInstance::<T, P, N>::deploy(provider)
     }
     /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+    and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+    This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+    the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     #[inline]
     pub fn deploy_builder<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
         P: alloy_contract::private::Provider<T, N>,
         N: alloy_contract::private::Network,
-    >(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
+    >(
+        provider: P,
+    ) -> alloy_contract::RawCallBuilder<T, P, N> {
         IStrategyManagerErrorsInstance::<T, P, N>::deploy_builder(provider)
     }
     /**A [`IStrategyManagerErrors`](self) instance.
 
-Contains type-safe methods for interacting with an on-chain instance of the
-[`IStrategyManagerErrors`](self) contract located at a given `address`, using a given
-provider `P`.
+    Contains type-safe methods for interacting with an on-chain instance of the
+    [`IStrategyManagerErrors`](self) contract located at a given `address`, using a given
+    provider `P`.
 
-If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
-documentation on how to provide it), the `deploy` and `deploy_builder` methods can
-be used to deploy a new instance of the contract.
+    If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
+    documentation on how to provide it), the `deploy` and `deploy_builder` methods can
+    be used to deploy a new instance of the contract.
 
-See the [module-level documentation](self) for all the available methods.*/
+    See the [module-level documentation](self) for all the available methods.*/
     #[derive(Clone)]
-    pub struct IStrategyManagerErrorsInstance<
-        T,
-        P,
-        N = alloy_contract::private::Ethereum,
-    > {
+    pub struct IStrategyManagerErrorsInstance<T, P, N = alloy_contract::private::Ethereum> {
         address: alloy_sol_types::private::Address,
         provider: P,
         _network_transport: ::core::marker::PhantomData<(N, T)>,
@@ -1167,24 +1068,24 @@ See the [module-level documentation](self) for all the available methods.*/
     impl<T, P, N> ::core::fmt::Debug for IStrategyManagerErrorsInstance<T, P, N> {
         #[inline]
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-            f.debug_tuple("IStrategyManagerErrorsInstance").field(&self.address).finish()
+            f.debug_tuple("IStrategyManagerErrorsInstance")
+                .field(&self.address)
+                .finish()
         }
     }
     /// Instantiation and getters/setters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > IStrategyManagerErrorsInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > IStrategyManagerErrorsInstance<T, P, N>
+    {
         /**Creates a new wrapper around an on-chain [`IStrategyManagerErrors`](self) contract instance.
 
-See the [wrapper's documentation](`IStrategyManagerErrorsInstance`) for more details.*/
+        See the [wrapper's documentation](`IStrategyManagerErrorsInstance`) for more details.*/
         #[inline]
-        pub const fn new(
-            address: alloy_sol_types::private::Address,
-            provider: P,
-        ) -> Self {
+        pub const fn new(address: alloy_sol_types::private::Address, provider: P) -> Self {
             Self {
                 address,
                 provider,
@@ -1193,9 +1094,9 @@ See the [wrapper's documentation](`IStrategyManagerErrorsInstance`) for more det
         }
         /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+        Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+        For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
         #[inline]
         pub async fn deploy(
             provider: P,
@@ -1205,10 +1106,10 @@ For more fine-grained control over the deployment process, use [`deploy_builder`
             Ok(Self::new(contract_address, call_builder.provider))
         }
         /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+        and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+        This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+        the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         #[inline]
         pub fn deploy_builder(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
             alloy_contract::RawCallBuilder::new_raw_deploy(
@@ -1251,10 +1152,11 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     /// Function calls.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > IStrategyManagerErrorsInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > IStrategyManagerErrorsInstance<T, P, N>
+    {
         /// Creates a new call builder using this contract instance's provider and address.
         ///
         /// Note that the call can be any function call, not just those defined in this
@@ -1269,10 +1171,11 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     /// Event filters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > IStrategyManagerErrorsInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > IStrategyManagerErrorsInstance<T, P, N>
+    {
         /// Creates a new event filter using this contract instance's provider and address.
         ///
         /// Note that the type can be any event, not just those defined in this contract.

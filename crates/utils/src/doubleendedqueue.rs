@@ -53,9 +53,9 @@ pub mod DoubleEndedQueue {
         b"s\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x000\x14`\x80`@R__\xFD\xFE\xA2dipfsX\"\x12 H\x11\\\xAD\x97'\x1C\x8E\xEA:A<\xE1\xC1\x92s\xA1\x8D\x95\x9C=2e\x8CT$o\xB1<\0C\xEDdsolcC\0\x08\x1B\x003",
     );
     /**Custom error with signature `Empty()` and selector `0x3db2a12a`.
-```solidity
-error Empty();
-```*/
+    ```solidity
+    error Empty();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct Empty {}
@@ -73,9 +73,7 @@ error Empty();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -99,9 +97,7 @@ error Empty();
         #[automatically_derived]
         impl alloy_sol_types::SolError for Empty {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "Empty()";
             const SELECTOR: [u8; 4] = [61u8, 178u8, 161u8, 42u8];
             #[inline]
@@ -117,9 +113,9 @@ error Empty();
         }
     };
     /**Custom error with signature `OutOfBounds()` and selector `0xb4120f14`.
-```solidity
-error OutOfBounds();
-```*/
+    ```solidity
+    error OutOfBounds();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct OutOfBounds {}
@@ -137,9 +133,7 @@ error OutOfBounds();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -163,9 +157,7 @@ error OutOfBounds();
         #[automatically_derived]
         impl alloy_sol_types::SolError for OutOfBounds {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "OutOfBounds()";
             const SELECTOR: [u8; 4] = [180u8, 18u8, 15u8, 20u8];
             #[inline]
@@ -193,10 +185,8 @@ error OutOfBounds();
         /// No guarantees are made about the order of the selectors.
         ///
         /// Prefer using `SolInterface` methods instead.
-        pub const SELECTORS: &'static [[u8; 4usize]] = &[
-            [61u8, 178u8, 161u8, 42u8],
-            [180u8, 18u8, 15u8, 20u8],
-        ];
+        pub const SELECTORS: &'static [[u8; 4usize]] =
+            &[[61u8, 178u8, 161u8, 42u8], [180u8, 18u8, 15u8, 20u8]];
     }
     #[automatically_derived]
     impl alloy_sol_types::SolInterface for DoubleEndedQueueErrors {
@@ -207,9 +197,7 @@ error OutOfBounds();
         fn selector(&self) -> [u8; 4] {
             match self {
                 Self::Empty(_) => <Empty as alloy_sol_types::SolError>::SELECTOR,
-                Self::OutOfBounds(_) => {
-                    <OutOfBounds as alloy_sol_types::SolError>::SELECTOR
-                }
+                Self::OutOfBounds(_) => <OutOfBounds as alloy_sol_types::SolError>::SELECTOR,
             }
         }
         #[inline]
@@ -230,16 +218,14 @@ error OutOfBounds();
             static DECODE_SHIMS: &[fn(
                 &[u8],
                 bool,
-            ) -> alloy_sol_types::Result<DoubleEndedQueueErrors>] = &[
+            )
+                -> alloy_sol_types::Result<DoubleEndedQueueErrors>] = &[
                 {
                     fn Empty(
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<DoubleEndedQueueErrors> {
-                        <Empty as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
+                        <Empty as alloy_sol_types::SolError>::abi_decode_raw(data, validate)
                             .map(DoubleEndedQueueErrors::Empty)
                     }
                     Empty
@@ -249,31 +235,24 @@ error OutOfBounds();
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<DoubleEndedQueueErrors> {
-                        <OutOfBounds as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
+                        <OutOfBounds as alloy_sol_types::SolError>::abi_decode_raw(data, validate)
                             .map(DoubleEndedQueueErrors::OutOfBounds)
                     }
                     OutOfBounds
                 },
             ];
             let Ok(idx) = Self::SELECTORS.binary_search(&selector) else {
-                return Err(
-                    alloy_sol_types::Error::unknown_selector(
-                        <Self as alloy_sol_types::SolInterface>::NAME,
-                        selector,
-                    ),
-                );
+                return Err(alloy_sol_types::Error::unknown_selector(
+                    <Self as alloy_sol_types::SolInterface>::NAME,
+                    selector,
+                ));
             };
             (unsafe { DECODE_SHIMS.get_unchecked(idx) })(data, validate)
         }
         #[inline]
         fn abi_encoded_size(&self) -> usize {
             match self {
-                Self::Empty(inner) => {
-                    <Empty as alloy_sol_types::SolError>::abi_encoded_size(inner)
-                }
+                Self::Empty(inner) => <Empty as alloy_sol_types::SolError>::abi_encoded_size(inner),
                 Self::OutOfBounds(inner) => {
                     <OutOfBounds as alloy_sol_types::SolError>::abi_encoded_size(inner)
                 }
@@ -286,10 +265,7 @@ error OutOfBounds();
                     <Empty as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
                 }
                 Self::OutOfBounds(inner) => {
-                    <OutOfBounds as alloy_sol_types::SolError>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <OutOfBounds as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
                 }
             }
         }
@@ -297,7 +273,7 @@ error OutOfBounds();
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`DoubleEndedQueue`](self) contract instance.
 
-See the [wrapper's documentation](`DoubleEndedQueueInstance`) for more details.*/
+    See the [wrapper's documentation](`DoubleEndedQueueInstance`) for more details.*/
     #[inline]
     pub const fn new<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -311,9 +287,9 @@ See the [wrapper's documentation](`DoubleEndedQueueInstance`) for more details.*
     }
     /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+    Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+    For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
     #[inline]
     pub fn deploy<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -321,35 +297,36 @@ For more fine-grained control over the deployment process, use [`deploy_builder`
         N: alloy_contract::private::Network,
     >(
         provider: P,
-    ) -> impl ::core::future::Future<
-        Output = alloy_contract::Result<DoubleEndedQueueInstance<T, P, N>>,
-    > {
+    ) -> impl ::core::future::Future<Output = alloy_contract::Result<DoubleEndedQueueInstance<T, P, N>>>
+    {
         DoubleEndedQueueInstance::<T, P, N>::deploy(provider)
     }
     /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+    and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+    This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+    the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     #[inline]
     pub fn deploy_builder<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
         P: alloy_contract::private::Provider<T, N>,
         N: alloy_contract::private::Network,
-    >(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
+    >(
+        provider: P,
+    ) -> alloy_contract::RawCallBuilder<T, P, N> {
         DoubleEndedQueueInstance::<T, P, N>::deploy_builder(provider)
     }
     /**A [`DoubleEndedQueue`](self) instance.
 
-Contains type-safe methods for interacting with an on-chain instance of the
-[`DoubleEndedQueue`](self) contract located at a given `address`, using a given
-provider `P`.
+    Contains type-safe methods for interacting with an on-chain instance of the
+    [`DoubleEndedQueue`](self) contract located at a given `address`, using a given
+    provider `P`.
 
-If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
-documentation on how to provide it), the `deploy` and `deploy_builder` methods can
-be used to deploy a new instance of the contract.
+    If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
+    documentation on how to provide it), the `deploy` and `deploy_builder` methods can
+    be used to deploy a new instance of the contract.
 
-See the [module-level documentation](self) for all the available methods.*/
+    See the [module-level documentation](self) for all the available methods.*/
     #[derive(Clone)]
     pub struct DoubleEndedQueueInstance<T, P, N = alloy_contract::private::Ethereum> {
         address: alloy_sol_types::private::Address,
@@ -360,24 +337,24 @@ See the [module-level documentation](self) for all the available methods.*/
     impl<T, P, N> ::core::fmt::Debug for DoubleEndedQueueInstance<T, P, N> {
         #[inline]
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-            f.debug_tuple("DoubleEndedQueueInstance").field(&self.address).finish()
+            f.debug_tuple("DoubleEndedQueueInstance")
+                .field(&self.address)
+                .finish()
         }
     }
     /// Instantiation and getters/setters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > DoubleEndedQueueInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > DoubleEndedQueueInstance<T, P, N>
+    {
         /**Creates a new wrapper around an on-chain [`DoubleEndedQueue`](self) contract instance.
 
-See the [wrapper's documentation](`DoubleEndedQueueInstance`) for more details.*/
+        See the [wrapper's documentation](`DoubleEndedQueueInstance`) for more details.*/
         #[inline]
-        pub const fn new(
-            address: alloy_sol_types::private::Address,
-            provider: P,
-        ) -> Self {
+        pub const fn new(address: alloy_sol_types::private::Address, provider: P) -> Self {
             Self {
                 address,
                 provider,
@@ -386,9 +363,9 @@ See the [wrapper's documentation](`DoubleEndedQueueInstance`) for more details.*
         }
         /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+        Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+        For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
         #[inline]
         pub async fn deploy(
             provider: P,
@@ -398,10 +375,10 @@ For more fine-grained control over the deployment process, use [`deploy_builder`
             Ok(Self::new(contract_address, call_builder.provider))
         }
         /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+        and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+        This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+        the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         #[inline]
         pub fn deploy_builder(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
             alloy_contract::RawCallBuilder::new_raw_deploy(
@@ -444,10 +421,11 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     /// Function calls.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > DoubleEndedQueueInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > DoubleEndedQueueInstance<T, P, N>
+    {
         /// Creates a new call builder using this contract instance's provider and address.
         ///
         /// Note that the call can be any function call, not just those defined in this
@@ -462,10 +440,11 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     /// Event filters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > DoubleEndedQueueInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > DoubleEndedQueueInstance<T, P, N>
+    {
         /// Creates a new event filter using this contract instance's provider and address.
         ///
         /// Note that the type can be any event, not just those defined in this contract.

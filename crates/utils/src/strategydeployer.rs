@@ -79,9 +79,9 @@ pub mod StrategyDeployer {
         b"`\x80`@R4\x80\x15a\0\x0FW__\xFD[P`\x046\x10a\0)W_5`\xE0\x1C\x80c\xC2 \xEDR\x14a\0-W[__\xFD[a\0@a\0;6`\x04a\x02^V[a\0VV[`@Qa\0M\x91\x90a\x02uV[`@Q\x80\x91\x03\x90\xF3[``_\x82g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x81\x11\x15a\0rWa\0ra\x02\xC0V[`@Q\x90\x80\x82R\x80` \x02` \x01\x82\x01`@R\x80\x15a\0\x9BW\x81` \x01` \x82\x02\x806\x837\x01\x90P[P\x90P_[\x83\x81\x10\x15a\x02=W\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0`\x01c\x01\x9E')`\xE0\x1B_\x19\x80o\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x80\x16\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0`@Qa\x01\x16\x90a\x02DV[`\x80\x80\x82R`\x04\x90\x82\x01Rc\x15\x19\\\xDD`\xE2\x1B`\xA0\x82\x01R`\xC0` \x82\x01\x81\x90R`\x03\x90\x82\x01Rb\x15\x14\xD5`\xEA\x1B`\xE0\x82\x01R`@\x81\x01\x92\x90\x92R`\x01`\x01`\xA0\x1B\x03\x16``\x82\x01Ra\x01\0\x01`@Q\x80\x91\x03\x90_\xF0\x80\x15\x80\x15a\x01|W=__>=_\xFD[P`@Q`$\x81\x01\x93\x90\x93R`D\x83\x01\x91\x90\x91R`\x01`\x01`\xA0\x1B\x03\x16`d\x82\x01R`\x01`\x84\x82\x01R`\xA4\x01`@\x80Q`\x1F\x19\x81\x84\x03\x01\x81R\x91\x81R` \x82\x01\x80Q`\x01`\x01`\xE0\x1B\x03\x16`\x01`\x01`\xE0\x1B\x03\x19\x90\x94\x16\x93\x90\x93\x17\x90\x92R\x90Qa\x01\xE5\x90a\x02QV[a\x01\xF1\x93\x92\x91\x90a\x02\xD4V[`@Q\x80\x91\x03\x90_\xF0\x80\x15\x80\x15a\x02\nW=__>=_\xFD[P\x82\x82\x81Q\x81\x10a\x02\x1DWa\x02\x1Da\x03'V[`\x01`\x01`\xA0\x1B\x03\x90\x92\x16` \x92\x83\x02\x91\x90\x91\x01\x90\x91\x01R`\x01\x01a\0\xA0V[P\x92\x91PPV[a\r\x91\x80a\x03<\x839\x01\x90V[a\rv\x80a\x10\xCD\x839\x01\x90V[_` \x82\x84\x03\x12\x15a\x02nW__\xFD[P5\x91\x90PV[` \x80\x82R\x82Q\x82\x82\x01\x81\x90R_\x91\x84\x01\x90`@\x84\x01\x90\x83[\x81\x81\x10\x15a\x02\xB5W\x83Q`\x01`\x01`\xA0\x1B\x03\x16\x83R` \x93\x84\x01\x93\x90\x92\x01\x91`\x01\x01a\x02\x8EV[P\x90\x95\x94PPPPPV[cNH{q`\xE0\x1B_R`A`\x04R`$_\xFD[`\x01\x80`\xA0\x1B\x03\x84\x16\x81R`\x01\x80`\xA0\x1B\x03\x83\x16` \x82\x01R```@\x82\x01R_\x82Q\x80``\x84\x01R\x80` \x85\x01`\x80\x85\x01^_`\x80\x82\x85\x01\x01R`\x80`\x1F\x19`\x1F\x83\x01\x16\x84\x01\x01\x91PP\x94\x93PPPPV[cNH{q`\xE0\x1B_R`2`\x04R`$_\xFD\xFE`\x80`@R4\x80\x15a\0\x0FW__\xFD[P`@Qa\r\x918\x03\x80a\r\x91\x839\x81\x01`@\x81\x90Ra\0.\x91a\x01\xC8V[\x83\x83`\x03a\0<\x83\x82a\x02\xD8V[P`\x04a\0I\x82\x82a\x02\xD8V[PPPa\0\\\x81\x83a\0e` \x1B` \x1CV[PPPPa\x03\xB7V[`\x01`\x01`\xA0\x1B\x03\x82\x16a\0\xBFW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`\x1F`$\x82\x01R\x7FERC20: mint to the zero address\0`D\x82\x01R`d\x01`@Q\x80\x91\x03\x90\xFD[\x80`\x02_\x82\x82Ta\0\xD0\x91\x90a\x03\x92V[\x90\x91UPP`\x01`\x01`\xA0\x1B\x03\x82\x16_\x81\x81R` \x81\x81R`@\x80\x83 \x80T\x86\x01\x90UQ\x84\x81R\x7F\xDD\xF2R\xAD\x1B\xE2\xC8\x9Bi\xC2\xB0h\xFC7\x8D\xAA\x95+\xA7\xF1c\xC4\xA1\x16(\xF5ZM\xF5#\xB3\xEF\x91\x01`@Q\x80\x91\x03\x90\xA3PPV[PPPV[cNH{q`\xE0\x1B_R`A`\x04R`$_\xFD[_\x82`\x1F\x83\x01\x12a\x01NW__\xFD[\x81Q`\x01`\x01`@\x1B\x03\x81\x11\x15a\x01gWa\x01ga\x01+V[`@Q`\x1F\x82\x01`\x1F\x19\x90\x81\x16`?\x01\x16\x81\x01`\x01`\x01`@\x1B\x03\x81\x11\x82\x82\x10\x17\x15a\x01\x95Wa\x01\x95a\x01+V[`@R\x81\x81R\x83\x82\x01` \x01\x85\x10\x15a\x01\xACW__\xFD[\x81` \x85\x01` \x83\x01^_\x91\x81\x01` \x01\x91\x90\x91R\x93\x92PPPV[____`\x80\x85\x87\x03\x12\x15a\x01\xDBW__\xFD[\x84Q`\x01`\x01`@\x1B\x03\x81\x11\x15a\x01\xF0W__\xFD[a\x01\xFC\x87\x82\x88\x01a\x01?V[` \x87\x01Q\x90\x95P\x90P`\x01`\x01`@\x1B\x03\x81\x11\x15a\x02\x19W__\xFD[a\x02%\x87\x82\x88\x01a\x01?V[`@\x87\x01Q``\x88\x01Q\x91\x95P\x93P\x90P`\x01`\x01`\xA0\x1B\x03\x81\x16\x81\x14a\x02JW__\xFD[\x93\x96\x92\x95P\x90\x93PPV[`\x01\x81\x81\x1C\x90\x82\x16\x80a\x02iW`\x7F\x82\x16\x91P[` \x82\x10\x81\x03a\x02\x87WcNH{q`\xE0\x1B_R`\"`\x04R`$_\xFD[P\x91\x90PV[`\x1F\x82\x11\x15a\x01&W\x80_R` _ `\x1F\x84\x01`\x05\x1C\x81\x01` \x85\x10\x15a\x02\xB2WP\x80[`\x1F\x84\x01`\x05\x1C\x82\x01\x91P[\x81\x81\x10\x15a\x02\xD1W_\x81U`\x01\x01a\x02\xBEV[PPPPPV[\x81Q`\x01`\x01`@\x1B\x03\x81\x11\x15a\x02\xF1Wa\x02\xF1a\x01+V[a\x03\x05\x81a\x02\xFF\x84Ta\x02UV[\x84a\x02\x8DV[` `\x1F\x82\x11`\x01\x81\x14a\x037W_\x83\x15a\x03 WP\x84\x82\x01Q[_\x19`\x03\x85\x90\x1B\x1C\x19\x16`\x01\x84\x90\x1B\x17\x84Ua\x02\xD1V[_\x84\x81R` \x81 `\x1F\x19\x85\x16\x91[\x82\x81\x10\x15a\x03fW\x87\x85\x01Q\x82U` \x94\x85\x01\x94`\x01\x90\x92\x01\x91\x01a\x03FV[P\x84\x82\x10\x15a\x03\x83W\x86\x84\x01Q_\x19`\x03\x87\x90\x1B`\xF8\x16\x1C\x19\x16\x81U[PPPP`\x01\x90\x81\x1B\x01\x90UPV[\x80\x82\x01\x80\x82\x11\x15a\x03\xB1WcNH{q`\xE0\x1B_R`\x11`\x04R`$_\xFD[\x92\x91PPV[a\t\xCD\x80a\x03\xC4_9_\xF3\xFE`\x80`@R4\x80\x15a\0\x0FW__\xFD[P`\x046\x10a\0\xCBW_5`\xE0\x1C\x80cB\x96lh\x11a\0\x88W\x80c\x95\xD8\x9BA\x11a\0cW\x80c\x95\xD8\x9BA\x14a\x01\xA7W\x80c\xA4W\xC2\xD7\x14a\x01\xAFW\x80c\xA9\x05\x9C\xBB\x14a\x01\xC2W\x80c\xDDb\xED>\x14a\x01\xD5W__\xFD[\x80cB\x96lh\x14a\x01WW\x80cp\xA0\x821\x14a\x01lW\x80cy\xCCg\x90\x14a\x01\x94W__\xFD[\x80c\x06\xFD\xDE\x03\x14a\0\xCFW\x80c\t^\xA7\xB3\x14a\0\xEDW\x80c\x18\x16\r\xDD\x14a\x01\x10W\x80c#\xB8r\xDD\x14a\x01\"W\x80c1<\xE5g\x14a\x015W\x80c9P\x93Q\x14a\x01DW[__\xFD[a\0\xD7a\x01\xE8V[`@Qa\0\xE4\x91\x90a\x08&V[`@Q\x80\x91\x03\x90\xF3[a\x01\0a\0\xFB6`\x04a\x08vV[a\x02xV[`@Q\x90\x15\x15\x81R` \x01a\0\xE4V[`\x02T[`@Q\x90\x81R` \x01a\0\xE4V[a\x01\0a\x0106`\x04a\x08\x9EV[a\x02\x91V[`@Q`\x12\x81R` \x01a\0\xE4V[a\x01\0a\x01R6`\x04a\x08vV[a\x02\xB4V[a\x01ja\x01e6`\x04a\x08\xD8V[a\x02\xD5V[\0[a\x01\x14a\x01z6`\x04a\x08\xEFV[`\x01`\x01`\xA0\x1B\x03\x16_\x90\x81R` \x81\x90R`@\x90 T\x90V[a\x01ja\x01\xA26`\x04a\x08vV[a\x02\xE2V[a\0\xD7a\x02\xFBV[a\x01\0a\x01\xBD6`\x04a\x08vV[a\x03\nV[a\x01\0a\x01\xD06`\x04a\x08vV[a\x03\x89V[a\x01\x14a\x01\xE36`\x04a\t\x0FV[a\x03\x96V[```\x03\x80Ta\x01\xF7\x90a\t@V[\x80`\x1F\x01` \x80\x91\x04\x02` \x01`@Q\x90\x81\x01`@R\x80\x92\x91\x90\x81\x81R` \x01\x82\x80Ta\x02#\x90a\t@V[\x80\x15a\x02nW\x80`\x1F\x10a\x02EWa\x01\0\x80\x83T\x04\x02\x83R\x91` \x01\x91a\x02nV[\x82\x01\x91\x90_R` _ \x90[\x81T\x81R\x90`\x01\x01\x90` \x01\x80\x83\x11a\x02QW\x82\x90\x03`\x1F\x16\x82\x01\x91[PPPPP\x90P\x90V[_3a\x02\x85\x81\x85\x85a\x03\xC0V[`\x01\x91PP[\x92\x91PPV[_3a\x02\x9E\x85\x82\x85a\x04\xE4V[a\x02\xA9\x85\x85\x85a\x05\\V[P`\x01\x94\x93PPPPV[_3a\x02\x85\x81\x85\x85a\x02\xC6\x83\x83a\x03\x96V[a\x02\xD0\x91\x90a\txV[a\x03\xC0V[a\x02\xDF3\x82a\x06\xFEV[PV[a\x02\xED\x823\x83a\x04\xE4V[a\x02\xF7\x82\x82a\x06\xFEV[PPV[```\x04\x80Ta\x01\xF7\x90a\t@V[_3\x81a\x03\x17\x82\x86a\x03\x96V[\x90P\x83\x81\x10\x15a\x03|W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`%`$\x82\x01R\x7FERC20: decreased allowance below`D\x82\x01Rd zero`\xD8\x1B`d\x82\x01R`\x84\x01[`@Q\x80\x91\x03\x90\xFD[a\x02\xA9\x82\x86\x86\x84\x03a\x03\xC0V[_3a\x02\x85\x81\x85\x85a\x05\\V[`\x01`\x01`\xA0\x1B\x03\x91\x82\x16_\x90\x81R`\x01` \x90\x81R`@\x80\x83 \x93\x90\x94\x16\x82R\x91\x90\x91R T\x90V[`\x01`\x01`\xA0\x1B\x03\x83\x16a\x04\"W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`$\x80\x82\x01R\x7FERC20: approve from the zero add`D\x82\x01Rcress`\xE0\x1B`d\x82\x01R`\x84\x01a\x03sV[`\x01`\x01`\xA0\x1B\x03\x82\x16a\x04\x83W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`\"`$\x82\x01R\x7FERC20: approve to the zero addre`D\x82\x01Rass`\xF0\x1B`d\x82\x01R`\x84\x01a\x03sV[`\x01`\x01`\xA0\x1B\x03\x83\x81\x16_\x81\x81R`\x01` \x90\x81R`@\x80\x83 \x94\x87\x16\x80\x84R\x94\x82R\x91\x82\x90 \x85\x90U\x90Q\x84\x81R\x7F\x8C[\xE1\xE5\xEB\xEC}[\xD1OqB}\x1E\x84\xF3\xDD\x03\x14\xC0\xF7\xB2)\x1E[ \n\xC8\xC7\xC3\xB9%\x91\x01[`@Q\x80\x91\x03\x90\xA3PPPV[_a\x04\xEF\x84\x84a\x03\x96V[\x90P_\x19\x81\x14a\x05VW\x81\x81\x10\x15a\x05IW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`\x1D`$\x82\x01R\x7FERC20: insufficient allowance\0\0\0`D\x82\x01R`d\x01a\x03sV[a\x05V\x84\x84\x84\x84\x03a\x03\xC0V[PPPPV[`\x01`\x01`\xA0\x1B\x03\x83\x16a\x05\xC0W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`%`$\x82\x01R\x7FERC20: transfer from the zero ad`D\x82\x01Rddress`\xD8\x1B`d\x82\x01R`\x84\x01a\x03sV[`\x01`\x01`\xA0\x1B\x03\x82\x16a\x06\"W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`#`$\x82\x01R\x7FERC20: transfer to the zero addr`D\x82\x01Rbess`\xE8\x1B`d\x82\x01R`\x84\x01a\x03sV[`\x01`\x01`\xA0\x1B\x03\x83\x16_\x90\x81R` \x81\x90R`@\x90 T\x81\x81\x10\x15a\x06\x99W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`&`$\x82\x01R\x7FERC20: transfer amount exceeds b`D\x82\x01Realance`\xD0\x1B`d\x82\x01R`\x84\x01a\x03sV[`\x01`\x01`\xA0\x1B\x03\x84\x81\x16_\x81\x81R` \x81\x81R`@\x80\x83 \x87\x87\x03\x90U\x93\x87\x16\x80\x83R\x91\x84\x90 \x80T\x87\x01\x90U\x92Q\x85\x81R\x90\x92\x7F\xDD\xF2R\xAD\x1B\xE2\xC8\x9Bi\xC2\xB0h\xFC7\x8D\xAA\x95+\xA7\xF1c\xC4\xA1\x16(\xF5ZM\xF5#\xB3\xEF\x91\x01`@Q\x80\x91\x03\x90\xA3a\x05VV[`\x01`\x01`\xA0\x1B\x03\x82\x16a\x07^W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`!`$\x82\x01R\x7FERC20: burn from the zero addres`D\x82\x01R`s`\xF8\x1B`d\x82\x01R`\x84\x01a\x03sV[`\x01`\x01`\xA0\x1B\x03\x82\x16_\x90\x81R` \x81\x90R`@\x90 T\x81\x81\x10\x15a\x07\xD1W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`\"`$\x82\x01R\x7FERC20: burn amount exceeds balan`D\x82\x01Race`\xF0\x1B`d\x82\x01R`\x84\x01a\x03sV[`\x01`\x01`\xA0\x1B\x03\x83\x16_\x81\x81R` \x81\x81R`@\x80\x83 \x86\x86\x03\x90U`\x02\x80T\x87\x90\x03\x90UQ\x85\x81R\x91\x92\x91\x7F\xDD\xF2R\xAD\x1B\xE2\xC8\x9Bi\xC2\xB0h\xFC7\x8D\xAA\x95+\xA7\xF1c\xC4\xA1\x16(\xF5ZM\xF5#\xB3\xEF\x91\x01a\x04\xD7V[` \x81R_\x82Q\x80` \x84\x01R\x80` \x85\x01`@\x85\x01^_`@\x82\x85\x01\x01R`@`\x1F\x19`\x1F\x83\x01\x16\x84\x01\x01\x91PP\x92\x91PPV[\x805`\x01`\x01`\xA0\x1B\x03\x81\x16\x81\x14a\x08qW__\xFD[\x91\x90PV[__`@\x83\x85\x03\x12\x15a\x08\x87W__\xFD[a\x08\x90\x83a\x08[V[\x94` \x93\x90\x93\x015\x93PPPV[___``\x84\x86\x03\x12\x15a\x08\xB0W__\xFD[a\x08\xB9\x84a\x08[V[\x92Pa\x08\xC7` \x85\x01a\x08[V[\x92\x95\x92\x94PPP`@\x91\x90\x91\x015\x90V[_` \x82\x84\x03\x12\x15a\x08\xE8W__\xFD[P5\x91\x90PV[_` \x82\x84\x03\x12\x15a\x08\xFFW__\xFD[a\t\x08\x82a\x08[V[\x93\x92PPPV[__`@\x83\x85\x03\x12\x15a\t W__\xFD[a\t)\x83a\x08[V[\x91Pa\t7` \x84\x01a\x08[V[\x90P\x92P\x92\x90PV[`\x01\x81\x81\x1C\x90\x82\x16\x80a\tTW`\x7F\x82\x16\x91P[` \x82\x10\x81\x03a\trWcNH{q`\xE0\x1B_R`\"`\x04R`$_\xFD[P\x91\x90PV[\x80\x82\x01\x80\x82\x11\x15a\x02\x8BWcNH{q`\xE0\x1B_R`\x11`\x04R`$_\xFD\xFE\xA2dipfsX\"\x12 \x1C\x97\x82\xE2~\x97]\x92\x10McP$\x91f\x9E\x7F\x08\xCA\x19\xB1\x13NU\xE2\xEE\x02\xDF\x8C\xE9!\x17dsolcC\0\x08\x1B\x003`\x80`@R`@Qa\rv8\x03\x80a\rv\x839\x81\x01`@\x81\x90Ra\0\"\x91a\x03\xC3V[\x82\x81a\0/\x82\x82_a\0CV[Pa\0;\x90P\x82a\0nV[PPPa\x04\xDFV[a\0L\x83a\0\xDBV[_\x82Q\x11\x80a\0XWP\x80[\x15a\0iWa\0g\x83\x83a\x01\x1AV[P[PPPV[\x7F~dMyB/\x17\xC0\x1EH\x94\xB5\xF4\xF5\x88\xD31\xEB\xFA(e=B\xAE\x83-\xC5\x9E8\xC9y\x8Fa\0\xAD_Q` a\r/_9_Q\x90_RT`\x01`\x01`\xA0\x1B\x03\x16\x90V[`@\x80Q`\x01`\x01`\xA0\x1B\x03\x92\x83\x16\x81R\x91\x84\x16` \x83\x01R\x01`@Q\x80\x91\x03\x90\xA1a\0\xD8\x81a\x01FV[PV[a\0\xE4\x81a\x01\xE1V[`@Q`\x01`\x01`\xA0\x1B\x03\x82\x16\x90\x7F\xBC|\xD7Z \xEE'\xFD\x9A\xDE\xBA\xB3 A\xF7U!M\xBCk\xFF\xA9\x0C\xC0\"[9\xDA.\\-;\x90_\x90\xA2PV[``a\x01?\x83\x83`@Q\x80``\x01`@R\x80`'\x81R` \x01a\rO`'\x919a\x02uV[\x93\x92PPPV[`\x01`\x01`\xA0\x1B\x03\x81\x16a\x01\xB0W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`&`$\x82\x01R\x7FERC1967: new admin is the zero a`D\x82\x01Reddress`\xD0\x1B`d\x82\x01R`\x84\x01[`@Q\x80\x91\x03\x90\xFD[\x80_Q` a\r/_9_Q\x90_R[\x80T`\x01`\x01`\xA0\x1B\x03\x19\x16`\x01`\x01`\xA0\x1B\x03\x92\x90\x92\x16\x91\x90\x91\x17\x90UPV[`\x01`\x01`\xA0\x1B\x03\x81\x16;a\x02NW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`-`$\x82\x01R\x7FERC1967: new implementation is n`D\x82\x01Rl\x1B\xDD\x08\x18H\x18\xDB\xDB\x9D\x1C\x98X\xDD`\x9A\x1B`d\x82\x01R`\x84\x01a\x01\xA7V[\x80\x7F6\x08\x94\xA1;\xA1\xA3!\x06g\xC8(I-\xB9\x8D\xCA> v\xCC75\xA9 \xA3\xCAP]8+\xBCa\x01\xC0V[``__\x85`\x01`\x01`\xA0\x1B\x03\x16\x85`@Qa\x02\x91\x91\x90a\x04\x94V[_`@Q\x80\x83\x03\x81\x85Z\xF4\x91PP=\x80_\x81\x14a\x02\xC9W`@Q\x91P`\x1F\x19`?=\x01\x16\x82\x01`@R=\x82R=_` \x84\x01>a\x02\xCEV[``\x91P[P\x90\x92P\x90Pa\x02\xE0\x86\x83\x83\x87a\x02\xEAV[\x96\x95PPPPPPV[``\x83\x15a\x03XW\x82Q_\x03a\x03QW`\x01`\x01`\xA0\x1B\x03\x85\x16;a\x03QW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`\x1D`$\x82\x01R\x7FAddress: call to non-contract\0\0\0`D\x82\x01R`d\x01a\x01\xA7V[P\x81a\x03bV[a\x03b\x83\x83a\x03jV[\x94\x93PPPPV[\x81Q\x15a\x03zW\x81Q\x80\x83` \x01\xFD[\x80`@QbF\x1B\xCD`\xE5\x1B\x81R`\x04\x01a\x01\xA7\x91\x90a\x04\xAAV[\x80Q`\x01`\x01`\xA0\x1B\x03\x81\x16\x81\x14a\x03\xAAW__\xFD[\x91\x90PV[cNH{q`\xE0\x1B_R`A`\x04R`$_\xFD[___``\x84\x86\x03\x12\x15a\x03\xD5W__\xFD[a\x03\xDE\x84a\x03\x94V[\x92Pa\x03\xEC` \x85\x01a\x03\x94V[`@\x85\x01Q\x90\x92P`\x01`\x01`@\x1B\x03\x81\x11\x15a\x04\x07W__\xFD[\x84\x01`\x1F\x81\x01\x86\x13a\x04\x17W__\xFD[\x80Q`\x01`\x01`@\x1B\x03\x81\x11\x15a\x040Wa\x040a\x03\xAFV[`@Q`\x1F\x82\x01`\x1F\x19\x90\x81\x16`?\x01\x16\x81\x01`\x01`\x01`@\x1B\x03\x81\x11\x82\x82\x10\x17\x15a\x04^Wa\x04^a\x03\xAFV[`@R\x81\x81R\x82\x82\x01` \x01\x88\x10\x15a\x04uW__\xFD[\x81` \x84\x01` \x83\x01^_` \x83\x83\x01\x01R\x80\x93PPPP\x92P\x92P\x92V[_\x82Q\x80` \x85\x01\x84^_\x92\x01\x91\x82RP\x91\x90PV[` \x81R_\x82Q\x80` \x84\x01R\x80` \x85\x01`@\x85\x01^_`@\x82\x85\x01\x01R`@`\x1F\x19`\x1F\x83\x01\x16\x84\x01\x01\x91PP\x92\x91PPV[a\x08C\x80a\x04\xEC_9_\xF3\xFE`\x80`@R6a\0\x13Wa\0\x11a\0\x17V[\0[a\0\x11[a\0\x1Fa\x01hV[`\x01`\x01`\xA0\x1B\x03\x163\x03a\x01^W```\x01`\x01`\xE0\x1B\x03\x19_5\x16cd\xD3\x18\r`\xE1\x1B\x81\x01a\0YWa\0Ra\x01\x9AV[\x91Pa\x01VV[cXp\x86\xBD`\xE1\x1B`\x01`\x01`\xE0\x1B\x03\x19\x82\x16\x01a\0yWa\0Ra\x01\xEDV[c\x07\r|i`\xE4\x1B`\x01`\x01`\xE0\x1B\x03\x19\x82\x16\x01a\0\x99Wa\0Ra\x021V[b\x1E\xB9o`\xE6\x1B`\x01`\x01`\xE0\x1B\x03\x19\x82\x16\x01a\0\xB8Wa\0Ra\x02aV[c\xA3\x9F%\xE5`\xE0\x1B`\x01`\x01`\xE0\x1B\x03\x19\x82\x16\x01a\0\xD8Wa\0Ra\x02\xA0V[`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`B`$\x82\x01R\x7FTransparentUpgradeableProxy: adm`D\x82\x01R\x7Fin cannot fallback to proxy targ`d\x82\x01Ra\x19]`\xF2\x1B`\x84\x82\x01R`\xA4\x01[`@Q\x80\x91\x03\x90\xFD[\x81Q` \x83\x01\xF3[a\x01fa\x02\xB3V[V[_\x7F\xB51'hJV\x8B1s\xAE\x13\xB9\xF8\xA6\x01n$>c\xB6\xE8\xEE\x11x\xD6\xA7\x17\x85\x0B]a\x03[T`\x01`\x01`\xA0\x1B\x03\x16\x91\x90PV[``a\x01\xA4a\x02\xC3V[_a\x01\xB26`\x04\x81\x84a\x06hV[\x81\x01\x90a\x01\xBF\x91\x90a\x06\xAAV[\x90Pa\x01\xDA\x81`@Q\x80` \x01`@R\x80_\x81RP_a\x02\xCDV[PP`@\x80Q` \x81\x01\x90\x91R_\x81R\x90V[``_\x80a\x01\xFE6`\x04\x81\x84a\x06hV[\x81\x01\x90a\x02\x0B\x91\x90a\x06\xD7V[\x91P\x91Pa\x02\x1B\x82\x82`\x01a\x02\xCDV[`@Q\x80` \x01`@R\x80_\x81RP\x92PPP\x90V[``a\x02;a\x02\xC3V[_a\x02I6`\x04\x81\x84a\x06hV[\x81\x01\x90a\x02V\x91\x90a\x06\xAAV[\x90Pa\x01\xDA\x81a\x02\xF8V[``a\x02ka\x02\xC3V[_a\x02ta\x01hV[`@\x80Q`\x01`\x01`\xA0\x1B\x03\x83\x16` \x82\x01R\x91\x92P\x01`@Q` \x81\x83\x03\x03\x81R\x90`@R\x91PP\x90V[``a\x02\xAAa\x02\xC3V[_a\x02ta\x03OV[a\x01fa\x02\xBEa\x03OV[a\x03]V[4\x15a\x01fW__\xFD[a\x02\xD6\x83a\x03{V[_\x82Q\x11\x80a\x02\xE2WP\x80[\x15a\x02\xF3Wa\x02\xF1\x83\x83a\x03\xBAV[P[PPPV[\x7F~dMyB/\x17\xC0\x1EH\x94\xB5\xF4\xF5\x88\xD31\xEB\xFA(e=B\xAE\x83-\xC5\x9E8\xC9y\x8Fa\x03!a\x01hV[`@\x80Q`\x01`\x01`\xA0\x1B\x03\x92\x83\x16\x81R\x91\x84\x16` \x83\x01R\x01`@Q\x80\x91\x03\x90\xA1a\x03L\x81a\x03\xE6V[PV[_a\x03Xa\x04\x8FV[\x90P\x90V[6__7__6_\x84Z\xF4=__>\x80\x80\x15a\x03wW=_\xF3[=_\xFD[a\x03\x84\x81a\x04\xB6V[`@Q`\x01`\x01`\xA0\x1B\x03\x82\x16\x90\x7F\xBC|\xD7Z \xEE'\xFD\x9A\xDE\xBA\xB3 A\xF7U!M\xBCk\xFF\xA9\x0C\xC0\"[9\xDA.\\-;\x90_\x90\xA2PV[``a\x03\xDF\x83\x83`@Q\x80``\x01`@R\x80`'\x81R` \x01a\x07\xE7`'\x919a\x05JV[\x93\x92PPPV[`\x01`\x01`\xA0\x1B\x03\x81\x16a\x04KW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`&`$\x82\x01R\x7FERC1967: new admin is the zero a`D\x82\x01Reddress`\xD0\x1B`d\x82\x01R`\x84\x01a\x01MV[\x80\x7F\xB51'hJV\x8B1s\xAE\x13\xB9\xF8\xA6\x01n$>c\xB6\xE8\xEE\x11x\xD6\xA7\x17\x85\x0B]a\x03[\x80T`\x01`\x01`\xA0\x1B\x03\x19\x16`\x01`\x01`\xA0\x1B\x03\x92\x90\x92\x16\x91\x90\x91\x17\x90UPV[_\x7F6\x08\x94\xA1;\xA1\xA3!\x06g\xC8(I-\xB9\x8D\xCA> v\xCC75\xA9 \xA3\xCAP]8+\xBCa\x01\x8BV[`\x01`\x01`\xA0\x1B\x03\x81\x16;a\x05#W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`-`$\x82\x01R\x7FERC1967: new implementation is n`D\x82\x01Rl\x1B\xDD\x08\x18H\x18\xDB\xDB\x9D\x1C\x98X\xDD`\x9A\x1B`d\x82\x01R`\x84\x01a\x01MV[\x80\x7F6\x08\x94\xA1;\xA1\xA3!\x06g\xC8(I-\xB9\x8D\xCA> v\xCC75\xA9 \xA3\xCAP]8+\xBCa\x04nV[``__\x85`\x01`\x01`\xA0\x1B\x03\x16\x85`@Qa\x05f\x91\x90a\x07\x9BV[_`@Q\x80\x83\x03\x81\x85Z\xF4\x91PP=\x80_\x81\x14a\x05\x9EW`@Q\x91P`\x1F\x19`?=\x01\x16\x82\x01`@R=\x82R=_` \x84\x01>a\x05\xA3V[``\x91P[P\x91P\x91Pa\x05\xB4\x86\x83\x83\x87a\x05\xBEV[\x96\x95PPPPPPV[``\x83\x15a\x06,W\x82Q_\x03a\x06%W`\x01`\x01`\xA0\x1B\x03\x85\x16;a\x06%W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`\x1D`$\x82\x01R\x7FAddress: call to non-contract\0\0\0`D\x82\x01R`d\x01a\x01MV[P\x81a\x066V[a\x066\x83\x83a\x06>V[\x94\x93PPPPV[\x81Q\x15a\x06NW\x81Q\x80\x83` \x01\xFD[\x80`@QbF\x1B\xCD`\xE5\x1B\x81R`\x04\x01a\x01M\x91\x90a\x07\xB1V[__\x85\x85\x11\x15a\x06vW__\xFD[\x83\x86\x11\x15a\x06\x82W__\xFD[PP\x82\x01\x93\x91\x90\x92\x03\x91PV[\x805`\x01`\x01`\xA0\x1B\x03\x81\x16\x81\x14a\x06\xA5W__\xFD[\x91\x90PV[_` \x82\x84\x03\x12\x15a\x06\xBAW__\xFD[a\x03\xDF\x82a\x06\x8FV[cNH{q`\xE0\x1B_R`A`\x04R`$_\xFD[__`@\x83\x85\x03\x12\x15a\x06\xE8W__\xFD[a\x06\xF1\x83a\x06\x8FV[\x91P` \x83\x015g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x81\x11\x15a\x07\x0CW__\xFD[\x83\x01`\x1F\x81\x01\x85\x13a\x07\x1CW__\xFD[\x805g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x81\x11\x15a\x076Wa\x076a\x06\xC3V[`@Q`\x1F\x82\x01`\x1F\x19\x90\x81\x16`?\x01\x16\x81\x01g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x81\x11\x82\x82\x10\x17\x15a\x07eWa\x07ea\x06\xC3V[`@R\x81\x81R\x82\x82\x01` \x01\x87\x10\x15a\x07|W__\xFD[\x81` \x84\x01` \x83\x017_` \x83\x83\x01\x01R\x80\x93PPPP\x92P\x92\x90PV[_\x82Q\x80` \x85\x01\x84^_\x92\x01\x91\x82RP\x91\x90PV[` \x81R_\x82Q\x80` \x84\x01R\x80` \x85\x01`@\x85\x01^_`@\x82\x85\x01\x01R`@`\x1F\x19`\x1F\x83\x01\x16\x84\x01\x01\x91PP\x92\x91PPV\xFEAddress: low-level delegate call failed\xA2dipfsX\"\x12 \xC1+\xA0\xAE\x9EKh\xCC\xC5\x96\\\x1D]`E\xC5\x9A0OT_\x18W\xAA\x10\xEAC\xF7)\x1DL\xCEdsolcC\0\x08\x1B\x003\xB51'hJV\x8B1s\xAE\x13\xB9\xF8\xA6\x01n$>c\xB6\xE8\xEE\x11x\xD6\xA7\x17\x85\x0B]a\x03Address: low-level delegate call failed\xA2dipfsX\"\x12 \xE9\xA6\xEB\xE2\xAA\xF0*\"+\xB1\xD5\xC5\xBF\x98\x14\xF9g\x13G\xBC\xFB\xCC8\xE1,\xAA\x13\x9B\x93\xFE\xB2udsolcC\0\x08\x1B\x003",
     );
     /**Constructor`.
-```solidity
-constructor(address _beneficiary, address _baseStrategyImplementation);
-```*/
+    ```solidity
+    constructor(address _beneficiary, address _baseStrategyImplementation);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct constructorCall {
@@ -103,9 +103,7 @@ constructor(address _beneficiary, address _baseStrategyImplementation);
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -136,9 +134,7 @@ constructor(address _beneficiary, address _baseStrategyImplementation);
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Address,
             );
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             #[inline]
             fn new<'a>(
                 tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
@@ -159,9 +155,9 @@ constructor(address _beneficiary, address _baseStrategyImplementation);
         }
     };
     /**Function with signature `createManyStrategies(uint256)` and selector `0xc220ed52`.
-```solidity
-function createManyStrategies(uint256 numStrategies) external returns (address[] memory);
-```*/
+    ```solidity
+    function createManyStrategies(uint256 numStrategies) external returns (address[] memory);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct createManyStrategiesCall {
@@ -185,14 +181,10 @@ function createManyStrategies(uint256 numStrategies) external returns (address[]
             #[doc(hidden)]
             type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (
-                alloy::sol_types::private::primitives::aliases::U256,
-            );
+            type UnderlyingRustTuple<'a> = (alloy::sol_types::private::primitives::aliases::U256,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -201,35 +193,31 @@ function createManyStrategies(uint256 numStrategies) external returns (address[]
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<createManyStrategiesCall>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<createManyStrategiesCall> for UnderlyingRustTuple<'_> {
                 fn from(value: createManyStrategiesCall) -> Self {
                     (value.numStrategies,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for createManyStrategiesCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for createManyStrategiesCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self { numStrategies: tuple.0 }
+                    Self {
+                        numStrategies: tuple.0,
+                    }
                 }
             }
         }
         {
             #[doc(hidden)]
-            type UnderlyingSolTuple<'a> = (
-                alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::Address>,
-            );
+            type UnderlyingSolTuple<'a> =
+                (alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::Address>,);
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (
-                alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
-            );
+            type UnderlyingRustTuple<'a> =
+                (alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -238,16 +226,14 @@ function createManyStrategies(uint256 numStrategies) external returns (address[]
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<createManyStrategiesReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<createManyStrategiesReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: createManyStrategiesReturn) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for createManyStrategiesReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for createManyStrategiesReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -256,16 +242,11 @@ function createManyStrategies(uint256 numStrategies) external returns (address[]
         #[automatically_derived]
         impl alloy_sol_types::SolCall for createManyStrategiesCall {
             type Parameters<'a> = (alloy::sol_types::sol_data::Uint<256>,);
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = createManyStrategiesReturn;
-            type ReturnTuple<'a> = (
-                alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::Address>,
-            );
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnTuple<'a> =
+                (alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::Address>,);
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "createManyStrategies(uint256)";
             const SELECTOR: [u8; 4] = [194u8, 32u8, 237u8, 82u8];
             #[inline]
@@ -277,9 +258,9 @@ function createManyStrategies(uint256 numStrategies) external returns (address[]
             #[inline]
             fn tokenize(&self) -> Self::Token<'_> {
                 (
-                    <alloy::sol_types::sol_data::Uint<
-                        256,
-                    > as alloy_sol_types::SolType>::tokenize(&self.numStrategies),
+                    <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
+                        &self.numStrategies,
+                    ),
                 )
             }
             #[inline]
@@ -287,10 +268,10 @@ function createManyStrategies(uint256 numStrategies) external returns (address[]
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
@@ -339,28 +320,24 @@ function createManyStrategies(uint256 numStrategies) external returns (address[]
             static DECODE_SHIMS: &[fn(
                 &[u8],
                 bool,
-            ) -> alloy_sol_types::Result<StrategyDeployerCalls>] = &[
-                {
-                    fn createManyStrategies(
-                        data: &[u8],
-                        validate: bool,
-                    ) -> alloy_sol_types::Result<StrategyDeployerCalls> {
-                        <createManyStrategiesCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(StrategyDeployerCalls::createManyStrategies)
-                    }
-                    createManyStrategies
-                },
-            ];
+            )
+                -> alloy_sol_types::Result<StrategyDeployerCalls>] = &[{
+                fn createManyStrategies(
+                    data: &[u8],
+                    validate: bool,
+                ) -> alloy_sol_types::Result<StrategyDeployerCalls> {
+                    <createManyStrategiesCall as alloy_sol_types::SolCall>::abi_decode_raw(
+                        data, validate,
+                    )
+                    .map(StrategyDeployerCalls::createManyStrategies)
+                }
+                createManyStrategies
+            }];
             let Ok(idx) = Self::SELECTORS.binary_search(&selector) else {
-                return Err(
-                    alloy_sol_types::Error::unknown_selector(
-                        <Self as alloy_sol_types::SolInterface>::NAME,
-                        selector,
-                    ),
-                );
+                return Err(alloy_sol_types::Error::unknown_selector(
+                    <Self as alloy_sol_types::SolInterface>::NAME,
+                    selector,
+                ));
             };
             (unsafe { DECODE_SHIMS.get_unchecked(idx) })(data, validate)
         }
@@ -368,9 +345,7 @@ function createManyStrategies(uint256 numStrategies) external returns (address[]
         fn abi_encoded_size(&self) -> usize {
             match self {
                 Self::createManyStrategies(inner) => {
-                    <createManyStrategiesCall as alloy_sol_types::SolCall>::abi_encoded_size(
-                        inner,
-                    )
+                    <createManyStrategiesCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
                 }
             }
         }
@@ -379,8 +354,7 @@ function createManyStrategies(uint256 numStrategies) external returns (address[]
             match self {
                 Self::createManyStrategies(inner) => {
                     <createManyStrategiesCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
+                        inner, out,
                     )
                 }
             }
@@ -389,7 +363,7 @@ function createManyStrategies(uint256 numStrategies) external returns (address[]
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`StrategyDeployer`](self) contract instance.
 
-See the [wrapper's documentation](`StrategyDeployerInstance`) for more details.*/
+    See the [wrapper's documentation](`StrategyDeployerInstance`) for more details.*/
     #[inline]
     pub const fn new<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -403,9 +377,9 @@ See the [wrapper's documentation](`StrategyDeployerInstance`) for more details.*
     }
     /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+    Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+    For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
     #[inline]
     pub fn deploy<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -415,20 +389,19 @@ For more fine-grained control over the deployment process, use [`deploy_builder`
         provider: P,
         _beneficiary: alloy::sol_types::private::Address,
         _baseStrategyImplementation: alloy::sol_types::private::Address,
-    ) -> impl ::core::future::Future<
-        Output = alloy_contract::Result<StrategyDeployerInstance<T, P, N>>,
-    > {
-        StrategyDeployerInstance::<
-            T,
-            P,
-            N,
-        >::deploy(provider, _beneficiary, _baseStrategyImplementation)
+    ) -> impl ::core::future::Future<Output = alloy_contract::Result<StrategyDeployerInstance<T, P, N>>>
+    {
+        StrategyDeployerInstance::<T, P, N>::deploy(
+            provider,
+            _beneficiary,
+            _baseStrategyImplementation,
+        )
     }
     /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+    and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+    This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+    the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     #[inline]
     pub fn deploy_builder<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -439,23 +412,23 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         _beneficiary: alloy::sol_types::private::Address,
         _baseStrategyImplementation: alloy::sol_types::private::Address,
     ) -> alloy_contract::RawCallBuilder<T, P, N> {
-        StrategyDeployerInstance::<
-            T,
-            P,
-            N,
-        >::deploy_builder(provider, _beneficiary, _baseStrategyImplementation)
+        StrategyDeployerInstance::<T, P, N>::deploy_builder(
+            provider,
+            _beneficiary,
+            _baseStrategyImplementation,
+        )
     }
     /**A [`StrategyDeployer`](self) instance.
 
-Contains type-safe methods for interacting with an on-chain instance of the
-[`StrategyDeployer`](self) contract located at a given `address`, using a given
-provider `P`.
+    Contains type-safe methods for interacting with an on-chain instance of the
+    [`StrategyDeployer`](self) contract located at a given `address`, using a given
+    provider `P`.
 
-If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
-documentation on how to provide it), the `deploy` and `deploy_builder` methods can
-be used to deploy a new instance of the contract.
+    If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
+    documentation on how to provide it), the `deploy` and `deploy_builder` methods can
+    be used to deploy a new instance of the contract.
 
-See the [module-level documentation](self) for all the available methods.*/
+    See the [module-level documentation](self) for all the available methods.*/
     #[derive(Clone)]
     pub struct StrategyDeployerInstance<T, P, N = alloy_contract::private::Ethereum> {
         address: alloy_sol_types::private::Address,
@@ -466,24 +439,24 @@ See the [module-level documentation](self) for all the available methods.*/
     impl<T, P, N> ::core::fmt::Debug for StrategyDeployerInstance<T, P, N> {
         #[inline]
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-            f.debug_tuple("StrategyDeployerInstance").field(&self.address).finish()
+            f.debug_tuple("StrategyDeployerInstance")
+                .field(&self.address)
+                .finish()
         }
     }
     /// Instantiation and getters/setters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > StrategyDeployerInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > StrategyDeployerInstance<T, P, N>
+    {
         /**Creates a new wrapper around an on-chain [`StrategyDeployer`](self) contract instance.
 
-See the [wrapper's documentation](`StrategyDeployerInstance`) for more details.*/
+        See the [wrapper's documentation](`StrategyDeployerInstance`) for more details.*/
         #[inline]
-        pub const fn new(
-            address: alloy_sol_types::private::Address,
-            provider: P,
-        ) -> Self {
+        pub const fn new(address: alloy_sol_types::private::Address, provider: P) -> Self {
             Self {
                 address,
                 provider,
@@ -492,28 +465,25 @@ See the [wrapper's documentation](`StrategyDeployerInstance`) for more details.*
         }
         /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+        Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+        For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
         #[inline]
         pub async fn deploy(
             provider: P,
             _beneficiary: alloy::sol_types::private::Address,
             _baseStrategyImplementation: alloy::sol_types::private::Address,
         ) -> alloy_contract::Result<StrategyDeployerInstance<T, P, N>> {
-            let call_builder = Self::deploy_builder(
-                provider,
-                _beneficiary,
-                _baseStrategyImplementation,
-            );
+            let call_builder =
+                Self::deploy_builder(provider, _beneficiary, _baseStrategyImplementation);
             let contract_address = call_builder.deploy().await?;
             Ok(Self::new(contract_address, call_builder.provider))
         }
         /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+        and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+        This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+        the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         #[inline]
         pub fn deploy_builder(
             provider: P,
@@ -524,15 +494,13 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
                 provider,
                 [
                     &BYTECODE[..],
-                    &alloy_sol_types::SolConstructor::abi_encode(
-                        &constructorCall {
-                            _beneficiary,
-                            _baseStrategyImplementation,
-                        },
-                    )[..],
+                    &alloy_sol_types::SolConstructor::abi_encode(&constructorCall {
+                        _beneficiary,
+                        _baseStrategyImplementation,
+                    })[..],
                 ]
-                    .concat()
-                    .into(),
+                .concat()
+                .into(),
             )
         }
         /// Returns a reference to the address.
@@ -570,10 +538,11 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     /// Function calls.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > StrategyDeployerInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > StrategyDeployerInstance<T, P, N>
+    {
         /// Creates a new call builder using this contract instance's provider and address.
         ///
         /// Note that the call can be any function call, not just those defined in this
@@ -589,20 +558,17 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
             &self,
             numStrategies: alloy::sol_types::private::primitives::aliases::U256,
         ) -> alloy_contract::SolCallBuilder<T, &P, createManyStrategiesCall, N> {
-            self.call_builder(
-                &createManyStrategiesCall {
-                    numStrategies,
-                },
-            )
+            self.call_builder(&createManyStrategiesCall { numStrategies })
         }
     }
     /// Event filters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > StrategyDeployerInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > StrategyDeployerInstance<T, P, N>
+    {
         /// Creates a new event filter using this contract instance's provider and address.
         ///
         /// Note that the type can be any event, not just those defined in this contract.
