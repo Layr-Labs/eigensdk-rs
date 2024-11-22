@@ -61,7 +61,9 @@ impl From<BlsKeyPair> for OperatorPubKeys {
 pub struct Operator {
     pub address: Address,
     pub staker_opt_out_window_blocks: u32,
+    pub delegation_approver_address: Address,
     pub metadata_url: Option<String>,
+    pub allocation_delay: u32,
 }
 
 pub type Socket = String;

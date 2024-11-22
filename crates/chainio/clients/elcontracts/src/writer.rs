@@ -5,11 +5,11 @@ pub use eigen_types::operator::Operator;
 use eigen_utils::{
     delegationmanager::{
         DelegationManager::{self},
-        IDelegationManager::OperatorDetails,
+        IDelegationManagerTypes::OperatorDetails,
     },
     erc20::ERC20,
     get_signer,
-    irewardscoordinator::IRewardsCoordinator::{self, RewardsMerkleClaim},
+    irewardscoordinator::{IRewardsCoordinator, IRewardsCoordinatorTypes::RewardsMerkleClaim},
     strategymanager::StrategyManager,
 };
 
@@ -67,17 +67,20 @@ impl ELChainWriter {
     ) -> Result<FixedBytes<32>, ElContractsError> {
         info!("registering operator {:?} to EigenLayer", operator.address);
         let op_details = OperatorDetails {
-            __deprecated_earningsReceiver: operator.earnings_receiver_address,
+            __deprecated_earningsReceiver: operator.address,
             delegationApprover: operator.delegation_approver_address,
-            stakerOptOutWindowBlocks: operator.staker_opt_out_window_blocks,
+            __deprecated_stakerOptOutWindowBlocks: operator.staker_opt_out_window_blocks,
         };
         let provider = get_signer(&self.signer.clone(), &self.provider);
 
         let contract_delegation_manager = DelegationManager::new(self.delegation_manager, provider);
 
         let binding = {
-            let contract_call = contract_delegation_manager
-                .registerAsOperator(op_details, operator.metadata_url.unwrap_or_default());
+            let contract_call = contract_delegation_manager.registerAsOperator(
+                op_details,
+                operator.allocation_delay,
+                operator.metadata_url.unwrap_or_default(),
+            );
             contract_call.gas(300000)
         };
 
@@ -123,9 +126,9 @@ impl ELChainWriter {
             operator.address
         );
         let operator_details = OperatorDetails {
-            __deprecated_earningsReceiver: operator.earnings_receiver_address,
+            __deprecated_earningsReceiver: operator.address,
+            __deprecated_stakerOptOutWindowBlocks: operator.staker_opt_out_window_blocks,
             delegationApprover: operator.delegation_approver_address,
-            stakerOptOutWindowBlocks: operator.staker_opt_out_window_blocks,
         };
         let provider = get_signer(&self.signer.clone(), &self.provider);
 
@@ -276,7 +279,7 @@ mod tests {
         contractsregistry::ContractsRegistry::{self, get_test_valuesReturn},
         delegationmanager::DelegationManager,
         get_provider,
-        irewardscoordinator::IRewardsCoordinator::{EarnerTreeMerkleLeaf, RewardsMerkleClaim},
+        irewardscoordinator::IRewardsCoordinatorTypes::{EarnerTreeMerkleLeaf, RewardsMerkleClaim},
         mockavsservicemanager::MockAvsServiceManager,
     };
     use serial_test::serial;
@@ -294,11 +297,6 @@ mod tests {
             delegation_manager_address,
             get_provider(http_endpoint.as_str()),
         );
-        let slasher_address_return = delegation_manager_contract.slasher().call().await.unwrap();
-        let DelegationManager::slasherReturn {
-            _0: slasher_address,
-        } = slasher_address_return;
-
         let service_manager_address = get_service_manager_address(http_endpoint.clone()).await;
         let service_manager_contract = MockAvsServiceManager::new(
             service_manager_address,
@@ -314,10 +312,17 @@ mod tests {
             _0: avs_directory_address,
         } = avs_directory_address_return;
 
+        let allocation_manager_address = delegation_manager_contract
+            .allocationManager()
+            .call()
+            .await
+            .unwrap()
+            ._0;
+
         (
             ELChainReader::new(
                 get_test_logger().clone(),
-                slasher_address,
+                allocation_manager_address,
                 delegation_manager_address,
                 avs_directory_address,
                 http_endpoint,
@@ -396,10 +401,10 @@ mod tests {
 
         let operator = Operator {
             address: wallet.address(),
-            earnings_receiver_address: wallet.address(),
-            delegation_approver_address: wallet.address(),
             staker_opt_out_window_blocks: 3,
+            delegation_approver_address: wallet.address(),
             metadata_url: Some("eigensdk-rs".to_string()),
+            allocation_delay: 1,
         };
 
         // First test: register as an operator
@@ -418,10 +423,10 @@ mod tests {
 
         let operator_modified = Operator {
             address: wallet_modified.address(),
-            earnings_receiver_address: wallet_modified.address(),
-            delegation_approver_address: wallet_modified.address(),
             staker_opt_out_window_blocks: 3,
+            delegation_approver_address: wallet_modified.address(),
             metadata_url: Some("eigensdk-rs".to_string()),
+            allocation_delay: 1,
         };
 
         // Second test: update operator details

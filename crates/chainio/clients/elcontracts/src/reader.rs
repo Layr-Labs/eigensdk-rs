@@ -3,11 +3,8 @@ use alloy_primitives::{Address, FixedBytes, U256};
 use eigen_logging::logger::SharedLogger;
 use eigen_types::operator::Operator;
 use eigen_utils::{
-    get_provider,
-    {
-        avsdirectory::AVSDirectory, delegationmanager::DelegationManager, erc20::ERC20,
-        istrategy::IStrategy,
-    },
+    allocationmanager::AllocationManager, avsdirectory::AVSDirectory,
+    delegationmanager::DelegationManager, erc20::ERC20, get_provider, istrategy::IStrategy,
 };
 
 #[derive(Debug, Clone)]
@@ -240,10 +237,22 @@ impl ELChainReader {
             _0: operator_details,
         } = operator_det;
 
+        let AllocationManager::getAllocationDelayReturn {
+            isSet: is_set,
+            delay,
+        } = AllocationManager::new(self.allocation_manager, &provider)
+            .getAllocationDelay(operator)
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+        let allocation_delay = if is_set { delay } else { 0 };
+
         Ok(Operator {
             address: operator,
             staker_opt_out_window_blocks: operator_details.__deprecated_stakerOptOutWindowBlocks,
             metadata_url: None,
+            allocation_delay,
+            delegation_approver_address: operator_details.delegationApprover,
         })
     }
 
