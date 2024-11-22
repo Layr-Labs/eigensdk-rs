@@ -765,4 +765,40 @@ mod tests {
             .await
             .unwrap();
     }
+
+    #[tokio::test]
+    async fn test_query_registration_detail() {
+        let avs_reader = build_avs_registry_chain_reader().await;
+
+        let operator_id = U256::from_str(
+            "35344093966194310405039483339636912150346494903629410125452342281826147822033",
+        )
+        .unwrap();
+
+        let operator_id_b256: B256 = operator_id.into();
+
+        let operator_address = avs_reader
+            .get_operator_from_id(operator_id_b256.into())
+            .await
+            .unwrap();
+
+        let ret_query_registration_detail = avs_reader
+            .query_registration_detail(operator_address)
+            .await
+            .unwrap();
+
+        println!("{:?}", ret_query_registration_detail);
+
+        // all the value are false
+        for ret_value in ret_query_registration_detail.iter() {
+            assert!(!ret_value);
+        }
+
+        // register an operator
+        let is_registered = avs_reader
+            .is_operator_registered(operator_address)
+            .await
+            .unwrap();
+        assert!(!is_registered);
+    }
 }
