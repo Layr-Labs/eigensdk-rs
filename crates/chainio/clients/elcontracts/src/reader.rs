@@ -385,6 +385,41 @@ impl ELChainReader {
         let DelegationManager::isOperatorReturn { _0: is_operator_is } = is_operator;
         Ok(is_operator_is)
     }
+
+    /// Returns the strategy contract and the underlying token address.
+    ///
+    /// # Arguments
+    ///
+    /// * `strategy_addr` - The strategy's address
+    ///
+    /// # Returns
+    ///
+    /// - the strategy contract,
+    /// - and the underlying token address
+    ///
+    /// # Errors
+    ///
+    /// * `ElContractsError` - if the call to the contract fails
+    pub async fn get_strategy_and_underlying_token(
+        &self,
+        strategy_addr: Address,
+    ) -> Result<(Address, Address), ElContractsError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_strategy = IStrategy::new(strategy_addr, &provider);
+
+        let underlying_token = contract_strategy
+            .underlyingToken()
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        let IStrategy::underlyingTokenReturn {
+            _0: underlying_token_addr,
+        } = underlying_token;
+
+        Ok((strategy_addr, underlying_token_addr))
+    }
 }
 
 #[cfg(test)]
