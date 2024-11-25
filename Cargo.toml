@@ -5,7 +5,6 @@ members = [
     "crates/chainio/clients/eth/",
     "crates/chainio/clients/fireblocks/",
     "crates/chainio/txmanager/",
-    "crates/contracts/bindings/",
     "crates/crypto/bls/",
     "crates/crypto/bn254/",
     "crates/eigen-cli/",
@@ -30,7 +29,7 @@ members = [
 resolver = "2"
 
 [workspace.package]
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 authors = ["Eigen Layer contributors"]
 rust-version = "1.79"
@@ -63,7 +62,6 @@ eigen-client-avsregistry = { path = "crates/chainio/clients/avsregistry" }
 eigen-client-elcontracts = { path = "crates/chainio/clients/elcontracts" }
 eigen-client-eth = { path = "crates/chainio/clients/eth" }
 eigen-client-fireblocks = { path = "crates/chainio/clients/fireblocks" }
-eigen-contract-bindings = { path = "crates/contracts/bindings/" }
 eigen-crypto-bls = { path = "crates/crypto/bls/" }
 eigen-crypto-bn254 = { path = "crates/crypto/bn254/" }
 eigen-logging = { path = "crates/logging/" }
