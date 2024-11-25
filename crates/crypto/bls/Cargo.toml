@@ -17,8 +17,8 @@ ark-ec.workspace = true
 alloy-primitives.workspace = true
 ark-std = { version = "0.4.0", default-features = false }
 serde.workspace = true
-eigen-crypto-bn254 = "0.1.1"
-eigen-utils  = "0.1.1"
+eigen-crypto-bn254.workspace = true
+eigen-utils.workspace = true
 [dev-dependencies]
 rand = "0.8.4"
 tokio = { workspace = true, features = ["full"] }

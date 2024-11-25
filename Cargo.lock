@@ -2444,7 +2444,7 @@ dependencies = [
  "eigen-crypto-bls",
  "eigen-testing-utils",
  "eigen-types",
- "eigen-utils 0.1.1",
+ "eigen-utils",
  "eth-keystore",
  "hex",
  "k256",
@@ -2477,7 +2477,7 @@ dependencies = [
  "eigen-logging",
  "eigen-testing-utils",
  "eigen-types",
- "eigen-utils 0.1.1",
+ "eigen-utils",
  "hex",
  "num-bigint 0.4.6",
  "once_cell",
@@ -2497,7 +2497,7 @@ dependencies = [
  "eigen-logging",
  "eigen-testing-utils",
  "eigen-types",
- "eigen-utils 0.1.1",
+ "eigen-utils",
  "once_cell",
  "serial_test",
  "thiserror",
@@ -2518,7 +2518,7 @@ dependencies = [
  "eigen-metrics-collectors-rpc-calls",
  "eigen-signer",
  "eigen-testing-utils",
- "eigen-utils 0.1.1",
+ "eigen-utils",
  "hex",
  "once_cell",
  "serial_test",
@@ -2534,7 +2534,7 @@ dependencies = [
  "alloy",
  "alloy-primitives",
  "chrono",
- "eigen-utils 0.1.1",
+ "eigen-utils",
  "hex",
  "jsonwebtoken 7.2.0",
  "mime",
@@ -2565,8 +2565,8 @@ dependencies = [
  "ark-ff 0.5.0",
  "ark-serialize 0.5.0",
  "ark-std 0.4.0",
- "eigen-crypto-bn254 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
- "eigen-utils 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "eigen-crypto-bn254",
+ "eigen-utils",
  "rand",
  "serde",
  "serde_json",
@@ -2585,19 +2585,6 @@ dependencies = [
  "rand",
  "rust-bls-bn254",
  "tokio",
-]
-
-[[package]]
-name = "eigen-crypto-bn254"
-version = "0.1.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "67916fff33bfbc764ee870402865cb012344ec018c1dc49e33b60aec25222aa5"
-dependencies = [
- "ark-bn254 0.5.0",
- "ark-ec 0.5.0",
- "ark-ff 0.5.0",
- "num-bigint 0.4.6",
- "rust-bls-bn254",
 ]
 
 [[package]]
@@ -2679,7 +2666,7 @@ dependencies = [
  "eigen-services-operatorsinfo",
  "eigen-testing-utils",
  "eigen-types",
- "eigen-utils 0.1.1",
+ "eigen-utils",
  "hex",
  "serde",
  "tokio",
@@ -2697,13 +2684,13 @@ dependencies = [
  "ark-ec 0.5.0",
  "eigen-client-avsregistry",
  "eigen-crypto-bls",
- "eigen-crypto-bn254 0.1.1",
+ "eigen-crypto-bn254",
  "eigen-logging",
  "eigen-services-avsregistry",
  "eigen-services-operatorsinfo",
  "eigen-testing-utils",
  "eigen-types",
- "eigen-utils 0.1.1",
+ "eigen-utils",
  "parking_lot",
  "serde",
  "serde_json",
@@ -2732,7 +2719,7 @@ dependencies = [
  "eigen-logging",
  "eigen-testing-utils",
  "eigen-types",
- "eigen-utils 0.1.1",
+ "eigen-utils",
  "eyre",
  "futures",
  "futures-util",
@@ -2773,7 +2760,7 @@ dependencies = [
  "alloy-provider",
  "alloy-rpc-types",
  "alloy-transport",
- "eigen-utils 0.1.1",
+ "eigen-utils",
  "serde",
  "serde_json",
  "testcontainers",
@@ -2801,16 +2788,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "eigen-utils"
-version = "0.1.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "29d11ac71ae9058ecb7a27532f0db4f3736e2a6c07dfd83cfae850c8ce68d236"
-dependencies = [
- "alloy",
- "reqwest 0.12.9",
-]
-
-[[package]]
 name = "eigensdk"
 version = "0.1.1"
 dependencies = [
@@ -2821,7 +2798,7 @@ dependencies = [
  "eigen-client-fireblocks",
  "eigen-contract-bindings",
  "eigen-crypto-bls",
- "eigen-crypto-bn254 0.1.1",
+ "eigen-crypto-bn254",
  "eigen-logging",
  "eigen-metrics",
  "eigen-metrics-collectors-economic",
@@ -2833,7 +2810,7 @@ dependencies = [
  "eigen-signer",
  "eigen-testing-utils",
  "eigen-types",
- "eigen-utils 0.1.1",
+ "eigen-utils",
 ]
 
 [[package]]
@@ -3327,11 +3304,11 @@ dependencies = [
  "eigen-client-avsregistry",
  "eigen-client-elcontracts",
  "eigen-crypto-bls",
- "eigen-crypto-bn254 0.1.1",
+ "eigen-crypto-bn254",
  "eigen-logging",
  "eigen-testing-utils",
  "eigen-types",
- "eigen-utils 0.1.1",
+ "eigen-utils",
  "eyre",
  "lazy_static",
  "tokio",
@@ -4136,7 +4113,7 @@ dependencies = [
  "eigen-logging",
  "eigen-services-operatorsinfo",
  "eigen-testing-utils",
- "eigen-utils 0.1.1",
+ "eigen-utils",
  "tokio",
  "tokio-util",
  "tracing",
