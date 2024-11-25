@@ -137,9 +137,9 @@ pub mod IETHPOSDeposit {
         b"",
     );
     /**Event with signature `DepositEvent(bytes,bytes,bytes,bytes,bytes)` and selector `0x649bbc62d0e31342afea4e5cd82d4049e7e1ee912fc0889aa790803be39038c5`.
-    ```solidity
-    event DepositEvent(bytes pubkey, bytes withdrawal_credentials, bytes amount, bytes signature, bytes index);
-    ```*/
+```solidity
+event DepositEvent(bytes pubkey, bytes withdrawal_credentials, bytes amount, bytes signature, bytes index);
+```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -176,15 +176,45 @@ pub mod IETHPOSDeposit {
                 alloy::sol_types::sol_data::Bytes,
                 alloy::sol_types::sol_data::Bytes,
             );
-            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (alloy_sol_types::sol_data::FixedBytes<32>,);
             const SIGNATURE: &'static str = "DepositEvent(bytes,bytes,bytes,bytes,bytes)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
-                alloy_sol_types::private::B256::new([
-                    100u8, 155u8, 188u8, 98u8, 208u8, 227u8, 19u8, 66u8, 175u8, 234u8, 78u8, 92u8,
-                    216u8, 45u8, 64u8, 73u8, 231u8, 225u8, 238u8, 145u8, 47u8, 192u8, 136u8, 154u8,
-                    167u8, 144u8, 128u8, 59u8, 227u8, 144u8, 56u8, 197u8,
-                ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
+                100u8,
+                155u8,
+                188u8,
+                98u8,
+                208u8,
+                227u8,
+                19u8,
+                66u8,
+                175u8,
+                234u8,
+                78u8,
+                92u8,
+                216u8,
+                45u8,
+                64u8,
+                73u8,
+                231u8,
+                225u8,
+                238u8,
+                145u8,
+                47u8,
+                192u8,
+                136u8,
+                154u8,
+                167u8,
+                144u8,
+                128u8,
+                59u8,
+                227u8,
+                144u8,
+                56u8,
+                197u8,
+            ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -205,11 +235,13 @@ pub mod IETHPOSDeposit {
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
-                        Self::SIGNATURE,
-                        topics.0,
-                        Self::SIGNATURE_HASH,
-                    ));
+                    return Err(
+                        alloy_sol_types::Error::invalid_event_signature_hash(
+                            Self::SIGNATURE,
+                            topics.0,
+                            Self::SIGNATURE_HASH,
+                        ),
+                    );
                 }
                 Ok(())
             }
@@ -245,7 +277,9 @@ pub mod IETHPOSDeposit {
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
+                out[0usize] = alloy_sol_types::abi::token::WordToken(
+                    Self::SIGNATURE_HASH,
+                );
                 Ok(())
             }
         }
@@ -267,9 +301,9 @@ pub mod IETHPOSDeposit {
         }
     };
     /**Function with signature `deposit(bytes,bytes,bytes,bytes32)` and selector `0x22895118`.
-    ```solidity
-    function deposit(bytes memory pubkey, bytes memory withdrawal_credentials, bytes memory signature, bytes32 deposit_data_root) external payable;
-    ```*/
+```solidity
+function deposit(bytes memory pubkey, bytes memory withdrawal_credentials, bytes memory signature, bytes32 deposit_data_root) external payable;
+```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct depositCall {
@@ -307,7 +341,9 @@ pub mod IETHPOSDeposit {
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -346,7 +382,9 @@ pub mod IETHPOSDeposit {
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -376,10 +414,14 @@ pub mod IETHPOSDeposit {
                 alloy::sol_types::sol_data::Bytes,
                 alloy::sol_types::sol_data::FixedBytes<32>,
             );
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type Return = depositReturn;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "deposit(bytes,bytes,bytes,bytes32)";
             const SELECTOR: [u8; 4] = [34u8, 137u8, 81u8, 24u8];
             #[inline]
@@ -410,17 +452,17 @@ pub mod IETHPOSDeposit {
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
+                <Self::ReturnTuple<
+                    '_,
+                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
+                    .map(Into::into)
             }
         }
     };
     /**Function with signature `get_deposit_count()` and selector `0x621fd130`.
-    ```solidity
-    function get_deposit_count() external view returns (bytes memory);
-    ```*/
+```solidity
+function get_deposit_count() external view returns (bytes memory);
+```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct get_deposit_countCall {}
@@ -445,7 +487,9 @@ pub mod IETHPOSDeposit {
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -454,14 +498,16 @@ pub mod IETHPOSDeposit {
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<get_deposit_countCall> for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<get_deposit_countCall>
+            for UnderlyingRustTuple<'_> {
                 fn from(value: get_deposit_countCall) -> Self {
                     ()
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for get_deposit_countCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>>
+            for get_deposit_countCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
@@ -474,7 +520,9 @@ pub mod IETHPOSDeposit {
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Bytes,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -483,14 +531,16 @@ pub mod IETHPOSDeposit {
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<get_deposit_countReturn> for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<get_deposit_countReturn>
+            for UnderlyingRustTuple<'_> {
                 fn from(value: get_deposit_countReturn) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for get_deposit_countReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>>
+            for get_deposit_countReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -499,10 +549,14 @@ pub mod IETHPOSDeposit {
         #[automatically_derived]
         impl alloy_sol_types::SolCall for get_deposit_countCall {
             type Parameters<'a> = ();
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type Return = get_deposit_countReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Bytes,);
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "get_deposit_count()";
             const SELECTOR: [u8; 4] = [98u8, 31u8, 209u8, 48u8];
             #[inline]
@@ -520,17 +574,17 @@ pub mod IETHPOSDeposit {
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
+                <Self::ReturnTuple<
+                    '_,
+                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
+                    .map(Into::into)
             }
         }
     };
     /**Function with signature `get_deposit_root()` and selector `0xc5f2892f`.
-    ```solidity
-    function get_deposit_root() external view returns (bytes32);
-    ```*/
+```solidity
+function get_deposit_root() external view returns (bytes32);
+```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct get_deposit_rootCall {}
@@ -555,7 +609,9 @@ pub mod IETHPOSDeposit {
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -564,14 +620,16 @@ pub mod IETHPOSDeposit {
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<get_deposit_rootCall> for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<get_deposit_rootCall>
+            for UnderlyingRustTuple<'_> {
                 fn from(value: get_deposit_rootCall) -> Self {
                     ()
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for get_deposit_rootCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>>
+            for get_deposit_rootCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
@@ -584,7 +642,9 @@ pub mod IETHPOSDeposit {
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::FixedBytes<32>,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -593,14 +653,16 @@ pub mod IETHPOSDeposit {
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<get_deposit_rootReturn> for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<get_deposit_rootReturn>
+            for UnderlyingRustTuple<'_> {
                 fn from(value: get_deposit_rootReturn) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for get_deposit_rootReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>>
+            for get_deposit_rootReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -609,10 +671,14 @@ pub mod IETHPOSDeposit {
         #[automatically_derived]
         impl alloy_sol_types::SolCall for get_deposit_rootCall {
             type Parameters<'a> = ();
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type Return = get_deposit_rootReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::FixedBytes<32>,);
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "get_deposit_root()";
             const SELECTOR: [u8; 4] = [197u8, 242u8, 137u8, 47u8];
             #[inline]
@@ -630,10 +696,10 @@ pub mod IETHPOSDeposit {
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
+                <Self::ReturnTuple<
+                    '_,
+                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
+                    .map(Into::into)
             }
         }
     };
@@ -692,14 +758,16 @@ pub mod IETHPOSDeposit {
             static DECODE_SHIMS: &[fn(
                 &[u8],
                 bool,
-            )
-                -> alloy_sol_types::Result<IETHPOSDepositCalls>] = &[
+            ) -> alloy_sol_types::Result<IETHPOSDepositCalls>] = &[
                 {
                     fn deposit(
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<IETHPOSDepositCalls> {
-                        <depositCall as alloy_sol_types::SolCall>::abi_decode_raw(data, validate)
+                        <depositCall as alloy_sol_types::SolCall>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
                             .map(IETHPOSDepositCalls::deposit)
                     }
                     deposit
@@ -710,9 +778,10 @@ pub mod IETHPOSDeposit {
                         validate: bool,
                     ) -> alloy_sol_types::Result<IETHPOSDepositCalls> {
                         <get_deposit_countCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                            data, validate,
-                        )
-                        .map(IETHPOSDepositCalls::get_deposit_count)
+                                data,
+                                validate,
+                            )
+                            .map(IETHPOSDepositCalls::get_deposit_count)
                     }
                     get_deposit_count
                 },
@@ -722,18 +791,21 @@ pub mod IETHPOSDeposit {
                         validate: bool,
                     ) -> alloy_sol_types::Result<IETHPOSDepositCalls> {
                         <get_deposit_rootCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                            data, validate,
-                        )
-                        .map(IETHPOSDepositCalls::get_deposit_root)
+                                data,
+                                validate,
+                            )
+                            .map(IETHPOSDepositCalls::get_deposit_root)
                     }
                     get_deposit_root
                 },
             ];
             let Ok(idx) = Self::SELECTORS.binary_search(&selector) else {
-                return Err(alloy_sol_types::Error::unknown_selector(
-                    <Self as alloy_sol_types::SolInterface>::NAME,
-                    selector,
-                ));
+                return Err(
+                    alloy_sol_types::Error::unknown_selector(
+                        <Self as alloy_sol_types::SolInterface>::NAME,
+                        selector,
+                    ),
+                );
             };
             (unsafe { DECODE_SHIMS.get_unchecked(idx) })(data, validate)
         }
@@ -744,10 +816,14 @@ pub mod IETHPOSDeposit {
                     <depositCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
                 }
                 Self::get_deposit_count(inner) => {
-                    <get_deposit_countCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
+                    <get_deposit_countCall as alloy_sol_types::SolCall>::abi_encoded_size(
+                        inner,
+                    )
                 }
                 Self::get_deposit_root(inner) => {
-                    <get_deposit_rootCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
+                    <get_deposit_rootCall as alloy_sol_types::SolCall>::abi_encoded_size(
+                        inner,
+                    )
                 }
             }
         }
@@ -758,10 +834,16 @@ pub mod IETHPOSDeposit {
                     <depositCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
                 }
                 Self::get_deposit_count(inner) => {
-                    <get_deposit_countCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
+                    <get_deposit_countCall as alloy_sol_types::SolCall>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
                 }
                 Self::get_deposit_root(inner) => {
-                    <get_deposit_rootCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
+                    <get_deposit_rootCall as alloy_sol_types::SolCall>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
                 }
             }
         }
@@ -778,11 +860,42 @@ pub mod IETHPOSDeposit {
         /// No guarantees are made about the order of the selectors.
         ///
         /// Prefer using `SolInterface` methods instead.
-        pub const SELECTORS: &'static [[u8; 32usize]] = &[[
-            100u8, 155u8, 188u8, 98u8, 208u8, 227u8, 19u8, 66u8, 175u8, 234u8, 78u8, 92u8, 216u8,
-            45u8, 64u8, 73u8, 231u8, 225u8, 238u8, 145u8, 47u8, 192u8, 136u8, 154u8, 167u8, 144u8,
-            128u8, 59u8, 227u8, 144u8, 56u8, 197u8,
-        ]];
+        pub const SELECTORS: &'static [[u8; 32usize]] = &[
+            [
+                100u8,
+                155u8,
+                188u8,
+                98u8,
+                208u8,
+                227u8,
+                19u8,
+                66u8,
+                175u8,
+                234u8,
+                78u8,
+                92u8,
+                216u8,
+                45u8,
+                64u8,
+                73u8,
+                231u8,
+                225u8,
+                238u8,
+                145u8,
+                47u8,
+                192u8,
+                136u8,
+                154u8,
+                167u8,
+                144u8,
+                128u8,
+                59u8,
+                227u8,
+                144u8,
+                56u8,
+                197u8,
+            ],
+        ];
     }
     #[automatically_derived]
     impl alloy_sol_types::SolEventInterface for IETHPOSDepositEvents {
@@ -796,19 +909,23 @@ pub mod IETHPOSDeposit {
             match topics.first().copied() {
                 Some(<DepositEvent as alloy_sol_types::SolEvent>::SIGNATURE_HASH) => {
                     <DepositEvent as alloy_sol_types::SolEvent>::decode_raw_log(
-                        topics, data, validate,
-                    )
-                    .map(Self::DepositEvent)
+                            topics,
+                            data,
+                            validate,
+                        )
+                        .map(Self::DepositEvent)
                 }
-                _ => alloy_sol_types::private::Err(alloy_sol_types::Error::InvalidLog {
-                    name: <Self as alloy_sol_types::SolEventInterface>::NAME,
-                    log: alloy_sol_types::private::Box::new(
-                        alloy_sol_types::private::LogData::new_unchecked(
-                            topics.to_vec(),
-                            data.to_vec().into(),
+                _ => {
+                    alloy_sol_types::private::Err(alloy_sol_types::Error::InvalidLog {
+                        name: <Self as alloy_sol_types::SolEventInterface>::NAME,
+                        log: alloy_sol_types::private::Box::new(
+                            alloy_sol_types::private::LogData::new_unchecked(
+                                topics.to_vec(),
+                                data.to_vec().into(),
+                            ),
                         ),
-                    ),
-                }),
+                    })
+                }
             }
         }
     }
@@ -832,7 +949,7 @@ pub mod IETHPOSDeposit {
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`IETHPOSDeposit`](self) contract instance.
 
-    See the [wrapper's documentation](`IETHPOSDepositInstance`) for more details.*/
+See the [wrapper's documentation](`IETHPOSDepositInstance`) for more details.*/
     #[inline]
     pub const fn new<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -846,9 +963,9 @@ pub mod IETHPOSDeposit {
     }
     /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-    Returns a new instance of the contract, if the deployment was successful.
+Returns a new instance of the contract, if the deployment was successful.
 
-    For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
     #[inline]
     pub fn deploy<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -856,36 +973,35 @@ pub mod IETHPOSDeposit {
         N: alloy_contract::private::Network,
     >(
         provider: P,
-    ) -> impl ::core::future::Future<Output = alloy_contract::Result<IETHPOSDepositInstance<T, P, N>>>
-    {
+    ) -> impl ::core::future::Future<
+        Output = alloy_contract::Result<IETHPOSDepositInstance<T, P, N>>,
+    > {
         IETHPOSDepositInstance::<T, P, N>::deploy(provider)
     }
     /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-    and constructor arguments, if any.
+and constructor arguments, if any.
 
-    This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-    the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     #[inline]
     pub fn deploy_builder<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
         P: alloy_contract::private::Provider<T, N>,
         N: alloy_contract::private::Network,
-    >(
-        provider: P,
-    ) -> alloy_contract::RawCallBuilder<T, P, N> {
+    >(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
         IETHPOSDepositInstance::<T, P, N>::deploy_builder(provider)
     }
     /**A [`IETHPOSDeposit`](self) instance.
 
-    Contains type-safe methods for interacting with an on-chain instance of the
-    [`IETHPOSDeposit`](self) contract located at a given `address`, using a given
-    provider `P`.
+Contains type-safe methods for interacting with an on-chain instance of the
+[`IETHPOSDeposit`](self) contract located at a given `address`, using a given
+provider `P`.
 
-    If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
-    documentation on how to provide it), the `deploy` and `deploy_builder` methods can
-    be used to deploy a new instance of the contract.
+If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
+documentation on how to provide it), the `deploy` and `deploy_builder` methods can
+be used to deploy a new instance of the contract.
 
-    See the [module-level documentation](self) for all the available methods.*/
+See the [module-level documentation](self) for all the available methods.*/
     #[derive(Clone)]
     pub struct IETHPOSDepositInstance<T, P, N = alloy_contract::private::Ethereum> {
         address: alloy_sol_types::private::Address,
@@ -896,24 +1012,24 @@ pub mod IETHPOSDeposit {
     impl<T, P, N> ::core::fmt::Debug for IETHPOSDepositInstance<T, P, N> {
         #[inline]
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-            f.debug_tuple("IETHPOSDepositInstance")
-                .field(&self.address)
-                .finish()
+            f.debug_tuple("IETHPOSDepositInstance").field(&self.address).finish()
         }
     }
     /// Instantiation and getters/setters.
     #[automatically_derived]
     impl<
-            T: alloy_contract::private::Transport + ::core::clone::Clone,
-            P: alloy_contract::private::Provider<T, N>,
-            N: alloy_contract::private::Network,
-        > IETHPOSDepositInstance<T, P, N>
-    {
+        T: alloy_contract::private::Transport + ::core::clone::Clone,
+        P: alloy_contract::private::Provider<T, N>,
+        N: alloy_contract::private::Network,
+    > IETHPOSDepositInstance<T, P, N> {
         /**Creates a new wrapper around an on-chain [`IETHPOSDeposit`](self) contract instance.
 
-        See the [wrapper's documentation](`IETHPOSDepositInstance`) for more details.*/
+See the [wrapper's documentation](`IETHPOSDepositInstance`) for more details.*/
         #[inline]
-        pub const fn new(address: alloy_sol_types::private::Address, provider: P) -> Self {
+        pub const fn new(
+            address: alloy_sol_types::private::Address,
+            provider: P,
+        ) -> Self {
             Self {
                 address,
                 provider,
@@ -922,9 +1038,9 @@ pub mod IETHPOSDeposit {
         }
         /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-        Returns a new instance of the contract, if the deployment was successful.
+Returns a new instance of the contract, if the deployment was successful.
 
-        For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
         #[inline]
         pub async fn deploy(
             provider: P,
@@ -934,10 +1050,10 @@ pub mod IETHPOSDeposit {
             Ok(Self::new(contract_address, call_builder.provider))
         }
         /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-        and constructor arguments, if any.
+and constructor arguments, if any.
 
-        This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-        the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         #[inline]
         pub fn deploy_builder(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
             alloy_contract::RawCallBuilder::new_raw_deploy(
@@ -980,11 +1096,10 @@ pub mod IETHPOSDeposit {
     /// Function calls.
     #[automatically_derived]
     impl<
-            T: alloy_contract::private::Transport + ::core::clone::Clone,
-            P: alloy_contract::private::Provider<T, N>,
-            N: alloy_contract::private::Network,
-        > IETHPOSDepositInstance<T, P, N>
-    {
+        T: alloy_contract::private::Transport + ::core::clone::Clone,
+        P: alloy_contract::private::Provider<T, N>,
+        N: alloy_contract::private::Network,
+    > IETHPOSDepositInstance<T, P, N> {
         /// Creates a new call builder using this contract instance's provider and address.
         ///
         /// Note that the call can be any function call, not just those defined in this
@@ -1003,12 +1118,14 @@ pub mod IETHPOSDeposit {
             signature: alloy::sol_types::private::Bytes,
             deposit_data_root: alloy::sol_types::private::FixedBytes<32>,
         ) -> alloy_contract::SolCallBuilder<T, &P, depositCall, N> {
-            self.call_builder(&depositCall {
-                pubkey,
-                withdrawal_credentials,
-                signature,
-                deposit_data_root,
-            })
+            self.call_builder(
+                &depositCall {
+                    pubkey,
+                    withdrawal_credentials,
+                    signature,
+                    deposit_data_root,
+                },
+            )
         }
         ///Creates a new call builder for the [`get_deposit_count`] function.
         pub fn get_deposit_count(
@@ -1026,11 +1143,10 @@ pub mod IETHPOSDeposit {
     /// Event filters.
     #[automatically_derived]
     impl<
-            T: alloy_contract::private::Transport + ::core::clone::Clone,
-            P: alloy_contract::private::Provider<T, N>,
-            N: alloy_contract::private::Network,
-        > IETHPOSDepositInstance<T, P, N>
-    {
+        T: alloy_contract::private::Transport + ::core::clone::Clone,
+        P: alloy_contract::private::Provider<T, N>,
+        N: alloy_contract::private::Network,
+    > IETHPOSDepositInstance<T, P, N> {
         /// Creates a new event filter using this contract instance's provider and address.
         ///
         /// Note that the type can be any event, not just those defined in this contract.
@@ -1041,7 +1157,9 @@ pub mod IETHPOSDeposit {
             alloy_contract::Event::new_sol(&self.provider, &self.address)
         }
         ///Creates a new event filter for the [`DepositEvent`] event.
-        pub fn DepositEvent_filter(&self) -> alloy_contract::Event<T, &P, DepositEvent, N> {
+        pub fn DepositEvent_filter(
+            &self,
+        ) -> alloy_contract::Event<T, &P, DepositEvent, N> {
             self.event_filter::<DepositEvent>()
         }
     }

@@ -129,9 +129,9 @@ pub mod IPauserRegistry {
         b"",
     );
     /**Custom error with signature `InputAddressZero()` and selector `0x73632176`.
-    ```solidity
-    error InputAddressZero();
-    ```*/
+```solidity
+error InputAddressZero();
+```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct InputAddressZero {}
@@ -149,7 +149,9 @@ pub mod IPauserRegistry {
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+        fn _type_assertion(
+            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+        ) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -173,7 +175,9 @@ pub mod IPauserRegistry {
         #[automatically_derived]
         impl alloy_sol_types::SolError for InputAddressZero {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "InputAddressZero()";
             const SELECTOR: [u8; 4] = [115u8, 99u8, 33u8, 118u8];
             #[inline]
@@ -189,9 +193,9 @@ pub mod IPauserRegistry {
         }
     };
     /**Custom error with signature `OnlyUnpauser()` and selector `0x794821ff`.
-    ```solidity
-    error OnlyUnpauser();
-    ```*/
+```solidity
+error OnlyUnpauser();
+```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct OnlyUnpauser {}
@@ -209,7 +213,9 @@ pub mod IPauserRegistry {
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+        fn _type_assertion(
+            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+        ) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -233,7 +239,9 @@ pub mod IPauserRegistry {
         #[automatically_derived]
         impl alloy_sol_types::SolError for OnlyUnpauser {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "OnlyUnpauser()";
             const SELECTOR: [u8; 4] = [121u8, 72u8, 33u8, 255u8];
             #[inline]
@@ -249,9 +257,9 @@ pub mod IPauserRegistry {
         }
     };
     /**Event with signature `PauserStatusChanged(address,bool)` and selector `0x65d3a1fd4c13f05cba164f80d03ce90fb4b5e21946bfc3ab7dbd434c2d0b9152`.
-    ```solidity
-    event PauserStatusChanged(address pauser, bool canPause);
-    ```*/
+```solidity
+event PauserStatusChanged(address pauser, bool canPause);
+```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -279,15 +287,45 @@ pub mod IPauserRegistry {
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Bool,
             );
-            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (alloy_sol_types::sol_data::FixedBytes<32>,);
             const SIGNATURE: &'static str = "PauserStatusChanged(address,bool)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
-                alloy_sol_types::private::B256::new([
-                    101u8, 211u8, 161u8, 253u8, 76u8, 19u8, 240u8, 92u8, 186u8, 22u8, 79u8, 128u8,
-                    208u8, 60u8, 233u8, 15u8, 180u8, 181u8, 226u8, 25u8, 70u8, 191u8, 195u8, 171u8,
-                    125u8, 189u8, 67u8, 76u8, 45u8, 11u8, 145u8, 82u8,
-                ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
+                101u8,
+                211u8,
+                161u8,
+                253u8,
+                76u8,
+                19u8,
+                240u8,
+                92u8,
+                186u8,
+                22u8,
+                79u8,
+                128u8,
+                208u8,
+                60u8,
+                233u8,
+                15u8,
+                180u8,
+                181u8,
+                226u8,
+                25u8,
+                70u8,
+                191u8,
+                195u8,
+                171u8,
+                125u8,
+                189u8,
+                67u8,
+                76u8,
+                45u8,
+                11u8,
+                145u8,
+                82u8,
+            ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -305,11 +343,13 @@ pub mod IPauserRegistry {
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
-                        Self::SIGNATURE,
-                        topics.0,
-                        Self::SIGNATURE_HASH,
-                    ));
+                    return Err(
+                        alloy_sol_types::Error::invalid_event_signature_hash(
+                            Self::SIGNATURE,
+                            topics.0,
+                            Self::SIGNATURE_HASH,
+                        ),
+                    );
                 }
                 Ok(())
             }
@@ -336,7 +376,9 @@ pub mod IPauserRegistry {
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
+                out[0usize] = alloy_sol_types::abi::token::WordToken(
+                    Self::SIGNATURE_HASH,
+                );
                 Ok(())
             }
         }
@@ -358,9 +400,9 @@ pub mod IPauserRegistry {
         }
     };
     /**Event with signature `UnpauserChanged(address,address)` and selector `0x06b4167a2528887a1e97a366eefe8549bfbf1ea3e6ac81cb2564a934d20e8892`.
-    ```solidity
-    event UnpauserChanged(address previousUnpauser, address newUnpauser);
-    ```*/
+```solidity
+event UnpauserChanged(address previousUnpauser, address newUnpauser);
+```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -388,15 +430,45 @@ pub mod IPauserRegistry {
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Address,
             );
-            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (alloy_sol_types::sol_data::FixedBytes<32>,);
             const SIGNATURE: &'static str = "UnpauserChanged(address,address)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
-                alloy_sol_types::private::B256::new([
-                    6u8, 180u8, 22u8, 122u8, 37u8, 40u8, 136u8, 122u8, 30u8, 151u8, 163u8, 102u8,
-                    238u8, 254u8, 133u8, 73u8, 191u8, 191u8, 30u8, 163u8, 230u8, 172u8, 129u8,
-                    203u8, 37u8, 100u8, 169u8, 52u8, 210u8, 14u8, 136u8, 146u8,
-                ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
+                6u8,
+                180u8,
+                22u8,
+                122u8,
+                37u8,
+                40u8,
+                136u8,
+                122u8,
+                30u8,
+                151u8,
+                163u8,
+                102u8,
+                238u8,
+                254u8,
+                133u8,
+                73u8,
+                191u8,
+                191u8,
+                30u8,
+                163u8,
+                230u8,
+                172u8,
+                129u8,
+                203u8,
+                37u8,
+                100u8,
+                169u8,
+                52u8,
+                210u8,
+                14u8,
+                136u8,
+                146u8,
+            ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -414,11 +486,13 @@ pub mod IPauserRegistry {
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
-                        Self::SIGNATURE,
-                        topics.0,
-                        Self::SIGNATURE_HASH,
-                    ));
+                    return Err(
+                        alloy_sol_types::Error::invalid_event_signature_hash(
+                            Self::SIGNATURE,
+                            topics.0,
+                            Self::SIGNATURE_HASH,
+                        ),
+                    );
                 }
                 Ok(())
             }
@@ -445,7 +519,9 @@ pub mod IPauserRegistry {
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
+                out[0usize] = alloy_sol_types::abi::token::WordToken(
+                    Self::SIGNATURE_HASH,
+                );
                 Ok(())
             }
         }
@@ -467,9 +543,9 @@ pub mod IPauserRegistry {
         }
     };
     /**Function with signature `isPauser(address)` and selector `0x46fbf68e`.
-    ```solidity
-    function isPauser(address pauser) external view returns (bool);
-    ```*/
+```solidity
+function isPauser(address pauser) external view returns (bool);
+```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct isPauserCall {
@@ -496,7 +572,9 @@ pub mod IPauserRegistry {
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -525,7 +603,9 @@ pub mod IPauserRegistry {
             type UnderlyingRustTuple<'a> = (bool,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -550,10 +630,14 @@ pub mod IPauserRegistry {
         #[automatically_derived]
         impl alloy_sol_types::SolCall for isPauserCall {
             type Parameters<'a> = (alloy::sol_types::sol_data::Address,);
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type Return = isPauserReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Bool,);
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "isPauser(address)";
             const SELECTOR: [u8; 4] = [70u8, 251u8, 246u8, 142u8];
             #[inline]
@@ -575,17 +659,17 @@ pub mod IPauserRegistry {
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
+                <Self::ReturnTuple<
+                    '_,
+                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
+                    .map(Into::into)
             }
         }
     };
     /**Function with signature `unpauser()` and selector `0xeab66d7a`.
-    ```solidity
-    function unpauser() external view returns (address);
-    ```*/
+```solidity
+function unpauser() external view returns (address);
+```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct unpauserCall {}
@@ -610,7 +694,9 @@ pub mod IPauserRegistry {
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -639,7 +725,9 @@ pub mod IPauserRegistry {
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -664,10 +752,14 @@ pub mod IPauserRegistry {
         #[automatically_derived]
         impl alloy_sol_types::SolCall for unpauserCall {
             type Parameters<'a> = ();
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type Return = unpauserReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Address,);
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "unpauser()";
             const SELECTOR: [u8; 4] = [234u8, 182u8, 109u8, 122u8];
             #[inline]
@@ -685,10 +777,10 @@ pub mod IPauserRegistry {
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
+                <Self::ReturnTuple<
+                    '_,
+                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
+                    .map(Into::into)
             }
         }
     };
@@ -705,8 +797,10 @@ pub mod IPauserRegistry {
         /// No guarantees are made about the order of the selectors.
         ///
         /// Prefer using `SolInterface` methods instead.
-        pub const SELECTORS: &'static [[u8; 4usize]] =
-            &[[70u8, 251u8, 246u8, 142u8], [234u8, 182u8, 109u8, 122u8]];
+        pub const SELECTORS: &'static [[u8; 4usize]] = &[
+            [70u8, 251u8, 246u8, 142u8],
+            [234u8, 182u8, 109u8, 122u8],
+        ];
     }
     #[automatically_derived]
     impl alloy_sol_types::SolInterface for IPauserRegistryCalls {
@@ -738,14 +832,16 @@ pub mod IPauserRegistry {
             static DECODE_SHIMS: &[fn(
                 &[u8],
                 bool,
-            )
-                -> alloy_sol_types::Result<IPauserRegistryCalls>] = &[
+            ) -> alloy_sol_types::Result<IPauserRegistryCalls>] = &[
                 {
                     fn isPauser(
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<IPauserRegistryCalls> {
-                        <isPauserCall as alloy_sol_types::SolCall>::abi_decode_raw(data, validate)
+                        <isPauserCall as alloy_sol_types::SolCall>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
                             .map(IPauserRegistryCalls::isPauser)
                     }
                     isPauser
@@ -755,17 +851,22 @@ pub mod IPauserRegistry {
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<IPauserRegistryCalls> {
-                        <unpauserCall as alloy_sol_types::SolCall>::abi_decode_raw(data, validate)
+                        <unpauserCall as alloy_sol_types::SolCall>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
                             .map(IPauserRegistryCalls::unpauser)
                     }
                     unpauser
                 },
             ];
             let Ok(idx) = Self::SELECTORS.binary_search(&selector) else {
-                return Err(alloy_sol_types::Error::unknown_selector(
-                    <Self as alloy_sol_types::SolInterface>::NAME,
-                    selector,
-                ));
+                return Err(
+                    alloy_sol_types::Error::unknown_selector(
+                        <Self as alloy_sol_types::SolInterface>::NAME,
+                        selector,
+                    ),
+                );
             };
             (unsafe { DECODE_SHIMS.get_unchecked(idx) })(data, validate)
         }
@@ -784,10 +885,16 @@ pub mod IPauserRegistry {
         fn abi_encode_raw(&self, out: &mut alloy_sol_types::private::Vec<u8>) {
             match self {
                 Self::isPauser(inner) => {
-                    <isPauserCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
+                    <isPauserCall as alloy_sol_types::SolCall>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
                 }
                 Self::unpauser(inner) => {
-                    <unpauserCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
+                    <unpauserCall as alloy_sol_types::SolCall>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
                 }
             }
         }
@@ -805,8 +912,10 @@ pub mod IPauserRegistry {
         /// No guarantees are made about the order of the selectors.
         ///
         /// Prefer using `SolInterface` methods instead.
-        pub const SELECTORS: &'static [[u8; 4usize]] =
-            &[[115u8, 99u8, 33u8, 118u8], [121u8, 72u8, 33u8, 255u8]];
+        pub const SELECTORS: &'static [[u8; 4usize]] = &[
+            [115u8, 99u8, 33u8, 118u8],
+            [121u8, 72u8, 33u8, 255u8],
+        ];
     }
     #[automatically_derived]
     impl alloy_sol_types::SolInterface for IPauserRegistryErrors {
@@ -819,7 +928,9 @@ pub mod IPauserRegistry {
                 Self::InputAddressZero(_) => {
                     <InputAddressZero as alloy_sol_types::SolError>::SELECTOR
                 }
-                Self::OnlyUnpauser(_) => <OnlyUnpauser as alloy_sol_types::SolError>::SELECTOR,
+                Self::OnlyUnpauser(_) => {
+                    <OnlyUnpauser as alloy_sol_types::SolError>::SELECTOR
+                }
             }
         }
         #[inline]
@@ -840,17 +951,17 @@ pub mod IPauserRegistry {
             static DECODE_SHIMS: &[fn(
                 &[u8],
                 bool,
-            )
-                -> alloy_sol_types::Result<IPauserRegistryErrors>] = &[
+            ) -> alloy_sol_types::Result<IPauserRegistryErrors>] = &[
                 {
                     fn InputAddressZero(
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<IPauserRegistryErrors> {
                         <InputAddressZero as alloy_sol_types::SolError>::abi_decode_raw(
-                            data, validate,
-                        )
-                        .map(IPauserRegistryErrors::InputAddressZero)
+                                data,
+                                validate,
+                            )
+                            .map(IPauserRegistryErrors::InputAddressZero)
                     }
                     InputAddressZero
                 },
@@ -859,17 +970,22 @@ pub mod IPauserRegistry {
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<IPauserRegistryErrors> {
-                        <OnlyUnpauser as alloy_sol_types::SolError>::abi_decode_raw(data, validate)
+                        <OnlyUnpauser as alloy_sol_types::SolError>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
                             .map(IPauserRegistryErrors::OnlyUnpauser)
                     }
                     OnlyUnpauser
                 },
             ];
             let Ok(idx) = Self::SELECTORS.binary_search(&selector) else {
-                return Err(alloy_sol_types::Error::unknown_selector(
-                    <Self as alloy_sol_types::SolInterface>::NAME,
-                    selector,
-                ));
+                return Err(
+                    alloy_sol_types::Error::unknown_selector(
+                        <Self as alloy_sol_types::SolInterface>::NAME,
+                        selector,
+                    ),
+                );
             };
             (unsafe { DECODE_SHIMS.get_unchecked(idx) })(data, validate)
         }
@@ -877,7 +993,9 @@ pub mod IPauserRegistry {
         fn abi_encoded_size(&self) -> usize {
             match self {
                 Self::InputAddressZero(inner) => {
-                    <InputAddressZero as alloy_sol_types::SolError>::abi_encoded_size(inner)
+                    <InputAddressZero as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
                 }
                 Self::OnlyUnpauser(inner) => {
                     <OnlyUnpauser as alloy_sol_types::SolError>::abi_encoded_size(inner)
@@ -888,10 +1006,16 @@ pub mod IPauserRegistry {
         fn abi_encode_raw(&self, out: &mut alloy_sol_types::private::Vec<u8>) {
             match self {
                 Self::InputAddressZero(inner) => {
-                    <InputAddressZero as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
+                    <InputAddressZero as alloy_sol_types::SolError>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
                 }
                 Self::OnlyUnpauser(inner) => {
-                    <OnlyUnpauser as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
+                    <OnlyUnpauser as alloy_sol_types::SolError>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
                 }
             }
         }
@@ -911,14 +1035,72 @@ pub mod IPauserRegistry {
         /// Prefer using `SolInterface` methods instead.
         pub const SELECTORS: &'static [[u8; 32usize]] = &[
             [
-                6u8, 180u8, 22u8, 122u8, 37u8, 40u8, 136u8, 122u8, 30u8, 151u8, 163u8, 102u8,
-                238u8, 254u8, 133u8, 73u8, 191u8, 191u8, 30u8, 163u8, 230u8, 172u8, 129u8, 203u8,
-                37u8, 100u8, 169u8, 52u8, 210u8, 14u8, 136u8, 146u8,
+                6u8,
+                180u8,
+                22u8,
+                122u8,
+                37u8,
+                40u8,
+                136u8,
+                122u8,
+                30u8,
+                151u8,
+                163u8,
+                102u8,
+                238u8,
+                254u8,
+                133u8,
+                73u8,
+                191u8,
+                191u8,
+                30u8,
+                163u8,
+                230u8,
+                172u8,
+                129u8,
+                203u8,
+                37u8,
+                100u8,
+                169u8,
+                52u8,
+                210u8,
+                14u8,
+                136u8,
+                146u8,
             ],
             [
-                101u8, 211u8, 161u8, 253u8, 76u8, 19u8, 240u8, 92u8, 186u8, 22u8, 79u8, 128u8,
-                208u8, 60u8, 233u8, 15u8, 180u8, 181u8, 226u8, 25u8, 70u8, 191u8, 195u8, 171u8,
-                125u8, 189u8, 67u8, 76u8, 45u8, 11u8, 145u8, 82u8,
+                101u8,
+                211u8,
+                161u8,
+                253u8,
+                76u8,
+                19u8,
+                240u8,
+                92u8,
+                186u8,
+                22u8,
+                79u8,
+                128u8,
+                208u8,
+                60u8,
+                233u8,
+                15u8,
+                180u8,
+                181u8,
+                226u8,
+                25u8,
+                70u8,
+                191u8,
+                195u8,
+                171u8,
+                125u8,
+                189u8,
+                67u8,
+                76u8,
+                45u8,
+                11u8,
+                145u8,
+                82u8,
             ],
         ];
     }
@@ -932,27 +1114,35 @@ pub mod IPauserRegistry {
             validate: bool,
         ) -> alloy_sol_types::Result<Self> {
             match topics.first().copied() {
-                Some(<PauserStatusChanged as alloy_sol_types::SolEvent>::SIGNATURE_HASH) => {
+                Some(
+                    <PauserStatusChanged as alloy_sol_types::SolEvent>::SIGNATURE_HASH,
+                ) => {
                     <PauserStatusChanged as alloy_sol_types::SolEvent>::decode_raw_log(
-                        topics, data, validate,
-                    )
-                    .map(Self::PauserStatusChanged)
+                            topics,
+                            data,
+                            validate,
+                        )
+                        .map(Self::PauserStatusChanged)
                 }
                 Some(<UnpauserChanged as alloy_sol_types::SolEvent>::SIGNATURE_HASH) => {
                     <UnpauserChanged as alloy_sol_types::SolEvent>::decode_raw_log(
-                        topics, data, validate,
-                    )
-                    .map(Self::UnpauserChanged)
+                            topics,
+                            data,
+                            validate,
+                        )
+                        .map(Self::UnpauserChanged)
                 }
-                _ => alloy_sol_types::private::Err(alloy_sol_types::Error::InvalidLog {
-                    name: <Self as alloy_sol_types::SolEventInterface>::NAME,
-                    log: alloy_sol_types::private::Box::new(
-                        alloy_sol_types::private::LogData::new_unchecked(
-                            topics.to_vec(),
-                            data.to_vec().into(),
+                _ => {
+                    alloy_sol_types::private::Err(alloy_sol_types::Error::InvalidLog {
+                        name: <Self as alloy_sol_types::SolEventInterface>::NAME,
+                        log: alloy_sol_types::private::Box::new(
+                            alloy_sol_types::private::LogData::new_unchecked(
+                                topics.to_vec(),
+                                data.to_vec().into(),
+                            ),
                         ),
-                    ),
-                }),
+                    })
+                }
             }
         }
     }
@@ -982,7 +1172,7 @@ pub mod IPauserRegistry {
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`IPauserRegistry`](self) contract instance.
 
-    See the [wrapper's documentation](`IPauserRegistryInstance`) for more details.*/
+See the [wrapper's documentation](`IPauserRegistryInstance`) for more details.*/
     #[inline]
     pub const fn new<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -996,9 +1186,9 @@ pub mod IPauserRegistry {
     }
     /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-    Returns a new instance of the contract, if the deployment was successful.
+Returns a new instance of the contract, if the deployment was successful.
 
-    For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
     #[inline]
     pub fn deploy<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -1006,36 +1196,35 @@ pub mod IPauserRegistry {
         N: alloy_contract::private::Network,
     >(
         provider: P,
-    ) -> impl ::core::future::Future<Output = alloy_contract::Result<IPauserRegistryInstance<T, P, N>>>
-    {
+    ) -> impl ::core::future::Future<
+        Output = alloy_contract::Result<IPauserRegistryInstance<T, P, N>>,
+    > {
         IPauserRegistryInstance::<T, P, N>::deploy(provider)
     }
     /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-    and constructor arguments, if any.
+and constructor arguments, if any.
 
-    This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-    the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     #[inline]
     pub fn deploy_builder<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
         P: alloy_contract::private::Provider<T, N>,
         N: alloy_contract::private::Network,
-    >(
-        provider: P,
-    ) -> alloy_contract::RawCallBuilder<T, P, N> {
+    >(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
         IPauserRegistryInstance::<T, P, N>::deploy_builder(provider)
     }
     /**A [`IPauserRegistry`](self) instance.
 
-    Contains type-safe methods for interacting with an on-chain instance of the
-    [`IPauserRegistry`](self) contract located at a given `address`, using a given
-    provider `P`.
+Contains type-safe methods for interacting with an on-chain instance of the
+[`IPauserRegistry`](self) contract located at a given `address`, using a given
+provider `P`.
 
-    If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
-    documentation on how to provide it), the `deploy` and `deploy_builder` methods can
-    be used to deploy a new instance of the contract.
+If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
+documentation on how to provide it), the `deploy` and `deploy_builder` methods can
+be used to deploy a new instance of the contract.
 
-    See the [module-level documentation](self) for all the available methods.*/
+See the [module-level documentation](self) for all the available methods.*/
     #[derive(Clone)]
     pub struct IPauserRegistryInstance<T, P, N = alloy_contract::private::Ethereum> {
         address: alloy_sol_types::private::Address,
@@ -1046,24 +1235,24 @@ pub mod IPauserRegistry {
     impl<T, P, N> ::core::fmt::Debug for IPauserRegistryInstance<T, P, N> {
         #[inline]
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-            f.debug_tuple("IPauserRegistryInstance")
-                .field(&self.address)
-                .finish()
+            f.debug_tuple("IPauserRegistryInstance").field(&self.address).finish()
         }
     }
     /// Instantiation and getters/setters.
     #[automatically_derived]
     impl<
-            T: alloy_contract::private::Transport + ::core::clone::Clone,
-            P: alloy_contract::private::Provider<T, N>,
-            N: alloy_contract::private::Network,
-        > IPauserRegistryInstance<T, P, N>
-    {
+        T: alloy_contract::private::Transport + ::core::clone::Clone,
+        P: alloy_contract::private::Provider<T, N>,
+        N: alloy_contract::private::Network,
+    > IPauserRegistryInstance<T, P, N> {
         /**Creates a new wrapper around an on-chain [`IPauserRegistry`](self) contract instance.
 
-        See the [wrapper's documentation](`IPauserRegistryInstance`) for more details.*/
+See the [wrapper's documentation](`IPauserRegistryInstance`) for more details.*/
         #[inline]
-        pub const fn new(address: alloy_sol_types::private::Address, provider: P) -> Self {
+        pub const fn new(
+            address: alloy_sol_types::private::Address,
+            provider: P,
+        ) -> Self {
             Self {
                 address,
                 provider,
@@ -1072,9 +1261,9 @@ pub mod IPauserRegistry {
         }
         /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-        Returns a new instance of the contract, if the deployment was successful.
+Returns a new instance of the contract, if the deployment was successful.
 
-        For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
         #[inline]
         pub async fn deploy(
             provider: P,
@@ -1084,10 +1273,10 @@ pub mod IPauserRegistry {
             Ok(Self::new(contract_address, call_builder.provider))
         }
         /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-        and constructor arguments, if any.
+and constructor arguments, if any.
 
-        This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-        the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         #[inline]
         pub fn deploy_builder(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
             alloy_contract::RawCallBuilder::new_raw_deploy(
@@ -1130,11 +1319,10 @@ pub mod IPauserRegistry {
     /// Function calls.
     #[automatically_derived]
     impl<
-            T: alloy_contract::private::Transport + ::core::clone::Clone,
-            P: alloy_contract::private::Provider<T, N>,
-            N: alloy_contract::private::Network,
-        > IPauserRegistryInstance<T, P, N>
-    {
+        T: alloy_contract::private::Transport + ::core::clone::Clone,
+        P: alloy_contract::private::Provider<T, N>,
+        N: alloy_contract::private::Network,
+    > IPauserRegistryInstance<T, P, N> {
         /// Creates a new call builder using this contract instance's provider and address.
         ///
         /// Note that the call can be any function call, not just those defined in this
@@ -1153,18 +1341,19 @@ pub mod IPauserRegistry {
             self.call_builder(&isPauserCall { pauser })
         }
         ///Creates a new call builder for the [`unpauser`] function.
-        pub fn unpauser(&self) -> alloy_contract::SolCallBuilder<T, &P, unpauserCall, N> {
+        pub fn unpauser(
+            &self,
+        ) -> alloy_contract::SolCallBuilder<T, &P, unpauserCall, N> {
             self.call_builder(&unpauserCall {})
         }
     }
     /// Event filters.
     #[automatically_derived]
     impl<
-            T: alloy_contract::private::Transport + ::core::clone::Clone,
-            P: alloy_contract::private::Provider<T, N>,
-            N: alloy_contract::private::Network,
-        > IPauserRegistryInstance<T, P, N>
-    {
+        T: alloy_contract::private::Transport + ::core::clone::Clone,
+        P: alloy_contract::private::Provider<T, N>,
+        N: alloy_contract::private::Network,
+    > IPauserRegistryInstance<T, P, N> {
         /// Creates a new event filter using this contract instance's provider and address.
         ///
         /// Note that the type can be any event, not just those defined in this contract.
@@ -1181,7 +1370,9 @@ pub mod IPauserRegistry {
             self.event_filter::<PauserStatusChanged>()
         }
         ///Creates a new event filter for the [`UnpauserChanged`] event.
-        pub fn UnpauserChanged_filter(&self) -> alloy_contract::Event<T, &P, UnpauserChanged, N> {
+        pub fn UnpauserChanged_filter(
+            &self,
+        ) -> alloy_contract::Event<T, &P, UnpauserChanged, N> {
             self.event_filter::<UnpauserChanged>()
         }
     }

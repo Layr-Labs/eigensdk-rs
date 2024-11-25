@@ -201,7 +201,7 @@ impl ELChainReader {
             .await
             .map_err(ElContractsError::AlloyContractError)?;
 
-        let DelegationManager::operatorSharesReturn { _0: shares } = operator_shares_in_strategy;
+        let DelegationManager::operatorSharesReturn { shares } = operator_shares_in_strategy;
         Ok(shares)
     }
 
@@ -280,8 +280,8 @@ impl ELChainReader {
         } = operator_det;
 
         let AllocationManager::getAllocationDelayReturn {
-            isSet: is_set,
-            delay,
+            _0: is_set,
+            _1: delay,
         } = AllocationManager::new(self.allocation_manager, &provider)
             .getAllocationDelay(operator)
             .call()
@@ -385,11 +385,9 @@ impl ELChainReader {
             .await
             .map_err(ElContractsError::AlloyContractError)?;
 
-        let DelegationManager::delegatedToReturn {
-            _0: operator_address,
-        } = delegated;
+        let DelegationManager::delegatedToReturn { operator } = delegated;
 
-        Ok(operator_address)
+        Ok(operator)
     }
 }
 

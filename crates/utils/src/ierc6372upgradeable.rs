@@ -69,9 +69,9 @@ pub mod IERC6372Upgradeable {
         b"",
     );
     /**Function with signature `CLOCK_MODE()` and selector `0x4bf5d7e9`.
-    ```solidity
-    function CLOCK_MODE() external view returns (string memory);
-    ```*/
+```solidity
+function CLOCK_MODE() external view returns (string memory);
+```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct CLOCK_MODECall {}
@@ -96,7 +96,9 @@ pub mod IERC6372Upgradeable {
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -125,7 +127,9 @@ pub mod IERC6372Upgradeable {
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::String,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -150,10 +154,14 @@ pub mod IERC6372Upgradeable {
         #[automatically_derived]
         impl alloy_sol_types::SolCall for CLOCK_MODECall {
             type Parameters<'a> = ();
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type Return = CLOCK_MODEReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::String,);
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "CLOCK_MODE()";
             const SELECTOR: [u8; 4] = [75u8, 245u8, 215u8, 233u8];
             #[inline]
@@ -171,17 +179,17 @@ pub mod IERC6372Upgradeable {
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
+                <Self::ReturnTuple<
+                    '_,
+                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
+                    .map(Into::into)
             }
         }
     };
     /**Function with signature `clock()` and selector `0x91ddadf4`.
-    ```solidity
-    function clock() external view returns (uint48);
-    ```*/
+```solidity
+function clock() external view returns (uint48);
+```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct clockCall {}
@@ -206,7 +214,9 @@ pub mod IERC6372Upgradeable {
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -232,10 +242,14 @@ pub mod IERC6372Upgradeable {
             #[doc(hidden)]
             type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Uint<48>,);
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (alloy::sol_types::private::primitives::aliases::U48,);
+            type UnderlyingRustTuple<'a> = (
+                alloy::sol_types::private::primitives::aliases::U48,
+            );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -260,10 +274,14 @@ pub mod IERC6372Upgradeable {
         #[automatically_derived]
         impl alloy_sol_types::SolCall for clockCall {
             type Parameters<'a> = ();
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type Return = clockReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Uint<48>,);
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "clock()";
             const SELECTOR: [u8; 4] = [145u8, 221u8, 173u8, 244u8];
             #[inline]
@@ -281,10 +299,10 @@ pub mod IERC6372Upgradeable {
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
+                <Self::ReturnTuple<
+                    '_,
+                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
+                    .map(Into::into)
             }
         }
     };
@@ -301,8 +319,10 @@ pub mod IERC6372Upgradeable {
         /// No guarantees are made about the order of the selectors.
         ///
         /// Prefer using `SolInterface` methods instead.
-        pub const SELECTORS: &'static [[u8; 4usize]] =
-            &[[75u8, 245u8, 215u8, 233u8], [145u8, 221u8, 173u8, 244u8]];
+        pub const SELECTORS: &'static [[u8; 4usize]] = &[
+            [75u8, 245u8, 215u8, 233u8],
+            [145u8, 221u8, 173u8, 244u8],
+        ];
     }
     #[automatically_derived]
     impl alloy_sol_types::SolInterface for IERC6372UpgradeableCalls {
@@ -312,7 +332,9 @@ pub mod IERC6372Upgradeable {
         #[inline]
         fn selector(&self) -> [u8; 4] {
             match self {
-                Self::CLOCK_MODE(_) => <CLOCK_MODECall as alloy_sol_types::SolCall>::SELECTOR,
+                Self::CLOCK_MODE(_) => {
+                    <CLOCK_MODECall as alloy_sol_types::SolCall>::SELECTOR
+                }
                 Self::clock(_) => <clockCall as alloy_sol_types::SolCall>::SELECTOR,
             }
         }
@@ -334,14 +356,16 @@ pub mod IERC6372Upgradeable {
             static DECODE_SHIMS: &[fn(
                 &[u8],
                 bool,
-            )
-                -> alloy_sol_types::Result<IERC6372UpgradeableCalls>] = &[
+            ) -> alloy_sol_types::Result<IERC6372UpgradeableCalls>] = &[
                 {
                     fn CLOCK_MODE(
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<IERC6372UpgradeableCalls> {
-                        <CLOCK_MODECall as alloy_sol_types::SolCall>::abi_decode_raw(data, validate)
+                        <CLOCK_MODECall as alloy_sol_types::SolCall>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
                             .map(IERC6372UpgradeableCalls::CLOCK_MODE)
                     }
                     CLOCK_MODE
@@ -351,17 +375,22 @@ pub mod IERC6372Upgradeable {
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<IERC6372UpgradeableCalls> {
-                        <clockCall as alloy_sol_types::SolCall>::abi_decode_raw(data, validate)
+                        <clockCall as alloy_sol_types::SolCall>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
                             .map(IERC6372UpgradeableCalls::clock)
                     }
                     clock
                 },
             ];
             let Ok(idx) = Self::SELECTORS.binary_search(&selector) else {
-                return Err(alloy_sol_types::Error::unknown_selector(
-                    <Self as alloy_sol_types::SolInterface>::NAME,
-                    selector,
-                ));
+                return Err(
+                    alloy_sol_types::Error::unknown_selector(
+                        <Self as alloy_sol_types::SolInterface>::NAME,
+                        selector,
+                    ),
+                );
             };
             (unsafe { DECODE_SHIMS.get_unchecked(idx) })(data, validate)
         }
@@ -380,7 +409,10 @@ pub mod IERC6372Upgradeable {
         fn abi_encode_raw(&self, out: &mut alloy_sol_types::private::Vec<u8>) {
             match self {
                 Self::CLOCK_MODE(inner) => {
-                    <CLOCK_MODECall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
+                    <CLOCK_MODECall as alloy_sol_types::SolCall>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
                 }
                 Self::clock(inner) => {
                     <clockCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
@@ -391,7 +423,7 @@ pub mod IERC6372Upgradeable {
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`IERC6372Upgradeable`](self) contract instance.
 
-    See the [wrapper's documentation](`IERC6372UpgradeableInstance`) for more details.*/
+See the [wrapper's documentation](`IERC6372UpgradeableInstance`) for more details.*/
     #[inline]
     pub const fn new<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -405,9 +437,9 @@ pub mod IERC6372Upgradeable {
     }
     /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-    Returns a new instance of the contract, if the deployment was successful.
+Returns a new instance of the contract, if the deployment was successful.
 
-    For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
     #[inline]
     pub fn deploy<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -415,36 +447,35 @@ pub mod IERC6372Upgradeable {
         N: alloy_contract::private::Network,
     >(
         provider: P,
-    ) -> impl ::core::future::Future<Output = alloy_contract::Result<IERC6372UpgradeableInstance<T, P, N>>>
-    {
+    ) -> impl ::core::future::Future<
+        Output = alloy_contract::Result<IERC6372UpgradeableInstance<T, P, N>>,
+    > {
         IERC6372UpgradeableInstance::<T, P, N>::deploy(provider)
     }
     /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-    and constructor arguments, if any.
+and constructor arguments, if any.
 
-    This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-    the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     #[inline]
     pub fn deploy_builder<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
         P: alloy_contract::private::Provider<T, N>,
         N: alloy_contract::private::Network,
-    >(
-        provider: P,
-    ) -> alloy_contract::RawCallBuilder<T, P, N> {
+    >(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
         IERC6372UpgradeableInstance::<T, P, N>::deploy_builder(provider)
     }
     /**A [`IERC6372Upgradeable`](self) instance.
 
-    Contains type-safe methods for interacting with an on-chain instance of the
-    [`IERC6372Upgradeable`](self) contract located at a given `address`, using a given
-    provider `P`.
+Contains type-safe methods for interacting with an on-chain instance of the
+[`IERC6372Upgradeable`](self) contract located at a given `address`, using a given
+provider `P`.
 
-    If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
-    documentation on how to provide it), the `deploy` and `deploy_builder` methods can
-    be used to deploy a new instance of the contract.
+If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
+documentation on how to provide it), the `deploy` and `deploy_builder` methods can
+be used to deploy a new instance of the contract.
 
-    See the [module-level documentation](self) for all the available methods.*/
+See the [module-level documentation](self) for all the available methods.*/
     #[derive(Clone)]
     pub struct IERC6372UpgradeableInstance<T, P, N = alloy_contract::private::Ethereum> {
         address: alloy_sol_types::private::Address,
@@ -455,24 +486,24 @@ pub mod IERC6372Upgradeable {
     impl<T, P, N> ::core::fmt::Debug for IERC6372UpgradeableInstance<T, P, N> {
         #[inline]
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-            f.debug_tuple("IERC6372UpgradeableInstance")
-                .field(&self.address)
-                .finish()
+            f.debug_tuple("IERC6372UpgradeableInstance").field(&self.address).finish()
         }
     }
     /// Instantiation and getters/setters.
     #[automatically_derived]
     impl<
-            T: alloy_contract::private::Transport + ::core::clone::Clone,
-            P: alloy_contract::private::Provider<T, N>,
-            N: alloy_contract::private::Network,
-        > IERC6372UpgradeableInstance<T, P, N>
-    {
+        T: alloy_contract::private::Transport + ::core::clone::Clone,
+        P: alloy_contract::private::Provider<T, N>,
+        N: alloy_contract::private::Network,
+    > IERC6372UpgradeableInstance<T, P, N> {
         /**Creates a new wrapper around an on-chain [`IERC6372Upgradeable`](self) contract instance.
 
-        See the [wrapper's documentation](`IERC6372UpgradeableInstance`) for more details.*/
+See the [wrapper's documentation](`IERC6372UpgradeableInstance`) for more details.*/
         #[inline]
-        pub const fn new(address: alloy_sol_types::private::Address, provider: P) -> Self {
+        pub const fn new(
+            address: alloy_sol_types::private::Address,
+            provider: P,
+        ) -> Self {
             Self {
                 address,
                 provider,
@@ -481,9 +512,9 @@ pub mod IERC6372Upgradeable {
         }
         /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-        Returns a new instance of the contract, if the deployment was successful.
+Returns a new instance of the contract, if the deployment was successful.
 
-        For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
         #[inline]
         pub async fn deploy(
             provider: P,
@@ -493,10 +524,10 @@ pub mod IERC6372Upgradeable {
             Ok(Self::new(contract_address, call_builder.provider))
         }
         /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-        and constructor arguments, if any.
+and constructor arguments, if any.
 
-        This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-        the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         #[inline]
         pub fn deploy_builder(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
             alloy_contract::RawCallBuilder::new_raw_deploy(
@@ -539,11 +570,10 @@ pub mod IERC6372Upgradeable {
     /// Function calls.
     #[automatically_derived]
     impl<
-            T: alloy_contract::private::Transport + ::core::clone::Clone,
-            P: alloy_contract::private::Provider<T, N>,
-            N: alloy_contract::private::Network,
-        > IERC6372UpgradeableInstance<T, P, N>
-    {
+        T: alloy_contract::private::Transport + ::core::clone::Clone,
+        P: alloy_contract::private::Provider<T, N>,
+        N: alloy_contract::private::Network,
+    > IERC6372UpgradeableInstance<T, P, N> {
         /// Creates a new call builder using this contract instance's provider and address.
         ///
         /// Note that the call can be any function call, not just those defined in this
@@ -555,7 +585,9 @@ pub mod IERC6372Upgradeable {
             alloy_contract::SolCallBuilder::new_sol(&self.provider, &self.address, call)
         }
         ///Creates a new call builder for the [`CLOCK_MODE`] function.
-        pub fn CLOCK_MODE(&self) -> alloy_contract::SolCallBuilder<T, &P, CLOCK_MODECall, N> {
+        pub fn CLOCK_MODE(
+            &self,
+        ) -> alloy_contract::SolCallBuilder<T, &P, CLOCK_MODECall, N> {
             self.call_builder(&CLOCK_MODECall {})
         }
         ///Creates a new call builder for the [`clock`] function.
@@ -566,11 +598,10 @@ pub mod IERC6372Upgradeable {
     /// Event filters.
     #[automatically_derived]
     impl<
-            T: alloy_contract::private::Transport + ::core::clone::Clone,
-            P: alloy_contract::private::Provider<T, N>,
-            N: alloy_contract::private::Network,
-        > IERC6372UpgradeableInstance<T, P, N>
-    {
+        T: alloy_contract::private::Transport + ::core::clone::Clone,
+        P: alloy_contract::private::Provider<T, N>,
+        N: alloy_contract::private::Network,
+    > IERC6372UpgradeableInstance<T, P, N> {
         /// Creates a new event filter using this contract instance's provider and address.
         ///
         /// Note that the type can be any event, not just those defined in this contract.
