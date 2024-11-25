@@ -21,3 +21,4 @@ serde.workspace = true
 serde_json.workspace = true
 testcontainers.workspace = true
 url.workspace = true
+tokio.workspace = true

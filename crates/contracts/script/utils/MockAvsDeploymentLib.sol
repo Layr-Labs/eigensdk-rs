@@ -161,6 +161,10 @@ library MockAvsDeploymentLib {
         UpgradeableProxyLib.upgrade(result.indexRegistry, indexRegistryimpl);
         UpgradeableProxyLib.upgrade(result.socketRegistry, socketRegistryImpl);
         UpgradeableProxyLib.upgradeAndCall(result.registryCoordinator, registryCoordinatorImpl, upgradeCall);
+        console2.log("registry_coordinator");
+        console2.log(result.registryCoordinator);
+        console2.log("avs_directory");
+        console2.log(coredata.avsDirectory);
         MockAvsServiceManager mockAvsServiceManagerImpl = new MockAvsServiceManager(
             IRegistryCoordinator(result.registryCoordinator),
             IAVSDirectory(coredata.avsDirectory),

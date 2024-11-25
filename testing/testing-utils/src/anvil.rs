@@ -4,10 +4,11 @@ use testcontainers::{
     runners::AsyncRunner,
     ContainerAsync, GenericImage, ImageExt,
 };
+use tokio::time::{timeout, Duration};
 
 const ANVIL_IMAGE: &str = "ghcr.io/foundry-rs/foundry";
 const ANVIL_TAG: &str = "latest";
-const ANVIL_STATE_PATH: &str = "./crates/contracts/anvil/contracts_deployed_anvil_state.json"; // relative path from the project root
+const ANVIL_STATE_PATH: &str = "./crates/contracts/anvil/dump_state.json"; // Correct file path // relative path from the project root
 
 fn workspace_dir() -> PathBuf {
     let output = std::process::Command::new(env!("CARGO"))
@@ -22,47 +23,64 @@ fn workspace_dir() -> PathBuf {
 }
 
 /// Start an Anvil container for testing with contract state loaded.
-pub async fn start_anvil_container() -> (ContainerAsync<GenericImage>, String, String) {
-    let relative_path = PathBuf::from(ANVIL_STATE_PATH);
-    let absolute_path = workspace_dir().join(relative_path);
-    let absolute_path_str = absolute_path.to_str().unwrap();
+// pub async fn start_anvil_container() -> (ContainerAsync<GenericImage>, String, String) {
+//     let relative_path = PathBuf::from(ANVIL_STATE_PATH);
+//     let absolute_path = workspace_dir().join(relative_path);
+//     let absolute_path_str = absolute_path.to_str().unwrap();
+//     println!("absolute_path{:?}",absolute_path_str);
+//     // let container = GenericImage::new(ANVIL_IMAGE, ANVIL_TAG)
+//     //     .with_wait_for(WaitFor::message_on_stdout("Listening on"))
+//     //     .with_exposed_port(8545.tcp())
+//     //     .with_entrypoint("anvil")
+//     //     .with_mount(testcontainers::core::Mount::bind_mount(
+//     //         absolute_path_str,
+//     //         "/dump_state.json", // Container path remains the same
+//     //     ))
+//     //     .with_cmd([
+//     //         // "anvil", // Add `anvil` explicitly to mimic the CLI
+//     //         // "--load-state",
+//     //         // "./crates/contracts/anvil/dump_state.json",
+//     //         "--host",
+//     //         "0.0.0.0",
+//     //         // "--load-state",
+//     //         // "/dump_state.json",
+//     //         // "--base-fee",
+//     //         // "0",
+//     //         // "--gas-price",
+//     //         // "0",
+//     //     ])
+//     //     .start()
+//     //     .await.unwrap();
 
-    let container = GenericImage::new(ANVIL_IMAGE, ANVIL_TAG)
-        .with_wait_for(WaitFor::message_on_stdout("Listening on"))
-        .with_exposed_port(8545.tcp())
-        .with_entrypoint("anvil")
-        .with_mount(testcontainers::core::Mount::bind_mount(
-            absolute_path_str,
-            "/contracts_deployed_anvil_state.json",
-        ))
-        .with_cmd([
-            "--host",
-            "0.0.0.0",
-            "--load-state",
-            "/contracts_deployed_anvil_state.json",
-            "--base-fee",
-            "0",
-            "--gas-price",
-            "0",
-        ])
-        .start()
-        .await
-        .expect("Error starting anvil container");
+//         let output = std::process::Command::new("docker")
+//     .args(&[
+//         "run", "--rm", "-d",
+//         "-p", "8545:8545",
+//         "-v", "/Users/supernovahs/Desktop/eigenlabs/eigensdk-rs/crates/contracts/anvil/dump_state.json:/dump_state.json",
+//         "ghcr.io/foundry-rs/foundry:latest",
+//         "anvil", "--load-state", "/dump_state.json",
+//     ])
+//     .output()
+//     .expect("Failed to start Anvil");
 
-    let port = container
-        .ports()
-        .await
-        .unwrap()
-        .map_to_host_port_ipv4(8545)
-        .unwrap();
+// println!("Docker output: {:?}", String::from_utf8_lossy(&output.stdout));
+// println!("Docker stderr: {:?}", String::from_utf8_lossy(&output.stderr));
 
-    let http_endpoint = format!("http://localhost:{}", port);
-    let ws_endpoint = format!("ws://localhost:{}", port);
+//     // let port = container
+//     //     .ports()
+//     //     .await
+//     //     .unwrap()
+//     //     .map_to_host_port_ipv4(8545)
+//     //     .unwrap();
 
-    mine_anvil_blocks(&container, 200).await;
+//     // let http_endpoint = format!("http://localhost:{}", port);
+//     // let ws_endpoint = format!("ws://localhost:{}", port);
 
-    (container, http_endpoint, ws_endpoint)
-}
+//     // mine_anvil_blocks(&container, 200).await;
+
+//     // (container, http_endpoint, ws_endpoint)
+//     todo!()
+// }
 
 /// Mine Anvil blocks.
 pub async fn mine_anvil_blocks(container: &ContainerAsync<GenericImage>, n: u32) {
@@ -79,6 +97,47 @@ pub async fn mine_anvil_blocks(container: &ContainerAsync<GenericImage>, n: u32)
     // blocking operation until the mining execution finishes
     output.stdout_to_vec().await.unwrap();
     assert_eq!(output.exit_code().await.unwrap().unwrap(), 0);
+}
+
+pub async fn start_anvil_container() -> (ContainerAsync<GenericImage>, String, String) {
+    let relative_path = PathBuf::from(ANVIL_STATE_PATH);
+    let absolute_path = workspace_dir().join(relative_path);
+    let absolute_path_str = absolute_path.to_str().unwrap();
+
+    let container = GenericImage::new(ANVIL_IMAGE, ANVIL_TAG)
+        .with_entrypoint("anvil") // Explicitly set the entrypoint
+        .with_wait_for(WaitFor::message_on_stdout("Listening on"))
+        .with_exposed_port(8545.tcp())
+        .with_mount(testcontainers::core::Mount::bind_mount(
+            absolute_path_str,
+            "/dump_state.json", // Mount the file inside the container
+        ))
+        .with_cmd([
+            "--host",
+            "0.0.0.0", // Ensure it binds to all interfaces
+            "--load-state",
+            "/dump_state.json", // Use the mounted state file
+            "--base-fee",
+            "0", // Optional configuration
+            "--gas-price",
+            "0",
+        ])
+        .start()
+        .await
+        .expect("Failed to start Anvil container");
+
+    let port = container
+        .ports()
+        .await
+        .unwrap()
+        .map_to_host_port_ipv4(8545)
+        .unwrap();
+
+    let http_endpoint = format!("http://localhost:{}", port);
+    let ws_endpoint = format!("ws://localhost:{}", port);
+
+    mine_anvil_blocks(&container, 200).await;
+    (container, http_endpoint, ws_endpoint)
 }
 
 /// Deposit 1 eth to the account in anvil

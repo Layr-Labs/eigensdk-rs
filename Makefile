@@ -15,6 +15,10 @@ deploy-avs:
 	chmod +x ./crates/contracts/anvil/deploy-avs.sh
 	./crates/contracts/anvil/deploy-avs.sh
 
+dump-state:
+	chmod +x ./crates/contracts/anvil/dump-state.sh
+	./crates/contracts/anvil/dump-state.sh
+
 __TESTING__: ##
 
 reset-anvil:
