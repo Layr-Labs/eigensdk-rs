@@ -5828,8 +5828,9 @@ checksum = "48fd7bd8a6377e15ad9d42a8ec25371b94ddc67abe7c8b9127bec79bebaaae18"
 
 [[package]]
 name = "rust-bls-bn254"
-version = "0.2.0"
-source = "git+https://github.com/Layr-Labs/rust-bls-bn254?rev=ce3313f#ce3313feb61b0512d4c65a6458aca08ccbc8ced2"
+version = "0.2.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "84ab37c09dbee7ec3b610ecd703c6a79708aef66d52052ee7bfec0bbb9e7a8cd"
 dependencies = [
  "aes",
  "ark-bn254 0.5.0",
