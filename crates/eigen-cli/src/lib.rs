@@ -281,6 +281,7 @@ mod test {
     }
 
     #[tokio::test]
+    #[ignore] // TODO: this test is ignored until the anvil state is updated to slashing
     async fn test_egn_addrs_with_service_manager_flag() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
 
@@ -321,6 +322,7 @@ mod test {
     }
 
     #[tokio::test]
+    #[ignore] // TODO: this test is ignored until the anvil state is updated to slashing
     async fn test_egn_addrs_with_registry_coordinator_flag() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
 

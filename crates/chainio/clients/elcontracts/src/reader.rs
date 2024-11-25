@@ -448,6 +448,7 @@ mod tests {
     }
 
     #[tokio::test]
+    #[ignore] // TODO: this test is ignored until the anvil state is updated to slashing
     async fn test_calculate_delegation_approval_digest_hash() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
         let provider = get_provider(&http_endpoint);
@@ -502,6 +503,7 @@ mod tests {
     }
 
     #[tokio::test]
+    #[ignore] // TODO: this test is ignored until the anvil state is updated to slashing
     async fn test_calculate_operator_avs_registration_digest_hash() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
         let provider = get_provider(&http_endpoint);
@@ -539,6 +541,7 @@ mod tests {
     }
 
     #[tokio::test]
+    #[ignore] // TODO: this test is ignored until the anvil state is updated to slashing
     async fn test_get_operator_details() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
         let operator_addr = Address::from_str(OPERATOR_ADDRESS).unwrap();

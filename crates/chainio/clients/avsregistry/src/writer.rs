@@ -361,6 +361,7 @@ mod tests {
     }
 
     #[tokio::test]
+    #[ignore] // TODO: this test is ignored until the anvil state is updated to slashing
     async fn test_avs_writer_methods() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
 

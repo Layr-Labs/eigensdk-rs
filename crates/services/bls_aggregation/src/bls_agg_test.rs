@@ -92,6 +92,7 @@ pub mod integration_test {
     }
 
     #[tokio::test]
+    #[ignore] // TODO: this test is ignored until the anvil state is updated to slashing
     async fn test_bls_agg() {
         // test 1 quorum, 1 operator
         let (container, http_endpoint, ws_endpoint) = start_anvil_container().await;
@@ -248,6 +249,7 @@ pub mod integration_test {
     }
 
     #[tokio::test]
+    #[ignore] // TODO: this test is ignored until the anvil state is updated to slashing
     async fn test_1_quorum_2_operators() {
         let (container, http_endpoint, ws_endpoint) = start_anvil_container().await;
 
@@ -451,6 +453,7 @@ pub mod integration_test {
     }
 
     #[tokio::test]
+    #[ignore] // TODO: this test is ignored until the anvil state is updated to slashing
     async fn test_2_quorums_2_operators_separated() {
         // operator 1 stakes on quorum 2
         // operator 2 stakes on quorum 3
@@ -671,6 +674,7 @@ pub mod integration_test {
     }
 
     #[tokio::test]
+    #[ignore] // TODO: this test is ignored until the anvil state is updated to slashing
     async fn test_2_quorums_2_operators_shared() {
         // operator 1 stakes on quorums [0, 1]
         // operator 2 stakes on quorums [1]
@@ -880,6 +884,7 @@ pub mod integration_test {
     }
 
     #[tokio::test]
+    #[ignore] // TODO: this test is ignored until the anvil state is updated to slashing
     async fn test_2_quorums_1_operator() {
         let (container, http_endpoint, ws_endpoint) = start_anvil_container().await;
 
