@@ -1,3 +1,5 @@
+use std::hash;
+
 use crate::error::ElContractsError;
 use crate::reader::ELChainReader;
 use alloy_primitives::{Address, FixedBytes, TxHash, U256};
@@ -310,6 +312,41 @@ impl ELChainWriter {
         } = distribution_roots_lenght_call;
 
         Ok(timestamp_return)
+    }
+
+    /// Get the root index from a given hash.
+    ///
+    /// # Arguments
+    ///
+    /// * `hash` - The hash to get the root index from.
+    ///
+    /// # Returns
+    ///
+    /// * `Result<u32, ElContractsError>` - The root index if the
+    /// call is successful.
+    ///
+    /// # Errors
+    ///
+    /// * `ElContractsError` - if the call to the contract fails.
+    pub async fn get_root_index_from_hash(
+        &self,
+        hash: FixedBytes<32>,
+    ) -> Result<u32, ElContractsError> {
+        let provider = get_signer(&self.signer, &self.provider);
+
+        let contract_rewards_coordinator =
+            IRewardsCoordinator::new(self.rewards_coordinator, &provider);
+
+        let get_root_index_from_hash_call = contract_rewards_coordinator
+            .getRootIndexFromHash(hash)
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        let IRewardsCoordinator::getRootIndexFromHashReturn { _0: root_index } =
+            get_root_index_from_hash_call;
+
+        Ok(root_index)
     }
 }
 
