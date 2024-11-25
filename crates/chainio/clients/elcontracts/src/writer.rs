@@ -251,6 +251,35 @@ impl ELChainWriter {
         let tx = process_claim_call.send().await?;
         Ok(*tx.tx_hash())
     }
+
+    /// Get the length of the distribution roots.
+    ///
+    /// # Returns
+    ///
+    /// * `Result<U256, ElContractsError>` - The length of the distribution roots if the call is successful,
+    /// otherwise an error.
+    ///
+    /// # Errors
+    ///
+    /// * `ElContractsError` - if the call to the contract fails.
+    pub async fn get_distribution_roots_length(&self) -> Result<U256, ElContractsError> {
+        let provider = get_signer(&self.signer, &self.provider);
+
+        let contract_rewards_coordinator =
+            IRewardsCoordinator::new(self.rewards_coordinator, &provider);
+
+        let distribution_roots_lenght_call = contract_rewards_coordinator
+            .getDistributionRootsLength()
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        let IRewardsCoordinator::getDistributionRootsLengthReturn {
+            _0: distribution_roots_length,
+        } = distribution_roots_lenght_call;
+
+        Ok(distribution_roots_length)
+    }
 }
 
 #[cfg(test)]
