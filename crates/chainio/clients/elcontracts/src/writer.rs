@@ -280,6 +280,37 @@ impl ELChainWriter {
 
         Ok(distribution_roots_length)
     }
+
+    /// Get the current rewards calculation end timestamp.
+    ///
+    /// # Returns
+    ///
+    /// * `Result<u32, ElContractsError>` - The current rewards calculation
+    /// end timestamp if the call is successful.
+    ///
+    /// # Errors
+    ///
+    /// * `ElContractsError` - if the call to the contract fails.
+    pub async fn get_curr_rewards_calculation_end_timestamp(
+        &self,
+    ) -> Result<u32, ElContractsError> {
+        let provider = get_signer(&self.signer, &self.provider);
+
+        let contract_rewards_coordinator =
+            IRewardsCoordinator::new(self.rewards_coordinator, &provider);
+
+        let distribution_roots_lenght_call = contract_rewards_coordinator
+            .currRewardsCalculationEndTimestamp()
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        let IRewardsCoordinator::currRewardsCalculationEndTimestampReturn {
+            _0: timestamp_return,
+        } = distribution_roots_lenght_call;
+
+        Ok(timestamp_return)
+    }
 }
 
 #[cfg(test)]
