@@ -3,8 +3,12 @@ use alloy_primitives::{Address, FixedBytes, U256};
 use eigen_logging::logger::SharedLogger;
 use eigen_types::operator::Operator;
 use eigen_utils::{
-    allocationmanager::AllocationManager, avsdirectory::AVSDirectory,
-    delegationmanager::DelegationManager, erc20::ERC20, get_provider, istrategy::IStrategy,
+    allocationmanager::AllocationManager::{self, OperatorSet},
+    avsdirectory::AVSDirectory,
+    delegationmanager::DelegationManager,
+    erc20::ERC20,
+    get_provider,
+    istrategy::IStrategy,
 };
 
 #[derive(Debug, Clone)]
@@ -391,6 +395,25 @@ impl ELChainReader {
 
         Ok(operator_address)
     }
+
+    // Return the list of operator sets that an operator is part of. Doesn't include M2 AVSs
+    pub async fn get_operators_for_operator_set(
+        &self,
+        operator_addr: Address,
+    ) -> Result<Vec<OperatorSet>, ElContractsError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_allocation_manager = AllocationManager::new(self.allocation_manager, provider);
+
+        let operator_sets = contract_allocation_manager
+            .getAllocatedSets(operator_addr)
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        Ok(operator_sets)
+    }
+
 }
 
 #[cfg(test)]
