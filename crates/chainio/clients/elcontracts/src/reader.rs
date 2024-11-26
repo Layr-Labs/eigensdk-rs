@@ -413,6 +413,27 @@ impl ELChainReader {
 
         Ok(operator_sets)
     }
+
+    // Returns the list of strategies that an operator set takes into account
+    // Not supported for M2 AVSs
+    pub async fn get_strategies_for_operator_set(
+        &self,
+        operator_set: OperatorSet,
+    ) -> Result<Vec<Address>, ElContractsError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_allocation_manager = AllocationManager::new(self.allocation_manager, provider);
+
+        let strategies = contract_allocation_manager
+            .getStrategiesInOperatorSet(operator_set)
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        let AllocationManager::getStrategiesInOperatorSetReturn { _0: strategies } = strategies;
+
+        Ok(strategies)
+    }
 }
 
 #[cfg(test)]
