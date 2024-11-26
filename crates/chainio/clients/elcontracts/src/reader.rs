@@ -395,7 +395,7 @@ impl ELChainReader {
     }
 
     // Return the list of operator sets that an operator is part of. Doesn't include M2 AVSs
-    pub async fn get_operators_for_operator_set(
+    pub async fn get_operators_sets_for_operator(
         &self,
         operator_addr: Address,
     ) -> Result<Vec<OperatorSet>, ElContractsError> {
@@ -434,6 +434,27 @@ impl ELChainReader {
 
         Ok(strategies)
     }
+
+    // Returns the list of operators in a specific operator set.
+    // Not supported for M2 AVSs
+    pub async fn get_operators_for_operator_set(
+        &self,
+        operator_set: OperatorSet,
+    ) -> Result<Vec<Address>, ElContractsError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_allocation_manager = AllocationManager::new(self.allocation_manager, provider);
+
+        let operators = contract_allocation_manager
+            .getMembers(operator_set)
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        let AllocationManager::getMembersReturn { _0: addresses } = operators;
+        Ok(addresses)
+    }
+
 }
 
 #[cfg(test)]
