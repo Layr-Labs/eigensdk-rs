@@ -496,42 +496,27 @@ impl ELChainReader {
         }
         Ok(operator_set_stakes)
     }
-    //     operatorSetStakes := make([]OperatorSetStakes, len(operatorSets))
-    //     for i, operatorSet := range operatorSets {
-    //         operators, err := r.GetOperatorsForOperatorSet(ctx, operatorSet)
-    //         if err != nil {
-    //             return nil, err
-    //         }
 
-    //         strategies, err := r.GetStrategiesForOperatorSet(ctx, operatorSet)
-    //         if err != nil {
-    //             return nil, err
-    //         }
+    pub async fn get_registered_sets(
+        &self,
+        operator_address: Address,
+    ) -> Result<Vec<OperatorSet>, ElContractsError> {
+        let provider = get_provider(&self.provider);
 
-    //         slashableShares, err := r.allocationManager.GetMinimumSlashableStake(
-    //             &bind.CallOpts{Context: ctx},
-    //             allocationmanager.OperatorSet{
-    //                 Id:  operatorSet.Id,
-    //                 Avs: operatorSet.Avs,
-    //             },
-    //             operators,
-    //             strategies,
-    //             futureBlock,
-    //         )
-    //         if err != nil {
-    //             return nil, err
-    //         }
+        let contract_allocation_manager = AllocationManager::new(self.allocation_manager, provider);
 
-    //         operatorSetStakes[i] = OperatorSetStakes{
-    //             OperatorSet:     operatorSet,
-    //             Strategies:      strategies,
-    //             Operators:       operators,
-    //             SlashableStakes: slashableShares,
-    //         }
-    //     }
+        let registered_sets = contract_allocation_manager
+            .getRegisteredSets(operator_address)
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
 
-    //     return operatorSetStakes, nil
-    // }
+        let AllocationManager::getRegisteredSetsReturn {
+            _0: registered_sets,
+        } = registered_sets;
+
+        Ok(registered_sets)
+    }
 }
 
 pub struct OperatorSetStakes {
