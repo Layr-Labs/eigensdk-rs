@@ -455,6 +455,90 @@ impl ELChainReader {
         Ok(addresses)
     }
 
+    // Returns the strategies the operatorSets take into account, their
+    // operators, and the minimum amount of shares that multiple operators delegated to them and slashable by the
+    // operatorSets before a given timestamp.
+    // Timestamp must be in the future. Used to underestimate future slashable stake.
+    // Not supported for M2 AVSs
+    pub async fn get_delegated_and_slashable_shares_for_operator_sets_before(
+        &self,
+        operator_sets: Vec<OperatorSet>,
+        future_block: u32,
+    ) -> Result<Vec<OperatorSetStakes>, ElContractsError> {
+        let provider = get_provider(&self.provider);
+        let mut operator_set_stakes = vec![];
+        let allocation_manager_contract = AllocationManager::new(self.allocation_manager, provider);
+
+        for operator_set in operator_sets {
+            let operators = self
+                .get_operators_for_operator_set(operator_set.clone())
+                .await?;
+            let strategies = self
+                .get_strategies_for_operator_set(operator_set.clone())
+                .await?;
+
+            let slashable_stakes = allocation_manager_contract
+                .getMinimumSlashableStake(
+                    operator_set.clone(),
+                    operators.clone(),
+                    strategies.clone(),
+                    future_block,
+                )
+                .call()
+                .await?
+                .slashableStake;
+            operator_set_stakes.push(OperatorSetStakes {
+                operator_set,
+                strategies,
+                operators,
+                slashable_stakes,
+            });
+        }
+        Ok(operator_set_stakes)
+    }
+    //     operatorSetStakes := make([]OperatorSetStakes, len(operatorSets))
+    //     for i, operatorSet := range operatorSets {
+    //         operators, err := r.GetOperatorsForOperatorSet(ctx, operatorSet)
+    //         if err != nil {
+    //             return nil, err
+    //         }
+
+    //         strategies, err := r.GetStrategiesForOperatorSet(ctx, operatorSet)
+    //         if err != nil {
+    //             return nil, err
+    //         }
+
+    //         slashableShares, err := r.allocationManager.GetMinimumSlashableStake(
+    //             &bind.CallOpts{Context: ctx},
+    //             allocationmanager.OperatorSet{
+    //                 Id:  operatorSet.Id,
+    //                 Avs: operatorSet.Avs,
+    //             },
+    //             operators,
+    //             strategies,
+    //             futureBlock,
+    //         )
+    //         if err != nil {
+    //             return nil, err
+    //         }
+
+    //         operatorSetStakes[i] = OperatorSetStakes{
+    //             OperatorSet:     operatorSet,
+    //             Strategies:      strategies,
+    //             Operators:       operators,
+    //             SlashableStakes: slashableShares,
+    //         }
+    //     }
+
+    //     return operatorSetStakes, nil
+    // }
+}
+
+pub struct OperatorSetStakes {
+    pub operator_set: OperatorSet,
+    pub strategies: Vec<Address>,
+    pub operators: Vec<Address>,
+    pub slashable_stakes: Vec<Vec<U256>>,
 }
 
 #[cfg(test)]
