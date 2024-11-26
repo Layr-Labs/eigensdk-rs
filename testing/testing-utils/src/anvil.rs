@@ -5,7 +5,7 @@ use testcontainers::{
     ContainerAsync, GenericImage, ImageExt,
 };
 
-const ANVIL_IMAGE: &str = "ghcr.io/foundry-rs/foundry";
+const ANVIL_IMAGE: &str = "foundry";
 const ANVIL_TAG: &str = "latest";
 const ANVIL_STATE_PATH: &str = "./crates/contracts/anvil/contracts_deployed_anvil_state.json"; // relative path from the project root
 

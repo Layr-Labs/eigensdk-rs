@@ -83,9 +83,9 @@ pub mod IEigenPodManagerErrors {
         b"",
     );
     /**Custom error with signature `EigenPodAlreadyExists()` and selector `0x0c6a1484`.
-```solidity
-error EigenPodAlreadyExists();
-```*/
+    ```solidity
+    error EigenPodAlreadyExists();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct EigenPodAlreadyExists {}
@@ -103,9 +103,7 @@ error EigenPodAlreadyExists();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -129,9 +127,7 @@ error EigenPodAlreadyExists();
         #[automatically_derived]
         impl alloy_sol_types::SolError for EigenPodAlreadyExists {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "EigenPodAlreadyExists()";
             const SELECTOR: [u8; 4] = [12u8, 106u8, 20u8, 132u8];
             #[inline]
@@ -147,9 +143,9 @@ error EigenPodAlreadyExists();
         }
     };
     /**Custom error with signature `InvalidStrategy()` and selector `0x4e236e9a`.
-```solidity
-error InvalidStrategy();
-```*/
+    ```solidity
+    error InvalidStrategy();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct InvalidStrategy {}
@@ -167,9 +163,7 @@ error InvalidStrategy();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -193,9 +187,7 @@ error InvalidStrategy();
         #[automatically_derived]
         impl alloy_sol_types::SolError for InvalidStrategy {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "InvalidStrategy()";
             const SELECTOR: [u8; 4] = [78u8, 35u8, 110u8, 154u8];
             #[inline]
@@ -211,9 +203,9 @@ error InvalidStrategy();
         }
     };
     /**Custom error with signature `LegacyWithdrawalsNotCompleted()` and selector `0x4b692bcf`.
-```solidity
-error LegacyWithdrawalsNotCompleted();
-```*/
+    ```solidity
+    error LegacyWithdrawalsNotCompleted();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct LegacyWithdrawalsNotCompleted {}
@@ -231,9 +223,7 @@ error LegacyWithdrawalsNotCompleted();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -242,16 +232,14 @@ error LegacyWithdrawalsNotCompleted();
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<LegacyWithdrawalsNotCompleted>
-        for UnderlyingRustTuple<'_> {
+        impl ::core::convert::From<LegacyWithdrawalsNotCompleted> for UnderlyingRustTuple<'_> {
             fn from(value: LegacyWithdrawalsNotCompleted) -> Self {
                 ()
             }
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<UnderlyingRustTuple<'_>>
-        for LegacyWithdrawalsNotCompleted {
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for LegacyWithdrawalsNotCompleted {
             fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                 Self {}
             }
@@ -259,9 +247,7 @@ error LegacyWithdrawalsNotCompleted();
         #[automatically_derived]
         impl alloy_sol_types::SolError for LegacyWithdrawalsNotCompleted {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "LegacyWithdrawalsNotCompleted()";
             const SELECTOR: [u8; 4] = [75u8, 105u8, 43u8, 207u8];
             #[inline]
@@ -277,9 +263,9 @@ error LegacyWithdrawalsNotCompleted();
         }
     };
     /**Custom error with signature `OnlyDelegationManager()` and selector `0xf739589b`.
-```solidity
-error OnlyDelegationManager();
-```*/
+    ```solidity
+    error OnlyDelegationManager();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct OnlyDelegationManager {}
@@ -297,9 +283,7 @@ error OnlyDelegationManager();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -323,9 +307,7 @@ error OnlyDelegationManager();
         #[automatically_derived]
         impl alloy_sol_types::SolError for OnlyDelegationManager {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "OnlyDelegationManager()";
             const SELECTOR: [u8; 4] = [247u8, 57u8, 88u8, 155u8];
             #[inline]
@@ -341,9 +323,9 @@ error OnlyDelegationManager();
         }
     };
     /**Custom error with signature `OnlyEigenPod()` and selector `0x25c2dae2`.
-```solidity
-error OnlyEigenPod();
-```*/
+    ```solidity
+    error OnlyEigenPod();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct OnlyEigenPod {}
@@ -361,9 +343,7 @@ error OnlyEigenPod();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -387,9 +367,7 @@ error OnlyEigenPod();
         #[automatically_derived]
         impl alloy_sol_types::SolError for OnlyEigenPod {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "OnlyEigenPod()";
             const SELECTOR: [u8; 4] = [37u8, 194u8, 218u8, 226u8];
             #[inline]
@@ -405,9 +383,9 @@ error OnlyEigenPod();
         }
     };
     /**Custom error with signature `SharesNegative()` and selector `0xef147de1`.
-```solidity
-error SharesNegative();
-```*/
+    ```solidity
+    error SharesNegative();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct SharesNegative {}
@@ -425,9 +403,7 @@ error SharesNegative();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -451,9 +427,7 @@ error SharesNegative();
         #[automatically_derived]
         impl alloy_sol_types::SolError for SharesNegative {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "SharesNegative()";
             const SELECTOR: [u8; 4] = [239u8, 20u8, 125u8, 225u8];
             #[inline]
@@ -469,9 +443,9 @@ error SharesNegative();
         }
     };
     /**Custom error with signature `SharesNotMultipleOfGwei()` and selector `0x8fa0e576`.
-```solidity
-error SharesNotMultipleOfGwei();
-```*/
+    ```solidity
+    error SharesNotMultipleOfGwei();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct SharesNotMultipleOfGwei {}
@@ -489,9 +463,7 @@ error SharesNotMultipleOfGwei();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -515,9 +487,7 @@ error SharesNotMultipleOfGwei();
         #[automatically_derived]
         impl alloy_sol_types::SolError for SharesNotMultipleOfGwei {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "SharesNotMultipleOfGwei()";
             const SELECTOR: [u8; 4] = [143u8, 160u8, 229u8, 118u8];
             #[inline]
@@ -580,12 +550,8 @@ error SharesNotMultipleOfGwei();
                 Self::OnlyDelegationManager(_) => {
                     <OnlyDelegationManager as alloy_sol_types::SolError>::SELECTOR
                 }
-                Self::OnlyEigenPod(_) => {
-                    <OnlyEigenPod as alloy_sol_types::SolError>::SELECTOR
-                }
-                Self::SharesNegative(_) => {
-                    <SharesNegative as alloy_sol_types::SolError>::SELECTOR
-                }
+                Self::OnlyEigenPod(_) => <OnlyEigenPod as alloy_sol_types::SolError>::SELECTOR,
+                Self::SharesNegative(_) => <SharesNegative as alloy_sol_types::SolError>::SELECTOR,
                 Self::SharesNotMultipleOfGwei(_) => {
                     <SharesNotMultipleOfGwei as alloy_sol_types::SolError>::SELECTOR
                 }
@@ -609,17 +575,17 @@ error SharesNotMultipleOfGwei();
             static DECODE_SHIMS: &[fn(
                 &[u8],
                 bool,
-            ) -> alloy_sol_types::Result<IEigenPodManagerErrorsErrors>] = &[
+            )
+                -> alloy_sol_types::Result<IEigenPodManagerErrorsErrors>] = &[
                 {
                     fn EigenPodAlreadyExists(
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<IEigenPodManagerErrorsErrors> {
                         <EigenPodAlreadyExists as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IEigenPodManagerErrorsErrors::EigenPodAlreadyExists)
+                            data, validate,
+                        )
+                        .map(IEigenPodManagerErrorsErrors::EigenPodAlreadyExists)
                     }
                     EigenPodAlreadyExists
                 },
@@ -628,10 +594,7 @@ error SharesNotMultipleOfGwei();
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<IEigenPodManagerErrorsErrors> {
-                        <OnlyEigenPod as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
+                        <OnlyEigenPod as alloy_sol_types::SolError>::abi_decode_raw(data, validate)
                             .map(IEigenPodManagerErrorsErrors::OnlyEigenPod)
                     }
                     OnlyEigenPod
@@ -657,10 +620,9 @@ error SharesNotMultipleOfGwei();
                         validate: bool,
                     ) -> alloy_sol_types::Result<IEigenPodManagerErrorsErrors> {
                         <InvalidStrategy as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IEigenPodManagerErrorsErrors::InvalidStrategy)
+                            data, validate,
+                        )
+                        .map(IEigenPodManagerErrorsErrors::InvalidStrategy)
                     }
                     InvalidStrategy
                 },
@@ -670,10 +632,9 @@ error SharesNotMultipleOfGwei();
                         validate: bool,
                     ) -> alloy_sol_types::Result<IEigenPodManagerErrorsErrors> {
                         <SharesNotMultipleOfGwei as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IEigenPodManagerErrorsErrors::SharesNotMultipleOfGwei)
+                            data, validate,
+                        )
+                        .map(IEigenPodManagerErrorsErrors::SharesNotMultipleOfGwei)
                     }
                     SharesNotMultipleOfGwei
                 },
@@ -683,10 +644,9 @@ error SharesNotMultipleOfGwei();
                         validate: bool,
                     ) -> alloy_sol_types::Result<IEigenPodManagerErrorsErrors> {
                         <SharesNegative as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IEigenPodManagerErrorsErrors::SharesNegative)
+                            data, validate,
+                        )
+                        .map(IEigenPodManagerErrorsErrors::SharesNegative)
                     }
                     SharesNegative
                 },
@@ -696,21 +656,18 @@ error SharesNotMultipleOfGwei();
                         validate: bool,
                     ) -> alloy_sol_types::Result<IEigenPodManagerErrorsErrors> {
                         <OnlyDelegationManager as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IEigenPodManagerErrorsErrors::OnlyDelegationManager)
+                            data, validate,
+                        )
+                        .map(IEigenPodManagerErrorsErrors::OnlyDelegationManager)
                     }
                     OnlyDelegationManager
                 },
             ];
             let Ok(idx) = Self::SELECTORS.binary_search(&selector) else {
-                return Err(
-                    alloy_sol_types::Error::unknown_selector(
-                        <Self as alloy_sol_types::SolInterface>::NAME,
-                        selector,
-                    ),
-                );
+                return Err(alloy_sol_types::Error::unknown_selector(
+                    <Self as alloy_sol_types::SolInterface>::NAME,
+                    selector,
+                ));
             };
             (unsafe { DECODE_SHIMS.get_unchecked(idx) })(data, validate)
         }
@@ -718,14 +675,10 @@ error SharesNotMultipleOfGwei();
         fn abi_encoded_size(&self) -> usize {
             match self {
                 Self::EigenPodAlreadyExists(inner) => {
-                    <EigenPodAlreadyExists as alloy_sol_types::SolError>::abi_encoded_size(
-                        inner,
-                    )
+                    <EigenPodAlreadyExists as alloy_sol_types::SolError>::abi_encoded_size(inner)
                 }
                 Self::InvalidStrategy(inner) => {
-                    <InvalidStrategy as alloy_sol_types::SolError>::abi_encoded_size(
-                        inner,
-                    )
+                    <InvalidStrategy as alloy_sol_types::SolError>::abi_encoded_size(inner)
                 }
                 Self::LegacyWithdrawalsNotCompleted(inner) => {
                     <LegacyWithdrawalsNotCompleted as alloy_sol_types::SolError>::abi_encoded_size(
@@ -733,22 +686,16 @@ error SharesNotMultipleOfGwei();
                     )
                 }
                 Self::OnlyDelegationManager(inner) => {
-                    <OnlyDelegationManager as alloy_sol_types::SolError>::abi_encoded_size(
-                        inner,
-                    )
+                    <OnlyDelegationManager as alloy_sol_types::SolError>::abi_encoded_size(inner)
                 }
                 Self::OnlyEigenPod(inner) => {
                     <OnlyEigenPod as alloy_sol_types::SolError>::abi_encoded_size(inner)
                 }
                 Self::SharesNegative(inner) => {
-                    <SharesNegative as alloy_sol_types::SolError>::abi_encoded_size(
-                        inner,
-                    )
+                    <SharesNegative as alloy_sol_types::SolError>::abi_encoded_size(inner)
                 }
                 Self::SharesNotMultipleOfGwei(inner) => {
-                    <SharesNotMultipleOfGwei as alloy_sol_types::SolError>::abi_encoded_size(
-                        inner,
-                    )
+                    <SharesNotMultipleOfGwei as alloy_sol_types::SolError>::abi_encoded_size(inner)
                 }
             }
         }
@@ -756,45 +703,28 @@ error SharesNotMultipleOfGwei();
         fn abi_encode_raw(&self, out: &mut alloy_sol_types::private::Vec<u8>) {
             match self {
                 Self::EigenPodAlreadyExists(inner) => {
-                    <EigenPodAlreadyExists as alloy_sol_types::SolError>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <EigenPodAlreadyExists as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
                 }
                 Self::InvalidStrategy(inner) => {
-                    <InvalidStrategy as alloy_sol_types::SolError>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <InvalidStrategy as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
                 }
                 Self::LegacyWithdrawalsNotCompleted(inner) => {
                     <LegacyWithdrawalsNotCompleted as alloy_sol_types::SolError>::abi_encode_raw(
-                        inner,
-                        out,
+                        inner, out,
                     )
                 }
                 Self::OnlyDelegationManager(inner) => {
-                    <OnlyDelegationManager as alloy_sol_types::SolError>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <OnlyDelegationManager as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
                 }
                 Self::OnlyEigenPod(inner) => {
-                    <OnlyEigenPod as alloy_sol_types::SolError>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <OnlyEigenPod as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
                 }
                 Self::SharesNegative(inner) => {
-                    <SharesNegative as alloy_sol_types::SolError>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <SharesNegative as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
                 }
                 Self::SharesNotMultipleOfGwei(inner) => {
                     <SharesNotMultipleOfGwei as alloy_sol_types::SolError>::abi_encode_raw(
-                        inner,
-                        out,
+                        inner, out,
                     )
                 }
             }
@@ -803,7 +733,7 @@ error SharesNotMultipleOfGwei();
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`IEigenPodManagerErrors`](self) contract instance.
 
-See the [wrapper's documentation](`IEigenPodManagerErrorsInstance`) for more details.*/
+    See the [wrapper's documentation](`IEigenPodManagerErrorsInstance`) for more details.*/
     #[inline]
     pub const fn new<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -817,9 +747,9 @@ See the [wrapper's documentation](`IEigenPodManagerErrorsInstance`) for more det
     }
     /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+    Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+    For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
     #[inline]
     pub fn deploy<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -833,35 +763,33 @@ For more fine-grained control over the deployment process, use [`deploy_builder`
         IEigenPodManagerErrorsInstance::<T, P, N>::deploy(provider)
     }
     /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+    and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+    This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+    the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     #[inline]
     pub fn deploy_builder<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
         P: alloy_contract::private::Provider<T, N>,
         N: alloy_contract::private::Network,
-    >(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
+    >(
+        provider: P,
+    ) -> alloy_contract::RawCallBuilder<T, P, N> {
         IEigenPodManagerErrorsInstance::<T, P, N>::deploy_builder(provider)
     }
     /**A [`IEigenPodManagerErrors`](self) instance.
 
-Contains type-safe methods for interacting with an on-chain instance of the
-[`IEigenPodManagerErrors`](self) contract located at a given `address`, using a given
-provider `P`.
+    Contains type-safe methods for interacting with an on-chain instance of the
+    [`IEigenPodManagerErrors`](self) contract located at a given `address`, using a given
+    provider `P`.
 
-If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
-documentation on how to provide it), the `deploy` and `deploy_builder` methods can
-be used to deploy a new instance of the contract.
+    If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
+    documentation on how to provide it), the `deploy` and `deploy_builder` methods can
+    be used to deploy a new instance of the contract.
 
-See the [module-level documentation](self) for all the available methods.*/
+    See the [module-level documentation](self) for all the available methods.*/
     #[derive(Clone)]
-    pub struct IEigenPodManagerErrorsInstance<
-        T,
-        P,
-        N = alloy_contract::private::Ethereum,
-    > {
+    pub struct IEigenPodManagerErrorsInstance<T, P, N = alloy_contract::private::Ethereum> {
         address: alloy_sol_types::private::Address,
         provider: P,
         _network_transport: ::core::marker::PhantomData<(N, T)>,
@@ -870,24 +798,24 @@ See the [module-level documentation](self) for all the available methods.*/
     impl<T, P, N> ::core::fmt::Debug for IEigenPodManagerErrorsInstance<T, P, N> {
         #[inline]
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-            f.debug_tuple("IEigenPodManagerErrorsInstance").field(&self.address).finish()
+            f.debug_tuple("IEigenPodManagerErrorsInstance")
+                .field(&self.address)
+                .finish()
         }
     }
     /// Instantiation and getters/setters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > IEigenPodManagerErrorsInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > IEigenPodManagerErrorsInstance<T, P, N>
+    {
         /**Creates a new wrapper around an on-chain [`IEigenPodManagerErrors`](self) contract instance.
 
-See the [wrapper's documentation](`IEigenPodManagerErrorsInstance`) for more details.*/
+        See the [wrapper's documentation](`IEigenPodManagerErrorsInstance`) for more details.*/
         #[inline]
-        pub const fn new(
-            address: alloy_sol_types::private::Address,
-            provider: P,
-        ) -> Self {
+        pub const fn new(address: alloy_sol_types::private::Address, provider: P) -> Self {
             Self {
                 address,
                 provider,
@@ -896,9 +824,9 @@ See the [wrapper's documentation](`IEigenPodManagerErrorsInstance`) for more det
         }
         /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+        Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+        For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
         #[inline]
         pub async fn deploy(
             provider: P,
@@ -908,10 +836,10 @@ For more fine-grained control over the deployment process, use [`deploy_builder`
             Ok(Self::new(contract_address, call_builder.provider))
         }
         /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+        and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+        This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+        the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         #[inline]
         pub fn deploy_builder(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
             alloy_contract::RawCallBuilder::new_raw_deploy(
@@ -954,10 +882,11 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     /// Function calls.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > IEigenPodManagerErrorsInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > IEigenPodManagerErrorsInstance<T, P, N>
+    {
         /// Creates a new call builder using this contract instance's provider and address.
         ///
         /// Note that the call can be any function call, not just those defined in this
@@ -972,10 +901,11 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     /// Event filters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > IEigenPodManagerErrorsInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > IEigenPodManagerErrorsInstance<T, P, N>
+    {
         /// Creates a new event filter using this contract instance's provider and address.
         ///
         /// Note that the type can be any event, not just those defined in this contract.

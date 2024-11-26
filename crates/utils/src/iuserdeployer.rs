@@ -83,9 +83,9 @@ pub mod IUserDeployer {
         b"",
     );
     /**Function with signature `beaconChain()` and selector `0x22c0350b`.
-```solidity
-function beaconChain() external view returns (address);
-```*/
+    ```solidity
+    function beaconChain() external view returns (address);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct beaconChainCall {}
@@ -110,9 +110,7 @@ function beaconChain() external view returns (address);
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -141,9 +139,7 @@ function beaconChain() external view returns (address);
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -168,14 +164,10 @@ function beaconChain() external view returns (address);
         #[automatically_derived]
         impl alloy_sol_types::SolCall for beaconChainCall {
             type Parameters<'a> = ();
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = beaconChainReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Address,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "beaconChain()";
             const SELECTOR: [u8; 4] = [34u8, 192u8, 53u8, 11u8];
             #[inline]
@@ -193,17 +185,17 @@ function beaconChain() external view returns (address);
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `eigenPodBeacon()` and selector `0x292b7b2b`.
-```solidity
-function eigenPodBeacon() external view returns (address);
-```*/
+    ```solidity
+    function eigenPodBeacon() external view returns (address);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct eigenPodBeaconCall {}
@@ -228,9 +220,7 @@ function eigenPodBeacon() external view returns (address);
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -259,9 +249,7 @@ function eigenPodBeacon() external view returns (address);
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -270,16 +258,14 @@ function eigenPodBeacon() external view returns (address);
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<eigenPodBeaconReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<eigenPodBeaconReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: eigenPodBeaconReturn) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for eigenPodBeaconReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for eigenPodBeaconReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -288,14 +274,10 @@ function eigenPodBeacon() external view returns (address);
         #[automatically_derived]
         impl alloy_sol_types::SolCall for eigenPodBeaconCall {
             type Parameters<'a> = ();
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = eigenPodBeaconReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Address,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "eigenPodBeacon()";
             const SELECTOR: [u8; 4] = [41u8, 43u8, 123u8, 43u8];
             #[inline]
@@ -313,17 +295,17 @@ function eigenPodBeacon() external view returns (address);
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `timeMachine()` and selector `0x3dfb40e0`.
-```solidity
-function timeMachine() external view returns (address);
-```*/
+    ```solidity
+    function timeMachine() external view returns (address);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct timeMachineCall {}
@@ -348,9 +330,7 @@ function timeMachine() external view returns (address);
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -379,9 +359,7 @@ function timeMachine() external view returns (address);
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -406,14 +384,10 @@ function timeMachine() external view returns (address);
         #[automatically_derived]
         impl alloy_sol_types::SolCall for timeMachineCall {
             type Parameters<'a> = ();
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = timeMachineReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Address,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "timeMachine()";
             const SELECTOR: [u8; 4] = [61u8, 251u8, 64u8, 224u8];
             #[inline]
@@ -431,10 +405,10 @@ function timeMachine() external view returns (address);
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
@@ -466,15 +440,11 @@ function timeMachine() external view returns (address);
         #[inline]
         fn selector(&self) -> [u8; 4] {
             match self {
-                Self::beaconChain(_) => {
-                    <beaconChainCall as alloy_sol_types::SolCall>::SELECTOR
-                }
+                Self::beaconChain(_) => <beaconChainCall as alloy_sol_types::SolCall>::SELECTOR,
                 Self::eigenPodBeacon(_) => {
                     <eigenPodBeaconCall as alloy_sol_types::SolCall>::SELECTOR
                 }
-                Self::timeMachine(_) => {
-                    <timeMachineCall as alloy_sol_types::SolCall>::SELECTOR
-                }
+                Self::timeMachine(_) => <timeMachineCall as alloy_sol_types::SolCall>::SELECTOR,
             }
         }
         #[inline]
@@ -495,17 +465,17 @@ function timeMachine() external view returns (address);
             static DECODE_SHIMS: &[fn(
                 &[u8],
                 bool,
-            ) -> alloy_sol_types::Result<IUserDeployerCalls>] = &[
+            )
+                -> alloy_sol_types::Result<IUserDeployerCalls>] = &[
                 {
                     fn beaconChain(
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<IUserDeployerCalls> {
                         <beaconChainCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IUserDeployerCalls::beaconChain)
+                            data, validate,
+                        )
+                        .map(IUserDeployerCalls::beaconChain)
                     }
                     beaconChain
                 },
@@ -515,10 +485,9 @@ function timeMachine() external view returns (address);
                         validate: bool,
                     ) -> alloy_sol_types::Result<IUserDeployerCalls> {
                         <eigenPodBeaconCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IUserDeployerCalls::eigenPodBeacon)
+                            data, validate,
+                        )
+                        .map(IUserDeployerCalls::eigenPodBeacon)
                     }
                     eigenPodBeacon
                 },
@@ -528,21 +497,18 @@ function timeMachine() external view returns (address);
                         validate: bool,
                     ) -> alloy_sol_types::Result<IUserDeployerCalls> {
                         <timeMachineCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IUserDeployerCalls::timeMachine)
+                            data, validate,
+                        )
+                        .map(IUserDeployerCalls::timeMachine)
                     }
                     timeMachine
                 },
             ];
             let Ok(idx) = Self::SELECTORS.binary_search(&selector) else {
-                return Err(
-                    alloy_sol_types::Error::unknown_selector(
-                        <Self as alloy_sol_types::SolInterface>::NAME,
-                        selector,
-                    ),
-                );
+                return Err(alloy_sol_types::Error::unknown_selector(
+                    <Self as alloy_sol_types::SolInterface>::NAME,
+                    selector,
+                ));
             };
             (unsafe { DECODE_SHIMS.get_unchecked(idx) })(data, validate)
         }
@@ -550,19 +516,13 @@ function timeMachine() external view returns (address);
         fn abi_encoded_size(&self) -> usize {
             match self {
                 Self::beaconChain(inner) => {
-                    <beaconChainCall as alloy_sol_types::SolCall>::abi_encoded_size(
-                        inner,
-                    )
+                    <beaconChainCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
                 }
                 Self::eigenPodBeacon(inner) => {
-                    <eigenPodBeaconCall as alloy_sol_types::SolCall>::abi_encoded_size(
-                        inner,
-                    )
+                    <eigenPodBeaconCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
                 }
                 Self::timeMachine(inner) => {
-                    <timeMachineCall as alloy_sol_types::SolCall>::abi_encoded_size(
-                        inner,
-                    )
+                    <timeMachineCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
                 }
             }
         }
@@ -570,22 +530,13 @@ function timeMachine() external view returns (address);
         fn abi_encode_raw(&self, out: &mut alloy_sol_types::private::Vec<u8>) {
             match self {
                 Self::beaconChain(inner) => {
-                    <beaconChainCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <beaconChainCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
                 }
                 Self::eigenPodBeacon(inner) => {
-                    <eigenPodBeaconCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <eigenPodBeaconCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
                 }
                 Self::timeMachine(inner) => {
-                    <timeMachineCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <timeMachineCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
                 }
             }
         }
@@ -593,7 +544,7 @@ function timeMachine() external view returns (address);
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`IUserDeployer`](self) contract instance.
 
-See the [wrapper's documentation](`IUserDeployerInstance`) for more details.*/
+    See the [wrapper's documentation](`IUserDeployerInstance`) for more details.*/
     #[inline]
     pub const fn new<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -607,9 +558,9 @@ See the [wrapper's documentation](`IUserDeployerInstance`) for more details.*/
     }
     /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+    Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+    For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
     #[inline]
     pub fn deploy<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -617,35 +568,36 @@ For more fine-grained control over the deployment process, use [`deploy_builder`
         N: alloy_contract::private::Network,
     >(
         provider: P,
-    ) -> impl ::core::future::Future<
-        Output = alloy_contract::Result<IUserDeployerInstance<T, P, N>>,
-    > {
+    ) -> impl ::core::future::Future<Output = alloy_contract::Result<IUserDeployerInstance<T, P, N>>>
+    {
         IUserDeployerInstance::<T, P, N>::deploy(provider)
     }
     /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+    and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+    This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+    the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     #[inline]
     pub fn deploy_builder<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
         P: alloy_contract::private::Provider<T, N>,
         N: alloy_contract::private::Network,
-    >(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
+    >(
+        provider: P,
+    ) -> alloy_contract::RawCallBuilder<T, P, N> {
         IUserDeployerInstance::<T, P, N>::deploy_builder(provider)
     }
     /**A [`IUserDeployer`](self) instance.
 
-Contains type-safe methods for interacting with an on-chain instance of the
-[`IUserDeployer`](self) contract located at a given `address`, using a given
-provider `P`.
+    Contains type-safe methods for interacting with an on-chain instance of the
+    [`IUserDeployer`](self) contract located at a given `address`, using a given
+    provider `P`.
 
-If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
-documentation on how to provide it), the `deploy` and `deploy_builder` methods can
-be used to deploy a new instance of the contract.
+    If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
+    documentation on how to provide it), the `deploy` and `deploy_builder` methods can
+    be used to deploy a new instance of the contract.
 
-See the [module-level documentation](self) for all the available methods.*/
+    See the [module-level documentation](self) for all the available methods.*/
     #[derive(Clone)]
     pub struct IUserDeployerInstance<T, P, N = alloy_contract::private::Ethereum> {
         address: alloy_sol_types::private::Address,
@@ -656,24 +608,24 @@ See the [module-level documentation](self) for all the available methods.*/
     impl<T, P, N> ::core::fmt::Debug for IUserDeployerInstance<T, P, N> {
         #[inline]
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-            f.debug_tuple("IUserDeployerInstance").field(&self.address).finish()
+            f.debug_tuple("IUserDeployerInstance")
+                .field(&self.address)
+                .finish()
         }
     }
     /// Instantiation and getters/setters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > IUserDeployerInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > IUserDeployerInstance<T, P, N>
+    {
         /**Creates a new wrapper around an on-chain [`IUserDeployer`](self) contract instance.
 
-See the [wrapper's documentation](`IUserDeployerInstance`) for more details.*/
+        See the [wrapper's documentation](`IUserDeployerInstance`) for more details.*/
         #[inline]
-        pub const fn new(
-            address: alloy_sol_types::private::Address,
-            provider: P,
-        ) -> Self {
+        pub const fn new(address: alloy_sol_types::private::Address, provider: P) -> Self {
             Self {
                 address,
                 provider,
@@ -682,22 +634,20 @@ See the [wrapper's documentation](`IUserDeployerInstance`) for more details.*/
         }
         /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+        Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+        For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
         #[inline]
-        pub async fn deploy(
-            provider: P,
-        ) -> alloy_contract::Result<IUserDeployerInstance<T, P, N>> {
+        pub async fn deploy(provider: P) -> alloy_contract::Result<IUserDeployerInstance<T, P, N>> {
             let call_builder = Self::deploy_builder(provider);
             let contract_address = call_builder.deploy().await?;
             Ok(Self::new(contract_address, call_builder.provider))
         }
         /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+        and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+        This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+        the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         #[inline]
         pub fn deploy_builder(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
             alloy_contract::RawCallBuilder::new_raw_deploy(
@@ -740,10 +690,11 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     /// Function calls.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > IUserDeployerInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > IUserDeployerInstance<T, P, N>
+    {
         /// Creates a new call builder using this contract instance's provider and address.
         ///
         /// Note that the call can be any function call, not just those defined in this
@@ -755,9 +706,7 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
             alloy_contract::SolCallBuilder::new_sol(&self.provider, &self.address, call)
         }
         ///Creates a new call builder for the [`beaconChain`] function.
-        pub fn beaconChain(
-            &self,
-        ) -> alloy_contract::SolCallBuilder<T, &P, beaconChainCall, N> {
+        pub fn beaconChain(&self) -> alloy_contract::SolCallBuilder<T, &P, beaconChainCall, N> {
             self.call_builder(&beaconChainCall {})
         }
         ///Creates a new call builder for the [`eigenPodBeacon`] function.
@@ -767,19 +716,18 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
             self.call_builder(&eigenPodBeaconCall {})
         }
         ///Creates a new call builder for the [`timeMachine`] function.
-        pub fn timeMachine(
-            &self,
-        ) -> alloy_contract::SolCallBuilder<T, &P, timeMachineCall, N> {
+        pub fn timeMachine(&self) -> alloy_contract::SolCallBuilder<T, &P, timeMachineCall, N> {
             self.call_builder(&timeMachineCall {})
         }
     }
     /// Event filters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > IUserDeployerInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > IUserDeployerInstance<T, P, N>
+    {
         /// Creates a new event filter using this contract instance's provider and address.
         ///
         /// Note that the type can be any event, not just those defined in this contract.

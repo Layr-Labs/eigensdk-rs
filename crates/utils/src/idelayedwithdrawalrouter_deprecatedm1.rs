@@ -320,8 +320,8 @@ pub mod IDelayedWithdrawalRouter_DeprecatedM1 {
         b"",
     );
     /**```solidity
-struct DelayedWithdrawal { uint224 amount; uint32 blockCreated; }
-```*/
+    struct DelayedWithdrawal { uint224 amount; uint32 blockCreated; }
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct DelayedWithdrawal {
@@ -342,15 +342,10 @@ struct DelayedWithdrawal { uint224 amount; uint32 blockCreated; }
             alloy::sol_types::sol_data::Uint<32>,
         );
         #[doc(hidden)]
-        type UnderlyingRustTuple<'a> = (
-            alloy::sol_types::private::primitives::aliases::U224,
-            u32,
-        );
+        type UnderlyingRustTuple<'a> = (alloy::sol_types::private::primitives::aliases::U224, u32);
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -383,12 +378,12 @@ struct DelayedWithdrawal { uint224 amount; uint32 blockCreated; }
             #[inline]
             fn stv_to_tokens(&self) -> <Self as alloy_sol_types::SolType>::Token<'_> {
                 (
-                    <alloy::sol_types::sol_data::Uint<
-                        224,
-                    > as alloy_sol_types::SolType>::tokenize(&self.amount),
-                    <alloy::sol_types::sol_data::Uint<
-                        32,
-                    > as alloy_sol_types::SolType>::tokenize(&self.blockCreated),
+                    <alloy::sol_types::sol_data::Uint<224> as alloy_sol_types::SolType>::tokenize(
+                        &self.amount,
+                    ),
+                    <alloy::sol_types::sol_data::Uint<32> as alloy_sol_types::SolType>::tokenize(
+                        &self.blockCreated,
+                    ),
                 )
             }
             #[inline]
@@ -396,64 +391,50 @@ struct DelayedWithdrawal { uint224 amount; uint32 blockCreated; }
                 if let Some(size) = <Self as alloy_sol_types::SolType>::ENCODED_SIZE {
                     return size;
                 }
-                let tuple = <UnderlyingRustTuple<
-                    '_,
-                > as ::core::convert::From<Self>>::from(self.clone());
-                <UnderlyingSolTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_encoded_size(&tuple)
+                let tuple =
+                    <UnderlyingRustTuple<'_> as ::core::convert::From<Self>>::from(self.clone());
+                <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::abi_encoded_size(&tuple)
             }
             #[inline]
             fn stv_eip712_data_word(&self) -> alloy_sol_types::Word {
                 <Self as alloy_sol_types::SolStruct>::eip712_hash_struct(self)
             }
             #[inline]
-            fn stv_abi_encode_packed_to(
-                &self,
-                out: &mut alloy_sol_types::private::Vec<u8>,
-            ) {
-                let tuple = <UnderlyingRustTuple<
-                    '_,
-                > as ::core::convert::From<Self>>::from(self.clone());
-                <UnderlyingSolTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_encode_packed_to(&tuple, out)
+            fn stv_abi_encode_packed_to(&self, out: &mut alloy_sol_types::private::Vec<u8>) {
+                let tuple =
+                    <UnderlyingRustTuple<'_> as ::core::convert::From<Self>>::from(self.clone());
+                <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::abi_encode_packed_to(
+                    &tuple, out,
+                )
             }
             #[inline]
             fn stv_abi_packed_encoded_size(&self) -> usize {
                 if let Some(size) = <Self as alloy_sol_types::SolType>::PACKED_ENCODED_SIZE {
                     return size;
                 }
-                let tuple = <UnderlyingRustTuple<
-                    '_,
-                > as ::core::convert::From<Self>>::from(self.clone());
-                <UnderlyingSolTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_packed_encoded_size(&tuple)
+                let tuple =
+                    <UnderlyingRustTuple<'_> as ::core::convert::From<Self>>::from(self.clone());
+                <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::abi_packed_encoded_size(
+                    &tuple,
+                )
             }
         }
         #[automatically_derived]
         impl alloy_sol_types::SolType for DelayedWithdrawal {
             type RustType = Self;
-            type Token<'a> = <UnderlyingSolTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <UnderlyingSolTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SOL_NAME: &'static str = <Self as alloy_sol_types::SolStruct>::NAME;
-            const ENCODED_SIZE: Option<usize> = <UnderlyingSolTuple<
-                '_,
-            > as alloy_sol_types::SolType>::ENCODED_SIZE;
-            const PACKED_ENCODED_SIZE: Option<usize> = <UnderlyingSolTuple<
-                '_,
-            > as alloy_sol_types::SolType>::PACKED_ENCODED_SIZE;
+            const ENCODED_SIZE: Option<usize> =
+                <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::ENCODED_SIZE;
+            const PACKED_ENCODED_SIZE: Option<usize> =
+                <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::PACKED_ENCODED_SIZE;
             #[inline]
             fn valid_token(token: &Self::Token<'_>) -> bool {
                 <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::valid_token(token)
             }
             #[inline]
             fn detokenize(token: Self::Token<'_>) -> Self::RustType {
-                let tuple = <UnderlyingSolTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::detokenize(token);
+                let tuple = <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::detokenize(token);
                 <Self as ::core::convert::From<UnderlyingRustTuple<'_>>>::from(tuple)
             }
         }
@@ -467,9 +448,9 @@ struct DelayedWithdrawal { uint224 amount; uint32 blockCreated; }
                 )
             }
             #[inline]
-            fn eip712_components() -> alloy_sol_types::private::Vec<
-                alloy_sol_types::private::Cow<'static, str>,
-            > {
+            fn eip712_components(
+            ) -> alloy_sol_types::private::Vec<alloy_sol_types::private::Cow<'static, str>>
+            {
                 alloy_sol_types::private::Vec::new()
             }
             #[inline]
@@ -512,9 +493,7 @@ struct DelayedWithdrawal { uint224 amount; uint32 blockCreated; }
                 rust: &Self::RustType,
                 out: &mut alloy_sol_types::private::Vec<u8>,
             ) {
-                out.reserve(
-                    <Self as alloy_sol_types::EventTopic>::topic_preimage_length(rust),
-                );
+                out.reserve(<Self as alloy_sol_types::EventTopic>::topic_preimage_length(rust));
                 <alloy::sol_types::sol_data::Uint<
                     224,
                 > as alloy_sol_types::EventTopic>::encode_topic_preimage(
@@ -529,23 +508,16 @@ struct DelayedWithdrawal { uint224 amount; uint32 blockCreated; }
                 );
             }
             #[inline]
-            fn encode_topic(
-                rust: &Self::RustType,
-            ) -> alloy_sol_types::abi::token::WordToken {
+            fn encode_topic(rust: &Self::RustType) -> alloy_sol_types::abi::token::WordToken {
                 let mut out = alloy_sol_types::private::Vec::new();
-                <Self as alloy_sol_types::EventTopic>::encode_topic_preimage(
-                    rust,
-                    &mut out,
-                );
-                alloy_sol_types::abi::token::WordToken(
-                    alloy_sol_types::private::keccak256(out),
-                )
+                <Self as alloy_sol_types::EventTopic>::encode_topic_preimage(rust, &mut out);
+                alloy_sol_types::abi::token::WordToken(alloy_sol_types::private::keccak256(out))
             }
         }
     };
     /**```solidity
-struct UserDelayedWithdrawals { uint256 delayedWithdrawalsCompleted; DelayedWithdrawal[] delayedWithdrawals; }
-```*/
+    struct UserDelayedWithdrawals { uint256 delayedWithdrawalsCompleted; DelayedWithdrawal[] delayedWithdrawals; }
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct UserDelayedWithdrawals {
@@ -576,9 +548,7 @@ struct UserDelayedWithdrawals { uint256 delayedWithdrawalsCompleted; DelayedWith
         );
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -626,64 +596,50 @@ struct UserDelayedWithdrawals { uint256 delayedWithdrawalsCompleted; DelayedWith
                 if let Some(size) = <Self as alloy_sol_types::SolType>::ENCODED_SIZE {
                     return size;
                 }
-                let tuple = <UnderlyingRustTuple<
-                    '_,
-                > as ::core::convert::From<Self>>::from(self.clone());
-                <UnderlyingSolTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_encoded_size(&tuple)
+                let tuple =
+                    <UnderlyingRustTuple<'_> as ::core::convert::From<Self>>::from(self.clone());
+                <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::abi_encoded_size(&tuple)
             }
             #[inline]
             fn stv_eip712_data_word(&self) -> alloy_sol_types::Word {
                 <Self as alloy_sol_types::SolStruct>::eip712_hash_struct(self)
             }
             #[inline]
-            fn stv_abi_encode_packed_to(
-                &self,
-                out: &mut alloy_sol_types::private::Vec<u8>,
-            ) {
-                let tuple = <UnderlyingRustTuple<
-                    '_,
-                > as ::core::convert::From<Self>>::from(self.clone());
-                <UnderlyingSolTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_encode_packed_to(&tuple, out)
+            fn stv_abi_encode_packed_to(&self, out: &mut alloy_sol_types::private::Vec<u8>) {
+                let tuple =
+                    <UnderlyingRustTuple<'_> as ::core::convert::From<Self>>::from(self.clone());
+                <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::abi_encode_packed_to(
+                    &tuple, out,
+                )
             }
             #[inline]
             fn stv_abi_packed_encoded_size(&self) -> usize {
                 if let Some(size) = <Self as alloy_sol_types::SolType>::PACKED_ENCODED_SIZE {
                     return size;
                 }
-                let tuple = <UnderlyingRustTuple<
-                    '_,
-                > as ::core::convert::From<Self>>::from(self.clone());
-                <UnderlyingSolTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_packed_encoded_size(&tuple)
+                let tuple =
+                    <UnderlyingRustTuple<'_> as ::core::convert::From<Self>>::from(self.clone());
+                <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::abi_packed_encoded_size(
+                    &tuple,
+                )
             }
         }
         #[automatically_derived]
         impl alloy_sol_types::SolType for UserDelayedWithdrawals {
             type RustType = Self;
-            type Token<'a> = <UnderlyingSolTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <UnderlyingSolTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SOL_NAME: &'static str = <Self as alloy_sol_types::SolStruct>::NAME;
-            const ENCODED_SIZE: Option<usize> = <UnderlyingSolTuple<
-                '_,
-            > as alloy_sol_types::SolType>::ENCODED_SIZE;
-            const PACKED_ENCODED_SIZE: Option<usize> = <UnderlyingSolTuple<
-                '_,
-            > as alloy_sol_types::SolType>::PACKED_ENCODED_SIZE;
+            const ENCODED_SIZE: Option<usize> =
+                <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::ENCODED_SIZE;
+            const PACKED_ENCODED_SIZE: Option<usize> =
+                <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::PACKED_ENCODED_SIZE;
             #[inline]
             fn valid_token(token: &Self::Token<'_>) -> bool {
                 <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::valid_token(token)
             }
             #[inline]
             fn detokenize(token: Self::Token<'_>) -> Self::RustType {
-                let tuple = <UnderlyingSolTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::detokenize(token);
+                let tuple = <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::detokenize(token);
                 <Self as ::core::convert::From<UnderlyingRustTuple<'_>>>::from(tuple)
             }
         }
@@ -697,18 +653,14 @@ struct UserDelayedWithdrawals { uint256 delayedWithdrawalsCompleted; DelayedWith
                 )
             }
             #[inline]
-            fn eip712_components() -> alloy_sol_types::private::Vec<
-                alloy_sol_types::private::Cow<'static, str>,
-            > {
+            fn eip712_components(
+            ) -> alloy_sol_types::private::Vec<alloy_sol_types::private::Cow<'static, str>>
+            {
                 let mut components = alloy_sol_types::private::Vec::with_capacity(1);
                 components
-                    .push(
-                        <DelayedWithdrawal as alloy_sol_types::SolStruct>::eip712_root_type(),
-                    );
+                    .push(<DelayedWithdrawal as alloy_sol_types::SolStruct>::eip712_root_type());
                 components
-                    .extend(
-                        <DelayedWithdrawal as alloy_sol_types::SolStruct>::eip712_components(),
-                    );
+                    .extend(<DelayedWithdrawal as alloy_sol_types::SolStruct>::eip712_components());
                 components
             }
             #[inline]
@@ -751,9 +703,7 @@ struct UserDelayedWithdrawals { uint256 delayedWithdrawalsCompleted; DelayedWith
                 rust: &Self::RustType,
                 out: &mut alloy_sol_types::private::Vec<u8>,
             ) {
-                out.reserve(
-                    <Self as alloy_sol_types::EventTopic>::topic_preimage_length(rust),
-                );
+                out.reserve(<Self as alloy_sol_types::EventTopic>::topic_preimage_length(rust));
                 <alloy::sol_types::sol_data::Uint<
                     256,
                 > as alloy_sol_types::EventTopic>::encode_topic_preimage(
@@ -768,24 +718,17 @@ struct UserDelayedWithdrawals { uint256 delayedWithdrawalsCompleted; DelayedWith
                 );
             }
             #[inline]
-            fn encode_topic(
-                rust: &Self::RustType,
-            ) -> alloy_sol_types::abi::token::WordToken {
+            fn encode_topic(rust: &Self::RustType) -> alloy_sol_types::abi::token::WordToken {
                 let mut out = alloy_sol_types::private::Vec::new();
-                <Self as alloy_sol_types::EventTopic>::encode_topic_preimage(
-                    rust,
-                    &mut out,
-                );
-                alloy_sol_types::abi::token::WordToken(
-                    alloy_sol_types::private::keccak256(out),
-                )
+                <Self as alloy_sol_types::EventTopic>::encode_topic_preimage(rust, &mut out);
+                alloy_sol_types::abi::token::WordToken(alloy_sol_types::private::keccak256(out))
             }
         }
     };
     /**Function with signature `canClaimDelayedWithdrawal(address,uint256)` and selector `0x75608896`.
-```solidity
-function canClaimDelayedWithdrawal(address user, uint256 index) external view returns (bool);
-```*/
+    ```solidity
+    function canClaimDelayedWithdrawal(address user, uint256 index) external view returns (bool);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct canClaimDelayedWithdrawalCall {
@@ -819,9 +762,7 @@ function canClaimDelayedWithdrawal(address user, uint256 index) external view re
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -830,16 +771,14 @@ function canClaimDelayedWithdrawal(address user, uint256 index) external view re
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<canClaimDelayedWithdrawalCall>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<canClaimDelayedWithdrawalCall> for UnderlyingRustTuple<'_> {
                 fn from(value: canClaimDelayedWithdrawalCall) -> Self {
                     (value.user, value.index)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for canClaimDelayedWithdrawalCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for canClaimDelayedWithdrawalCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {
                         user: tuple.0,
@@ -855,9 +794,7 @@ function canClaimDelayedWithdrawal(address user, uint256 index) external view re
             type UnderlyingRustTuple<'a> = (bool,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -866,16 +803,14 @@ function canClaimDelayedWithdrawal(address user, uint256 index) external view re
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<canClaimDelayedWithdrawalReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<canClaimDelayedWithdrawalReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: canClaimDelayedWithdrawalReturn) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for canClaimDelayedWithdrawalReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for canClaimDelayedWithdrawalReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -887,14 +822,10 @@ function canClaimDelayedWithdrawal(address user, uint256 index) external view re
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Uint<256>,
             );
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = canClaimDelayedWithdrawalReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Bool,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "canClaimDelayedWithdrawal(address,uint256)";
             const SELECTOR: [u8; 4] = [117u8, 96u8, 136u8, 150u8];
             #[inline]
@@ -909,9 +840,9 @@ function canClaimDelayedWithdrawal(address user, uint256 index) external view re
                     <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
                         &self.user,
                     ),
-                    <alloy::sol_types::sol_data::Uint<
-                        256,
-                    > as alloy_sol_types::SolType>::tokenize(&self.index),
+                    <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
+                        &self.index,
+                    ),
                 )
             }
             #[inline]
@@ -919,17 +850,17 @@ function canClaimDelayedWithdrawal(address user, uint256 index) external view re
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `claimDelayedWithdrawals(uint256)` and selector `0xd44e1b76`.
-```solidity
-function claimDelayedWithdrawals(uint256 maxNumberOfWithdrawalsToClaim) external;
-```*/
+    ```solidity
+    function claimDelayedWithdrawals(uint256 maxNumberOfWithdrawalsToClaim) external;
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct claimDelayedWithdrawals_0Call {
@@ -951,14 +882,10 @@ function claimDelayedWithdrawals(uint256 maxNumberOfWithdrawalsToClaim) external
             #[doc(hidden)]
             type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (
-                alloy::sol_types::private::primitives::aliases::U256,
-            );
+            type UnderlyingRustTuple<'a> = (alloy::sol_types::private::primitives::aliases::U256,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -967,16 +894,14 @@ function claimDelayedWithdrawals(uint256 maxNumberOfWithdrawalsToClaim) external
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<claimDelayedWithdrawals_0Call>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<claimDelayedWithdrawals_0Call> for UnderlyingRustTuple<'_> {
                 fn from(value: claimDelayedWithdrawals_0Call) -> Self {
                     (value.maxNumberOfWithdrawalsToClaim,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for claimDelayedWithdrawals_0Call {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for claimDelayedWithdrawals_0Call {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {
                         maxNumberOfWithdrawalsToClaim: tuple.0,
@@ -991,9 +916,7 @@ function claimDelayedWithdrawals(uint256 maxNumberOfWithdrawalsToClaim) external
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1002,16 +925,14 @@ function claimDelayedWithdrawals(uint256 maxNumberOfWithdrawalsToClaim) external
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<claimDelayedWithdrawals_0Return>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<claimDelayedWithdrawals_0Return> for UnderlyingRustTuple<'_> {
                 fn from(value: claimDelayedWithdrawals_0Return) -> Self {
                     ()
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for claimDelayedWithdrawals_0Return {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for claimDelayedWithdrawals_0Return {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
@@ -1020,14 +941,10 @@ function claimDelayedWithdrawals(uint256 maxNumberOfWithdrawalsToClaim) external
         #[automatically_derived]
         impl alloy_sol_types::SolCall for claimDelayedWithdrawals_0Call {
             type Parameters<'a> = (alloy::sol_types::sol_data::Uint<256>,);
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = claimDelayedWithdrawals_0Return;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "claimDelayedWithdrawals(uint256)";
             const SELECTOR: [u8; 4] = [212u8, 78u8, 27u8, 118u8];
             #[inline]
@@ -1039,9 +956,7 @@ function claimDelayedWithdrawals(uint256 maxNumberOfWithdrawalsToClaim) external
             #[inline]
             fn tokenize(&self) -> Self::Token<'_> {
                 (
-                    <alloy::sol_types::sol_data::Uint<
-                        256,
-                    > as alloy_sol_types::SolType>::tokenize(
+                    <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
                         &self.maxNumberOfWithdrawalsToClaim,
                     ),
                 )
@@ -1051,17 +966,17 @@ function claimDelayedWithdrawals(uint256 maxNumberOfWithdrawalsToClaim) external
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `claimDelayedWithdrawals(address,uint256)` and selector `0xe5db06c0`.
-```solidity
-function claimDelayedWithdrawals(address recipient, uint256 maxNumberOfWithdrawalsToClaim) external;
-```*/
+    ```solidity
+    function claimDelayedWithdrawals(address recipient, uint256 maxNumberOfWithdrawalsToClaim) external;
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct claimDelayedWithdrawals_1Call {
@@ -1093,9 +1008,7 @@ function claimDelayedWithdrawals(address recipient, uint256 maxNumberOfWithdrawa
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1104,16 +1017,14 @@ function claimDelayedWithdrawals(address recipient, uint256 maxNumberOfWithdrawa
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<claimDelayedWithdrawals_1Call>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<claimDelayedWithdrawals_1Call> for UnderlyingRustTuple<'_> {
                 fn from(value: claimDelayedWithdrawals_1Call) -> Self {
                     (value.recipient, value.maxNumberOfWithdrawalsToClaim)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for claimDelayedWithdrawals_1Call {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for claimDelayedWithdrawals_1Call {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {
                         recipient: tuple.0,
@@ -1129,9 +1040,7 @@ function claimDelayedWithdrawals(address recipient, uint256 maxNumberOfWithdrawa
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1140,16 +1049,14 @@ function claimDelayedWithdrawals(address recipient, uint256 maxNumberOfWithdrawa
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<claimDelayedWithdrawals_1Return>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<claimDelayedWithdrawals_1Return> for UnderlyingRustTuple<'_> {
                 fn from(value: claimDelayedWithdrawals_1Return) -> Self {
                     ()
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for claimDelayedWithdrawals_1Return {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for claimDelayedWithdrawals_1Return {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
@@ -1161,14 +1068,10 @@ function claimDelayedWithdrawals(address recipient, uint256 maxNumberOfWithdrawa
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Uint<256>,
             );
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = claimDelayedWithdrawals_1Return;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "claimDelayedWithdrawals(address,uint256)";
             const SELECTOR: [u8; 4] = [229u8, 219u8, 6u8, 192u8];
             #[inline]
@@ -1183,9 +1086,7 @@ function claimDelayedWithdrawals(address recipient, uint256 maxNumberOfWithdrawa
                     <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
                         &self.recipient,
                     ),
-                    <alloy::sol_types::sol_data::Uint<
-                        256,
-                    > as alloy_sol_types::SolType>::tokenize(
+                    <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
                         &self.maxNumberOfWithdrawalsToClaim,
                     ),
                 )
@@ -1195,17 +1096,17 @@ function claimDelayedWithdrawals(address recipient, uint256 maxNumberOfWithdrawa
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `createDelayedWithdrawal(address,address)` and selector `0xc0db354c`.
-```solidity
-function createDelayedWithdrawal(address podOwner, address recipient) external payable;
-```*/
+    ```solidity
+    function createDelayedWithdrawal(address podOwner, address recipient) external payable;
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct createDelayedWithdrawalCall {
@@ -1237,9 +1138,7 @@ function createDelayedWithdrawal(address podOwner, address recipient) external p
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1248,16 +1147,14 @@ function createDelayedWithdrawal(address podOwner, address recipient) external p
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<createDelayedWithdrawalCall>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<createDelayedWithdrawalCall> for UnderlyingRustTuple<'_> {
                 fn from(value: createDelayedWithdrawalCall) -> Self {
                     (value.podOwner, value.recipient)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for createDelayedWithdrawalCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for createDelayedWithdrawalCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {
                         podOwner: tuple.0,
@@ -1273,9 +1170,7 @@ function createDelayedWithdrawal(address podOwner, address recipient) external p
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1284,16 +1179,14 @@ function createDelayedWithdrawal(address podOwner, address recipient) external p
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<createDelayedWithdrawalReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<createDelayedWithdrawalReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: createDelayedWithdrawalReturn) -> Self {
                     ()
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for createDelayedWithdrawalReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for createDelayedWithdrawalReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
@@ -1305,14 +1198,10 @@ function createDelayedWithdrawal(address podOwner, address recipient) external p
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Address,
             );
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = createDelayedWithdrawalReturn;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "createDelayedWithdrawal(address,address)";
             const SELECTOR: [u8; 4] = [192u8, 219u8, 53u8, 76u8];
             #[inline]
@@ -1337,17 +1226,17 @@ function createDelayedWithdrawal(address podOwner, address recipient) external p
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `getClaimableUserDelayedWithdrawals(address)` and selector `0x1f39d87f`.
-```solidity
-function getClaimableUserDelayedWithdrawals(address user) external view returns (DelayedWithdrawal[] memory);
-```*/
+    ```solidity
+    function getClaimableUserDelayedWithdrawals(address user) external view returns (DelayedWithdrawal[] memory);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getClaimableUserDelayedWithdrawalsCall {
@@ -1376,9 +1265,7 @@ function getClaimableUserDelayedWithdrawals(address user) external view returns 
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1387,16 +1274,14 @@ function getClaimableUserDelayedWithdrawals(address user) external view returns 
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<getClaimableUserDelayedWithdrawalsCall>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<getClaimableUserDelayedWithdrawalsCall> for UnderlyingRustTuple<'_> {
                 fn from(value: getClaimableUserDelayedWithdrawalsCall) -> Self {
                     (value.user,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for getClaimableUserDelayedWithdrawalsCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for getClaimableUserDelayedWithdrawalsCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { user: tuple.0 }
                 }
@@ -1404,9 +1289,7 @@ function getClaimableUserDelayedWithdrawals(address user) external view returns 
         }
         {
             #[doc(hidden)]
-            type UnderlyingSolTuple<'a> = (
-                alloy::sol_types::sol_data::Array<DelayedWithdrawal>,
-            );
+            type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Array<DelayedWithdrawal>,);
             #[doc(hidden)]
             type UnderlyingRustTuple<'a> = (
                 alloy::sol_types::private::Vec<
@@ -1415,9 +1298,7 @@ function getClaimableUserDelayedWithdrawals(address user) external view returns 
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1426,16 +1307,14 @@ function getClaimableUserDelayedWithdrawals(address user) external view returns 
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<getClaimableUserDelayedWithdrawalsReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<getClaimableUserDelayedWithdrawalsReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: getClaimableUserDelayedWithdrawalsReturn) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for getClaimableUserDelayedWithdrawalsReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for getClaimableUserDelayedWithdrawalsReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -1444,16 +1323,10 @@ function getClaimableUserDelayedWithdrawals(address user) external view returns 
         #[automatically_derived]
         impl alloy_sol_types::SolCall for getClaimableUserDelayedWithdrawalsCall {
             type Parameters<'a> = (alloy::sol_types::sol_data::Address,);
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = getClaimableUserDelayedWithdrawalsReturn;
-            type ReturnTuple<'a> = (
-                alloy::sol_types::sol_data::Array<DelayedWithdrawal>,
-            );
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnTuple<'a> = (alloy::sol_types::sol_data::Array<DelayedWithdrawal>,);
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "getClaimableUserDelayedWithdrawals(address)";
             const SELECTOR: [u8; 4] = [31u8, 57u8, 216u8, 127u8];
             #[inline]
@@ -1475,17 +1348,17 @@ function getClaimableUserDelayedWithdrawals(address user) external view returns 
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `getUserDelayedWithdrawals(address)` and selector `0x3e1de008`.
-```solidity
-function getUserDelayedWithdrawals(address user) external view returns (DelayedWithdrawal[] memory);
-```*/
+    ```solidity
+    function getUserDelayedWithdrawals(address user) external view returns (DelayedWithdrawal[] memory);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getUserDelayedWithdrawalsCall {
@@ -1514,9 +1387,7 @@ function getUserDelayedWithdrawals(address user) external view returns (DelayedW
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1525,16 +1396,14 @@ function getUserDelayedWithdrawals(address user) external view returns (DelayedW
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<getUserDelayedWithdrawalsCall>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<getUserDelayedWithdrawalsCall> for UnderlyingRustTuple<'_> {
                 fn from(value: getUserDelayedWithdrawalsCall) -> Self {
                     (value.user,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for getUserDelayedWithdrawalsCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for getUserDelayedWithdrawalsCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { user: tuple.0 }
                 }
@@ -1542,9 +1411,7 @@ function getUserDelayedWithdrawals(address user) external view returns (DelayedW
         }
         {
             #[doc(hidden)]
-            type UnderlyingSolTuple<'a> = (
-                alloy::sol_types::sol_data::Array<DelayedWithdrawal>,
-            );
+            type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Array<DelayedWithdrawal>,);
             #[doc(hidden)]
             type UnderlyingRustTuple<'a> = (
                 alloy::sol_types::private::Vec<
@@ -1553,9 +1420,7 @@ function getUserDelayedWithdrawals(address user) external view returns (DelayedW
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1564,16 +1429,14 @@ function getUserDelayedWithdrawals(address user) external view returns (DelayedW
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<getUserDelayedWithdrawalsReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<getUserDelayedWithdrawalsReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: getUserDelayedWithdrawalsReturn) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for getUserDelayedWithdrawalsReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for getUserDelayedWithdrawalsReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -1582,16 +1445,10 @@ function getUserDelayedWithdrawals(address user) external view returns (DelayedW
         #[automatically_derived]
         impl alloy_sol_types::SolCall for getUserDelayedWithdrawalsCall {
             type Parameters<'a> = (alloy::sol_types::sol_data::Address,);
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = getUserDelayedWithdrawalsReturn;
-            type ReturnTuple<'a> = (
-                alloy::sol_types::sol_data::Array<DelayedWithdrawal>,
-            );
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnTuple<'a> = (alloy::sol_types::sol_data::Array<DelayedWithdrawal>,);
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "getUserDelayedWithdrawals(address)";
             const SELECTOR: [u8; 4] = [62u8, 29u8, 224u8, 8u8];
             #[inline]
@@ -1613,17 +1470,17 @@ function getUserDelayedWithdrawals(address user) external view returns (DelayedW
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `setWithdrawalDelayBlocks(uint256)` and selector `0x4d50f9a4`.
-```solidity
-function setWithdrawalDelayBlocks(uint256 newValue) external;
-```*/
+    ```solidity
+    function setWithdrawalDelayBlocks(uint256 newValue) external;
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setWithdrawalDelayBlocksCall {
@@ -1645,14 +1502,10 @@ function setWithdrawalDelayBlocks(uint256 newValue) external;
             #[doc(hidden)]
             type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (
-                alloy::sol_types::private::primitives::aliases::U256,
-            );
+            type UnderlyingRustTuple<'a> = (alloy::sol_types::private::primitives::aliases::U256,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1661,16 +1514,14 @@ function setWithdrawalDelayBlocks(uint256 newValue) external;
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<setWithdrawalDelayBlocksCall>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<setWithdrawalDelayBlocksCall> for UnderlyingRustTuple<'_> {
                 fn from(value: setWithdrawalDelayBlocksCall) -> Self {
                     (value.newValue,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for setWithdrawalDelayBlocksCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for setWithdrawalDelayBlocksCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { newValue: tuple.0 }
                 }
@@ -1683,9 +1534,7 @@ function setWithdrawalDelayBlocks(uint256 newValue) external;
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1694,16 +1543,14 @@ function setWithdrawalDelayBlocks(uint256 newValue) external;
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<setWithdrawalDelayBlocksReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<setWithdrawalDelayBlocksReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: setWithdrawalDelayBlocksReturn) -> Self {
                     ()
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for setWithdrawalDelayBlocksReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for setWithdrawalDelayBlocksReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
@@ -1712,14 +1559,10 @@ function setWithdrawalDelayBlocks(uint256 newValue) external;
         #[automatically_derived]
         impl alloy_sol_types::SolCall for setWithdrawalDelayBlocksCall {
             type Parameters<'a> = (alloy::sol_types::sol_data::Uint<256>,);
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = setWithdrawalDelayBlocksReturn;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "setWithdrawalDelayBlocks(uint256)";
             const SELECTOR: [u8; 4] = [77u8, 80u8, 249u8, 164u8];
             #[inline]
@@ -1731,9 +1574,9 @@ function setWithdrawalDelayBlocks(uint256 newValue) external;
             #[inline]
             fn tokenize(&self) -> Self::Token<'_> {
                 (
-                    <alloy::sol_types::sol_data::Uint<
-                        256,
-                    > as alloy_sol_types::SolType>::tokenize(&self.newValue),
+                    <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
+                        &self.newValue,
+                    ),
                 )
             }
             #[inline]
@@ -1741,17 +1584,17 @@ function setWithdrawalDelayBlocks(uint256 newValue) external;
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `userDelayedWithdrawalByIndex(address,uint256)` and selector `0x85594e58`.
-```solidity
-function userDelayedWithdrawalByIndex(address user, uint256 index) external view returns (DelayedWithdrawal memory);
-```*/
+    ```solidity
+    function userDelayedWithdrawalByIndex(address user, uint256 index) external view returns (DelayedWithdrawal memory);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct userDelayedWithdrawalByIndexCall {
@@ -1785,9 +1628,7 @@ function userDelayedWithdrawalByIndex(address user, uint256 index) external view
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1796,16 +1637,14 @@ function userDelayedWithdrawalByIndex(address user, uint256 index) external view
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<userDelayedWithdrawalByIndexCall>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<userDelayedWithdrawalByIndexCall> for UnderlyingRustTuple<'_> {
                 fn from(value: userDelayedWithdrawalByIndexCall) -> Self {
                     (value.user, value.index)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for userDelayedWithdrawalByIndexCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for userDelayedWithdrawalByIndexCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {
                         user: tuple.0,
@@ -1818,14 +1657,11 @@ function userDelayedWithdrawalByIndex(address user, uint256 index) external view
             #[doc(hidden)]
             type UnderlyingSolTuple<'a> = (DelayedWithdrawal,);
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (
-                <DelayedWithdrawal as alloy::sol_types::SolType>::RustType,
-            );
+            type UnderlyingRustTuple<'a> =
+                (<DelayedWithdrawal as alloy::sol_types::SolType>::RustType,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1834,16 +1670,14 @@ function userDelayedWithdrawalByIndex(address user, uint256 index) external view
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<userDelayedWithdrawalByIndexReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<userDelayedWithdrawalByIndexReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: userDelayedWithdrawalByIndexReturn) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for userDelayedWithdrawalByIndexReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for userDelayedWithdrawalByIndexReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -1855,14 +1689,10 @@ function userDelayedWithdrawalByIndex(address user, uint256 index) external view
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Uint<256>,
             );
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = userDelayedWithdrawalByIndexReturn;
             type ReturnTuple<'a> = (DelayedWithdrawal,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "userDelayedWithdrawalByIndex(address,uint256)";
             const SELECTOR: [u8; 4] = [133u8, 89u8, 78u8, 88u8];
             #[inline]
@@ -1877,9 +1707,9 @@ function userDelayedWithdrawalByIndex(address user, uint256 index) external view
                     <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
                         &self.user,
                     ),
-                    <alloy::sol_types::sol_data::Uint<
-                        256,
-                    > as alloy_sol_types::SolType>::tokenize(&self.index),
+                    <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
+                        &self.index,
+                    ),
                 )
             }
             #[inline]
@@ -1887,17 +1717,17 @@ function userDelayedWithdrawalByIndex(address user, uint256 index) external view
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `userWithdrawals(address)` and selector `0xecb7cb1b`.
-```solidity
-function userWithdrawals(address user) external view returns (UserDelayedWithdrawals memory);
-```*/
+    ```solidity
+    function userWithdrawals(address user) external view returns (UserDelayedWithdrawals memory);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct userWithdrawalsCall {
@@ -1924,9 +1754,7 @@ function userWithdrawals(address user) external view returns (UserDelayedWithdra
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1952,14 +1780,11 @@ function userWithdrawals(address user) external view returns (UserDelayedWithdra
             #[doc(hidden)]
             type UnderlyingSolTuple<'a> = (UserDelayedWithdrawals,);
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (
-                <UserDelayedWithdrawals as alloy::sol_types::SolType>::RustType,
-            );
+            type UnderlyingRustTuple<'a> =
+                (<UserDelayedWithdrawals as alloy::sol_types::SolType>::RustType,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1968,16 +1793,14 @@ function userWithdrawals(address user) external view returns (UserDelayedWithdra
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<userWithdrawalsReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<userWithdrawalsReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: userWithdrawalsReturn) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for userWithdrawalsReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for userWithdrawalsReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -1986,14 +1809,10 @@ function userWithdrawals(address user) external view returns (UserDelayedWithdra
         #[automatically_derived]
         impl alloy_sol_types::SolCall for userWithdrawalsCall {
             type Parameters<'a> = (alloy::sol_types::sol_data::Address,);
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = userWithdrawalsReturn;
             type ReturnTuple<'a> = (UserDelayedWithdrawals,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "userWithdrawals(address)";
             const SELECTOR: [u8; 4] = [236u8, 183u8, 203u8, 27u8];
             #[inline]
@@ -2015,17 +1834,17 @@ function userWithdrawals(address user) external view returns (UserDelayedWithdra
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `userWithdrawalsLength(address)` and selector `0xe4f4f887`.
-```solidity
-function userWithdrawalsLength(address user) external view returns (uint256);
-```*/
+    ```solidity
+    function userWithdrawalsLength(address user) external view returns (uint256);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct userWithdrawalsLengthCall {
@@ -2052,9 +1871,7 @@ function userWithdrawalsLength(address user) external view returns (uint256);
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -2063,16 +1880,14 @@ function userWithdrawalsLength(address user) external view returns (uint256);
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<userWithdrawalsLengthCall>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<userWithdrawalsLengthCall> for UnderlyingRustTuple<'_> {
                 fn from(value: userWithdrawalsLengthCall) -> Self {
                     (value.user,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for userWithdrawalsLengthCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for userWithdrawalsLengthCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { user: tuple.0 }
                 }
@@ -2082,14 +1897,10 @@ function userWithdrawalsLength(address user) external view returns (uint256);
             #[doc(hidden)]
             type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (
-                alloy::sol_types::private::primitives::aliases::U256,
-            );
+            type UnderlyingRustTuple<'a> = (alloy::sol_types::private::primitives::aliases::U256,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -2098,16 +1909,14 @@ function userWithdrawalsLength(address user) external view returns (uint256);
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<userWithdrawalsLengthReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<userWithdrawalsLengthReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: userWithdrawalsLengthReturn) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for userWithdrawalsLengthReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for userWithdrawalsLengthReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -2116,14 +1925,10 @@ function userWithdrawalsLength(address user) external view returns (uint256);
         #[automatically_derived]
         impl alloy_sol_types::SolCall for userWithdrawalsLengthCall {
             type Parameters<'a> = (alloy::sol_types::sol_data::Address,);
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = userWithdrawalsLengthReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "userWithdrawalsLength(address)";
             const SELECTOR: [u8; 4] = [228u8, 244u8, 248u8, 135u8];
             #[inline]
@@ -2145,17 +1950,17 @@ function userWithdrawalsLength(address user) external view returns (uint256);
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `withdrawalDelayBlocks()` and selector `0x50f73e7c`.
-```solidity
-function withdrawalDelayBlocks() external view returns (uint256);
-```*/
+    ```solidity
+    function withdrawalDelayBlocks() external view returns (uint256);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct withdrawalDelayBlocksCall {}
@@ -2180,9 +1985,7 @@ function withdrawalDelayBlocks() external view returns (uint256);
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -2191,16 +1994,14 @@ function withdrawalDelayBlocks() external view returns (uint256);
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<withdrawalDelayBlocksCall>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<withdrawalDelayBlocksCall> for UnderlyingRustTuple<'_> {
                 fn from(value: withdrawalDelayBlocksCall) -> Self {
                     ()
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for withdrawalDelayBlocksCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for withdrawalDelayBlocksCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
@@ -2210,14 +2011,10 @@ function withdrawalDelayBlocks() external view returns (uint256);
             #[doc(hidden)]
             type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (
-                alloy::sol_types::private::primitives::aliases::U256,
-            );
+            type UnderlyingRustTuple<'a> = (alloy::sol_types::private::primitives::aliases::U256,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -2226,16 +2023,14 @@ function withdrawalDelayBlocks() external view returns (uint256);
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<withdrawalDelayBlocksReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<withdrawalDelayBlocksReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: withdrawalDelayBlocksReturn) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for withdrawalDelayBlocksReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for withdrawalDelayBlocksReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -2244,14 +2039,10 @@ function withdrawalDelayBlocks() external view returns (uint256);
         #[automatically_derived]
         impl alloy_sol_types::SolCall for withdrawalDelayBlocksCall {
             type Parameters<'a> = ();
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = withdrawalDelayBlocksReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "withdrawalDelayBlocks()";
             const SELECTOR: [u8; 4] = [80u8, 247u8, 62u8, 124u8];
             #[inline]
@@ -2269,10 +2060,10 @@ function withdrawalDelayBlocks() external view returns (uint256);
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
@@ -2373,14 +2164,15 @@ function withdrawalDelayBlocks() external view returns (uint256);
             static DECODE_SHIMS: &[fn(
                 &[u8],
                 bool,
-            ) -> alloy_sol_types::Result<IDelayedWithdrawalRouter_DeprecatedM1Calls>] = &[
+            ) -> alloy_sol_types::Result<
+                IDelayedWithdrawalRouter_DeprecatedM1Calls,
+            >] = &[
                 {
                     fn getClaimableUserDelayedWithdrawals(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<
-                        IDelayedWithdrawalRouter_DeprecatedM1Calls,
-                    > {
+                    ) -> alloy_sol_types::Result<IDelayedWithdrawalRouter_DeprecatedM1Calls>
+                    {
                         <getClaimableUserDelayedWithdrawalsCall as alloy_sol_types::SolCall>::abi_decode_raw(
                                 data,
                                 validate,
@@ -2395,16 +2187,12 @@ function withdrawalDelayBlocks() external view returns (uint256);
                     fn getUserDelayedWithdrawals(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<
-                        IDelayedWithdrawalRouter_DeprecatedM1Calls,
-                    > {
+                    ) -> alloy_sol_types::Result<IDelayedWithdrawalRouter_DeprecatedM1Calls>
+                    {
                         <getUserDelayedWithdrawalsCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(
-                                IDelayedWithdrawalRouter_DeprecatedM1Calls::getUserDelayedWithdrawals,
-                            )
+                            data, validate,
+                        )
+                        .map(IDelayedWithdrawalRouter_DeprecatedM1Calls::getUserDelayedWithdrawals)
                     }
                     getUserDelayedWithdrawals
                 },
@@ -2412,16 +2200,12 @@ function withdrawalDelayBlocks() external view returns (uint256);
                     fn setWithdrawalDelayBlocks(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<
-                        IDelayedWithdrawalRouter_DeprecatedM1Calls,
-                    > {
+                    ) -> alloy_sol_types::Result<IDelayedWithdrawalRouter_DeprecatedM1Calls>
+                    {
                         <setWithdrawalDelayBlocksCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(
-                                IDelayedWithdrawalRouter_DeprecatedM1Calls::setWithdrawalDelayBlocks,
-                            )
+                            data, validate,
+                        )
+                        .map(IDelayedWithdrawalRouter_DeprecatedM1Calls::setWithdrawalDelayBlocks)
                     }
                     setWithdrawalDelayBlocks
                 },
@@ -2429,16 +2213,12 @@ function withdrawalDelayBlocks() external view returns (uint256);
                     fn withdrawalDelayBlocks(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<
-                        IDelayedWithdrawalRouter_DeprecatedM1Calls,
-                    > {
+                    ) -> alloy_sol_types::Result<IDelayedWithdrawalRouter_DeprecatedM1Calls>
+                    {
                         <withdrawalDelayBlocksCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(
-                                IDelayedWithdrawalRouter_DeprecatedM1Calls::withdrawalDelayBlocks,
-                            )
+                            data, validate,
+                        )
+                        .map(IDelayedWithdrawalRouter_DeprecatedM1Calls::withdrawalDelayBlocks)
                     }
                     withdrawalDelayBlocks
                 },
@@ -2446,16 +2226,12 @@ function withdrawalDelayBlocks() external view returns (uint256);
                     fn canClaimDelayedWithdrawal(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<
-                        IDelayedWithdrawalRouter_DeprecatedM1Calls,
-                    > {
+                    ) -> alloy_sol_types::Result<IDelayedWithdrawalRouter_DeprecatedM1Calls>
+                    {
                         <canClaimDelayedWithdrawalCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(
-                                IDelayedWithdrawalRouter_DeprecatedM1Calls::canClaimDelayedWithdrawal,
-                            )
+                            data, validate,
+                        )
+                        .map(IDelayedWithdrawalRouter_DeprecatedM1Calls::canClaimDelayedWithdrawal)
                     }
                     canClaimDelayedWithdrawal
                 },
@@ -2463,9 +2239,8 @@ function withdrawalDelayBlocks() external view returns (uint256);
                     fn userDelayedWithdrawalByIndex(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<
-                        IDelayedWithdrawalRouter_DeprecatedM1Calls,
-                    > {
+                    ) -> alloy_sol_types::Result<IDelayedWithdrawalRouter_DeprecatedM1Calls>
+                    {
                         <userDelayedWithdrawalByIndexCall as alloy_sol_types::SolCall>::abi_decode_raw(
                                 data,
                                 validate,
@@ -2480,16 +2255,12 @@ function withdrawalDelayBlocks() external view returns (uint256);
                     fn createDelayedWithdrawal(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<
-                        IDelayedWithdrawalRouter_DeprecatedM1Calls,
-                    > {
+                    ) -> alloy_sol_types::Result<IDelayedWithdrawalRouter_DeprecatedM1Calls>
+                    {
                         <createDelayedWithdrawalCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(
-                                IDelayedWithdrawalRouter_DeprecatedM1Calls::createDelayedWithdrawal,
-                            )
+                            data, validate,
+                        )
+                        .map(IDelayedWithdrawalRouter_DeprecatedM1Calls::createDelayedWithdrawal)
                     }
                     createDelayedWithdrawal
                 },
@@ -2497,16 +2268,12 @@ function withdrawalDelayBlocks() external view returns (uint256);
                     fn claimDelayedWithdrawals_0(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<
-                        IDelayedWithdrawalRouter_DeprecatedM1Calls,
-                    > {
+                    ) -> alloy_sol_types::Result<IDelayedWithdrawalRouter_DeprecatedM1Calls>
+                    {
                         <claimDelayedWithdrawals_0Call as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(
-                                IDelayedWithdrawalRouter_DeprecatedM1Calls::claimDelayedWithdrawals_0,
-                            )
+                            data, validate,
+                        )
+                        .map(IDelayedWithdrawalRouter_DeprecatedM1Calls::claimDelayedWithdrawals_0)
                     }
                     claimDelayedWithdrawals_0
                 },
@@ -2514,16 +2281,12 @@ function withdrawalDelayBlocks() external view returns (uint256);
                     fn userWithdrawalsLength(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<
-                        IDelayedWithdrawalRouter_DeprecatedM1Calls,
-                    > {
+                    ) -> alloy_sol_types::Result<IDelayedWithdrawalRouter_DeprecatedM1Calls>
+                    {
                         <userWithdrawalsLengthCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(
-                                IDelayedWithdrawalRouter_DeprecatedM1Calls::userWithdrawalsLength,
-                            )
+                            data, validate,
+                        )
+                        .map(IDelayedWithdrawalRouter_DeprecatedM1Calls::userWithdrawalsLength)
                     }
                     userWithdrawalsLength
                 },
@@ -2531,16 +2294,12 @@ function withdrawalDelayBlocks() external view returns (uint256);
                     fn claimDelayedWithdrawals_1(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<
-                        IDelayedWithdrawalRouter_DeprecatedM1Calls,
-                    > {
+                    ) -> alloy_sol_types::Result<IDelayedWithdrawalRouter_DeprecatedM1Calls>
+                    {
                         <claimDelayedWithdrawals_1Call as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(
-                                IDelayedWithdrawalRouter_DeprecatedM1Calls::claimDelayedWithdrawals_1,
-                            )
+                            data, validate,
+                        )
+                        .map(IDelayedWithdrawalRouter_DeprecatedM1Calls::claimDelayedWithdrawals_1)
                     }
                     claimDelayedWithdrawals_1
                 },
@@ -2548,27 +2307,21 @@ function withdrawalDelayBlocks() external view returns (uint256);
                     fn userWithdrawals(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<
-                        IDelayedWithdrawalRouter_DeprecatedM1Calls,
-                    > {
+                    ) -> alloy_sol_types::Result<IDelayedWithdrawalRouter_DeprecatedM1Calls>
+                    {
                         <userWithdrawalsCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(
-                                IDelayedWithdrawalRouter_DeprecatedM1Calls::userWithdrawals,
-                            )
+                            data, validate,
+                        )
+                        .map(IDelayedWithdrawalRouter_DeprecatedM1Calls::userWithdrawals)
                     }
                     userWithdrawals
                 },
             ];
             let Ok(idx) = Self::SELECTORS.binary_search(&selector) else {
-                return Err(
-                    alloy_sol_types::Error::unknown_selector(
-                        <Self as alloy_sol_types::SolInterface>::NAME,
-                        selector,
-                    ),
-                );
+                return Err(alloy_sol_types::Error::unknown_selector(
+                    <Self as alloy_sol_types::SolInterface>::NAME,
+                    selector,
+                ));
             };
             (unsafe { DECODE_SHIMS.get_unchecked(idx) })(data, validate)
         }
@@ -2707,7 +2460,7 @@ function withdrawalDelayBlocks() external view returns (uint256);
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`IDelayedWithdrawalRouter_DeprecatedM1`](self) contract instance.
 
-See the [wrapper's documentation](`IDelayedWithdrawalRouter_DeprecatedM1Instance`) for more details.*/
+    See the [wrapper's documentation](`IDelayedWithdrawalRouter_DeprecatedM1Instance`) for more details.*/
     #[inline]
     pub const fn new<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -2721,9 +2474,9 @@ See the [wrapper's documentation](`IDelayedWithdrawalRouter_DeprecatedM1Instance
     }
     /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+    Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+    For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
     #[inline]
     pub fn deploy<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -2732,40 +2485,36 @@ For more fine-grained control over the deployment process, use [`deploy_builder`
     >(
         provider: P,
     ) -> impl ::core::future::Future<
-        Output = alloy_contract::Result<
-            IDelayedWithdrawalRouter_DeprecatedM1Instance<T, P, N>,
-        >,
+        Output = alloy_contract::Result<IDelayedWithdrawalRouter_DeprecatedM1Instance<T, P, N>>,
     > {
         IDelayedWithdrawalRouter_DeprecatedM1Instance::<T, P, N>::deploy(provider)
     }
     /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+    and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+    This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+    the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     #[inline]
     pub fn deploy_builder<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
         P: alloy_contract::private::Provider<T, N>,
         N: alloy_contract::private::Network,
-    >(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
-        IDelayedWithdrawalRouter_DeprecatedM1Instance::<
-            T,
-            P,
-            N,
-        >::deploy_builder(provider)
+    >(
+        provider: P,
+    ) -> alloy_contract::RawCallBuilder<T, P, N> {
+        IDelayedWithdrawalRouter_DeprecatedM1Instance::<T, P, N>::deploy_builder(provider)
     }
     /**A [`IDelayedWithdrawalRouter_DeprecatedM1`](self) instance.
 
-Contains type-safe methods for interacting with an on-chain instance of the
-[`IDelayedWithdrawalRouter_DeprecatedM1`](self) contract located at a given `address`, using a given
-provider `P`.
+    Contains type-safe methods for interacting with an on-chain instance of the
+    [`IDelayedWithdrawalRouter_DeprecatedM1`](self) contract located at a given `address`, using a given
+    provider `P`.
 
-If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
-documentation on how to provide it), the `deploy` and `deploy_builder` methods can
-be used to deploy a new instance of the contract.
+    If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
+    documentation on how to provide it), the `deploy` and `deploy_builder` methods can
+    be used to deploy a new instance of the contract.
 
-See the [module-level documentation](self) for all the available methods.*/
+    See the [module-level documentation](self) for all the available methods.*/
     #[derive(Clone)]
     pub struct IDelayedWithdrawalRouter_DeprecatedM1Instance<
         T,
@@ -2777,8 +2526,7 @@ See the [module-level documentation](self) for all the available methods.*/
         _network_transport: ::core::marker::PhantomData<(N, T)>,
     }
     #[automatically_derived]
-    impl<T, P, N> ::core::fmt::Debug
-    for IDelayedWithdrawalRouter_DeprecatedM1Instance<T, P, N> {
+    impl<T, P, N> ::core::fmt::Debug for IDelayedWithdrawalRouter_DeprecatedM1Instance<T, P, N> {
         #[inline]
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
             f.debug_tuple("IDelayedWithdrawalRouter_DeprecatedM1Instance")
@@ -2789,18 +2537,16 @@ See the [module-level documentation](self) for all the available methods.*/
     /// Instantiation and getters/setters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > IDelayedWithdrawalRouter_DeprecatedM1Instance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > IDelayedWithdrawalRouter_DeprecatedM1Instance<T, P, N>
+    {
         /**Creates a new wrapper around an on-chain [`IDelayedWithdrawalRouter_DeprecatedM1`](self) contract instance.
 
-See the [wrapper's documentation](`IDelayedWithdrawalRouter_DeprecatedM1Instance`) for more details.*/
+        See the [wrapper's documentation](`IDelayedWithdrawalRouter_DeprecatedM1Instance`) for more details.*/
         #[inline]
-        pub const fn new(
-            address: alloy_sol_types::private::Address,
-            provider: P,
-        ) -> Self {
+        pub const fn new(address: alloy_sol_types::private::Address, provider: P) -> Self {
             Self {
                 address,
                 provider,
@@ -2809,24 +2555,23 @@ See the [wrapper's documentation](`IDelayedWithdrawalRouter_DeprecatedM1Instance
         }
         /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+        Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+        For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
         #[inline]
         pub async fn deploy(
             provider: P,
-        ) -> alloy_contract::Result<
-            IDelayedWithdrawalRouter_DeprecatedM1Instance<T, P, N>,
-        > {
+        ) -> alloy_contract::Result<IDelayedWithdrawalRouter_DeprecatedM1Instance<T, P, N>>
+        {
             let call_builder = Self::deploy_builder(provider);
             let contract_address = call_builder.deploy().await?;
             Ok(Self::new(contract_address, call_builder.provider))
         }
         /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+        and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+        This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+        the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         #[inline]
         pub fn deploy_builder(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
             alloy_contract::RawCallBuilder::new_raw_deploy(
@@ -2855,11 +2600,7 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
             &self.provider
         }
     }
-    impl<
-        T,
-        P: ::core::clone::Clone,
-        N,
-    > IDelayedWithdrawalRouter_DeprecatedM1Instance<T, &P, N> {
+    impl<T, P: ::core::clone::Clone, N> IDelayedWithdrawalRouter_DeprecatedM1Instance<T, &P, N> {
         /// Clones the provider and returns a new instance with the cloned provider.
         #[inline]
         pub fn with_cloned_provider(
@@ -2875,10 +2616,11 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     /// Function calls.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > IDelayedWithdrawalRouter_DeprecatedM1Instance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > IDelayedWithdrawalRouter_DeprecatedM1Instance<T, P, N>
+    {
         /// Creates a new call builder using this contract instance's provider and address.
         ///
         /// Note that the call can be any function call, not just those defined in this
@@ -2895,23 +2637,16 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
             user: alloy::sol_types::private::Address,
             index: alloy::sol_types::private::primitives::aliases::U256,
         ) -> alloy_contract::SolCallBuilder<T, &P, canClaimDelayedWithdrawalCall, N> {
-            self.call_builder(
-                &canClaimDelayedWithdrawalCall {
-                    user,
-                    index,
-                },
-            )
+            self.call_builder(&canClaimDelayedWithdrawalCall { user, index })
         }
         ///Creates a new call builder for the [`claimDelayedWithdrawals_0`] function.
         pub fn claimDelayedWithdrawals_0(
             &self,
             maxNumberOfWithdrawalsToClaim: alloy::sol_types::private::primitives::aliases::U256,
         ) -> alloy_contract::SolCallBuilder<T, &P, claimDelayedWithdrawals_0Call, N> {
-            self.call_builder(
-                &claimDelayedWithdrawals_0Call {
-                    maxNumberOfWithdrawalsToClaim,
-                },
-            )
+            self.call_builder(&claimDelayedWithdrawals_0Call {
+                maxNumberOfWithdrawalsToClaim,
+            })
         }
         ///Creates a new call builder for the [`claimDelayedWithdrawals_1`] function.
         pub fn claimDelayedWithdrawals_1(
@@ -2919,12 +2654,10 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
             recipient: alloy::sol_types::private::Address,
             maxNumberOfWithdrawalsToClaim: alloy::sol_types::private::primitives::aliases::U256,
         ) -> alloy_contract::SolCallBuilder<T, &P, claimDelayedWithdrawals_1Call, N> {
-            self.call_builder(
-                &claimDelayedWithdrawals_1Call {
-                    recipient,
-                    maxNumberOfWithdrawalsToClaim,
-                },
-            )
+            self.call_builder(&claimDelayedWithdrawals_1Call {
+                recipient,
+                maxNumberOfWithdrawalsToClaim,
+            })
         }
         ///Creates a new call builder for the [`createDelayedWithdrawal`] function.
         pub fn createDelayedWithdrawal(
@@ -2932,50 +2665,32 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
             podOwner: alloy::sol_types::private::Address,
             recipient: alloy::sol_types::private::Address,
         ) -> alloy_contract::SolCallBuilder<T, &P, createDelayedWithdrawalCall, N> {
-            self.call_builder(
-                &createDelayedWithdrawalCall {
-                    podOwner,
-                    recipient,
-                },
-            )
+            self.call_builder(&createDelayedWithdrawalCall {
+                podOwner,
+                recipient,
+            })
         }
         ///Creates a new call builder for the [`getClaimableUserDelayedWithdrawals`] function.
         pub fn getClaimableUserDelayedWithdrawals(
             &self,
             user: alloy::sol_types::private::Address,
-        ) -> alloy_contract::SolCallBuilder<
-            T,
-            &P,
-            getClaimableUserDelayedWithdrawalsCall,
-            N,
-        > {
-            self.call_builder(
-                &getClaimableUserDelayedWithdrawalsCall {
-                    user,
-                },
-            )
+        ) -> alloy_contract::SolCallBuilder<T, &P, getClaimableUserDelayedWithdrawalsCall, N>
+        {
+            self.call_builder(&getClaimableUserDelayedWithdrawalsCall { user })
         }
         ///Creates a new call builder for the [`getUserDelayedWithdrawals`] function.
         pub fn getUserDelayedWithdrawals(
             &self,
             user: alloy::sol_types::private::Address,
         ) -> alloy_contract::SolCallBuilder<T, &P, getUserDelayedWithdrawalsCall, N> {
-            self.call_builder(
-                &getUserDelayedWithdrawalsCall {
-                    user,
-                },
-            )
+            self.call_builder(&getUserDelayedWithdrawalsCall { user })
         }
         ///Creates a new call builder for the [`setWithdrawalDelayBlocks`] function.
         pub fn setWithdrawalDelayBlocks(
             &self,
             newValue: alloy::sol_types::private::primitives::aliases::U256,
         ) -> alloy_contract::SolCallBuilder<T, &P, setWithdrawalDelayBlocksCall, N> {
-            self.call_builder(
-                &setWithdrawalDelayBlocksCall {
-                    newValue,
-                },
-            )
+            self.call_builder(&setWithdrawalDelayBlocksCall { newValue })
         }
         ///Creates a new call builder for the [`userDelayedWithdrawalByIndex`] function.
         pub fn userDelayedWithdrawalByIndex(
@@ -2983,12 +2698,7 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
             user: alloy::sol_types::private::Address,
             index: alloy::sol_types::private::primitives::aliases::U256,
         ) -> alloy_contract::SolCallBuilder<T, &P, userDelayedWithdrawalByIndexCall, N> {
-            self.call_builder(
-                &userDelayedWithdrawalByIndexCall {
-                    user,
-                    index,
-                },
-            )
+            self.call_builder(&userDelayedWithdrawalByIndexCall { user, index })
         }
         ///Creates a new call builder for the [`userWithdrawals`] function.
         pub fn userWithdrawals(
@@ -3014,10 +2724,11 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     /// Event filters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > IDelayedWithdrawalRouter_DeprecatedM1Instance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > IDelayedWithdrawalRouter_DeprecatedM1Instance<T, P, N>
+    {
         /// Creates a new event filter using this contract instance's provider and address.
         ///
         /// Note that the type can be any event, not just those defined in this contract.

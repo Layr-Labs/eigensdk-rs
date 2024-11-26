@@ -86,9 +86,9 @@ pub mod EIP_4788_Oracle_Mock {
         b"`\x80`@R4\x80\x15a\0\x0FW__\xFD[P`\x046\x10a\x004W_5`\xE0\x1C\x80cd5\x99\xF2\x14a\x01\xA4W\x80c\xAC\xD4\x14\xA8\x14a\x01\xDFW[` 6\x14a\0\x9DW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`+`$\x82\x01R\x7F4788OracleMock.fallback: malform`D\x82\x01Rjed msg.data`\xA8\x1B`d\x82\x01R`\x84\x01[`@Q\x80\x91\x03\x90\xFD[_a\0\xA86\x82a\x02\x0BV[\x90P\x80_\x03a\x01\tW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`'`$\x82\x01R\x7F4788OracleMock.fallback: timesta`D\x82\x01Rf\x06\xD7\x02\x06\x972\x03`\xCC\x1B`d\x82\x01R`\x84\x01a\0\x94V[_\x81\x81R` \x81\x90R`@\x81 T\x90\x81\x90\x03a\x01\x9CW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`F`$\x82\x01R\x7F4788OracleMock.fallback: no bloc`D\x82\x01R\x7Fk root found. DID YOU USE CHEATS`d\x82\x01Re.WARP?`\xD0\x1B`\x84\x82\x01R`\xA4\x01a\0\x94V[\x80_R` _\xF3[a\x01\xCDa\x01\xB26`\x04a\x02\x0BV[g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x16_\x90\x81R` \x81\x90R`@\x90 T\x90V[`@Q\x90\x81R` \x01`@Q\x80\x91\x03\x90\xF3[a\x02\ta\x01\xED6`\x04a\x02\"V[g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x90\x91\x16_\x90\x81R` \x81\x90R`@\x90 UV[\0[_` \x82\x84\x03\x12\x15a\x02\x1BW__\xFD[P5\x91\x90PV[__`@\x83\x85\x03\x12\x15a\x023W__\xFD[\x825g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x81\x16\x81\x14a\x02JW__\xFD[\x94` \x93\x90\x93\x015\x93PPPV\xFE\xA2dipfsX\"\x12 \xE3\xB4\xEA\xF3:E\xB2)\xCE\xE6\xDF(\xC2\x9B\xB7\xC4*\x1ABC\x89!\x8A\xFA\x08\xD0\xFB\xDC\x8C\xB5\xDD^dsolcC\0\x08\x1B\x003",
     );
     /**Function with signature `setBlockRoot(uint64,bytes32)` and selector `0xacd414a8`.
-```solidity
-function setBlockRoot(uint64 timestamp, bytes32 blockRoot) external;
-```*/
+    ```solidity
+    function setBlockRoot(uint64 timestamp, bytes32 blockRoot) external;
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setBlockRootCall {
@@ -114,15 +114,10 @@ function setBlockRoot(uint64 timestamp, bytes32 blockRoot) external;
                 alloy::sol_types::sol_data::FixedBytes<32>,
             );
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (
-                u64,
-                alloy::sol_types::private::FixedBytes<32>,
-            );
+            type UnderlyingRustTuple<'a> = (u64, alloy::sol_types::private::FixedBytes<32>);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -154,9 +149,7 @@ function setBlockRoot(uint64 timestamp, bytes32 blockRoot) external;
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -184,14 +177,10 @@ function setBlockRoot(uint64 timestamp, bytes32 blockRoot) external;
                 alloy::sol_types::sol_data::Uint<64>,
                 alloy::sol_types::sol_data::FixedBytes<32>,
             );
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = setBlockRootReturn;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "setBlockRoot(uint64,bytes32)";
             const SELECTOR: [u8; 4] = [172u8, 212u8, 20u8, 168u8];
             #[inline]
@@ -216,17 +205,17 @@ function setBlockRoot(uint64 timestamp, bytes32 blockRoot) external;
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `timestampToBlockRoot(uint256)` and selector `0x643599f2`.
-```solidity
-function timestampToBlockRoot(uint256 timestamp) external view returns (bytes32);
-```*/
+    ```solidity
+    function timestampToBlockRoot(uint256 timestamp) external view returns (bytes32);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct timestampToBlockRootCall {
@@ -250,14 +239,10 @@ function timestampToBlockRoot(uint256 timestamp) external view returns (bytes32)
             #[doc(hidden)]
             type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (
-                alloy::sol_types::private::primitives::aliases::U256,
-            );
+            type UnderlyingRustTuple<'a> = (alloy::sol_types::private::primitives::aliases::U256,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -266,16 +251,14 @@ function timestampToBlockRoot(uint256 timestamp) external view returns (bytes32)
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<timestampToBlockRootCall>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<timestampToBlockRootCall> for UnderlyingRustTuple<'_> {
                 fn from(value: timestampToBlockRootCall) -> Self {
                     (value.timestamp,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for timestampToBlockRootCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for timestampToBlockRootCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { timestamp: tuple.0 }
                 }
@@ -288,9 +271,7 @@ function timestampToBlockRoot(uint256 timestamp) external view returns (bytes32)
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::FixedBytes<32>,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -299,16 +280,14 @@ function timestampToBlockRoot(uint256 timestamp) external view returns (bytes32)
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<timestampToBlockRootReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<timestampToBlockRootReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: timestampToBlockRootReturn) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for timestampToBlockRootReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for timestampToBlockRootReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -317,14 +296,10 @@ function timestampToBlockRoot(uint256 timestamp) external view returns (bytes32)
         #[automatically_derived]
         impl alloy_sol_types::SolCall for timestampToBlockRootCall {
             type Parameters<'a> = (alloy::sol_types::sol_data::Uint<256>,);
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = timestampToBlockRootReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::FixedBytes<32>,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "timestampToBlockRoot(uint256)";
             const SELECTOR: [u8; 4] = [100u8, 53u8, 153u8, 242u8];
             #[inline]
@@ -336,9 +311,9 @@ function timestampToBlockRoot(uint256 timestamp) external view returns (bytes32)
             #[inline]
             fn tokenize(&self) -> Self::Token<'_> {
                 (
-                    <alloy::sol_types::sol_data::Uint<
-                        256,
-                    > as alloy_sol_types::SolType>::tokenize(&self.timestamp),
+                    <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
+                        &self.timestamp,
+                    ),
                 )
             }
             #[inline]
@@ -346,10 +321,10 @@ function timestampToBlockRoot(uint256 timestamp) external view returns (bytes32)
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
@@ -366,10 +341,8 @@ function timestampToBlockRoot(uint256 timestamp) external view returns (bytes32)
         /// No guarantees are made about the order of the selectors.
         ///
         /// Prefer using `SolInterface` methods instead.
-        pub const SELECTORS: &'static [[u8; 4usize]] = &[
-            [100u8, 53u8, 153u8, 242u8],
-            [172u8, 212u8, 20u8, 168u8],
-        ];
+        pub const SELECTORS: &'static [[u8; 4usize]] =
+            &[[100u8, 53u8, 153u8, 242u8], [172u8, 212u8, 20u8, 168u8]];
     }
     #[automatically_derived]
     impl alloy_sol_types::SolInterface for EIP_4788_Oracle_MockCalls {
@@ -379,9 +352,7 @@ function timestampToBlockRoot(uint256 timestamp) external view returns (bytes32)
         #[inline]
         fn selector(&self) -> [u8; 4] {
             match self {
-                Self::setBlockRoot(_) => {
-                    <setBlockRootCall as alloy_sol_types::SolCall>::SELECTOR
-                }
+                Self::setBlockRoot(_) => <setBlockRootCall as alloy_sol_types::SolCall>::SELECTOR,
                 Self::timestampToBlockRoot(_) => {
                     <timestampToBlockRootCall as alloy_sol_types::SolCall>::SELECTOR
                 }
@@ -405,17 +376,17 @@ function timestampToBlockRoot(uint256 timestamp) external view returns (bytes32)
             static DECODE_SHIMS: &[fn(
                 &[u8],
                 bool,
-            ) -> alloy_sol_types::Result<EIP_4788_Oracle_MockCalls>] = &[
+            )
+                -> alloy_sol_types::Result<EIP_4788_Oracle_MockCalls>] = &[
                 {
                     fn timestampToBlockRoot(
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<EIP_4788_Oracle_MockCalls> {
                         <timestampToBlockRootCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(EIP_4788_Oracle_MockCalls::timestampToBlockRoot)
+                            data, validate,
+                        )
+                        .map(EIP_4788_Oracle_MockCalls::timestampToBlockRoot)
                     }
                     timestampToBlockRoot
                 },
@@ -425,21 +396,18 @@ function timestampToBlockRoot(uint256 timestamp) external view returns (bytes32)
                         validate: bool,
                     ) -> alloy_sol_types::Result<EIP_4788_Oracle_MockCalls> {
                         <setBlockRootCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(EIP_4788_Oracle_MockCalls::setBlockRoot)
+                            data, validate,
+                        )
+                        .map(EIP_4788_Oracle_MockCalls::setBlockRoot)
                     }
                     setBlockRoot
                 },
             ];
             let Ok(idx) = Self::SELECTORS.binary_search(&selector) else {
-                return Err(
-                    alloy_sol_types::Error::unknown_selector(
-                        <Self as alloy_sol_types::SolInterface>::NAME,
-                        selector,
-                    ),
-                );
+                return Err(alloy_sol_types::Error::unknown_selector(
+                    <Self as alloy_sol_types::SolInterface>::NAME,
+                    selector,
+                ));
             };
             (unsafe { DECODE_SHIMS.get_unchecked(idx) })(data, validate)
         }
@@ -447,14 +415,10 @@ function timestampToBlockRoot(uint256 timestamp) external view returns (bytes32)
         fn abi_encoded_size(&self) -> usize {
             match self {
                 Self::setBlockRoot(inner) => {
-                    <setBlockRootCall as alloy_sol_types::SolCall>::abi_encoded_size(
-                        inner,
-                    )
+                    <setBlockRootCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
                 }
                 Self::timestampToBlockRoot(inner) => {
-                    <timestampToBlockRootCall as alloy_sol_types::SolCall>::abi_encoded_size(
-                        inner,
-                    )
+                    <timestampToBlockRootCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
                 }
             }
         }
@@ -462,15 +426,11 @@ function timestampToBlockRoot(uint256 timestamp) external view returns (bytes32)
         fn abi_encode_raw(&self, out: &mut alloy_sol_types::private::Vec<u8>) {
             match self {
                 Self::setBlockRoot(inner) => {
-                    <setBlockRootCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <setBlockRootCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
                 }
                 Self::timestampToBlockRoot(inner) => {
                     <timestampToBlockRootCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
+                        inner, out,
                     )
                 }
             }
@@ -479,7 +439,7 @@ function timestampToBlockRoot(uint256 timestamp) external view returns (bytes32)
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`EIP_4788_Oracle_Mock`](self) contract instance.
 
-See the [wrapper's documentation](`EIP_4788_Oracle_MockInstance`) for more details.*/
+    See the [wrapper's documentation](`EIP_4788_Oracle_MockInstance`) for more details.*/
     #[inline]
     pub const fn new<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -493,9 +453,9 @@ See the [wrapper's documentation](`EIP_4788_Oracle_MockInstance`) for more detai
     }
     /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+    Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+    For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
     #[inline]
     pub fn deploy<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -509,35 +469,33 @@ For more fine-grained control over the deployment process, use [`deploy_builder`
         EIP_4788_Oracle_MockInstance::<T, P, N>::deploy(provider)
     }
     /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+    and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+    This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+    the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     #[inline]
     pub fn deploy_builder<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
         P: alloy_contract::private::Provider<T, N>,
         N: alloy_contract::private::Network,
-    >(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
+    >(
+        provider: P,
+    ) -> alloy_contract::RawCallBuilder<T, P, N> {
         EIP_4788_Oracle_MockInstance::<T, P, N>::deploy_builder(provider)
     }
     /**A [`EIP_4788_Oracle_Mock`](self) instance.
 
-Contains type-safe methods for interacting with an on-chain instance of the
-[`EIP_4788_Oracle_Mock`](self) contract located at a given `address`, using a given
-provider `P`.
+    Contains type-safe methods for interacting with an on-chain instance of the
+    [`EIP_4788_Oracle_Mock`](self) contract located at a given `address`, using a given
+    provider `P`.
 
-If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
-documentation on how to provide it), the `deploy` and `deploy_builder` methods can
-be used to deploy a new instance of the contract.
+    If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
+    documentation on how to provide it), the `deploy` and `deploy_builder` methods can
+    be used to deploy a new instance of the contract.
 
-See the [module-level documentation](self) for all the available methods.*/
+    See the [module-level documentation](self) for all the available methods.*/
     #[derive(Clone)]
-    pub struct EIP_4788_Oracle_MockInstance<
-        T,
-        P,
-        N = alloy_contract::private::Ethereum,
-    > {
+    pub struct EIP_4788_Oracle_MockInstance<T, P, N = alloy_contract::private::Ethereum> {
         address: alloy_sol_types::private::Address,
         provider: P,
         _network_transport: ::core::marker::PhantomData<(N, T)>,
@@ -546,24 +504,24 @@ See the [module-level documentation](self) for all the available methods.*/
     impl<T, P, N> ::core::fmt::Debug for EIP_4788_Oracle_MockInstance<T, P, N> {
         #[inline]
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-            f.debug_tuple("EIP_4788_Oracle_MockInstance").field(&self.address).finish()
+            f.debug_tuple("EIP_4788_Oracle_MockInstance")
+                .field(&self.address)
+                .finish()
         }
     }
     /// Instantiation and getters/setters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > EIP_4788_Oracle_MockInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > EIP_4788_Oracle_MockInstance<T, P, N>
+    {
         /**Creates a new wrapper around an on-chain [`EIP_4788_Oracle_Mock`](self) contract instance.
 
-See the [wrapper's documentation](`EIP_4788_Oracle_MockInstance`) for more details.*/
+        See the [wrapper's documentation](`EIP_4788_Oracle_MockInstance`) for more details.*/
         #[inline]
-        pub const fn new(
-            address: alloy_sol_types::private::Address,
-            provider: P,
-        ) -> Self {
+        pub const fn new(address: alloy_sol_types::private::Address, provider: P) -> Self {
             Self {
                 address,
                 provider,
@@ -572,9 +530,9 @@ See the [wrapper's documentation](`EIP_4788_Oracle_MockInstance`) for more detai
         }
         /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+        Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+        For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
         #[inline]
         pub async fn deploy(
             provider: P,
@@ -584,10 +542,10 @@ For more fine-grained control over the deployment process, use [`deploy_builder`
             Ok(Self::new(contract_address, call_builder.provider))
         }
         /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+        and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+        This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+        the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         #[inline]
         pub fn deploy_builder(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
             alloy_contract::RawCallBuilder::new_raw_deploy(
@@ -630,10 +588,11 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     /// Function calls.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > EIP_4788_Oracle_MockInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > EIP_4788_Oracle_MockInstance<T, P, N>
+    {
         /// Creates a new call builder using this contract instance's provider and address.
         ///
         /// Note that the call can be any function call, not just those defined in this
@@ -650,32 +609,27 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
             timestamp: u64,
             blockRoot: alloy::sol_types::private::FixedBytes<32>,
         ) -> alloy_contract::SolCallBuilder<T, &P, setBlockRootCall, N> {
-            self.call_builder(
-                &setBlockRootCall {
-                    timestamp,
-                    blockRoot,
-                },
-            )
+            self.call_builder(&setBlockRootCall {
+                timestamp,
+                blockRoot,
+            })
         }
         ///Creates a new call builder for the [`timestampToBlockRoot`] function.
         pub fn timestampToBlockRoot(
             &self,
             timestamp: alloy::sol_types::private::primitives::aliases::U256,
         ) -> alloy_contract::SolCallBuilder<T, &P, timestampToBlockRootCall, N> {
-            self.call_builder(
-                &timestampToBlockRootCall {
-                    timestamp,
-                },
-            )
+            self.call_builder(&timestampToBlockRootCall { timestamp })
         }
     }
     /// Event filters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > EIP_4788_Oracle_MockInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > EIP_4788_Oracle_MockInstance<T, P, N>
+    {
         /// Creates a new event filter using this contract instance's provider and address.
         ///
         /// Note that the type can be any event, not just those defined in this contract.
