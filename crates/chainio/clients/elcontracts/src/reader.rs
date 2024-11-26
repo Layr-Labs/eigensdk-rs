@@ -582,7 +582,7 @@ impl ELChainReader {
                 registered_operator_set.id == operator_set.id
                     && registered_operator_set.avs == operator_set.avs
             });
-            return Ok(is_registered);
+            Ok(is_registered)
         }
     }
 
