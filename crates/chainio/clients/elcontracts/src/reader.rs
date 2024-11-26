@@ -403,15 +403,16 @@ impl ELChainReader {
 
         let contract_allocation_manager = AllocationManager::new(self.allocation_manager, provider);
 
-        let operator_sets = contract_allocation_manager
+        let allocated_sets = contract_allocation_manager
             .getAllocatedSets(operator_addr)
             .call()
             .await
             .map_err(ElContractsError::AlloyContractError)?;
 
+        let AllocationManager::getAllocatedSetsReturn { _0: operator_sets } = allocated_sets;
+
         Ok(operator_sets)
     }
-
 }
 
 #[cfg(test)]
