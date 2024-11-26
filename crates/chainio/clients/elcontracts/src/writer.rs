@@ -353,15 +353,38 @@ impl ELChainWriter {
         let contract_rewards_coordinator =
             IRewardsCoordinator::new(self.rewards_coordinator, &provider);
 
-        let process_claim_call = contract_rewards_coordinator
+        let check_claim_call = contract_rewards_coordinator
             .checkClaim(claim)
             .call()
             .await
             .map_err(ElContractsError::AlloyContractError)?;
 
-        let IRewardsCoordinator::checkClaimReturn { _0: claim_ret } = process_claim_call;
+        let IRewardsCoordinator::checkClaimReturn { _0: claim_ret } = check_claim_call;
 
         Ok(claim_ret)
+    }
+
+    pub async fn get_cumulative_claimed(
+        &self,
+        earner_address: Address,
+        token: Address,
+    ) -> Result<U256, ElContractsError> {
+        let provider = get_signer(&self.signer, &self.provider);
+
+        let contract_rewards_coordinator =
+            IRewardsCoordinator::new(self.rewards_coordinator, &provider);
+
+        let cumulative_claimed_call = contract_rewards_coordinator
+            .cumulativeClaimed(earner_address, token)
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        let IRewardsCoordinator::cumulativeClaimedReturn {
+            _0: cumulative_claim_ret,
+        } = cumulative_claimed_call;
+
+        Ok(cumulative_claim_ret)
     }
 }
 
