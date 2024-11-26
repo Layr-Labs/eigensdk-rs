@@ -1,9 +1,14 @@
 //! Anvil utilities
-use alloy_primitives::{address, Address};
+use std::str::FromStr;
+
+use alloy_primitives::{address, Address, FixedBytes};
 use eigen_utils::{
-    contractsregistry::ContractsRegistry::{self, contractsReturn},
-    get_provider,
+    contractsregistry::ContractsRegistry::{self, contractsReturn}, delegationmanager::IDelegationManager::OperatorDetails, get_provider, get_signer
 };
+use alloy_signer_local::PrivateKeySigner;
+use eyre::Result;
+use eigen_utils::delegationmanager::DelegationManager;
+use tracing::info;
 
 /// Local anvil ContractsRegistry which contains a mapping of all locally deployed EL contracts.
 pub const CONTRACTS_REGISTRY: Address = address!("5FbDB2315678afecb367f032d93F642f64180aa3");
@@ -150,3 +155,17 @@ pub async fn get_rewards_coordinator_address(rpc_url: String) -> Address {
 
     address
 }
+
+
+pub async fn register_operator_to_el_if_not_registered(pvt_key: &str,rpc_url: &str,operator_details:OperatorDetails,uri:&str) -> Result<()> {
+    let wallet = PrivateKeySigner::from_str(pvt_key)?;
+    let signer = get_signer(pvt_key,&rpc_url);
+    let contract_instance = DelegationManager::new(get_delegation_manager_address(rpc_url.to_string()).await, signer);
+    let is_registered = contract_instance.isOperator(wallet.address()).call().await?._0;
+    if !is_registered{
+        let register_instance = contract_instance.registerAsOperator(operator_details, uri.to_string()).send().await?;
+        info!(tx_hash = ?register_instance.tx_hash(),"Tx hash for registering operator to EL");
+    }
+    Ok(())
+
+}   
