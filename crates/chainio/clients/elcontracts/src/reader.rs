@@ -436,6 +436,47 @@ impl ELChainReader {
         Ok(strategies)
     }
 
+    // Returns if an operator is registered with a specific operator set
+    pub async fn is_operator_registered_with_operator_set(
+        &self,
+        operator_address: Address,
+        operator_set: OperatorSet,
+    ) -> Result<bool, ElContractsError> {
+        let provider = get_provider(&self.provider);
+
+        if operator_set.id == 0 {
+            // this is an M2 AVS
+            let contract_avs_directory = AVSDirectory::new(self.avs_directory, provider);
+
+            let operator_avs_registration_status = contract_avs_directory
+                .avsOperatorStatus(operator_set.avs, operator_address)
+                .call()
+                .await
+                .map_err(ElContractsError::AlloyContractError)?;
+
+            let AVSDirectory::avsOperatorStatusReturn { _0: status } =
+                operator_avs_registration_status;
+
+            Ok(status == 1)
+        } else {
+            let contract_allocation_manager =
+                AllocationManager::new(self.allocation_manager, provider);
+            let registered_operator_sets = contract_allocation_manager
+                .getRegisteredSets(operator_address)
+                .call()
+                .await
+                .map_err(ElContractsError::AlloyContractError)?;
+            let AllocationManager::getRegisteredSetsReturn { _0: operator_sets } =
+                registered_operator_sets;
+
+            let is_registered = operator_sets.iter().any(|registered_operator_set| {
+                registered_operator_set.id == operator_set.id
+                    && registered_operator_set.avs == operator_set.avs
+            });
+            return Ok(is_registered);
+        }
+    }
+
     // Returns the list of operators in a specific operator set.
     // Not supported for M2 AVSs
     pub async fn get_operators_for_operator_set(
