@@ -456,6 +456,26 @@ impl ELChainReader {
         Ok(addresses)
     }
 
+    // Returns the number of operators in a specific operator set
+    pub async fn get_num_operators_for_operator_set(
+        &self,
+        operator_set: OperatorSet,
+    ) -> Result<U256, ElContractsError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_allocation_manager = AllocationManager::new(self.allocation_manager, provider);
+
+        let num_operators = contract_allocation_manager
+            .getMemberCount(operator_set)
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        let AllocationManager::getMemberCountReturn { _0: num_operators } = num_operators;
+
+        Ok(num_operators)
+    }
+
     // Returns the strategies the operatorSets take into account, their
     // operators, and the minimum amount of shares that are slashable by the operatorSets.
     // Not supported for M2 AVSs
