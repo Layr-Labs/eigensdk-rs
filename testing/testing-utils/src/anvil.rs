@@ -6,7 +6,7 @@ use testcontainers::{
 };
 use tokio::time::{timeout, Duration};
 const ANVIL_IMAGE: &str = "ghcr.io/foundry-rs/foundry";
-const ANVIL_TAG: &str = "latest";
+const ANVIL_TAG: &str = "nightly-5b7e4cb3c882b28f3c32ba580de27ce7381f415a";
 const ANVIL_STATE_PATH: &str = "./crates/contracts/anvil/dump_state.json"; // Correct file path // relative path from the project root
 
 fn workspace_dir() -> PathBuf {
