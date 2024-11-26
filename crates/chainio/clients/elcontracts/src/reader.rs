@@ -395,26 +395,6 @@ impl ELChainReader {
         Ok(operator)
     }
 
-    // Return the list of operator sets that an operator is part of. Doesn't include M2 AVSs
-    pub async fn get_operators_sets_for_operator(
-        &self,
-        operator_addr: Address,
-    ) -> Result<Vec<OperatorSet>, ElContractsError> {
-        let provider = get_provider(&self.provider);
-
-        let contract_allocation_manager = AllocationManager::new(self.allocation_manager, provider);
-
-        let allocated_sets = contract_allocation_manager
-            .getAllocatedSets(operator_addr)
-            .call()
-            .await
-            .map_err(ElContractsError::AlloyContractError)?;
-
-        let AllocationManager::getAllocatedSetsReturn { _0: operator_sets } = allocated_sets;
-
-        Ok(operator_sets)
-    }
-
     // Returns the list of strategies that an operator set takes into account
     // Not supported for M2 AVSs
     pub async fn get_strategies_for_operator_set(
@@ -434,6 +414,37 @@ impl ELChainReader {
         let AllocationManager::getStrategiesInOperatorSetReturn { _0: strategies } = strategies;
 
         Ok(strategies)
+    }
+
+    // Returns the number of operator sets that an operator is part of
+    // Doesn't include M2 AVSs
+    pub async fn get_num_operator_sets_for_operator(
+        &self,
+        operator_addr: Address,
+    ) -> Result<U256, ElContractsError> {
+        self.get_operator_sets_for_operator(operator_addr)
+            .await
+            .map(|operator_sets| U256::from(operator_sets.len() as u64))
+    }
+
+    // Return the list of operator sets that an operator is part of. Doesn't include M2 AVSs
+    pub async fn get_operator_sets_for_operator(
+        &self,
+        operator_addr: Address,
+    ) -> Result<Vec<OperatorSet>, ElContractsError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_allocation_manager = AllocationManager::new(self.allocation_manager, provider);
+
+        let allocated_sets = contract_allocation_manager
+            .getAllocatedSets(operator_addr)
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        let AllocationManager::getAllocatedSetsReturn { _0: operator_sets } = allocated_sets;
+
+        Ok(operator_sets)
     }
 
     // Returns if an operator is registered with a specific operator set
