@@ -395,6 +395,28 @@ impl ELChainReader {
         Ok(operator)
     }
 
+    pub async fn get_operator_shares(
+        &self,
+        operator_address: Address,
+        strategy_addresses: Vec<Address>,
+    ) -> Result<Vec<U256>, ElContractsError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_delegation_manager = DelegationManager::new(self.delegation_manager, provider);
+
+        let operator_shares = contract_delegation_manager
+            .getOperatorShares(operator_address, strategy_addresses)
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        let DelegationManager::getOperatorSharesReturn {
+            _0: operator_shares,
+        } = operator_shares;
+
+        Ok(operator_shares)
+    }
+
     pub async fn get_operators_shares(
         &self,
         operator_addresses: Vec<Address>,
