@@ -1,5 +1,3 @@
-use std::hash;
-
 use crate::error::ElContractsError;
 use crate::reader::ELChainReader;
 use alloy_primitives::{Address, FixedBytes, TxHash, U256};
@@ -347,6 +345,23 @@ impl ELChainWriter {
             get_root_index_from_hash_call;
 
         Ok(root_index)
+    }
+
+    pub async fn check_claim(&self, claim: RewardsMerkleClaim) -> Result<bool, ElContractsError> {
+        let provider = get_signer(&self.signer, &self.provider);
+
+        let contract_rewards_coordinator =
+            IRewardsCoordinator::new(self.rewards_coordinator, &provider);
+
+        let process_claim_call = contract_rewards_coordinator
+            .checkClaim(claim)
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        let IRewardsCoordinator::checkClaimReturn { _0: claim_ret } = process_claim_call;
+
+        Ok(claim_ret)
     }
 }
 
