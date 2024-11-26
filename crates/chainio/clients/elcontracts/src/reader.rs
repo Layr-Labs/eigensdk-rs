@@ -395,6 +395,28 @@ impl ELChainReader {
         Ok(operator)
     }
 
+    pub async fn get_allocatable_magnitude(
+        &self,
+        operator_address: Address,
+        strategy_address: Address,
+    ) -> Result<u64, ElContractsError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_allocation_manager = AllocationManager::new(self.allocation_manager, provider);
+
+        let allocatable_magnitude = contract_allocation_manager
+            .getAllocatableMagnitude(operator_address, strategy_address)
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        let AllocationManager::getAllocatableMagnitudeReturn {
+            _0: allocatable_magnitude,
+        } = allocatable_magnitude;
+
+        Ok(allocatable_magnitude)
+    }
+
     pub async fn get_max_magnitudes(
         &self,
         operator_address: Address,
