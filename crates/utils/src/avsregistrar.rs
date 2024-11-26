@@ -90,9 +90,9 @@ pub mod AVSRegistrar {
         b"`\x80`@R4\x80\x15a\0\x0FW__\xFD[P`\x046\x10a\x004W_5`\xE0\x1C\x80c\x9D\x8E\x0C#\x14a\x006W\x80c\xAD\xCFs\xF7\x14a\0IW[\0[a\x004a\0D6`\x04a\0\xC1V[PPPV[a\x004a\0W6`\x04a\x01\x10V[PPPPPV[\x805`\x01`\x01`\xA0\x1B\x03\x81\x16\x81\x14a\0tW__\xFD[\x91\x90PV[__\x83`\x1F\x84\x01\x12a\0\x89W__\xFD[P\x815g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x81\x11\x15a\0\xA0W__\xFD[` \x83\x01\x91P\x83` \x82`\x05\x1B\x85\x01\x01\x11\x15a\0\xBAW__\xFD[\x92P\x92\x90PV[___`@\x84\x86\x03\x12\x15a\0\xD3W__\xFD[a\0\xDC\x84a\0^V[\x92P` \x84\x015g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x81\x11\x15a\0\xF7W__\xFD[a\x01\x03\x86\x82\x87\x01a\0yV[\x94\x97\x90\x96P\x93\x94PPPPV[_____``\x86\x88\x03\x12\x15a\x01$W__\xFD[a\x01-\x86a\0^V[\x94P` \x86\x015g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x81\x11\x15a\x01HW__\xFD[a\x01T\x88\x82\x89\x01a\0yV[\x90\x95P\x93PP`@\x86\x015g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x81\x11\x15a\x01sW__\xFD[\x86\x01`\x1F\x81\x01\x88\x13a\x01\x83W__\xFD[\x805g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x81\x11\x15a\x01\x99W__\xFD[\x88` \x82\x84\x01\x01\x11\x15a\x01\xAAW__\xFD[\x95\x98\x94\x97P\x92\x95PPP` \x01\x91\x90V\xFE\xA2dipfsX\"\x12 \xEB\xF6\x837x\xCDl\x9EE\xE56\x01\xA0}\x13@X\xB9=0\r\x19B\x9C\x7F\xE6\xF3\x19\xAF\xF4\xAD\xDFdsolcC\0\x08\x1B\x003",
     );
     /**Function with signature `deregisterOperator(address,uint32[])` and selector `0x9d8e0c23`.
-```solidity
-function deregisterOperator(address operator, uint32[] memory operatorSetIds) external;
-```*/
+    ```solidity
+    function deregisterOperator(address operator, uint32[] memory operatorSetIds) external;
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct deregisterOperatorCall {
@@ -124,9 +124,7 @@ function deregisterOperator(address operator, uint32[] memory operatorSetIds) ex
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -135,16 +133,14 @@ function deregisterOperator(address operator, uint32[] memory operatorSetIds) ex
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<deregisterOperatorCall>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<deregisterOperatorCall> for UnderlyingRustTuple<'_> {
                 fn from(value: deregisterOperatorCall) -> Self {
                     (value.operator, value.operatorSetIds)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for deregisterOperatorCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for deregisterOperatorCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {
                         operator: tuple.0,
@@ -160,9 +156,7 @@ function deregisterOperator(address operator, uint32[] memory operatorSetIds) ex
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -171,16 +165,14 @@ function deregisterOperator(address operator, uint32[] memory operatorSetIds) ex
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<deregisterOperatorReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<deregisterOperatorReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: deregisterOperatorReturn) -> Self {
                     ()
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for deregisterOperatorReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for deregisterOperatorReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
@@ -192,14 +184,10 @@ function deregisterOperator(address operator, uint32[] memory operatorSetIds) ex
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::Uint<32>>,
             );
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = deregisterOperatorReturn;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "deregisterOperator(address,uint32[])";
             const SELECTOR: [u8; 4] = [157u8, 142u8, 12u8, 35u8];
             #[inline]
@@ -224,17 +212,17 @@ function deregisterOperator(address operator, uint32[] memory operatorSetIds) ex
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `registerOperator(address,uint32[],bytes)` and selector `0xadcf73f7`.
-```solidity
-function registerOperator(address operator, uint32[] memory operatorSetIds, bytes memory data) external;
-```*/
+    ```solidity
+    function registerOperator(address operator, uint32[] memory operatorSetIds, bytes memory data) external;
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct registerOperatorCall {
@@ -269,9 +257,7 @@ function registerOperator(address operator, uint32[] memory operatorSetIds, byte
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -280,16 +266,14 @@ function registerOperator(address operator, uint32[] memory operatorSetIds, byte
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<registerOperatorCall>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<registerOperatorCall> for UnderlyingRustTuple<'_> {
                 fn from(value: registerOperatorCall) -> Self {
                     (value.operator, value.operatorSetIds, value.data)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for registerOperatorCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for registerOperatorCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {
                         operator: tuple.0,
@@ -306,9 +290,7 @@ function registerOperator(address operator, uint32[] memory operatorSetIds, byte
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -317,16 +299,14 @@ function registerOperator(address operator, uint32[] memory operatorSetIds, byte
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<registerOperatorReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<registerOperatorReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: registerOperatorReturn) -> Self {
                     ()
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for registerOperatorReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for registerOperatorReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
@@ -339,14 +319,10 @@ function registerOperator(address operator, uint32[] memory operatorSetIds, byte
                 alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::Uint<32>>,
                 alloy::sol_types::sol_data::Bytes,
             );
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = registerOperatorReturn;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "registerOperator(address,uint32[],bytes)";
             const SELECTOR: [u8; 4] = [173u8, 207u8, 115u8, 247u8];
             #[inline]
@@ -374,10 +350,10 @@ function registerOperator(address operator, uint32[] memory operatorSetIds, byte
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
@@ -394,10 +370,8 @@ function registerOperator(address operator, uint32[] memory operatorSetIds, byte
         /// No guarantees are made about the order of the selectors.
         ///
         /// Prefer using `SolInterface` methods instead.
-        pub const SELECTORS: &'static [[u8; 4usize]] = &[
-            [157u8, 142u8, 12u8, 35u8],
-            [173u8, 207u8, 115u8, 247u8],
-        ];
+        pub const SELECTORS: &'static [[u8; 4usize]] =
+            &[[157u8, 142u8, 12u8, 35u8], [173u8, 207u8, 115u8, 247u8]];
     }
     #[automatically_derived]
     impl alloy_sol_types::SolInterface for AVSRegistrarCalls {
@@ -433,17 +407,17 @@ function registerOperator(address operator, uint32[] memory operatorSetIds, byte
             static DECODE_SHIMS: &[fn(
                 &[u8],
                 bool,
-            ) -> alloy_sol_types::Result<AVSRegistrarCalls>] = &[
+            )
+                -> alloy_sol_types::Result<AVSRegistrarCalls>] = &[
                 {
                     fn deregisterOperator(
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<AVSRegistrarCalls> {
                         <deregisterOperatorCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(AVSRegistrarCalls::deregisterOperator)
+                            data, validate,
+                        )
+                        .map(AVSRegistrarCalls::deregisterOperator)
                     }
                     deregisterOperator
                 },
@@ -453,21 +427,18 @@ function registerOperator(address operator, uint32[] memory operatorSetIds, byte
                         validate: bool,
                     ) -> alloy_sol_types::Result<AVSRegistrarCalls> {
                         <registerOperatorCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(AVSRegistrarCalls::registerOperator)
+                            data, validate,
+                        )
+                        .map(AVSRegistrarCalls::registerOperator)
                     }
                     registerOperator
                 },
             ];
             let Ok(idx) = Self::SELECTORS.binary_search(&selector) else {
-                return Err(
-                    alloy_sol_types::Error::unknown_selector(
-                        <Self as alloy_sol_types::SolInterface>::NAME,
-                        selector,
-                    ),
-                );
+                return Err(alloy_sol_types::Error::unknown_selector(
+                    <Self as alloy_sol_types::SolInterface>::NAME,
+                    selector,
+                ));
             };
             (unsafe { DECODE_SHIMS.get_unchecked(idx) })(data, validate)
         }
@@ -475,14 +446,10 @@ function registerOperator(address operator, uint32[] memory operatorSetIds, byte
         fn abi_encoded_size(&self) -> usize {
             match self {
                 Self::deregisterOperator(inner) => {
-                    <deregisterOperatorCall as alloy_sol_types::SolCall>::abi_encoded_size(
-                        inner,
-                    )
+                    <deregisterOperatorCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
                 }
                 Self::registerOperator(inner) => {
-                    <registerOperatorCall as alloy_sol_types::SolCall>::abi_encoded_size(
-                        inner,
-                    )
+                    <registerOperatorCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
                 }
             }
         }
@@ -490,16 +457,10 @@ function registerOperator(address operator, uint32[] memory operatorSetIds, byte
         fn abi_encode_raw(&self, out: &mut alloy_sol_types::private::Vec<u8>) {
             match self {
                 Self::deregisterOperator(inner) => {
-                    <deregisterOperatorCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <deregisterOperatorCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
                 }
                 Self::registerOperator(inner) => {
-                    <registerOperatorCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <registerOperatorCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
                 }
             }
         }
@@ -507,7 +468,7 @@ function registerOperator(address operator, uint32[] memory operatorSetIds, byte
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`AVSRegistrar`](self) contract instance.
 
-See the [wrapper's documentation](`AVSRegistrarInstance`) for more details.*/
+    See the [wrapper's documentation](`AVSRegistrarInstance`) for more details.*/
     #[inline]
     pub const fn new<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -521,9 +482,9 @@ See the [wrapper's documentation](`AVSRegistrarInstance`) for more details.*/
     }
     /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+    Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+    For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
     #[inline]
     pub fn deploy<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -531,35 +492,36 @@ For more fine-grained control over the deployment process, use [`deploy_builder`
         N: alloy_contract::private::Network,
     >(
         provider: P,
-    ) -> impl ::core::future::Future<
-        Output = alloy_contract::Result<AVSRegistrarInstance<T, P, N>>,
-    > {
+    ) -> impl ::core::future::Future<Output = alloy_contract::Result<AVSRegistrarInstance<T, P, N>>>
+    {
         AVSRegistrarInstance::<T, P, N>::deploy(provider)
     }
     /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+    and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+    This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+    the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     #[inline]
     pub fn deploy_builder<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
         P: alloy_contract::private::Provider<T, N>,
         N: alloy_contract::private::Network,
-    >(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
+    >(
+        provider: P,
+    ) -> alloy_contract::RawCallBuilder<T, P, N> {
         AVSRegistrarInstance::<T, P, N>::deploy_builder(provider)
     }
     /**A [`AVSRegistrar`](self) instance.
 
-Contains type-safe methods for interacting with an on-chain instance of the
-[`AVSRegistrar`](self) contract located at a given `address`, using a given
-provider `P`.
+    Contains type-safe methods for interacting with an on-chain instance of the
+    [`AVSRegistrar`](self) contract located at a given `address`, using a given
+    provider `P`.
 
-If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
-documentation on how to provide it), the `deploy` and `deploy_builder` methods can
-be used to deploy a new instance of the contract.
+    If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
+    documentation on how to provide it), the `deploy` and `deploy_builder` methods can
+    be used to deploy a new instance of the contract.
 
-See the [module-level documentation](self) for all the available methods.*/
+    See the [module-level documentation](self) for all the available methods.*/
     #[derive(Clone)]
     pub struct AVSRegistrarInstance<T, P, N = alloy_contract::private::Ethereum> {
         address: alloy_sol_types::private::Address,
@@ -570,24 +532,24 @@ See the [module-level documentation](self) for all the available methods.*/
     impl<T, P, N> ::core::fmt::Debug for AVSRegistrarInstance<T, P, N> {
         #[inline]
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-            f.debug_tuple("AVSRegistrarInstance").field(&self.address).finish()
+            f.debug_tuple("AVSRegistrarInstance")
+                .field(&self.address)
+                .finish()
         }
     }
     /// Instantiation and getters/setters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > AVSRegistrarInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > AVSRegistrarInstance<T, P, N>
+    {
         /**Creates a new wrapper around an on-chain [`AVSRegistrar`](self) contract instance.
 
-See the [wrapper's documentation](`AVSRegistrarInstance`) for more details.*/
+        See the [wrapper's documentation](`AVSRegistrarInstance`) for more details.*/
         #[inline]
-        pub const fn new(
-            address: alloy_sol_types::private::Address,
-            provider: P,
-        ) -> Self {
+        pub const fn new(address: alloy_sol_types::private::Address, provider: P) -> Self {
             Self {
                 address,
                 provider,
@@ -596,22 +558,20 @@ See the [wrapper's documentation](`AVSRegistrarInstance`) for more details.*/
         }
         /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+        Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+        For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
         #[inline]
-        pub async fn deploy(
-            provider: P,
-        ) -> alloy_contract::Result<AVSRegistrarInstance<T, P, N>> {
+        pub async fn deploy(provider: P) -> alloy_contract::Result<AVSRegistrarInstance<T, P, N>> {
             let call_builder = Self::deploy_builder(provider);
             let contract_address = call_builder.deploy().await?;
             Ok(Self::new(contract_address, call_builder.provider))
         }
         /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+        and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+        This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+        the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         #[inline]
         pub fn deploy_builder(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
             alloy_contract::RawCallBuilder::new_raw_deploy(
@@ -654,10 +614,11 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     /// Function calls.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > AVSRegistrarInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > AVSRegistrarInstance<T, P, N>
+    {
         /// Creates a new call builder using this contract instance's provider and address.
         ///
         /// Note that the call can be any function call, not just those defined in this
@@ -674,12 +635,10 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
             operator: alloy::sol_types::private::Address,
             operatorSetIds: alloy::sol_types::private::Vec<u32>,
         ) -> alloy_contract::SolCallBuilder<T, &P, deregisterOperatorCall, N> {
-            self.call_builder(
-                &deregisterOperatorCall {
-                    operator,
-                    operatorSetIds,
-                },
-            )
+            self.call_builder(&deregisterOperatorCall {
+                operator,
+                operatorSetIds,
+            })
         }
         ///Creates a new call builder for the [`registerOperator`] function.
         pub fn registerOperator(
@@ -688,22 +647,21 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
             operatorSetIds: alloy::sol_types::private::Vec<u32>,
             data: alloy::sol_types::private::Bytes,
         ) -> alloy_contract::SolCallBuilder<T, &P, registerOperatorCall, N> {
-            self.call_builder(
-                &registerOperatorCall {
-                    operator,
-                    operatorSetIds,
-                    data,
-                },
-            )
+            self.call_builder(&registerOperatorCall {
+                operator,
+                operatorSetIds,
+                data,
+            })
         }
     }
     /// Event filters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > AVSRegistrarInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > AVSRegistrarInstance<T, P, N>
+    {
         /// Creates a new event filter using this contract instance's provider and address.
         ///
         /// Note that the type can be any event, not just those defined in this contract.

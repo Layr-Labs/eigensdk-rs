@@ -149,9 +149,9 @@ pub mod IAllocationManagerErrors {
         b"",
     );
     /**Custom error with signature `AlreadyMemberOfSet()` and selector `0xd8d8dc4e`.
-```solidity
-error AlreadyMemberOfSet();
-```*/
+    ```solidity
+    error AlreadyMemberOfSet();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct AlreadyMemberOfSet {}
@@ -169,9 +169,7 @@ error AlreadyMemberOfSet();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -195,9 +193,7 @@ error AlreadyMemberOfSet();
         #[automatically_derived]
         impl alloy_sol_types::SolError for AlreadyMemberOfSet {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "AlreadyMemberOfSet()";
             const SELECTOR: [u8; 4] = [216u8, 216u8, 220u8, 78u8];
             #[inline]
@@ -213,9 +209,9 @@ error AlreadyMemberOfSet();
         }
     };
     /**Custom error with signature `InputArrayLengthMismatch()` and selector `0x43714afd`.
-```solidity
-error InputArrayLengthMismatch();
-```*/
+    ```solidity
+    error InputArrayLengthMismatch();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct InputArrayLengthMismatch {}
@@ -233,9 +229,7 @@ error InputArrayLengthMismatch();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -244,16 +238,14 @@ error InputArrayLengthMismatch();
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<InputArrayLengthMismatch>
-        for UnderlyingRustTuple<'_> {
+        impl ::core::convert::From<InputArrayLengthMismatch> for UnderlyingRustTuple<'_> {
             fn from(value: InputArrayLengthMismatch) -> Self {
                 ()
             }
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<UnderlyingRustTuple<'_>>
-        for InputArrayLengthMismatch {
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for InputArrayLengthMismatch {
             fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                 Self {}
             }
@@ -261,9 +253,7 @@ error InputArrayLengthMismatch();
         #[automatically_derived]
         impl alloy_sol_types::SolError for InputArrayLengthMismatch {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "InputArrayLengthMismatch()";
             const SELECTOR: [u8; 4] = [67u8, 113u8, 74u8, 253u8];
             #[inline]
@@ -279,9 +269,9 @@ error InputArrayLengthMismatch();
         }
     };
     /**Custom error with signature `InsufficientMagnitude()` and selector `0x6c9be0bf`.
-```solidity
-error InsufficientMagnitude();
-```*/
+    ```solidity
+    error InsufficientMagnitude();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct InsufficientMagnitude {}
@@ -299,9 +289,7 @@ error InsufficientMagnitude();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -325,9 +313,7 @@ error InsufficientMagnitude();
         #[automatically_derived]
         impl alloy_sol_types::SolError for InsufficientMagnitude {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "InsufficientMagnitude()";
             const SELECTOR: [u8; 4] = [108u8, 155u8, 224u8, 191u8];
             #[inline]
@@ -343,9 +329,9 @@ error InsufficientMagnitude();
         }
     };
     /**Custom error with signature `InvalidBlockNumber()` and selector `0x4e47846c`.
-```solidity
-error InvalidBlockNumber();
-```*/
+    ```solidity
+    error InvalidBlockNumber();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct InvalidBlockNumber {}
@@ -363,9 +349,7 @@ error InvalidBlockNumber();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -389,9 +373,7 @@ error InvalidBlockNumber();
         #[automatically_derived]
         impl alloy_sol_types::SolError for InvalidBlockNumber {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "InvalidBlockNumber()";
             const SELECTOR: [u8; 4] = [78u8, 71u8, 132u8, 108u8];
             #[inline]
@@ -407,9 +389,9 @@ error InvalidBlockNumber();
         }
     };
     /**Custom error with signature `InvalidCaller()` and selector `0x48f5c3ed`.
-```solidity
-error InvalidCaller();
-```*/
+    ```solidity
+    error InvalidCaller();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct InvalidCaller {}
@@ -427,9 +409,7 @@ error InvalidCaller();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -453,9 +433,7 @@ error InvalidCaller();
         #[automatically_derived]
         impl alloy_sol_types::SolError for InvalidCaller {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "InvalidCaller()";
             const SELECTOR: [u8; 4] = [72u8, 245u8, 195u8, 237u8];
             #[inline]
@@ -471,9 +449,9 @@ error InvalidCaller();
         }
     };
     /**Custom error with signature `InvalidOperator()` and selector `0xccea9e6f`.
-```solidity
-error InvalidOperator();
-```*/
+    ```solidity
+    error InvalidOperator();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct InvalidOperator {}
@@ -491,9 +469,7 @@ error InvalidOperator();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -517,9 +493,7 @@ error InvalidOperator();
         #[automatically_derived]
         impl alloy_sol_types::SolError for InvalidOperator {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "InvalidOperator()";
             const SELECTOR: [u8; 4] = [204u8, 234u8, 158u8, 111u8];
             #[inline]
@@ -535,9 +509,9 @@ error InvalidOperator();
         }
     };
     /**Custom error with signature `InvalidOperatorSet()` and selector `0x7ec5c154`.
-```solidity
-error InvalidOperatorSet();
-```*/
+    ```solidity
+    error InvalidOperatorSet();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct InvalidOperatorSet {}
@@ -555,9 +529,7 @@ error InvalidOperatorSet();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -581,9 +553,7 @@ error InvalidOperatorSet();
         #[automatically_derived]
         impl alloy_sol_types::SolError for InvalidOperatorSet {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "InvalidOperatorSet()";
             const SELECTOR: [u8; 4] = [126u8, 197u8, 193u8, 84u8];
             #[inline]
@@ -599,9 +569,9 @@ error InvalidOperatorSet();
         }
     };
     /**Custom error with signature `InvalidStrategy()` and selector `0x4e236e9a`.
-```solidity
-error InvalidStrategy();
-```*/
+    ```solidity
+    error InvalidStrategy();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct InvalidStrategy {}
@@ -619,9 +589,7 @@ error InvalidStrategy();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -645,9 +613,7 @@ error InvalidStrategy();
         #[automatically_derived]
         impl alloy_sol_types::SolError for InvalidStrategy {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "InvalidStrategy()";
             const SELECTOR: [u8; 4] = [78u8, 35u8, 110u8, 154u8];
             #[inline]
@@ -663,9 +629,9 @@ error InvalidStrategy();
         }
     };
     /**Custom error with signature `InvalidWadToSlash()` and selector `0x13536031`.
-```solidity
-error InvalidWadToSlash();
-```*/
+    ```solidity
+    error InvalidWadToSlash();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct InvalidWadToSlash {}
@@ -683,9 +649,7 @@ error InvalidWadToSlash();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -709,9 +673,7 @@ error InvalidWadToSlash();
         #[automatically_derived]
         impl alloy_sol_types::SolError for InvalidWadToSlash {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "InvalidWadToSlash()";
             const SELECTOR: [u8; 4] = [19u8, 83u8, 96u8, 49u8];
             #[inline]
@@ -727,9 +689,9 @@ error InvalidWadToSlash();
         }
     };
     /**Custom error with signature `ModificationAlreadyPending()` and selector `0xd8fcbe30`.
-```solidity
-error ModificationAlreadyPending();
-```*/
+    ```solidity
+    error ModificationAlreadyPending();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct ModificationAlreadyPending {}
@@ -747,9 +709,7 @@ error ModificationAlreadyPending();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -758,16 +718,14 @@ error ModificationAlreadyPending();
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<ModificationAlreadyPending>
-        for UnderlyingRustTuple<'_> {
+        impl ::core::convert::From<ModificationAlreadyPending> for UnderlyingRustTuple<'_> {
             fn from(value: ModificationAlreadyPending) -> Self {
                 ()
             }
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<UnderlyingRustTuple<'_>>
-        for ModificationAlreadyPending {
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for ModificationAlreadyPending {
             fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                 Self {}
             }
@@ -775,9 +733,7 @@ error ModificationAlreadyPending();
         #[automatically_derived]
         impl alloy_sol_types::SolError for ModificationAlreadyPending {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "ModificationAlreadyPending()";
             const SELECTOR: [u8; 4] = [216u8, 252u8, 190u8, 48u8];
             #[inline]
@@ -793,9 +749,9 @@ error ModificationAlreadyPending();
         }
     };
     /**Custom error with signature `NotMemberOfSet()` and selector `0x25131d4f`.
-```solidity
-error NotMemberOfSet();
-```*/
+    ```solidity
+    error NotMemberOfSet();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct NotMemberOfSet {}
@@ -813,9 +769,7 @@ error NotMemberOfSet();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -839,9 +793,7 @@ error NotMemberOfSet();
         #[automatically_derived]
         impl alloy_sol_types::SolError for NotMemberOfSet {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "NotMemberOfSet()";
             const SELECTOR: [u8; 4] = [37u8, 19u8, 29u8, 79u8];
             #[inline]
@@ -857,9 +809,9 @@ error NotMemberOfSet();
         }
     };
     /**Custom error with signature `OnlyDelegationManager()` and selector `0xf739589b`.
-```solidity
-error OnlyDelegationManager();
-```*/
+    ```solidity
+    error OnlyDelegationManager();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct OnlyDelegationManager {}
@@ -877,9 +829,7 @@ error OnlyDelegationManager();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -903,9 +853,7 @@ error OnlyDelegationManager();
         #[automatically_derived]
         impl alloy_sol_types::SolError for OnlyDelegationManager {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "OnlyDelegationManager()";
             const SELECTOR: [u8; 4] = [247u8, 57u8, 88u8, 155u8];
             #[inline]
@@ -921,9 +869,9 @@ error OnlyDelegationManager();
         }
     };
     /**Custom error with signature `OperatorNotRegistered()` and selector `0x25ec6c1f`.
-```solidity
-error OperatorNotRegistered();
-```*/
+    ```solidity
+    error OperatorNotRegistered();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct OperatorNotRegistered {}
@@ -941,9 +889,7 @@ error OperatorNotRegistered();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -967,9 +913,7 @@ error OperatorNotRegistered();
         #[automatically_derived]
         impl alloy_sol_types::SolError for OperatorNotRegistered {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "OperatorNotRegistered()";
             const SELECTOR: [u8; 4] = [37u8, 236u8, 108u8, 31u8];
             #[inline]
@@ -985,9 +929,9 @@ error OperatorNotRegistered();
         }
     };
     /**Custom error with signature `OperatorNotSlashable()` and selector `0xebbff497`.
-```solidity
-error OperatorNotSlashable();
-```*/
+    ```solidity
+    error OperatorNotSlashable();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct OperatorNotSlashable {}
@@ -1005,9 +949,7 @@ error OperatorNotSlashable();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1031,9 +973,7 @@ error OperatorNotSlashable();
         #[automatically_derived]
         impl alloy_sol_types::SolError for OperatorNotSlashable {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "OperatorNotSlashable()";
             const SELECTOR: [u8; 4] = [235u8, 191u8, 244u8, 151u8];
             #[inline]
@@ -1049,9 +989,9 @@ error OperatorNotSlashable();
         }
     };
     /**Custom error with signature `SameMagnitude()` and selector `0x8c0c2f26`.
-```solidity
-error SameMagnitude();
-```*/
+    ```solidity
+    error SameMagnitude();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct SameMagnitude {}
@@ -1069,9 +1009,7 @@ error SameMagnitude();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1095,9 +1033,7 @@ error SameMagnitude();
         #[automatically_derived]
         impl alloy_sol_types::SolError for SameMagnitude {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "SameMagnitude()";
             const SELECTOR: [u8; 4] = [140u8, 12u8, 47u8, 38u8];
             #[inline]
@@ -1113,9 +1049,9 @@ error SameMagnitude();
         }
     };
     /**Custom error with signature `StrategyAlreadyInOperatorSet()` and selector `0x585cfb2f`.
-```solidity
-error StrategyAlreadyInOperatorSet();
-```*/
+    ```solidity
+    error StrategyAlreadyInOperatorSet();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct StrategyAlreadyInOperatorSet {}
@@ -1133,9 +1069,7 @@ error StrategyAlreadyInOperatorSet();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1144,16 +1078,14 @@ error StrategyAlreadyInOperatorSet();
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<StrategyAlreadyInOperatorSet>
-        for UnderlyingRustTuple<'_> {
+        impl ::core::convert::From<StrategyAlreadyInOperatorSet> for UnderlyingRustTuple<'_> {
             fn from(value: StrategyAlreadyInOperatorSet) -> Self {
                 ()
             }
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<UnderlyingRustTuple<'_>>
-        for StrategyAlreadyInOperatorSet {
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for StrategyAlreadyInOperatorSet {
             fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                 Self {}
             }
@@ -1161,9 +1093,7 @@ error StrategyAlreadyInOperatorSet();
         #[automatically_derived]
         impl alloy_sol_types::SolError for StrategyAlreadyInOperatorSet {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "StrategyAlreadyInOperatorSet()";
             const SELECTOR: [u8; 4] = [88u8, 92u8, 251u8, 47u8];
             #[inline]
@@ -1179,9 +1109,9 @@ error StrategyAlreadyInOperatorSet();
         }
     };
     /**Custom error with signature `StrategyNotInOperatorSet()` and selector `0x6378684e`.
-```solidity
-error StrategyNotInOperatorSet();
-```*/
+    ```solidity
+    error StrategyNotInOperatorSet();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct StrategyNotInOperatorSet {}
@@ -1199,9 +1129,7 @@ error StrategyNotInOperatorSet();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1210,16 +1138,14 @@ error StrategyNotInOperatorSet();
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<StrategyNotInOperatorSet>
-        for UnderlyingRustTuple<'_> {
+        impl ::core::convert::From<StrategyNotInOperatorSet> for UnderlyingRustTuple<'_> {
             fn from(value: StrategyNotInOperatorSet) -> Self {
                 ()
             }
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<UnderlyingRustTuple<'_>>
-        for StrategyNotInOperatorSet {
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for StrategyNotInOperatorSet {
             fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                 Self {}
             }
@@ -1227,9 +1153,7 @@ error StrategyNotInOperatorSet();
         #[automatically_derived]
         impl alloy_sol_types::SolError for StrategyNotInOperatorSet {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "StrategyNotInOperatorSet()";
             const SELECTOR: [u8; 4] = [99u8, 120u8, 104u8, 78u8];
             #[inline]
@@ -1245,9 +1169,9 @@ error StrategyNotInOperatorSet();
         }
     };
     /**Custom error with signature `UninitializedAllocationDelay()` and selector `0xfa55fc81`.
-```solidity
-error UninitializedAllocationDelay();
-```*/
+    ```solidity
+    error UninitializedAllocationDelay();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct UninitializedAllocationDelay {}
@@ -1265,9 +1189,7 @@ error UninitializedAllocationDelay();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1276,16 +1198,14 @@ error UninitializedAllocationDelay();
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<UninitializedAllocationDelay>
-        for UnderlyingRustTuple<'_> {
+        impl ::core::convert::From<UninitializedAllocationDelay> for UnderlyingRustTuple<'_> {
             fn from(value: UninitializedAllocationDelay) -> Self {
                 ()
             }
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<UnderlyingRustTuple<'_>>
-        for UninitializedAllocationDelay {
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for UninitializedAllocationDelay {
             fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                 Self {}
             }
@@ -1293,9 +1213,7 @@ error UninitializedAllocationDelay();
         #[automatically_derived]
         impl alloy_sol_types::SolError for UninitializedAllocationDelay {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "UninitializedAllocationDelay()";
             const SELECTOR: [u8; 4] = [250u8, 85u8, 252u8, 129u8];
             #[inline]
@@ -1380,9 +1298,7 @@ error UninitializedAllocationDelay();
                 Self::InvalidBlockNumber(_) => {
                     <InvalidBlockNumber as alloy_sol_types::SolError>::SELECTOR
                 }
-                Self::InvalidCaller(_) => {
-                    <InvalidCaller as alloy_sol_types::SolError>::SELECTOR
-                }
+                Self::InvalidCaller(_) => <InvalidCaller as alloy_sol_types::SolError>::SELECTOR,
                 Self::InvalidOperator(_) => {
                     <InvalidOperator as alloy_sol_types::SolError>::SELECTOR
                 }
@@ -1398,9 +1314,7 @@ error UninitializedAllocationDelay();
                 Self::ModificationAlreadyPending(_) => {
                     <ModificationAlreadyPending as alloy_sol_types::SolError>::SELECTOR
                 }
-                Self::NotMemberOfSet(_) => {
-                    <NotMemberOfSet as alloy_sol_types::SolError>::SELECTOR
-                }
+                Self::NotMemberOfSet(_) => <NotMemberOfSet as alloy_sol_types::SolError>::SELECTOR,
                 Self::OnlyDelegationManager(_) => {
                     <OnlyDelegationManager as alloy_sol_types::SolError>::SELECTOR
                 }
@@ -1410,9 +1324,7 @@ error UninitializedAllocationDelay();
                 Self::OperatorNotSlashable(_) => {
                     <OperatorNotSlashable as alloy_sol_types::SolError>::SELECTOR
                 }
-                Self::SameMagnitude(_) => {
-                    <SameMagnitude as alloy_sol_types::SolError>::SELECTOR
-                }
+                Self::SameMagnitude(_) => <SameMagnitude as alloy_sol_types::SolError>::SELECTOR,
                 Self::StrategyAlreadyInOperatorSet(_) => {
                     <StrategyAlreadyInOperatorSet as alloy_sol_types::SolError>::SELECTOR
                 }
@@ -1442,17 +1354,19 @@ error UninitializedAllocationDelay();
             static DECODE_SHIMS: &[fn(
                 &[u8],
                 bool,
-            ) -> alloy_sol_types::Result<IAllocationManagerErrorsErrors>] = &[
+            ) -> alloy_sol_types::Result<
+                IAllocationManagerErrorsErrors,
+            >] = &[
                 {
                     fn InvalidWadToSlash(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IAllocationManagerErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IAllocationManagerErrorsErrors>
+                    {
                         <InvalidWadToSlash as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IAllocationManagerErrorsErrors::InvalidWadToSlash)
+                            data, validate,
+                        )
+                        .map(IAllocationManagerErrorsErrors::InvalidWadToSlash)
                     }
                     InvalidWadToSlash
                 },
@@ -1460,12 +1374,12 @@ error UninitializedAllocationDelay();
                     fn NotMemberOfSet(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IAllocationManagerErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IAllocationManagerErrorsErrors>
+                    {
                         <NotMemberOfSet as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IAllocationManagerErrorsErrors::NotMemberOfSet)
+                            data, validate,
+                        )
+                        .map(IAllocationManagerErrorsErrors::NotMemberOfSet)
                     }
                     NotMemberOfSet
                 },
@@ -1473,12 +1387,12 @@ error UninitializedAllocationDelay();
                     fn OperatorNotRegistered(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IAllocationManagerErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IAllocationManagerErrorsErrors>
+                    {
                         <OperatorNotRegistered as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IAllocationManagerErrorsErrors::OperatorNotRegistered)
+                            data, validate,
+                        )
+                        .map(IAllocationManagerErrorsErrors::OperatorNotRegistered)
                     }
                     OperatorNotRegistered
                 },
@@ -1486,14 +1400,12 @@ error UninitializedAllocationDelay();
                     fn InputArrayLengthMismatch(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IAllocationManagerErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IAllocationManagerErrorsErrors>
+                    {
                         <InputArrayLengthMismatch as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(
-                                IAllocationManagerErrorsErrors::InputArrayLengthMismatch,
-                            )
+                            data, validate,
+                        )
+                        .map(IAllocationManagerErrorsErrors::InputArrayLengthMismatch)
                     }
                     InputArrayLengthMismatch
                 },
@@ -1501,11 +1413,9 @@ error UninitializedAllocationDelay();
                     fn InvalidCaller(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IAllocationManagerErrorsErrors> {
-                        <InvalidCaller as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
+                    ) -> alloy_sol_types::Result<IAllocationManagerErrorsErrors>
+                    {
+                        <InvalidCaller as alloy_sol_types::SolError>::abi_decode_raw(data, validate)
                             .map(IAllocationManagerErrorsErrors::InvalidCaller)
                     }
                     InvalidCaller
@@ -1514,12 +1424,12 @@ error UninitializedAllocationDelay();
                     fn InvalidStrategy(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IAllocationManagerErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IAllocationManagerErrorsErrors>
+                    {
                         <InvalidStrategy as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IAllocationManagerErrorsErrors::InvalidStrategy)
+                            data, validate,
+                        )
+                        .map(IAllocationManagerErrorsErrors::InvalidStrategy)
                     }
                     InvalidStrategy
                 },
@@ -1527,12 +1437,12 @@ error UninitializedAllocationDelay();
                     fn InvalidBlockNumber(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IAllocationManagerErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IAllocationManagerErrorsErrors>
+                    {
                         <InvalidBlockNumber as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IAllocationManagerErrorsErrors::InvalidBlockNumber)
+                            data, validate,
+                        )
+                        .map(IAllocationManagerErrorsErrors::InvalidBlockNumber)
                     }
                     InvalidBlockNumber
                 },
@@ -1540,14 +1450,12 @@ error UninitializedAllocationDelay();
                     fn StrategyAlreadyInOperatorSet(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IAllocationManagerErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IAllocationManagerErrorsErrors>
+                    {
                         <StrategyAlreadyInOperatorSet as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(
-                                IAllocationManagerErrorsErrors::StrategyAlreadyInOperatorSet,
-                            )
+                            data, validate,
+                        )
+                        .map(IAllocationManagerErrorsErrors::StrategyAlreadyInOperatorSet)
                     }
                     StrategyAlreadyInOperatorSet
                 },
@@ -1555,14 +1463,12 @@ error UninitializedAllocationDelay();
                     fn StrategyNotInOperatorSet(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IAllocationManagerErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IAllocationManagerErrorsErrors>
+                    {
                         <StrategyNotInOperatorSet as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(
-                                IAllocationManagerErrorsErrors::StrategyNotInOperatorSet,
-                            )
+                            data, validate,
+                        )
+                        .map(IAllocationManagerErrorsErrors::StrategyNotInOperatorSet)
                     }
                     StrategyNotInOperatorSet
                 },
@@ -1570,12 +1476,12 @@ error UninitializedAllocationDelay();
                     fn InsufficientMagnitude(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IAllocationManagerErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IAllocationManagerErrorsErrors>
+                    {
                         <InsufficientMagnitude as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IAllocationManagerErrorsErrors::InsufficientMagnitude)
+                            data, validate,
+                        )
+                        .map(IAllocationManagerErrorsErrors::InsufficientMagnitude)
                     }
                     InsufficientMagnitude
                 },
@@ -1583,12 +1489,12 @@ error UninitializedAllocationDelay();
                     fn InvalidOperatorSet(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IAllocationManagerErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IAllocationManagerErrorsErrors>
+                    {
                         <InvalidOperatorSet as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IAllocationManagerErrorsErrors::InvalidOperatorSet)
+                            data, validate,
+                        )
+                        .map(IAllocationManagerErrorsErrors::InvalidOperatorSet)
                     }
                     InvalidOperatorSet
                 },
@@ -1596,11 +1502,9 @@ error UninitializedAllocationDelay();
                     fn SameMagnitude(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IAllocationManagerErrorsErrors> {
-                        <SameMagnitude as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
+                    ) -> alloy_sol_types::Result<IAllocationManagerErrorsErrors>
+                    {
+                        <SameMagnitude as alloy_sol_types::SolError>::abi_decode_raw(data, validate)
                             .map(IAllocationManagerErrorsErrors::SameMagnitude)
                     }
                     SameMagnitude
@@ -1609,12 +1513,12 @@ error UninitializedAllocationDelay();
                     fn InvalidOperator(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IAllocationManagerErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IAllocationManagerErrorsErrors>
+                    {
                         <InvalidOperator as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IAllocationManagerErrorsErrors::InvalidOperator)
+                            data, validate,
+                        )
+                        .map(IAllocationManagerErrorsErrors::InvalidOperator)
                     }
                     InvalidOperator
                 },
@@ -1622,12 +1526,12 @@ error UninitializedAllocationDelay();
                     fn AlreadyMemberOfSet(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IAllocationManagerErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IAllocationManagerErrorsErrors>
+                    {
                         <AlreadyMemberOfSet as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IAllocationManagerErrorsErrors::AlreadyMemberOfSet)
+                            data, validate,
+                        )
+                        .map(IAllocationManagerErrorsErrors::AlreadyMemberOfSet)
                     }
                     AlreadyMemberOfSet
                 },
@@ -1635,14 +1539,12 @@ error UninitializedAllocationDelay();
                     fn ModificationAlreadyPending(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IAllocationManagerErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IAllocationManagerErrorsErrors>
+                    {
                         <ModificationAlreadyPending as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(
-                                IAllocationManagerErrorsErrors::ModificationAlreadyPending,
-                            )
+                            data, validate,
+                        )
+                        .map(IAllocationManagerErrorsErrors::ModificationAlreadyPending)
                     }
                     ModificationAlreadyPending
                 },
@@ -1650,12 +1552,12 @@ error UninitializedAllocationDelay();
                     fn OperatorNotSlashable(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IAllocationManagerErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IAllocationManagerErrorsErrors>
+                    {
                         <OperatorNotSlashable as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IAllocationManagerErrorsErrors::OperatorNotSlashable)
+                            data, validate,
+                        )
+                        .map(IAllocationManagerErrorsErrors::OperatorNotSlashable)
                     }
                     OperatorNotSlashable
                 },
@@ -1663,12 +1565,12 @@ error UninitializedAllocationDelay();
                     fn OnlyDelegationManager(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IAllocationManagerErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IAllocationManagerErrorsErrors>
+                    {
                         <OnlyDelegationManager as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IAllocationManagerErrorsErrors::OnlyDelegationManager)
+                            data, validate,
+                        )
+                        .map(IAllocationManagerErrorsErrors::OnlyDelegationManager)
                     }
                     OnlyDelegationManager
                 },
@@ -1676,25 +1578,21 @@ error UninitializedAllocationDelay();
                     fn UninitializedAllocationDelay(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IAllocationManagerErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IAllocationManagerErrorsErrors>
+                    {
                         <UninitializedAllocationDelay as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(
-                                IAllocationManagerErrorsErrors::UninitializedAllocationDelay,
-                            )
+                            data, validate,
+                        )
+                        .map(IAllocationManagerErrorsErrors::UninitializedAllocationDelay)
                     }
                     UninitializedAllocationDelay
                 },
             ];
             let Ok(idx) = Self::SELECTORS.binary_search(&selector) else {
-                return Err(
-                    alloy_sol_types::Error::unknown_selector(
-                        <Self as alloy_sol_types::SolInterface>::NAME,
-                        selector,
-                    ),
-                );
+                return Err(alloy_sol_types::Error::unknown_selector(
+                    <Self as alloy_sol_types::SolInterface>::NAME,
+                    selector,
+                ));
             };
             (unsafe { DECODE_SHIMS.get_unchecked(idx) })(data, validate)
         }
@@ -1702,47 +1600,31 @@ error UninitializedAllocationDelay();
         fn abi_encoded_size(&self) -> usize {
             match self {
                 Self::AlreadyMemberOfSet(inner) => {
-                    <AlreadyMemberOfSet as alloy_sol_types::SolError>::abi_encoded_size(
-                        inner,
-                    )
+                    <AlreadyMemberOfSet as alloy_sol_types::SolError>::abi_encoded_size(inner)
                 }
                 Self::InputArrayLengthMismatch(inner) => {
-                    <InputArrayLengthMismatch as alloy_sol_types::SolError>::abi_encoded_size(
-                        inner,
-                    )
+                    <InputArrayLengthMismatch as alloy_sol_types::SolError>::abi_encoded_size(inner)
                 }
                 Self::InsufficientMagnitude(inner) => {
-                    <InsufficientMagnitude as alloy_sol_types::SolError>::abi_encoded_size(
-                        inner,
-                    )
+                    <InsufficientMagnitude as alloy_sol_types::SolError>::abi_encoded_size(inner)
                 }
                 Self::InvalidBlockNumber(inner) => {
-                    <InvalidBlockNumber as alloy_sol_types::SolError>::abi_encoded_size(
-                        inner,
-                    )
+                    <InvalidBlockNumber as alloy_sol_types::SolError>::abi_encoded_size(inner)
                 }
                 Self::InvalidCaller(inner) => {
                     <InvalidCaller as alloy_sol_types::SolError>::abi_encoded_size(inner)
                 }
                 Self::InvalidOperator(inner) => {
-                    <InvalidOperator as alloy_sol_types::SolError>::abi_encoded_size(
-                        inner,
-                    )
+                    <InvalidOperator as alloy_sol_types::SolError>::abi_encoded_size(inner)
                 }
                 Self::InvalidOperatorSet(inner) => {
-                    <InvalidOperatorSet as alloy_sol_types::SolError>::abi_encoded_size(
-                        inner,
-                    )
+                    <InvalidOperatorSet as alloy_sol_types::SolError>::abi_encoded_size(inner)
                 }
                 Self::InvalidStrategy(inner) => {
-                    <InvalidStrategy as alloy_sol_types::SolError>::abi_encoded_size(
-                        inner,
-                    )
+                    <InvalidStrategy as alloy_sol_types::SolError>::abi_encoded_size(inner)
                 }
                 Self::InvalidWadToSlash(inner) => {
-                    <InvalidWadToSlash as alloy_sol_types::SolError>::abi_encoded_size(
-                        inner,
-                    )
+                    <InvalidWadToSlash as alloy_sol_types::SolError>::abi_encoded_size(inner)
                 }
                 Self::ModificationAlreadyPending(inner) => {
                     <ModificationAlreadyPending as alloy_sol_types::SolError>::abi_encoded_size(
@@ -1750,24 +1632,16 @@ error UninitializedAllocationDelay();
                     )
                 }
                 Self::NotMemberOfSet(inner) => {
-                    <NotMemberOfSet as alloy_sol_types::SolError>::abi_encoded_size(
-                        inner,
-                    )
+                    <NotMemberOfSet as alloy_sol_types::SolError>::abi_encoded_size(inner)
                 }
                 Self::OnlyDelegationManager(inner) => {
-                    <OnlyDelegationManager as alloy_sol_types::SolError>::abi_encoded_size(
-                        inner,
-                    )
+                    <OnlyDelegationManager as alloy_sol_types::SolError>::abi_encoded_size(inner)
                 }
                 Self::OperatorNotRegistered(inner) => {
-                    <OperatorNotRegistered as alloy_sol_types::SolError>::abi_encoded_size(
-                        inner,
-                    )
+                    <OperatorNotRegistered as alloy_sol_types::SolError>::abi_encoded_size(inner)
                 }
                 Self::OperatorNotSlashable(inner) => {
-                    <OperatorNotSlashable as alloy_sol_types::SolError>::abi_encoded_size(
-                        inner,
-                    )
+                    <OperatorNotSlashable as alloy_sol_types::SolError>::abi_encoded_size(inner)
                 }
                 Self::SameMagnitude(inner) => {
                     <SameMagnitude as alloy_sol_types::SolError>::abi_encoded_size(inner)
@@ -1778,9 +1652,7 @@ error UninitializedAllocationDelay();
                     )
                 }
                 Self::StrategyNotInOperatorSet(inner) => {
-                    <StrategyNotInOperatorSet as alloy_sol_types::SolError>::abi_encoded_size(
-                        inner,
-                    )
+                    <StrategyNotInOperatorSet as alloy_sol_types::SolError>::abi_encoded_size(inner)
                 }
                 Self::UninitializedAllocationDelay(inner) => {
                     <UninitializedAllocationDelay as alloy_sol_types::SolError>::abi_encoded_size(
@@ -1793,111 +1665,67 @@ error UninitializedAllocationDelay();
         fn abi_encode_raw(&self, out: &mut alloy_sol_types::private::Vec<u8>) {
             match self {
                 Self::AlreadyMemberOfSet(inner) => {
-                    <AlreadyMemberOfSet as alloy_sol_types::SolError>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <AlreadyMemberOfSet as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
                 }
                 Self::InputArrayLengthMismatch(inner) => {
                     <InputArrayLengthMismatch as alloy_sol_types::SolError>::abi_encode_raw(
-                        inner,
-                        out,
+                        inner, out,
                     )
                 }
                 Self::InsufficientMagnitude(inner) => {
-                    <InsufficientMagnitude as alloy_sol_types::SolError>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <InsufficientMagnitude as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
                 }
                 Self::InvalidBlockNumber(inner) => {
-                    <InvalidBlockNumber as alloy_sol_types::SolError>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <InvalidBlockNumber as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
                 }
                 Self::InvalidCaller(inner) => {
-                    <InvalidCaller as alloy_sol_types::SolError>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <InvalidCaller as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
                 }
                 Self::InvalidOperator(inner) => {
-                    <InvalidOperator as alloy_sol_types::SolError>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <InvalidOperator as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
                 }
                 Self::InvalidOperatorSet(inner) => {
-                    <InvalidOperatorSet as alloy_sol_types::SolError>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <InvalidOperatorSet as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
                 }
                 Self::InvalidStrategy(inner) => {
-                    <InvalidStrategy as alloy_sol_types::SolError>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <InvalidStrategy as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
                 }
                 Self::InvalidWadToSlash(inner) => {
-                    <InvalidWadToSlash as alloy_sol_types::SolError>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <InvalidWadToSlash as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
                 }
                 Self::ModificationAlreadyPending(inner) => {
                     <ModificationAlreadyPending as alloy_sol_types::SolError>::abi_encode_raw(
-                        inner,
-                        out,
+                        inner, out,
                     )
                 }
                 Self::NotMemberOfSet(inner) => {
-                    <NotMemberOfSet as alloy_sol_types::SolError>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <NotMemberOfSet as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
                 }
                 Self::OnlyDelegationManager(inner) => {
-                    <OnlyDelegationManager as alloy_sol_types::SolError>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <OnlyDelegationManager as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
                 }
                 Self::OperatorNotRegistered(inner) => {
-                    <OperatorNotRegistered as alloy_sol_types::SolError>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <OperatorNotRegistered as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
                 }
                 Self::OperatorNotSlashable(inner) => {
-                    <OperatorNotSlashable as alloy_sol_types::SolError>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <OperatorNotSlashable as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
                 }
                 Self::SameMagnitude(inner) => {
-                    <SameMagnitude as alloy_sol_types::SolError>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <SameMagnitude as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
                 }
                 Self::StrategyAlreadyInOperatorSet(inner) => {
                     <StrategyAlreadyInOperatorSet as alloy_sol_types::SolError>::abi_encode_raw(
-                        inner,
-                        out,
+                        inner, out,
                     )
                 }
                 Self::StrategyNotInOperatorSet(inner) => {
                     <StrategyNotInOperatorSet as alloy_sol_types::SolError>::abi_encode_raw(
-                        inner,
-                        out,
+                        inner, out,
                     )
                 }
                 Self::UninitializedAllocationDelay(inner) => {
                     <UninitializedAllocationDelay as alloy_sol_types::SolError>::abi_encode_raw(
-                        inner,
-                        out,
+                        inner, out,
                     )
                 }
             }
@@ -1906,7 +1734,7 @@ error UninitializedAllocationDelay();
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`IAllocationManagerErrors`](self) contract instance.
 
-See the [wrapper's documentation](`IAllocationManagerErrorsInstance`) for more details.*/
+    See the [wrapper's documentation](`IAllocationManagerErrorsInstance`) for more details.*/
     #[inline]
     pub const fn new<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -1920,9 +1748,9 @@ See the [wrapper's documentation](`IAllocationManagerErrorsInstance`) for more d
     }
     /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+    Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+    For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
     #[inline]
     pub fn deploy<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -1936,35 +1764,33 @@ For more fine-grained control over the deployment process, use [`deploy_builder`
         IAllocationManagerErrorsInstance::<T, P, N>::deploy(provider)
     }
     /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+    and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+    This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+    the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     #[inline]
     pub fn deploy_builder<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
         P: alloy_contract::private::Provider<T, N>,
         N: alloy_contract::private::Network,
-    >(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
+    >(
+        provider: P,
+    ) -> alloy_contract::RawCallBuilder<T, P, N> {
         IAllocationManagerErrorsInstance::<T, P, N>::deploy_builder(provider)
     }
     /**A [`IAllocationManagerErrors`](self) instance.
 
-Contains type-safe methods for interacting with an on-chain instance of the
-[`IAllocationManagerErrors`](self) contract located at a given `address`, using a given
-provider `P`.
+    Contains type-safe methods for interacting with an on-chain instance of the
+    [`IAllocationManagerErrors`](self) contract located at a given `address`, using a given
+    provider `P`.
 
-If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
-documentation on how to provide it), the `deploy` and `deploy_builder` methods can
-be used to deploy a new instance of the contract.
+    If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
+    documentation on how to provide it), the `deploy` and `deploy_builder` methods can
+    be used to deploy a new instance of the contract.
 
-See the [module-level documentation](self) for all the available methods.*/
+    See the [module-level documentation](self) for all the available methods.*/
     #[derive(Clone)]
-    pub struct IAllocationManagerErrorsInstance<
-        T,
-        P,
-        N = alloy_contract::private::Ethereum,
-    > {
+    pub struct IAllocationManagerErrorsInstance<T, P, N = alloy_contract::private::Ethereum> {
         address: alloy_sol_types::private::Address,
         provider: P,
         _network_transport: ::core::marker::PhantomData<(N, T)>,
@@ -1981,18 +1807,16 @@ See the [module-level documentation](self) for all the available methods.*/
     /// Instantiation and getters/setters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > IAllocationManagerErrorsInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > IAllocationManagerErrorsInstance<T, P, N>
+    {
         /**Creates a new wrapper around an on-chain [`IAllocationManagerErrors`](self) contract instance.
 
-See the [wrapper's documentation](`IAllocationManagerErrorsInstance`) for more details.*/
+        See the [wrapper's documentation](`IAllocationManagerErrorsInstance`) for more details.*/
         #[inline]
-        pub const fn new(
-            address: alloy_sol_types::private::Address,
-            provider: P,
-        ) -> Self {
+        pub const fn new(address: alloy_sol_types::private::Address, provider: P) -> Self {
             Self {
                 address,
                 provider,
@@ -2001,9 +1825,9 @@ See the [wrapper's documentation](`IAllocationManagerErrorsInstance`) for more d
         }
         /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+        Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+        For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
         #[inline]
         pub async fn deploy(
             provider: P,
@@ -2013,10 +1837,10 @@ For more fine-grained control over the deployment process, use [`deploy_builder`
             Ok(Self::new(contract_address, call_builder.provider))
         }
         /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+        and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+        This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+        the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         #[inline]
         pub fn deploy_builder(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
             alloy_contract::RawCallBuilder::new_raw_deploy(
@@ -2059,10 +1883,11 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     /// Function calls.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > IAllocationManagerErrorsInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > IAllocationManagerErrorsInstance<T, P, N>
+    {
         /// Creates a new call builder using this contract instance's provider and address.
         ///
         /// Note that the call can be any function call, not just those defined in this
@@ -2077,10 +1902,11 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     /// Event filters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > IAllocationManagerErrorsInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > IAllocationManagerErrorsInstance<T, P, N>
+    {
         /// Creates a new event filter using this contract instance's provider and address.
         ///
         /// Note that the type can be any event, not just those defined in this contract.
