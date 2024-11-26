@@ -1,6 +1,6 @@
 use crate::error::ElContractsError;
 use alloy::providers::Provider;
-use alloy_primitives::{Address, FixedBytes, U256};
+use alloy_primitives::{ruint::aliases::U256, Address, FixedBytes};
 use eigen_logging::logger::SharedLogger;
 use eigen_types::operator::Operator;
 use eigen_utils::{
@@ -395,6 +395,39 @@ impl ELChainReader {
         Ok(operator)
     }
 
+    pub async fn get_allocation_info(
+        &self,
+        operator_address: Address,
+        strategy_address: Address,
+    ) -> Result<Vec<AllocationInfo>, ElContractsError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_allocation_manager = AllocationManager::new(self.allocation_manager, provider);
+
+        let allocations = contract_allocation_manager
+            .getStrategyAllocations(operator_address, strategy_address)
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        let AllocationManager::getStrategyAllocationsReturn {
+            _0: operator_sets,
+            _1: allocation_info,
+        } = allocations;
+
+        let mut allocations_info = vec![];
+        for (i, operator_set) in operator_sets.iter().enumerate() {
+            allocations_info.push(AllocationInfo {
+                operator_set: operator_set.clone(),
+                current_magnitude: U256::from(allocation_info[i].currentMagnitude),
+                pending_diff: U256::from(allocation_info[i].pendingDiff),
+                effect_block: allocation_info[i].effectBlock,
+            });
+        }
+
+        Ok(allocations_info)
+    }
+
     pub async fn get_operator_shares(
         &self,
         operator_address: Address,
@@ -680,11 +713,19 @@ impl ELChainReader {
     }
 }
 
+// TODO: move to types.rs?
 pub struct OperatorSetStakes {
     pub operator_set: OperatorSet,
     pub strategies: Vec<Address>,
     pub operators: Vec<Address>,
     pub slashable_stakes: Vec<Vec<U256>>,
+}
+
+pub struct AllocationInfo {
+    pub current_magnitude: U256,
+    pub pending_diff: U256,
+    pub effect_block: u32,
+    pub operator_set: OperatorSet,
 }
 
 #[cfg(test)]
