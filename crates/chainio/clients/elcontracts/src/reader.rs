@@ -1,4 +1,5 @@
 use crate::error::ElContractsError;
+use alloy::providers::Provider;
 use alloy_primitives::{Address, FixedBytes, U256};
 use eigen_logging::logger::SharedLogger;
 use eigen_types::operator::Operator;
@@ -453,6 +454,24 @@ impl ELChainReader {
 
         let AllocationManager::getMembersReturn { _0: addresses } = operators;
         Ok(addresses)
+    }
+
+    // Returns the strategies the operatorSets take into account, their
+    // operators, and the minimum amount of shares that are slashable by the operatorSets.
+    // Not supported for M2 AVSs
+    pub async fn get_slashable_shares_for_operator_sets(
+        &self,
+        operator_sets: Vec<OperatorSet>,
+    ) -> Result<Vec<OperatorSetStakes>, ElContractsError> {
+        let provider = get_provider(&self.provider);
+        let current_block_number = provider.get_block_number().await.map_err(|e| {
+            ElContractsError::AlloyContractError(alloy::contract::Error::TransportError(e))
+        })?;
+        self.get_delegated_and_slashable_shares_for_operator_sets_before(
+            operator_sets,
+            current_block_number as u32,
+        )
+        .await
     }
 
     // Returns the strategies the operatorSets take into account, their
