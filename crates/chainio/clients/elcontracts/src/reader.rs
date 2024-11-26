@@ -497,6 +497,32 @@ impl ELChainReader {
         Ok(operator_set_stakes)
     }
 
+    pub async fn get_allocation_delay(
+        &self,
+        operator_address: Address,
+    ) -> Result<u32, ElContractsError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_allocation_manager = AllocationManager::new(self.allocation_manager, provider);
+
+        let allocation_delay = contract_allocation_manager
+            .getAllocationDelay(operator_address)
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        let AllocationManager::getAllocationDelayReturn {
+            _0: is_set,
+            _1: delay,
+        } = allocation_delay;
+
+        if !is_set {
+            return Err(ElContractsError::AllocationDelayNotSet);
+        }
+
+        Ok(delay)
+    }
+
     pub async fn get_registered_sets(
         &self,
         operator_address: Address,
