@@ -395,25 +395,26 @@ impl ELChainReader {
         Ok(operator)
     }
 
-    // Returns the list of strategies that an operator set takes into account
-    // Not supported for M2 AVSs
-    pub async fn get_strategies_for_operator_set(
+    pub async fn get_operators_shares(
         &self,
-        operator_set: OperatorSet,
-    ) -> Result<Vec<Address>, ElContractsError> {
+        operator_addresses: Vec<Address>,
+        strategy_addresses: Vec<Address>,
+    ) -> Result<Vec<Vec<U256>>, ElContractsError> {
         let provider = get_provider(&self.provider);
 
-        let contract_allocation_manager = AllocationManager::new(self.allocation_manager, provider);
+        let contract_delegation_manager = DelegationManager::new(self.delegation_manager, provider);
 
-        let strategies = contract_allocation_manager
-            .getStrategiesInOperatorSet(operator_set)
+        let operators_shares = contract_delegation_manager
+            .getOperatorsShares(operator_addresses, strategy_addresses)
             .call()
             .await
             .map_err(ElContractsError::AlloyContractError)?;
 
-        let AllocationManager::getStrategiesInOperatorSetReturn { _0: strategies } = strategies;
+        let DelegationManager::getOperatorsSharesReturn {
+            _0: operators_shares,
+        } = operators_shares;
 
-        Ok(strategies)
+        Ok(operators_shares)
     }
 
     // Returns the number of operator sets that an operator is part of
@@ -526,6 +527,27 @@ impl ELChainReader {
         let AllocationManager::getMemberCountReturn { _0: num_operators } = num_operators;
 
         Ok(num_operators)
+    }
+
+    // Returns the list of strategies that an operator set takes into account
+    // Not supported for M2 AVSs
+    pub async fn get_strategies_for_operator_set(
+        &self,
+        operator_set: OperatorSet,
+    ) -> Result<Vec<Address>, ElContractsError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_allocation_manager = AllocationManager::new(self.allocation_manager, provider);
+
+        let strategies = contract_allocation_manager
+            .getStrategiesInOperatorSet(operator_set)
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        let AllocationManager::getStrategiesInOperatorSetReturn { _0: strategies } = strategies;
+
+        Ok(strategies)
     }
 
     // Returns the strategies the operatorSets take into account, their
