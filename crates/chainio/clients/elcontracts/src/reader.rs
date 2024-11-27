@@ -932,4 +932,18 @@ mod tests {
         assert!(operator.metadata_url.is_none());
         println!("{:?}", operator.metadata_url);
     }
+
+    #[tokio::test]
+    async fn test_is_operator_registered() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let operator_addr = Address::from_str(OPERATOR_ADDRESS).unwrap();
+        let chain_reader = build_el_chain_reader(http_endpoint).await;
+
+        let is_registered = chain_reader
+            .is_operator_registered(operator_addr)
+            .await
+            .unwrap();
+
+        assert!(is_registered);
+    }
 }
