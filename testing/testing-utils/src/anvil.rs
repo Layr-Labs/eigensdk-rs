@@ -6,7 +6,7 @@ use testcontainers::{
 };
 use tokio::time::{timeout, Duration};
 const ANVIL_IMAGE: &str = "ghcr.io/foundry-rs/foundry";
-const ANVIL_TAG: &str = "nightly-5b7e4cb3c882b28f3c32ba580de27ce7381f415a";
+const ANVIL_TAG: &str = "latest";
 const ANVIL_STATE_PATH: &str = "./crates/contracts/anvil/dump_state.json"; // Correct file path // relative path from the project root
 
 fn workspace_dir() -> PathBuf {
@@ -44,18 +44,18 @@ pub async fn start_anvil_container() -> (ContainerAsync<GenericImage>, String, S
     let absolute_path_str = absolute_path.to_str().unwrap();
 
     let container = GenericImage::new(ANVIL_IMAGE, ANVIL_TAG)
-        .with_entrypoint("anvil") 
+        .with_entrypoint("anvil")
         .with_wait_for(WaitFor::message_on_stdout("Listening on"))
         .with_exposed_port(8545.tcp())
         .with_mount(testcontainers::core::Mount::bind_mount(
             absolute_path_str,
-            "/dump_state.json", 
+            "/dump_state.json",
         ))
         .with_cmd([
             "--host",
-            "0.0.0.0", 
+            "0.0.0.0",
             "--load-state",
-            "/dump_state.json", 
+            "/dump_state.json",
             "--base-fee",
             "0",
             "--gas-price",
@@ -65,7 +65,7 @@ pub async fn start_anvil_container() -> (ContainerAsync<GenericImage>, String, S
         .await
         .unwrap();
 
-    println!("container_stdout{:?}",container.stdout_to_vec().await);
+    println!("container_stdout{:?}", container.stdout_to_vec().await);
 
     let port = container
         .ports()
@@ -80,7 +80,6 @@ pub async fn start_anvil_container() -> (ContainerAsync<GenericImage>, String, S
     // mine_anvil_blocks(&container, 200).await;
     (container, http_endpoint, ws_endpoint)
 }
-
 
 /// Deposit 1 eth to the account in anvil
 pub async fn set_account_balance(container: &ContainerAsync<GenericImage>, address: &str) {
