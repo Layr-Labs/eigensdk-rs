@@ -15,7 +15,12 @@ contract MockAvsServiceManager is ServiceManagerBase, BLSSignatureChecker {
         IAVSDirectory _avsDirectory,
         IRewardsCoordinator _rewardsCoordinator
     )
-        ServiceManagerBase(_avsDirectory, _rewardsCoordinator, _registryCoordinator, _registryCoordinator.stakeRegistry())
+        ServiceManagerBase(
+            _avsDirectory,
+            _rewardsCoordinator,
+            _registryCoordinator,
+            _registryCoordinator.stakeRegistry()
+        )
         BLSSignatureChecker(_registryCoordinator)
     {}
 

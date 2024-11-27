@@ -11,23 +11,46 @@ library WriteToContractsRegistryLib {
         address contracts_registry_addr,
         CoreDeploymentLib.DeploymentData memory deploymentdata
     ) internal {
-        ContractsRegistry contractsRegistry = ContractsRegistry(contracts_registry_addr);
-        contractsRegistry.registerContract("delegationManager", address(deploymentdata.delegationManager));
-        contractsRegistry.registerContract("strategyManager", address(deploymentdata.strategyManager));
-        contractsRegistry.registerContract("avsDirectory", address(deploymentdata.avsDirectory));
+        ContractsRegistry contractsRegistry = ContractsRegistry(
+            contracts_registry_addr
+        );
+        contractsRegistry.registerContract(
+            "delegationManager",
+            address(deploymentdata.delegationManager)
+        );
+        contractsRegistry.registerContract(
+            "strategyManager",
+            address(deploymentdata.strategyManager)
+        );
+        contractsRegistry.registerContract(
+            "avsDirectory",
+            address(deploymentdata.avsDirectory)
+        );
     }
 
     function writeMockAvsContractsToRegistry(
         address contracts_registry_addr,
         MockAvsDeploymentLib.DeploymentData memory deploymentdata
     ) internal {
-        ContractsRegistry contractsRegistry = ContractsRegistry(contracts_registry_addr);
+        ContractsRegistry contractsRegistry = ContractsRegistry(
+            contracts_registry_addr
+        );
 
-        contractsRegistry.registerContract("erc20MockStrategy", address(deploymentdata.strategy));
-        contractsRegistry.registerContract("mockAvsServiceManager", deploymentdata.mockAvsServiceManager);
-        contractsRegistry.registerContract("mockAvsRegistryCoordinator", address(deploymentdata.registryCoordinator));
         contractsRegistry.registerContract(
-            "mockAvsOperatorStateRetriever", address(deploymentdata.operatorStateRetriever)
+            "erc20MockStrategy",
+            address(deploymentdata.strategy)
+        );
+        contractsRegistry.registerContract(
+            "mockAvsServiceManager",
+            deploymentdata.mockAvsServiceManager
+        );
+        contractsRegistry.registerContract(
+            "mockAvsRegistryCoordinator",
+            address(deploymentdata.registryCoordinator)
+        );
+        contractsRegistry.registerContract(
+            "mockAvsOperatorStateRetriever",
+            address(deploymentdata.operatorStateRetriever)
         );
     }
 }
