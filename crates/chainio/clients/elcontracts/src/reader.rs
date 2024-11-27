@@ -340,7 +340,8 @@ impl ELChainReader {
     /// * `block_number` - The block number
     ///
     /// # Returns
-    /// * `Vec<(Address, U96)>` - An array of tuples containing the strategy address and the amount of shares the staker has in that strategy
+    /// * `Vec<Address>` - An array of strategy addresses
+    /// * `Vec<U256>` - An array with the amount of shares the staker has in each strategy
     ///
     /// # Errors
     /// * `ElContractsError` - if the call to the contract fails
@@ -779,7 +780,9 @@ mod tests {
     use eigen_logging::get_test_logger;
     use eigen_testing_utils::{
         anvil::start_anvil_container,
-        anvil_constants::{get_delegation_manager_address, get_service_manager_address},
+        anvil_constants::{
+            get_delegation_manager_address, get_erc20_mock_strategy, get_service_manager_address,
+        },
     };
     use eigen_utils::{
         avsdirectory::AVSDirectory,
@@ -945,5 +948,20 @@ mod tests {
             .unwrap();
 
         assert!(is_registered);
+    }
+
+    #[tokio::test]
+    async fn test_get_staker_shares() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let operator_addr = Address::from_str(OPERATOR_ADDRESS).unwrap();
+        let chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
+
+        let (strategies, shares) = chain_reader.get_staker_shares(operator_addr).await.unwrap();
+
+        let expected_strategies = vec![get_erc20_mock_strategy(http_endpoint.clone()).await];
+
+        assert!(strategies.len() == shares.len());
+        assert_eq!(strategies, expected_strategies);
+        assert!(shares[0] > U256::from(0));
     }
 }
