@@ -386,6 +386,35 @@ impl ELChainWriter {
 
         Ok(cumulative_claim_ret)
     }
+
+    pub async fn get_cumulative_claimed_for_root(&self) -> Result<U256, ElContractsError> {
+        let provider = get_signer(&self.signer, &self.provider);
+
+        let contract_rewards_coordinator =
+            IRewardsCoordinator::new(self.rewards_coordinator, &provider);
+
+        let cumulative_claimed_for_root_call = contract_rewards_coordinator
+            .cumulativeClaimedForRoot(earner_address, token, root_index)
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        //let IRew
+        todo!("implement get_cumulative_claimed_for_root")
+    }
+    /*
+    func (r *ChainReader) GetCurrentClaimableDistributionRoot(
+        ctx context.Context,
+    ) (rewardscoordinator.IRewardsCoordinatorTypesDistributionRoot, error) {
+        if r.rewardsCoordinator == nil {
+            return rewardscoordinator.IRewardsCoordinatorTypesDistributionRoot{}, errors.New(
+                "RewardsCoordinator contract not provided",
+            )
+        }
+
+        return r.rewardsCoordinator.GetCurrentClaimableDistributionRoot(&bind.CallOpts{Context: ctx})
+    }
+    */
 }
 
 #[cfg(test)]
