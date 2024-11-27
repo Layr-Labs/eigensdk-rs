@@ -964,4 +964,18 @@ mod tests {
         assert_eq!(strategies, expected_strategies);
         assert!(shares[0] > U256::from(0));
     }
+
+    #[tokio::test]
+    async fn test_get_delegated_operator() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let staker_addr = Address::from_str(OPERATOR_ADDRESS).unwrap(); // TODO: staker address? see deployment scripts
+        let chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
+
+        let operator_addr = chain_reader
+            .get_delegated_operator(staker_addr)
+            .await
+            .unwrap();
+
+        assert_eq!(operator_addr, Address::ZERO); // staker is delegated?
+    }
 }
