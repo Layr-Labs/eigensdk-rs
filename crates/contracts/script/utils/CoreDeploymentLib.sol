@@ -10,7 +10,6 @@ import {stdJson} from "forge-std/StdJson.sol";
 import {DelegationManager} from "@eigenlayer/contracts/core/DelegationManager.sol";
 import {StrategyManager} from "@eigenlayer/contracts/core/StrategyManager.sol";
 import {AVSDirectory} from "@eigenlayer/contracts/core/AVSDirectory.sol";
-import {Slasher} from "@eigenlayer/contracts/core/Slasher.sol";
 import {EigenPodManager} from "@eigenlayer/contracts/pods/EigenPodManager.sol";
 import {RewardsCoordinator} from "@eigenlayer/contracts/core/RewardsCoordinator.sol";
 import {StrategyBase} from "@eigenlayer/contracts/strategies/StrategyBase.sol";
@@ -24,12 +23,12 @@ import {ISignatureUtils} from "@eigenlayer/contracts/interfaces/ISignatureUtils.
 import {IDelegationManager} from "@eigenlayer/contracts/interfaces/IDelegationManager.sol";
 import {IBeacon} from "@openzeppelin/contracts/proxy/beacon/IBeacon.sol";
 import {IStrategyManager} from "@eigenlayer/contracts/interfaces/IStrategyManager.sol";
-import {ISlasher} from "@eigenlayer/contracts/interfaces/ISlasher.sol";
 import {IEigenPodManager} from "@eigenlayer/contracts/interfaces/IEigenPodManager.sol";
 import {IAVSDirectory} from "@eigenlayer/contracts/interfaces/IAVSDirectory.sol";
 import {IPauserRegistry} from "@eigenlayer/contracts/interfaces/IPauserRegistry.sol";
 import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 import {StrategyFactory} from "@eigenlayer/contracts/strategies/StrategyFactory.sol";
+import {IAllocationManager} from "@eigenlayer/contracts/core/AllocationManager.sol";
 import {UpgradeableProxyLib} from "./UpgradeableProxyLib.sol";
 
 library CoreDeploymentLib {
@@ -43,10 +42,6 @@ library CoreDeploymentLib {
     struct StrategyManagerConfig {
         uint256 initPausedStatus;
         uint256 initWithdrawalDelayBlocks;
-    }
-
-    struct SlasherConfig {
-        uint256 initPausedStatus;
     }
 
     struct DelegationManagerConfig {
@@ -79,6 +74,7 @@ library CoreDeploymentLib {
         address avsDirectory;
         address strategyManager;
         address eigenPodManager;
+        address allocationManager;
         address rewardsCoordinator;
         address eigenPodBeacon;
         address pauserRegistry;
@@ -100,9 +96,10 @@ library CoreDeploymentLib {
         result.strategyManager = UpgradeableProxyLib.setUpEmptyProxy(
             proxyAdmin
         );
-        result.eigenPodManager = UpgradeableProxyLib.setUpEmptyProxy(
+        result.allocationManager = UpgradeableProxyLib.setUpEmptyProxy(
             proxyAdmin
         );
+        result.avsDirectory = UpgradeableProxyLib.setUpEmptyProxy(proxyAdmin);
         result.rewardsCoordinator = UpgradeableProxyLib.setUpEmptyProxy(
             proxyAdmin
         );
@@ -115,21 +112,22 @@ library CoreDeploymentLib {
         // Deploy the implementation contracts, using the proxy contracts as inputs
         address delegationManagerImpl = address(
             new DelegationManager(
+                IAVSDirectory(result.avsDirectory),
                 IStrategyManager(result.strategyManager),
-                ISlasher(address(0)),
-                IEigenPodManager(result.eigenPodManager)
+                IEigenPodManager(result.eigenPodManager),
+                IAllocationManager(result.allocationManager),
+                uint32(0) // TODO: check minWithdrawalDelay
             )
         );
         address avsDirectoryImpl = address(
-            new AVSDirectory(IDelegationManager(result.delegationManager))
+            new AVSDirectory(
+                IDelegationManager(result.delegationManager),
+                uint32(1512000) // _DEALLOCATION_DELAY: 17.5 days in seconds),
+            )
         );
 
         address strategyManagerImpl = address(
-            new StrategyManager(
-                IDelegationManager(result.delegationManager),
-                IEigenPodManager(result.eigenPodManager),
-                ISlasher(address(0))
-            )
+            new StrategyManager(IDelegationManager(result.delegationManager))
         );
 
         address strategyFactoryImpl = address(
@@ -150,7 +148,6 @@ library CoreDeploymentLib {
                 IETHPOSDeposit(ethPOSDeposit),
                 IBeacon(result.eigenPodBeacon),
                 IStrategyManager(result.strategyManager),
-                ISlasher(address(0)),
                 IDelegationManager(result.delegationManager)
             )
         );
@@ -208,10 +205,7 @@ library CoreDeploymentLib {
             (
                 proxyAdmin, // initialOwner
                 IPauserRegistry(result.pauserRegistry), // _pauserRegistry
-                configData.delegationManager.initPausedStatus, // initialPausedStatus
-                configData.delegationManager.withdrawalDelayBlocks, // _minWithdrawalDelayBlocks
-                new IStrategy[](0), // _strategies (empty array for now)
-                new uint256[](0) // _withdrawalDelayBlocks (empty array for now)
+                configData.delegationManager.initPausedStatus // initialPausedStatus
             )
         );
         UpgradeableProxyLib.upgradeAndCall(
@@ -321,7 +315,6 @@ library CoreDeploymentLib {
     struct DeploymentConfigData {
         StrategyManagerConfig strategyManager;
         DelegationManagerConfig delegationManager;
-        SlasherConfig slasher;
         EigenPodManagerConfig eigenPodManager;
         RewardsCoordinatorConfig rewardsCoordinator;
         StrategyFactoryConfig strategyFactory;
@@ -357,13 +350,6 @@ library CoreDeploymentLib {
             ".delegation.init_withdrawal_delay_blocks"
         );
         // DelegationManager config end
-
-        // Slasher config start
-        data.slasher.initPausedStatus = json.readUint(
-            ".slasher.init_paused_status"
-        );
-
-        // Slasher config end
 
         // EigenPodManager config start
         data.eigenPodManager.initPausedStatus = json.readUint(
