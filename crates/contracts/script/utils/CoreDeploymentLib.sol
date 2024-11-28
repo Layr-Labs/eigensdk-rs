@@ -108,6 +108,9 @@ library CoreDeploymentLib {
         result.strategyFactory = UpgradeableProxyLib.setUpEmptyProxy(
             proxyAdmin
         );
+        result.eigenPodManager = UpgradeableProxyLib.setUpEmptyProxy(
+            proxyAdmin
+        );
 
         // Deploy the implementation contracts, using the proxy contracts as inputs
         address delegationManagerImpl = address(
@@ -340,7 +343,7 @@ library CoreDeploymentLib {
         data.strategyManager.initWithdrawalDelayBlocks = uint32(
             json.readUint(".strategyManager.init_withdrawal_delay_blocks")
         );
-        // slasher config end
+        // StrategyManager config end
 
         // DelegationManager config start
         data.delegationManager.initPausedStatus = json.readUint(
