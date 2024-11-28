@@ -613,4 +613,24 @@ mod tests {
         assert!(operator.metadata_url.is_none());
         println!("{:?}", operator.metadata_url);
     }
+
+    #[tokio::test]
+    async fn test_get_strategy_and_underlying_token() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let strategy_addr = get_erc20_mock_strategy(http_endpoint.clone()).await;
+        let chain_reader = build_el_chain_reader(http_endpoint).await;
+
+        let (strategy_addr_ret, underlying_token_addr) = chain_reader
+            .get_strategy_and_underlying_token(strategy_addr)
+            .await
+            .unwrap();
+
+        assert_eq!(strategy_addr, strategy_addr_ret);
+
+        let underlying_token_addr_str = underlying_token_addr.to_string();
+        assert_eq!(
+            underlying_token_addr_str,
+            "0x82e01223d51Eb87e16A03E24687EDF0F294da6f1"
+        );
+    }
 }
