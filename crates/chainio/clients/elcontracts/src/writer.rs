@@ -351,7 +351,6 @@ mod tests {
 
     #[tokio::test]
     #[serial]
-    #[ignore] // TODO: this test is ignored until the anvil state is updated to slashing
     async fn test_register_operator() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
         let provider = get_provider(&http_endpoint);
@@ -388,7 +387,6 @@ mod tests {
 
     #[tokio::test]
     #[serial]
-    #[ignore] // TODO: this test is ignored until the anvil state is updated to slashing
     async fn test_register_and_update_operator() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
         let provider = get_provider(&http_endpoint);
@@ -443,7 +441,6 @@ mod tests {
 
     #[tokio::test]
     #[serial]
-    #[ignore] // TODO: this test is ignored until the anvil state is updated to slashing
     async fn test_deposit_erc20_into_strategy() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
         let el_chain_writer = new_test_writer(http_endpoint.clone()).await;
@@ -461,7 +458,6 @@ mod tests {
 
     #[tokio::test]
     #[serial]
-    #[ignore] // TODO: this test is ignored until the anvil state is updated to slashing
     async fn test_set_claimer_for() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
         let el_chain_writer = new_test_writer(http_endpoint.clone()).await;
@@ -476,7 +472,6 @@ mod tests {
 
     #[tokio::test]
     #[serial]
-    #[ignore] // TODO: this test is ignored until the anvil state is updated to slashing
     async fn test_process_claim() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
         let el_chain_writer = new_test_writer(http_endpoint.clone()).await;
