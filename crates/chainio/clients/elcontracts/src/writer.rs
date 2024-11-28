@@ -621,12 +621,16 @@ mod tests {
         };
 
         let tx_hash = el_chain_writer
-            .process_claim(earner_address, claim)
+            .process_claim(earner_address, claim.clone())
             .await
             .unwrap();
 
         let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
         assert!(receipt.status());
+
+        // TODO! fix this
+        let ret = el_chain_writer.check_claim(claim).await.unwrap();
+        assert!(ret);
     }
 
     #[tokio::test]
@@ -635,6 +639,7 @@ mod tests {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
         let el_chain_writer = new_test_writer(http_endpoint.clone()).await;
 
+        // TODO! fix this
         let distribution_roots_length_ret = el_chain_writer
             .get_distribution_roots_length()
             .await
@@ -643,6 +648,17 @@ mod tests {
         println!(
             "distribution_roots_length_ret: {:?}",
             distribution_roots_length_ret
+        );
+
+        // TODO! fix this
+        let curr_rewards_calculation_end_timestamp_ret = el_chain_writer
+            .get_curr_rewards_calculation_end_timestamp()
+            .await
+            .unwrap();
+
+        println!(
+            "curr_rewards_calculation_end_timestamp_ret: {:?}",
+            curr_rewards_calculation_end_timestamp_ret
         );
     }
 }
