@@ -19,7 +19,9 @@ import {BLSApkRegistry} from "@eigenlayer-middleware/src/BLSApkRegistry.sol";
 import {IndexRegistry} from "@eigenlayer-middleware/src/IndexRegistry.sol";
 import {StakeRegistry} from "@eigenlayer-middleware/src/StakeRegistry.sol";
 import {IRegistryCoordinator} from "@eigenlayer-middleware/src/interfaces/IRegistryCoordinator.sol";
+import {IServiceManager} from "@eigenlayer-middleware/src/interfaces/IServiceManager.sol";
 import {IStrategy} from "@eigenlayer/contracts/interfaces/IStrategyManager.sol";
+import {IAllocationManager} from "@eigenlayer/contracts/interfaces/IAllocationManager.sol";
 import {CoreDeploymentLib} from "./CoreDeploymentLib.sol";
 
 import {RegistryCoordinator, IBLSApkRegistry, IIndexRegistry, IStakeRegistry} from "@eigenlayer-middleware/src/RegistryCoordinator.sol";
@@ -87,7 +89,9 @@ library MockAvsDeploymentLib {
         address stakeRegistryImpl = address(
             new StakeRegistry(
                 IRegistryCoordinator(result.registryCoordinator),
-                IDelegationManager(core.delegationManager)
+                IDelegationManager(core.delegationManager),
+                IAVSDirectory(core.avsDirectory),
+                MockAvsServiceManager(result.mockAvsServiceManager) // TODO: check this
             )
         );
 
@@ -102,7 +106,8 @@ library MockAvsDeploymentLib {
                 MockAvsServiceManager(result.mockAvsServiceManager),
                 IStakeRegistry(result.stakeRegistry),
                 IBLSApkRegistry(result.blsapkRegistry),
-                IIndexRegistry(result.indexRegistry)
+                IIndexRegistry(result.indexRegistry),
+                IAVSDirectory(core.avsDirectory)
             )
         );
 
@@ -180,7 +185,8 @@ library MockAvsDeploymentLib {
         MockAvsServiceManager mockAvsServiceManagerImpl = new MockAvsServiceManager(
                 IRegistryCoordinator(result.registryCoordinator),
                 IAVSDirectory(coredata.avsDirectory),
-                IRewardsCoordinator(coredata.rewardsCoordinator)
+                IRewardsCoordinator(coredata.rewardsCoordinator),
+                IAllocationManager(coredata.allocationManager)
             );
         bytes memory mockavsmanagerupgradecall = abi.encodeCall(
             MockAvsServiceManager.initialize,
