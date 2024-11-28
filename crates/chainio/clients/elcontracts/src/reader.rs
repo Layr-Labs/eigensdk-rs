@@ -978,4 +978,19 @@ mod tests {
 
         assert_eq!(operator_addr, Address::ZERO); // staker is delegated?
     }
+
+    #[tokio::test]
+    #[ignore]
+    async fn test_get_registered_sets() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let operator_addr = Address::from_str(OPERATOR_ADDRESS).unwrap();
+        let chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
+
+        let ret = chain_reader
+            .get_registered_sets(operator_addr)
+            .await
+            .unwrap();
+
+        assert_eq!(ret.len(), 1);
+    }
 }
