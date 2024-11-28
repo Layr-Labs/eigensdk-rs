@@ -394,7 +394,7 @@ impl ELChainReader {
     ///
     /// # Returns
     ///
-    /// - the strategy contract,
+    /// - the strategy contract address,
     /// - and the underlying token address
     ///
     /// # Errors
@@ -407,6 +407,7 @@ impl ELChainReader {
         let provider = get_provider(&self.provider);
 
         let contract_strategy = IStrategy::new(strategy_addr, &provider);
+        let contract_strategy_address = contract_strategy.address();
 
         let underlying_token = contract_strategy
             .underlyingToken()
@@ -418,7 +419,7 @@ impl ELChainReader {
             _0: underlying_token_addr,
         } = underlying_token;
 
-        Ok((strategy_addr, underlying_token_addr))
+        Ok((contract_strategy_address.clone(), underlying_token_addr))
     }
 }
 
@@ -620,17 +621,21 @@ mod tests {
         let strategy_addr = get_erc20_mock_strategy(http_endpoint.clone()).await;
         let chain_reader = build_el_chain_reader(http_endpoint).await;
 
-        let (strategy_addr_ret, underlying_token_addr) = chain_reader
+        let (strategy_contract_addr, underlying_token_addr) = chain_reader
             .get_strategy_and_underlying_token(strategy_addr)
             .await
             .unwrap();
-
-        assert_eq!(strategy_addr, strategy_addr_ret);
 
         let underlying_token_addr_str = underlying_token_addr.to_string();
         assert_eq!(
             underlying_token_addr_str,
             "0x82e01223d51Eb87e16A03E24687EDF0F294da6f1"
+        );
+
+        let strategy_contract_addr_str = strategy_contract_addr.to_string();
+        assert_eq!(
+            strategy_contract_addr_str,
+            "0x7969c5eD335650692Bc04293B07F5BF2e7A673C0"
         );
     }
 }
