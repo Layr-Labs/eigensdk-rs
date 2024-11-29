@@ -361,6 +361,7 @@ mod tests {
     }
 
     #[tokio::test]
+    #[ignore] // TODO: fix problems with anvil new version
     async fn test_avs_writer_methods() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
 

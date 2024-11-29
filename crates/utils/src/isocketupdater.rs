@@ -46,7 +46,12 @@ interface ISocketUpdater {
   }
 ]
 ```*/
-#[allow(non_camel_case_types, non_snake_case, clippy::style)]
+#[allow(
+    non_camel_case_types,
+    non_snake_case,
+    clippy::pub_underscore_fields,
+    clippy::style
+)]
 pub mod ISocketUpdater {
     use super::*;
     use alloy::sol_types as alloy_sol_types;
@@ -74,7 +79,12 @@ pub mod ISocketUpdater {
     ```solidity
     event OperatorSocketUpdate(bytes32 indexed operatorId, string socket);
     ```*/
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     #[derive(Clone)]
     pub struct OperatorSocketUpdate {
         #[allow(missing_docs)]
@@ -82,7 +92,12 @@ pub mod ISocketUpdater {
         #[allow(missing_docs)]
         pub socket: alloy::sol_types::private::String,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         #[automatically_derived]
@@ -173,16 +188,21 @@ pub mod ISocketUpdater {
     ```solidity
     function updateSocket(string memory socket) external;
     ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct updateSocketCall {
         pub socket: alloy::sol_types::private::String,
     }
     ///Container type for the return parameters of the [`updateSocket(string)`](updateSocketCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct updateSocketReturn {}
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
