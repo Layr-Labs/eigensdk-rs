@@ -1,10 +1,15 @@
 use crate::error::ElContractsError;
-use alloy_primitives::{Address, FixedBytes, U256};
+use alloy::providers::Provider;
+use alloy_primitives::{ruint::aliases::U256, Address, FixedBytes};
 use eigen_logging::logger::SharedLogger;
 use eigen_types::operator::Operator;
 use eigen_utils::{
-    allocationmanager::AllocationManager, avsdirectory::AVSDirectory,
-    delegationmanager::DelegationManager, erc20::ERC20, get_provider, istrategy::IStrategy,
+    allocationmanager::AllocationManager::{self, OperatorSet},
+    avsdirectory::AVSDirectory,
+    delegationmanager::DelegationManager,
+    erc20::ERC20,
+    get_provider,
+    istrategy::IStrategy,
 };
 
 #[derive(Debug, Clone)]
@@ -335,7 +340,8 @@ impl ELChainReader {
     /// * `block_number` - The block number
     ///
     /// # Returns
-    /// * `Vec<(Address, U96)>` - An array of tuples containing the strategy address and the amount of shares the staker has in that strategy
+    /// * `Vec<Address>` - An array of strategy addresses
+    /// * `Vec<U256>` - An array with the amount of shares the staker has in each strategy
     ///
     /// # Errors
     /// * `ElContractsError` - if the call to the contract fails
@@ -549,5 +555,62 @@ mod tests {
 
         assert!(operator.metadata_url.is_none());
         println!("{:?}", operator.metadata_url);
+    }
+
+    #[tokio::test]
+    async fn test_is_operator_registered() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let operator_addr = Address::from_str(OPERATOR_ADDRESS).unwrap();
+        let chain_reader = build_el_chain_reader(http_endpoint).await;
+
+        let is_registered = chain_reader
+            .is_operator_registered(operator_addr)
+            .await
+            .unwrap();
+
+        assert!(is_registered);
+    }
+
+    #[tokio::test]
+    async fn test_get_staker_shares() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let operator_addr = Address::from_str(OPERATOR_ADDRESS).unwrap();
+        let chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
+
+        let (strategies, shares) = chain_reader.get_staker_shares(operator_addr).await.unwrap();
+
+        let expected_strategies = vec![get_erc20_mock_strategy(http_endpoint.clone()).await];
+
+        assert!(strategies.len() == shares.len());
+        assert_eq!(strategies, expected_strategies);
+        assert!(shares[0] > U256::from(0));
+    }
+
+    #[tokio::test]
+    async fn test_get_delegated_operator() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let staker_addr = Address::from_str(OPERATOR_ADDRESS).unwrap(); // TODO: staker address? see deployment scripts
+        let chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
+
+        let operator_addr = chain_reader
+            .get_delegated_operator(staker_addr)
+            .await
+            .unwrap();
+
+        assert_eq!(operator_addr, Address::ZERO); // staker is delegated?
+    }
+
+    #[tokio::test]
+    async fn test_get_registered_sets() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let operator_addr = Address::from_str(OPERATOR_ADDRESS).unwrap();
+        let chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
+
+        let ret = chain_reader
+            .get_registered_sets(operator_addr)
+            .await
+            .unwrap();
+
+        assert_eq!(ret.len(), 1);
     }
 }

@@ -9,7 +9,9 @@ use eigen_utils::{
     },
     erc20::ERC20,
     get_signer,
-    irewardscoordinator::{IRewardsCoordinator, IRewardsCoordinatorTypes::RewardsMerkleClaim},
+    irewardscoordinator::{
+        IRewardsCoordinator, IRewardsCoordinatorTypes, IRewardsCoordinatorTypes::RewardsMerkleClaim,
+    },
     strategymanager::StrategyManager,
 };
 
@@ -253,6 +255,27 @@ impl ELChainWriter {
 
         let tx = process_claim_call.send().await?;
         Ok(*tx.tx_hash())
+    }
+
+    pub async fn get_cumulative_claimed_for_root(
+        &self,
+    ) -> Result<IRewardsCoordinatorTypes::DistributionRoot, ElContractsError> {
+        let provider = get_signer(&self.signer, &self.provider);
+
+        let contract_rewards_coordinator =
+            IRewardsCoordinator::new(self.rewards_coordinator, &provider);
+
+        let cumulative_claimed_for_root_call = contract_rewards_coordinator
+            .getCurrentClaimableDistributionRoot()
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        let IRewardsCoordinator::getCurrentClaimableDistributionRootReturn {
+            _0: cumulative_claimed_for_root_ret,
+        } = cumulative_claimed_for_root_call;
+
+        Ok(cumulative_claimed_for_root_ret)
     }
 }
 
