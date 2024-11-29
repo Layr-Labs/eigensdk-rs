@@ -40,7 +40,7 @@ CHAIN_ID=$(cast chain-id)
 
 # DEPLOY CONTRACT REGISTRY
 cd $root_dir/contracts
-forge create src/ContractsRegistry.sol:ContractsRegistry --rpc-url $ETH_HTTP_URL --private-key $DEPLOYER_PRIVATE_KEY
+forge create src/ContractsRegistry.sol:ContractsRegistry --rpc-url $ETH_HTTP_URL --private-key $DEPLOYER_PRIVATE_KEY --broadcast
 
 # DEPLOY EIGENLAYER
 EIGEN_CONTRACTS_DIR=$root_dir/contracts/lib/eigenlayer-middleware/lib/eigenlayer-contracts

@@ -36,7 +36,12 @@ interface IERC1271Upgradeable {
   }
 ]
 ```*/
-#[allow(non_camel_case_types, non_snake_case, clippy::style)]
+#[allow(
+    non_camel_case_types,
+    non_snake_case,
+    clippy::pub_underscore_fields,
+    clippy::style
+)]
 pub mod IERC1271Upgradeable {
     use super::*;
     use alloy::sol_types as alloy_sol_types;
@@ -64,19 +69,24 @@ pub mod IERC1271Upgradeable {
     ```solidity
     function isValidSignature(bytes32 hash, bytes memory signature) external view returns (bytes4 magicValue);
     ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct isValidSignatureCall {
         pub hash: alloy::sol_types::private::FixedBytes<32>,
         pub signature: alloy::sol_types::private::Bytes,
     }
     ///Container type for the return parameters of the [`isValidSignature(bytes32,bytes)`](isValidSignatureCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct isValidSignatureReturn {
         pub magicValue: alloy::sol_types::private::FixedBytes<4>,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
