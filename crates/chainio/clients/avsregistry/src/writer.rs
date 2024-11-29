@@ -333,9 +333,9 @@ mod tests {
     use alloy_primitives::{Address, Bytes, FixedBytes, U256};
     use eigen_crypto_bls::BlsKeyPair;
     use eigen_logging::get_test_logger;
-    use eigen_testing_utils::anvil::{start_anvil_container};
     use eigen_testing_utils::anvil_constants::{
-        get_operator_state_retriever_address, get_registry_coordinator_address, register_operator_to_el_if_not_registered,
+        get_operator_state_retriever_address, get_registry_coordinator_address,
+        register_operator_to_el_if_not_registered,
     };
     use eigen_testing_utils::transaction::wait_transaction;
     use eigen_utils::delegationmanager::IDelegationManager::OperatorDetails;
@@ -347,10 +347,10 @@ mod tests {
     ) -> AvsRegistryChainWriter {
         let registry_coordinator_address =
             get_registry_coordinator_address(http_endpoint.clone()).await;
-            println!("reg_coordinator{:?}",registry_coordinator_address);
+        println!("reg_coordinator{:?}", registry_coordinator_address);
         let operator_state_retriever_address =
             get_operator_state_retriever_address(http_endpoint.clone()).await;
-        println!("op_state{:?}",operator_state_retriever_address);
+        println!("op_state{:?}", operator_state_retriever_address);
         AvsRegistryChainWriter::build_avs_registry_chain_writer(
             get_test_logger(),
             http_endpoint,
@@ -373,9 +373,21 @@ mod tests {
                 .to_string();
         let private_key =
             "8b3a350cf5c34c9194ca85829a2df0ec3153be0318b5e2d3348e872092edffba".to_string();
-            let operator_details = OperatorDetails{__deprecated_earningsReceiver: Address::ZERO,delegationApprover:Address::ZERO,stakerOptOutWindowBlocks:0};
-        register_operator_to_el_if_not_registered(&private_key,&http_endpoint,operator_details,"uri").await.unwrap();
-        let avs_writer = build_avs_registry_chain_writer(http_endpoint.clone().to_string(), private_key).await;
+        let operator_details = OperatorDetails {
+            __deprecated_earningsReceiver: Address::ZERO,
+            delegationApprover: Address::ZERO,
+            stakerOptOutWindowBlocks: 0,
+        };
+        register_operator_to_el_if_not_registered(
+            &private_key,
+            &http_endpoint,
+            operator_details,
+            "uri",
+        )
+        .await
+        .unwrap();
+        let avs_writer =
+            build_avs_registry_chain_writer(http_endpoint.clone().to_string(), private_key).await;
         let operator_addr = Address::from_str("9965507D1a55bcC2695C58ba16FB37d819B0A4dc").unwrap();
         let quorum_nums = Bytes::from([0]);
 

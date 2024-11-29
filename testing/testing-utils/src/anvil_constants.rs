@@ -1,7 +1,7 @@
 //! Anvil utilities
 use std::str::FromStr;
 
-use alloy_primitives::{address, Address, FixedBytes};
+use alloy_primitives::{address, Address};
 use alloy_signer_local::PrivateKeySigner;
 use eigen_utils::delegationmanager::DelegationManager;
 use eigen_utils::{
@@ -158,14 +158,15 @@ pub async fn get_rewards_coordinator_address(rpc_url: String) -> Address {
     address
 }
 
+/// Register an operator in the DelegationManager contract. If its already registered, it will not do anything.
 pub async fn register_operator_to_el_if_not_registered(
     pvt_key: &str,
     rpc_url: &str,
     operator_details: OperatorDetails,
-    uri: &str,
+    metadata_uri: &str,
 ) -> Result<()> {
     let wallet = PrivateKeySigner::from_str(pvt_key)?;
-    let signer = get_signer(pvt_key, &rpc_url);
+    let signer = get_signer(pvt_key, rpc_url);
     let contract_instance = DelegationManager::new(
         get_delegation_manager_address(rpc_url.to_string()).await,
         signer,
@@ -178,7 +179,7 @@ pub async fn register_operator_to_el_if_not_registered(
     if !is_registered {
         // TODO: check allocation delay
         let register_instance = contract_instance
-            .registerAsOperator(operator_details, 0, uri.to_string())
+            .registerAsOperator(operator_details, 0, metadata_uri.to_string())
             .send()
             .await?;
         info!(tx_hash = ?register_instance.tx_hash(),"Tx hash for registering operator to EL");

@@ -4,7 +4,6 @@ use testcontainers::{
     runners::AsyncRunner,
     ContainerAsync, GenericImage, ImageExt,
 };
-use tokio::time::{timeout, Duration};
 const ANVIL_IMAGE: &str = "ghcr.io/foundry-rs/foundry";
 const ANVIL_TAG: &str = "latest";
 const ANVIL_STATE_PATH: &str = "./crates/contracts/anvil/dump_state.json"; // Correct file path // relative path from the project root
@@ -38,6 +37,7 @@ pub async fn mine_anvil_blocks(container: &ContainerAsync<GenericImage>, n: u32)
     assert_eq!(output.exit_code().await.unwrap().unwrap(), 0);
 }
 
+/// Start an anvil container for testing, using the dump state file `ANVIL_STATE_PATH`
 pub async fn start_anvil_container() -> (ContainerAsync<GenericImage>, String, String) {
     let relative_path = PathBuf::from(ANVIL_STATE_PATH);
     let absolute_path = workspace_dir().join(relative_path);
