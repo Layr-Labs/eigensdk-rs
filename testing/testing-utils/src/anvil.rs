@@ -65,8 +65,6 @@ pub async fn start_anvil_container() -> (ContainerAsync<GenericImage>, String, S
         .await
         .unwrap();
 
-    println!("container_stdout{:?}", container.stdout_to_vec().await);
-
     let port = container
         .ports()
         .await

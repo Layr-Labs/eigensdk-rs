@@ -333,12 +333,13 @@ mod tests {
     use alloy_primitives::{Address, Bytes, FixedBytes, U256};
     use eigen_crypto_bls::BlsKeyPair;
     use eigen_logging::get_test_logger;
+    use eigen_testing_utils::anvil::start_anvil_container;
     use eigen_testing_utils::anvil_constants::{
         get_operator_state_retriever_address, get_registry_coordinator_address,
         register_operator_to_el_if_not_registered,
     };
     use eigen_testing_utils::transaction::wait_transaction;
-    use eigen_utils::delegationmanager::IDelegationManager::OperatorDetails;
+    use eigen_utils::delegationmanager::IDelegationManagerTypes::OperatorDetails;
     use std::str::FromStr;
 
     async fn build_avs_registry_chain_writer(
@@ -376,7 +377,7 @@ mod tests {
         let operator_details = OperatorDetails {
             __deprecated_earningsReceiver: Address::ZERO,
             delegationApprover: Address::ZERO,
-            stakerOptOutWindowBlocks: 0,
+            __deprecated_stakerOptOutWindowBlocks: 0,
         };
         register_operator_to_el_if_not_registered(
             &private_key,
