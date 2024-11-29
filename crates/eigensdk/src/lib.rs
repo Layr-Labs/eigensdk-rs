@@ -32,10 +32,6 @@ pub use eigen_logging as logging;
 #[doc(inline)]
 pub use eigen_metrics as metrics;
 
-#[cfg(feature = "contract-bindings")]
-#[doc(inline)]
-pub use eigen_contract_bindings as contract_bindings;
-
 /* ------------------------------------- Client Re-exports ------------------------------------- */
 
 #[cfg(feature = "client-avsregistry")]
