@@ -2759,11 +2759,15 @@ dependencies = [
  "alloy-primitives",
  "alloy-provider",
  "alloy-rpc-types",
+ "alloy-signer-local",
  "alloy-transport",
  "eigen-utils",
+ "eyre",
  "serde",
  "serde_json",
  "testcontainers",
+ "tokio",
+ "tracing",
  "url",
 ]
 
