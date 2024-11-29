@@ -277,6 +277,141 @@ impl ELChainWriter {
 
         Ok(cumulative_claimed_for_root_ret)
     }
+
+    /// Get the length of the distribution roots.
+    ///
+    /// # Returns
+    ///
+    /// * `Result<U256, ElContractsError>` - The length of the distribution roots if the call is successful,
+    /// otherwise an error.
+    ///
+    /// # Errors
+    ///
+    /// * `ElContractsError` - if the call to the contract fails.
+    pub async fn get_distribution_roots_length(&self) -> Result<U256, ElContractsError> {
+        let provider = get_signer(&self.signer, &self.provider);
+
+        let contract_rewards_coordinator =
+            IRewardsCoordinator::new(self.rewards_coordinator, &provider);
+
+        let distribution_roots_lenght_call = contract_rewards_coordinator
+            .getDistributionRootsLength()
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        let IRewardsCoordinator::getDistributionRootsLengthReturn {
+            _0: distribution_roots_length,
+        } = distribution_roots_lenght_call;
+
+        Ok(distribution_roots_length)
+    }
+
+    /// Get the current rewards calculation end timestamp.
+    ///
+    /// # Returns
+    ///
+    /// * `Result<u32, ElContractsError>` - The current rewards calculation
+    /// end timestamp if the call is successful.
+    ///
+    /// # Errors
+    ///
+    /// * `ElContractsError` - if the call to the contract fails.
+    pub async fn get_curr_rewards_calculation_end_timestamp(
+        &self,
+    ) -> Result<u32, ElContractsError> {
+        let provider = get_signer(&self.signer, &self.provider);
+
+        let contract_rewards_coordinator =
+            IRewardsCoordinator::new(self.rewards_coordinator, &provider);
+
+        let distribution_roots_lenght_call = contract_rewards_coordinator
+            .currRewardsCalculationEndTimestamp()
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        let IRewardsCoordinator::currRewardsCalculationEndTimestampReturn {
+            _0: timestamp_return,
+        } = distribution_roots_lenght_call;
+
+        Ok(timestamp_return)
+    }
+
+    /// Get the root index from a given hash.
+    ///
+    /// # Arguments
+    ///
+    /// * `hash` - The hash to get the root index from.
+    ///
+    /// # Returns
+    ///
+    /// * `Result<u32, ElContractsError>` - The root index if the
+    /// call is successful.
+    ///
+    /// # Errors
+    ///
+    /// * `ElContractsError` - if the call to the contract fails.
+    pub async fn get_root_index_from_hash(
+        &self,
+        hash: FixedBytes<32>,
+    ) -> Result<u32, ElContractsError> {
+        let provider = get_signer(&self.signer, &self.provider);
+
+        let contract_rewards_coordinator =
+            IRewardsCoordinator::new(self.rewards_coordinator, &provider);
+
+        let get_root_index_from_hash_call = contract_rewards_coordinator
+            .getRootIndexFromHash(hash)
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        let IRewardsCoordinator::getRootIndexFromHashReturn { _0: root_index } =
+            get_root_index_from_hash_call;
+
+        Ok(root_index)
+    }
+
+    pub async fn check_claim(&self, claim: RewardsMerkleClaim) -> Result<bool, ElContractsError> {
+        let provider = get_signer(&self.signer, &self.provider);
+
+        let contract_rewards_coordinator =
+            IRewardsCoordinator::new(self.rewards_coordinator, &provider);
+
+        let check_claim_call = contract_rewards_coordinator
+            .checkClaim(claim)
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        let IRewardsCoordinator::checkClaimReturn { _0: claim_ret } = check_claim_call;
+
+        Ok(claim_ret)
+    }
+
+    pub async fn get_cumulative_claimed(
+        &self,
+        earner_address: Address,
+        token: Address,
+    ) -> Result<U256, ElContractsError> {
+        let provider = get_signer(&self.signer, &self.provider);
+
+        let contract_rewards_coordinator =
+            IRewardsCoordinator::new(self.rewards_coordinator, &provider);
+
+        let cumulative_claimed_call = contract_rewards_coordinator
+            .cumulativeClaimed(earner_address, token)
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        let IRewardsCoordinator::cumulativeClaimedReturn {
+            _0: cumulative_claim_ret,
+        } = cumulative_claimed_call;
+
+        Ok(cumulative_claim_ret)
+    }
 }
 
 #[cfg(test)]
@@ -514,11 +649,44 @@ mod tests {
         };
 
         let tx_hash = el_chain_writer
-            .process_claim(earner_address, claim)
+            .process_claim(earner_address, claim.clone())
             .await
             .unwrap();
 
         let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
         assert!(receipt.status());
+
+        // TODO! fix this
+        let ret = el_chain_writer.check_claim(claim).await.unwrap();
+        assert!(ret);
+    }
+
+    #[tokio::test]
+    #[serial]
+    async fn test_get_distribution_roots_length() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let el_chain_writer = new_test_writer(http_endpoint.clone()).await;
+
+        // TODO! fix this
+        let distribution_roots_length_ret = el_chain_writer
+            .get_distribution_roots_length()
+            .await
+            .unwrap();
+
+        println!(
+            "distribution_roots_length_ret: {:?}",
+            distribution_roots_length_ret
+        );
+
+        // TODO! fix this
+        let curr_rewards_calculation_end_timestamp_ret = el_chain_writer
+            .get_curr_rewards_calculation_end_timestamp()
+            .await
+            .unwrap();
+
+        println!(
+            "curr_rewards_calculation_end_timestamp_ret: {:?}",
+            curr_rewards_calculation_end_timestamp_ret
+        );
     }
 }

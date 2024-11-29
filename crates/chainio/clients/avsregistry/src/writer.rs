@@ -328,18 +328,16 @@ impl AvsRegistryChainWriter {
 #[cfg(test)]
 mod tests {
     use super::AvsRegistryChainWriter;
-    use alloy::providers::{Provider, ProviderBuilder};
-    use alloy::transports::http::reqwest::Url;
     use alloy_primitives::{Address, Bytes, FixedBytes, U256};
     use eigen_crypto_bls::BlsKeyPair;
     use eigen_logging::get_test_logger;
+    use eigen_testing_utils::anvil::start_anvil_container;
     use eigen_testing_utils::anvil_constants::{
         get_operator_state_retriever_address, get_registry_coordinator_address,
         register_operator_to_el_if_not_registered,
     };
     use eigen_testing_utils::transaction::wait_transaction;
-    use eigen_utils::delegationmanager::IDelegationManager::OperatorDetails;
-    use std::str::FromStr;
+    use eigen_utils::delegationmanager::IDelegationManagerTypes::OperatorDetails;
 
     async fn build_avs_registry_chain_writer(
         http_endpoint: String,
@@ -376,7 +374,7 @@ mod tests {
         let operator_details = OperatorDetails {
             __deprecated_earningsReceiver: Address::ZERO,
             delegationApprover: Address::ZERO,
-            stakerOptOutWindowBlocks: 0,
+            __deprecated_stakerOptOutWindowBlocks: 0,
         };
         register_operator_to_el_if_not_registered(
             &private_key,
@@ -388,7 +386,6 @@ mod tests {
         .unwrap();
         let avs_writer =
             build_avs_registry_chain_writer(http_endpoint.clone().to_string(), private_key).await;
-        let operator_addr = Address::from_str("9965507D1a55bcC2695C58ba16FB37d819B0A4dc").unwrap();
         let quorum_nums = Bytes::from([0]);
 
         test_register_operator(
@@ -398,6 +395,8 @@ mod tests {
             http_endpoint.clone().to_string(),
         )
         .await;
+
+        //let operator_addr = Address::from_str("9965507D1a55bcC2695C58ba16FB37d819B0A4dc").unwrap();
         // test_update_stake_of_operator_subset(&avs_writer, operator_addr, http_endpoint.clone())
         //     .await;
         // test_update_stake_of_entire_operator_set(
@@ -453,7 +452,9 @@ mod tests {
 
         // this is set to U256::MAX so that the registry does not take the signature as expired.
         let signature_expiry = U256::MAX;
-        let url = Url::from_str(&http_url).unwrap();
+        //use std::str::FromStr;
+        //use alloy::transports::http::reqwest::Url;
+        //let url = Url::from_str(&http_url).unwrap();
         let tx_hash = avs_writer
             .register_operator_in_quorum_with_avs_registry_coordinator(
                 bls_key_pair,
