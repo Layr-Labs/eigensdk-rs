@@ -40,7 +40,10 @@ impl EthBackend for AlloyBackend {
         number: BlockNumberOrTag,
         hydrate: bool,
     ) -> Result<Option<Block>, RpcError<TransportErrorKind>> {
-        Ok(self.provider.get_block_by_number(number, hydrate).await?)
+        Ok(self
+            .provider
+            .get_block_by_number(number, hydrate.into())
+            .await?)
     }
 
     async fn get_transaction_receipt(&self, hash: TxHash) -> Option<TransactionReceipt> {
