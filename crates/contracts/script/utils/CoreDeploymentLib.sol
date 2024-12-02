@@ -8,6 +8,7 @@ import {console2} from "forge-std/Test.sol";
 import {Vm} from "forge-std/Vm.sol";
 import {stdJson} from "forge-std/StdJson.sol";
 import {DelegationManager} from "@eigenlayer/contracts/core/DelegationManager.sol";
+import {AllocationManager} from "@eigenlayer/contracts/core/AllocationManager.sol";
 import {StrategyManager} from "@eigenlayer/contracts/core/StrategyManager.sol";
 import {AVSDirectory} from "@eigenlayer/contracts/core/AVSDirectory.sol";
 import {EigenPodManager} from "@eigenlayer/contracts/pods/EigenPodManager.sol";
@@ -28,7 +29,7 @@ import {IAVSDirectory} from "@eigenlayer/contracts/interfaces/IAVSDirectory.sol"
 import {IPauserRegistry} from "@eigenlayer/contracts/interfaces/IPauserRegistry.sol";
 import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 import {StrategyFactory} from "@eigenlayer/contracts/strategies/StrategyFactory.sol";
-import {IAllocationManager} from "@eigenlayer/contracts/core/AllocationManager.sol";
+import {IAllocationManager} from "@eigenlayer/contracts/interfaces/IAllocationManager.sol";
 import {UpgradeableProxyLib} from "./UpgradeableProxyLib.sol";
 
 library CoreDeploymentLib {
@@ -135,6 +136,15 @@ library CoreDeploymentLib {
 
         address strategyFactoryImpl = address(
             new StrategyFactory(IStrategyManager(result.strategyManager))
+        );
+
+        address allocationManagerImpl = address(
+            new AllocationManager(
+                IDelegationManager(result.delegationManager),
+                IAVSDirectory(result.avsDirectory),
+                uint32(0), // _DEALLOCATION_DELAY
+                uint32(0) // _ALLOCATION_CONFIGURATION_DELAY
+            )
         );
 
         address ethPOSDeposit;
@@ -309,6 +319,22 @@ library CoreDeploymentLib {
         UpgradeableProxyLib.upgradeAndCall(
             result.eigenPodBeacon,
             eigenPodImpl,
+            upgradeCall
+        );
+
+        // Upgrade AllocationManager contract
+        upgradeCall = abi.encodeCall(
+            AllocationManager.initialize,
+            // TODO: Double check this
+            (
+                deployer, // initialOwner
+                IPauserRegistry(result.pauserRegistry), // _pauserRegistry
+                configData.delegationManager.initPausedStatus // initialPausedStatus
+            )
+        );
+        UpgradeableProxyLib.upgradeAndCall(
+            result.allocationManager,
+            allocationManagerImpl,
             upgradeCall
         );
 
