@@ -179,7 +179,7 @@ pub async fn register_operator_to_el_if_not_registered(
     if !is_registered {
         // TODO: check allocation delay
         let register_instance = contract_instance
-            .registerAsOperator(operator_details, 0, metadata_uri.to_string())
+            .registerAsOperator(operator_details, 1, metadata_uri.to_string())
             .send()
             .await?;
         info!(tx_hash = ?register_instance.tx_hash(),"Tx hash for registering operator to EL");
