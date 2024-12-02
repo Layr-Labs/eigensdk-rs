@@ -517,6 +517,8 @@ library CoreDeploymentLib {
                 data.rewardsCoordinator.toHexString(),
                 '","strategyBeacon":"',
                 data.strategyBeacon.toHexString(),
+                '","allocationManager":"',
+                data.allocationManager.toHexString(),
                 '"}'
             );
     }
