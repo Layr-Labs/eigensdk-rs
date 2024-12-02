@@ -1039,13 +1039,13 @@ mod tests {
         let underlying_token_addr_str = underlying_token_addr.to_string();
         assert_eq!(
             underlying_token_addr_str,
-            "0x82e01223d51Eb87e16A03E24687EDF0F294da6f1"
+            "0x9d4454B023096f34B160D6B654540c56A1F81688"
         );
 
         let strategy_contract_addr_str = strategy_contract_addr.to_string();
         assert_eq!(
             strategy_contract_addr_str,
-            "0x7969c5eD335650692Bc04293B07F5BF2e7A673C0"
+            "0xeC4cFde48EAdca2bC63E94BB437BbeAcE1371bF3"
         );
     }
 }
