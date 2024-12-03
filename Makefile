@@ -5,9 +5,6 @@ __CONTRACTS__: ##
 start-anvil-chain-with-contracts-deployed: ##
 	./crates/contracts/anvil/start-anvil-chain-with-el-and-avs-deployed.sh
 
-deploy-contracts-to-anvil-and-save-state: ##
-	./crates/contracts/anvil/deploy-contracts-save-anvil-state.sh
-
 deploy-eigenlayer:
 	./crates/contracts/anvil/deploy-eigenlayer.sh
 

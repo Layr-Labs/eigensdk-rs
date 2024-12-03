@@ -28,7 +28,7 @@ trap 'cleanup $LINENO "$BASH_COMMAND"' EXIT
 # we start anvil in the background so that we can run the below script
 # anvil --load-state avs-and-eigenlayer-deployed-anvil-state.json &
 # FIXME: bug in latest foundry version, so we use this pinned version instead of latest
-start_anvil_docker $parent_path/contracts_deployed_anvil_state.json ""
+start_anvil_docker $parent_path/dump_state.json ""
 
 cd ../../contracts
 # we need to restart the anvil chain at the correct block, otherwise the indexRegistry has a quorumUpdate at the block number
