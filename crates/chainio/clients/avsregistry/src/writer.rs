@@ -361,38 +361,31 @@ mod tests {
     }
 
     #[tokio::test]
-    #[ignore] // TODO: fix problems with anvil new version
     async fn test_avs_writer_methods() {
-        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        // start_anvil_docker().await;
-        // let http_endpoint = "http://localhost:8545";
+        // let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let http_endpoint = "http://localhost:8545";
         let bls_key =
             "1371012690269088913462269866874713266643928125698382731338806296762673180359922"
                 .to_string();
         let private_key =
             "8b3a350cf5c34c9194ca85829a2df0ec3153be0318b5e2d3348e872092edffba".to_string();
-        let operator_details = OperatorDetails {
-            __deprecated_earningsReceiver: Address::ZERO,
-            delegationApprover: Address::ZERO,
-            __deprecated_stakerOptOutWindowBlocks: 0,
-        };
         register_operator_to_el_if_not_registered(
             &private_key,
             &http_endpoint,
-            operator_details,
+            Address::ZERO,
             "uri",
         )
         .await
         .unwrap();
         let avs_writer =
-            build_avs_registry_chain_writer(http_endpoint.clone().to_string(), private_key).await;
+            build_avs_registry_chain_writer(http_endpoint.to_string(), private_key).await;
         let quorum_nums = Bytes::from([0]);
 
         test_register_operator(
             &avs_writer,
             bls_key,
             quorum_nums.clone(),
-            http_endpoint.clone().to_string(),
+            http_endpoint.to_string(),
         )
         .await;
 
@@ -440,7 +433,7 @@ mod tests {
         assert!(tx_status);
     }
 
-    // this function is caller from test_avs_writer_methods
+    // this function is called from test_avs_writer_methods
     async fn test_register_operator(
         avs_writer: &AvsRegistryChainWriter,
         private_key_decimal: String,
@@ -452,9 +445,6 @@ mod tests {
 
         // this is set to U256::MAX so that the registry does not take the signature as expired.
         let signature_expiry = U256::MAX;
-        //use std::str::FromStr;
-        //use alloy::transports::http::reqwest::Url;
-        //let url = Url::from_str(&http_url).unwrap();
         let tx_hash = avs_writer
             .register_operator_in_quorum_with_avs_registry_coordinator(
                 bls_key_pair,
