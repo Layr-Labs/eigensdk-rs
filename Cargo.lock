@@ -2766,7 +2766,6 @@ dependencies = [
  "serde",
  "serde_json",
  "testcontainers",
- "tracing",
  "url",
 ]
 

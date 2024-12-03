@@ -10,7 +10,6 @@ use eigen_utils::{
     get_provider, get_signer,
 };
 use eyre::Result;
-use tracing::info;
 
 /// Local anvil ContractsRegistry which contains a mapping of all locally deployed EL contracts.
 pub const CONTRACTS_REGISTRY: Address = address!("5FbDB2315678afecb367f032d93F642f64180aa3");
@@ -192,17 +191,20 @@ pub async fn register_operator_to_el_if_not_registered(
         .await?
         ._0;
     if !is_registered {
+        dbg!("Registering operator");
         let operator_details = OperatorDetails {
             __deprecated_earningsReceiver: Address::ZERO,
             delegationApprover: delegation_approver,
             __deprecated_stakerOptOutWindowBlocks: 0,
         };
+        dbg!(&contract_instance);
+
         // TODO: check allocation delay
         let register_instance = contract_instance
             .registerAsOperator(operator_details, 1, metadata_uri.to_string())
             .send()
             .await?;
-        info!(tx_hash = ?register_instance.tx_hash(),"Tx hash for registering operator to EL");
+        register_instance.get_receipt().await?;
     }
     Ok(())
 }

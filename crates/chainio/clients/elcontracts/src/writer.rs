@@ -426,21 +426,23 @@ mod tests {
     use eigen_testing_utils::{
         anvil::start_anvil_container,
         anvil_constants::{
+            get_allocation_manager_address, get_avs_directory_address,
             get_delegation_manager_address, get_erc20_mock_strategy,
-            get_rewards_coordinator_address, get_service_manager_address,
-            get_strategy_manager_address, register_operator_to_el_if_not_registered,
+            get_rewards_coordinator_address, get_strategy_manager_address,
         },
         transaction::wait_transaction,
     };
     use eigen_types::operator::Operator;
     use eigen_utils::{
-        delegationmanager::DelegationManager,
         get_provider,
         irewardscoordinator::IRewardsCoordinatorTypes::{EarnerTreeMerkleLeaf, RewardsMerkleClaim},
-        mockavsservicemanager::MockAvsServiceManager,
     };
     use serial_test::serial;
     use std::str::FromStr;
+
+    const OPERATOR_ADDRESS: Address = address!("90F79bf6EB2c4f870365E785982E1f101E93b906");
+    const OPERATOR_PRIVATE_KEY: &str =
+        "7c852118294e51e653712a81e05800f419141751be58f605c371e15141b007a6";
 
     /// Returns a new instance of ELChainWriter and the address of the delegation manager contract
     ///
@@ -450,32 +452,9 @@ mod tests {
     async fn setup_el_chain_reader(http_endpoint: String) -> (ELChainReader, Address) {
         let delegation_manager_address =
             get_delegation_manager_address(http_endpoint.clone()).await;
-        let delegation_manager_contract = DelegationManager::new(
-            delegation_manager_address,
-            get_provider(http_endpoint.as_str()),
-        );
-        let service_manager_address = get_service_manager_address(http_endpoint.clone()).await;
-        let service_manager_contract = MockAvsServiceManager::new(
-            service_manager_address,
-            get_provider(http_endpoint.as_str()),
-        );
-        let avs_directory_address_return = service_manager_contract
-            .avsDirectory()
-            .call()
-            .await
-            .unwrap();
-
-        let MockAvsServiceManager::avsDirectoryReturn {
-            _0: avs_directory_address,
-        } = avs_directory_address_return;
-
-        let allocation_manager_address = delegation_manager_contract
-            .allocationManager()
-            .call()
-            .await
-            .unwrap()
-            ._0;
-
+        let avs_directory_address = get_avs_directory_address(http_endpoint.clone()).await;
+        let allocation_manager_address =
+            get_allocation_manager_address(http_endpoint.clone()).await;
         (
             ELChainReader::new(
                 get_test_logger().clone(),
@@ -490,49 +469,44 @@ mod tests {
 
     async fn new_test_writer(http_endpoint: String) -> ELChainWriter {
         let (el_chain_reader, _) = setup_el_chain_reader(http_endpoint.clone()).await;
-        let operator_addr = Address::from_str("90F79bf6EB2c4f870365E785982E1f101E93b906").unwrap();
-        let operator_private_key =
-            "7c852118294e51e653712a81e05800f419141751be58f605c371e15141b007a6".to_string();
         let strategy_manager = get_strategy_manager_address(http_endpoint.clone()).await;
         let rewards_coordinator = get_rewards_coordinator_address(http_endpoint.clone()).await;
+        let delegation_manager = get_delegation_manager_address(http_endpoint.clone()).await;
 
         ELChainWriter::new(
-            operator_addr,
+            delegation_manager,
             strategy_manager,
             rewards_coordinator,
             el_chain_reader,
             http_endpoint.clone(),
-            operator_private_key,
+            OPERATOR_PRIVATE_KEY.to_string(),
         )
     }
 
     #[tokio::test]
-    #[serial]
     async fn test_register_operator() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-
         let (el_chain_reader, _delegation_manager_address) =
             setup_el_chain_reader(http_endpoint.clone()).await;
+        let el_chain_writer = new_test_writer(http_endpoint.clone()).await;
 
-        let operator_pvt_key = "59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d";
-        let operator: PrivateKeySigner = (operator_pvt_key)
-            .parse()
-            .expect("failed to generate wallet");
-
-        register_operator_to_el_if_not_registered(
-            operator_pvt_key,
-            &http_endpoint,
-            operator.address(),
-            "metadata_uri",
-        )
-        .await
-        .unwrap();
-
-        let operator_address = operator.address();
-        assert!(el_chain_reader
-            .is_operator_registered(operator_address)
+        let operator = Operator {
+            address: OPERATOR_ADDRESS, // can only register the address corresponding to the signer used in the writer
+            staker_opt_out_window_blocks: 3,
+            delegation_approver_address: OPERATOR_ADDRESS,
+            metadata_url: Some("metadata_uri".to_string()),
+            allocation_delay: 1,
+        };
+        el_chain_writer
+            .register_as_operator(operator)
             .await
-            .unwrap());
+            .unwrap();
+
+        let is_registered = el_chain_reader
+            .is_operator_registered(OPERATOR_ADDRESS)
+            .await
+            .unwrap();
+        assert!(is_registered);
     }
 
     #[tokio::test]

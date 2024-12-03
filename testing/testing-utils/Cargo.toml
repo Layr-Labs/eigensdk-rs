@@ -20,7 +20,6 @@ alloy-signer-local.workspace  = true
 eigen-utils.workspace = true
 serde.workspace = true
 serde_json.workspace = true
-tracing.workspace = true
 testcontainers.workspace = true
 url.workspace = true
 eyre.workspace = true
