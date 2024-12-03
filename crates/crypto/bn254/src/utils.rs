@@ -4,7 +4,6 @@ use ark_ff::{
     fields::{Field, PrimeField},
     One,
 };
-use num_bigint::BigUint;
 use rust_bls_bn254::pairing;
 
 /// MapToCurve implements the simple hash-and-check (also sometimes try-and-increment) algorithm
@@ -15,16 +14,15 @@ use rust_bls_bn254::pairing;
 pub fn map_to_curve(digest: &[u8]) -> G1Affine {
     let one = Fq::one();
     let three = Fq::from(3u64);
-    let big_int = BigUint::from_bytes_be(digest);
     let mut bytes = [0u8; 32];
-    big_int
-        .to_bytes_be()
-        .iter()
-        .rev()
-        .enumerate()
-        .for_each(|(i, &b)| bytes[i] = b);
 
-    let mut x = Fq::from_le_bytes_mod_order(&bytes);
+    // This adds padding to the digest to make it 32 bytes. Go SDK automatically does it.
+    // This makes HashToCurve same for both Rust and Go SDK.
+    for i in 0..digest.len() {
+        bytes[i] = digest[i];
+    }
+
+    let mut x = Fq::from_be_bytes_mod_order(&bytes);
 
     loop {
         // y = x^3 + 3
