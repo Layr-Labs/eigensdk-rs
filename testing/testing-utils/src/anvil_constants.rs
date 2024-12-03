@@ -158,6 +158,34 @@ pub async fn get_rewards_coordinator_address(rpc_url: String) -> Address {
     address
 }
 
+/// Allocation Manager contract address
+pub async fn get_allocation_manager_address(rpc_url: String) -> Address {
+    let contracts_registry = ContractsRegistry::new(CONTRACTS_REGISTRY, get_provider(&rpc_url));
+
+    let val = contracts_registry
+        .contracts("delegationManager".to_string())
+        .call()
+        .await
+        .unwrap();
+
+    let contractsReturn {
+        _0: delegation_manager,
+    } = val;
+
+    let contract_delegation_manager =
+        DelegationManager::new(delegation_manager, get_provider(&rpc_url));
+
+    let DelegationManager::allocationManagerReturn {
+        _0: allocation_manager_address,
+    } = contract_delegation_manager
+        .allocationManager()
+        .call()
+        .await
+        .unwrap();
+
+    allocation_manager_address
+}
+
 /// Register an operator in the DelegationManager contract. If its already registered, it will not do anything.
 pub async fn register_operator_to_el_if_not_registered(
     pvt_key: &str,
