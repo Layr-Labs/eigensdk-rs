@@ -177,7 +177,7 @@ pub async fn get_allocation_manager_address(rpc_url: String) -> Address {
 pub async fn register_operator_to_el_if_not_registered(
     pvt_key: &str,
     rpc_url: &str,
-    operator_details: OperatorDetails,
+    delegation_approver: Address,
     metadata_uri: &str,
 ) -> Result<()> {
     let wallet = PrivateKeySigner::from_str(pvt_key)?;
@@ -192,6 +192,11 @@ pub async fn register_operator_to_el_if_not_registered(
         .await?
         ._0;
     if !is_registered {
+        let operator_details = OperatorDetails {
+            __deprecated_earningsReceiver: Address::ZERO,
+            delegationApprover: delegation_approver,
+            __deprecated_stakerOptOutWindowBlocks: 0,
+        };
         // TODO: check allocation delay
         let register_instance = contract_instance
             .registerAsOperator(operator_details, 1, metadata_uri.to_string())
