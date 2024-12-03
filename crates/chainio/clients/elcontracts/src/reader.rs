@@ -814,7 +814,9 @@ mod tests {
     use alloy::providers::Provider;
     use alloy_primitives::{address, keccak256, Address, FixedBytes, U256};
     use eigen_logging::get_test_logger;
-    use eigen_testing_utils::anvil_constants::get_erc20_mock_strategy;
+    use eigen_testing_utils::anvil_constants::{
+        get_erc20_mock_strategy, register_operator_to_el_if_not_registered,
+    };
     use eigen_testing_utils::{
         anvil::start_anvil_container,
         anvil_constants::{get_delegation_manager_address, get_service_manager_address},
@@ -828,9 +830,20 @@ mod tests {
     };
     use std::str::FromStr;
 
-    const OPERATOR_ADDRESS: &str = "0xa0Ee7A142d267C1f36714E4a8F75612F20a79720";
+    const OPERATOR_ADDRESS: Address = address!("f39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+    const OPERATOR_PRIVATE_KEY: &str =
+        "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
 
     async fn build_el_chain_reader(http_endpoint: String) -> ELChainReader {
+        register_operator_to_el_if_not_registered(
+            OPERATOR_PRIVATE_KEY,
+            &http_endpoint,
+            OPERATOR_ADDRESS,
+            "metadata_uri",
+        )
+        .await
+        .unwrap();
+
         let delegation_manager_address =
             get_delegation_manager_address(http_endpoint.clone()).await;
         let delegation_manager_contract =
@@ -956,11 +969,10 @@ mod tests {
     #[tokio::test]
     async fn test_get_operator_details() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let operator_addr = Address::from_str(OPERATOR_ADDRESS).unwrap();
         let chain_reader = build_el_chain_reader(http_endpoint).await;
 
         let operator = chain_reader
-            .get_operator_details(operator_addr)
+            .get_operator_details(OPERATOR_ADDRESS)
             .await
             .unwrap();
 
@@ -971,11 +983,10 @@ mod tests {
     #[tokio::test]
     async fn test_is_operator_registered() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let operator_addr = Address::from_str(OPERATOR_ADDRESS).unwrap();
         let chain_reader = build_el_chain_reader(http_endpoint).await;
 
         let is_registered = chain_reader
-            .is_operator_registered(operator_addr)
+            .is_operator_registered(OPERATOR_ADDRESS)
             .await
             .unwrap();
 
@@ -985,10 +996,12 @@ mod tests {
     #[tokio::test]
     async fn test_get_staker_shares() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let operator_addr = Address::from_str(OPERATOR_ADDRESS).unwrap();
         let chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
 
-        let (strategies, shares) = chain_reader.get_staker_shares(operator_addr).await.unwrap();
+        let (strategies, shares) = chain_reader
+            .get_staker_shares(OPERATOR_ADDRESS)
+            .await
+            .unwrap();
 
         let expected_strategies = vec![get_erc20_mock_strategy(http_endpoint.clone()).await];
 
@@ -1000,11 +1013,10 @@ mod tests {
     #[tokio::test]
     async fn test_get_delegated_operator() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let staker_addr = Address::from_str(OPERATOR_ADDRESS).unwrap(); // TODO: staker address? see deployment scripts
         let chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
 
         let operator_addr = chain_reader
-            .get_delegated_operator(staker_addr)
+            .get_delegated_operator(OPERATOR_ADDRESS)
             .await
             .unwrap();
 
@@ -1014,11 +1026,10 @@ mod tests {
     #[tokio::test]
     async fn test_get_registered_sets() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let operator_addr = Address::from_str(OPERATOR_ADDRESS).unwrap();
         let chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
 
         let ret = chain_reader
-            .get_registered_sets(operator_addr)
+            .get_registered_sets(OPERATOR_ADDRESS)
             .await
             .unwrap();
 
@@ -1039,7 +1050,7 @@ mod tests {
         let underlying_token_addr_str = underlying_token_addr.to_string();
         assert_eq!(
             underlying_token_addr_str,
-            "0x9d4454B023096f34B160D6B654540c56A1F81688"
+            "0x36C02dA8a0983159322a80FFE9F24b1acfF8B570"
         );
 
         let strategy_contract_addr_str = strategy_contract_addr.to_string();

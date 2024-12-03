@@ -362,8 +362,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_avs_writer_methods() {
-        // let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let http_endpoint = "http://localhost:8545";
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
         let bls_key =
             "1371012690269088913462269866874713266643928125698382731338806296762673180359922"
                 .to_string();
