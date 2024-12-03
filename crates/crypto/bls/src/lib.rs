@@ -56,22 +56,18 @@ impl<'de> Deserialize<'de> for BlsG1Point {
                 formatter.write_str("a byte array representing a G1Affine point")
             }
 
-            fn visit_seq<A>(self, mut seq: A) -> Result<Self::Value, A::Error>
+            fn visit_bytes<E>(self, mut bytes: &[u8]) -> Result<Self::Value, E>
             where
-                A: serde::de::SeqAccess<'de>,
+                E: de::Error,
             {
-                let mut buffer = Vec::new();
+                //let mut buffer = Vec::new();
 
-                while let Some(value) = seq.next_element()? {
-                    buffer.push(value);
-                }
-
-                let g1 = G1Affine::deserialize_uncompressed(&*buffer).map_err(de::Error::custom)?;
+                let g1 = G1Affine::deserialize_uncompressed(bytes).map_err(de::Error::custom)?;
                 Ok(BlsG1Point { g1 })
             }
         }
 
-        deserializer.deserialize_seq(BlsG1PointVisitor)
+        deserializer.deserialize_bytes(BlsG1PointVisitor)
     }
 }
 
