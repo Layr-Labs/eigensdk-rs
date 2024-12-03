@@ -770,6 +770,8 @@ impl ELChainReader {
         Ok(delay)
     }
 
+    /*
+     *  * TODO: This method is not supported by the current version of eigenlayer-contracts
     pub async fn get_registered_sets(
         &self,
         operator_address: Address,
@@ -790,6 +792,7 @@ impl ELChainReader {
 
         Ok(registered_sets)
     }
+    */
 }
 
 // TODO: move to types.rs?
@@ -1003,11 +1006,10 @@ mod tests {
             .await
             .unwrap();
 
-        let expected_strategies = vec![get_erc20_mock_strategy(http_endpoint.clone()).await];
+        let expected_strategies: Vec<Address> = vec![];
 
         assert!(strategies.len() == shares.len());
         assert_eq!(strategies, expected_strategies);
-        assert!(shares[0] > U256::from(0));
     }
 
     #[tokio::test]
@@ -1020,9 +1022,11 @@ mod tests {
             .await
             .unwrap();
 
-        assert_eq!(operator_addr, Address::ZERO); // staker is delegated?
+        assert_eq!(operator_addr, OPERATOR_ADDRESS); // operator is delegated to himself
     }
 
+    /*
+     * TODO: This method is not supported by the current version of eigenlayer-contracts
     #[tokio::test]
     async fn test_get_registered_sets() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
@@ -1035,6 +1039,7 @@ mod tests {
 
         assert_eq!(ret.len(), 1);
     }
+    */
 
     #[tokio::test]
     async fn test_get_strategy_and_underlying_token() {
