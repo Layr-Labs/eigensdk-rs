@@ -26,10 +26,13 @@ library WriteToContractsRegistryLib {
             "avsDirectory",
             address(deploymentdata.avsDirectory)
         );
-
         contractsRegistry.registerContract(
             "allocationManager",
             address(deploymentdata.allocationManager)
+        );
+        contractsRegistry.registerContract(
+            "rewardsCoordinators",
+            address(deploymentdata.delegationManager)
         );
     }
 
