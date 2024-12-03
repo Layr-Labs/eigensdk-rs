@@ -429,7 +429,7 @@ impl ELChainReader {
             _0: underlying_token_addr,
         } = underlying_token;
 
-        Ok((contract_strategy_address.clone(), underlying_token_addr))
+        Ok((*contract_strategy_address, underlying_token_addr))
     }
 
     pub async fn get_allocatable_magnitude(
@@ -831,7 +831,6 @@ mod tests {
         delegationmanager::DelegationManager::calculateDelegationApprovalDigestHashReturn,
         mockavsservicemanager::MockAvsServiceManager,
     };
-    use std::str::FromStr;
 
     const OPERATOR_ADDRESS: Address = address!("f39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
     const OPERATOR_PRIVATE_KEY: &str =

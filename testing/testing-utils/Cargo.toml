@@ -24,4 +24,3 @@ tracing.workspace = true
 testcontainers.workspace = true
 url.workspace = true
 eyre.workspace = true
-tokio.workspace = true

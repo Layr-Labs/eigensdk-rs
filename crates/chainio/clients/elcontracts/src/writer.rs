@@ -10,7 +10,8 @@ use eigen_utils::{
     erc20::ERC20,
     get_signer,
     irewardscoordinator::{
-        IRewardsCoordinator, IRewardsCoordinatorTypes, IRewardsCoordinatorTypes::RewardsMerkleClaim,
+        IRewardsCoordinator,
+        IRewardsCoordinatorTypes::{self, RewardsMerkleClaim},
     },
     strategymanager::StrategyManager,
 };
@@ -283,7 +284,7 @@ impl ELChainWriter {
     /// # Returns
     ///
     /// * `Result<U256, ElContractsError>` - The length of the distribution roots if the call is successful,
-    /// otherwise an error.
+    ///   otherwise an error.
     ///
     /// # Errors
     ///
@@ -312,7 +313,7 @@ impl ELChainWriter {
     /// # Returns
     ///
     /// * `Result<u32, ElContractsError>` - The current rewards calculation
-    /// end timestamp if the call is successful.
+    ///   end timestamp if the call is successful.
     ///
     /// # Errors
     ///
@@ -347,7 +348,7 @@ impl ELChainWriter {
     /// # Returns
     ///
     /// * `Result<u32, ElContractsError>` - The root index if the
-    /// call is successful.
+    ///   call is successful.
     ///
     /// # Errors
     ///
@@ -425,7 +426,7 @@ mod tests {
     use eigen_testing_utils::{
         anvil::start_anvil_container,
         anvil_constants::{
-            self, get_delegation_manager_address, get_erc20_mock_strategy,
+            get_delegation_manager_address, get_erc20_mock_strategy,
             get_rewards_coordinator_address, get_service_manager_address,
             get_strategy_manager_address, register_operator_to_el_if_not_registered,
         },
@@ -509,7 +510,6 @@ mod tests {
     #[serial]
     async fn test_register_operator() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let provider = get_provider(&http_endpoint);
 
         let (el_chain_reader, _delegation_manager_address) =
             setup_el_chain_reader(http_endpoint.clone()).await;
