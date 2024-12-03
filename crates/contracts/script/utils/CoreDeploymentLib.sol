@@ -460,6 +460,9 @@ library CoreDeploymentLib {
         data.rewardsCoordinator = json.readAddress(
             ".addresses.rewardsCoordinator"
         );
+        data.allocationManager = json.readAddress(
+            ".addresses.allocationManager"
+        );
 
         return data;
     }

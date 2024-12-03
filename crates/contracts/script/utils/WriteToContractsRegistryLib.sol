@@ -31,8 +31,8 @@ library WriteToContractsRegistryLib {
             address(deploymentdata.allocationManager)
         );
         contractsRegistry.registerContract(
-            "rewardsCoordinators",
-            address(deploymentdata.delegationManager)
+            "rewardsCoordinator",
+            address(deploymentdata.rewardsCoordinator)
         );
     }
 
