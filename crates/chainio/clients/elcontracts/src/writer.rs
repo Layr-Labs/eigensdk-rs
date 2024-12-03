@@ -434,7 +434,7 @@ mod tests {
     };
     use eigen_types::operator::Operator;
     use eigen_utils::{
-        delegationmanager::{DelegationManager, IDelegationManagerTypes::OperatorDetails},
+        delegationmanager::DelegationManager,
         get_provider,
         irewardscoordinator::IRewardsCoordinatorTypes::{EarnerTreeMerkleLeaf, RewardsMerkleClaim},
         mockavsservicemanager::MockAvsServiceManager,

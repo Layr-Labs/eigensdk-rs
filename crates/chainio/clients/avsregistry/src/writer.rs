@@ -337,7 +337,6 @@ mod tests {
         register_operator_to_el_if_not_registered,
     };
     use eigen_testing_utils::transaction::wait_transaction;
-    use eigen_utils::delegationmanager::IDelegationManagerTypes::OperatorDetails;
 
     async fn build_avs_registry_chain_writer(
         http_endpoint: String,

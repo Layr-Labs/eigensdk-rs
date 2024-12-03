@@ -1116,7 +1116,7 @@ mod tests {
         // test call_contract
         let expected_bytes = anvil.call(&tx_request).await.unwrap();
         let bytes = instrumented_client
-            .call_contract(tx_request.clone(), BlockNumberOrTag::Earliest)
+            .call_contract(tx_request.clone(), BlockNumberOrTag::Latest)
             .await
             .unwrap();
         assert_eq!(expected_bytes, bytes);
@@ -1155,8 +1155,9 @@ mod tests {
             .await
             .unwrap();
 
+        let block_number = instrumented_client.block_number().await.unwrap();
         let storage = instrumented_client
-            .storage_at(account, U256::ZERO, U256::ZERO)
+            .storage_at(account, U256::ZERO, U256::from(block_number))
             .await
             .unwrap();
 
