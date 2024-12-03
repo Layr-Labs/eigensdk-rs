@@ -421,21 +421,19 @@ mod tests {
     use alloy::providers::Provider;
     use alloy_primitives::{address, Address, FixedBytes, U256};
     use alloy_signer_local::PrivateKeySigner;
-    use anvil_constants::CONTRACTS_REGISTRY;
     use eigen_logging::get_test_logger;
     use eigen_testing_utils::{
         anvil::start_anvil_container,
         anvil_constants::{
             self, get_delegation_manager_address, get_erc20_mock_strategy,
             get_rewards_coordinator_address, get_service_manager_address,
-            get_strategy_manager_address,
+            get_strategy_manager_address, register_operator_to_el_if_not_registered,
         },
         transaction::wait_transaction,
     };
     use eigen_types::operator::Operator;
     use eigen_utils::{
-        contractsregistry::ContractsRegistry::{self, get_test_valuesReturn},
-        delegationmanager::DelegationManager,
+        delegationmanager::{DelegationManager, IDelegationManagerTypes::OperatorDetails},
         get_provider,
         irewardscoordinator::IRewardsCoordinatorTypes::{EarnerTreeMerkleLeaf, RewardsMerkleClaim},
         mockavsservicemanager::MockAvsServiceManager,
@@ -514,28 +512,22 @@ mod tests {
         let provider = get_provider(&http_endpoint);
 
         let (el_chain_reader, _delegation_manager_address) =
-            setup_el_chain_reader(http_endpoint).await;
+            setup_el_chain_reader(http_endpoint.clone()).await;
 
         let operator_pvt_key = "59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d";
         let operator: PrivateKeySigner = (operator_pvt_key)
             .parse()
             .expect("failed to generate wallet");
 
-        let contract_registry = ContractsRegistry::new(CONTRACTS_REGISTRY, provider);
-        // Use these value in tests when needed
-        let operator_index = "1".parse().unwrap();
-        let get_test_values_return = contract_registry
-            .get_test_values("test_register_operator".to_string(), operator_index)
-            .call()
-            .await
-            .unwrap();
-        let get_test_valuesReturn {
-            _0: _timestamp,
-            _1: _blocknumber,
-            _2: _index,
-        } = get_test_values_return;
+        register_operator_to_el_if_not_registered(
+            operator_pvt_key,
+            &http_endpoint,
+            operator.address(),
+            "metadata_uri",
+        )
+        .await
+        .unwrap();
 
-        // operator who registered at index 1
         let operator_address = operator.address();
         assert!(el_chain_reader
             .is_operator_registered(operator_address)
