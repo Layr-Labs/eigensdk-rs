@@ -440,9 +440,9 @@ mod tests {
     use serial_test::serial;
     use std::str::FromStr;
 
-    const OPERATOR_ADDRESS: Address = address!("90F79bf6EB2c4f870365E785982E1f101E93b906");
+    const OPERATOR_ADDRESS: Address = address!("f39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
     const OPERATOR_PRIVATE_KEY: &str =
-        "7c852118294e51e653712a81e05800f419141751be58f605c371e15141b007a6";
+        "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
 
     /// Returns a new instance of ELChainWriter and the address of the delegation manager contract
     ///
