@@ -191,15 +191,11 @@ pub async fn register_operator_to_el_if_not_registered(
         .await?
         ._0;
     if !is_registered {
-        dbg!("Registering operator");
         let operator_details = OperatorDetails {
             __deprecated_earningsReceiver: Address::ZERO,
             delegationApprover: delegation_approver,
             __deprecated_stakerOptOutWindowBlocks: 0,
         };
-        dbg!(&contract_instance);
-
-        // TODO: check allocation delay
         let register_instance = contract_instance
             .registerAsOperator(operator_details, 1, metadata_uri.to_string())
             .send()
