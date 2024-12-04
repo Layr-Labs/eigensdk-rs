@@ -18,7 +18,7 @@ pub fn map_to_curve(digest: &[u8]) -> G1Affine {
 
     // This adds padding to the digest to make it 32 bytes. Go SDK automatically does it.
     // This makes HashToCurve same for both Rust and Go SDK.
-    bytes[..digest.len()].copy_from_slice(&digest[..]);
+    bytes[..digest.len()].copy_from_slice(digest);
 
     let mut x = Fq::from_be_bytes_mod_order(&bytes);
 
