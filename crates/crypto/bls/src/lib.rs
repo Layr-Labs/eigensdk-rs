@@ -690,5 +690,10 @@ mod tests {
         println!("local public_key={:?}", public_key);
         let signature = bls_key_pair.sign_message(message_bytes);
         println!("local signature={:?}", signature);
+
+        let serialized = serde_json::to_string(&signature).expect("Failed to serialize");
+
+        println!("====================");
+        println!("{}", serialized);
     }
 }
