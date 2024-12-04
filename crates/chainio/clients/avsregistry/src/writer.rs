@@ -323,7 +323,6 @@ mod tests {
     use eigen_testing_utils::anvil::start_anvil_container;
     use eigen_testing_utils::anvil_constants::{
         get_operator_state_retriever_address, get_registry_coordinator_address,
-        register_operator_to_el_if_not_registered,
     };
     use eigen_testing_utils::transaction::wait_transaction;
     use std::str::FromStr;
