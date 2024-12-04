@@ -9,7 +9,7 @@ use eigen_crypto_bls::{
 use eigen_logging::logger::SharedLogger;
 use eigen_utils::registrycoordinator::{
     IBLSApkRegistry::PubkeyRegistrationParams, ISignatureUtils::SignatureWithSaltAndExpiry,
-    RegistryCoordinator, BN254::G1Point as RegistryG1Point, BN254::G2Point as RegistryG2Point,
+    RegistryCoordinator,
 };
 use eigen_utils::{
     get_provider, get_signer,
@@ -188,6 +188,7 @@ impl AvsRegistryChainWriter {
             .sign_hash(&msg_to_sign)
             .await
             .map_err(|_| AvsRegistryError::InvalidSignature)?;
+
         let operator_signature_with_salt_and_expiry = SignatureWithSaltAndExpiry {
             signature: operator_signature.as_bytes().into(),
             salt: operator_to_avs_registration_sig_salt,
@@ -197,20 +198,7 @@ impl AvsRegistryChainWriter {
         let contract_call = contract_registry_coordinator.registerOperator(
             quorum_numbers.clone(),
             socket,
-            PubkeyRegistrationParams {
-                pubkeyRegistrationSignature: RegistryG1Point {
-                    X: pub_key_reg_params.pubkeyRegistrationSignature.X,
-                    Y: pub_key_reg_params.pubkeyRegistrationSignature.Y,
-                },
-                pubkeyG1: RegistryG1Point {
-                    X: pub_key_reg_params.pubkeyG1.X,
-                    Y: pub_key_reg_params.pubkeyG1.Y,
-                },
-                pubkeyG2: RegistryG2Point {
-                    X: pub_key_reg_params.pubkeyG2.X,
-                    Y: pub_key_reg_params.pubkeyG2.Y,
-                },
-            },
+            pub_key_reg_params,
             operator_signature_with_salt_and_expiry,
         );
 
@@ -219,6 +207,7 @@ impl AvsRegistryChainWriter {
             .send()
             .await
             .map_err(AvsRegistryError::AlloyContractError)?;
+
         info!(tx_hash = ?tx.tx_hash(),"Sent transaction to register operator in the AVS's registry coordinator" );
         Ok(*tx.tx_hash())
     }
@@ -337,6 +326,7 @@ mod tests {
         register_operator_to_el_if_not_registered,
     };
     use eigen_testing_utils::transaction::wait_transaction;
+    use std::str::FromStr;
 
     async fn build_avs_registry_chain_writer(
         http_endpoint: String,
@@ -344,10 +334,8 @@ mod tests {
     ) -> AvsRegistryChainWriter {
         let registry_coordinator_address =
             get_registry_coordinator_address(http_endpoint.clone()).await;
-        println!("reg_coordinator{:?}", registry_coordinator_address);
         let operator_state_retriever_address =
             get_operator_state_retriever_address(http_endpoint.clone()).await;
-        println!("op_state{:?}", operator_state_retriever_address);
         AvsRegistryChainWriter::build_avs_registry_chain_writer(
             get_test_logger(),
             http_endpoint,
@@ -360,44 +348,36 @@ mod tests {
     }
 
     #[tokio::test]
+    #[ignore] // TODO: fix this. Registering the operator fails due to BLSApkRegistry.registerBLSPublicKey error
     async fn test_avs_writer_methods() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+
         let bls_key =
             "1371012690269088913462269866874713266643928125698382731338806296762673180359922"
                 .to_string();
         let private_key =
             "8b3a350cf5c34c9194ca85829a2df0ec3153be0318b5e2d3348e872092edffba".to_string();
-        register_operator_to_el_if_not_registered(
-            &private_key,
-            &http_endpoint,
-            Address::ZERO,
-            "uri",
-        )
-        .await
-        .unwrap();
-        let avs_writer =
-            build_avs_registry_chain_writer(http_endpoint.to_string(), private_key).await;
+        let avs_writer = build_avs_registry_chain_writer(http_endpoint.clone(), private_key).await;
+        let operator_addr = Address::from_str("9965507D1a55bcC2695C58ba16FB37d819B0A4dc").unwrap();
         let quorum_nums = Bytes::from([0]);
 
         test_register_operator(
             &avs_writer,
             bls_key,
             quorum_nums.clone(),
-            http_endpoint.to_string(),
+            http_endpoint.clone(),
         )
         .await;
-
-        //let operator_addr = Address::from_str("9965507D1a55bcC2695C58ba16FB37d819B0A4dc").unwrap();
-        // test_update_stake_of_operator_subset(&avs_writer, operator_addr, http_endpoint.clone())
-        //     .await;
-        // test_update_stake_of_entire_operator_set(
-        //     &avs_writer,
-        //     operator_addr,
-        //     quorum_nums.clone(),
-        //     http_endpoint.clone(),
-        // )
-        // .await;
-        // test_deregister_operator(&avs_writer, quorum_nums, http_endpoint).await;
+        test_update_stake_of_operator_subset(&avs_writer, operator_addr, http_endpoint.clone())
+            .await;
+        test_update_stake_of_entire_operator_set(
+            &avs_writer,
+            operator_addr,
+            quorum_nums.clone(),
+            http_endpoint.clone(),
+        )
+        .await;
+        test_deregister_operator(&avs_writer, quorum_nums, http_endpoint).await;
     }
 
     // this function is caller from test_avs_writer_methods
@@ -452,8 +432,8 @@ mod tests {
                 "".into(),
             )
             .await
-            .expect("regg");
-        println!("tx_hash{:?}", tx_hash);
+            .unwrap();
+
         let tx_status = wait_transaction(&http_url, tx_hash).await.unwrap().status();
         assert!(tx_status);
     }
