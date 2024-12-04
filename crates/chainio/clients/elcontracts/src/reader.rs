@@ -247,8 +247,8 @@ impl ELChainReader {
 
         Ok((
             strategy_addr,
-            underlying_token_addr,
             *contract_ierc20.address(),
+            underlying_token_addr,
         ))
     }
 
@@ -832,9 +832,9 @@ mod tests {
         mockavsservicemanager::MockAvsServiceManager,
     };
 
-    const OPERATOR_ADDRESS: Address = address!("f39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+    const OPERATOR_ADDRESS: Address = address!("70997970C51812dc3A010C7d01b50e0d17dc79C8");
     const OPERATOR_PRIVATE_KEY: &str =
-        "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
+        "0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d";
 
     async fn build_el_chain_reader(http_endpoint: String) -> ELChainReader {
         register_operator_to_el_if_not_registered(
