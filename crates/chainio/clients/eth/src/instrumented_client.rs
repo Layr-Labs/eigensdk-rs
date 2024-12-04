@@ -1008,6 +1008,8 @@ mod tests {
     async fn test_transaction_methods() {
         let (_container, rpc_url, _ws_endpoint) = start_anvil_container().await;
         let instrumented_client = InstrumentedClient::new(&rpc_url).await.unwrap();
+        let private_key_hex =
+            "2a871d0798f97d79848a013d4936a73bf4cc922c825d33c1cf7073dff6d409c6".to_string();
 
         // build the transaction
         let to = address!("a0Ee7A142d267C1f36714E4a8F75612F20a79720");
@@ -1015,14 +1017,12 @@ mod tests {
             to: Call(to),
             value: U256::from(0),
             gas_limit: 2_000_000,
-            nonce: 0x69, // nonce queried from the sender account
+            nonce: 0,
             gas_price: 21_000_000_000,
             input: bytes!(),
             chain_id: Some(31337),
         };
 
-        let private_key_hex =
-            "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80".to_string();
         let config = Config::PrivateKey(private_key_hex);
         let signer = Config::signer_from_config(config).unwrap();
         let signature = signer.sign_transaction_sync(&mut tx).unwrap();
