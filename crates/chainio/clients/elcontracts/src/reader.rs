@@ -813,8 +813,8 @@ pub struct AllocationInfo {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use alloy::eips::eip1898::BlockNumberOrTag::Number;
     use alloy::providers::Provider;
+    use alloy::{eips::eip1898::BlockNumberOrTag::Number, rpc::types::BlockTransactionsKind};
     use alloy_primitives::{address, keccak256, Address, FixedBytes, U256};
     use eigen_logging::get_test_logger;
     use eigen_testing_utils::anvil_constants::{
@@ -891,7 +891,7 @@ mod tests {
         let approve_salt: FixedBytes<32> = FixedBytes::from([0x02; 32]);
         let current_block_number = provider.get_block_number().await.unwrap();
         let block_info = provider
-            .get_block_by_number(Number(current_block_number), true)
+            .get_block_by_number(Number(current_block_number), BlockTransactionsKind::Hashes)
             .await
             .unwrap();
 
@@ -941,7 +941,7 @@ mod tests {
         let salt: FixedBytes<32> = FixedBytes::from([0x02; 32]);
         let current_block_number = provider.get_block_number().await.unwrap();
         let block_info = provider
-            .get_block_by_number(Number(current_block_number), true)
+            .get_block_by_number(Number(current_block_number), BlockTransactionsKind::Hashes)
             .await
             .unwrap();
         let block = block_info.unwrap();

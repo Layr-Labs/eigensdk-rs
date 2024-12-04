@@ -5,7 +5,6 @@ members = [
     "crates/chainio/clients/eth/",
     "crates/chainio/clients/fireblocks/",
     "crates/chainio/txmanager/",
-    "crates/contracts/bindings/",
     "crates/crypto/bls/",
     "crates/crypto/bn254/",
     "crates/eigen-cli/",
@@ -30,7 +29,7 @@ members = [
 resolver = "2"
 
 [workspace.package]
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 authors = ["Eigen Layer contributors"]
 rust-version = "1.79"
@@ -63,7 +62,6 @@ eigen-client-avsregistry = { path = "crates/chainio/clients/avsregistry" }
 eigen-client-elcontracts = { path = "crates/chainio/clients/elcontracts" }
 eigen-client-eth = { path = "crates/chainio/clients/eth" }
 eigen-client-fireblocks = { path = "crates/chainio/clients/fireblocks" }
-eigen-contract-bindings = { path = "crates/contracts/bindings/" }
 eigen-crypto-bls = { path = "crates/crypto/bls/" }
 eigen-crypto-bn254 = { path = "crates/crypto/bn254/" }
 eigen-logging = { path = "crates/logging/" }
@@ -120,32 +118,30 @@ uuid = { version = "1.11", features = ["v4"] }
 parking_lot = "0.12"
 
 #alloy
-alloy-json-rpc = { version = "0.5.3", default-features = false }
-alloy-network = { version = "0.5.3", default-features = false }
-alloy-node-bindings = { version = "0.5.3", default-features = false }
-alloy-primitives = "0.8.7"
-alloy-provider = { version = "0.5.3", default-features = false, features = [
+alloy-json-rpc = { version = "0.7", default-features = false }
+alloy-network = { version = "0.7", default-features = false }
+alloy-node-bindings = { version = "0.7", default-features = false }
+alloy-primitives = "0.8.14"
+alloy-provider = { version = "0.7", default-features = false, features = [
     "reqwest",
     "ws",
 ] }
-alloy-pubsub = { version = "0.5.3", default-features = false }
-alloy-rlp = "0.3.8"
-alloy-rpc-client = "0.5.3"
-alloy-rpc-types = { version = "0.5.3", default-features = false, features = [
+alloy-pubsub = { version = "0.7", default-features = false }
+alloy-rlp = "0.3.9"
+alloy-rpc-client = "0.7"
+alloy-rpc-types = { version = "0.7", default-features = false, features = [
     "eth",
 ] }
-alloy-serde = { version = "0.5.3", default-features = false }
-alloy-signer = { version = "0.5.3", default-features = false }
-alloy-signer-aws = "0.5.3"
-alloy-signer-local = { version = "0.5.3", default-features = false }
-alloy-sol-types = "0.8.7"
-alloy-transport = { version = "0.5.3" }
-alloy-transport-http = { version = "0.5.3", features = [
-    "reqwest-rustls-tls",
-], default-features = false }
-alloy-transport-ipc = { version = "0.5.3", default-features = false }
-alloy-transport-ws = { version = "0.5.3", default-features = false }
-alloy = { version = "0.5.3", features = ["sol-types", "contract","full","signer-aws"] }
+alloy-serde = { version = "0.7", default-features = false }
+alloy-signer = { version = "0.7", default-features = false }
+alloy-signer-aws = "0.7"
+alloy-signer-local = { version = "0.7", default-features = false }
+alloy-sol-types = "0.8"
+alloy-transport = { version = "0.7" }
+alloy-transport-http = { version = "0.7", features = ["reqwest-rustls-tls"], default-features = false }
+alloy-transport-ipc = { version = "0.7.0", default-features = false }
+alloy-transport-ws = { version = "0.7.0", default-features = false }
+alloy = { version = "0.7.0", features = ["sol-types", "contract","full","signer-aws"] }
 anvil-utils = { path = "examples/anvil-utils" }
 avsregistry-read = { path = "examples/avsregistry-read" }
 avsregistry-write = { path = "examples/avsregistry-write" }

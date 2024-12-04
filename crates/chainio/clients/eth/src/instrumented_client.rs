@@ -965,7 +965,7 @@ mod tests {
         let block_number = 1;
 
         let expected_block = provider
-            .get_block_by_number(block_number.into(), true)
+            .get_block_by_number(block_number.into(), BlockTransactionsKind::Full)
             .await
             .unwrap();
         let block = instrumented_client
@@ -1254,7 +1254,7 @@ mod tests {
             .unwrap();
 
         let expected_header = provider
-            .get_block_by_number(block_number, false)
+            .get_block_by_number(block_number, BlockTransactionsKind::Hashes)
             .await
             .unwrap()
             .unwrap()
@@ -1356,7 +1356,7 @@ mod tests {
         let instrumented_client = InstrumentedClient::new(&http_endpoint).await.unwrap();
 
         let expected_transaction_count: u64 = provider
-            .get_block_by_number(BlockNumberOrTag::Pending, false)
+            .get_block_by_number(BlockNumberOrTag::Pending, BlockTransactionsKind::Hashes)
             .await
             .unwrap()
             .unwrap()

@@ -185,7 +185,7 @@ impl SimpleTxManager {
 
         let header = self
             .provider
-            .get_block_by_number(BlockNumberOrTag::Latest, false)
+            .get_block_by_number(BlockNumberOrTag::Latest, false.into())
             .await
             .ok()
             .flatten()
