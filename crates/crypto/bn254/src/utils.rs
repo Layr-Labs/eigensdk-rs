@@ -4,7 +4,6 @@ use ark_ff::{
     fields::{Field, PrimeField},
     One,
 };
-use num_bigint::BigUint;
 use rust_bls_bn254::pairing;
 
 /// MapToCurve implements the simple hash-and-check (also sometimes try-and-increment) algorithm
@@ -12,19 +11,11 @@ use rust_bls_bn254::pairing;
 /// Note that this function needs to be the same as the one used in the contract:
 /// https://github.com/Layr-Labs/eigenlayer-middleware/blob/1feb6ae7e12f33ce8eefb361edb69ee26c118b5d/src/libraries/BN254.sol#L292
 /// we don't use the newer constant time hash-to-curve algorithms as they are gas-expensive to compute onchain
-pub fn map_to_curve(digest: &[u8]) -> G1Affine {
+pub fn map_to_curve(bytes: &[u8; 32]) -> G1Affine {
     let one = Fq::one();
     let three = Fq::from(3u64);
-    let big_int = BigUint::from_bytes_be(digest);
-    let mut bytes = [0u8; 32];
-    big_int
-        .to_bytes_be()
-        .iter()
-        .rev()
-        .enumerate()
-        .for_each(|(i, &b)| bytes[i] = b);
 
-    let mut x = Fq::from_le_bytes_mod_order(&bytes);
+    let mut x = Fq::from_le_bytes_mod_order(bytes);
 
     loop {
         // y = x^3 + 3
@@ -44,7 +35,7 @@ pub fn map_to_curve(digest: &[u8]) -> G1Affine {
 }
 
 /// Verifies message on G2
-pub fn verify_message(public_key: G2Affine, message: &[u8], signature: G1Affine) -> bool {
+pub fn verify_message(public_key: G2Affine, message: &[u8; 32], signature: G1Affine) -> bool {
     if !signature.is_in_correct_subgroup_assuming_on_curve() || !signature.is_on_curve() {
         return false;
     }
