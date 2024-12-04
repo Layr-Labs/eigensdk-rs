@@ -2642,7 +2642,6 @@ dependencies = [
  "ark-bn254 0.5.0",
  "ark-ec 0.5.0",
  "ark-ff 0.5.0",
- "num-bigint 0.4.6",
  "rand",
  "rust-bls-bn254",
  "tokio",
