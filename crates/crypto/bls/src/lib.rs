@@ -680,20 +680,40 @@ mod tests {
 
     #[test]
     fn test_compliance() {
+        type Fp = ark_ff::Fp<ark_ff::MontBackend<ark_bn254::FqConfig, 4>, 4>;
         let message = "Hello, world!Hello, world!123456";
         let message_bytes: &[u8; 32] = message.as_bytes().try_into().unwrap();
 
         let bls_priv_key =
             "12248929636257230549931416853095037629726205319386239410403476017439825112537";
         let bls_key_pair = BlsKeyPair::new(bls_priv_key.to_string()).unwrap();
-        let public_key = bls_key_pair.public_key();
-        println!("local public_key={:?}", public_key);
         let signature = bls_key_pair.sign_message(message_bytes);
-        println!("local signature={:?}", signature);
 
-        let serialized = serde_json::to_string(&signature).expect("Failed to serialize");
+        let g1_point = signature.g1_point().g1();
+        let x = g1_point.x().unwrap();
+        let y = g1_point.y().unwrap();
 
-        println!("====================");
-        println!("{}", serialized);
+        // assert x and y with the values obtained in Go SDK
+        assert_eq!(
+            x,
+            Fp::from_bigint(
+                BigInt::from_str(
+                    "15790168376429033610067099039091292283117017641532256477437243974517959682102",
+                )
+                .unwrap()
+            )
+            .unwrap()
+        );
+
+        assert_eq!(
+            y,
+            Fp::from_bigint(
+                BigInt::from_str(
+                    "4960450323239587206117776989095741074887370703941588742100855592356200866613",
+                )
+                .unwrap()
+            )
+            .unwrap()
+        );
     }
 }
