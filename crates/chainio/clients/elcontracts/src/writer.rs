@@ -227,8 +227,12 @@ impl ELChainWriter {
         Ok(*tx.tx_hash())
     }
 
-    /// Process a claim for rewards to a given address.
-    /// This function interacts with the RewardsCoordinator contract to execute the claim operation for a given address.
+    /// Process a claim for rewards for a given earner address. Checks the claim against a given root
+    /// (determined by the root_index on the claim). Earnings are cumulative so earners can claim to
+    /// the latest distribution root and the contract will compute the difference between their earning 
+    /// and claimed amounts. The difference is transferred to the earner address.
+    /// If a claimer has not been set (see [`set_claimer_for`]), only the earner can claim. Otherwise, only
+    /// the claimer can claim.
     ///
     /// # Arguments
     ///
@@ -258,7 +262,14 @@ impl ELChainWriter {
         Ok(*tx.tx_hash())
     }
 
-    pub async fn get_cumulative_claimed_for_root(
+    /// Get the latest claimable distribution root.
+    /// 
+    /// # Returns
+    /// * `Result<DistributionRoot, ElContractsError>` - The latest claimable distribution root if the call is successful.
+    /// 
+    /// # Errors
+    /// * `ElContractsError` - if the call to the contract fails.
+    pub async fn get_current_claimable_distribution_root(
         &self,
     ) -> Result<IRewardsCoordinatorTypes::DistributionRoot, ElContractsError> {
         let provider = get_signer(&self.signer, &self.provider);
@@ -308,7 +319,7 @@ impl ELChainWriter {
         Ok(distribution_roots_length)
     }
 
-    /// Get the current rewards calculation end timestamp.
+    /// Get the current rewards calculation end timestamp (the timestamp until which rewards have been calculated).
     ///
     /// # Returns
     ///
@@ -374,6 +385,16 @@ impl ELChainWriter {
         Ok(root_index)
     }
 
+    /// Check if a claim would currently pass the validations in `process_claim`
+    ///
+    /// # Arguments
+    /// * `claim` - The claim to check
+    ///
+    /// # Returns
+    /// * `Result<bool, ElContractsError>` - True if the claim would pass the validations, false otherwise
+    ///
+    /// # Errors
+    /// * `ElContractsError` - if the call to the contract fails
     pub async fn check_claim(&self, claim: RewardsMerkleClaim) -> Result<bool, ElContractsError> {
         let provider = get_signer(&self.signer, &self.provider);
 
@@ -391,6 +412,17 @@ impl ELChainWriter {
         Ok(claim_ret)
     }
 
+    /// Get the cumulative claimed amount for a given earner address and token.
+    ///
+    /// # Arguments
+    /// * `earner_address` - The address of the earner.
+    /// * `token` - The address of the token.
+    ///
+    /// # Returns
+    /// * `Result<U256, ElContractsError>` - The cumulative claimed amount if the call is successful.
+    ///
+    /// # Errors
+    /// * `ElContractsError` - if the call to the contract fails.
     pub async fn get_cumulative_claimed(
         &self,
         earner_address: Address,
