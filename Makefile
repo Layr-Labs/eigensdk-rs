@@ -12,6 +12,8 @@ deploy-avs:
 	chmod +x ./crates/contracts/anvil/deploy-avs.sh
 	./crates/contracts/anvil/deploy-avs.sh
 
+deploy: deploy-eigenlayer deploy-avs ##
+
 dump-state:
 	chmod +x ./crates/contracts/anvil/dump-state.sh
 	./crates/contracts/anvil/dump-state.sh
