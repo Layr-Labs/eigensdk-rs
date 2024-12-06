@@ -91,7 +91,7 @@ library MockAvsDeploymentLib {
                 IRegistryCoordinator(result.registryCoordinator),
                 IDelegationManager(core.delegationManager),
                 IAVSDirectory(core.avsDirectory),
-                MockAvsServiceManager(result.mockAvsServiceManager) // TODO: check this
+                MockAvsServiceManager(result.mockAvsServiceManager)
             )
         );
 

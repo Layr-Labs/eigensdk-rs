@@ -9,10 +9,7 @@ use eigen_utils::{
     },
     erc20::ERC20,
     get_signer,
-    irewardscoordinator::{
-        IRewardsCoordinator,
-        IRewardsCoordinatorTypes::{self, RewardsMerkleClaim},
-    },
+    irewardscoordinator::IRewardsCoordinatorTypes::{self, RewardsMerkleClaim},
     strategymanager::StrategyManager,
 };
 
@@ -245,7 +242,7 @@ impl ELChainWriter {
     ///
     /// # Errors
     ///
-    /// * `ElContractsError` - if the call to the contract fails.
+    /// * `ElContractsError` - if the call to the contract fails. Also fails if no root has been submitted yet.
     pub async fn process_claim(
         &self,
         earner_address: Address,
@@ -394,7 +391,7 @@ impl ELChainWriter {
     /// * `Result<bool, ElContractsError>` - True if the claim would pass the validations, false otherwise
     ///
     /// # Errors
-    /// * `ElContractsError` - if the call to the contract fails
+    /// * `ElContractsError` - if the call to the contract fails. Also fails if no root has been submitted yet.
     pub async fn check_claim(&self, claim: RewardsMerkleClaim) -> Result<bool, ElContractsError> {
         let provider = get_signer(&self.signer, &self.provider);
 
@@ -466,7 +463,7 @@ mod tests {
     };
     use eigen_types::operator::Operator;
     use eigen_utils::{
-        get_provider, get_signer,
+        get_provider,
         irewardscoordinator::{
             IRewardsCoordinator,
             IRewardsCoordinatorTypes::{EarnerTreeMerkleLeaf, RewardsMerkleClaim},
@@ -626,9 +623,8 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn test_process_claim() {
-        // let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let http_endpoint = "http://localhost:8545".to_string();
+    async fn test_check_claim_and_process_claim_fail_with_no_root_submitted() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
         let el_chain_writer = new_test_writer(http_endpoint.clone()).await;
 
         let earner_address = address!("F2288D736d27C1584Ebf7be5f52f9E4d47251AeE");
@@ -637,7 +633,6 @@ mod tests {
             earnerTokenRoot: FixedBytes::from([0; 32]),
         };
         let claim = RewardsMerkleClaim {
-            // TODO: check claim
             rootIndex: 0,
             earnerIndex: 0,
             earnerTreeProof: vec![].into(),
@@ -647,37 +642,15 @@ mod tests {
             tokenLeaves: vec![],
         };
 
-        // Submit root before processing claim
-        let rewards_coordinator_addr = get_rewards_coordinator_address(http_endpoint.clone()).await;
-        let deployer_key = "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
-        let rewards_coordinator = IRewardsCoordinator::new(
-            rewards_coordinator_addr,
-            get_signer(deployer_key, &http_endpoint),
-        );
-        let curr_rewards_calculation_end_timestamp = el_chain_writer
-            .get_curr_rewards_calculation_end_timestamp()
-            .await
-            .unwrap();
+        // Check claim should return false as no root has been submitted yet
+        let result: Result<bool, crate::error::ElContractsError> =
+            el_chain_writer.check_claim(claim.clone()).await;
+        assert!(result.is_err());
 
-        let root = FixedBytes::from([0; 32]);
-        let tx = rewards_coordinator
-            .submitRoot(root, curr_rewards_calculation_end_timestamp + 1)
-            .send()
-            .await
-            .unwrap();
-        let status = tx.get_receipt().await.unwrap().status();
-        assert!(status);
+        let result = el_chain_writer.process_claim(earner_address, claim).await;
 
-        let tx_hash = el_chain_writer
-            .process_claim(earner_address, claim.clone())
-            .await
-            .unwrap();
-
-        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
-        assert!(receipt.status());
-
-        let ret = el_chain_writer.check_claim(claim).await.unwrap();
-        assert!(ret);
+        // Process claim call should revert as no root has been submited yet
+        assert!(result.is_err());
     }
 
     #[tokio::test]
