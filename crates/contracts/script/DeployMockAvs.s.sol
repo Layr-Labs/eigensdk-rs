@@ -59,6 +59,7 @@ contract DeployMockAvs {
                 avsconfig,
                 msg.sender
             );
+        depData.token = address(erc20Mock);
 
         MockAvsDeploymentLib.writeDeploymentJson(depData);
 
