@@ -451,8 +451,8 @@ impl ELChainWriter {
 mod tests {
     use super::ELChainWriter;
     use crate::reader::ELChainReader;
-    use alloy::providers::Provider;
-    use alloy_primitives::{address, Address, FixedBytes, U256};
+    use alloy::{hex::FromHex, providers::Provider};
+    use alloy_primitives::{address, Address, Bytes, FixedBytes, U256};
     use alloy_signer_local::PrivateKeySigner;
     use eigen_logging::get_test_logger;
     use eigen_testing_utils::{
@@ -466,8 +466,13 @@ mod tests {
     };
     use eigen_types::operator::Operator;
     use eigen_utils::{
-        get_provider,
-        irewardscoordinator::IRewardsCoordinatorTypes::{EarnerTreeMerkleLeaf, RewardsMerkleClaim},
+        get_provider, get_signer,
+        irewardscoordinator::{
+            IRewardsCoordinator,
+            IRewardsCoordinatorTypes::{
+                EarnerTreeMerkleLeaf, RewardsMerkleClaim, TokenTreeMerkleLeaf,
+            },
+        },
     };
     use std::str::FromStr;
 
@@ -624,33 +629,73 @@ mod tests {
 
     #[tokio::test]
     async fn test_check_claim_and_process_claim_fail_with_no_root_submitted() {
-        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        // let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let http_endpoint = "http://localhost:8545".to_string();
         let el_chain_writer = new_test_writer(http_endpoint.clone()).await;
 
-        let earner_address = address!("F2288D736d27C1584Ebf7be5f52f9E4d47251AeE");
-        let earner_leaf = EarnerTreeMerkleLeaf {
-            earner: earner_address,
-            earnerTokenRoot: FixedBytes::from([0; 32]),
-        };
+        let earner_address = address!("f2288d736d27c1584ebf7be5f52f9e4d47251aee");
         let claim = RewardsMerkleClaim {
             rootIndex: 0,
-            earnerIndex: 0,
-            earnerTreeProof: vec![].into(),
-            earnerLeaf: earner_leaf,
-            tokenIndices: vec![],
-            tokenTreeProofs: vec![],
-            tokenLeaves: vec![],
+            earnerIndex: 3,
+            earnerTreeProof: Bytes::from_hex("0x04da796e892869089dfdaae7269c8eb12548f6aa3774a747322b65c42d1ca0050d38d6d5e7e9e65ba24c275fcc0f0c377d8fb6ed089770d849c39a1829d1edf27e78a529aa8f867a3777f97541a23fb1844d6ae24c3b8ca1cc981510e5d08bda").unwrap(),
+            earnerLeaf: EarnerTreeMerkleLeaf {
+                earner: earner_address,
+                earnerTokenRoot: FixedBytes::from_hex(
+                    "167f18d55815451f979244946b7eb2ce019c323a9e02fba1b2e05e19a27b91b5",
+                )
+                .unwrap(),
+            },
+            tokenIndices: vec![0],
+            tokenTreeProofs: vec![
+                Bytes::from([0]),
+            ],
+            tokenLeaves: vec![TokenTreeMerkleLeaf {
+                token: address!("1006dd1b8c3d0ef53489bed27577c75299f71473"),
+                cumulativeEarnings: U256::from_str("1000000000000000000").unwrap(),
+            }],
         };
 
-        // Check claim should return false as no root has been submitted yet
-        let result: Result<bool, crate::error::ElContractsError> =
-            el_chain_writer.check_claim(claim.clone()).await;
-        assert!(result.is_err());
+        // Use test data taken from https://github.com/Layr-Labs/eigenlayer-contracts/blob/a888a1cd1479438dda4b138245a69177b125a973/src/test/test-data/rewardsCoordinator/processClaimProofs_SingleTokenLeaf.json
+        let root = FixedBytes::from_hex(
+            "86867b737e68a56280554c0447ac6b43ba1cb68f4a46d1d9a0ecb919f912959b",
+        )
+        .unwrap();
 
-        let result = el_chain_writer.process_claim(earner_address, claim).await;
+        let key = "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
+        let rewards_coordinator = IRewardsCoordinator::new(
+            get_rewards_coordinator_address(http_endpoint.clone()).await,
+            get_signer(key, &http_endpoint),
+        );
+        let curr_rewards_calculation_end_timestamp = el_chain_writer
+            .get_curr_rewards_calculation_end_timestamp()
+            .await
+            .unwrap();
+        let submit_tx = rewards_coordinator
+            .submitRoot(root, curr_rewards_calculation_end_timestamp + 1)
+            .send()
+            .await
+            .unwrap();
+        let submit_status = submit_tx.get_receipt().await.unwrap().status();
+        assert!(submit_status);
 
-        // Process claim call should revert as no root has been submited yet
-        assert!(result.is_err());
+        // Distribution roots length should be 1
+        let distribution_roots_length = el_chain_writer
+            .get_distribution_roots_length()
+            .await
+            .unwrap();
+        // assert_eq!(distribution_roots_length, U256::from(1));
+
+        // // Check claim should return true as the claim is valid
+        // let valid_claim = el_chain_writer.check_claim(claim.clone()).await.unwrap();
+        // assert!(valid_claim);
+
+        // Process claim
+        let r = el_chain_writer
+            .process_claim(earner_address, claim)
+            .await
+            .unwrap();
+        let receipt = wait_transaction(&http_endpoint, r).await.unwrap();
+        assert!(receipt.status());
     }
 
     #[tokio::test]
