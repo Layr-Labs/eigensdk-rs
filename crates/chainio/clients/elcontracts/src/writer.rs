@@ -9,7 +9,10 @@ use eigen_utils::{
     },
     erc20::ERC20,
     get_signer,
-    irewardscoordinator::IRewardsCoordinatorTypes::{self, RewardsMerkleClaim},
+    irewardscoordinator::{
+        IRewardsCoordinator,
+        IRewardsCoordinatorTypes::{self, RewardsMerkleClaim},
+    },
     strategymanager::StrategyManager,
 };
 
@@ -464,10 +467,7 @@ mod tests {
     use eigen_types::operator::Operator;
     use eigen_utils::{
         get_provider,
-        irewardscoordinator::{
-            IRewardsCoordinator,
-            IRewardsCoordinatorTypes::{EarnerTreeMerkleLeaf, RewardsMerkleClaim},
-        },
+        irewardscoordinator::IRewardsCoordinatorTypes::{EarnerTreeMerkleLeaf, RewardsMerkleClaim},
     };
     use std::str::FromStr;
 
