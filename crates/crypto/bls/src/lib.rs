@@ -175,7 +175,7 @@ impl BlsKeyPair {
         Signature::new(r.into_affine())
     }
 
-    pub fn sign_message(&self, message: &[u8]) -> Signature {
+    pub fn sign_message(&self, message: &[u8; 32]) -> Signature {
         let g1 = map_to_curve(message);
         let sk_int: BigInteger256 = self.priv_key.into();
         let r = g1.mul_bigint(sk_int);
@@ -676,5 +676,24 @@ mod tests {
             original_point, deserialized,
             "The deserialized point does not match the original"
         );
+    }
+
+    #[test]
+    fn test_compliance() {
+        let message = "Hello, world!Hello, world!123456";
+        let message_bytes: &[u8; 32] = message.as_bytes().try_into().unwrap();
+
+        let bls_priv_key =
+            "12248929636257230549931416853095037629726205319386239410403476017439825112537";
+        let bls_key_pair = BlsKeyPair::new(bls_priv_key.to_string()).unwrap();
+        let public_key = bls_key_pair.public_key();
+        println!("local public_key={:?}", public_key);
+        let signature = bls_key_pair.sign_message(message_bytes);
+        println!("local signature={:?}", signature);
+
+        let serialized = serde_json::to_string(&signature).expect("Failed to serialize");
+
+        println!("====================");
+        println!("{}", serialized);
     }
 }
