@@ -1060,7 +1060,7 @@ mod tests {
         let strategy_contract_addr_str = strategy_contract_addr.to_string();
         assert_eq!(
             strategy_contract_addr_str,
-            "0xeC4cFde48EAdca2bC63E94BB437BbeAcE1371bF3"
+            "0x1006dd1B8C3D0eF53489beD27577C75299F71473"
         );
     }
 }
