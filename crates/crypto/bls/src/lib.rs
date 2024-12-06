@@ -375,6 +375,8 @@ mod tests {
     use super::*;
     use ark_bn254::Fq2;
     use eigen_crypto_bn254::utils::verify_message;
+    use eigen_testing_utils::test_data::TestData;
+    type Fp = ark_ff::Fp<ark_ff::MontBackend<ark_bn254::FqConfig, 4>, 4>;
 
     #[test]
     fn test_convert_to_g1_point() {
@@ -679,14 +681,23 @@ mod tests {
     }
 
     #[test]
-    fn test_compliance() {
-        type Fp = ark_ff::Fp<ark_ff::MontBackend<ark_bn254::FqConfig, 4>, 4>;
-        let message = "Hello, world!Hello, world!123456";
-        let message_bytes: &[u8; 32] = message.as_bytes().try_into().unwrap();
+    fn test_compliance_bls_signature() {
+        #[derive(Deserialize, Debug)]
+        struct Input {
+            message_bytes: String,
+            bls_priv_key: String,
+        }
 
-        let bls_priv_key =
-            "12248929636257230549931416853095037629726205319386239410403476017439825112537";
-        let bls_key_pair = BlsKeyPair::new(bls_priv_key.to_string()).unwrap();
+        let test_data = TestData::new(Input {
+            message_bytes: "Hello, world!Hello, world!123456".to_string(),
+            bls_priv_key:
+                "12248929636257230549931416853095037629726205319386239410403476017439825112537"
+                    .to_string(),
+        });
+
+        let message_bytes: &[u8; 32] = test_data.input.message_bytes.as_bytes().try_into().unwrap();
+        let bls_priv_key = test_data.input.bls_priv_key;
+        let bls_key_pair = BlsKeyPair::new(bls_priv_key).unwrap();
         let signature = bls_key_pair.sign_message(message_bytes);
 
         let g1_point = signature.g1_point().g1();
