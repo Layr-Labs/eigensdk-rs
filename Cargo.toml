@@ -121,7 +121,7 @@ parking_lot = "0.12"
 alloy-json-rpc = { version = "0.7", default-features = false }
 alloy-network = { version = "0.7", default-features = false }
 alloy-node-bindings = { version = "0.7", default-features = false }
-alloy-primitives = "0.8.14"
+alloy-primitives = "0.8"
 alloy-provider = { version = "0.7", default-features = false, features = [
     "reqwest",
     "ws",
