@@ -285,17 +285,16 @@ mod tests {
         let logger = get_test_logger();
 
         let private_key =
-            "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80".to_string();
+            "2a871d0798f97d79848a013d4936a73bf4cc922c825d33c1cf7073dff6d409c6".to_string();
         let simple_tx_manager =
             SimpleTxManager::new(logger, 1.0, private_key.as_str(), rpc_url.as_str()).unwrap();
         let to = address!("a0Ee7A142d267C1f36714E4a8F75612F20a79720");
 
-        let account_nonce = 0x69; // nonce queried from the sender account
         let tx = TxLegacy {
             to: Call(to),
             value: U256::from(1_000_000_000),
             gas_limit: 2_000_000,
-            nonce: account_nonce,
+            nonce: 0,
             gas_price: 21_000_000_000,
             input: bytes!(),
             chain_id: Some(31337),
@@ -316,15 +315,14 @@ mod tests {
         let logger = get_test_logger();
 
         let private_key =
-            "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80".to_string();
+            "2a871d0798f97d79848a013d4936a73bf4cc922c825d33c1cf7073dff6d409c6".to_string();
         let simple_tx_manager =
             SimpleTxManager::new(logger, 1.0, private_key.as_str(), rpc_url.as_str()).unwrap();
         let to = address!("a0Ee7A142d267C1f36714E4a8F75612F20a79720");
 
-        let account_nonce = 0x69; // nonce queried from the sender account
         let mut tx = TransactionRequest::default()
             .with_to(to)
-            .with_nonce(account_nonce)
+            .with_nonce(0)
             .with_chain_id(31337)
             .with_value(U256::from(100))
             .with_gas_limit(21_000)

@@ -175,7 +175,7 @@ impl BlsKeyPair {
         Signature::new(r.into_affine())
     }
 
-    pub fn sign_message(&self, message: &[u8]) -> Signature {
+    pub fn sign_message(&self, message: &[u8; 32]) -> Signature {
         let g1 = map_to_curve(message);
         let sk_int: BigInteger256 = self.priv_key.into();
         let r = g1.mul_bigint(sk_int);
@@ -524,14 +524,14 @@ mod tests {
         assert_eq!(
             U256::from_limbs(g1.x().unwrap().into_bigint().0),
             U256::from_str(
-                "455867356320691211509944977504407603390036387149619137164185182714736811811"
+                "14528991250861404666834535435384615765856667510756806797353855100662256435714"
             )
             .unwrap()
         );
         assert_eq!(
             U256::from_limbs(g1.y().unwrap().into_bigint().0),
             U256::from_str(
-                "9802125641729881429496664198939823213610051907104384160271670136040620850981"
+                "1084634806445338125226100575785895110643952950453653534955932359686296806861"
             )
             .unwrap()
         );
@@ -551,14 +551,14 @@ mod tests {
         assert_eq!(
             U256::from_limbs(signature.g1_point().g1().x().unwrap().into_bigint().0),
             U256::from_str(
-                "6125087140203962697351933212367898471377426213402772883153680722977416765651"
+                "6480852672313836368883198697599909951599236047787132531972745015650532978134"
             )
             .unwrap()
         );
         assert_eq!(
             U256::from_limbs(signature.g1_point().g1().y().unwrap().into_bigint().0),
             U256::from_str(
-                "19120302240465611628345095276448175199636936878728446037184749040811421969742"
+                "20692567294854493165175278753837678513615081984887336401902704973346059699322"
             )
             .unwrap()
         );
@@ -676,5 +676,24 @@ mod tests {
             original_point, deserialized,
             "The deserialized point does not match the original"
         );
+    }
+
+    #[test]
+    fn test_compliance() {
+        let message = "Hello, world!Hello, world!123456";
+        let message_bytes: &[u8; 32] = message.as_bytes().try_into().unwrap();
+
+        let bls_priv_key =
+            "12248929636257230549931416853095037629726205319386239410403476017439825112537";
+        let bls_key_pair = BlsKeyPair::new(bls_priv_key.to_string()).unwrap();
+        let public_key = bls_key_pair.public_key();
+        println!("local public_key={:?}", public_key);
+        let signature = bls_key_pair.sign_message(message_bytes);
+        println!("local signature={:?}", signature);
+
+        let serialized = serde_json::to_string(&signature).expect("Failed to serialize");
+
+        println!("====================");
+        println!("{}", serialized);
     }
 }

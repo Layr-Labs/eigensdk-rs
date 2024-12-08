@@ -291,22 +291,22 @@ mod test {
         let expected_addresses: ContractAddresses = serde_json::from_str(&format!(
             r#"{{
                 "avs": {{
-                    "bls-apk-registry": "0x84ea74d481ee0a5332c457a4d796187f6ba67feb",
-                    "index-registry": "0x9e545e3c0baab3e08cdfd552c960a1050f373042",
-                    "registry-coordinator": "0xc3e53f4d16ae77db1c982e75a937b9f60fe63690",
-                    "service-manager": "0x67d269191c92caf3cd7723f116c85e6e9bf55933",
-                    "stake-registry": "0xa82ff9afd8f496c3d6ac40e2a0f282e47488cfc9"
+                    "bls-apk-registry": "0x7bc06c482dead17c0e297afbc32f6e63d3846650",
+                    "index-registry": "0xfd471836031dc5108809d173a067e8486b9047a3",
+                    "registry-coordinator": "0x2bdcc0de6be1f7d2ee689a0342d76f52e8efaba3",
+                    "service-manager": "0x5f3f1dbd7b74c6b46e8c44f98792a1daf8d69154",
+                    "stake-registry": "0xcd8a1c3ba11cf5ecfa6267617243239504a98d90"
                 }},
                 "eigenlayer": {{
-                    "delegation-manager": "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
-                    "slasher": "0xa513E6E4b8f2a923D98304ec87F64353C4D5C853",
-                    "strategy-manager": "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707"
+                    "delegation-manager": "0xcf7ed3acca5a467e9e704c703e8d87f634fb0fc9",
+                    "allocation-manager": "0x8a791620dd6260079bf849dc5567adc3f2fdc318",
+                    "strategy-manager": "0xa513e6e4b8f2a923d98304ec87f64353c4d5c853"
                 }},
                 "network": {{
                     "chain-id": "31337",
                     "rpc-url": "{http_endpoint}"
                 }}
-            }}"#
+            }}"#,
         ))
         .unwrap();
         let addresses = ContractAddresses::get_addresses(
@@ -330,16 +330,16 @@ mod test {
         let expected_addresses: ContractAddresses = serde_json::from_str(&format!(
             r#"{{
                 "avs": {{
-                    "bls-apk-registry": "0x84ea74d481ee0a5332c457a4d796187f6ba67feb",
-                    "index-registry": "0x9e545e3c0baab3e08cdfd552c960a1050f373042",
-                    "registry-coordinator": "0xc3e53f4d16ae77db1c982e75a937b9f60fe63690",
-                    "service-manager": "0x67d269191c92caf3cd7723f116c85e6e9bf55933",
-                    "stake-registry": "0xa82ff9afd8f496c3d6ac40e2a0f282e47488cfc9"
+                    "bls-apk-registry": "0x7bc06c482dead17c0e297afbc32f6e63d3846650",
+                    "index-registry": "0xfd471836031dc5108809d173a067e8486b9047a3",
+                    "registry-coordinator": "0x2bdcc0de6be1f7d2ee689a0342d76f52e8efaba3",
+                    "service-manager": "0x5f3f1dbd7b74c6b46e8c44f98792a1daf8d69154",
+                    "stake-registry": "0xcd8a1c3ba11cf5ecfa6267617243239504a98d90"
                 }},
                 "eigenlayer": {{
-                    "delegation-manager": "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
-                    "slasher": "0xa513E6E4b8f2a923D98304ec87F64353C4D5C853",
-                    "strategy-manager": "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707"
+                    "delegation-manager": "0xcf7ed3acca5a467e9e704c703e8d87f634fb0fc9",
+                    "allocation-manager": "0x8a791620dd6260079bf849dc5567adc3f2fdc318",
+                    "strategy-manager": "0xa513e6e4b8f2a923d98304ec87f64353c4d5c853"
                 }},
                 "network": {{
                     "chain-id": "31337",
@@ -348,7 +348,6 @@ mod test {
             }}"#,
         ))
         .unwrap();
-
         let addresses = ContractAddresses::get_addresses(
             None,
             Some(registry_coordinator_address),
