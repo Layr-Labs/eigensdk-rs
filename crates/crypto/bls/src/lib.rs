@@ -681,7 +681,7 @@ mod tests {
     }
 
     #[test]
-    fn test_compliance_bls_signature() {
+    fn test_bls_signature() {
         #[derive(Deserialize, Debug)]
         struct Input {
             message_bytes: String,
