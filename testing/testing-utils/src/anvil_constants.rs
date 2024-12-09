@@ -1,9 +1,15 @@
 //! Anvil utilities
+use std::str::FromStr;
+
 use alloy_primitives::{address, Address};
+use alloy_signer_local::PrivateKeySigner;
+use eigen_utils::delegationmanager::DelegationManager;
 use eigen_utils::{
     contractsregistry::ContractsRegistry::{self, contractsReturn},
-    get_provider,
+    delegationmanager::IDelegationManagerTypes::OperatorDetails,
+    get_provider, get_signer,
 };
+use eyre::Result;
 
 /// Local anvil ContractsRegistry which contains a mapping of all locally deployed EL contracts.
 pub const CONTRACTS_REGISTRY: Address = address!("5FbDB2315678afecb367f032d93F642f64180aa3");
@@ -136,7 +142,7 @@ pub async fn get_proxy_admin(rpc_url: String) -> Address {
     address
 }
 
-/// Avs Directory contract address
+/// Rewards contract address
 pub async fn get_rewards_coordinator_address(rpc_url: String) -> Address {
     let contracts_registry = ContractsRegistry::new(CONTRACTS_REGISTRY, get_provider(&rpc_url));
 
@@ -149,4 +155,52 @@ pub async fn get_rewards_coordinator_address(rpc_url: String) -> Address {
     let contractsReturn { _0: address } = val;
 
     address
+}
+
+/// Allocation Manager contract address
+pub async fn get_allocation_manager_address(rpc_url: String) -> Address {
+    let contracts_registry = ContractsRegistry::new(CONTRACTS_REGISTRY, get_provider(&rpc_url));
+
+    let val = contracts_registry
+        .contracts("allocationManager".to_string())
+        .call()
+        .await
+        .unwrap();
+
+    let contractsReturn { _0: address } = val;
+
+    address
+}
+
+/// Register an operator in the DelegationManager contract. If its already registered, it will not do anything.
+pub async fn register_operator_to_el_if_not_registered(
+    pvt_key: &str,
+    rpc_url: &str,
+    delegation_approver: Address,
+    metadata_uri: &str,
+) -> Result<()> {
+    let wallet = PrivateKeySigner::from_str(pvt_key)?;
+    let signer = get_signer(pvt_key, rpc_url);
+    let contract_instance = DelegationManager::new(
+        get_delegation_manager_address(rpc_url.to_string()).await,
+        signer,
+    );
+    let is_registered = contract_instance
+        .isOperator(wallet.address())
+        .call()
+        .await?
+        ._0;
+    if !is_registered {
+        let operator_details = OperatorDetails {
+            __deprecated_earningsReceiver: Address::ZERO,
+            delegationApprover: delegation_approver,
+            __deprecated_stakerOptOutWindowBlocks: 0,
+        };
+        let register_instance = contract_instance
+            .registerAsOperator(operator_details, 1, metadata_uri.to_string())
+            .send()
+            .await?;
+        register_instance.get_receipt().await?;
+    }
+    Ok(())
 }

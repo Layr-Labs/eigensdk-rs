@@ -9,29 +9,34 @@ interface StringsUpgradeable {}
 ```json
 []
 ```*/
-#[allow(non_camel_case_types, non_snake_case, clippy::style)]
+#[allow(
+    non_camel_case_types,
+    non_snake_case,
+    clippy::pub_underscore_fields,
+    clippy::style
+)]
 pub mod StringsUpgradeable {
     use super::*;
     use alloy::sol_types as alloy_sol_types;
     /// The creation / init bytecode of the contract.
     ///
     /// ```text
-    ///0x60566037600b82828239805160001a607314602a57634e487b7160e01b600052600060045260246000fd5b30600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600080fdfea264697066735822122011fb48dd485c31a8d22fe7037c7f09984ac8eab820115d53460965a9fd57991064736f6c634300080c0033
+    ///0x60556032600b8282823980515f1a607314602657634e487b7160e01b5f525f60045260245ffd5b305f52607381538281f3fe730000000000000000000000000000000000000000301460806040525f5ffdfea26469706673582212203329ce8da0fd863a2c9be48e298530a71edde2a6daab1bfa5b6c4876b3ce267564736f6c634300081b0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"`V`7`\x0B\x82\x82\x829\x80Q`\0\x1A`s\x14`*WcNH{q`\xE0\x1B`\0R`\0`\x04R`$`\0\xFD[0`\0R`s\x81S\x82\x81\xF3\xFEs\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x000\x14`\x80`@R`\0\x80\xFD\xFE\xA2dipfsX\"\x12 \x11\xFBH\xDDH\\1\xA8\xD2/\xE7\x03|\x7F\t\x98J\xC8\xEA\xB8 \x11]SF\te\xA9\xFDW\x99\x10dsolcC\0\x08\x0C\x003",
+        b"`U`2`\x0B\x82\x82\x829\x80Q_\x1A`s\x14`&WcNH{q`\xE0\x1B_R_`\x04R`$_\xFD[0_R`s\x81S\x82\x81\xF3\xFEs\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x000\x14`\x80`@R__\xFD\xFE\xA2dipfsX\"\x12 3)\xCE\x8D\xA0\xFD\x86:,\x9B\xE4\x8E)\x850\xA7\x1E\xDD\xE2\xA6\xDA\xAB\x1B\xFA[lHv\xB3\xCE&udsolcC\0\x08\x1B\x003",
     );
     /// The runtime bytecode of the contract, as deployed on the network.
     ///
     /// ```text
-    ///0x73000000000000000000000000000000000000000030146080604052600080fdfea264697066735822122011fb48dd485c31a8d22fe7037c7f09984ac8eab820115d53460965a9fd57991064736f6c634300080c0033
+    ///0x730000000000000000000000000000000000000000301460806040525f5ffdfea26469706673582212203329ce8da0fd863a2c9be48e298530a71edde2a6daab1bfa5b6c4876b3ce267564736f6c634300081b0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static DEPLOYED_BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"s\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x000\x14`\x80`@R`\0\x80\xFD\xFE\xA2dipfsX\"\x12 \x11\xFBH\xDDH\\1\xA8\xD2/\xE7\x03|\x7F\t\x98J\xC8\xEA\xB8 \x11]SF\te\xA9\xFDW\x99\x10dsolcC\0\x08\x0C\x003",
+        b"s\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x000\x14`\x80`@R__\xFD\xFE\xA2dipfsX\"\x12 3)\xCE\x8D\xA0\xFD\x86:,\x9B\xE4\x8E)\x850\xA7\x1E\xDD\xE2\xA6\xDA\xAB\x1B\xFA[lHv\xB3\xCE&udsolcC\0\x08\x1B\x003",
     );
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`StringsUpgradeable`](self) contract instance.
