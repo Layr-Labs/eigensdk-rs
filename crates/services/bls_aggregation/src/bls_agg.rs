@@ -636,9 +636,15 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
             return Err(SignatureVerificationError::OperatorPublicKeyNotFound);
         };
 
+        let message = signed_task_response_digest
+            .task_response_digest
+            .as_slice()
+            .try_into()
+            .map_err(|_| SignatureVerificationError::IncorrectSignature)?;
+
         verify_message(
             pub_keys.g2_pub_key.g2(),
-            signed_task_response_digest.task_response_digest.as_slice(),
+            message,
             signed_task_response_digest.bls_signature.g1_point().g1(),
         )
         .then_some(())
