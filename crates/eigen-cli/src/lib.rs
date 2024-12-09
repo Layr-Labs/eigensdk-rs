@@ -291,11 +291,11 @@ mod test {
         let expected_addresses: ContractAddresses = serde_json::from_str(&format!(
             r#"{{
                 "avs": {{
-                    "bls-apk-registry": "0x7bc06c482dead17c0e297afbc32f6e63d3846650",
-                    "index-registry": "0xfd471836031dc5108809d173a067e8486b9047a3",
-                    "registry-coordinator": "0x2bdcc0de6be1f7d2ee689a0342d76f52e8efaba3",
-                    "service-manager": "0x5f3f1dbd7b74c6b46e8c44f98792a1daf8d69154",
-                    "stake-registry": "0xcd8a1c3ba11cf5ecfa6267617243239504a98d90"
+                    "bls-apk-registry": "0xc351628eb244ec633d5f21fbd6621e1a683b1181",
+                    "index-registry": "0xcbeaf3bde82155f56486fb5a1072cb8baaf547cc",
+                    "registry-coordinator": "0x7969c5ed335650692bc04293b07f5bf2e7a673c0",
+                    "service-manager": "0xb7278a61aa25c888815afc32ad3cc52ff24fe575",
+                    "stake-registry": "0x82e01223d51eb87e16a03e24687edf0f294da6f1"
                 }},
                 "eigenlayer": {{
                     "delegation-manager": "0xcf7ed3acca5a467e9e704c703e8d87f634fb0fc9",
@@ -330,11 +330,11 @@ mod test {
         let expected_addresses: ContractAddresses = serde_json::from_str(&format!(
             r#"{{
                 "avs": {{
-                    "bls-apk-registry": "0x7bc06c482dead17c0e297afbc32f6e63d3846650",
-                    "index-registry": "0xfd471836031dc5108809d173a067e8486b9047a3",
-                    "registry-coordinator": "0x2bdcc0de6be1f7d2ee689a0342d76f52e8efaba3",
-                    "service-manager": "0x5f3f1dbd7b74c6b46e8c44f98792a1daf8d69154",
-                    "stake-registry": "0xcd8a1c3ba11cf5ecfa6267617243239504a98d90"
+                    "bls-apk-registry": "0xc351628eb244ec633d5f21fbd6621e1a683b1181",
+                    "index-registry": "0xcbeaf3bde82155f56486fb5a1072cb8baaf547cc",
+                    "registry-coordinator": "0x7969c5ed335650692bc04293b07f5bf2e7a673c0",
+                    "service-manager": "0xb7278a61aa25c888815afc32ad3cc52ff24fe575",
+                    "stake-registry": "0x82e01223d51eb87e16a03e24687edf0f294da6f1"
                 }},
                 "eigenlayer": {{
                     "delegation-manager": "0xcf7ed3acca5a467e9e704c703e8d87f634fb0fc9",

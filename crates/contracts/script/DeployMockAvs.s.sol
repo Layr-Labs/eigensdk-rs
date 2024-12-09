@@ -22,6 +22,7 @@ contract DeployMockAvs {
     address internal proxyAdmin;
     CoreDeploymentLib.DeploymentData internal configData;
     MockERC20 public erc20Mock;
+    MockERC20 public erc20MockRewards;
     IStrategy mockAvsStrategy;
 
     function setUp() public virtual {
@@ -37,6 +38,7 @@ contract DeployMockAvs {
             block.chainid
         );
         erc20Mock = new MockERC20();
+        erc20MockRewards = new MockERC20();
         MockAvsDeploymentLib.MockAvsSetupConfig
             memory avsconfig = MockAvsDeploymentLib.readMockAvsConfigJson(
                 "mock_avs_config"
@@ -59,6 +61,12 @@ contract DeployMockAvs {
                 avsconfig,
                 msg.sender
             );
+        IStrategy(
+            StrategyFactory(configData.strategyFactory).deployNewStrategy(
+                erc20MockRewards
+            )
+        );
+        depData.tokenRewards = address(erc20MockRewards);
         depData.token = address(erc20Mock);
 
         MockAvsDeploymentLib.writeDeploymentJson(depData);

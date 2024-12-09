@@ -47,6 +47,7 @@ library MockAvsDeploymentLib {
         address stakeRegistry;
         address strategy;
         address token;
+        address tokenRewards;
     }
 
     struct MockAvsSetupConfig {
@@ -331,6 +332,8 @@ library MockAvsDeploymentLib {
                 data.strategy.toHexString(),
                 '","token":"',
                 data.token.toHexString(),
+                '","tokenRewards":"',
+                data.tokenRewards.toHexString(),
                 '"}'
             );
     }

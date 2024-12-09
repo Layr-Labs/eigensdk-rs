@@ -1,18 +1,19 @@
 {
     "lastUpdate": {
-        "timestamp": "1733246358",
-        "block_number": "81"
+        "timestamp": "1733773802",
+        "block_number": "42"
     },
     "addresses": {
-        "proxyAdmin": "0xbec49fa140acaa83533fb00a2bb19bddd0290f25",
-        "MockAvsServiceManager": "0xc9a43158891282a2b1475592d5719c001986aaec",
-        "MockAvsServiceManagerImpl": "0xf8e31cb472bc70500f08cd84917e5a1912ec8397",
-        "registryCoordinator": "0x7a9ec1d04904907de0ed7b6839ccdd59c3716ac9",
-        "blsapkRegistry": "0x4631bcabd6df18d94796344963cb60d44a4136b6",
-        "indexRegistry": "0xa4899d35897033b927acfcf422bc745916139776",
-        "stakeRegistry": "0x367761085bf3c12e5da2df99ac6e1a824612b8fb",
-        "operatorStateRetriever": "0xf953b3a269d80e3eb0f2947630da976b896a8c5b",
-        "strategy": "0x1006dd1B8C3D0eF53489beD27577C75299F71473",
-        "token": "0x7FBFDd1DFd80730385aee232cC9F79b8aE12a654"
+        "proxyAdmin": "0x5eb3bc0a489c5a8288765d2336659ebca68fcd00",
+        "MockAvsServiceManager": "0xb7278a61aa25c888815afc32ad3cc52ff24fe575",
+        "MockAvsServiceManagerImpl": "0x2e2ed0cfd3ad2f1d34481277b3204d807ca2f8c2",
+        "registryCoordinator": "0x7969c5ed335650692bc04293b07f5bf2e7a673c0",
+        "blsapkRegistry": "0xc351628eb244ec633d5f21fbd6621e1a683b1181",
+        "indexRegistry": "0xcbeaf3bde82155f56486fb5a1072cb8baaf547cc",
+        "stakeRegistry": "0x82e01223d51eb87e16a03e24687edf0f294da6f1",
+        "operatorStateRetriever": "0x1429859428c0abc9c2c47c8ee9fbaf82cfa0f20f",
+        "strategy": "0xec4cfde48eadca2bc63e94bb437bbeace1371bf3",
+        "token": "0x36c02da8a0983159322a80ffe9f24b1acff8b570",
+        "tokenRewards": "0x809d550fca64d94bd9f66e60752a544199cfac3d"
     }
 }
