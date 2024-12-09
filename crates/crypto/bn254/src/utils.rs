@@ -15,7 +15,7 @@ pub fn map_to_curve(bytes: &[u8; 32]) -> G1Affine {
     let one = Fq::one();
     let three = Fq::from(3u64);
 
-    let mut x = Fq::from_le_bytes_mod_order(bytes);
+    let mut x = Fq::from_be_bytes_mod_order(bytes);
 
     loop {
         // y = x^3 + 3
