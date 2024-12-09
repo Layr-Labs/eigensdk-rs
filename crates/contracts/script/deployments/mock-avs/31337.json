@@ -1,1 +1,18 @@
-{"lastUpdate":{"timestamp":"1733516686","block_number":"42"},"addresses":{"proxyAdmin":"0x5eb3bc0a489c5a8288765d2336659ebca68fcd00","MockAvsServiceManager":"0x5f3f1dbd7b74c6b46e8c44f98792a1daf8d69154","MockAvsServiceManagerImpl":"0x21df544947ba3e8b3c32561399e88b52dc8b2823","registryCoordinator":"0x2bdcc0de6be1f7d2ee689a0342d76f52e8efaba3","blsapkRegistry":"0x7bc06c482dead17c0e297afbc32f6e63d3846650","indexRegistry":"0xfd471836031dc5108809d173a067e8486b9047a3","stakeRegistry":"0xcd8a1c3ba11cf5ecfa6267617243239504a98d90","operatorStateRetriever":"0xcbeaf3bde82155f56486fb5a1072cb8baaf547cc","strategy":"0xec4cfde48eadca2bc63e94bb437bbeace1371bf3","token":"0x36c02da8a0983159322a80ffe9f24b1acff8b570"}}
+{
+    "lastUpdate": {
+        "timestamp": "1733246358",
+        "block_number": "81"
+    },
+    "addresses": {
+        "proxyAdmin": "0xbec49fa140acaa83533fb00a2bb19bddd0290f25",
+        "MockAvsServiceManager": "0xc9a43158891282a2b1475592d5719c001986aaec",
+        "MockAvsServiceManagerImpl": "0xf8e31cb472bc70500f08cd84917e5a1912ec8397",
+        "registryCoordinator": "0x7a9ec1d04904907de0ed7b6839ccdd59c3716ac9",
+        "blsapkRegistry": "0x4631bcabd6df18d94796344963cb60d44a4136b6",
+        "indexRegistry": "0xa4899d35897033b927acfcf422bc745916139776",
+        "stakeRegistry": "0x367761085bf3c12e5da2df99ac6e1a824612b8fb",
+        "operatorStateRetriever": "0xf953b3a269d80e3eb0f2947630da976b896a8c5b",
+        "strategy": "0x1006dd1B8C3D0eF53489beD27577C75299F71473",
+        "token": "0x7FBFDd1DFd80730385aee232cC9F79b8aE12a654"
+    }
+}
