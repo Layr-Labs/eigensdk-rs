@@ -72,4 +72,7 @@ pub enum ElContractsError {
 
     #[error("Alloy pending Transaction error {0}")]
     AlloyPendingTransactionError(#[from] PendingTransactionError),
+
+    #[error("Allocation delay not set for operator")]
+    AllocationDelayNotSet,
 }

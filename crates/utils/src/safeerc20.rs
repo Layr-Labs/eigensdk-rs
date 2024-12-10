@@ -9,29 +9,34 @@ interface SafeERC20 {}
 ```json
 []
 ```*/
-#[allow(non_camel_case_types, non_snake_case, clippy::style)]
+#[allow(
+    non_camel_case_types,
+    non_snake_case,
+    clippy::pub_underscore_fields,
+    clippy::style
+)]
 pub mod SafeERC20 {
     use super::*;
     use alloy::sol_types as alloy_sol_types;
     /// The creation / init bytecode of the contract.
     ///
     /// ```text
-    ///0x60566037600b82828239805160001a607314602a57634e487b7160e01b600052600060045260246000fd5b30600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600080fdfea264697066735822122049d94ff5a46e62e2f9bd04916090407b188d7d40badf72cea2e8a0afcfd68ed064736f6c634300080c0033
+    ///0x60556032600b8282823980515f1a607314602657634e487b7160e01b5f525f60045260245ffd5b305f52607381538281f3fe730000000000000000000000000000000000000000301460806040525f5ffdfea2646970667358221220f7b458a3de24d1dd14f290af2de810f0f6c539d96191c376bb3309fb3445ad9264736f6c634300081b0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"`V`7`\x0B\x82\x82\x829\x80Q`\0\x1A`s\x14`*WcNH{q`\xE0\x1B`\0R`\0`\x04R`$`\0\xFD[0`\0R`s\x81S\x82\x81\xF3\xFEs\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x000\x14`\x80`@R`\0\x80\xFD\xFE\xA2dipfsX\"\x12 I\xD9O\xF5\xA4nb\xE2\xF9\xBD\x04\x91`\x90@{\x18\x8D}@\xBA\xDFr\xCE\xA2\xE8\xA0\xAF\xCF\xD6\x8E\xD0dsolcC\0\x08\x0C\x003",
+        b"`U`2`\x0B\x82\x82\x829\x80Q_\x1A`s\x14`&WcNH{q`\xE0\x1B_R_`\x04R`$_\xFD[0_R`s\x81S\x82\x81\xF3\xFEs\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x000\x14`\x80`@R__\xFD\xFE\xA2dipfsX\"\x12 \xF7\xB4X\xA3\xDE$\xD1\xDD\x14\xF2\x90\xAF-\xE8\x10\xF0\xF6\xC59\xD9a\x91\xC3v\xBB3\t\xFB4E\xAD\x92dsolcC\0\x08\x1B\x003",
     );
     /// The runtime bytecode of the contract, as deployed on the network.
     ///
     /// ```text
-    ///0x73000000000000000000000000000000000000000030146080604052600080fdfea264697066735822122049d94ff5a46e62e2f9bd04916090407b188d7d40badf72cea2e8a0afcfd68ed064736f6c634300080c0033
+    ///0x730000000000000000000000000000000000000000301460806040525f5ffdfea2646970667358221220f7b458a3de24d1dd14f290af2de810f0f6c539d96191c376bb3309fb3445ad9264736f6c634300081b0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static DEPLOYED_BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"s\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x000\x14`\x80`@R`\0\x80\xFD\xFE\xA2dipfsX\"\x12 I\xD9O\xF5\xA4nb\xE2\xF9\xBD\x04\x91`\x90@{\x18\x8D}@\xBA\xDFr\xCE\xA2\xE8\xA0\xAF\xCF\xD6\x8E\xD0dsolcC\0\x08\x0C\x003",
+        b"s\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x000\x14`\x80`@R__\xFD\xFE\xA2dipfsX\"\x12 \xF7\xB4X\xA3\xDE$\xD1\xDD\x14\xF2\x90\xAF-\xE8\x10\xF0\xF6\xC59\xD9a\x91\xC3v\xBB3\t\xFB4E\xAD\x92dsolcC\0\x08\x1B\x003",
     );
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`SafeERC20`](self) contract instance.

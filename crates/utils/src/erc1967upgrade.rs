@@ -59,7 +59,12 @@ interface ERC1967Upgrade {
   }
 ]
 ```*/
-#[allow(non_camel_case_types, non_snake_case, clippy::style)]
+#[allow(
+    non_camel_case_types,
+    non_snake_case,
+    clippy::pub_underscore_fields,
+    clippy::style
+)]
 pub mod ERC1967Upgrade {
     use super::*;
     use alloy::sol_types as alloy_sol_types;
@@ -87,7 +92,12 @@ pub mod ERC1967Upgrade {
     ```solidity
     event AdminChanged(address previousAdmin, address newAdmin);
     ```*/
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     #[derive(Clone)]
     pub struct AdminChanged {
         #[allow(missing_docs)]
@@ -95,7 +105,12 @@ pub mod ERC1967Upgrade {
         #[allow(missing_docs)]
         pub newAdmin: alloy::sol_types::private::Address,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         #[automatically_derived]
@@ -186,13 +201,23 @@ pub mod ERC1967Upgrade {
     ```solidity
     event BeaconUpgraded(address indexed beacon);
     ```*/
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     #[derive(Clone)]
     pub struct BeaconUpgraded {
         #[allow(missing_docs)]
         pub beacon: alloy::sol_types::private::Address,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         #[automatically_derived]
@@ -276,13 +301,23 @@ pub mod ERC1967Upgrade {
     ```solidity
     event Upgraded(address indexed implementation);
     ```*/
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     #[derive(Clone)]
     pub struct Upgraded {
         #[allow(missing_docs)]
         pub implementation: alloy::sol_types::private::Address,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         #[automatically_derived]

@@ -175,7 +175,7 @@ impl BlsKeyPair {
         Signature::new(r.into_affine())
     }
 
-    pub fn sign_message(&self, message: &[u8]) -> Signature {
+    pub fn sign_message(&self, message: &[u8; 32]) -> Signature {
         let g1 = map_to_curve(message);
         let sk_int: BigInteger256 = self.priv_key.into();
         let r = g1.mul_bigint(sk_int);
@@ -375,6 +375,8 @@ mod tests {
     use super::*;
     use ark_bn254::Fq2;
     use eigen_crypto_bn254::utils::verify_message;
+    use eigen_testing_utils::test_data::TestData;
+    type Fp = ark_ff::Fp<ark_ff::MontBackend<ark_bn254::FqConfig, 4>, 4>;
 
     #[test]
     fn test_convert_to_g1_point() {
@@ -524,14 +526,14 @@ mod tests {
         assert_eq!(
             U256::from_limbs(g1.x().unwrap().into_bigint().0),
             U256::from_str(
-                "455867356320691211509944977504407603390036387149619137164185182714736811811"
+                "14528991250861404666834535435384615765856667510756806797353855100662256435714"
             )
             .unwrap()
         );
         assert_eq!(
             U256::from_limbs(g1.y().unwrap().into_bigint().0),
             U256::from_str(
-                "9802125641729881429496664198939823213610051907104384160271670136040620850981"
+                "1084634806445338125226100575785895110643952950453653534955932359686296806861"
             )
             .unwrap()
         );
@@ -551,14 +553,14 @@ mod tests {
         assert_eq!(
             U256::from_limbs(signature.g1_point().g1().x().unwrap().into_bigint().0),
             U256::from_str(
-                "6125087140203962697351933212367898471377426213402772883153680722977416765651"
+                "6480852672313836368883198697599909951599236047787132531972745015650532978134"
             )
             .unwrap()
         );
         assert_eq!(
             U256::from_limbs(signature.g1_point().g1().y().unwrap().into_bigint().0),
             U256::from_str(
-                "19120302240465611628345095276448175199636936878728446037184749040811421969742"
+                "20692567294854493165175278753837678513615081984887336401902704973346059699322"
             )
             .unwrap()
         );
@@ -675,6 +677,54 @@ mod tests {
         assert_eq!(
             original_point, deserialized,
             "The deserialized point does not match the original"
+        );
+    }
+
+    #[test]
+    fn test_bls_signature() {
+        #[derive(Deserialize, Debug)]
+        struct Input {
+            message_bytes: String,
+            bls_priv_key: String,
+        }
+
+        let test_data = TestData::new(Input {
+            message_bytes: "Hello, world!Hello, world!123456".to_string(),
+            bls_priv_key:
+                "12248929636257230549931416853095037629726205319386239410403476017439825112537"
+                    .to_string(),
+        });
+
+        let message_bytes: &[u8; 32] = test_data.input.message_bytes.as_bytes().try_into().unwrap();
+        let bls_priv_key = test_data.input.bls_priv_key;
+        let bls_key_pair = BlsKeyPair::new(bls_priv_key).unwrap();
+        let signature = bls_key_pair.sign_message(message_bytes);
+
+        let g1_point = signature.g1_point().g1();
+        let x = g1_point.x().unwrap();
+        let y = g1_point.y().unwrap();
+
+        // assert x and y with the values obtained in Go SDK
+        assert_eq!(
+            x,
+            Fp::from_bigint(
+                BigInt::from_str(
+                    "15790168376429033610067099039091292283117017641532256477437243974517959682102",
+                )
+                .unwrap()
+            )
+            .unwrap()
+        );
+
+        assert_eq!(
+            y,
+            Fp::from_bigint(
+                BigInt::from_str(
+                    "4960450323239587206117776989095741074887370703941588742100855592356200866613",
+                )
+                .unwrap()
+            )
+            .unwrap()
         );
     }
 }

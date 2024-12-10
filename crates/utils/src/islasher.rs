@@ -578,7 +578,12 @@ interface ISlasher {
   }
 ]
 ```*/
-#[allow(non_camel_case_types, non_snake_case, clippy::style)]
+#[allow(
+    non_camel_case_types,
+    non_snake_case,
+    clippy::pub_underscore_fields,
+    clippy::style
+)]
 pub mod ISlasher {
     use super::*;
     use alloy::sol_types as alloy_sol_types;
@@ -605,13 +610,18 @@ pub mod ISlasher {
     /**```solidity
     struct MiddlewareTimes { uint32 stalestUpdateBlock; uint32 latestServeUntilBlock; }
     ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct MiddlewareTimes {
         pub stalestUpdateBlock: u32,
         pub latestServeUntilBlock: u32,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         #[doc(hidden)]
@@ -801,13 +811,23 @@ pub mod ISlasher {
     ```solidity
     event FrozenStatusReset(address indexed previouslySlashedAddress);
     ```*/
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     #[derive(Clone)]
     pub struct FrozenStatusReset {
         #[allow(missing_docs)]
         pub previouslySlashedAddress: alloy::sol_types::private::Address,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         #[automatically_derived]
@@ -896,7 +916,12 @@ pub mod ISlasher {
     ```solidity
     event MiddlewareTimesAdded(address operator, uint256 index, uint32 stalestUpdateBlock, uint32 latestServeUntilBlock);
     ```*/
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     #[derive(Clone)]
     pub struct MiddlewareTimesAdded {
         #[allow(missing_docs)]
@@ -908,7 +933,12 @@ pub mod ISlasher {
         #[allow(missing_docs)]
         pub latestServeUntilBlock: u32,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         #[automatically_derived]
@@ -1009,7 +1039,12 @@ pub mod ISlasher {
     ```solidity
     event OperatorFrozen(address indexed slashedOperator, address indexed slashingContract);
     ```*/
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     #[derive(Clone)]
     pub struct OperatorFrozen {
         #[allow(missing_docs)]
@@ -1017,7 +1052,12 @@ pub mod ISlasher {
         #[allow(missing_docs)]
         pub slashingContract: alloy::sol_types::private::Address,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         #[automatically_derived]
@@ -1112,7 +1152,12 @@ pub mod ISlasher {
     ```solidity
     event OptedIntoSlashing(address indexed operator, address indexed contractAddress);
     ```*/
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     #[derive(Clone)]
     pub struct OptedIntoSlashing {
         #[allow(missing_docs)]
@@ -1120,7 +1165,12 @@ pub mod ISlasher {
         #[allow(missing_docs)]
         pub contractAddress: alloy::sol_types::private::Address,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         #[automatically_derived]
@@ -1215,7 +1265,12 @@ pub mod ISlasher {
     ```solidity
     event SlashingAbilityRevoked(address indexed operator, address indexed contractAddress, uint32 contractCanSlashOperatorUntilBlock);
     ```*/
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     #[derive(Clone)]
     pub struct SlashingAbilityRevoked {
         #[allow(missing_docs)]
@@ -1225,7 +1280,12 @@ pub mod ISlasher {
         #[allow(missing_docs)]
         pub contractCanSlashOperatorUntilBlock: u32,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         #[automatically_derived]
@@ -1325,19 +1385,24 @@ pub mod ISlasher {
     ```solidity
     function canSlash(address toBeSlashed, address slashingContract) external view returns (bool);
     ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct canSlashCall {
         pub toBeSlashed: alloy::sol_types::private::Address,
         pub slashingContract: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`canSlash(address,address)`](canSlashCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct canSlashReturn {
         pub _0: bool,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -1452,7 +1517,7 @@ pub mod ISlasher {
     ```solidity
     function canWithdraw(address operator, uint32 withdrawalStartBlock, uint256 middlewareTimesIndex) external returns (bool);
     ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct canWithdrawCall {
         pub operator: alloy::sol_types::private::Address,
@@ -1460,12 +1525,17 @@ pub mod ISlasher {
         pub middlewareTimesIndex: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`canWithdraw(address,uint32,uint256)`](canWithdrawCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct canWithdrawReturn {
         pub _0: bool,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -1591,19 +1661,24 @@ pub mod ISlasher {
     ```solidity
     function contractCanSlashOperatorUntilBlock(address operator, address serviceContract) external view returns (uint32);
     ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct contractCanSlashOperatorUntilBlockCall {
         pub operator: alloy::sol_types::private::Address,
         pub serviceContract: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`contractCanSlashOperatorUntilBlock(address,address)`](contractCanSlashOperatorUntilBlockCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct contractCanSlashOperatorUntilBlockReturn {
         pub _0: u32,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -1718,16 +1793,21 @@ pub mod ISlasher {
     ```solidity
     function delegation() external view returns (address);
     ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct delegationCall {}
     ///Container type for the return parameters of the [`delegation()`](delegationCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct delegationReturn {
         pub _0: alloy::sol_types::private::Address,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -1823,16 +1903,21 @@ pub mod ISlasher {
     ```solidity
     function freezeOperator(address toBeFrozen) external;
     ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct freezeOperatorCall {
         pub toBeFrozen: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`freezeOperator(address)`](freezeOperatorCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct freezeOperatorReturn {}
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -1934,19 +2019,24 @@ pub mod ISlasher {
     ```solidity
     function getCorrectValueForInsertAfter(address operator, uint32 updateBlock) external view returns (uint256);
     ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getCorrectValueForInsertAfterCall {
         pub operator: alloy::sol_types::private::Address,
         pub updateBlock: u32,
     }
     ///Container type for the return parameters of the [`getCorrectValueForInsertAfter(address,uint32)`](getCorrectValueForInsertAfterCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getCorrectValueForInsertAfterReturn {
         pub _0: alloy::sol_types::private::primitives::aliases::U256,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -2058,19 +2148,24 @@ pub mod ISlasher {
     ```solidity
     function getMiddlewareTimesIndexServeUntilBlock(address operator, uint32 index) external view returns (uint32);
     ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getMiddlewareTimesIndexServeUntilBlockCall {
         pub operator: alloy::sol_types::private::Address,
         pub index: u32,
     }
     ///Container type for the return parameters of the [`getMiddlewareTimesIndexServeUntilBlock(address,uint32)`](getMiddlewareTimesIndexServeUntilBlockCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getMiddlewareTimesIndexServeUntilBlockReturn {
         pub _0: u32,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -2187,19 +2282,24 @@ pub mod ISlasher {
     ```solidity
     function getMiddlewareTimesIndexStalestUpdateBlock(address operator, uint32 index) external view returns (uint32);
     ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getMiddlewareTimesIndexStalestUpdateBlockCall {
         pub operator: alloy::sol_types::private::Address,
         pub index: u32,
     }
     ///Container type for the return parameters of the [`getMiddlewareTimesIndexStalestUpdateBlock(address,uint32)`](getMiddlewareTimesIndexStalestUpdateBlockCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getMiddlewareTimesIndexStalestUpdateBlockReturn {
         pub _0: u32,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -2320,18 +2420,23 @@ pub mod ISlasher {
     ```solidity
     function isFrozen(address staker) external view returns (bool);
     ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct isFrozenCall {
         pub staker: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`isFrozen(address)`](isFrozenCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct isFrozenReturn {
         pub _0: bool,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -2431,19 +2536,24 @@ pub mod ISlasher {
     ```solidity
     function latestUpdateBlock(address operator, address serviceContract) external view returns (uint32);
     ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct latestUpdateBlockCall {
         pub operator: alloy::sol_types::private::Address,
         pub serviceContract: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`latestUpdateBlock(address,address)`](latestUpdateBlockCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct latestUpdateBlockReturn {
         pub _0: u32,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -2558,18 +2668,23 @@ pub mod ISlasher {
     ```solidity
     function middlewareTimesLength(address operator) external view returns (uint256);
     ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct middlewareTimesLengthCall {
         pub operator: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`middlewareTimesLength(address)`](middlewareTimesLengthCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct middlewareTimesLengthReturn {
         pub _0: alloy::sol_types::private::primitives::aliases::U256,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -2669,19 +2784,24 @@ pub mod ISlasher {
     ```solidity
     function operatorToMiddlewareTimes(address operator, uint256 arrayIndex) external view returns (MiddlewareTimes memory);
     ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct operatorToMiddlewareTimesCall {
         pub operator: alloy::sol_types::private::Address,
         pub arrayIndex: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`operatorToMiddlewareTimes(address,uint256)`](operatorToMiddlewareTimesCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct operatorToMiddlewareTimesReturn {
         pub _0: <MiddlewareTimes as alloy::sol_types::SolType>::RustType,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -2797,21 +2917,26 @@ pub mod ISlasher {
     ```solidity
     function operatorWhitelistedContractsLinkedListEntry(address operator, address node) external view returns (bool, uint256, uint256);
     ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct operatorWhitelistedContractsLinkedListEntryCall {
         pub operator: alloy::sol_types::private::Address,
         pub node: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`operatorWhitelistedContractsLinkedListEntry(address,address)`](operatorWhitelistedContractsLinkedListEntryCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct operatorWhitelistedContractsLinkedListEntryReturn {
         pub _0: bool,
         pub _1: alloy::sol_types::private::primitives::aliases::U256,
         pub _2: alloy::sol_types::private::primitives::aliases::U256,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -2951,18 +3076,23 @@ pub mod ISlasher {
     ```solidity
     function operatorWhitelistedContractsLinkedListSize(address operator) external view returns (uint256);
     ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct operatorWhitelistedContractsLinkedListSizeCall {
         pub operator: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`operatorWhitelistedContractsLinkedListSize(address)`](operatorWhitelistedContractsLinkedListSizeCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct operatorWhitelistedContractsLinkedListSizeReturn {
         pub _0: alloy::sol_types::private::primitives::aliases::U256,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -3070,16 +3200,21 @@ pub mod ISlasher {
     ```solidity
     function optIntoSlashing(address contractAddress) external;
     ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct optIntoSlashingCall {
         pub contractAddress: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`optIntoSlashing(address)`](optIntoSlashingCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct optIntoSlashingReturn {}
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -3181,17 +3316,22 @@ pub mod ISlasher {
     ```solidity
     function recordFirstStakeUpdate(address operator, uint32 serveUntilBlock) external;
     ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct recordFirstStakeUpdateCall {
         pub operator: alloy::sol_types::private::Address,
         pub serveUntilBlock: u32,
     }
     ///Container type for the return parameters of the [`recordFirstStakeUpdate(address,uint32)`](recordFirstStakeUpdateCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct recordFirstStakeUpdateReturn {}
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -3303,17 +3443,22 @@ pub mod ISlasher {
     ```solidity
     function recordLastStakeUpdateAndRevokeSlashingAbility(address operator, uint32 serveUntilBlock) external;
     ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct recordLastStakeUpdateAndRevokeSlashingAbilityCall {
         pub operator: alloy::sol_types::private::Address,
         pub serveUntilBlock: u32,
     }
     ///Container type for the return parameters of the [`recordLastStakeUpdateAndRevokeSlashingAbility(address,uint32)`](recordLastStakeUpdateAndRevokeSlashingAbilityCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct recordLastStakeUpdateAndRevokeSlashingAbilityReturn {}
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -3434,7 +3579,7 @@ pub mod ISlasher {
     ```solidity
     function recordStakeUpdate(address operator, uint32 updateBlock, uint32 serveUntilBlock, uint256 insertAfter) external;
     ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct recordStakeUpdateCall {
         pub operator: alloy::sol_types::private::Address,
@@ -3443,10 +3588,15 @@ pub mod ISlasher {
         pub insertAfter: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`recordStakeUpdate(address,uint32,uint32,uint256)`](recordStakeUpdateCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct recordStakeUpdateReturn {}
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -3580,16 +3730,21 @@ pub mod ISlasher {
     ```solidity
     function resetFrozenStatus(address[] memory frozenAddresses) external;
     ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct resetFrozenStatusCall {
         pub frozenAddresses: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
     }
     ///Container type for the return parameters of the [`resetFrozenStatus(address[])`](resetFrozenStatusCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct resetFrozenStatusReturn {}
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -3694,16 +3849,21 @@ pub mod ISlasher {
     ```solidity
     function strategyManager() external view returns (address);
     ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct strategyManagerCall {}
     ///Container type for the return parameters of the [`strategyManager()`](strategyManagerCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct strategyManagerReturn {
         pub _0: alloy::sol_types::private::Address,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
