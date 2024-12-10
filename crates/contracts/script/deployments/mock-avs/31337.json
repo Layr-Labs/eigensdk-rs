@@ -1,6 +1,6 @@
 {
     "lastUpdate": {
-        "timestamp": "1733773802",
+        "timestamp": "1733870131",
         "block_number": "42"
     },
     "addresses": {
@@ -14,6 +14,6 @@
         "operatorStateRetriever": "0x1429859428c0abc9c2c47c8ee9fbaf82cfa0f20f",
         "strategy": "0xec4cfde48eadca2bc63e94bb437bbeace1371bf3",
         "token": "0x36c02da8a0983159322a80ffe9f24b1acff8b570",
-        "tokenRewards": "0x809d550fca64d94bd9f66e60752a544199cfac3d"
+        "tokenRewards": "0x7fbfdd1dfd80730385aee232cc9f79b8ae12a654"
     }
 }
