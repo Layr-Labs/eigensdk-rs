@@ -15,7 +15,7 @@ pub mod BN254 {
     struct G1Point { uint256 X; uint256 Y; }
     ```*/
     #[allow(non_camel_case_types, non_snake_case)]
-    #[derive(Clone)]
+    #[derive(Clone, Debug)]
     pub struct G1Point {
         pub X: alloy::sol_types::private::primitives::aliases::U256,
         pub Y: alloy::sol_types::private::primitives::aliases::U256,
@@ -197,7 +197,7 @@ pub mod BN254 {
     struct G2Point { uint256[2] X; uint256[2] Y; }
     ```*/
     #[allow(non_camel_case_types, non_snake_case)]
-    #[derive(Clone)]
+    #[derive(Clone, Debug)]
     pub struct G2Point {
         pub X: [alloy::sol_types::private::primitives::aliases::U256; 2usize],
         pub Y: [alloy::sol_types::private::primitives::aliases::U256; 2usize],
@@ -535,7 +535,7 @@ pub mod IBLSApkRegistry {
     struct PubkeyRegistrationParams { BN254.G1Point pubkeyRegistrationSignature; BN254.G1Point pubkeyG1; BN254.G2Point pubkeyG2; }
     ```*/
     #[allow(non_camel_case_types, non_snake_case)]
-    #[derive(Clone)]
+    #[derive(Clone, Debug)]
     pub struct PubkeyRegistrationParams {
         pub pubkeyRegistrationSignature: <BN254::G1Point as alloy::sol_types::SolType>::RustType,
         pub pubkeyG1: <BN254::G1Point as alloy::sol_types::SolType>::RustType,
@@ -1952,7 +1952,7 @@ pub mod ISignatureUtils {
     struct SignatureWithSaltAndExpiry { bytes signature; bytes32 salt; uint256 expiry; }
     ```*/
     #[allow(non_camel_case_types, non_snake_case)]
-    #[derive(Clone)]
+    #[derive(Clone, Debug)]
     pub struct SignatureWithSaltAndExpiry {
         pub signature: alloy::sol_types::private::Bytes,
         pub salt: alloy::sol_types::private::FixedBytes<32>,
