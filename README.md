@@ -42,8 +42,7 @@ The main branch of this repo is intended to be syncronized with mainnet version 
 
 To update the bindings of this repo:
 
-- Clone the repo [eigenlayer-middleware](https://github.com/Layr-Labs/eigenlayer-middleware/). And checkout the desired branch or release (e.g. as Aug 2024: `v0.2.1-mainnet-rewards`).
-- Inside the `eigenlayer-middleware`, run the commnand:
+- Inside the `crates/contracts` folder, run:
 
 ```bash
 forge bind --alloy --bindings-path <path-eigensdk-rs>/crates/utils --overwrite -C src/contracts
@@ -54,6 +53,8 @@ where `path-eigensdk-rs` is the full path to the eigensdk-rs (this) repo.
 This command will generate the bindings files in the folder: `<path-eigensdk-rs>/crates/utils`.
 
 ⚠️ It rewrites Cargo.toml file, this file must be restored to the current version.
+
+- Fix all compilation warnings.
 
 ## Contributor Guidelines
 
