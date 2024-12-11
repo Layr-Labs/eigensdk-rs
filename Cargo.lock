@@ -2602,7 +2602,7 @@ dependencies = [
  "alloy",
  "alloy-primitives",
  "chrono",
- "eigen-utils",
+ "eigen-testing-utils",
  "hex",
  "jsonwebtoken 7.2.0",
  "mime",
@@ -2614,6 +2614,18 @@ dependencies = [
  "thiserror 1.0.69",
  "tokio",
  "uuid 1.11.0",
+]
+
+[[package]]
+name = "eigen-common"
+version = "0.1.1"
+dependencies = [
+ "alloy-provider",
+ "alloy-pubsub",
+ "alloy-signer-local",
+ "alloy-transport",
+ "alloy-transport-http",
+ "url",
 ]
 
 [[package]]
@@ -2819,11 +2831,9 @@ version = "0.1.1"
 dependencies = [
  "alloy-primitives",
  "alloy-provider",
- "alloy-pubsub",
  "alloy-rpc-types",
- "alloy-signer-local",
  "alloy-transport",
- "alloy-transport-http",
+ "eigen-common",
  "eigen-utils",
  "serde",
  "serde_json",

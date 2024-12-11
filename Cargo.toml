@@ -1,5 +1,6 @@
 [workspace]
 members = [
+    "crates/common/",
     "crates/chainio/clients/avsregistry/",
     "crates/chainio/clients/elcontracts/",
     "crates/chainio/clients/eth/",
@@ -57,6 +58,7 @@ async-trait = "0.1.83"
 aws-config = "1.5.9"
 aws-sdk-kms = "1.49.0"
 clap = { version = "4.5.20", features = ["derive"] }
+eigen-common = { path = "crates/common/" }
 eigen-chainio-txmanager = { path = "crates/chainio/txmanager/" }
 eigen-client-avsregistry = { path = "crates/chainio/clients/avsregistry" }
 eigen-client-elcontracts = { path = "crates/chainio/clients/elcontracts" }

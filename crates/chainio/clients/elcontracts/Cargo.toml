@@ -14,6 +14,7 @@ alloy-primitives.workspace = true
 eigen-logging.workspace = true
 eigen-types.workspace = true
 eigen-utils.workspace = true
+eigen-testing-utils.workspace = true
 thiserror.workspace = true
 tracing.workspace = true
 
