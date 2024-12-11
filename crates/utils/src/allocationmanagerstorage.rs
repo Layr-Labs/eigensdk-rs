@@ -14,6 +14,8 @@ library IAllocationManagerTypes {
     clippy::pub_underscore_fields,
     clippy::style
 )]
+use crate::iallocationmanager::IAllocationManager::OperatorSet;
+
 pub mod IAllocationManagerTypes {
     use super::*;
     use alloy::sol_types as alloy_sol_types;

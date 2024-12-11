@@ -14,8 +14,12 @@ library IAllocationManagerTypes {
     clippy::pub_underscore_fields,
     clippy::style
 )]
+
+use crate::allocationmanager::AllocationManager::OperatorSet;
+
 pub mod IAllocationManagerTypes {
     use super::*;
+    use crate::iallocationmanager::IAllocationManager::OperatorSet;
     use alloy::sol_types as alloy_sol_types;
     /**```solidity
 struct MagnitudeAllocation { address strategy; uint64 expectedMaxMagnitude; OperatorSet[] operatorSets; uint64[] magnitudes; }
