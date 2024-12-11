@@ -1,9 +1,9 @@
 use crate::error::ElContractsError;
 use alloy_primitives::{Address, FixedBytes, U256};
+use eigen_common::get_provider;
 use eigen_logging::logger::SharedLogger;
 use eigen_types::operator::Operator;
-use eigen_common::get_provider;
-use eigen_utils::{
+use eigen_utils::middleware::{
     avsdirectory::AVSDirectory, delegationmanager::DelegationManager, erc20::ERC20,
     islasher::ISlasher, istrategy::IStrategy,
 };
@@ -399,11 +399,13 @@ mod tests {
         },
     };
     use eigen_utils::{
-        avsdirectory::AVSDirectory,
-        avsdirectory::AVSDirectory::calculateOperatorAVSRegistrationDigestHashReturn,
-        delegationmanager::DelegationManager,
-        delegationmanager::DelegationManager::calculateDelegationApprovalDigestHashReturn,
-        mockavsservicemanager::MockAvsServiceManager,
+        deploy::mockavsservicemanager::MockAvsServiceManager,
+        middleware::{
+            avsdirectory::AVSDirectory::{self, calculateOperatorAVSRegistrationDigestHashReturn},
+            delegationmanager::DelegationManager::{
+                self, calculateDelegationApprovalDigestHashReturn,
+            },
+        },
     };
     use std::str::FromStr;
 

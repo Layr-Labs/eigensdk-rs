@@ -1,6 +1,6 @@
 //! Anvil utilities
 use alloy_primitives::{address, Address};
-use eigen_utils::contractsregistry::ContractsRegistry::{self, contractsReturn};
+use eigen_utils::deploy::contractsregistry::ContractsRegistry::{self, contractsReturn};
 
 use eigen_common::get_provider;
 
