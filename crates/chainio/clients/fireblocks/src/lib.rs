@@ -16,11 +16,11 @@ pub mod status;
 pub mod transaction;
 use std::collections::HashMap;
 use std::str::FromStr;
-
+use alloy::providers::Provider;
 use alloy::rpc::types::transaction::TransactionReceipt;
 use alloy_primitives::Address;
 use alloy_primitives::U64;
-use eigen_testing_utils::get_provider;
+use eigen_common::get_provider;
 use client::{Client, ASSET_ID_BY_CHAIN};
 use error::FireBlockError;
 use get_transaction::GetTransaction;

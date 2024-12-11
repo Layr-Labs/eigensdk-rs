@@ -2,13 +2,13 @@ use crate::error::ElContractsError;
 use crate::reader::ELChainReader;
 use alloy_primitives::{Address, FixedBytes, TxHash, U256};
 pub use eigen_types::operator::Operator;
+use eigen_common::get_signer;
 use eigen_utils::{
     delegationmanager::{
         DelegationManager::{self},
         IDelegationManager::OperatorDetails,
     },
     erc20::ERC20,
-    get_signer,
     irewardscoordinator::IRewardsCoordinator::{self, RewardsMerkleClaim},
     strategymanager::StrategyManager,
 };
@@ -272,10 +272,10 @@ mod tests {
         transaction::wait_transaction,
     };
     use eigen_types::operator::Operator;
+    use eigen_common::get_provider;
     use eigen_utils::{
         contractsregistry::ContractsRegistry::{self, get_test_valuesReturn},
         delegationmanager::DelegationManager,
-        get_provider,
         irewardscoordinator::IRewardsCoordinator::{EarnerTreeMerkleLeaf, RewardsMerkleClaim},
         mockavsservicemanager::MockAvsServiceManager,
     };
