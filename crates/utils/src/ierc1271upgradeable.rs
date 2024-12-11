@@ -36,7 +36,12 @@ interface IERC1271Upgradeable {
   }
 ]
 ```*/
-#[allow(non_camel_case_types, non_snake_case, clippy::style)]
+#[allow(
+    non_camel_case_types,
+    non_snake_case,
+    clippy::pub_underscore_fields,
+    clippy::style
+)]
 pub mod IERC1271Upgradeable {
     use super::*;
     use alloy::sol_types as alloy_sol_types;
@@ -61,22 +66,27 @@ pub mod IERC1271Upgradeable {
         b"",
     );
     /**Function with signature `isValidSignature(bytes32,bytes)` and selector `0x1626ba7e`.
-    ```solidity
-    function isValidSignature(bytes32 hash, bytes memory signature) external view returns (bytes4 magicValue);
-    ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+```solidity
+function isValidSignature(bytes32 hash, bytes memory signature) external view returns (bytes4 magicValue);
+```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct isValidSignatureCall {
         pub hash: alloy::sol_types::private::FixedBytes<32>,
         pub signature: alloy::sol_types::private::Bytes,
     }
     ///Container type for the return parameters of the [`isValidSignature(bytes32,bytes)`](isValidSignatureCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct isValidSignatureReturn {
         pub magicValue: alloy::sol_types::private::FixedBytes<4>,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -92,7 +102,9 @@ pub mod IERC1271Upgradeable {
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -101,14 +113,16 @@ pub mod IERC1271Upgradeable {
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<isValidSignatureCall> for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<isValidSignatureCall>
+            for UnderlyingRustTuple<'_> {
                 fn from(value: isValidSignatureCall) -> Self {
                     (value.hash, value.signature)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for isValidSignatureCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>>
+            for isValidSignatureCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {
                         hash: tuple.0,
@@ -124,7 +138,9 @@ pub mod IERC1271Upgradeable {
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::FixedBytes<4>,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -133,18 +149,18 @@ pub mod IERC1271Upgradeable {
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<isValidSignatureReturn> for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<isValidSignatureReturn>
+            for UnderlyingRustTuple<'_> {
                 fn from(value: isValidSignatureReturn) -> Self {
                     (value.magicValue,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for isValidSignatureReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>>
+            for isValidSignatureReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self {
-                        magicValue: tuple.0,
-                    }
+                    Self { magicValue: tuple.0 }
                 }
             }
         }
@@ -154,10 +170,14 @@ pub mod IERC1271Upgradeable {
                 alloy::sol_types::sol_data::FixedBytes<32>,
                 alloy::sol_types::sol_data::Bytes,
             );
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type Return = isValidSignatureReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::FixedBytes<4>,);
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "isValidSignature(bytes32,bytes)";
             const SELECTOR: [u8; 4] = [22u8, 38u8, 186u8, 126u8];
             #[inline]
@@ -182,10 +202,10 @@ pub mod IERC1271Upgradeable {
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
+                <Self::ReturnTuple<
+                    '_,
+                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
+                    .map(Into::into)
             }
         }
     };
@@ -234,24 +254,28 @@ pub mod IERC1271Upgradeable {
             static DECODE_SHIMS: &[fn(
                 &[u8],
                 bool,
-            )
-                -> alloy_sol_types::Result<IERC1271UpgradeableCalls>] = &[{
-                fn isValidSignature(
-                    data: &[u8],
-                    validate: bool,
-                ) -> alloy_sol_types::Result<IERC1271UpgradeableCalls> {
-                    <isValidSignatureCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                        data, validate,
-                    )
-                    .map(IERC1271UpgradeableCalls::isValidSignature)
-                }
-                isValidSignature
-            }];
+            ) -> alloy_sol_types::Result<IERC1271UpgradeableCalls>] = &[
+                {
+                    fn isValidSignature(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<IERC1271UpgradeableCalls> {
+                        <isValidSignatureCall as alloy_sol_types::SolCall>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
+                            .map(IERC1271UpgradeableCalls::isValidSignature)
+                    }
+                    isValidSignature
+                },
+            ];
             let Ok(idx) = Self::SELECTORS.binary_search(&selector) else {
-                return Err(alloy_sol_types::Error::unknown_selector(
-                    <Self as alloy_sol_types::SolInterface>::NAME,
-                    selector,
-                ));
+                return Err(
+                    alloy_sol_types::Error::unknown_selector(
+                        <Self as alloy_sol_types::SolInterface>::NAME,
+                        selector,
+                    ),
+                );
             };
             (unsafe { DECODE_SHIMS.get_unchecked(idx) })(data, validate)
         }
@@ -259,7 +283,9 @@ pub mod IERC1271Upgradeable {
         fn abi_encoded_size(&self) -> usize {
             match self {
                 Self::isValidSignature(inner) => {
-                    <isValidSignatureCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
+                    <isValidSignatureCall as alloy_sol_types::SolCall>::abi_encoded_size(
+                        inner,
+                    )
                 }
             }
         }
@@ -267,7 +293,10 @@ pub mod IERC1271Upgradeable {
         fn abi_encode_raw(&self, out: &mut alloy_sol_types::private::Vec<u8>) {
             match self {
                 Self::isValidSignature(inner) => {
-                    <isValidSignatureCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
+                    <isValidSignatureCall as alloy_sol_types::SolCall>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
                 }
             }
         }
@@ -275,7 +304,7 @@ pub mod IERC1271Upgradeable {
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`IERC1271Upgradeable`](self) contract instance.
 
-    See the [wrapper's documentation](`IERC1271UpgradeableInstance`) for more details.*/
+See the [wrapper's documentation](`IERC1271UpgradeableInstance`) for more details.*/
     #[inline]
     pub const fn new<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -289,9 +318,9 @@ pub mod IERC1271Upgradeable {
     }
     /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-    Returns a new instance of the contract, if the deployment was successful.
+Returns a new instance of the contract, if the deployment was successful.
 
-    For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
     #[inline]
     pub fn deploy<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -299,36 +328,35 @@ pub mod IERC1271Upgradeable {
         N: alloy_contract::private::Network,
     >(
         provider: P,
-    ) -> impl ::core::future::Future<Output = alloy_contract::Result<IERC1271UpgradeableInstance<T, P, N>>>
-    {
+    ) -> impl ::core::future::Future<
+        Output = alloy_contract::Result<IERC1271UpgradeableInstance<T, P, N>>,
+    > {
         IERC1271UpgradeableInstance::<T, P, N>::deploy(provider)
     }
     /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-    and constructor arguments, if any.
+and constructor arguments, if any.
 
-    This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-    the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     #[inline]
     pub fn deploy_builder<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
         P: alloy_contract::private::Provider<T, N>,
         N: alloy_contract::private::Network,
-    >(
-        provider: P,
-    ) -> alloy_contract::RawCallBuilder<T, P, N> {
+    >(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
         IERC1271UpgradeableInstance::<T, P, N>::deploy_builder(provider)
     }
     /**A [`IERC1271Upgradeable`](self) instance.
 
-    Contains type-safe methods for interacting with an on-chain instance of the
-    [`IERC1271Upgradeable`](self) contract located at a given `address`, using a given
-    provider `P`.
+Contains type-safe methods for interacting with an on-chain instance of the
+[`IERC1271Upgradeable`](self) contract located at a given `address`, using a given
+provider `P`.
 
-    If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
-    documentation on how to provide it), the `deploy` and `deploy_builder` methods can
-    be used to deploy a new instance of the contract.
+If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
+documentation on how to provide it), the `deploy` and `deploy_builder` methods can
+be used to deploy a new instance of the contract.
 
-    See the [module-level documentation](self) for all the available methods.*/
+See the [module-level documentation](self) for all the available methods.*/
     #[derive(Clone)]
     pub struct IERC1271UpgradeableInstance<T, P, N = alloy_contract::private::Ethereum> {
         address: alloy_sol_types::private::Address,
@@ -339,24 +367,24 @@ pub mod IERC1271Upgradeable {
     impl<T, P, N> ::core::fmt::Debug for IERC1271UpgradeableInstance<T, P, N> {
         #[inline]
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-            f.debug_tuple("IERC1271UpgradeableInstance")
-                .field(&self.address)
-                .finish()
+            f.debug_tuple("IERC1271UpgradeableInstance").field(&self.address).finish()
         }
     }
     /// Instantiation and getters/setters.
     #[automatically_derived]
     impl<
-            T: alloy_contract::private::Transport + ::core::clone::Clone,
-            P: alloy_contract::private::Provider<T, N>,
-            N: alloy_contract::private::Network,
-        > IERC1271UpgradeableInstance<T, P, N>
-    {
+        T: alloy_contract::private::Transport + ::core::clone::Clone,
+        P: alloy_contract::private::Provider<T, N>,
+        N: alloy_contract::private::Network,
+    > IERC1271UpgradeableInstance<T, P, N> {
         /**Creates a new wrapper around an on-chain [`IERC1271Upgradeable`](self) contract instance.
 
-        See the [wrapper's documentation](`IERC1271UpgradeableInstance`) for more details.*/
+See the [wrapper's documentation](`IERC1271UpgradeableInstance`) for more details.*/
         #[inline]
-        pub const fn new(address: alloy_sol_types::private::Address, provider: P) -> Self {
+        pub const fn new(
+            address: alloy_sol_types::private::Address,
+            provider: P,
+        ) -> Self {
             Self {
                 address,
                 provider,
@@ -365,9 +393,9 @@ pub mod IERC1271Upgradeable {
         }
         /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-        Returns a new instance of the contract, if the deployment was successful.
+Returns a new instance of the contract, if the deployment was successful.
 
-        For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
         #[inline]
         pub async fn deploy(
             provider: P,
@@ -377,10 +405,10 @@ pub mod IERC1271Upgradeable {
             Ok(Self::new(contract_address, call_builder.provider))
         }
         /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-        and constructor arguments, if any.
+and constructor arguments, if any.
 
-        This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-        the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         #[inline]
         pub fn deploy_builder(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
             alloy_contract::RawCallBuilder::new_raw_deploy(
@@ -423,11 +451,10 @@ pub mod IERC1271Upgradeable {
     /// Function calls.
     #[automatically_derived]
     impl<
-            T: alloy_contract::private::Transport + ::core::clone::Clone,
-            P: alloy_contract::private::Provider<T, N>,
-            N: alloy_contract::private::Network,
-        > IERC1271UpgradeableInstance<T, P, N>
-    {
+        T: alloy_contract::private::Transport + ::core::clone::Clone,
+        P: alloy_contract::private::Provider<T, N>,
+        N: alloy_contract::private::Network,
+    > IERC1271UpgradeableInstance<T, P, N> {
         /// Creates a new call builder using this contract instance's provider and address.
         ///
         /// Note that the call can be any function call, not just those defined in this
@@ -444,17 +471,21 @@ pub mod IERC1271Upgradeable {
             hash: alloy::sol_types::private::FixedBytes<32>,
             signature: alloy::sol_types::private::Bytes,
         ) -> alloy_contract::SolCallBuilder<T, &P, isValidSignatureCall, N> {
-            self.call_builder(&isValidSignatureCall { hash, signature })
+            self.call_builder(
+                &isValidSignatureCall {
+                    hash,
+                    signature,
+                },
+            )
         }
     }
     /// Event filters.
     #[automatically_derived]
     impl<
-            T: alloy_contract::private::Transport + ::core::clone::Clone,
-            P: alloy_contract::private::Provider<T, N>,
-            N: alloy_contract::private::Network,
-        > IERC1271UpgradeableInstance<T, P, N>
-    {
+        T: alloy_contract::private::Transport + ::core::clone::Clone,
+        P: alloy_contract::private::Provider<T, N>,
+        N: alloy_contract::private::Network,
+    > IERC1271UpgradeableInstance<T, P, N> {
         /// Creates a new event filter using this contract instance's provider and address.
         ///
         /// Note that the type can be any event, not just those defined in this contract.

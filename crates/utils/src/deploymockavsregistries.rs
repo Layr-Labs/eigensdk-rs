@@ -193,44 +193,54 @@ interface DeployMockAvsRegistries {
   }
 ]
 ```*/
-#[allow(non_camel_case_types, non_snake_case, clippy::style)]
+#[allow(
+    non_camel_case_types,
+    non_snake_case,
+    clippy::pub_underscore_fields,
+    clippy::style
+)]
 pub mod DeployMockAvsRegistries {
     use super::*;
     use alloy::sol_types as alloy_sol_types;
     /// The creation / init bytecode of the contract.
     ///
     /// ```text
-    ///0x6080604052600c805462ff00ff19166201000117905534801561002157600080fd5b50610235806100316000396000f3fe608060405234801561001057600080fd5b50600436106100cf5760003560e01c806380e064d41161008c5780639e9923c2116100665780639e9923c2146101a3578063e18272c2146101b6578063e3a8b345146101c9578063f8ccbf47146101dc57600080fd5b806380e064d41461016a5780638b2c69eb1461017d5780639e3ba4371461019057600080fd5b80630331ed2a146100d457806339a5fcfa1461010b5780634ca22c3f1461011e5780635df459461461013157806368304835146101445780636d14a98714610157575b600080fd5b600c546100ee90630100000090046001600160a01b031681565b6040516001600160a01b0390911681526020015b60405180910390f35b600f546100ee906001600160a01b031681565b6016546100ee906001600160a01b031681565b6010546100ee906001600160a01b031681565b6014546100ee906001600160a01b031681565b600e546100ee906001600160a01b031681565b600d546100ee906001600160a01b031681565b6013546100ee906001600160a01b031681565b6011546100ee906001600160a01b031681565b6012546100ee906001600160a01b031681565b6015546100ee906001600160a01b031681565b6017546100ee906001600160a01b031681565b600c546101ef9062010000900460ff1681565b604051901515815260200161010256fea26469706673582212201453d4bf05f8c497d9ead2ee542204814abcb8c1aefed00926a25edb0de539a064736f6c634300080c0033
+    ///0x6080604052600c805462ff00ff191662010001179055348015601f575f5ffd5b506102308061002d5f395ff3fe608060405234801561000f575f5ffd5b50600436106100cb575f3560e01c806380e064d4116100885780639e9923c2116100635780639e9923c21461019e578063e18272c2146101b1578063e3a8b345146101c4578063f8ccbf47146101d7575f5ffd5b806380e064d4146101655780638b2c69eb146101785780639e3ba4371461018b575f5ffd5b80630331ed2a146100cf57806339a5fcfa146101065780634ca22c3f146101195780635df459461461012c578063683048351461013f5780636d14a98714610152575b5f5ffd5b600c546100e990630100000090046001600160a01b031681565b6040516001600160a01b0390911681526020015b60405180910390f35b600f546100e9906001600160a01b031681565b6016546100e9906001600160a01b031681565b6010546100e9906001600160a01b031681565b6014546100e9906001600160a01b031681565b600e546100e9906001600160a01b031681565b600d546100e9906001600160a01b031681565b6013546100e9906001600160a01b031681565b6011546100e9906001600160a01b031681565b6012546100e9906001600160a01b031681565b6015546100e9906001600160a01b031681565b6017546100e9906001600160a01b031681565b600c546101ea9062010000900460ff1681565b60405190151581526020016100fd56fea2646970667358221220bb1117bb4d4a668b5076febb1c94935aa103b52da50f5f3e395fbc63db27fca664736f6c634300081b0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"`\x80`@R`\x0C\x80Tb\xFF\0\xFF\x19\x16b\x01\0\x01\x17\x90U4\x80\x15a\0!W`\0\x80\xFD[Pa\x025\x80a\x001`\09`\0\xF3\xFE`\x80`@R4\x80\x15a\0\x10W`\0\x80\xFD[P`\x046\x10a\0\xCFW`\x005`\xE0\x1C\x80c\x80\xE0d\xD4\x11a\0\x8CW\x80c\x9E\x99#\xC2\x11a\0fW\x80c\x9E\x99#\xC2\x14a\x01\xA3W\x80c\xE1\x82r\xC2\x14a\x01\xB6W\x80c\xE3\xA8\xB3E\x14a\x01\xC9W\x80c\xF8\xCC\xBFG\x14a\x01\xDCW`\0\x80\xFD[\x80c\x80\xE0d\xD4\x14a\x01jW\x80c\x8B,i\xEB\x14a\x01}W\x80c\x9E;\xA47\x14a\x01\x90W`\0\x80\xFD[\x80c\x031\xED*\x14a\0\xD4W\x80c9\xA5\xFC\xFA\x14a\x01\x0BW\x80cL\xA2,?\x14a\x01\x1EW\x80c]\xF4YF\x14a\x011W\x80ch0H5\x14a\x01DW\x80cm\x14\xA9\x87\x14a\x01WW[`\0\x80\xFD[`\x0CTa\0\xEE\x90c\x01\0\0\0\x90\x04`\x01`\x01`\xA0\x1B\x03\x16\x81V[`@Q`\x01`\x01`\xA0\x1B\x03\x90\x91\x16\x81R` \x01[`@Q\x80\x91\x03\x90\xF3[`\x0FTa\0\xEE\x90`\x01`\x01`\xA0\x1B\x03\x16\x81V[`\x16Ta\0\xEE\x90`\x01`\x01`\xA0\x1B\x03\x16\x81V[`\x10Ta\0\xEE\x90`\x01`\x01`\xA0\x1B\x03\x16\x81V[`\x14Ta\0\xEE\x90`\x01`\x01`\xA0\x1B\x03\x16\x81V[`\x0ETa\0\xEE\x90`\x01`\x01`\xA0\x1B\x03\x16\x81V[`\rTa\0\xEE\x90`\x01`\x01`\xA0\x1B\x03\x16\x81V[`\x13Ta\0\xEE\x90`\x01`\x01`\xA0\x1B\x03\x16\x81V[`\x11Ta\0\xEE\x90`\x01`\x01`\xA0\x1B\x03\x16\x81V[`\x12Ta\0\xEE\x90`\x01`\x01`\xA0\x1B\x03\x16\x81V[`\x15Ta\0\xEE\x90`\x01`\x01`\xA0\x1B\x03\x16\x81V[`\x17Ta\0\xEE\x90`\x01`\x01`\xA0\x1B\x03\x16\x81V[`\x0CTa\x01\xEF\x90b\x01\0\0\x90\x04`\xFF\x16\x81V[`@Q\x90\x15\x15\x81R` \x01a\x01\x02V\xFE\xA2dipfsX\"\x12 \x14S\xD4\xBF\x05\xF8\xC4\x97\xD9\xEA\xD2\xEET\"\x04\x81J\xBC\xB8\xC1\xAE\xFE\xD0\t&\xA2^\xDB\r\xE59\xA0dsolcC\0\x08\x0C\x003",
+        b"`\x80`@R`\x0C\x80Tb\xFF\0\xFF\x19\x16b\x01\0\x01\x17\x90U4\x80\x15`\x1FW__\xFD[Pa\x020\x80a\0-_9_\xF3\xFE`\x80`@R4\x80\x15a\0\x0FW__\xFD[P`\x046\x10a\0\xCBW_5`\xE0\x1C\x80c\x80\xE0d\xD4\x11a\0\x88W\x80c\x9E\x99#\xC2\x11a\0cW\x80c\x9E\x99#\xC2\x14a\x01\x9EW\x80c\xE1\x82r\xC2\x14a\x01\xB1W\x80c\xE3\xA8\xB3E\x14a\x01\xC4W\x80c\xF8\xCC\xBFG\x14a\x01\xD7W__\xFD[\x80c\x80\xE0d\xD4\x14a\x01eW\x80c\x8B,i\xEB\x14a\x01xW\x80c\x9E;\xA47\x14a\x01\x8BW__\xFD[\x80c\x031\xED*\x14a\0\xCFW\x80c9\xA5\xFC\xFA\x14a\x01\x06W\x80cL\xA2,?\x14a\x01\x19W\x80c]\xF4YF\x14a\x01,W\x80ch0H5\x14a\x01?W\x80cm\x14\xA9\x87\x14a\x01RW[__\xFD[`\x0CTa\0\xE9\x90c\x01\0\0\0\x90\x04`\x01`\x01`\xA0\x1B\x03\x16\x81V[`@Q`\x01`\x01`\xA0\x1B\x03\x90\x91\x16\x81R` \x01[`@Q\x80\x91\x03\x90\xF3[`\x0FTa\0\xE9\x90`\x01`\x01`\xA0\x1B\x03\x16\x81V[`\x16Ta\0\xE9\x90`\x01`\x01`\xA0\x1B\x03\x16\x81V[`\x10Ta\0\xE9\x90`\x01`\x01`\xA0\x1B\x03\x16\x81V[`\x14Ta\0\xE9\x90`\x01`\x01`\xA0\x1B\x03\x16\x81V[`\x0ETa\0\xE9\x90`\x01`\x01`\xA0\x1B\x03\x16\x81V[`\rTa\0\xE9\x90`\x01`\x01`\xA0\x1B\x03\x16\x81V[`\x13Ta\0\xE9\x90`\x01`\x01`\xA0\x1B\x03\x16\x81V[`\x11Ta\0\xE9\x90`\x01`\x01`\xA0\x1B\x03\x16\x81V[`\x12Ta\0\xE9\x90`\x01`\x01`\xA0\x1B\x03\x16\x81V[`\x15Ta\0\xE9\x90`\x01`\x01`\xA0\x1B\x03\x16\x81V[`\x17Ta\0\xE9\x90`\x01`\x01`\xA0\x1B\x03\x16\x81V[`\x0CTa\x01\xEA\x90b\x01\0\0\x90\x04`\xFF\x16\x81V[`@Q\x90\x15\x15\x81R` \x01a\0\xFDV\xFE\xA2dipfsX\"\x12 \xBB\x11\x17\xBBMJf\x8BPv\xFE\xBB\x1C\x94\x93Z\xA1\x03\xB5-\xA5\x0F_>9_\xBCc\xDB'\xFC\xA6dsolcC\0\x08\x1B\x003",
     );
     /// The runtime bytecode of the contract, as deployed on the network.
     ///
     /// ```text
-    ///0x608060405234801561001057600080fd5b50600436106100cf5760003560e01c806380e064d41161008c5780639e9923c2116100665780639e9923c2146101a3578063e18272c2146101b6578063e3a8b345146101c9578063f8ccbf47146101dc57600080fd5b806380e064d41461016a5780638b2c69eb1461017d5780639e3ba4371461019057600080fd5b80630331ed2a146100d457806339a5fcfa1461010b5780634ca22c3f1461011e5780635df459461461013157806368304835146101445780636d14a98714610157575b600080fd5b600c546100ee90630100000090046001600160a01b031681565b6040516001600160a01b0390911681526020015b60405180910390f35b600f546100ee906001600160a01b031681565b6016546100ee906001600160a01b031681565b6010546100ee906001600160a01b031681565b6014546100ee906001600160a01b031681565b600e546100ee906001600160a01b031681565b600d546100ee906001600160a01b031681565b6013546100ee906001600160a01b031681565b6011546100ee906001600160a01b031681565b6012546100ee906001600160a01b031681565b6015546100ee906001600160a01b031681565b6017546100ee906001600160a01b031681565b600c546101ef9062010000900460ff1681565b604051901515815260200161010256fea26469706673582212201453d4bf05f8c497d9ead2ee542204814abcb8c1aefed00926a25edb0de539a064736f6c634300080c0033
+    ///0x608060405234801561000f575f5ffd5b50600436106100cb575f3560e01c806380e064d4116100885780639e9923c2116100635780639e9923c21461019e578063e18272c2146101b1578063e3a8b345146101c4578063f8ccbf47146101d7575f5ffd5b806380e064d4146101655780638b2c69eb146101785780639e3ba4371461018b575f5ffd5b80630331ed2a146100cf57806339a5fcfa146101065780634ca22c3f146101195780635df459461461012c578063683048351461013f5780636d14a98714610152575b5f5ffd5b600c546100e990630100000090046001600160a01b031681565b6040516001600160a01b0390911681526020015b60405180910390f35b600f546100e9906001600160a01b031681565b6016546100e9906001600160a01b031681565b6010546100e9906001600160a01b031681565b6014546100e9906001600160a01b031681565b600e546100e9906001600160a01b031681565b600d546100e9906001600160a01b031681565b6013546100e9906001600160a01b031681565b6011546100e9906001600160a01b031681565b6012546100e9906001600160a01b031681565b6015546100e9906001600160a01b031681565b6017546100e9906001600160a01b031681565b600c546101ea9062010000900460ff1681565b60405190151581526020016100fd56fea2646970667358221220bb1117bb4d4a668b5076febb1c94935aa103b52da50f5f3e395fbc63db27fca664736f6c634300081b0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static DEPLOYED_BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"`\x80`@R4\x80\x15a\0\x10W`\0\x80\xFD[P`\x046\x10a\0\xCFW`\x005`\xE0\x1C\x80c\x80\xE0d\xD4\x11a\0\x8CW\x80c\x9E\x99#\xC2\x11a\0fW\x80c\x9E\x99#\xC2\x14a\x01\xA3W\x80c\xE1\x82r\xC2\x14a\x01\xB6W\x80c\xE3\xA8\xB3E\x14a\x01\xC9W\x80c\xF8\xCC\xBFG\x14a\x01\xDCW`\0\x80\xFD[\x80c\x80\xE0d\xD4\x14a\x01jW\x80c\x8B,i\xEB\x14a\x01}W\x80c\x9E;\xA47\x14a\x01\x90W`\0\x80\xFD[\x80c\x031\xED*\x14a\0\xD4W\x80c9\xA5\xFC\xFA\x14a\x01\x0BW\x80cL\xA2,?\x14a\x01\x1EW\x80c]\xF4YF\x14a\x011W\x80ch0H5\x14a\x01DW\x80cm\x14\xA9\x87\x14a\x01WW[`\0\x80\xFD[`\x0CTa\0\xEE\x90c\x01\0\0\0\x90\x04`\x01`\x01`\xA0\x1B\x03\x16\x81V[`@Q`\x01`\x01`\xA0\x1B\x03\x90\x91\x16\x81R` \x01[`@Q\x80\x91\x03\x90\xF3[`\x0FTa\0\xEE\x90`\x01`\x01`\xA0\x1B\x03\x16\x81V[`\x16Ta\0\xEE\x90`\x01`\x01`\xA0\x1B\x03\x16\x81V[`\x10Ta\0\xEE\x90`\x01`\x01`\xA0\x1B\x03\x16\x81V[`\x14Ta\0\xEE\x90`\x01`\x01`\xA0\x1B\x03\x16\x81V[`\x0ETa\0\xEE\x90`\x01`\x01`\xA0\x1B\x03\x16\x81V[`\rTa\0\xEE\x90`\x01`\x01`\xA0\x1B\x03\x16\x81V[`\x13Ta\0\xEE\x90`\x01`\x01`\xA0\x1B\x03\x16\x81V[`\x11Ta\0\xEE\x90`\x01`\x01`\xA0\x1B\x03\x16\x81V[`\x12Ta\0\xEE\x90`\x01`\x01`\xA0\x1B\x03\x16\x81V[`\x15Ta\0\xEE\x90`\x01`\x01`\xA0\x1B\x03\x16\x81V[`\x17Ta\0\xEE\x90`\x01`\x01`\xA0\x1B\x03\x16\x81V[`\x0CTa\x01\xEF\x90b\x01\0\0\x90\x04`\xFF\x16\x81V[`@Q\x90\x15\x15\x81R` \x01a\x01\x02V\xFE\xA2dipfsX\"\x12 \x14S\xD4\xBF\x05\xF8\xC4\x97\xD9\xEA\xD2\xEET\"\x04\x81J\xBC\xB8\xC1\xAE\xFE\xD0\t&\xA2^\xDB\r\xE59\xA0dsolcC\0\x08\x0C\x003",
+        b"`\x80`@R4\x80\x15a\0\x0FW__\xFD[P`\x046\x10a\0\xCBW_5`\xE0\x1C\x80c\x80\xE0d\xD4\x11a\0\x88W\x80c\x9E\x99#\xC2\x11a\0cW\x80c\x9E\x99#\xC2\x14a\x01\x9EW\x80c\xE1\x82r\xC2\x14a\x01\xB1W\x80c\xE3\xA8\xB3E\x14a\x01\xC4W\x80c\xF8\xCC\xBFG\x14a\x01\xD7W__\xFD[\x80c\x80\xE0d\xD4\x14a\x01eW\x80c\x8B,i\xEB\x14a\x01xW\x80c\x9E;\xA47\x14a\x01\x8BW__\xFD[\x80c\x031\xED*\x14a\0\xCFW\x80c9\xA5\xFC\xFA\x14a\x01\x06W\x80cL\xA2,?\x14a\x01\x19W\x80c]\xF4YF\x14a\x01,W\x80ch0H5\x14a\x01?W\x80cm\x14\xA9\x87\x14a\x01RW[__\xFD[`\x0CTa\0\xE9\x90c\x01\0\0\0\x90\x04`\x01`\x01`\xA0\x1B\x03\x16\x81V[`@Q`\x01`\x01`\xA0\x1B\x03\x90\x91\x16\x81R` \x01[`@Q\x80\x91\x03\x90\xF3[`\x0FTa\0\xE9\x90`\x01`\x01`\xA0\x1B\x03\x16\x81V[`\x16Ta\0\xE9\x90`\x01`\x01`\xA0\x1B\x03\x16\x81V[`\x10Ta\0\xE9\x90`\x01`\x01`\xA0\x1B\x03\x16\x81V[`\x14Ta\0\xE9\x90`\x01`\x01`\xA0\x1B\x03\x16\x81V[`\x0ETa\0\xE9\x90`\x01`\x01`\xA0\x1B\x03\x16\x81V[`\rTa\0\xE9\x90`\x01`\x01`\xA0\x1B\x03\x16\x81V[`\x13Ta\0\xE9\x90`\x01`\x01`\xA0\x1B\x03\x16\x81V[`\x11Ta\0\xE9\x90`\x01`\x01`\xA0\x1B\x03\x16\x81V[`\x12Ta\0\xE9\x90`\x01`\x01`\xA0\x1B\x03\x16\x81V[`\x15Ta\0\xE9\x90`\x01`\x01`\xA0\x1B\x03\x16\x81V[`\x17Ta\0\xE9\x90`\x01`\x01`\xA0\x1B\x03\x16\x81V[`\x0CTa\x01\xEA\x90b\x01\0\0\x90\x04`\xFF\x16\x81V[`@Q\x90\x15\x15\x81R` \x01a\0\xFDV\xFE\xA2dipfsX\"\x12 \xBB\x11\x17\xBBMJf\x8BPv\xFE\xBB\x1C\x94\x93Z\xA1\x03\xB5-\xA5\x0F_>9_\xBCc\xDB'\xFC\xA6dsolcC\0\x08\x1B\x003",
     );
     /**Function with signature `IS_SCRIPT()` and selector `0xf8ccbf47`.
-    ```solidity
-    function IS_SCRIPT() external view returns (bool);
-    ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+```solidity
+function IS_SCRIPT() external view returns (bool);
+```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct IS_SCRIPTCall {}
     ///Container type for the return parameters of the [`IS_SCRIPT()`](IS_SCRIPTCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct IS_SCRIPTReturn {
         pub _0: bool,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -240,7 +250,9 @@ pub mod DeployMockAvsRegistries {
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -269,7 +281,9 @@ pub mod DeployMockAvsRegistries {
             type UnderlyingRustTuple<'a> = (bool,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -294,10 +308,14 @@ pub mod DeployMockAvsRegistries {
         #[automatically_derived]
         impl alloy_sol_types::SolCall for IS_SCRIPTCall {
             type Parameters<'a> = ();
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type Return = IS_SCRIPTReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Bool,);
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "IS_SCRIPT()";
             const SELECTOR: [u8; 4] = [248u8, 204u8, 191u8, 71u8];
             #[inline]
@@ -315,27 +333,32 @@ pub mod DeployMockAvsRegistries {
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
+                <Self::ReturnTuple<
+                    '_,
+                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
+                    .map(Into::into)
             }
         }
     };
     /**Function with signature `blsApkRegistry()` and selector `0x5df45946`.
-    ```solidity
-    function blsApkRegistry() external view returns (address);
-    ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+```solidity
+function blsApkRegistry() external view returns (address);
+```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct blsApkRegistryCall {}
     ///Container type for the return parameters of the [`blsApkRegistry()`](blsApkRegistryCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct blsApkRegistryReturn {
         pub _0: alloy::sol_types::private::Address,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -345,7 +368,9 @@ pub mod DeployMockAvsRegistries {
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -374,7 +399,9 @@ pub mod DeployMockAvsRegistries {
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -383,14 +410,16 @@ pub mod DeployMockAvsRegistries {
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<blsApkRegistryReturn> for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<blsApkRegistryReturn>
+            for UnderlyingRustTuple<'_> {
                 fn from(value: blsApkRegistryReturn) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for blsApkRegistryReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>>
+            for blsApkRegistryReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -399,10 +428,14 @@ pub mod DeployMockAvsRegistries {
         #[automatically_derived]
         impl alloy_sol_types::SolCall for blsApkRegistryCall {
             type Parameters<'a> = ();
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type Return = blsApkRegistryReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Address,);
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "blsApkRegistry()";
             const SELECTOR: [u8; 4] = [93u8, 244u8, 89u8, 70u8];
             #[inline]
@@ -420,27 +453,32 @@ pub mod DeployMockAvsRegistries {
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
+                <Self::ReturnTuple<
+                    '_,
+                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
+                    .map(Into::into)
             }
         }
     };
     /**Function with signature `blsApkRegistryImplementation()` and selector `0x9e3ba437`.
-    ```solidity
-    function blsApkRegistryImplementation() external view returns (address);
-    ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+```solidity
+function blsApkRegistryImplementation() external view returns (address);
+```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct blsApkRegistryImplementationCall {}
     ///Container type for the return parameters of the [`blsApkRegistryImplementation()`](blsApkRegistryImplementationCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct blsApkRegistryImplementationReturn {
         pub _0: alloy::sol_types::private::Address,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -450,7 +488,9 @@ pub mod DeployMockAvsRegistries {
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -459,14 +499,16 @@ pub mod DeployMockAvsRegistries {
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<blsApkRegistryImplementationCall> for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<blsApkRegistryImplementationCall>
+            for UnderlyingRustTuple<'_> {
                 fn from(value: blsApkRegistryImplementationCall) -> Self {
                     ()
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for blsApkRegistryImplementationCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>>
+            for blsApkRegistryImplementationCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
@@ -479,7 +521,9 @@ pub mod DeployMockAvsRegistries {
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -488,14 +532,16 @@ pub mod DeployMockAvsRegistries {
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<blsApkRegistryImplementationReturn> for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<blsApkRegistryImplementationReturn>
+            for UnderlyingRustTuple<'_> {
                 fn from(value: blsApkRegistryImplementationReturn) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for blsApkRegistryImplementationReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>>
+            for blsApkRegistryImplementationReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -504,10 +550,14 @@ pub mod DeployMockAvsRegistries {
         #[automatically_derived]
         impl alloy_sol_types::SolCall for blsApkRegistryImplementationCall {
             type Parameters<'a> = ();
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type Return = blsApkRegistryImplementationReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Address,);
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "blsApkRegistryImplementation()";
             const SELECTOR: [u8; 4] = [158u8, 59u8, 164u8, 55u8];
             #[inline]
@@ -525,27 +575,32 @@ pub mod DeployMockAvsRegistries {
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
+                <Self::ReturnTuple<
+                    '_,
+                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
+                    .map(Into::into)
             }
         }
     };
     /**Function with signature `emptyContract()` and selector `0xe3a8b345`.
-    ```solidity
-    function emptyContract() external view returns (address);
-    ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+```solidity
+function emptyContract() external view returns (address);
+```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct emptyContractCall {}
     ///Container type for the return parameters of the [`emptyContract()`](emptyContractCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct emptyContractReturn {
         pub _0: alloy::sol_types::private::Address,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -555,7 +610,9 @@ pub mod DeployMockAvsRegistries {
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -584,7 +641,9 @@ pub mod DeployMockAvsRegistries {
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -609,10 +668,14 @@ pub mod DeployMockAvsRegistries {
         #[automatically_derived]
         impl alloy_sol_types::SolCall for emptyContractCall {
             type Parameters<'a> = ();
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type Return = emptyContractReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Address,);
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "emptyContract()";
             const SELECTOR: [u8; 4] = [227u8, 168u8, 179u8, 69u8];
             #[inline]
@@ -630,27 +693,32 @@ pub mod DeployMockAvsRegistries {
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
+                <Self::ReturnTuple<
+                    '_,
+                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
+                    .map(Into::into)
             }
         }
     };
     /**Function with signature `indexRegistry()` and selector `0x9e9923c2`.
-    ```solidity
-    function indexRegistry() external view returns (address);
-    ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+```solidity
+function indexRegistry() external view returns (address);
+```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct indexRegistryCall {}
     ///Container type for the return parameters of the [`indexRegistry()`](indexRegistryCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct indexRegistryReturn {
         pub _0: alloy::sol_types::private::Address,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -660,7 +728,9 @@ pub mod DeployMockAvsRegistries {
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -689,7 +759,9 @@ pub mod DeployMockAvsRegistries {
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -714,10 +786,14 @@ pub mod DeployMockAvsRegistries {
         #[automatically_derived]
         impl alloy_sol_types::SolCall for indexRegistryCall {
             type Parameters<'a> = ();
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type Return = indexRegistryReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Address,);
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "indexRegistry()";
             const SELECTOR: [u8; 4] = [158u8, 153u8, 35u8, 194u8];
             #[inline]
@@ -735,27 +811,32 @@ pub mod DeployMockAvsRegistries {
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
+                <Self::ReturnTuple<
+                    '_,
+                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
+                    .map(Into::into)
             }
         }
     };
     /**Function with signature `indexRegistryImplementation()` and selector `0x8b2c69eb`.
-    ```solidity
-    function indexRegistryImplementation() external view returns (address);
-    ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+```solidity
+function indexRegistryImplementation() external view returns (address);
+```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct indexRegistryImplementationCall {}
     ///Container type for the return parameters of the [`indexRegistryImplementation()`](indexRegistryImplementationCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct indexRegistryImplementationReturn {
         pub _0: alloy::sol_types::private::Address,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -765,7 +846,9 @@ pub mod DeployMockAvsRegistries {
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -774,14 +857,16 @@ pub mod DeployMockAvsRegistries {
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<indexRegistryImplementationCall> for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<indexRegistryImplementationCall>
+            for UnderlyingRustTuple<'_> {
                 fn from(value: indexRegistryImplementationCall) -> Self {
                     ()
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for indexRegistryImplementationCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>>
+            for indexRegistryImplementationCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
@@ -794,7 +879,9 @@ pub mod DeployMockAvsRegistries {
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -803,14 +890,16 @@ pub mod DeployMockAvsRegistries {
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<indexRegistryImplementationReturn> for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<indexRegistryImplementationReturn>
+            for UnderlyingRustTuple<'_> {
                 fn from(value: indexRegistryImplementationReturn) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for indexRegistryImplementationReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>>
+            for indexRegistryImplementationReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -819,10 +908,14 @@ pub mod DeployMockAvsRegistries {
         #[automatically_derived]
         impl alloy_sol_types::SolCall for indexRegistryImplementationCall {
             type Parameters<'a> = ();
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type Return = indexRegistryImplementationReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Address,);
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "indexRegistryImplementation()";
             const SELECTOR: [u8; 4] = [139u8, 44u8, 105u8, 235u8];
             #[inline]
@@ -840,27 +933,32 @@ pub mod DeployMockAvsRegistries {
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
+                <Self::ReturnTuple<
+                    '_,
+                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
+                    .map(Into::into)
             }
         }
     };
     /**Function with signature `mockAvsPauserReg()` and selector `0x80e064d4`.
-    ```solidity
-    function mockAvsPauserReg() external view returns (address);
-    ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+```solidity
+function mockAvsPauserReg() external view returns (address);
+```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct mockAvsPauserRegCall {}
     ///Container type for the return parameters of the [`mockAvsPauserReg()`](mockAvsPauserRegCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct mockAvsPauserRegReturn {
         pub _0: alloy::sol_types::private::Address,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -870,7 +968,9 @@ pub mod DeployMockAvsRegistries {
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -879,14 +979,16 @@ pub mod DeployMockAvsRegistries {
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<mockAvsPauserRegCall> for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<mockAvsPauserRegCall>
+            for UnderlyingRustTuple<'_> {
                 fn from(value: mockAvsPauserRegCall) -> Self {
                     ()
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for mockAvsPauserRegCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>>
+            for mockAvsPauserRegCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
@@ -899,7 +1001,9 @@ pub mod DeployMockAvsRegistries {
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -908,14 +1012,16 @@ pub mod DeployMockAvsRegistries {
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<mockAvsPauserRegReturn> for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<mockAvsPauserRegReturn>
+            for UnderlyingRustTuple<'_> {
                 fn from(value: mockAvsPauserRegReturn) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for mockAvsPauserRegReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>>
+            for mockAvsPauserRegReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -924,10 +1030,14 @@ pub mod DeployMockAvsRegistries {
         #[automatically_derived]
         impl alloy_sol_types::SolCall for mockAvsPauserRegCall {
             type Parameters<'a> = ();
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type Return = mockAvsPauserRegReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Address,);
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "mockAvsPauserReg()";
             const SELECTOR: [u8; 4] = [128u8, 224u8, 100u8, 212u8];
             #[inline]
@@ -945,27 +1055,32 @@ pub mod DeployMockAvsRegistries {
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
+                <Self::ReturnTuple<
+                    '_,
+                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
+                    .map(Into::into)
             }
         }
     };
     /**Function with signature `mockAvsProxyAdmin()` and selector `0x0331ed2a`.
-    ```solidity
-    function mockAvsProxyAdmin() external view returns (address);
-    ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+```solidity
+function mockAvsProxyAdmin() external view returns (address);
+```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct mockAvsProxyAdminCall {}
     ///Container type for the return parameters of the [`mockAvsProxyAdmin()`](mockAvsProxyAdminCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct mockAvsProxyAdminReturn {
         pub _0: alloy::sol_types::private::Address,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -975,7 +1090,9 @@ pub mod DeployMockAvsRegistries {
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -984,14 +1101,16 @@ pub mod DeployMockAvsRegistries {
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<mockAvsProxyAdminCall> for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<mockAvsProxyAdminCall>
+            for UnderlyingRustTuple<'_> {
                 fn from(value: mockAvsProxyAdminCall) -> Self {
                     ()
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for mockAvsProxyAdminCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>>
+            for mockAvsProxyAdminCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
@@ -1004,7 +1123,9 @@ pub mod DeployMockAvsRegistries {
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1013,14 +1134,16 @@ pub mod DeployMockAvsRegistries {
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<mockAvsProxyAdminReturn> for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<mockAvsProxyAdminReturn>
+            for UnderlyingRustTuple<'_> {
                 fn from(value: mockAvsProxyAdminReturn) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for mockAvsProxyAdminReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>>
+            for mockAvsProxyAdminReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -1029,10 +1152,14 @@ pub mod DeployMockAvsRegistries {
         #[automatically_derived]
         impl alloy_sol_types::SolCall for mockAvsProxyAdminCall {
             type Parameters<'a> = ();
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type Return = mockAvsProxyAdminReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Address,);
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "mockAvsProxyAdmin()";
             const SELECTOR: [u8; 4] = [3u8, 49u8, 237u8, 42u8];
             #[inline]
@@ -1050,27 +1177,32 @@ pub mod DeployMockAvsRegistries {
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
+                <Self::ReturnTuple<
+                    '_,
+                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
+                    .map(Into::into)
             }
         }
     };
     /**Function with signature `operatorStateRetriever()` and selector `0x4ca22c3f`.
-    ```solidity
-    function operatorStateRetriever() external view returns (address);
-    ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+```solidity
+function operatorStateRetriever() external view returns (address);
+```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct operatorStateRetrieverCall {}
     ///Container type for the return parameters of the [`operatorStateRetriever()`](operatorStateRetrieverCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct operatorStateRetrieverReturn {
         pub _0: alloy::sol_types::private::Address,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -1080,7 +1212,9 @@ pub mod DeployMockAvsRegistries {
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1089,14 +1223,16 @@ pub mod DeployMockAvsRegistries {
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<operatorStateRetrieverCall> for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<operatorStateRetrieverCall>
+            for UnderlyingRustTuple<'_> {
                 fn from(value: operatorStateRetrieverCall) -> Self {
                     ()
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for operatorStateRetrieverCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>>
+            for operatorStateRetrieverCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
@@ -1109,7 +1245,9 @@ pub mod DeployMockAvsRegistries {
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1118,14 +1256,16 @@ pub mod DeployMockAvsRegistries {
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<operatorStateRetrieverReturn> for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<operatorStateRetrieverReturn>
+            for UnderlyingRustTuple<'_> {
                 fn from(value: operatorStateRetrieverReturn) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for operatorStateRetrieverReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>>
+            for operatorStateRetrieverReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -1134,10 +1274,14 @@ pub mod DeployMockAvsRegistries {
         #[automatically_derived]
         impl alloy_sol_types::SolCall for operatorStateRetrieverCall {
             type Parameters<'a> = ();
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type Return = operatorStateRetrieverReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Address,);
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "operatorStateRetriever()";
             const SELECTOR: [u8; 4] = [76u8, 162u8, 44u8, 63u8];
             #[inline]
@@ -1155,27 +1299,32 @@ pub mod DeployMockAvsRegistries {
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
+                <Self::ReturnTuple<
+                    '_,
+                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
+                    .map(Into::into)
             }
         }
     };
     /**Function with signature `registryCoordinator()` and selector `0x6d14a987`.
-    ```solidity
-    function registryCoordinator() external view returns (address);
-    ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+```solidity
+function registryCoordinator() external view returns (address);
+```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct registryCoordinatorCall {}
     ///Container type for the return parameters of the [`registryCoordinator()`](registryCoordinatorCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct registryCoordinatorReturn {
         pub _0: alloy::sol_types::private::Address,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -1185,7 +1334,9 @@ pub mod DeployMockAvsRegistries {
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1194,14 +1345,16 @@ pub mod DeployMockAvsRegistries {
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<registryCoordinatorCall> for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<registryCoordinatorCall>
+            for UnderlyingRustTuple<'_> {
                 fn from(value: registryCoordinatorCall) -> Self {
                     ()
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for registryCoordinatorCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>>
+            for registryCoordinatorCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
@@ -1214,7 +1367,9 @@ pub mod DeployMockAvsRegistries {
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1223,14 +1378,16 @@ pub mod DeployMockAvsRegistries {
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<registryCoordinatorReturn> for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<registryCoordinatorReturn>
+            for UnderlyingRustTuple<'_> {
                 fn from(value: registryCoordinatorReturn) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for registryCoordinatorReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>>
+            for registryCoordinatorReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -1239,10 +1396,14 @@ pub mod DeployMockAvsRegistries {
         #[automatically_derived]
         impl alloy_sol_types::SolCall for registryCoordinatorCall {
             type Parameters<'a> = ();
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type Return = registryCoordinatorReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Address,);
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "registryCoordinator()";
             const SELECTOR: [u8; 4] = [109u8, 20u8, 169u8, 135u8];
             #[inline]
@@ -1260,27 +1421,32 @@ pub mod DeployMockAvsRegistries {
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
+                <Self::ReturnTuple<
+                    '_,
+                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
+                    .map(Into::into)
             }
         }
     };
     /**Function with signature `registryCoordinatorImplementation()` and selector `0x39a5fcfa`.
-    ```solidity
-    function registryCoordinatorImplementation() external view returns (address);
-    ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+```solidity
+function registryCoordinatorImplementation() external view returns (address);
+```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct registryCoordinatorImplementationCall {}
     ///Container type for the return parameters of the [`registryCoordinatorImplementation()`](registryCoordinatorImplementationCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct registryCoordinatorImplementationReturn {
         pub _0: alloy::sol_types::private::Address,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -1290,7 +1456,9 @@ pub mod DeployMockAvsRegistries {
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1299,14 +1467,16 @@ pub mod DeployMockAvsRegistries {
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<registryCoordinatorImplementationCall> for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<registryCoordinatorImplementationCall>
+            for UnderlyingRustTuple<'_> {
                 fn from(value: registryCoordinatorImplementationCall) -> Self {
                     ()
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for registryCoordinatorImplementationCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>>
+            for registryCoordinatorImplementationCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
@@ -1319,7 +1489,9 @@ pub mod DeployMockAvsRegistries {
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1328,14 +1500,16 @@ pub mod DeployMockAvsRegistries {
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<registryCoordinatorImplementationReturn> for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<registryCoordinatorImplementationReturn>
+            for UnderlyingRustTuple<'_> {
                 fn from(value: registryCoordinatorImplementationReturn) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for registryCoordinatorImplementationReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>>
+            for registryCoordinatorImplementationReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -1344,10 +1518,14 @@ pub mod DeployMockAvsRegistries {
         #[automatically_derived]
         impl alloy_sol_types::SolCall for registryCoordinatorImplementationCall {
             type Parameters<'a> = ();
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type Return = registryCoordinatorImplementationReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Address,);
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "registryCoordinatorImplementation()";
             const SELECTOR: [u8; 4] = [57u8, 165u8, 252u8, 250u8];
             #[inline]
@@ -1365,27 +1543,32 @@ pub mod DeployMockAvsRegistries {
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
+                <Self::ReturnTuple<
+                    '_,
+                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
+                    .map(Into::into)
             }
         }
     };
     /**Function with signature `stakeRegistry()` and selector `0x68304835`.
-    ```solidity
-    function stakeRegistry() external view returns (address);
-    ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+```solidity
+function stakeRegistry() external view returns (address);
+```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct stakeRegistryCall {}
     ///Container type for the return parameters of the [`stakeRegistry()`](stakeRegistryCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct stakeRegistryReturn {
         pub _0: alloy::sol_types::private::Address,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -1395,7 +1578,9 @@ pub mod DeployMockAvsRegistries {
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1424,7 +1609,9 @@ pub mod DeployMockAvsRegistries {
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1449,10 +1636,14 @@ pub mod DeployMockAvsRegistries {
         #[automatically_derived]
         impl alloy_sol_types::SolCall for stakeRegistryCall {
             type Parameters<'a> = ();
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type Return = stakeRegistryReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Address,);
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "stakeRegistry()";
             const SELECTOR: [u8; 4] = [104u8, 48u8, 72u8, 53u8];
             #[inline]
@@ -1470,27 +1661,32 @@ pub mod DeployMockAvsRegistries {
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
+                <Self::ReturnTuple<
+                    '_,
+                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
+                    .map(Into::into)
             }
         }
     };
     /**Function with signature `stakeRegistryImplementation()` and selector `0xe18272c2`.
-    ```solidity
-    function stakeRegistryImplementation() external view returns (address);
-    ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+```solidity
+function stakeRegistryImplementation() external view returns (address);
+```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct stakeRegistryImplementationCall {}
     ///Container type for the return parameters of the [`stakeRegistryImplementation()`](stakeRegistryImplementationCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct stakeRegistryImplementationReturn {
         pub _0: alloy::sol_types::private::Address,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -1500,7 +1696,9 @@ pub mod DeployMockAvsRegistries {
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1509,14 +1707,16 @@ pub mod DeployMockAvsRegistries {
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<stakeRegistryImplementationCall> for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<stakeRegistryImplementationCall>
+            for UnderlyingRustTuple<'_> {
                 fn from(value: stakeRegistryImplementationCall) -> Self {
                     ()
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for stakeRegistryImplementationCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>>
+            for stakeRegistryImplementationCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
@@ -1529,7 +1729,9 @@ pub mod DeployMockAvsRegistries {
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1538,14 +1740,16 @@ pub mod DeployMockAvsRegistries {
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<stakeRegistryImplementationReturn> for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<stakeRegistryImplementationReturn>
+            for UnderlyingRustTuple<'_> {
                 fn from(value: stakeRegistryImplementationReturn) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for stakeRegistryImplementationReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>>
+            for stakeRegistryImplementationReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -1554,10 +1758,14 @@ pub mod DeployMockAvsRegistries {
         #[automatically_derived]
         impl alloy_sol_types::SolCall for stakeRegistryImplementationCall {
             type Parameters<'a> = ();
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type Return = stakeRegistryImplementationReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Address,);
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "stakeRegistryImplementation()";
             const SELECTOR: [u8; 4] = [225u8, 130u8, 114u8, 194u8];
             #[inline]
@@ -1575,10 +1783,10 @@ pub mod DeployMockAvsRegistries {
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
+                <Self::ReturnTuple<
+                    '_,
+                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
+                    .map(Into::into)
             }
         }
     };
@@ -1630,15 +1838,21 @@ pub mod DeployMockAvsRegistries {
         #[inline]
         fn selector(&self) -> [u8; 4] {
             match self {
-                Self::IS_SCRIPT(_) => <IS_SCRIPTCall as alloy_sol_types::SolCall>::SELECTOR,
+                Self::IS_SCRIPT(_) => {
+                    <IS_SCRIPTCall as alloy_sol_types::SolCall>::SELECTOR
+                }
                 Self::blsApkRegistry(_) => {
                     <blsApkRegistryCall as alloy_sol_types::SolCall>::SELECTOR
                 }
                 Self::blsApkRegistryImplementation(_) => {
                     <blsApkRegistryImplementationCall as alloy_sol_types::SolCall>::SELECTOR
                 }
-                Self::emptyContract(_) => <emptyContractCall as alloy_sol_types::SolCall>::SELECTOR,
-                Self::indexRegistry(_) => <indexRegistryCall as alloy_sol_types::SolCall>::SELECTOR,
+                Self::emptyContract(_) => {
+                    <emptyContractCall as alloy_sol_types::SolCall>::SELECTOR
+                }
+                Self::indexRegistry(_) => {
+                    <indexRegistryCall as alloy_sol_types::SolCall>::SELECTOR
+                }
                 Self::indexRegistryImplementation(_) => {
                     <indexRegistryImplementationCall as alloy_sol_types::SolCall>::SELECTOR
                 }
@@ -1657,7 +1871,9 @@ pub mod DeployMockAvsRegistries {
                 Self::registryCoordinatorImplementation(_) => {
                     <registryCoordinatorImplementationCall as alloy_sol_types::SolCall>::SELECTOR
                 }
-                Self::stakeRegistry(_) => <stakeRegistryCall as alloy_sol_types::SolCall>::SELECTOR,
+                Self::stakeRegistry(_) => {
+                    <stakeRegistryCall as alloy_sol_types::SolCall>::SELECTOR
+                }
                 Self::stakeRegistryImplementation(_) => {
                     <stakeRegistryImplementationCall as alloy_sol_types::SolCall>::SELECTOR
                 }
@@ -1681,17 +1897,17 @@ pub mod DeployMockAvsRegistries {
             static DECODE_SHIMS: &[fn(
                 &[u8],
                 bool,
-            )
-                -> alloy_sol_types::Result<DeployMockAvsRegistriesCalls>] = &[
+            ) -> alloy_sol_types::Result<DeployMockAvsRegistriesCalls>] = &[
                 {
                     fn mockAvsProxyAdmin(
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<DeployMockAvsRegistriesCalls> {
                         <mockAvsProxyAdminCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                            data, validate,
-                        )
-                        .map(DeployMockAvsRegistriesCalls::mockAvsProxyAdmin)
+                                data,
+                                validate,
+                            )
+                            .map(DeployMockAvsRegistriesCalls::mockAvsProxyAdmin)
                     }
                     mockAvsProxyAdmin
                 },
@@ -1716,9 +1932,10 @@ pub mod DeployMockAvsRegistries {
                         validate: bool,
                     ) -> alloy_sol_types::Result<DeployMockAvsRegistriesCalls> {
                         <operatorStateRetrieverCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                            data, validate,
-                        )
-                        .map(DeployMockAvsRegistriesCalls::operatorStateRetriever)
+                                data,
+                                validate,
+                            )
+                            .map(DeployMockAvsRegistriesCalls::operatorStateRetriever)
                     }
                     operatorStateRetriever
                 },
@@ -1728,9 +1945,10 @@ pub mod DeployMockAvsRegistries {
                         validate: bool,
                     ) -> alloy_sol_types::Result<DeployMockAvsRegistriesCalls> {
                         <blsApkRegistryCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                            data, validate,
-                        )
-                        .map(DeployMockAvsRegistriesCalls::blsApkRegistry)
+                                data,
+                                validate,
+                            )
+                            .map(DeployMockAvsRegistriesCalls::blsApkRegistry)
                     }
                     blsApkRegistry
                 },
@@ -1740,9 +1958,10 @@ pub mod DeployMockAvsRegistries {
                         validate: bool,
                     ) -> alloy_sol_types::Result<DeployMockAvsRegistriesCalls> {
                         <stakeRegistryCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                            data, validate,
-                        )
-                        .map(DeployMockAvsRegistriesCalls::stakeRegistry)
+                                data,
+                                validate,
+                            )
+                            .map(DeployMockAvsRegistriesCalls::stakeRegistry)
                     }
                     stakeRegistry
                 },
@@ -1752,9 +1971,10 @@ pub mod DeployMockAvsRegistries {
                         validate: bool,
                     ) -> alloy_sol_types::Result<DeployMockAvsRegistriesCalls> {
                         <registryCoordinatorCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                            data, validate,
-                        )
-                        .map(DeployMockAvsRegistriesCalls::registryCoordinator)
+                                data,
+                                validate,
+                            )
+                            .map(DeployMockAvsRegistriesCalls::registryCoordinator)
                     }
                     registryCoordinator
                 },
@@ -1764,9 +1984,10 @@ pub mod DeployMockAvsRegistries {
                         validate: bool,
                     ) -> alloy_sol_types::Result<DeployMockAvsRegistriesCalls> {
                         <mockAvsPauserRegCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                            data, validate,
-                        )
-                        .map(DeployMockAvsRegistriesCalls::mockAvsPauserReg)
+                                data,
+                                validate,
+                            )
+                            .map(DeployMockAvsRegistriesCalls::mockAvsPauserReg)
                     }
                     mockAvsPauserReg
                 },
@@ -1806,9 +2027,10 @@ pub mod DeployMockAvsRegistries {
                         validate: bool,
                     ) -> alloy_sol_types::Result<DeployMockAvsRegistriesCalls> {
                         <indexRegistryCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                            data, validate,
-                        )
-                        .map(DeployMockAvsRegistriesCalls::indexRegistry)
+                                data,
+                                validate,
+                            )
+                            .map(DeployMockAvsRegistriesCalls::indexRegistry)
                     }
                     indexRegistry
                 },
@@ -1833,9 +2055,10 @@ pub mod DeployMockAvsRegistries {
                         validate: bool,
                     ) -> alloy_sol_types::Result<DeployMockAvsRegistriesCalls> {
                         <emptyContractCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                            data, validate,
-                        )
-                        .map(DeployMockAvsRegistriesCalls::emptyContract)
+                                data,
+                                validate,
+                            )
+                            .map(DeployMockAvsRegistriesCalls::emptyContract)
                     }
                     emptyContract
                 },
@@ -1844,17 +2067,22 @@ pub mod DeployMockAvsRegistries {
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<DeployMockAvsRegistriesCalls> {
-                        <IS_SCRIPTCall as alloy_sol_types::SolCall>::abi_decode_raw(data, validate)
+                        <IS_SCRIPTCall as alloy_sol_types::SolCall>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
                             .map(DeployMockAvsRegistriesCalls::IS_SCRIPT)
                     }
                     IS_SCRIPT
                 },
             ];
             let Ok(idx) = Self::SELECTORS.binary_search(&selector) else {
-                return Err(alloy_sol_types::Error::unknown_selector(
-                    <Self as alloy_sol_types::SolInterface>::NAME,
-                    selector,
-                ));
+                return Err(
+                    alloy_sol_types::Error::unknown_selector(
+                        <Self as alloy_sol_types::SolInterface>::NAME,
+                        selector,
+                    ),
+                );
             };
             (unsafe { DECODE_SHIMS.get_unchecked(idx) })(data, validate)
         }
@@ -2013,7 +2241,7 @@ pub mod DeployMockAvsRegistries {
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`DeployMockAvsRegistries`](self) contract instance.
 
-    See the [wrapper's documentation](`DeployMockAvsRegistriesInstance`) for more details.*/
+See the [wrapper's documentation](`DeployMockAvsRegistriesInstance`) for more details.*/
     #[inline]
     pub const fn new<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -2027,9 +2255,9 @@ pub mod DeployMockAvsRegistries {
     }
     /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-    Returns a new instance of the contract, if the deployment was successful.
+Returns a new instance of the contract, if the deployment was successful.
 
-    For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
     #[inline]
     pub fn deploy<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -2043,33 +2271,35 @@ pub mod DeployMockAvsRegistries {
         DeployMockAvsRegistriesInstance::<T, P, N>::deploy(provider)
     }
     /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-    and constructor arguments, if any.
+and constructor arguments, if any.
 
-    This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-    the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     #[inline]
     pub fn deploy_builder<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
         P: alloy_contract::private::Provider<T, N>,
         N: alloy_contract::private::Network,
-    >(
-        provider: P,
-    ) -> alloy_contract::RawCallBuilder<T, P, N> {
+    >(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
         DeployMockAvsRegistriesInstance::<T, P, N>::deploy_builder(provider)
     }
     /**A [`DeployMockAvsRegistries`](self) instance.
 
-    Contains type-safe methods for interacting with an on-chain instance of the
-    [`DeployMockAvsRegistries`](self) contract located at a given `address`, using a given
-    provider `P`.
+Contains type-safe methods for interacting with an on-chain instance of the
+[`DeployMockAvsRegistries`](self) contract located at a given `address`, using a given
+provider `P`.
 
-    If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
-    documentation on how to provide it), the `deploy` and `deploy_builder` methods can
-    be used to deploy a new instance of the contract.
+If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
+documentation on how to provide it), the `deploy` and `deploy_builder` methods can
+be used to deploy a new instance of the contract.
 
-    See the [module-level documentation](self) for all the available methods.*/
+See the [module-level documentation](self) for all the available methods.*/
     #[derive(Clone)]
-    pub struct DeployMockAvsRegistriesInstance<T, P, N = alloy_contract::private::Ethereum> {
+    pub struct DeployMockAvsRegistriesInstance<
+        T,
+        P,
+        N = alloy_contract::private::Ethereum,
+    > {
         address: alloy_sol_types::private::Address,
         provider: P,
         _network_transport: ::core::marker::PhantomData<(N, T)>,
@@ -2086,16 +2316,18 @@ pub mod DeployMockAvsRegistries {
     /// Instantiation and getters/setters.
     #[automatically_derived]
     impl<
-            T: alloy_contract::private::Transport + ::core::clone::Clone,
-            P: alloy_contract::private::Provider<T, N>,
-            N: alloy_contract::private::Network,
-        > DeployMockAvsRegistriesInstance<T, P, N>
-    {
+        T: alloy_contract::private::Transport + ::core::clone::Clone,
+        P: alloy_contract::private::Provider<T, N>,
+        N: alloy_contract::private::Network,
+    > DeployMockAvsRegistriesInstance<T, P, N> {
         /**Creates a new wrapper around an on-chain [`DeployMockAvsRegistries`](self) contract instance.
 
-        See the [wrapper's documentation](`DeployMockAvsRegistriesInstance`) for more details.*/
+See the [wrapper's documentation](`DeployMockAvsRegistriesInstance`) for more details.*/
         #[inline]
-        pub const fn new(address: alloy_sol_types::private::Address, provider: P) -> Self {
+        pub const fn new(
+            address: alloy_sol_types::private::Address,
+            provider: P,
+        ) -> Self {
             Self {
                 address,
                 provider,
@@ -2104,9 +2336,9 @@ pub mod DeployMockAvsRegistries {
         }
         /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-        Returns a new instance of the contract, if the deployment was successful.
+Returns a new instance of the contract, if the deployment was successful.
 
-        For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
         #[inline]
         pub async fn deploy(
             provider: P,
@@ -2116,10 +2348,10 @@ pub mod DeployMockAvsRegistries {
             Ok(Self::new(contract_address, call_builder.provider))
         }
         /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-        and constructor arguments, if any.
+and constructor arguments, if any.
 
-        This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-        the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         #[inline]
         pub fn deploy_builder(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
             alloy_contract::RawCallBuilder::new_raw_deploy(
@@ -2162,11 +2394,10 @@ pub mod DeployMockAvsRegistries {
     /// Function calls.
     #[automatically_derived]
     impl<
-            T: alloy_contract::private::Transport + ::core::clone::Clone,
-            P: alloy_contract::private::Provider<T, N>,
-            N: alloy_contract::private::Network,
-        > DeployMockAvsRegistriesInstance<T, P, N>
-    {
+        T: alloy_contract::private::Transport + ::core::clone::Clone,
+        P: alloy_contract::private::Provider<T, N>,
+        N: alloy_contract::private::Network,
+    > DeployMockAvsRegistriesInstance<T, P, N> {
         /// Creates a new call builder using this contract instance's provider and address.
         ///
         /// Note that the call can be any function call, not just those defined in this
@@ -2178,7 +2409,9 @@ pub mod DeployMockAvsRegistries {
             alloy_contract::SolCallBuilder::new_sol(&self.provider, &self.address, call)
         }
         ///Creates a new call builder for the [`IS_SCRIPT`] function.
-        pub fn IS_SCRIPT(&self) -> alloy_contract::SolCallBuilder<T, &P, IS_SCRIPTCall, N> {
+        pub fn IS_SCRIPT(
+            &self,
+        ) -> alloy_contract::SolCallBuilder<T, &P, IS_SCRIPTCall, N> {
             self.call_builder(&IS_SCRIPTCall {})
         }
         ///Creates a new call builder for the [`blsApkRegistry`] function.
@@ -2191,14 +2424,21 @@ pub mod DeployMockAvsRegistries {
         pub fn blsApkRegistryImplementation(
             &self,
         ) -> alloy_contract::SolCallBuilder<T, &P, blsApkRegistryImplementationCall, N> {
-            self.call_builder(&blsApkRegistryImplementationCall {})
+            self.call_builder(
+                &blsApkRegistryImplementationCall {
+                },
+            )
         }
         ///Creates a new call builder for the [`emptyContract`] function.
-        pub fn emptyContract(&self) -> alloy_contract::SolCallBuilder<T, &P, emptyContractCall, N> {
+        pub fn emptyContract(
+            &self,
+        ) -> alloy_contract::SolCallBuilder<T, &P, emptyContractCall, N> {
             self.call_builder(&emptyContractCall {})
         }
         ///Creates a new call builder for the [`indexRegistry`] function.
-        pub fn indexRegistry(&self) -> alloy_contract::SolCallBuilder<T, &P, indexRegistryCall, N> {
+        pub fn indexRegistry(
+            &self,
+        ) -> alloy_contract::SolCallBuilder<T, &P, indexRegistryCall, N> {
             self.call_builder(&indexRegistryCall {})
         }
         ///Creates a new call builder for the [`indexRegistryImplementation`] function.
@@ -2234,12 +2474,21 @@ pub mod DeployMockAvsRegistries {
         ///Creates a new call builder for the [`registryCoordinatorImplementation`] function.
         pub fn registryCoordinatorImplementation(
             &self,
-        ) -> alloy_contract::SolCallBuilder<T, &P, registryCoordinatorImplementationCall, N>
-        {
-            self.call_builder(&registryCoordinatorImplementationCall {})
+        ) -> alloy_contract::SolCallBuilder<
+            T,
+            &P,
+            registryCoordinatorImplementationCall,
+            N,
+        > {
+            self.call_builder(
+                &registryCoordinatorImplementationCall {
+                },
+            )
         }
         ///Creates a new call builder for the [`stakeRegistry`] function.
-        pub fn stakeRegistry(&self) -> alloy_contract::SolCallBuilder<T, &P, stakeRegistryCall, N> {
+        pub fn stakeRegistry(
+            &self,
+        ) -> alloy_contract::SolCallBuilder<T, &P, stakeRegistryCall, N> {
             self.call_builder(&stakeRegistryCall {})
         }
         ///Creates a new call builder for the [`stakeRegistryImplementation`] function.
@@ -2252,11 +2501,10 @@ pub mod DeployMockAvsRegistries {
     /// Event filters.
     #[automatically_derived]
     impl<
-            T: alloy_contract::private::Transport + ::core::clone::Clone,
-            P: alloy_contract::private::Provider<T, N>,
-            N: alloy_contract::private::Network,
-        > DeployMockAvsRegistriesInstance<T, P, N>
-    {
+        T: alloy_contract::private::Transport + ::core::clone::Clone,
+        P: alloy_contract::private::Provider<T, N>,
+        N: alloy_contract::private::Network,
+    > DeployMockAvsRegistriesInstance<T, P, N> {
         /// Creates a new event filter using this contract instance's provider and address.
         ///
         /// Note that the type can be any event, not just those defined in this contract.
