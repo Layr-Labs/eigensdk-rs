@@ -291,9 +291,9 @@ pub mod BitmapUtilsWrapper {
         b"`\x80`@R4\x80\x15a\0\x10W`\0\x80\xFD[P`\x046\x10a\0\xA9W`\x005`\xE0\x1C\x80cls\xBD\x87\x11a\0qW\x80cls\xBD\x87\x14a\x010W\x80cv7\x0F\x1F\x14a\x01CW\x80c\xA8\xE3\xEA\xBB\x14a\x01iW\x80c\xDDTq\x85\x14a\x01|W\x80c\xF4\xF3\xBD\xC1\x14a\x01\x9CW\x80c\xF9\x0C\xFE\xEF\x14a\x01\xAFW`\0\x80\xFD[\x80c\x1F\xF4\xAD\xBA\x14a\0\xAEW\x80c \xE8\x84\x03\x14a\0\xD6W\x80cN\xE2\x90\x90\x14a\0\xF7W\x80cb\xE2\xEF3\x14a\x01\nW\x80cf\t\x8DO\x14a\x01\x1DW[`\0\x80\xFD[a\0\xC1a\0\xBC6`\x04a\x05\xD0V[a\x01\xC2V[`@Q\x90\x15\x15\x81R` \x01[`@Q\x80\x91\x03\x90\xF3[a\0\xE9a\0\xE46`\x04a\x06\x06V[a\x01\xDAV[`@Q\x90\x81R` \x01a\0\xCDV[a\0\xE9a\x01\x056`\x04a\x05\xD0V[a\x02\x1BV[a\0\xC1a\x01\x186`\x04a\x06xV[a\x02+V[a\0\xE9a\x01+6`\x04a\x06xV[a\x026V[a\0\xC1a\x01>6`\x04a\x06\x06V[a\x02@V[a\x01Va\x01Q6`\x04a\x06\x9AV[a\x02LV[`@Qa\xFF\xFF\x90\x91\x16\x81R` \x01a\0\xCDV[a\0\xC1a\x01w6`\x04a\x06xV[a\x02WV[a\x01\x8Fa\x01\x8A6`\x04a\x06\x9AV[a\x02cV[`@Qa\0\xCD\x91\x90a\x06\xB3V[a\0\xE9a\x01\xAA6`\x04a\x06xV[a\x02nV[a\0\xC1a\x01\xBD6`\x04a\x06\x9AV[a\x02yV[`\0`\x01`\xFF\x83\x16\x84\x90\x1C\x81\x16\x14[\x90P[\x92\x91PPV[`\0a\x01\xD1\x83\x83\x80\x80`\x1F\x01` \x80\x91\x04\x02` \x01`@Q\x90\x81\x01`@R\x80\x93\x92\x91\x90\x81\x81R` \x01\x83\x83\x80\x82\x847`\0\x92\x01\x91\x90\x91RPa\x02\x82\x92PPPV[`\0`\x01`\xFF\x83\x16\x1B\x83\x17a\x01\xD1V[`\0\x81\x83\x16\x15a\x01\xD1V[`\0\x81\x83\x17a\x01\xD1V[`\0a\x01\xD1\x83\x83a\x04\x14V[`\0a\x01\xD4\x82a\x04\xD8V[`\0\x81\x83\x16\x83\x14a\x01\xD1V[``a\x01\xD4\x82a\x05\x03V[`\0\x81\x19\x83\x16a\x01\xD1V[`\0\x81\x15a\x01\xD4V[`\0a\x01\0\x82Q\x11\x15a\x03\x10W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`D`$\x82\x01\x81\x90R\x7FBitmapUtils.orderedBytesArrayToB\x90\x82\x01R\x7Fitmap: orderedBytesArray is too `d\x82\x01Rclong`\xE0\x1B`\x84\x82\x01R`\xA4\x01[`@Q\x80\x91\x03\x90\xFD[\x81Qa\x03\x1EWP`\0\x91\x90PV[`\0\x80\x83`\0\x81Q\x81\x10a\x034Wa\x034a\x07\x08V[\x01` \x01Q`\x01`\xF8\x91\x90\x91\x1C\x81\x90\x1B\x92P[\x84Q\x81\x10\x15a\x04\x0BW\x84\x81\x81Q\x81\x10a\x03bWa\x03ba\x07\x08V[\x01` \x01Q`\x01`\xF8\x91\x90\x91\x1C\x1B\x91P\x82\x82\x11a\x03\xF7W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`G`$\x82\x01R\x7FBitmapUtils.orderedBytesArrayToB`D\x82\x01R\x7Fitmap: orderedBytesArray is not `d\x82\x01Rf\x1B\xDC\x99\x19\\\x99Y`\xCA\x1B`\x84\x82\x01R`\xA4\x01a\x03\x07V[\x91\x81\x17\x91a\x04\x04\x81a\x074V[\x90Pa\x03GV[P\x90\x93\x92PPPV[`\0a\x01\0\x82\x11\x15a\x04(WP`\0a\x01\xD4V[\x81a\x045WP`\x01a\x01\xD4V[`\0\x83\x83`\0\x81\x81\x10a\x04JWa\x04Ja\x07\x08V[\x90\x91\x015`\x01`\x01`\xF8\x1B\x03\x19\x16\x91P`\x01\x90P[\x83\x81\x10\x15a\x04\xCDW`\xF8\x82\x90\x1C\x85\x85\x83\x81\x81\x10a\x04~Wa\x04~a\x07\x08V[\x90P\x015`\xF8\x1C`\xF8\x1B`\xF8\x1C`\xFF\x16\x11a\x04\x9EW`\0\x92PPPa\x01\xD4V[\x84\x84\x82\x81\x81\x10a\x04\xB0Wa\x04\xB0a\x07\x08V[\x90P\x015`\xF8\x1C`\xF8\x1B\x91P\x80a\x04\xC6\x90a\x074V[\x90Pa\x04_V[P`\x01\x94\x93PPPPV[`\0\x80[\x82\x15a\x01\xD4Wa\x04\xED`\x01\x84a\x07OV[\x90\x92\x16\x91\x80a\x04\xFB\x81a\x07fV[\x91PPa\x04\xDCV[```\0\x80a\x05\x11\x84a\x04\xD8V[a\xFF\xFF\x16g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x81\x11\x15a\x05-Wa\x05-a\x07\x88V[`@Q\x90\x80\x82R\x80`\x1F\x01`\x1F\x19\x16` \x01\x82\x01`@R\x80\x15a\x05WW` \x82\x01\x81\x806\x837\x01\x90P[P\x90P`\0\x80[\x82Q\x82\x10\x80\x15a\x05oWPa\x01\0\x81\x10[\x15a\x05\xC6W`\x01\x81\x1B\x93P\x85\x84\x16\x15a\x05\xB6W\x80`\xF8\x1B\x83\x83\x81Q\x81\x10a\x05\x98Wa\x05\x98a\x07\x08V[` \x01\x01\x90`\x01`\x01`\xF8\x1B\x03\x19\x16\x90\x81`\0\x1A\x90SP\x81`\x01\x01\x91P[a\x05\xBF\x81a\x074V[\x90Pa\x05^V[P\x90\x94\x93PPPPV[`\0\x80`@\x83\x85\x03\x12\x15a\x05\xE3W`\0\x80\xFD[\x825\x91P` \x83\x015`\xFF\x81\x16\x81\x14a\x05\xFBW`\0\x80\xFD[\x80\x91PP\x92P\x92\x90PV[`\0\x80` \x83\x85\x03\x12\x15a\x06\x19W`\0\x80\xFD[\x825g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x80\x82\x11\x15a\x061W`\0\x80\xFD[\x81\x85\x01\x91P\x85`\x1F\x83\x01\x12a\x06EW`\0\x80\xFD[\x815\x81\x81\x11\x15a\x06TW`\0\x80\xFD[\x86` \x82\x85\x01\x01\x11\x15a\x06fW`\0\x80\xFD[` \x92\x90\x92\x01\x96\x91\x95P\x90\x93PPPPV[`\0\x80`@\x83\x85\x03\x12\x15a\x06\x8BW`\0\x80\xFD[PP\x805\x92` \x90\x91\x015\x91PV[`\0` \x82\x84\x03\x12\x15a\x06\xACW`\0\x80\xFD[P5\x91\x90PV[`\0` \x80\x83R\x83Q\x80\x82\x85\x01R`\0[\x81\x81\x10\x15a\x06\xE0W\x85\x81\x01\x83\x01Q\x85\x82\x01`@\x01R\x82\x01a\x06\xC4V[\x81\x81\x11\x15a\x06\xF2W`\0`@\x83\x87\x01\x01R[P`\x1F\x01`\x1F\x19\x16\x92\x90\x92\x01`@\x01\x93\x92PPPV[cNH{q`\xE0\x1B`\0R`2`\x04R`$`\0\xFD[cNH{q`\xE0\x1B`\0R`\x11`\x04R`$`\0\xFD[`\0`\0\x19\x82\x14\x15a\x07HWa\x07Ha\x07\x1EV[P`\x01\x01\x90V[`\0\x82\x82\x10\x15a\x07aWa\x07aa\x07\x1EV[P\x03\x90V[`\0a\xFF\xFF\x80\x83\x16\x81\x81\x14\x15a\x07~Wa\x07~a\x07\x1EV[`\x01\x01\x93\x92PPPV[cNH{q`\xE0\x1B`\0R`A`\x04R`$`\0\xFD\xFE\xA2dipfsX\"\x12 \xA4)w\xE5H\xD0\x08\x0E\x94\xBB\xAE\x1E\x1C\x9DSU\xB5\xC5\xD1`AgYwFI\x12\xEC\xB7\xFE\x12\xBDdsolcC\0\x08\x0C\x003",
     );
     /**Function with signature `bitmapToBytesArray(uint256)` and selector `0xdd547185`.
-```solidity
-function bitmapToBytesArray(uint256 bitmap) external pure returns (bytes memory bytesArray);
-```*/
+    ```solidity
+    function bitmapToBytesArray(uint256 bitmap) external pure returns (bytes memory bytesArray);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct bitmapToBytesArrayCall {
@@ -317,14 +317,10 @@ function bitmapToBytesArray(uint256 bitmap) external pure returns (bytes memory 
             #[doc(hidden)]
             type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (
-                alloy::sol_types::private::primitives::aliases::U256,
-            );
+            type UnderlyingRustTuple<'a> = (alloy::sol_types::private::primitives::aliases::U256,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -333,16 +329,14 @@ function bitmapToBytesArray(uint256 bitmap) external pure returns (bytes memory 
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<bitmapToBytesArrayCall>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<bitmapToBytesArrayCall> for UnderlyingRustTuple<'_> {
                 fn from(value: bitmapToBytesArrayCall) -> Self {
                     (value.bitmap,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for bitmapToBytesArrayCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for bitmapToBytesArrayCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { bitmap: tuple.0 }
                 }
@@ -355,9 +349,7 @@ function bitmapToBytesArray(uint256 bitmap) external pure returns (bytes memory 
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Bytes,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -366,32 +358,28 @@ function bitmapToBytesArray(uint256 bitmap) external pure returns (bytes memory 
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<bitmapToBytesArrayReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<bitmapToBytesArrayReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: bitmapToBytesArrayReturn) -> Self {
                     (value.bytesArray,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for bitmapToBytesArrayReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for bitmapToBytesArrayReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self { bytesArray: tuple.0 }
+                    Self {
+                        bytesArray: tuple.0,
+                    }
                 }
             }
         }
         #[automatically_derived]
         impl alloy_sol_types::SolCall for bitmapToBytesArrayCall {
             type Parameters<'a> = (alloy::sol_types::sol_data::Uint<256>,);
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = bitmapToBytesArrayReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Bytes,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "bitmapToBytesArray(uint256)";
             const SELECTOR: [u8; 4] = [221u8, 84u8, 113u8, 133u8];
             #[inline]
@@ -403,9 +391,9 @@ function bitmapToBytesArray(uint256 bitmap) external pure returns (bytes memory 
             #[inline]
             fn tokenize(&self) -> Self::Token<'_> {
                 (
-                    <alloy::sol_types::sol_data::Uint<
-                        256,
-                    > as alloy_sol_types::SolType>::tokenize(&self.bitmap),
+                    <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
+                        &self.bitmap,
+                    ),
                 )
             }
             #[inline]
@@ -413,17 +401,17 @@ function bitmapToBytesArray(uint256 bitmap) external pure returns (bytes memory 
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `countNumOnes(uint256)` and selector `0x76370f1f`.
-```solidity
-function countNumOnes(uint256 n) external pure returns (uint16);
-```*/
+    ```solidity
+    function countNumOnes(uint256 n) external pure returns (uint16);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct countNumOnesCall {
@@ -447,14 +435,10 @@ function countNumOnes(uint256 n) external pure returns (uint16);
             #[doc(hidden)]
             type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (
-                alloy::sol_types::private::primitives::aliases::U256,
-            );
+            type UnderlyingRustTuple<'a> = (alloy::sol_types::private::primitives::aliases::U256,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -483,9 +467,7 @@ function countNumOnes(uint256 n) external pure returns (uint16);
             type UnderlyingRustTuple<'a> = (u16,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -510,14 +492,10 @@ function countNumOnes(uint256 n) external pure returns (uint16);
         #[automatically_derived]
         impl alloy_sol_types::SolCall for countNumOnesCall {
             type Parameters<'a> = (alloy::sol_types::sol_data::Uint<256>,);
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = countNumOnesReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Uint<16>,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "countNumOnes(uint256)";
             const SELECTOR: [u8; 4] = [118u8, 55u8, 15u8, 31u8];
             #[inline]
@@ -529,9 +507,9 @@ function countNumOnes(uint256 n) external pure returns (uint16);
             #[inline]
             fn tokenize(&self) -> Self::Token<'_> {
                 (
-                    <alloy::sol_types::sol_data::Uint<
-                        256,
-                    > as alloy_sol_types::SolType>::tokenize(&self.n),
+                    <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
+                        &self.n,
+                    ),
                 )
             }
             #[inline]
@@ -539,17 +517,17 @@ function countNumOnes(uint256 n) external pure returns (uint16);
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `isArrayStrictlyAscendingOrdered(bytes)` and selector `0x6c73bd87`.
-```solidity
-function isArrayStrictlyAscendingOrdered(bytes memory bytesArray) external pure returns (bool);
-```*/
+    ```solidity
+    function isArrayStrictlyAscendingOrdered(bytes memory bytesArray) external pure returns (bool);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct isArrayStrictlyAscendingOrderedCall {
@@ -576,9 +554,7 @@ function isArrayStrictlyAscendingOrdered(bytes memory bytesArray) external pure 
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Bytes,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -587,18 +563,18 @@ function isArrayStrictlyAscendingOrdered(bytes memory bytesArray) external pure 
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<isArrayStrictlyAscendingOrderedCall>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<isArrayStrictlyAscendingOrderedCall> for UnderlyingRustTuple<'_> {
                 fn from(value: isArrayStrictlyAscendingOrderedCall) -> Self {
                     (value.bytesArray,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for isArrayStrictlyAscendingOrderedCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for isArrayStrictlyAscendingOrderedCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self { bytesArray: tuple.0 }
+                    Self {
+                        bytesArray: tuple.0,
+                    }
                 }
             }
         }
@@ -609,9 +585,7 @@ function isArrayStrictlyAscendingOrdered(bytes memory bytesArray) external pure 
             type UnderlyingRustTuple<'a> = (bool,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -620,16 +594,14 @@ function isArrayStrictlyAscendingOrdered(bytes memory bytesArray) external pure 
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<isArrayStrictlyAscendingOrderedReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<isArrayStrictlyAscendingOrderedReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: isArrayStrictlyAscendingOrderedReturn) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for isArrayStrictlyAscendingOrderedReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for isArrayStrictlyAscendingOrderedReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -638,14 +610,10 @@ function isArrayStrictlyAscendingOrdered(bytes memory bytesArray) external pure 
         #[automatically_derived]
         impl alloy_sol_types::SolCall for isArrayStrictlyAscendingOrderedCall {
             type Parameters<'a> = (alloy::sol_types::sol_data::Bytes,);
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = isArrayStrictlyAscendingOrderedReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Bool,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "isArrayStrictlyAscendingOrdered(bytes)";
             const SELECTOR: [u8; 4] = [108u8, 115u8, 189u8, 135u8];
             #[inline]
@@ -667,17 +635,17 @@ function isArrayStrictlyAscendingOrdered(bytes memory bytesArray) external pure 
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `isEmpty(uint256)` and selector `0xf90cfeef`.
-```solidity
-function isEmpty(uint256 bitmap) external pure returns (bool);
-```*/
+    ```solidity
+    function isEmpty(uint256 bitmap) external pure returns (bool);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct isEmptyCall {
@@ -701,14 +669,10 @@ function isEmpty(uint256 bitmap) external pure returns (bool);
             #[doc(hidden)]
             type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (
-                alloy::sol_types::private::primitives::aliases::U256,
-            );
+            type UnderlyingRustTuple<'a> = (alloy::sol_types::private::primitives::aliases::U256,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -737,9 +701,7 @@ function isEmpty(uint256 bitmap) external pure returns (bool);
             type UnderlyingRustTuple<'a> = (bool,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -764,14 +726,10 @@ function isEmpty(uint256 bitmap) external pure returns (bool);
         #[automatically_derived]
         impl alloy_sol_types::SolCall for isEmptyCall {
             type Parameters<'a> = (alloy::sol_types::sol_data::Uint<256>,);
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = isEmptyReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Bool,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "isEmpty(uint256)";
             const SELECTOR: [u8; 4] = [249u8, 12u8, 254u8, 239u8];
             #[inline]
@@ -783,9 +741,9 @@ function isEmpty(uint256 bitmap) external pure returns (bool);
             #[inline]
             fn tokenize(&self) -> Self::Token<'_> {
                 (
-                    <alloy::sol_types::sol_data::Uint<
-                        256,
-                    > as alloy_sol_types::SolType>::tokenize(&self.bitmap),
+                    <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
+                        &self.bitmap,
+                    ),
                 )
             }
             #[inline]
@@ -793,17 +751,17 @@ function isEmpty(uint256 bitmap) external pure returns (bool);
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `isSet(uint256,uint8)` and selector `0x1ff4adba`.
-```solidity
-function isSet(uint256 bitmap, uint8 numberToCheckForInclusion) external pure returns (bool);
-```*/
+    ```solidity
+    function isSet(uint256 bitmap, uint8 numberToCheckForInclusion) external pure returns (bool);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct isSetCall {
@@ -831,15 +789,11 @@ function isSet(uint256 bitmap, uint8 numberToCheckForInclusion) external pure re
                 alloy::sol_types::sol_data::Uint<8>,
             );
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (
-                alloy::sol_types::private::primitives::aliases::U256,
-                u8,
-            );
+            type UnderlyingRustTuple<'a> =
+                (alloy::sol_types::private::primitives::aliases::U256, u8);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -871,9 +825,7 @@ function isSet(uint256 bitmap, uint8 numberToCheckForInclusion) external pure re
             type UnderlyingRustTuple<'a> = (bool,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -901,14 +853,10 @@ function isSet(uint256 bitmap, uint8 numberToCheckForInclusion) external pure re
                 alloy::sol_types::sol_data::Uint<256>,
                 alloy::sol_types::sol_data::Uint<8>,
             );
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = isSetReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Bool,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "isSet(uint256,uint8)";
             const SELECTOR: [u8; 4] = [31u8, 244u8, 173u8, 186u8];
             #[inline]
@@ -920,12 +868,10 @@ function isSet(uint256 bitmap, uint8 numberToCheckForInclusion) external pure re
             #[inline]
             fn tokenize(&self) -> Self::Token<'_> {
                 (
-                    <alloy::sol_types::sol_data::Uint<
-                        256,
-                    > as alloy_sol_types::SolType>::tokenize(&self.bitmap),
-                    <alloy::sol_types::sol_data::Uint<
-                        8,
-                    > as alloy_sol_types::SolType>::tokenize(
+                    <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
+                        &self.bitmap,
+                    ),
+                    <alloy::sol_types::sol_data::Uint<8> as alloy_sol_types::SolType>::tokenize(
                         &self.numberToCheckForInclusion,
                     ),
                 )
@@ -935,17 +881,17 @@ function isSet(uint256 bitmap, uint8 numberToCheckForInclusion) external pure re
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `isSubsetOf(uint256,uint256)` and selector `0xa8e3eabb`.
-```solidity
-function isSubsetOf(uint256 a, uint256 b) external pure returns (bool);
-```*/
+    ```solidity
+    function isSubsetOf(uint256 a, uint256 b) external pure returns (bool);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct isSubsetOfCall {
@@ -979,9 +925,7 @@ function isSubsetOf(uint256 a, uint256 b) external pure returns (bool);
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -999,7 +943,10 @@ function isSubsetOf(uint256 a, uint256 b) external pure returns (bool);
             #[doc(hidden)]
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for isSubsetOfCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self { a: tuple.0, b: tuple.1 }
+                    Self {
+                        a: tuple.0,
+                        b: tuple.1,
+                    }
                 }
             }
         }
@@ -1010,9 +957,7 @@ function isSubsetOf(uint256 a, uint256 b) external pure returns (bool);
             type UnderlyingRustTuple<'a> = (bool,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1040,14 +985,10 @@ function isSubsetOf(uint256 a, uint256 b) external pure returns (bool);
                 alloy::sol_types::sol_data::Uint<256>,
                 alloy::sol_types::sol_data::Uint<256>,
             );
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = isSubsetOfReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Bool,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "isSubsetOf(uint256,uint256)";
             const SELECTOR: [u8; 4] = [168u8, 227u8, 234u8, 187u8];
             #[inline]
@@ -1059,12 +1000,12 @@ function isSubsetOf(uint256 a, uint256 b) external pure returns (bool);
             #[inline]
             fn tokenize(&self) -> Self::Token<'_> {
                 (
-                    <alloy::sol_types::sol_data::Uint<
-                        256,
-                    > as alloy_sol_types::SolType>::tokenize(&self.a),
-                    <alloy::sol_types::sol_data::Uint<
-                        256,
-                    > as alloy_sol_types::SolType>::tokenize(&self.b),
+                    <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
+                        &self.a,
+                    ),
+                    <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
+                        &self.b,
+                    ),
                 )
             }
             #[inline]
@@ -1072,17 +1013,17 @@ function isSubsetOf(uint256 a, uint256 b) external pure returns (bool);
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `minus(uint256,uint256)` and selector `0xf4f3bdc1`.
-```solidity
-function minus(uint256 a, uint256 b) external pure returns (uint256);
-```*/
+    ```solidity
+    function minus(uint256 a, uint256 b) external pure returns (uint256);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct minusCall {
@@ -1116,9 +1057,7 @@ function minus(uint256 a, uint256 b) external pure returns (uint256);
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1136,7 +1075,10 @@ function minus(uint256 a, uint256 b) external pure returns (uint256);
             #[doc(hidden)]
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for minusCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self { a: tuple.0, b: tuple.1 }
+                    Self {
+                        a: tuple.0,
+                        b: tuple.1,
+                    }
                 }
             }
         }
@@ -1144,14 +1086,10 @@ function minus(uint256 a, uint256 b) external pure returns (uint256);
             #[doc(hidden)]
             type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (
-                alloy::sol_types::private::primitives::aliases::U256,
-            );
+            type UnderlyingRustTuple<'a> = (alloy::sol_types::private::primitives::aliases::U256,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1179,14 +1117,10 @@ function minus(uint256 a, uint256 b) external pure returns (uint256);
                 alloy::sol_types::sol_data::Uint<256>,
                 alloy::sol_types::sol_data::Uint<256>,
             );
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = minusReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "minus(uint256,uint256)";
             const SELECTOR: [u8; 4] = [244u8, 243u8, 189u8, 193u8];
             #[inline]
@@ -1198,12 +1132,12 @@ function minus(uint256 a, uint256 b) external pure returns (uint256);
             #[inline]
             fn tokenize(&self) -> Self::Token<'_> {
                 (
-                    <alloy::sol_types::sol_data::Uint<
-                        256,
-                    > as alloy_sol_types::SolType>::tokenize(&self.a),
-                    <alloy::sol_types::sol_data::Uint<
-                        256,
-                    > as alloy_sol_types::SolType>::tokenize(&self.b),
+                    <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
+                        &self.a,
+                    ),
+                    <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
+                        &self.b,
+                    ),
                 )
             }
             #[inline]
@@ -1211,17 +1145,17 @@ function minus(uint256 a, uint256 b) external pure returns (uint256);
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `noBitsInCommon(uint256,uint256)` and selector `0x62e2ef33`.
-```solidity
-function noBitsInCommon(uint256 a, uint256 b) external pure returns (bool);
-```*/
+    ```solidity
+    function noBitsInCommon(uint256 a, uint256 b) external pure returns (bool);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct noBitsInCommonCall {
@@ -1255,9 +1189,7 @@ function noBitsInCommon(uint256 a, uint256 b) external pure returns (bool);
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1275,7 +1207,10 @@ function noBitsInCommon(uint256 a, uint256 b) external pure returns (bool);
             #[doc(hidden)]
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for noBitsInCommonCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self { a: tuple.0, b: tuple.1 }
+                    Self {
+                        a: tuple.0,
+                        b: tuple.1,
+                    }
                 }
             }
         }
@@ -1286,9 +1221,7 @@ function noBitsInCommon(uint256 a, uint256 b) external pure returns (bool);
             type UnderlyingRustTuple<'a> = (bool,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1297,16 +1230,14 @@ function noBitsInCommon(uint256 a, uint256 b) external pure returns (bool);
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<noBitsInCommonReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<noBitsInCommonReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: noBitsInCommonReturn) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for noBitsInCommonReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for noBitsInCommonReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -1318,14 +1249,10 @@ function noBitsInCommon(uint256 a, uint256 b) external pure returns (bool);
                 alloy::sol_types::sol_data::Uint<256>,
                 alloy::sol_types::sol_data::Uint<256>,
             );
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = noBitsInCommonReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Bool,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "noBitsInCommon(uint256,uint256)";
             const SELECTOR: [u8; 4] = [98u8, 226u8, 239u8, 51u8];
             #[inline]
@@ -1337,12 +1264,12 @@ function noBitsInCommon(uint256 a, uint256 b) external pure returns (bool);
             #[inline]
             fn tokenize(&self) -> Self::Token<'_> {
                 (
-                    <alloy::sol_types::sol_data::Uint<
-                        256,
-                    > as alloy_sol_types::SolType>::tokenize(&self.a),
-                    <alloy::sol_types::sol_data::Uint<
-                        256,
-                    > as alloy_sol_types::SolType>::tokenize(&self.b),
+                    <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
+                        &self.a,
+                    ),
+                    <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
+                        &self.b,
+                    ),
                 )
             }
             #[inline]
@@ -1350,17 +1277,17 @@ function noBitsInCommon(uint256 a, uint256 b) external pure returns (bool);
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `orderedBytesArrayToBitmap(bytes)` and selector `0x20e88403`.
-```solidity
-function orderedBytesArrayToBitmap(bytes memory orderedBytesArray) external pure returns (uint256);
-```*/
+    ```solidity
+    function orderedBytesArrayToBitmap(bytes memory orderedBytesArray) external pure returns (uint256);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct orderedBytesArrayToBitmapCall {
@@ -1387,9 +1314,7 @@ function orderedBytesArrayToBitmap(bytes memory orderedBytesArray) external pure
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Bytes,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1398,18 +1323,18 @@ function orderedBytesArrayToBitmap(bytes memory orderedBytesArray) external pure
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<orderedBytesArrayToBitmapCall>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<orderedBytesArrayToBitmapCall> for UnderlyingRustTuple<'_> {
                 fn from(value: orderedBytesArrayToBitmapCall) -> Self {
                     (value.orderedBytesArray,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for orderedBytesArrayToBitmapCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for orderedBytesArrayToBitmapCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self { orderedBytesArray: tuple.0 }
+                    Self {
+                        orderedBytesArray: tuple.0,
+                    }
                 }
             }
         }
@@ -1417,14 +1342,10 @@ function orderedBytesArrayToBitmap(bytes memory orderedBytesArray) external pure
             #[doc(hidden)]
             type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (
-                alloy::sol_types::private::primitives::aliases::U256,
-            );
+            type UnderlyingRustTuple<'a> = (alloy::sol_types::private::primitives::aliases::U256,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1433,16 +1354,14 @@ function orderedBytesArrayToBitmap(bytes memory orderedBytesArray) external pure
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<orderedBytesArrayToBitmapReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<orderedBytesArrayToBitmapReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: orderedBytesArrayToBitmapReturn) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for orderedBytesArrayToBitmapReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for orderedBytesArrayToBitmapReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -1451,14 +1370,10 @@ function orderedBytesArrayToBitmap(bytes memory orderedBytesArray) external pure
         #[automatically_derived]
         impl alloy_sol_types::SolCall for orderedBytesArrayToBitmapCall {
             type Parameters<'a> = (alloy::sol_types::sol_data::Bytes,);
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = orderedBytesArrayToBitmapReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "orderedBytesArrayToBitmap(bytes)";
             const SELECTOR: [u8; 4] = [32u8, 232u8, 132u8, 3u8];
             #[inline]
@@ -1480,17 +1395,17 @@ function orderedBytesArrayToBitmap(bytes memory orderedBytesArray) external pure
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `plus(uint256,uint256)` and selector `0x66098d4f`.
-```solidity
-function plus(uint256 a, uint256 b) external pure returns (uint256);
-```*/
+    ```solidity
+    function plus(uint256 a, uint256 b) external pure returns (uint256);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct plusCall {
@@ -1524,9 +1439,7 @@ function plus(uint256 a, uint256 b) external pure returns (uint256);
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1544,7 +1457,10 @@ function plus(uint256 a, uint256 b) external pure returns (uint256);
             #[doc(hidden)]
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for plusCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self { a: tuple.0, b: tuple.1 }
+                    Self {
+                        a: tuple.0,
+                        b: tuple.1,
+                    }
                 }
             }
         }
@@ -1552,14 +1468,10 @@ function plus(uint256 a, uint256 b) external pure returns (uint256);
             #[doc(hidden)]
             type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (
-                alloy::sol_types::private::primitives::aliases::U256,
-            );
+            type UnderlyingRustTuple<'a> = (alloy::sol_types::private::primitives::aliases::U256,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1587,14 +1499,10 @@ function plus(uint256 a, uint256 b) external pure returns (uint256);
                 alloy::sol_types::sol_data::Uint<256>,
                 alloy::sol_types::sol_data::Uint<256>,
             );
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = plusReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "plus(uint256,uint256)";
             const SELECTOR: [u8; 4] = [102u8, 9u8, 141u8, 79u8];
             #[inline]
@@ -1606,12 +1514,12 @@ function plus(uint256 a, uint256 b) external pure returns (uint256);
             #[inline]
             fn tokenize(&self) -> Self::Token<'_> {
                 (
-                    <alloy::sol_types::sol_data::Uint<
-                        256,
-                    > as alloy_sol_types::SolType>::tokenize(&self.a),
-                    <alloy::sol_types::sol_data::Uint<
-                        256,
-                    > as alloy_sol_types::SolType>::tokenize(&self.b),
+                    <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
+                        &self.a,
+                    ),
+                    <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
+                        &self.b,
+                    ),
                 )
             }
             #[inline]
@@ -1619,17 +1527,17 @@ function plus(uint256 a, uint256 b) external pure returns (uint256);
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `setBit(uint256,uint8)` and selector `0x4ee29090`.
-```solidity
-function setBit(uint256 bitmap, uint8 bit) external pure returns (uint256);
-```*/
+    ```solidity
+    function setBit(uint256 bitmap, uint8 bit) external pure returns (uint256);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setBitCall {
@@ -1657,15 +1565,11 @@ function setBit(uint256 bitmap, uint8 bit) external pure returns (uint256);
                 alloy::sol_types::sol_data::Uint<8>,
             );
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (
-                alloy::sol_types::private::primitives::aliases::U256,
-                u8,
-            );
+            type UnderlyingRustTuple<'a> =
+                (alloy::sol_types::private::primitives::aliases::U256, u8);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1694,14 +1598,10 @@ function setBit(uint256 bitmap, uint8 bit) external pure returns (uint256);
             #[doc(hidden)]
             type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (
-                alloy::sol_types::private::primitives::aliases::U256,
-            );
+            type UnderlyingRustTuple<'a> = (alloy::sol_types::private::primitives::aliases::U256,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1729,14 +1629,10 @@ function setBit(uint256 bitmap, uint8 bit) external pure returns (uint256);
                 alloy::sol_types::sol_data::Uint<256>,
                 alloy::sol_types::sol_data::Uint<8>,
             );
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = setBitReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "setBit(uint256,uint8)";
             const SELECTOR: [u8; 4] = [78u8, 226u8, 144u8, 144u8];
             #[inline]
@@ -1748,12 +1644,12 @@ function setBit(uint256 bitmap, uint8 bit) external pure returns (uint256);
             #[inline]
             fn tokenize(&self) -> Self::Token<'_> {
                 (
-                    <alloy::sol_types::sol_data::Uint<
-                        256,
-                    > as alloy_sol_types::SolType>::tokenize(&self.bitmap),
-                    <alloy::sol_types::sol_data::Uint<
-                        8,
-                    > as alloy_sol_types::SolType>::tokenize(&self.bit),
+                    <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
+                        &self.bitmap,
+                    ),
+                    <alloy::sol_types::sol_data::Uint<8> as alloy_sol_types::SolType>::tokenize(
+                        &self.bit,
+                    ),
                 )
             }
             #[inline]
@@ -1761,10 +1657,10 @@ function setBit(uint256 bitmap, uint8 bit) external pure returns (uint256);
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
@@ -1815,17 +1711,13 @@ function setBit(uint256 bitmap, uint8 bit) external pure returns (uint256);
                 Self::bitmapToBytesArray(_) => {
                     <bitmapToBytesArrayCall as alloy_sol_types::SolCall>::SELECTOR
                 }
-                Self::countNumOnes(_) => {
-                    <countNumOnesCall as alloy_sol_types::SolCall>::SELECTOR
-                }
+                Self::countNumOnes(_) => <countNumOnesCall as alloy_sol_types::SolCall>::SELECTOR,
                 Self::isArrayStrictlyAscendingOrdered(_) => {
                     <isArrayStrictlyAscendingOrderedCall as alloy_sol_types::SolCall>::SELECTOR
                 }
                 Self::isEmpty(_) => <isEmptyCall as alloy_sol_types::SolCall>::SELECTOR,
                 Self::isSet(_) => <isSetCall as alloy_sol_types::SolCall>::SELECTOR,
-                Self::isSubsetOf(_) => {
-                    <isSubsetOfCall as alloy_sol_types::SolCall>::SELECTOR
-                }
+                Self::isSubsetOf(_) => <isSubsetOfCall as alloy_sol_types::SolCall>::SELECTOR,
                 Self::minus(_) => <minusCall as alloy_sol_types::SolCall>::SELECTOR,
                 Self::noBitsInCommon(_) => {
                     <noBitsInCommonCall as alloy_sol_types::SolCall>::SELECTOR
@@ -1855,16 +1747,14 @@ function setBit(uint256 bitmap, uint8 bit) external pure returns (uint256);
             static DECODE_SHIMS: &[fn(
                 &[u8],
                 bool,
-            ) -> alloy_sol_types::Result<BitmapUtilsWrapperCalls>] = &[
+            )
+                -> alloy_sol_types::Result<BitmapUtilsWrapperCalls>] = &[
                 {
                     fn isSet(
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<BitmapUtilsWrapperCalls> {
-                        <isSetCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
+                        <isSetCall as alloy_sol_types::SolCall>::abi_decode_raw(data, validate)
                             .map(BitmapUtilsWrapperCalls::isSet)
                     }
                     isSet
@@ -1875,10 +1765,9 @@ function setBit(uint256 bitmap, uint8 bit) external pure returns (uint256);
                         validate: bool,
                     ) -> alloy_sol_types::Result<BitmapUtilsWrapperCalls> {
                         <orderedBytesArrayToBitmapCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(BitmapUtilsWrapperCalls::orderedBytesArrayToBitmap)
+                            data, validate,
+                        )
+                        .map(BitmapUtilsWrapperCalls::orderedBytesArrayToBitmap)
                     }
                     orderedBytesArrayToBitmap
                 },
@@ -1887,10 +1776,7 @@ function setBit(uint256 bitmap, uint8 bit) external pure returns (uint256);
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<BitmapUtilsWrapperCalls> {
-                        <setBitCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
+                        <setBitCall as alloy_sol_types::SolCall>::abi_decode_raw(data, validate)
                             .map(BitmapUtilsWrapperCalls::setBit)
                     }
                     setBit
@@ -1901,10 +1787,9 @@ function setBit(uint256 bitmap, uint8 bit) external pure returns (uint256);
                         validate: bool,
                     ) -> alloy_sol_types::Result<BitmapUtilsWrapperCalls> {
                         <noBitsInCommonCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(BitmapUtilsWrapperCalls::noBitsInCommon)
+                            data, validate,
+                        )
+                        .map(BitmapUtilsWrapperCalls::noBitsInCommon)
                     }
                     noBitsInCommon
                 },
@@ -1913,10 +1798,7 @@ function setBit(uint256 bitmap, uint8 bit) external pure returns (uint256);
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<BitmapUtilsWrapperCalls> {
-                        <plusCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
+                        <plusCall as alloy_sol_types::SolCall>::abi_decode_raw(data, validate)
                             .map(BitmapUtilsWrapperCalls::plus)
                     }
                     plus
@@ -1942,10 +1824,9 @@ function setBit(uint256 bitmap, uint8 bit) external pure returns (uint256);
                         validate: bool,
                     ) -> alloy_sol_types::Result<BitmapUtilsWrapperCalls> {
                         <countNumOnesCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(BitmapUtilsWrapperCalls::countNumOnes)
+                            data, validate,
+                        )
+                        .map(BitmapUtilsWrapperCalls::countNumOnes)
                     }
                     countNumOnes
                 },
@@ -1954,10 +1835,7 @@ function setBit(uint256 bitmap, uint8 bit) external pure returns (uint256);
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<BitmapUtilsWrapperCalls> {
-                        <isSubsetOfCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
+                        <isSubsetOfCall as alloy_sol_types::SolCall>::abi_decode_raw(data, validate)
                             .map(BitmapUtilsWrapperCalls::isSubsetOf)
                     }
                     isSubsetOf
@@ -1968,10 +1846,9 @@ function setBit(uint256 bitmap, uint8 bit) external pure returns (uint256);
                         validate: bool,
                     ) -> alloy_sol_types::Result<BitmapUtilsWrapperCalls> {
                         <bitmapToBytesArrayCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(BitmapUtilsWrapperCalls::bitmapToBytesArray)
+                            data, validate,
+                        )
+                        .map(BitmapUtilsWrapperCalls::bitmapToBytesArray)
                     }
                     bitmapToBytesArray
                 },
@@ -1980,10 +1857,7 @@ function setBit(uint256 bitmap, uint8 bit) external pure returns (uint256);
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<BitmapUtilsWrapperCalls> {
-                        <minusCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
+                        <minusCall as alloy_sol_types::SolCall>::abi_decode_raw(data, validate)
                             .map(BitmapUtilsWrapperCalls::minus)
                     }
                     minus
@@ -1993,22 +1867,17 @@ function setBit(uint256 bitmap, uint8 bit) external pure returns (uint256);
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<BitmapUtilsWrapperCalls> {
-                        <isEmptyCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
+                        <isEmptyCall as alloy_sol_types::SolCall>::abi_decode_raw(data, validate)
                             .map(BitmapUtilsWrapperCalls::isEmpty)
                     }
                     isEmpty
                 },
             ];
             let Ok(idx) = Self::SELECTORS.binary_search(&selector) else {
-                return Err(
-                    alloy_sol_types::Error::unknown_selector(
-                        <Self as alloy_sol_types::SolInterface>::NAME,
-                        selector,
-                    ),
-                );
+                return Err(alloy_sol_types::Error::unknown_selector(
+                    <Self as alloy_sol_types::SolInterface>::NAME,
+                    selector,
+                ));
             };
             (unsafe { DECODE_SHIMS.get_unchecked(idx) })(data, validate)
         }
@@ -2120,7 +1989,7 @@ function setBit(uint256 bitmap, uint8 bit) external pure returns (uint256);
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`BitmapUtilsWrapper`](self) contract instance.
 
-See the [wrapper's documentation](`BitmapUtilsWrapperInstance`) for more details.*/
+    See the [wrapper's documentation](`BitmapUtilsWrapperInstance`) for more details.*/
     #[inline]
     pub const fn new<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -2134,9 +2003,9 @@ See the [wrapper's documentation](`BitmapUtilsWrapperInstance`) for more details
     }
     /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+    Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+    For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
     #[inline]
     pub fn deploy<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -2144,35 +2013,36 @@ For more fine-grained control over the deployment process, use [`deploy_builder`
         N: alloy_contract::private::Network,
     >(
         provider: P,
-    ) -> impl ::core::future::Future<
-        Output = alloy_contract::Result<BitmapUtilsWrapperInstance<T, P, N>>,
-    > {
+    ) -> impl ::core::future::Future<Output = alloy_contract::Result<BitmapUtilsWrapperInstance<T, P, N>>>
+    {
         BitmapUtilsWrapperInstance::<T, P, N>::deploy(provider)
     }
     /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+    and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+    This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+    the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     #[inline]
     pub fn deploy_builder<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
         P: alloy_contract::private::Provider<T, N>,
         N: alloy_contract::private::Network,
-    >(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
+    >(
+        provider: P,
+    ) -> alloy_contract::RawCallBuilder<T, P, N> {
         BitmapUtilsWrapperInstance::<T, P, N>::deploy_builder(provider)
     }
     /**A [`BitmapUtilsWrapper`](self) instance.
 
-Contains type-safe methods for interacting with an on-chain instance of the
-[`BitmapUtilsWrapper`](self) contract located at a given `address`, using a given
-provider `P`.
+    Contains type-safe methods for interacting with an on-chain instance of the
+    [`BitmapUtilsWrapper`](self) contract located at a given `address`, using a given
+    provider `P`.
 
-If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
-documentation on how to provide it), the `deploy` and `deploy_builder` methods can
-be used to deploy a new instance of the contract.
+    If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
+    documentation on how to provide it), the `deploy` and `deploy_builder` methods can
+    be used to deploy a new instance of the contract.
 
-See the [module-level documentation](self) for all the available methods.*/
+    See the [module-level documentation](self) for all the available methods.*/
     #[derive(Clone)]
     pub struct BitmapUtilsWrapperInstance<T, P, N = alloy_contract::private::Ethereum> {
         address: alloy_sol_types::private::Address,
@@ -2183,24 +2053,24 @@ See the [module-level documentation](self) for all the available methods.*/
     impl<T, P, N> ::core::fmt::Debug for BitmapUtilsWrapperInstance<T, P, N> {
         #[inline]
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-            f.debug_tuple("BitmapUtilsWrapperInstance").field(&self.address).finish()
+            f.debug_tuple("BitmapUtilsWrapperInstance")
+                .field(&self.address)
+                .finish()
         }
     }
     /// Instantiation and getters/setters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > BitmapUtilsWrapperInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > BitmapUtilsWrapperInstance<T, P, N>
+    {
         /**Creates a new wrapper around an on-chain [`BitmapUtilsWrapper`](self) contract instance.
 
-See the [wrapper's documentation](`BitmapUtilsWrapperInstance`) for more details.*/
+        See the [wrapper's documentation](`BitmapUtilsWrapperInstance`) for more details.*/
         #[inline]
-        pub const fn new(
-            address: alloy_sol_types::private::Address,
-            provider: P,
-        ) -> Self {
+        pub const fn new(address: alloy_sol_types::private::Address, provider: P) -> Self {
             Self {
                 address,
                 provider,
@@ -2209,9 +2079,9 @@ See the [wrapper's documentation](`BitmapUtilsWrapperInstance`) for more details
         }
         /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+        Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+        For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
         #[inline]
         pub async fn deploy(
             provider: P,
@@ -2221,10 +2091,10 @@ For more fine-grained control over the deployment process, use [`deploy_builder`
             Ok(Self::new(contract_address, call_builder.provider))
         }
         /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+        and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+        This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+        the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         #[inline]
         pub fn deploy_builder(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
             alloy_contract::RawCallBuilder::new_raw_deploy(
@@ -2267,10 +2137,11 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     /// Function calls.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > BitmapUtilsWrapperInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > BitmapUtilsWrapperInstance<T, P, N>
+    {
         /// Creates a new call builder using this contract instance's provider and address.
         ///
         /// Note that the call can be any function call, not just those defined in this
@@ -2299,17 +2170,8 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         pub fn isArrayStrictlyAscendingOrdered(
             &self,
             bytesArray: alloy::sol_types::private::Bytes,
-        ) -> alloy_contract::SolCallBuilder<
-            T,
-            &P,
-            isArrayStrictlyAscendingOrderedCall,
-            N,
-        > {
-            self.call_builder(
-                &isArrayStrictlyAscendingOrderedCall {
-                    bytesArray,
-                },
-            )
+        ) -> alloy_contract::SolCallBuilder<T, &P, isArrayStrictlyAscendingOrderedCall, N> {
+            self.call_builder(&isArrayStrictlyAscendingOrderedCall { bytesArray })
         }
         ///Creates a new call builder for the [`isEmpty`] function.
         pub fn isEmpty(
@@ -2324,12 +2186,10 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
             bitmap: alloy::sol_types::private::primitives::aliases::U256,
             numberToCheckForInclusion: u8,
         ) -> alloy_contract::SolCallBuilder<T, &P, isSetCall, N> {
-            self.call_builder(
-                &isSetCall {
-                    bitmap,
-                    numberToCheckForInclusion,
-                },
-            )
+            self.call_builder(&isSetCall {
+                bitmap,
+                numberToCheckForInclusion,
+            })
         }
         ///Creates a new call builder for the [`isSubsetOf`] function.
         pub fn isSubsetOf(
@@ -2360,11 +2220,7 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
             &self,
             orderedBytesArray: alloy::sol_types::private::Bytes,
         ) -> alloy_contract::SolCallBuilder<T, &P, orderedBytesArrayToBitmapCall, N> {
-            self.call_builder(
-                &orderedBytesArrayToBitmapCall {
-                    orderedBytesArray,
-                },
-            )
+            self.call_builder(&orderedBytesArrayToBitmapCall { orderedBytesArray })
         }
         ///Creates a new call builder for the [`plus`] function.
         pub fn plus(
@@ -2386,10 +2242,11 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     /// Event filters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > BitmapUtilsWrapperInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > BitmapUtilsWrapperInstance<T, P, N>
+    {
         /// Creates a new event filter using this contract instance's provider and address.
         ///
         /// Note that the type can be any event, not just those defined in this contract.

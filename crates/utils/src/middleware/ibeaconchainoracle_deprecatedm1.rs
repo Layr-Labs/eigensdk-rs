@@ -234,15 +234,13 @@ pub mod IBeaconChainOracle_DeprecatedM1 {
         b"",
     );
     /**Function with signature `addOracleSigners(address[])` and selector `0x30904457`.
-```solidity
-function addOracleSigners(address[] memory _oracleSigners) external;
-```*/
+    ```solidity
+    function addOracleSigners(address[] memory _oracleSigners) external;
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct addOracleSignersCall {
-        pub _oracleSigners: alloy::sol_types::private::Vec<
-            alloy::sol_types::private::Address,
-        >,
+        pub _oracleSigners: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
     }
     ///Container type for the return parameters of the [`addOracleSigners(address[])`](addOracleSignersCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
@@ -258,18 +256,14 @@ function addOracleSigners(address[] memory _oracleSigners) external;
         use alloy::sol_types as alloy_sol_types;
         {
             #[doc(hidden)]
-            type UnderlyingSolTuple<'a> = (
-                alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::Address>,
-            );
+            type UnderlyingSolTuple<'a> =
+                (alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::Address>,);
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (
-                alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
-            );
+            type UnderlyingRustTuple<'a> =
+                (alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -278,18 +272,18 @@ function addOracleSigners(address[] memory _oracleSigners) external;
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<addOracleSignersCall>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<addOracleSignersCall> for UnderlyingRustTuple<'_> {
                 fn from(value: addOracleSignersCall) -> Self {
                     (value._oracleSigners,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for addOracleSignersCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for addOracleSignersCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self { _oracleSigners: tuple.0 }
+                    Self {
+                        _oracleSigners: tuple.0,
+                    }
                 }
             }
         }
@@ -300,9 +294,7 @@ function addOracleSigners(address[] memory _oracleSigners) external;
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -311,16 +303,14 @@ function addOracleSigners(address[] memory _oracleSigners) external;
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<addOracleSignersReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<addOracleSignersReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: addOracleSignersReturn) -> Self {
                     ()
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for addOracleSignersReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for addOracleSignersReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
@@ -328,17 +318,12 @@ function addOracleSigners(address[] memory _oracleSigners) external;
         }
         #[automatically_derived]
         impl alloy_sol_types::SolCall for addOracleSignersCall {
-            type Parameters<'a> = (
-                alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::Address>,
-            );
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Parameters<'a> =
+                (alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::Address>,);
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = addOracleSignersReturn;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "addOracleSigners(address[])";
             const SELECTOR: [u8; 4] = [48u8, 144u8, 68u8, 87u8];
             #[inline]
@@ -349,28 +334,28 @@ function addOracleSigners(address[] memory _oracleSigners) external;
             }
             #[inline]
             fn tokenize(&self) -> Self::Token<'_> {
-                (
-                    <alloy::sol_types::sol_data::Array<
-                        alloy::sol_types::sol_data::Address,
-                    > as alloy_sol_types::SolType>::tokenize(&self._oracleSigners),
-                )
+                (<alloy::sol_types::sol_data::Array<
+                    alloy::sol_types::sol_data::Address,
+                > as alloy_sol_types::SolType>::tokenize(
+                    &self._oracleSigners,
+                ),)
             }
             #[inline]
             fn abi_decode_returns(
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `beaconStateRootAtBlockNumber(uint64)` and selector `0x864b8a69`.
-```solidity
-function beaconStateRootAtBlockNumber(uint64 blockNumber) external view returns (bytes32);
-```*/
+    ```solidity
+    function beaconStateRootAtBlockNumber(uint64 blockNumber) external view returns (bytes32);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct beaconStateRootAtBlockNumberCall {
@@ -397,9 +382,7 @@ function beaconStateRootAtBlockNumber(uint64 blockNumber) external view returns 
             type UnderlyingRustTuple<'a> = (u64,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -408,18 +391,18 @@ function beaconStateRootAtBlockNumber(uint64 blockNumber) external view returns 
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<beaconStateRootAtBlockNumberCall>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<beaconStateRootAtBlockNumberCall> for UnderlyingRustTuple<'_> {
                 fn from(value: beaconStateRootAtBlockNumberCall) -> Self {
                     (value.blockNumber,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for beaconStateRootAtBlockNumberCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for beaconStateRootAtBlockNumberCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self { blockNumber: tuple.0 }
+                    Self {
+                        blockNumber: tuple.0,
+                    }
                 }
             }
         }
@@ -430,9 +413,7 @@ function beaconStateRootAtBlockNumber(uint64 blockNumber) external view returns 
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::FixedBytes<32>,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -441,16 +422,14 @@ function beaconStateRootAtBlockNumber(uint64 blockNumber) external view returns 
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<beaconStateRootAtBlockNumberReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<beaconStateRootAtBlockNumberReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: beaconStateRootAtBlockNumberReturn) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for beaconStateRootAtBlockNumberReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for beaconStateRootAtBlockNumberReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -459,14 +438,10 @@ function beaconStateRootAtBlockNumber(uint64 blockNumber) external view returns 
         #[automatically_derived]
         impl alloy_sol_types::SolCall for beaconStateRootAtBlockNumberCall {
             type Parameters<'a> = (alloy::sol_types::sol_data::Uint<64>,);
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = beaconStateRootAtBlockNumberReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::FixedBytes<32>,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "beaconStateRootAtBlockNumber(uint64)";
             const SELECTOR: [u8; 4] = [134u8, 75u8, 138u8, 105u8];
             #[inline]
@@ -478,9 +453,9 @@ function beaconStateRootAtBlockNumber(uint64 blockNumber) external view returns 
             #[inline]
             fn tokenize(&self) -> Self::Token<'_> {
                 (
-                    <alloy::sol_types::sol_data::Uint<
-                        64,
-                    > as alloy_sol_types::SolType>::tokenize(&self.blockNumber),
+                    <alloy::sol_types::sol_data::Uint<64> as alloy_sol_types::SolType>::tokenize(
+                        &self.blockNumber,
+                    ),
                 )
             }
             #[inline]
@@ -488,17 +463,17 @@ function beaconStateRootAtBlockNumber(uint64 blockNumber) external view returns 
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `hasVoted(uint64,address)` and selector `0xc61ff600`.
-```solidity
-function hasVoted(uint64 blockNumber, address oracleSigner) external view returns (bool);
-```*/
+    ```solidity
+    function hasVoted(uint64 blockNumber, address oracleSigner) external view returns (bool);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct hasVotedCall {
@@ -529,9 +504,7 @@ function hasVoted(uint64 blockNumber, address oracleSigner) external view return
             type UnderlyingRustTuple<'a> = (u64, alloy::sol_types::private::Address);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -563,9 +536,7 @@ function hasVoted(uint64 blockNumber, address oracleSigner) external view return
             type UnderlyingRustTuple<'a> = (bool,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -593,14 +564,10 @@ function hasVoted(uint64 blockNumber, address oracleSigner) external view return
                 alloy::sol_types::sol_data::Uint<64>,
                 alloy::sol_types::sol_data::Address,
             );
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = hasVotedReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Bool,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "hasVoted(uint64,address)";
             const SELECTOR: [u8; 4] = [198u8, 31u8, 246u8, 0u8];
             #[inline]
@@ -612,9 +579,9 @@ function hasVoted(uint64 blockNumber, address oracleSigner) external view return
             #[inline]
             fn tokenize(&self) -> Self::Token<'_> {
                 (
-                    <alloy::sol_types::sol_data::Uint<
-                        64,
-                    > as alloy_sol_types::SolType>::tokenize(&self.blockNumber),
+                    <alloy::sol_types::sol_data::Uint<64> as alloy_sol_types::SolType>::tokenize(
+                        &self.blockNumber,
+                    ),
                     <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
                         &self.oracleSigner,
                     ),
@@ -625,17 +592,17 @@ function hasVoted(uint64 blockNumber, address oracleSigner) external view return
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `isOracleSigner(address)` and selector `0x7a000989`.
-```solidity
-function isOracleSigner(address _oracleSigner) external view returns (bool);
-```*/
+    ```solidity
+    function isOracleSigner(address _oracleSigner) external view returns (bool);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct isOracleSignerCall {
@@ -662,9 +629,7 @@ function isOracleSigner(address _oracleSigner) external view returns (bool);
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -682,7 +647,9 @@ function isOracleSigner(address _oracleSigner) external view returns (bool);
             #[doc(hidden)]
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for isOracleSignerCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self { _oracleSigner: tuple.0 }
+                    Self {
+                        _oracleSigner: tuple.0,
+                    }
                 }
             }
         }
@@ -693,9 +660,7 @@ function isOracleSigner(address _oracleSigner) external view returns (bool);
             type UnderlyingRustTuple<'a> = (bool,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -704,16 +669,14 @@ function isOracleSigner(address _oracleSigner) external view returns (bool);
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<isOracleSignerReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<isOracleSignerReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: isOracleSignerReturn) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for isOracleSignerReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for isOracleSignerReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -722,14 +685,10 @@ function isOracleSigner(address _oracleSigner) external view returns (bool);
         #[automatically_derived]
         impl alloy_sol_types::SolCall for isOracleSignerCall {
             type Parameters<'a> = (alloy::sol_types::sol_data::Address,);
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = isOracleSignerReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Bool,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "isOracleSigner(address)";
             const SELECTOR: [u8; 4] = [122u8, 0u8, 9u8, 137u8];
             #[inline]
@@ -751,17 +710,17 @@ function isOracleSigner(address _oracleSigner) external view returns (bool);
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `latestConfirmedOracleBlockNumber()` and selector `0x2dae03e1`.
-```solidity
-function latestConfirmedOracleBlockNumber() external view returns (uint64);
-```*/
+    ```solidity
+    function latestConfirmedOracleBlockNumber() external view returns (uint64);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct latestConfirmedOracleBlockNumberCall {}
@@ -786,9 +745,7 @@ function latestConfirmedOracleBlockNumber() external view returns (uint64);
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -797,16 +754,14 @@ function latestConfirmedOracleBlockNumber() external view returns (uint64);
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<latestConfirmedOracleBlockNumberCall>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<latestConfirmedOracleBlockNumberCall> for UnderlyingRustTuple<'_> {
                 fn from(value: latestConfirmedOracleBlockNumberCall) -> Self {
                     ()
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for latestConfirmedOracleBlockNumberCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for latestConfirmedOracleBlockNumberCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
@@ -819,9 +774,7 @@ function latestConfirmedOracleBlockNumber() external view returns (uint64);
             type UnderlyingRustTuple<'a> = (u64,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -830,16 +783,14 @@ function latestConfirmedOracleBlockNumber() external view returns (uint64);
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<latestConfirmedOracleBlockNumberReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<latestConfirmedOracleBlockNumberReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: latestConfirmedOracleBlockNumberReturn) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for latestConfirmedOracleBlockNumberReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for latestConfirmedOracleBlockNumberReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -848,14 +799,10 @@ function latestConfirmedOracleBlockNumber() external view returns (uint64);
         #[automatically_derived]
         impl alloy_sol_types::SolCall for latestConfirmedOracleBlockNumberCall {
             type Parameters<'a> = ();
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = latestConfirmedOracleBlockNumberReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Uint<64>,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "latestConfirmedOracleBlockNumber()";
             const SELECTOR: [u8; 4] = [45u8, 174u8, 3u8, 225u8];
             #[inline]
@@ -873,23 +820,21 @@ function latestConfirmedOracleBlockNumber() external view returns (uint64);
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `removeOracleSigners(address[])` and selector `0xa3b2aa96`.
-```solidity
-function removeOracleSigners(address[] memory _oracleSigners) external;
-```*/
+    ```solidity
+    function removeOracleSigners(address[] memory _oracleSigners) external;
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct removeOracleSignersCall {
-        pub _oracleSigners: alloy::sol_types::private::Vec<
-            alloy::sol_types::private::Address,
-        >,
+        pub _oracleSigners: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
     }
     ///Container type for the return parameters of the [`removeOracleSigners(address[])`](removeOracleSignersCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
@@ -905,18 +850,14 @@ function removeOracleSigners(address[] memory _oracleSigners) external;
         use alloy::sol_types as alloy_sol_types;
         {
             #[doc(hidden)]
-            type UnderlyingSolTuple<'a> = (
-                alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::Address>,
-            );
+            type UnderlyingSolTuple<'a> =
+                (alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::Address>,);
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (
-                alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
-            );
+            type UnderlyingRustTuple<'a> =
+                (alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -925,18 +866,18 @@ function removeOracleSigners(address[] memory _oracleSigners) external;
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<removeOracleSignersCall>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<removeOracleSignersCall> for UnderlyingRustTuple<'_> {
                 fn from(value: removeOracleSignersCall) -> Self {
                     (value._oracleSigners,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for removeOracleSignersCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for removeOracleSignersCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self { _oracleSigners: tuple.0 }
+                    Self {
+                        _oracleSigners: tuple.0,
+                    }
                 }
             }
         }
@@ -947,9 +888,7 @@ function removeOracleSigners(address[] memory _oracleSigners) external;
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -958,16 +897,14 @@ function removeOracleSigners(address[] memory _oracleSigners) external;
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<removeOracleSignersReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<removeOracleSignersReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: removeOracleSignersReturn) -> Self {
                     ()
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for removeOracleSignersReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for removeOracleSignersReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
@@ -975,17 +912,12 @@ function removeOracleSigners(address[] memory _oracleSigners) external;
         }
         #[automatically_derived]
         impl alloy_sol_types::SolCall for removeOracleSignersCall {
-            type Parameters<'a> = (
-                alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::Address>,
-            );
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Parameters<'a> =
+                (alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::Address>,);
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = removeOracleSignersReturn;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "removeOracleSigners(address[])";
             const SELECTOR: [u8; 4] = [163u8, 178u8, 170u8, 150u8];
             #[inline]
@@ -996,28 +928,28 @@ function removeOracleSigners(address[] memory _oracleSigners) external;
             }
             #[inline]
             fn tokenize(&self) -> Self::Token<'_> {
-                (
-                    <alloy::sol_types::sol_data::Array<
-                        alloy::sol_types::sol_data::Address,
-                    > as alloy_sol_types::SolType>::tokenize(&self._oracleSigners),
-                )
+                (<alloy::sol_types::sol_data::Array<
+                    alloy::sol_types::sol_data::Address,
+                > as alloy_sol_types::SolType>::tokenize(
+                    &self._oracleSigners,
+                ),)
             }
             #[inline]
             fn abi_decode_returns(
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `setThreshold(uint256)` and selector `0x960bfe04`.
-```solidity
-function setThreshold(uint256 _threshold) external;
-```*/
+    ```solidity
+    function setThreshold(uint256 _threshold) external;
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setThresholdCall {
@@ -1039,14 +971,10 @@ function setThreshold(uint256 _threshold) external;
             #[doc(hidden)]
             type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (
-                alloy::sol_types::private::primitives::aliases::U256,
-            );
+            type UnderlyingRustTuple<'a> = (alloy::sol_types::private::primitives::aliases::U256,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1064,7 +992,9 @@ function setThreshold(uint256 _threshold) external;
             #[doc(hidden)]
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for setThresholdCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self { _threshold: tuple.0 }
+                    Self {
+                        _threshold: tuple.0,
+                    }
                 }
             }
         }
@@ -1075,9 +1005,7 @@ function setThreshold(uint256 _threshold) external;
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1102,14 +1030,10 @@ function setThreshold(uint256 _threshold) external;
         #[automatically_derived]
         impl alloy_sol_types::SolCall for setThresholdCall {
             type Parameters<'a> = (alloy::sol_types::sol_data::Uint<256>,);
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = setThresholdReturn;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "setThreshold(uint256)";
             const SELECTOR: [u8; 4] = [150u8, 11u8, 254u8, 4u8];
             #[inline]
@@ -1121,9 +1045,9 @@ function setThreshold(uint256 _threshold) external;
             #[inline]
             fn tokenize(&self) -> Self::Token<'_> {
                 (
-                    <alloy::sol_types::sol_data::Uint<
-                        256,
-                    > as alloy_sol_types::SolType>::tokenize(&self._threshold),
+                    <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
+                        &self._threshold,
+                    ),
                 )
             }
             #[inline]
@@ -1131,17 +1055,17 @@ function setThreshold(uint256 _threshold) external;
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `stateRootVotes(uint64,bytes32)` and selector `0x0690526a`.
-```solidity
-function stateRootVotes(uint64 blockNumber, bytes32 stateRoot) external view returns (uint256);
-```*/
+    ```solidity
+    function stateRootVotes(uint64 blockNumber, bytes32 stateRoot) external view returns (uint256);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct stateRootVotesCall {
@@ -1169,15 +1093,10 @@ function stateRootVotes(uint64 blockNumber, bytes32 stateRoot) external view ret
                 alloy::sol_types::sol_data::FixedBytes<32>,
             );
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (
-                u64,
-                alloy::sol_types::private::FixedBytes<32>,
-            );
+            type UnderlyingRustTuple<'a> = (u64, alloy::sol_types::private::FixedBytes<32>);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1206,14 +1125,10 @@ function stateRootVotes(uint64 blockNumber, bytes32 stateRoot) external view ret
             #[doc(hidden)]
             type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (
-                alloy::sol_types::private::primitives::aliases::U256,
-            );
+            type UnderlyingRustTuple<'a> = (alloy::sol_types::private::primitives::aliases::U256,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1222,16 +1137,14 @@ function stateRootVotes(uint64 blockNumber, bytes32 stateRoot) external view ret
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<stateRootVotesReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<stateRootVotesReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: stateRootVotesReturn) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for stateRootVotesReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for stateRootVotesReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -1243,14 +1156,10 @@ function stateRootVotes(uint64 blockNumber, bytes32 stateRoot) external view ret
                 alloy::sol_types::sol_data::Uint<64>,
                 alloy::sol_types::sol_data::FixedBytes<32>,
             );
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = stateRootVotesReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "stateRootVotes(uint64,bytes32)";
             const SELECTOR: [u8; 4] = [6u8, 144u8, 82u8, 106u8];
             #[inline]
@@ -1275,17 +1184,17 @@ function stateRootVotes(uint64 blockNumber, bytes32 stateRoot) external view ret
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `threshold()` and selector `0x42cde4e8`.
-```solidity
-function threshold() external view returns (uint256);
-```*/
+    ```solidity
+    function threshold() external view returns (uint256);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct thresholdCall {}
@@ -1310,9 +1219,7 @@ function threshold() external view returns (uint256);
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1338,14 +1245,10 @@ function threshold() external view returns (uint256);
             #[doc(hidden)]
             type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (
-                alloy::sol_types::private::primitives::aliases::U256,
-            );
+            type UnderlyingRustTuple<'a> = (alloy::sol_types::private::primitives::aliases::U256,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1370,14 +1273,10 @@ function threshold() external view returns (uint256);
         #[automatically_derived]
         impl alloy_sol_types::SolCall for thresholdCall {
             type Parameters<'a> = ();
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = thresholdReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "threshold()";
             const SELECTOR: [u8; 4] = [66u8, 205u8, 228u8, 232u8];
             #[inline]
@@ -1395,17 +1294,17 @@ function threshold() external view returns (uint256);
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `totalOracleSigners()` and selector `0x7d21af06`.
-```solidity
-function totalOracleSigners() external view returns (uint256);
-```*/
+    ```solidity
+    function totalOracleSigners() external view returns (uint256);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct totalOracleSignersCall {}
@@ -1430,9 +1329,7 @@ function totalOracleSigners() external view returns (uint256);
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1441,16 +1338,14 @@ function totalOracleSigners() external view returns (uint256);
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<totalOracleSignersCall>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<totalOracleSignersCall> for UnderlyingRustTuple<'_> {
                 fn from(value: totalOracleSignersCall) -> Self {
                     ()
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for totalOracleSignersCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for totalOracleSignersCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
@@ -1460,14 +1355,10 @@ function totalOracleSigners() external view returns (uint256);
             #[doc(hidden)]
             type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (
-                alloy::sol_types::private::primitives::aliases::U256,
-            );
+            type UnderlyingRustTuple<'a> = (alloy::sol_types::private::primitives::aliases::U256,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1476,16 +1367,14 @@ function totalOracleSigners() external view returns (uint256);
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<totalOracleSignersReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<totalOracleSignersReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: totalOracleSignersReturn) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for totalOracleSignersReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for totalOracleSignersReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -1494,14 +1383,10 @@ function totalOracleSigners() external view returns (uint256);
         #[automatically_derived]
         impl alloy_sol_types::SolCall for totalOracleSignersCall {
             type Parameters<'a> = ();
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = totalOracleSignersReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "totalOracleSigners()";
             const SELECTOR: [u8; 4] = [125u8, 33u8, 175u8, 6u8];
             #[inline]
@@ -1519,17 +1404,17 @@ function totalOracleSigners() external view returns (uint256);
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `voteForBeaconChainStateRoot(uint64,bytes32)` and selector `0xa22f141e`.
-```solidity
-function voteForBeaconChainStateRoot(uint64 blockNumber, bytes32 stateRoot) external;
-```*/
+    ```solidity
+    function voteForBeaconChainStateRoot(uint64 blockNumber, bytes32 stateRoot) external;
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct voteForBeaconChainStateRootCall {
@@ -1555,15 +1440,10 @@ function voteForBeaconChainStateRoot(uint64 blockNumber, bytes32 stateRoot) exte
                 alloy::sol_types::sol_data::FixedBytes<32>,
             );
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (
-                u64,
-                alloy::sol_types::private::FixedBytes<32>,
-            );
+            type UnderlyingRustTuple<'a> = (u64, alloy::sol_types::private::FixedBytes<32>);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1572,16 +1452,14 @@ function voteForBeaconChainStateRoot(uint64 blockNumber, bytes32 stateRoot) exte
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<voteForBeaconChainStateRootCall>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<voteForBeaconChainStateRootCall> for UnderlyingRustTuple<'_> {
                 fn from(value: voteForBeaconChainStateRootCall) -> Self {
                     (value.blockNumber, value.stateRoot)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for voteForBeaconChainStateRootCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for voteForBeaconChainStateRootCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {
                         blockNumber: tuple.0,
@@ -1597,9 +1475,7 @@ function voteForBeaconChainStateRoot(uint64 blockNumber, bytes32 stateRoot) exte
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1608,16 +1484,14 @@ function voteForBeaconChainStateRoot(uint64 blockNumber, bytes32 stateRoot) exte
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<voteForBeaconChainStateRootReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<voteForBeaconChainStateRootReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: voteForBeaconChainStateRootReturn) -> Self {
                     ()
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for voteForBeaconChainStateRootReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for voteForBeaconChainStateRootReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
@@ -1629,14 +1503,10 @@ function voteForBeaconChainStateRoot(uint64 blockNumber, bytes32 stateRoot) exte
                 alloy::sol_types::sol_data::Uint<64>,
                 alloy::sol_types::sol_data::FixedBytes<32>,
             );
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = voteForBeaconChainStateRootReturn;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "voteForBeaconChainStateRoot(uint64,bytes32)";
             const SELECTOR: [u8; 4] = [162u8, 47u8, 20u8, 30u8];
             #[inline]
@@ -1661,10 +1531,10 @@ function voteForBeaconChainStateRoot(uint64 blockNumber, bytes32 stateRoot) exte
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
@@ -1728,15 +1598,11 @@ function voteForBeaconChainStateRoot(uint64 blockNumber, bytes32 stateRoot) exte
                 Self::removeOracleSigners(_) => {
                     <removeOracleSignersCall as alloy_sol_types::SolCall>::SELECTOR
                 }
-                Self::setThreshold(_) => {
-                    <setThresholdCall as alloy_sol_types::SolCall>::SELECTOR
-                }
+                Self::setThreshold(_) => <setThresholdCall as alloy_sol_types::SolCall>::SELECTOR,
                 Self::stateRootVotes(_) => {
                     <stateRootVotesCall as alloy_sol_types::SolCall>::SELECTOR
                 }
-                Self::threshold(_) => {
-                    <thresholdCall as alloy_sol_types::SolCall>::SELECTOR
-                }
+                Self::threshold(_) => <thresholdCall as alloy_sol_types::SolCall>::SELECTOR,
                 Self::totalOracleSigners(_) => {
                     <totalOracleSignersCall as alloy_sol_types::SolCall>::SELECTOR
                 }
@@ -1763,17 +1629,19 @@ function voteForBeaconChainStateRoot(uint64 blockNumber, bytes32 stateRoot) exte
             static DECODE_SHIMS: &[fn(
                 &[u8],
                 bool,
-            ) -> alloy_sol_types::Result<IBeaconChainOracle_DeprecatedM1Calls>] = &[
+            ) -> alloy_sol_types::Result<
+                IBeaconChainOracle_DeprecatedM1Calls,
+            >] = &[
                 {
                     fn stateRootVotes(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IBeaconChainOracle_DeprecatedM1Calls> {
+                    ) -> alloy_sol_types::Result<IBeaconChainOracle_DeprecatedM1Calls>
+                    {
                         <stateRootVotesCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IBeaconChainOracle_DeprecatedM1Calls::stateRootVotes)
+                            data, validate,
+                        )
+                        .map(IBeaconChainOracle_DeprecatedM1Calls::stateRootVotes)
                     }
                     stateRootVotes
                 },
@@ -1781,7 +1649,8 @@ function voteForBeaconChainStateRoot(uint64 blockNumber, bytes32 stateRoot) exte
                     fn latestConfirmedOracleBlockNumber(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IBeaconChainOracle_DeprecatedM1Calls> {
+                    ) -> alloy_sol_types::Result<IBeaconChainOracle_DeprecatedM1Calls>
+                    {
                         <latestConfirmedOracleBlockNumberCall as alloy_sol_types::SolCall>::abi_decode_raw(
                                 data,
                                 validate,
@@ -1796,12 +1665,12 @@ function voteForBeaconChainStateRoot(uint64 blockNumber, bytes32 stateRoot) exte
                     fn addOracleSigners(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IBeaconChainOracle_DeprecatedM1Calls> {
+                    ) -> alloy_sol_types::Result<IBeaconChainOracle_DeprecatedM1Calls>
+                    {
                         <addOracleSignersCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IBeaconChainOracle_DeprecatedM1Calls::addOracleSigners)
+                            data, validate,
+                        )
+                        .map(IBeaconChainOracle_DeprecatedM1Calls::addOracleSigners)
                     }
                     addOracleSigners
                 },
@@ -1809,11 +1678,9 @@ function voteForBeaconChainStateRoot(uint64 blockNumber, bytes32 stateRoot) exte
                     fn threshold(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IBeaconChainOracle_DeprecatedM1Calls> {
-                        <thresholdCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
+                    ) -> alloy_sol_types::Result<IBeaconChainOracle_DeprecatedM1Calls>
+                    {
+                        <thresholdCall as alloy_sol_types::SolCall>::abi_decode_raw(data, validate)
                             .map(IBeaconChainOracle_DeprecatedM1Calls::threshold)
                     }
                     threshold
@@ -1822,12 +1689,12 @@ function voteForBeaconChainStateRoot(uint64 blockNumber, bytes32 stateRoot) exte
                     fn isOracleSigner(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IBeaconChainOracle_DeprecatedM1Calls> {
+                    ) -> alloy_sol_types::Result<IBeaconChainOracle_DeprecatedM1Calls>
+                    {
                         <isOracleSignerCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IBeaconChainOracle_DeprecatedM1Calls::isOracleSigner)
+                            data, validate,
+                        )
+                        .map(IBeaconChainOracle_DeprecatedM1Calls::isOracleSigner)
                     }
                     isOracleSigner
                 },
@@ -1835,14 +1702,12 @@ function voteForBeaconChainStateRoot(uint64 blockNumber, bytes32 stateRoot) exte
                     fn totalOracleSigners(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IBeaconChainOracle_DeprecatedM1Calls> {
+                    ) -> alloy_sol_types::Result<IBeaconChainOracle_DeprecatedM1Calls>
+                    {
                         <totalOracleSignersCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(
-                                IBeaconChainOracle_DeprecatedM1Calls::totalOracleSigners,
-                            )
+                            data, validate,
+                        )
+                        .map(IBeaconChainOracle_DeprecatedM1Calls::totalOracleSigners)
                     }
                     totalOracleSigners
                 },
@@ -1850,7 +1715,8 @@ function voteForBeaconChainStateRoot(uint64 blockNumber, bytes32 stateRoot) exte
                     fn beaconStateRootAtBlockNumber(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IBeaconChainOracle_DeprecatedM1Calls> {
+                    ) -> alloy_sol_types::Result<IBeaconChainOracle_DeprecatedM1Calls>
+                    {
                         <beaconStateRootAtBlockNumberCall as alloy_sol_types::SolCall>::abi_decode_raw(
                                 data,
                                 validate,
@@ -1865,12 +1731,12 @@ function voteForBeaconChainStateRoot(uint64 blockNumber, bytes32 stateRoot) exte
                     fn setThreshold(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IBeaconChainOracle_DeprecatedM1Calls> {
+                    ) -> alloy_sol_types::Result<IBeaconChainOracle_DeprecatedM1Calls>
+                    {
                         <setThresholdCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IBeaconChainOracle_DeprecatedM1Calls::setThreshold)
+                            data, validate,
+                        )
+                        .map(IBeaconChainOracle_DeprecatedM1Calls::setThreshold)
                     }
                     setThreshold
                 },
@@ -1878,7 +1744,8 @@ function voteForBeaconChainStateRoot(uint64 blockNumber, bytes32 stateRoot) exte
                     fn voteForBeaconChainStateRoot(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IBeaconChainOracle_DeprecatedM1Calls> {
+                    ) -> alloy_sol_types::Result<IBeaconChainOracle_DeprecatedM1Calls>
+                    {
                         <voteForBeaconChainStateRootCall as alloy_sol_types::SolCall>::abi_decode_raw(
                                 data,
                                 validate,
@@ -1893,14 +1760,12 @@ function voteForBeaconChainStateRoot(uint64 blockNumber, bytes32 stateRoot) exte
                     fn removeOracleSigners(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IBeaconChainOracle_DeprecatedM1Calls> {
+                    ) -> alloy_sol_types::Result<IBeaconChainOracle_DeprecatedM1Calls>
+                    {
                         <removeOracleSignersCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(
-                                IBeaconChainOracle_DeprecatedM1Calls::removeOracleSigners,
-                            )
+                            data, validate,
+                        )
+                        .map(IBeaconChainOracle_DeprecatedM1Calls::removeOracleSigners)
                     }
                     removeOracleSigners
                 },
@@ -1908,23 +1773,19 @@ function voteForBeaconChainStateRoot(uint64 blockNumber, bytes32 stateRoot) exte
                     fn hasVoted(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IBeaconChainOracle_DeprecatedM1Calls> {
-                        <hasVotedCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
+                    ) -> alloy_sol_types::Result<IBeaconChainOracle_DeprecatedM1Calls>
+                    {
+                        <hasVotedCall as alloy_sol_types::SolCall>::abi_decode_raw(data, validate)
                             .map(IBeaconChainOracle_DeprecatedM1Calls::hasVoted)
                     }
                     hasVoted
                 },
             ];
             let Ok(idx) = Self::SELECTORS.binary_search(&selector) else {
-                return Err(
-                    alloy_sol_types::Error::unknown_selector(
-                        <Self as alloy_sol_types::SolInterface>::NAME,
-                        selector,
-                    ),
-                );
+                return Err(alloy_sol_types::Error::unknown_selector(
+                    <Self as alloy_sol_types::SolInterface>::NAME,
+                    selector,
+                ));
             };
             (unsafe { DECODE_SHIMS.get_unchecked(idx) })(data, validate)
         }
@@ -2059,7 +1920,7 @@ function voteForBeaconChainStateRoot(uint64 blockNumber, bytes32 stateRoot) exte
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`IBeaconChainOracle_DeprecatedM1`](self) contract instance.
 
-See the [wrapper's documentation](`IBeaconChainOracle_DeprecatedM1Instance`) for more details.*/
+    See the [wrapper's documentation](`IBeaconChainOracle_DeprecatedM1Instance`) for more details.*/
     #[inline]
     pub const fn new<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -2073,9 +1934,9 @@ See the [wrapper's documentation](`IBeaconChainOracle_DeprecatedM1Instance`) for
     }
     /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+    Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+    For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
     #[inline]
     pub fn deploy<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -2089,42 +1950,39 @@ For more fine-grained control over the deployment process, use [`deploy_builder`
         IBeaconChainOracle_DeprecatedM1Instance::<T, P, N>::deploy(provider)
     }
     /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+    and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+    This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+    the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     #[inline]
     pub fn deploy_builder<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
         P: alloy_contract::private::Provider<T, N>,
         N: alloy_contract::private::Network,
-    >(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
+    >(
+        provider: P,
+    ) -> alloy_contract::RawCallBuilder<T, P, N> {
         IBeaconChainOracle_DeprecatedM1Instance::<T, P, N>::deploy_builder(provider)
     }
     /**A [`IBeaconChainOracle_DeprecatedM1`](self) instance.
 
-Contains type-safe methods for interacting with an on-chain instance of the
-[`IBeaconChainOracle_DeprecatedM1`](self) contract located at a given `address`, using a given
-provider `P`.
+    Contains type-safe methods for interacting with an on-chain instance of the
+    [`IBeaconChainOracle_DeprecatedM1`](self) contract located at a given `address`, using a given
+    provider `P`.
 
-If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
-documentation on how to provide it), the `deploy` and `deploy_builder` methods can
-be used to deploy a new instance of the contract.
+    If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
+    documentation on how to provide it), the `deploy` and `deploy_builder` methods can
+    be used to deploy a new instance of the contract.
 
-See the [module-level documentation](self) for all the available methods.*/
+    See the [module-level documentation](self) for all the available methods.*/
     #[derive(Clone)]
-    pub struct IBeaconChainOracle_DeprecatedM1Instance<
-        T,
-        P,
-        N = alloy_contract::private::Ethereum,
-    > {
+    pub struct IBeaconChainOracle_DeprecatedM1Instance<T, P, N = alloy_contract::private::Ethereum> {
         address: alloy_sol_types::private::Address,
         provider: P,
         _network_transport: ::core::marker::PhantomData<(N, T)>,
     }
     #[automatically_derived]
-    impl<T, P, N> ::core::fmt::Debug
-    for IBeaconChainOracle_DeprecatedM1Instance<T, P, N> {
+    impl<T, P, N> ::core::fmt::Debug for IBeaconChainOracle_DeprecatedM1Instance<T, P, N> {
         #[inline]
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
             f.debug_tuple("IBeaconChainOracle_DeprecatedM1Instance")
@@ -2135,18 +1993,16 @@ See the [module-level documentation](self) for all the available methods.*/
     /// Instantiation and getters/setters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > IBeaconChainOracle_DeprecatedM1Instance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > IBeaconChainOracle_DeprecatedM1Instance<T, P, N>
+    {
         /**Creates a new wrapper around an on-chain [`IBeaconChainOracle_DeprecatedM1`](self) contract instance.
 
-See the [wrapper's documentation](`IBeaconChainOracle_DeprecatedM1Instance`) for more details.*/
+        See the [wrapper's documentation](`IBeaconChainOracle_DeprecatedM1Instance`) for more details.*/
         #[inline]
-        pub const fn new(
-            address: alloy_sol_types::private::Address,
-            provider: P,
-        ) -> Self {
+        pub const fn new(address: alloy_sol_types::private::Address, provider: P) -> Self {
             Self {
                 address,
                 provider,
@@ -2155,9 +2011,9 @@ See the [wrapper's documentation](`IBeaconChainOracle_DeprecatedM1Instance`) for
         }
         /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+        Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+        For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
         #[inline]
         pub async fn deploy(
             provider: P,
@@ -2167,10 +2023,10 @@ For more fine-grained control over the deployment process, use [`deploy_builder`
             Ok(Self::new(contract_address, call_builder.provider))
         }
         /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+        and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+        This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+        the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         #[inline]
         pub fn deploy_builder(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
             alloy_contract::RawCallBuilder::new_raw_deploy(
@@ -2199,16 +2055,10 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
             &self.provider
         }
     }
-    impl<
-        T,
-        P: ::core::clone::Clone,
-        N,
-    > IBeaconChainOracle_DeprecatedM1Instance<T, &P, N> {
+    impl<T, P: ::core::clone::Clone, N> IBeaconChainOracle_DeprecatedM1Instance<T, &P, N> {
         /// Clones the provider and returns a new instance with the cloned provider.
         #[inline]
-        pub fn with_cloned_provider(
-            self,
-        ) -> IBeaconChainOracle_DeprecatedM1Instance<T, P, N> {
+        pub fn with_cloned_provider(self) -> IBeaconChainOracle_DeprecatedM1Instance<T, P, N> {
             IBeaconChainOracle_DeprecatedM1Instance {
                 address: self.address,
                 provider: ::core::clone::Clone::clone(&self.provider),
@@ -2219,10 +2069,11 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     /// Function calls.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > IBeaconChainOracle_DeprecatedM1Instance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > IBeaconChainOracle_DeprecatedM1Instance<T, P, N>
+    {
         /// Creates a new call builder using this contract instance's provider and address.
         ///
         /// Note that the call can be any function call, not just those defined in this
@@ -2236,26 +2087,16 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         ///Creates a new call builder for the [`addOracleSigners`] function.
         pub fn addOracleSigners(
             &self,
-            _oracleSigners: alloy::sol_types::private::Vec<
-                alloy::sol_types::private::Address,
-            >,
+            _oracleSigners: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
         ) -> alloy_contract::SolCallBuilder<T, &P, addOracleSignersCall, N> {
-            self.call_builder(
-                &addOracleSignersCall {
-                    _oracleSigners,
-                },
-            )
+            self.call_builder(&addOracleSignersCall { _oracleSigners })
         }
         ///Creates a new call builder for the [`beaconStateRootAtBlockNumber`] function.
         pub fn beaconStateRootAtBlockNumber(
             &self,
             blockNumber: u64,
         ) -> alloy_contract::SolCallBuilder<T, &P, beaconStateRootAtBlockNumberCall, N> {
-            self.call_builder(
-                &beaconStateRootAtBlockNumberCall {
-                    blockNumber,
-                },
-            )
+            self.call_builder(&beaconStateRootAtBlockNumberCall { blockNumber })
         }
         ///Creates a new call builder for the [`hasVoted`] function.
         pub fn hasVoted(
@@ -2263,50 +2104,31 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
             blockNumber: u64,
             oracleSigner: alloy::sol_types::private::Address,
         ) -> alloy_contract::SolCallBuilder<T, &P, hasVotedCall, N> {
-            self.call_builder(
-                &hasVotedCall {
-                    blockNumber,
-                    oracleSigner,
-                },
-            )
+            self.call_builder(&hasVotedCall {
+                blockNumber,
+                oracleSigner,
+            })
         }
         ///Creates a new call builder for the [`isOracleSigner`] function.
         pub fn isOracleSigner(
             &self,
             _oracleSigner: alloy::sol_types::private::Address,
         ) -> alloy_contract::SolCallBuilder<T, &P, isOracleSignerCall, N> {
-            self.call_builder(
-                &isOracleSignerCall {
-                    _oracleSigner,
-                },
-            )
+            self.call_builder(&isOracleSignerCall { _oracleSigner })
         }
         ///Creates a new call builder for the [`latestConfirmedOracleBlockNumber`] function.
         pub fn latestConfirmedOracleBlockNumber(
             &self,
-        ) -> alloy_contract::SolCallBuilder<
-            T,
-            &P,
-            latestConfirmedOracleBlockNumberCall,
-            N,
-        > {
-            self.call_builder(
-                &latestConfirmedOracleBlockNumberCall {
-                },
-            )
+        ) -> alloy_contract::SolCallBuilder<T, &P, latestConfirmedOracleBlockNumberCall, N>
+        {
+            self.call_builder(&latestConfirmedOracleBlockNumberCall {})
         }
         ///Creates a new call builder for the [`removeOracleSigners`] function.
         pub fn removeOracleSigners(
             &self,
-            _oracleSigners: alloy::sol_types::private::Vec<
-                alloy::sol_types::private::Address,
-            >,
+            _oracleSigners: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
         ) -> alloy_contract::SolCallBuilder<T, &P, removeOracleSignersCall, N> {
-            self.call_builder(
-                &removeOracleSignersCall {
-                    _oracleSigners,
-                },
-            )
+            self.call_builder(&removeOracleSignersCall { _oracleSigners })
         }
         ///Creates a new call builder for the [`setThreshold`] function.
         pub fn setThreshold(
@@ -2321,17 +2143,13 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
             blockNumber: u64,
             stateRoot: alloy::sol_types::private::FixedBytes<32>,
         ) -> alloy_contract::SolCallBuilder<T, &P, stateRootVotesCall, N> {
-            self.call_builder(
-                &stateRootVotesCall {
-                    blockNumber,
-                    stateRoot,
-                },
-            )
+            self.call_builder(&stateRootVotesCall {
+                blockNumber,
+                stateRoot,
+            })
         }
         ///Creates a new call builder for the [`threshold`] function.
-        pub fn threshold(
-            &self,
-        ) -> alloy_contract::SolCallBuilder<T, &P, thresholdCall, N> {
+        pub fn threshold(&self) -> alloy_contract::SolCallBuilder<T, &P, thresholdCall, N> {
             self.call_builder(&thresholdCall {})
         }
         ///Creates a new call builder for the [`totalOracleSigners`] function.
@@ -2346,21 +2164,20 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
             blockNumber: u64,
             stateRoot: alloy::sol_types::private::FixedBytes<32>,
         ) -> alloy_contract::SolCallBuilder<T, &P, voteForBeaconChainStateRootCall, N> {
-            self.call_builder(
-                &voteForBeaconChainStateRootCall {
-                    blockNumber,
-                    stateRoot,
-                },
-            )
+            self.call_builder(&voteForBeaconChainStateRootCall {
+                blockNumber,
+                stateRoot,
+            })
         }
     }
     /// Event filters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > IBeaconChainOracle_DeprecatedM1Instance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > IBeaconChainOracle_DeprecatedM1Instance<T, P, N>
+    {
         /// Creates a new event filter using this contract instance's provider and address.
         ///
         /// Note that the type can be any event, not just those defined in this contract.

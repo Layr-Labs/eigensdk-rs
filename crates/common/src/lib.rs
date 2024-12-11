@@ -9,8 +9,8 @@ use alloy_pubsub::PubSubFrontend;
 use alloy_signer_local::PrivateKeySigner;
 use alloy_transport::{RpcError, TransportErrorKind};
 use alloy_transport_http::{Client, Http};
-use url::Url;
 use std::str::FromStr;
+use url::Url;
 
 #[allow(clippy::type_complexity)]
 pub fn get_signer(

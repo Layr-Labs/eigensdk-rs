@@ -71,9 +71,9 @@ pub mod RegisterOperators {
         b"`\x80`@R4\x80\x15a\0\x0FW__\xFD[P`\x046\x10a\0?W_5`\xE0\x1C\x80c\n\x92T\xE4\x14a\0CW\x80c\xC0@b&\x14a\0MW\x80c\xF8\xCC\xBFG\x14a\0UW[__\xFD[a\0Ka\0|V[\0[a\0Ka\x01YV[`\x0CTa\0h\x90b\x01\0\0\x90\x04`\xFF\x16\x81V[`@Q\x90\x15\x15\x81R` \x01`@Q\x80\x91\x03\x90\xF3[`\n`\x0EUaziF\x14\x80a\0\x92WPFa\x059\x14[\x15a\0\xC0W`@Q\x80``\x01`@R\x80`;\x81R` \x01a\x18\x9B`;\x919`\r\x90a\0\xBD\x90\x82a\x13\xF3V[PV[`@Qc\xF8w\xCB\x19`\xE0\x1B\x81R` `\x04\x82\x01R`\x08`$\x82\x01RgMNEMONIC`\xC0\x1B`D\x82\x01Rsq\tp\x9E\xCF\xA9\x1A\x80bo\xF3\x98\x9Dh\xF6\x7F[\x1D\xD1-\x90c\xF8w\xCB\x19\x90`d\x01_`@Q\x80\x83\x03\x81\x86Z\xFA\x15\x80\x15a\x01%W=__>=_\xFD[PPPP`@Q=_\x82>`\x1F=\x90\x81\x01`\x1F\x19\x16\x82\x01`@Ra\x01L\x91\x90\x81\x01\x90a\x15%V[`\r\x90a\0\xBD\x90\x82a\x13\xF3V[`\x0F\x80T`\x01`\x01`\xA0\x1B\x03\x19\x16s_\xBD\xB21Vx\xAF\xEC\xB3g\xF02\xD9?d/d\x18\n\xA3\x17\x90U_a\x01\x88a\x08\xC0V[\x90P_a\x01\x93a\x0B3V[\x90P_`\x0ETg\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x81\x11\x15a\x01\xB1Wa\x01\xB1a\x13[V[`@Q\x90\x80\x82R\x80` \x02` \x01\x82\x01`@R\x80\x15a\x01\xDAW\x81` \x01` \x82\x02\x806\x837\x01\x90P[P\x90P_`\x0ETg\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x81\x11\x15a\x01\xF9Wa\x01\xF9a\x13[V[`@Q\x90\x80\x82R\x80` \x02` \x01\x82\x01`@R\x80\x15a\x02\"W\x81` \x01` \x82\x02\x806\x837\x01\x90P[P\x90P_`\x0ETg\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x81\x11\x15a\x02AWa\x02Aa\x13[V[`@Q\x90\x80\x82R\x80` \x02` \x01\x82\x01`@R\x80\x15a\x02jW\x81` \x01` \x82\x02\x806\x837\x01\x90P[P\x90P_[`\x0ET\x81\x10\x15a\x03\xD6W_a\x03\x0C`\r\x80Ta\x02\x8A\x90a\x13oV[\x80`\x1F\x01` \x80\x91\x04\x02` \x01`@Q\x90\x81\x01`@R\x80\x92\x91\x90\x81\x81R` \x01\x82\x80Ta\x02\xB6\x90a\x13oV[\x80\x15a\x03\x01W\x80`\x1F\x10a\x02\xD8Wa\x01\0\x80\x83T\x04\x02\x83R\x91` \x01\x91a\x03\x01V[\x82\x01\x91\x90_R` _ \x90[\x81T\x81R\x90`\x01\x01\x90` \x01\x80\x83\x11a\x02\xE4W\x82\x90\x03`\x1F\x16\x82\x01\x91[PPPPP\x83a\x0B\xB6V[P\x90P\x80\x85\x83\x81Q\x81\x10a\x03\"Wa\x03\"a\x15jV[` \x02` \x01\x01\x90`\x01`\x01`\xA0\x1B\x03\x16\x90\x81`\x01`\x01`\xA0\x1B\x03\x16\x81RPPgEc\x91\x82D\xF4\0\0\x84\x83\x81Q\x81\x10a\x03]Wa\x03]a\x15jV[` \x02` \x01\x01\x81\x81RPPa\x03\xB0\x82_\x1B`@Q` \x01a\x03\x81\x91\x81R` \x01\x90V[`@Q` \x81\x83\x03\x03\x81R\x90`@R\x80Q\x90` \x01 _\x1Cg\r\xE0\xB6\xB3\xA7d\0\0g\x8A\xC7#\x04\x89\xE8\0\0a\x0C\xB1V[\x83\x83\x81Q\x81\x10a\x03\xC2Wa\x03\xC2a\x15jV[` \x90\x81\x02\x91\x90\x91\x01\x01RP`\x01\x01a\x02oV[P_Q` a\x18{_9_Q\x90_R_\x1C`\x01`\x01`\xA0\x1B\x03\x16c\x7F\xB5)\x7F`@Q\x81c\xFF\xFF\xFF\xFF\x16`\xE0\x1B\x81R`\x04\x01_`@Q\x80\x83\x03\x81_\x87\x80;\x15\x80\x15a\x04\x1EW__\xFD[PZ\xF1\x15\x80\x15a\x040W=__>=_\xFD[PPPPa\x04?_\x84\x84a\x0C\xF4V[\x83Qa\x04L\x90\x84\x83a\x0C\xF4V[_Q` a\x18{_9_Q\x90_R_\x1C`\x01`\x01`\xA0\x1B\x03\x16cv\xEA\xDD6`@Q\x81c\xFF\xFF\xFF\xFF\x16`\xE0\x1B\x81R`\x04\x01_`@Q\x80\x83\x03\x81_\x87\x80;\x15\x80\x15a\x04\x93W__\xFD[PZ\xF1\x15\x80\x15a\x04\xA5W=__>=_\xFD[P_\x92PPP[`\x0ET\x81\x10\x15a\x08\xB8W`@Qc4\x80Q\xD7`\xE1\x1B\x81R`\x04\x81\x01\x82\x90R_\x90`d\x90\x82\x90sq\tp\x9E\xCF\xA9\x1A\x80bo\xF3\x98\x9Dh\xF6\x7F[\x1D\xD1-\x90ci\0\xA3\xAE\x90`$\x01_`@Q\x80\x83\x03\x81\x86Z\xFA\x15\x80\x15a\x05\nW=__>=_\xFD[PPPP`@Q=_\x82>`\x1F=\x90\x81\x01`\x1F\x19\x16\x82\x01`@Ra\x051\x91\x90\x81\x01\x90a\x15%V[`@Q` \x01a\x05A\x91\x90a\x15\x95V[`@Q` \x81\x83\x03\x03\x81R\x90`@R\x90P_a\x05\xE5`\r\x80Ta\x05c\x90a\x13oV[\x80`\x1F\x01` \x80\x91\x04\x02` \x01`@Q\x90\x81\x01`@R\x80\x92\x91\x90\x81\x81R` \x01\x82\x80Ta\x05\x8F\x90a\x13oV[\x80\x15a\x05\xDAW\x80`\x1F\x10a\x05\xB1Wa\x01\0\x80\x83T\x04\x02\x83R\x91` \x01\x91a\x05\xDAV[\x82\x01\x91\x90_R` _ \x90[\x81T\x81R\x90`\x01\x01\x90` \x01\x80\x83\x11a\x05\xBDW\x82\x90\x03`\x1F\x16\x82\x01\x91[PPPPP\x86a\x0B\xB6V[`@Qc\xCE\x81}G`\xE0\x1B\x81R`\x04\x81\x01\x82\x90R\x90\x92Psq\tp\x9E\xCF\xA9\x1A\x80bo\xF3\x98\x9Dh\xF6\x7F[\x1D\xD1-\x91Pc\xCE\x81}G\x90`$\x01_`@Q\x80\x83\x03\x81_\x87\x80;\x15\x80\x15a\x063W__\xFD[PZ\xF1\x15\x80\x15a\x06EW=__>=_\xFD[PPPPFazi\x14\x80a\x06ZWPFa\x059\x14[\x15a\x06\xF2W`\x0FT`@QcVj\xDDQ`\xE1\x1B\x81R`\x80`\x04\x82\x01R`\x16`\x84\x82\x01Ru:2\xB9\xBA/\xB92\xB3\xB4\xB9\xBA2\xB9/\xB7\xB82\xB90\xBA7\xB9`Q\x1B`\xA4\x82\x01R`$\x81\x01\x87\x90RC`D\x82\x01RB`d\x82\x01R`\x01`\x01`\xA0\x1B\x03\x90\x91\x16\x90c\xAC\xD5\xBA\xA2\x90`\xC4\x01_`@Q\x80\x83\x03\x81_\x87\x80;\x15\x80\x15a\x06\xDBW__\xFD[PZ\xF1\x15\x80\x15a\x06\xEDW=__>=_\xFD[PPPP[\x89``\x01Q`\x01`\x01`\xA0\x1B\x03\x16c\x0FX\x9EY`@Q\x80``\x01`@R\x80\x8B\x89\x81Q\x81\x10a\x07\"Wa\x07\"a\x15jV[` \x02` \x01\x01Q`\x01`\x01`\xA0\x1B\x03\x16\x81R` \x01\x87`\x01`\x01`\xA0\x1B\x03\x16\x81R` \x01\x86c\xFF\xFF\xFF\xFF\x16\x81RP\x84`@Q\x83c\xFF\xFF\xFF\xFF\x16`\xE0\x1B\x81R`\x04\x01a\x07o\x92\x91\x90a\x15\xF4V[_`@Q\x80\x83\x03\x81_\x87\x80;\x15\x80\x15a\x07\x86W__\xFD[PZ\xF1\x15\x80\x15a\x07\x98W=__>=_\xFD[PPPP\x89`@\x01Q`\x01`\x01`\xA0\x1B\x03\x16c\xE7\xA0P\xAA\x8A` \x01Q\x8B_\x01Q\x89\x89\x81Q\x81\x10a\x07\xCAWa\x07\xCAa\x15jV[` \x90\x81\x02\x91\x90\x91\x01\x01Q`@Q`\x01`\x01`\xE0\x1B\x03\x19`\xE0\x86\x90\x1B\x16\x81R`\x01`\x01`\xA0\x1B\x03\x93\x84\x16`\x04\x82\x01R\x92\x90\x91\x16`$\x83\x01R`D\x82\x01R`d\x01` `@Q\x80\x83\x03\x81_\x87Z\xF1\x15\x80\x15a\x08&W=__>=_\xFD[PPPP`@Q=`\x1F\x19`\x1F\x82\x01\x16\x82\x01\x80`@RP\x81\x01\x90a\x08J\x91\x90a\x167V[P_Q` a\x18{_9_Q\x90_R_\x1C`\x01`\x01`\xA0\x1B\x03\x16cv\xEA\xDD6`@Q\x81c\xFF\xFF\xFF\xFF\x16`\xE0\x1B\x81R`\x04\x01_`@Q\x80\x83\x03\x81_\x87\x80;\x15\x80\x15a\x08\x92W__\xFD[PZ\xF1\x15\x80\x15a\x08\xA4W=__>=_\xFD[PP`\x01\x90\x96\x01\x95Pa\x04\xAC\x94PPPPPV[PPPPPPV[`@\x80Qa\x01\0\x81\x01\x82R_\x80\x82R` \x82\x01\x81\x90R\x91\x81\x01\x82\x90R``\x81\x01\x82\x90R`\x80\x81\x01\x82\x90R`\xA0\x81\x01\x82\x90R`\xC0\x81\x01\x82\x90R`\xE0\x81\x01\x91\x90\x91R_a\t?`@Q\x80`@\x01`@R\x80`\x1C\x81R` \x01\x7Feigenlayer_deployment_output\0\0\0\0\x81RPa\x0E?V[\x90P_a\t\x81\x82`@Q\x80`@\x01`@R\x80`\x1F\x81R` \x01\x7F.addresses.eigenLayerProxyAdmin\0\x81RPa\x101V[\x90P_a\t\xC3\x83`@Q\x80`@\x01`@R\x80`\x1E\x81R` \x01\x7F.addresses.eigenLayerPauserReg\0\0\x81RPa\x101V[\x90P_a\n\x05\x84`@Q\x80`@\x01`@R\x80`\x1A\x81R` \x01\x7F.addresses.strategyManager\0\0\0\0\0\0\x81RPa\x101V[\x90P_a\n?\x85`@Q\x80`@\x01`@R\x80`\x15\x81R` \x01t\x170\xB2292\xB9\xB9\xB2\xB9\x9722\xB62\xB3\xB0\xBA4\xB7\xB7`Y\x1B\x81RPa\x101V[\x90P_a\n\x81\x86`@Q\x80`@\x01`@R\x80`\x17\x81R` \x01\x7F.addresses.avsDirectory\0\0\0\0\0\0\0\0\0\x81RPa\x101V[\x90P_a\n\xB8\x87`@Q\x80`@\x01`@R\x80`\x12\x81R` \x01q\x170\xB2292\xB9\xB9\xB2\xB9\x979\xB60\xB9\xB42\xB9`q\x1B\x81RPa\x101V[\x90P_a\n\xDD\x88`@Q\x80``\x01`@R\x80`%\x81R` \x01a\x18V`%\x919a\x101V[`@\x80Qa\x01\0\x81\x01\x82R`\x01`\x01`\xA0\x1B\x03\x99\x8A\x16\x81R\x97\x89\x16` \x89\x01R\x95\x88\x16\x95\x87\x01\x95\x90\x95RP\x91\x85\x16``\x85\x01R\x90\x84\x16`\x80\x84\x01R\x83\x16`\xA0\x83\x01R_`\xC0\x83\x01R\x90\x91\x16`\xE0\x82\x01R\x92\x91PPV[`@\x80Q\x80\x82\x01\x90\x91R_\x80\x82R` \x82\x01R_a\x0Bh`@Q\x80``\x01`@R\x80`$\x81R` \x01a\x18\xD6`$\x919a\x0E?V[\x90P_a\x0B\x97\x82`@Q\x80`@\x01`@R\x80`\n\x81R` \x01i.addresses`\xB0\x1B\x81RPa\x10\xB4V[\x90P_\x81\x80` \x01\x90Q\x81\x01\x90a\x0B\xAE\x91\x90a\x16bV[\x94\x93PPPPV[`@Qcb)I\x8B`\xE0\x1B\x81R_\x90\x81\x90sq\tp\x9E\xCF\xA9\x1A\x80bo\xF3\x98\x9Dh\xF6\x7F[\x1D\xD1-\x90cb)I\x8B\x90a\x0B\xF3\x90\x87\x90\x87\x90`\x04\x01a\x16\xC1V[` `@Q\x80\x83\x03\x81\x86Z\xFA\x15\x80\x15a\x0C\x0EW=__>=_\xFD[PPPP`@Q=`\x1F\x19`\x1F\x82\x01\x16\x82\x01\x80`@RP\x81\x01\x90a\x0C2\x91\x90a\x167V[`@Qc\x08\x84\0\x19`\xE2\x1B\x81R`\x04\x81\x01\x82\x90R\x90\x91Psq\tp\x9E\xCF\xA9\x1A\x80bo\xF3\x98\x9Dh\xF6\x7F[\x1D\xD1-\x90c\"\x10\0d\x90`$\x01` `@Q\x80\x83\x03\x81_\x87Z\xF1\x15\x80\x15a\x0C\x84W=__>=_\xFD[PPPP`@Q=`\x1F\x19`\x1F\x82\x01\x16\x82\x01\x80`@RP\x81\x01\x90a\x0C\xA8\x91\x90a\x16\xE8V[\x91P\x92P\x92\x90PV[_a\x0C\xBD\x84\x84\x84a\x111V[\x90Pa\x0C\xED`@Q\x80`@\x01`@R\x80`\x0C\x81R` \x01k\x10\x9B\xDD[\x99\x08\x1C\x99\\\xDD[\x1D`\xA2\x1B\x81RP\x82a\x12\xEEV[\x93\x92PPPV[_[\x82Q\x81\x10\x15a\x0E9W`\x01`\x01`\xA0\x1B\x03\x84\x16a\r{W\x82\x81\x81Q\x81\x10a\r\x1FWa\r\x1Fa\x15jV[` \x02` \x01\x01Q`\x01`\x01`\xA0\x1B\x03\x16a\x08\xFC\x83\x83\x81Q\x81\x10a\rEWa\rEa\x15jV[` \x02` \x01\x01Q\x90\x81\x15\x02\x90`@Q_`@Q\x80\x83\x03\x81\x85\x88\x88\xF1\x93PPPP\x15\x80\x15a\ruW=__>=_\xFD[Pa\x0E1V[\x83`\x01`\x01`\xA0\x1B\x03\x16c\xA9\x05\x9C\xBB\x84\x83\x81Q\x81\x10a\r\x9CWa\r\x9Ca\x15jV[` \x02` \x01\x01Q\x84\x84\x81Q\x81\x10a\r\xB6Wa\r\xB6a\x15jV[` \x02` \x01\x01Q`@Q\x83c\xFF\xFF\xFF\xFF\x16`\xE0\x1B\x81R`\x04\x01a\r\xEF\x92\x91\x90`\x01`\x01`\xA0\x1B\x03\x92\x90\x92\x16\x82R` \x82\x01R`@\x01\x90V[` `@Q\x80\x83\x03\x81_\x87Z\xF1\x15\x80\x15a\x0E\x0BW=__>=_\xFD[PPPP`@Q=`\x1F\x19`\x1F\x82\x01\x16\x82\x01\x80`@RP\x81\x01\x90a\x0E/\x91\x90a\x17\x03V[P[`\x01\x01a\x0C\xF6V[PPPPV[``__Q` a\x18{_9_Q\x90_R_\x1C`\x01`\x01`\xA0\x1B\x03\x16c\xD90\xA0\xE6`@Q\x81c\xFF\xFF\xFF\xFF\x16`\xE0\x1B\x81R`\x04\x01_`@Q\x80\x83\x03\x81\x86Z\xFA\x15\x80\x15a\x0E\x8CW=__>=_\xFD[PPPP`@Q=_\x82>`\x1F=\x90\x81\x01`\x1F\x19\x16\x82\x01`@Ra\x0E\xB3\x91\x90\x81\x01\x90a\x15%V[`@Q` \x01a\x0E\xC3\x91\x90a\x17\"V[`@\x80Q\x80\x83\x03`\x1F\x19\x01\x81R\x90\x82\x90Rc4\x80Q\xD7`\xE1\x1B\x82RF`\x04\x83\x01R\x91P_\x90sq\tp\x9E\xCF\xA9\x1A\x80bo\xF3\x98\x9Dh\xF6\x7F[\x1D\xD1-\x90ci\0\xA3\xAE\x90`$\x01_`@Q\x80\x83\x03\x81\x86Z\xFA\x15\x80\x15a\x0F!W=__>=_\xFD[PPPP`@Q=_\x82>`\x1F=\x90\x81\x01`\x1F\x19\x16\x82\x01`@Ra\x0FH\x91\x90\x81\x01\x90a\x15%V[`@Q` \x01a\x0FX\x91\x90a\x17LV[`@Q` \x81\x83\x03\x03\x81R\x90`@R\x90P_\x84`@Q` \x01a\x0F{\x91\x90a\x17hV[`@\x80Q`\x1F\x19\x81\x84\x03\x01\x81R\x90\x82\x90R\x91Psq\tp\x9E\xCF\xA9\x1A\x80bo\xF3\x98\x9Dh\xF6\x7F[\x1D\xD1-\x90c`\xF9\xBB\x11\x90a\x0F\xBC\x90\x86\x90\x86\x90\x86\x90` \x01a\x17\x88V[`@Q` \x81\x83\x03\x03\x81R\x90`@R`@Q\x82c\xFF\xFF\xFF\xFF\x16`\xE0\x1B\x81R`\x04\x01a\x0F\xE7\x91\x90a\x17\xA5V[_`@Q\x80\x83\x03\x81\x86Z\xFA\x15\x80\x15a\x10\x01W=__>=_\xFD[PPPP`@Q=_\x82>`\x1F=\x90\x81\x01`\x1F\x19\x16\x82\x01`@Ra\x10(\x91\x90\x81\x01\x90a\x15%V[\x95\x94PPPPPV[`@Qc\x1E\x19\xE6W`\xE0\x1B\x81R_\x90sq\tp\x9E\xCF\xA9\x1A\x80bo\xF3\x98\x9Dh\xF6\x7F[\x1D\xD1-\x90c\x1E\x19\xE6W\x90a\x10l\x90\x86\x90\x86\x90`\x04\x01a\x17\xB7V[` `@Q\x80\x83\x03\x81\x86Z\xFA\x15\x80\x15a\x10\x87W=__>=_\xFD[PPPP`@Q=`\x1F\x19`\x1F\x82\x01\x16\x82\x01\x80`@RP\x81\x01\x90a\x10\xAB\x91\x90a\x16\xE8V[\x90P[\x92\x91PPV[`@Qc\x85\x94\x0E\xF1`\xE0\x1B\x81R``\x90sq\tp\x9E\xCF\xA9\x1A\x80bo\xF3\x98\x9Dh\xF6\x7F[\x1D\xD1-\x90c\x85\x94\x0E\xF1\x90a\x10\xF0\x90\x86\x90\x86\x90`\x04\x01a\x17\xB7V[_`@Q\x80\x83\x03\x81\x86Z\xFA\x15\x80\x15a\x11\nW=__>=_\xFD[PPPP`@Q=_\x82>`\x1F=\x90\x81\x01`\x1F\x19\x16\x82\x01`@Ra\x10\xAB\x91\x90\x81\x01\x90a\x15%V[_\x81\x83\x11\x15a\x11\xACW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`>`$\x82\x01R\x7FStdUtils bound(uint256,uint256,u`D\x82\x01R\x7Fint256): Max is less than min.\0\0`d\x82\x01R`\x84\x01`@Q\x80\x91\x03\x90\xFD[\x82\x84\x10\x15\x80\x15a\x11\xBCWP\x81\x84\x11\x15[\x15a\x11\xC8WP\x82a\x0C\xEDV[_a\x11\xD3\x84\x84a\x17\xEFV[a\x11\xDE\x90`\x01a\x18\x02V[\x90P`\x03\x85\x11\x15\x80\x15a\x11\xF0WP\x84\x81\x11[\x15a\x12\x07Wa\x11\xFF\x85\x85a\x18\x02V[\x91PPa\x0C\xEDV[a\x12\x13`\x03_\x19a\x17\xEFV[\x85\x10\x15\x80\x15a\x12+WPa\x12(\x85_\x19a\x17\xEFV[\x81\x11[\x15a\x12EWa\x12;\x85_\x19a\x17\xEFV[a\x11\xFF\x90\x84a\x17\xEFV[\x82\x85\x11\x15a\x12\x98W_a\x12X\x84\x87a\x17\xEFV[\x90P_a\x12e\x83\x83a\x18\x15V[\x90P\x80_\x03a\x12yW\x84\x93PPPPa\x0C\xEDV[`\x01a\x12\x85\x82\x88a\x18\x02V[a\x12\x8F\x91\x90a\x17\xEFV[\x93PPPa\x12\xE6V[\x83\x85\x10\x15a\x12\xE6W_a\x12\xAB\x86\x86a\x17\xEFV[\x90P_a\x12\xB8\x83\x83a\x18\x15V[\x90P\x80_\x03a\x12\xCCW\x85\x93PPPPa\x0C\xEDV[a\x12\xD6\x81\x86a\x17\xEFV[a\x12\xE1\x90`\x01a\x18\x02V[\x93PPP[P\x93\x92PPPV[a\x133\x82\x82`@Q`$\x01a\x13\x04\x92\x91\x90a\x184V[`@\x80Q`\x1F\x19\x81\x84\x03\x01\x81R\x91\x90R` \x81\x01\x80Q`\x01`\x01`\xE0\x1B\x03\x16c-\x83\x9C\xB3`\xE2\x1B\x17\x90Ra\x137V[PPV[a\0\xBD\x81\x80Qjconsole.log` \x83\x01_\x80\x84\x83\x85Z\xFAPPPPPV[cNH{q`\xE0\x1B_R`A`\x04R`$_\xFD[`\x01\x81\x81\x1C\x90\x82\x16\x80a\x13\x83W`\x7F\x82\x16\x91P[` \x82\x10\x81\x03a\x13\xA1WcNH{q`\xE0\x1B_R`\"`\x04R`$_\xFD[P\x91\x90PV[`\x1F\x82\x11\x15a\x13\xEEW\x80_R` _ `\x1F\x84\x01`\x05\x1C\x81\x01` \x85\x10\x15a\x13\xCCWP\x80[`\x1F\x84\x01`\x05\x1C\x82\x01\x91P[\x81\x81\x10\x15a\x13\xEBW_\x81U`\x01\x01a\x13\xD8V[PP[PPPV[\x81Qg\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x81\x11\x15a\x14\rWa\x14\ra\x13[V[a\x14!\x81a\x14\x1B\x84Ta\x13oV[\x84a\x13\xA7V[` `\x1F\x82\x11`\x01\x81\x14a\x14SW_\x83\x15a\x14<WP\x84\x82\x01Q[_\x19`\x03\x85\x90\x1B\x1C\x19\x16`\x01\x84\x90\x1B\x17\x84Ua\x13\xEBV[_\x84\x81R` \x81 `\x1F\x19\x85\x16\x91[\x82\x81\x10\x15a\x14\x82W\x87\x85\x01Q\x82U` \x94\x85\x01\x94`\x01\x90\x92\x01\x91\x01a\x14bV[P\x84\x82\x10\x15a\x14\x9FW\x86\x84\x01Q_\x19`\x03\x87\x90\x1B`\xF8\x16\x1C\x19\x16\x81U[PPPP`\x01\x90\x81\x1B\x01\x90UPV[__g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x84\x11\x15a\x14\xC8Wa\x14\xC8a\x13[V[P`@Q`\x1F\x19`\x1F\x85\x01\x81\x16`?\x01\x16\x81\x01\x81\x81\x10g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x82\x11\x17\x15a\x14\xF7Wa\x14\xF7a\x13[V[`@R\x83\x81R\x90P\x80\x82\x84\x01\x85\x10\x15a\x15\x0EW__\xFD[\x83\x83` \x83\x01^_` \x85\x83\x01\x01RP\x93\x92PPPV[_` \x82\x84\x03\x12\x15a\x155W__\xFD[\x81Qg\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x81\x11\x15a\x15KW__\xFD[\x82\x01`\x1F\x81\x01\x84\x13a\x15[W__\xFD[a\x0B\xAE\x84\x82Q` \x84\x01a\x14\xAEV[cNH{q`\xE0\x1B_R`2`\x04R`$_\xFD[_\x81Q\x80` \x84\x01\x85^_\x93\x01\x92\x83RP\x90\x91\x90PV[\x7Fhttps://coolstuff.com/operator/\0\x81R_a\x10\xAB`\x1F\x83\x01\x84a\x15~V[_\x81Q\x80\x84R\x80` \x84\x01` \x86\x01^_` \x82\x86\x01\x01R` `\x1F\x19`\x1F\x83\x01\x16\x85\x01\x01\x91PP\x92\x91PPV[`\x01\x80`\xA0\x1B\x03\x83Q\x16\x81R`\x01\x80`\xA0\x1B\x03` \x84\x01Q\x16` \x82\x01Rc\xFF\xFF\xFF\xFF`@\x84\x01Q\x16`@\x82\x01R`\x80``\x82\x01R_a\x0B\xAE`\x80\x83\x01\x84a\x15\xC6V[_` \x82\x84\x03\x12\x15a\x16GW__\xFD[PQ\x91\x90PV[`\x01`\x01`\xA0\x1B\x03\x81\x16\x81\x14a\0\xBDW__\xFD[_`@\x82\x84\x03\x12\x80\x15a\x16sW__\xFD[P`@\x80Q\x90\x81\x01g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x81\x11\x82\x82\x10\x17\x15a\x16\x97Wa\x16\x97a\x13[V[`@R\x82Qa\x16\xA5\x81a\x16NV[\x81R` \x83\x01Qa\x16\xB5\x81a\x16NV[` \x82\x01R\x93\x92PPPV[`@\x81R_a\x16\xD3`@\x83\x01\x85a\x15\xC6V[\x90Pc\xFF\xFF\xFF\xFF\x83\x16` \x83\x01R\x93\x92PPPV[_` \x82\x84\x03\x12\x15a\x16\xF8W__\xFD[\x81Qa\x0C\xED\x81a\x16NV[_` \x82\x84\x03\x12\x15a\x17\x13W__\xFD[\x81Q\x80\x15\x15\x81\x14a\x0C\xEDW__\xFD[_a\x17-\x82\x84a\x15~V[n/script/output/`\x88\x1B\x81R`\x0F\x01\x93\x92PPPV[_a\x17W\x82\x84a\x15~V[`/`\xF8\x1B\x81R`\x01\x01\x93\x92PPPV[_a\x17s\x82\x84a\x15~V[d\x1759\xB7\xB7`\xD9\x1B\x81R`\x05\x01\x93\x92PPPV[_a\x10(a\x17\x9Fa\x17\x99\x84\x88a\x15~V[\x86a\x15~V[\x84a\x15~V[` \x81R_a\x10\xAB` \x83\x01\x84a\x15\xC6V[`@\x81R_a\x17\xC9`@\x83\x01\x85a\x15\xC6V[\x82\x81\x03` \x84\x01Ra\x10(\x81\x85a\x15\xC6V[cNH{q`\xE0\x1B_R`\x11`\x04R`$_\xFD[\x81\x81\x03\x81\x81\x11\x15a\x10\xAEWa\x10\xAEa\x17\xDBV[\x80\x82\x01\x80\x82\x11\x15a\x10\xAEWa\x10\xAEa\x17\xDBV[_\x82a\x18/WcNH{q`\xE0\x1B_R`\x12`\x04R`$_\xFD[P\x06\x90V[`@\x81R_a\x18F`@\x83\x01\x85a\x15\xC6V[\x90P\x82` \x83\x01R\x93\x92PPPV\xFE.addresses.baseStrategyImplementation\x88\\\xB6\x92@\xA95\xD62\xD7\x9C1q\tp\x9E\xCF\xA9\x1A\x80bo\xF3\x98\x9Dh\xF6\x7F[\x1D\xD1-test test test test test test test test test test test junktoken_and_strategy_deployment_output\xA2dipfsX\"\x12 \xCEU\xC5\xCCy/$\x11\xA18\xEE_\x14|\xD8\xB8h\xEB*\xCB\x99\xEBK\xB0b\xA24\xADs\xFE\x05kdsolcC\0\x08\x1B\x003",
     );
     /**Function with signature `IS_SCRIPT()` and selector `0xf8ccbf47`.
-```solidity
-function IS_SCRIPT() external view returns (bool);
-```*/
+    ```solidity
+    function IS_SCRIPT() external view returns (bool);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct IS_SCRIPTCall {}
@@ -98,9 +98,7 @@ function IS_SCRIPT() external view returns (bool);
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -129,9 +127,7 @@ function IS_SCRIPT() external view returns (bool);
             type UnderlyingRustTuple<'a> = (bool,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -156,14 +152,10 @@ function IS_SCRIPT() external view returns (bool);
         #[automatically_derived]
         impl alloy_sol_types::SolCall for IS_SCRIPTCall {
             type Parameters<'a> = ();
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = IS_SCRIPTReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Bool,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "IS_SCRIPT()";
             const SELECTOR: [u8; 4] = [248u8, 204u8, 191u8, 71u8];
             #[inline]
@@ -181,17 +173,17 @@ function IS_SCRIPT() external view returns (bool);
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `run()` and selector `0xc0406226`.
-```solidity
-function run() external;
-```*/
+    ```solidity
+    function run() external;
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct runCall {}
@@ -214,9 +206,7 @@ function run() external;
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -245,9 +235,7 @@ function run() external;
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -272,14 +260,10 @@ function run() external;
         #[automatically_derived]
         impl alloy_sol_types::SolCall for runCall {
             type Parameters<'a> = ();
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = runReturn;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "run()";
             const SELECTOR: [u8; 4] = [192u8, 64u8, 98u8, 38u8];
             #[inline]
@@ -297,17 +281,17 @@ function run() external;
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `setUp()` and selector `0x0a9254e4`.
-```solidity
-function setUp() external;
-```*/
+    ```solidity
+    function setUp() external;
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setUpCall {}
@@ -330,9 +314,7 @@ function setUp() external;
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -361,9 +343,7 @@ function setUp() external;
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -388,14 +368,10 @@ function setUp() external;
         #[automatically_derived]
         impl alloy_sol_types::SolCall for setUpCall {
             type Parameters<'a> = ();
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = setUpReturn;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "setUp()";
             const SELECTOR: [u8; 4] = [10u8, 146u8, 84u8, 228u8];
             #[inline]
@@ -413,10 +389,10 @@ function setUp() external;
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
@@ -448,9 +424,7 @@ function setUp() external;
         #[inline]
         fn selector(&self) -> [u8; 4] {
             match self {
-                Self::IS_SCRIPT(_) => {
-                    <IS_SCRIPTCall as alloy_sol_types::SolCall>::SELECTOR
-                }
+                Self::IS_SCRIPT(_) => <IS_SCRIPTCall as alloy_sol_types::SolCall>::SELECTOR,
                 Self::run(_) => <runCall as alloy_sol_types::SolCall>::SELECTOR,
                 Self::setUp(_) => <setUpCall as alloy_sol_types::SolCall>::SELECTOR,
             }
@@ -473,16 +447,14 @@ function setUp() external;
             static DECODE_SHIMS: &[fn(
                 &[u8],
                 bool,
-            ) -> alloy_sol_types::Result<RegisterOperatorsCalls>] = &[
+            )
+                -> alloy_sol_types::Result<RegisterOperatorsCalls>] = &[
                 {
                     fn setUp(
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<RegisterOperatorsCalls> {
-                        <setUpCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
+                        <setUpCall as alloy_sol_types::SolCall>::abi_decode_raw(data, validate)
                             .map(RegisterOperatorsCalls::setUp)
                     }
                     setUp
@@ -492,10 +464,7 @@ function setUp() external;
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<RegisterOperatorsCalls> {
-                        <runCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
+                        <runCall as alloy_sol_types::SolCall>::abi_decode_raw(data, validate)
                             .map(RegisterOperatorsCalls::run)
                     }
                     run
@@ -505,22 +474,17 @@ function setUp() external;
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<RegisterOperatorsCalls> {
-                        <IS_SCRIPTCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
+                        <IS_SCRIPTCall as alloy_sol_types::SolCall>::abi_decode_raw(data, validate)
                             .map(RegisterOperatorsCalls::IS_SCRIPT)
                     }
                     IS_SCRIPT
                 },
             ];
             let Ok(idx) = Self::SELECTORS.binary_search(&selector) else {
-                return Err(
-                    alloy_sol_types::Error::unknown_selector(
-                        <Self as alloy_sol_types::SolInterface>::NAME,
-                        selector,
-                    ),
-                );
+                return Err(alloy_sol_types::Error::unknown_selector(
+                    <Self as alloy_sol_types::SolInterface>::NAME,
+                    selector,
+                ));
             };
             (unsafe { DECODE_SHIMS.get_unchecked(idx) })(data, validate)
         }
@@ -530,9 +494,7 @@ function setUp() external;
                 Self::IS_SCRIPT(inner) => {
                     <IS_SCRIPTCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
                 }
-                Self::run(inner) => {
-                    <runCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
-                }
+                Self::run(inner) => <runCall as alloy_sol_types::SolCall>::abi_encoded_size(inner),
                 Self::setUp(inner) => {
                     <setUpCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
                 }
@@ -542,10 +504,7 @@ function setUp() external;
         fn abi_encode_raw(&self, out: &mut alloy_sol_types::private::Vec<u8>) {
             match self {
                 Self::IS_SCRIPT(inner) => {
-                    <IS_SCRIPTCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <IS_SCRIPTCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
                 }
                 Self::run(inner) => {
                     <runCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
@@ -559,7 +518,7 @@ function setUp() external;
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`RegisterOperators`](self) contract instance.
 
-See the [wrapper's documentation](`RegisterOperatorsInstance`) for more details.*/
+    See the [wrapper's documentation](`RegisterOperatorsInstance`) for more details.*/
     #[inline]
     pub const fn new<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -573,9 +532,9 @@ See the [wrapper's documentation](`RegisterOperatorsInstance`) for more details.
     }
     /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+    Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+    For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
     #[inline]
     pub fn deploy<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -583,35 +542,36 @@ For more fine-grained control over the deployment process, use [`deploy_builder`
         N: alloy_contract::private::Network,
     >(
         provider: P,
-    ) -> impl ::core::future::Future<
-        Output = alloy_contract::Result<RegisterOperatorsInstance<T, P, N>>,
-    > {
+    ) -> impl ::core::future::Future<Output = alloy_contract::Result<RegisterOperatorsInstance<T, P, N>>>
+    {
         RegisterOperatorsInstance::<T, P, N>::deploy(provider)
     }
     /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+    and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+    This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+    the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     #[inline]
     pub fn deploy_builder<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
         P: alloy_contract::private::Provider<T, N>,
         N: alloy_contract::private::Network,
-    >(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
+    >(
+        provider: P,
+    ) -> alloy_contract::RawCallBuilder<T, P, N> {
         RegisterOperatorsInstance::<T, P, N>::deploy_builder(provider)
     }
     /**A [`RegisterOperators`](self) instance.
 
-Contains type-safe methods for interacting with an on-chain instance of the
-[`RegisterOperators`](self) contract located at a given `address`, using a given
-provider `P`.
+    Contains type-safe methods for interacting with an on-chain instance of the
+    [`RegisterOperators`](self) contract located at a given `address`, using a given
+    provider `P`.
 
-If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
-documentation on how to provide it), the `deploy` and `deploy_builder` methods can
-be used to deploy a new instance of the contract.
+    If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
+    documentation on how to provide it), the `deploy` and `deploy_builder` methods can
+    be used to deploy a new instance of the contract.
 
-See the [module-level documentation](self) for all the available methods.*/
+    See the [module-level documentation](self) for all the available methods.*/
     #[derive(Clone)]
     pub struct RegisterOperatorsInstance<T, P, N = alloy_contract::private::Ethereum> {
         address: alloy_sol_types::private::Address,
@@ -622,24 +582,24 @@ See the [module-level documentation](self) for all the available methods.*/
     impl<T, P, N> ::core::fmt::Debug for RegisterOperatorsInstance<T, P, N> {
         #[inline]
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-            f.debug_tuple("RegisterOperatorsInstance").field(&self.address).finish()
+            f.debug_tuple("RegisterOperatorsInstance")
+                .field(&self.address)
+                .finish()
         }
     }
     /// Instantiation and getters/setters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > RegisterOperatorsInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > RegisterOperatorsInstance<T, P, N>
+    {
         /**Creates a new wrapper around an on-chain [`RegisterOperators`](self) contract instance.
 
-See the [wrapper's documentation](`RegisterOperatorsInstance`) for more details.*/
+        See the [wrapper's documentation](`RegisterOperatorsInstance`) for more details.*/
         #[inline]
-        pub const fn new(
-            address: alloy_sol_types::private::Address,
-            provider: P,
-        ) -> Self {
+        pub const fn new(address: alloy_sol_types::private::Address, provider: P) -> Self {
             Self {
                 address,
                 provider,
@@ -648,9 +608,9 @@ See the [wrapper's documentation](`RegisterOperatorsInstance`) for more details.
         }
         /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+        Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+        For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
         #[inline]
         pub async fn deploy(
             provider: P,
@@ -660,10 +620,10 @@ For more fine-grained control over the deployment process, use [`deploy_builder`
             Ok(Self::new(contract_address, call_builder.provider))
         }
         /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+        and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+        This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+        the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         #[inline]
         pub fn deploy_builder(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
             alloy_contract::RawCallBuilder::new_raw_deploy(
@@ -706,10 +666,11 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     /// Function calls.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > RegisterOperatorsInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > RegisterOperatorsInstance<T, P, N>
+    {
         /// Creates a new call builder using this contract instance's provider and address.
         ///
         /// Note that the call can be any function call, not just those defined in this
@@ -721,9 +682,7 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
             alloy_contract::SolCallBuilder::new_sol(&self.provider, &self.address, call)
         }
         ///Creates a new call builder for the [`IS_SCRIPT`] function.
-        pub fn IS_SCRIPT(
-            &self,
-        ) -> alloy_contract::SolCallBuilder<T, &P, IS_SCRIPTCall, N> {
+        pub fn IS_SCRIPT(&self) -> alloy_contract::SolCallBuilder<T, &P, IS_SCRIPTCall, N> {
             self.call_builder(&IS_SCRIPTCall {})
         }
         ///Creates a new call builder for the [`run`] function.
@@ -738,10 +697,11 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     /// Event filters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > RegisterOperatorsInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > RegisterOperatorsInstance<T, P, N>
+    {
         /// Creates a new event filter using this contract instance's provider and address.
         ///
         /// Note that the type can be any event, not just those defined in this contract.

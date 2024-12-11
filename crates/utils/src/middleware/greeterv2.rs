@@ -77,9 +77,9 @@ pub mod GreeterV2 {
         b"`\x80`@R4\x80\x15a\0\x10W`\0\x80\xFD[P`\x046\x10a\0AW`\x005`\xE0\x1C\x80cL\xBF\x9E1\x14a\0FW\x80c\xEFi\x0C\xC0\x14a\0PW\x80c\xF6-\x18\x88\x14a\0nW[`\0\x80\xFD[a\0Na\0\x81V[\0[a\0Xa\0\xB3V[`@Qa\0e\x91\x90a\x01\xF1V[`@Q\x80\x91\x03\x90\xF3[a\0Na\0|6`\x04a\x02\\V[a\x01AV[`@\x80Q\x80\x82\x01\x90\x91R`\x08\x80\x82Rg\x1C\x99\\\xD9]\x1D\x19Y`\xC2\x1B` \x90\x92\x01\x91\x82Ra\0\xB0\x91`\0\x91a\x01XV[PV[`\0\x80Ta\0\xC0\x90a\x03\rV[\x80`\x1F\x01` \x80\x91\x04\x02` \x01`@Q\x90\x81\x01`@R\x80\x92\x91\x90\x81\x81R` \x01\x82\x80Ta\0\xEC\x90a\x03\rV[\x80\x15a\x019W\x80`\x1F\x10a\x01\x0EWa\x01\0\x80\x83T\x04\x02\x83R\x91` \x01\x91a\x019V[\x82\x01\x91\x90`\0R` `\0 \x90[\x81T\x81R\x90`\x01\x01\x90` \x01\x80\x83\x11a\x01\x1CW\x82\x90\x03`\x1F\x16\x82\x01\x91[PPPPP\x81V[\x80Qa\x01T\x90`\0\x90` \x84\x01\x90a\x01XV[PPV[\x82\x80Ta\x01d\x90a\x03\rV[\x90`\0R` `\0 \x90`\x1F\x01` \x90\x04\x81\x01\x92\x82a\x01\x86W`\0\x85Ua\x01\xCCV[\x82`\x1F\x10a\x01\x9FW\x80Q`\xFF\x19\x16\x83\x80\x01\x17\x85Ua\x01\xCCV[\x82\x80\x01`\x01\x01\x85U\x82\x15a\x01\xCCW\x91\x82\x01[\x82\x81\x11\x15a\x01\xCCW\x82Q\x82U\x91` \x01\x91\x90`\x01\x01\x90a\x01\xB1V[Pa\x01\xD8\x92\x91Pa\x01\xDCV[P\x90V[[\x80\x82\x11\x15a\x01\xD8W`\0\x81U`\x01\x01a\x01\xDDV[`\0` \x80\x83R\x83Q\x80\x82\x85\x01R`\0[\x81\x81\x10\x15a\x02\x1EW\x85\x81\x01\x83\x01Q\x85\x82\x01`@\x01R\x82\x01a\x02\x02V[\x81\x81\x11\x15a\x020W`\0`@\x83\x87\x01\x01R[P`\x1F\x01`\x1F\x19\x16\x92\x90\x92\x01`@\x01\x93\x92PPPV[cNH{q`\xE0\x1B`\0R`A`\x04R`$`\0\xFD[`\0` \x82\x84\x03\x12\x15a\x02nW`\0\x80\xFD[\x815g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x80\x82\x11\x15a\x02\x86W`\0\x80\xFD[\x81\x84\x01\x91P\x84`\x1F\x83\x01\x12a\x02\x9AW`\0\x80\xFD[\x815\x81\x81\x11\x15a\x02\xACWa\x02\xACa\x02FV[`@Q`\x1F\x82\x01`\x1F\x19\x90\x81\x16`?\x01\x16\x81\x01\x90\x83\x82\x11\x81\x83\x10\x17\x15a\x02\xD4Wa\x02\xD4a\x02FV[\x81`@R\x82\x81R\x87` \x84\x87\x01\x01\x11\x15a\x02\xEDW`\0\x80\xFD[\x82` \x86\x01` \x83\x017`\0\x92\x81\x01` \x01\x92\x90\x92RP\x95\x94PPPPPV[`\x01\x81\x81\x1C\x90\x82\x16\x80a\x03!W`\x7F\x82\x16\x91P[` \x82\x10\x81\x14\x15a\x03BWcNH{q`\xE0\x1B`\0R`\"`\x04R`$`\0\xFD[P\x91\x90PV\xFE\xA2dipfsX\"\x12 \xBD\xEA\x07\x16`'\xC2\xC0@3\xDA\xEDR7?f\xE0>\x98\xE5\xC5\xFA\x12aO\x90\x8C\x02\xB9\x96\xB0\x89dsolcC\0\x08\x0C\x003",
     );
     /**Function with signature `greeting()` and selector `0xef690cc0`.
-```solidity
-function greeting() external view returns (string memory);
-```*/
+    ```solidity
+    function greeting() external view returns (string memory);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct greetingCall {}
@@ -104,9 +104,7 @@ function greeting() external view returns (string memory);
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -135,9 +133,7 @@ function greeting() external view returns (string memory);
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::String,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -162,14 +158,10 @@ function greeting() external view returns (string memory);
         #[automatically_derived]
         impl alloy_sol_types::SolCall for greetingCall {
             type Parameters<'a> = ();
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = greetingReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::String,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "greeting()";
             const SELECTOR: [u8; 4] = [239u8, 105u8, 12u8, 192u8];
             #[inline]
@@ -187,17 +179,17 @@ function greeting() external view returns (string memory);
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `initialize(string)` and selector `0xf62d1888`.
-```solidity
-function initialize(string memory _greeting) external;
-```*/
+    ```solidity
+    function initialize(string memory _greeting) external;
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct initializeCall {
@@ -222,9 +214,7 @@ function initialize(string memory _greeting) external;
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::String,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -253,9 +243,7 @@ function initialize(string memory _greeting) external;
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -280,14 +268,10 @@ function initialize(string memory _greeting) external;
         #[automatically_derived]
         impl alloy_sol_types::SolCall for initializeCall {
             type Parameters<'a> = (alloy::sol_types::sol_data::String,);
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = initializeReturn;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "initialize(string)";
             const SELECTOR: [u8; 4] = [246u8, 45u8, 24u8, 136u8];
             #[inline]
@@ -309,17 +293,17 @@ function initialize(string memory _greeting) external;
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `resetGreeting()` and selector `0x4cbf9e31`.
-```solidity
-function resetGreeting() external;
-```*/
+    ```solidity
+    function resetGreeting() external;
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct resetGreetingCall {}
@@ -342,9 +326,7 @@ function resetGreeting() external;
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -373,9 +355,7 @@ function resetGreeting() external;
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -400,14 +380,10 @@ function resetGreeting() external;
         #[automatically_derived]
         impl alloy_sol_types::SolCall for resetGreetingCall {
             type Parameters<'a> = ();
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = resetGreetingReturn;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "resetGreeting()";
             const SELECTOR: [u8; 4] = [76u8, 191u8, 158u8, 49u8];
             #[inline]
@@ -425,10 +401,10 @@ function resetGreeting() external;
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
@@ -461,12 +437,8 @@ function resetGreeting() external;
         fn selector(&self) -> [u8; 4] {
             match self {
                 Self::greeting(_) => <greetingCall as alloy_sol_types::SolCall>::SELECTOR,
-                Self::initialize(_) => {
-                    <initializeCall as alloy_sol_types::SolCall>::SELECTOR
-                }
-                Self::resetGreeting(_) => {
-                    <resetGreetingCall as alloy_sol_types::SolCall>::SELECTOR
-                }
+                Self::initialize(_) => <initializeCall as alloy_sol_types::SolCall>::SELECTOR,
+                Self::resetGreeting(_) => <resetGreetingCall as alloy_sol_types::SolCall>::SELECTOR,
             }
         }
         #[inline]
@@ -484,20 +456,16 @@ function resetGreeting() external;
             data: &[u8],
             validate: bool,
         ) -> alloy_sol_types::Result<Self> {
-            static DECODE_SHIMS: &[fn(
-                &[u8],
-                bool,
-            ) -> alloy_sol_types::Result<GreeterV2Calls>] = &[
+            static DECODE_SHIMS: &[fn(&[u8], bool) -> alloy_sol_types::Result<GreeterV2Calls>] = &[
                 {
                     fn resetGreeting(
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<GreeterV2Calls> {
                         <resetGreetingCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(GreeterV2Calls::resetGreeting)
+                            data, validate,
+                        )
+                        .map(GreeterV2Calls::resetGreeting)
                     }
                     resetGreeting
                 },
@@ -506,10 +474,7 @@ function resetGreeting() external;
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<GreeterV2Calls> {
-                        <greetingCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
+                        <greetingCall as alloy_sol_types::SolCall>::abi_decode_raw(data, validate)
                             .map(GreeterV2Calls::greeting)
                     }
                     greeting
@@ -519,22 +484,17 @@ function resetGreeting() external;
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<GreeterV2Calls> {
-                        <initializeCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
+                        <initializeCall as alloy_sol_types::SolCall>::abi_decode_raw(data, validate)
                             .map(GreeterV2Calls::initialize)
                     }
                     initialize
                 },
             ];
             let Ok(idx) = Self::SELECTORS.binary_search(&selector) else {
-                return Err(
-                    alloy_sol_types::Error::unknown_selector(
-                        <Self as alloy_sol_types::SolInterface>::NAME,
-                        selector,
-                    ),
-                );
+                return Err(alloy_sol_types::Error::unknown_selector(
+                    <Self as alloy_sol_types::SolInterface>::NAME,
+                    selector,
+                ));
             };
             (unsafe { DECODE_SHIMS.get_unchecked(idx) })(data, validate)
         }
@@ -548,9 +508,7 @@ function resetGreeting() external;
                     <initializeCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
                 }
                 Self::resetGreeting(inner) => {
-                    <resetGreetingCall as alloy_sol_types::SolCall>::abi_encoded_size(
-                        inner,
-                    )
+                    <resetGreetingCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
                 }
             }
         }
@@ -558,22 +516,13 @@ function resetGreeting() external;
         fn abi_encode_raw(&self, out: &mut alloy_sol_types::private::Vec<u8>) {
             match self {
                 Self::greeting(inner) => {
-                    <greetingCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <greetingCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
                 }
                 Self::initialize(inner) => {
-                    <initializeCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <initializeCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
                 }
                 Self::resetGreeting(inner) => {
-                    <resetGreetingCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <resetGreetingCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
                 }
             }
         }
@@ -581,7 +530,7 @@ function resetGreeting() external;
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`GreeterV2`](self) contract instance.
 
-See the [wrapper's documentation](`GreeterV2Instance`) for more details.*/
+    See the [wrapper's documentation](`GreeterV2Instance`) for more details.*/
     #[inline]
     pub const fn new<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -595,9 +544,9 @@ See the [wrapper's documentation](`GreeterV2Instance`) for more details.*/
     }
     /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+    Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+    For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
     #[inline]
     pub fn deploy<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -605,35 +554,36 @@ For more fine-grained control over the deployment process, use [`deploy_builder`
         N: alloy_contract::private::Network,
     >(
         provider: P,
-    ) -> impl ::core::future::Future<
-        Output = alloy_contract::Result<GreeterV2Instance<T, P, N>>,
-    > {
+    ) -> impl ::core::future::Future<Output = alloy_contract::Result<GreeterV2Instance<T, P, N>>>
+    {
         GreeterV2Instance::<T, P, N>::deploy(provider)
     }
     /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+    and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+    This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+    the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     #[inline]
     pub fn deploy_builder<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
         P: alloy_contract::private::Provider<T, N>,
         N: alloy_contract::private::Network,
-    >(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
+    >(
+        provider: P,
+    ) -> alloy_contract::RawCallBuilder<T, P, N> {
         GreeterV2Instance::<T, P, N>::deploy_builder(provider)
     }
     /**A [`GreeterV2`](self) instance.
 
-Contains type-safe methods for interacting with an on-chain instance of the
-[`GreeterV2`](self) contract located at a given `address`, using a given
-provider `P`.
+    Contains type-safe methods for interacting with an on-chain instance of the
+    [`GreeterV2`](self) contract located at a given `address`, using a given
+    provider `P`.
 
-If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
-documentation on how to provide it), the `deploy` and `deploy_builder` methods can
-be used to deploy a new instance of the contract.
+    If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
+    documentation on how to provide it), the `deploy` and `deploy_builder` methods can
+    be used to deploy a new instance of the contract.
 
-See the [module-level documentation](self) for all the available methods.*/
+    See the [module-level documentation](self) for all the available methods.*/
     #[derive(Clone)]
     pub struct GreeterV2Instance<T, P, N = alloy_contract::private::Ethereum> {
         address: alloy_sol_types::private::Address,
@@ -644,24 +594,24 @@ See the [module-level documentation](self) for all the available methods.*/
     impl<T, P, N> ::core::fmt::Debug for GreeterV2Instance<T, P, N> {
         #[inline]
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-            f.debug_tuple("GreeterV2Instance").field(&self.address).finish()
+            f.debug_tuple("GreeterV2Instance")
+                .field(&self.address)
+                .finish()
         }
     }
     /// Instantiation and getters/setters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > GreeterV2Instance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > GreeterV2Instance<T, P, N>
+    {
         /**Creates a new wrapper around an on-chain [`GreeterV2`](self) contract instance.
 
-See the [wrapper's documentation](`GreeterV2Instance`) for more details.*/
+        See the [wrapper's documentation](`GreeterV2Instance`) for more details.*/
         #[inline]
-        pub const fn new(
-            address: alloy_sol_types::private::Address,
-            provider: P,
-        ) -> Self {
+        pub const fn new(address: alloy_sol_types::private::Address, provider: P) -> Self {
             Self {
                 address,
                 provider,
@@ -670,22 +620,20 @@ See the [wrapper's documentation](`GreeterV2Instance`) for more details.*/
         }
         /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+        Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+        For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
         #[inline]
-        pub async fn deploy(
-            provider: P,
-        ) -> alloy_contract::Result<GreeterV2Instance<T, P, N>> {
+        pub async fn deploy(provider: P) -> alloy_contract::Result<GreeterV2Instance<T, P, N>> {
             let call_builder = Self::deploy_builder(provider);
             let contract_address = call_builder.deploy().await?;
             Ok(Self::new(contract_address, call_builder.provider))
         }
         /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+        and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+        This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+        the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         #[inline]
         pub fn deploy_builder(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
             alloy_contract::RawCallBuilder::new_raw_deploy(
@@ -728,10 +676,11 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     /// Function calls.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > GreeterV2Instance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > GreeterV2Instance<T, P, N>
+    {
         /// Creates a new call builder using this contract instance's provider and address.
         ///
         /// Note that the call can be any function call, not just those defined in this
@@ -743,9 +692,7 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
             alloy_contract::SolCallBuilder::new_sol(&self.provider, &self.address, call)
         }
         ///Creates a new call builder for the [`greeting`] function.
-        pub fn greeting(
-            &self,
-        ) -> alloy_contract::SolCallBuilder<T, &P, greetingCall, N> {
+        pub fn greeting(&self) -> alloy_contract::SolCallBuilder<T, &P, greetingCall, N> {
             self.call_builder(&greetingCall {})
         }
         ///Creates a new call builder for the [`initialize`] function.
@@ -756,19 +703,18 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
             self.call_builder(&initializeCall { _greeting })
         }
         ///Creates a new call builder for the [`resetGreeting`] function.
-        pub fn resetGreeting(
-            &self,
-        ) -> alloy_contract::SolCallBuilder<T, &P, resetGreetingCall, N> {
+        pub fn resetGreeting(&self) -> alloy_contract::SolCallBuilder<T, &P, resetGreetingCall, N> {
             self.call_builder(&resetGreetingCall {})
         }
     }
     /// Event filters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > GreeterV2Instance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > GreeterV2Instance<T, P, N>
+    {
         /// Creates a new event filter using this contract instance's provider and address.
         ///
         /// Note that the type can be any event, not just those defined in this contract.

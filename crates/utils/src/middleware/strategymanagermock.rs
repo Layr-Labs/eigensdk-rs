@@ -1015,9 +1015,9 @@ pub mod StrategyManagerMock {
         b"`\x80`@R4\x80\x15a\0\x10W`\0\x80\xFD[P`\x046\x10a\x02SW`\x005`\xE0\x1C\x80c\x94\xF6I\xDD\x11a\x01FW\x80c\xC4b>\xA1\x11a\0\xC3W\x80c\xE2C\xDC<\x11a\0\x87W\x80c\xE2C\xDC<\x14a\x05\xA9W\x80c\xE2\xA8\x18\xC5\x14a\x05\xBCW\x80c\xE7\xA0P\xAA\x14a\x05\xCFW\x80c\xF2\xFD\xE3\x8B\x14a\x05\xE6W\x80c\xF6\x98\xDA%\x14a\x05\xF9W\x80c\xFA\xBC\x1C\xBC\x14a\x06\0W`\0\x80\xFD[\x80c\xC4b>\xA1\x14a\x05PW\x80c\xC6\x08\xC7\xF3\x14a\x05dW\x80c\xC6eg\x02\x14a\x05rW\x80c\xDF[5G\x14a\x05\x83W\x80c\xDF\\\xF7#\x14a\x05\x96W`\0\x80\xFD[\x80c\x9F\0\xFA$\x11a\x01\nW\x80c\x9F\0\xFA$\x14a\x04\xEFW\x80c\xA1x\x84\x84\x14a\x05\x01W\x80c\xA1\xCAx\x0B\x14a\x05!W\x80c\xB14Bq\x14a\x05/W\x80c\xB5\xD8\xB5\xB8\x14a\x05BW`\0\x80\xFD[\x80c\x94\xF6I\xDD\x14a\x04LW\x80c\x96\x7F\xC0\xD2\x14a\x04mW\x80c\x9A\x95\x19\xE0\x14a\x04\x80W\x80c\x9BM\xA0=\x14a\x04\x93W\x80c\x9B~/w\x14a\x04\xB6W`\0\x80\xFD[\x80c\\\x97Z\xBB\x11a\x01\xD4W\x80c\x88o\x11\x95\x11a\x01\x98W\x80c\x88o\x11\x95\x14a\x03\xF9W\x80c\x8B\x8A\xAC<\x14a\x04\x0CW\x80c\x8C\x80\xD4\xE5\x14a\x04!W\x80c\x8D\xA5\xCB[\x14a\x044W\x80c\x91\x04\xC3\x19\x14a\x04EW`\0\x80\xFD[\x80c\\\x97Z\xBB\x14a\x03\x9DW\x80cc\xFC\xA8\x88\x14a\x03\xA5W\x80cf<\x1D\xE4\x14a\x03\xB8W\x80cqP\x18\xA6\x14a\x03\xDBW\x80cz~\r\x92\x14a\x03\xE3W`\0\x80\xFD[\x80c6;\xF9d\x11a\x02\x1BW\x80c6;\xF9d\x14a\x02\xD7W\x80cFe\xBC\xDA\x14a\x03$W\x80cNZBc\x14a\x03OW\x80cY\\jg\x14a\x03bW\x80cZ\xC8j\xB7\x14a\x03jW`\0\x80\xFD[\x80c\x01\xF8 \xB2\x14a\x02XW\x80c\r9\x08\xF4\x14a\x02tW\x80c\x10\xD6z/\x14a\x02\x95W\x80c\x13d9\xDD\x14a\x02\xAAW\x80c2\xE8\x9A\xCE\x14a\x02\xBDW[`\0\x80\xFD[a\x02a`\xD2T\x81V[`@Q\x90\x81R` \x01[`@Q\x80\x91\x03\x90\xF3[a\x02\x88a\x02\x826`\x04a\x10nV[P``\x90V[`@Qa\x02k\x91\x90a\x10\xD6V[a\x02\xA8a\x02\xA36`\x04a\x10nV[a\x06\x13V[\0[a\x02\xA8a\x02\xB86`\x04a\x10\xE9V[a\x06\xCCV[a\x02aa\x02\xCB6`\x04a\x11\x18V[`\0\x96\x95PPPPPPV[a\x02\xA8a\x02\xE56`\x04a\x12\x13V[`\xC9\x80T`\x01`\x01`\xA0\x1B\x03\x94\x85\x16`\x01`\x01`\xA0\x1B\x03\x19\x91\x82\x16\x17\x90\x91U`\xCB\x80T\x92\x85\x16\x92\x82\x16\x92\x90\x92\x17\x90\x91U`\xCA\x80T\x92\x90\x93\x16\x91\x16\x17\x90UV[`\xCATa\x037\x90`\x01`\x01`\xA0\x1B\x03\x16\x81V[`@Q`\x01`\x01`\xA0\x1B\x03\x90\x91\x16\x81R` \x01a\x02kV[a\x02\xA8a\x03]6`\x04a\x12lV[a\x08\x0BV[a\x02\xA8a\x08yV[a\x03\x8Da\x03x6`\x04a\x12\xA5V[`\x98T`\x01`\xFF\x90\x92\x16\x91\x90\x91\x1B\x90\x81\x16\x14\x90V[`@Q\x90\x15\x15\x81R` \x01a\x02kV[`\x98Ta\x02aV[a\x02aa\x03\xB36`\x04a\x12\xC8V[a\t@V[a\x03\x8Da\x03\xC66`\x04a\x10nV[`\xCF` R`\0\x90\x81R`@\x90 T`\xFF\x16\x81V[a\x02\xA8a\tqV[a\x02aa\x03\xF16`\x04a\x12\xF4V[`\0\x92\x91PPV[`\x97Ta\x037\x90`\x01`\x01`\xA0\x1B\x03\x16\x81V[a\x02aa\x04\x1A6`\x04a\x10nV[P`\xD2T\x90V[a\x02\xA8a\x04/6`\x04a\x13\"V[PPPV[`3T`\x01`\x01`\xA0\x1B\x03\x16a\x037V[`\0a\x037V[a\x04_a\x04Z6`\x04a\x10nV[a\t\x85V[`@Qa\x02k\x92\x91\x90a\x13cV[`\xCCTa\x037\x90`\x01`\x01`\xA0\x1B\x03\x16\x81V[a\x02\xA8a\x04\x8E6`\x04a\x10\xE9V[`\xD2UV[a\x03\x8Da\x04\xA16`\x04a\x10nV[`\xD1` R`\0\x90\x81R`@\x90 T`\xFF\x16\x81V[a\x02\xA8a\x04\xC46`\x04a\x12lV[`\x01`\x01`\xA0\x1B\x03\x91\x90\x91\x16`\0\x90\x81R`\xCF` R`@\x90 \x80T`\xFF\x19\x16\x91\x15\x15\x91\x90\x91\x17\x90UV[a\x02\xA8a\x04\xFD6`\x04a\x12\xC8V[PPV[a\x02aa\x05\x0F6`\x04a\x10nV[`\xD0` R`\0\x90\x81R`@\x90 T\x81V[a\x02\xA8a\x04/6`\x04a\x13\xBAV[`\xCBTa\x037\x90`\x01`\x01`\xA0\x1B\x03\x16\x81V[a\x02\xA8a\x04\xFD6`\x04a\x14;V[a\x02\xA8a\x05^6`\x04a\x14}V[PPPPV[a\x02\xA8a\x05^6`\x04a\x14\xCEV[a\x02\xA8a\x05\x806`\x04a\x10nV[PV[a\x02\xA8a\x05\x916`\x04a\x15!V[a\n^V[`\xC9Ta\x037\x90`\x01`\x01`\xA0\x1B\x03\x16\x81V[a\x037a\x05\xB76`\x04a\x12\xC8V[a\x0BOV[a\x02\xA8a\x05\xCA6`\x04a\x15\x8DV[a\x0B\x87V[a\x02aa\x05\xDD6`\x04a\x13\"V[`\0\x93\x92PPPV[a\x02\xA8a\x05\xF46`\x04a\x10nV[a\x0C1V[`\0a\x02aV[a\x02\xA8a\x06\x0E6`\x04a\x10\xE9V[a\x0C\xA7V[`\x97`\0\x90T\x90a\x01\0\n\x90\x04`\x01`\x01`\xA0\x1B\x03\x16`\x01`\x01`\xA0\x1B\x03\x16c\xEA\xB6mz`@Q\x81c\xFF\xFF\xFF\xFF\x16`\xE0\x1B\x81R`\x04\x01` `@Q\x80\x83\x03\x81\x86Z\xFA\x15\x80\x15a\x06fW=`\0\x80>=`\0\xFD[PPPP`@Q=`\x1F\x19`\x1F\x82\x01\x16\x82\x01\x80`@RP\x81\x01\x90a\x06\x8A\x91\x90a\x16\x10V[`\x01`\x01`\xA0\x1B\x03\x163`\x01`\x01`\xA0\x1B\x03\x16\x14a\x06\xC3W`@QbF\x1B\xCD`\xE5\x1B\x81R`\x04\x01a\x06\xBA\x90a\x16-V[`@Q\x80\x91\x03\x90\xFD[a\x05\x80\x81a\x0E\x03V[`\x97T`@Qc#}\xFBG`\xE1\x1B\x81R3`\x04\x82\x01R`\x01`\x01`\xA0\x1B\x03\x90\x91\x16\x90cF\xFB\xF6\x8E\x90`$\x01` `@Q\x80\x83\x03\x81\x86Z\xFA\x15\x80\x15a\x07\x14W=`\0\x80>=`\0\xFD[PPPP`@Q=`\x1F\x19`\x1F\x82\x01\x16\x82\x01\x80`@RP\x81\x01\x90a\x078\x91\x90a\x16wV[a\x07TW`@QbF\x1B\xCD`\xE5\x1B\x81R`\x04\x01a\x06\xBA\x90a\x16\x94V[`\x98T\x81\x81\x16\x14a\x07\xCDW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`8`$\x82\x01R\x7FPausable.pause: invalid attempt `D\x82\x01R\x7Fto unpause functionality\0\0\0\0\0\0\0\0`d\x82\x01R`\x84\x01a\x06\xBAV[`\x98\x81\x90U`@Q\x81\x81R3\x90\x7F\xAB@\xA3t\xBCQ\xDE7\"\0\xA8\xBC\x98\x1A\xF8\xC9\xEC\xDC\x08\xDF\xDA\xEF\x0B\xB6\xE0\x9F\x88\xF3\xC6\x16\xEF=\x90` \x01[`@Q\x80\x91\x03\x90\xA2PV[`@\x80Q`\x01`\x01`\xA0\x1B\x03\x84\x16\x81R\x82\x15\x15` \x82\x01R\x7Fw\xD90\xDFI7y4s\xA9P$\xD8z\x98\xFD,\xCB\x9E\x92\xD3\xC2F;=\xAC\xD6]>jW\x86\x91\x01`@Q\x80\x91\x03\x90\xA1`\x01`\x01`\xA0\x1B\x03\x91\x90\x91\x16`\0\x90\x81R`\xD1` R`@\x90 \x80T`\xFF\x19\x16\x91\x15\x15\x91\x90\x91\x17\x90UV[`\x97T`@Qc#}\xFBG`\xE1\x1B\x81R3`\x04\x82\x01R`\x01`\x01`\xA0\x1B\x03\x90\x91\x16\x90cF\xFB\xF6\x8E\x90`$\x01` `@Q\x80\x83\x03\x81\x86Z\xFA\x15\x80\x15a\x08\xC1W=`\0\x80>=`\0\xFD[PPPP`@Q=`\x1F\x19`\x1F\x82\x01\x16\x82\x01\x80`@RP\x81\x01\x90a\x08\xE5\x91\x90a\x16wV[a\t\x01W`@QbF\x1B\xCD`\xE5\x1B\x81R`\x04\x01a\x06\xBA\x90a\x16\x94V[`\0\x19`\x98\x81\x90U`@Q\x90\x81R3\x90\x7F\xAB@\xA3t\xBCQ\xDE7\"\0\xA8\xBC\x98\x1A\xF8\xC9\xEC\xDC\x08\xDF\xDA\xEF\x0B\xB6\xE0\x9F\x88\xF3\xC6\x16\xEF=\x90` \x01`@Q\x80\x91\x03\x90\xA2V[`\xCE` R\x81`\0R`@`\0 \x81\x81T\x81\x10a\t\\W`\0\x80\xFD[\x90`\0R` `\0 \x01`\0\x91P\x91PPT\x81V[a\tya\x0E\xFAV[a\t\x83`\0a\x0FTV[V[`\x01`\x01`\xA0\x1B\x03\x81\x16`\0\x90\x81R`\xCD` \x90\x81R`@\x80\x83 `\xCE\x83R\x92\x81\x90 \x83T\x82Q\x81\x85\x02\x81\x01\x85\x01\x90\x93R\x80\x83R``\x94\x85\x94\x90\x93\x91\x84\x91\x83\x01\x82\x82\x80\x15a\t\xFCW` \x02\x82\x01\x91\x90`\0R` `\0 \x90[\x81T`\x01`\x01`\xA0\x1B\x03\x16\x81R`\x01\x90\x91\x01\x90` \x01\x80\x83\x11a\t\xDEW[PPPPP\x91P\x80\x80T\x80` \x02` \x01`@Q\x90\x81\x01`@R\x80\x92\x91\x90\x81\x81R` \x01\x82\x80T\x80\x15a\nNW` \x02\x82\x01\x91\x90`\0R` `\0 \x90[\x81T\x81R` \x01\x90`\x01\x01\x90\x80\x83\x11a\n:W[PPPPP\x90P\x91P\x91P\x91P\x91V[`\0[\x83\x81\x10\x15a\x0BHW`\x01`\xCF`\0\x87\x87\x85\x81\x81\x10a\n\x81Wa\n\x81a\x16\xDCV[\x90P` \x02\x01` \x81\x01\x90a\n\x96\x91\x90a\x10nV[`\x01`\x01`\xA0\x1B\x03\x16\x81R` \x81\x01\x91\x90\x91R`@\x01`\0 \x80T`\xFF\x19\x16\x91\x15\x15\x91\x90\x91\x17\x90U\x82\x82\x82\x81\x81\x10a\n\xD0Wa\n\xD0a\x16\xDCV[\x90P` \x02\x01` \x81\x01\x90a\n\xE5\x91\x90a\x16\xF2V[`\xD1`\0\x87\x87\x85\x81\x81\x10a\n\xFBWa\n\xFBa\x16\xDCV[\x90P` \x02\x01` \x81\x01\x90a\x0B\x10\x91\x90a\x10nV[`\x01`\x01`\xA0\x1B\x03\x16\x81R` \x81\x01\x91\x90\x91R`@\x01`\0 \x80T`\xFF\x19\x16\x91\x15\x15\x91\x90\x91\x17\x90Ua\x0BA\x81a\x17\x0FV[\x90Pa\naV[PPPPPV[`\xCD` R\x81`\0R`@`\0 \x81\x81T\x81\x10a\x0BkW`\0\x80\xFD[`\0\x91\x82R` \x90\x91 \x01T`\x01`\x01`\xA0\x1B\x03\x16\x91P\x82\x90PV[\x82\x81\x14a\x0B\xE2W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`$\x80\x82\x01R\x7FStrategyManagerMock: length mism`D\x82\x01Rc\x0C.\x8Cm`\xE3\x1B`d\x82\x01R`\x84\x01a\x06\xBAV[`\x01`\x01`\xA0\x1B\x03\x85\x16`\0\x90\x81R`\xCD` R`@\x90 a\x0C\x05\x90\x85\x85a\x0F\xA6V[P`\x01`\x01`\xA0\x1B\x03\x85\x16`\0\x90\x81R`\xCE` R`@\x90 a\x0C)\x90\x83\x83a\x10\tV[PPPPPPV[a\x0C9a\x0E\xFAV[`\x01`\x01`\xA0\x1B\x03\x81\x16a\x0C\x9EW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`&`$\x82\x01R\x7FOwnable: new owner is the zero a`D\x82\x01Reddress`\xD0\x1B`d\x82\x01R`\x84\x01a\x06\xBAV[a\x05\x80\x81a\x0FTV[`\x97`\0\x90T\x90a\x01\0\n\x90\x04`\x01`\x01`\xA0\x1B\x03\x16`\x01`\x01`\xA0\x1B\x03\x16c\xEA\xB6mz`@Q\x81c\xFF\xFF\xFF\xFF\x16`\xE0\x1B\x81R`\x04\x01` `@Q\x80\x83\x03\x81\x86Z\xFA\x15\x80\x15a\x0C\xFAW=`\0\x80>=`\0\xFD[PPPP`@Q=`\x1F\x19`\x1F\x82\x01\x16\x82\x01\x80`@RP\x81\x01\x90a\r\x1E\x91\x90a\x16\x10V[`\x01`\x01`\xA0\x1B\x03\x163`\x01`\x01`\xA0\x1B\x03\x16\x14a\rNW`@QbF\x1B\xCD`\xE5\x1B\x81R`\x04\x01a\x06\xBA\x90a\x16-V[`\x98T\x19\x81\x19`\x98T\x19\x16\x14a\r\xCCW`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`8`$\x82\x01R\x7FPausable.unpause: invalid attemp`D\x82\x01R\x7Ft to pause functionality\0\0\0\0\0\0\0\0`d\x82\x01R`\x84\x01a\x06\xBAV[`\x98\x81\x90U`@Q\x81\x81R3\x90\x7F5\x82\xD1\x82\x8E&\xBFV\xBD\x80\x15\x02\xBC\x02\x1A\xC0\xBC\x8A\xFBW\xC8&\xE4\x98kEY<\x8F\xAD8\x9C\x90` \x01a\x08\0V[`\x01`\x01`\xA0\x1B\x03\x81\x16a\x0E\x91W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`I`$\x82\x01R\x7FPausable._setPauserRegistry: new`D\x82\x01R\x7FPauserRegistry cannot be the zer`d\x82\x01Rho address`\xB8\x1B`\x84\x82\x01R`\xA4\x01a\x06\xBAV[`\x97T`@\x80Q`\x01`\x01`\xA0\x1B\x03\x92\x83\x16\x81R\x91\x83\x16` \x83\x01R\x7Fn\x9F\xCDS\x98\x96\xFC\xA6\x0E\x8B\x0F\x01\xDDX\x023\xE4\x8Ak\x0F}\xF0\x13\xB8\x9B\xA7\xF5e\x86\x9A\xCD\xB6\x91\x01`@Q\x80\x91\x03\x90\xA1`\x97\x80T`\x01`\x01`\xA0\x1B\x03\x19\x16`\x01`\x01`\xA0\x1B\x03\x92\x90\x92\x16\x91\x90\x91\x17\x90UV[`3T`\x01`\x01`\xA0\x1B\x03\x163\x14a\t\x83W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01\x81\x90R`$\x82\x01R\x7FOwnable: caller is not the owner`D\x82\x01R`d\x01a\x06\xBAV[`3\x80T`\x01`\x01`\xA0\x1B\x03\x83\x81\x16`\x01`\x01`\xA0\x1B\x03\x19\x83\x16\x81\x17\x90\x93U`@Q\x91\x16\x91\x90\x82\x90\x7F\x8B\xE0\x07\x9CS\x16Y\x14\x13D\xCD\x1F\xD0\xA4\xF2\x84\x19I\x7F\x97\"\xA3\xDA\xAF\xE3\xB4\x18okdW\xE0\x90`\0\x90\xA3PPV[\x82\x80T\x82\x82U\x90`\0R` `\0 \x90\x81\x01\x92\x82\x15a\x0F\xF9W\x91` \x02\x82\x01[\x82\x81\x11\x15a\x0F\xF9W\x81T`\x01`\x01`\xA0\x1B\x03\x19\x16`\x01`\x01`\xA0\x1B\x03\x845\x16\x17\x82U` \x90\x92\x01\x91`\x01\x90\x91\x01\x90a\x0F\xC6V[Pa\x10\x05\x92\x91Pa\x10DV[P\x90V[\x82\x80T\x82\x82U\x90`\0R` `\0 \x90\x81\x01\x92\x82\x15a\x0F\xF9W\x91` \x02\x82\x01[\x82\x81\x11\x15a\x0F\xF9W\x825\x82U\x91` \x01\x91\x90`\x01\x01\x90a\x10)V[[\x80\x82\x11\x15a\x10\x05W`\0\x81U`\x01\x01a\x10EV[`\x01`\x01`\xA0\x1B\x03\x81\x16\x81\x14a\x05\x80W`\0\x80\xFD[`\0` \x82\x84\x03\x12\x15a\x10\x80W`\0\x80\xFD[\x815a\x10\x8B\x81a\x10YV[\x93\x92PPPV[`\0\x81Q\x80\x84R` \x80\x85\x01\x94P\x80\x84\x01`\0[\x83\x81\x10\x15a\x10\xCBW\x81Q`\x01`\x01`\xA0\x1B\x03\x16\x87R\x95\x82\x01\x95\x90\x82\x01\x90`\x01\x01a\x10\xA6V[P\x94\x95\x94PPPPPV[` \x81R`\0a\x10\x8B` \x83\x01\x84a\x10\x92V[`\0` \x82\x84\x03\x12\x15a\x10\xFBW`\0\x80\xFD[P5\x91\x90PV[cNH{q`\xE0\x1B`\0R`A`\x04R`$`\0\xFD[`\0\x80`\0\x80`\0\x80`\xC0\x87\x89\x03\x12\x15a\x111W`\0\x80\xFD[\x865a\x11<\x81a\x10YV[\x95P` \x87\x015a\x11L\x81a\x10YV[\x94P`@\x87\x015\x93P``\x87\x015a\x11c\x81a\x10YV[\x92P`\x80\x87\x015\x91P`\xA0\x87\x015g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x80\x82\x11\x15a\x11\x87W`\0\x80\xFD[\x81\x89\x01\x91P\x89`\x1F\x83\x01\x12a\x11\x9BW`\0\x80\xFD[\x815\x81\x81\x11\x15a\x11\xADWa\x11\xADa\x11\x02V[`@Q`\x1F\x82\x01`\x1F\x19\x90\x81\x16`?\x01\x16\x81\x01\x90\x83\x82\x11\x81\x83\x10\x17\x15a\x11\xD5Wa\x11\xD5a\x11\x02V[\x81`@R\x82\x81R\x8C` \x84\x87\x01\x01\x11\x15a\x11\xEEW`\0\x80\xFD[\x82` \x86\x01` \x83\x017`\0` \x84\x83\x01\x01R\x80\x95PPPPPP\x92\x95P\x92\x95P\x92\x95V[`\0\x80`\0``\x84\x86\x03\x12\x15a\x12(W`\0\x80\xFD[\x835a\x123\x81a\x10YV[\x92P` \x84\x015a\x12C\x81a\x10YV[\x91P`@\x84\x015a\x12S\x81a\x10YV[\x80\x91PP\x92P\x92P\x92V[\x80\x15\x15\x81\x14a\x05\x80W`\0\x80\xFD[`\0\x80`@\x83\x85\x03\x12\x15a\x12\x7FW`\0\x80\xFD[\x825a\x12\x8A\x81a\x10YV[\x91P` \x83\x015a\x12\x9A\x81a\x12^V[\x80\x91PP\x92P\x92\x90PV[`\0` \x82\x84\x03\x12\x15a\x12\xB7W`\0\x80\xFD[\x815`\xFF\x81\x16\x81\x14a\x10\x8BW`\0\x80\xFD[`\0\x80`@\x83\x85\x03\x12\x15a\x12\xDBW`\0\x80\xFD[\x825a\x12\xE6\x81a\x10YV[\x94` \x93\x90\x93\x015\x93PPPV[`\0\x80`@\x83\x85\x03\x12\x15a\x13\x07W`\0\x80\xFD[\x825a\x13\x12\x81a\x10YV[\x91P` \x83\x015a\x12\x9A\x81a\x10YV[`\0\x80`\0``\x84\x86\x03\x12\x15a\x137W`\0\x80\xFD[\x835a\x13B\x81a\x10YV[\x92P` \x84\x015a\x13R\x81a\x10YV[\x92\x95\x92\x94PPP`@\x91\x90\x91\x015\x90V[`@\x81R`\0a\x13v`@\x83\x01\x85a\x10\x92V[\x82\x81\x03` \x84\x81\x01\x91\x90\x91R\x84Q\x80\x83R\x85\x82\x01\x92\x82\x01\x90`\0[\x81\x81\x10\x15a\x13\xADW\x84Q\x83R\x93\x83\x01\x93\x91\x83\x01\x91`\x01\x01a\x13\x91V[P\x90\x97\x96PPPPPPPV[`\0\x80`\0``\x84\x86\x03\x12\x15a\x13\xCFW`\0\x80\xFD[\x835a\x13\xDA\x81a\x10YV[\x95` \x85\x015\x95P`@\x90\x94\x015\x93\x92PPPV[`\0\x80\x83`\x1F\x84\x01\x12a\x14\x01W`\0\x80\xFD[P\x815g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x81\x11\x15a\x14\x19W`\0\x80\xFD[` \x83\x01\x91P\x83` \x82`\x05\x1B\x85\x01\x01\x11\x15a\x144W`\0\x80\xFD[\x92P\x92\x90PV[`\0\x80` \x83\x85\x03\x12\x15a\x14NW`\0\x80\xFD[\x825g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x81\x11\x15a\x14eW`\0\x80\xFD[a\x14q\x85\x82\x86\x01a\x13\xEFV[\x90\x96\x90\x95P\x93PPPPV[`\0\x80`\0\x80`\x80\x85\x87\x03\x12\x15a\x14\x93W`\0\x80\xFD[\x845a\x14\x9E\x81a\x10YV[\x93P` \x85\x015a\x14\xAE\x81a\x10YV[\x92P`@\x85\x015a\x14\xBE\x81a\x10YV[\x93\x96\x92\x95P\x92\x93``\x015\x92PPV[`\0\x80`\0\x80`\x80\x85\x87\x03\x12\x15a\x14\xE4W`\0\x80\xFD[\x845a\x14\xEF\x81a\x10YV[\x93P` \x85\x015a\x14\xFF\x81a\x10YV[\x92P`@\x85\x015\x91P``\x85\x015a\x15\x16\x81a\x10YV[\x93\x96\x92\x95P\x90\x93PPV[`\0\x80`\0\x80`@\x85\x87\x03\x12\x15a\x157W`\0\x80\xFD[\x845g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x80\x82\x11\x15a\x15OW`\0\x80\xFD[a\x15[\x88\x83\x89\x01a\x13\xEFV[\x90\x96P\x94P` \x87\x015\x91P\x80\x82\x11\x15a\x15tW`\0\x80\xFD[Pa\x15\x81\x87\x82\x88\x01a\x13\xEFV[\x95\x98\x94\x97P\x95PPPPV[`\0\x80`\0\x80`\0``\x86\x88\x03\x12\x15a\x15\xA5W`\0\x80\xFD[\x855a\x15\xB0\x81a\x10YV[\x94P` \x86\x015g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x80\x82\x11\x15a\x15\xCDW`\0\x80\xFD[a\x15\xD9\x89\x83\x8A\x01a\x13\xEFV[\x90\x96P\x94P`@\x88\x015\x91P\x80\x82\x11\x15a\x15\xF2W`\0\x80\xFD[Pa\x15\xFF\x88\x82\x89\x01a\x13\xEFV[\x96\x99\x95\x98P\x93\x96P\x92\x94\x93\x92PPPV[`\0` \x82\x84\x03\x12\x15a\x16\"W`\0\x80\xFD[\x81Qa\x10\x8B\x81a\x10YV[` \x80\x82R`*\x90\x82\x01R\x7Fmsg.sender is not permissioned a`@\x82\x01Ri9\x90:\xB780\xBA\xB9\xB2\xB9`\xB1\x1B``\x82\x01R`\x80\x01\x90V[`\0` \x82\x84\x03\x12\x15a\x16\x89W`\0\x80\xFD[\x81Qa\x10\x8B\x81a\x12^V[` \x80\x82R`(\x90\x82\x01R\x7Fmsg.sender is not permissioned a`@\x82\x01Rg9\x9080\xBA\xB9\xB2\xB9`\xC1\x1B``\x82\x01R`\x80\x01\x90V[cNH{q`\xE0\x1B`\0R`2`\x04R`$`\0\xFD[`\0` \x82\x84\x03\x12\x15a\x17\x04W`\0\x80\xFD[\x815a\x10\x8B\x81a\x12^V[`\0`\0\x19\x82\x14\x15a\x171WcNH{q`\xE0\x1B`\0R`\x11`\x04R`$`\0\xFD[P`\x01\x01\x90V\xFE\xA2dipfsX\"\x12 \xCA\xFF\xCC\x84\xA5i\x7F\xE1\x9F\xAF\x08\x1E\xA8\xBB.\x8E=\xBE\x95\x99\xCF\x80r\xA3\x8B\xB6=\xC8L\t2|dsolcC\0\x08\x0C\x003",
     );
     /**Event with signature `Deposit(address,address,address,uint256)` and selector `0x7cfff908a4b583f36430b25d75964c458d8ede8a99bd61be750e97ee1b2f3a96`.
-```solidity
-event Deposit(address staker, address token, address strategy, uint256 shares);
-```*/
+    ```solidity
+    event Deposit(address staker, address token, address strategy, uint256 shares);
+    ```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -1051,45 +1051,15 @@ event Deposit(address staker, address token, address strategy, uint256 shares);
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Uint<256>,
             );
-            type DataToken<'a> = <Self::DataTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (alloy_sol_types::sol_data::FixedBytes<32>,);
             const SIGNATURE: &'static str = "Deposit(address,address,address,uint256)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
-                124u8,
-                255u8,
-                249u8,
-                8u8,
-                164u8,
-                181u8,
-                131u8,
-                243u8,
-                100u8,
-                48u8,
-                178u8,
-                93u8,
-                117u8,
-                150u8,
-                76u8,
-                69u8,
-                141u8,
-                142u8,
-                222u8,
-                138u8,
-                153u8,
-                189u8,
-                97u8,
-                190u8,
-                117u8,
-                14u8,
-                151u8,
-                238u8,
-                27u8,
-                47u8,
-                58u8,
-                150u8,
-            ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
+                alloy_sol_types::private::B256::new([
+                    124u8, 255u8, 249u8, 8u8, 164u8, 181u8, 131u8, 243u8, 100u8, 48u8, 178u8, 93u8,
+                    117u8, 150u8, 76u8, 69u8, 141u8, 142u8, 222u8, 138u8, 153u8, 189u8, 97u8,
+                    190u8, 117u8, 14u8, 151u8, 238u8, 27u8, 47u8, 58u8, 150u8,
+                ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -1109,13 +1079,11 @@ event Deposit(address staker, address token, address strategy, uint256 shares);
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(
-                        alloy_sol_types::Error::invalid_event_signature_hash(
-                            Self::SIGNATURE,
-                            topics.0,
-                            Self::SIGNATURE_HASH,
-                        ),
-                    );
+                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
+                        Self::SIGNATURE,
+                        topics.0,
+                        Self::SIGNATURE_HASH,
+                    ));
                 }
                 Ok(())
             }
@@ -1131,9 +1099,9 @@ event Deposit(address staker, address token, address strategy, uint256 shares);
                     <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
                         &self.strategy,
                     ),
-                    <alloy::sol_types::sol_data::Uint<
-                        256,
-                    > as alloy_sol_types::SolType>::tokenize(&self.shares),
+                    <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
+                        &self.shares,
+                    ),
                 )
             }
             #[inline]
@@ -1148,9 +1116,7 @@ event Deposit(address staker, address token, address strategy, uint256 shares);
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(
-                    Self::SIGNATURE_HASH,
-                );
+                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
                 Ok(())
             }
         }
@@ -1172,9 +1138,9 @@ event Deposit(address staker, address token, address strategy, uint256 shares);
         }
     };
     /**Event with signature `Initialized(uint8)` and selector `0x7f26b83ff96e1f2b6a682f133852f6798a09c465da95921460cefb3847402498`.
-```solidity
-event Initialized(uint8 version);
-```*/
+    ```solidity
+    event Initialized(uint8 version);
+    ```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -1197,45 +1163,15 @@ event Initialized(uint8 version);
         #[automatically_derived]
         impl alloy_sol_types::SolEvent for Initialized {
             type DataTuple<'a> = (alloy::sol_types::sol_data::Uint<8>,);
-            type DataToken<'a> = <Self::DataTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (alloy_sol_types::sol_data::FixedBytes<32>,);
             const SIGNATURE: &'static str = "Initialized(uint8)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
-                127u8,
-                38u8,
-                184u8,
-                63u8,
-                249u8,
-                110u8,
-                31u8,
-                43u8,
-                106u8,
-                104u8,
-                47u8,
-                19u8,
-                56u8,
-                82u8,
-                246u8,
-                121u8,
-                138u8,
-                9u8,
-                196u8,
-                101u8,
-                218u8,
-                149u8,
-                146u8,
-                20u8,
-                96u8,
-                206u8,
-                251u8,
-                56u8,
-                71u8,
-                64u8,
-                36u8,
-                152u8,
-            ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
+                alloy_sol_types::private::B256::new([
+                    127u8, 38u8, 184u8, 63u8, 249u8, 110u8, 31u8, 43u8, 106u8, 104u8, 47u8, 19u8,
+                    56u8, 82u8, 246u8, 121u8, 138u8, 9u8, 196u8, 101u8, 218u8, 149u8, 146u8, 20u8,
+                    96u8, 206u8, 251u8, 56u8, 71u8, 64u8, 36u8, 152u8,
+                ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -1250,22 +1186,20 @@ event Initialized(uint8 version);
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(
-                        alloy_sol_types::Error::invalid_event_signature_hash(
-                            Self::SIGNATURE,
-                            topics.0,
-                            Self::SIGNATURE_HASH,
-                        ),
-                    );
+                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
+                        Self::SIGNATURE,
+                        topics.0,
+                        Self::SIGNATURE_HASH,
+                    ));
                 }
                 Ok(())
             }
             #[inline]
             fn tokenize_body(&self) -> Self::DataToken<'_> {
                 (
-                    <alloy::sol_types::sol_data::Uint<
-                        8,
-                    > as alloy_sol_types::SolType>::tokenize(&self.version),
+                    <alloy::sol_types::sol_data::Uint<8> as alloy_sol_types::SolType>::tokenize(
+                        &self.version,
+                    ),
                 )
             }
             #[inline]
@@ -1280,9 +1214,7 @@ event Initialized(uint8 version);
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(
-                    Self::SIGNATURE_HASH,
-                );
+                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
                 Ok(())
             }
         }
@@ -1304,9 +1236,9 @@ event Initialized(uint8 version);
         }
     };
     /**Event with signature `OwnershipTransferred(address,address)` and selector `0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0`.
-```solidity
-event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
-```*/
+    ```solidity
+    event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
+    ```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -1331,49 +1263,19 @@ event OwnershipTransferred(address indexed previousOwner, address indexed newOwn
         #[automatically_derived]
         impl alloy_sol_types::SolEvent for OwnershipTransferred {
             type DataTuple<'a> = ();
-            type DataToken<'a> = <Self::DataTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (
                 alloy_sol_types::sol_data::FixedBytes<32>,
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Address,
             );
             const SIGNATURE: &'static str = "OwnershipTransferred(address,address)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
-                139u8,
-                224u8,
-                7u8,
-                156u8,
-                83u8,
-                22u8,
-                89u8,
-                20u8,
-                19u8,
-                68u8,
-                205u8,
-                31u8,
-                208u8,
-                164u8,
-                242u8,
-                132u8,
-                25u8,
-                73u8,
-                127u8,
-                151u8,
-                34u8,
-                163u8,
-                218u8,
-                175u8,
-                227u8,
-                180u8,
-                24u8,
-                111u8,
-                107u8,
-                100u8,
-                87u8,
-                224u8,
-            ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
+                alloy_sol_types::private::B256::new([
+                    139u8, 224u8, 7u8, 156u8, 83u8, 22u8, 89u8, 20u8, 19u8, 68u8, 205u8, 31u8,
+                    208u8, 164u8, 242u8, 132u8, 25u8, 73u8, 127u8, 151u8, 34u8, 163u8, 218u8,
+                    175u8, 227u8, 180u8, 24u8, 111u8, 107u8, 100u8, 87u8, 224u8,
+                ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -1391,13 +1293,11 @@ event OwnershipTransferred(address indexed previousOwner, address indexed newOwn
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(
-                        alloy_sol_types::Error::invalid_event_signature_hash(
-                            Self::SIGNATURE,
-                            topics.0,
-                            Self::SIGNATURE_HASH,
-                        ),
-                    );
+                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
+                        Self::SIGNATURE,
+                        topics.0,
+                        Self::SIGNATURE_HASH,
+                    ));
                 }
                 Ok(())
             }
@@ -1421,9 +1321,7 @@ event OwnershipTransferred(address indexed previousOwner, address indexed newOwn
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(
-                    Self::SIGNATURE_HASH,
-                );
+                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
                 out[1usize] = <alloy::sol_types::sol_data::Address as alloy_sol_types::EventTopic>::encode_topic(
                     &self.previousOwner,
                 );
@@ -1451,9 +1349,9 @@ event OwnershipTransferred(address indexed previousOwner, address indexed newOwn
         }
     };
     /**Event with signature `Paused(address,uint256)` and selector `0xab40a374bc51de372200a8bc981af8c9ecdc08dfdaef0bb6e09f88f3c616ef3d`.
-```solidity
-event Paused(address indexed account, uint256 newPausedStatus);
-```*/
+    ```solidity
+    event Paused(address indexed account, uint256 newPausedStatus);
+    ```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -1478,48 +1376,18 @@ event Paused(address indexed account, uint256 newPausedStatus);
         #[automatically_derived]
         impl alloy_sol_types::SolEvent for Paused {
             type DataTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
-            type DataToken<'a> = <Self::DataTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (
                 alloy_sol_types::sol_data::FixedBytes<32>,
                 alloy::sol_types::sol_data::Address,
             );
             const SIGNATURE: &'static str = "Paused(address,uint256)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
-                171u8,
-                64u8,
-                163u8,
-                116u8,
-                188u8,
-                81u8,
-                222u8,
-                55u8,
-                34u8,
-                0u8,
-                168u8,
-                188u8,
-                152u8,
-                26u8,
-                248u8,
-                201u8,
-                236u8,
-                220u8,
-                8u8,
-                223u8,
-                218u8,
-                239u8,
-                11u8,
-                182u8,
-                224u8,
-                159u8,
-                136u8,
-                243u8,
-                198u8,
-                22u8,
-                239u8,
-                61u8,
-            ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
+                alloy_sol_types::private::B256::new([
+                    171u8, 64u8, 163u8, 116u8, 188u8, 81u8, 222u8, 55u8, 34u8, 0u8, 168u8, 188u8,
+                    152u8, 26u8, 248u8, 201u8, 236u8, 220u8, 8u8, 223u8, 218u8, 239u8, 11u8, 182u8,
+                    224u8, 159u8, 136u8, 243u8, 198u8, 22u8, 239u8, 61u8,
+                ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -1537,22 +1405,20 @@ event Paused(address indexed account, uint256 newPausedStatus);
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(
-                        alloy_sol_types::Error::invalid_event_signature_hash(
-                            Self::SIGNATURE,
-                            topics.0,
-                            Self::SIGNATURE_HASH,
-                        ),
-                    );
+                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
+                        Self::SIGNATURE,
+                        topics.0,
+                        Self::SIGNATURE_HASH,
+                    ));
                 }
                 Ok(())
             }
             #[inline]
             fn tokenize_body(&self) -> Self::DataToken<'_> {
                 (
-                    <alloy::sol_types::sol_data::Uint<
-                        256,
-                    > as alloy_sol_types::SolType>::tokenize(&self.newPausedStatus),
+                    <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
+                        &self.newPausedStatus,
+                    ),
                 )
             }
             #[inline]
@@ -1567,9 +1433,7 @@ event Paused(address indexed account, uint256 newPausedStatus);
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(
-                    Self::SIGNATURE_HASH,
-                );
+                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
                 out[1usize] = <alloy::sol_types::sol_data::Address as alloy_sol_types::EventTopic>::encode_topic(
                     &self.account,
                 );
@@ -1594,9 +1458,9 @@ event Paused(address indexed account, uint256 newPausedStatus);
         }
     };
     /**Event with signature `PauserRegistrySet(address,address)` and selector `0x6e9fcd539896fca60e8b0f01dd580233e48a6b0f7df013b89ba7f565869acdb6`.
-```solidity
-event PauserRegistrySet(address pauserRegistry, address newPauserRegistry);
-```*/
+    ```solidity
+    event PauserRegistrySet(address pauserRegistry, address newPauserRegistry);
+    ```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -1624,45 +1488,15 @@ event PauserRegistrySet(address pauserRegistry, address newPauserRegistry);
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Address,
             );
-            type DataToken<'a> = <Self::DataTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (alloy_sol_types::sol_data::FixedBytes<32>,);
             const SIGNATURE: &'static str = "PauserRegistrySet(address,address)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
-                110u8,
-                159u8,
-                205u8,
-                83u8,
-                152u8,
-                150u8,
-                252u8,
-                166u8,
-                14u8,
-                139u8,
-                15u8,
-                1u8,
-                221u8,
-                88u8,
-                2u8,
-                51u8,
-                228u8,
-                138u8,
-                107u8,
-                15u8,
-                125u8,
-                240u8,
-                19u8,
-                184u8,
-                155u8,
-                167u8,
-                245u8,
-                101u8,
-                134u8,
-                154u8,
-                205u8,
-                182u8,
-            ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
+                alloy_sol_types::private::B256::new([
+                    110u8, 159u8, 205u8, 83u8, 152u8, 150u8, 252u8, 166u8, 14u8, 139u8, 15u8, 1u8,
+                    221u8, 88u8, 2u8, 51u8, 228u8, 138u8, 107u8, 15u8, 125u8, 240u8, 19u8, 184u8,
+                    155u8, 167u8, 245u8, 101u8, 134u8, 154u8, 205u8, 182u8,
+                ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -1680,13 +1514,11 @@ event PauserRegistrySet(address pauserRegistry, address newPauserRegistry);
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(
-                        alloy_sol_types::Error::invalid_event_signature_hash(
-                            Self::SIGNATURE,
-                            topics.0,
-                            Self::SIGNATURE_HASH,
-                        ),
-                    );
+                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
+                        Self::SIGNATURE,
+                        topics.0,
+                        Self::SIGNATURE_HASH,
+                    ));
                 }
                 Ok(())
             }
@@ -1713,9 +1545,7 @@ event PauserRegistrySet(address pauserRegistry, address newPauserRegistry);
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(
-                    Self::SIGNATURE_HASH,
-                );
+                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
                 Ok(())
             }
         }
@@ -1737,9 +1567,9 @@ event PauserRegistrySet(address pauserRegistry, address newPauserRegistry);
         }
     };
     /**Event with signature `StrategyAddedToDepositWhitelist(address)` and selector `0x0c35b17d91c96eb2751cd456e1252f42a386e524ef9ff26ecc9950859fdc04fe`.
-```solidity
-event StrategyAddedToDepositWhitelist(address strategy);
-```*/
+    ```solidity
+    event StrategyAddedToDepositWhitelist(address strategy);
+    ```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -1762,45 +1592,15 @@ event StrategyAddedToDepositWhitelist(address strategy);
         #[automatically_derived]
         impl alloy_sol_types::SolEvent for StrategyAddedToDepositWhitelist {
             type DataTuple<'a> = (alloy::sol_types::sol_data::Address,);
-            type DataToken<'a> = <Self::DataTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (alloy_sol_types::sol_data::FixedBytes<32>,);
             const SIGNATURE: &'static str = "StrategyAddedToDepositWhitelist(address)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
-                12u8,
-                53u8,
-                177u8,
-                125u8,
-                145u8,
-                201u8,
-                110u8,
-                178u8,
-                117u8,
-                28u8,
-                212u8,
-                86u8,
-                225u8,
-                37u8,
-                47u8,
-                66u8,
-                163u8,
-                134u8,
-                229u8,
-                36u8,
-                239u8,
-                159u8,
-                242u8,
-                110u8,
-                204u8,
-                153u8,
-                80u8,
-                133u8,
-                159u8,
-                220u8,
-                4u8,
-                254u8,
-            ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
+                alloy_sol_types::private::B256::new([
+                    12u8, 53u8, 177u8, 125u8, 145u8, 201u8, 110u8, 178u8, 117u8, 28u8, 212u8, 86u8,
+                    225u8, 37u8, 47u8, 66u8, 163u8, 134u8, 229u8, 36u8, 239u8, 159u8, 242u8, 110u8,
+                    204u8, 153u8, 80u8, 133u8, 159u8, 220u8, 4u8, 254u8,
+                ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -1815,13 +1615,11 @@ event StrategyAddedToDepositWhitelist(address strategy);
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(
-                        alloy_sol_types::Error::invalid_event_signature_hash(
-                            Self::SIGNATURE,
-                            topics.0,
-                            Self::SIGNATURE_HASH,
-                        ),
-                    );
+                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
+                        Self::SIGNATURE,
+                        topics.0,
+                        Self::SIGNATURE_HASH,
+                    ));
                 }
                 Ok(())
             }
@@ -1845,9 +1643,7 @@ event StrategyAddedToDepositWhitelist(address strategy);
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(
-                    Self::SIGNATURE_HASH,
-                );
+                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
                 Ok(())
             }
         }
@@ -1861,20 +1657,17 @@ event StrategyAddedToDepositWhitelist(address strategy);
             }
         }
         #[automatically_derived]
-        impl From<&StrategyAddedToDepositWhitelist>
-        for alloy_sol_types::private::LogData {
+        impl From<&StrategyAddedToDepositWhitelist> for alloy_sol_types::private::LogData {
             #[inline]
-            fn from(
-                this: &StrategyAddedToDepositWhitelist,
-            ) -> alloy_sol_types::private::LogData {
+            fn from(this: &StrategyAddedToDepositWhitelist) -> alloy_sol_types::private::LogData {
                 alloy_sol_types::SolEvent::encode_log_data(this)
             }
         }
     };
     /**Event with signature `StrategyRemovedFromDepositWhitelist(address)` and selector `0x4074413b4b443e4e58019f2855a8765113358c7c72e39509c6af45fc0f5ba030`.
-```solidity
-event StrategyRemovedFromDepositWhitelist(address strategy);
-```*/
+    ```solidity
+    event StrategyRemovedFromDepositWhitelist(address strategy);
+    ```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -1897,45 +1690,15 @@ event StrategyRemovedFromDepositWhitelist(address strategy);
         #[automatically_derived]
         impl alloy_sol_types::SolEvent for StrategyRemovedFromDepositWhitelist {
             type DataTuple<'a> = (alloy::sol_types::sol_data::Address,);
-            type DataToken<'a> = <Self::DataTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (alloy_sol_types::sol_data::FixedBytes<32>,);
             const SIGNATURE: &'static str = "StrategyRemovedFromDepositWhitelist(address)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
-                64u8,
-                116u8,
-                65u8,
-                59u8,
-                75u8,
-                68u8,
-                62u8,
-                78u8,
-                88u8,
-                1u8,
-                159u8,
-                40u8,
-                85u8,
-                168u8,
-                118u8,
-                81u8,
-                19u8,
-                53u8,
-                140u8,
-                124u8,
-                114u8,
-                227u8,
-                149u8,
-                9u8,
-                198u8,
-                175u8,
-                69u8,
-                252u8,
-                15u8,
-                91u8,
-                160u8,
-                48u8,
-            ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
+                alloy_sol_types::private::B256::new([
+                    64u8, 116u8, 65u8, 59u8, 75u8, 68u8, 62u8, 78u8, 88u8, 1u8, 159u8, 40u8, 85u8,
+                    168u8, 118u8, 81u8, 19u8, 53u8, 140u8, 124u8, 114u8, 227u8, 149u8, 9u8, 198u8,
+                    175u8, 69u8, 252u8, 15u8, 91u8, 160u8, 48u8,
+                ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -1950,13 +1713,11 @@ event StrategyRemovedFromDepositWhitelist(address strategy);
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(
-                        alloy_sol_types::Error::invalid_event_signature_hash(
-                            Self::SIGNATURE,
-                            topics.0,
-                            Self::SIGNATURE_HASH,
-                        ),
-                    );
+                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
+                        Self::SIGNATURE,
+                        topics.0,
+                        Self::SIGNATURE_HASH,
+                    ));
                 }
                 Ok(())
             }
@@ -1980,15 +1741,12 @@ event StrategyRemovedFromDepositWhitelist(address strategy);
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(
-                    Self::SIGNATURE_HASH,
-                );
+                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
                 Ok(())
             }
         }
         #[automatically_derived]
-        impl alloy_sol_types::private::IntoLogData
-        for StrategyRemovedFromDepositWhitelist {
+        impl alloy_sol_types::private::IntoLogData for StrategyRemovedFromDepositWhitelist {
             fn to_log_data(&self) -> alloy_sol_types::private::LogData {
                 From::from(self)
             }
@@ -1997,8 +1755,7 @@ event StrategyRemovedFromDepositWhitelist(address strategy);
             }
         }
         #[automatically_derived]
-        impl From<&StrategyRemovedFromDepositWhitelist>
-        for alloy_sol_types::private::LogData {
+        impl From<&StrategyRemovedFromDepositWhitelist> for alloy_sol_types::private::LogData {
             #[inline]
             fn from(
                 this: &StrategyRemovedFromDepositWhitelist,
@@ -2008,9 +1765,9 @@ event StrategyRemovedFromDepositWhitelist(address strategy);
         }
     };
     /**Event with signature `StrategyWhitelisterChanged(address,address)` and selector `0x4264275e593955ff9d6146a51a4525f6ddace2e81db9391abcc9d1ca48047d29`.
-```solidity
-event StrategyWhitelisterChanged(address previousAddress, address newAddress);
-```*/
+    ```solidity
+    event StrategyWhitelisterChanged(address previousAddress, address newAddress);
+    ```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -2038,45 +1795,15 @@ event StrategyWhitelisterChanged(address previousAddress, address newAddress);
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Address,
             );
-            type DataToken<'a> = <Self::DataTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (alloy_sol_types::sol_data::FixedBytes<32>,);
             const SIGNATURE: &'static str = "StrategyWhitelisterChanged(address,address)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
-                66u8,
-                100u8,
-                39u8,
-                94u8,
-                89u8,
-                57u8,
-                85u8,
-                255u8,
-                157u8,
-                97u8,
-                70u8,
-                165u8,
-                26u8,
-                69u8,
-                37u8,
-                246u8,
-                221u8,
-                172u8,
-                226u8,
-                232u8,
-                29u8,
-                185u8,
-                57u8,
-                26u8,
-                188u8,
-                201u8,
-                209u8,
-                202u8,
-                72u8,
-                4u8,
-                125u8,
-                41u8,
-            ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
+                alloy_sol_types::private::B256::new([
+                    66u8, 100u8, 39u8, 94u8, 89u8, 57u8, 85u8, 255u8, 157u8, 97u8, 70u8, 165u8,
+                    26u8, 69u8, 37u8, 246u8, 221u8, 172u8, 226u8, 232u8, 29u8, 185u8, 57u8, 26u8,
+                    188u8, 201u8, 209u8, 202u8, 72u8, 4u8, 125u8, 41u8,
+                ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -2094,13 +1821,11 @@ event StrategyWhitelisterChanged(address previousAddress, address newAddress);
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(
-                        alloy_sol_types::Error::invalid_event_signature_hash(
-                            Self::SIGNATURE,
-                            topics.0,
-                            Self::SIGNATURE_HASH,
-                        ),
-                    );
+                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
+                        Self::SIGNATURE,
+                        topics.0,
+                        Self::SIGNATURE_HASH,
+                    ));
                 }
                 Ok(())
             }
@@ -2127,9 +1852,7 @@ event StrategyWhitelisterChanged(address previousAddress, address newAddress);
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(
-                    Self::SIGNATURE_HASH,
-                );
+                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
                 Ok(())
             }
         }
@@ -2145,17 +1868,15 @@ event StrategyWhitelisterChanged(address previousAddress, address newAddress);
         #[automatically_derived]
         impl From<&StrategyWhitelisterChanged> for alloy_sol_types::private::LogData {
             #[inline]
-            fn from(
-                this: &StrategyWhitelisterChanged,
-            ) -> alloy_sol_types::private::LogData {
+            fn from(this: &StrategyWhitelisterChanged) -> alloy_sol_types::private::LogData {
                 alloy_sol_types::SolEvent::encode_log_data(this)
             }
         }
     };
     /**Event with signature `Unpaused(address,uint256)` and selector `0x3582d1828e26bf56bd801502bc021ac0bc8afb57c826e4986b45593c8fad389c`.
-```solidity
-event Unpaused(address indexed account, uint256 newPausedStatus);
-```*/
+    ```solidity
+    event Unpaused(address indexed account, uint256 newPausedStatus);
+    ```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -2180,48 +1901,18 @@ event Unpaused(address indexed account, uint256 newPausedStatus);
         #[automatically_derived]
         impl alloy_sol_types::SolEvent for Unpaused {
             type DataTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
-            type DataToken<'a> = <Self::DataTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (
                 alloy_sol_types::sol_data::FixedBytes<32>,
                 alloy::sol_types::sol_data::Address,
             );
             const SIGNATURE: &'static str = "Unpaused(address,uint256)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
-                53u8,
-                130u8,
-                209u8,
-                130u8,
-                142u8,
-                38u8,
-                191u8,
-                86u8,
-                189u8,
-                128u8,
-                21u8,
-                2u8,
-                188u8,
-                2u8,
-                26u8,
-                192u8,
-                188u8,
-                138u8,
-                251u8,
-                87u8,
-                200u8,
-                38u8,
-                228u8,
-                152u8,
-                107u8,
-                69u8,
-                89u8,
-                60u8,
-                143u8,
-                173u8,
-                56u8,
-                156u8,
-            ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
+                alloy_sol_types::private::B256::new([
+                    53u8, 130u8, 209u8, 130u8, 142u8, 38u8, 191u8, 86u8, 189u8, 128u8, 21u8, 2u8,
+                    188u8, 2u8, 26u8, 192u8, 188u8, 138u8, 251u8, 87u8, 200u8, 38u8, 228u8, 152u8,
+                    107u8, 69u8, 89u8, 60u8, 143u8, 173u8, 56u8, 156u8,
+                ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -2239,22 +1930,20 @@ event Unpaused(address indexed account, uint256 newPausedStatus);
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(
-                        alloy_sol_types::Error::invalid_event_signature_hash(
-                            Self::SIGNATURE,
-                            topics.0,
-                            Self::SIGNATURE_HASH,
-                        ),
-                    );
+                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
+                        Self::SIGNATURE,
+                        topics.0,
+                        Self::SIGNATURE_HASH,
+                    ));
                 }
                 Ok(())
             }
             #[inline]
             fn tokenize_body(&self) -> Self::DataToken<'_> {
                 (
-                    <alloy::sol_types::sol_data::Uint<
-                        256,
-                    > as alloy_sol_types::SolType>::tokenize(&self.newPausedStatus),
+                    <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
+                        &self.newPausedStatus,
+                    ),
                 )
             }
             #[inline]
@@ -2269,9 +1958,7 @@ event Unpaused(address indexed account, uint256 newPausedStatus);
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(
-                    Self::SIGNATURE_HASH,
-                );
+                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
                 out[1usize] = <alloy::sol_types::sol_data::Address as alloy_sol_types::EventTopic>::encode_topic(
                     &self.account,
                 );
@@ -2296,9 +1983,9 @@ event Unpaused(address indexed account, uint256 newPausedStatus);
         }
     };
     /**Event with signature `UpdatedThirdPartyTransfersForbidden(address,bool)` and selector `0x77d930df4937793473a95024d87a98fd2ccb9e92d3c2463b3dacd65d3e6a5786`.
-```solidity
-event UpdatedThirdPartyTransfersForbidden(address strategy, bool value);
-```*/
+    ```solidity
+    event UpdatedThirdPartyTransfersForbidden(address strategy, bool value);
+    ```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -2326,45 +2013,15 @@ event UpdatedThirdPartyTransfersForbidden(address strategy, bool value);
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Bool,
             );
-            type DataToken<'a> = <Self::DataTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (alloy_sol_types::sol_data::FixedBytes<32>,);
             const SIGNATURE: &'static str = "UpdatedThirdPartyTransfersForbidden(address,bool)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
-                119u8,
-                217u8,
-                48u8,
-                223u8,
-                73u8,
-                55u8,
-                121u8,
-                52u8,
-                115u8,
-                169u8,
-                80u8,
-                36u8,
-                216u8,
-                122u8,
-                152u8,
-                253u8,
-                44u8,
-                203u8,
-                158u8,
-                146u8,
-                211u8,
-                194u8,
-                70u8,
-                59u8,
-                61u8,
-                172u8,
-                214u8,
-                93u8,
-                62u8,
-                106u8,
-                87u8,
-                134u8,
-            ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
+                alloy_sol_types::private::B256::new([
+                    119u8, 217u8, 48u8, 223u8, 73u8, 55u8, 121u8, 52u8, 115u8, 169u8, 80u8, 36u8,
+                    216u8, 122u8, 152u8, 253u8, 44u8, 203u8, 158u8, 146u8, 211u8, 194u8, 70u8,
+                    59u8, 61u8, 172u8, 214u8, 93u8, 62u8, 106u8, 87u8, 134u8,
+                ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -2382,13 +2039,11 @@ event UpdatedThirdPartyTransfersForbidden(address strategy, bool value);
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(
-                        alloy_sol_types::Error::invalid_event_signature_hash(
-                            Self::SIGNATURE,
-                            topics.0,
-                            Self::SIGNATURE_HASH,
-                        ),
-                    );
+                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
+                        Self::SIGNATURE,
+                        topics.0,
+                        Self::SIGNATURE_HASH,
+                    ));
                 }
                 Ok(())
             }
@@ -2415,15 +2070,12 @@ event UpdatedThirdPartyTransfersForbidden(address strategy, bool value);
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(
-                    Self::SIGNATURE_HASH,
-                );
+                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
                 Ok(())
             }
         }
         #[automatically_derived]
-        impl alloy_sol_types::private::IntoLogData
-        for UpdatedThirdPartyTransfersForbidden {
+        impl alloy_sol_types::private::IntoLogData for UpdatedThirdPartyTransfersForbidden {
             fn to_log_data(&self) -> alloy_sol_types::private::LogData {
                 From::from(self)
             }
@@ -2432,8 +2084,7 @@ event UpdatedThirdPartyTransfersForbidden(address strategy, bool value);
             }
         }
         #[automatically_derived]
-        impl From<&UpdatedThirdPartyTransfersForbidden>
-        for alloy_sol_types::private::LogData {
+        impl From<&UpdatedThirdPartyTransfersForbidden> for alloy_sol_types::private::LogData {
             #[inline]
             fn from(
                 this: &UpdatedThirdPartyTransfersForbidden,
@@ -2443,9 +2094,9 @@ event UpdatedThirdPartyTransfersForbidden(address strategy, bool value);
         }
     };
     /**Function with signature `addShares(address,address,address,uint256)` and selector `0xc4623ea1`.
-```solidity
-function addShares(address staker, address token, address strategy, uint256 shares) external;
-```*/
+    ```solidity
+    function addShares(address staker, address token, address strategy, uint256 shares) external;
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct addSharesCall {
@@ -2483,9 +2134,7 @@ function addShares(address staker, address token, address strategy, uint256 shar
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -2519,9 +2168,7 @@ function addShares(address staker, address token, address strategy, uint256 shar
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -2551,14 +2198,10 @@ function addShares(address staker, address token, address strategy, uint256 shar
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Uint<256>,
             );
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = addSharesReturn;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "addShares(address,address,address,uint256)";
             const SELECTOR: [u8; 4] = [196u8, 98u8, 62u8, 161u8];
             #[inline]
@@ -2579,9 +2222,9 @@ function addShares(address staker, address token, address strategy, uint256 shar
                     <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
                         &self.strategy,
                     ),
-                    <alloy::sol_types::sol_data::Uint<
-                        256,
-                    > as alloy_sol_types::SolType>::tokenize(&self.shares),
+                    <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
+                        &self.shares,
+                    ),
                 )
             }
             #[inline]
@@ -2589,23 +2232,22 @@ function addShares(address staker, address token, address strategy, uint256 shar
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `addStrategiesToDepositWhitelist(address[],bool[])` and selector `0xdf5b3547`.
-```solidity
-function addStrategiesToDepositWhitelist(address[] memory strategiesToWhitelist, bool[] memory thirdPartyTransfersForbiddenValues) external;
-```*/
+    ```solidity
+    function addStrategiesToDepositWhitelist(address[] memory strategiesToWhitelist, bool[] memory thirdPartyTransfersForbiddenValues) external;
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct addStrategiesToDepositWhitelistCall {
-        pub strategiesToWhitelist: alloy::sol_types::private::Vec<
-            alloy::sol_types::private::Address,
-        >,
+        pub strategiesToWhitelist:
+            alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
         pub thirdPartyTransfersForbiddenValues: alloy::sol_types::private::Vec<bool>,
     }
     ///Container type for the return parameters of the [`addStrategiesToDepositWhitelist(address[],bool[])`](addStrategiesToDepositWhitelistCall) function.
@@ -2633,9 +2275,7 @@ function addStrategiesToDepositWhitelist(address[] memory strategiesToWhitelist,
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -2644,8 +2284,7 @@ function addStrategiesToDepositWhitelist(address[] memory strategiesToWhitelist,
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<addStrategiesToDepositWhitelistCall>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<addStrategiesToDepositWhitelistCall> for UnderlyingRustTuple<'_> {
                 fn from(value: addStrategiesToDepositWhitelistCall) -> Self {
                     (
                         value.strategiesToWhitelist,
@@ -2655,8 +2294,7 @@ function addStrategiesToDepositWhitelist(address[] memory strategiesToWhitelist,
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for addStrategiesToDepositWhitelistCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for addStrategiesToDepositWhitelistCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {
                         strategiesToWhitelist: tuple.0,
@@ -2672,9 +2310,7 @@ function addStrategiesToDepositWhitelist(address[] memory strategiesToWhitelist,
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -2683,16 +2319,14 @@ function addStrategiesToDepositWhitelist(address[] memory strategiesToWhitelist,
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<addStrategiesToDepositWhitelistReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<addStrategiesToDepositWhitelistReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: addStrategiesToDepositWhitelistReturn) -> Self {
                     ()
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for addStrategiesToDepositWhitelistReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for addStrategiesToDepositWhitelistReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
@@ -2704,14 +2338,10 @@ function addStrategiesToDepositWhitelist(address[] memory strategiesToWhitelist,
                 alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::Address>,
                 alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::Bool>,
             );
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = addStrategiesToDepositWhitelistReturn;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "addStrategiesToDepositWhitelist(address[],bool[])";
             const SELECTOR: [u8; 4] = [223u8, 91u8, 53u8, 71u8];
             #[inline]
@@ -2740,17 +2370,17 @@ function addStrategiesToDepositWhitelist(address[] memory strategiesToWhitelist,
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `beaconChainETHStrategy()` and selector `0x9104c319`.
-```solidity
-function beaconChainETHStrategy() external view returns (address);
-```*/
+    ```solidity
+    function beaconChainETHStrategy() external view returns (address);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct beaconChainETHStrategyCall {}
@@ -2775,9 +2405,7 @@ function beaconChainETHStrategy() external view returns (address);
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -2786,16 +2414,14 @@ function beaconChainETHStrategy() external view returns (address);
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<beaconChainETHStrategyCall>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<beaconChainETHStrategyCall> for UnderlyingRustTuple<'_> {
                 fn from(value: beaconChainETHStrategyCall) -> Self {
                     ()
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for beaconChainETHStrategyCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for beaconChainETHStrategyCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
@@ -2808,9 +2434,7 @@ function beaconChainETHStrategy() external view returns (address);
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -2819,16 +2443,14 @@ function beaconChainETHStrategy() external view returns (address);
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<beaconChainETHStrategyReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<beaconChainETHStrategyReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: beaconChainETHStrategyReturn) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for beaconChainETHStrategyReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for beaconChainETHStrategyReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -2837,14 +2459,10 @@ function beaconChainETHStrategy() external view returns (address);
         #[automatically_derived]
         impl alloy_sol_types::SolCall for beaconChainETHStrategyCall {
             type Parameters<'a> = ();
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = beaconChainETHStrategyReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Address,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "beaconChainETHStrategy()";
             const SELECTOR: [u8; 4] = [145u8, 4u8, 195u8, 25u8];
             #[inline]
@@ -2862,17 +2480,17 @@ function beaconChainETHStrategy() external view returns (address);
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `cumulativeWithdrawalsQueued(address)` and selector `0xa1788484`.
-```solidity
-function cumulativeWithdrawalsQueued(address) external view returns (uint256);
-```*/
+    ```solidity
+    function cumulativeWithdrawalsQueued(address) external view returns (uint256);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct cumulativeWithdrawalsQueuedCall {
@@ -2899,9 +2517,7 @@ function cumulativeWithdrawalsQueued(address) external view returns (uint256);
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -2910,16 +2526,14 @@ function cumulativeWithdrawalsQueued(address) external view returns (uint256);
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<cumulativeWithdrawalsQueuedCall>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<cumulativeWithdrawalsQueuedCall> for UnderlyingRustTuple<'_> {
                 fn from(value: cumulativeWithdrawalsQueuedCall) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for cumulativeWithdrawalsQueuedCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for cumulativeWithdrawalsQueuedCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -2929,14 +2543,10 @@ function cumulativeWithdrawalsQueued(address) external view returns (uint256);
             #[doc(hidden)]
             type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (
-                alloy::sol_types::private::primitives::aliases::U256,
-            );
+            type UnderlyingRustTuple<'a> = (alloy::sol_types::private::primitives::aliases::U256,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -2945,16 +2555,14 @@ function cumulativeWithdrawalsQueued(address) external view returns (uint256);
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<cumulativeWithdrawalsQueuedReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<cumulativeWithdrawalsQueuedReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: cumulativeWithdrawalsQueuedReturn) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for cumulativeWithdrawalsQueuedReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for cumulativeWithdrawalsQueuedReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -2963,14 +2571,10 @@ function cumulativeWithdrawalsQueued(address) external view returns (uint256);
         #[automatically_derived]
         impl alloy_sol_types::SolCall for cumulativeWithdrawalsQueuedCall {
             type Parameters<'a> = (alloy::sol_types::sol_data::Address,);
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = cumulativeWithdrawalsQueuedReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "cumulativeWithdrawalsQueued(address)";
             const SELECTOR: [u8; 4] = [161u8, 120u8, 132u8, 132u8];
             #[inline]
@@ -2992,17 +2596,17 @@ function cumulativeWithdrawalsQueued(address) external view returns (uint256);
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `delegation()` and selector `0xdf5cf723`.
-```solidity
-function delegation() external view returns (address);
-```*/
+    ```solidity
+    function delegation() external view returns (address);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct delegationCall {}
@@ -3027,9 +2631,7 @@ function delegation() external view returns (address);
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -3058,9 +2660,7 @@ function delegation() external view returns (address);
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -3085,14 +2685,10 @@ function delegation() external view returns (address);
         #[automatically_derived]
         impl alloy_sol_types::SolCall for delegationCall {
             type Parameters<'a> = ();
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = delegationReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Address,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "delegation()";
             const SELECTOR: [u8; 4] = [223u8, 92u8, 247u8, 35u8];
             #[inline]
@@ -3110,17 +2706,17 @@ function delegation() external view returns (address);
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `depositBeaconChainETH(address,uint256)` and selector `0x9f00fa24`.
-```solidity
-function depositBeaconChainETH(address staker, uint256 amount) external;
-```*/
+    ```solidity
+    function depositBeaconChainETH(address staker, uint256 amount) external;
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct depositBeaconChainETHCall {
@@ -3152,9 +2748,7 @@ function depositBeaconChainETH(address staker, uint256 amount) external;
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -3163,16 +2757,14 @@ function depositBeaconChainETH(address staker, uint256 amount) external;
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<depositBeaconChainETHCall>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<depositBeaconChainETHCall> for UnderlyingRustTuple<'_> {
                 fn from(value: depositBeaconChainETHCall) -> Self {
                     (value.staker, value.amount)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for depositBeaconChainETHCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for depositBeaconChainETHCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {
                         staker: tuple.0,
@@ -3188,9 +2780,7 @@ function depositBeaconChainETH(address staker, uint256 amount) external;
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -3199,16 +2789,14 @@ function depositBeaconChainETH(address staker, uint256 amount) external;
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<depositBeaconChainETHReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<depositBeaconChainETHReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: depositBeaconChainETHReturn) -> Self {
                     ()
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for depositBeaconChainETHReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for depositBeaconChainETHReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
@@ -3220,14 +2808,10 @@ function depositBeaconChainETH(address staker, uint256 amount) external;
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Uint<256>,
             );
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = depositBeaconChainETHReturn;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "depositBeaconChainETH(address,uint256)";
             const SELECTOR: [u8; 4] = [159u8, 0u8, 250u8, 36u8];
             #[inline]
@@ -3242,9 +2826,9 @@ function depositBeaconChainETH(address staker, uint256 amount) external;
                     <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
                         &self.staker,
                     ),
-                    <alloy::sol_types::sol_data::Uint<
-                        256,
-                    > as alloy_sol_types::SolType>::tokenize(&self.amount),
+                    <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
+                        &self.amount,
+                    ),
                 )
             }
             #[inline]
@@ -3252,17 +2836,17 @@ function depositBeaconChainETH(address staker, uint256 amount) external;
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `depositIntoStrategy(address,address,uint256)` and selector `0xe7a050aa`.
-```solidity
-function depositIntoStrategy(address strategy, address token, uint256 amount) external returns (uint256);
-```*/
+    ```solidity
+    function depositIntoStrategy(address strategy, address token, uint256 amount) external returns (uint256);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct depositIntoStrategyCall {
@@ -3299,9 +2883,7 @@ function depositIntoStrategy(address strategy, address token, uint256 amount) ex
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -3310,16 +2892,14 @@ function depositIntoStrategy(address strategy, address token, uint256 amount) ex
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<depositIntoStrategyCall>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<depositIntoStrategyCall> for UnderlyingRustTuple<'_> {
                 fn from(value: depositIntoStrategyCall) -> Self {
                     (value.strategy, value.token, value.amount)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for depositIntoStrategyCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for depositIntoStrategyCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {
                         strategy: tuple.0,
@@ -3333,14 +2913,10 @@ function depositIntoStrategy(address strategy, address token, uint256 amount) ex
             #[doc(hidden)]
             type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (
-                alloy::sol_types::private::primitives::aliases::U256,
-            );
+            type UnderlyingRustTuple<'a> = (alloy::sol_types::private::primitives::aliases::U256,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -3349,16 +2925,14 @@ function depositIntoStrategy(address strategy, address token, uint256 amount) ex
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<depositIntoStrategyReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<depositIntoStrategyReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: depositIntoStrategyReturn) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for depositIntoStrategyReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for depositIntoStrategyReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -3371,14 +2945,10 @@ function depositIntoStrategy(address strategy, address token, uint256 amount) ex
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Uint<256>,
             );
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = depositIntoStrategyReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "depositIntoStrategy(address,address,uint256)";
             const SELECTOR: [u8; 4] = [231u8, 160u8, 80u8, 170u8];
             #[inline]
@@ -3396,9 +2966,9 @@ function depositIntoStrategy(address strategy, address token, uint256 amount) ex
                     <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
                         &self.token,
                     ),
-                    <alloy::sol_types::sol_data::Uint<
-                        256,
-                    > as alloy_sol_types::SolType>::tokenize(&self.amount),
+                    <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
+                        &self.amount,
+                    ),
                 )
             }
             #[inline]
@@ -3406,17 +2976,17 @@ function depositIntoStrategy(address strategy, address token, uint256 amount) ex
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `depositIntoStrategyWithSignature(address,address,uint256,address,uint256,bytes)` and selector `0x32e89ace`.
-```solidity
-function depositIntoStrategyWithSignature(address strategy, address token, uint256 amount, address staker, uint256 expiry, bytes memory signature) external returns (uint256 shares);
-```*/
+    ```solidity
+    function depositIntoStrategyWithSignature(address strategy, address token, uint256 amount, address staker, uint256 expiry, bytes memory signature) external returns (uint256 shares);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct depositIntoStrategyWithSignatureCall {
@@ -3462,9 +3032,7 @@ function depositIntoStrategyWithSignature(address strategy, address token, uint2
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -3473,8 +3041,7 @@ function depositIntoStrategyWithSignature(address strategy, address token, uint2
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<depositIntoStrategyWithSignatureCall>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<depositIntoStrategyWithSignatureCall> for UnderlyingRustTuple<'_> {
                 fn from(value: depositIntoStrategyWithSignatureCall) -> Self {
                     (
                         value.strategy,
@@ -3488,8 +3055,7 @@ function depositIntoStrategyWithSignature(address strategy, address token, uint2
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for depositIntoStrategyWithSignatureCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for depositIntoStrategyWithSignatureCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {
                         strategy: tuple.0,
@@ -3506,14 +3072,10 @@ function depositIntoStrategyWithSignature(address strategy, address token, uint2
             #[doc(hidden)]
             type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (
-                alloy::sol_types::private::primitives::aliases::U256,
-            );
+            type UnderlyingRustTuple<'a> = (alloy::sol_types::private::primitives::aliases::U256,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -3522,16 +3084,14 @@ function depositIntoStrategyWithSignature(address strategy, address token, uint2
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<depositIntoStrategyWithSignatureReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<depositIntoStrategyWithSignatureReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: depositIntoStrategyWithSignatureReturn) -> Self {
                     (value.shares,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for depositIntoStrategyWithSignatureReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for depositIntoStrategyWithSignatureReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { shares: tuple.0 }
                 }
@@ -3547,15 +3107,12 @@ function depositIntoStrategyWithSignature(address strategy, address token, uint2
                 alloy::sol_types::sol_data::Uint<256>,
                 alloy::sol_types::sol_data::Bytes,
             );
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = depositIntoStrategyWithSignatureReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
-            const SIGNATURE: &'static str = "depositIntoStrategyWithSignature(address,address,uint256,address,uint256,bytes)";
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str =
+                "depositIntoStrategyWithSignature(address,address,uint256,address,uint256,bytes)";
             const SELECTOR: [u8; 4] = [50u8, 232u8, 154u8, 206u8];
             #[inline]
             fn new<'a>(
@@ -3572,15 +3129,15 @@ function depositIntoStrategyWithSignature(address strategy, address token, uint2
                     <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
                         &self.token,
                     ),
-                    <alloy::sol_types::sol_data::Uint<
-                        256,
-                    > as alloy_sol_types::SolType>::tokenize(&self.amount),
+                    <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
+                        &self.amount,
+                    ),
                     <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
                         &self.staker,
                     ),
-                    <alloy::sol_types::sol_data::Uint<
-                        256,
-                    > as alloy_sol_types::SolType>::tokenize(&self.expiry),
+                    <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
+                        &self.expiry,
+                    ),
                     <alloy::sol_types::sol_data::Bytes as alloy_sol_types::SolType>::tokenize(
                         &self.signature,
                     ),
@@ -3591,17 +3148,17 @@ function depositIntoStrategyWithSignature(address strategy, address token, uint2
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `domainSeparator()` and selector `0xf698da25`.
-```solidity
-function domainSeparator() external view returns (bytes32);
-```*/
+    ```solidity
+    function domainSeparator() external view returns (bytes32);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct domainSeparatorCall {}
@@ -3626,9 +3183,7 @@ function domainSeparator() external view returns (bytes32);
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -3657,9 +3212,7 @@ function domainSeparator() external view returns (bytes32);
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::FixedBytes<32>,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -3668,16 +3221,14 @@ function domainSeparator() external view returns (bytes32);
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<domainSeparatorReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<domainSeparatorReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: domainSeparatorReturn) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for domainSeparatorReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for domainSeparatorReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -3686,14 +3237,10 @@ function domainSeparator() external view returns (bytes32);
         #[automatically_derived]
         impl alloy_sol_types::SolCall for domainSeparatorCall {
             type Parameters<'a> = ();
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = domainSeparatorReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::FixedBytes<32>,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "domainSeparator()";
             const SELECTOR: [u8; 4] = [246u8, 152u8, 218u8, 37u8];
             #[inline]
@@ -3711,17 +3258,17 @@ function domainSeparator() external view returns (bytes32);
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `eigenPodManager()` and selector `0x4665bcda`.
-```solidity
-function eigenPodManager() external view returns (address);
-```*/
+    ```solidity
+    function eigenPodManager() external view returns (address);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct eigenPodManagerCall {}
@@ -3746,9 +3293,7 @@ function eigenPodManager() external view returns (address);
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -3777,9 +3322,7 @@ function eigenPodManager() external view returns (address);
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -3788,16 +3331,14 @@ function eigenPodManager() external view returns (address);
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<eigenPodManagerReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<eigenPodManagerReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: eigenPodManagerReturn) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for eigenPodManagerReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for eigenPodManagerReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -3806,14 +3347,10 @@ function eigenPodManager() external view returns (address);
         #[automatically_derived]
         impl alloy_sol_types::SolCall for eigenPodManagerCall {
             type Parameters<'a> = ();
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = eigenPodManagerReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Address,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "eigenPodManager()";
             const SELECTOR: [u8; 4] = [70u8, 101u8, 188u8, 218u8];
             #[inline]
@@ -3831,17 +3368,17 @@ function eigenPodManager() external view returns (address);
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `getDeposits(address)` and selector `0x94f649dd`.
-```solidity
-function getDeposits(address staker) external view returns (address[] memory, uint256[] memory);
-```*/
+    ```solidity
+    function getDeposits(address staker) external view returns (address[] memory, uint256[] memory);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getDepositsCall {
@@ -3852,9 +3389,8 @@ function getDeposits(address staker) external view returns (address[] memory, ui
     #[derive(Clone)]
     pub struct getDepositsReturn {
         pub _0: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
-        pub _1: alloy::sol_types::private::Vec<
-            alloy::sol_types::private::primitives::aliases::U256,
-        >,
+        pub _1:
+            alloy::sol_types::private::Vec<alloy::sol_types::private::primitives::aliases::U256>,
     }
     #[allow(
         non_camel_case_types,
@@ -3871,9 +3407,7 @@ function getDeposits(address staker) external view returns (address[] memory, ui
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -3910,9 +3444,7 @@ function getDeposits(address staker) external view returns (address[] memory, ui
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -3930,24 +3462,23 @@ function getDeposits(address staker) external view returns (address[] memory, ui
             #[doc(hidden)]
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for getDepositsReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self { _0: tuple.0, _1: tuple.1 }
+                    Self {
+                        _0: tuple.0,
+                        _1: tuple.1,
+                    }
                 }
             }
         }
         #[automatically_derived]
         impl alloy_sol_types::SolCall for getDepositsCall {
             type Parameters<'a> = (alloy::sol_types::sol_data::Address,);
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = getDepositsReturn;
             type ReturnTuple<'a> = (
                 alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::Address>,
                 alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::Uint<256>>,
             );
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "getDeposits(address)";
             const SELECTOR: [u8; 4] = [148u8, 246u8, 73u8, 221u8];
             #[inline]
@@ -3969,17 +3500,17 @@ function getDeposits(address staker) external view returns (address[] memory, ui
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `owner()` and selector `0x8da5cb5b`.
-```solidity
-function owner() external view returns (address);
-```*/
+    ```solidity
+    function owner() external view returns (address);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct ownerCall {}
@@ -4004,9 +3535,7 @@ function owner() external view returns (address);
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -4035,9 +3564,7 @@ function owner() external view returns (address);
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -4062,14 +3589,10 @@ function owner() external view returns (address);
         #[automatically_derived]
         impl alloy_sol_types::SolCall for ownerCall {
             type Parameters<'a> = ();
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = ownerReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Address,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "owner()";
             const SELECTOR: [u8; 4] = [141u8, 165u8, 203u8, 91u8];
             #[inline]
@@ -4087,17 +3610,17 @@ function owner() external view returns (address);
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `pause(uint256)` and selector `0x136439dd`.
-```solidity
-function pause(uint256 newPausedStatus) external;
-```*/
+    ```solidity
+    function pause(uint256 newPausedStatus) external;
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct pauseCall {
@@ -4119,14 +3642,10 @@ function pause(uint256 newPausedStatus) external;
             #[doc(hidden)]
             type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (
-                alloy::sol_types::private::primitives::aliases::U256,
-            );
+            type UnderlyingRustTuple<'a> = (alloy::sol_types::private::primitives::aliases::U256,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -4144,7 +3663,9 @@ function pause(uint256 newPausedStatus) external;
             #[doc(hidden)]
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for pauseCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self { newPausedStatus: tuple.0 }
+                    Self {
+                        newPausedStatus: tuple.0,
+                    }
                 }
             }
         }
@@ -4155,9 +3676,7 @@ function pause(uint256 newPausedStatus) external;
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -4182,14 +3701,10 @@ function pause(uint256 newPausedStatus) external;
         #[automatically_derived]
         impl alloy_sol_types::SolCall for pauseCall {
             type Parameters<'a> = (alloy::sol_types::sol_data::Uint<256>,);
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = pauseReturn;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "pause(uint256)";
             const SELECTOR: [u8; 4] = [19u8, 100u8, 57u8, 221u8];
             #[inline]
@@ -4201,9 +3716,9 @@ function pause(uint256 newPausedStatus) external;
             #[inline]
             fn tokenize(&self) -> Self::Token<'_> {
                 (
-                    <alloy::sol_types::sol_data::Uint<
-                        256,
-                    > as alloy_sol_types::SolType>::tokenize(&self.newPausedStatus),
+                    <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
+                        &self.newPausedStatus,
+                    ),
                 )
             }
             #[inline]
@@ -4211,17 +3726,17 @@ function pause(uint256 newPausedStatus) external;
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `pauseAll()` and selector `0x595c6a67`.
-```solidity
-function pauseAll() external;
-```*/
+    ```solidity
+    function pauseAll() external;
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct pauseAllCall {}
@@ -4244,9 +3759,7 @@ function pauseAll() external;
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -4275,9 +3788,7 @@ function pauseAll() external;
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -4302,14 +3813,10 @@ function pauseAll() external;
         #[automatically_derived]
         impl alloy_sol_types::SolCall for pauseAllCall {
             type Parameters<'a> = ();
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = pauseAllReturn;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "pauseAll()";
             const SELECTOR: [u8; 4] = [89u8, 92u8, 106u8, 103u8];
             #[inline]
@@ -4327,17 +3834,17 @@ function pauseAll() external;
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `paused(uint8)` and selector `0x5ac86ab7`.
-```solidity
-function paused(uint8 index) external view returns (bool);
-```*/
+    ```solidity
+    function paused(uint8 index) external view returns (bool);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct paused_0Call {
@@ -4364,9 +3871,7 @@ function paused(uint8 index) external view returns (bool);
             type UnderlyingRustTuple<'a> = (u8,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -4395,9 +3900,7 @@ function paused(uint8 index) external view returns (bool);
             type UnderlyingRustTuple<'a> = (bool,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -4422,14 +3925,10 @@ function paused(uint8 index) external view returns (bool);
         #[automatically_derived]
         impl alloy_sol_types::SolCall for paused_0Call {
             type Parameters<'a> = (alloy::sol_types::sol_data::Uint<8>,);
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = paused_0Return;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Bool,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "paused(uint8)";
             const SELECTOR: [u8; 4] = [90u8, 200u8, 106u8, 183u8];
             #[inline]
@@ -4441,9 +3940,9 @@ function paused(uint8 index) external view returns (bool);
             #[inline]
             fn tokenize(&self) -> Self::Token<'_> {
                 (
-                    <alloy::sol_types::sol_data::Uint<
-                        8,
-                    > as alloy_sol_types::SolType>::tokenize(&self.index),
+                    <alloy::sol_types::sol_data::Uint<8> as alloy_sol_types::SolType>::tokenize(
+                        &self.index,
+                    ),
                 )
             }
             #[inline]
@@ -4451,17 +3950,17 @@ function paused(uint8 index) external view returns (bool);
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `paused()` and selector `0x5c975abb`.
-```solidity
-function paused() external view returns (uint256);
-```*/
+    ```solidity
+    function paused() external view returns (uint256);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct paused_1Call {}
@@ -4486,9 +3985,7 @@ function paused() external view returns (uint256);
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -4514,14 +4011,10 @@ function paused() external view returns (uint256);
             #[doc(hidden)]
             type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (
-                alloy::sol_types::private::primitives::aliases::U256,
-            );
+            type UnderlyingRustTuple<'a> = (alloy::sol_types::private::primitives::aliases::U256,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -4546,14 +4039,10 @@ function paused() external view returns (uint256);
         #[automatically_derived]
         impl alloy_sol_types::SolCall for paused_1Call {
             type Parameters<'a> = ();
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = paused_1Return;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "paused()";
             const SELECTOR: [u8; 4] = [92u8, 151u8, 90u8, 187u8];
             #[inline]
@@ -4571,17 +4060,17 @@ function paused() external view returns (uint256);
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `pauserRegistry()` and selector `0x886f1195`.
-```solidity
-function pauserRegistry() external view returns (address);
-```*/
+    ```solidity
+    function pauserRegistry() external view returns (address);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct pauserRegistryCall {}
@@ -4606,9 +4095,7 @@ function pauserRegistry() external view returns (address);
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -4637,9 +4124,7 @@ function pauserRegistry() external view returns (address);
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -4648,16 +4133,14 @@ function pauserRegistry() external view returns (address);
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<pauserRegistryReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<pauserRegistryReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: pauserRegistryReturn) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for pauserRegistryReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for pauserRegistryReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -4666,14 +4149,10 @@ function pauserRegistry() external view returns (address);
         #[automatically_derived]
         impl alloy_sol_types::SolCall for pauserRegistryCall {
             type Parameters<'a> = ();
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = pauserRegistryReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Address,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "pauserRegistry()";
             const SELECTOR: [u8; 4] = [136u8, 111u8, 17u8, 149u8];
             #[inline]
@@ -4691,17 +4170,17 @@ function pauserRegistry() external view returns (address);
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `recordBeaconChainETHBalanceUpdate(address,uint256,int256)` and selector `0xa1ca780b`.
-```solidity
-function recordBeaconChainETHBalanceUpdate(address overcommittedPodOwner, uint256 beaconChainETHStrategyIndex, int256 sharesDelta) external;
-```*/
+    ```solidity
+    function recordBeaconChainETHBalanceUpdate(address overcommittedPodOwner, uint256 beaconChainETHStrategyIndex, int256 sharesDelta) external;
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct recordBeaconChainETHBalanceUpdateCall {
@@ -4736,9 +4215,7 @@ function recordBeaconChainETHBalanceUpdate(address overcommittedPodOwner, uint25
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -4747,8 +4224,7 @@ function recordBeaconChainETHBalanceUpdate(address overcommittedPodOwner, uint25
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<recordBeaconChainETHBalanceUpdateCall>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<recordBeaconChainETHBalanceUpdateCall> for UnderlyingRustTuple<'_> {
                 fn from(value: recordBeaconChainETHBalanceUpdateCall) -> Self {
                     (
                         value.overcommittedPodOwner,
@@ -4759,8 +4235,7 @@ function recordBeaconChainETHBalanceUpdate(address overcommittedPodOwner, uint25
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for recordBeaconChainETHBalanceUpdateCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for recordBeaconChainETHBalanceUpdateCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {
                         overcommittedPodOwner: tuple.0,
@@ -4777,9 +4252,7 @@ function recordBeaconChainETHBalanceUpdate(address overcommittedPodOwner, uint25
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -4788,16 +4261,14 @@ function recordBeaconChainETHBalanceUpdate(address overcommittedPodOwner, uint25
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<recordBeaconChainETHBalanceUpdateReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<recordBeaconChainETHBalanceUpdateReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: recordBeaconChainETHBalanceUpdateReturn) -> Self {
                     ()
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for recordBeaconChainETHBalanceUpdateReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for recordBeaconChainETHBalanceUpdateReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
@@ -4810,15 +4281,12 @@ function recordBeaconChainETHBalanceUpdate(address overcommittedPodOwner, uint25
                 alloy::sol_types::sol_data::Uint<256>,
                 alloy::sol_types::sol_data::Int<256>,
             );
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = recordBeaconChainETHBalanceUpdateReturn;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
-            const SIGNATURE: &'static str = "recordBeaconChainETHBalanceUpdate(address,uint256,int256)";
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str =
+                "recordBeaconChainETHBalanceUpdate(address,uint256,int256)";
             const SELECTOR: [u8; 4] = [161u8, 202u8, 120u8, 11u8];
             #[inline]
             fn new<'a>(
@@ -4832,14 +4300,12 @@ function recordBeaconChainETHBalanceUpdate(address overcommittedPodOwner, uint25
                     <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
                         &self.overcommittedPodOwner,
                     ),
-                    <alloy::sol_types::sol_data::Uint<
-                        256,
-                    > as alloy_sol_types::SolType>::tokenize(
+                    <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
                         &self.beaconChainETHStrategyIndex,
                     ),
-                    <alloy::sol_types::sol_data::Int<
-                        256,
-                    > as alloy_sol_types::SolType>::tokenize(&self.sharesDelta),
+                    <alloy::sol_types::sol_data::Int<256> as alloy_sol_types::SolType>::tokenize(
+                        &self.sharesDelta,
+                    ),
                 )
             }
             #[inline]
@@ -4847,17 +4313,17 @@ function recordBeaconChainETHBalanceUpdate(address overcommittedPodOwner, uint25
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `removeShares(address,address,uint256)` and selector `0x8c80d4e5`.
-```solidity
-function removeShares(address staker, address strategy, uint256 shares) external;
-```*/
+    ```solidity
+    function removeShares(address staker, address strategy, uint256 shares) external;
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct removeSharesCall {
@@ -4892,9 +4358,7 @@ function removeShares(address staker, address strategy, uint256 shares) external
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -4927,9 +4391,7 @@ function removeShares(address staker, address strategy, uint256 shares) external
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -4958,14 +4420,10 @@ function removeShares(address staker, address strategy, uint256 shares) external
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Uint<256>,
             );
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = removeSharesReturn;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "removeShares(address,address,uint256)";
             const SELECTOR: [u8; 4] = [140u8, 128u8, 212u8, 229u8];
             #[inline]
@@ -4983,9 +4441,9 @@ function removeShares(address staker, address strategy, uint256 shares) external
                     <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
                         &self.strategy,
                     ),
-                    <alloy::sol_types::sol_data::Uint<
-                        256,
-                    > as alloy_sol_types::SolType>::tokenize(&self.shares),
+                    <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
+                        &self.shares,
+                    ),
                 )
             }
             #[inline]
@@ -4993,17 +4451,17 @@ function removeShares(address staker, address strategy, uint256 shares) external
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `removeStrategiesFromDepositWhitelist(address[])` and selector `0xb5d8b5b8`.
-```solidity
-function removeStrategiesFromDepositWhitelist(address[] memory) external pure;
-```*/
+    ```solidity
+    function removeStrategiesFromDepositWhitelist(address[] memory) external pure;
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct removeStrategiesFromDepositWhitelistCall {
@@ -5023,18 +4481,14 @@ function removeStrategiesFromDepositWhitelist(address[] memory) external pure;
         use alloy::sol_types as alloy_sol_types;
         {
             #[doc(hidden)]
-            type UnderlyingSolTuple<'a> = (
-                alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::Address>,
-            );
+            type UnderlyingSolTuple<'a> =
+                (alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::Address>,);
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (
-                alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
-            );
+            type UnderlyingRustTuple<'a> =
+                (alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -5043,16 +4497,14 @@ function removeStrategiesFromDepositWhitelist(address[] memory) external pure;
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<removeStrategiesFromDepositWhitelistCall>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<removeStrategiesFromDepositWhitelistCall> for UnderlyingRustTuple<'_> {
                 fn from(value: removeStrategiesFromDepositWhitelistCall) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for removeStrategiesFromDepositWhitelistCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for removeStrategiesFromDepositWhitelistCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -5065,9 +4517,7 @@ function removeStrategiesFromDepositWhitelist(address[] memory) external pure;
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -5076,16 +4526,14 @@ function removeStrategiesFromDepositWhitelist(address[] memory) external pure;
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<removeStrategiesFromDepositWhitelistReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<removeStrategiesFromDepositWhitelistReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: removeStrategiesFromDepositWhitelistReturn) -> Self {
                     ()
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for removeStrategiesFromDepositWhitelistReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for removeStrategiesFromDepositWhitelistReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
@@ -5093,17 +4541,12 @@ function removeStrategiesFromDepositWhitelist(address[] memory) external pure;
         }
         #[automatically_derived]
         impl alloy_sol_types::SolCall for removeStrategiesFromDepositWhitelistCall {
-            type Parameters<'a> = (
-                alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::Address>,
-            );
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Parameters<'a> =
+                (alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::Address>,);
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = removeStrategiesFromDepositWhitelistReturn;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "removeStrategiesFromDepositWhitelist(address[])";
             const SELECTOR: [u8; 4] = [181u8, 216u8, 181u8, 184u8];
             #[inline]
@@ -5114,28 +4557,28 @@ function removeStrategiesFromDepositWhitelist(address[] memory) external pure;
             }
             #[inline]
             fn tokenize(&self) -> Self::Token<'_> {
-                (
-                    <alloy::sol_types::sol_data::Array<
-                        alloy::sol_types::sol_data::Address,
-                    > as alloy_sol_types::SolType>::tokenize(&self._0),
-                )
+                (<alloy::sol_types::sol_data::Array<
+                    alloy::sol_types::sol_data::Address,
+                > as alloy_sol_types::SolType>::tokenize(
+                    &self._0
+                ),)
             }
             #[inline]
             fn abi_decode_returns(
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `renounceOwnership()` and selector `0x715018a6`.
-```solidity
-function renounceOwnership() external;
-```*/
+    ```solidity
+    function renounceOwnership() external;
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct renounceOwnershipCall {}
@@ -5158,9 +4601,7 @@ function renounceOwnership() external;
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -5169,16 +4610,14 @@ function renounceOwnership() external;
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<renounceOwnershipCall>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<renounceOwnershipCall> for UnderlyingRustTuple<'_> {
                 fn from(value: renounceOwnershipCall) -> Self {
                     ()
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for renounceOwnershipCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for renounceOwnershipCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
@@ -5191,9 +4630,7 @@ function renounceOwnership() external;
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -5202,16 +4639,14 @@ function renounceOwnership() external;
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<renounceOwnershipReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<renounceOwnershipReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: renounceOwnershipReturn) -> Self {
                     ()
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for renounceOwnershipReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for renounceOwnershipReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
@@ -5220,14 +4655,10 @@ function renounceOwnership() external;
         #[automatically_derived]
         impl alloy_sol_types::SolCall for renounceOwnershipCall {
             type Parameters<'a> = ();
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = renounceOwnershipReturn;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "renounceOwnership()";
             const SELECTOR: [u8; 4] = [113u8, 80u8, 24u8, 166u8];
             #[inline]
@@ -5245,17 +4676,17 @@ function renounceOwnership() external;
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `setAddresses(address,address,address)` and selector `0x363bf964`.
-```solidity
-function setAddresses(address _delegation, address _eigenPodManager, address _slasher) external;
-```*/
+    ```solidity
+    function setAddresses(address _delegation, address _eigenPodManager, address _slasher) external;
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setAddressesCall {
@@ -5290,9 +4721,7 @@ function setAddresses(address _delegation, address _eigenPodManager, address _sl
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -5325,9 +4754,7 @@ function setAddresses(address _delegation, address _eigenPodManager, address _sl
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -5356,14 +4783,10 @@ function setAddresses(address _delegation, address _eigenPodManager, address _sl
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Address,
             );
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = setAddressesReturn;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "setAddresses(address,address,address)";
             const SELECTOR: [u8; 4] = [54u8, 59u8, 249u8, 100u8];
             #[inline]
@@ -5391,27 +4814,24 @@ function setAddresses(address _delegation, address _eigenPodManager, address _sl
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `setDeposits(address,address[],uint256[])` and selector `0xe2a818c5`.
-```solidity
-function setDeposits(address staker, address[] memory _strategiesToReturn, uint256[] memory _sharesToReturn) external;
-```*/
+    ```solidity
+    function setDeposits(address staker, address[] memory _strategiesToReturn, uint256[] memory _sharesToReturn) external;
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setDepositsCall {
         pub staker: alloy::sol_types::private::Address,
-        pub _strategiesToReturn: alloy::sol_types::private::Vec<
-            alloy::sol_types::private::Address,
-        >,
-        pub _sharesToReturn: alloy::sol_types::private::Vec<
-            alloy::sol_types::private::primitives::aliases::U256,
-        >,
+        pub _strategiesToReturn: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
+        pub _sharesToReturn:
+            alloy::sol_types::private::Vec<alloy::sol_types::private::primitives::aliases::U256>,
     }
     ///Container type for the return parameters of the [`setDeposits(address,address[],uint256[])`](setDepositsCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
@@ -5442,9 +4862,7 @@ function setDeposits(address staker, address[] memory _strategiesToReturn, uint2
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -5455,7 +4873,11 @@ function setDeposits(address staker, address[] memory _strategiesToReturn, uint2
             #[doc(hidden)]
             impl ::core::convert::From<setDepositsCall> for UnderlyingRustTuple<'_> {
                 fn from(value: setDepositsCall) -> Self {
-                    (value.staker, value._strategiesToReturn, value._sharesToReturn)
+                    (
+                        value.staker,
+                        value._strategiesToReturn,
+                        value._sharesToReturn,
+                    )
                 }
             }
             #[automatically_derived]
@@ -5477,9 +4899,7 @@ function setDeposits(address staker, address[] memory _strategiesToReturn, uint2
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -5508,14 +4928,10 @@ function setDeposits(address staker, address[] memory _strategiesToReturn, uint2
                 alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::Address>,
                 alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::Uint<256>>,
             );
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = setDepositsReturn;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "setDeposits(address,address[],uint256[])";
             const SELECTOR: [u8; 4] = [226u8, 168u8, 24u8, 197u8];
             #[inline]
@@ -5543,17 +4959,17 @@ function setDeposits(address staker, address[] memory _strategiesToReturn, uint2
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `setPauserRegistry(address)` and selector `0x10d67a2f`.
-```solidity
-function setPauserRegistry(address newPauserRegistry) external;
-```*/
+    ```solidity
+    function setPauserRegistry(address newPauserRegistry) external;
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setPauserRegistryCall {
@@ -5578,9 +4994,7 @@ function setPauserRegistry(address newPauserRegistry) external;
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -5589,18 +5003,18 @@ function setPauserRegistry(address newPauserRegistry) external;
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<setPauserRegistryCall>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<setPauserRegistryCall> for UnderlyingRustTuple<'_> {
                 fn from(value: setPauserRegistryCall) -> Self {
                     (value.newPauserRegistry,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for setPauserRegistryCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for setPauserRegistryCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self { newPauserRegistry: tuple.0 }
+                    Self {
+                        newPauserRegistry: tuple.0,
+                    }
                 }
             }
         }
@@ -5611,9 +5025,7 @@ function setPauserRegistry(address newPauserRegistry) external;
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -5622,16 +5034,14 @@ function setPauserRegistry(address newPauserRegistry) external;
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<setPauserRegistryReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<setPauserRegistryReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: setPauserRegistryReturn) -> Self {
                     ()
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for setPauserRegistryReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for setPauserRegistryReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
@@ -5640,14 +5050,10 @@ function setPauserRegistry(address newPauserRegistry) external;
         #[automatically_derived]
         impl alloy_sol_types::SolCall for setPauserRegistryCall {
             type Parameters<'a> = (alloy::sol_types::sol_data::Address,);
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = setPauserRegistryReturn;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "setPauserRegistry(address)";
             const SELECTOR: [u8; 4] = [16u8, 214u8, 122u8, 47u8];
             #[inline]
@@ -5669,17 +5075,17 @@ function setPauserRegistry(address newPauserRegistry) external;
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `setStakerStrategyListLengthReturnValue(uint256)` and selector `0x9a9519e0`.
-```solidity
-function setStakerStrategyListLengthReturnValue(uint256 valueToSet) external;
-```*/
+    ```solidity
+    function setStakerStrategyListLengthReturnValue(uint256 valueToSet) external;
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setStakerStrategyListLengthReturnValueCall {
@@ -5701,14 +5107,10 @@ function setStakerStrategyListLengthReturnValue(uint256 valueToSet) external;
             #[doc(hidden)]
             type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (
-                alloy::sol_types::private::primitives::aliases::U256,
-            );
+            type UnderlyingRustTuple<'a> = (alloy::sol_types::private::primitives::aliases::U256,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -5717,18 +5119,18 @@ function setStakerStrategyListLengthReturnValue(uint256 valueToSet) external;
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<setStakerStrategyListLengthReturnValueCall>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<setStakerStrategyListLengthReturnValueCall> for UnderlyingRustTuple<'_> {
                 fn from(value: setStakerStrategyListLengthReturnValueCall) -> Self {
                     (value.valueToSet,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for setStakerStrategyListLengthReturnValueCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for setStakerStrategyListLengthReturnValueCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self { valueToSet: tuple.0 }
+                    Self {
+                        valueToSet: tuple.0,
+                    }
                 }
             }
         }
@@ -5739,9 +5141,7 @@ function setStakerStrategyListLengthReturnValue(uint256 valueToSet) external;
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -5751,7 +5151,8 @@ function setStakerStrategyListLengthReturnValue(uint256 valueToSet) external;
             #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<setStakerStrategyListLengthReturnValueReturn>
-            for UnderlyingRustTuple<'_> {
+                for UnderlyingRustTuple<'_>
+            {
                 fn from(value: setStakerStrategyListLengthReturnValueReturn) -> Self {
                     ()
                 }
@@ -5759,7 +5160,8 @@ function setStakerStrategyListLengthReturnValue(uint256 valueToSet) external;
             #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for setStakerStrategyListLengthReturnValueReturn {
+                for setStakerStrategyListLengthReturnValueReturn
+            {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
@@ -5768,14 +5170,10 @@ function setStakerStrategyListLengthReturnValue(uint256 valueToSet) external;
         #[automatically_derived]
         impl alloy_sol_types::SolCall for setStakerStrategyListLengthReturnValueCall {
             type Parameters<'a> = (alloy::sol_types::sol_data::Uint<256>,);
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = setStakerStrategyListLengthReturnValueReturn;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "setStakerStrategyListLengthReturnValue(uint256)";
             const SELECTOR: [u8; 4] = [154u8, 149u8, 25u8, 224u8];
             #[inline]
@@ -5787,9 +5185,9 @@ function setStakerStrategyListLengthReturnValue(uint256 valueToSet) external;
             #[inline]
             fn tokenize(&self) -> Self::Token<'_> {
                 (
-                    <alloy::sol_types::sol_data::Uint<
-                        256,
-                    > as alloy_sol_types::SolType>::tokenize(&self.valueToSet),
+                    <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
+                        &self.valueToSet,
+                    ),
                 )
             }
             #[inline]
@@ -5797,17 +5195,17 @@ function setStakerStrategyListLengthReturnValue(uint256 valueToSet) external;
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `setStrategyWhitelist(address,bool)` and selector `0x9b7e2f77`.
-```solidity
-function setStrategyWhitelist(address strategy, bool value) external;
-```*/
+    ```solidity
+    function setStrategyWhitelist(address strategy, bool value) external;
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setStrategyWhitelistCall {
@@ -5836,9 +5234,7 @@ function setStrategyWhitelist(address strategy, bool value) external;
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address, bool);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -5847,16 +5243,14 @@ function setStrategyWhitelist(address strategy, bool value) external;
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<setStrategyWhitelistCall>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<setStrategyWhitelistCall> for UnderlyingRustTuple<'_> {
                 fn from(value: setStrategyWhitelistCall) -> Self {
                     (value.strategy, value.value)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for setStrategyWhitelistCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for setStrategyWhitelistCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {
                         strategy: tuple.0,
@@ -5872,9 +5266,7 @@ function setStrategyWhitelist(address strategy, bool value) external;
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -5883,16 +5275,14 @@ function setStrategyWhitelist(address strategy, bool value) external;
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<setStrategyWhitelistReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<setStrategyWhitelistReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: setStrategyWhitelistReturn) -> Self {
                     ()
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for setStrategyWhitelistReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for setStrategyWhitelistReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
@@ -5904,14 +5294,10 @@ function setStrategyWhitelist(address strategy, bool value) external;
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Bool,
             );
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = setStrategyWhitelistReturn;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "setStrategyWhitelist(address,bool)";
             const SELECTOR: [u8; 4] = [155u8, 126u8, 47u8, 119u8];
             #[inline]
@@ -5936,17 +5322,17 @@ function setStrategyWhitelist(address strategy, bool value) external;
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `setStrategyWhitelister(address)` and selector `0xc6656702`.
-```solidity
-function setStrategyWhitelister(address newStrategyWhitelister) external;
-```*/
+    ```solidity
+    function setStrategyWhitelister(address newStrategyWhitelister) external;
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setStrategyWhitelisterCall {
@@ -5971,9 +5357,7 @@ function setStrategyWhitelister(address newStrategyWhitelister) external;
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -5982,16 +5366,14 @@ function setStrategyWhitelister(address newStrategyWhitelister) external;
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<setStrategyWhitelisterCall>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<setStrategyWhitelisterCall> for UnderlyingRustTuple<'_> {
                 fn from(value: setStrategyWhitelisterCall) -> Self {
                     (value.newStrategyWhitelister,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for setStrategyWhitelisterCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for setStrategyWhitelisterCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {
                         newStrategyWhitelister: tuple.0,
@@ -6006,9 +5388,7 @@ function setStrategyWhitelister(address newStrategyWhitelister) external;
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -6017,16 +5397,14 @@ function setStrategyWhitelister(address newStrategyWhitelister) external;
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<setStrategyWhitelisterReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<setStrategyWhitelisterReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: setStrategyWhitelisterReturn) -> Self {
                     ()
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for setStrategyWhitelisterReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for setStrategyWhitelisterReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
@@ -6035,14 +5413,10 @@ function setStrategyWhitelister(address newStrategyWhitelister) external;
         #[automatically_derived]
         impl alloy_sol_types::SolCall for setStrategyWhitelisterCall {
             type Parameters<'a> = (alloy::sol_types::sol_data::Address,);
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = setStrategyWhitelisterReturn;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "setStrategyWhitelister(address)";
             const SELECTOR: [u8; 4] = [198u8, 101u8, 103u8, 2u8];
             #[inline]
@@ -6064,17 +5438,17 @@ function setStrategyWhitelister(address newStrategyWhitelister) external;
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `setThirdPartyTransfersForbidden(address,bool)` and selector `0x4e5a4263`.
-```solidity
-function setThirdPartyTransfersForbidden(address strategy, bool value) external;
-```*/
+    ```solidity
+    function setThirdPartyTransfersForbidden(address strategy, bool value) external;
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setThirdPartyTransfersForbiddenCall {
@@ -6103,9 +5477,7 @@ function setThirdPartyTransfersForbidden(address strategy, bool value) external;
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address, bool);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -6114,16 +5486,14 @@ function setThirdPartyTransfersForbidden(address strategy, bool value) external;
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<setThirdPartyTransfersForbiddenCall>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<setThirdPartyTransfersForbiddenCall> for UnderlyingRustTuple<'_> {
                 fn from(value: setThirdPartyTransfersForbiddenCall) -> Self {
                     (value.strategy, value.value)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for setThirdPartyTransfersForbiddenCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for setThirdPartyTransfersForbiddenCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {
                         strategy: tuple.0,
@@ -6139,9 +5509,7 @@ function setThirdPartyTransfersForbidden(address strategy, bool value) external;
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -6150,16 +5518,14 @@ function setThirdPartyTransfersForbidden(address strategy, bool value) external;
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<setThirdPartyTransfersForbiddenReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<setThirdPartyTransfersForbiddenReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: setThirdPartyTransfersForbiddenReturn) -> Self {
                     ()
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for setThirdPartyTransfersForbiddenReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for setThirdPartyTransfersForbiddenReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
@@ -6171,14 +5537,10 @@ function setThirdPartyTransfersForbidden(address strategy, bool value) external;
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Bool,
             );
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = setThirdPartyTransfersForbiddenReturn;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "setThirdPartyTransfersForbidden(address,bool)";
             const SELECTOR: [u8; 4] = [78u8, 90u8, 66u8, 99u8];
             #[inline]
@@ -6203,17 +5565,17 @@ function setThirdPartyTransfersForbidden(address strategy, bool value) external;
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `sharesToReturn(address,uint256)` and selector `0x63fca888`.
-```solidity
-function sharesToReturn(address, uint256) external view returns (uint256);
-```*/
+    ```solidity
+    function sharesToReturn(address, uint256) external view returns (uint256);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct sharesToReturnCall {
@@ -6247,9 +5609,7 @@ function sharesToReturn(address, uint256) external view returns (uint256);
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -6267,7 +5627,10 @@ function sharesToReturn(address, uint256) external view returns (uint256);
             #[doc(hidden)]
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for sharesToReturnCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self { _0: tuple.0, _1: tuple.1 }
+                    Self {
+                        _0: tuple.0,
+                        _1: tuple.1,
+                    }
                 }
             }
         }
@@ -6275,14 +5638,10 @@ function sharesToReturn(address, uint256) external view returns (uint256);
             #[doc(hidden)]
             type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (
-                alloy::sol_types::private::primitives::aliases::U256,
-            );
+            type UnderlyingRustTuple<'a> = (alloy::sol_types::private::primitives::aliases::U256,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -6291,16 +5650,14 @@ function sharesToReturn(address, uint256) external view returns (uint256);
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<sharesToReturnReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<sharesToReturnReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: sharesToReturnReturn) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for sharesToReturnReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for sharesToReturnReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -6312,14 +5669,10 @@ function sharesToReturn(address, uint256) external view returns (uint256);
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Uint<256>,
             );
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = sharesToReturnReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "sharesToReturn(address,uint256)";
             const SELECTOR: [u8; 4] = [99u8, 252u8, 168u8, 136u8];
             #[inline]
@@ -6334,9 +5687,9 @@ function sharesToReturn(address, uint256) external view returns (uint256);
                     <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
                         &self._0,
                     ),
-                    <alloy::sol_types::sol_data::Uint<
-                        256,
-                    > as alloy_sol_types::SolType>::tokenize(&self._1),
+                    <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
+                        &self._1,
+                    ),
                 )
             }
             #[inline]
@@ -6344,17 +5697,17 @@ function sharesToReturn(address, uint256) external view returns (uint256);
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `slasher()` and selector `0xb1344271`.
-```solidity
-function slasher() external view returns (address);
-```*/
+    ```solidity
+    function slasher() external view returns (address);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct slasherCall {}
@@ -6379,9 +5732,7 @@ function slasher() external view returns (address);
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -6410,9 +5761,7 @@ function slasher() external view returns (address);
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -6437,14 +5786,10 @@ function slasher() external view returns (address);
         #[automatically_derived]
         impl alloy_sol_types::SolCall for slasherCall {
             type Parameters<'a> = ();
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = slasherReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Address,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "slasher()";
             const SELECTOR: [u8; 4] = [177u8, 52u8, 66u8, 113u8];
             #[inline]
@@ -6462,17 +5807,17 @@ function slasher() external view returns (address);
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `stakerStrategyListLength(address)` and selector `0x8b8aac3c`.
-```solidity
-function stakerStrategyListLength(address) external view returns (uint256);
-```*/
+    ```solidity
+    function stakerStrategyListLength(address) external view returns (uint256);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct stakerStrategyListLengthCall {
@@ -6499,9 +5844,7 @@ function stakerStrategyListLength(address) external view returns (uint256);
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -6510,16 +5853,14 @@ function stakerStrategyListLength(address) external view returns (uint256);
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<stakerStrategyListLengthCall>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<stakerStrategyListLengthCall> for UnderlyingRustTuple<'_> {
                 fn from(value: stakerStrategyListLengthCall) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for stakerStrategyListLengthCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for stakerStrategyListLengthCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -6529,14 +5870,10 @@ function stakerStrategyListLength(address) external view returns (uint256);
             #[doc(hidden)]
             type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (
-                alloy::sol_types::private::primitives::aliases::U256,
-            );
+            type UnderlyingRustTuple<'a> = (alloy::sol_types::private::primitives::aliases::U256,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -6545,16 +5882,14 @@ function stakerStrategyListLength(address) external view returns (uint256);
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<stakerStrategyListLengthReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<stakerStrategyListLengthReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: stakerStrategyListLengthReturn) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for stakerStrategyListLengthReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for stakerStrategyListLengthReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -6563,14 +5898,10 @@ function stakerStrategyListLength(address) external view returns (uint256);
         #[automatically_derived]
         impl alloy_sol_types::SolCall for stakerStrategyListLengthCall {
             type Parameters<'a> = (alloy::sol_types::sol_data::Address,);
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = stakerStrategyListLengthReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "stakerStrategyListLength(address)";
             const SELECTOR: [u8; 4] = [139u8, 138u8, 172u8, 60u8];
             #[inline]
@@ -6592,17 +5923,17 @@ function stakerStrategyListLength(address) external view returns (uint256);
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `stakerStrategyListLengthReturnValue()` and selector `0x01f820b2`.
-```solidity
-function stakerStrategyListLengthReturnValue() external view returns (uint256);
-```*/
+    ```solidity
+    function stakerStrategyListLengthReturnValue() external view returns (uint256);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct stakerStrategyListLengthReturnValueCall {}
@@ -6627,9 +5958,7 @@ function stakerStrategyListLengthReturnValue() external view returns (uint256);
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -6638,16 +5967,14 @@ function stakerStrategyListLengthReturnValue() external view returns (uint256);
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<stakerStrategyListLengthReturnValueCall>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<stakerStrategyListLengthReturnValueCall> for UnderlyingRustTuple<'_> {
                 fn from(value: stakerStrategyListLengthReturnValueCall) -> Self {
                     ()
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for stakerStrategyListLengthReturnValueCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for stakerStrategyListLengthReturnValueCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
@@ -6657,14 +5984,10 @@ function stakerStrategyListLengthReturnValue() external view returns (uint256);
             #[doc(hidden)]
             type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (
-                alloy::sol_types::private::primitives::aliases::U256,
-            );
+            type UnderlyingRustTuple<'a> = (alloy::sol_types::private::primitives::aliases::U256,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -6673,16 +5996,14 @@ function stakerStrategyListLengthReturnValue() external view returns (uint256);
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<stakerStrategyListLengthReturnValueReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<stakerStrategyListLengthReturnValueReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: stakerStrategyListLengthReturnValueReturn) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for stakerStrategyListLengthReturnValueReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for stakerStrategyListLengthReturnValueReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -6691,14 +6012,10 @@ function stakerStrategyListLengthReturnValue() external view returns (uint256);
         #[automatically_derived]
         impl alloy_sol_types::SolCall for stakerStrategyListLengthReturnValueCall {
             type Parameters<'a> = ();
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = stakerStrategyListLengthReturnValueReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "stakerStrategyListLengthReturnValue()";
             const SELECTOR: [u8; 4] = [1u8, 248u8, 32u8, 178u8];
             #[inline]
@@ -6716,17 +6033,17 @@ function stakerStrategyListLengthReturnValue() external view returns (uint256);
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `stakerStrategyShares(address,address)` and selector `0x7a7e0d92`.
-```solidity
-function stakerStrategyShares(address user, address strategy) external view returns (uint256 shares);
-```*/
+    ```solidity
+    function stakerStrategyShares(address user, address strategy) external view returns (uint256 shares);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct stakerStrategySharesCall {
@@ -6760,9 +6077,7 @@ function stakerStrategyShares(address user, address strategy) external view retu
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -6771,16 +6086,14 @@ function stakerStrategyShares(address user, address strategy) external view retu
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<stakerStrategySharesCall>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<stakerStrategySharesCall> for UnderlyingRustTuple<'_> {
                 fn from(value: stakerStrategySharesCall) -> Self {
                     (value.user, value.strategy)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for stakerStrategySharesCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for stakerStrategySharesCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {
                         user: tuple.0,
@@ -6793,14 +6106,10 @@ function stakerStrategyShares(address user, address strategy) external view retu
             #[doc(hidden)]
             type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (
-                alloy::sol_types::private::primitives::aliases::U256,
-            );
+            type UnderlyingRustTuple<'a> = (alloy::sol_types::private::primitives::aliases::U256,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -6809,16 +6118,14 @@ function stakerStrategyShares(address user, address strategy) external view retu
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<stakerStrategySharesReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<stakerStrategySharesReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: stakerStrategySharesReturn) -> Self {
                     (value.shares,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for stakerStrategySharesReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for stakerStrategySharesReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { shares: tuple.0 }
                 }
@@ -6830,14 +6137,10 @@ function stakerStrategyShares(address user, address strategy) external view retu
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Address,
             );
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = stakerStrategySharesReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "stakerStrategyShares(address,address)";
             const SELECTOR: [u8; 4] = [122u8, 126u8, 13u8, 146u8];
             #[inline]
@@ -6862,17 +6165,17 @@ function stakerStrategyShares(address user, address strategy) external view retu
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `stakerStrats(address)` and selector `0x0d3908f4`.
-```solidity
-function stakerStrats(address staker) external view returns (address[] memory);
-```*/
+    ```solidity
+    function stakerStrats(address staker) external view returns (address[] memory);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct stakerStratsCall {
@@ -6899,9 +6202,7 @@ function stakerStrats(address staker) external view returns (address[] memory);
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -6925,18 +6226,14 @@ function stakerStrats(address staker) external view returns (address[] memory);
         }
         {
             #[doc(hidden)]
-            type UnderlyingSolTuple<'a> = (
-                alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::Address>,
-            );
+            type UnderlyingSolTuple<'a> =
+                (alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::Address>,);
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (
-                alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
-            );
+            type UnderlyingRustTuple<'a> =
+                (alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -6961,16 +6258,11 @@ function stakerStrats(address staker) external view returns (address[] memory);
         #[automatically_derived]
         impl alloy_sol_types::SolCall for stakerStratsCall {
             type Parameters<'a> = (alloy::sol_types::sol_data::Address,);
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = stakerStratsReturn;
-            type ReturnTuple<'a> = (
-                alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::Address>,
-            );
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnTuple<'a> =
+                (alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::Address>,);
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "stakerStrats(address)";
             const SELECTOR: [u8; 4] = [13u8, 57u8, 8u8, 244u8];
             #[inline]
@@ -6992,17 +6284,17 @@ function stakerStrats(address staker) external view returns (address[] memory);
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `strategiesToReturn(address,uint256)` and selector `0xe243dc3c`.
-```solidity
-function strategiesToReturn(address, uint256) external view returns (address);
-```*/
+    ```solidity
+    function strategiesToReturn(address, uint256) external view returns (address);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct strategiesToReturnCall {
@@ -7036,9 +6328,7 @@ function strategiesToReturn(address, uint256) external view returns (address);
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -7047,18 +6337,19 @@ function strategiesToReturn(address, uint256) external view returns (address);
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<strategiesToReturnCall>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<strategiesToReturnCall> for UnderlyingRustTuple<'_> {
                 fn from(value: strategiesToReturnCall) -> Self {
                     (value._0, value._1)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for strategiesToReturnCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for strategiesToReturnCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self { _0: tuple.0, _1: tuple.1 }
+                    Self {
+                        _0: tuple.0,
+                        _1: tuple.1,
+                    }
                 }
             }
         }
@@ -7069,9 +6360,7 @@ function strategiesToReturn(address, uint256) external view returns (address);
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -7080,16 +6369,14 @@ function strategiesToReturn(address, uint256) external view returns (address);
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<strategiesToReturnReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<strategiesToReturnReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: strategiesToReturnReturn) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for strategiesToReturnReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for strategiesToReturnReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -7101,14 +6388,10 @@ function strategiesToReturn(address, uint256) external view returns (address);
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Uint<256>,
             );
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = strategiesToReturnReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Address,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "strategiesToReturn(address,uint256)";
             const SELECTOR: [u8; 4] = [226u8, 67u8, 220u8, 60u8];
             #[inline]
@@ -7123,9 +6406,9 @@ function strategiesToReturn(address, uint256) external view returns (address);
                     <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
                         &self._0,
                     ),
-                    <alloy::sol_types::sol_data::Uint<
-                        256,
-                    > as alloy_sol_types::SolType>::tokenize(&self._1),
+                    <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
+                        &self._1,
+                    ),
                 )
             }
             #[inline]
@@ -7133,17 +6416,17 @@ function strategiesToReturn(address, uint256) external view returns (address);
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `strategyIsWhitelistedForDeposit(address)` and selector `0x663c1de4`.
-```solidity
-function strategyIsWhitelistedForDeposit(address) external view returns (bool);
-```*/
+    ```solidity
+    function strategyIsWhitelistedForDeposit(address) external view returns (bool);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct strategyIsWhitelistedForDepositCall {
@@ -7170,9 +6453,7 @@ function strategyIsWhitelistedForDeposit(address) external view returns (bool);
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -7181,16 +6462,14 @@ function strategyIsWhitelistedForDeposit(address) external view returns (bool);
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<strategyIsWhitelistedForDepositCall>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<strategyIsWhitelistedForDepositCall> for UnderlyingRustTuple<'_> {
                 fn from(value: strategyIsWhitelistedForDepositCall) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for strategyIsWhitelistedForDepositCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for strategyIsWhitelistedForDepositCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -7203,9 +6482,7 @@ function strategyIsWhitelistedForDeposit(address) external view returns (bool);
             type UnderlyingRustTuple<'a> = (bool,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -7214,16 +6491,14 @@ function strategyIsWhitelistedForDeposit(address) external view returns (bool);
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<strategyIsWhitelistedForDepositReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<strategyIsWhitelistedForDepositReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: strategyIsWhitelistedForDepositReturn) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for strategyIsWhitelistedForDepositReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for strategyIsWhitelistedForDepositReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -7232,14 +6507,10 @@ function strategyIsWhitelistedForDeposit(address) external view returns (bool);
         #[automatically_derived]
         impl alloy_sol_types::SolCall for strategyIsWhitelistedForDepositCall {
             type Parameters<'a> = (alloy::sol_types::sol_data::Address,);
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = strategyIsWhitelistedForDepositReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Bool,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "strategyIsWhitelistedForDeposit(address)";
             const SELECTOR: [u8; 4] = [102u8, 60u8, 29u8, 228u8];
             #[inline]
@@ -7261,17 +6532,17 @@ function strategyIsWhitelistedForDeposit(address) external view returns (bool);
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `strategyWhitelister()` and selector `0x967fc0d2`.
-```solidity
-function strategyWhitelister() external view returns (address);
-```*/
+    ```solidity
+    function strategyWhitelister() external view returns (address);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct strategyWhitelisterCall {}
@@ -7296,9 +6567,7 @@ function strategyWhitelister() external view returns (address);
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -7307,16 +6576,14 @@ function strategyWhitelister() external view returns (address);
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<strategyWhitelisterCall>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<strategyWhitelisterCall> for UnderlyingRustTuple<'_> {
                 fn from(value: strategyWhitelisterCall) -> Self {
                     ()
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for strategyWhitelisterCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for strategyWhitelisterCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
@@ -7329,9 +6596,7 @@ function strategyWhitelister() external view returns (address);
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -7340,16 +6605,14 @@ function strategyWhitelister() external view returns (address);
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<strategyWhitelisterReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<strategyWhitelisterReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: strategyWhitelisterReturn) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for strategyWhitelisterReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for strategyWhitelisterReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -7358,14 +6621,10 @@ function strategyWhitelister() external view returns (address);
         #[automatically_derived]
         impl alloy_sol_types::SolCall for strategyWhitelisterCall {
             type Parameters<'a> = ();
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = strategyWhitelisterReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Address,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "strategyWhitelister()";
             const SELECTOR: [u8; 4] = [150u8, 127u8, 192u8, 210u8];
             #[inline]
@@ -7383,17 +6642,17 @@ function strategyWhitelister() external view returns (address);
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `thirdPartyTransfersForbidden(address)` and selector `0x9b4da03d`.
-```solidity
-function thirdPartyTransfersForbidden(address) external view returns (bool);
-```*/
+    ```solidity
+    function thirdPartyTransfersForbidden(address) external view returns (bool);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct thirdPartyTransfersForbiddenCall {
@@ -7420,9 +6679,7 @@ function thirdPartyTransfersForbidden(address) external view returns (bool);
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -7431,16 +6688,14 @@ function thirdPartyTransfersForbidden(address) external view returns (bool);
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<thirdPartyTransfersForbiddenCall>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<thirdPartyTransfersForbiddenCall> for UnderlyingRustTuple<'_> {
                 fn from(value: thirdPartyTransfersForbiddenCall) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for thirdPartyTransfersForbiddenCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for thirdPartyTransfersForbiddenCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -7453,9 +6708,7 @@ function thirdPartyTransfersForbidden(address) external view returns (bool);
             type UnderlyingRustTuple<'a> = (bool,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -7464,16 +6717,14 @@ function thirdPartyTransfersForbidden(address) external view returns (bool);
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<thirdPartyTransfersForbiddenReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<thirdPartyTransfersForbiddenReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: thirdPartyTransfersForbiddenReturn) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for thirdPartyTransfersForbiddenReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for thirdPartyTransfersForbiddenReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -7482,14 +6733,10 @@ function thirdPartyTransfersForbidden(address) external view returns (bool);
         #[automatically_derived]
         impl alloy_sol_types::SolCall for thirdPartyTransfersForbiddenCall {
             type Parameters<'a> = (alloy::sol_types::sol_data::Address,);
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = thirdPartyTransfersForbiddenReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Bool,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "thirdPartyTransfersForbidden(address)";
             const SELECTOR: [u8; 4] = [155u8, 77u8, 160u8, 61u8];
             #[inline]
@@ -7511,17 +6758,17 @@ function thirdPartyTransfersForbidden(address) external view returns (bool);
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `transferOwnership(address)` and selector `0xf2fde38b`.
-```solidity
-function transferOwnership(address newOwner) external;
-```*/
+    ```solidity
+    function transferOwnership(address newOwner) external;
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct transferOwnershipCall {
@@ -7546,9 +6793,7 @@ function transferOwnership(address newOwner) external;
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -7557,16 +6802,14 @@ function transferOwnership(address newOwner) external;
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<transferOwnershipCall>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<transferOwnershipCall> for UnderlyingRustTuple<'_> {
                 fn from(value: transferOwnershipCall) -> Self {
                     (value.newOwner,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for transferOwnershipCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for transferOwnershipCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { newOwner: tuple.0 }
                 }
@@ -7579,9 +6822,7 @@ function transferOwnership(address newOwner) external;
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -7590,16 +6831,14 @@ function transferOwnership(address newOwner) external;
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<transferOwnershipReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<transferOwnershipReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: transferOwnershipReturn) -> Self {
                     ()
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for transferOwnershipReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for transferOwnershipReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
@@ -7608,14 +6847,10 @@ function transferOwnership(address newOwner) external;
         #[automatically_derived]
         impl alloy_sol_types::SolCall for transferOwnershipCall {
             type Parameters<'a> = (alloy::sol_types::sol_data::Address,);
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = transferOwnershipReturn;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "transferOwnership(address)";
             const SELECTOR: [u8; 4] = [242u8, 253u8, 227u8, 139u8];
             #[inline]
@@ -7637,17 +6872,17 @@ function transferOwnership(address newOwner) external;
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `unpause(uint256)` and selector `0xfabc1cbc`.
-```solidity
-function unpause(uint256 newPausedStatus) external;
-```*/
+    ```solidity
+    function unpause(uint256 newPausedStatus) external;
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct unpauseCall {
@@ -7669,14 +6904,10 @@ function unpause(uint256 newPausedStatus) external;
             #[doc(hidden)]
             type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (
-                alloy::sol_types::private::primitives::aliases::U256,
-            );
+            type UnderlyingRustTuple<'a> = (alloy::sol_types::private::primitives::aliases::U256,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -7694,7 +6925,9 @@ function unpause(uint256 newPausedStatus) external;
             #[doc(hidden)]
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for unpauseCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self { newPausedStatus: tuple.0 }
+                    Self {
+                        newPausedStatus: tuple.0,
+                    }
                 }
             }
         }
@@ -7705,9 +6938,7 @@ function unpause(uint256 newPausedStatus) external;
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -7732,14 +6963,10 @@ function unpause(uint256 newPausedStatus) external;
         #[automatically_derived]
         impl alloy_sol_types::SolCall for unpauseCall {
             type Parameters<'a> = (alloy::sol_types::sol_data::Uint<256>,);
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = unpauseReturn;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "unpause(uint256)";
             const SELECTOR: [u8; 4] = [250u8, 188u8, 28u8, 188u8];
             #[inline]
@@ -7751,9 +6978,9 @@ function unpause(uint256 newPausedStatus) external;
             #[inline]
             fn tokenize(&self) -> Self::Token<'_> {
                 (
-                    <alloy::sol_types::sol_data::Uint<
-                        256,
-                    > as alloy_sol_types::SolType>::tokenize(&self.newPausedStatus),
+                    <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
+                        &self.newPausedStatus,
+                    ),
                 )
             }
             #[inline]
@@ -7761,17 +6988,17 @@ function unpause(uint256 newPausedStatus) external;
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `withdrawSharesAsTokens(address,address,uint256,address)` and selector `0xc608c7f3`.
-```solidity
-function withdrawSharesAsTokens(address recipient, address strategy, uint256 shares, address token) external;
-```*/
+    ```solidity
+    function withdrawSharesAsTokens(address recipient, address strategy, uint256 shares, address token) external;
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct withdrawSharesAsTokensCall {
@@ -7809,9 +7036,7 @@ function withdrawSharesAsTokens(address recipient, address strategy, uint256 sha
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -7820,16 +7045,14 @@ function withdrawSharesAsTokens(address recipient, address strategy, uint256 sha
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<withdrawSharesAsTokensCall>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<withdrawSharesAsTokensCall> for UnderlyingRustTuple<'_> {
                 fn from(value: withdrawSharesAsTokensCall) -> Self {
                     (value.recipient, value.strategy, value.shares, value.token)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for withdrawSharesAsTokensCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for withdrawSharesAsTokensCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {
                         recipient: tuple.0,
@@ -7847,9 +7070,7 @@ function withdrawSharesAsTokens(address recipient, address strategy, uint256 sha
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -7858,16 +7079,14 @@ function withdrawSharesAsTokens(address recipient, address strategy, uint256 sha
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<withdrawSharesAsTokensReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<withdrawSharesAsTokensReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: withdrawSharesAsTokensReturn) -> Self {
                     ()
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for withdrawSharesAsTokensReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for withdrawSharesAsTokensReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
@@ -7881,15 +7100,12 @@ function withdrawSharesAsTokens(address recipient, address strategy, uint256 sha
                 alloy::sol_types::sol_data::Uint<256>,
                 alloy::sol_types::sol_data::Address,
             );
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = withdrawSharesAsTokensReturn;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
-            const SIGNATURE: &'static str = "withdrawSharesAsTokens(address,address,uint256,address)";
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str =
+                "withdrawSharesAsTokens(address,address,uint256,address)";
             const SELECTOR: [u8; 4] = [198u8, 8u8, 199u8, 243u8];
             #[inline]
             fn new<'a>(
@@ -7906,9 +7122,9 @@ function withdrawSharesAsTokens(address recipient, address strategy, uint256 sha
                     <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
                         &self.strategy,
                     ),
-                    <alloy::sol_types::sol_data::Uint<
-                        256,
-                    > as alloy_sol_types::SolType>::tokenize(&self.shares),
+                    <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
+                        &self.shares,
+                    ),
                     <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
                         &self.token,
                     ),
@@ -7919,10 +7135,10 @@ function withdrawSharesAsTokens(address recipient, address strategy, uint256 sha
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
@@ -7952,9 +7168,7 @@ function withdrawSharesAsTokens(address recipient, address strategy, uint256 sha
         setAddresses(setAddressesCall),
         setDeposits(setDepositsCall),
         setPauserRegistry(setPauserRegistryCall),
-        setStakerStrategyListLengthReturnValue(
-            setStakerStrategyListLengthReturnValueCall,
-        ),
+        setStakerStrategyListLengthReturnValue(setStakerStrategyListLengthReturnValueCall),
         setStrategyWhitelist(setStrategyWhitelistCall),
         setStrategyWhitelister(setStrategyWhitelisterCall),
         setThirdPartyTransfersForbidden(setThirdPartyTransfersForbiddenCall),
@@ -8161,7 +7375,8 @@ function withdrawSharesAsTokens(address recipient, address strategy, uint256 sha
             static DECODE_SHIMS: &[fn(
                 &[u8],
                 bool,
-            ) -> alloy_sol_types::Result<StrategyManagerMockCalls>] = &[
+            )
+                -> alloy_sol_types::Result<StrategyManagerMockCalls>] = &[
                 {
                     fn stakerStrategyListLengthReturnValue(
                         data: &[u8],
@@ -8183,10 +7398,9 @@ function withdrawSharesAsTokens(address recipient, address strategy, uint256 sha
                         validate: bool,
                     ) -> alloy_sol_types::Result<StrategyManagerMockCalls> {
                         <stakerStratsCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(StrategyManagerMockCalls::stakerStrats)
+                            data, validate,
+                        )
+                        .map(StrategyManagerMockCalls::stakerStrats)
                     }
                     stakerStrats
                 },
@@ -8196,10 +7410,9 @@ function withdrawSharesAsTokens(address recipient, address strategy, uint256 sha
                         validate: bool,
                     ) -> alloy_sol_types::Result<StrategyManagerMockCalls> {
                         <setPauserRegistryCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(StrategyManagerMockCalls::setPauserRegistry)
+                            data, validate,
+                        )
+                        .map(StrategyManagerMockCalls::setPauserRegistry)
                     }
                     setPauserRegistry
                 },
@@ -8208,10 +7421,7 @@ function withdrawSharesAsTokens(address recipient, address strategy, uint256 sha
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<StrategyManagerMockCalls> {
-                        <pauseCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
+                        <pauseCall as alloy_sol_types::SolCall>::abi_decode_raw(data, validate)
                             .map(StrategyManagerMockCalls::pause)
                     }
                     pause
@@ -8237,10 +7447,9 @@ function withdrawSharesAsTokens(address recipient, address strategy, uint256 sha
                         validate: bool,
                     ) -> alloy_sol_types::Result<StrategyManagerMockCalls> {
                         <setAddressesCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(StrategyManagerMockCalls::setAddresses)
+                            data, validate,
+                        )
+                        .map(StrategyManagerMockCalls::setAddresses)
                     }
                     setAddresses
                 },
@@ -8250,10 +7459,9 @@ function withdrawSharesAsTokens(address recipient, address strategy, uint256 sha
                         validate: bool,
                     ) -> alloy_sol_types::Result<StrategyManagerMockCalls> {
                         <eigenPodManagerCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(StrategyManagerMockCalls::eigenPodManager)
+                            data, validate,
+                        )
+                        .map(StrategyManagerMockCalls::eigenPodManager)
                     }
                     eigenPodManager
                 },
@@ -8277,10 +7485,7 @@ function withdrawSharesAsTokens(address recipient, address strategy, uint256 sha
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<StrategyManagerMockCalls> {
-                        <pauseAllCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
+                        <pauseAllCall as alloy_sol_types::SolCall>::abi_decode_raw(data, validate)
                             .map(StrategyManagerMockCalls::pauseAll)
                     }
                     pauseAll
@@ -8290,10 +7495,7 @@ function withdrawSharesAsTokens(address recipient, address strategy, uint256 sha
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<StrategyManagerMockCalls> {
-                        <paused_0Call as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
+                        <paused_0Call as alloy_sol_types::SolCall>::abi_decode_raw(data, validate)
                             .map(StrategyManagerMockCalls::paused_0)
                     }
                     paused_0
@@ -8303,10 +7505,7 @@ function withdrawSharesAsTokens(address recipient, address strategy, uint256 sha
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<StrategyManagerMockCalls> {
-                        <paused_1Call as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
+                        <paused_1Call as alloy_sol_types::SolCall>::abi_decode_raw(data, validate)
                             .map(StrategyManagerMockCalls::paused_1)
                     }
                     paused_1
@@ -8317,10 +7516,9 @@ function withdrawSharesAsTokens(address recipient, address strategy, uint256 sha
                         validate: bool,
                     ) -> alloy_sol_types::Result<StrategyManagerMockCalls> {
                         <sharesToReturnCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(StrategyManagerMockCalls::sharesToReturn)
+                            data, validate,
+                        )
+                        .map(StrategyManagerMockCalls::sharesToReturn)
                     }
                     sharesToReturn
                 },
@@ -8345,10 +7543,9 @@ function withdrawSharesAsTokens(address recipient, address strategy, uint256 sha
                         validate: bool,
                     ) -> alloy_sol_types::Result<StrategyManagerMockCalls> {
                         <renounceOwnershipCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(StrategyManagerMockCalls::renounceOwnership)
+                            data, validate,
+                        )
+                        .map(StrategyManagerMockCalls::renounceOwnership)
                     }
                     renounceOwnership
                 },
@@ -8358,10 +7555,9 @@ function withdrawSharesAsTokens(address recipient, address strategy, uint256 sha
                         validate: bool,
                     ) -> alloy_sol_types::Result<StrategyManagerMockCalls> {
                         <stakerStrategySharesCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(StrategyManagerMockCalls::stakerStrategyShares)
+                            data, validate,
+                        )
+                        .map(StrategyManagerMockCalls::stakerStrategyShares)
                     }
                     stakerStrategyShares
                 },
@@ -8371,10 +7567,9 @@ function withdrawSharesAsTokens(address recipient, address strategy, uint256 sha
                         validate: bool,
                     ) -> alloy_sol_types::Result<StrategyManagerMockCalls> {
                         <pauserRegistryCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(StrategyManagerMockCalls::pauserRegistry)
+                            data, validate,
+                        )
+                        .map(StrategyManagerMockCalls::pauserRegistry)
                     }
                     pauserRegistry
                 },
@@ -8384,10 +7579,9 @@ function withdrawSharesAsTokens(address recipient, address strategy, uint256 sha
                         validate: bool,
                     ) -> alloy_sol_types::Result<StrategyManagerMockCalls> {
                         <stakerStrategyListLengthCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(StrategyManagerMockCalls::stakerStrategyListLength)
+                            data, validate,
+                        )
+                        .map(StrategyManagerMockCalls::stakerStrategyListLength)
                     }
                     stakerStrategyListLength
                 },
@@ -8397,10 +7591,9 @@ function withdrawSharesAsTokens(address recipient, address strategy, uint256 sha
                         validate: bool,
                     ) -> alloy_sol_types::Result<StrategyManagerMockCalls> {
                         <removeSharesCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(StrategyManagerMockCalls::removeShares)
+                            data, validate,
+                        )
+                        .map(StrategyManagerMockCalls::removeShares)
                     }
                     removeShares
                 },
@@ -8409,10 +7602,7 @@ function withdrawSharesAsTokens(address recipient, address strategy, uint256 sha
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<StrategyManagerMockCalls> {
-                        <ownerCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
+                        <ownerCall as alloy_sol_types::SolCall>::abi_decode_raw(data, validate)
                             .map(StrategyManagerMockCalls::owner)
                     }
                     owner
@@ -8423,10 +7613,9 @@ function withdrawSharesAsTokens(address recipient, address strategy, uint256 sha
                         validate: bool,
                     ) -> alloy_sol_types::Result<StrategyManagerMockCalls> {
                         <beaconChainETHStrategyCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(StrategyManagerMockCalls::beaconChainETHStrategy)
+                            data, validate,
+                        )
+                        .map(StrategyManagerMockCalls::beaconChainETHStrategy)
                     }
                     beaconChainETHStrategy
                 },
@@ -8436,10 +7625,9 @@ function withdrawSharesAsTokens(address recipient, address strategy, uint256 sha
                         validate: bool,
                     ) -> alloy_sol_types::Result<StrategyManagerMockCalls> {
                         <getDepositsCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(StrategyManagerMockCalls::getDeposits)
+                            data, validate,
+                        )
+                        .map(StrategyManagerMockCalls::getDeposits)
                     }
                     getDeposits
                 },
@@ -8449,10 +7637,9 @@ function withdrawSharesAsTokens(address recipient, address strategy, uint256 sha
                         validate: bool,
                     ) -> alloy_sol_types::Result<StrategyManagerMockCalls> {
                         <strategyWhitelisterCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(StrategyManagerMockCalls::strategyWhitelister)
+                            data, validate,
+                        )
+                        .map(StrategyManagerMockCalls::strategyWhitelister)
                     }
                     strategyWhitelister
                 },
@@ -8490,10 +7677,9 @@ function withdrawSharesAsTokens(address recipient, address strategy, uint256 sha
                         validate: bool,
                     ) -> alloy_sol_types::Result<StrategyManagerMockCalls> {
                         <setStrategyWhitelistCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(StrategyManagerMockCalls::setStrategyWhitelist)
+                            data, validate,
+                        )
+                        .map(StrategyManagerMockCalls::setStrategyWhitelist)
                     }
                     setStrategyWhitelist
                 },
@@ -8503,10 +7689,9 @@ function withdrawSharesAsTokens(address recipient, address strategy, uint256 sha
                         validate: bool,
                     ) -> alloy_sol_types::Result<StrategyManagerMockCalls> {
                         <depositBeaconChainETHCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(StrategyManagerMockCalls::depositBeaconChainETH)
+                            data, validate,
+                        )
+                        .map(StrategyManagerMockCalls::depositBeaconChainETH)
                     }
                     depositBeaconChainETH
                 },
@@ -8543,10 +7728,7 @@ function withdrawSharesAsTokens(address recipient, address strategy, uint256 sha
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<StrategyManagerMockCalls> {
-                        <slasherCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
+                        <slasherCall as alloy_sol_types::SolCall>::abi_decode_raw(data, validate)
                             .map(StrategyManagerMockCalls::slasher)
                     }
                     slasher
@@ -8571,10 +7753,7 @@ function withdrawSharesAsTokens(address recipient, address strategy, uint256 sha
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<StrategyManagerMockCalls> {
-                        <addSharesCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
+                        <addSharesCall as alloy_sol_types::SolCall>::abi_decode_raw(data, validate)
                             .map(StrategyManagerMockCalls::addShares)
                     }
                     addShares
@@ -8585,10 +7764,9 @@ function withdrawSharesAsTokens(address recipient, address strategy, uint256 sha
                         validate: bool,
                     ) -> alloy_sol_types::Result<StrategyManagerMockCalls> {
                         <withdrawSharesAsTokensCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(StrategyManagerMockCalls::withdrawSharesAsTokens)
+                            data, validate,
+                        )
+                        .map(StrategyManagerMockCalls::withdrawSharesAsTokens)
                     }
                     withdrawSharesAsTokens
                 },
@@ -8598,10 +7776,9 @@ function withdrawSharesAsTokens(address recipient, address strategy, uint256 sha
                         validate: bool,
                     ) -> alloy_sol_types::Result<StrategyManagerMockCalls> {
                         <setStrategyWhitelisterCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(StrategyManagerMockCalls::setStrategyWhitelister)
+                            data, validate,
+                        )
+                        .map(StrategyManagerMockCalls::setStrategyWhitelister)
                     }
                     setStrategyWhitelister
                 },
@@ -8625,10 +7802,7 @@ function withdrawSharesAsTokens(address recipient, address strategy, uint256 sha
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<StrategyManagerMockCalls> {
-                        <delegationCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
+                        <delegationCall as alloy_sol_types::SolCall>::abi_decode_raw(data, validate)
                             .map(StrategyManagerMockCalls::delegation)
                     }
                     delegation
@@ -8639,10 +7813,9 @@ function withdrawSharesAsTokens(address recipient, address strategy, uint256 sha
                         validate: bool,
                     ) -> alloy_sol_types::Result<StrategyManagerMockCalls> {
                         <strategiesToReturnCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(StrategyManagerMockCalls::strategiesToReturn)
+                            data, validate,
+                        )
+                        .map(StrategyManagerMockCalls::strategiesToReturn)
                     }
                     strategiesToReturn
                 },
@@ -8652,10 +7825,9 @@ function withdrawSharesAsTokens(address recipient, address strategy, uint256 sha
                         validate: bool,
                     ) -> alloy_sol_types::Result<StrategyManagerMockCalls> {
                         <setDepositsCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(StrategyManagerMockCalls::setDeposits)
+                            data, validate,
+                        )
+                        .map(StrategyManagerMockCalls::setDeposits)
                     }
                     setDeposits
                 },
@@ -8665,10 +7837,9 @@ function withdrawSharesAsTokens(address recipient, address strategy, uint256 sha
                         validate: bool,
                     ) -> alloy_sol_types::Result<StrategyManagerMockCalls> {
                         <depositIntoStrategyCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(StrategyManagerMockCalls::depositIntoStrategy)
+                            data, validate,
+                        )
+                        .map(StrategyManagerMockCalls::depositIntoStrategy)
                     }
                     depositIntoStrategy
                 },
@@ -8678,10 +7849,9 @@ function withdrawSharesAsTokens(address recipient, address strategy, uint256 sha
                         validate: bool,
                     ) -> alloy_sol_types::Result<StrategyManagerMockCalls> {
                         <transferOwnershipCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(StrategyManagerMockCalls::transferOwnership)
+                            data, validate,
+                        )
+                        .map(StrategyManagerMockCalls::transferOwnership)
                     }
                     transferOwnership
                 },
@@ -8691,10 +7861,9 @@ function withdrawSharesAsTokens(address recipient, address strategy, uint256 sha
                         validate: bool,
                     ) -> alloy_sol_types::Result<StrategyManagerMockCalls> {
                         <domainSeparatorCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(StrategyManagerMockCalls::domainSeparator)
+                            data, validate,
+                        )
+                        .map(StrategyManagerMockCalls::domainSeparator)
                     }
                     domainSeparator
                 },
@@ -8703,22 +7872,17 @@ function withdrawSharesAsTokens(address recipient, address strategy, uint256 sha
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<StrategyManagerMockCalls> {
-                        <unpauseCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
+                        <unpauseCall as alloy_sol_types::SolCall>::abi_decode_raw(data, validate)
                             .map(StrategyManagerMockCalls::unpause)
                     }
                     unpause
                 },
             ];
             let Ok(idx) = Self::SELECTORS.binary_search(&selector) else {
-                return Err(
-                    alloy_sol_types::Error::unknown_selector(
-                        <Self as alloy_sol_types::SolInterface>::NAME,
-                        selector,
-                    ),
-                );
+                return Err(alloy_sol_types::Error::unknown_selector(
+                    <Self as alloy_sol_types::SolInterface>::NAME,
+                    selector,
+                ));
             };
             (unsafe { DECODE_SHIMS.get_unchecked(idx) })(data, validate)
         }
@@ -9177,344 +8341,54 @@ function withdrawSharesAsTokens(address recipient, address strategy, uint256 sha
         /// Prefer using `SolInterface` methods instead.
         pub const SELECTORS: &'static [[u8; 32usize]] = &[
             [
-                12u8,
-                53u8,
-                177u8,
-                125u8,
-                145u8,
-                201u8,
-                110u8,
-                178u8,
-                117u8,
-                28u8,
-                212u8,
-                86u8,
-                225u8,
-                37u8,
-                47u8,
-                66u8,
-                163u8,
-                134u8,
-                229u8,
-                36u8,
-                239u8,
-                159u8,
-                242u8,
-                110u8,
-                204u8,
-                153u8,
-                80u8,
-                133u8,
-                159u8,
-                220u8,
-                4u8,
-                254u8,
+                12u8, 53u8, 177u8, 125u8, 145u8, 201u8, 110u8, 178u8, 117u8, 28u8, 212u8, 86u8,
+                225u8, 37u8, 47u8, 66u8, 163u8, 134u8, 229u8, 36u8, 239u8, 159u8, 242u8, 110u8,
+                204u8, 153u8, 80u8, 133u8, 159u8, 220u8, 4u8, 254u8,
             ],
             [
-                53u8,
-                130u8,
-                209u8,
-                130u8,
-                142u8,
-                38u8,
-                191u8,
-                86u8,
-                189u8,
-                128u8,
-                21u8,
-                2u8,
-                188u8,
-                2u8,
-                26u8,
-                192u8,
-                188u8,
-                138u8,
-                251u8,
-                87u8,
-                200u8,
-                38u8,
-                228u8,
-                152u8,
-                107u8,
-                69u8,
-                89u8,
-                60u8,
-                143u8,
-                173u8,
-                56u8,
-                156u8,
+                53u8, 130u8, 209u8, 130u8, 142u8, 38u8, 191u8, 86u8, 189u8, 128u8, 21u8, 2u8,
+                188u8, 2u8, 26u8, 192u8, 188u8, 138u8, 251u8, 87u8, 200u8, 38u8, 228u8, 152u8,
+                107u8, 69u8, 89u8, 60u8, 143u8, 173u8, 56u8, 156u8,
             ],
             [
-                64u8,
-                116u8,
-                65u8,
-                59u8,
-                75u8,
-                68u8,
-                62u8,
-                78u8,
-                88u8,
-                1u8,
-                159u8,
-                40u8,
-                85u8,
-                168u8,
-                118u8,
-                81u8,
-                19u8,
-                53u8,
-                140u8,
-                124u8,
-                114u8,
-                227u8,
-                149u8,
-                9u8,
-                198u8,
-                175u8,
-                69u8,
-                252u8,
-                15u8,
-                91u8,
-                160u8,
-                48u8,
+                64u8, 116u8, 65u8, 59u8, 75u8, 68u8, 62u8, 78u8, 88u8, 1u8, 159u8, 40u8, 85u8,
+                168u8, 118u8, 81u8, 19u8, 53u8, 140u8, 124u8, 114u8, 227u8, 149u8, 9u8, 198u8,
+                175u8, 69u8, 252u8, 15u8, 91u8, 160u8, 48u8,
             ],
             [
-                66u8,
-                100u8,
-                39u8,
-                94u8,
-                89u8,
-                57u8,
-                85u8,
-                255u8,
-                157u8,
-                97u8,
-                70u8,
-                165u8,
-                26u8,
-                69u8,
-                37u8,
-                246u8,
-                221u8,
-                172u8,
-                226u8,
-                232u8,
-                29u8,
-                185u8,
-                57u8,
-                26u8,
-                188u8,
-                201u8,
-                209u8,
-                202u8,
-                72u8,
-                4u8,
-                125u8,
-                41u8,
+                66u8, 100u8, 39u8, 94u8, 89u8, 57u8, 85u8, 255u8, 157u8, 97u8, 70u8, 165u8, 26u8,
+                69u8, 37u8, 246u8, 221u8, 172u8, 226u8, 232u8, 29u8, 185u8, 57u8, 26u8, 188u8,
+                201u8, 209u8, 202u8, 72u8, 4u8, 125u8, 41u8,
             ],
             [
-                110u8,
-                159u8,
-                205u8,
-                83u8,
-                152u8,
-                150u8,
-                252u8,
-                166u8,
-                14u8,
-                139u8,
-                15u8,
-                1u8,
-                221u8,
-                88u8,
-                2u8,
-                51u8,
-                228u8,
-                138u8,
-                107u8,
-                15u8,
-                125u8,
-                240u8,
-                19u8,
-                184u8,
-                155u8,
-                167u8,
-                245u8,
-                101u8,
-                134u8,
-                154u8,
-                205u8,
-                182u8,
+                110u8, 159u8, 205u8, 83u8, 152u8, 150u8, 252u8, 166u8, 14u8, 139u8, 15u8, 1u8,
+                221u8, 88u8, 2u8, 51u8, 228u8, 138u8, 107u8, 15u8, 125u8, 240u8, 19u8, 184u8,
+                155u8, 167u8, 245u8, 101u8, 134u8, 154u8, 205u8, 182u8,
             ],
             [
-                119u8,
-                217u8,
-                48u8,
-                223u8,
-                73u8,
-                55u8,
-                121u8,
-                52u8,
-                115u8,
-                169u8,
-                80u8,
-                36u8,
-                216u8,
-                122u8,
-                152u8,
-                253u8,
-                44u8,
-                203u8,
-                158u8,
-                146u8,
-                211u8,
-                194u8,
-                70u8,
-                59u8,
-                61u8,
-                172u8,
-                214u8,
-                93u8,
-                62u8,
-                106u8,
-                87u8,
-                134u8,
+                119u8, 217u8, 48u8, 223u8, 73u8, 55u8, 121u8, 52u8, 115u8, 169u8, 80u8, 36u8,
+                216u8, 122u8, 152u8, 253u8, 44u8, 203u8, 158u8, 146u8, 211u8, 194u8, 70u8, 59u8,
+                61u8, 172u8, 214u8, 93u8, 62u8, 106u8, 87u8, 134u8,
             ],
             [
-                124u8,
-                255u8,
-                249u8,
-                8u8,
-                164u8,
-                181u8,
-                131u8,
-                243u8,
-                100u8,
-                48u8,
-                178u8,
-                93u8,
-                117u8,
-                150u8,
-                76u8,
-                69u8,
-                141u8,
-                142u8,
-                222u8,
-                138u8,
-                153u8,
-                189u8,
-                97u8,
-                190u8,
-                117u8,
-                14u8,
-                151u8,
-                238u8,
-                27u8,
-                47u8,
-                58u8,
-                150u8,
+                124u8, 255u8, 249u8, 8u8, 164u8, 181u8, 131u8, 243u8, 100u8, 48u8, 178u8, 93u8,
+                117u8, 150u8, 76u8, 69u8, 141u8, 142u8, 222u8, 138u8, 153u8, 189u8, 97u8, 190u8,
+                117u8, 14u8, 151u8, 238u8, 27u8, 47u8, 58u8, 150u8,
             ],
             [
-                127u8,
-                38u8,
-                184u8,
-                63u8,
-                249u8,
-                110u8,
-                31u8,
-                43u8,
-                106u8,
-                104u8,
-                47u8,
-                19u8,
-                56u8,
-                82u8,
-                246u8,
-                121u8,
-                138u8,
-                9u8,
-                196u8,
-                101u8,
-                218u8,
-                149u8,
-                146u8,
-                20u8,
-                96u8,
-                206u8,
-                251u8,
-                56u8,
-                71u8,
-                64u8,
-                36u8,
-                152u8,
+                127u8, 38u8, 184u8, 63u8, 249u8, 110u8, 31u8, 43u8, 106u8, 104u8, 47u8, 19u8, 56u8,
+                82u8, 246u8, 121u8, 138u8, 9u8, 196u8, 101u8, 218u8, 149u8, 146u8, 20u8, 96u8,
+                206u8, 251u8, 56u8, 71u8, 64u8, 36u8, 152u8,
             ],
             [
-                139u8,
-                224u8,
-                7u8,
-                156u8,
-                83u8,
-                22u8,
-                89u8,
-                20u8,
-                19u8,
-                68u8,
-                205u8,
-                31u8,
-                208u8,
-                164u8,
-                242u8,
-                132u8,
-                25u8,
-                73u8,
-                127u8,
-                151u8,
-                34u8,
-                163u8,
-                218u8,
-                175u8,
-                227u8,
-                180u8,
-                24u8,
-                111u8,
-                107u8,
-                100u8,
-                87u8,
-                224u8,
+                139u8, 224u8, 7u8, 156u8, 83u8, 22u8, 89u8, 20u8, 19u8, 68u8, 205u8, 31u8, 208u8,
+                164u8, 242u8, 132u8, 25u8, 73u8, 127u8, 151u8, 34u8, 163u8, 218u8, 175u8, 227u8,
+                180u8, 24u8, 111u8, 107u8, 100u8, 87u8, 224u8,
             ],
             [
-                171u8,
-                64u8,
-                163u8,
-                116u8,
-                188u8,
-                81u8,
-                222u8,
-                55u8,
-                34u8,
-                0u8,
-                168u8,
-                188u8,
-                152u8,
-                26u8,
-                248u8,
-                201u8,
-                236u8,
-                220u8,
-                8u8,
-                223u8,
-                218u8,
-                239u8,
-                11u8,
-                182u8,
-                224u8,
-                159u8,
-                136u8,
-                243u8,
-                198u8,
-                22u8,
-                239u8,
-                61u8,
+                171u8, 64u8, 163u8, 116u8, 188u8, 81u8, 222u8, 55u8, 34u8, 0u8, 168u8, 188u8,
+                152u8, 26u8, 248u8, 201u8, 236u8, 220u8, 8u8, 223u8, 218u8, 239u8, 11u8, 182u8,
+                224u8, 159u8, 136u8, 243u8, 198u8, 22u8, 239u8, 61u8,
             ],
         ];
     }
@@ -9638,18 +8512,14 @@ function withdrawSharesAsTokens(address recipient, address strategy, uint256 sha
     impl alloy_sol_types::private::IntoLogData for StrategyManagerMockEvents {
         fn to_log_data(&self) -> alloy_sol_types::private::LogData {
             match self {
-                Self::Deposit(inner) => {
-                    alloy_sol_types::private::IntoLogData::to_log_data(inner)
-                }
+                Self::Deposit(inner) => alloy_sol_types::private::IntoLogData::to_log_data(inner),
                 Self::Initialized(inner) => {
                     alloy_sol_types::private::IntoLogData::to_log_data(inner)
                 }
                 Self::OwnershipTransferred(inner) => {
                     alloy_sol_types::private::IntoLogData::to_log_data(inner)
                 }
-                Self::Paused(inner) => {
-                    alloy_sol_types::private::IntoLogData::to_log_data(inner)
-                }
+                Self::Paused(inner) => alloy_sol_types::private::IntoLogData::to_log_data(inner),
                 Self::PauserRegistrySet(inner) => {
                     alloy_sol_types::private::IntoLogData::to_log_data(inner)
                 }
@@ -9662,9 +8532,7 @@ function withdrawSharesAsTokens(address recipient, address strategy, uint256 sha
                 Self::StrategyWhitelisterChanged(inner) => {
                     alloy_sol_types::private::IntoLogData::to_log_data(inner)
                 }
-                Self::Unpaused(inner) => {
-                    alloy_sol_types::private::IntoLogData::to_log_data(inner)
-                }
+                Self::Unpaused(inner) => alloy_sol_types::private::IntoLogData::to_log_data(inner),
                 Self::UpdatedThirdPartyTransfersForbidden(inner) => {
                     alloy_sol_types::private::IntoLogData::to_log_data(inner)
                 }
@@ -9672,18 +8540,14 @@ function withdrawSharesAsTokens(address recipient, address strategy, uint256 sha
         }
         fn into_log_data(self) -> alloy_sol_types::private::LogData {
             match self {
-                Self::Deposit(inner) => {
-                    alloy_sol_types::private::IntoLogData::into_log_data(inner)
-                }
+                Self::Deposit(inner) => alloy_sol_types::private::IntoLogData::into_log_data(inner),
                 Self::Initialized(inner) => {
                     alloy_sol_types::private::IntoLogData::into_log_data(inner)
                 }
                 Self::OwnershipTransferred(inner) => {
                     alloy_sol_types::private::IntoLogData::into_log_data(inner)
                 }
-                Self::Paused(inner) => {
-                    alloy_sol_types::private::IntoLogData::into_log_data(inner)
-                }
+                Self::Paused(inner) => alloy_sol_types::private::IntoLogData::into_log_data(inner),
                 Self::PauserRegistrySet(inner) => {
                     alloy_sol_types::private::IntoLogData::into_log_data(inner)
                 }
@@ -9708,7 +8572,7 @@ function withdrawSharesAsTokens(address recipient, address strategy, uint256 sha
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`StrategyManagerMock`](self) contract instance.
 
-See the [wrapper's documentation](`StrategyManagerMockInstance`) for more details.*/
+    See the [wrapper's documentation](`StrategyManagerMockInstance`) for more details.*/
     #[inline]
     pub const fn new<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -9722,9 +8586,9 @@ See the [wrapper's documentation](`StrategyManagerMockInstance`) for more detail
     }
     /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+    Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+    For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
     #[inline]
     pub fn deploy<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -9732,35 +8596,36 @@ For more fine-grained control over the deployment process, use [`deploy_builder`
         N: alloy_contract::private::Network,
     >(
         provider: P,
-    ) -> impl ::core::future::Future<
-        Output = alloy_contract::Result<StrategyManagerMockInstance<T, P, N>>,
-    > {
+    ) -> impl ::core::future::Future<Output = alloy_contract::Result<StrategyManagerMockInstance<T, P, N>>>
+    {
         StrategyManagerMockInstance::<T, P, N>::deploy(provider)
     }
     /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+    and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+    This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+    the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     #[inline]
     pub fn deploy_builder<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
         P: alloy_contract::private::Provider<T, N>,
         N: alloy_contract::private::Network,
-    >(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
+    >(
+        provider: P,
+    ) -> alloy_contract::RawCallBuilder<T, P, N> {
         StrategyManagerMockInstance::<T, P, N>::deploy_builder(provider)
     }
     /**A [`StrategyManagerMock`](self) instance.
 
-Contains type-safe methods for interacting with an on-chain instance of the
-[`StrategyManagerMock`](self) contract located at a given `address`, using a given
-provider `P`.
+    Contains type-safe methods for interacting with an on-chain instance of the
+    [`StrategyManagerMock`](self) contract located at a given `address`, using a given
+    provider `P`.
 
-If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
-documentation on how to provide it), the `deploy` and `deploy_builder` methods can
-be used to deploy a new instance of the contract.
+    If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
+    documentation on how to provide it), the `deploy` and `deploy_builder` methods can
+    be used to deploy a new instance of the contract.
 
-See the [module-level documentation](self) for all the available methods.*/
+    See the [module-level documentation](self) for all the available methods.*/
     #[derive(Clone)]
     pub struct StrategyManagerMockInstance<T, P, N = alloy_contract::private::Ethereum> {
         address: alloy_sol_types::private::Address,
@@ -9771,24 +8636,24 @@ See the [module-level documentation](self) for all the available methods.*/
     impl<T, P, N> ::core::fmt::Debug for StrategyManagerMockInstance<T, P, N> {
         #[inline]
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-            f.debug_tuple("StrategyManagerMockInstance").field(&self.address).finish()
+            f.debug_tuple("StrategyManagerMockInstance")
+                .field(&self.address)
+                .finish()
         }
     }
     /// Instantiation and getters/setters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > StrategyManagerMockInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > StrategyManagerMockInstance<T, P, N>
+    {
         /**Creates a new wrapper around an on-chain [`StrategyManagerMock`](self) contract instance.
 
-See the [wrapper's documentation](`StrategyManagerMockInstance`) for more details.*/
+        See the [wrapper's documentation](`StrategyManagerMockInstance`) for more details.*/
         #[inline]
-        pub const fn new(
-            address: alloy_sol_types::private::Address,
-            provider: P,
-        ) -> Self {
+        pub const fn new(address: alloy_sol_types::private::Address, provider: P) -> Self {
             Self {
                 address,
                 provider,
@@ -9797,9 +8662,9 @@ See the [wrapper's documentation](`StrategyManagerMockInstance`) for more detail
         }
         /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+        Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+        For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
         #[inline]
         pub async fn deploy(
             provider: P,
@@ -9809,10 +8674,10 @@ For more fine-grained control over the deployment process, use [`deploy_builder`
             Ok(Self::new(contract_address, call_builder.provider))
         }
         /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+        and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+        This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+        the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         #[inline]
         pub fn deploy_builder(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
             alloy_contract::RawCallBuilder::new_raw_deploy(
@@ -9855,10 +8720,11 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     /// Function calls.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > StrategyManagerMockInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > StrategyManagerMockInstance<T, P, N>
+    {
         /// Creates a new call builder using this contract instance's provider and address.
         ///
         /// Note that the call can be any function call, not just those defined in this
@@ -9877,14 +8743,12 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
             strategy: alloy::sol_types::private::Address,
             shares: alloy::sol_types::private::primitives::aliases::U256,
         ) -> alloy_contract::SolCallBuilder<T, &P, addSharesCall, N> {
-            self.call_builder(
-                &addSharesCall {
-                    staker,
-                    token,
-                    strategy,
-                    shares,
-                },
-            )
+            self.call_builder(&addSharesCall {
+                staker,
+                token,
+                strategy,
+                shares,
+            })
         }
         ///Creates a new call builder for the [`addStrategiesToDepositWhitelist`] function.
         pub fn addStrategiesToDepositWhitelist(
@@ -9893,18 +8757,11 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
                 alloy::sol_types::private::Address,
             >,
             thirdPartyTransfersForbiddenValues: alloy::sol_types::private::Vec<bool>,
-        ) -> alloy_contract::SolCallBuilder<
-            T,
-            &P,
-            addStrategiesToDepositWhitelistCall,
-            N,
-        > {
-            self.call_builder(
-                &addStrategiesToDepositWhitelistCall {
-                    strategiesToWhitelist,
-                    thirdPartyTransfersForbiddenValues,
-                },
-            )
+        ) -> alloy_contract::SolCallBuilder<T, &P, addStrategiesToDepositWhitelistCall, N> {
+            self.call_builder(&addStrategiesToDepositWhitelistCall {
+                strategiesToWhitelist,
+                thirdPartyTransfersForbiddenValues,
+            })
         }
         ///Creates a new call builder for the [`beaconChainETHStrategy`] function.
         pub fn beaconChainETHStrategy(
@@ -9917,16 +8774,10 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
             &self,
             _0: alloy::sol_types::private::Address,
         ) -> alloy_contract::SolCallBuilder<T, &P, cumulativeWithdrawalsQueuedCall, N> {
-            self.call_builder(
-                &cumulativeWithdrawalsQueuedCall {
-                    _0,
-                },
-            )
+            self.call_builder(&cumulativeWithdrawalsQueuedCall { _0 })
         }
         ///Creates a new call builder for the [`delegation`] function.
-        pub fn delegation(
-            &self,
-        ) -> alloy_contract::SolCallBuilder<T, &P, delegationCall, N> {
+        pub fn delegation(&self) -> alloy_contract::SolCallBuilder<T, &P, delegationCall, N> {
             self.call_builder(&delegationCall {})
         }
         ///Creates a new call builder for the [`depositBeaconChainETH`] function.
@@ -9935,12 +8786,7 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
             staker: alloy::sol_types::private::Address,
             amount: alloy::sol_types::private::primitives::aliases::U256,
         ) -> alloy_contract::SolCallBuilder<T, &P, depositBeaconChainETHCall, N> {
-            self.call_builder(
-                &depositBeaconChainETHCall {
-                    staker,
-                    amount,
-                },
-            )
+            self.call_builder(&depositBeaconChainETHCall { staker, amount })
         }
         ///Creates a new call builder for the [`depositIntoStrategy`] function.
         pub fn depositIntoStrategy(
@@ -9949,13 +8795,11 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
             token: alloy::sol_types::private::Address,
             amount: alloy::sol_types::private::primitives::aliases::U256,
         ) -> alloy_contract::SolCallBuilder<T, &P, depositIntoStrategyCall, N> {
-            self.call_builder(
-                &depositIntoStrategyCall {
-                    strategy,
-                    token,
-                    amount,
-                },
-            )
+            self.call_builder(&depositIntoStrategyCall {
+                strategy,
+                token,
+                amount,
+            })
         }
         ///Creates a new call builder for the [`depositIntoStrategyWithSignature`] function.
         pub fn depositIntoStrategyWithSignature(
@@ -9966,22 +8810,16 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
             staker: alloy::sol_types::private::Address,
             expiry: alloy::sol_types::private::primitives::aliases::U256,
             signature: alloy::sol_types::private::Bytes,
-        ) -> alloy_contract::SolCallBuilder<
-            T,
-            &P,
-            depositIntoStrategyWithSignatureCall,
-            N,
-        > {
-            self.call_builder(
-                &depositIntoStrategyWithSignatureCall {
-                    strategy,
-                    token,
-                    amount,
-                    staker,
-                    expiry,
-                    signature,
-                },
-            )
+        ) -> alloy_contract::SolCallBuilder<T, &P, depositIntoStrategyWithSignatureCall, N>
+        {
+            self.call_builder(&depositIntoStrategyWithSignatureCall {
+                strategy,
+                token,
+                amount,
+                staker,
+                expiry,
+                signature,
+            })
         }
         ///Creates a new call builder for the [`domainSeparator`] function.
         pub fn domainSeparator(
@@ -10014,9 +8852,7 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
             self.call_builder(&pauseCall { newPausedStatus })
         }
         ///Creates a new call builder for the [`pauseAll`] function.
-        pub fn pauseAll(
-            &self,
-        ) -> alloy_contract::SolCallBuilder<T, &P, pauseAllCall, N> {
+        pub fn pauseAll(&self) -> alloy_contract::SolCallBuilder<T, &P, pauseAllCall, N> {
             self.call_builder(&pauseAllCall {})
         }
         ///Creates a new call builder for the [`paused_0`] function.
@@ -10027,9 +8863,7 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
             self.call_builder(&paused_0Call { index })
         }
         ///Creates a new call builder for the [`paused_1`] function.
-        pub fn paused_1(
-            &self,
-        ) -> alloy_contract::SolCallBuilder<T, &P, paused_1Call, N> {
+        pub fn paused_1(&self) -> alloy_contract::SolCallBuilder<T, &P, paused_1Call, N> {
             self.call_builder(&paused_1Call {})
         }
         ///Creates a new call builder for the [`pauserRegistry`] function.
@@ -10044,19 +8878,13 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
             overcommittedPodOwner: alloy::sol_types::private::Address,
             beaconChainETHStrategyIndex: alloy::sol_types::private::primitives::aliases::U256,
             sharesDelta: alloy::sol_types::private::primitives::aliases::I256,
-        ) -> alloy_contract::SolCallBuilder<
-            T,
-            &P,
-            recordBeaconChainETHBalanceUpdateCall,
-            N,
-        > {
-            self.call_builder(
-                &recordBeaconChainETHBalanceUpdateCall {
-                    overcommittedPodOwner,
-                    beaconChainETHStrategyIndex,
-                    sharesDelta,
-                },
-            )
+        ) -> alloy_contract::SolCallBuilder<T, &P, recordBeaconChainETHBalanceUpdateCall, N>
+        {
+            self.call_builder(&recordBeaconChainETHBalanceUpdateCall {
+                overcommittedPodOwner,
+                beaconChainETHStrategyIndex,
+                sharesDelta,
+            })
         }
         ///Creates a new call builder for the [`removeShares`] function.
         pub fn removeShares(
@@ -10065,29 +8893,19 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
             strategy: alloy::sol_types::private::Address,
             shares: alloy::sol_types::private::primitives::aliases::U256,
         ) -> alloy_contract::SolCallBuilder<T, &P, removeSharesCall, N> {
-            self.call_builder(
-                &removeSharesCall {
-                    staker,
-                    strategy,
-                    shares,
-                },
-            )
+            self.call_builder(&removeSharesCall {
+                staker,
+                strategy,
+                shares,
+            })
         }
         ///Creates a new call builder for the [`removeStrategiesFromDepositWhitelist`] function.
         pub fn removeStrategiesFromDepositWhitelist(
             &self,
             _0: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
-        ) -> alloy_contract::SolCallBuilder<
-            T,
-            &P,
-            removeStrategiesFromDepositWhitelistCall,
-            N,
-        > {
-            self.call_builder(
-                &removeStrategiesFromDepositWhitelistCall {
-                    _0,
-                },
-            )
+        ) -> alloy_contract::SolCallBuilder<T, &P, removeStrategiesFromDepositWhitelistCall, N>
+        {
+            self.call_builder(&removeStrategiesFromDepositWhitelistCall { _0 })
         }
         ///Creates a new call builder for the [`renounceOwnership`] function.
         pub fn renounceOwnership(
@@ -10102,59 +8920,41 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
             _eigenPodManager: alloy::sol_types::private::Address,
             _slasher: alloy::sol_types::private::Address,
         ) -> alloy_contract::SolCallBuilder<T, &P, setAddressesCall, N> {
-            self.call_builder(
-                &setAddressesCall {
-                    _delegation,
-                    _eigenPodManager,
-                    _slasher,
-                },
-            )
+            self.call_builder(&setAddressesCall {
+                _delegation,
+                _eigenPodManager,
+                _slasher,
+            })
         }
         ///Creates a new call builder for the [`setDeposits`] function.
         pub fn setDeposits(
             &self,
             staker: alloy::sol_types::private::Address,
-            _strategiesToReturn: alloy::sol_types::private::Vec<
-                alloy::sol_types::private::Address,
-            >,
+            _strategiesToReturn: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
             _sharesToReturn: alloy::sol_types::private::Vec<
                 alloy::sol_types::private::primitives::aliases::U256,
             >,
         ) -> alloy_contract::SolCallBuilder<T, &P, setDepositsCall, N> {
-            self.call_builder(
-                &setDepositsCall {
-                    staker,
-                    _strategiesToReturn,
-                    _sharesToReturn,
-                },
-            )
+            self.call_builder(&setDepositsCall {
+                staker,
+                _strategiesToReturn,
+                _sharesToReturn,
+            })
         }
         ///Creates a new call builder for the [`setPauserRegistry`] function.
         pub fn setPauserRegistry(
             &self,
             newPauserRegistry: alloy::sol_types::private::Address,
         ) -> alloy_contract::SolCallBuilder<T, &P, setPauserRegistryCall, N> {
-            self.call_builder(
-                &setPauserRegistryCall {
-                    newPauserRegistry,
-                },
-            )
+            self.call_builder(&setPauserRegistryCall { newPauserRegistry })
         }
         ///Creates a new call builder for the [`setStakerStrategyListLengthReturnValue`] function.
         pub fn setStakerStrategyListLengthReturnValue(
             &self,
             valueToSet: alloy::sol_types::private::primitives::aliases::U256,
-        ) -> alloy_contract::SolCallBuilder<
-            T,
-            &P,
-            setStakerStrategyListLengthReturnValueCall,
-            N,
-        > {
-            self.call_builder(
-                &setStakerStrategyListLengthReturnValueCall {
-                    valueToSet,
-                },
-            )
+        ) -> alloy_contract::SolCallBuilder<T, &P, setStakerStrategyListLengthReturnValueCall, N>
+        {
+            self.call_builder(&setStakerStrategyListLengthReturnValueCall { valueToSet })
         }
         ///Creates a new call builder for the [`setStrategyWhitelist`] function.
         pub fn setStrategyWhitelist(
@@ -10162,41 +8962,24 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
             strategy: alloy::sol_types::private::Address,
             value: bool,
         ) -> alloy_contract::SolCallBuilder<T, &P, setStrategyWhitelistCall, N> {
-            self.call_builder(
-                &setStrategyWhitelistCall {
-                    strategy,
-                    value,
-                },
-            )
+            self.call_builder(&setStrategyWhitelistCall { strategy, value })
         }
         ///Creates a new call builder for the [`setStrategyWhitelister`] function.
         pub fn setStrategyWhitelister(
             &self,
             newStrategyWhitelister: alloy::sol_types::private::Address,
         ) -> alloy_contract::SolCallBuilder<T, &P, setStrategyWhitelisterCall, N> {
-            self.call_builder(
-                &setStrategyWhitelisterCall {
-                    newStrategyWhitelister,
-                },
-            )
+            self.call_builder(&setStrategyWhitelisterCall {
+                newStrategyWhitelister,
+            })
         }
         ///Creates a new call builder for the [`setThirdPartyTransfersForbidden`] function.
         pub fn setThirdPartyTransfersForbidden(
             &self,
             strategy: alloy::sol_types::private::Address,
             value: bool,
-        ) -> alloy_contract::SolCallBuilder<
-            T,
-            &P,
-            setThirdPartyTransfersForbiddenCall,
-            N,
-        > {
-            self.call_builder(
-                &setThirdPartyTransfersForbiddenCall {
-                    strategy,
-                    value,
-                },
-            )
+        ) -> alloy_contract::SolCallBuilder<T, &P, setThirdPartyTransfersForbiddenCall, N> {
+            self.call_builder(&setThirdPartyTransfersForbiddenCall { strategy, value })
         }
         ///Creates a new call builder for the [`sharesToReturn`] function.
         pub fn sharesToReturn(
@@ -10220,16 +9003,9 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         ///Creates a new call builder for the [`stakerStrategyListLengthReturnValue`] function.
         pub fn stakerStrategyListLengthReturnValue(
             &self,
-        ) -> alloy_contract::SolCallBuilder<
-            T,
-            &P,
-            stakerStrategyListLengthReturnValueCall,
-            N,
-        > {
-            self.call_builder(
-                &stakerStrategyListLengthReturnValueCall {
-                },
-            )
+        ) -> alloy_contract::SolCallBuilder<T, &P, stakerStrategyListLengthReturnValueCall, N>
+        {
+            self.call_builder(&stakerStrategyListLengthReturnValueCall {})
         }
         ///Creates a new call builder for the [`stakerStrategyShares`] function.
         pub fn stakerStrategyShares(
@@ -10237,12 +9013,7 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
             user: alloy::sol_types::private::Address,
             strategy: alloy::sol_types::private::Address,
         ) -> alloy_contract::SolCallBuilder<T, &P, stakerStrategySharesCall, N> {
-            self.call_builder(
-                &stakerStrategySharesCall {
-                    user,
-                    strategy,
-                },
-            )
+            self.call_builder(&stakerStrategySharesCall { user, strategy })
         }
         ///Creates a new call builder for the [`stakerStrats`] function.
         pub fn stakerStrats(
@@ -10263,17 +9034,8 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         pub fn strategyIsWhitelistedForDeposit(
             &self,
             _0: alloy::sol_types::private::Address,
-        ) -> alloy_contract::SolCallBuilder<
-            T,
-            &P,
-            strategyIsWhitelistedForDepositCall,
-            N,
-        > {
-            self.call_builder(
-                &strategyIsWhitelistedForDepositCall {
-                    _0,
-                },
-            )
+        ) -> alloy_contract::SolCallBuilder<T, &P, strategyIsWhitelistedForDepositCall, N> {
+            self.call_builder(&strategyIsWhitelistedForDepositCall { _0 })
         }
         ///Creates a new call builder for the [`strategyWhitelister`] function.
         pub fn strategyWhitelister(
@@ -10286,11 +9048,7 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
             &self,
             _0: alloy::sol_types::private::Address,
         ) -> alloy_contract::SolCallBuilder<T, &P, thirdPartyTransfersForbiddenCall, N> {
-            self.call_builder(
-                &thirdPartyTransfersForbiddenCall {
-                    _0,
-                },
-            )
+            self.call_builder(&thirdPartyTransfersForbiddenCall { _0 })
         }
         ///Creates a new call builder for the [`transferOwnership`] function.
         pub fn transferOwnership(
@@ -10314,23 +9072,22 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
             shares: alloy::sol_types::private::primitives::aliases::U256,
             token: alloy::sol_types::private::Address,
         ) -> alloy_contract::SolCallBuilder<T, &P, withdrawSharesAsTokensCall, N> {
-            self.call_builder(
-                &withdrawSharesAsTokensCall {
-                    recipient,
-                    strategy,
-                    shares,
-                    token,
-                },
-            )
+            self.call_builder(&withdrawSharesAsTokensCall {
+                recipient,
+                strategy,
+                shares,
+                token,
+            })
         }
     }
     /// Event filters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > StrategyManagerMockInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > StrategyManagerMockInstance<T, P, N>
+    {
         /// Creates a new event filter using this contract instance's provider and address.
         ///
         /// Note that the type can be any event, not just those defined in this contract.
@@ -10345,9 +9102,7 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
             self.event_filter::<Deposit>()
         }
         ///Creates a new event filter for the [`Initialized`] event.
-        pub fn Initialized_filter(
-            &self,
-        ) -> alloy_contract::Event<T, &P, Initialized, N> {
+        pub fn Initialized_filter(&self) -> alloy_contract::Event<T, &P, Initialized, N> {
             self.event_filter::<Initialized>()
         }
         ///Creates a new event filter for the [`OwnershipTransferred`] event.

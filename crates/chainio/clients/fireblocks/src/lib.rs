@@ -14,14 +14,12 @@ pub mod list_external_accounts;
 mod list_vault_accounts;
 pub mod status;
 pub mod transaction;
-use std::collections::HashMap;
-use std::str::FromStr;
 use alloy::providers::Provider;
 use alloy::rpc::types::transaction::TransactionReceipt;
 use alloy_primitives::Address;
 use alloy_primitives::U64;
-use eigen_common::get_provider;
 use client::{Client, ASSET_ID_BY_CHAIN};
+use eigen_common::get_provider;
 use error::FireBlockError;
 use get_transaction::GetTransaction;
 use list_contracts::ListContracts;
@@ -30,6 +28,8 @@ use list_external_accounts::ListExternalAccounts;
 use list_external_accounts::WhitelistedAccount;
 use list_vault_accounts::{ListVaultAccounts, VaultAccount};
 use status::Status;
+use std::collections::HashMap;
+use std::str::FromStr;
 
 /// Fireblocks wallet
 #[derive(Debug)]

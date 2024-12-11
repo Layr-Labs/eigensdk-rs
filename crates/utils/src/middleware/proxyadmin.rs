@@ -200,9 +200,9 @@ pub mod ProxyAdmin {
         b"`\x80`@R`\x046\x10a\0{W`\x005`\xE0\x1C\x80c\x96#`\x9D\x11a\0NW\x80c\x96#`\x9D\x14a\x01\x11W\x80c\x99\xA8\x8E\xC4\x14a\x01$W\x80c\xF2\xFD\xE3\x8B\x14a\x01DW\x80c\xF3\xB7\xDE\xAD\x14a\x01dW`\0\x80\xFD[\x80c N\x1Cz\x14a\0\x80W\x80cqP\x18\xA6\x14a\0\xBCW\x80c~\xFF'^\x14a\0\xD3W\x80c\x8D\xA5\xCB[\x14a\0\xF3W[`\0\x80\xFD[4\x80\x15a\0\x8CW`\0\x80\xFD[Pa\0\xA0a\0\x9B6`\x04a\x04\x99V[a\x01\x84V[`@Q`\x01`\x01`\xA0\x1B\x03\x90\x91\x16\x81R` \x01`@Q\x80\x91\x03\x90\xF3[4\x80\x15a\0\xC8W`\0\x80\xFD[Pa\0\xD1a\x02\x15V[\0[4\x80\x15a\0\xDFW`\0\x80\xFD[Pa\0\xD1a\0\xEE6`\x04a\x04\xBDV[a\x02)V[4\x80\x15a\0\xFFW`\0\x80\xFD[P`\0T`\x01`\x01`\xA0\x1B\x03\x16a\0\xA0V[a\0\xD1a\x01\x1F6`\x04a\x05\x0CV[a\x02\x91V[4\x80\x15a\x010W`\0\x80\xFD[Pa\0\xD1a\x01?6`\x04a\x04\xBDV[a\x03\0V[4\x80\x15a\x01PW`\0\x80\xFD[Pa\0\xD1a\x01_6`\x04a\x04\x99V[a\x036V[4\x80\x15a\x01pW`\0\x80\xFD[Pa\0\xA0a\x01\x7F6`\x04a\x04\x99V[a\x03\xB4V[`\0\x80`\0\x83`\x01`\x01`\xA0\x1B\x03\x16`@Qa\x01\xAA\x90c\\`\xDA\x1B`\xE0\x1B\x81R`\x04\x01\x90V[`\0`@Q\x80\x83\x03\x81\x85Z\xFA\x91PP=\x80`\0\x81\x14a\x01\xE5W`@Q\x91P`\x1F\x19`?=\x01\x16\x82\x01`@R=\x82R=`\0` \x84\x01>a\x01\xEAV[``\x91P[P\x91P\x91P\x81a\x01\xF9W`\0\x80\xFD[\x80\x80` \x01\x90Q\x81\x01\x90a\x02\r\x91\x90a\x05\xE2V[\x94\x93PPPPV[a\x02\x1Da\x03\xDAV[a\x02'`\0a\x044V[V[a\x021a\x03\xDAV[`@Qc\x08\xF2\x83\x97`\xE4\x1B\x81R`\x01`\x01`\xA0\x1B\x03\x82\x81\x16`\x04\x83\x01R\x83\x16\x90c\x8F(9p\x90`$\x01[`\0`@Q\x80\x83\x03\x81`\0\x87\x80;\x15\x80\x15a\x02uW`\0\x80\xFD[PZ\xF1\x15\x80\x15a\x02\x89W=`\0\x80>=`\0\xFD[PPPPPPV[a\x02\x99a\x03\xDAV[`@Qc'\x8FyC`\xE1\x1B\x81R`\x01`\x01`\xA0\x1B\x03\x84\x16\x90cO\x1E\xF2\x86\x904\x90a\x02\xC9\x90\x86\x90\x86\x90`\x04\x01a\x05\xFFV[`\0`@Q\x80\x83\x03\x81\x85\x88\x80;\x15\x80\x15a\x02\xE2W`\0\x80\xFD[PZ\xF1\x15\x80\x15a\x02\xF6W=`\0\x80>=`\0\xFD[PPPPPPPPV[a\x03\x08a\x03\xDAV[`@Qc\x1B,\xE7\xF3`\xE1\x1B\x81R`\x01`\x01`\xA0\x1B\x03\x82\x81\x16`\x04\x83\x01R\x83\x16\x90c6Y\xCF\xE6\x90`$\x01a\x02[V[a\x03>a\x03\xDAV[`\x01`\x01`\xA0\x1B\x03\x81\x16a\x03\xA8W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`&`$\x82\x01R\x7FOwnable: new owner is the zero a`D\x82\x01Reddress`\xD0\x1B`d\x82\x01R`\x84\x01[`@Q\x80\x91\x03\x90\xFD[a\x03\xB1\x81a\x044V[PV[`\0\x80`\0\x83`\x01`\x01`\xA0\x1B\x03\x16`@Qa\x01\xAA\x90c\x03\xE1F\x91`\xE6\x1B\x81R`\x04\x01\x90V[`\0T`\x01`\x01`\xA0\x1B\x03\x163\x14a\x02'W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01\x81\x90R`$\x82\x01R\x7FOwnable: caller is not the owner`D\x82\x01R`d\x01a\x03\x9FV[`\0\x80T`\x01`\x01`\xA0\x1B\x03\x83\x81\x16`\x01`\x01`\xA0\x1B\x03\x19\x83\x16\x81\x17\x84U`@Q\x91\x90\x92\x16\x92\x83\x91\x7F\x8B\xE0\x07\x9CS\x16Y\x14\x13D\xCD\x1F\xD0\xA4\xF2\x84\x19I\x7F\x97\"\xA3\xDA\xAF\xE3\xB4\x18okdW\xE0\x91\x90\xA3PPV[`\x01`\x01`\xA0\x1B\x03\x81\x16\x81\x14a\x03\xB1W`\0\x80\xFD[`\0` \x82\x84\x03\x12\x15a\x04\xABW`\0\x80\xFD[\x815a\x04\xB6\x81a\x04\x84V[\x93\x92PPPV[`\0\x80`@\x83\x85\x03\x12\x15a\x04\xD0W`\0\x80\xFD[\x825a\x04\xDB\x81a\x04\x84V[\x91P` \x83\x015a\x04\xEB\x81a\x04\x84V[\x80\x91PP\x92P\x92\x90PV[cNH{q`\xE0\x1B`\0R`A`\x04R`$`\0\xFD[`\0\x80`\0``\x84\x86\x03\x12\x15a\x05!W`\0\x80\xFD[\x835a\x05,\x81a\x04\x84V[\x92P` \x84\x015a\x05<\x81a\x04\x84V[\x91P`@\x84\x015g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x80\x82\x11\x15a\x05YW`\0\x80\xFD[\x81\x86\x01\x91P\x86`\x1F\x83\x01\x12a\x05mW`\0\x80\xFD[\x815\x81\x81\x11\x15a\x05\x7FWa\x05\x7Fa\x04\xF6V[`@Q`\x1F\x82\x01`\x1F\x19\x90\x81\x16`?\x01\x16\x81\x01\x90\x83\x82\x11\x81\x83\x10\x17\x15a\x05\xA7Wa\x05\xA7a\x04\xF6V[\x81`@R\x82\x81R\x89` \x84\x87\x01\x01\x11\x15a\x05\xC0W`\0\x80\xFD[\x82` \x86\x01` \x83\x017`\0` \x84\x83\x01\x01R\x80\x95PPPPPP\x92P\x92P\x92V[`\0` \x82\x84\x03\x12\x15a\x05\xF4W`\0\x80\xFD[\x81Qa\x04\xB6\x81a\x04\x84V[`\x01\x80`\xA0\x1B\x03\x83\x16\x81R`\0` `@\x81\x84\x01R\x83Q\x80`@\x85\x01R`\0[\x81\x81\x10\x15a\x06;W\x85\x81\x01\x83\x01Q\x85\x82\x01``\x01R\x82\x01a\x06\x1FV[\x81\x81\x11\x15a\x06MW`\0``\x83\x87\x01\x01R[P`\x1F\x01`\x1F\x19\x16\x92\x90\x92\x01``\x01\x94\x93PPPPV\xFE\xA2dipfsX\"\x12 6S\xE96>\xFD\x0F\x03P\xF1L(ZzJ\xC2\xE7\xA7\x1C\x103\xBC\xF7P\x84\xC6\xD0\xFE-9\xB8)dsolcC\0\x08\x0C\x003",
     );
     /**Event with signature `OwnershipTransferred(address,address)` and selector `0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0`.
-```solidity
-event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
-```*/
+    ```solidity
+    event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
+    ```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -227,49 +227,19 @@ event OwnershipTransferred(address indexed previousOwner, address indexed newOwn
         #[automatically_derived]
         impl alloy_sol_types::SolEvent for OwnershipTransferred {
             type DataTuple<'a> = ();
-            type DataToken<'a> = <Self::DataTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (
                 alloy_sol_types::sol_data::FixedBytes<32>,
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Address,
             );
             const SIGNATURE: &'static str = "OwnershipTransferred(address,address)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
-                139u8,
-                224u8,
-                7u8,
-                156u8,
-                83u8,
-                22u8,
-                89u8,
-                20u8,
-                19u8,
-                68u8,
-                205u8,
-                31u8,
-                208u8,
-                164u8,
-                242u8,
-                132u8,
-                25u8,
-                73u8,
-                127u8,
-                151u8,
-                34u8,
-                163u8,
-                218u8,
-                175u8,
-                227u8,
-                180u8,
-                24u8,
-                111u8,
-                107u8,
-                100u8,
-                87u8,
-                224u8,
-            ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
+                alloy_sol_types::private::B256::new([
+                    139u8, 224u8, 7u8, 156u8, 83u8, 22u8, 89u8, 20u8, 19u8, 68u8, 205u8, 31u8,
+                    208u8, 164u8, 242u8, 132u8, 25u8, 73u8, 127u8, 151u8, 34u8, 163u8, 218u8,
+                    175u8, 227u8, 180u8, 24u8, 111u8, 107u8, 100u8, 87u8, 224u8,
+                ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -287,13 +257,11 @@ event OwnershipTransferred(address indexed previousOwner, address indexed newOwn
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(
-                        alloy_sol_types::Error::invalid_event_signature_hash(
-                            Self::SIGNATURE,
-                            topics.0,
-                            Self::SIGNATURE_HASH,
-                        ),
-                    );
+                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
+                        Self::SIGNATURE,
+                        topics.0,
+                        Self::SIGNATURE_HASH,
+                    ));
                 }
                 Ok(())
             }
@@ -317,9 +285,7 @@ event OwnershipTransferred(address indexed previousOwner, address indexed newOwn
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(
-                    Self::SIGNATURE_HASH,
-                );
+                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
                 out[1usize] = <alloy::sol_types::sol_data::Address as alloy_sol_types::EventTopic>::encode_topic(
                     &self.previousOwner,
                 );
@@ -347,9 +313,9 @@ event OwnershipTransferred(address indexed previousOwner, address indexed newOwn
         }
     };
     /**Function with signature `changeProxyAdmin(address,address)` and selector `0x7eff275e`.
-```solidity
-function changeProxyAdmin(address proxy, address newAdmin) external;
-```*/
+    ```solidity
+    function changeProxyAdmin(address proxy, address newAdmin) external;
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct changeProxyAdminCall {
@@ -381,9 +347,7 @@ function changeProxyAdmin(address proxy, address newAdmin) external;
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -392,16 +356,14 @@ function changeProxyAdmin(address proxy, address newAdmin) external;
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<changeProxyAdminCall>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<changeProxyAdminCall> for UnderlyingRustTuple<'_> {
                 fn from(value: changeProxyAdminCall) -> Self {
                     (value.proxy, value.newAdmin)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for changeProxyAdminCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for changeProxyAdminCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {
                         proxy: tuple.0,
@@ -417,9 +379,7 @@ function changeProxyAdmin(address proxy, address newAdmin) external;
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -428,16 +388,14 @@ function changeProxyAdmin(address proxy, address newAdmin) external;
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<changeProxyAdminReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<changeProxyAdminReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: changeProxyAdminReturn) -> Self {
                     ()
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for changeProxyAdminReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for changeProxyAdminReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
@@ -449,14 +407,10 @@ function changeProxyAdmin(address proxy, address newAdmin) external;
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Address,
             );
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = changeProxyAdminReturn;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "changeProxyAdmin(address,address)";
             const SELECTOR: [u8; 4] = [126u8, 255u8, 39u8, 94u8];
             #[inline]
@@ -481,17 +435,17 @@ function changeProxyAdmin(address proxy, address newAdmin) external;
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `getProxyAdmin(address)` and selector `0xf3b7dead`.
-```solidity
-function getProxyAdmin(address proxy) external view returns (address);
-```*/
+    ```solidity
+    function getProxyAdmin(address proxy) external view returns (address);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getProxyAdminCall {
@@ -518,9 +472,7 @@ function getProxyAdmin(address proxy) external view returns (address);
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -549,9 +501,7 @@ function getProxyAdmin(address proxy) external view returns (address);
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -576,14 +526,10 @@ function getProxyAdmin(address proxy) external view returns (address);
         #[automatically_derived]
         impl alloy_sol_types::SolCall for getProxyAdminCall {
             type Parameters<'a> = (alloy::sol_types::sol_data::Address,);
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = getProxyAdminReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Address,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "getProxyAdmin(address)";
             const SELECTOR: [u8; 4] = [243u8, 183u8, 222u8, 173u8];
             #[inline]
@@ -605,17 +551,17 @@ function getProxyAdmin(address proxy) external view returns (address);
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `getProxyImplementation(address)` and selector `0x204e1c7a`.
-```solidity
-function getProxyImplementation(address proxy) external view returns (address);
-```*/
+    ```solidity
+    function getProxyImplementation(address proxy) external view returns (address);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getProxyImplementationCall {
@@ -642,9 +588,7 @@ function getProxyImplementation(address proxy) external view returns (address);
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -653,16 +597,14 @@ function getProxyImplementation(address proxy) external view returns (address);
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<getProxyImplementationCall>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<getProxyImplementationCall> for UnderlyingRustTuple<'_> {
                 fn from(value: getProxyImplementationCall) -> Self {
                     (value.proxy,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for getProxyImplementationCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for getProxyImplementationCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { proxy: tuple.0 }
                 }
@@ -675,9 +617,7 @@ function getProxyImplementation(address proxy) external view returns (address);
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -686,16 +626,14 @@ function getProxyImplementation(address proxy) external view returns (address);
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<getProxyImplementationReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<getProxyImplementationReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: getProxyImplementationReturn) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for getProxyImplementationReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for getProxyImplementationReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -704,14 +642,10 @@ function getProxyImplementation(address proxy) external view returns (address);
         #[automatically_derived]
         impl alloy_sol_types::SolCall for getProxyImplementationCall {
             type Parameters<'a> = (alloy::sol_types::sol_data::Address,);
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = getProxyImplementationReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Address,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "getProxyImplementation(address)";
             const SELECTOR: [u8; 4] = [32u8, 78u8, 28u8, 122u8];
             #[inline]
@@ -733,17 +667,17 @@ function getProxyImplementation(address proxy) external view returns (address);
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `owner()` and selector `0x8da5cb5b`.
-```solidity
-function owner() external view returns (address);
-```*/
+    ```solidity
+    function owner() external view returns (address);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct ownerCall {}
@@ -768,9 +702,7 @@ function owner() external view returns (address);
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -799,9 +731,7 @@ function owner() external view returns (address);
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -826,14 +756,10 @@ function owner() external view returns (address);
         #[automatically_derived]
         impl alloy_sol_types::SolCall for ownerCall {
             type Parameters<'a> = ();
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = ownerReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Address,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "owner()";
             const SELECTOR: [u8; 4] = [141u8, 165u8, 203u8, 91u8];
             #[inline]
@@ -851,17 +777,17 @@ function owner() external view returns (address);
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `renounceOwnership()` and selector `0x715018a6`.
-```solidity
-function renounceOwnership() external;
-```*/
+    ```solidity
+    function renounceOwnership() external;
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct renounceOwnershipCall {}
@@ -884,9 +810,7 @@ function renounceOwnership() external;
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -895,16 +819,14 @@ function renounceOwnership() external;
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<renounceOwnershipCall>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<renounceOwnershipCall> for UnderlyingRustTuple<'_> {
                 fn from(value: renounceOwnershipCall) -> Self {
                     ()
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for renounceOwnershipCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for renounceOwnershipCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
@@ -917,9 +839,7 @@ function renounceOwnership() external;
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -928,16 +848,14 @@ function renounceOwnership() external;
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<renounceOwnershipReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<renounceOwnershipReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: renounceOwnershipReturn) -> Self {
                     ()
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for renounceOwnershipReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for renounceOwnershipReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
@@ -946,14 +864,10 @@ function renounceOwnership() external;
         #[automatically_derived]
         impl alloy_sol_types::SolCall for renounceOwnershipCall {
             type Parameters<'a> = ();
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = renounceOwnershipReturn;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "renounceOwnership()";
             const SELECTOR: [u8; 4] = [113u8, 80u8, 24u8, 166u8];
             #[inline]
@@ -971,17 +885,17 @@ function renounceOwnership() external;
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `transferOwnership(address)` and selector `0xf2fde38b`.
-```solidity
-function transferOwnership(address newOwner) external;
-```*/
+    ```solidity
+    function transferOwnership(address newOwner) external;
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct transferOwnershipCall {
@@ -1006,9 +920,7 @@ function transferOwnership(address newOwner) external;
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1017,16 +929,14 @@ function transferOwnership(address newOwner) external;
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<transferOwnershipCall>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<transferOwnershipCall> for UnderlyingRustTuple<'_> {
                 fn from(value: transferOwnershipCall) -> Self {
                     (value.newOwner,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for transferOwnershipCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for transferOwnershipCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { newOwner: tuple.0 }
                 }
@@ -1039,9 +949,7 @@ function transferOwnership(address newOwner) external;
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1050,16 +958,14 @@ function transferOwnership(address newOwner) external;
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<transferOwnershipReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<transferOwnershipReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: transferOwnershipReturn) -> Self {
                     ()
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for transferOwnershipReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for transferOwnershipReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
@@ -1068,14 +974,10 @@ function transferOwnership(address newOwner) external;
         #[automatically_derived]
         impl alloy_sol_types::SolCall for transferOwnershipCall {
             type Parameters<'a> = (alloy::sol_types::sol_data::Address,);
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = transferOwnershipReturn;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "transferOwnership(address)";
             const SELECTOR: [u8; 4] = [242u8, 253u8, 227u8, 139u8];
             #[inline]
@@ -1097,17 +999,17 @@ function transferOwnership(address newOwner) external;
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `upgrade(address,address)` and selector `0x99a88ec4`.
-```solidity
-function upgrade(address proxy, address implementation) external;
-```*/
+    ```solidity
+    function upgrade(address proxy, address implementation) external;
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct upgradeCall {
@@ -1139,9 +1041,7 @@ function upgrade(address proxy, address implementation) external;
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1173,9 +1073,7 @@ function upgrade(address proxy, address implementation) external;
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1203,14 +1101,10 @@ function upgrade(address proxy, address implementation) external;
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Address,
             );
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = upgradeReturn;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "upgrade(address,address)";
             const SELECTOR: [u8; 4] = [153u8, 168u8, 142u8, 196u8];
             #[inline]
@@ -1235,17 +1129,17 @@ function upgrade(address proxy, address implementation) external;
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `upgradeAndCall(address,address,bytes)` and selector `0x9623609d`.
-```solidity
-function upgradeAndCall(address proxy, address implementation, bytes memory data) external payable;
-```*/
+    ```solidity
+    function upgradeAndCall(address proxy, address implementation, bytes memory data) external payable;
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct upgradeAndCallCall {
@@ -1280,9 +1174,7 @@ function upgradeAndCall(address proxy, address implementation, bytes memory data
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1315,9 +1207,7 @@ function upgradeAndCall(address proxy, address implementation, bytes memory data
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1326,16 +1216,14 @@ function upgradeAndCall(address proxy, address implementation, bytes memory data
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<upgradeAndCallReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<upgradeAndCallReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: upgradeAndCallReturn) -> Self {
                     ()
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for upgradeAndCallReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for upgradeAndCallReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
@@ -1348,14 +1236,10 @@ function upgradeAndCall(address proxy, address implementation, bytes memory data
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Bytes,
             );
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = upgradeAndCallReturn;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "upgradeAndCall(address,address,bytes)";
             const SELECTOR: [u8; 4] = [150u8, 35u8, 96u8, 157u8];
             #[inline]
@@ -1383,10 +1267,10 @@ function upgradeAndCall(address proxy, address implementation, bytes memory data
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
@@ -1431,9 +1315,7 @@ function upgradeAndCall(address proxy, address implementation, bytes memory data
                 Self::changeProxyAdmin(_) => {
                     <changeProxyAdminCall as alloy_sol_types::SolCall>::SELECTOR
                 }
-                Self::getProxyAdmin(_) => {
-                    <getProxyAdminCall as alloy_sol_types::SolCall>::SELECTOR
-                }
+                Self::getProxyAdmin(_) => <getProxyAdminCall as alloy_sol_types::SolCall>::SELECTOR,
                 Self::getProxyImplementation(_) => {
                     <getProxyImplementationCall as alloy_sol_types::SolCall>::SELECTOR
                 }
@@ -1465,20 +1347,16 @@ function upgradeAndCall(address proxy, address implementation, bytes memory data
             data: &[u8],
             validate: bool,
         ) -> alloy_sol_types::Result<Self> {
-            static DECODE_SHIMS: &[fn(
-                &[u8],
-                bool,
-            ) -> alloy_sol_types::Result<ProxyAdminCalls>] = &[
+            static DECODE_SHIMS: &[fn(&[u8], bool) -> alloy_sol_types::Result<ProxyAdminCalls>] = &[
                 {
                     fn getProxyImplementation(
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<ProxyAdminCalls> {
                         <getProxyImplementationCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(ProxyAdminCalls::getProxyImplementation)
+                            data, validate,
+                        )
+                        .map(ProxyAdminCalls::getProxyImplementation)
                     }
                     getProxyImplementation
                 },
@@ -1488,10 +1366,9 @@ function upgradeAndCall(address proxy, address implementation, bytes memory data
                         validate: bool,
                     ) -> alloy_sol_types::Result<ProxyAdminCalls> {
                         <renounceOwnershipCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(ProxyAdminCalls::renounceOwnership)
+                            data, validate,
+                        )
+                        .map(ProxyAdminCalls::renounceOwnership)
                     }
                     renounceOwnership
                 },
@@ -1501,10 +1378,9 @@ function upgradeAndCall(address proxy, address implementation, bytes memory data
                         validate: bool,
                     ) -> alloy_sol_types::Result<ProxyAdminCalls> {
                         <changeProxyAdminCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(ProxyAdminCalls::changeProxyAdmin)
+                            data, validate,
+                        )
+                        .map(ProxyAdminCalls::changeProxyAdmin)
                     }
                     changeProxyAdmin
                 },
@@ -1513,10 +1389,7 @@ function upgradeAndCall(address proxy, address implementation, bytes memory data
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<ProxyAdminCalls> {
-                        <ownerCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
+                        <ownerCall as alloy_sol_types::SolCall>::abi_decode_raw(data, validate)
                             .map(ProxyAdminCalls::owner)
                     }
                     owner
@@ -1527,10 +1400,9 @@ function upgradeAndCall(address proxy, address implementation, bytes memory data
                         validate: bool,
                     ) -> alloy_sol_types::Result<ProxyAdminCalls> {
                         <upgradeAndCallCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(ProxyAdminCalls::upgradeAndCall)
+                            data, validate,
+                        )
+                        .map(ProxyAdminCalls::upgradeAndCall)
                     }
                     upgradeAndCall
                 },
@@ -1539,10 +1411,7 @@ function upgradeAndCall(address proxy, address implementation, bytes memory data
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<ProxyAdminCalls> {
-                        <upgradeCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
+                        <upgradeCall as alloy_sol_types::SolCall>::abi_decode_raw(data, validate)
                             .map(ProxyAdminCalls::upgrade)
                     }
                     upgrade
@@ -1553,10 +1422,9 @@ function upgradeAndCall(address proxy, address implementation, bytes memory data
                         validate: bool,
                     ) -> alloy_sol_types::Result<ProxyAdminCalls> {
                         <transferOwnershipCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(ProxyAdminCalls::transferOwnership)
+                            data, validate,
+                        )
+                        .map(ProxyAdminCalls::transferOwnership)
                     }
                     transferOwnership
                 },
@@ -1566,21 +1434,18 @@ function upgradeAndCall(address proxy, address implementation, bytes memory data
                         validate: bool,
                     ) -> alloy_sol_types::Result<ProxyAdminCalls> {
                         <getProxyAdminCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(ProxyAdminCalls::getProxyAdmin)
+                            data, validate,
+                        )
+                        .map(ProxyAdminCalls::getProxyAdmin)
                     }
                     getProxyAdmin
                 },
             ];
             let Ok(idx) = Self::SELECTORS.binary_search(&selector) else {
-                return Err(
-                    alloy_sol_types::Error::unknown_selector(
-                        <Self as alloy_sol_types::SolInterface>::NAME,
-                        selector,
-                    ),
-                );
+                return Err(alloy_sol_types::Error::unknown_selector(
+                    <Self as alloy_sol_types::SolInterface>::NAME,
+                    selector,
+                ));
             };
             (unsafe { DECODE_SHIMS.get_unchecked(idx) })(data, validate)
         }
@@ -1588,14 +1453,10 @@ function upgradeAndCall(address proxy, address implementation, bytes memory data
         fn abi_encoded_size(&self) -> usize {
             match self {
                 Self::changeProxyAdmin(inner) => {
-                    <changeProxyAdminCall as alloy_sol_types::SolCall>::abi_encoded_size(
-                        inner,
-                    )
+                    <changeProxyAdminCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
                 }
                 Self::getProxyAdmin(inner) => {
-                    <getProxyAdminCall as alloy_sol_types::SolCall>::abi_encoded_size(
-                        inner,
-                    )
+                    <getProxyAdminCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
                 }
                 Self::getProxyImplementation(inner) => {
                     <getProxyImplementationCall as alloy_sol_types::SolCall>::abi_encoded_size(
@@ -1606,22 +1467,16 @@ function upgradeAndCall(address proxy, address implementation, bytes memory data
                     <ownerCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
                 }
                 Self::renounceOwnership(inner) => {
-                    <renounceOwnershipCall as alloy_sol_types::SolCall>::abi_encoded_size(
-                        inner,
-                    )
+                    <renounceOwnershipCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
                 }
                 Self::transferOwnership(inner) => {
-                    <transferOwnershipCall as alloy_sol_types::SolCall>::abi_encoded_size(
-                        inner,
-                    )
+                    <transferOwnershipCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
                 }
                 Self::upgrade(inner) => {
                     <upgradeCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
                 }
                 Self::upgradeAndCall(inner) => {
-                    <upgradeAndCallCall as alloy_sol_types::SolCall>::abi_encoded_size(
-                        inner,
-                    )
+                    <upgradeAndCallCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
                 }
             }
         }
@@ -1629,46 +1484,30 @@ function upgradeAndCall(address proxy, address implementation, bytes memory data
         fn abi_encode_raw(&self, out: &mut alloy_sol_types::private::Vec<u8>) {
             match self {
                 Self::changeProxyAdmin(inner) => {
-                    <changeProxyAdminCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <changeProxyAdminCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
                 }
                 Self::getProxyAdmin(inner) => {
-                    <getProxyAdminCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <getProxyAdminCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
                 }
                 Self::getProxyImplementation(inner) => {
                     <getProxyImplementationCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
+                        inner, out,
                     )
                 }
                 Self::owner(inner) => {
                     <ownerCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
                 }
                 Self::renounceOwnership(inner) => {
-                    <renounceOwnershipCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <renounceOwnershipCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
                 }
                 Self::transferOwnership(inner) => {
-                    <transferOwnershipCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <transferOwnershipCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
                 }
                 Self::upgrade(inner) => {
                     <upgradeCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
                 }
                 Self::upgradeAndCall(inner) => {
-                    <upgradeAndCallCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <upgradeAndCallCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
                 }
             }
         }
@@ -1685,42 +1524,11 @@ function upgradeAndCall(address proxy, address implementation, bytes memory data
         /// No guarantees are made about the order of the selectors.
         ///
         /// Prefer using `SolInterface` methods instead.
-        pub const SELECTORS: &'static [[u8; 32usize]] = &[
-            [
-                139u8,
-                224u8,
-                7u8,
-                156u8,
-                83u8,
-                22u8,
-                89u8,
-                20u8,
-                19u8,
-                68u8,
-                205u8,
-                31u8,
-                208u8,
-                164u8,
-                242u8,
-                132u8,
-                25u8,
-                73u8,
-                127u8,
-                151u8,
-                34u8,
-                163u8,
-                218u8,
-                175u8,
-                227u8,
-                180u8,
-                24u8,
-                111u8,
-                107u8,
-                100u8,
-                87u8,
-                224u8,
-            ],
-        ];
+        pub const SELECTORS: &'static [[u8; 32usize]] = &[[
+            139u8, 224u8, 7u8, 156u8, 83u8, 22u8, 89u8, 20u8, 19u8, 68u8, 205u8, 31u8, 208u8,
+            164u8, 242u8, 132u8, 25u8, 73u8, 127u8, 151u8, 34u8, 163u8, 218u8, 175u8, 227u8, 180u8,
+            24u8, 111u8, 107u8, 100u8, 87u8, 224u8,
+        ]];
     }
     #[automatically_derived]
     impl alloy_sol_types::SolEventInterface for ProxyAdminEvents {
@@ -1732,27 +1540,21 @@ function upgradeAndCall(address proxy, address implementation, bytes memory data
             validate: bool,
         ) -> alloy_sol_types::Result<Self> {
             match topics.first().copied() {
-                Some(
-                    <OwnershipTransferred as alloy_sol_types::SolEvent>::SIGNATURE_HASH,
-                ) => {
+                Some(<OwnershipTransferred as alloy_sol_types::SolEvent>::SIGNATURE_HASH) => {
                     <OwnershipTransferred as alloy_sol_types::SolEvent>::decode_raw_log(
-                            topics,
-                            data,
-                            validate,
-                        )
-                        .map(Self::OwnershipTransferred)
+                        topics, data, validate,
+                    )
+                    .map(Self::OwnershipTransferred)
                 }
-                _ => {
-                    alloy_sol_types::private::Err(alloy_sol_types::Error::InvalidLog {
-                        name: <Self as alloy_sol_types::SolEventInterface>::NAME,
-                        log: alloy_sol_types::private::Box::new(
-                            alloy_sol_types::private::LogData::new_unchecked(
-                                topics.to_vec(),
-                                data.to_vec().into(),
-                            ),
+                _ => alloy_sol_types::private::Err(alloy_sol_types::Error::InvalidLog {
+                    name: <Self as alloy_sol_types::SolEventInterface>::NAME,
+                    log: alloy_sol_types::private::Box::new(
+                        alloy_sol_types::private::LogData::new_unchecked(
+                            topics.to_vec(),
+                            data.to_vec().into(),
                         ),
-                    })
-                }
+                    ),
+                }),
             }
         }
     }
@@ -1776,7 +1578,7 @@ function upgradeAndCall(address proxy, address implementation, bytes memory data
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`ProxyAdmin`](self) contract instance.
 
-See the [wrapper's documentation](`ProxyAdminInstance`) for more details.*/
+    See the [wrapper's documentation](`ProxyAdminInstance`) for more details.*/
     #[inline]
     pub const fn new<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -1790,9 +1592,9 @@ See the [wrapper's documentation](`ProxyAdminInstance`) for more details.*/
     }
     /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+    Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+    For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
     #[inline]
     pub fn deploy<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -1800,35 +1602,36 @@ For more fine-grained control over the deployment process, use [`deploy_builder`
         N: alloy_contract::private::Network,
     >(
         provider: P,
-    ) -> impl ::core::future::Future<
-        Output = alloy_contract::Result<ProxyAdminInstance<T, P, N>>,
-    > {
+    ) -> impl ::core::future::Future<Output = alloy_contract::Result<ProxyAdminInstance<T, P, N>>>
+    {
         ProxyAdminInstance::<T, P, N>::deploy(provider)
     }
     /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+    and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+    This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+    the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     #[inline]
     pub fn deploy_builder<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
         P: alloy_contract::private::Provider<T, N>,
         N: alloy_contract::private::Network,
-    >(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
+    >(
+        provider: P,
+    ) -> alloy_contract::RawCallBuilder<T, P, N> {
         ProxyAdminInstance::<T, P, N>::deploy_builder(provider)
     }
     /**A [`ProxyAdmin`](self) instance.
 
-Contains type-safe methods for interacting with an on-chain instance of the
-[`ProxyAdmin`](self) contract located at a given `address`, using a given
-provider `P`.
+    Contains type-safe methods for interacting with an on-chain instance of the
+    [`ProxyAdmin`](self) contract located at a given `address`, using a given
+    provider `P`.
 
-If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
-documentation on how to provide it), the `deploy` and `deploy_builder` methods can
-be used to deploy a new instance of the contract.
+    If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
+    documentation on how to provide it), the `deploy` and `deploy_builder` methods can
+    be used to deploy a new instance of the contract.
 
-See the [module-level documentation](self) for all the available methods.*/
+    See the [module-level documentation](self) for all the available methods.*/
     #[derive(Clone)]
     pub struct ProxyAdminInstance<T, P, N = alloy_contract::private::Ethereum> {
         address: alloy_sol_types::private::Address,
@@ -1839,24 +1642,24 @@ See the [module-level documentation](self) for all the available methods.*/
     impl<T, P, N> ::core::fmt::Debug for ProxyAdminInstance<T, P, N> {
         #[inline]
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-            f.debug_tuple("ProxyAdminInstance").field(&self.address).finish()
+            f.debug_tuple("ProxyAdminInstance")
+                .field(&self.address)
+                .finish()
         }
     }
     /// Instantiation and getters/setters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > ProxyAdminInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > ProxyAdminInstance<T, P, N>
+    {
         /**Creates a new wrapper around an on-chain [`ProxyAdmin`](self) contract instance.
 
-See the [wrapper's documentation](`ProxyAdminInstance`) for more details.*/
+        See the [wrapper's documentation](`ProxyAdminInstance`) for more details.*/
         #[inline]
-        pub const fn new(
-            address: alloy_sol_types::private::Address,
-            provider: P,
-        ) -> Self {
+        pub const fn new(address: alloy_sol_types::private::Address, provider: P) -> Self {
             Self {
                 address,
                 provider,
@@ -1865,22 +1668,20 @@ See the [wrapper's documentation](`ProxyAdminInstance`) for more details.*/
         }
         /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+        Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+        For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
         #[inline]
-        pub async fn deploy(
-            provider: P,
-        ) -> alloy_contract::Result<ProxyAdminInstance<T, P, N>> {
+        pub async fn deploy(provider: P) -> alloy_contract::Result<ProxyAdminInstance<T, P, N>> {
             let call_builder = Self::deploy_builder(provider);
             let contract_address = call_builder.deploy().await?;
             Ok(Self::new(contract_address, call_builder.provider))
         }
         /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+        and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+        This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+        the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         #[inline]
         pub fn deploy_builder(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
             alloy_contract::RawCallBuilder::new_raw_deploy(
@@ -1923,10 +1724,11 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     /// Function calls.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > ProxyAdminInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > ProxyAdminInstance<T, P, N>
+    {
         /// Creates a new call builder using this contract instance's provider and address.
         ///
         /// Note that the call can be any function call, not just those defined in this
@@ -1943,12 +1745,7 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
             proxy: alloy::sol_types::private::Address,
             newAdmin: alloy::sol_types::private::Address,
         ) -> alloy_contract::SolCallBuilder<T, &P, changeProxyAdminCall, N> {
-            self.call_builder(
-                &changeProxyAdminCall {
-                    proxy,
-                    newAdmin,
-                },
-            )
+            self.call_builder(&changeProxyAdminCall { proxy, newAdmin })
         }
         ///Creates a new call builder for the [`getProxyAdmin`] function.
         pub fn getProxyAdmin(
@@ -1962,11 +1759,7 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
             &self,
             proxy: alloy::sol_types::private::Address,
         ) -> alloy_contract::SolCallBuilder<T, &P, getProxyImplementationCall, N> {
-            self.call_builder(
-                &getProxyImplementationCall {
-                    proxy,
-                },
-            )
+            self.call_builder(&getProxyImplementationCall { proxy })
         }
         ///Creates a new call builder for the [`owner`] function.
         pub fn owner(&self) -> alloy_contract::SolCallBuilder<T, &P, ownerCall, N> {
@@ -1991,12 +1784,10 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
             proxy: alloy::sol_types::private::Address,
             implementation: alloy::sol_types::private::Address,
         ) -> alloy_contract::SolCallBuilder<T, &P, upgradeCall, N> {
-            self.call_builder(
-                &upgradeCall {
-                    proxy,
-                    implementation,
-                },
-            )
+            self.call_builder(&upgradeCall {
+                proxy,
+                implementation,
+            })
         }
         ///Creates a new call builder for the [`upgradeAndCall`] function.
         pub fn upgradeAndCall(
@@ -2005,22 +1796,21 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
             implementation: alloy::sol_types::private::Address,
             data: alloy::sol_types::private::Bytes,
         ) -> alloy_contract::SolCallBuilder<T, &P, upgradeAndCallCall, N> {
-            self.call_builder(
-                &upgradeAndCallCall {
-                    proxy,
-                    implementation,
-                    data,
-                },
-            )
+            self.call_builder(&upgradeAndCallCall {
+                proxy,
+                implementation,
+                data,
+            })
         }
     }
     /// Event filters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > ProxyAdminInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > ProxyAdminInstance<T, P, N>
+    {
         /// Creates a new event filter using this contract instance's provider and address.
         ///
         /// Note that the type can be any event, not just those defined in this contract.

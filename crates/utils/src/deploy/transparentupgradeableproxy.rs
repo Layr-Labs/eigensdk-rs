@@ -200,9 +200,9 @@ pub mod TransparentUpgradeableProxy {
         b"`\x80`@R`\x046\x10a\0MW_5`\xE0\x1C\x80c6Y\xCF\xE6\x14a\0dW\x80cO\x1E\xF2\x86\x14a\0\x83W\x80c\\`\xDA\x1B\x14a\0\x96W\x80c\x8F(9p\x14a\0\xC6W\x80c\xF8Q\xA4@\x14a\0\xE5Wa\0\\V[6a\0\\Wa\0Za\0\xF9V[\0[a\0Za\0\xF9V[4\x80\x15a\0oW__\xFD[Pa\0Za\0~6`\x04a\x06\x8CV[a\x01\x13V[a\0Za\0\x916`\x04a\x06\xA5V[a\x01NV[4\x80\x15a\0\xA1W__\xFD[Pa\0\xAAa\x01\xB4V[`@Q`\x01`\x01`\xA0\x1B\x03\x90\x91\x16\x81R` \x01`@Q\x80\x91\x03\x90\xF3[4\x80\x15a\0\xD1W__\xFD[Pa\0Za\0\xE06`\x04a\x06\x8CV[a\x01\xE4V[4\x80\x15a\0\xF0W__\xFD[Pa\0\xAAa\x02\x04V[a\x01\x01a\x02$V[a\x01\x11a\x01\x0Ca\x02\xB9V[a\x02\xC2V[V[a\x01\x1Ba\x02\xE0V[`\x01`\x01`\xA0\x1B\x03\x163\x03a\x01FWa\x01C\x81`@Q\x80` \x01`@R\x80_\x81RP_a\x03\x12V[PV[a\x01Ca\0\xF9V[a\x01Va\x02\xE0V[`\x01`\x01`\xA0\x1B\x03\x163\x03a\x01\xACWa\x01\xA7\x83\x83\x83\x80\x80`\x1F\x01` \x80\x91\x04\x02` \x01`@Q\x90\x81\x01`@R\x80\x93\x92\x91\x90\x81\x81R` \x01\x83\x83\x80\x82\x847_\x92\x01\x91\x90\x91RP`\x01\x92Pa\x03\x12\x91PPV[PPPV[a\x01\xA7a\0\xF9V[_a\x01\xBDa\x02\xE0V[`\x01`\x01`\xA0\x1B\x03\x163\x03a\x01\xD9Wa\x01\xD4a\x02\xB9V[\x90P\x90V[a\x01\xE1a\0\xF9V[\x90V[a\x01\xECa\x02\xE0V[`\x01`\x01`\xA0\x1B\x03\x163\x03a\x01FWa\x01C\x81a\x03<V[_a\x02\ra\x02\xE0V[`\x01`\x01`\xA0\x1B\x03\x163\x03a\x01\xD9Wa\x01\xD4a\x02\xE0V[a\x02,a\x02\xE0V[`\x01`\x01`\xA0\x1B\x03\x163\x03a\x01\x11W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`B`$\x82\x01R\x7FTransparentUpgradeableProxy: adm`D\x82\x01R\x7Fin cannot fallback to proxy targ`d\x82\x01Ra\x19]`\xF2\x1B`\x84\x82\x01R`\xA4\x01[`@Q\x80\x91\x03\x90\xFD[_a\x01\xD4a\x03\x90V[6__7__6_\x84Z\xF4=__>\x80\x80\x15a\x02\xDCW=_\xF3[=_\xFD[_\x7F\xB51'hJV\x8B1s\xAE\x13\xB9\xF8\xA6\x01n$>c\xB6\xE8\xEE\x11x\xD6\xA7\x17\x85\x0B]a\x03[T`\x01`\x01`\xA0\x1B\x03\x16\x91\x90PV[a\x03\x1B\x83a\x03\xB7V[_\x82Q\x11\x80a\x03'WP\x80[\x15a\x01\xA7Wa\x036\x83\x83a\x03\xF6V[PPPPV[\x7F~dMyB/\x17\xC0\x1EH\x94\xB5\xF4\xF5\x88\xD31\xEB\xFA(e=B\xAE\x83-\xC5\x9E8\xC9y\x8Fa\x03ea\x02\xE0V[`@\x80Q`\x01`\x01`\xA0\x1B\x03\x92\x83\x16\x81R\x91\x84\x16` \x83\x01R\x01`@Q\x80\x91\x03\x90\xA1a\x01C\x81a\x04\"V[_\x7F6\x08\x94\xA1;\xA1\xA3!\x06g\xC8(I-\xB9\x8D\xCA> v\xCC75\xA9 \xA3\xCAP]8+\xBCa\x03\x03V[a\x03\xC0\x81a\x04\xCBV[`@Q`\x01`\x01`\xA0\x1B\x03\x82\x16\x90\x7F\xBC|\xD7Z \xEE'\xFD\x9A\xDE\xBA\xB3 A\xF7U!M\xBCk\xFF\xA9\x0C\xC0\"[9\xDA.\\-;\x90_\x90\xA2PV[``a\x04\x1B\x83\x83`@Q\x80``\x01`@R\x80`'\x81R` \x01a\x07o`'\x919a\x05_V[\x93\x92PPPV[`\x01`\x01`\xA0\x1B\x03\x81\x16a\x04\x87W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`&`$\x82\x01R\x7FERC1967: new admin is the zero a`D\x82\x01Reddress`\xD0\x1B`d\x82\x01R`\x84\x01a\x02\xB0V[\x80\x7F\xB51'hJV\x8B1s\xAE\x13\xB9\xF8\xA6\x01n$>c\xB6\xE8\xEE\x11x\xD6\xA7\x17\x85\x0B]a\x03[\x80T`\x01`\x01`\xA0\x1B\x03\x19\x16`\x01`\x01`\xA0\x1B\x03\x92\x90\x92\x16\x91\x90\x91\x17\x90UPV[`\x01`\x01`\xA0\x1B\x03\x81\x16;a\x058W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`-`$\x82\x01R\x7FERC1967: new implementation is n`D\x82\x01Rl\x1B\xDD\x08\x18H\x18\xDB\xDB\x9D\x1C\x98X\xDD`\x9A\x1B`d\x82\x01R`\x84\x01a\x02\xB0V[\x80\x7F6\x08\x94\xA1;\xA1\xA3!\x06g\xC8(I-\xB9\x8D\xCA> v\xCC75\xA9 \xA3\xCAP]8+\xBCa\x04\xAAV[```\x01`\x01`\xA0\x1B\x03\x84\x16;a\x05\xC7W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`&`$\x82\x01R\x7FAddress: delegate call to non-co`D\x82\x01Re\x1B\x9D\x1C\x98X\xDD`\xD2\x1B`d\x82\x01R`\x84\x01a\x02\xB0V[__\x85`\x01`\x01`\xA0\x1B\x03\x16\x85`@Qa\x05\xE1\x91\x90a\x07#V[_`@Q\x80\x83\x03\x81\x85Z\xF4\x91PP=\x80_\x81\x14a\x06\x19W`@Q\x91P`\x1F\x19`?=\x01\x16\x82\x01`@R=\x82R=_` \x84\x01>a\x06\x1EV[``\x91P[P\x91P\x91Pa\x06.\x82\x82\x86a\x068V[\x96\x95PPPPPPV[``\x83\x15a\x06GWP\x81a\x04\x1BV[\x82Q\x15a\x06WW\x82Q\x80\x84` \x01\xFD[\x81`@QbF\x1B\xCD`\xE5\x1B\x81R`\x04\x01a\x02\xB0\x91\x90a\x079V[\x805`\x01`\x01`\xA0\x1B\x03\x81\x16\x81\x14a\x06\x87W__\xFD[\x91\x90PV[_` \x82\x84\x03\x12\x15a\x06\x9CW__\xFD[a\x04\x1B\x82a\x06qV[___`@\x84\x86\x03\x12\x15a\x06\xB7W__\xFD[a\x06\xC0\x84a\x06qV[\x92P` \x84\x015g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x81\x11\x15a\x06\xDBW__\xFD[\x84\x01`\x1F\x81\x01\x86\x13a\x06\xEBW__\xFD[\x805g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x81\x11\x15a\x07\x01W__\xFD[\x86` \x82\x84\x01\x01\x11\x15a\x07\x12W__\xFD[\x93\x96` \x91\x90\x91\x01\x95P\x92\x93PPPV[_\x82Q\x80` \x85\x01\x84^_\x92\x01\x91\x82RP\x91\x90PV[` \x81R_\x82Q\x80` \x84\x01R\x80` \x85\x01`@\x85\x01^_`@\x82\x85\x01\x01R`@`\x1F\x19`\x1F\x83\x01\x16\x84\x01\x01\x91PP\x92\x91PPV\xFEAddress: low-level delegate call failed\xA2dipfsX\"\x12 \xF7\xD2\xAB\x95a\x9B\xF8R\xF9-\xBB\x93]\\\x891\x9E\xD0\xB1/\xB2K\xC3\x10\xAD\xF1-s%\xF5/\xCBdsolcC\0\x08\x1B\x003",
     );
     /**Event with signature `AdminChanged(address,address)` and selector `0x7e644d79422f17c01e4894b5f4f588d331ebfa28653d42ae832dc59e38c9798f`.
-```solidity
-event AdminChanged(address previousAdmin, address newAdmin);
-```*/
+    ```solidity
+    event AdminChanged(address previousAdmin, address newAdmin);
+    ```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -230,45 +230,15 @@ event AdminChanged(address previousAdmin, address newAdmin);
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Address,
             );
-            type DataToken<'a> = <Self::DataTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (alloy_sol_types::sol_data::FixedBytes<32>,);
             const SIGNATURE: &'static str = "AdminChanged(address,address)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
-                126u8,
-                100u8,
-                77u8,
-                121u8,
-                66u8,
-                47u8,
-                23u8,
-                192u8,
-                30u8,
-                72u8,
-                148u8,
-                181u8,
-                244u8,
-                245u8,
-                136u8,
-                211u8,
-                49u8,
-                235u8,
-                250u8,
-                40u8,
-                101u8,
-                61u8,
-                66u8,
-                174u8,
-                131u8,
-                45u8,
-                197u8,
-                158u8,
-                56u8,
-                201u8,
-                121u8,
-                143u8,
-            ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
+                alloy_sol_types::private::B256::new([
+                    126u8, 100u8, 77u8, 121u8, 66u8, 47u8, 23u8, 192u8, 30u8, 72u8, 148u8, 181u8,
+                    244u8, 245u8, 136u8, 211u8, 49u8, 235u8, 250u8, 40u8, 101u8, 61u8, 66u8, 174u8,
+                    131u8, 45u8, 197u8, 158u8, 56u8, 201u8, 121u8, 143u8,
+                ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -286,13 +256,11 @@ event AdminChanged(address previousAdmin, address newAdmin);
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(
-                        alloy_sol_types::Error::invalid_event_signature_hash(
-                            Self::SIGNATURE,
-                            topics.0,
-                            Self::SIGNATURE_HASH,
-                        ),
-                    );
+                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
+                        Self::SIGNATURE,
+                        topics.0,
+                        Self::SIGNATURE_HASH,
+                    ));
                 }
                 Ok(())
             }
@@ -319,9 +287,7 @@ event AdminChanged(address previousAdmin, address newAdmin);
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(
-                    Self::SIGNATURE_HASH,
-                );
+                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
                 Ok(())
             }
         }
@@ -343,9 +309,9 @@ event AdminChanged(address previousAdmin, address newAdmin);
         }
     };
     /**Event with signature `BeaconUpgraded(address)` and selector `0x1cf3b03a6cf19fa2baba4df148e9dcabedea7f8a5c07840e207e5c089be95d3e`.
-```solidity
-event BeaconUpgraded(address indexed beacon);
-```*/
+    ```solidity
+    event BeaconUpgraded(address indexed beacon);
+    ```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -368,48 +334,18 @@ event BeaconUpgraded(address indexed beacon);
         #[automatically_derived]
         impl alloy_sol_types::SolEvent for BeaconUpgraded {
             type DataTuple<'a> = ();
-            type DataToken<'a> = <Self::DataTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (
                 alloy_sol_types::sol_data::FixedBytes<32>,
                 alloy::sol_types::sol_data::Address,
             );
             const SIGNATURE: &'static str = "BeaconUpgraded(address)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
-                28u8,
-                243u8,
-                176u8,
-                58u8,
-                108u8,
-                241u8,
-                159u8,
-                162u8,
-                186u8,
-                186u8,
-                77u8,
-                241u8,
-                72u8,
-                233u8,
-                220u8,
-                171u8,
-                237u8,
-                234u8,
-                127u8,
-                138u8,
-                92u8,
-                7u8,
-                132u8,
-                14u8,
-                32u8,
-                126u8,
-                92u8,
-                8u8,
-                155u8,
-                233u8,
-                93u8,
-                62u8,
-            ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
+                alloy_sol_types::private::B256::new([
+                    28u8, 243u8, 176u8, 58u8, 108u8, 241u8, 159u8, 162u8, 186u8, 186u8, 77u8,
+                    241u8, 72u8, 233u8, 220u8, 171u8, 237u8, 234u8, 127u8, 138u8, 92u8, 7u8, 132u8,
+                    14u8, 32u8, 126u8, 92u8, 8u8, 155u8, 233u8, 93u8, 62u8,
+                ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -424,13 +360,11 @@ event BeaconUpgraded(address indexed beacon);
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(
-                        alloy_sol_types::Error::invalid_event_signature_hash(
-                            Self::SIGNATURE,
-                            topics.0,
-                            Self::SIGNATURE_HASH,
-                        ),
-                    );
+                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
+                        Self::SIGNATURE,
+                        topics.0,
+                        Self::SIGNATURE_HASH,
+                    ));
                 }
                 Ok(())
             }
@@ -450,9 +384,7 @@ event BeaconUpgraded(address indexed beacon);
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(
-                    Self::SIGNATURE_HASH,
-                );
+                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
                 out[1usize] = <alloy::sol_types::sol_data::Address as alloy_sol_types::EventTopic>::encode_topic(
                     &self.beacon,
                 );
@@ -477,9 +409,9 @@ event BeaconUpgraded(address indexed beacon);
         }
     };
     /**Event with signature `Upgraded(address)` and selector `0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b`.
-```solidity
-event Upgraded(address indexed implementation);
-```*/
+    ```solidity
+    event Upgraded(address indexed implementation);
+    ```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -502,48 +434,18 @@ event Upgraded(address indexed implementation);
         #[automatically_derived]
         impl alloy_sol_types::SolEvent for Upgraded {
             type DataTuple<'a> = ();
-            type DataToken<'a> = <Self::DataTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (
                 alloy_sol_types::sol_data::FixedBytes<32>,
                 alloy::sol_types::sol_data::Address,
             );
             const SIGNATURE: &'static str = "Upgraded(address)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
-                188u8,
-                124u8,
-                215u8,
-                90u8,
-                32u8,
-                238u8,
-                39u8,
-                253u8,
-                154u8,
-                222u8,
-                186u8,
-                179u8,
-                32u8,
-                65u8,
-                247u8,
-                85u8,
-                33u8,
-                77u8,
-                188u8,
-                107u8,
-                255u8,
-                169u8,
-                12u8,
-                192u8,
-                34u8,
-                91u8,
-                57u8,
-                218u8,
-                46u8,
-                92u8,
-                45u8,
-                59u8,
-            ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
+                alloy_sol_types::private::B256::new([
+                    188u8, 124u8, 215u8, 90u8, 32u8, 238u8, 39u8, 253u8, 154u8, 222u8, 186u8,
+                    179u8, 32u8, 65u8, 247u8, 85u8, 33u8, 77u8, 188u8, 107u8, 255u8, 169u8, 12u8,
+                    192u8, 34u8, 91u8, 57u8, 218u8, 46u8, 92u8, 45u8, 59u8,
+                ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -551,20 +453,20 @@ event Upgraded(address indexed implementation);
                 topics: <Self::TopicList as alloy_sol_types::SolType>::RustType,
                 data: <Self::DataTuple<'_> as alloy_sol_types::SolType>::RustType,
             ) -> Self {
-                Self { implementation: topics.1 }
+                Self {
+                    implementation: topics.1,
+                }
             }
             #[inline]
             fn check_signature(
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(
-                        alloy_sol_types::Error::invalid_event_signature_hash(
-                            Self::SIGNATURE,
-                            topics.0,
-                            Self::SIGNATURE_HASH,
-                        ),
-                    );
+                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
+                        Self::SIGNATURE,
+                        topics.0,
+                        Self::SIGNATURE_HASH,
+                    ));
                 }
                 Ok(())
             }
@@ -584,9 +486,7 @@ event Upgraded(address indexed implementation);
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(
-                    Self::SIGNATURE_HASH,
-                );
+                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
                 out[1usize] = <alloy::sol_types::sol_data::Address as alloy_sol_types::EventTopic>::encode_topic(
                     &self.implementation,
                 );
@@ -611,9 +511,9 @@ event Upgraded(address indexed implementation);
         }
     };
     /**Constructor`.
-```solidity
-constructor(address _logic, address admin_, bytes _data) payable;
-```*/
+    ```solidity
+    constructor(address _logic, address admin_, bytes _data) payable;
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct constructorCall {
@@ -638,9 +538,7 @@ constructor(address _logic, address admin_, bytes _data) payable;
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -673,9 +571,7 @@ constructor(address _logic, address admin_, bytes _data) payable;
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Bytes,
             );
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             #[inline]
             fn new<'a>(
                 tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
@@ -699,9 +595,9 @@ constructor(address _logic, address admin_, bytes _data) payable;
         }
     };
     /**Function with signature `admin()` and selector `0xf851a440`.
-```solidity
-function admin() external returns (address admin_);
-```*/
+    ```solidity
+    function admin() external returns (address admin_);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct adminCall {}
@@ -726,9 +622,7 @@ function admin() external returns (address admin_);
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -757,9 +651,7 @@ function admin() external returns (address admin_);
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -784,14 +676,10 @@ function admin() external returns (address admin_);
         #[automatically_derived]
         impl alloy_sol_types::SolCall for adminCall {
             type Parameters<'a> = ();
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = adminReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Address,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "admin()";
             const SELECTOR: [u8; 4] = [248u8, 81u8, 164u8, 64u8];
             #[inline]
@@ -809,17 +697,17 @@ function admin() external returns (address admin_);
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `changeAdmin(address)` and selector `0x8f283970`.
-```solidity
-function changeAdmin(address newAdmin) external;
-```*/
+    ```solidity
+    function changeAdmin(address newAdmin) external;
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct changeAdminCall {
@@ -844,9 +732,7 @@ function changeAdmin(address newAdmin) external;
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -875,9 +761,7 @@ function changeAdmin(address newAdmin) external;
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -902,14 +786,10 @@ function changeAdmin(address newAdmin) external;
         #[automatically_derived]
         impl alloy_sol_types::SolCall for changeAdminCall {
             type Parameters<'a> = (alloy::sol_types::sol_data::Address,);
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = changeAdminReturn;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "changeAdmin(address)";
             const SELECTOR: [u8; 4] = [143u8, 40u8, 57u8, 112u8];
             #[inline]
@@ -931,17 +811,17 @@ function changeAdmin(address newAdmin) external;
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `implementation()` and selector `0x5c60da1b`.
-```solidity
-function implementation() external returns (address implementation_);
-```*/
+    ```solidity
+    function implementation() external returns (address implementation_);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct implementationCall {}
@@ -966,9 +846,7 @@ function implementation() external returns (address implementation_);
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -997,9 +875,7 @@ function implementation() external returns (address implementation_);
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1008,32 +884,28 @@ function implementation() external returns (address implementation_);
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<implementationReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<implementationReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: implementationReturn) -> Self {
                     (value.implementation_,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for implementationReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for implementationReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self { implementation_: tuple.0 }
+                    Self {
+                        implementation_: tuple.0,
+                    }
                 }
             }
         }
         #[automatically_derived]
         impl alloy_sol_types::SolCall for implementationCall {
             type Parameters<'a> = ();
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = implementationReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Address,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "implementation()";
             const SELECTOR: [u8; 4] = [92u8, 96u8, 218u8, 27u8];
             #[inline]
@@ -1051,17 +923,17 @@ function implementation() external returns (address implementation_);
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `upgradeTo(address)` and selector `0x3659cfe6`.
-```solidity
-function upgradeTo(address newImplementation) external;
-```*/
+    ```solidity
+    function upgradeTo(address newImplementation) external;
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct upgradeToCall {
@@ -1086,9 +958,7 @@ function upgradeTo(address newImplementation) external;
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1106,7 +976,9 @@ function upgradeTo(address newImplementation) external;
             #[doc(hidden)]
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for upgradeToCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self { newImplementation: tuple.0 }
+                    Self {
+                        newImplementation: tuple.0,
+                    }
                 }
             }
         }
@@ -1117,9 +989,7 @@ function upgradeTo(address newImplementation) external;
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1144,14 +1014,10 @@ function upgradeTo(address newImplementation) external;
         #[automatically_derived]
         impl alloy_sol_types::SolCall for upgradeToCall {
             type Parameters<'a> = (alloy::sol_types::sol_data::Address,);
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = upgradeToReturn;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "upgradeTo(address)";
             const SELECTOR: [u8; 4] = [54u8, 89u8, 207u8, 230u8];
             #[inline]
@@ -1173,17 +1039,17 @@ function upgradeTo(address newImplementation) external;
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `upgradeToAndCall(address,bytes)` and selector `0x4f1ef286`.
-```solidity
-function upgradeToAndCall(address newImplementation, bytes memory data) external payable;
-```*/
+    ```solidity
+    function upgradeToAndCall(address newImplementation, bytes memory data) external payable;
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct upgradeToAndCallCall {
@@ -1215,9 +1081,7 @@ function upgradeToAndCall(address newImplementation, bytes memory data) external
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1226,16 +1090,14 @@ function upgradeToAndCall(address newImplementation, bytes memory data) external
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<upgradeToAndCallCall>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<upgradeToAndCallCall> for UnderlyingRustTuple<'_> {
                 fn from(value: upgradeToAndCallCall) -> Self {
                     (value.newImplementation, value.data)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for upgradeToAndCallCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for upgradeToAndCallCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {
                         newImplementation: tuple.0,
@@ -1251,9 +1113,7 @@ function upgradeToAndCall(address newImplementation, bytes memory data) external
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1262,16 +1122,14 @@ function upgradeToAndCall(address newImplementation, bytes memory data) external
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<upgradeToAndCallReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<upgradeToAndCallReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: upgradeToAndCallReturn) -> Self {
                     ()
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for upgradeToAndCallReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for upgradeToAndCallReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
@@ -1283,14 +1141,10 @@ function upgradeToAndCall(address newImplementation, bytes memory data) external
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Bytes,
             );
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = upgradeToAndCallReturn;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "upgradeToAndCall(address,bytes)";
             const SELECTOR: [u8; 4] = [79u8, 30u8, 242u8, 134u8];
             #[inline]
@@ -1315,10 +1169,10 @@ function upgradeToAndCall(address newImplementation, bytes memory data) external
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
@@ -1355,15 +1209,11 @@ function upgradeToAndCall(address newImplementation, bytes memory data) external
         fn selector(&self) -> [u8; 4] {
             match self {
                 Self::admin(_) => <adminCall as alloy_sol_types::SolCall>::SELECTOR,
-                Self::changeAdmin(_) => {
-                    <changeAdminCall as alloy_sol_types::SolCall>::SELECTOR
-                }
+                Self::changeAdmin(_) => <changeAdminCall as alloy_sol_types::SolCall>::SELECTOR,
                 Self::implementation(_) => {
                     <implementationCall as alloy_sol_types::SolCall>::SELECTOR
                 }
-                Self::upgradeTo(_) => {
-                    <upgradeToCall as alloy_sol_types::SolCall>::SELECTOR
-                }
+                Self::upgradeTo(_) => <upgradeToCall as alloy_sol_types::SolCall>::SELECTOR,
                 Self::upgradeToAndCall(_) => {
                     <upgradeToAndCallCall as alloy_sol_types::SolCall>::SELECTOR
                 }
@@ -1387,16 +1237,16 @@ function upgradeToAndCall(address newImplementation, bytes memory data) external
             static DECODE_SHIMS: &[fn(
                 &[u8],
                 bool,
-            ) -> alloy_sol_types::Result<TransparentUpgradeableProxyCalls>] = &[
+            ) -> alloy_sol_types::Result<
+                TransparentUpgradeableProxyCalls,
+            >] = &[
                 {
                     fn upgradeTo(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<TransparentUpgradeableProxyCalls> {
-                        <upgradeToCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
+                    ) -> alloy_sol_types::Result<TransparentUpgradeableProxyCalls>
+                    {
+                        <upgradeToCall as alloy_sol_types::SolCall>::abi_decode_raw(data, validate)
                             .map(TransparentUpgradeableProxyCalls::upgradeTo)
                     }
                     upgradeTo
@@ -1405,12 +1255,12 @@ function upgradeToAndCall(address newImplementation, bytes memory data) external
                     fn upgradeToAndCall(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<TransparentUpgradeableProxyCalls> {
+                    ) -> alloy_sol_types::Result<TransparentUpgradeableProxyCalls>
+                    {
                         <upgradeToAndCallCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(TransparentUpgradeableProxyCalls::upgradeToAndCall)
+                            data, validate,
+                        )
+                        .map(TransparentUpgradeableProxyCalls::upgradeToAndCall)
                     }
                     upgradeToAndCall
                 },
@@ -1418,12 +1268,12 @@ function upgradeToAndCall(address newImplementation, bytes memory data) external
                     fn implementation(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<TransparentUpgradeableProxyCalls> {
+                    ) -> alloy_sol_types::Result<TransparentUpgradeableProxyCalls>
+                    {
                         <implementationCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(TransparentUpgradeableProxyCalls::implementation)
+                            data, validate,
+                        )
+                        .map(TransparentUpgradeableProxyCalls::implementation)
                     }
                     implementation
                 },
@@ -1431,12 +1281,12 @@ function upgradeToAndCall(address newImplementation, bytes memory data) external
                     fn changeAdmin(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<TransparentUpgradeableProxyCalls> {
+                    ) -> alloy_sol_types::Result<TransparentUpgradeableProxyCalls>
+                    {
                         <changeAdminCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(TransparentUpgradeableProxyCalls::changeAdmin)
+                            data, validate,
+                        )
+                        .map(TransparentUpgradeableProxyCalls::changeAdmin)
                     }
                     changeAdmin
                 },
@@ -1444,23 +1294,19 @@ function upgradeToAndCall(address newImplementation, bytes memory data) external
                     fn admin(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<TransparentUpgradeableProxyCalls> {
-                        <adminCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
+                    ) -> alloy_sol_types::Result<TransparentUpgradeableProxyCalls>
+                    {
+                        <adminCall as alloy_sol_types::SolCall>::abi_decode_raw(data, validate)
                             .map(TransparentUpgradeableProxyCalls::admin)
                     }
                     admin
                 },
             ];
             let Ok(idx) = Self::SELECTORS.binary_search(&selector) else {
-                return Err(
-                    alloy_sol_types::Error::unknown_selector(
-                        <Self as alloy_sol_types::SolInterface>::NAME,
-                        selector,
-                    ),
-                );
+                return Err(alloy_sol_types::Error::unknown_selector(
+                    <Self as alloy_sol_types::SolInterface>::NAME,
+                    selector,
+                ));
             };
             (unsafe { DECODE_SHIMS.get_unchecked(idx) })(data, validate)
         }
@@ -1471,22 +1317,16 @@ function upgradeToAndCall(address newImplementation, bytes memory data) external
                     <adminCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
                 }
                 Self::changeAdmin(inner) => {
-                    <changeAdminCall as alloy_sol_types::SolCall>::abi_encoded_size(
-                        inner,
-                    )
+                    <changeAdminCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
                 }
                 Self::implementation(inner) => {
-                    <implementationCall as alloy_sol_types::SolCall>::abi_encoded_size(
-                        inner,
-                    )
+                    <implementationCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
                 }
                 Self::upgradeTo(inner) => {
                     <upgradeToCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
                 }
                 Self::upgradeToAndCall(inner) => {
-                    <upgradeToAndCallCall as alloy_sol_types::SolCall>::abi_encoded_size(
-                        inner,
-                    )
+                    <upgradeToAndCallCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
                 }
             }
         }
@@ -1497,28 +1337,16 @@ function upgradeToAndCall(address newImplementation, bytes memory data) external
                     <adminCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
                 }
                 Self::changeAdmin(inner) => {
-                    <changeAdminCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <changeAdminCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
                 }
                 Self::implementation(inner) => {
-                    <implementationCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <implementationCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
                 }
                 Self::upgradeTo(inner) => {
-                    <upgradeToCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <upgradeToCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
                 }
                 Self::upgradeToAndCall(inner) => {
-                    <upgradeToAndCallCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <upgradeToAndCallCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
                 }
             }
         }
@@ -1539,106 +1367,19 @@ function upgradeToAndCall(address newImplementation, bytes memory data) external
         /// Prefer using `SolInterface` methods instead.
         pub const SELECTORS: &'static [[u8; 32usize]] = &[
             [
-                28u8,
-                243u8,
-                176u8,
-                58u8,
-                108u8,
-                241u8,
-                159u8,
-                162u8,
-                186u8,
-                186u8,
-                77u8,
-                241u8,
-                72u8,
-                233u8,
-                220u8,
-                171u8,
-                237u8,
-                234u8,
-                127u8,
-                138u8,
-                92u8,
-                7u8,
-                132u8,
-                14u8,
-                32u8,
-                126u8,
-                92u8,
-                8u8,
-                155u8,
-                233u8,
-                93u8,
-                62u8,
+                28u8, 243u8, 176u8, 58u8, 108u8, 241u8, 159u8, 162u8, 186u8, 186u8, 77u8, 241u8,
+                72u8, 233u8, 220u8, 171u8, 237u8, 234u8, 127u8, 138u8, 92u8, 7u8, 132u8, 14u8,
+                32u8, 126u8, 92u8, 8u8, 155u8, 233u8, 93u8, 62u8,
             ],
             [
-                126u8,
-                100u8,
-                77u8,
-                121u8,
-                66u8,
-                47u8,
-                23u8,
-                192u8,
-                30u8,
-                72u8,
-                148u8,
-                181u8,
-                244u8,
-                245u8,
-                136u8,
-                211u8,
-                49u8,
-                235u8,
-                250u8,
-                40u8,
-                101u8,
-                61u8,
-                66u8,
-                174u8,
-                131u8,
-                45u8,
-                197u8,
-                158u8,
-                56u8,
-                201u8,
-                121u8,
-                143u8,
+                126u8, 100u8, 77u8, 121u8, 66u8, 47u8, 23u8, 192u8, 30u8, 72u8, 148u8, 181u8,
+                244u8, 245u8, 136u8, 211u8, 49u8, 235u8, 250u8, 40u8, 101u8, 61u8, 66u8, 174u8,
+                131u8, 45u8, 197u8, 158u8, 56u8, 201u8, 121u8, 143u8,
             ],
             [
-                188u8,
-                124u8,
-                215u8,
-                90u8,
-                32u8,
-                238u8,
-                39u8,
-                253u8,
-                154u8,
-                222u8,
-                186u8,
-                179u8,
-                32u8,
-                65u8,
-                247u8,
-                85u8,
-                33u8,
-                77u8,
-                188u8,
-                107u8,
-                255u8,
-                169u8,
-                12u8,
-                192u8,
-                34u8,
-                91u8,
-                57u8,
-                218u8,
-                46u8,
-                92u8,
-                45u8,
-                59u8,
+                188u8, 124u8, 215u8, 90u8, 32u8, 238u8, 39u8, 253u8, 154u8, 222u8, 186u8, 179u8,
+                32u8, 65u8, 247u8, 85u8, 33u8, 77u8, 188u8, 107u8, 255u8, 169u8, 12u8, 192u8, 34u8,
+                91u8, 57u8, 218u8, 46u8, 92u8, 45u8, 59u8,
             ],
         ];
     }
@@ -1654,39 +1395,29 @@ function upgradeToAndCall(address newImplementation, bytes memory data) external
             match topics.first().copied() {
                 Some(<AdminChanged as alloy_sol_types::SolEvent>::SIGNATURE_HASH) => {
                     <AdminChanged as alloy_sol_types::SolEvent>::decode_raw_log(
-                            topics,
-                            data,
-                            validate,
-                        )
-                        .map(Self::AdminChanged)
+                        topics, data, validate,
+                    )
+                    .map(Self::AdminChanged)
                 }
                 Some(<BeaconUpgraded as alloy_sol_types::SolEvent>::SIGNATURE_HASH) => {
                     <BeaconUpgraded as alloy_sol_types::SolEvent>::decode_raw_log(
-                            topics,
-                            data,
-                            validate,
-                        )
-                        .map(Self::BeaconUpgraded)
+                        topics, data, validate,
+                    )
+                    .map(Self::BeaconUpgraded)
                 }
                 Some(<Upgraded as alloy_sol_types::SolEvent>::SIGNATURE_HASH) => {
-                    <Upgraded as alloy_sol_types::SolEvent>::decode_raw_log(
-                            topics,
-                            data,
-                            validate,
-                        )
+                    <Upgraded as alloy_sol_types::SolEvent>::decode_raw_log(topics, data, validate)
                         .map(Self::Upgraded)
                 }
-                _ => {
-                    alloy_sol_types::private::Err(alloy_sol_types::Error::InvalidLog {
-                        name: <Self as alloy_sol_types::SolEventInterface>::NAME,
-                        log: alloy_sol_types::private::Box::new(
-                            alloy_sol_types::private::LogData::new_unchecked(
-                                topics.to_vec(),
-                                data.to_vec().into(),
-                            ),
+                _ => alloy_sol_types::private::Err(alloy_sol_types::Error::InvalidLog {
+                    name: <Self as alloy_sol_types::SolEventInterface>::NAME,
+                    log: alloy_sol_types::private::Box::new(
+                        alloy_sol_types::private::LogData::new_unchecked(
+                            topics.to_vec(),
+                            data.to_vec().into(),
                         ),
-                    })
-                }
+                    ),
+                }),
             }
         }
     }
@@ -1700,9 +1431,7 @@ function upgradeToAndCall(address newImplementation, bytes memory data) external
                 Self::BeaconUpgraded(inner) => {
                     alloy_sol_types::private::IntoLogData::to_log_data(inner)
                 }
-                Self::Upgraded(inner) => {
-                    alloy_sol_types::private::IntoLogData::to_log_data(inner)
-                }
+                Self::Upgraded(inner) => alloy_sol_types::private::IntoLogData::to_log_data(inner),
             }
         }
         fn into_log_data(self) -> alloy_sol_types::private::LogData {
@@ -1722,7 +1451,7 @@ function upgradeToAndCall(address newImplementation, bytes memory data) external
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`TransparentUpgradeableProxy`](self) contract instance.
 
-See the [wrapper's documentation](`TransparentUpgradeableProxyInstance`) for more details.*/
+    See the [wrapper's documentation](`TransparentUpgradeableProxyInstance`) for more details.*/
     #[inline]
     pub const fn new<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -1736,9 +1465,9 @@ See the [wrapper's documentation](`TransparentUpgradeableProxyInstance`) for mor
     }
     /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+    Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+    For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
     #[inline]
     pub fn deploy<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -1752,17 +1481,13 @@ For more fine-grained control over the deployment process, use [`deploy_builder`
     ) -> impl ::core::future::Future<
         Output = alloy_contract::Result<TransparentUpgradeableProxyInstance<T, P, N>>,
     > {
-        TransparentUpgradeableProxyInstance::<
-            T,
-            P,
-            N,
-        >::deploy(provider, _logic, admin_, _data)
+        TransparentUpgradeableProxyInstance::<T, P, N>::deploy(provider, _logic, admin_, _data)
     }
     /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+    and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+    This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+    the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     #[inline]
     pub fn deploy_builder<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -1774,29 +1499,23 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         admin_: alloy::sol_types::private::Address,
         _data: alloy::sol_types::private::Bytes,
     ) -> alloy_contract::RawCallBuilder<T, P, N> {
-        TransparentUpgradeableProxyInstance::<
-            T,
-            P,
-            N,
-        >::deploy_builder(provider, _logic, admin_, _data)
+        TransparentUpgradeableProxyInstance::<T, P, N>::deploy_builder(
+            provider, _logic, admin_, _data,
+        )
     }
     /**A [`TransparentUpgradeableProxy`](self) instance.
 
-Contains type-safe methods for interacting with an on-chain instance of the
-[`TransparentUpgradeableProxy`](self) contract located at a given `address`, using a given
-provider `P`.
+    Contains type-safe methods for interacting with an on-chain instance of the
+    [`TransparentUpgradeableProxy`](self) contract located at a given `address`, using a given
+    provider `P`.
 
-If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
-documentation on how to provide it), the `deploy` and `deploy_builder` methods can
-be used to deploy a new instance of the contract.
+    If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
+    documentation on how to provide it), the `deploy` and `deploy_builder` methods can
+    be used to deploy a new instance of the contract.
 
-See the [module-level documentation](self) for all the available methods.*/
+    See the [module-level documentation](self) for all the available methods.*/
     #[derive(Clone)]
-    pub struct TransparentUpgradeableProxyInstance<
-        T,
-        P,
-        N = alloy_contract::private::Ethereum,
-    > {
+    pub struct TransparentUpgradeableProxyInstance<T, P, N = alloy_contract::private::Ethereum> {
         address: alloy_sol_types::private::Address,
         provider: P,
         _network_transport: ::core::marker::PhantomData<(N, T)>,
@@ -1813,18 +1532,16 @@ See the [module-level documentation](self) for all the available methods.*/
     /// Instantiation and getters/setters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > TransparentUpgradeableProxyInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > TransparentUpgradeableProxyInstance<T, P, N>
+    {
         /**Creates a new wrapper around an on-chain [`TransparentUpgradeableProxy`](self) contract instance.
 
-See the [wrapper's documentation](`TransparentUpgradeableProxyInstance`) for more details.*/
+        See the [wrapper's documentation](`TransparentUpgradeableProxyInstance`) for more details.*/
         #[inline]
-        pub const fn new(
-            address: alloy_sol_types::private::Address,
-            provider: P,
-        ) -> Self {
+        pub const fn new(address: alloy_sol_types::private::Address, provider: P) -> Self {
             Self {
                 address,
                 provider,
@@ -1833,9 +1550,9 @@ See the [wrapper's documentation](`TransparentUpgradeableProxyInstance`) for mor
         }
         /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+        Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+        For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
         #[inline]
         pub async fn deploy(
             provider: P,
@@ -1848,10 +1565,10 @@ For more fine-grained control over the deployment process, use [`deploy_builder`
             Ok(Self::new(contract_address, call_builder.provider))
         }
         /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+        and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+        This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+        the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         #[inline]
         pub fn deploy_builder(
             provider: P,
@@ -1863,16 +1580,14 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
                 provider,
                 [
                     &BYTECODE[..],
-                    &alloy_sol_types::SolConstructor::abi_encode(
-                        &constructorCall {
-                            _logic,
-                            admin_,
-                            _data,
-                        },
-                    )[..],
+                    &alloy_sol_types::SolConstructor::abi_encode(&constructorCall {
+                        _logic,
+                        admin_,
+                        _data,
+                    })[..],
                 ]
-                    .concat()
-                    .into(),
+                .concat()
+                .into(),
             )
         }
         /// Returns a reference to the address.
@@ -1899,9 +1614,7 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     impl<T, P: ::core::clone::Clone, N> TransparentUpgradeableProxyInstance<T, &P, N> {
         /// Clones the provider and returns a new instance with the cloned provider.
         #[inline]
-        pub fn with_cloned_provider(
-            self,
-        ) -> TransparentUpgradeableProxyInstance<T, P, N> {
+        pub fn with_cloned_provider(self) -> TransparentUpgradeableProxyInstance<T, P, N> {
             TransparentUpgradeableProxyInstance {
                 address: self.address,
                 provider: ::core::clone::Clone::clone(&self.provider),
@@ -1912,10 +1625,11 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     /// Function calls.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > TransparentUpgradeableProxyInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > TransparentUpgradeableProxyInstance<T, P, N>
+    {
         /// Creates a new call builder using this contract instance's provider and address.
         ///
         /// Note that the call can be any function call, not just those defined in this
@@ -1956,21 +1670,20 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
             newImplementation: alloy::sol_types::private::Address,
             data: alloy::sol_types::private::Bytes,
         ) -> alloy_contract::SolCallBuilder<T, &P, upgradeToAndCallCall, N> {
-            self.call_builder(
-                &upgradeToAndCallCall {
-                    newImplementation,
-                    data,
-                },
-            )
+            self.call_builder(&upgradeToAndCallCall {
+                newImplementation,
+                data,
+            })
         }
     }
     /// Event filters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > TransparentUpgradeableProxyInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > TransparentUpgradeableProxyInstance<T, P, N>
+    {
         /// Creates a new event filter using this contract instance's provider and address.
         ///
         /// Note that the type can be any event, not just those defined in this contract.
@@ -1981,15 +1694,11 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
             alloy_contract::Event::new_sol(&self.provider, &self.address)
         }
         ///Creates a new event filter for the [`AdminChanged`] event.
-        pub fn AdminChanged_filter(
-            &self,
-        ) -> alloy_contract::Event<T, &P, AdminChanged, N> {
+        pub fn AdminChanged_filter(&self) -> alloy_contract::Event<T, &P, AdminChanged, N> {
             self.event_filter::<AdminChanged>()
         }
         ///Creates a new event filter for the [`BeaconUpgraded`] event.
-        pub fn BeaconUpgraded_filter(
-            &self,
-        ) -> alloy_contract::Event<T, &P, BeaconUpgraded, N> {
+        pub fn BeaconUpgraded_filter(&self) -> alloy_contract::Event<T, &P, BeaconUpgraded, N> {
             self.event_filter::<BeaconUpgraded>()
         }
         ///Creates a new event filter for the [`Upgraded`] event.

@@ -91,24 +91,21 @@ pub mod MockDelegationManager {
         b"`\x80`@R4\x80\x15a\0\x10W`\0\x80\xFD[P`\x046\x10a\x006W`\x005`\xE0\x1C\x80cw\x8EU\xF3\x14a\0;W\x80c\x90\x04\x13G\x14a\0eW[`\0\x80\xFD[a\0Ra\0I6`\x04a\x011V[a\x03\xE8\x92\x91PPV[`@Q\x90\x81R` \x01[`@Q\x80\x91\x03\x90\xF3[a\0xa\0s6`\x04a\x01zV[a\0\x85V[`@Qa\0\\\x91\x90a\x02RV[```\0\x82Qg\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x81\x11\x15a\0\xA3Wa\0\xA3a\x01dV[`@Q\x90\x80\x82R\x80` \x02` \x01\x82\x01`@R\x80\x15a\0\xCCW\x81` \x01` \x82\x02\x806\x837\x01\x90P[P\x90P`\0[\x83Q\x81\x10\x15a\x01\rWa\x03\xE8\x82\x82\x81Q\x81\x10a\0\xF0Wa\0\xF0a\x02\x96V[` \x90\x81\x02\x91\x90\x91\x01\x01R\x80a\x01\x05\x81a\x02\xACV[\x91PPa\0\xD2V[P\x93\x92PPPV[\x805`\x01`\x01`\xA0\x1B\x03\x81\x16\x81\x14a\x01,W`\0\x80\xFD[\x91\x90PV[`\0\x80`@\x83\x85\x03\x12\x15a\x01DW`\0\x80\xFD[a\x01M\x83a\x01\x15V[\x91Pa\x01[` \x84\x01a\x01\x15V[\x90P\x92P\x92\x90PV[cNH{q`\xE0\x1B`\0R`A`\x04R`$`\0\xFD[`\0\x80`@\x83\x85\x03\x12\x15a\x01\x8DW`\0\x80\xFD[a\x01\x96\x83a\x01\x15V[\x91P` \x80\x84\x015g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x80\x82\x11\x15a\x01\xB4W`\0\x80\xFD[\x81\x86\x01\x91P\x86`\x1F\x83\x01\x12a\x01\xC8W`\0\x80\xFD[\x815\x81\x81\x11\x15a\x01\xDAWa\x01\xDAa\x01dV[\x80`\x05\x1B`@Q`\x1F\x19`?\x83\x01\x16\x81\x01\x81\x81\x10\x85\x82\x11\x17\x15a\x01\xFFWa\x01\xFFa\x01dV[`@R\x91\x82R\x84\x82\x01\x92P\x83\x81\x01\x85\x01\x91\x89\x83\x11\x15a\x02\x1DW`\0\x80\xFD[\x93\x85\x01\x93[\x82\x85\x10\x15a\x02BWa\x023\x85a\x01\x15V[\x84R\x93\x85\x01\x93\x92\x85\x01\x92a\x02\"V[\x80\x96PPPPPPP\x92P\x92\x90PV[` \x80\x82R\x82Q\x82\x82\x01\x81\x90R`\0\x91\x90\x84\x82\x01\x90`@\x85\x01\x90\x84[\x81\x81\x10\x15a\x02\x8AW\x83Q\x83R\x92\x84\x01\x92\x91\x84\x01\x91`\x01\x01a\x02nV[P\x90\x96\x95PPPPPPV[cNH{q`\xE0\x1B`\0R`2`\x04R`$`\0\xFD[`\0`\0\x19\x82\x14\x15a\x02\xCEWcNH{q`\xE0\x1B`\0R`\x11`\x04R`$`\0\xFD[P`\x01\x01\x90V\xFE\xA2dipfsX\"\x12 \x04F\t\x96\x8EB\t\xAFWU\x8Ft\xBD\xE9\rV\x90\xCCh\xA4\xD9{\xF9\xDC_pR\t\xC7\x0B\r\x90dsolcC\0\x08\x0C\x003",
     );
     /**Function with signature `getOperatorShares(address,address[])` and selector `0x90041347`.
-```solidity
-function getOperatorShares(address, address[] memory strategies) external pure returns (uint256[] memory);
-```*/
+    ```solidity
+    function getOperatorShares(address, address[] memory strategies) external pure returns (uint256[] memory);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getOperatorSharesCall {
         pub _0: alloy::sol_types::private::Address,
-        pub strategies: alloy::sol_types::private::Vec<
-            alloy::sol_types::private::Address,
-        >,
+        pub strategies: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
     }
     ///Container type for the return parameters of the [`getOperatorShares(address,address[])`](getOperatorSharesCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getOperatorSharesReturn {
-        pub _0: alloy::sol_types::private::Vec<
-            alloy::sol_types::private::primitives::aliases::U256,
-        >,
+        pub _0:
+            alloy::sol_types::private::Vec<alloy::sol_types::private::primitives::aliases::U256>,
     }
     #[allow(
         non_camel_case_types,
@@ -131,9 +128,7 @@ function getOperatorShares(address, address[] memory strategies) external pure r
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -142,16 +137,14 @@ function getOperatorShares(address, address[] memory strategies) external pure r
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<getOperatorSharesCall>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<getOperatorSharesCall> for UnderlyingRustTuple<'_> {
                 fn from(value: getOperatorSharesCall) -> Self {
                     (value._0, value.strategies)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for getOperatorSharesCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for getOperatorSharesCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {
                         _0: tuple.0,
@@ -162,9 +155,8 @@ function getOperatorShares(address, address[] memory strategies) external pure r
         }
         {
             #[doc(hidden)]
-            type UnderlyingSolTuple<'a> = (
-                alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::Uint<256>>,
-            );
+            type UnderlyingSolTuple<'a> =
+                (alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::Uint<256>>,);
             #[doc(hidden)]
             type UnderlyingRustTuple<'a> = (
                 alloy::sol_types::private::Vec<
@@ -173,9 +165,7 @@ function getOperatorShares(address, address[] memory strategies) external pure r
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -184,16 +174,14 @@ function getOperatorShares(address, address[] memory strategies) external pure r
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<getOperatorSharesReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<getOperatorSharesReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: getOperatorSharesReturn) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for getOperatorSharesReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for getOperatorSharesReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -205,16 +193,11 @@ function getOperatorShares(address, address[] memory strategies) external pure r
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::Address>,
             );
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = getOperatorSharesReturn;
-            type ReturnTuple<'a> = (
-                alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::Uint<256>>,
-            );
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnTuple<'a> =
+                (alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::Uint<256>>,);
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "getOperatorShares(address,address[])";
             const SELECTOR: [u8; 4] = [144u8, 4u8, 19u8, 71u8];
             #[inline]
@@ -239,17 +222,17 @@ function getOperatorShares(address, address[] memory strategies) external pure r
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `operatorShares(address,address)` and selector `0x778e55f3`.
-```solidity
-function operatorShares(address, address) external pure returns (uint256);
-```*/
+    ```solidity
+    function operatorShares(address, address) external pure returns (uint256);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct operatorSharesCall {
@@ -283,9 +266,7 @@ function operatorShares(address, address) external pure returns (uint256);
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -303,7 +284,10 @@ function operatorShares(address, address) external pure returns (uint256);
             #[doc(hidden)]
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for operatorSharesCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self { _0: tuple.0, _1: tuple.1 }
+                    Self {
+                        _0: tuple.0,
+                        _1: tuple.1,
+                    }
                 }
             }
         }
@@ -311,14 +295,10 @@ function operatorShares(address, address) external pure returns (uint256);
             #[doc(hidden)]
             type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (
-                alloy::sol_types::private::primitives::aliases::U256,
-            );
+            type UnderlyingRustTuple<'a> = (alloy::sol_types::private::primitives::aliases::U256,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -327,16 +307,14 @@ function operatorShares(address, address) external pure returns (uint256);
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<operatorSharesReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<operatorSharesReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: operatorSharesReturn) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for operatorSharesReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for operatorSharesReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -348,14 +326,10 @@ function operatorShares(address, address) external pure returns (uint256);
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Address,
             );
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = operatorSharesReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "operatorShares(address,address)";
             const SELECTOR: [u8; 4] = [119u8, 142u8, 85u8, 243u8];
             #[inline]
@@ -380,10 +354,10 @@ function operatorShares(address, address) external pure returns (uint256);
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
@@ -400,10 +374,8 @@ function operatorShares(address, address) external pure returns (uint256);
         /// No guarantees are made about the order of the selectors.
         ///
         /// Prefer using `SolInterface` methods instead.
-        pub const SELECTORS: &'static [[u8; 4usize]] = &[
-            [119u8, 142u8, 85u8, 243u8],
-            [144u8, 4u8, 19u8, 71u8],
-        ];
+        pub const SELECTORS: &'static [[u8; 4usize]] =
+            &[[119u8, 142u8, 85u8, 243u8], [144u8, 4u8, 19u8, 71u8]];
     }
     #[automatically_derived]
     impl alloy_sol_types::SolInterface for MockDelegationManagerCalls {
@@ -439,17 +411,17 @@ function operatorShares(address, address) external pure returns (uint256);
             static DECODE_SHIMS: &[fn(
                 &[u8],
                 bool,
-            ) -> alloy_sol_types::Result<MockDelegationManagerCalls>] = &[
+            )
+                -> alloy_sol_types::Result<MockDelegationManagerCalls>] = &[
                 {
                     fn operatorShares(
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<MockDelegationManagerCalls> {
                         <operatorSharesCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(MockDelegationManagerCalls::operatorShares)
+                            data, validate,
+                        )
+                        .map(MockDelegationManagerCalls::operatorShares)
                     }
                     operatorShares
                 },
@@ -459,21 +431,18 @@ function operatorShares(address, address) external pure returns (uint256);
                         validate: bool,
                     ) -> alloy_sol_types::Result<MockDelegationManagerCalls> {
                         <getOperatorSharesCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(MockDelegationManagerCalls::getOperatorShares)
+                            data, validate,
+                        )
+                        .map(MockDelegationManagerCalls::getOperatorShares)
                     }
                     getOperatorShares
                 },
             ];
             let Ok(idx) = Self::SELECTORS.binary_search(&selector) else {
-                return Err(
-                    alloy_sol_types::Error::unknown_selector(
-                        <Self as alloy_sol_types::SolInterface>::NAME,
-                        selector,
-                    ),
-                );
+                return Err(alloy_sol_types::Error::unknown_selector(
+                    <Self as alloy_sol_types::SolInterface>::NAME,
+                    selector,
+                ));
             };
             (unsafe { DECODE_SHIMS.get_unchecked(idx) })(data, validate)
         }
@@ -481,14 +450,10 @@ function operatorShares(address, address) external pure returns (uint256);
         fn abi_encoded_size(&self) -> usize {
             match self {
                 Self::getOperatorShares(inner) => {
-                    <getOperatorSharesCall as alloy_sol_types::SolCall>::abi_encoded_size(
-                        inner,
-                    )
+                    <getOperatorSharesCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
                 }
                 Self::operatorShares(inner) => {
-                    <operatorSharesCall as alloy_sol_types::SolCall>::abi_encoded_size(
-                        inner,
-                    )
+                    <operatorSharesCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
                 }
             }
         }
@@ -496,16 +461,10 @@ function operatorShares(address, address) external pure returns (uint256);
         fn abi_encode_raw(&self, out: &mut alloy_sol_types::private::Vec<u8>) {
             match self {
                 Self::getOperatorShares(inner) => {
-                    <getOperatorSharesCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <getOperatorSharesCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
                 }
                 Self::operatorShares(inner) => {
-                    <operatorSharesCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <operatorSharesCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
                 }
             }
         }
@@ -513,7 +472,7 @@ function operatorShares(address, address) external pure returns (uint256);
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`MockDelegationManager`](self) contract instance.
 
-See the [wrapper's documentation](`MockDelegationManagerInstance`) for more details.*/
+    See the [wrapper's documentation](`MockDelegationManagerInstance`) for more details.*/
     #[inline]
     pub const fn new<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -527,9 +486,9 @@ See the [wrapper's documentation](`MockDelegationManagerInstance`) for more deta
     }
     /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+    Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+    For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
     #[inline]
     pub fn deploy<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -543,35 +502,33 @@ For more fine-grained control over the deployment process, use [`deploy_builder`
         MockDelegationManagerInstance::<T, P, N>::deploy(provider)
     }
     /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+    and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+    This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+    the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     #[inline]
     pub fn deploy_builder<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
         P: alloy_contract::private::Provider<T, N>,
         N: alloy_contract::private::Network,
-    >(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
+    >(
+        provider: P,
+    ) -> alloy_contract::RawCallBuilder<T, P, N> {
         MockDelegationManagerInstance::<T, P, N>::deploy_builder(provider)
     }
     /**A [`MockDelegationManager`](self) instance.
 
-Contains type-safe methods for interacting with an on-chain instance of the
-[`MockDelegationManager`](self) contract located at a given `address`, using a given
-provider `P`.
+    Contains type-safe methods for interacting with an on-chain instance of the
+    [`MockDelegationManager`](self) contract located at a given `address`, using a given
+    provider `P`.
 
-If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
-documentation on how to provide it), the `deploy` and `deploy_builder` methods can
-be used to deploy a new instance of the contract.
+    If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
+    documentation on how to provide it), the `deploy` and `deploy_builder` methods can
+    be used to deploy a new instance of the contract.
 
-See the [module-level documentation](self) for all the available methods.*/
+    See the [module-level documentation](self) for all the available methods.*/
     #[derive(Clone)]
-    pub struct MockDelegationManagerInstance<
-        T,
-        P,
-        N = alloy_contract::private::Ethereum,
-    > {
+    pub struct MockDelegationManagerInstance<T, P, N = alloy_contract::private::Ethereum> {
         address: alloy_sol_types::private::Address,
         provider: P,
         _network_transport: ::core::marker::PhantomData<(N, T)>,
@@ -580,24 +537,24 @@ See the [module-level documentation](self) for all the available methods.*/
     impl<T, P, N> ::core::fmt::Debug for MockDelegationManagerInstance<T, P, N> {
         #[inline]
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-            f.debug_tuple("MockDelegationManagerInstance").field(&self.address).finish()
+            f.debug_tuple("MockDelegationManagerInstance")
+                .field(&self.address)
+                .finish()
         }
     }
     /// Instantiation and getters/setters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > MockDelegationManagerInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > MockDelegationManagerInstance<T, P, N>
+    {
         /**Creates a new wrapper around an on-chain [`MockDelegationManager`](self) contract instance.
 
-See the [wrapper's documentation](`MockDelegationManagerInstance`) for more details.*/
+        See the [wrapper's documentation](`MockDelegationManagerInstance`) for more details.*/
         #[inline]
-        pub const fn new(
-            address: alloy_sol_types::private::Address,
-            provider: P,
-        ) -> Self {
+        pub const fn new(address: alloy_sol_types::private::Address, provider: P) -> Self {
             Self {
                 address,
                 provider,
@@ -606,9 +563,9 @@ See the [wrapper's documentation](`MockDelegationManagerInstance`) for more deta
         }
         /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+        Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+        For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
         #[inline]
         pub async fn deploy(
             provider: P,
@@ -618,10 +575,10 @@ For more fine-grained control over the deployment process, use [`deploy_builder`
             Ok(Self::new(contract_address, call_builder.provider))
         }
         /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+        and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+        This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+        the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         #[inline]
         pub fn deploy_builder(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
             alloy_contract::RawCallBuilder::new_raw_deploy(
@@ -664,10 +621,11 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     /// Function calls.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > MockDelegationManagerInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > MockDelegationManagerInstance<T, P, N>
+    {
         /// Creates a new call builder using this contract instance's provider and address.
         ///
         /// Note that the call can be any function call, not just those defined in this
@@ -682,16 +640,9 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         pub fn getOperatorShares(
             &self,
             _0: alloy::sol_types::private::Address,
-            strategies: alloy::sol_types::private::Vec<
-                alloy::sol_types::private::Address,
-            >,
+            strategies: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
         ) -> alloy_contract::SolCallBuilder<T, &P, getOperatorSharesCall, N> {
-            self.call_builder(
-                &getOperatorSharesCall {
-                    _0,
-                    strategies,
-                },
-            )
+            self.call_builder(&getOperatorSharesCall { _0, strategies })
         }
         ///Creates a new call builder for the [`operatorShares`] function.
         pub fn operatorShares(
@@ -705,10 +656,11 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     /// Event filters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > MockDelegationManagerInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > MockDelegationManagerInstance<T, P, N>
+    {
         /// Creates a new event filter using this contract instance's provider and address.
         ///
         /// Note that the type can be any event, not just those defined in this contract.
