@@ -1,5 +1,5 @@
 use crate::error::AvsRegistryError;
-use alloy_primitives::{address, Address, Bytes, FixedBytes, TxHash, U256};
+use alloy_primitives::{Address, Bytes, FixedBytes, TxHash, U256};
 use alloy_signer::Signer;
 use alloy_signer_local::PrivateKeySigner;
 use eigen_client_elcontracts::reader::ELChainReader;
@@ -7,7 +7,6 @@ use eigen_crypto_bls::{
     alloy_g1_point_to_g1_affine, convert_to_g1_point, convert_to_g2_point, BlsKeyPair,
 };
 use eigen_logging::logger::SharedLogger;
-use eigen_utils::registrycoordinator::BN254::G1Point;
 use eigen_utils::registrycoordinator::{
     IBLSApkRegistry::PubkeyRegistrationParams, ISignatureUtils::SignatureWithSaltAndExpiry,
     RegistryCoordinator,
@@ -152,38 +151,13 @@ impl AvsRegistryChainWriter {
         let contract_registry_coordinator =
             RegistryCoordinator::new(self.registry_coordinator_addr, provider);
 
-        // GET MESSAGE HASH TO SIGN WITH BLS KEY
         let g1_hashed_msg_to_sign = contract_registry_coordinator
             .pubkeyRegistrationMessageHash(wallet.address())
             .call()
             .await
             .map_err(|_| AvsRegistryError::PubKeyRegistrationMessageHash)?
             ._0;
-        dbg!(&g1_hashed_msg_to_sign);
 
-        // test: get hash for address 0
-        let test_msg = contract_registry_coordinator
-            .pubkeyRegistrationMessageHash(Address::ZERO)
-            .call()
-            .await
-            .map_err(|_| AvsRegistryError::PubKeyRegistrationMessageHash)?;
-        dbg!(test_msg._0.X.to_be_bytes::<32>());
-        dbg!(test_msg._0.Y.to_be_bytes::<32>());
-        // end test
-
-        let g1_hashed_msg_to_sign = G1Point {
-            X: U256::from_str(
-                "20187513611830522305702135123848414057533369924953892225975993470990874339295",
-            )
-            .unwrap(),
-            Y: U256::from_str(
-                "13602901778273433747831915511781444357512783178239745895797858401491040175247",
-            )
-            .unwrap(),
-        };
-        dbg!(&g1_hashed_msg_to_sign);
-
-        // SIGN MESSAGE WITH BLS KEY
         let sig = bls_key_pair
             .sign_hashed_to_curve_message(alloy_g1_point_to_g1_affine(g1_hashed_msg_to_sign))
             .g1_point();
@@ -191,30 +165,22 @@ impl AvsRegistryChainWriter {
         let g1_pub_key_bn254 = convert_to_g1_point(bls_key_pair.public_key().g1())?;
         let g2_pub_key_bn254 = convert_to_g2_point(bls_key_pair.public_key_g2().g2())?;
 
-        // REGISTRATION PARAMS: signed message, bls key
         let pub_key_reg_params = PubkeyRegistrationParams {
             pubkeyRegistrationSignature: alloy_g1_point_signed_msg,
             pubkeyG1: g1_pub_key_bn254,
             pubkeyG2: g2_pub_key_bn254,
         };
 
-        // GET MESSAGE TO SIGN WITH ECDSA KEY
-        // let msg_to_sign = self
-        //     .el_reader
-        //     .calculate_operator_avs_registration_digest_hash(
-        //         wallet.address(),
-        //         self.service_manager_addr,
-        //         operator_to_avs_registration_sig_salt,
-        //         operator_to_avs_registration_sig_expiry,
-        //     )
-        //     .await?;
-        // dbg!(&msg_to_sign);
-        let msg_to_sign = FixedBytes::from([
-            106, 240, 229, 29, 127, 146, 183, 18, 11, 161, 136, 224, 221, 201, 188, 125, 138, 239,
-            139, 252, 177, 74, 218, 148, 191, 239, 239, 88, 172, 140, 180, 198,
-        ]);
+        let msg_to_sign = self
+            .el_reader
+            .calculate_operator_avs_registration_digest_hash(
+                wallet.address(),
+                self.service_manager_addr,
+                operator_to_avs_registration_sig_salt,
+                operator_to_avs_registration_sig_expiry,
+            )
+            .await?;
 
-        // Sign message with wallet
         let operator_signature = wallet
             .sign_hash(&msg_to_sign)
             .await
@@ -227,9 +193,6 @@ impl AvsRegistryChainWriter {
             salt: operator_to_avs_registration_sig_salt,
             expiry: operator_to_avs_registration_sig_expiry,
         };
-        dbg!(&operator_signature_with_salt_and_expiry);
-        dbg!(&sig.g1());
-        dbg!(&pub_key_reg_params);
         let contract_call = contract_registry_coordinator.registerOperator(
             quorum_numbers.clone(),
             socket,
@@ -237,7 +200,6 @@ impl AvsRegistryChainWriter {
             operator_signature_with_salt_and_expiry,
         );
 
-        // REGISTER OPERATOR
         let tx_call = contract_call.gas(GAS_LIMIT_REGISTER_OPERATOR_REGISTRY_COORDINATOR);
         let tx = tx_call
             .send()
@@ -353,12 +315,12 @@ impl AvsRegistryChainWriter {
 #[cfg(test)]
 mod tests {
     use super::AvsRegistryChainWriter;
-    use alloy_primitives::{address, Address, Bytes, FixedBytes, U256};
+    use alloy_primitives::{Address, Bytes, FixedBytes, U256};
     use eigen_crypto_bls::BlsKeyPair;
     use eigen_logging::get_test_logger;
     use eigen_testing_utils::anvil::start_anvil_container;
     use eigen_testing_utils::anvil_constants::{
-        get_operator_state_retriever_address, get_registry_coordinator_address, register_operator_to_el_if_not_registered,
+        get_operator_state_retriever_address, get_registry_coordinator_address,
     };
     use eigen_testing_utils::transaction::wait_transaction;
     use std::str::FromStr;
@@ -383,7 +345,6 @@ mod tests {
     }
 
     #[tokio::test]
-    #[ignore] // TODO: fix this. Registering the operator fails due to BLSApkRegistry.registerBLSPublicKey error
     async fn test_avs_writer_methods() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
 
