@@ -1,5 +1,5 @@
 use crate::error::AvsRegistryError;
-use alloy_primitives::{address, Address, Bytes, FixedBytes, TxHash, U256};
+use alloy_primitives::{Address, Bytes, FixedBytes, TxHash, U256};
 use alloy_signer::Signer;
 use alloy_signer_local::PrivateKeySigner;
 use eigen_client_elcontracts::reader::ELChainReader;
@@ -9,7 +9,7 @@ use eigen_crypto_bls::{
 use eigen_logging::logger::SharedLogger;
 use eigen_utils::middleware::registrycoordinator::{
     IBLSApkRegistry::PubkeyRegistrationParams, ISignatureUtils::SignatureWithSaltAndExpiry,
-    RegistryCoordinator, BN254::G1Point as RegistryG1Point, BN254::G2Point as RegistryG2Point,
+    RegistryCoordinator,
 };
 use eigen_utils::middleware::{
     servicemanagerbase::ServiceManagerBase, stakeregistry::StakeRegistry,
@@ -154,7 +154,7 @@ impl AvsRegistryChainWriter {
             RegistryCoordinator::new(self.registry_coordinator_addr, provider);
         dbg!(self.registry_coordinator_addr);
 
-        // GET MESSAGE HASH TO SIGN WITH BLS KEY
+        // Get message to sign with BLS key
         let g1_hashed_msg_to_sign = contract_registry_coordinator
             .pubkeyRegistrationMessageHash(wallet.address())
             .call()
@@ -163,29 +163,19 @@ impl AvsRegistryChainWriter {
             ._0;
         dbg!(&g1_hashed_msg_to_sign);
 
-        // test: get hash for address 0
-        let test_msg = contract_registry_coordinator
-            .pubkeyRegistrationMessageHash(Address::ZERO)
-            .call()
-            .await
-            .map_err(|_| AvsRegistryError::PubKeyRegistrationMessageHash)?;
-        dbg!(test_msg._0.X.to_be_bytes::<32>());
-        dbg!(test_msg._0.Y.to_be_bytes::<32>());
-        // end test
+        // let g1_hashed_msg_to_sign = RegistryG1Point {
+        //     X: U256::from_str(
+        //         "20187513611830522305702135123848414057533369924953892225975993470990874339295",
+        //     )
+        //     .unwrap(),
+        //     Y: U256::from_str(
+        //         "13602901778273433747831915511781444357512783178239745895797858401491040175247",
+        //     )
+        //     .unwrap(),
+        // };
+        // dbg!(&g1_hashed_msg_to_sign);
 
-        let g1_hashed_msg_to_sign = G1Point {
-            X: U256::from_str(
-                "20187513611830522305702135123848414057533369924953892225975993470990874339295",
-            )
-            .unwrap(),
-            Y: U256::from_str(
-                "13602901778273433747831915511781444357512783178239745895797858401491040175247",
-            )
-            .unwrap(),
-        };
-        dbg!(&g1_hashed_msg_to_sign);
-
-        // SIGN MESSAGE WITH BLS KEY
+        // Sign message with BLS key
         let sig = bls_key_pair
             .sign_hashed_to_curve_message(alloy_g1_point_to_g1_affine(g1_hashed_msg_to_sign))
             .g1_point();
@@ -194,7 +184,6 @@ impl AvsRegistryChainWriter {
         dbg!(&alloy_g1_point_signed_msg);
 
         let g1_pub_key_bn254 = convert_to_g1_point(bls_key_pair.public_key().g1())?;
-
         let g2_pub_key_bn254 = convert_to_g2_point(bls_key_pair.public_key_g2().g2())?;
 
         // REGISTRATION PARAMS: signed message, bls key
@@ -204,23 +193,19 @@ impl AvsRegistryChainWriter {
             pubkeyG2: g2_pub_key_bn254,
         };
 
-        // GET MESSAGE TO SIGN WITH ECDSA KEY
-        // let msg_to_sign = self
-        //     .el_reader
-        //     .calculate_operator_avs_registration_digest_hash(
-        //         wallet.address(),
-        //         self.service_manager_addr,
-        //         operator_to_avs_registration_sig_salt,
-        //         operator_to_avs_registration_sig_expiry,
-        //     )
-        //     .await?;
-        // dbg!(&msg_to_sign);
-        let msg_to_sign = FixedBytes::from([
-            106, 240, 229, 29, 127, 146, 183, 18, 11, 161, 136, 224, 221, 201, 188, 125, 138, 239,
-            139, 252, 177, 74, 218, 148, 191, 239, 239, 88, 172, 140, 180, 198,
-        ]);
+        // Get message to sign with ecdsa key
+        let msg_to_sign = self
+            .el_reader
+            .calculate_operator_avs_registration_digest_hash(
+                wallet.address(),
+                self.service_manager_addr,
+                operator_to_avs_registration_sig_salt,
+                operator_to_avs_registration_sig_expiry,
+            )
+            .await?;
+        dbg!(&msg_to_sign);
 
-        // SIGN MESSAGE WITH WALLET
+        // Sign message with wallet
         let operator_signature = wallet
             .sign_hash(&msg_to_sign)
             .await
@@ -240,24 +225,11 @@ impl AvsRegistryChainWriter {
         let contract_call = contract_registry_coordinator.registerOperator(
             quorum_numbers.clone(),
             socket,
-            PubkeyRegistrationParams {
-                pubkeyRegistrationSignature: RegistryG1Point {
-                    X: pub_key_reg_params.pubkeyRegistrationSignature.X,
-                    Y: pub_key_reg_params.pubkeyRegistrationSignature.Y,
-                },
-                pubkeyG1: RegistryG1Point {
-                    X: pub_key_reg_params.pubkeyG1.X,
-                    Y: pub_key_reg_params.pubkeyG1.Y,
-                },
-                pubkeyG2: RegistryG2Point {
-                    X: pub_key_reg_params.pubkeyG2.X,
-                    Y: pub_key_reg_params.pubkeyG2.Y,
-                },
-            },
+            pub_key_reg_params,
             operator_signature_with_salt_and_expiry,
         );
 
-        // REGISTER OPERATOR
+        // Register operator
         let tx_call = contract_call.gas(GAS_LIMIT_REGISTER_OPERATOR_REGISTRY_COORDINATOR);
         tx_call.call().await.unwrap();
         let tx = tx_call
@@ -406,7 +378,9 @@ mod tests {
 
     #[tokio::test]
     async fn test_register_operator_in_quorum_with_avs_registry_coordinator() {
-        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        // let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let http_endpoint = "http://localhost:8545".to_string();
+
         let bls_key = "1".to_string();
         let private_key =
             "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80".to_string();
