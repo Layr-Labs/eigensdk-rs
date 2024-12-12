@@ -365,6 +365,7 @@ library MockAvsDeploymentLib {
         data.eigenPodManager = json.readAddress(".addresses.eigenPodManager");
         data.delegationManager = json.readAddress(".addresses.delegation");
         data.avsDirectory = json.readAddress(".addresses.avsDirectory");
+        data.allocationManager = json.readAddress(".addresses.allocationManager");
 
         return data;
     }
