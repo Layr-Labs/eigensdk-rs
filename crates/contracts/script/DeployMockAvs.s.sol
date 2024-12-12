@@ -6,6 +6,7 @@ import {IStrategy} from "@eigenlayer/contracts/interfaces/IStrategy.sol";
 import {MockAvsDeploymentLib} from "./utils/MockAvsDeploymentLib.sol";
 import {CoreDeploymentLib} from "./utils/CoreDeploymentLib.sol";
 import {FundOperator} from "./utils/FundOperator.sol";
+import {StakeRegistry} from "@eigenlayer-middleware/src/StakeRegistry.sol";
 
 import {StrategyFactory} from "@eigenlayer/contracts/strategies/StrategyFactory.sol";
 
@@ -66,6 +67,8 @@ contract DeployMockAvs {
                 erc20MockRewards
             )
         );
+        StakeRegistry(depData.stakeRegistry).setSlashableStakeLookahead(20);
+
         depData.tokenRewards = address(erc20MockRewards);
         depData.token = address(erc20Mock);
 
