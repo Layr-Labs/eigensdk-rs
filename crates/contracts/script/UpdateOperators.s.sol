@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.9;
+pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
@@ -10,12 +10,17 @@ import "./parsers/EigenlayerContractsParser.sol";
 import {ConfigsReadWriter} from "./parsers/ConfigsReadWriter.sol";
 import {ContractsRegistry} from "../src/ContractsRegistry.sol";
 
-contract UpdateOperators is ConfigsReadWriter, EigenlayerContractsParser, TokenAndStrategyContractsParser {
+contract UpdateOperators is
+    ConfigsReadWriter,
+    EigenlayerContractsParser,
+    TokenAndStrategyContractsParser
+{
     using Strings for uint256;
 
     string internal mnemonic;
     uint256 internal numberOfOperators;
-    ContractsRegistry contractsRegistry = ContractsRegistry(0x5FbDB2315678afecb367f032d93F642f64180aa3);
+    ContractsRegistry contractsRegistry =
+        ContractsRegistry(0x5FbDB2315678afecb367f032d93F642f64180aa3);
 
     function setUp() public {
         numberOfOperators = 10;
@@ -27,17 +32,25 @@ contract UpdateOperators is ConfigsReadWriter, EigenlayerContractsParser, TokenA
     }
 
     function run() external {
-        EigenlayerContracts memory eigenlayerContracts = _loadEigenlayerDeployedContracts();
-        TokenAndStrategyContracts memory tokenAndStrategy = _loadTokenAndStrategyContracts();
-        
+        EigenlayerContracts
+            memory eigenlayerContracts = _loadEigenlayerDeployedContracts();
+        TokenAndStrategyContracts
+            memory tokenAndStrategy = _loadTokenAndStrategyContracts();
+
         address[] memory operators = new address[](numberOfOperators);
         uint256[] memory operatorsETHAmount = new uint256[](numberOfOperators);
-        uint256[] memory operatorTokenAmounts = new uint256[](numberOfOperators);
+        uint256[] memory operatorTokenAmounts = new uint256[](
+            numberOfOperators
+        );
         for (uint256 i; i < numberOfOperators; i++) {
-            (address operator,) = deriveRememberKey(mnemonic, uint32(i));
+            (address operator, ) = deriveRememberKey(mnemonic, uint32(i));
             operators[i] = operator;
             operatorsETHAmount[i] = 5 ether;
-            operatorTokenAmounts[i] = bound(uint256(keccak256(bytes.concat(bytes32(uint256(i))))), 1 ether, 10 ether);
+            operatorTokenAmounts[i] = bound(
+                uint256(keccak256(bytes.concat(bytes32(uint256(i))))),
+                1 ether,
+                10 ether
+            );
         }
         vm.startBroadcast();
 
@@ -45,7 +58,11 @@ contract UpdateOperators is ConfigsReadWriter, EigenlayerContractsParser, TokenA
         _allocateEthOrErc20(address(0), operators, operatorsETHAmount);
 
         // Allocate tokens to operators
-        _allocateEthOrErc20(address(tokenAndStrategy.token), operators, operatorTokenAmounts);
+        _allocateEthOrErc20(
+            address(tokenAndStrategy.token),
+            operators,
+            operatorTokenAmounts
+        );
 
         vm.stopBroadcast();
 
@@ -55,16 +72,29 @@ contract UpdateOperators is ConfigsReadWriter, EigenlayerContractsParser, TokenA
             uint32 stakerOptOutWindowBlocks = 120;
             (, uint256 privateKey) = deriveRememberKey(mnemonic, uint32(i));
             vm.startBroadcast(privateKey);
-            contractsRegistry.store_test("test_modify_operator_details", int256(i), block.number, block.timestamp);
+            contractsRegistry.store_test(
+                "test_modify_operator_details",
+                int256(i),
+                block.number,
+                block.timestamp
+            );
             eigenlayerContracts.delegationManager.modifyOperatorDetails(
-                IDelegationManager.OperatorDetails(operators[i], delegationApprover, stakerOptOutWindowBlocks)
+                IDelegationManager.OperatorDetails(
+                    operators[i],
+                    delegationApprover,
+                    stakerOptOutWindowBlocks
+                )
             );
             vm.stopBroadcast();
         }
     }
 
     // setting token=address(0) will allocate eth
-    function _allocateEthOrErc20(address token, address[] memory tos, uint256[] memory amounts) internal {
+    function _allocateEthOrErc20(
+        address token,
+        address[] memory tos,
+        uint256[] memory amounts
+    ) internal {
         for (uint256 i = 0; i < tos.length; i++) {
             if (token == address(0)) {
                 payable(tos[i]).transfer(amounts[i]);

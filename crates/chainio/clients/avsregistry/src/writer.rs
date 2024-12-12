@@ -7,15 +7,15 @@ use eigen_crypto_bls::{
     alloy_g1_point_to_g1_affine, convert_to_g1_point, convert_to_g2_point, BlsKeyPair,
 };
 use eigen_logging::logger::SharedLogger;
-use eigen_utils::registrycoordinator::BN254::G1Point;
-use eigen_utils::registrycoordinator::{
+use eigen_utils::middleware::registrycoordinator::{
     IBLSApkRegistry::PubkeyRegistrationParams, ISignatureUtils::SignatureWithSaltAndExpiry,
     RegistryCoordinator, BN254::G1Point as RegistryG1Point, BN254::G2Point as RegistryG2Point,
 };
-use eigen_utils::{
-    get_provider, get_signer,
-    {servicemanagerbase::ServiceManagerBase, stakeregistry::StakeRegistry},
+use eigen_utils::middleware::{
+    servicemanagerbase::ServiceManagerBase, stakeregistry::StakeRegistry,
 };
+
+use eigen_common::{get_provider, get_signer};
 use std::str::FromStr;
 use tracing::info;
 
