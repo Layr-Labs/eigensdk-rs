@@ -378,8 +378,9 @@ mod tests {
     use ark_bn254::Fq2;
     use eigen_crypto_bn254::utils::verify_message;
     use eigen_testing_utils::test_data::TestData;
+    use rust_bls_bn254::pairing;
     type Fp = ark_ff::Fp<ark_ff::MontBackend<ark_bn254::FqConfig, 4>, 4>;
-
+    
     #[test]
     fn test_convert_to_g1_point() {
         let x_point = Fq::from_str(
@@ -566,6 +567,50 @@ mod tests {
             )
             .unwrap()
         );
+    }
+
+
+    #[test]
+    fn test_sign_hashed_to_curve_message() {
+        let message = G1Affine {
+            x: Fq::from_str(
+                "20187513611830522305702135123848414057533369924953892225975993470990874339295",
+            )
+            .unwrap(),
+            y: Fq::from_str(
+                "13602901778273433747831915511781444357512783178239745895797858401491040175247",
+            )
+            .unwrap(),
+            infinity: false,
+        };
+        let bls_priv_key = "1";
+        let bls_key_pair = BlsKeyPair::new(bls_priv_key.to_string()).unwrap();
+
+        let signature = bls_key_pair.sign_hashed_to_curve_message(message);
+
+        assert_eq!(
+            U256::from_limbs(signature.g1_point().g1().x().unwrap().into_bigint().0),
+            U256::from_str(
+                "20187513611830522305702135123848414057533369924953892225975993470990874339295"
+            )
+            .unwrap()
+        );
+        assert_eq!(
+            U256::from_limbs(signature.g1_point().g1().y().unwrap().into_bigint().0),
+            U256::from_str(
+                "13602901778273433747831915511781444357512783178239745895797858401491040175247"
+            )
+            .unwrap()
+        );
+
+        // verify the signature
+        let signature = signature.g1_point.g1();
+        assert!(signature.is_in_correct_subgroup_assuming_on_curve());
+        assert!(signature.is_on_curve());
+    
+        let c1 = pairing(bls_key_pair.public_key_g2().g2(), message);
+        let c2 = pairing(G2Affine::generator(), signature);
+        assert_eq!(c1, c2);
     }
 
     #[test]
