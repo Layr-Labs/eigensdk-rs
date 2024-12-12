@@ -147,12 +147,10 @@ impl AvsRegistryChainWriter {
         let wallet = PrivateKeySigner::from_str(&self.signer)
             .map_err(|_| AvsRegistryError::InvalidPrivateKey)?;
 
-        dbg!(wallet.address());
         // tracing info
         info!(avs_service_manager = %self.service_manager_addr, operator= %wallet.address(),quorum_numbers = ?quorum_numbers,"quorum_numbers,registering operator with the AVS's registry coordinator");
         let contract_registry_coordinator =
             RegistryCoordinator::new(self.registry_coordinator_addr, provider);
-        dbg!(self.registry_coordinator_addr);
 
         // GET MESSAGE HASH TO SIGN WITH BLS KEY
         let g1_hashed_msg_to_sign = contract_registry_coordinator
@@ -189,12 +187,8 @@ impl AvsRegistryChainWriter {
         let sig = bls_key_pair
             .sign_hashed_to_curve_message(alloy_g1_point_to_g1_affine(g1_hashed_msg_to_sign))
             .g1_point();
-        dbg!(&sig);
         let alloy_g1_point_signed_msg = convert_to_g1_point(sig.g1())?;
-        dbg!(&alloy_g1_point_signed_msg);
-
         let g1_pub_key_bn254 = convert_to_g1_point(bls_key_pair.public_key().g1())?;
-
         let g2_pub_key_bn254 = convert_to_g2_point(bls_key_pair.public_key_g2().g2())?;
 
         // REGISTRATION PARAMS: signed message, bls key
@@ -220,14 +214,13 @@ impl AvsRegistryChainWriter {
             139, 252, 177, 74, 218, 148, 191, 239, 239, 88, 172, 140, 180, 198,
         ]);
 
-        // SIGN MESSAGE WITH WALLET
+        // Sign message with wallet
         let operator_signature = wallet
             .sign_hash(&msg_to_sign)
             .await
             .map_err(|_| AvsRegistryError::InvalidSignature)?;
 
         let bytes = operator_signature.as_bytes().into();
-        dbg!(&bytes);
 
         let operator_signature_with_salt_and_expiry = SignatureWithSaltAndExpiry {
             signature: bytes,
@@ -246,7 +239,6 @@ impl AvsRegistryChainWriter {
 
         // REGISTER OPERATOR
         let tx_call = contract_call.gas(GAS_LIMIT_REGISTER_OPERATOR_REGISTRY_COORDINATOR);
-        tx_call.call().await.unwrap();
         let tx = tx_call
             .send()
             .await
@@ -361,12 +353,12 @@ impl AvsRegistryChainWriter {
 #[cfg(test)]
 mod tests {
     use super::AvsRegistryChainWriter;
-    use alloy_primitives::{Address, Bytes, FixedBytes, U256};
+    use alloy_primitives::{address, Address, Bytes, FixedBytes, U256};
     use eigen_crypto_bls::BlsKeyPair;
     use eigen_logging::get_test_logger;
     use eigen_testing_utils::anvil::start_anvil_container;
     use eigen_testing_utils::anvil_constants::{
-        get_operator_state_retriever_address, get_registry_coordinator_address,
+        get_operator_state_retriever_address, get_registry_coordinator_address, register_operator_to_el_if_not_registered,
     };
     use eigen_testing_utils::transaction::wait_transaction;
     use std::str::FromStr;
