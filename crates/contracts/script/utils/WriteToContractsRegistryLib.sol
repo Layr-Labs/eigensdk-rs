@@ -8,11 +8,11 @@ import {MockAvsDeploymentLib} from "./MockAvsDeploymentLib.sol";
 
 library WriteToContractsRegistryLib {
     function writeCoreContractsToRegistry(
-        address contracts_registry_addr,
+        address contractsRegistryAddr,
         CoreDeploymentLib.DeploymentData memory deploymentdata
     ) internal {
         ContractsRegistry contractsRegistry = ContractsRegistry(
-            contracts_registry_addr
+            contractsRegistryAddr
         );
         contractsRegistry.registerContract(
             "delegationManager",
@@ -37,11 +37,11 @@ library WriteToContractsRegistryLib {
     }
 
     function writeMockAvsContractsToRegistry(
-        address contracts_registry_addr,
+        address contractsRegistryAddr,
         MockAvsDeploymentLib.DeploymentData memory deploymentdata
     ) internal {
         ContractsRegistry contractsRegistry = ContractsRegistry(
-            contracts_registry_addr
+            contractsRegistryAddr
         );
 
         contractsRegistry.registerContract(

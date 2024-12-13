@@ -4,7 +4,6 @@ pragma solidity ^0.8.12;
 import {ProxyAdmin} from "@openzeppelin/contracts/proxy/transparent/ProxyAdmin.sol";
 import {TransparentUpgradeableProxy} from "@openzeppelin/contracts/proxy/transparent/TransparentUpgradeableProxy.sol";
 import {Script} from "forge-std/Script.sol";
-import {console2} from "forge-std/Test.sol";
 import {Vm} from "forge-std/Vm.sol";
 import {stdJson} from "forge-std/StdJson.sol";
 import {IAVSDirectory} from "@eigenlayer/contracts/interfaces/IAVSDirectory.sol";
@@ -22,20 +21,21 @@ import {IRegistryCoordinator} from "@eigenlayer-middleware/src/interfaces/IRegis
 import {IServiceManager} from "@eigenlayer-middleware/src/interfaces/IServiceManager.sol";
 import {IStrategy} from "@eigenlayer/contracts/interfaces/IStrategyManager.sol";
 import {IAllocationManager} from "@eigenlayer/contracts/interfaces/IAllocationManager.sol";
-import {CoreDeploymentLib} from "./CoreDeploymentLib.sol";
 
-import {RegistryCoordinator, IBLSApkRegistry, IIndexRegistry, IStakeRegistry} from "@eigenlayer-middleware/src/RegistryCoordinator.sol";
+import {RegistryCoordinator, IBLSApkRegistry, IIndexRegistry} from "@eigenlayer-middleware/src/RegistryCoordinator.sol";
+import {IStakeRegistry, StakeType} from "@eigenlayer-middleware/src/interfaces/IStakeRegistry.sol";
 import {IAVSDirectory} from "@eigenlayer/contracts/interfaces/IAVSDirectory.sol";
 import {PauserRegistry, IPauserRegistry} from "@eigenlayer/contracts/permissions/PauserRegistry.sol";
 import {OperatorStateRetriever} from "@eigenlayer-middleware/src/OperatorStateRetriever.sol";
 import {Vm} from "forge-std/Vm.sol";
+import {IPauserRegistry} from "@eigenlayer/contracts/interfaces/IPauserRegistry.sol";
 
 library MockAvsDeploymentLib {
     using stdJson for *;
     using Strings for *;
     using UpgradeableProxyLib for address;
 
-    Vm internal constant vm =
+    Vm internal constant VM =
         Vm(address(uint160(uint256(keccak256("hevm cheat code")))));
 
     struct DeploymentData {
@@ -53,8 +53,8 @@ library MockAvsDeploymentLib {
     struct MockAvsSetupConfig {
         uint256 numQuorums;
         uint256[] operatorParams;
-        address operator_addr;
-        address contracts_registry_addr;
+        address operatorAddr;
+        address contractsRegistryAddr;
     }
 
     function deployContracts(
@@ -108,14 +108,14 @@ library MockAvsDeploymentLib {
                 IStakeRegistry(result.stakeRegistry),
                 IBLSApkRegistry(result.blsapkRegistry),
                 IIndexRegistry(result.indexRegistry),
-                IAVSDirectory(core.avsDirectory)
+                IAVSDirectory(core.avsDirectory),
+                IPauserRegistry(core.pauserRegistry)
             )
         );
 
         address[] memory pausers = new address[](2);
         pausers[0] = admin;
         pausers[1] = admin;
-        PauserRegistry pausercontract = new PauserRegistry(pausers, admin);
 
         IStrategy[1] memory deployedStrategyArray = [IStrategy(strategy)];
         uint256 numStrategies = deployedStrategyArray.length;
@@ -125,14 +125,14 @@ library MockAvsDeploymentLib {
             memory quorumsOperatorSetParams = new IRegistryCoordinator.OperatorSetParam[](
                 numQuorums
             );
-        uint256[] memory operator_params = isConfig.operatorParams;
+        uint256[] memory operatorParams = isConfig.operatorParams;
 
         for (uint256 i = 0; i < numQuorums; i++) {
             quorumsOperatorSetParams[i] = IRegistryCoordinator
                 .OperatorSetParam({
-                    maxOperatorCount: uint32(operator_params[i]),
-                    kickBIPsOfOperatorStake: uint16(operator_params[i + 1]),
-                    kickBIPsOfTotalStake: uint16(operator_params[i + 2])
+                    maxOperatorCount: uint32(operatorParams[i]),
+                    kickBIPsOfOperatorStake: uint16(operatorParams[i + 1]),
+                    kickBIPsOfTotalStake: uint16(operatorParams[i + 2])
                 });
         }
         // set to 0 for every quorum
@@ -141,6 +141,8 @@ library MockAvsDeploymentLib {
             memory quorumsStrategyParams = new IStakeRegistry.StrategyParams[][](
                 numQuorums
             );
+        StakeType[] memory stakeTypes = new StakeType[](numQuorums);
+        uint32[] memory lookAheadPeriods = new uint32[](numQuorums);
         for (uint256 i = 0; i < numQuorums; i++) {
             quorumsStrategyParams[i] = new IStakeRegistry.StrategyParams[](
                 numStrategies
@@ -154,6 +156,8 @@ library MockAvsDeploymentLib {
                     //    weight += uint96(sharesAmount * strategyAndMultiplier.multiplier / WEIGHTING_DIVISOR);
                     multiplier: 1 ether
                 });
+                stakeTypes[i] = StakeType.TOTAL_SLASHABLE;
+                lookAheadPeriods[i] = 1;
             }
         }
 
@@ -163,11 +167,12 @@ library MockAvsDeploymentLib {
                 admin,
                 admin,
                 admin,
-                pausercontract,
                 0,
                 quorumsOperatorSetParams,
                 quorumsMinimumStake,
-                quorumsStrategyParams
+                quorumsStrategyParams,
+                stakeTypes,
+                lookAheadPeriods
             )
         );
 
@@ -210,16 +215,16 @@ library MockAvsDeploymentLib {
         string memory directoryPath
     ) internal returns (MockAvsSetupConfig memory) {
         string memory fileName = string.concat(directoryPath, ".json");
-        require(vm.exists(fileName), "Deployment file does not exist");
-        string memory json = vm.readFile(fileName);
+        require(VM.exists(fileName), "Deployment file does not exist");
+        string memory json = VM.readFile(fileName);
 
         MockAvsSetupConfig memory data;
-        data.contracts_registry_addr = json.readAddress(
+        data.contractsRegistryAddr = json.readAddress(
             ".contracts_registry_addr"
         );
-        data.operator_addr = json.readAddress(".operator_addr");
+        data.operatorAddr = json.readAddress(".operatorAddr");
         data.numQuorums = json.readUint(".num_quorums");
-        data.operatorParams = json.readUintArray(".operator_params");
+        data.operatorParams = json.readUintArray(".operatorParams");
         return data;
     }
 
@@ -229,13 +234,13 @@ library MockAvsDeploymentLib {
     ) internal returns (DeploymentData memory) {
         string memory fileName = string.concat(
             directoryPath,
-            vm.toString(chainId),
+            VM.toString(chainId),
             ".json"
         );
 
-        require(vm.exists(fileName), "Deployment file does not exist");
+        require(VM.exists(fileName), "Deployment file does not exist");
 
-        string memory json = vm.readFile(fileName);
+        string memory json = VM.readFile(fileName);
 
         DeploymentData memory data;
         data.mockAvsServiceManager = json.readAddress(
@@ -279,15 +284,14 @@ library MockAvsDeploymentLib {
 
         string memory fileName = string.concat(
             outputPath,
-            vm.toString(chainId),
+            VM.toString(chainId),
             ".json"
         );
-        if (!vm.exists(outputPath)) {
-            vm.createDir(outputPath, true);
+        if (!VM.exists(outputPath)) {
+            VM.createDir(outputPath, true);
         }
 
-        vm.writeFile(fileName, deploymentData);
-        console2.log("Deployment artifacts written to:", fileName);
+        VM.writeFile(fileName, deploymentData);
     }
 
     function _generateDeploymentJson(
@@ -297,9 +301,9 @@ library MockAvsDeploymentLib {
         return
             string.concat(
                 '{"lastUpdate":{"timestamp":"',
-                vm.toString(block.timestamp),
+                VM.toString(block.timestamp),
                 '","block_number":"',
-                vm.toString(block.number),
+                VM.toString(block.number),
                 '"},"addresses":',
                 _generateContractsJson(data, proxyAdmin),
                 "}"
@@ -345,7 +349,7 @@ library MockAvsDeploymentLib {
         return
             readCoreDeploymentJson(
                 directoryPath,
-                string.concat(vm.toString(chainId), ".json")
+                string.concat(VM.toString(chainId), ".json")
             );
     }
 
@@ -355,9 +359,9 @@ library MockAvsDeploymentLib {
     ) internal returns (CoreDeploymentLib.DeploymentData memory) {
         string memory pathToFile = string.concat(path, fileName);
 
-        require(vm.exists(pathToFile), "Deployment file does not exist");
+        require(VM.exists(pathToFile), "Deployment file does not exist");
 
-        string memory json = vm.readFile(pathToFile);
+        string memory json = VM.readFile(pathToFile);
 
         CoreDeploymentLib.DeploymentData memory data;
         data.strategyFactory = json.readAddress(".addresses.strategyFactory");

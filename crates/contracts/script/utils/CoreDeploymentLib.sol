@@ -31,6 +31,8 @@ import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 import {StrategyFactory} from "@eigenlayer/contracts/strategies/StrategyFactory.sol";
 import {IAllocationManager} from "@eigenlayer/contracts/interfaces/IAllocationManager.sol";
 import {UpgradeableProxyLib} from "./UpgradeableProxyLib.sol";
+import {PermissionController} from "@eigenlayer/contracts/permissions/PermissionController.sol";
+import {IPermissionController} from "@eigenlayer/contracts/interfaces/IPermissionController.sol";
 
 library CoreDeploymentLib {
     using stdJson for *;
@@ -81,6 +83,7 @@ library CoreDeploymentLib {
         address pauserRegistry;
         address strategyFactory;
         address strategyBeacon;
+        address permissionController;
     }
 
     function deployContracts(
@@ -112,36 +115,51 @@ library CoreDeploymentLib {
         result.eigenPodManager = UpgradeableProxyLib.setUpEmptyProxy(
             proxyAdmin
         );
+        result.permissionController = UpgradeableProxyLib.setUpEmptyProxy(
+            proxyAdmin
+        );
 
         // Deploy the implementation contracts, using the proxy contracts as inputs
         address delegationManagerImpl = address(
             new DelegationManager(
-                IAVSDirectory(result.avsDirectory),
                 IStrategyManager(result.strategyManager),
                 IEigenPodManager(result.eigenPodManager),
                 IAllocationManager(result.allocationManager),
+                IPauserRegistry(result.pauserRegistry),
+                IPermissionController(result.permissionController),
                 uint32(0) // TODO: check minWithdrawalDelay
             )
+        );
+
+        address permissionControllerImpl = address(
+            new PermissionController()
         );
         address avsDirectoryImpl = address(
             new AVSDirectory(
                 IDelegationManager(result.delegationManager),
-                uint32(1512000) // _DEALLOCATION_DELAY: 17.5 days in seconds),
+                IPauserRegistry(result.pauserRegistry)
             )
         );
 
         address strategyManagerImpl = address(
-            new StrategyManager(IDelegationManager(result.delegationManager))
+            new StrategyManager(
+                IDelegationManager(result.delegationManager),
+                IPauserRegistry(result.pauserRegistry)
+            )
         );
 
         address strategyFactoryImpl = address(
-            new StrategyFactory(IStrategyManager(result.strategyManager))
+            new StrategyFactory(
+                IStrategyManager(result.strategyManager),
+                IPauserRegistry(result.pauserRegistry)
+            )
         );
 
         address allocationManagerImpl = address(
             new AllocationManager(
                 IDelegationManager(result.delegationManager),
-                IAVSDirectory(result.avsDirectory),
+                IPauserRegistry(result.pauserRegistry),
+                IPermissionController(result.permissionController),
                 uint32(0), // _DEALLOCATION_DELAY
                 uint32(0) // _ALLOCATION_CONFIGURATION_DELAY
             )
@@ -160,8 +178,8 @@ library CoreDeploymentLib {
             new EigenPodManager(
                 IETHPOSDeposit(ethPOSDeposit),
                 IBeacon(result.eigenPodBeacon),
-                IStrategyManager(result.strategyManager),
-                IDelegationManager(result.delegationManager)
+                IDelegationManager(result.delegationManager),
+                IPauserRegistry(result.pauserRegistry)
             )
         );
 
@@ -175,6 +193,9 @@ library CoreDeploymentLib {
             new RewardsCoordinator(
                 IDelegationManager(result.delegationManager),
                 IStrategyManager(result.strategyManager),
+                IAllocationManager(result.allocationManager),
+                IPauserRegistry(result.pauserRegistry),
+                IPermissionController(result.permissionController),
                 CALCULATION_INTERVAL_SECONDS,
                 MAX_REWARDS_DURATION,
                 MAX_RETROACTIVE_LENGTH,
@@ -192,11 +213,11 @@ library CoreDeploymentLib {
                 GENESIS_TIME
             )
         );
-        address eigenPodBeaconImpl = address(
-            new UpgradeableBeacon(eigenPodImpl)
-        );
         address baseStrategyImpl = address(
-            new StrategyBase(IStrategyManager(result.strategyManager))
+            new StrategyBase(
+                IStrategyManager(result.strategyManager),
+                IPauserRegistry(result.pauserRegistry)
+            )
         );
         /// TODO: PauserRegistry isn't upgradeable
         address pauserRegistryImpl = address(
@@ -205,6 +226,7 @@ library CoreDeploymentLib {
                 proxyAdmin // ProxyAdmin as the unpauser
             )
         );
+        UpgradeableProxyLib.upgrade(result.pauserRegistry, pauserRegistryImpl);
 
         // Deploy and configure the strategy beacon
         result.strategyBeacon = address(
@@ -217,7 +239,6 @@ library CoreDeploymentLib {
             DelegationManager.initialize,
             (
                 proxyAdmin, // initialOwner
-                IPauserRegistry(result.pauserRegistry), // _pauserRegistry
                 configData.delegationManager.initPausedStatus // initialPausedStatus
             )
         );
@@ -233,7 +254,6 @@ library CoreDeploymentLib {
             (
                 proxyAdmin, // initialOwner
                 result.strategyFactory, // initialStrategyWhitelister
-                IPauserRegistry(result.pauserRegistry), // _pauserRegistry
                 configData.strategyManager.initPausedStatus // initialPausedStatus
             )
         );
@@ -248,7 +268,6 @@ library CoreDeploymentLib {
             StrategyFactory.initialize,
             (
                 proxyAdmin, // initialOwner
-                IPauserRegistry(result.pauserRegistry), // _pauserRegistry
                 configData.strategyFactory.initPausedStatus, // initialPausedStatus
                 IBeacon(result.strategyBeacon)
             )
@@ -264,7 +283,6 @@ library CoreDeploymentLib {
             EigenPodManager.initialize,
             (
                 proxyAdmin, // initialOwner
-                IPauserRegistry(result.pauserRegistry), // _pauserRegistry
                 configData.eigenPodManager.initPausedStatus // initialPausedStatus
             )
         );
@@ -274,12 +292,14 @@ library CoreDeploymentLib {
             upgradeCall
         );
 
+        // Upgrade PermissionController contract
+        UpgradeableProxyLib.upgrade(result.permissionController, permissionControllerImpl);
+
         // Upgrade AVSDirectory contract
         upgradeCall = abi.encodeCall(
             AVSDirectory.initialize,
             (
                 proxyAdmin, // initialOwner
-                IPauserRegistry(result.pauserRegistry), // _pauserRegistry
                 0 // TODO: AVS Missing configinitialPausedStatus
             )
         );
@@ -294,7 +314,6 @@ library CoreDeploymentLib {
             RewardsCoordinator.initialize,
             (
                 deployer, // initialOwner
-                IPauserRegistry(result.pauserRegistry), // _pauserRegistry
                 configData.rewardsCoordinator.initPausedStatus, // initialPausedStatus
                 /// TODO: is there a setter and is this expected?
                 deployer, // rewards updater
@@ -328,7 +347,6 @@ library CoreDeploymentLib {
             // TODO: Double check this
             (
                 deployer, // initialOwner
-                IPauserRegistry(result.pauserRegistry), // _pauserRegistry
                 configData.delegationManager.initPausedStatus // initialPausedStatus
             )
         );
