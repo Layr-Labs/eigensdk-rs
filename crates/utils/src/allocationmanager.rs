@@ -11,6 +11,8 @@ library IAllocationManagerTypes {
     struct SlashingParams { address operator; uint32 operatorSetId; address[] strategies; uint256[] wadsToSlash; string description; }
 }
 ```*/
+use crate::allocationmanager::AllocationManager::OperatorSet;
+
 #[allow(
     non_camel_case_types,
     non_snake_case,
