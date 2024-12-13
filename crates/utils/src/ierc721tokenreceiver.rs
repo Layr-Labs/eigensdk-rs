@@ -76,9 +76,9 @@ pub mod IERC721TokenReceiver {
         b"",
     );
     /**Function with signature `onERC721Received(address,address,uint256,bytes)` and selector `0x150b7a02`.
-    ```solidity
-    function onERC721Received(address _operator, address _from, uint256 _tokenId, bytes memory _data) external returns (bytes4);
-    ```*/
+```solidity
+function onERC721Received(address _operator, address _from, uint256 _tokenId, bytes memory _data) external returns (bytes4);
+```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct onERC721ReceivedCall {
@@ -118,7 +118,9 @@ pub mod IERC721TokenReceiver {
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -127,14 +129,16 @@ pub mod IERC721TokenReceiver {
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<onERC721ReceivedCall> for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<onERC721ReceivedCall>
+            for UnderlyingRustTuple<'_> {
                 fn from(value: onERC721ReceivedCall) -> Self {
                     (value._operator, value._from, value._tokenId, value._data)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for onERC721ReceivedCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>>
+            for onERC721ReceivedCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {
                         _operator: tuple.0,
@@ -152,7 +156,9 @@ pub mod IERC721TokenReceiver {
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::FixedBytes<4>,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -161,14 +167,16 @@ pub mod IERC721TokenReceiver {
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<onERC721ReceivedReturn> for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<onERC721ReceivedReturn>
+            for UnderlyingRustTuple<'_> {
                 fn from(value: onERC721ReceivedReturn) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for onERC721ReceivedReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>>
+            for onERC721ReceivedReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -182,10 +190,14 @@ pub mod IERC721TokenReceiver {
                 alloy::sol_types::sol_data::Uint<256>,
                 alloy::sol_types::sol_data::Bytes,
             );
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type Return = onERC721ReceivedReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::FixedBytes<4>,);
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "onERC721Received(address,address,uint256,bytes)";
             const SELECTOR: [u8; 4] = [21u8, 11u8, 122u8, 2u8];
             #[inline]
@@ -203,9 +215,9 @@ pub mod IERC721TokenReceiver {
                     <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
                         &self._from,
                     ),
-                    <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
-                        &self._tokenId,
-                    ),
+                    <alloy::sol_types::sol_data::Uint<
+                        256,
+                    > as alloy_sol_types::SolType>::tokenize(&self._tokenId),
                     <alloy::sol_types::sol_data::Bytes as alloy_sol_types::SolType>::tokenize(
                         &self._data,
                     ),
@@ -216,10 +228,10 @@ pub mod IERC721TokenReceiver {
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
+                <Self::ReturnTuple<
+                    '_,
+                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
+                    .map(Into::into)
             }
         }
     };
@@ -268,24 +280,28 @@ pub mod IERC721TokenReceiver {
             static DECODE_SHIMS: &[fn(
                 &[u8],
                 bool,
-            )
-                -> alloy_sol_types::Result<IERC721TokenReceiverCalls>] = &[{
-                fn onERC721Received(
-                    data: &[u8],
-                    validate: bool,
-                ) -> alloy_sol_types::Result<IERC721TokenReceiverCalls> {
-                    <onERC721ReceivedCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                        data, validate,
-                    )
-                    .map(IERC721TokenReceiverCalls::onERC721Received)
-                }
-                onERC721Received
-            }];
+            ) -> alloy_sol_types::Result<IERC721TokenReceiverCalls>] = &[
+                {
+                    fn onERC721Received(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<IERC721TokenReceiverCalls> {
+                        <onERC721ReceivedCall as alloy_sol_types::SolCall>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
+                            .map(IERC721TokenReceiverCalls::onERC721Received)
+                    }
+                    onERC721Received
+                },
+            ];
             let Ok(idx) = Self::SELECTORS.binary_search(&selector) else {
-                return Err(alloy_sol_types::Error::unknown_selector(
-                    <Self as alloy_sol_types::SolInterface>::NAME,
-                    selector,
-                ));
+                return Err(
+                    alloy_sol_types::Error::unknown_selector(
+                        <Self as alloy_sol_types::SolInterface>::NAME,
+                        selector,
+                    ),
+                );
             };
             (unsafe { DECODE_SHIMS.get_unchecked(idx) })(data, validate)
         }
@@ -293,7 +309,9 @@ pub mod IERC721TokenReceiver {
         fn abi_encoded_size(&self) -> usize {
             match self {
                 Self::onERC721Received(inner) => {
-                    <onERC721ReceivedCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
+                    <onERC721ReceivedCall as alloy_sol_types::SolCall>::abi_encoded_size(
+                        inner,
+                    )
                 }
             }
         }
@@ -301,7 +319,10 @@ pub mod IERC721TokenReceiver {
         fn abi_encode_raw(&self, out: &mut alloy_sol_types::private::Vec<u8>) {
             match self {
                 Self::onERC721Received(inner) => {
-                    <onERC721ReceivedCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
+                    <onERC721ReceivedCall as alloy_sol_types::SolCall>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
                 }
             }
         }
@@ -309,7 +330,7 @@ pub mod IERC721TokenReceiver {
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`IERC721TokenReceiver`](self) contract instance.
 
-    See the [wrapper's documentation](`IERC721TokenReceiverInstance`) for more details.*/
+See the [wrapper's documentation](`IERC721TokenReceiverInstance`) for more details.*/
     #[inline]
     pub const fn new<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -323,9 +344,9 @@ pub mod IERC721TokenReceiver {
     }
     /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-    Returns a new instance of the contract, if the deployment was successful.
+Returns a new instance of the contract, if the deployment was successful.
 
-    For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
     #[inline]
     pub fn deploy<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -339,33 +360,35 @@ pub mod IERC721TokenReceiver {
         IERC721TokenReceiverInstance::<T, P, N>::deploy(provider)
     }
     /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-    and constructor arguments, if any.
+and constructor arguments, if any.
 
-    This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-    the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     #[inline]
     pub fn deploy_builder<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
         P: alloy_contract::private::Provider<T, N>,
         N: alloy_contract::private::Network,
-    >(
-        provider: P,
-    ) -> alloy_contract::RawCallBuilder<T, P, N> {
+    >(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
         IERC721TokenReceiverInstance::<T, P, N>::deploy_builder(provider)
     }
     /**A [`IERC721TokenReceiver`](self) instance.
 
-    Contains type-safe methods for interacting with an on-chain instance of the
-    [`IERC721TokenReceiver`](self) contract located at a given `address`, using a given
-    provider `P`.
+Contains type-safe methods for interacting with an on-chain instance of the
+[`IERC721TokenReceiver`](self) contract located at a given `address`, using a given
+provider `P`.
 
-    If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
-    documentation on how to provide it), the `deploy` and `deploy_builder` methods can
-    be used to deploy a new instance of the contract.
+If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
+documentation on how to provide it), the `deploy` and `deploy_builder` methods can
+be used to deploy a new instance of the contract.
 
-    See the [module-level documentation](self) for all the available methods.*/
+See the [module-level documentation](self) for all the available methods.*/
     #[derive(Clone)]
-    pub struct IERC721TokenReceiverInstance<T, P, N = alloy_contract::private::Ethereum> {
+    pub struct IERC721TokenReceiverInstance<
+        T,
+        P,
+        N = alloy_contract::private::Ethereum,
+    > {
         address: alloy_sol_types::private::Address,
         provider: P,
         _network_transport: ::core::marker::PhantomData<(N, T)>,
@@ -374,24 +397,24 @@ pub mod IERC721TokenReceiver {
     impl<T, P, N> ::core::fmt::Debug for IERC721TokenReceiverInstance<T, P, N> {
         #[inline]
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-            f.debug_tuple("IERC721TokenReceiverInstance")
-                .field(&self.address)
-                .finish()
+            f.debug_tuple("IERC721TokenReceiverInstance").field(&self.address).finish()
         }
     }
     /// Instantiation and getters/setters.
     #[automatically_derived]
     impl<
-            T: alloy_contract::private::Transport + ::core::clone::Clone,
-            P: alloy_contract::private::Provider<T, N>,
-            N: alloy_contract::private::Network,
-        > IERC721TokenReceiverInstance<T, P, N>
-    {
+        T: alloy_contract::private::Transport + ::core::clone::Clone,
+        P: alloy_contract::private::Provider<T, N>,
+        N: alloy_contract::private::Network,
+    > IERC721TokenReceiverInstance<T, P, N> {
         /**Creates a new wrapper around an on-chain [`IERC721TokenReceiver`](self) contract instance.
 
-        See the [wrapper's documentation](`IERC721TokenReceiverInstance`) for more details.*/
+See the [wrapper's documentation](`IERC721TokenReceiverInstance`) for more details.*/
         #[inline]
-        pub const fn new(address: alloy_sol_types::private::Address, provider: P) -> Self {
+        pub const fn new(
+            address: alloy_sol_types::private::Address,
+            provider: P,
+        ) -> Self {
             Self {
                 address,
                 provider,
@@ -400,9 +423,9 @@ pub mod IERC721TokenReceiver {
         }
         /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-        Returns a new instance of the contract, if the deployment was successful.
+Returns a new instance of the contract, if the deployment was successful.
 
-        For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
         #[inline]
         pub async fn deploy(
             provider: P,
@@ -412,10 +435,10 @@ pub mod IERC721TokenReceiver {
             Ok(Self::new(contract_address, call_builder.provider))
         }
         /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-        and constructor arguments, if any.
+and constructor arguments, if any.
 
-        This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-        the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         #[inline]
         pub fn deploy_builder(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
             alloy_contract::RawCallBuilder::new_raw_deploy(
@@ -458,11 +481,10 @@ pub mod IERC721TokenReceiver {
     /// Function calls.
     #[automatically_derived]
     impl<
-            T: alloy_contract::private::Transport + ::core::clone::Clone,
-            P: alloy_contract::private::Provider<T, N>,
-            N: alloy_contract::private::Network,
-        > IERC721TokenReceiverInstance<T, P, N>
-    {
+        T: alloy_contract::private::Transport + ::core::clone::Clone,
+        P: alloy_contract::private::Provider<T, N>,
+        N: alloy_contract::private::Network,
+    > IERC721TokenReceiverInstance<T, P, N> {
         /// Creates a new call builder using this contract instance's provider and address.
         ///
         /// Note that the call can be any function call, not just those defined in this
@@ -481,22 +503,23 @@ pub mod IERC721TokenReceiver {
             _tokenId: alloy::sol_types::private::primitives::aliases::U256,
             _data: alloy::sol_types::private::Bytes,
         ) -> alloy_contract::SolCallBuilder<T, &P, onERC721ReceivedCall, N> {
-            self.call_builder(&onERC721ReceivedCall {
-                _operator,
-                _from,
-                _tokenId,
-                _data,
-            })
+            self.call_builder(
+                &onERC721ReceivedCall {
+                    _operator,
+                    _from,
+                    _tokenId,
+                    _data,
+                },
+            )
         }
     }
     /// Event filters.
     #[automatically_derived]
     impl<
-            T: alloy_contract::private::Transport + ::core::clone::Clone,
-            P: alloy_contract::private::Provider<T, N>,
-            N: alloy_contract::private::Network,
-        > IERC721TokenReceiverInstance<T, P, N>
-    {
+        T: alloy_contract::private::Transport + ::core::clone::Clone,
+        P: alloy_contract::private::Provider<T, N>,
+        N: alloy_contract::private::Network,
+    > IERC721TokenReceiverInstance<T, P, N> {
         /// Creates a new event filter using this contract instance's provider and address.
         ///
         /// Note that the type can be any event, not just those defined in this contract.

@@ -235,9 +235,9 @@ pub mod IEigenPodEvents {
         b"",
     );
     /**Event with signature `CheckpointCreated(uint64,bytes32,uint256)` and selector `0x575796133bbed337e5b39aa49a30dc2556a91e0c6c2af4b7b886ae77ebef1076`.
-    ```solidity
-    event CheckpointCreated(uint64 indexed checkpointTimestamp, bytes32 indexed beaconBlockRoot, uint256 validatorCount);
-    ```*/
+```solidity
+event CheckpointCreated(uint64 indexed checkpointTimestamp, bytes32 indexed beaconBlockRoot, uint256 validatorCount);
+```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -264,19 +264,49 @@ pub mod IEigenPodEvents {
         #[automatically_derived]
         impl alloy_sol_types::SolEvent for CheckpointCreated {
             type DataTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
-            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (
                 alloy_sol_types::sol_data::FixedBytes<32>,
                 alloy::sol_types::sol_data::Uint<64>,
                 alloy::sol_types::sol_data::FixedBytes<32>,
             );
             const SIGNATURE: &'static str = "CheckpointCreated(uint64,bytes32,uint256)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
-                alloy_sol_types::private::B256::new([
-                    87u8, 87u8, 150u8, 19u8, 59u8, 190u8, 211u8, 55u8, 229u8, 179u8, 154u8, 164u8,
-                    154u8, 48u8, 220u8, 37u8, 86u8, 169u8, 30u8, 12u8, 108u8, 42u8, 244u8, 183u8,
-                    184u8, 134u8, 174u8, 119u8, 235u8, 239u8, 16u8, 118u8,
-                ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
+                87u8,
+                87u8,
+                150u8,
+                19u8,
+                59u8,
+                190u8,
+                211u8,
+                55u8,
+                229u8,
+                179u8,
+                154u8,
+                164u8,
+                154u8,
+                48u8,
+                220u8,
+                37u8,
+                86u8,
+                169u8,
+                30u8,
+                12u8,
+                108u8,
+                42u8,
+                244u8,
+                183u8,
+                184u8,
+                134u8,
+                174u8,
+                119u8,
+                235u8,
+                239u8,
+                16u8,
+                118u8,
+            ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -295,20 +325,22 @@ pub mod IEigenPodEvents {
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
-                        Self::SIGNATURE,
-                        topics.0,
-                        Self::SIGNATURE_HASH,
-                    ));
+                    return Err(
+                        alloy_sol_types::Error::invalid_event_signature_hash(
+                            Self::SIGNATURE,
+                            topics.0,
+                            Self::SIGNATURE_HASH,
+                        ),
+                    );
                 }
                 Ok(())
             }
             #[inline]
             fn tokenize_body(&self) -> Self::DataToken<'_> {
                 (
-                    <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
-                        &self.validatorCount,
-                    ),
+                    <alloy::sol_types::sol_data::Uint<
+                        256,
+                    > as alloy_sol_types::SolType>::tokenize(&self.validatorCount),
                 )
             }
             #[inline]
@@ -327,7 +359,9 @@ pub mod IEigenPodEvents {
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
+                out[0usize] = alloy_sol_types::abi::token::WordToken(
+                    Self::SIGNATURE_HASH,
+                );
                 out[1usize] = <alloy::sol_types::sol_data::Uint<
                     64,
                 > as alloy_sol_types::EventTopic>::encode_topic(
@@ -357,9 +391,9 @@ pub mod IEigenPodEvents {
         }
     };
     /**Event with signature `CheckpointFinalized(uint64,int256)` and selector `0x525408c201bc1576eb44116f6478f1c2a54775b19a043bcfdc708364f74f8e44`.
-    ```solidity
-    event CheckpointFinalized(uint64 indexed checkpointTimestamp, int256 totalShareDeltaWei);
-    ```*/
+```solidity
+event CheckpointFinalized(uint64 indexed checkpointTimestamp, int256 totalShareDeltaWei);
+```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -384,18 +418,48 @@ pub mod IEigenPodEvents {
         #[automatically_derived]
         impl alloy_sol_types::SolEvent for CheckpointFinalized {
             type DataTuple<'a> = (alloy::sol_types::sol_data::Int<256>,);
-            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (
                 alloy_sol_types::sol_data::FixedBytes<32>,
                 alloy::sol_types::sol_data::Uint<64>,
             );
             const SIGNATURE: &'static str = "CheckpointFinalized(uint64,int256)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
-                alloy_sol_types::private::B256::new([
-                    82u8, 84u8, 8u8, 194u8, 1u8, 188u8, 21u8, 118u8, 235u8, 68u8, 17u8, 111u8,
-                    100u8, 120u8, 241u8, 194u8, 165u8, 71u8, 117u8, 177u8, 154u8, 4u8, 59u8, 207u8,
-                    220u8, 112u8, 131u8, 100u8, 247u8, 79u8, 142u8, 68u8,
-                ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
+                82u8,
+                84u8,
+                8u8,
+                194u8,
+                1u8,
+                188u8,
+                21u8,
+                118u8,
+                235u8,
+                68u8,
+                17u8,
+                111u8,
+                100u8,
+                120u8,
+                241u8,
+                194u8,
+                165u8,
+                71u8,
+                117u8,
+                177u8,
+                154u8,
+                4u8,
+                59u8,
+                207u8,
+                220u8,
+                112u8,
+                131u8,
+                100u8,
+                247u8,
+                79u8,
+                142u8,
+                68u8,
+            ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -413,28 +477,27 @@ pub mod IEigenPodEvents {
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
-                        Self::SIGNATURE,
-                        topics.0,
-                        Self::SIGNATURE_HASH,
-                    ));
+                    return Err(
+                        alloy_sol_types::Error::invalid_event_signature_hash(
+                            Self::SIGNATURE,
+                            topics.0,
+                            Self::SIGNATURE_HASH,
+                        ),
+                    );
                 }
                 Ok(())
             }
             #[inline]
             fn tokenize_body(&self) -> Self::DataToken<'_> {
                 (
-                    <alloy::sol_types::sol_data::Int<256> as alloy_sol_types::SolType>::tokenize(
-                        &self.totalShareDeltaWei,
-                    ),
+                    <alloy::sol_types::sol_data::Int<
+                        256,
+                    > as alloy_sol_types::SolType>::tokenize(&self.totalShareDeltaWei),
                 )
             }
             #[inline]
             fn topics(&self) -> <Self::TopicList as alloy_sol_types::SolType>::RustType {
-                (
-                    Self::SIGNATURE_HASH.into(),
-                    self.checkpointTimestamp.clone(),
-                )
+                (Self::SIGNATURE_HASH.into(), self.checkpointTimestamp.clone())
             }
             #[inline]
             fn encode_topics_raw(
@@ -444,7 +507,9 @@ pub mod IEigenPodEvents {
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
+                out[0usize] = alloy_sol_types::abi::token::WordToken(
+                    Self::SIGNATURE_HASH,
+                );
                 out[1usize] = <alloy::sol_types::sol_data::Uint<
                     64,
                 > as alloy_sol_types::EventTopic>::encode_topic(
@@ -471,9 +536,9 @@ pub mod IEigenPodEvents {
         }
     };
     /**Event with signature `EigenPodStaked(bytes)` and selector `0x606865b7934a25d4aed43f6cdb426403353fa4b3009c4d228407474581b01e23`.
-    ```solidity
-    event EigenPodStaked(bytes pubkey);
-    ```*/
+```solidity
+event EigenPodStaked(bytes pubkey);
+```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -496,15 +561,45 @@ pub mod IEigenPodEvents {
         #[automatically_derived]
         impl alloy_sol_types::SolEvent for EigenPodStaked {
             type DataTuple<'a> = (alloy::sol_types::sol_data::Bytes,);
-            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (alloy_sol_types::sol_data::FixedBytes<32>,);
             const SIGNATURE: &'static str = "EigenPodStaked(bytes)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
-                alloy_sol_types::private::B256::new([
-                    96u8, 104u8, 101u8, 183u8, 147u8, 74u8, 37u8, 212u8, 174u8, 212u8, 63u8, 108u8,
-                    219u8, 66u8, 100u8, 3u8, 53u8, 63u8, 164u8, 179u8, 0u8, 156u8, 77u8, 34u8,
-                    132u8, 7u8, 71u8, 69u8, 129u8, 176u8, 30u8, 35u8,
-                ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
+                96u8,
+                104u8,
+                101u8,
+                183u8,
+                147u8,
+                74u8,
+                37u8,
+                212u8,
+                174u8,
+                212u8,
+                63u8,
+                108u8,
+                219u8,
+                66u8,
+                100u8,
+                3u8,
+                53u8,
+                63u8,
+                164u8,
+                179u8,
+                0u8,
+                156u8,
+                77u8,
+                34u8,
+                132u8,
+                7u8,
+                71u8,
+                69u8,
+                129u8,
+                176u8,
+                30u8,
+                35u8,
+            ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -519,11 +614,13 @@ pub mod IEigenPodEvents {
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
-                        Self::SIGNATURE,
-                        topics.0,
-                        Self::SIGNATURE_HASH,
-                    ));
+                    return Err(
+                        alloy_sol_types::Error::invalid_event_signature_hash(
+                            Self::SIGNATURE,
+                            topics.0,
+                            Self::SIGNATURE_HASH,
+                        ),
+                    );
                 }
                 Ok(())
             }
@@ -547,7 +644,9 @@ pub mod IEigenPodEvents {
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
+                out[0usize] = alloy_sol_types::abi::token::WordToken(
+                    Self::SIGNATURE_HASH,
+                );
                 Ok(())
             }
         }
@@ -569,9 +668,9 @@ pub mod IEigenPodEvents {
         }
     };
     /**Event with signature `NonBeaconChainETHReceived(uint256)` and selector `0x6fdd3dbdb173299608c0aa9f368735857c8842b581f8389238bf05bd04b3bf49`.
-    ```solidity
-    event NonBeaconChainETHReceived(uint256 amountReceived);
-    ```*/
+```solidity
+event NonBeaconChainETHReceived(uint256 amountReceived);
+```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -594,15 +693,45 @@ pub mod IEigenPodEvents {
         #[automatically_derived]
         impl alloy_sol_types::SolEvent for NonBeaconChainETHReceived {
             type DataTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
-            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (alloy_sol_types::sol_data::FixedBytes<32>,);
             const SIGNATURE: &'static str = "NonBeaconChainETHReceived(uint256)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
-                alloy_sol_types::private::B256::new([
-                    111u8, 221u8, 61u8, 189u8, 177u8, 115u8, 41u8, 150u8, 8u8, 192u8, 170u8, 159u8,
-                    54u8, 135u8, 53u8, 133u8, 124u8, 136u8, 66u8, 181u8, 129u8, 248u8, 56u8, 146u8,
-                    56u8, 191u8, 5u8, 189u8, 4u8, 179u8, 191u8, 73u8,
-                ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
+                111u8,
+                221u8,
+                61u8,
+                189u8,
+                177u8,
+                115u8,
+                41u8,
+                150u8,
+                8u8,
+                192u8,
+                170u8,
+                159u8,
+                54u8,
+                135u8,
+                53u8,
+                133u8,
+                124u8,
+                136u8,
+                66u8,
+                181u8,
+                129u8,
+                248u8,
+                56u8,
+                146u8,
+                56u8,
+                191u8,
+                5u8,
+                189u8,
+                4u8,
+                179u8,
+                191u8,
+                73u8,
+            ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -610,29 +739,29 @@ pub mod IEigenPodEvents {
                 topics: <Self::TopicList as alloy_sol_types::SolType>::RustType,
                 data: <Self::DataTuple<'_> as alloy_sol_types::SolType>::RustType,
             ) -> Self {
-                Self {
-                    amountReceived: data.0,
-                }
+                Self { amountReceived: data.0 }
             }
             #[inline]
             fn check_signature(
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
-                        Self::SIGNATURE,
-                        topics.0,
-                        Self::SIGNATURE_HASH,
-                    ));
+                    return Err(
+                        alloy_sol_types::Error::invalid_event_signature_hash(
+                            Self::SIGNATURE,
+                            topics.0,
+                            Self::SIGNATURE_HASH,
+                        ),
+                    );
                 }
                 Ok(())
             }
             #[inline]
             fn tokenize_body(&self) -> Self::DataToken<'_> {
                 (
-                    <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
-                        &self.amountReceived,
-                    ),
+                    <alloy::sol_types::sol_data::Uint<
+                        256,
+                    > as alloy_sol_types::SolType>::tokenize(&self.amountReceived),
                 )
             }
             #[inline]
@@ -647,7 +776,9 @@ pub mod IEigenPodEvents {
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
+                out[0usize] = alloy_sol_types::abi::token::WordToken(
+                    Self::SIGNATURE_HASH,
+                );
                 Ok(())
             }
         }
@@ -663,15 +794,17 @@ pub mod IEigenPodEvents {
         #[automatically_derived]
         impl From<&NonBeaconChainETHReceived> for alloy_sol_types::private::LogData {
             #[inline]
-            fn from(this: &NonBeaconChainETHReceived) -> alloy_sol_types::private::LogData {
+            fn from(
+                this: &NonBeaconChainETHReceived,
+            ) -> alloy_sol_types::private::LogData {
                 alloy_sol_types::SolEvent::encode_log_data(this)
             }
         }
     };
     /**Event with signature `ProofSubmitterUpdated(address,address)` and selector `0xfb8129080a19d34dceac04ba253fc50304dc86c729bd63cdca4a969ad19a5eac`.
-    ```solidity
-    event ProofSubmitterUpdated(address prevProofSubmitter, address newProofSubmitter);
-    ```*/
+```solidity
+event ProofSubmitterUpdated(address prevProofSubmitter, address newProofSubmitter);
+```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -699,15 +832,45 @@ pub mod IEigenPodEvents {
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Address,
             );
-            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (alloy_sol_types::sol_data::FixedBytes<32>,);
             const SIGNATURE: &'static str = "ProofSubmitterUpdated(address,address)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
-                alloy_sol_types::private::B256::new([
-                    251u8, 129u8, 41u8, 8u8, 10u8, 25u8, 211u8, 77u8, 206u8, 172u8, 4u8, 186u8,
-                    37u8, 63u8, 197u8, 3u8, 4u8, 220u8, 134u8, 199u8, 41u8, 189u8, 99u8, 205u8,
-                    202u8, 74u8, 150u8, 154u8, 209u8, 154u8, 94u8, 172u8,
-                ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
+                251u8,
+                129u8,
+                41u8,
+                8u8,
+                10u8,
+                25u8,
+                211u8,
+                77u8,
+                206u8,
+                172u8,
+                4u8,
+                186u8,
+                37u8,
+                63u8,
+                197u8,
+                3u8,
+                4u8,
+                220u8,
+                134u8,
+                199u8,
+                41u8,
+                189u8,
+                99u8,
+                205u8,
+                202u8,
+                74u8,
+                150u8,
+                154u8,
+                209u8,
+                154u8,
+                94u8,
+                172u8,
+            ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -725,11 +888,13 @@ pub mod IEigenPodEvents {
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
-                        Self::SIGNATURE,
-                        topics.0,
-                        Self::SIGNATURE_HASH,
-                    ));
+                    return Err(
+                        alloy_sol_types::Error::invalid_event_signature_hash(
+                            Self::SIGNATURE,
+                            topics.0,
+                            Self::SIGNATURE_HASH,
+                        ),
+                    );
                 }
                 Ok(())
             }
@@ -756,7 +921,9 @@ pub mod IEigenPodEvents {
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
+                out[0usize] = alloy_sol_types::abi::token::WordToken(
+                    Self::SIGNATURE_HASH,
+                );
                 Ok(())
             }
         }
@@ -778,9 +945,9 @@ pub mod IEigenPodEvents {
         }
     };
     /**Event with signature `RestakedBeaconChainETHWithdrawn(address,uint256)` and selector `0x8947fd2ce07ef9cc302c4e8f0461015615d91ce851564839e91cc804c2f49d8e`.
-    ```solidity
-    event RestakedBeaconChainETHWithdrawn(address indexed recipient, uint256 amount);
-    ```*/
+```solidity
+event RestakedBeaconChainETHWithdrawn(address indexed recipient, uint256 amount);
+```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -805,18 +972,48 @@ pub mod IEigenPodEvents {
         #[automatically_derived]
         impl alloy_sol_types::SolEvent for RestakedBeaconChainETHWithdrawn {
             type DataTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
-            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (
                 alloy_sol_types::sol_data::FixedBytes<32>,
                 alloy::sol_types::sol_data::Address,
             );
             const SIGNATURE: &'static str = "RestakedBeaconChainETHWithdrawn(address,uint256)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
-                alloy_sol_types::private::B256::new([
-                    137u8, 71u8, 253u8, 44u8, 224u8, 126u8, 249u8, 204u8, 48u8, 44u8, 78u8, 143u8,
-                    4u8, 97u8, 1u8, 86u8, 21u8, 217u8, 28u8, 232u8, 81u8, 86u8, 72u8, 57u8, 233u8,
-                    28u8, 200u8, 4u8, 194u8, 244u8, 157u8, 142u8,
-                ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
+                137u8,
+                71u8,
+                253u8,
+                44u8,
+                224u8,
+                126u8,
+                249u8,
+                204u8,
+                48u8,
+                44u8,
+                78u8,
+                143u8,
+                4u8,
+                97u8,
+                1u8,
+                86u8,
+                21u8,
+                217u8,
+                28u8,
+                232u8,
+                81u8,
+                86u8,
+                72u8,
+                57u8,
+                233u8,
+                28u8,
+                200u8,
+                4u8,
+                194u8,
+                244u8,
+                157u8,
+                142u8,
+            ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -834,20 +1031,22 @@ pub mod IEigenPodEvents {
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
-                        Self::SIGNATURE,
-                        topics.0,
-                        Self::SIGNATURE_HASH,
-                    ));
+                    return Err(
+                        alloy_sol_types::Error::invalid_event_signature_hash(
+                            Self::SIGNATURE,
+                            topics.0,
+                            Self::SIGNATURE_HASH,
+                        ),
+                    );
                 }
                 Ok(())
             }
             #[inline]
             fn tokenize_body(&self) -> Self::DataToken<'_> {
                 (
-                    <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
-                        &self.amount,
-                    ),
+                    <alloy::sol_types::sol_data::Uint<
+                        256,
+                    > as alloy_sol_types::SolType>::tokenize(&self.amount),
                 )
             }
             #[inline]
@@ -862,7 +1061,9 @@ pub mod IEigenPodEvents {
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
+                out[0usize] = alloy_sol_types::abi::token::WordToken(
+                    Self::SIGNATURE_HASH,
+                );
                 out[1usize] = <alloy::sol_types::sol_data::Address as alloy_sol_types::EventTopic>::encode_topic(
                     &self.recipient,
                 );
@@ -879,17 +1080,20 @@ pub mod IEigenPodEvents {
             }
         }
         #[automatically_derived]
-        impl From<&RestakedBeaconChainETHWithdrawn> for alloy_sol_types::private::LogData {
+        impl From<&RestakedBeaconChainETHWithdrawn>
+        for alloy_sol_types::private::LogData {
             #[inline]
-            fn from(this: &RestakedBeaconChainETHWithdrawn) -> alloy_sol_types::private::LogData {
+            fn from(
+                this: &RestakedBeaconChainETHWithdrawn,
+            ) -> alloy_sol_types::private::LogData {
                 alloy_sol_types::SolEvent::encode_log_data(this)
             }
         }
     };
     /**Event with signature `ValidatorBalanceUpdated(uint40,uint64,uint64)` and selector `0x0e5fac175b83177cc047381e030d8fb3b42b37bd1c025e22c280facad62c32df`.
-    ```solidity
-    event ValidatorBalanceUpdated(uint40 validatorIndex, uint64 balanceTimestamp, uint64 newValidatorBalanceGwei);
-    ```*/
+```solidity
+event ValidatorBalanceUpdated(uint40 validatorIndex, uint64 balanceTimestamp, uint64 newValidatorBalanceGwei);
+```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -920,15 +1124,45 @@ pub mod IEigenPodEvents {
                 alloy::sol_types::sol_data::Uint<64>,
                 alloy::sol_types::sol_data::Uint<64>,
             );
-            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (alloy_sol_types::sol_data::FixedBytes<32>,);
             const SIGNATURE: &'static str = "ValidatorBalanceUpdated(uint40,uint64,uint64)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
-                alloy_sol_types::private::B256::new([
-                    14u8, 95u8, 172u8, 23u8, 91u8, 131u8, 23u8, 124u8, 192u8, 71u8, 56u8, 30u8,
-                    3u8, 13u8, 143u8, 179u8, 180u8, 43u8, 55u8, 189u8, 28u8, 2u8, 94u8, 34u8,
-                    194u8, 128u8, 250u8, 202u8, 214u8, 44u8, 50u8, 223u8,
-                ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
+                14u8,
+                95u8,
+                172u8,
+                23u8,
+                91u8,
+                131u8,
+                23u8,
+                124u8,
+                192u8,
+                71u8,
+                56u8,
+                30u8,
+                3u8,
+                13u8,
+                143u8,
+                179u8,
+                180u8,
+                43u8,
+                55u8,
+                189u8,
+                28u8,
+                2u8,
+                94u8,
+                34u8,
+                194u8,
+                128u8,
+                250u8,
+                202u8,
+                214u8,
+                44u8,
+                50u8,
+                223u8,
+            ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -947,24 +1181,28 @@ pub mod IEigenPodEvents {
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
-                        Self::SIGNATURE,
-                        topics.0,
-                        Self::SIGNATURE_HASH,
-                    ));
+                    return Err(
+                        alloy_sol_types::Error::invalid_event_signature_hash(
+                            Self::SIGNATURE,
+                            topics.0,
+                            Self::SIGNATURE_HASH,
+                        ),
+                    );
                 }
                 Ok(())
             }
             #[inline]
             fn tokenize_body(&self) -> Self::DataToken<'_> {
                 (
-                    <alloy::sol_types::sol_data::Uint<40> as alloy_sol_types::SolType>::tokenize(
-                        &self.validatorIndex,
-                    ),
-                    <alloy::sol_types::sol_data::Uint<64> as alloy_sol_types::SolType>::tokenize(
-                        &self.balanceTimestamp,
-                    ),
-                    <alloy::sol_types::sol_data::Uint<64> as alloy_sol_types::SolType>::tokenize(
+                    <alloy::sol_types::sol_data::Uint<
+                        40,
+                    > as alloy_sol_types::SolType>::tokenize(&self.validatorIndex),
+                    <alloy::sol_types::sol_data::Uint<
+                        64,
+                    > as alloy_sol_types::SolType>::tokenize(&self.balanceTimestamp),
+                    <alloy::sol_types::sol_data::Uint<
+                        64,
+                    > as alloy_sol_types::SolType>::tokenize(
                         &self.newValidatorBalanceGwei,
                     ),
                 )
@@ -981,7 +1219,9 @@ pub mod IEigenPodEvents {
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
+                out[0usize] = alloy_sol_types::abi::token::WordToken(
+                    Self::SIGNATURE_HASH,
+                );
                 Ok(())
             }
         }
@@ -997,15 +1237,17 @@ pub mod IEigenPodEvents {
         #[automatically_derived]
         impl From<&ValidatorBalanceUpdated> for alloy_sol_types::private::LogData {
             #[inline]
-            fn from(this: &ValidatorBalanceUpdated) -> alloy_sol_types::private::LogData {
+            fn from(
+                this: &ValidatorBalanceUpdated,
+            ) -> alloy_sol_types::private::LogData {
                 alloy_sol_types::SolEvent::encode_log_data(this)
             }
         }
     };
     /**Event with signature `ValidatorCheckpointed(uint64,uint40)` and selector `0xa91c59033c3423e18b54d0acecebb4972f9ea95aedf5f4cae3b677b02eaf3a3f`.
-    ```solidity
-    event ValidatorCheckpointed(uint64 indexed checkpointTimestamp, uint40 indexed validatorIndex);
-    ```*/
+```solidity
+event ValidatorCheckpointed(uint64 indexed checkpointTimestamp, uint40 indexed validatorIndex);
+```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -1030,19 +1272,49 @@ pub mod IEigenPodEvents {
         #[automatically_derived]
         impl alloy_sol_types::SolEvent for ValidatorCheckpointed {
             type DataTuple<'a> = ();
-            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (
                 alloy_sol_types::sol_data::FixedBytes<32>,
                 alloy::sol_types::sol_data::Uint<64>,
                 alloy::sol_types::sol_data::Uint<40>,
             );
             const SIGNATURE: &'static str = "ValidatorCheckpointed(uint64,uint40)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
-                alloy_sol_types::private::B256::new([
-                    169u8, 28u8, 89u8, 3u8, 60u8, 52u8, 35u8, 225u8, 139u8, 84u8, 208u8, 172u8,
-                    236u8, 235u8, 180u8, 151u8, 47u8, 158u8, 169u8, 90u8, 237u8, 245u8, 244u8,
-                    202u8, 227u8, 182u8, 119u8, 176u8, 46u8, 175u8, 58u8, 63u8,
-                ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
+                169u8,
+                28u8,
+                89u8,
+                3u8,
+                60u8,
+                52u8,
+                35u8,
+                225u8,
+                139u8,
+                84u8,
+                208u8,
+                172u8,
+                236u8,
+                235u8,
+                180u8,
+                151u8,
+                47u8,
+                158u8,
+                169u8,
+                90u8,
+                237u8,
+                245u8,
+                244u8,
+                202u8,
+                227u8,
+                182u8,
+                119u8,
+                176u8,
+                46u8,
+                175u8,
+                58u8,
+                63u8,
+            ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -1060,11 +1332,13 @@ pub mod IEigenPodEvents {
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
-                        Self::SIGNATURE,
-                        topics.0,
-                        Self::SIGNATURE_HASH,
-                    ));
+                    return Err(
+                        alloy_sol_types::Error::invalid_event_signature_hash(
+                            Self::SIGNATURE,
+                            topics.0,
+                            Self::SIGNATURE_HASH,
+                        ),
+                    );
                 }
                 Ok(())
             }
@@ -1088,7 +1362,9 @@ pub mod IEigenPodEvents {
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
+                out[0usize] = alloy_sol_types::abi::token::WordToken(
+                    Self::SIGNATURE_HASH,
+                );
                 out[1usize] = <alloy::sol_types::sol_data::Uint<
                     64,
                 > as alloy_sol_types::EventTopic>::encode_topic(
@@ -1118,9 +1394,9 @@ pub mod IEigenPodEvents {
         }
     };
     /**Event with signature `ValidatorRestaked(uint40)` and selector `0x2d0800bbc377ea54a08c5db6a87aafff5e3e9c8fead0eda110e40e0c10441449`.
-    ```solidity
-    event ValidatorRestaked(uint40 validatorIndex);
-    ```*/
+```solidity
+event ValidatorRestaked(uint40 validatorIndex);
+```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -1143,15 +1419,45 @@ pub mod IEigenPodEvents {
         #[automatically_derived]
         impl alloy_sol_types::SolEvent for ValidatorRestaked {
             type DataTuple<'a> = (alloy::sol_types::sol_data::Uint<40>,);
-            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (alloy_sol_types::sol_data::FixedBytes<32>,);
             const SIGNATURE: &'static str = "ValidatorRestaked(uint40)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
-                alloy_sol_types::private::B256::new([
-                    45u8, 8u8, 0u8, 187u8, 195u8, 119u8, 234u8, 84u8, 160u8, 140u8, 93u8, 182u8,
-                    168u8, 122u8, 175u8, 255u8, 94u8, 62u8, 156u8, 143u8, 234u8, 208u8, 237u8,
-                    161u8, 16u8, 228u8, 14u8, 12u8, 16u8, 68u8, 20u8, 73u8,
-                ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
+                45u8,
+                8u8,
+                0u8,
+                187u8,
+                195u8,
+                119u8,
+                234u8,
+                84u8,
+                160u8,
+                140u8,
+                93u8,
+                182u8,
+                168u8,
+                122u8,
+                175u8,
+                255u8,
+                94u8,
+                62u8,
+                156u8,
+                143u8,
+                234u8,
+                208u8,
+                237u8,
+                161u8,
+                16u8,
+                228u8,
+                14u8,
+                12u8,
+                16u8,
+                68u8,
+                20u8,
+                73u8,
+            ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -1159,29 +1465,29 @@ pub mod IEigenPodEvents {
                 topics: <Self::TopicList as alloy_sol_types::SolType>::RustType,
                 data: <Self::DataTuple<'_> as alloy_sol_types::SolType>::RustType,
             ) -> Self {
-                Self {
-                    validatorIndex: data.0,
-                }
+                Self { validatorIndex: data.0 }
             }
             #[inline]
             fn check_signature(
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
-                        Self::SIGNATURE,
-                        topics.0,
-                        Self::SIGNATURE_HASH,
-                    ));
+                    return Err(
+                        alloy_sol_types::Error::invalid_event_signature_hash(
+                            Self::SIGNATURE,
+                            topics.0,
+                            Self::SIGNATURE_HASH,
+                        ),
+                    );
                 }
                 Ok(())
             }
             #[inline]
             fn tokenize_body(&self) -> Self::DataToken<'_> {
                 (
-                    <alloy::sol_types::sol_data::Uint<40> as alloy_sol_types::SolType>::tokenize(
-                        &self.validatorIndex,
-                    ),
+                    <alloy::sol_types::sol_data::Uint<
+                        40,
+                    > as alloy_sol_types::SolType>::tokenize(&self.validatorIndex),
                 )
             }
             #[inline]
@@ -1196,7 +1502,9 @@ pub mod IEigenPodEvents {
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
+                out[0usize] = alloy_sol_types::abi::token::WordToken(
+                    Self::SIGNATURE_HASH,
+                );
                 Ok(())
             }
         }
@@ -1218,9 +1526,9 @@ pub mod IEigenPodEvents {
         }
     };
     /**Event with signature `ValidatorWithdrawn(uint64,uint40)` and selector `0x2a02361ffa66cf2c2da4682c2355a6adcaa9f6c227b6e6563e68480f9587626a`.
-    ```solidity
-    event ValidatorWithdrawn(uint64 indexed checkpointTimestamp, uint40 indexed validatorIndex);
-    ```*/
+```solidity
+event ValidatorWithdrawn(uint64 indexed checkpointTimestamp, uint40 indexed validatorIndex);
+```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -1245,19 +1553,49 @@ pub mod IEigenPodEvents {
         #[automatically_derived]
         impl alloy_sol_types::SolEvent for ValidatorWithdrawn {
             type DataTuple<'a> = ();
-            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (
                 alloy_sol_types::sol_data::FixedBytes<32>,
                 alloy::sol_types::sol_data::Uint<64>,
                 alloy::sol_types::sol_data::Uint<40>,
             );
             const SIGNATURE: &'static str = "ValidatorWithdrawn(uint64,uint40)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
-                alloy_sol_types::private::B256::new([
-                    42u8, 2u8, 54u8, 31u8, 250u8, 102u8, 207u8, 44u8, 45u8, 164u8, 104u8, 44u8,
-                    35u8, 85u8, 166u8, 173u8, 202u8, 169u8, 246u8, 194u8, 39u8, 182u8, 230u8, 86u8,
-                    62u8, 104u8, 72u8, 15u8, 149u8, 135u8, 98u8, 106u8,
-                ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
+                42u8,
+                2u8,
+                54u8,
+                31u8,
+                250u8,
+                102u8,
+                207u8,
+                44u8,
+                45u8,
+                164u8,
+                104u8,
+                44u8,
+                35u8,
+                85u8,
+                166u8,
+                173u8,
+                202u8,
+                169u8,
+                246u8,
+                194u8,
+                39u8,
+                182u8,
+                230u8,
+                86u8,
+                62u8,
+                104u8,
+                72u8,
+                15u8,
+                149u8,
+                135u8,
+                98u8,
+                106u8,
+            ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -1275,11 +1613,13 @@ pub mod IEigenPodEvents {
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
-                        Self::SIGNATURE,
-                        topics.0,
-                        Self::SIGNATURE_HASH,
-                    ));
+                    return Err(
+                        alloy_sol_types::Error::invalid_event_signature_hash(
+                            Self::SIGNATURE,
+                            topics.0,
+                            Self::SIGNATURE_HASH,
+                        ),
+                    );
                 }
                 Ok(())
             }
@@ -1303,7 +1643,9 @@ pub mod IEigenPodEvents {
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
+                out[0usize] = alloy_sol_types::abi::token::WordToken(
+                    Self::SIGNATURE_HASH,
+                );
                 out[1usize] = <alloy::sol_types::sol_data::Uint<
                     64,
                 > as alloy_sol_types::EventTopic>::encode_topic(
@@ -1355,54 +1697,344 @@ pub mod IEigenPodEvents {
         /// Prefer using `SolInterface` methods instead.
         pub const SELECTORS: &'static [[u8; 32usize]] = &[
             [
-                14u8, 95u8, 172u8, 23u8, 91u8, 131u8, 23u8, 124u8, 192u8, 71u8, 56u8, 30u8, 3u8,
-                13u8, 143u8, 179u8, 180u8, 43u8, 55u8, 189u8, 28u8, 2u8, 94u8, 34u8, 194u8, 128u8,
-                250u8, 202u8, 214u8, 44u8, 50u8, 223u8,
+                14u8,
+                95u8,
+                172u8,
+                23u8,
+                91u8,
+                131u8,
+                23u8,
+                124u8,
+                192u8,
+                71u8,
+                56u8,
+                30u8,
+                3u8,
+                13u8,
+                143u8,
+                179u8,
+                180u8,
+                43u8,
+                55u8,
+                189u8,
+                28u8,
+                2u8,
+                94u8,
+                34u8,
+                194u8,
+                128u8,
+                250u8,
+                202u8,
+                214u8,
+                44u8,
+                50u8,
+                223u8,
             ],
             [
-                42u8, 2u8, 54u8, 31u8, 250u8, 102u8, 207u8, 44u8, 45u8, 164u8, 104u8, 44u8, 35u8,
-                85u8, 166u8, 173u8, 202u8, 169u8, 246u8, 194u8, 39u8, 182u8, 230u8, 86u8, 62u8,
-                104u8, 72u8, 15u8, 149u8, 135u8, 98u8, 106u8,
+                42u8,
+                2u8,
+                54u8,
+                31u8,
+                250u8,
+                102u8,
+                207u8,
+                44u8,
+                45u8,
+                164u8,
+                104u8,
+                44u8,
+                35u8,
+                85u8,
+                166u8,
+                173u8,
+                202u8,
+                169u8,
+                246u8,
+                194u8,
+                39u8,
+                182u8,
+                230u8,
+                86u8,
+                62u8,
+                104u8,
+                72u8,
+                15u8,
+                149u8,
+                135u8,
+                98u8,
+                106u8,
             ],
             [
-                45u8, 8u8, 0u8, 187u8, 195u8, 119u8, 234u8, 84u8, 160u8, 140u8, 93u8, 182u8, 168u8,
-                122u8, 175u8, 255u8, 94u8, 62u8, 156u8, 143u8, 234u8, 208u8, 237u8, 161u8, 16u8,
-                228u8, 14u8, 12u8, 16u8, 68u8, 20u8, 73u8,
+                45u8,
+                8u8,
+                0u8,
+                187u8,
+                195u8,
+                119u8,
+                234u8,
+                84u8,
+                160u8,
+                140u8,
+                93u8,
+                182u8,
+                168u8,
+                122u8,
+                175u8,
+                255u8,
+                94u8,
+                62u8,
+                156u8,
+                143u8,
+                234u8,
+                208u8,
+                237u8,
+                161u8,
+                16u8,
+                228u8,
+                14u8,
+                12u8,
+                16u8,
+                68u8,
+                20u8,
+                73u8,
             ],
             [
-                82u8, 84u8, 8u8, 194u8, 1u8, 188u8, 21u8, 118u8, 235u8, 68u8, 17u8, 111u8, 100u8,
-                120u8, 241u8, 194u8, 165u8, 71u8, 117u8, 177u8, 154u8, 4u8, 59u8, 207u8, 220u8,
-                112u8, 131u8, 100u8, 247u8, 79u8, 142u8, 68u8,
+                82u8,
+                84u8,
+                8u8,
+                194u8,
+                1u8,
+                188u8,
+                21u8,
+                118u8,
+                235u8,
+                68u8,
+                17u8,
+                111u8,
+                100u8,
+                120u8,
+                241u8,
+                194u8,
+                165u8,
+                71u8,
+                117u8,
+                177u8,
+                154u8,
+                4u8,
+                59u8,
+                207u8,
+                220u8,
+                112u8,
+                131u8,
+                100u8,
+                247u8,
+                79u8,
+                142u8,
+                68u8,
             ],
             [
-                87u8, 87u8, 150u8, 19u8, 59u8, 190u8, 211u8, 55u8, 229u8, 179u8, 154u8, 164u8,
-                154u8, 48u8, 220u8, 37u8, 86u8, 169u8, 30u8, 12u8, 108u8, 42u8, 244u8, 183u8,
-                184u8, 134u8, 174u8, 119u8, 235u8, 239u8, 16u8, 118u8,
+                87u8,
+                87u8,
+                150u8,
+                19u8,
+                59u8,
+                190u8,
+                211u8,
+                55u8,
+                229u8,
+                179u8,
+                154u8,
+                164u8,
+                154u8,
+                48u8,
+                220u8,
+                37u8,
+                86u8,
+                169u8,
+                30u8,
+                12u8,
+                108u8,
+                42u8,
+                244u8,
+                183u8,
+                184u8,
+                134u8,
+                174u8,
+                119u8,
+                235u8,
+                239u8,
+                16u8,
+                118u8,
             ],
             [
-                96u8, 104u8, 101u8, 183u8, 147u8, 74u8, 37u8, 212u8, 174u8, 212u8, 63u8, 108u8,
-                219u8, 66u8, 100u8, 3u8, 53u8, 63u8, 164u8, 179u8, 0u8, 156u8, 77u8, 34u8, 132u8,
-                7u8, 71u8, 69u8, 129u8, 176u8, 30u8, 35u8,
+                96u8,
+                104u8,
+                101u8,
+                183u8,
+                147u8,
+                74u8,
+                37u8,
+                212u8,
+                174u8,
+                212u8,
+                63u8,
+                108u8,
+                219u8,
+                66u8,
+                100u8,
+                3u8,
+                53u8,
+                63u8,
+                164u8,
+                179u8,
+                0u8,
+                156u8,
+                77u8,
+                34u8,
+                132u8,
+                7u8,
+                71u8,
+                69u8,
+                129u8,
+                176u8,
+                30u8,
+                35u8,
             ],
             [
-                111u8, 221u8, 61u8, 189u8, 177u8, 115u8, 41u8, 150u8, 8u8, 192u8, 170u8, 159u8,
-                54u8, 135u8, 53u8, 133u8, 124u8, 136u8, 66u8, 181u8, 129u8, 248u8, 56u8, 146u8,
-                56u8, 191u8, 5u8, 189u8, 4u8, 179u8, 191u8, 73u8,
+                111u8,
+                221u8,
+                61u8,
+                189u8,
+                177u8,
+                115u8,
+                41u8,
+                150u8,
+                8u8,
+                192u8,
+                170u8,
+                159u8,
+                54u8,
+                135u8,
+                53u8,
+                133u8,
+                124u8,
+                136u8,
+                66u8,
+                181u8,
+                129u8,
+                248u8,
+                56u8,
+                146u8,
+                56u8,
+                191u8,
+                5u8,
+                189u8,
+                4u8,
+                179u8,
+                191u8,
+                73u8,
             ],
             [
-                137u8, 71u8, 253u8, 44u8, 224u8, 126u8, 249u8, 204u8, 48u8, 44u8, 78u8, 143u8, 4u8,
-                97u8, 1u8, 86u8, 21u8, 217u8, 28u8, 232u8, 81u8, 86u8, 72u8, 57u8, 233u8, 28u8,
-                200u8, 4u8, 194u8, 244u8, 157u8, 142u8,
+                137u8,
+                71u8,
+                253u8,
+                44u8,
+                224u8,
+                126u8,
+                249u8,
+                204u8,
+                48u8,
+                44u8,
+                78u8,
+                143u8,
+                4u8,
+                97u8,
+                1u8,
+                86u8,
+                21u8,
+                217u8,
+                28u8,
+                232u8,
+                81u8,
+                86u8,
+                72u8,
+                57u8,
+                233u8,
+                28u8,
+                200u8,
+                4u8,
+                194u8,
+                244u8,
+                157u8,
+                142u8,
             ],
             [
-                169u8, 28u8, 89u8, 3u8, 60u8, 52u8, 35u8, 225u8, 139u8, 84u8, 208u8, 172u8, 236u8,
-                235u8, 180u8, 151u8, 47u8, 158u8, 169u8, 90u8, 237u8, 245u8, 244u8, 202u8, 227u8,
-                182u8, 119u8, 176u8, 46u8, 175u8, 58u8, 63u8,
+                169u8,
+                28u8,
+                89u8,
+                3u8,
+                60u8,
+                52u8,
+                35u8,
+                225u8,
+                139u8,
+                84u8,
+                208u8,
+                172u8,
+                236u8,
+                235u8,
+                180u8,
+                151u8,
+                47u8,
+                158u8,
+                169u8,
+                90u8,
+                237u8,
+                245u8,
+                244u8,
+                202u8,
+                227u8,
+                182u8,
+                119u8,
+                176u8,
+                46u8,
+                175u8,
+                58u8,
+                63u8,
             ],
             [
-                251u8, 129u8, 41u8, 8u8, 10u8, 25u8, 211u8, 77u8, 206u8, 172u8, 4u8, 186u8, 37u8,
-                63u8, 197u8, 3u8, 4u8, 220u8, 134u8, 199u8, 41u8, 189u8, 99u8, 205u8, 202u8, 74u8,
-                150u8, 154u8, 209u8, 154u8, 94u8, 172u8,
+                251u8,
+                129u8,
+                41u8,
+                8u8,
+                10u8,
+                25u8,
+                211u8,
+                77u8,
+                206u8,
+                172u8,
+                4u8,
+                186u8,
+                37u8,
+                63u8,
+                197u8,
+                3u8,
+                4u8,
+                220u8,
+                134u8,
+                199u8,
+                41u8,
+                189u8,
+                99u8,
+                205u8,
+                202u8,
+                74u8,
+                150u8,
+                154u8,
+                209u8,
+                154u8,
+                94u8,
+                172u8,
             ],
         ];
     }
@@ -1416,77 +2048,115 @@ pub mod IEigenPodEvents {
             validate: bool,
         ) -> alloy_sol_types::Result<Self> {
             match topics.first().copied() {
-                Some(<CheckpointCreated as alloy_sol_types::SolEvent>::SIGNATURE_HASH) => {
+                Some(
+                    <CheckpointCreated as alloy_sol_types::SolEvent>::SIGNATURE_HASH,
+                ) => {
                     <CheckpointCreated as alloy_sol_types::SolEvent>::decode_raw_log(
-                        topics, data, validate,
-                    )
-                    .map(Self::CheckpointCreated)
+                            topics,
+                            data,
+                            validate,
+                        )
+                        .map(Self::CheckpointCreated)
                 }
-                Some(<CheckpointFinalized as alloy_sol_types::SolEvent>::SIGNATURE_HASH) => {
+                Some(
+                    <CheckpointFinalized as alloy_sol_types::SolEvent>::SIGNATURE_HASH,
+                ) => {
                     <CheckpointFinalized as alloy_sol_types::SolEvent>::decode_raw_log(
-                        topics, data, validate,
-                    )
-                    .map(Self::CheckpointFinalized)
+                            topics,
+                            data,
+                            validate,
+                        )
+                        .map(Self::CheckpointFinalized)
                 }
                 Some(<EigenPodStaked as alloy_sol_types::SolEvent>::SIGNATURE_HASH) => {
                     <EigenPodStaked as alloy_sol_types::SolEvent>::decode_raw_log(
-                        topics, data, validate,
-                    )
-                    .map(Self::EigenPodStaked)
+                            topics,
+                            data,
+                            validate,
+                        )
+                        .map(Self::EigenPodStaked)
                 }
-                Some(<NonBeaconChainETHReceived as alloy_sol_types::SolEvent>::SIGNATURE_HASH) => {
+                Some(
+                    <NonBeaconChainETHReceived as alloy_sol_types::SolEvent>::SIGNATURE_HASH,
+                ) => {
                     <NonBeaconChainETHReceived as alloy_sol_types::SolEvent>::decode_raw_log(
-                        topics, data, validate,
-                    )
-                    .map(Self::NonBeaconChainETHReceived)
+                            topics,
+                            data,
+                            validate,
+                        )
+                        .map(Self::NonBeaconChainETHReceived)
                 }
-                Some(<ProofSubmitterUpdated as alloy_sol_types::SolEvent>::SIGNATURE_HASH) => {
+                Some(
+                    <ProofSubmitterUpdated as alloy_sol_types::SolEvent>::SIGNATURE_HASH,
+                ) => {
                     <ProofSubmitterUpdated as alloy_sol_types::SolEvent>::decode_raw_log(
-                        topics, data, validate,
-                    )
-                    .map(Self::ProofSubmitterUpdated)
+                            topics,
+                            data,
+                            validate,
+                        )
+                        .map(Self::ProofSubmitterUpdated)
                 }
                 Some(
                     <RestakedBeaconChainETHWithdrawn as alloy_sol_types::SolEvent>::SIGNATURE_HASH,
                 ) => {
                     <RestakedBeaconChainETHWithdrawn as alloy_sol_types::SolEvent>::decode_raw_log(
-                        topics, data, validate,
-                    )
-                    .map(Self::RestakedBeaconChainETHWithdrawn)
+                            topics,
+                            data,
+                            validate,
+                        )
+                        .map(Self::RestakedBeaconChainETHWithdrawn)
                 }
-                Some(<ValidatorBalanceUpdated as alloy_sol_types::SolEvent>::SIGNATURE_HASH) => {
+                Some(
+                    <ValidatorBalanceUpdated as alloy_sol_types::SolEvent>::SIGNATURE_HASH,
+                ) => {
                     <ValidatorBalanceUpdated as alloy_sol_types::SolEvent>::decode_raw_log(
-                        topics, data, validate,
-                    )
-                    .map(Self::ValidatorBalanceUpdated)
+                            topics,
+                            data,
+                            validate,
+                        )
+                        .map(Self::ValidatorBalanceUpdated)
                 }
-                Some(<ValidatorCheckpointed as alloy_sol_types::SolEvent>::SIGNATURE_HASH) => {
+                Some(
+                    <ValidatorCheckpointed as alloy_sol_types::SolEvent>::SIGNATURE_HASH,
+                ) => {
                     <ValidatorCheckpointed as alloy_sol_types::SolEvent>::decode_raw_log(
-                        topics, data, validate,
-                    )
-                    .map(Self::ValidatorCheckpointed)
+                            topics,
+                            data,
+                            validate,
+                        )
+                        .map(Self::ValidatorCheckpointed)
                 }
-                Some(<ValidatorRestaked as alloy_sol_types::SolEvent>::SIGNATURE_HASH) => {
+                Some(
+                    <ValidatorRestaked as alloy_sol_types::SolEvent>::SIGNATURE_HASH,
+                ) => {
                     <ValidatorRestaked as alloy_sol_types::SolEvent>::decode_raw_log(
-                        topics, data, validate,
-                    )
-                    .map(Self::ValidatorRestaked)
+                            topics,
+                            data,
+                            validate,
+                        )
+                        .map(Self::ValidatorRestaked)
                 }
-                Some(<ValidatorWithdrawn as alloy_sol_types::SolEvent>::SIGNATURE_HASH) => {
+                Some(
+                    <ValidatorWithdrawn as alloy_sol_types::SolEvent>::SIGNATURE_HASH,
+                ) => {
                     <ValidatorWithdrawn as alloy_sol_types::SolEvent>::decode_raw_log(
-                        topics, data, validate,
-                    )
-                    .map(Self::ValidatorWithdrawn)
+                            topics,
+                            data,
+                            validate,
+                        )
+                        .map(Self::ValidatorWithdrawn)
                 }
-                _ => alloy_sol_types::private::Err(alloy_sol_types::Error::InvalidLog {
-                    name: <Self as alloy_sol_types::SolEventInterface>::NAME,
-                    log: alloy_sol_types::private::Box::new(
-                        alloy_sol_types::private::LogData::new_unchecked(
-                            topics.to_vec(),
-                            data.to_vec().into(),
+                _ => {
+                    alloy_sol_types::private::Err(alloy_sol_types::Error::InvalidLog {
+                        name: <Self as alloy_sol_types::SolEventInterface>::NAME,
+                        log: alloy_sol_types::private::Box::new(
+                            alloy_sol_types::private::LogData::new_unchecked(
+                                topics.to_vec(),
+                                data.to_vec().into(),
+                            ),
                         ),
-                    ),
-                }),
+                    })
+                }
             }
         }
     }
@@ -1564,7 +2234,7 @@ pub mod IEigenPodEvents {
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`IEigenPodEvents`](self) contract instance.
 
-    See the [wrapper's documentation](`IEigenPodEventsInstance`) for more details.*/
+See the [wrapper's documentation](`IEigenPodEventsInstance`) for more details.*/
     #[inline]
     pub const fn new<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -1578,9 +2248,9 @@ pub mod IEigenPodEvents {
     }
     /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-    Returns a new instance of the contract, if the deployment was successful.
+Returns a new instance of the contract, if the deployment was successful.
 
-    For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
     #[inline]
     pub fn deploy<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -1588,36 +2258,35 @@ pub mod IEigenPodEvents {
         N: alloy_contract::private::Network,
     >(
         provider: P,
-    ) -> impl ::core::future::Future<Output = alloy_contract::Result<IEigenPodEventsInstance<T, P, N>>>
-    {
+    ) -> impl ::core::future::Future<
+        Output = alloy_contract::Result<IEigenPodEventsInstance<T, P, N>>,
+    > {
         IEigenPodEventsInstance::<T, P, N>::deploy(provider)
     }
     /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-    and constructor arguments, if any.
+and constructor arguments, if any.
 
-    This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-    the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     #[inline]
     pub fn deploy_builder<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
         P: alloy_contract::private::Provider<T, N>,
         N: alloy_contract::private::Network,
-    >(
-        provider: P,
-    ) -> alloy_contract::RawCallBuilder<T, P, N> {
+    >(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
         IEigenPodEventsInstance::<T, P, N>::deploy_builder(provider)
     }
     /**A [`IEigenPodEvents`](self) instance.
 
-    Contains type-safe methods for interacting with an on-chain instance of the
-    [`IEigenPodEvents`](self) contract located at a given `address`, using a given
-    provider `P`.
+Contains type-safe methods for interacting with an on-chain instance of the
+[`IEigenPodEvents`](self) contract located at a given `address`, using a given
+provider `P`.
 
-    If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
-    documentation on how to provide it), the `deploy` and `deploy_builder` methods can
-    be used to deploy a new instance of the contract.
+If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
+documentation on how to provide it), the `deploy` and `deploy_builder` methods can
+be used to deploy a new instance of the contract.
 
-    See the [module-level documentation](self) for all the available methods.*/
+See the [module-level documentation](self) for all the available methods.*/
     #[derive(Clone)]
     pub struct IEigenPodEventsInstance<T, P, N = alloy_contract::private::Ethereum> {
         address: alloy_sol_types::private::Address,
@@ -1628,24 +2297,24 @@ pub mod IEigenPodEvents {
     impl<T, P, N> ::core::fmt::Debug for IEigenPodEventsInstance<T, P, N> {
         #[inline]
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-            f.debug_tuple("IEigenPodEventsInstance")
-                .field(&self.address)
-                .finish()
+            f.debug_tuple("IEigenPodEventsInstance").field(&self.address).finish()
         }
     }
     /// Instantiation and getters/setters.
     #[automatically_derived]
     impl<
-            T: alloy_contract::private::Transport + ::core::clone::Clone,
-            P: alloy_contract::private::Provider<T, N>,
-            N: alloy_contract::private::Network,
-        > IEigenPodEventsInstance<T, P, N>
-    {
+        T: alloy_contract::private::Transport + ::core::clone::Clone,
+        P: alloy_contract::private::Provider<T, N>,
+        N: alloy_contract::private::Network,
+    > IEigenPodEventsInstance<T, P, N> {
         /**Creates a new wrapper around an on-chain [`IEigenPodEvents`](self) contract instance.
 
-        See the [wrapper's documentation](`IEigenPodEventsInstance`) for more details.*/
+See the [wrapper's documentation](`IEigenPodEventsInstance`) for more details.*/
         #[inline]
-        pub const fn new(address: alloy_sol_types::private::Address, provider: P) -> Self {
+        pub const fn new(
+            address: alloy_sol_types::private::Address,
+            provider: P,
+        ) -> Self {
             Self {
                 address,
                 provider,
@@ -1654,9 +2323,9 @@ pub mod IEigenPodEvents {
         }
         /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-        Returns a new instance of the contract, if the deployment was successful.
+Returns a new instance of the contract, if the deployment was successful.
 
-        For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
         #[inline]
         pub async fn deploy(
             provider: P,
@@ -1666,10 +2335,10 @@ pub mod IEigenPodEvents {
             Ok(Self::new(contract_address, call_builder.provider))
         }
         /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-        and constructor arguments, if any.
+and constructor arguments, if any.
 
-        This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-        the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         #[inline]
         pub fn deploy_builder(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
             alloy_contract::RawCallBuilder::new_raw_deploy(
@@ -1712,11 +2381,10 @@ pub mod IEigenPodEvents {
     /// Function calls.
     #[automatically_derived]
     impl<
-            T: alloy_contract::private::Transport + ::core::clone::Clone,
-            P: alloy_contract::private::Provider<T, N>,
-            N: alloy_contract::private::Network,
-        > IEigenPodEventsInstance<T, P, N>
-    {
+        T: alloy_contract::private::Transport + ::core::clone::Clone,
+        P: alloy_contract::private::Provider<T, N>,
+        N: alloy_contract::private::Network,
+    > IEigenPodEventsInstance<T, P, N> {
         /// Creates a new call builder using this contract instance's provider and address.
         ///
         /// Note that the call can be any function call, not just those defined in this
@@ -1731,11 +2399,10 @@ pub mod IEigenPodEvents {
     /// Event filters.
     #[automatically_derived]
     impl<
-            T: alloy_contract::private::Transport + ::core::clone::Clone,
-            P: alloy_contract::private::Provider<T, N>,
-            N: alloy_contract::private::Network,
-        > IEigenPodEventsInstance<T, P, N>
-    {
+        T: alloy_contract::private::Transport + ::core::clone::Clone,
+        P: alloy_contract::private::Provider<T, N>,
+        N: alloy_contract::private::Network,
+    > IEigenPodEventsInstance<T, P, N> {
         /// Creates a new event filter using this contract instance's provider and address.
         ///
         /// Note that the type can be any event, not just those defined in this contract.
@@ -1758,7 +2425,9 @@ pub mod IEigenPodEvents {
             self.event_filter::<CheckpointFinalized>()
         }
         ///Creates a new event filter for the [`EigenPodStaked`] event.
-        pub fn EigenPodStaked_filter(&self) -> alloy_contract::Event<T, &P, EigenPodStaked, N> {
+        pub fn EigenPodStaked_filter(
+            &self,
+        ) -> alloy_contract::Event<T, &P, EigenPodStaked, N> {
             self.event_filter::<EigenPodStaked>()
         }
         ///Creates a new event filter for the [`NonBeaconChainETHReceived`] event.

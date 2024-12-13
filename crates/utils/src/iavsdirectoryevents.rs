@@ -21,31 +21,39 @@ pub mod IAVSDirectoryTypes {
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         #[automatically_derived]
-        impl alloy_sol_types::private::SolTypeValue<OperatorAVSRegistrationStatus> for u8 {
+        impl alloy_sol_types::private::SolTypeValue<OperatorAVSRegistrationStatus>
+        for u8 {
             #[inline]
             fn stv_to_tokens(
                 &self,
-            ) -> <alloy::sol_types::sol_data::Uint<8> as alloy_sol_types::SolType>::Token<'_>
-            {
+            ) -> <alloy::sol_types::sol_data::Uint<
+                8,
+            > as alloy_sol_types::SolType>::Token<'_> {
                 alloy_sol_types::private::SolTypeValue::<
                     alloy::sol_types::sol_data::Uint<8>,
                 >::stv_to_tokens(self)
             }
             #[inline]
             fn stv_eip712_data_word(&self) -> alloy_sol_types::Word {
-                <alloy::sol_types::sol_data::Uint<8> as alloy_sol_types::SolType>::tokenize(self).0
+                <alloy::sol_types::sol_data::Uint<
+                    8,
+                > as alloy_sol_types::SolType>::tokenize(self)
+                    .0
             }
             #[inline]
-            fn stv_abi_encode_packed_to(&self, out: &mut alloy_sol_types::private::Vec<u8>) {
+            fn stv_abi_encode_packed_to(
+                &self,
+                out: &mut alloy_sol_types::private::Vec<u8>,
+            ) {
                 <alloy::sol_types::sol_data::Uint<
                     8,
                 > as alloy_sol_types::SolType>::abi_encode_packed_to(self, out)
             }
             #[inline]
             fn stv_abi_packed_encoded_size(&self) -> usize {
-                <alloy::sol_types::sol_data::Uint<8> as alloy_sol_types::SolType>::abi_encoded_size(
-                    self,
-                )
+                <alloy::sol_types::sol_data::Uint<
+                    8,
+                > as alloy_sol_types::SolType>::abi_encoded_size(self)
             }
         }
         #[automatically_derived]
@@ -78,11 +86,13 @@ pub mod IAVSDirectoryTypes {
         #[automatically_derived]
         impl alloy_sol_types::SolType for OperatorAVSRegistrationStatus {
             type RustType = u8;
-            type Token<'a> =
-                <alloy::sol_types::sol_data::Uint<8> as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <alloy::sol_types::sol_data::Uint<
+                8,
+            > as alloy_sol_types::SolType>::Token<'a>;
             const SOL_NAME: &'static str = Self::NAME;
-            const ENCODED_SIZE: Option<usize> =
-                <alloy::sol_types::sol_data::Uint<8> as alloy_sol_types::SolType>::ENCODED_SIZE;
+            const ENCODED_SIZE: Option<usize> = <alloy::sol_types::sol_data::Uint<
+                8,
+            > as alloy_sol_types::SolType>::ENCODED_SIZE;
             const PACKED_ENCODED_SIZE: Option<usize> = <alloy::sol_types::sol_data::Uint<
                 8,
             > as alloy_sol_types::SolType>::PACKED_ENCODED_SIZE;
@@ -92,11 +102,15 @@ pub mod IAVSDirectoryTypes {
             }
             #[inline]
             fn type_check(token: &Self::Token<'_>) -> alloy_sol_types::Result<()> {
-                <alloy::sol_types::sol_data::Uint<8> as alloy_sol_types::SolType>::type_check(token)
+                <alloy::sol_types::sol_data::Uint<
+                    8,
+                > as alloy_sol_types::SolType>::type_check(token)
             }
             #[inline]
             fn detokenize(token: Self::Token<'_>) -> Self::RustType {
-                <alloy::sol_types::sol_data::Uint<8> as alloy_sol_types::SolType>::detokenize(token)
+                <alloy::sol_types::sol_data::Uint<
+                    8,
+                > as alloy_sol_types::SolType>::detokenize(token)
             }
         }
         #[automatically_derived]
@@ -117,17 +131,19 @@ pub mod IAVSDirectoryTypes {
                 > as alloy_sol_types::EventTopic>::encode_topic_preimage(rust, out)
             }
             #[inline]
-            fn encode_topic(rust: &Self::RustType) -> alloy_sol_types::abi::token::WordToken {
-                <alloy::sol_types::sol_data::Uint<8> as alloy_sol_types::EventTopic>::encode_topic(
-                    rust,
-                )
+            fn encode_topic(
+                rust: &Self::RustType,
+            ) -> alloy_sol_types::abi::token::WordToken {
+                <alloy::sol_types::sol_data::Uint<
+                    8,
+                > as alloy_sol_types::EventTopic>::encode_topic(rust)
             }
         }
     };
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`IAVSDirectoryTypes`](self) contract instance.
 
-    See the [wrapper's documentation](`IAVSDirectoryTypesInstance`) for more details.*/
+See the [wrapper's documentation](`IAVSDirectoryTypesInstance`) for more details.*/
     #[inline]
     pub const fn new<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -141,15 +157,15 @@ pub mod IAVSDirectoryTypes {
     }
     /**A [`IAVSDirectoryTypes`](self) instance.
 
-    Contains type-safe methods for interacting with an on-chain instance of the
-    [`IAVSDirectoryTypes`](self) contract located at a given `address`, using a given
-    provider `P`.
+Contains type-safe methods for interacting with an on-chain instance of the
+[`IAVSDirectoryTypes`](self) contract located at a given `address`, using a given
+provider `P`.
 
-    If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
-    documentation on how to provide it), the `deploy` and `deploy_builder` methods can
-    be used to deploy a new instance of the contract.
+If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
+documentation on how to provide it), the `deploy` and `deploy_builder` methods can
+be used to deploy a new instance of the contract.
 
-    See the [module-level documentation](self) for all the available methods.*/
+See the [module-level documentation](self) for all the available methods.*/
     #[derive(Clone)]
     pub struct IAVSDirectoryTypesInstance<T, P, N = alloy_contract::private::Ethereum> {
         address: alloy_sol_types::private::Address,
@@ -160,24 +176,24 @@ pub mod IAVSDirectoryTypes {
     impl<T, P, N> ::core::fmt::Debug for IAVSDirectoryTypesInstance<T, P, N> {
         #[inline]
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-            f.debug_tuple("IAVSDirectoryTypesInstance")
-                .field(&self.address)
-                .finish()
+            f.debug_tuple("IAVSDirectoryTypesInstance").field(&self.address).finish()
         }
     }
     /// Instantiation and getters/setters.
     #[automatically_derived]
     impl<
-            T: alloy_contract::private::Transport + ::core::clone::Clone,
-            P: alloy_contract::private::Provider<T, N>,
-            N: alloy_contract::private::Network,
-        > IAVSDirectoryTypesInstance<T, P, N>
-    {
+        T: alloy_contract::private::Transport + ::core::clone::Clone,
+        P: alloy_contract::private::Provider<T, N>,
+        N: alloy_contract::private::Network,
+    > IAVSDirectoryTypesInstance<T, P, N> {
         /**Creates a new wrapper around an on-chain [`IAVSDirectoryTypes`](self) contract instance.
 
-        See the [wrapper's documentation](`IAVSDirectoryTypesInstance`) for more details.*/
+See the [wrapper's documentation](`IAVSDirectoryTypesInstance`) for more details.*/
         #[inline]
-        pub const fn new(address: alloy_sol_types::private::Address, provider: P) -> Self {
+        pub const fn new(
+            address: alloy_sol_types::private::Address,
+            provider: P,
+        ) -> Self {
             Self {
                 address,
                 provider,
@@ -219,11 +235,10 @@ pub mod IAVSDirectoryTypes {
     /// Function calls.
     #[automatically_derived]
     impl<
-            T: alloy_contract::private::Transport + ::core::clone::Clone,
-            P: alloy_contract::private::Provider<T, N>,
-            N: alloy_contract::private::Network,
-        > IAVSDirectoryTypesInstance<T, P, N>
-    {
+        T: alloy_contract::private::Transport + ::core::clone::Clone,
+        P: alloy_contract::private::Provider<T, N>,
+        N: alloy_contract::private::Network,
+    > IAVSDirectoryTypesInstance<T, P, N> {
         /// Creates a new call builder using this contract instance's provider and address.
         ///
         /// Note that the call can be any function call, not just those defined in this
@@ -238,11 +253,10 @@ pub mod IAVSDirectoryTypes {
     /// Event filters.
     #[automatically_derived]
     impl<
-            T: alloy_contract::private::Transport + ::core::clone::Clone,
-            P: alloy_contract::private::Provider<T, N>,
-            N: alloy_contract::private::Network,
-        > IAVSDirectoryTypesInstance<T, P, N>
-    {
+        T: alloy_contract::private::Transport + ::core::clone::Clone,
+        P: alloy_contract::private::Provider<T, N>,
+        N: alloy_contract::private::Network,
+    > IAVSDirectoryTypesInstance<T, P, N> {
         /// Creates a new event filter using this contract instance's provider and address.
         ///
         /// Note that the type can be any event, not just those defined in this contract.
@@ -387,9 +401,9 @@ pub mod IAVSDirectoryEvents {
         b"",
     );
     /**Event with signature `AVSMetadataURIUpdated(address,string)` and selector `0xa89c1dc243d8908a96dd84944bcc97d6bc6ac00dd78e20621576be6a3c943713`.
-    ```solidity
-    event AVSMetadataURIUpdated(address indexed avs, string metadataURI);
-    ```*/
+```solidity
+event AVSMetadataURIUpdated(address indexed avs, string metadataURI);
+```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -414,18 +428,48 @@ pub mod IAVSDirectoryEvents {
         #[automatically_derived]
         impl alloy_sol_types::SolEvent for AVSMetadataURIUpdated {
             type DataTuple<'a> = (alloy::sol_types::sol_data::String,);
-            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (
                 alloy_sol_types::sol_data::FixedBytes<32>,
                 alloy::sol_types::sol_data::Address,
             );
             const SIGNATURE: &'static str = "AVSMetadataURIUpdated(address,string)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
-                alloy_sol_types::private::B256::new([
-                    168u8, 156u8, 29u8, 194u8, 67u8, 216u8, 144u8, 138u8, 150u8, 221u8, 132u8,
-                    148u8, 75u8, 204u8, 151u8, 214u8, 188u8, 106u8, 192u8, 13u8, 215u8, 142u8,
-                    32u8, 98u8, 21u8, 118u8, 190u8, 106u8, 60u8, 148u8, 55u8, 19u8,
-                ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
+                168u8,
+                156u8,
+                29u8,
+                194u8,
+                67u8,
+                216u8,
+                144u8,
+                138u8,
+                150u8,
+                221u8,
+                132u8,
+                148u8,
+                75u8,
+                204u8,
+                151u8,
+                214u8,
+                188u8,
+                106u8,
+                192u8,
+                13u8,
+                215u8,
+                142u8,
+                32u8,
+                98u8,
+                21u8,
+                118u8,
+                190u8,
+                106u8,
+                60u8,
+                148u8,
+                55u8,
+                19u8,
+            ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -443,11 +487,13 @@ pub mod IAVSDirectoryEvents {
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
-                        Self::SIGNATURE,
-                        topics.0,
-                        Self::SIGNATURE_HASH,
-                    ));
+                    return Err(
+                        alloy_sol_types::Error::invalid_event_signature_hash(
+                            Self::SIGNATURE,
+                            topics.0,
+                            Self::SIGNATURE_HASH,
+                        ),
+                    );
                 }
                 Ok(())
             }
@@ -471,7 +517,9 @@ pub mod IAVSDirectoryEvents {
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
+                out[0usize] = alloy_sol_types::abi::token::WordToken(
+                    Self::SIGNATURE_HASH,
+                );
                 out[1usize] = <alloy::sol_types::sol_data::Address as alloy_sol_types::EventTopic>::encode_topic(
                     &self.avs,
                 );
@@ -496,9 +544,9 @@ pub mod IAVSDirectoryEvents {
         }
     };
     /**Event with signature `AVSMigratedToOperatorSets(address)` and selector `0x702b0c1f6cb1cf511aaa81f72bc05a215bb3497632d72c690c822b044ab494bf`.
-    ```solidity
-    event AVSMigratedToOperatorSets(address indexed avs);
-    ```*/
+```solidity
+event AVSMigratedToOperatorSets(address indexed avs);
+```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -521,18 +569,48 @@ pub mod IAVSDirectoryEvents {
         #[automatically_derived]
         impl alloy_sol_types::SolEvent for AVSMigratedToOperatorSets {
             type DataTuple<'a> = ();
-            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (
                 alloy_sol_types::sol_data::FixedBytes<32>,
                 alloy::sol_types::sol_data::Address,
             );
             const SIGNATURE: &'static str = "AVSMigratedToOperatorSets(address)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
-                alloy_sol_types::private::B256::new([
-                    112u8, 43u8, 12u8, 31u8, 108u8, 177u8, 207u8, 81u8, 26u8, 170u8, 129u8, 247u8,
-                    43u8, 192u8, 90u8, 33u8, 91u8, 179u8, 73u8, 118u8, 50u8, 215u8, 44u8, 105u8,
-                    12u8, 130u8, 43u8, 4u8, 74u8, 180u8, 148u8, 191u8,
-                ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
+                112u8,
+                43u8,
+                12u8,
+                31u8,
+                108u8,
+                177u8,
+                207u8,
+                81u8,
+                26u8,
+                170u8,
+                129u8,
+                247u8,
+                43u8,
+                192u8,
+                90u8,
+                33u8,
+                91u8,
+                179u8,
+                73u8,
+                118u8,
+                50u8,
+                215u8,
+                44u8,
+                105u8,
+                12u8,
+                130u8,
+                43u8,
+                4u8,
+                74u8,
+                180u8,
+                148u8,
+                191u8,
+            ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -547,11 +625,13 @@ pub mod IAVSDirectoryEvents {
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
-                        Self::SIGNATURE,
-                        topics.0,
-                        Self::SIGNATURE_HASH,
-                    ));
+                    return Err(
+                        alloy_sol_types::Error::invalid_event_signature_hash(
+                            Self::SIGNATURE,
+                            topics.0,
+                            Self::SIGNATURE_HASH,
+                        ),
+                    );
                 }
                 Ok(())
             }
@@ -571,7 +651,9 @@ pub mod IAVSDirectoryEvents {
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
+                out[0usize] = alloy_sol_types::abi::token::WordToken(
+                    Self::SIGNATURE_HASH,
+                );
                 out[1usize] = <alloy::sol_types::sol_data::Address as alloy_sol_types::EventTopic>::encode_topic(
                     &self.avs,
                 );
@@ -590,15 +672,17 @@ pub mod IAVSDirectoryEvents {
         #[automatically_derived]
         impl From<&AVSMigratedToOperatorSets> for alloy_sol_types::private::LogData {
             #[inline]
-            fn from(this: &AVSMigratedToOperatorSets) -> alloy_sol_types::private::LogData {
+            fn from(
+                this: &AVSMigratedToOperatorSets,
+            ) -> alloy_sol_types::private::LogData {
                 alloy_sol_types::SolEvent::encode_log_data(this)
             }
         }
     };
     /**Event with signature `OperatorAVSRegistrationStatusUpdated(address,address,uint8)` and selector `0xf0952b1c65271d819d39983d2abb044b9cace59bcc4d4dd389f586ebdcb15b41`.
-    ```solidity
-    event OperatorAVSRegistrationStatusUpdated(address indexed operator, address indexed avs, IAVSDirectoryTypes.OperatorAVSRegistrationStatus status);
-    ```*/
+```solidity
+event OperatorAVSRegistrationStatusUpdated(address indexed operator, address indexed avs, IAVSDirectoryTypes.OperatorAVSRegistrationStatus status);
+```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -625,20 +709,49 @@ pub mod IAVSDirectoryEvents {
         #[automatically_derived]
         impl alloy_sol_types::SolEvent for OperatorAVSRegistrationStatusUpdated {
             type DataTuple<'a> = (IAVSDirectoryTypes::OperatorAVSRegistrationStatus,);
-            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (
                 alloy_sol_types::sol_data::FixedBytes<32>,
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Address,
             );
-            const SIGNATURE: &'static str =
-                "OperatorAVSRegistrationStatusUpdated(address,address,uint8)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
-                alloy_sol_types::private::B256::new([
-                    240u8, 149u8, 43u8, 28u8, 101u8, 39u8, 29u8, 129u8, 157u8, 57u8, 152u8, 61u8,
-                    42u8, 187u8, 4u8, 75u8, 156u8, 172u8, 229u8, 155u8, 204u8, 77u8, 77u8, 211u8,
-                    137u8, 245u8, 134u8, 235u8, 220u8, 177u8, 91u8, 65u8,
-                ]);
+            const SIGNATURE: &'static str = "OperatorAVSRegistrationStatusUpdated(address,address,uint8)";
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
+                240u8,
+                149u8,
+                43u8,
+                28u8,
+                101u8,
+                39u8,
+                29u8,
+                129u8,
+                157u8,
+                57u8,
+                152u8,
+                61u8,
+                42u8,
+                187u8,
+                4u8,
+                75u8,
+                156u8,
+                172u8,
+                229u8,
+                155u8,
+                204u8,
+                77u8,
+                77u8,
+                211u8,
+                137u8,
+                245u8,
+                134u8,
+                235u8,
+                220u8,
+                177u8,
+                91u8,
+                65u8,
+            ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -657,11 +770,13 @@ pub mod IAVSDirectoryEvents {
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
-                        Self::SIGNATURE,
-                        topics.0,
-                        Self::SIGNATURE_HASH,
-                    ));
+                    return Err(
+                        alloy_sol_types::Error::invalid_event_signature_hash(
+                            Self::SIGNATURE,
+                            topics.0,
+                            Self::SIGNATURE_HASH,
+                        ),
+                    );
                 }
                 Ok(())
             }
@@ -675,11 +790,7 @@ pub mod IAVSDirectoryEvents {
             }
             #[inline]
             fn topics(&self) -> <Self::TopicList as alloy_sol_types::SolType>::RustType {
-                (
-                    Self::SIGNATURE_HASH.into(),
-                    self.operator.clone(),
-                    self.avs.clone(),
-                )
+                (Self::SIGNATURE_HASH.into(), self.operator.clone(), self.avs.clone())
             }
             #[inline]
             fn encode_topics_raw(
@@ -689,7 +800,9 @@ pub mod IAVSDirectoryEvents {
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
+                out[0usize] = alloy_sol_types::abi::token::WordToken(
+                    Self::SIGNATURE_HASH,
+                );
                 out[1usize] = <alloy::sol_types::sol_data::Address as alloy_sol_types::EventTopic>::encode_topic(
                     &self.operator,
                 );
@@ -700,7 +813,8 @@ pub mod IAVSDirectoryEvents {
             }
         }
         #[automatically_derived]
-        impl alloy_sol_types::private::IntoLogData for OperatorAVSRegistrationStatusUpdated {
+        impl alloy_sol_types::private::IntoLogData
+        for OperatorAVSRegistrationStatusUpdated {
             fn to_log_data(&self) -> alloy_sol_types::private::LogData {
                 From::from(self)
             }
@@ -709,7 +823,8 @@ pub mod IAVSDirectoryEvents {
             }
         }
         #[automatically_derived]
-        impl From<&OperatorAVSRegistrationStatusUpdated> for alloy_sol_types::private::LogData {
+        impl From<&OperatorAVSRegistrationStatusUpdated>
+        for alloy_sol_types::private::LogData {
             #[inline]
             fn from(
                 this: &OperatorAVSRegistrationStatusUpdated,
@@ -719,9 +834,9 @@ pub mod IAVSDirectoryEvents {
         }
     };
     /**Event with signature `OperatorMigratedToOperatorSets(address,address,uint32[])` and selector `0x54f33cfdd1ca703d795986b986fd47d742eab1904ecd2a5fdb8d6595e5904a01`.
-    ```solidity
-    event OperatorMigratedToOperatorSets(address indexed operator, address indexed avs, uint32[] operatorSetIds);
-    ```*/
+```solidity
+event OperatorMigratedToOperatorSets(address indexed operator, address indexed avs, uint32[] operatorSetIds);
+```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -747,22 +862,52 @@ pub mod IAVSDirectoryEvents {
         use alloy::sol_types as alloy_sol_types;
         #[automatically_derived]
         impl alloy_sol_types::SolEvent for OperatorMigratedToOperatorSets {
-            type DataTuple<'a> =
-                (alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::Uint<32>>,);
-            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type DataTuple<'a> = (
+                alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::Uint<32>>,
+            );
+            type DataToken<'a> = <Self::DataTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (
                 alloy_sol_types::sol_data::FixedBytes<32>,
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Address,
             );
-            const SIGNATURE: &'static str =
-                "OperatorMigratedToOperatorSets(address,address,uint32[])";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
-                alloy_sol_types::private::B256::new([
-                    84u8, 243u8, 60u8, 253u8, 209u8, 202u8, 112u8, 61u8, 121u8, 89u8, 134u8, 185u8,
-                    134u8, 253u8, 71u8, 215u8, 66u8, 234u8, 177u8, 144u8, 78u8, 205u8, 42u8, 95u8,
-                    219u8, 141u8, 101u8, 149u8, 229u8, 144u8, 74u8, 1u8,
-                ]);
+            const SIGNATURE: &'static str = "OperatorMigratedToOperatorSets(address,address,uint32[])";
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
+                84u8,
+                243u8,
+                60u8,
+                253u8,
+                209u8,
+                202u8,
+                112u8,
+                61u8,
+                121u8,
+                89u8,
+                134u8,
+                185u8,
+                134u8,
+                253u8,
+                71u8,
+                215u8,
+                66u8,
+                234u8,
+                177u8,
+                144u8,
+                78u8,
+                205u8,
+                42u8,
+                95u8,
+                219u8,
+                141u8,
+                101u8,
+                149u8,
+                229u8,
+                144u8,
+                74u8,
+                1u8,
+            ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -781,29 +926,27 @@ pub mod IAVSDirectoryEvents {
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
-                        Self::SIGNATURE,
-                        topics.0,
-                        Self::SIGNATURE_HASH,
-                    ));
+                    return Err(
+                        alloy_sol_types::Error::invalid_event_signature_hash(
+                            Self::SIGNATURE,
+                            topics.0,
+                            Self::SIGNATURE_HASH,
+                        ),
+                    );
                 }
                 Ok(())
             }
             #[inline]
             fn tokenize_body(&self) -> Self::DataToken<'_> {
-                (<alloy::sol_types::sol_data::Array<
-                    alloy::sol_types::sol_data::Uint<32>,
-                > as alloy_sol_types::SolType>::tokenize(
-                    &self.operatorSetIds,
-                ),)
+                (
+                    <alloy::sol_types::sol_data::Array<
+                        alloy::sol_types::sol_data::Uint<32>,
+                    > as alloy_sol_types::SolType>::tokenize(&self.operatorSetIds),
+                )
             }
             #[inline]
             fn topics(&self) -> <Self::TopicList as alloy_sol_types::SolType>::RustType {
-                (
-                    Self::SIGNATURE_HASH.into(),
-                    self.operator.clone(),
-                    self.avs.clone(),
-                )
+                (Self::SIGNATURE_HASH.into(), self.operator.clone(), self.avs.clone())
             }
             #[inline]
             fn encode_topics_raw(
@@ -813,7 +956,9 @@ pub mod IAVSDirectoryEvents {
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
+                out[0usize] = alloy_sol_types::abi::token::WordToken(
+                    Self::SIGNATURE_HASH,
+                );
                 out[1usize] = <alloy::sol_types::sol_data::Address as alloy_sol_types::EventTopic>::encode_topic(
                     &self.operator,
                 );
@@ -833,9 +978,12 @@ pub mod IAVSDirectoryEvents {
             }
         }
         #[automatically_derived]
-        impl From<&OperatorMigratedToOperatorSets> for alloy_sol_types::private::LogData {
+        impl From<&OperatorMigratedToOperatorSets>
+        for alloy_sol_types::private::LogData {
             #[inline]
-            fn from(this: &OperatorMigratedToOperatorSets) -> alloy_sol_types::private::LogData {
+            fn from(
+                this: &OperatorMigratedToOperatorSets,
+            ) -> alloy_sol_types::private::LogData {
                 alloy_sol_types::SolEvent::encode_log_data(this)
             }
         }
@@ -857,24 +1005,140 @@ pub mod IAVSDirectoryEvents {
         /// Prefer using `SolInterface` methods instead.
         pub const SELECTORS: &'static [[u8; 32usize]] = &[
             [
-                84u8, 243u8, 60u8, 253u8, 209u8, 202u8, 112u8, 61u8, 121u8, 89u8, 134u8, 185u8,
-                134u8, 253u8, 71u8, 215u8, 66u8, 234u8, 177u8, 144u8, 78u8, 205u8, 42u8, 95u8,
-                219u8, 141u8, 101u8, 149u8, 229u8, 144u8, 74u8, 1u8,
+                84u8,
+                243u8,
+                60u8,
+                253u8,
+                209u8,
+                202u8,
+                112u8,
+                61u8,
+                121u8,
+                89u8,
+                134u8,
+                185u8,
+                134u8,
+                253u8,
+                71u8,
+                215u8,
+                66u8,
+                234u8,
+                177u8,
+                144u8,
+                78u8,
+                205u8,
+                42u8,
+                95u8,
+                219u8,
+                141u8,
+                101u8,
+                149u8,
+                229u8,
+                144u8,
+                74u8,
+                1u8,
             ],
             [
-                112u8, 43u8, 12u8, 31u8, 108u8, 177u8, 207u8, 81u8, 26u8, 170u8, 129u8, 247u8,
-                43u8, 192u8, 90u8, 33u8, 91u8, 179u8, 73u8, 118u8, 50u8, 215u8, 44u8, 105u8, 12u8,
-                130u8, 43u8, 4u8, 74u8, 180u8, 148u8, 191u8,
+                112u8,
+                43u8,
+                12u8,
+                31u8,
+                108u8,
+                177u8,
+                207u8,
+                81u8,
+                26u8,
+                170u8,
+                129u8,
+                247u8,
+                43u8,
+                192u8,
+                90u8,
+                33u8,
+                91u8,
+                179u8,
+                73u8,
+                118u8,
+                50u8,
+                215u8,
+                44u8,
+                105u8,
+                12u8,
+                130u8,
+                43u8,
+                4u8,
+                74u8,
+                180u8,
+                148u8,
+                191u8,
             ],
             [
-                168u8, 156u8, 29u8, 194u8, 67u8, 216u8, 144u8, 138u8, 150u8, 221u8, 132u8, 148u8,
-                75u8, 204u8, 151u8, 214u8, 188u8, 106u8, 192u8, 13u8, 215u8, 142u8, 32u8, 98u8,
-                21u8, 118u8, 190u8, 106u8, 60u8, 148u8, 55u8, 19u8,
+                168u8,
+                156u8,
+                29u8,
+                194u8,
+                67u8,
+                216u8,
+                144u8,
+                138u8,
+                150u8,
+                221u8,
+                132u8,
+                148u8,
+                75u8,
+                204u8,
+                151u8,
+                214u8,
+                188u8,
+                106u8,
+                192u8,
+                13u8,
+                215u8,
+                142u8,
+                32u8,
+                98u8,
+                21u8,
+                118u8,
+                190u8,
+                106u8,
+                60u8,
+                148u8,
+                55u8,
+                19u8,
             ],
             [
-                240u8, 149u8, 43u8, 28u8, 101u8, 39u8, 29u8, 129u8, 157u8, 57u8, 152u8, 61u8, 42u8,
-                187u8, 4u8, 75u8, 156u8, 172u8, 229u8, 155u8, 204u8, 77u8, 77u8, 211u8, 137u8,
-                245u8, 134u8, 235u8, 220u8, 177u8, 91u8, 65u8,
+                240u8,
+                149u8,
+                43u8,
+                28u8,
+                101u8,
+                39u8,
+                29u8,
+                129u8,
+                157u8,
+                57u8,
+                152u8,
+                61u8,
+                42u8,
+                187u8,
+                4u8,
+                75u8,
+                156u8,
+                172u8,
+                229u8,
+                155u8,
+                204u8,
+                77u8,
+                77u8,
+                211u8,
+                137u8,
+                245u8,
+                134u8,
+                235u8,
+                220u8,
+                177u8,
+                91u8,
+                65u8,
             ],
         ];
     }
@@ -980,7 +1244,7 @@ pub mod IAVSDirectoryEvents {
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`IAVSDirectoryEvents`](self) contract instance.
 
-    See the [wrapper's documentation](`IAVSDirectoryEventsInstance`) for more details.*/
+See the [wrapper's documentation](`IAVSDirectoryEventsInstance`) for more details.*/
     #[inline]
     pub const fn new<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -994,9 +1258,9 @@ pub mod IAVSDirectoryEvents {
     }
     /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-    Returns a new instance of the contract, if the deployment was successful.
+Returns a new instance of the contract, if the deployment was successful.
 
-    For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
     #[inline]
     pub fn deploy<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -1004,36 +1268,35 @@ pub mod IAVSDirectoryEvents {
         N: alloy_contract::private::Network,
     >(
         provider: P,
-    ) -> impl ::core::future::Future<Output = alloy_contract::Result<IAVSDirectoryEventsInstance<T, P, N>>>
-    {
+    ) -> impl ::core::future::Future<
+        Output = alloy_contract::Result<IAVSDirectoryEventsInstance<T, P, N>>,
+    > {
         IAVSDirectoryEventsInstance::<T, P, N>::deploy(provider)
     }
     /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-    and constructor arguments, if any.
+and constructor arguments, if any.
 
-    This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-    the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     #[inline]
     pub fn deploy_builder<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
         P: alloy_contract::private::Provider<T, N>,
         N: alloy_contract::private::Network,
-    >(
-        provider: P,
-    ) -> alloy_contract::RawCallBuilder<T, P, N> {
+    >(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
         IAVSDirectoryEventsInstance::<T, P, N>::deploy_builder(provider)
     }
     /**A [`IAVSDirectoryEvents`](self) instance.
 
-    Contains type-safe methods for interacting with an on-chain instance of the
-    [`IAVSDirectoryEvents`](self) contract located at a given `address`, using a given
-    provider `P`.
+Contains type-safe methods for interacting with an on-chain instance of the
+[`IAVSDirectoryEvents`](self) contract located at a given `address`, using a given
+provider `P`.
 
-    If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
-    documentation on how to provide it), the `deploy` and `deploy_builder` methods can
-    be used to deploy a new instance of the contract.
+If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
+documentation on how to provide it), the `deploy` and `deploy_builder` methods can
+be used to deploy a new instance of the contract.
 
-    See the [module-level documentation](self) for all the available methods.*/
+See the [module-level documentation](self) for all the available methods.*/
     #[derive(Clone)]
     pub struct IAVSDirectoryEventsInstance<T, P, N = alloy_contract::private::Ethereum> {
         address: alloy_sol_types::private::Address,
@@ -1044,24 +1307,24 @@ pub mod IAVSDirectoryEvents {
     impl<T, P, N> ::core::fmt::Debug for IAVSDirectoryEventsInstance<T, P, N> {
         #[inline]
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-            f.debug_tuple("IAVSDirectoryEventsInstance")
-                .field(&self.address)
-                .finish()
+            f.debug_tuple("IAVSDirectoryEventsInstance").field(&self.address).finish()
         }
     }
     /// Instantiation and getters/setters.
     #[automatically_derived]
     impl<
-            T: alloy_contract::private::Transport + ::core::clone::Clone,
-            P: alloy_contract::private::Provider<T, N>,
-            N: alloy_contract::private::Network,
-        > IAVSDirectoryEventsInstance<T, P, N>
-    {
+        T: alloy_contract::private::Transport + ::core::clone::Clone,
+        P: alloy_contract::private::Provider<T, N>,
+        N: alloy_contract::private::Network,
+    > IAVSDirectoryEventsInstance<T, P, N> {
         /**Creates a new wrapper around an on-chain [`IAVSDirectoryEvents`](self) contract instance.
 
-        See the [wrapper's documentation](`IAVSDirectoryEventsInstance`) for more details.*/
+See the [wrapper's documentation](`IAVSDirectoryEventsInstance`) for more details.*/
         #[inline]
-        pub const fn new(address: alloy_sol_types::private::Address, provider: P) -> Self {
+        pub const fn new(
+            address: alloy_sol_types::private::Address,
+            provider: P,
+        ) -> Self {
             Self {
                 address,
                 provider,
@@ -1070,9 +1333,9 @@ pub mod IAVSDirectoryEvents {
         }
         /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-        Returns a new instance of the contract, if the deployment was successful.
+Returns a new instance of the contract, if the deployment was successful.
 
-        For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
         #[inline]
         pub async fn deploy(
             provider: P,
@@ -1082,10 +1345,10 @@ pub mod IAVSDirectoryEvents {
             Ok(Self::new(contract_address, call_builder.provider))
         }
         /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-        and constructor arguments, if any.
+and constructor arguments, if any.
 
-        This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-        the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         #[inline]
         pub fn deploy_builder(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
             alloy_contract::RawCallBuilder::new_raw_deploy(
@@ -1128,11 +1391,10 @@ pub mod IAVSDirectoryEvents {
     /// Function calls.
     #[automatically_derived]
     impl<
-            T: alloy_contract::private::Transport + ::core::clone::Clone,
-            P: alloy_contract::private::Provider<T, N>,
-            N: alloy_contract::private::Network,
-        > IAVSDirectoryEventsInstance<T, P, N>
-    {
+        T: alloy_contract::private::Transport + ::core::clone::Clone,
+        P: alloy_contract::private::Provider<T, N>,
+        N: alloy_contract::private::Network,
+    > IAVSDirectoryEventsInstance<T, P, N> {
         /// Creates a new call builder using this contract instance's provider and address.
         ///
         /// Note that the call can be any function call, not just those defined in this
@@ -1147,11 +1409,10 @@ pub mod IAVSDirectoryEvents {
     /// Event filters.
     #[automatically_derived]
     impl<
-            T: alloy_contract::private::Transport + ::core::clone::Clone,
-            P: alloy_contract::private::Provider<T, N>,
-            N: alloy_contract::private::Network,
-        > IAVSDirectoryEventsInstance<T, P, N>
-    {
+        T: alloy_contract::private::Transport + ::core::clone::Clone,
+        P: alloy_contract::private::Provider<T, N>,
+        N: alloy_contract::private::Network,
+    > IAVSDirectoryEventsInstance<T, P, N> {
         /// Creates a new event filter using this contract instance's provider and address.
         ///
         /// Note that the type can be any event, not just those defined in this contract.

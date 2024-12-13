@@ -399,9 +399,9 @@ pub mod IERC721Enumerable {
         b"",
     );
     /**Event with signature `Approval(address,address,uint256)` and selector `0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925`.
-    ```solidity
-    event Approval(address indexed _owner, address indexed _approved, uint256 indexed _tokenId);
-    ```*/
+```solidity
+event Approval(address indexed _owner, address indexed _approved, uint256 indexed _tokenId);
+```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -428,7 +428,9 @@ pub mod IERC721Enumerable {
         #[automatically_derived]
         impl alloy_sol_types::SolEvent for Approval {
             type DataTuple<'a> = ();
-            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (
                 alloy_sol_types::sol_data::FixedBytes<32>,
                 alloy::sol_types::sol_data::Address,
@@ -436,12 +438,40 @@ pub mod IERC721Enumerable {
                 alloy::sol_types::sol_data::Uint<256>,
             );
             const SIGNATURE: &'static str = "Approval(address,address,uint256)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
-                alloy_sol_types::private::B256::new([
-                    140u8, 91u8, 225u8, 229u8, 235u8, 236u8, 125u8, 91u8, 209u8, 79u8, 113u8, 66u8,
-                    125u8, 30u8, 132u8, 243u8, 221u8, 3u8, 20u8, 192u8, 247u8, 178u8, 41u8, 30u8,
-                    91u8, 32u8, 10u8, 200u8, 199u8, 195u8, 185u8, 37u8,
-                ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
+                140u8,
+                91u8,
+                225u8,
+                229u8,
+                235u8,
+                236u8,
+                125u8,
+                91u8,
+                209u8,
+                79u8,
+                113u8,
+                66u8,
+                125u8,
+                30u8,
+                132u8,
+                243u8,
+                221u8,
+                3u8,
+                20u8,
+                192u8,
+                247u8,
+                178u8,
+                41u8,
+                30u8,
+                91u8,
+                32u8,
+                10u8,
+                200u8,
+                199u8,
+                195u8,
+                185u8,
+                37u8,
+            ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -460,11 +490,13 @@ pub mod IERC721Enumerable {
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
-                        Self::SIGNATURE,
-                        topics.0,
-                        Self::SIGNATURE_HASH,
-                    ));
+                    return Err(
+                        alloy_sol_types::Error::invalid_event_signature_hash(
+                            Self::SIGNATURE,
+                            topics.0,
+                            Self::SIGNATURE_HASH,
+                        ),
+                    );
                 }
                 Ok(())
             }
@@ -489,7 +521,9 @@ pub mod IERC721Enumerable {
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
+                out[0usize] = alloy_sol_types::abi::token::WordToken(
+                    Self::SIGNATURE_HASH,
+                );
                 out[1usize] = <alloy::sol_types::sol_data::Address as alloy_sol_types::EventTopic>::encode_topic(
                     &self._owner,
                 );
@@ -520,9 +554,9 @@ pub mod IERC721Enumerable {
         }
     };
     /**Event with signature `ApprovalForAll(address,address,bool)` and selector `0x17307eab39ab6107e8899845ad3d59bd9653f200f220920489ca2b5937696c31`.
-    ```solidity
-    event ApprovalForAll(address indexed _owner, address indexed _operator, bool _approved);
-    ```*/
+```solidity
+event ApprovalForAll(address indexed _owner, address indexed _operator, bool _approved);
+```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -549,19 +583,49 @@ pub mod IERC721Enumerable {
         #[automatically_derived]
         impl alloy_sol_types::SolEvent for ApprovalForAll {
             type DataTuple<'a> = (alloy::sol_types::sol_data::Bool,);
-            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (
                 alloy_sol_types::sol_data::FixedBytes<32>,
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Address,
             );
             const SIGNATURE: &'static str = "ApprovalForAll(address,address,bool)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
-                alloy_sol_types::private::B256::new([
-                    23u8, 48u8, 126u8, 171u8, 57u8, 171u8, 97u8, 7u8, 232u8, 137u8, 152u8, 69u8,
-                    173u8, 61u8, 89u8, 189u8, 150u8, 83u8, 242u8, 0u8, 242u8, 32u8, 146u8, 4u8,
-                    137u8, 202u8, 43u8, 89u8, 55u8, 105u8, 108u8, 49u8,
-                ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
+                23u8,
+                48u8,
+                126u8,
+                171u8,
+                57u8,
+                171u8,
+                97u8,
+                7u8,
+                232u8,
+                137u8,
+                152u8,
+                69u8,
+                173u8,
+                61u8,
+                89u8,
+                189u8,
+                150u8,
+                83u8,
+                242u8,
+                0u8,
+                242u8,
+                32u8,
+                146u8,
+                4u8,
+                137u8,
+                202u8,
+                43u8,
+                89u8,
+                55u8,
+                105u8,
+                108u8,
+                49u8,
+            ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -580,11 +644,13 @@ pub mod IERC721Enumerable {
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
-                        Self::SIGNATURE,
-                        topics.0,
-                        Self::SIGNATURE_HASH,
-                    ));
+                    return Err(
+                        alloy_sol_types::Error::invalid_event_signature_hash(
+                            Self::SIGNATURE,
+                            topics.0,
+                            Self::SIGNATURE_HASH,
+                        ),
+                    );
                 }
                 Ok(())
             }
@@ -612,7 +678,9 @@ pub mod IERC721Enumerable {
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
+                out[0usize] = alloy_sol_types::abi::token::WordToken(
+                    Self::SIGNATURE_HASH,
+                );
                 out[1usize] = <alloy::sol_types::sol_data::Address as alloy_sol_types::EventTopic>::encode_topic(
                     &self._owner,
                 );
@@ -640,9 +708,9 @@ pub mod IERC721Enumerable {
         }
     };
     /**Event with signature `Transfer(address,address,uint256)` and selector `0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef`.
-    ```solidity
-    event Transfer(address indexed _from, address indexed _to, uint256 indexed _tokenId);
-    ```*/
+```solidity
+event Transfer(address indexed _from, address indexed _to, uint256 indexed _tokenId);
+```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -669,7 +737,9 @@ pub mod IERC721Enumerable {
         #[automatically_derived]
         impl alloy_sol_types::SolEvent for Transfer {
             type DataTuple<'a> = ();
-            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (
                 alloy_sol_types::sol_data::FixedBytes<32>,
                 alloy::sol_types::sol_data::Address,
@@ -677,12 +747,40 @@ pub mod IERC721Enumerable {
                 alloy::sol_types::sol_data::Uint<256>,
             );
             const SIGNATURE: &'static str = "Transfer(address,address,uint256)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
-                alloy_sol_types::private::B256::new([
-                    221u8, 242u8, 82u8, 173u8, 27u8, 226u8, 200u8, 155u8, 105u8, 194u8, 176u8,
-                    104u8, 252u8, 55u8, 141u8, 170u8, 149u8, 43u8, 167u8, 241u8, 99u8, 196u8,
-                    161u8, 22u8, 40u8, 245u8, 90u8, 77u8, 245u8, 35u8, 179u8, 239u8,
-                ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
+                221u8,
+                242u8,
+                82u8,
+                173u8,
+                27u8,
+                226u8,
+                200u8,
+                155u8,
+                105u8,
+                194u8,
+                176u8,
+                104u8,
+                252u8,
+                55u8,
+                141u8,
+                170u8,
+                149u8,
+                43u8,
+                167u8,
+                241u8,
+                99u8,
+                196u8,
+                161u8,
+                22u8,
+                40u8,
+                245u8,
+                90u8,
+                77u8,
+                245u8,
+                35u8,
+                179u8,
+                239u8,
+            ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -701,11 +799,13 @@ pub mod IERC721Enumerable {
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
-                        Self::SIGNATURE,
-                        topics.0,
-                        Self::SIGNATURE_HASH,
-                    ));
+                    return Err(
+                        alloy_sol_types::Error::invalid_event_signature_hash(
+                            Self::SIGNATURE,
+                            topics.0,
+                            Self::SIGNATURE_HASH,
+                        ),
+                    );
                 }
                 Ok(())
             }
@@ -730,7 +830,9 @@ pub mod IERC721Enumerable {
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
+                out[0usize] = alloy_sol_types::abi::token::WordToken(
+                    Self::SIGNATURE_HASH,
+                );
                 out[1usize] = <alloy::sol_types::sol_data::Address as alloy_sol_types::EventTopic>::encode_topic(
                     &self._from,
                 );
@@ -761,9 +863,9 @@ pub mod IERC721Enumerable {
         }
     };
     /**Function with signature `approve(address,uint256)` and selector `0x095ea7b3`.
-    ```solidity
-    function approve(address _approved, uint256 _tokenId) external payable;
-    ```*/
+```solidity
+function approve(address _approved, uint256 _tokenId) external payable;
+```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct approveCall {
@@ -795,7 +897,9 @@ pub mod IERC721Enumerable {
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -827,7 +931,9 @@ pub mod IERC721Enumerable {
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -855,10 +961,14 @@ pub mod IERC721Enumerable {
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Uint<256>,
             );
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type Return = approveReturn;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "approve(address,uint256)";
             const SELECTOR: [u8; 4] = [9u8, 94u8, 167u8, 179u8];
             #[inline]
@@ -873,9 +983,9 @@ pub mod IERC721Enumerable {
                     <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
                         &self._approved,
                     ),
-                    <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
-                        &self._tokenId,
-                    ),
+                    <alloy::sol_types::sol_data::Uint<
+                        256,
+                    > as alloy_sol_types::SolType>::tokenize(&self._tokenId),
                 )
             }
             #[inline]
@@ -883,17 +993,17 @@ pub mod IERC721Enumerable {
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
+                <Self::ReturnTuple<
+                    '_,
+                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
+                    .map(Into::into)
             }
         }
     };
     /**Function with signature `balanceOf(address)` and selector `0x70a08231`.
-    ```solidity
-    function balanceOf(address _owner) external view returns (uint256);
-    ```*/
+```solidity
+function balanceOf(address _owner) external view returns (uint256);
+```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct balanceOfCall {
@@ -920,7 +1030,9 @@ pub mod IERC721Enumerable {
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -946,10 +1058,14 @@ pub mod IERC721Enumerable {
             #[doc(hidden)]
             type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (alloy::sol_types::private::primitives::aliases::U256,);
+            type UnderlyingRustTuple<'a> = (
+                alloy::sol_types::private::primitives::aliases::U256,
+            );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -974,10 +1090,14 @@ pub mod IERC721Enumerable {
         #[automatically_derived]
         impl alloy_sol_types::SolCall for balanceOfCall {
             type Parameters<'a> = (alloy::sol_types::sol_data::Address,);
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type Return = balanceOfReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "balanceOf(address)";
             const SELECTOR: [u8; 4] = [112u8, 160u8, 130u8, 49u8];
             #[inline]
@@ -999,17 +1119,17 @@ pub mod IERC721Enumerable {
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
+                <Self::ReturnTuple<
+                    '_,
+                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
+                    .map(Into::into)
             }
         }
     };
     /**Function with signature `getApproved(uint256)` and selector `0x081812fc`.
-    ```solidity
-    function getApproved(uint256 _tokenId) external view returns (address);
-    ```*/
+```solidity
+function getApproved(uint256 _tokenId) external view returns (address);
+```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getApprovedCall {
@@ -1033,10 +1153,14 @@ pub mod IERC721Enumerable {
             #[doc(hidden)]
             type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (alloy::sol_types::private::primitives::aliases::U256,);
+            type UnderlyingRustTuple<'a> = (
+                alloy::sol_types::private::primitives::aliases::U256,
+            );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1065,7 +1189,9 @@ pub mod IERC721Enumerable {
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1090,10 +1216,14 @@ pub mod IERC721Enumerable {
         #[automatically_derived]
         impl alloy_sol_types::SolCall for getApprovedCall {
             type Parameters<'a> = (alloy::sol_types::sol_data::Uint<256>,);
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type Return = getApprovedReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Address,);
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "getApproved(uint256)";
             const SELECTOR: [u8; 4] = [8u8, 24u8, 18u8, 252u8];
             #[inline]
@@ -1105,9 +1235,9 @@ pub mod IERC721Enumerable {
             #[inline]
             fn tokenize(&self) -> Self::Token<'_> {
                 (
-                    <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
-                        &self._tokenId,
-                    ),
+                    <alloy::sol_types::sol_data::Uint<
+                        256,
+                    > as alloy_sol_types::SolType>::tokenize(&self._tokenId),
                 )
             }
             #[inline]
@@ -1115,17 +1245,17 @@ pub mod IERC721Enumerable {
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
+                <Self::ReturnTuple<
+                    '_,
+                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
+                    .map(Into::into)
             }
         }
     };
     /**Function with signature `isApprovedForAll(address,address)` and selector `0xe985e9c5`.
-    ```solidity
-    function isApprovedForAll(address _owner, address _operator) external view returns (bool);
-    ```*/
+```solidity
+function isApprovedForAll(address _owner, address _operator) external view returns (bool);
+```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct isApprovedForAllCall {
@@ -1159,7 +1289,9 @@ pub mod IERC721Enumerable {
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1168,14 +1300,16 @@ pub mod IERC721Enumerable {
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<isApprovedForAllCall> for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<isApprovedForAllCall>
+            for UnderlyingRustTuple<'_> {
                 fn from(value: isApprovedForAllCall) -> Self {
                     (value._owner, value._operator)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for isApprovedForAllCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>>
+            for isApprovedForAllCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {
                         _owner: tuple.0,
@@ -1191,7 +1325,9 @@ pub mod IERC721Enumerable {
             type UnderlyingRustTuple<'a> = (bool,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1200,14 +1336,16 @@ pub mod IERC721Enumerable {
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<isApprovedForAllReturn> for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<isApprovedForAllReturn>
+            for UnderlyingRustTuple<'_> {
                 fn from(value: isApprovedForAllReturn) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for isApprovedForAllReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>>
+            for isApprovedForAllReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -1219,10 +1357,14 @@ pub mod IERC721Enumerable {
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Address,
             );
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type Return = isApprovedForAllReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Bool,);
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "isApprovedForAll(address,address)";
             const SELECTOR: [u8; 4] = [233u8, 133u8, 233u8, 197u8];
             #[inline]
@@ -1247,17 +1389,17 @@ pub mod IERC721Enumerable {
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
+                <Self::ReturnTuple<
+                    '_,
+                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
+                    .map(Into::into)
             }
         }
     };
     /**Function with signature `ownerOf(uint256)` and selector `0x6352211e`.
-    ```solidity
-    function ownerOf(uint256 _tokenId) external view returns (address);
-    ```*/
+```solidity
+function ownerOf(uint256 _tokenId) external view returns (address);
+```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct ownerOfCall {
@@ -1281,10 +1423,14 @@ pub mod IERC721Enumerable {
             #[doc(hidden)]
             type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (alloy::sol_types::private::primitives::aliases::U256,);
+            type UnderlyingRustTuple<'a> = (
+                alloy::sol_types::private::primitives::aliases::U256,
+            );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1313,7 +1459,9 @@ pub mod IERC721Enumerable {
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1338,10 +1486,14 @@ pub mod IERC721Enumerable {
         #[automatically_derived]
         impl alloy_sol_types::SolCall for ownerOfCall {
             type Parameters<'a> = (alloy::sol_types::sol_data::Uint<256>,);
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type Return = ownerOfReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Address,);
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "ownerOf(uint256)";
             const SELECTOR: [u8; 4] = [99u8, 82u8, 33u8, 30u8];
             #[inline]
@@ -1353,9 +1505,9 @@ pub mod IERC721Enumerable {
             #[inline]
             fn tokenize(&self) -> Self::Token<'_> {
                 (
-                    <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
-                        &self._tokenId,
-                    ),
+                    <alloy::sol_types::sol_data::Uint<
+                        256,
+                    > as alloy_sol_types::SolType>::tokenize(&self._tokenId),
                 )
             }
             #[inline]
@@ -1363,17 +1515,17 @@ pub mod IERC721Enumerable {
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
+                <Self::ReturnTuple<
+                    '_,
+                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
+                    .map(Into::into)
             }
         }
     };
     /**Function with signature `safeTransferFrom(address,address,uint256)` and selector `0x42842e0e`.
-    ```solidity
-    function safeTransferFrom(address _from, address _to, uint256 _tokenId) external payable;
-    ```*/
+```solidity
+function safeTransferFrom(address _from, address _to, uint256 _tokenId) external payable;
+```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct safeTransferFrom_0Call {
@@ -1408,7 +1560,9 @@ pub mod IERC721Enumerable {
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1417,14 +1571,16 @@ pub mod IERC721Enumerable {
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<safeTransferFrom_0Call> for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<safeTransferFrom_0Call>
+            for UnderlyingRustTuple<'_> {
                 fn from(value: safeTransferFrom_0Call) -> Self {
                     (value._from, value._to, value._tokenId)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for safeTransferFrom_0Call {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>>
+            for safeTransferFrom_0Call {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {
                         _from: tuple.0,
@@ -1441,7 +1597,9 @@ pub mod IERC721Enumerable {
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1450,14 +1608,16 @@ pub mod IERC721Enumerable {
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<safeTransferFrom_0Return> for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<safeTransferFrom_0Return>
+            for UnderlyingRustTuple<'_> {
                 fn from(value: safeTransferFrom_0Return) -> Self {
                     ()
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for safeTransferFrom_0Return {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>>
+            for safeTransferFrom_0Return {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
@@ -1470,10 +1630,14 @@ pub mod IERC721Enumerable {
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Uint<256>,
             );
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type Return = safeTransferFrom_0Return;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "safeTransferFrom(address,address,uint256)";
             const SELECTOR: [u8; 4] = [66u8, 132u8, 46u8, 14u8];
             #[inline]
@@ -1491,9 +1655,9 @@ pub mod IERC721Enumerable {
                     <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
                         &self._to,
                     ),
-                    <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
-                        &self._tokenId,
-                    ),
+                    <alloy::sol_types::sol_data::Uint<
+                        256,
+                    > as alloy_sol_types::SolType>::tokenize(&self._tokenId),
                 )
             }
             #[inline]
@@ -1501,17 +1665,17 @@ pub mod IERC721Enumerable {
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
+                <Self::ReturnTuple<
+                    '_,
+                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
+                    .map(Into::into)
             }
         }
     };
     /**Function with signature `safeTransferFrom(address,address,uint256,bytes)` and selector `0xb88d4fde`.
-    ```solidity
-    function safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes memory data) external payable;
-    ```*/
+```solidity
+function safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes memory data) external payable;
+```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct safeTransferFrom_1Call {
@@ -1549,7 +1713,9 @@ pub mod IERC721Enumerable {
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1558,14 +1724,16 @@ pub mod IERC721Enumerable {
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<safeTransferFrom_1Call> for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<safeTransferFrom_1Call>
+            for UnderlyingRustTuple<'_> {
                 fn from(value: safeTransferFrom_1Call) -> Self {
                     (value._from, value._to, value._tokenId, value.data)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for safeTransferFrom_1Call {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>>
+            for safeTransferFrom_1Call {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {
                         _from: tuple.0,
@@ -1583,7 +1751,9 @@ pub mod IERC721Enumerable {
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1592,14 +1762,16 @@ pub mod IERC721Enumerable {
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<safeTransferFrom_1Return> for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<safeTransferFrom_1Return>
+            for UnderlyingRustTuple<'_> {
                 fn from(value: safeTransferFrom_1Return) -> Self {
                     ()
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for safeTransferFrom_1Return {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>>
+            for safeTransferFrom_1Return {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
@@ -1613,10 +1785,14 @@ pub mod IERC721Enumerable {
                 alloy::sol_types::sol_data::Uint<256>,
                 alloy::sol_types::sol_data::Bytes,
             );
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type Return = safeTransferFrom_1Return;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "safeTransferFrom(address,address,uint256,bytes)";
             const SELECTOR: [u8; 4] = [184u8, 141u8, 79u8, 222u8];
             #[inline]
@@ -1634,9 +1810,9 @@ pub mod IERC721Enumerable {
                     <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
                         &self._to,
                     ),
-                    <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
-                        &self._tokenId,
-                    ),
+                    <alloy::sol_types::sol_data::Uint<
+                        256,
+                    > as alloy_sol_types::SolType>::tokenize(&self._tokenId),
                     <alloy::sol_types::sol_data::Bytes as alloy_sol_types::SolType>::tokenize(
                         &self.data,
                     ),
@@ -1647,17 +1823,17 @@ pub mod IERC721Enumerable {
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
+                <Self::ReturnTuple<
+                    '_,
+                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
+                    .map(Into::into)
             }
         }
     };
     /**Function with signature `setApprovalForAll(address,bool)` and selector `0xa22cb465`.
-    ```solidity
-    function setApprovalForAll(address _operator, bool _approved) external;
-    ```*/
+```solidity
+function setApprovalForAll(address _operator, bool _approved) external;
+```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setApprovalForAllCall {
@@ -1686,7 +1862,9 @@ pub mod IERC721Enumerable {
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address, bool);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1695,14 +1873,16 @@ pub mod IERC721Enumerable {
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<setApprovalForAllCall> for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<setApprovalForAllCall>
+            for UnderlyingRustTuple<'_> {
                 fn from(value: setApprovalForAllCall) -> Self {
                     (value._operator, value._approved)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for setApprovalForAllCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>>
+            for setApprovalForAllCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {
                         _operator: tuple.0,
@@ -1718,7 +1898,9 @@ pub mod IERC721Enumerable {
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1727,14 +1909,16 @@ pub mod IERC721Enumerable {
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<setApprovalForAllReturn> for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<setApprovalForAllReturn>
+            for UnderlyingRustTuple<'_> {
                 fn from(value: setApprovalForAllReturn) -> Self {
                     ()
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for setApprovalForAllReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>>
+            for setApprovalForAllReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
@@ -1746,10 +1930,14 @@ pub mod IERC721Enumerable {
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Bool,
             );
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type Return = setApprovalForAllReturn;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "setApprovalForAll(address,bool)";
             const SELECTOR: [u8; 4] = [162u8, 44u8, 180u8, 101u8];
             #[inline]
@@ -1774,17 +1962,17 @@ pub mod IERC721Enumerable {
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
+                <Self::ReturnTuple<
+                    '_,
+                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
+                    .map(Into::into)
             }
         }
     };
     /**Function with signature `supportsInterface(bytes4)` and selector `0x01ffc9a7`.
-    ```solidity
-    function supportsInterface(bytes4 interfaceID) external view returns (bool);
-    ```*/
+```solidity
+function supportsInterface(bytes4 interfaceID) external view returns (bool);
+```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct supportsInterfaceCall {
@@ -1811,7 +1999,9 @@ pub mod IERC721Enumerable {
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::FixedBytes<4>,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1820,18 +2010,18 @@ pub mod IERC721Enumerable {
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<supportsInterfaceCall> for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<supportsInterfaceCall>
+            for UnderlyingRustTuple<'_> {
                 fn from(value: supportsInterfaceCall) -> Self {
                     (value.interfaceID,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for supportsInterfaceCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>>
+            for supportsInterfaceCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self {
-                        interfaceID: tuple.0,
-                    }
+                    Self { interfaceID: tuple.0 }
                 }
             }
         }
@@ -1842,7 +2032,9 @@ pub mod IERC721Enumerable {
             type UnderlyingRustTuple<'a> = (bool,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1851,14 +2043,16 @@ pub mod IERC721Enumerable {
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<supportsInterfaceReturn> for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<supportsInterfaceReturn>
+            for UnderlyingRustTuple<'_> {
                 fn from(value: supportsInterfaceReturn) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for supportsInterfaceReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>>
+            for supportsInterfaceReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -1867,10 +2061,14 @@ pub mod IERC721Enumerable {
         #[automatically_derived]
         impl alloy_sol_types::SolCall for supportsInterfaceCall {
             type Parameters<'a> = (alloy::sol_types::sol_data::FixedBytes<4>,);
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type Return = supportsInterfaceReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Bool,);
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "supportsInterface(bytes4)";
             const SELECTOR: [u8; 4] = [1u8, 255u8, 201u8, 167u8];
             #[inline]
@@ -1892,17 +2090,17 @@ pub mod IERC721Enumerable {
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
+                <Self::ReturnTuple<
+                    '_,
+                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
+                    .map(Into::into)
             }
         }
     };
     /**Function with signature `tokenByIndex(uint256)` and selector `0x4f6ccce7`.
-    ```solidity
-    function tokenByIndex(uint256 _index) external view returns (uint256);
-    ```*/
+```solidity
+function tokenByIndex(uint256 _index) external view returns (uint256);
+```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct tokenByIndexCall {
@@ -1926,10 +2124,14 @@ pub mod IERC721Enumerable {
             #[doc(hidden)]
             type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (alloy::sol_types::private::primitives::aliases::U256,);
+            type UnderlyingRustTuple<'a> = (
+                alloy::sol_types::private::primitives::aliases::U256,
+            );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1955,10 +2157,14 @@ pub mod IERC721Enumerable {
             #[doc(hidden)]
             type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (alloy::sol_types::private::primitives::aliases::U256,);
+            type UnderlyingRustTuple<'a> = (
+                alloy::sol_types::private::primitives::aliases::U256,
+            );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1983,10 +2189,14 @@ pub mod IERC721Enumerable {
         #[automatically_derived]
         impl alloy_sol_types::SolCall for tokenByIndexCall {
             type Parameters<'a> = (alloy::sol_types::sol_data::Uint<256>,);
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type Return = tokenByIndexReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "tokenByIndex(uint256)";
             const SELECTOR: [u8; 4] = [79u8, 108u8, 204u8, 231u8];
             #[inline]
@@ -1998,9 +2208,9 @@ pub mod IERC721Enumerable {
             #[inline]
             fn tokenize(&self) -> Self::Token<'_> {
                 (
-                    <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
-                        &self._index,
-                    ),
+                    <alloy::sol_types::sol_data::Uint<
+                        256,
+                    > as alloy_sol_types::SolType>::tokenize(&self._index),
                 )
             }
             #[inline]
@@ -2008,17 +2218,17 @@ pub mod IERC721Enumerable {
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
+                <Self::ReturnTuple<
+                    '_,
+                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
+                    .map(Into::into)
             }
         }
     };
     /**Function with signature `tokenOfOwnerByIndex(address,uint256)` and selector `0x2f745c59`.
-    ```solidity
-    function tokenOfOwnerByIndex(address _owner, uint256 _index) external view returns (uint256);
-    ```*/
+```solidity
+function tokenOfOwnerByIndex(address _owner, uint256 _index) external view returns (uint256);
+```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct tokenOfOwnerByIndexCall {
@@ -2052,7 +2262,9 @@ pub mod IERC721Enumerable {
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -2061,14 +2273,16 @@ pub mod IERC721Enumerable {
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<tokenOfOwnerByIndexCall> for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<tokenOfOwnerByIndexCall>
+            for UnderlyingRustTuple<'_> {
                 fn from(value: tokenOfOwnerByIndexCall) -> Self {
                     (value._owner, value._index)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for tokenOfOwnerByIndexCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>>
+            for tokenOfOwnerByIndexCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {
                         _owner: tuple.0,
@@ -2081,10 +2295,14 @@ pub mod IERC721Enumerable {
             #[doc(hidden)]
             type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (alloy::sol_types::private::primitives::aliases::U256,);
+            type UnderlyingRustTuple<'a> = (
+                alloy::sol_types::private::primitives::aliases::U256,
+            );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -2093,14 +2311,16 @@ pub mod IERC721Enumerable {
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<tokenOfOwnerByIndexReturn> for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<tokenOfOwnerByIndexReturn>
+            for UnderlyingRustTuple<'_> {
                 fn from(value: tokenOfOwnerByIndexReturn) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for tokenOfOwnerByIndexReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>>
+            for tokenOfOwnerByIndexReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -2112,10 +2332,14 @@ pub mod IERC721Enumerable {
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Uint<256>,
             );
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type Return = tokenOfOwnerByIndexReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "tokenOfOwnerByIndex(address,uint256)";
             const SELECTOR: [u8; 4] = [47u8, 116u8, 92u8, 89u8];
             #[inline]
@@ -2130,9 +2354,9 @@ pub mod IERC721Enumerable {
                     <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
                         &self._owner,
                     ),
-                    <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
-                        &self._index,
-                    ),
+                    <alloy::sol_types::sol_data::Uint<
+                        256,
+                    > as alloy_sol_types::SolType>::tokenize(&self._index),
                 )
             }
             #[inline]
@@ -2140,17 +2364,17 @@ pub mod IERC721Enumerable {
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
+                <Self::ReturnTuple<
+                    '_,
+                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
+                    .map(Into::into)
             }
         }
     };
     /**Function with signature `totalSupply()` and selector `0x18160ddd`.
-    ```solidity
-    function totalSupply() external view returns (uint256);
-    ```*/
+```solidity
+function totalSupply() external view returns (uint256);
+```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct totalSupplyCall {}
@@ -2175,7 +2399,9 @@ pub mod IERC721Enumerable {
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -2201,10 +2427,14 @@ pub mod IERC721Enumerable {
             #[doc(hidden)]
             type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (alloy::sol_types::private::primitives::aliases::U256,);
+            type UnderlyingRustTuple<'a> = (
+                alloy::sol_types::private::primitives::aliases::U256,
+            );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -2229,10 +2459,14 @@ pub mod IERC721Enumerable {
         #[automatically_derived]
         impl alloy_sol_types::SolCall for totalSupplyCall {
             type Parameters<'a> = ();
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type Return = totalSupplyReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "totalSupply()";
             const SELECTOR: [u8; 4] = [24u8, 22u8, 13u8, 221u8];
             #[inline]
@@ -2250,17 +2484,17 @@ pub mod IERC721Enumerable {
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
+                <Self::ReturnTuple<
+                    '_,
+                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
+                    .map(Into::into)
             }
         }
     };
     /**Function with signature `transferFrom(address,address,uint256)` and selector `0x23b872dd`.
-    ```solidity
-    function transferFrom(address _from, address _to, uint256 _tokenId) external payable;
-    ```*/
+```solidity
+function transferFrom(address _from, address _to, uint256 _tokenId) external payable;
+```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct transferFromCall {
@@ -2295,7 +2529,9 @@ pub mod IERC721Enumerable {
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -2328,7 +2564,9 @@ pub mod IERC721Enumerable {
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -2357,10 +2595,14 @@ pub mod IERC721Enumerable {
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Uint<256>,
             );
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type Return = transferFromReturn;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "transferFrom(address,address,uint256)";
             const SELECTOR: [u8; 4] = [35u8, 184u8, 114u8, 221u8];
             #[inline]
@@ -2378,9 +2620,9 @@ pub mod IERC721Enumerable {
                     <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
                         &self._to,
                     ),
-                    <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
-                        &self._tokenId,
-                    ),
+                    <alloy::sol_types::sol_data::Uint<
+                        256,
+                    > as alloy_sol_types::SolType>::tokenize(&self._tokenId),
                 )
             }
             #[inline]
@@ -2388,10 +2630,10 @@ pub mod IERC721Enumerable {
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
+                <Self::ReturnTuple<
+                    '_,
+                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
+                    .map(Into::into)
             }
         }
     };
@@ -2444,8 +2686,12 @@ pub mod IERC721Enumerable {
         fn selector(&self) -> [u8; 4] {
             match self {
                 Self::approve(_) => <approveCall as alloy_sol_types::SolCall>::SELECTOR,
-                Self::balanceOf(_) => <balanceOfCall as alloy_sol_types::SolCall>::SELECTOR,
-                Self::getApproved(_) => <getApprovedCall as alloy_sol_types::SolCall>::SELECTOR,
+                Self::balanceOf(_) => {
+                    <balanceOfCall as alloy_sol_types::SolCall>::SELECTOR
+                }
+                Self::getApproved(_) => {
+                    <getApprovedCall as alloy_sol_types::SolCall>::SELECTOR
+                }
                 Self::isApprovedForAll(_) => {
                     <isApprovedForAllCall as alloy_sol_types::SolCall>::SELECTOR
                 }
@@ -2462,12 +2708,18 @@ pub mod IERC721Enumerable {
                 Self::supportsInterface(_) => {
                     <supportsInterfaceCall as alloy_sol_types::SolCall>::SELECTOR
                 }
-                Self::tokenByIndex(_) => <tokenByIndexCall as alloy_sol_types::SolCall>::SELECTOR,
+                Self::tokenByIndex(_) => {
+                    <tokenByIndexCall as alloy_sol_types::SolCall>::SELECTOR
+                }
                 Self::tokenOfOwnerByIndex(_) => {
                     <tokenOfOwnerByIndexCall as alloy_sol_types::SolCall>::SELECTOR
                 }
-                Self::totalSupply(_) => <totalSupplyCall as alloy_sol_types::SolCall>::SELECTOR,
-                Self::transferFrom(_) => <transferFromCall as alloy_sol_types::SolCall>::SELECTOR,
+                Self::totalSupply(_) => {
+                    <totalSupplyCall as alloy_sol_types::SolCall>::SELECTOR
+                }
+                Self::transferFrom(_) => {
+                    <transferFromCall as alloy_sol_types::SolCall>::SELECTOR
+                }
             }
         }
         #[inline]
@@ -2488,17 +2740,17 @@ pub mod IERC721Enumerable {
             static DECODE_SHIMS: &[fn(
                 &[u8],
                 bool,
-            )
-                -> alloy_sol_types::Result<IERC721EnumerableCalls>] = &[
+            ) -> alloy_sol_types::Result<IERC721EnumerableCalls>] = &[
                 {
                     fn supportsInterface(
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<IERC721EnumerableCalls> {
                         <supportsInterfaceCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                            data, validate,
-                        )
-                        .map(IERC721EnumerableCalls::supportsInterface)
+                                data,
+                                validate,
+                            )
+                            .map(IERC721EnumerableCalls::supportsInterface)
                     }
                     supportsInterface
                 },
@@ -2508,9 +2760,10 @@ pub mod IERC721Enumerable {
                         validate: bool,
                     ) -> alloy_sol_types::Result<IERC721EnumerableCalls> {
                         <getApprovedCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                            data, validate,
-                        )
-                        .map(IERC721EnumerableCalls::getApproved)
+                                data,
+                                validate,
+                            )
+                            .map(IERC721EnumerableCalls::getApproved)
                     }
                     getApproved
                 },
@@ -2519,7 +2772,10 @@ pub mod IERC721Enumerable {
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<IERC721EnumerableCalls> {
-                        <approveCall as alloy_sol_types::SolCall>::abi_decode_raw(data, validate)
+                        <approveCall as alloy_sol_types::SolCall>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
                             .map(IERC721EnumerableCalls::approve)
                     }
                     approve
@@ -2530,9 +2786,10 @@ pub mod IERC721Enumerable {
                         validate: bool,
                     ) -> alloy_sol_types::Result<IERC721EnumerableCalls> {
                         <totalSupplyCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                            data, validate,
-                        )
-                        .map(IERC721EnumerableCalls::totalSupply)
+                                data,
+                                validate,
+                            )
+                            .map(IERC721EnumerableCalls::totalSupply)
                     }
                     totalSupply
                 },
@@ -2542,9 +2799,10 @@ pub mod IERC721Enumerable {
                         validate: bool,
                     ) -> alloy_sol_types::Result<IERC721EnumerableCalls> {
                         <transferFromCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                            data, validate,
-                        )
-                        .map(IERC721EnumerableCalls::transferFrom)
+                                data,
+                                validate,
+                            )
+                            .map(IERC721EnumerableCalls::transferFrom)
                     }
                     transferFrom
                 },
@@ -2554,9 +2812,10 @@ pub mod IERC721Enumerable {
                         validate: bool,
                     ) -> alloy_sol_types::Result<IERC721EnumerableCalls> {
                         <tokenOfOwnerByIndexCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                            data, validate,
-                        )
-                        .map(IERC721EnumerableCalls::tokenOfOwnerByIndex)
+                                data,
+                                validate,
+                            )
+                            .map(IERC721EnumerableCalls::tokenOfOwnerByIndex)
                     }
                     tokenOfOwnerByIndex
                 },
@@ -2566,9 +2825,10 @@ pub mod IERC721Enumerable {
                         validate: bool,
                     ) -> alloy_sol_types::Result<IERC721EnumerableCalls> {
                         <safeTransferFrom_0Call as alloy_sol_types::SolCall>::abi_decode_raw(
-                            data, validate,
-                        )
-                        .map(IERC721EnumerableCalls::safeTransferFrom_0)
+                                data,
+                                validate,
+                            )
+                            .map(IERC721EnumerableCalls::safeTransferFrom_0)
                     }
                     safeTransferFrom_0
                 },
@@ -2578,9 +2838,10 @@ pub mod IERC721Enumerable {
                         validate: bool,
                     ) -> alloy_sol_types::Result<IERC721EnumerableCalls> {
                         <tokenByIndexCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                            data, validate,
-                        )
-                        .map(IERC721EnumerableCalls::tokenByIndex)
+                                data,
+                                validate,
+                            )
+                            .map(IERC721EnumerableCalls::tokenByIndex)
                     }
                     tokenByIndex
                 },
@@ -2589,7 +2850,10 @@ pub mod IERC721Enumerable {
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<IERC721EnumerableCalls> {
-                        <ownerOfCall as alloy_sol_types::SolCall>::abi_decode_raw(data, validate)
+                        <ownerOfCall as alloy_sol_types::SolCall>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
                             .map(IERC721EnumerableCalls::ownerOf)
                     }
                     ownerOf
@@ -2599,7 +2863,10 @@ pub mod IERC721Enumerable {
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<IERC721EnumerableCalls> {
-                        <balanceOfCall as alloy_sol_types::SolCall>::abi_decode_raw(data, validate)
+                        <balanceOfCall as alloy_sol_types::SolCall>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
                             .map(IERC721EnumerableCalls::balanceOf)
                     }
                     balanceOf
@@ -2610,9 +2877,10 @@ pub mod IERC721Enumerable {
                         validate: bool,
                     ) -> alloy_sol_types::Result<IERC721EnumerableCalls> {
                         <setApprovalForAllCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                            data, validate,
-                        )
-                        .map(IERC721EnumerableCalls::setApprovalForAll)
+                                data,
+                                validate,
+                            )
+                            .map(IERC721EnumerableCalls::setApprovalForAll)
                     }
                     setApprovalForAll
                 },
@@ -2622,9 +2890,10 @@ pub mod IERC721Enumerable {
                         validate: bool,
                     ) -> alloy_sol_types::Result<IERC721EnumerableCalls> {
                         <safeTransferFrom_1Call as alloy_sol_types::SolCall>::abi_decode_raw(
-                            data, validate,
-                        )
-                        .map(IERC721EnumerableCalls::safeTransferFrom_1)
+                                data,
+                                validate,
+                            )
+                            .map(IERC721EnumerableCalls::safeTransferFrom_1)
                     }
                     safeTransferFrom_1
                 },
@@ -2634,18 +2903,21 @@ pub mod IERC721Enumerable {
                         validate: bool,
                     ) -> alloy_sol_types::Result<IERC721EnumerableCalls> {
                         <isApprovedForAllCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                            data, validate,
-                        )
-                        .map(IERC721EnumerableCalls::isApprovedForAll)
+                                data,
+                                validate,
+                            )
+                            .map(IERC721EnumerableCalls::isApprovedForAll)
                     }
                     isApprovedForAll
                 },
             ];
             let Ok(idx) = Self::SELECTORS.binary_search(&selector) else {
-                return Err(alloy_sol_types::Error::unknown_selector(
-                    <Self as alloy_sol_types::SolInterface>::NAME,
-                    selector,
-                ));
+                return Err(
+                    alloy_sol_types::Error::unknown_selector(
+                        <Self as alloy_sol_types::SolInterface>::NAME,
+                        selector,
+                    ),
+                );
             };
             (unsafe { DECODE_SHIMS.get_unchecked(idx) })(data, validate)
         }
@@ -2659,37 +2931,57 @@ pub mod IERC721Enumerable {
                     <balanceOfCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
                 }
                 Self::getApproved(inner) => {
-                    <getApprovedCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
+                    <getApprovedCall as alloy_sol_types::SolCall>::abi_encoded_size(
+                        inner,
+                    )
                 }
                 Self::isApprovedForAll(inner) => {
-                    <isApprovedForAllCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
+                    <isApprovedForAllCall as alloy_sol_types::SolCall>::abi_encoded_size(
+                        inner,
+                    )
                 }
                 Self::ownerOf(inner) => {
                     <ownerOfCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
                 }
                 Self::safeTransferFrom_0(inner) => {
-                    <safeTransferFrom_0Call as alloy_sol_types::SolCall>::abi_encoded_size(inner)
+                    <safeTransferFrom_0Call as alloy_sol_types::SolCall>::abi_encoded_size(
+                        inner,
+                    )
                 }
                 Self::safeTransferFrom_1(inner) => {
-                    <safeTransferFrom_1Call as alloy_sol_types::SolCall>::abi_encoded_size(inner)
+                    <safeTransferFrom_1Call as alloy_sol_types::SolCall>::abi_encoded_size(
+                        inner,
+                    )
                 }
                 Self::setApprovalForAll(inner) => {
-                    <setApprovalForAllCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
+                    <setApprovalForAllCall as alloy_sol_types::SolCall>::abi_encoded_size(
+                        inner,
+                    )
                 }
                 Self::supportsInterface(inner) => {
-                    <supportsInterfaceCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
+                    <supportsInterfaceCall as alloy_sol_types::SolCall>::abi_encoded_size(
+                        inner,
+                    )
                 }
                 Self::tokenByIndex(inner) => {
-                    <tokenByIndexCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
+                    <tokenByIndexCall as alloy_sol_types::SolCall>::abi_encoded_size(
+                        inner,
+                    )
                 }
                 Self::tokenOfOwnerByIndex(inner) => {
-                    <tokenOfOwnerByIndexCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
+                    <tokenOfOwnerByIndexCall as alloy_sol_types::SolCall>::abi_encoded_size(
+                        inner,
+                    )
                 }
                 Self::totalSupply(inner) => {
-                    <totalSupplyCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
+                    <totalSupplyCall as alloy_sol_types::SolCall>::abi_encoded_size(
+                        inner,
+                    )
                 }
                 Self::transferFrom(inner) => {
-                    <transferFromCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
+                    <transferFromCall as alloy_sol_types::SolCall>::abi_encoded_size(
+                        inner,
+                    )
                 }
             }
         }
@@ -2700,42 +2992,73 @@ pub mod IERC721Enumerable {
                     <approveCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
                 }
                 Self::balanceOf(inner) => {
-                    <balanceOfCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
+                    <balanceOfCall as alloy_sol_types::SolCall>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
                 }
                 Self::getApproved(inner) => {
-                    <getApprovedCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
+                    <getApprovedCall as alloy_sol_types::SolCall>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
                 }
                 Self::isApprovedForAll(inner) => {
-                    <isApprovedForAllCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
+                    <isApprovedForAllCall as alloy_sol_types::SolCall>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
                 }
                 Self::ownerOf(inner) => {
                     <ownerOfCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
                 }
                 Self::safeTransferFrom_0(inner) => {
-                    <safeTransferFrom_0Call as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
+                    <safeTransferFrom_0Call as alloy_sol_types::SolCall>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
                 }
                 Self::safeTransferFrom_1(inner) => {
-                    <safeTransferFrom_1Call as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
+                    <safeTransferFrom_1Call as alloy_sol_types::SolCall>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
                 }
                 Self::setApprovalForAll(inner) => {
-                    <setApprovalForAllCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
+                    <setApprovalForAllCall as alloy_sol_types::SolCall>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
                 }
                 Self::supportsInterface(inner) => {
-                    <supportsInterfaceCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
+                    <supportsInterfaceCall as alloy_sol_types::SolCall>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
                 }
                 Self::tokenByIndex(inner) => {
-                    <tokenByIndexCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
+                    <tokenByIndexCall as alloy_sol_types::SolCall>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
                 }
                 Self::tokenOfOwnerByIndex(inner) => {
                     <tokenOfOwnerByIndexCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner, out,
+                        inner,
+                        out,
                     )
                 }
                 Self::totalSupply(inner) => {
-                    <totalSupplyCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
+                    <totalSupplyCall as alloy_sol_types::SolCall>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
                 }
                 Self::transferFrom(inner) => {
-                    <transferFromCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
+                    <transferFromCall as alloy_sol_types::SolCall>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
                 }
             }
         }
@@ -2756,19 +3079,106 @@ pub mod IERC721Enumerable {
         /// Prefer using `SolInterface` methods instead.
         pub const SELECTORS: &'static [[u8; 32usize]] = &[
             [
-                23u8, 48u8, 126u8, 171u8, 57u8, 171u8, 97u8, 7u8, 232u8, 137u8, 152u8, 69u8, 173u8,
-                61u8, 89u8, 189u8, 150u8, 83u8, 242u8, 0u8, 242u8, 32u8, 146u8, 4u8, 137u8, 202u8,
-                43u8, 89u8, 55u8, 105u8, 108u8, 49u8,
+                23u8,
+                48u8,
+                126u8,
+                171u8,
+                57u8,
+                171u8,
+                97u8,
+                7u8,
+                232u8,
+                137u8,
+                152u8,
+                69u8,
+                173u8,
+                61u8,
+                89u8,
+                189u8,
+                150u8,
+                83u8,
+                242u8,
+                0u8,
+                242u8,
+                32u8,
+                146u8,
+                4u8,
+                137u8,
+                202u8,
+                43u8,
+                89u8,
+                55u8,
+                105u8,
+                108u8,
+                49u8,
             ],
             [
-                140u8, 91u8, 225u8, 229u8, 235u8, 236u8, 125u8, 91u8, 209u8, 79u8, 113u8, 66u8,
-                125u8, 30u8, 132u8, 243u8, 221u8, 3u8, 20u8, 192u8, 247u8, 178u8, 41u8, 30u8, 91u8,
-                32u8, 10u8, 200u8, 199u8, 195u8, 185u8, 37u8,
+                140u8,
+                91u8,
+                225u8,
+                229u8,
+                235u8,
+                236u8,
+                125u8,
+                91u8,
+                209u8,
+                79u8,
+                113u8,
+                66u8,
+                125u8,
+                30u8,
+                132u8,
+                243u8,
+                221u8,
+                3u8,
+                20u8,
+                192u8,
+                247u8,
+                178u8,
+                41u8,
+                30u8,
+                91u8,
+                32u8,
+                10u8,
+                200u8,
+                199u8,
+                195u8,
+                185u8,
+                37u8,
             ],
             [
-                221u8, 242u8, 82u8, 173u8, 27u8, 226u8, 200u8, 155u8, 105u8, 194u8, 176u8, 104u8,
-                252u8, 55u8, 141u8, 170u8, 149u8, 43u8, 167u8, 241u8, 99u8, 196u8, 161u8, 22u8,
-                40u8, 245u8, 90u8, 77u8, 245u8, 35u8, 179u8, 239u8,
+                221u8,
+                242u8,
+                82u8,
+                173u8,
+                27u8,
+                226u8,
+                200u8,
+                155u8,
+                105u8,
+                194u8,
+                176u8,
+                104u8,
+                252u8,
+                55u8,
+                141u8,
+                170u8,
+                149u8,
+                43u8,
+                167u8,
+                241u8,
+                99u8,
+                196u8,
+                161u8,
+                22u8,
+                40u8,
+                245u8,
+                90u8,
+                77u8,
+                245u8,
+                35u8,
+                179u8,
+                239u8,
             ],
         ];
     }
@@ -2783,28 +3193,40 @@ pub mod IERC721Enumerable {
         ) -> alloy_sol_types::Result<Self> {
             match topics.first().copied() {
                 Some(<Approval as alloy_sol_types::SolEvent>::SIGNATURE_HASH) => {
-                    <Approval as alloy_sol_types::SolEvent>::decode_raw_log(topics, data, validate)
+                    <Approval as alloy_sol_types::SolEvent>::decode_raw_log(
+                            topics,
+                            data,
+                            validate,
+                        )
                         .map(Self::Approval)
                 }
                 Some(<ApprovalForAll as alloy_sol_types::SolEvent>::SIGNATURE_HASH) => {
                     <ApprovalForAll as alloy_sol_types::SolEvent>::decode_raw_log(
-                        topics, data, validate,
-                    )
-                    .map(Self::ApprovalForAll)
+                            topics,
+                            data,
+                            validate,
+                        )
+                        .map(Self::ApprovalForAll)
                 }
                 Some(<Transfer as alloy_sol_types::SolEvent>::SIGNATURE_HASH) => {
-                    <Transfer as alloy_sol_types::SolEvent>::decode_raw_log(topics, data, validate)
+                    <Transfer as alloy_sol_types::SolEvent>::decode_raw_log(
+                            topics,
+                            data,
+                            validate,
+                        )
                         .map(Self::Transfer)
                 }
-                _ => alloy_sol_types::private::Err(alloy_sol_types::Error::InvalidLog {
-                    name: <Self as alloy_sol_types::SolEventInterface>::NAME,
-                    log: alloy_sol_types::private::Box::new(
-                        alloy_sol_types::private::LogData::new_unchecked(
-                            topics.to_vec(),
-                            data.to_vec().into(),
+                _ => {
+                    alloy_sol_types::private::Err(alloy_sol_types::Error::InvalidLog {
+                        name: <Self as alloy_sol_types::SolEventInterface>::NAME,
+                        log: alloy_sol_types::private::Box::new(
+                            alloy_sol_types::private::LogData::new_unchecked(
+                                topics.to_vec(),
+                                data.to_vec().into(),
+                            ),
                         ),
-                    ),
-                }),
+                    })
+                }
             }
         }
     }
@@ -2812,11 +3234,15 @@ pub mod IERC721Enumerable {
     impl alloy_sol_types::private::IntoLogData for IERC721EnumerableEvents {
         fn to_log_data(&self) -> alloy_sol_types::private::LogData {
             match self {
-                Self::Approval(inner) => alloy_sol_types::private::IntoLogData::to_log_data(inner),
+                Self::Approval(inner) => {
+                    alloy_sol_types::private::IntoLogData::to_log_data(inner)
+                }
                 Self::ApprovalForAll(inner) => {
                     alloy_sol_types::private::IntoLogData::to_log_data(inner)
                 }
-                Self::Transfer(inner) => alloy_sol_types::private::IntoLogData::to_log_data(inner),
+                Self::Transfer(inner) => {
+                    alloy_sol_types::private::IntoLogData::to_log_data(inner)
+                }
             }
         }
         fn into_log_data(self) -> alloy_sol_types::private::LogData {
@@ -2836,7 +3262,7 @@ pub mod IERC721Enumerable {
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`IERC721Enumerable`](self) contract instance.
 
-    See the [wrapper's documentation](`IERC721EnumerableInstance`) for more details.*/
+See the [wrapper's documentation](`IERC721EnumerableInstance`) for more details.*/
     #[inline]
     pub const fn new<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -2850,9 +3276,9 @@ pub mod IERC721Enumerable {
     }
     /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-    Returns a new instance of the contract, if the deployment was successful.
+Returns a new instance of the contract, if the deployment was successful.
 
-    For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
     #[inline]
     pub fn deploy<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -2860,36 +3286,35 @@ pub mod IERC721Enumerable {
         N: alloy_contract::private::Network,
     >(
         provider: P,
-    ) -> impl ::core::future::Future<Output = alloy_contract::Result<IERC721EnumerableInstance<T, P, N>>>
-    {
+    ) -> impl ::core::future::Future<
+        Output = alloy_contract::Result<IERC721EnumerableInstance<T, P, N>>,
+    > {
         IERC721EnumerableInstance::<T, P, N>::deploy(provider)
     }
     /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-    and constructor arguments, if any.
+and constructor arguments, if any.
 
-    This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-    the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     #[inline]
     pub fn deploy_builder<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
         P: alloy_contract::private::Provider<T, N>,
         N: alloy_contract::private::Network,
-    >(
-        provider: P,
-    ) -> alloy_contract::RawCallBuilder<T, P, N> {
+    >(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
         IERC721EnumerableInstance::<T, P, N>::deploy_builder(provider)
     }
     /**A [`IERC721Enumerable`](self) instance.
 
-    Contains type-safe methods for interacting with an on-chain instance of the
-    [`IERC721Enumerable`](self) contract located at a given `address`, using a given
-    provider `P`.
+Contains type-safe methods for interacting with an on-chain instance of the
+[`IERC721Enumerable`](self) contract located at a given `address`, using a given
+provider `P`.
 
-    If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
-    documentation on how to provide it), the `deploy` and `deploy_builder` methods can
-    be used to deploy a new instance of the contract.
+If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
+documentation on how to provide it), the `deploy` and `deploy_builder` methods can
+be used to deploy a new instance of the contract.
 
-    See the [module-level documentation](self) for all the available methods.*/
+See the [module-level documentation](self) for all the available methods.*/
     #[derive(Clone)]
     pub struct IERC721EnumerableInstance<T, P, N = alloy_contract::private::Ethereum> {
         address: alloy_sol_types::private::Address,
@@ -2900,24 +3325,24 @@ pub mod IERC721Enumerable {
     impl<T, P, N> ::core::fmt::Debug for IERC721EnumerableInstance<T, P, N> {
         #[inline]
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-            f.debug_tuple("IERC721EnumerableInstance")
-                .field(&self.address)
-                .finish()
+            f.debug_tuple("IERC721EnumerableInstance").field(&self.address).finish()
         }
     }
     /// Instantiation and getters/setters.
     #[automatically_derived]
     impl<
-            T: alloy_contract::private::Transport + ::core::clone::Clone,
-            P: alloy_contract::private::Provider<T, N>,
-            N: alloy_contract::private::Network,
-        > IERC721EnumerableInstance<T, P, N>
-    {
+        T: alloy_contract::private::Transport + ::core::clone::Clone,
+        P: alloy_contract::private::Provider<T, N>,
+        N: alloy_contract::private::Network,
+    > IERC721EnumerableInstance<T, P, N> {
         /**Creates a new wrapper around an on-chain [`IERC721Enumerable`](self) contract instance.
 
-        See the [wrapper's documentation](`IERC721EnumerableInstance`) for more details.*/
+See the [wrapper's documentation](`IERC721EnumerableInstance`) for more details.*/
         #[inline]
-        pub const fn new(address: alloy_sol_types::private::Address, provider: P) -> Self {
+        pub const fn new(
+            address: alloy_sol_types::private::Address,
+            provider: P,
+        ) -> Self {
             Self {
                 address,
                 provider,
@@ -2926,9 +3351,9 @@ pub mod IERC721Enumerable {
         }
         /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-        Returns a new instance of the contract, if the deployment was successful.
+Returns a new instance of the contract, if the deployment was successful.
 
-        For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
         #[inline]
         pub async fn deploy(
             provider: P,
@@ -2938,10 +3363,10 @@ pub mod IERC721Enumerable {
             Ok(Self::new(contract_address, call_builder.provider))
         }
         /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-        and constructor arguments, if any.
+and constructor arguments, if any.
 
-        This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-        the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         #[inline]
         pub fn deploy_builder(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
             alloy_contract::RawCallBuilder::new_raw_deploy(
@@ -2984,11 +3409,10 @@ pub mod IERC721Enumerable {
     /// Function calls.
     #[automatically_derived]
     impl<
-            T: alloy_contract::private::Transport + ::core::clone::Clone,
-            P: alloy_contract::private::Provider<T, N>,
-            N: alloy_contract::private::Network,
-        > IERC721EnumerableInstance<T, P, N>
-    {
+        T: alloy_contract::private::Transport + ::core::clone::Clone,
+        P: alloy_contract::private::Provider<T, N>,
+        N: alloy_contract::private::Network,
+    > IERC721EnumerableInstance<T, P, N> {
         /// Creates a new call builder using this contract instance's provider and address.
         ///
         /// Note that the call can be any function call, not just those defined in this
@@ -3005,10 +3429,7 @@ pub mod IERC721Enumerable {
             _approved: alloy::sol_types::private::Address,
             _tokenId: alloy::sol_types::private::primitives::aliases::U256,
         ) -> alloy_contract::SolCallBuilder<T, &P, approveCall, N> {
-            self.call_builder(&approveCall {
-                _approved,
-                _tokenId,
-            })
+            self.call_builder(&approveCall { _approved, _tokenId })
         }
         ///Creates a new call builder for the [`balanceOf`] function.
         pub fn balanceOf(
@@ -3030,7 +3451,12 @@ pub mod IERC721Enumerable {
             _owner: alloy::sol_types::private::Address,
             _operator: alloy::sol_types::private::Address,
         ) -> alloy_contract::SolCallBuilder<T, &P, isApprovedForAllCall, N> {
-            self.call_builder(&isApprovedForAllCall { _owner, _operator })
+            self.call_builder(
+                &isApprovedForAllCall {
+                    _owner,
+                    _operator,
+                },
+            )
         }
         ///Creates a new call builder for the [`ownerOf`] function.
         pub fn ownerOf(
@@ -3046,11 +3472,13 @@ pub mod IERC721Enumerable {
             _to: alloy::sol_types::private::Address,
             _tokenId: alloy::sol_types::private::primitives::aliases::U256,
         ) -> alloy_contract::SolCallBuilder<T, &P, safeTransferFrom_0Call, N> {
-            self.call_builder(&safeTransferFrom_0Call {
-                _from,
-                _to,
-                _tokenId,
-            })
+            self.call_builder(
+                &safeTransferFrom_0Call {
+                    _from,
+                    _to,
+                    _tokenId,
+                },
+            )
         }
         ///Creates a new call builder for the [`safeTransferFrom_1`] function.
         pub fn safeTransferFrom_1(
@@ -3060,12 +3488,14 @@ pub mod IERC721Enumerable {
             _tokenId: alloy::sol_types::private::primitives::aliases::U256,
             data: alloy::sol_types::private::Bytes,
         ) -> alloy_contract::SolCallBuilder<T, &P, safeTransferFrom_1Call, N> {
-            self.call_builder(&safeTransferFrom_1Call {
-                _from,
-                _to,
-                _tokenId,
-                data,
-            })
+            self.call_builder(
+                &safeTransferFrom_1Call {
+                    _from,
+                    _to,
+                    _tokenId,
+                    data,
+                },
+            )
         }
         ///Creates a new call builder for the [`setApprovalForAll`] function.
         pub fn setApprovalForAll(
@@ -3073,17 +3503,23 @@ pub mod IERC721Enumerable {
             _operator: alloy::sol_types::private::Address,
             _approved: bool,
         ) -> alloy_contract::SolCallBuilder<T, &P, setApprovalForAllCall, N> {
-            self.call_builder(&setApprovalForAllCall {
-                _operator,
-                _approved,
-            })
+            self.call_builder(
+                &setApprovalForAllCall {
+                    _operator,
+                    _approved,
+                },
+            )
         }
         ///Creates a new call builder for the [`supportsInterface`] function.
         pub fn supportsInterface(
             &self,
             interfaceID: alloy::sol_types::private::FixedBytes<4>,
         ) -> alloy_contract::SolCallBuilder<T, &P, supportsInterfaceCall, N> {
-            self.call_builder(&supportsInterfaceCall { interfaceID })
+            self.call_builder(
+                &supportsInterfaceCall {
+                    interfaceID,
+                },
+            )
         }
         ///Creates a new call builder for the [`tokenByIndex`] function.
         pub fn tokenByIndex(
@@ -3098,10 +3534,17 @@ pub mod IERC721Enumerable {
             _owner: alloy::sol_types::private::Address,
             _index: alloy::sol_types::private::primitives::aliases::U256,
         ) -> alloy_contract::SolCallBuilder<T, &P, tokenOfOwnerByIndexCall, N> {
-            self.call_builder(&tokenOfOwnerByIndexCall { _owner, _index })
+            self.call_builder(
+                &tokenOfOwnerByIndexCall {
+                    _owner,
+                    _index,
+                },
+            )
         }
         ///Creates a new call builder for the [`totalSupply`] function.
-        pub fn totalSupply(&self) -> alloy_contract::SolCallBuilder<T, &P, totalSupplyCall, N> {
+        pub fn totalSupply(
+            &self,
+        ) -> alloy_contract::SolCallBuilder<T, &P, totalSupplyCall, N> {
             self.call_builder(&totalSupplyCall {})
         }
         ///Creates a new call builder for the [`transferFrom`] function.
@@ -3111,21 +3554,22 @@ pub mod IERC721Enumerable {
             _to: alloy::sol_types::private::Address,
             _tokenId: alloy::sol_types::private::primitives::aliases::U256,
         ) -> alloy_contract::SolCallBuilder<T, &P, transferFromCall, N> {
-            self.call_builder(&transferFromCall {
-                _from,
-                _to,
-                _tokenId,
-            })
+            self.call_builder(
+                &transferFromCall {
+                    _from,
+                    _to,
+                    _tokenId,
+                },
+            )
         }
     }
     /// Event filters.
     #[automatically_derived]
     impl<
-            T: alloy_contract::private::Transport + ::core::clone::Clone,
-            P: alloy_contract::private::Provider<T, N>,
-            N: alloy_contract::private::Network,
-        > IERC721EnumerableInstance<T, P, N>
-    {
+        T: alloy_contract::private::Transport + ::core::clone::Clone,
+        P: alloy_contract::private::Provider<T, N>,
+        N: alloy_contract::private::Network,
+    > IERC721EnumerableInstance<T, P, N> {
         /// Creates a new event filter using this contract instance's provider and address.
         ///
         /// Note that the type can be any event, not just those defined in this contract.
@@ -3140,7 +3584,9 @@ pub mod IERC721Enumerable {
             self.event_filter::<Approval>()
         }
         ///Creates a new event filter for the [`ApprovalForAll`] event.
-        pub fn ApprovalForAll_filter(&self) -> alloy_contract::Event<T, &P, ApprovalForAll, N> {
+        pub fn ApprovalForAll_filter(
+            &self,
+        ) -> alloy_contract::Event<T, &P, ApprovalForAll, N> {
             self.event_filter::<ApprovalForAll>()
         }
         ///Creates a new event filter for the [`Transfer`] event.

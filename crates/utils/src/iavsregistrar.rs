@@ -84,9 +84,9 @@ pub mod IAVSRegistrar {
         b"",
     );
     /**Function with signature `deregisterOperator(address,uint32[])` and selector `0x9d8e0c23`.
-    ```solidity
-    function deregisterOperator(address operator, uint32[] memory operatorSetIds) external;
-    ```*/
+```solidity
+function deregisterOperator(address operator, uint32[] memory operatorSetIds) external;
+```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct deregisterOperatorCall {
@@ -118,7 +118,9 @@ pub mod IAVSRegistrar {
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -127,14 +129,16 @@ pub mod IAVSRegistrar {
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<deregisterOperatorCall> for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<deregisterOperatorCall>
+            for UnderlyingRustTuple<'_> {
                 fn from(value: deregisterOperatorCall) -> Self {
                     (value.operator, value.operatorSetIds)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for deregisterOperatorCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>>
+            for deregisterOperatorCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {
                         operator: tuple.0,
@@ -150,7 +154,9 @@ pub mod IAVSRegistrar {
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -159,14 +165,16 @@ pub mod IAVSRegistrar {
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<deregisterOperatorReturn> for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<deregisterOperatorReturn>
+            for UnderlyingRustTuple<'_> {
                 fn from(value: deregisterOperatorReturn) -> Self {
                     ()
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for deregisterOperatorReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>>
+            for deregisterOperatorReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
@@ -178,10 +186,14 @@ pub mod IAVSRegistrar {
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::Uint<32>>,
             );
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type Return = deregisterOperatorReturn;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "deregisterOperator(address,uint32[])";
             const SELECTOR: [u8; 4] = [157u8, 142u8, 12u8, 35u8];
             #[inline]
@@ -206,17 +218,17 @@ pub mod IAVSRegistrar {
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
+                <Self::ReturnTuple<
+                    '_,
+                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
+                    .map(Into::into)
             }
         }
     };
     /**Function with signature `registerOperator(address,uint32[],bytes)` and selector `0xadcf73f7`.
-    ```solidity
-    function registerOperator(address operator, uint32[] memory operatorSetIds, bytes memory data) external;
-    ```*/
+```solidity
+function registerOperator(address operator, uint32[] memory operatorSetIds, bytes memory data) external;
+```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct registerOperatorCall {
@@ -251,7 +263,9 @@ pub mod IAVSRegistrar {
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -260,14 +274,16 @@ pub mod IAVSRegistrar {
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<registerOperatorCall> for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<registerOperatorCall>
+            for UnderlyingRustTuple<'_> {
                 fn from(value: registerOperatorCall) -> Self {
                     (value.operator, value.operatorSetIds, value.data)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for registerOperatorCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>>
+            for registerOperatorCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {
                         operator: tuple.0,
@@ -284,7 +300,9 @@ pub mod IAVSRegistrar {
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -293,14 +311,16 @@ pub mod IAVSRegistrar {
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<registerOperatorReturn> for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<registerOperatorReturn>
+            for UnderlyingRustTuple<'_> {
                 fn from(value: registerOperatorReturn) -> Self {
                     ()
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for registerOperatorReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>>
+            for registerOperatorReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
@@ -313,10 +333,14 @@ pub mod IAVSRegistrar {
                 alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::Uint<32>>,
                 alloy::sol_types::sol_data::Bytes,
             );
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type Return = registerOperatorReturn;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "registerOperator(address,uint32[],bytes)";
             const SELECTOR: [u8; 4] = [173u8, 207u8, 115u8, 247u8];
             #[inline]
@@ -344,10 +368,10 @@ pub mod IAVSRegistrar {
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
+                <Self::ReturnTuple<
+                    '_,
+                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
+                    .map(Into::into)
             }
         }
     };
@@ -364,8 +388,10 @@ pub mod IAVSRegistrar {
         /// No guarantees are made about the order of the selectors.
         ///
         /// Prefer using `SolInterface` methods instead.
-        pub const SELECTORS: &'static [[u8; 4usize]] =
-            &[[157u8, 142u8, 12u8, 35u8], [173u8, 207u8, 115u8, 247u8]];
+        pub const SELECTORS: &'static [[u8; 4usize]] = &[
+            [157u8, 142u8, 12u8, 35u8],
+            [173u8, 207u8, 115u8, 247u8],
+        ];
     }
     #[automatically_derived]
     impl alloy_sol_types::SolInterface for IAVSRegistrarCalls {
@@ -401,17 +427,17 @@ pub mod IAVSRegistrar {
             static DECODE_SHIMS: &[fn(
                 &[u8],
                 bool,
-            )
-                -> alloy_sol_types::Result<IAVSRegistrarCalls>] = &[
+            ) -> alloy_sol_types::Result<IAVSRegistrarCalls>] = &[
                 {
                     fn deregisterOperator(
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<IAVSRegistrarCalls> {
                         <deregisterOperatorCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                            data, validate,
-                        )
-                        .map(IAVSRegistrarCalls::deregisterOperator)
+                                data,
+                                validate,
+                            )
+                            .map(IAVSRegistrarCalls::deregisterOperator)
                     }
                     deregisterOperator
                 },
@@ -421,18 +447,21 @@ pub mod IAVSRegistrar {
                         validate: bool,
                     ) -> alloy_sol_types::Result<IAVSRegistrarCalls> {
                         <registerOperatorCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                            data, validate,
-                        )
-                        .map(IAVSRegistrarCalls::registerOperator)
+                                data,
+                                validate,
+                            )
+                            .map(IAVSRegistrarCalls::registerOperator)
                     }
                     registerOperator
                 },
             ];
             let Ok(idx) = Self::SELECTORS.binary_search(&selector) else {
-                return Err(alloy_sol_types::Error::unknown_selector(
-                    <Self as alloy_sol_types::SolInterface>::NAME,
-                    selector,
-                ));
+                return Err(
+                    alloy_sol_types::Error::unknown_selector(
+                        <Self as alloy_sol_types::SolInterface>::NAME,
+                        selector,
+                    ),
+                );
             };
             (unsafe { DECODE_SHIMS.get_unchecked(idx) })(data, validate)
         }
@@ -440,10 +469,14 @@ pub mod IAVSRegistrar {
         fn abi_encoded_size(&self) -> usize {
             match self {
                 Self::deregisterOperator(inner) => {
-                    <deregisterOperatorCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
+                    <deregisterOperatorCall as alloy_sol_types::SolCall>::abi_encoded_size(
+                        inner,
+                    )
                 }
                 Self::registerOperator(inner) => {
-                    <registerOperatorCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
+                    <registerOperatorCall as alloy_sol_types::SolCall>::abi_encoded_size(
+                        inner,
+                    )
                 }
             }
         }
@@ -451,10 +484,16 @@ pub mod IAVSRegistrar {
         fn abi_encode_raw(&self, out: &mut alloy_sol_types::private::Vec<u8>) {
             match self {
                 Self::deregisterOperator(inner) => {
-                    <deregisterOperatorCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
+                    <deregisterOperatorCall as alloy_sol_types::SolCall>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
                 }
                 Self::registerOperator(inner) => {
-                    <registerOperatorCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
+                    <registerOperatorCall as alloy_sol_types::SolCall>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
                 }
             }
         }
@@ -462,7 +501,7 @@ pub mod IAVSRegistrar {
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`IAVSRegistrar`](self) contract instance.
 
-    See the [wrapper's documentation](`IAVSRegistrarInstance`) for more details.*/
+See the [wrapper's documentation](`IAVSRegistrarInstance`) for more details.*/
     #[inline]
     pub const fn new<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -476,9 +515,9 @@ pub mod IAVSRegistrar {
     }
     /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-    Returns a new instance of the contract, if the deployment was successful.
+Returns a new instance of the contract, if the deployment was successful.
 
-    For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
     #[inline]
     pub fn deploy<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -486,36 +525,35 @@ pub mod IAVSRegistrar {
         N: alloy_contract::private::Network,
     >(
         provider: P,
-    ) -> impl ::core::future::Future<Output = alloy_contract::Result<IAVSRegistrarInstance<T, P, N>>>
-    {
+    ) -> impl ::core::future::Future<
+        Output = alloy_contract::Result<IAVSRegistrarInstance<T, P, N>>,
+    > {
         IAVSRegistrarInstance::<T, P, N>::deploy(provider)
     }
     /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-    and constructor arguments, if any.
+and constructor arguments, if any.
 
-    This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-    the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     #[inline]
     pub fn deploy_builder<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
         P: alloy_contract::private::Provider<T, N>,
         N: alloy_contract::private::Network,
-    >(
-        provider: P,
-    ) -> alloy_contract::RawCallBuilder<T, P, N> {
+    >(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
         IAVSRegistrarInstance::<T, P, N>::deploy_builder(provider)
     }
     /**A [`IAVSRegistrar`](self) instance.
 
-    Contains type-safe methods for interacting with an on-chain instance of the
-    [`IAVSRegistrar`](self) contract located at a given `address`, using a given
-    provider `P`.
+Contains type-safe methods for interacting with an on-chain instance of the
+[`IAVSRegistrar`](self) contract located at a given `address`, using a given
+provider `P`.
 
-    If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
-    documentation on how to provide it), the `deploy` and `deploy_builder` methods can
-    be used to deploy a new instance of the contract.
+If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
+documentation on how to provide it), the `deploy` and `deploy_builder` methods can
+be used to deploy a new instance of the contract.
 
-    See the [module-level documentation](self) for all the available methods.*/
+See the [module-level documentation](self) for all the available methods.*/
     #[derive(Clone)]
     pub struct IAVSRegistrarInstance<T, P, N = alloy_contract::private::Ethereum> {
         address: alloy_sol_types::private::Address,
@@ -526,24 +564,24 @@ pub mod IAVSRegistrar {
     impl<T, P, N> ::core::fmt::Debug for IAVSRegistrarInstance<T, P, N> {
         #[inline]
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-            f.debug_tuple("IAVSRegistrarInstance")
-                .field(&self.address)
-                .finish()
+            f.debug_tuple("IAVSRegistrarInstance").field(&self.address).finish()
         }
     }
     /// Instantiation and getters/setters.
     #[automatically_derived]
     impl<
-            T: alloy_contract::private::Transport + ::core::clone::Clone,
-            P: alloy_contract::private::Provider<T, N>,
-            N: alloy_contract::private::Network,
-        > IAVSRegistrarInstance<T, P, N>
-    {
+        T: alloy_contract::private::Transport + ::core::clone::Clone,
+        P: alloy_contract::private::Provider<T, N>,
+        N: alloy_contract::private::Network,
+    > IAVSRegistrarInstance<T, P, N> {
         /**Creates a new wrapper around an on-chain [`IAVSRegistrar`](self) contract instance.
 
-        See the [wrapper's documentation](`IAVSRegistrarInstance`) for more details.*/
+See the [wrapper's documentation](`IAVSRegistrarInstance`) for more details.*/
         #[inline]
-        pub const fn new(address: alloy_sol_types::private::Address, provider: P) -> Self {
+        pub const fn new(
+            address: alloy_sol_types::private::Address,
+            provider: P,
+        ) -> Self {
             Self {
                 address,
                 provider,
@@ -552,20 +590,22 @@ pub mod IAVSRegistrar {
         }
         /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-        Returns a new instance of the contract, if the deployment was successful.
+Returns a new instance of the contract, if the deployment was successful.
 
-        For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
         #[inline]
-        pub async fn deploy(provider: P) -> alloy_contract::Result<IAVSRegistrarInstance<T, P, N>> {
+        pub async fn deploy(
+            provider: P,
+        ) -> alloy_contract::Result<IAVSRegistrarInstance<T, P, N>> {
             let call_builder = Self::deploy_builder(provider);
             let contract_address = call_builder.deploy().await?;
             Ok(Self::new(contract_address, call_builder.provider))
         }
         /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-        and constructor arguments, if any.
+and constructor arguments, if any.
 
-        This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-        the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         #[inline]
         pub fn deploy_builder(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
             alloy_contract::RawCallBuilder::new_raw_deploy(
@@ -608,11 +648,10 @@ pub mod IAVSRegistrar {
     /// Function calls.
     #[automatically_derived]
     impl<
-            T: alloy_contract::private::Transport + ::core::clone::Clone,
-            P: alloy_contract::private::Provider<T, N>,
-            N: alloy_contract::private::Network,
-        > IAVSRegistrarInstance<T, P, N>
-    {
+        T: alloy_contract::private::Transport + ::core::clone::Clone,
+        P: alloy_contract::private::Provider<T, N>,
+        N: alloy_contract::private::Network,
+    > IAVSRegistrarInstance<T, P, N> {
         /// Creates a new call builder using this contract instance's provider and address.
         ///
         /// Note that the call can be any function call, not just those defined in this
@@ -629,10 +668,12 @@ pub mod IAVSRegistrar {
             operator: alloy::sol_types::private::Address,
             operatorSetIds: alloy::sol_types::private::Vec<u32>,
         ) -> alloy_contract::SolCallBuilder<T, &P, deregisterOperatorCall, N> {
-            self.call_builder(&deregisterOperatorCall {
-                operator,
-                operatorSetIds,
-            })
+            self.call_builder(
+                &deregisterOperatorCall {
+                    operator,
+                    operatorSetIds,
+                },
+            )
         }
         ///Creates a new call builder for the [`registerOperator`] function.
         pub fn registerOperator(
@@ -641,21 +682,22 @@ pub mod IAVSRegistrar {
             operatorSetIds: alloy::sol_types::private::Vec<u32>,
             data: alloy::sol_types::private::Bytes,
         ) -> alloy_contract::SolCallBuilder<T, &P, registerOperatorCall, N> {
-            self.call_builder(&registerOperatorCall {
-                operator,
-                operatorSetIds,
-                data,
-            })
+            self.call_builder(
+                &registerOperatorCall {
+                    operator,
+                    operatorSetIds,
+                    data,
+                },
+            )
         }
     }
     /// Event filters.
     #[automatically_derived]
     impl<
-            T: alloy_contract::private::Transport + ::core::clone::Clone,
-            P: alloy_contract::private::Provider<T, N>,
-            N: alloy_contract::private::Network,
-        > IAVSRegistrarInstance<T, P, N>
-    {
+        T: alloy_contract::private::Transport + ::core::clone::Clone,
+        P: alloy_contract::private::Provider<T, N>,
+        N: alloy_contract::private::Network,
+    > IAVSRegistrarInstance<T, P, N> {
         /// Creates a new event filter using this contract instance's provider and address.
         ///
         /// Note that the type can be any event, not just those defined in this contract.

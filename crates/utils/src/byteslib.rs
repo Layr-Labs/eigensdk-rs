@@ -35,27 +35,27 @@ pub mod BytesLib {
     /// The creation / init bytecode of the contract.
     ///
     /// ```text
-    ///0x60556032600b8282823980515f1a607314602657634e487b7160e01b5f525f60045260245ffd5b305f52607381538281f3fe730000000000000000000000000000000000000000301460806040525f5ffdfea2646970667358221220517c792f82001a69d55f8c03043251e3baff982c0b3c945ebf5259c111341b5664736f6c634300081b0033
+    ///0x6055604b600b8282823980515f1a607314603f577f4e487b71000000000000000000000000000000000000000000000000000000005f525f60045260245ffd5b305f52607381538281f3fe730000000000000000000000000000000000000000301460806040525f5ffdfea2646970667358221220d70448e565f29c5241e0ecd29aa424a706237305d906582d99db575c2b3beff364736f6c634300081b0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"`U`2`\x0B\x82\x82\x829\x80Q_\x1A`s\x14`&WcNH{q`\xE0\x1B_R_`\x04R`$_\xFD[0_R`s\x81S\x82\x81\xF3\xFEs\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x000\x14`\x80`@R__\xFD\xFE\xA2dipfsX\"\x12 Q|y/\x82\0\x1Ai\xD5_\x8C\x03\x042Q\xE3\xBA\xFF\x98,\x0B<\x94^\xBFRY\xC1\x114\x1BVdsolcC\0\x08\x1B\x003",
+        b"`U`K`\x0B\x82\x82\x829\x80Q_\x1A`s\x14`?W\x7FNH{q\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0_R_`\x04R`$_\xFD[0_R`s\x81S\x82\x81\xF3\xFEs\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x000\x14`\x80`@R__\xFD\xFE\xA2dipfsX\"\x12 \xD7\x04H\xE5e\xF2\x9CRA\xE0\xEC\xD2\x9A\xA4$\xA7\x06#s\x05\xD9\x06X-\x99\xDBW\\+;\xEF\xF3dsolcC\0\x08\x1B\x003",
     );
     /// The runtime bytecode of the contract, as deployed on the network.
     ///
     /// ```text
-    ///0x730000000000000000000000000000000000000000301460806040525f5ffdfea2646970667358221220517c792f82001a69d55f8c03043251e3baff982c0b3c945ebf5259c111341b5664736f6c634300081b0033
+    ///0x730000000000000000000000000000000000000000301460806040525f5ffdfea2646970667358221220d70448e565f29c5241e0ecd29aa424a706237305d906582d99db575c2b3beff364736f6c634300081b0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static DEPLOYED_BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"s\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x000\x14`\x80`@R__\xFD\xFE\xA2dipfsX\"\x12 Q|y/\x82\0\x1Ai\xD5_\x8C\x03\x042Q\xE3\xBA\xFF\x98,\x0B<\x94^\xBFRY\xC1\x114\x1BVdsolcC\0\x08\x1B\x003",
+        b"s\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x000\x14`\x80`@R__\xFD\xFE\xA2dipfsX\"\x12 \xD7\x04H\xE5e\xF2\x9CRA\xE0\xEC\xD2\x9A\xA4$\xA7\x06#s\x05\xD9\x06X-\x99\xDBW\\+;\xEF\xF3dsolcC\0\x08\x1B\x003",
     );
     /**Custom error with signature `OutOfBounds()` and selector `0xb4120f14`.
-    ```solidity
-    error OutOfBounds();
-    ```*/
+```solidity
+error OutOfBounds();
+```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct OutOfBounds {}
@@ -73,7 +73,9 @@ pub mod BytesLib {
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+        fn _type_assertion(
+            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+        ) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -97,7 +99,9 @@ pub mod BytesLib {
         #[automatically_derived]
         impl alloy_sol_types::SolError for OutOfBounds {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "OutOfBounds()";
             const SELECTOR: [u8; 4] = [180u8, 18u8, 15u8, 20u8];
             #[inline]
@@ -113,9 +117,9 @@ pub mod BytesLib {
         }
     };
     /**Custom error with signature `Overflow()` and selector `0x35278d12`.
-    ```solidity
-    error Overflow();
-    ```*/
+```solidity
+error Overflow();
+```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct Overflow {}
@@ -133,7 +137,9 @@ pub mod BytesLib {
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+        fn _type_assertion(
+            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+        ) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -157,7 +163,9 @@ pub mod BytesLib {
         #[automatically_derived]
         impl alloy_sol_types::SolError for Overflow {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "Overflow()";
             const SELECTOR: [u8; 4] = [53u8, 39u8, 141u8, 18u8];
             #[inline]
@@ -185,8 +193,10 @@ pub mod BytesLib {
         /// No guarantees are made about the order of the selectors.
         ///
         /// Prefer using `SolInterface` methods instead.
-        pub const SELECTORS: &'static [[u8; 4usize]] =
-            &[[53u8, 39u8, 141u8, 18u8], [180u8, 18u8, 15u8, 20u8]];
+        pub const SELECTORS: &'static [[u8; 4usize]] = &[
+            [53u8, 39u8, 141u8, 18u8],
+            [180u8, 18u8, 15u8, 20u8],
+        ];
     }
     #[automatically_derived]
     impl alloy_sol_types::SolInterface for BytesLibErrors {
@@ -196,7 +206,9 @@ pub mod BytesLib {
         #[inline]
         fn selector(&self) -> [u8; 4] {
             match self {
-                Self::OutOfBounds(_) => <OutOfBounds as alloy_sol_types::SolError>::SELECTOR,
+                Self::OutOfBounds(_) => {
+                    <OutOfBounds as alloy_sol_types::SolError>::SELECTOR
+                }
                 Self::Overflow(_) => <Overflow as alloy_sol_types::SolError>::SELECTOR,
             }
         }
@@ -215,13 +227,19 @@ pub mod BytesLib {
             data: &[u8],
             validate: bool,
         ) -> alloy_sol_types::Result<Self> {
-            static DECODE_SHIMS: &[fn(&[u8], bool) -> alloy_sol_types::Result<BytesLibErrors>] = &[
+            static DECODE_SHIMS: &[fn(
+                &[u8],
+                bool,
+            ) -> alloy_sol_types::Result<BytesLibErrors>] = &[
                 {
                     fn Overflow(
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<BytesLibErrors> {
-                        <Overflow as alloy_sol_types::SolError>::abi_decode_raw(data, validate)
+                        <Overflow as alloy_sol_types::SolError>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
                             .map(BytesLibErrors::Overflow)
                     }
                     Overflow
@@ -231,17 +249,22 @@ pub mod BytesLib {
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<BytesLibErrors> {
-                        <OutOfBounds as alloy_sol_types::SolError>::abi_decode_raw(data, validate)
+                        <OutOfBounds as alloy_sol_types::SolError>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
                             .map(BytesLibErrors::OutOfBounds)
                     }
                     OutOfBounds
                 },
             ];
             let Ok(idx) = Self::SELECTORS.binary_search(&selector) else {
-                return Err(alloy_sol_types::Error::unknown_selector(
-                    <Self as alloy_sol_types::SolInterface>::NAME,
-                    selector,
-                ));
+                return Err(
+                    alloy_sol_types::Error::unknown_selector(
+                        <Self as alloy_sol_types::SolInterface>::NAME,
+                        selector,
+                    ),
+                );
             };
             (unsafe { DECODE_SHIMS.get_unchecked(idx) })(data, validate)
         }
@@ -260,7 +283,10 @@ pub mod BytesLib {
         fn abi_encode_raw(&self, out: &mut alloy_sol_types::private::Vec<u8>) {
             match self {
                 Self::OutOfBounds(inner) => {
-                    <OutOfBounds as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
+                    <OutOfBounds as alloy_sol_types::SolError>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
                 }
                 Self::Overflow(inner) => {
                     <Overflow as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
@@ -271,7 +297,7 @@ pub mod BytesLib {
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`BytesLib`](self) contract instance.
 
-    See the [wrapper's documentation](`BytesLibInstance`) for more details.*/
+See the [wrapper's documentation](`BytesLibInstance`) for more details.*/
     #[inline]
     pub const fn new<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -285,9 +311,9 @@ pub mod BytesLib {
     }
     /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-    Returns a new instance of the contract, if the deployment was successful.
+Returns a new instance of the contract, if the deployment was successful.
 
-    For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
     #[inline]
     pub fn deploy<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -295,36 +321,35 @@ pub mod BytesLib {
         N: alloy_contract::private::Network,
     >(
         provider: P,
-    ) -> impl ::core::future::Future<Output = alloy_contract::Result<BytesLibInstance<T, P, N>>>
-    {
+    ) -> impl ::core::future::Future<
+        Output = alloy_contract::Result<BytesLibInstance<T, P, N>>,
+    > {
         BytesLibInstance::<T, P, N>::deploy(provider)
     }
     /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-    and constructor arguments, if any.
+and constructor arguments, if any.
 
-    This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-    the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     #[inline]
     pub fn deploy_builder<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
         P: alloy_contract::private::Provider<T, N>,
         N: alloy_contract::private::Network,
-    >(
-        provider: P,
-    ) -> alloy_contract::RawCallBuilder<T, P, N> {
+    >(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
         BytesLibInstance::<T, P, N>::deploy_builder(provider)
     }
     /**A [`BytesLib`](self) instance.
 
-    Contains type-safe methods for interacting with an on-chain instance of the
-    [`BytesLib`](self) contract located at a given `address`, using a given
-    provider `P`.
+Contains type-safe methods for interacting with an on-chain instance of the
+[`BytesLib`](self) contract located at a given `address`, using a given
+provider `P`.
 
-    If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
-    documentation on how to provide it), the `deploy` and `deploy_builder` methods can
-    be used to deploy a new instance of the contract.
+If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
+documentation on how to provide it), the `deploy` and `deploy_builder` methods can
+be used to deploy a new instance of the contract.
 
-    See the [module-level documentation](self) for all the available methods.*/
+See the [module-level documentation](self) for all the available methods.*/
     #[derive(Clone)]
     pub struct BytesLibInstance<T, P, N = alloy_contract::private::Ethereum> {
         address: alloy_sol_types::private::Address,
@@ -335,24 +360,24 @@ pub mod BytesLib {
     impl<T, P, N> ::core::fmt::Debug for BytesLibInstance<T, P, N> {
         #[inline]
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-            f.debug_tuple("BytesLibInstance")
-                .field(&self.address)
-                .finish()
+            f.debug_tuple("BytesLibInstance").field(&self.address).finish()
         }
     }
     /// Instantiation and getters/setters.
     #[automatically_derived]
     impl<
-            T: alloy_contract::private::Transport + ::core::clone::Clone,
-            P: alloy_contract::private::Provider<T, N>,
-            N: alloy_contract::private::Network,
-        > BytesLibInstance<T, P, N>
-    {
+        T: alloy_contract::private::Transport + ::core::clone::Clone,
+        P: alloy_contract::private::Provider<T, N>,
+        N: alloy_contract::private::Network,
+    > BytesLibInstance<T, P, N> {
         /**Creates a new wrapper around an on-chain [`BytesLib`](self) contract instance.
 
-        See the [wrapper's documentation](`BytesLibInstance`) for more details.*/
+See the [wrapper's documentation](`BytesLibInstance`) for more details.*/
         #[inline]
-        pub const fn new(address: alloy_sol_types::private::Address, provider: P) -> Self {
+        pub const fn new(
+            address: alloy_sol_types::private::Address,
+            provider: P,
+        ) -> Self {
             Self {
                 address,
                 provider,
@@ -361,20 +386,22 @@ pub mod BytesLib {
         }
         /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-        Returns a new instance of the contract, if the deployment was successful.
+Returns a new instance of the contract, if the deployment was successful.
 
-        For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
         #[inline]
-        pub async fn deploy(provider: P) -> alloy_contract::Result<BytesLibInstance<T, P, N>> {
+        pub async fn deploy(
+            provider: P,
+        ) -> alloy_contract::Result<BytesLibInstance<T, P, N>> {
             let call_builder = Self::deploy_builder(provider);
             let contract_address = call_builder.deploy().await?;
             Ok(Self::new(contract_address, call_builder.provider))
         }
         /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-        and constructor arguments, if any.
+and constructor arguments, if any.
 
-        This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-        the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         #[inline]
         pub fn deploy_builder(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
             alloy_contract::RawCallBuilder::new_raw_deploy(
@@ -417,11 +444,10 @@ pub mod BytesLib {
     /// Function calls.
     #[automatically_derived]
     impl<
-            T: alloy_contract::private::Transport + ::core::clone::Clone,
-            P: alloy_contract::private::Provider<T, N>,
-            N: alloy_contract::private::Network,
-        > BytesLibInstance<T, P, N>
-    {
+        T: alloy_contract::private::Transport + ::core::clone::Clone,
+        P: alloy_contract::private::Provider<T, N>,
+        N: alloy_contract::private::Network,
+    > BytesLibInstance<T, P, N> {
         /// Creates a new call builder using this contract instance's provider and address.
         ///
         /// Note that the call can be any function call, not just those defined in this
@@ -436,11 +462,10 @@ pub mod BytesLib {
     /// Event filters.
     #[automatically_derived]
     impl<
-            T: alloy_contract::private::Transport + ::core::clone::Clone,
-            P: alloy_contract::private::Provider<T, N>,
-            N: alloy_contract::private::Network,
-        > BytesLibInstance<T, P, N>
-    {
+        T: alloy_contract::private::Transport + ::core::clone::Clone,
+        P: alloy_contract::private::Provider<T, N>,
+        N: alloy_contract::private::Network,
+    > BytesLibInstance<T, P, N> {
         /// Creates a new event filter using this contract instance's provider and address.
         ///
         /// Note that the type can be any event, not just those defined in this contract.
