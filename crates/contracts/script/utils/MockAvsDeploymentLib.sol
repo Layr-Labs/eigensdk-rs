@@ -222,9 +222,9 @@ library MockAvsDeploymentLib {
         data.contractsRegistryAddr = json.readAddress(
             ".contracts_registry_addr"
         );
-        data.operatorAddr = json.readAddress(".operatorAddr");
+        data.operatorAddr = json.readAddress(".operator_addr");
         data.numQuorums = json.readUint(".num_quorums");
-        data.operatorParams = json.readUintArray(".operatorParams");
+        data.operatorParams = json.readUintArray(".operator_params");
         return data;
     }
 

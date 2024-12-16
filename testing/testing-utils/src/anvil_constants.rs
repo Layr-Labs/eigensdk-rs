@@ -6,7 +6,6 @@ use alloy_signer_local::PrivateKeySigner;
 use eigen_utils::delegationmanager::DelegationManager;
 use eigen_utils::{
     contractsregistry::ContractsRegistry::{self, contractsReturn},
-    delegationmanager::IDelegationManagerTypes::OperatorDetails,
     get_provider, get_signer,
 };
 use eyre::Result;
@@ -191,13 +190,8 @@ pub async fn register_operator_to_el_if_not_registered(
         .await?
         ._0;
     if !is_registered {
-        let operator_details = OperatorDetails {
-            __deprecated_earningsReceiver: Address::ZERO,
-            delegationApprover: delegation_approver,
-            __deprecated_stakerOptOutWindowBlocks: 0,
-        };
         let register_instance = contract_instance
-            .registerAsOperator(operator_details, 1, metadata_uri.to_string())
+            .registerAsOperator(delegation_approver, 1, metadata_uri.to_string())
             .send()
             .await?;
         register_instance.get_receipt().await?;

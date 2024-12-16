@@ -226,7 +226,6 @@ library CoreDeploymentLib {
                 proxyAdmin // ProxyAdmin as the unpauser
             )
         );
-        UpgradeableProxyLib.upgrade(result.pauserRegistry, pauserRegistryImpl);
 
         // Deploy and configure the strategy beacon
         result.strategyBeacon = address(
