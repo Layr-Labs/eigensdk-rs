@@ -416,7 +416,7 @@ impl AvsRegistryChainReader {
     pub async fn query_registration_detail(
         &self,
         operator_address: Address,
-    ) -> Result<Vec<bool>, AvsRegistryError> {
+    ) -> Result<[bool; 64], AvsRegistryError> {
         let operator_id = self.get_operator_id(operator_address).await?;
 
         let provider = get_provider(&self.provider);
@@ -428,11 +428,10 @@ impl AvsRegistryChainReader {
             .await?;
 
         let inner_value = quorum_bitmap._0.into_limbs()[0];
-
-        let mut quorums = Vec::<bool>::new();
+        let mut quorums: [bool; 64] = [false; 64];
         for i in 0..64_u64 {
             let other = inner_value & (1 << i) != 0;
-            quorums.push(other);
+            quorums[i as usize] = other;
         }
         Ok(quorums)
     }
