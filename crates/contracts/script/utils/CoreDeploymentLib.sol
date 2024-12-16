@@ -480,6 +480,7 @@ library CoreDeploymentLib {
         data.allocationManager = json.readAddress(
             ".addresses.allocationManager"
         );
+        data.pauserRegistry = json.readAddress(".addresses.pauserRegistry");
 
         return data;
     }
@@ -563,6 +564,8 @@ library CoreDeploymentLib {
                 data.rewardsCoordinator.toHexString(),
                 '","strategyBeacon":"',
                 data.strategyBeacon.toHexString(),
+                '","pauserRegistry":"',
+                data.pauserRegistry.toHexString(),
                 '","allocationManager":"',
                 data.allocationManager.toHexString(),
                 '"}'
