@@ -2,7 +2,6 @@ use crate::error::ElContractsError;
 use alloy::providers::Provider;
 use alloy_primitives::{ruint::aliases::U256, Address, FixedBytes};
 use eigen_logging::logger::SharedLogger;
-use eigen_types::operator::Operator;
 use eigen_utils::{
     allocationmanager::AllocationManager::{self, OperatorSet},
     avsdirectory::AVSDirectory,

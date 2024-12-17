@@ -6,7 +6,6 @@ use alloy_primitives::{address, Address};
 use alloy_signer_local::PrivateKeySigner;
 use eigen_utils::delegationmanager::DelegationManager;
 use eigen_utils::{
-    // contractsregistry::ContractsRegistry::{self},
     get_provider,
     get_signer,
 };

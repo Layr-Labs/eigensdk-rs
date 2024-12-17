@@ -15,7 +15,4 @@ remappings = [
     "forge-std/=lib/forge-std/src/",
 ]
 
-
-
-
 # See more config options https://github.com/foundry-rs/foundry/tree/master/config
