@@ -42,10 +42,17 @@ impl ELChainReader {
     ) -> Self {
         #[cfg(feature = "telemetry")]
         {
-            let _ = tokio::task::spawn_blocking(move || {
-                let _ = eigen_telemetry::telemetry::Telemetry::capture_event("elchainreader.new")
-                    .map_err(|e| ElContractsError::TelemetryError(e.to_string()));
-            });
+            if let Ok(runtime) = tokio::runtime::Runtime::new() {
+                runtime.block_on(async {
+                    let _ = tokio::task::spawn_blocking(move || {
+                        let _ = eigen_telemetry::telemetry::Telemetry::capture_event(
+                            "elchainreader.new",
+                        )
+                        .map_err(|e| ElContractsError::TelemetryError(e.to_string()));
+                    })
+                    .await;
+                });
+            }
         }
 
         ELChainReader {
