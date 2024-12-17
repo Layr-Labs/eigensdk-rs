@@ -380,6 +380,14 @@ impl ELChainReader {
         Ok((*contract_strategy_address, underlying_token_addr))
     }
 
+    /// For a strategy, get the amount of magnitude not currently allocated to any operator set
+    /// # Arguments
+    /// * `operator_address` - The operator's address to query
+    /// * `strategy_address` - The strategy's address to get allocatable magnitude for
+    /// # Returns
+    /// * `u64` - The magnitude available to be allocated to an operator set
+    /// # Errors
+    /// * `ElContractsError` - if the call to the contract fails
     pub async fn get_allocatable_magnitude(
         &self,
         operator_address: Address,
@@ -402,6 +410,14 @@ impl ELChainReader {
         Ok(allocatable_magnitude)
     }
 
+    /// Get the maximum magnitude an operator can allocate for the given strategies
+    /// # Arguments
+    /// * `operator_address` - The operator's address to query
+    /// * `strategy_addresses` - The strategy's addresses to get max magnitudes for
+    /// # Returns
+    /// * `Vec<u64>` - The maximum magnitudes for the strategies
+    /// # Errors
+    /// * `ElContractsError` - if the call to the contract fails
     pub async fn get_max_magnitudes(
         &self,
         operator_address: Address,
@@ -422,6 +438,14 @@ impl ELChainReader {
         Ok(max_magnitudes)
     }
 
+    /// Get the allocation info given a strategy and an operator. Returns the info for each operator set where an operator has allocation.
+    /// # Arguments
+    /// * `operator_address` - The operator's address to query
+    /// * `strategy_address` - The strategy's address to get allocation info for
+    /// # Returns
+    /// * `Vec<AllocationInfo>` - The allocation info for each operator set
+    /// # Errors
+    /// * `ElContractsError` - if the call to the contract fails
     pub async fn get_allocation_info(
         &self,
         operator_address: Address,
@@ -435,7 +459,7 @@ impl ELChainReader {
             .getStrategyAllocations(operator_address, strategy_address)
             .call()
             .await
-            .map_err(ElContractsError::AlloyContractError)?;
+            .map_err(ElContractsError::AlloyContractError).unwrap();
 
         let AllocationManager::getStrategyAllocationsReturn {
             _0: operator_sets,
@@ -455,6 +479,14 @@ impl ELChainReader {
         Ok(allocations_info)
     }
 
+    /// Get the shares that an operator owns in a set of strategies
+    /// # Arguments
+    /// * `operator_address` - The operator's address to get shares for
+    /// * `strategy_addresses` - The strategy's addresses to get shares for
+    /// # Returns
+    /// * `Vec<U256>` - The list of shares for each strategy
+    /// # Errors
+    /// * `ElContractsError` - if the call to the contract fails
     pub async fn get_operator_shares(
         &self,
         operator_address: Address,
@@ -477,6 +509,14 @@ impl ELChainReader {
         Ok(operator_shares)
     }
 
+    /// Get the shares that a list of operators own in a set of strategies
+    /// # Arguments
+    /// * `operator_addresses` - The list of operators' addresses to get shares for
+    /// * `strategy_addresses` - The strategy's addresses to get shares for
+    /// # Returns
+    /// * `Vec<Vec<U256>>` - The list of shares for each operator
+    /// # Errors
+    /// * `ElContractsError` - if the call to the contract fails
     pub async fn get_operators_shares(
         &self,
         operator_addresses: Vec<Address>,
@@ -499,8 +539,13 @@ impl ELChainReader {
         Ok(operators_shares)
     }
 
-    // Returns the number of operator sets that an operator is part of
-    // Doesn't include M2 AVSs
+    /// Get the number of operator sets that an operator is part of. Doesn't include M2 AVSs
+    /// # Arguments
+    /// * `operator_addr` - The operator's address to query
+    /// # Returns
+    /// * `U256` - The number of operator sets the operator is part of
+    /// # Errors
+    /// * `ElContractsError` - if the call to the contract fails
     pub async fn get_num_operator_sets_for_operator(
         &self,
         operator_addr: Address,
@@ -510,7 +555,13 @@ impl ELChainReader {
             .map(|operator_sets| U256::from(operator_sets.len() as u64))
     }
 
-    // Return the list of operator sets that an operator is part of. Doesn't include M2 AVSs
+    /// Get the operator sets that an operator is part of. Doesn't include M2 AVSs
+    /// # Arguments
+    /// * `operator_addr` - The operator's address to query
+    /// # Returns
+    /// * `Vec<OperatorSet>` - The operator sets the operator is part of
+    /// # Errors
+    /// * `ElContractsError` - if the call to the contract fails
     pub async fn get_operator_sets_for_operator(
         &self,
         operator_addr: Address,
@@ -530,7 +581,14 @@ impl ELChainReader {
         Ok(operator_sets)
     }
 
-    // Returns if an operator is registered with a specific operator set
+    /// Check if an operator is registered with a specific operator set
+    /// # Arguments
+    /// * `operator_address` - The operator's address to query
+    /// * `operator_set` - The operator set to check if the operator is registered with
+    /// # Returns
+    /// * `bool` - true if the operator is registered with the operator set, false otherwise
+    /// # Errors
+    /// * `ElContractsError` - if the call to the contract fails
     pub async fn is_operator_registered_with_operator_set(
         &self,
         operator_address: Address,
@@ -571,8 +629,13 @@ impl ELChainReader {
         }
     }
 
-    // Returns the list of operators in a specific operator set.
-    // Not supported for M2 AVSs
+    /// Get the operators in a specific operator set. Not supported for M2 AVSs
+    /// # Arguments
+    /// * `operator_set` - The operator set to query
+    /// # Returns
+    /// * `Vec<Address>` - The list of operator's addresses in the operator set
+    /// # Errors
+    /// * `ElContractsError` - if the call to the contract fails
     pub async fn get_operators_for_operator_set(
         &self,
         operator_set: OperatorSet,
@@ -591,7 +654,13 @@ impl ELChainReader {
         Ok(addresses)
     }
 
-    // Returns the number of operators in a specific operator set
+    /// Get the number of operators in a specific operator set. Not supported for M2 AVSs
+    /// # Arguments
+    /// * `operator_set` - The operator set to query
+    /// # Returns
+    /// * `U256` - The number of operators in the operator set
+    /// # Errors
+    /// * `ElContractsError` - if the call to the contract fails
     pub async fn get_num_operators_for_operator_set(
         &self,
         operator_set: OperatorSet,
@@ -611,8 +680,12 @@ impl ELChainReader {
         Ok(num_operators)
     }
 
-    // Returns the list of strategies that an operator set takes into account
-    // Not supported for M2 AVSs
+    /// Get the strategies in a specific operator set. Not supported for M2 AVSs
+    /// # Arguments
+    /// * `operator_set` - The operator set to query
+    /// # Returns
+    /// * `Vec<Address>` - The list of strategy's addresses in the operator set
+    /// # Errors
     pub async fn get_strategies_for_operator_set(
         &self,
         operator_set: OperatorSet,
@@ -632,9 +705,13 @@ impl ELChainReader {
         Ok(strategies)
     }
 
-    // Returns the strategies the operatorSets take into account, their
-    // operators, and the minimum amount of shares that are slashable by the operatorSets.
-    // Not supported for M2 AVSs
+    /// Get the minimum amount of shares that are slashable by the operator sets. Not supported for M2 AVSs.
+    /// Arguments
+    /// * `operator_sets` - The operator sets to query
+    /// Returns
+    /// * `Vec<OperatorSetStakes>` - The operator sets, their strategies, operators, and slashable stakes
+    /// Errors
+    /// * `ElContractsError` - if the call to the contract fails
     pub async fn get_slashable_shares_for_operator_sets(
         &self,
         operator_sets: Vec<OperatorSet>,
@@ -650,11 +727,18 @@ impl ELChainReader {
         .await
     }
 
-    // Returns the strategies the operatorSets take into account, their
-    // operators, and the minimum amount of shares that multiple operators delegated to them and slashable by the
-    // operatorSets before a given timestamp.
-    // Timestamp must be in the future. Used to underestimate future slashable stake.
-    // Not supported for M2 AVSs
+    /// Given a list of operator sets, for each one get:
+    /// - the operators,
+    /// - the strategies,
+    /// - the minimum amount of shares that are slashable before a given block.
+    /// Not supported for M2 AVSs.
+    /// Arguments
+    /// * `operator_sets` - The operator sets to query
+    /// * `future_block` - The block at which to get allocation information. It must be greater that the current block number.
+    /// Returns
+    /// * `Vec<OperatorSetStakes>` - The operator sets, their strategies, operators, and slashable stakes
+    /// Errors
+    /// * `ElContractsError` - if the call to the contract fails
     pub async fn get_delegated_and_slashable_shares_for_operator_sets_before(
         &self,
         operator_sets: Vec<OperatorSet>,
@@ -692,6 +776,14 @@ impl ELChainReader {
         Ok(operator_set_stakes)
     }
 
+    /// Get the allocation delay for an operator. Is the number of blocks between an operator allocating slashable magnitude and the magnitude becoming slashable.
+    /// Arguments
+    /// * `operator_address` - The operator's address to query
+    /// Returns
+    /// * `u32` - The allocation delay
+    /// Errors
+    /// * `ElContractsError` - if the call to the contract fails
+    /// * `AllocationDelayNotSet` - if the allocation delay is not set
     pub async fn get_allocation_delay(
         &self,
         operator_address: Address,
@@ -718,8 +810,13 @@ impl ELChainReader {
         Ok(delay)
     }
 
-    /*
-     *  * TODO: This method is not supported by the current version of eigenlayer-contracts
+    /// Get the operator sets that the operator is registered for
+    /// Arguments
+    /// * `operator_address` - The operator's address to query
+    /// Returns
+    /// * `Vec<OperatorSet>` - The operator sets the operator is registered for
+    /// Errors
+    /// * `ElContractsError` - if the call to the contract fails
     pub async fn get_registered_sets(
         &self,
         operator_address: Address,
@@ -740,7 +837,6 @@ impl ELChainReader {
 
         Ok(registered_sets)
     }
-    */
 }
 
 // TODO: move to types.rs?
@@ -751,6 +847,7 @@ pub struct OperatorSetStakes {
     pub slashable_stakes: Vec<Vec<U256>>,
 }
 
+#[derive(Debug, Clone)]
 pub struct AllocationInfo {
     pub current_magnitude: U256,
     pub pending_diff: U256,
@@ -958,22 +1055,6 @@ mod tests {
         assert_eq!(operator_addr, OPERATOR_ADDRESS); // operator is delegated to himself
     }
 
-    /*
-     * TODO: This method is not supported by the current version of eigenlayer-contracts
-    #[tokio::test]
-    async fn test_get_registered_sets() {
-        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
-
-        let ret = chain_reader
-            .get_registered_sets(OPERATOR_ADDRESS)
-            .await
-            .unwrap();
-
-        assert_eq!(ret.len(), 1);
-    }
-    */
-
     #[tokio::test]
     async fn test_get_strategy_and_underlying_token() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
@@ -996,5 +1077,244 @@ mod tests {
             strategy_contract_addr_str,
             "0xeC4cFde48EAdca2bC63E94BB437BbeAcE1371bF3"
         );
+    }
+
+    #[tokio::test]
+    async fn test_get_allocatable_magnitude_and_max_magnitude() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let strategy_addr = get_erc20_mock_strategy(http_endpoint.clone()).await;
+        let chain_reader = build_el_chain_reader(http_endpoint).await;
+
+        let allocatable_magnitude = chain_reader
+            .get_allocatable_magnitude(OPERATOR_ADDRESS, strategy_addr)
+            .await
+            .unwrap();
+
+        assert!(allocatable_magnitude > 0);
+
+        // Since the operator has no encumbered magnitude, the max magnitude should be the same as the allocatable magnitude
+        let max_magnitude = chain_reader
+            .get_max_magnitudes(OPERATOR_ADDRESS, vec![strategy_addr])
+            .await
+            .unwrap()[0];
+
+        assert_eq!(allocatable_magnitude, max_magnitude);
+    }
+
+    #[tokio::test]
+    async fn test_get_allocation_info() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let strategy_addr = get_erc20_mock_strategy(http_endpoint.clone()).await;
+        let chain_reader = build_el_chain_reader(http_endpoint).await;
+
+        // TODO: fix this, `getStrategyAllocations` call reverts
+        let allocation_info = chain_reader
+            .get_allocation_info(OPERATOR_ADDRESS, strategy_addr)
+            .await
+            .unwrap();
+        dbg!(allocation_info);
+    }
+
+    #[tokio::test]
+    async fn test_get_operator_shares() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let strategy_addr = get_erc20_mock_strategy(http_endpoint.clone()).await;
+        let chain_reader = build_el_chain_reader(http_endpoint).await;
+
+        let operator_shares = chain_reader
+            .get_operator_shares(OPERATOR_ADDRESS, vec![strategy_addr])
+            .await
+            .unwrap();
+
+        assert_eq!(operator_shares.len(), 1);
+        assert_eq!(operator_shares[0], U256::from(0));
+    }
+
+    #[tokio::test]
+    async fn test_get_operators_shares() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let strategy_addr = get_erc20_mock_strategy(http_endpoint.clone()).await;
+        let chain_reader = build_el_chain_reader(http_endpoint).await;
+
+        let operator_shares = chain_reader
+            .get_operators_shares(vec![OPERATOR_ADDRESS], vec![strategy_addr])
+            .await
+            .unwrap();
+
+        assert_eq!(operator_shares.len(), 1);
+        assert_eq!(operator_shares[0].len(), 1);
+        assert_eq!(operator_shares[0][0], U256::from(0));
+    }
+
+    #[tokio::test]
+    async fn test_get_num_operator_sets_for_operator(){
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let chain_reader = build_el_chain_reader(http_endpoint).await;
+
+        // TODO: fix this
+        let num_operator_sets = chain_reader.get_num_operator_sets_for_operator(OPERATOR_ADDRESS).await.unwrap();
+        
+        assert_eq!(num_operator_sets, U256::from(1));
+    }
+
+    #[tokio::test]
+    async fn test_get_operator_sets_for_operator() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let chain_reader = build_el_chain_reader(http_endpoint).await;
+
+        // TODO: fix this
+        let operator_sets = chain_reader.get_operator_sets_for_operator(OPERATOR_ADDRESS).await.unwrap();
+        
+        assert_eq!(operator_sets.len(), 1);
+        assert_eq!(operator_sets[0].avs, Address::ZERO);
+    }
+
+    #[tokio::test]
+    async fn test_is_operator_registered_with_operator_set() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let chain_reader = build_el_chain_reader(http_endpoint).await;
+
+        let operator_set = OperatorSet {
+            id: 1,
+            avs: Address::ZERO,
+        };
+
+        // TODO: fix this
+        let is_registered = chain_reader
+            .is_operator_registered_with_operator_set(OPERATOR_ADDRESS, operator_set)
+            .await
+            .unwrap();
+
+        assert!(is_registered);   
+    }
+
+    #[tokio::test]
+    async fn test_get_operators_for_operator_set() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let chain_reader = build_el_chain_reader(http_endpoint).await;
+
+        let operator_set = OperatorSet {
+            id: 1,
+            avs: Address::ZERO,
+        };
+
+        // TODO: fix this
+        let operators = chain_reader
+            .get_operators_for_operator_set(operator_set)
+            .await
+            .unwrap();
+
+        assert_eq!(operators[0], OPERATOR_ADDRESS);       
+    }
+
+    #[tokio::test]
+    async fn test_get_num_operators_for_operator_set() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let chain_reader = build_el_chain_reader(http_endpoint).await;
+
+        let operator_set = OperatorSet {
+            id: 1,
+            avs: Address::ZERO,
+        };
+
+        // TODO: fix this
+        let num_operators = chain_reader
+            .get_num_operators_for_operator_set(operator_set)
+            .await
+            .unwrap();
+
+        assert_eq!(num_operators, U256::from(1));       
+    }
+
+    #[tokio::test]
+    async fn test_get_strategies_for_operator_set() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
+
+        let operator_set = OperatorSet {
+            id: 1,
+            avs: Address::ZERO,
+        };
+
+        // TODO: fix this
+        let strategies = chain_reader
+            .get_strategies_for_operator_set(operator_set)
+            .await
+            .unwrap();
+
+        let strategy_addr = get_erc20_mock_strategy(http_endpoint).await;
+        assert_eq!(strategies, vec![strategy_addr]);       
+    }
+
+    #[tokio::test]
+    async fn test_get_slashable_shares_for_operator_sets() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let chain_reader = build_el_chain_reader(http_endpoint).await;
+
+        let operator_set = OperatorSet {
+            id: 1,
+            avs: Address::ZERO,
+        };
+
+        // TODO: fix this
+        let slashable_shares = chain_reader
+            .get_slashable_shares_for_operator_sets(vec![operator_set])
+            .await
+            .unwrap();
+
+        assert_eq!(slashable_shares.len(), 1);
+        assert_eq!(slashable_shares[0].operator_set.id, 1);
+        assert_eq!(slashable_shares[0].operators, vec![OPERATOR_ADDRESS]);
+        assert_eq!(slashable_shares[0].slashable_stakes, vec![vec![U256::from(0)]]);
+    }
+
+    #[tokio::test]
+    async fn test_get_delegated_and_slashable_shares_for_operator_sets_before() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
+
+        let operator_set = OperatorSet {
+            id: 1,
+            avs: Address::ZERO,
+        };
+
+        let current_block_number = get_provider(&http_endpoint).get_block_number().await.unwrap() as u32;
+        // TODO: fix this
+        let slashable_shares = chain_reader
+            .get_delegated_and_slashable_shares_for_operator_sets_before(vec![operator_set], current_block_number + 1)
+            .await
+            .unwrap();
+
+        assert_eq!(slashable_shares.len(), 1);
+        assert_eq!(slashable_shares[0].operator_set.id, 1);
+        assert_eq!(slashable_shares[0].operators, vec![OPERATOR_ADDRESS]);
+        assert_eq!(slashable_shares[0].slashable_stakes, vec![vec![U256::from(0)]]);
+    }
+
+    #[tokio::test]
+    async fn test_get_allocation_delay() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let chain_reader = build_el_chain_reader(http_endpoint).await;
+
+        let allocation_delay = chain_reader
+            .get_allocation_delay(OPERATOR_ADDRESS)
+            .await
+            .unwrap();
+
+        assert_eq!(allocation_delay, 1);
+    }
+
+    #[tokio::test]
+    async fn test_get_registered_sets() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
+
+        // TODO: fix this
+        let ret = chain_reader
+            .get_registered_sets(OPERATOR_ADDRESS)
+            .await
+            .unwrap();
+
+        assert_eq!(ret.len(), 1);
     }
 }
