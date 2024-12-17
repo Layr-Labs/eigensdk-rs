@@ -9,9 +9,11 @@ interface IRewardsCoordinatorErrors {
     error EarningsNotGreaterThanClaimed();
     error InputArrayLengthMismatch();
     error InputArrayLengthZero();
+    error InvalidAddressZero();
     error InvalidCalculationIntervalSecondsRemainder();
     error InvalidClaimProof();
     error InvalidDurationRemainder();
+    error InvalidEarner();
     error InvalidEarnerLeafIndex();
     error InvalidGenesisRewardsTimestampRemainder();
     error InvalidRoot();
@@ -19,14 +21,18 @@ interface IRewardsCoordinatorErrors {
     error InvalidStartTimestampRemainder();
     error InvalidTokenLeafIndex();
     error NewRootMustBeForNewCalculatedPeriod();
+    error OperatorsNotInAscendingOrder();
+    error PreviousSplitPending();
     error RewardsEndTimestampNotElapsed();
     error RootAlreadyActivated();
     error RootDisabled();
     error RootNotActivated();
+    error SplitExceedsMax();
     error StartTimestampTooFarInFuture();
     error StartTimestampTooFarInPast();
     error StrategiesNotInAscendingOrder();
     error StrategyNotWhitelisted();
+    error SubmissionNotRetroactive();
     error UnauthorizedCaller();
 }
 ```
@@ -66,6 +72,11 @@ interface IRewardsCoordinatorErrors {
   },
   {
     "type": "error",
+    "name": "InvalidAddressZero",
+    "inputs": []
+  },
+  {
+    "type": "error",
     "name": "InvalidCalculationIntervalSecondsRemainder",
     "inputs": []
   },
@@ -77,6 +88,11 @@ interface IRewardsCoordinatorErrors {
   {
     "type": "error",
     "name": "InvalidDurationRemainder",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "InvalidEarner",
     "inputs": []
   },
   {
@@ -116,6 +132,16 @@ interface IRewardsCoordinatorErrors {
   },
   {
     "type": "error",
+    "name": "OperatorsNotInAscendingOrder",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "PreviousSplitPending",
+    "inputs": []
+  },
+  {
+    "type": "error",
     "name": "RewardsEndTimestampNotElapsed",
     "inputs": []
   },
@@ -136,6 +162,11 @@ interface IRewardsCoordinatorErrors {
   },
   {
     "type": "error",
+    "name": "SplitExceedsMax",
+    "inputs": []
+  },
+  {
+    "type": "error",
     "name": "StartTimestampTooFarInFuture",
     "inputs": []
   },
@@ -152,6 +183,11 @@ interface IRewardsCoordinatorErrors {
   {
     "type": "error",
     "name": "StrategyNotWhitelisted",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "SubmissionNotRetroactive",
     "inputs": []
   },
   {
@@ -550,6 +586,66 @@ pub mod IRewardsCoordinatorErrors {
             }
         }
     };
+    /**Custom error with signature `InvalidAddressZero()` and selector `0x10c748a6`.
+    ```solidity
+    error InvalidAddressZero();
+    ```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct InvalidAddressZero {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<InvalidAddressZero> for UnderlyingRustTuple<'_> {
+            fn from(value: InvalidAddressZero) -> Self {
+                ()
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for InvalidAddressZero {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolError for InvalidAddressZero {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "InvalidAddressZero()";
+            const SELECTOR: [u8; 4] = [16u8, 199u8, 72u8, 166u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+        }
+    };
     /**Custom error with signature `InvalidCalculationIntervalSecondsRemainder()` and selector `0x4478f672`.
     ```solidity
     error InvalidCalculationIntervalSecondsRemainder();
@@ -718,6 +814,66 @@ pub mod IRewardsCoordinatorErrors {
             type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "InvalidDurationRemainder()";
             const SELECTOR: [u8; 4] = [238u8, 102u8, 71u8, 5u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+        }
+    };
+    /**Custom error with signature `InvalidEarner()` and selector `0xfb494ea1`.
+    ```solidity
+    error InvalidEarner();
+    ```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct InvalidEarner {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<InvalidEarner> for UnderlyingRustTuple<'_> {
+            fn from(value: InvalidEarner) -> Self {
+                ()
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for InvalidEarner {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolError for InvalidEarner {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "InvalidEarner()";
+            const SELECTOR: [u8; 4] = [251u8, 73u8, 78u8, 161u8];
             #[inline]
             fn new<'a>(
                 tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
@@ -1150,6 +1306,126 @@ pub mod IRewardsCoordinatorErrors {
             }
         }
     };
+    /**Custom error with signature `OperatorsNotInAscendingOrder()` and selector `0x87da3f88`.
+    ```solidity
+    error OperatorsNotInAscendingOrder();
+    ```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct OperatorsNotInAscendingOrder {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<OperatorsNotInAscendingOrder> for UnderlyingRustTuple<'_> {
+            fn from(value: OperatorsNotInAscendingOrder) -> Self {
+                ()
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for OperatorsNotInAscendingOrder {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolError for OperatorsNotInAscendingOrder {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "OperatorsNotInAscendingOrder()";
+            const SELECTOR: [u8; 4] = [135u8, 218u8, 63u8, 136u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+        }
+    };
+    /**Custom error with signature `PreviousSplitPending()` and selector `0x7b1e25c5`.
+    ```solidity
+    error PreviousSplitPending();
+    ```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct PreviousSplitPending {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<PreviousSplitPending> for UnderlyingRustTuple<'_> {
+            fn from(value: PreviousSplitPending) -> Self {
+                ()
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for PreviousSplitPending {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolError for PreviousSplitPending {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "PreviousSplitPending()";
+            const SELECTOR: [u8; 4] = [123u8, 30u8, 37u8, 197u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+        }
+    };
     /**Custom error with signature `RewardsEndTimestampNotElapsed()` and selector `0x0d2af922`.
     ```solidity
     error RewardsEndTimestampNotElapsed();
@@ -1378,6 +1654,66 @@ pub mod IRewardsCoordinatorErrors {
             type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "RootNotActivated()";
             const SELECTOR: [u8; 4] = [161u8, 189u8, 21u8, 216u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+        }
+    };
+    /**Custom error with signature `SplitExceedsMax()` and selector `0x891c63df`.
+    ```solidity
+    error SplitExceedsMax();
+    ```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct SplitExceedsMax {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<SplitExceedsMax> for UnderlyingRustTuple<'_> {
+            fn from(value: SplitExceedsMax) -> Self {
+                ()
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for SplitExceedsMax {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolError for SplitExceedsMax {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "SplitExceedsMax()";
+            const SELECTOR: [u8; 4] = [137u8, 28u8, 99u8, 223u8];
             #[inline]
             fn new<'a>(
                 tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
@@ -1630,6 +1966,66 @@ pub mod IRewardsCoordinatorErrors {
             }
         }
     };
+    /**Custom error with signature `SubmissionNotRetroactive()` and selector `0x540d6284`.
+    ```solidity
+    error SubmissionNotRetroactive();
+    ```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct SubmissionNotRetroactive {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<SubmissionNotRetroactive> for UnderlyingRustTuple<'_> {
+            fn from(value: SubmissionNotRetroactive) -> Self {
+                ()
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for SubmissionNotRetroactive {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolError for SubmissionNotRetroactive {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "SubmissionNotRetroactive()";
+            const SELECTOR: [u8; 4] = [84u8, 13u8, 98u8, 132u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+        }
+    };
     /**Custom error with signature `UnauthorizedCaller()` and selector `0x5c427cd9`.
     ```solidity
     error UnauthorizedCaller();
@@ -1698,9 +2094,11 @@ pub mod IRewardsCoordinatorErrors {
         EarningsNotGreaterThanClaimed(EarningsNotGreaterThanClaimed),
         InputArrayLengthMismatch(InputArrayLengthMismatch),
         InputArrayLengthZero(InputArrayLengthZero),
+        InvalidAddressZero(InvalidAddressZero),
         InvalidCalculationIntervalSecondsRemainder(InvalidCalculationIntervalSecondsRemainder),
         InvalidClaimProof(InvalidClaimProof),
         InvalidDurationRemainder(InvalidDurationRemainder),
+        InvalidEarner(InvalidEarner),
         InvalidEarnerLeafIndex(InvalidEarnerLeafIndex),
         InvalidGenesisRewardsTimestampRemainder(InvalidGenesisRewardsTimestampRemainder),
         InvalidRoot(InvalidRoot),
@@ -1708,14 +2106,18 @@ pub mod IRewardsCoordinatorErrors {
         InvalidStartTimestampRemainder(InvalidStartTimestampRemainder),
         InvalidTokenLeafIndex(InvalidTokenLeafIndex),
         NewRootMustBeForNewCalculatedPeriod(NewRootMustBeForNewCalculatedPeriod),
+        OperatorsNotInAscendingOrder(OperatorsNotInAscendingOrder),
+        PreviousSplitPending(PreviousSplitPending),
         RewardsEndTimestampNotElapsed(RewardsEndTimestampNotElapsed),
         RootAlreadyActivated(RootAlreadyActivated),
         RootDisabled(RootDisabled),
         RootNotActivated(RootNotActivated),
+        SplitExceedsMax(SplitExceedsMax),
         StartTimestampTooFarInFuture(StartTimestampTooFarInFuture),
         StartTimestampTooFarInPast(StartTimestampTooFarInPast),
         StrategiesNotInAscendingOrder(StrategiesNotInAscendingOrder),
         StrategyNotWhitelisted(StrategyNotWhitelisted),
+        SubmissionNotRetroactive(SubmissionNotRetroactive),
         UnauthorizedCaller(UnauthorizedCaller),
     }
     #[automatically_derived]
@@ -1730,6 +2132,7 @@ pub mod IRewardsCoordinatorErrors {
             [8u8, 53u8, 78u8, 174u8],
             [13u8, 42u8, 249u8, 34u8],
             [14u8, 6u8, 189u8, 49u8],
+            [16u8, 199u8, 72u8, 166u8],
             [27u8, 20u8, 23u8, 75u8],
             [28u8, 45u8, 105u8, 188u8],
             [48u8, 219u8, 217u8, 148u8],
@@ -1738,13 +2141,17 @@ pub mod IRewardsCoordinatorErrors {
             [67u8, 173u8, 32u8, 252u8],
             [68u8, 120u8, 246u8, 114u8],
             [80u8, 69u8, 112u8, 227u8],
+            [84u8, 13u8, 98u8, 132u8],
             [92u8, 66u8, 124u8, 217u8],
             [93u8, 251u8, 44u8, 162u8],
             [99u8, 97u8, 206u8, 128u8],
             [105u8, 202u8, 22u8, 201u8],
             [114u8, 159u8, 148u8, 44u8],
             [121u8, 108u8, 197u8, 37u8],
+            [123u8, 30u8, 37u8, 197u8],
             [126u8, 226u8, 180u8, 67u8],
+            [135u8, 218u8, 63u8, 136u8],
+            [137u8, 28u8, 99u8, 223u8],
             [148u8, 168u8, 211u8, 137u8],
             [161u8, 189u8, 21u8, 216u8],
             [169u8, 254u8, 155u8, 224u8],
@@ -1752,13 +2159,14 @@ pub mod IRewardsCoordinatorErrors {
             [223u8, 173u8, 156u8, 161u8],
             [238u8, 102u8, 71u8, 5u8],
             [240u8, 106u8, 83u8, 196u8],
+            [251u8, 73u8, 78u8, 161u8],
         ];
     }
     #[automatically_derived]
     impl alloy_sol_types::SolInterface for IRewardsCoordinatorErrorsErrors {
         const NAME: &'static str = "IRewardsCoordinatorErrorsErrors";
         const MIN_DATA_LENGTH: usize = 0usize;
-        const COUNT: usize = 25usize;
+        const COUNT: usize = 31usize;
         #[inline]
         fn selector(&self) -> [u8; 4] {
             match self {
@@ -1780,6 +2188,9 @@ pub mod IRewardsCoordinatorErrors {
                 Self::InputArrayLengthZero(_) => {
                     <InputArrayLengthZero as alloy_sol_types::SolError>::SELECTOR
                 }
+                Self::InvalidAddressZero(_) => {
+                    <InvalidAddressZero as alloy_sol_types::SolError>::SELECTOR
+                }
                 Self::InvalidCalculationIntervalSecondsRemainder(_) => {
                     <InvalidCalculationIntervalSecondsRemainder as alloy_sol_types::SolError>::SELECTOR
                 }
@@ -1788,6 +2199,9 @@ pub mod IRewardsCoordinatorErrors {
                 }
                 Self::InvalidDurationRemainder(_) => {
                     <InvalidDurationRemainder as alloy_sol_types::SolError>::SELECTOR
+                }
+                Self::InvalidEarner(_) => {
+                    <InvalidEarner as alloy_sol_types::SolError>::SELECTOR
                 }
                 Self::InvalidEarnerLeafIndex(_) => {
                     <InvalidEarnerLeafIndex as alloy_sol_types::SolError>::SELECTOR
@@ -1810,6 +2224,12 @@ pub mod IRewardsCoordinatorErrors {
                 Self::NewRootMustBeForNewCalculatedPeriod(_) => {
                     <NewRootMustBeForNewCalculatedPeriod as alloy_sol_types::SolError>::SELECTOR
                 }
+                Self::OperatorsNotInAscendingOrder(_) => {
+                    <OperatorsNotInAscendingOrder as alloy_sol_types::SolError>::SELECTOR
+                }
+                Self::PreviousSplitPending(_) => {
+                    <PreviousSplitPending as alloy_sol_types::SolError>::SELECTOR
+                }
                 Self::RewardsEndTimestampNotElapsed(_) => {
                     <RewardsEndTimestampNotElapsed as alloy_sol_types::SolError>::SELECTOR
                 }
@@ -1822,6 +2242,9 @@ pub mod IRewardsCoordinatorErrors {
                 Self::RootNotActivated(_) => {
                     <RootNotActivated as alloy_sol_types::SolError>::SELECTOR
                 }
+                Self::SplitExceedsMax(_) => {
+                    <SplitExceedsMax as alloy_sol_types::SolError>::SELECTOR
+                }
                 Self::StartTimestampTooFarInFuture(_) => {
                     <StartTimestampTooFarInFuture as alloy_sol_types::SolError>::SELECTOR
                 }
@@ -1833,6 +2256,9 @@ pub mod IRewardsCoordinatorErrors {
                 }
                 Self::StrategyNotWhitelisted(_) => {
                     <StrategyNotWhitelisted as alloy_sol_types::SolError>::SELECTOR
+                }
+                Self::SubmissionNotRetroactive(_) => {
+                    <SubmissionNotRetroactive as alloy_sol_types::SolError>::SELECTOR
                 }
                 Self::UnauthorizedCaller(_) => {
                     <UnauthorizedCaller as alloy_sol_types::SolError>::SELECTOR
@@ -1904,6 +2330,19 @@ pub mod IRewardsCoordinatorErrors {
                             )
                     }
                     InvalidGenesisRewardsTimestampRemainder
+                },
+                {
+                    fn InvalidAddressZero(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<IRewardsCoordinatorErrorsErrors>
+                    {
+                        <InvalidAddressZero as alloy_sol_types::SolError>::abi_decode_raw(
+                            data, validate,
+                        )
+                        .map(IRewardsCoordinatorErrorsErrors::InvalidAddressZero)
+                    }
+                    InvalidAddressZero
                 },
                 {
                     fn RootDisabled(
@@ -2007,6 +2446,19 @@ pub mod IRewardsCoordinatorErrors {
                     InvalidRoot
                 },
                 {
+                    fn SubmissionNotRetroactive(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<IRewardsCoordinatorErrorsErrors>
+                    {
+                        <SubmissionNotRetroactive as alloy_sol_types::SolError>::abi_decode_raw(
+                            data, validate,
+                        )
+                        .map(IRewardsCoordinatorErrorsErrors::SubmissionNotRetroactive)
+                    }
+                    SubmissionNotRetroactive
+                },
+                {
                     fn UnauthorizedCaller(
                         data: &[u8],
                         validate: bool,
@@ -2088,6 +2540,19 @@ pub mod IRewardsCoordinatorErrors {
                     InputArrayLengthZero
                 },
                 {
+                    fn PreviousSplitPending(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<IRewardsCoordinatorErrorsErrors>
+                    {
+                        <PreviousSplitPending as alloy_sol_types::SolError>::abi_decode_raw(
+                            data, validate,
+                        )
+                        .map(IRewardsCoordinatorErrorsErrors::PreviousSplitPending)
+                    }
+                    PreviousSplitPending
+                },
+                {
                     fn StartTimestampTooFarInFuture(
                         data: &[u8],
                         validate: bool,
@@ -2099,6 +2564,32 @@ pub mod IRewardsCoordinatorErrors {
                         .map(IRewardsCoordinatorErrorsErrors::StartTimestampTooFarInFuture)
                     }
                     StartTimestampTooFarInFuture
+                },
+                {
+                    fn OperatorsNotInAscendingOrder(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<IRewardsCoordinatorErrorsErrors>
+                    {
+                        <OperatorsNotInAscendingOrder as alloy_sol_types::SolError>::abi_decode_raw(
+                            data, validate,
+                        )
+                        .map(IRewardsCoordinatorErrorsErrors::OperatorsNotInAscendingOrder)
+                    }
+                    OperatorsNotInAscendingOrder
+                },
+                {
+                    fn SplitExceedsMax(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<IRewardsCoordinatorErrorsErrors>
+                    {
+                        <SplitExceedsMax as alloy_sol_types::SolError>::abi_decode_raw(
+                            data, validate,
+                        )
+                        .map(IRewardsCoordinatorErrorsErrors::SplitExceedsMax)
+                    }
+                    SplitExceedsMax
                 },
                 {
                     fn InvalidRootIndex(
@@ -2200,6 +2691,17 @@ pub mod IRewardsCoordinatorErrors {
                     }
                     InvalidStartTimestampRemainder
                 },
+                {
+                    fn InvalidEarner(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<IRewardsCoordinatorErrorsErrors>
+                    {
+                        <InvalidEarner as alloy_sol_types::SolError>::abi_decode_raw(data, validate)
+                            .map(IRewardsCoordinatorErrorsErrors::InvalidEarner)
+                    }
+                    InvalidEarner
+                },
             ];
             let Ok(idx) = Self::SELECTORS.binary_search(&selector) else {
                 return Err(alloy_sol_types::Error::unknown_selector(
@@ -2240,6 +2742,11 @@ pub mod IRewardsCoordinatorErrors {
                         inner,
                     )
                 }
+                Self::InvalidAddressZero(inner) => {
+                    <InvalidAddressZero as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
+                }
                 Self::InvalidCalculationIntervalSecondsRemainder(inner) => {
                     <InvalidCalculationIntervalSecondsRemainder as alloy_sol_types::SolError>::abi_encoded_size(
                         inner,
@@ -2254,6 +2761,9 @@ pub mod IRewardsCoordinatorErrors {
                     <InvalidDurationRemainder as alloy_sol_types::SolError>::abi_encoded_size(
                         inner,
                     )
+                }
+                Self::InvalidEarner(inner) => {
+                    <InvalidEarner as alloy_sol_types::SolError>::abi_encoded_size(inner)
                 }
                 Self::InvalidEarnerLeafIndex(inner) => {
                     <InvalidEarnerLeafIndex as alloy_sol_types::SolError>::abi_encoded_size(
@@ -2288,6 +2798,16 @@ pub mod IRewardsCoordinatorErrors {
                         inner,
                     )
                 }
+                Self::OperatorsNotInAscendingOrder(inner) => {
+                    <OperatorsNotInAscendingOrder as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
+                }
+                Self::PreviousSplitPending(inner) => {
+                    <PreviousSplitPending as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
+                }
                 Self::RewardsEndTimestampNotElapsed(inner) => {
                     <RewardsEndTimestampNotElapsed as alloy_sol_types::SolError>::abi_encoded_size(
                         inner,
@@ -2303,6 +2823,11 @@ pub mod IRewardsCoordinatorErrors {
                 }
                 Self::RootNotActivated(inner) => {
                     <RootNotActivated as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
+                }
+                Self::SplitExceedsMax(inner) => {
+                    <SplitExceedsMax as alloy_sol_types::SolError>::abi_encoded_size(
                         inner,
                     )
                 }
@@ -2323,6 +2848,11 @@ pub mod IRewardsCoordinatorErrors {
                 }
                 Self::StrategyNotWhitelisted(inner) => {
                     <StrategyNotWhitelisted as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
+                }
+                Self::SubmissionNotRetroactive(inner) => {
+                    <SubmissionNotRetroactive as alloy_sol_types::SolError>::abi_encoded_size(
                         inner,
                     )
                 }
@@ -2372,6 +2902,12 @@ pub mod IRewardsCoordinatorErrors {
                         out,
                     )
                 }
+                Self::InvalidAddressZero(inner) => {
+                    <InvalidAddressZero as alloy_sol_types::SolError>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
                 Self::InvalidCalculationIntervalSecondsRemainder(inner) => {
                     <InvalidCalculationIntervalSecondsRemainder as alloy_sol_types::SolError>::abi_encode_raw(
                         inner,
@@ -2386,6 +2922,12 @@ pub mod IRewardsCoordinatorErrors {
                 }
                 Self::InvalidDurationRemainder(inner) => {
                     <InvalidDurationRemainder as alloy_sol_types::SolError>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
+                Self::InvalidEarner(inner) => {
+                    <InvalidEarner as alloy_sol_types::SolError>::abi_encode_raw(
                         inner,
                         out,
                     )
@@ -2432,6 +2974,18 @@ pub mod IRewardsCoordinatorErrors {
                         out,
                     )
                 }
+                Self::OperatorsNotInAscendingOrder(inner) => {
+                    <OperatorsNotInAscendingOrder as alloy_sol_types::SolError>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
+                Self::PreviousSplitPending(inner) => {
+                    <PreviousSplitPending as alloy_sol_types::SolError>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
                 Self::RewardsEndTimestampNotElapsed(inner) => {
                     <RewardsEndTimestampNotElapsed as alloy_sol_types::SolError>::abi_encode_raw(
                         inner,
@@ -2456,6 +3010,12 @@ pub mod IRewardsCoordinatorErrors {
                         out,
                     )
                 }
+                Self::SplitExceedsMax(inner) => {
+                    <SplitExceedsMax as alloy_sol_types::SolError>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
                 Self::StartTimestampTooFarInFuture(inner) => {
                     <StartTimestampTooFarInFuture as alloy_sol_types::SolError>::abi_encode_raw(
                         inner,
@@ -2476,6 +3036,12 @@ pub mod IRewardsCoordinatorErrors {
                 }
                 Self::StrategyNotWhitelisted(inner) => {
                     <StrategyNotWhitelisted as alloy_sol_types::SolError>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
+                Self::SubmissionNotRetroactive(inner) => {
+                    <SubmissionNotRetroactive as alloy_sol_types::SolError>::abi_encode_raw(
                         inner,
                         out,
                     )

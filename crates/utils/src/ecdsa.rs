@@ -21,22 +21,22 @@ pub mod ECDSA {
     /// The creation / init bytecode of the contract.
     ///
     /// ```text
-    ///0x60556032600b8282823980515f1a607314602657634e487b7160e01b5f525f60045260245ffd5b305f52607381538281f3fe730000000000000000000000000000000000000000301460806040525f5ffdfea26469706673582212208f2ba94002b2940c8647615888f316efef8e86c4123ae9c4ae1a1017a18edfd564736f6c634300081b0033
+    ///0x6080806040523460175760399081601c823930815050f35b5f80fdfe5f80fdfea264697066735822122097b6a4a7905b316c6bdc942e0872342a3ba25c5a2b643c607e519051a0c81c1164736f6c634300081b0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"`U`2`\x0B\x82\x82\x829\x80Q_\x1A`s\x14`&WcNH{q`\xE0\x1B_R_`\x04R`$_\xFD[0_R`s\x81S\x82\x81\xF3\xFEs\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x000\x14`\x80`@R__\xFD\xFE\xA2dipfsX\"\x12 \x8F+\xA9@\x02\xB2\x94\x0C\x86GaX\x88\xF3\x16\xEF\xEF\x8E\x86\xC4\x12:\xE9\xC4\xAE\x1A\x10\x17\xA1\x8E\xDF\xD5dsolcC\0\x08\x1B\x003",
+        b"`\x80\x80`@R4`\x17W`9\x90\x81`\x1C\x8290\x81PP\xF3[_\x80\xFD\xFE_\x80\xFD\xFE\xA2dipfsX\"\x12 \x97\xB6\xA4\xA7\x90[1lk\xDC\x94.\x08r4*;\xA2\\Z+d<`~Q\x90Q\xA0\xC8\x1C\x11dsolcC\0\x08\x1B\x003",
     );
     /// The runtime bytecode of the contract, as deployed on the network.
     ///
     /// ```text
-    ///0x730000000000000000000000000000000000000000301460806040525f5ffdfea26469706673582212208f2ba94002b2940c8647615888f316efef8e86c4123ae9c4ae1a1017a18edfd564736f6c634300081b0033
+    ///0x5f80fdfea264697066735822122097b6a4a7905b316c6bdc942e0872342a3ba25c5a2b643c607e519051a0c81c1164736f6c634300081b0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static DEPLOYED_BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"s\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x000\x14`\x80`@R__\xFD\xFE\xA2dipfsX\"\x12 \x8F+\xA9@\x02\xB2\x94\x0C\x86GaX\x88\xF3\x16\xEF\xEF\x8E\x86\xC4\x12:\xE9\xC4\xAE\x1A\x10\x17\xA1\x8E\xDF\xD5dsolcC\0\x08\x1B\x003",
+        b"_\x80\xFD\xFE\xA2dipfsX\"\x12 \x97\xB6\xA4\xA7\x90[1lk\xDC\x94.\x08r4*;\xA2\\Z+d<`~Q\x90Q\xA0\xC8\x1C\x11dsolcC\0\x08\x1B\x003",
     );
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`ECDSA`](self) contract instance.

@@ -2,7 +2,6 @@
 pragma solidity ^0.8.12;
 
 import {Script} from "forge-std/Script.sol";
-import {console2} from "forge-std/console2.sol";
 import {CoreDeploymentLib} from "./utils/CoreDeploymentLib.sol";
 import {UpgradeableProxyLib} from "./utils/UpgradeableProxyLib.sol";
 
@@ -10,30 +9,30 @@ contract DeployEigenlayerCore is Script {
     using CoreDeploymentLib for *;
     using UpgradeableProxyLib for address;
 
-    address internal deployer;
-    address internal proxyAdmin;
-    CoreDeploymentLib.DeploymentData internal deploymentData;
-    CoreDeploymentLib.DeploymentConfigData internal configData;
+    address internal _deployer;
+    address internal _proxyAdmin;
+    CoreDeploymentLib.DeploymentData internal _deploymentData;
+    CoreDeploymentLib.DeploymentConfigData internal _configData;
 
     function setUp() public virtual {
-        deployer = vm.rememberKey(vm.envUint("PRIVATE_KEY"));
-        vm.label(deployer, "Deployer");
+        _deployer = vm.rememberKey(vm.envUint("PRIVATE_KEY"));
+        vm.label(_deployer, "Deployer");
     }
 
     function run() external {
-        vm.startBroadcast(deployer);
-        proxyAdmin = UpgradeableProxyLib.deployProxyAdmin();
-        deploymentData = CoreDeploymentLib.deployContracts(
-            deployer,
-            proxyAdmin,
-            configData
+        vm.startBroadcast(_deployer);
+        _proxyAdmin = UpgradeableProxyLib.deployProxyAdmin();
+        _deploymentData = CoreDeploymentLib.deployContracts(
+            _deployer,
+            _proxyAdmin,
+            _configData
         );
         vm.stopBroadcast();
         string memory deploymentPath = "script/deployments/core/";
         CoreDeploymentLib.writeDeploymentJson(
             deploymentPath,
             block.chainid,
-            deploymentData
+            _deploymentData
         );
     }
 }

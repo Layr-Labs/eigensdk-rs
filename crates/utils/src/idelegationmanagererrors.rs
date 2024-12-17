@@ -15,10 +15,7 @@ interface IDelegationManagerErrors {
     error OperatorNotRegistered();
     error OperatorsCannotUndelegate();
     error SaltSpent();
-    error UnauthorizedCaller();
-    error WithdrawalDelayExeedsMax();
     error WithdrawalDelayNotElapsed();
-    error WithdrawalDoesNotExist();
     error WithdrawalExceedsMax();
     error WithdrawalNotQueued();
     error WithdrawerNotCaller();
@@ -91,22 +88,7 @@ interface IDelegationManagerErrors {
   },
   {
     "type": "error",
-    "name": "UnauthorizedCaller",
-    "inputs": []
-  },
-  {
-    "type": "error",
-    "name": "WithdrawalDelayExeedsMax",
-    "inputs": []
-  },
-  {
-    "type": "error",
     "name": "WithdrawalDelayNotElapsed",
-    "inputs": []
-  },
-  {
-    "type": "error",
-    "name": "WithdrawalDoesNotExist",
     "inputs": []
   },
   {
@@ -880,126 +862,6 @@ pub mod IDelegationManagerErrors {
             }
         }
     };
-    /**Custom error with signature `UnauthorizedCaller()` and selector `0x5c427cd9`.
-    ```solidity
-    error UnauthorizedCaller();
-    ```*/
-    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
-    #[derive(Clone)]
-    pub struct UnauthorizedCaller {}
-    #[allow(
-        non_camel_case_types,
-        non_snake_case,
-        clippy::pub_underscore_fields,
-        clippy::style
-    )]
-    const _: () = {
-        use alloy::sol_types as alloy_sol_types;
-        #[doc(hidden)]
-        type UnderlyingSolTuple<'a> = ();
-        #[doc(hidden)]
-        type UnderlyingRustTuple<'a> = ();
-        #[cfg(test)]
-        #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
-            match _t {
-                alloy_sol_types::private::AssertTypeEq::<
-                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
-                >(_) => {}
-            }
-        }
-        #[automatically_derived]
-        #[doc(hidden)]
-        impl ::core::convert::From<UnauthorizedCaller> for UnderlyingRustTuple<'_> {
-            fn from(value: UnauthorizedCaller) -> Self {
-                ()
-            }
-        }
-        #[automatically_derived]
-        #[doc(hidden)]
-        impl ::core::convert::From<UnderlyingRustTuple<'_>> for UnauthorizedCaller {
-            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                Self {}
-            }
-        }
-        #[automatically_derived]
-        impl alloy_sol_types::SolError for UnauthorizedCaller {
-            type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
-            const SIGNATURE: &'static str = "UnauthorizedCaller()";
-            const SELECTOR: [u8; 4] = [92u8, 66u8, 124u8, 217u8];
-            #[inline]
-            fn new<'a>(
-                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
-            ) -> Self {
-                tuple.into()
-            }
-            #[inline]
-            fn tokenize(&self) -> Self::Token<'_> {
-                ()
-            }
-        }
-    };
-    /**Custom error with signature `WithdrawalDelayExeedsMax()` and selector `0x11a255bc`.
-    ```solidity
-    error WithdrawalDelayExeedsMax();
-    ```*/
-    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
-    #[derive(Clone)]
-    pub struct WithdrawalDelayExeedsMax {}
-    #[allow(
-        non_camel_case_types,
-        non_snake_case,
-        clippy::pub_underscore_fields,
-        clippy::style
-    )]
-    const _: () = {
-        use alloy::sol_types as alloy_sol_types;
-        #[doc(hidden)]
-        type UnderlyingSolTuple<'a> = ();
-        #[doc(hidden)]
-        type UnderlyingRustTuple<'a> = ();
-        #[cfg(test)]
-        #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
-            match _t {
-                alloy_sol_types::private::AssertTypeEq::<
-                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
-                >(_) => {}
-            }
-        }
-        #[automatically_derived]
-        #[doc(hidden)]
-        impl ::core::convert::From<WithdrawalDelayExeedsMax> for UnderlyingRustTuple<'_> {
-            fn from(value: WithdrawalDelayExeedsMax) -> Self {
-                ()
-            }
-        }
-        #[automatically_derived]
-        #[doc(hidden)]
-        impl ::core::convert::From<UnderlyingRustTuple<'_>> for WithdrawalDelayExeedsMax {
-            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                Self {}
-            }
-        }
-        #[automatically_derived]
-        impl alloy_sol_types::SolError for WithdrawalDelayExeedsMax {
-            type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
-            const SIGNATURE: &'static str = "WithdrawalDelayExeedsMax()";
-            const SELECTOR: [u8; 4] = [17u8, 162u8, 85u8, 188u8];
-            #[inline]
-            fn new<'a>(
-                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
-            ) -> Self {
-                tuple.into()
-            }
-            #[inline]
-            fn tokenize(&self) -> Self::Token<'_> {
-                ()
-            }
-        }
-    };
     /**Custom error with signature `WithdrawalDelayNotElapsed()` and selector `0xf1ecf5c2`.
     ```solidity
     error WithdrawalDelayNotElapsed();
@@ -1048,66 +910,6 @@ pub mod IDelegationManagerErrors {
             type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "WithdrawalDelayNotElapsed()";
             const SELECTOR: [u8; 4] = [241u8, 236u8, 245u8, 194u8];
-            #[inline]
-            fn new<'a>(
-                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
-            ) -> Self {
-                tuple.into()
-            }
-            #[inline]
-            fn tokenize(&self) -> Self::Token<'_> {
-                ()
-            }
-        }
-    };
-    /**Custom error with signature `WithdrawalDoesNotExist()` and selector `0x52b4cdc2`.
-    ```solidity
-    error WithdrawalDoesNotExist();
-    ```*/
-    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
-    #[derive(Clone)]
-    pub struct WithdrawalDoesNotExist {}
-    #[allow(
-        non_camel_case_types,
-        non_snake_case,
-        clippy::pub_underscore_fields,
-        clippy::style
-    )]
-    const _: () = {
-        use alloy::sol_types as alloy_sol_types;
-        #[doc(hidden)]
-        type UnderlyingSolTuple<'a> = ();
-        #[doc(hidden)]
-        type UnderlyingRustTuple<'a> = ();
-        #[cfg(test)]
-        #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
-            match _t {
-                alloy_sol_types::private::AssertTypeEq::<
-                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
-                >(_) => {}
-            }
-        }
-        #[automatically_derived]
-        #[doc(hidden)]
-        impl ::core::convert::From<WithdrawalDoesNotExist> for UnderlyingRustTuple<'_> {
-            fn from(value: WithdrawalDoesNotExist) -> Self {
-                ()
-            }
-        }
-        #[automatically_derived]
-        #[doc(hidden)]
-        impl ::core::convert::From<UnderlyingRustTuple<'_>> for WithdrawalDoesNotExist {
-            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                Self {}
-            }
-        }
-        #[automatically_derived]
-        impl alloy_sol_types::SolError for WithdrawalDoesNotExist {
-            type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
-            const SIGNATURE: &'static str = "WithdrawalDoesNotExist()";
-            const SELECTOR: [u8; 4] = [82u8, 180u8, 205u8, 194u8];
             #[inline]
             fn new<'a>(
                 tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
@@ -1374,10 +1176,7 @@ pub mod IDelegationManagerErrors {
         OperatorNotRegistered(OperatorNotRegistered),
         OperatorsCannotUndelegate(OperatorsCannotUndelegate),
         SaltSpent(SaltSpent),
-        UnauthorizedCaller(UnauthorizedCaller),
-        WithdrawalDelayExeedsMax(WithdrawalDelayExeedsMax),
         WithdrawalDelayNotElapsed(WithdrawalDelayNotElapsed),
-        WithdrawalDoesNotExist(WithdrawalDoesNotExist),
         WithdrawalExceedsMax(WithdrawalExceedsMax),
         WithdrawalNotQueued(WithdrawalNotQueued),
         WithdrawerNotCaller(WithdrawerNotCaller),
@@ -1393,16 +1192,13 @@ pub mod IDelegationManagerErrors {
         /// Prefer using `SolInterface` methods instead.
         pub const SELECTORS: &'static [[u8; 4usize]] = &[
             [17u8, 72u8, 26u8, 148u8],
-            [17u8, 162u8, 85u8, 188u8],
             [35u8, 216u8, 113u8, 165u8],
             [37u8, 236u8, 108u8, 31u8],
             [40u8, 206u8, 241u8, 164u8],
             [53u8, 49u8, 50u8, 68u8],
             [60u8, 147u8, 52u8, 70u8],
             [67u8, 113u8, 74u8, 253u8],
-            [82u8, 180u8, 205u8, 194u8],
             [88u8, 68u8, 52u8, 212u8],
-            [92u8, 66u8, 124u8, 217u8],
             [119u8, 229u8, 106u8, 6u8],
             [121u8, 108u8, 197u8, 37u8],
             [135u8, 201u8, 210u8, 25u8],
@@ -1418,7 +1214,7 @@ pub mod IDelegationManagerErrors {
     impl alloy_sol_types::SolInterface for IDelegationManagerErrorsErrors {
         const NAME: &'static str = "IDelegationManagerErrorsErrors";
         const MIN_DATA_LENGTH: usize = 0usize;
-        const COUNT: usize = 20usize;
+        const COUNT: usize = 17usize;
         #[inline]
         fn selector(&self) -> [u8; 4] {
             match self {
@@ -1454,17 +1250,8 @@ pub mod IDelegationManagerErrors {
                     <OperatorsCannotUndelegate as alloy_sol_types::SolError>::SELECTOR
                 }
                 Self::SaltSpent(_) => <SaltSpent as alloy_sol_types::SolError>::SELECTOR,
-                Self::UnauthorizedCaller(_) => {
-                    <UnauthorizedCaller as alloy_sol_types::SolError>::SELECTOR
-                }
-                Self::WithdrawalDelayExeedsMax(_) => {
-                    <WithdrawalDelayExeedsMax as alloy_sol_types::SolError>::SELECTOR
-                }
                 Self::WithdrawalDelayNotElapsed(_) => {
                     <WithdrawalDelayNotElapsed as alloy_sol_types::SolError>::SELECTOR
-                }
-                Self::WithdrawalDoesNotExist(_) => {
-                    <WithdrawalDoesNotExist as alloy_sol_types::SolError>::SELECTOR
                 }
                 Self::WithdrawalExceedsMax(_) => {
                     <WithdrawalExceedsMax as alloy_sol_types::SolError>::SELECTOR
@@ -1516,19 +1303,6 @@ pub mod IDelegationManagerErrors {
                             )
                     }
                     OnlyStrategyManagerOrEigenPodManager
-                },
-                {
-                    fn WithdrawalDelayExeedsMax(
-                        data: &[u8],
-                        validate: bool,
-                    ) -> alloy_sol_types::Result<IDelegationManagerErrorsErrors>
-                    {
-                        <WithdrawalDelayExeedsMax as alloy_sol_types::SolError>::abi_decode_raw(
-                            data, validate,
-                        )
-                        .map(IDelegationManagerErrorsErrors::WithdrawalDelayExeedsMax)
-                    }
-                    WithdrawalDelayExeedsMax
                 },
                 {
                     fn OnlyAllocationManager(
@@ -1605,19 +1379,6 @@ pub mod IDelegationManagerErrors {
                     InputArrayLengthMismatch
                 },
                 {
-                    fn WithdrawalDoesNotExist(
-                        data: &[u8],
-                        validate: bool,
-                    ) -> alloy_sol_types::Result<IDelegationManagerErrorsErrors>
-                    {
-                        <WithdrawalDoesNotExist as alloy_sol_types::SolError>::abi_decode_raw(
-                            data, validate,
-                        )
-                        .map(IDelegationManagerErrorsErrors::WithdrawalDoesNotExist)
-                    }
-                    WithdrawalDoesNotExist
-                },
-                {
                     fn WithdrawerNotCaller(
                         data: &[u8],
                         validate: bool,
@@ -1629,19 +1390,6 @@ pub mod IDelegationManagerErrors {
                         .map(IDelegationManagerErrorsErrors::WithdrawerNotCaller)
                     }
                     WithdrawerNotCaller
-                },
-                {
-                    fn UnauthorizedCaller(
-                        data: &[u8],
-                        validate: bool,
-                    ) -> alloy_sol_types::Result<IDelegationManagerErrorsErrors>
-                    {
-                        <UnauthorizedCaller as alloy_sol_types::SolError>::abi_decode_raw(
-                            data, validate,
-                        )
-                        .map(IDelegationManagerErrorsErrors::UnauthorizedCaller)
-                    }
-                    UnauthorizedCaller
                 },
                 {
                     fn ActivelyDelegated(
@@ -1828,23 +1576,8 @@ pub mod IDelegationManagerErrors {
                 Self::SaltSpent(inner) => {
                     <SaltSpent as alloy_sol_types::SolError>::abi_encoded_size(inner)
                 }
-                Self::UnauthorizedCaller(inner) => {
-                    <UnauthorizedCaller as alloy_sol_types::SolError>::abi_encoded_size(
-                        inner,
-                    )
-                }
-                Self::WithdrawalDelayExeedsMax(inner) => {
-                    <WithdrawalDelayExeedsMax as alloy_sol_types::SolError>::abi_encoded_size(
-                        inner,
-                    )
-                }
                 Self::WithdrawalDelayNotElapsed(inner) => {
                     <WithdrawalDelayNotElapsed as alloy_sol_types::SolError>::abi_encoded_size(
-                        inner,
-                    )
-                }
-                Self::WithdrawalDoesNotExist(inner) => {
-                    <WithdrawalDoesNotExist as alloy_sol_types::SolError>::abi_encoded_size(
                         inner,
                     )
                 }
@@ -1942,26 +1675,8 @@ pub mod IDelegationManagerErrors {
                 Self::SaltSpent(inner) => {
                     <SaltSpent as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
                 }
-                Self::UnauthorizedCaller(inner) => {
-                    <UnauthorizedCaller as alloy_sol_types::SolError>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
-                }
-                Self::WithdrawalDelayExeedsMax(inner) => {
-                    <WithdrawalDelayExeedsMax as alloy_sol_types::SolError>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
-                }
                 Self::WithdrawalDelayNotElapsed(inner) => {
                     <WithdrawalDelayNotElapsed as alloy_sol_types::SolError>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
-                }
-                Self::WithdrawalDoesNotExist(inner) => {
-                    <WithdrawalDoesNotExist as alloy_sol_types::SolError>::abi_encode_raw(
                         inner,
                         out,
                     )

@@ -281,7 +281,6 @@ mod test {
     }
 
     #[tokio::test]
-    #[ignore] // TODO: this test is ignored until the anvil state is updated to slashing
     async fn test_egn_addrs_with_service_manager_flag() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
 
@@ -292,22 +291,22 @@ mod test {
         let expected_addresses: ContractAddresses = serde_json::from_str(&format!(
             r#"{{
                 "avs": {{
-                    "bls-apk-registry": "0x809d550fca64d94bd9f66e60752a544199cfac3d",
-                    "index-registry": "0x1291be112d480055dafd8a610b7d1e203891c274",
-                    "registry-coordinator": "0x5eb3bc0a489c5a8288765d2336659ebca68fcd00",
-                    "service-manager": "0x99bba657f2bbc93c02d617f8ba121cb8fc104acf",
-                    "stake-registry": "0x8f86403a4de0bb5791fa46b8e795c547942fe4cf"
+                    "bls-apk-registry": "0xc351628eb244ec633d5f21fbd6621e1a683b1181",
+                    "index-registry": "0xcbeaf3bde82155f56486fb5a1072cb8baaf547cc",
+                    "registry-coordinator": "0x7969c5ed335650692bc04293b07f5bf2e7a673c0",
+                    "service-manager": "0xb7278a61aa25c888815afc32ad3cc52ff24fe575",
+                    "stake-registry": "0x82e01223d51eb87e16a03e24687edf0f294da6f1"
                 }},
                 "eigenlayer": {{
                     "delegation-manager": "0xcf7ed3acca5a467e9e704c703e8d87f634fb0fc9",
-                    "slasher": "0x0000000000000000000000000000000000000000",
+                    "allocation-manager": "0x8a791620dd6260079bf849dc5567adc3f2fdc318",
                     "strategy-manager": "0xa513e6e4b8f2a923d98304ec87f64353c4d5c853"
                 }},
                 "network": {{
                     "chain-id": "31337",
                     "rpc-url": "{http_endpoint}"
                 }}
-            }}"#
+            }}"#,
         ))
         .unwrap();
         let addresses = ContractAddresses::get_addresses(
@@ -322,7 +321,6 @@ mod test {
     }
 
     #[tokio::test]
-    #[ignore] // TODO: this test is ignored until the anvil state is updated to slashing
     async fn test_egn_addrs_with_registry_coordinator_flag() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
 
@@ -332,15 +330,15 @@ mod test {
         let expected_addresses: ContractAddresses = serde_json::from_str(&format!(
             r#"{{
                 "avs": {{
-                    "bls-apk-registry": "0x809d550fca64d94bd9f66e60752a544199cfac3d",
-                    "index-registry": "0x1291be112d480055dafd8a610b7d1e203891c274",
-                    "registry-coordinator": "0x5eb3bc0a489c5a8288765d2336659ebca68fcd00",
-                    "service-manager": "0x99bba657f2bbc93c02d617f8ba121cb8fc104acf",
-                    "stake-registry": "0x8f86403a4de0bb5791fa46b8e795c547942fe4cf"
+                    "bls-apk-registry": "0xc351628eb244ec633d5f21fbd6621e1a683b1181",
+                    "index-registry": "0xcbeaf3bde82155f56486fb5a1072cb8baaf547cc",
+                    "registry-coordinator": "0x7969c5ed335650692bc04293b07f5bf2e7a673c0",
+                    "service-manager": "0xb7278a61aa25c888815afc32ad3cc52ff24fe575",
+                    "stake-registry": "0x82e01223d51eb87e16a03e24687edf0f294da6f1"
                 }},
                 "eigenlayer": {{
                     "delegation-manager": "0xcf7ed3acca5a467e9e704c703e8d87f634fb0fc9",
-                    "slasher": "0x0000000000000000000000000000000000000000",
+                    "allocation-manager": "0x8a791620dd6260079bf849dc5567adc3f2fdc318",
                     "strategy-manager": "0xa513e6e4b8f2a923d98304ec87f64353c4d5c853"
                 }},
                 "network": {{
@@ -350,7 +348,6 @@ mod test {
             }}"#,
         ))
         .unwrap();
-
         let addresses = ContractAddresses::get_addresses(
             None,
             Some(registry_coordinator_address),

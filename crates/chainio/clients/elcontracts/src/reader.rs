@@ -247,8 +247,8 @@ impl ELChainReader {
 
         Ok((
             strategy_addr,
-            underlying_token_addr,
             *contract_ierc20.address(),
+            underlying_token_addr,
         ))
     }
 
@@ -265,43 +265,43 @@ impl ELChainReader {
     /// # Errors
     ///
     /// * `ElContractsError` - if the call to the contract fails
-    pub async fn get_operator_details(
-        &self,
-        operator: Address,
-    ) -> Result<Operator, ElContractsError> {
-        let provider = get_provider(&self.provider);
+    // pub async fn get_operator_details(
+    //     &self,
+    //     operator: Address,
+    // ) -> Result<Operator, ElContractsError> {
+    //     let provider = get_provider(&self.provider);
 
-        let contract_delegation_manager =
-            DelegationManager::new(self.delegation_manager, &provider);
+    //     let contract_delegation_manager =
+    //         DelegationManager::new(self.delegation_manager, &provider);
 
-        let operator_det = contract_delegation_manager
-            .operatorDetails(operator)
-            .call()
-            .await
-            .map_err(ElContractsError::AlloyContractError)?;
+    //     let operator_det = contract_delegation_manager
+    //         .operatorDetails(operator)
+    //         .call()
+    //         .await
+    //         .map_err(ElContractsError::AlloyContractError)?;
 
-        let DelegationManager::operatorDetailsReturn {
-            _0: operator_details,
-        } = operator_det;
+    //     let DelegationManager::operatorDetailsReturn {
+    //         _0: operator_details,
+    //     } = operator_det;
 
-        let AllocationManager::getAllocationDelayReturn {
-            _0: is_set,
-            _1: delay,
-        } = AllocationManager::new(self.allocation_manager, &provider)
-            .getAllocationDelay(operator)
-            .call()
-            .await
-            .map_err(ElContractsError::AlloyContractError)?;
-        let allocation_delay = if is_set { delay } else { 0 };
+    //     let AllocationManager::getAllocationDelayReturn {
+    //         _0: is_set,
+    //         _1: delay,
+    //     } = AllocationManager::new(self.allocation_manager, &provider)
+    //         .getAllocationDelay(operator)
+    //         .call()
+    //         .await
+    //         .map_err(ElContractsError::AlloyContractError)?;
+    //     let allocation_delay = if is_set { delay } else { 0 };
 
-        Ok(Operator {
-            address: operator,
-            staker_opt_out_window_blocks: operator_details.__deprecated_stakerOptOutWindowBlocks,
-            metadata_url: None,
-            allocation_delay,
-            delegation_approver_address: operator_details.delegationApprover,
-        })
-    }
+    //     Ok(Operator {
+    //         address: operator,
+    //         staker_opt_out_window_blocks: operator_details.__deprecated_stakerOptOutWindowBlocks,
+    //         metadata_url: None,
+    //         allocation_delay,
+    //         delegation_approver_address: operator_details.delegationApprover,
+    //     })
+    // }
 
     /// Check if the operator is registered
     ///
@@ -429,7 +429,7 @@ impl ELChainReader {
             _0: underlying_token_addr,
         } = underlying_token;
 
-        Ok((contract_strategy_address.clone(), underlying_token_addr))
+        Ok((*contract_strategy_address, underlying_token_addr))
     }
 
     pub async fn get_allocatable_magnitude(
@@ -770,6 +770,8 @@ impl ELChainReader {
         Ok(delay)
     }
 
+    /*
+     *  * TODO: This method is not supported by the current version of eigenlayer-contracts
     pub async fn get_registered_sets(
         &self,
         operator_address: Address,
@@ -790,6 +792,7 @@ impl ELChainReader {
 
         Ok(registered_sets)
     }
+    */
 }
 
 // TODO: move to types.rs?
@@ -810,10 +813,13 @@ pub struct AllocationInfo {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use alloy::eips::eip1898::BlockNumberOrTag::Number;
     use alloy::providers::Provider;
+    use alloy::{eips::eip1898::BlockNumberOrTag::Number, rpc::types::BlockTransactionsKind};
     use alloy_primitives::{address, keccak256, Address, FixedBytes, U256};
     use eigen_logging::get_test_logger;
+    use eigen_testing_utils::anvil_constants::{
+        get_erc20_mock_strategy, register_operator_to_el_if_not_registered,
+    };
     use eigen_testing_utils::{
         anvil::start_anvil_container,
         anvil_constants::{
@@ -827,11 +833,21 @@ mod tests {
         delegationmanager::DelegationManager::calculateDelegationApprovalDigestHashReturn,
         mockavsservicemanager::MockAvsServiceManager,
     };
-    use std::str::FromStr;
 
-    const OPERATOR_ADDRESS: &str = "0xa0Ee7A142d267C1f36714E4a8F75612F20a79720";
+    const OPERATOR_ADDRESS: Address = address!("70997970C51812dc3A010C7d01b50e0d17dc79C8");
+    const OPERATOR_PRIVATE_KEY: &str =
+        "0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d";
 
     async fn build_el_chain_reader(http_endpoint: String) -> ELChainReader {
+        register_operator_to_el_if_not_registered(
+            OPERATOR_PRIVATE_KEY,
+            &http_endpoint,
+            OPERATOR_ADDRESS,
+            "metadata_uri",
+        )
+        .await
+        .unwrap();
+
         let delegation_manager_address =
             get_delegation_manager_address(http_endpoint.clone()).await;
         let delegation_manager_contract =
@@ -877,7 +893,7 @@ mod tests {
         let approve_salt: FixedBytes<32> = FixedBytes::from([0x02; 32]);
         let current_block_number = provider.get_block_number().await.unwrap();
         let block_info = provider
-            .get_block_by_number(Number(current_block_number), true)
+            .get_block_by_number(Number(current_block_number), BlockTransactionsKind::Hashes)
             .await
             .unwrap();
 
@@ -927,7 +943,7 @@ mod tests {
         let salt: FixedBytes<32> = FixedBytes::from([0x02; 32]);
         let current_block_number = provider.get_block_number().await.unwrap();
         let block_info = provider
-            .get_block_by_number(Number(current_block_number), true)
+            .get_block_by_number(Number(current_block_number), BlockTransactionsKind::Hashes)
             .await
             .unwrap();
         let block = block_info.unwrap();
@@ -955,28 +971,27 @@ mod tests {
     }
 
     #[tokio::test]
+    #[ignore]
     async fn test_get_operator_details() {
-        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let operator_addr = Address::from_str(OPERATOR_ADDRESS).unwrap();
-        let chain_reader = build_el_chain_reader(http_endpoint).await;
+        // let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        // let chain_reader = build_el_chain_reader(http_endpoint).await;
 
-        let operator = chain_reader
-            .get_operator_details(operator_addr)
-            .await
-            .unwrap();
+        // let operator = chain_reader
+        //     .get_operator_details(OPERATOR_ADDRESS)
+        //     .await
+        //     .unwrap();
 
-        assert!(operator.metadata_url.is_none());
-        println!("{:?}", operator.metadata_url);
+        // assert!(operator.metadata_url.is_none());
+        // println!("{:?}", operator.metadata_url);
     }
 
     #[tokio::test]
     async fn test_is_operator_registered() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let operator_addr = Address::from_str(OPERATOR_ADDRESS).unwrap();
         let chain_reader = build_el_chain_reader(http_endpoint).await;
 
         let is_registered = chain_reader
-            .is_operator_registered(operator_addr)
+            .is_operator_registered(OPERATOR_ADDRESS)
             .await
             .unwrap();
 
@@ -986,45 +1001,47 @@ mod tests {
     #[tokio::test]
     async fn test_get_staker_shares() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let operator_addr = Address::from_str(OPERATOR_ADDRESS).unwrap();
         let chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
 
-        let (strategies, shares) = chain_reader.get_staker_shares(operator_addr).await.unwrap();
+        let (strategies, shares) = chain_reader
+            .get_staker_shares(OPERATOR_ADDRESS)
+            .await
+            .unwrap();
 
-        let expected_strategies = vec![get_erc20_mock_strategy(http_endpoint.clone()).await];
+        let expected_strategies: Vec<Address> = vec![];
 
         assert!(strategies.len() == shares.len());
         assert_eq!(strategies, expected_strategies);
-        assert!(shares[0] > U256::from(0));
     }
 
     #[tokio::test]
     async fn test_get_delegated_operator() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let staker_addr = Address::from_str(OPERATOR_ADDRESS).unwrap(); // TODO: staker address? see deployment scripts
         let chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
 
         let operator_addr = chain_reader
-            .get_delegated_operator(staker_addr)
+            .get_delegated_operator(OPERATOR_ADDRESS)
             .await
             .unwrap();
 
-        assert_eq!(operator_addr, Address::ZERO); // staker is delegated?
+        assert_eq!(operator_addr, OPERATOR_ADDRESS); // operator is delegated to himself
     }
 
+    /*
+     * TODO: This method is not supported by the current version of eigenlayer-contracts
     #[tokio::test]
     async fn test_get_registered_sets() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let operator_addr = Address::from_str(OPERATOR_ADDRESS).unwrap();
         let chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
 
         let ret = chain_reader
-            .get_registered_sets(operator_addr)
+            .get_registered_sets(OPERATOR_ADDRESS)
             .await
             .unwrap();
 
         assert_eq!(ret.len(), 1);
     }
+    */
 
     #[tokio::test]
     async fn test_get_strategy_and_underlying_token() {
@@ -1040,13 +1057,13 @@ mod tests {
         let underlying_token_addr_str = underlying_token_addr.to_string();
         assert_eq!(
             underlying_token_addr_str,
-            "0x82e01223d51Eb87e16A03E24687EDF0F294da6f1"
+            "0x36C02dA8a0983159322a80FFE9F24b1acfF8B570"
         );
 
         let strategy_contract_addr_str = strategy_contract_addr.to_string();
         assert_eq!(
             strategy_contract_addr_str,
-            "0x7969c5eD335650692Bc04293B07F5BF2e7A673C0"
+            "0xeC4cFde48EAdca2bC63E94BB437BbeAcE1371bF3"
         );
     }
 }

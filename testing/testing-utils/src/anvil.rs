@@ -75,7 +75,6 @@ pub async fn start_anvil_container() -> (ContainerAsync<GenericImage>, String, S
     let http_endpoint = format!("http://localhost:{}", port);
     let ws_endpoint = format!("ws://localhost:{}", port);
 
-    // mine_anvil_blocks(&container, 200).await;
     (container, http_endpoint, ws_endpoint)
 }
 

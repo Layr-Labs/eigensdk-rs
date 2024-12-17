@@ -78,7 +78,10 @@ impl EthBackend for FakeEthBackend {
         _hydrate: bool,
     ) -> Result<Option<Block>, RpcError<TransportErrorKind>> {
         let header = Header {
-            base_fee_per_gas: Some(self.base_fee_per_gas),
+            inner: alloy::consensus::Header {
+                base_fee_per_gas: Some(self.base_fee_per_gas),
+                ..Default::default()
+            },
             ..Default::default()
         };
         Ok(Some(Block {

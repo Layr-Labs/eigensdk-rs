@@ -3,6 +3,8 @@
 
 ```solidity
 library IRewardsCoordinatorTypes {
+    struct OperatorDirectedRewardsSubmission { StrategyAndMultiplier[] strategiesAndMultipliers; address token; OperatorReward[] operatorRewards; uint32 startTimestamp; uint32 duration; string description; }
+    struct OperatorReward { address operator; uint256 amount; }
     struct RewardsSubmission { StrategyAndMultiplier[] strategiesAndMultipliers; address token; uint256 amount; uint32 startTimestamp; uint32 duration; }
     struct StrategyAndMultiplier { address strategy; uint96 multiplier; }
 }
@@ -16,6 +18,506 @@ library IRewardsCoordinatorTypes {
 pub mod IRewardsCoordinatorTypes {
     use super::*;
     use alloy::sol_types as alloy_sol_types;
+    /**```solidity
+    struct OperatorDirectedRewardsSubmission { StrategyAndMultiplier[] strategiesAndMultipliers; address token; OperatorReward[] operatorRewards; uint32 startTimestamp; uint32 duration; string description; }
+    ```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct OperatorDirectedRewardsSubmission {
+        pub strategiesAndMultipliers: alloy::sol_types::private::Vec<
+            <StrategyAndMultiplier as alloy::sol_types::SolType>::RustType,
+        >,
+        pub token: alloy::sol_types::private::Address,
+        pub operatorRewards:
+            alloy::sol_types::private::Vec<<OperatorReward as alloy::sol_types::SolType>::RustType>,
+        pub startTimestamp: u32,
+        pub duration: u32,
+        pub description: alloy::sol_types::private::String,
+    }
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = (
+            alloy::sol_types::sol_data::Array<StrategyAndMultiplier>,
+            alloy::sol_types::sol_data::Address,
+            alloy::sol_types::sol_data::Array<OperatorReward>,
+            alloy::sol_types::sol_data::Uint<32>,
+            alloy::sol_types::sol_data::Uint<32>,
+            alloy::sol_types::sol_data::String,
+        );
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = (
+            alloy::sol_types::private::Vec<
+                <StrategyAndMultiplier as alloy::sol_types::SolType>::RustType,
+            >,
+            alloy::sol_types::private::Address,
+            alloy::sol_types::private::Vec<<OperatorReward as alloy::sol_types::SolType>::RustType>,
+            u32,
+            u32,
+            alloy::sol_types::private::String,
+        );
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<OperatorDirectedRewardsSubmission> for UnderlyingRustTuple<'_> {
+            fn from(value: OperatorDirectedRewardsSubmission) -> Self {
+                (
+                    value.strategiesAndMultipliers,
+                    value.token,
+                    value.operatorRewards,
+                    value.startTimestamp,
+                    value.duration,
+                    value.description,
+                )
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for OperatorDirectedRewardsSubmission {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {
+                    strategiesAndMultipliers: tuple.0,
+                    token: tuple.1,
+                    operatorRewards: tuple.2,
+                    startTimestamp: tuple.3,
+                    duration: tuple.4,
+                    description: tuple.5,
+                }
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolValue for OperatorDirectedRewardsSubmission {
+            type SolType = Self;
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::private::SolTypeValue<Self> for OperatorDirectedRewardsSubmission {
+            #[inline]
+            fn stv_to_tokens(&self) -> <Self as alloy_sol_types::SolType>::Token<'_> {
+                (
+                    <alloy::sol_types::sol_data::Array<
+                        StrategyAndMultiplier,
+                    > as alloy_sol_types::SolType>::tokenize(
+                        &self.strategiesAndMultipliers,
+                    ),
+                    <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
+                        &self.token,
+                    ),
+                    <alloy::sol_types::sol_data::Array<
+                        OperatorReward,
+                    > as alloy_sol_types::SolType>::tokenize(&self.operatorRewards),
+                    <alloy::sol_types::sol_data::Uint<
+                        32,
+                    > as alloy_sol_types::SolType>::tokenize(&self.startTimestamp),
+                    <alloy::sol_types::sol_data::Uint<
+                        32,
+                    > as alloy_sol_types::SolType>::tokenize(&self.duration),
+                    <alloy::sol_types::sol_data::String as alloy_sol_types::SolType>::tokenize(
+                        &self.description,
+                    ),
+                )
+            }
+            #[inline]
+            fn stv_abi_encoded_size(&self) -> usize {
+                if let Some(size) = <Self as alloy_sol_types::SolType>::ENCODED_SIZE {
+                    return size;
+                }
+                let tuple =
+                    <UnderlyingRustTuple<'_> as ::core::convert::From<Self>>::from(self.clone());
+                <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::abi_encoded_size(&tuple)
+            }
+            #[inline]
+            fn stv_eip712_data_word(&self) -> alloy_sol_types::Word {
+                <Self as alloy_sol_types::SolStruct>::eip712_hash_struct(self)
+            }
+            #[inline]
+            fn stv_abi_encode_packed_to(&self, out: &mut alloy_sol_types::private::Vec<u8>) {
+                let tuple =
+                    <UnderlyingRustTuple<'_> as ::core::convert::From<Self>>::from(self.clone());
+                <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::abi_encode_packed_to(
+                    &tuple, out,
+                )
+            }
+            #[inline]
+            fn stv_abi_packed_encoded_size(&self) -> usize {
+                if let Some(size) = <Self as alloy_sol_types::SolType>::PACKED_ENCODED_SIZE {
+                    return size;
+                }
+                let tuple =
+                    <UnderlyingRustTuple<'_> as ::core::convert::From<Self>>::from(self.clone());
+                <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::abi_packed_encoded_size(
+                    &tuple,
+                )
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolType for OperatorDirectedRewardsSubmission {
+            type RustType = Self;
+            type Token<'a> = <UnderlyingSolTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SOL_NAME: &'static str = <Self as alloy_sol_types::SolStruct>::NAME;
+            const ENCODED_SIZE: Option<usize> =
+                <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::ENCODED_SIZE;
+            const PACKED_ENCODED_SIZE: Option<usize> =
+                <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::PACKED_ENCODED_SIZE;
+            #[inline]
+            fn valid_token(token: &Self::Token<'_>) -> bool {
+                <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::valid_token(token)
+            }
+            #[inline]
+            fn detokenize(token: Self::Token<'_>) -> Self::RustType {
+                let tuple = <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::detokenize(token);
+                <Self as ::core::convert::From<UnderlyingRustTuple<'_>>>::from(tuple)
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolStruct for OperatorDirectedRewardsSubmission {
+            const NAME: &'static str = "OperatorDirectedRewardsSubmission";
+            #[inline]
+            fn eip712_root_type() -> alloy_sol_types::private::Cow<'static, str> {
+                alloy_sol_types::private::Cow::Borrowed(
+                    "OperatorDirectedRewardsSubmission(StrategyAndMultiplier[] strategiesAndMultipliers,address token,OperatorReward[] operatorRewards,uint32 startTimestamp,uint32 duration,string description)",
+                )
+            }
+            #[inline]
+            fn eip712_components(
+            ) -> alloy_sol_types::private::Vec<alloy_sol_types::private::Cow<'static, str>>
+            {
+                let mut components = alloy_sol_types::private::Vec::with_capacity(2);
+                components.push(
+                    <StrategyAndMultiplier as alloy_sol_types::SolStruct>::eip712_root_type(),
+                );
+                components.extend(
+                    <StrategyAndMultiplier as alloy_sol_types::SolStruct>::eip712_components(),
+                );
+                components.push(<OperatorReward as alloy_sol_types::SolStruct>::eip712_root_type());
+                components
+                    .extend(<OperatorReward as alloy_sol_types::SolStruct>::eip712_components());
+                components
+            }
+            #[inline]
+            fn eip712_encode_data(&self) -> alloy_sol_types::private::Vec<u8> {
+                [
+                    <alloy::sol_types::sol_data::Array<
+                        StrategyAndMultiplier,
+                    > as alloy_sol_types::SolType>::eip712_data_word(
+                            &self.strategiesAndMultipliers,
+                        )
+                        .0,
+                    <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::eip712_data_word(
+                            &self.token,
+                        )
+                        .0,
+                    <alloy::sol_types::sol_data::Array<
+                        OperatorReward,
+                    > as alloy_sol_types::SolType>::eip712_data_word(
+                            &self.operatorRewards,
+                        )
+                        .0,
+                    <alloy::sol_types::sol_data::Uint<
+                        32,
+                    > as alloy_sol_types::SolType>::eip712_data_word(
+                            &self.startTimestamp,
+                        )
+                        .0,
+                    <alloy::sol_types::sol_data::Uint<
+                        32,
+                    > as alloy_sol_types::SolType>::eip712_data_word(&self.duration)
+                        .0,
+                    <alloy::sol_types::sol_data::String as alloy_sol_types::SolType>::eip712_data_word(
+                            &self.description,
+                        )
+                        .0,
+                ]
+                    .concat()
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::EventTopic for OperatorDirectedRewardsSubmission {
+            #[inline]
+            fn topic_preimage_length(rust: &Self::RustType) -> usize {
+                0usize
+                    + <alloy::sol_types::sol_data::Array<
+                        StrategyAndMultiplier,
+                    > as alloy_sol_types::EventTopic>::topic_preimage_length(
+                        &rust.strategiesAndMultipliers,
+                    )
+                    + <alloy::sol_types::sol_data::Address as alloy_sol_types::EventTopic>::topic_preimage_length(
+                        &rust.token,
+                    )
+                    + <alloy::sol_types::sol_data::Array<
+                        OperatorReward,
+                    > as alloy_sol_types::EventTopic>::topic_preimage_length(
+                        &rust.operatorRewards,
+                    )
+                    + <alloy::sol_types::sol_data::Uint<
+                        32,
+                    > as alloy_sol_types::EventTopic>::topic_preimage_length(
+                        &rust.startTimestamp,
+                    )
+                    + <alloy::sol_types::sol_data::Uint<
+                        32,
+                    > as alloy_sol_types::EventTopic>::topic_preimage_length(
+                        &rust.duration,
+                    )
+                    + <alloy::sol_types::sol_data::String as alloy_sol_types::EventTopic>::topic_preimage_length(
+                        &rust.description,
+                    )
+            }
+            #[inline]
+            fn encode_topic_preimage(
+                rust: &Self::RustType,
+                out: &mut alloy_sol_types::private::Vec<u8>,
+            ) {
+                out.reserve(<Self as alloy_sol_types::EventTopic>::topic_preimage_length(rust));
+                <alloy::sol_types::sol_data::Array<
+                    StrategyAndMultiplier,
+                > as alloy_sol_types::EventTopic>::encode_topic_preimage(
+                    &rust.strategiesAndMultipliers,
+                    out,
+                );
+                <alloy::sol_types::sol_data::Address as alloy_sol_types::EventTopic>::encode_topic_preimage(
+                    &rust.token,
+                    out,
+                );
+                <alloy::sol_types::sol_data::Array<
+                    OperatorReward,
+                > as alloy_sol_types::EventTopic>::encode_topic_preimage(
+                    &rust.operatorRewards,
+                    out,
+                );
+                <alloy::sol_types::sol_data::Uint<
+                    32,
+                > as alloy_sol_types::EventTopic>::encode_topic_preimage(
+                    &rust.startTimestamp,
+                    out,
+                );
+                <alloy::sol_types::sol_data::Uint<
+                    32,
+                > as alloy_sol_types::EventTopic>::encode_topic_preimage(
+                    &rust.duration,
+                    out,
+                );
+                <alloy::sol_types::sol_data::String as alloy_sol_types::EventTopic>::encode_topic_preimage(
+                    &rust.description,
+                    out,
+                );
+            }
+            #[inline]
+            fn encode_topic(rust: &Self::RustType) -> alloy_sol_types::abi::token::WordToken {
+                let mut out = alloy_sol_types::private::Vec::new();
+                <Self as alloy_sol_types::EventTopic>::encode_topic_preimage(rust, &mut out);
+                alloy_sol_types::abi::token::WordToken(alloy_sol_types::private::keccak256(out))
+            }
+        }
+    };
+    /**```solidity
+    struct OperatorReward { address operator; uint256 amount; }
+    ```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct OperatorReward {
+        pub operator: alloy::sol_types::private::Address,
+        pub amount: alloy::sol_types::private::primitives::aliases::U256,
+    }
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = (
+            alloy::sol_types::sol_data::Address,
+            alloy::sol_types::sol_data::Uint<256>,
+        );
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = (
+            alloy::sol_types::private::Address,
+            alloy::sol_types::private::primitives::aliases::U256,
+        );
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<OperatorReward> for UnderlyingRustTuple<'_> {
+            fn from(value: OperatorReward) -> Self {
+                (value.operator, value.amount)
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for OperatorReward {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {
+                    operator: tuple.0,
+                    amount: tuple.1,
+                }
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolValue for OperatorReward {
+            type SolType = Self;
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::private::SolTypeValue<Self> for OperatorReward {
+            #[inline]
+            fn stv_to_tokens(&self) -> <Self as alloy_sol_types::SolType>::Token<'_> {
+                (
+                    <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
+                        &self.operator,
+                    ),
+                    <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
+                        &self.amount,
+                    ),
+                )
+            }
+            #[inline]
+            fn stv_abi_encoded_size(&self) -> usize {
+                if let Some(size) = <Self as alloy_sol_types::SolType>::ENCODED_SIZE {
+                    return size;
+                }
+                let tuple =
+                    <UnderlyingRustTuple<'_> as ::core::convert::From<Self>>::from(self.clone());
+                <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::abi_encoded_size(&tuple)
+            }
+            #[inline]
+            fn stv_eip712_data_word(&self) -> alloy_sol_types::Word {
+                <Self as alloy_sol_types::SolStruct>::eip712_hash_struct(self)
+            }
+            #[inline]
+            fn stv_abi_encode_packed_to(&self, out: &mut alloy_sol_types::private::Vec<u8>) {
+                let tuple =
+                    <UnderlyingRustTuple<'_> as ::core::convert::From<Self>>::from(self.clone());
+                <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::abi_encode_packed_to(
+                    &tuple, out,
+                )
+            }
+            #[inline]
+            fn stv_abi_packed_encoded_size(&self) -> usize {
+                if let Some(size) = <Self as alloy_sol_types::SolType>::PACKED_ENCODED_SIZE {
+                    return size;
+                }
+                let tuple =
+                    <UnderlyingRustTuple<'_> as ::core::convert::From<Self>>::from(self.clone());
+                <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::abi_packed_encoded_size(
+                    &tuple,
+                )
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolType for OperatorReward {
+            type RustType = Self;
+            type Token<'a> = <UnderlyingSolTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SOL_NAME: &'static str = <Self as alloy_sol_types::SolStruct>::NAME;
+            const ENCODED_SIZE: Option<usize> =
+                <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::ENCODED_SIZE;
+            const PACKED_ENCODED_SIZE: Option<usize> =
+                <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::PACKED_ENCODED_SIZE;
+            #[inline]
+            fn valid_token(token: &Self::Token<'_>) -> bool {
+                <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::valid_token(token)
+            }
+            #[inline]
+            fn detokenize(token: Self::Token<'_>) -> Self::RustType {
+                let tuple = <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::detokenize(token);
+                <Self as ::core::convert::From<UnderlyingRustTuple<'_>>>::from(tuple)
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolStruct for OperatorReward {
+            const NAME: &'static str = "OperatorReward";
+            #[inline]
+            fn eip712_root_type() -> alloy_sol_types::private::Cow<'static, str> {
+                alloy_sol_types::private::Cow::Borrowed(
+                    "OperatorReward(address operator,uint256 amount)",
+                )
+            }
+            #[inline]
+            fn eip712_components(
+            ) -> alloy_sol_types::private::Vec<alloy_sol_types::private::Cow<'static, str>>
+            {
+                alloy_sol_types::private::Vec::new()
+            }
+            #[inline]
+            fn eip712_encode_type() -> alloy_sol_types::private::Cow<'static, str> {
+                <Self as alloy_sol_types::SolStruct>::eip712_root_type()
+            }
+            #[inline]
+            fn eip712_encode_data(&self) -> alloy_sol_types::private::Vec<u8> {
+                [
+                    <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::eip712_data_word(
+                            &self.operator,
+                        )
+                        .0,
+                    <alloy::sol_types::sol_data::Uint<
+                        256,
+                    > as alloy_sol_types::SolType>::eip712_data_word(&self.amount)
+                        .0,
+                ]
+                    .concat()
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::EventTopic for OperatorReward {
+            #[inline]
+            fn topic_preimage_length(rust: &Self::RustType) -> usize {
+                0usize
+                    + <alloy::sol_types::sol_data::Address as alloy_sol_types::EventTopic>::topic_preimage_length(
+                        &rust.operator,
+                    )
+                    + <alloy::sol_types::sol_data::Uint<
+                        256,
+                    > as alloy_sol_types::EventTopic>::topic_preimage_length(
+                        &rust.amount,
+                    )
+            }
+            #[inline]
+            fn encode_topic_preimage(
+                rust: &Self::RustType,
+                out: &mut alloy_sol_types::private::Vec<u8>,
+            ) {
+                out.reserve(<Self as alloy_sol_types::EventTopic>::topic_preimage_length(rust));
+                <alloy::sol_types::sol_data::Address as alloy_sol_types::EventTopic>::encode_topic_preimage(
+                    &rust.operator,
+                    out,
+                );
+                <alloy::sol_types::sol_data::Uint<
+                    256,
+                > as alloy_sol_types::EventTopic>::encode_topic_preimage(
+                    &rust.amount,
+                    out,
+                );
+            }
+            #[inline]
+            fn encode_topic(rust: &Self::RustType) -> alloy_sol_types::abi::token::WordToken {
+                let mut out = alloy_sol_types::private::Vec::new();
+                <Self as alloy_sol_types::EventTopic>::encode_topic_preimage(rust, &mut out);
+                alloy_sol_types::abi::token::WordToken(alloy_sol_types::private::keccak256(out))
+            }
+        }
+    };
     /**```solidity
     struct RewardsSubmission { StrategyAndMultiplier[] strategiesAndMultipliers; address token; uint256 amount; uint32 startTimestamp; uint32 duration; }
     ```*/
@@ -626,6 +1128,18 @@ pub mod IRewardsCoordinatorTypes {
 Generated by the following Solidity interface...
 ```solidity
 library IRewardsCoordinatorTypes {
+    struct OperatorDirectedRewardsSubmission {
+        StrategyAndMultiplier[] strategiesAndMultipliers;
+        address token;
+        OperatorReward[] operatorRewards;
+        uint32 startTimestamp;
+        uint32 duration;
+        string description;
+    }
+    struct OperatorReward {
+        address operator;
+        uint256 amount;
+    }
     struct RewardsSubmission {
         StrategyAndMultiplier[] strategiesAndMultipliers;
         address token;
@@ -643,9 +1157,12 @@ interface IRewardsCoordinatorEvents {
     event AVSRewardsSubmissionCreated(address indexed avs, uint256 indexed submissionNonce, bytes32 indexed rewardsSubmissionHash, IRewardsCoordinatorTypes.RewardsSubmission rewardsSubmission);
     event ActivationDelaySet(uint32 oldActivationDelay, uint32 newActivationDelay);
     event ClaimerForSet(address indexed earner, address indexed oldClaimer, address indexed claimer);
+    event DefaultOperatorSplitBipsSet(uint16 oldDefaultOperatorSplitBips, uint16 newDefaultOperatorSplitBips);
     event DistributionRootDisabled(uint32 indexed rootIndex);
     event DistributionRootSubmitted(uint32 indexed rootIndex, bytes32 indexed root, uint32 indexed rewardsCalculationEndTimestamp, uint32 activatedAt);
-    event GlobalCommissionBipsSet(uint16 oldGlobalCommissionBips, uint16 newGlobalCommissionBips);
+    event OperatorAVSSplitBipsSet(address indexed caller, address indexed operator, address indexed avs, uint32 activatedAt, uint16 oldOperatorAVSSplitBips, uint16 newOperatorAVSSplitBips);
+    event OperatorDirectedAVSRewardsSubmissionCreated(address indexed caller, address indexed avs, bytes32 indexed operatorDirectedRewardsSubmissionHash, uint256 submissionNonce, IRewardsCoordinatorTypes.OperatorDirectedRewardsSubmission operatorDirectedRewardsSubmission);
+    event OperatorPISplitBipsSet(address indexed caller, address indexed operator, uint32 activatedAt, uint16 oldOperatorPISplitBips, uint16 newOperatorPISplitBips);
     event RewardsClaimed(bytes32 root, address indexed earner, address indexed claimer, address indexed recipient, address token, uint256 claimedAmount);
     event RewardsForAllSubmitterSet(address indexed rewardsForAllSubmitter, bool indexed oldValue, bool indexed newValue);
     event RewardsSubmissionForAllCreated(address indexed submitter, uint256 indexed submissionNonce, bytes32 indexed rewardsSubmissionHash, IRewardsCoordinatorTypes.RewardsSubmission rewardsSubmission);
@@ -773,6 +1290,25 @@ interface IRewardsCoordinatorEvents {
   },
   {
     "type": "event",
+    "name": "DefaultOperatorSplitBipsSet",
+    "inputs": [
+      {
+        "name": "oldDefaultOperatorSplitBips",
+        "type": "uint16",
+        "indexed": false,
+        "internalType": "uint16"
+      },
+      {
+        "name": "newDefaultOperatorSplitBips",
+        "type": "uint16",
+        "indexed": false,
+        "internalType": "uint16"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
     "name": "DistributionRootDisabled",
     "inputs": [
       {
@@ -817,16 +1353,170 @@ interface IRewardsCoordinatorEvents {
   },
   {
     "type": "event",
-    "name": "GlobalCommissionBipsSet",
+    "name": "OperatorAVSSplitBipsSet",
     "inputs": [
       {
-        "name": "oldGlobalCommissionBips",
+        "name": "caller",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "operator",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "avs",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "activatedAt",
+        "type": "uint32",
+        "indexed": false,
+        "internalType": "uint32"
+      },
+      {
+        "name": "oldOperatorAVSSplitBips",
         "type": "uint16",
         "indexed": false,
         "internalType": "uint16"
       },
       {
-        "name": "newGlobalCommissionBips",
+        "name": "newOperatorAVSSplitBips",
+        "type": "uint16",
+        "indexed": false,
+        "internalType": "uint16"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "OperatorDirectedAVSRewardsSubmissionCreated",
+    "inputs": [
+      {
+        "name": "caller",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "avs",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "operatorDirectedRewardsSubmissionHash",
+        "type": "bytes32",
+        "indexed": true,
+        "internalType": "bytes32"
+      },
+      {
+        "name": "submissionNonce",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "operatorDirectedRewardsSubmission",
+        "type": "tuple",
+        "indexed": false,
+        "internalType": "struct IRewardsCoordinatorTypes.OperatorDirectedRewardsSubmission",
+        "components": [
+          {
+            "name": "strategiesAndMultipliers",
+            "type": "tuple[]",
+            "internalType": "struct IRewardsCoordinatorTypes.StrategyAndMultiplier[]",
+            "components": [
+              {
+                "name": "strategy",
+                "type": "address",
+                "internalType": "contract IStrategy"
+              },
+              {
+                "name": "multiplier",
+                "type": "uint96",
+                "internalType": "uint96"
+              }
+            ]
+          },
+          {
+            "name": "token",
+            "type": "address",
+            "internalType": "contract IERC20"
+          },
+          {
+            "name": "operatorRewards",
+            "type": "tuple[]",
+            "internalType": "struct IRewardsCoordinatorTypes.OperatorReward[]",
+            "components": [
+              {
+                "name": "operator",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
+                "name": "amount",
+                "type": "uint256",
+                "internalType": "uint256"
+              }
+            ]
+          },
+          {
+            "name": "startTimestamp",
+            "type": "uint32",
+            "internalType": "uint32"
+          },
+          {
+            "name": "duration",
+            "type": "uint32",
+            "internalType": "uint32"
+          },
+          {
+            "name": "description",
+            "type": "string",
+            "internalType": "string"
+          }
+        ]
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "OperatorPISplitBipsSet",
+    "inputs": [
+      {
+        "name": "caller",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "operator",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "activatedAt",
+        "type": "uint32",
+        "indexed": false,
+        "internalType": "uint32"
+      },
+      {
+        "name": "oldOperatorPISplitBips",
+        "type": "uint16",
+        "indexed": false,
+        "internalType": "uint16"
+      },
+      {
+        "name": "newOperatorPISplitBips",
         "type": "uint16",
         "indexed": false,
         "internalType": "uint16"
@@ -1453,6 +2143,115 @@ pub mod IRewardsCoordinatorEvents {
             }
         }
     };
+    /**Event with signature `DefaultOperatorSplitBipsSet(uint16,uint16)` and selector `0xe6cd4edfdcc1f6d130ab35f73d72378f3a642944fb4ee5bd84b7807a81ea1c4e`.
+    ```solidity
+    event DefaultOperatorSplitBipsSet(uint16 oldDefaultOperatorSplitBips, uint16 newDefaultOperatorSplitBips);
+    ```*/
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    #[derive(Clone)]
+    pub struct DefaultOperatorSplitBipsSet {
+        #[allow(missing_docs)]
+        pub oldDefaultOperatorSplitBips: u16,
+        #[allow(missing_docs)]
+        pub newDefaultOperatorSplitBips: u16,
+    }
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[automatically_derived]
+        impl alloy_sol_types::SolEvent for DefaultOperatorSplitBipsSet {
+            type DataTuple<'a> = (
+                alloy::sol_types::sol_data::Uint<16>,
+                alloy::sol_types::sol_data::Uint<16>,
+            );
+            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type TopicList = (alloy_sol_types::sol_data::FixedBytes<32>,);
+            const SIGNATURE: &'static str = "DefaultOperatorSplitBipsSet(uint16,uint16)";
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
+                alloy_sol_types::private::B256::new([
+                    230u8, 205u8, 78u8, 223u8, 220u8, 193u8, 246u8, 209u8, 48u8, 171u8, 53u8,
+                    247u8, 61u8, 114u8, 55u8, 143u8, 58u8, 100u8, 41u8, 68u8, 251u8, 78u8, 229u8,
+                    189u8, 132u8, 183u8, 128u8, 122u8, 129u8, 234u8, 28u8, 78u8,
+                ]);
+            const ANONYMOUS: bool = false;
+            #[allow(unused_variables)]
+            #[inline]
+            fn new(
+                topics: <Self::TopicList as alloy_sol_types::SolType>::RustType,
+                data: <Self::DataTuple<'_> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                Self {
+                    oldDefaultOperatorSplitBips: data.0,
+                    newDefaultOperatorSplitBips: data.1,
+                }
+            }
+            #[inline]
+            fn check_signature(
+                topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
+            ) -> alloy_sol_types::Result<()> {
+                if topics.0 != Self::SIGNATURE_HASH {
+                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
+                        Self::SIGNATURE,
+                        topics.0,
+                        Self::SIGNATURE_HASH,
+                    ));
+                }
+                Ok(())
+            }
+            #[inline]
+            fn tokenize_body(&self) -> Self::DataToken<'_> {
+                (
+                    <alloy::sol_types::sol_data::Uint<16> as alloy_sol_types::SolType>::tokenize(
+                        &self.oldDefaultOperatorSplitBips,
+                    ),
+                    <alloy::sol_types::sol_data::Uint<16> as alloy_sol_types::SolType>::tokenize(
+                        &self.newDefaultOperatorSplitBips,
+                    ),
+                )
+            }
+            #[inline]
+            fn topics(&self) -> <Self::TopicList as alloy_sol_types::SolType>::RustType {
+                (Self::SIGNATURE_HASH.into(),)
+            }
+            #[inline]
+            fn encode_topics_raw(
+                &self,
+                out: &mut [alloy_sol_types::abi::token::WordToken],
+            ) -> alloy_sol_types::Result<()> {
+                if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
+                    return Err(alloy_sol_types::Error::Overrun);
+                }
+                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
+                Ok(())
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::private::IntoLogData for DefaultOperatorSplitBipsSet {
+            fn to_log_data(&self) -> alloy_sol_types::private::LogData {
+                From::from(self)
+            }
+            fn into_log_data(self) -> alloy_sol_types::private::LogData {
+                From::from(&self)
+            }
+        }
+        #[automatically_derived]
+        impl From<&DefaultOperatorSplitBipsSet> for alloy_sol_types::private::LogData {
+            #[inline]
+            fn from(this: &DefaultOperatorSplitBipsSet) -> alloy_sol_types::private::LogData {
+                alloy_sol_types::SolEvent::encode_log_data(this)
+            }
+        }
+    };
     /**Event with signature `DistributionRootDisabled(uint32)` and selector `0xd850e6e5dfa497b72661fa73df2923464eaed9dc2ff1d3cb82bccbfeabe5c41e`.
     ```solidity
     event DistributionRootDisabled(uint32 indexed rootIndex);
@@ -1686,9 +2485,9 @@ pub mod IRewardsCoordinatorEvents {
             }
         }
     };
-    /**Event with signature `GlobalCommissionBipsSet(uint16,uint16)` and selector `0x8cdc428b0431b82d1619763f443a48197db344ba96905f3949643acd1c863a06`.
+    /**Event with signature `OperatorAVSSplitBipsSet(address,address,address,uint32,uint16,uint16)` and selector `0x48e198b6ae357e529204ee53a8e514c470ff77d9cc8e4f7207f8b5d490ae6934`.
     ```solidity
-    event GlobalCommissionBipsSet(uint16 oldGlobalCommissionBips, uint16 newGlobalCommissionBips);
+    event OperatorAVSSplitBipsSet(address indexed caller, address indexed operator, address indexed avs, uint32 activatedAt, uint16 oldOperatorAVSSplitBips, uint16 newOperatorAVSSplitBips);
     ```*/
     #[allow(
         non_camel_case_types,
@@ -1697,11 +2496,19 @@ pub mod IRewardsCoordinatorEvents {
         clippy::style
     )]
     #[derive(Clone)]
-    pub struct GlobalCommissionBipsSet {
+    pub struct OperatorAVSSplitBipsSet {
         #[allow(missing_docs)]
-        pub oldGlobalCommissionBips: u16,
+        pub caller: alloy::sol_types::private::Address,
         #[allow(missing_docs)]
-        pub newGlobalCommissionBips: u16,
+        pub operator: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
+        pub avs: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
+        pub activatedAt: u32,
+        #[allow(missing_docs)]
+        pub oldOperatorAVSSplitBips: u16,
+        #[allow(missing_docs)]
+        pub newOperatorAVSSplitBips: u16,
     }
     #[allow(
         non_camel_case_types,
@@ -1712,19 +2519,26 @@ pub mod IRewardsCoordinatorEvents {
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         #[automatically_derived]
-        impl alloy_sol_types::SolEvent for GlobalCommissionBipsSet {
+        impl alloy_sol_types::SolEvent for OperatorAVSSplitBipsSet {
             type DataTuple<'a> = (
+                alloy::sol_types::sol_data::Uint<32>,
                 alloy::sol_types::sol_data::Uint<16>,
                 alloy::sol_types::sol_data::Uint<16>,
             );
             type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
-            type TopicList = (alloy_sol_types::sol_data::FixedBytes<32>,);
-            const SIGNATURE: &'static str = "GlobalCommissionBipsSet(uint16,uint16)";
+            type TopicList = (
+                alloy_sol_types::sol_data::FixedBytes<32>,
+                alloy::sol_types::sol_data::Address,
+                alloy::sol_types::sol_data::Address,
+                alloy::sol_types::sol_data::Address,
+            );
+            const SIGNATURE: &'static str =
+                "OperatorAVSSplitBipsSet(address,address,address,uint32,uint16,uint16)";
             const SIGNATURE_HASH: alloy_sol_types::private::B256 =
                 alloy_sol_types::private::B256::new([
-                    140u8, 220u8, 66u8, 139u8, 4u8, 49u8, 184u8, 45u8, 22u8, 25u8, 118u8, 63u8,
-                    68u8, 58u8, 72u8, 25u8, 125u8, 179u8, 68u8, 186u8, 150u8, 144u8, 95u8, 57u8,
-                    73u8, 100u8, 58u8, 205u8, 28u8, 134u8, 58u8, 6u8,
+                    72u8, 225u8, 152u8, 182u8, 174u8, 53u8, 126u8, 82u8, 146u8, 4u8, 238u8, 83u8,
+                    168u8, 229u8, 20u8, 196u8, 112u8, 255u8, 119u8, 217u8, 204u8, 142u8, 79u8,
+                    114u8, 7u8, 248u8, 181u8, 212u8, 144u8, 174u8, 105u8, 52u8,
                 ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
@@ -1734,8 +2548,12 @@ pub mod IRewardsCoordinatorEvents {
                 data: <Self::DataTuple<'_> as alloy_sol_types::SolType>::RustType,
             ) -> Self {
                 Self {
-                    oldGlobalCommissionBips: data.0,
-                    newGlobalCommissionBips: data.1,
+                    caller: topics.1,
+                    operator: topics.2,
+                    avs: topics.3,
+                    activatedAt: data.0,
+                    oldOperatorAVSSplitBips: data.1,
+                    newOperatorAVSSplitBips: data.2,
                 }
             }
             #[inline]
@@ -1754,17 +2572,25 @@ pub mod IRewardsCoordinatorEvents {
             #[inline]
             fn tokenize_body(&self) -> Self::DataToken<'_> {
                 (
-                    <alloy::sol_types::sol_data::Uint<16> as alloy_sol_types::SolType>::tokenize(
-                        &self.oldGlobalCommissionBips,
+                    <alloy::sol_types::sol_data::Uint<32> as alloy_sol_types::SolType>::tokenize(
+                        &self.activatedAt,
                     ),
                     <alloy::sol_types::sol_data::Uint<16> as alloy_sol_types::SolType>::tokenize(
-                        &self.newGlobalCommissionBips,
+                        &self.oldOperatorAVSSplitBips,
+                    ),
+                    <alloy::sol_types::sol_data::Uint<16> as alloy_sol_types::SolType>::tokenize(
+                        &self.newOperatorAVSSplitBips,
                     ),
                 )
             }
             #[inline]
             fn topics(&self) -> <Self::TopicList as alloy_sol_types::SolType>::RustType {
-                (Self::SIGNATURE_HASH.into(),)
+                (
+                    Self::SIGNATURE_HASH.into(),
+                    self.caller.clone(),
+                    self.operator.clone(),
+                    self.avs.clone(),
+                )
             }
             #[inline]
             fn encode_topics_raw(
@@ -1775,11 +2601,20 @@ pub mod IRewardsCoordinatorEvents {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
                 out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
+                out[1usize] = <alloy::sol_types::sol_data::Address as alloy_sol_types::EventTopic>::encode_topic(
+                    &self.caller,
+                );
+                out[2usize] = <alloy::sol_types::sol_data::Address as alloy_sol_types::EventTopic>::encode_topic(
+                    &self.operator,
+                );
+                out[3usize] = <alloy::sol_types::sol_data::Address as alloy_sol_types::EventTopic>::encode_topic(
+                    &self.avs,
+                );
                 Ok(())
             }
         }
         #[automatically_derived]
-        impl alloy_sol_types::private::IntoLogData for GlobalCommissionBipsSet {
+        impl alloy_sol_types::private::IntoLogData for OperatorAVSSplitBipsSet {
             fn to_log_data(&self) -> alloy_sol_types::private::LogData {
                 From::from(self)
             }
@@ -1788,9 +2623,289 @@ pub mod IRewardsCoordinatorEvents {
             }
         }
         #[automatically_derived]
-        impl From<&GlobalCommissionBipsSet> for alloy_sol_types::private::LogData {
+        impl From<&OperatorAVSSplitBipsSet> for alloy_sol_types::private::LogData {
             #[inline]
-            fn from(this: &GlobalCommissionBipsSet) -> alloy_sol_types::private::LogData {
+            fn from(this: &OperatorAVSSplitBipsSet) -> alloy_sol_types::private::LogData {
+                alloy_sol_types::SolEvent::encode_log_data(this)
+            }
+        }
+    };
+    /**Event with signature `OperatorDirectedAVSRewardsSubmissionCreated(address,address,bytes32,uint256,((address,uint96)[],address,(address,uint256)[],uint32,uint32,string))` and selector `0xfc8888bffd711da60bc5092b33f677d81896fe80ecc677b84cfab8184462b6e0`.
+    ```solidity
+    event OperatorDirectedAVSRewardsSubmissionCreated(address indexed caller, address indexed avs, bytes32 indexed operatorDirectedRewardsSubmissionHash, uint256 submissionNonce, IRewardsCoordinatorTypes.OperatorDirectedRewardsSubmission operatorDirectedRewardsSubmission);
+    ```*/
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    #[derive(Clone)]
+    pub struct OperatorDirectedAVSRewardsSubmissionCreated {
+        #[allow(missing_docs)]
+        pub caller: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
+        pub avs: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
+        pub operatorDirectedRewardsSubmissionHash: alloy::sol_types::private::FixedBytes<
+            32,
+        >,
+        #[allow(missing_docs)]
+        pub submissionNonce: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
+        pub operatorDirectedRewardsSubmission: <IRewardsCoordinatorTypes::OperatorDirectedRewardsSubmission as alloy::sol_types::SolType>::RustType,
+    }
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[automatically_derived]
+        impl alloy_sol_types::SolEvent for OperatorDirectedAVSRewardsSubmissionCreated {
+            type DataTuple<'a> = (
+                alloy::sol_types::sol_data::Uint<256>,
+                IRewardsCoordinatorTypes::OperatorDirectedRewardsSubmission,
+            );
+            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type TopicList = (
+                alloy_sol_types::sol_data::FixedBytes<32>,
+                alloy::sol_types::sol_data::Address,
+                alloy::sol_types::sol_data::Address,
+                alloy::sol_types::sol_data::FixedBytes<32>,
+            );
+            const SIGNATURE: &'static str = "OperatorDirectedAVSRewardsSubmissionCreated(address,address,bytes32,uint256,((address,uint96)[],address,(address,uint256)[],uint32,uint32,string))";
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
+                alloy_sol_types::private::B256::new([
+                    252u8, 136u8, 136u8, 191u8, 253u8, 113u8, 29u8, 166u8, 11u8, 197u8, 9u8, 43u8,
+                    51u8, 246u8, 119u8, 216u8, 24u8, 150u8, 254u8, 128u8, 236u8, 198u8, 119u8,
+                    184u8, 76u8, 250u8, 184u8, 24u8, 68u8, 98u8, 182u8, 224u8,
+                ]);
+            const ANONYMOUS: bool = false;
+            #[allow(unused_variables)]
+            #[inline]
+            fn new(
+                topics: <Self::TopicList as alloy_sol_types::SolType>::RustType,
+                data: <Self::DataTuple<'_> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                Self {
+                    caller: topics.1,
+                    avs: topics.2,
+                    operatorDirectedRewardsSubmissionHash: topics.3,
+                    submissionNonce: data.0,
+                    operatorDirectedRewardsSubmission: data.1,
+                }
+            }
+            #[inline]
+            fn check_signature(
+                topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
+            ) -> alloy_sol_types::Result<()> {
+                if topics.0 != Self::SIGNATURE_HASH {
+                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
+                        Self::SIGNATURE,
+                        topics.0,
+                        Self::SIGNATURE_HASH,
+                    ));
+                }
+                Ok(())
+            }
+            #[inline]
+            fn tokenize_body(&self) -> Self::DataToken<'_> {
+                (
+                    <alloy::sol_types::sol_data::Uint<
+                        256,
+                    > as alloy_sol_types::SolType>::tokenize(&self.submissionNonce),
+                    <IRewardsCoordinatorTypes::OperatorDirectedRewardsSubmission as alloy_sol_types::SolType>::tokenize(
+                        &self.operatorDirectedRewardsSubmission,
+                    ),
+                )
+            }
+            #[inline]
+            fn topics(&self) -> <Self::TopicList as alloy_sol_types::SolType>::RustType {
+                (
+                    Self::SIGNATURE_HASH.into(),
+                    self.caller.clone(),
+                    self.avs.clone(),
+                    self.operatorDirectedRewardsSubmissionHash.clone(),
+                )
+            }
+            #[inline]
+            fn encode_topics_raw(
+                &self,
+                out: &mut [alloy_sol_types::abi::token::WordToken],
+            ) -> alloy_sol_types::Result<()> {
+                if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
+                    return Err(alloy_sol_types::Error::Overrun);
+                }
+                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
+                out[1usize] = <alloy::sol_types::sol_data::Address as alloy_sol_types::EventTopic>::encode_topic(
+                    &self.caller,
+                );
+                out[2usize] = <alloy::sol_types::sol_data::Address as alloy_sol_types::EventTopic>::encode_topic(
+                    &self.avs,
+                );
+                out[3usize] = <alloy::sol_types::sol_data::FixedBytes<
+                    32,
+                > as alloy_sol_types::EventTopic>::encode_topic(
+                    &self.operatorDirectedRewardsSubmissionHash,
+                );
+                Ok(())
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::private::IntoLogData for OperatorDirectedAVSRewardsSubmissionCreated {
+            fn to_log_data(&self) -> alloy_sol_types::private::LogData {
+                From::from(self)
+            }
+            fn into_log_data(self) -> alloy_sol_types::private::LogData {
+                From::from(&self)
+            }
+        }
+        #[automatically_derived]
+        impl From<&OperatorDirectedAVSRewardsSubmissionCreated> for alloy_sol_types::private::LogData {
+            #[inline]
+            fn from(
+                this: &OperatorDirectedAVSRewardsSubmissionCreated,
+            ) -> alloy_sol_types::private::LogData {
+                alloy_sol_types::SolEvent::encode_log_data(this)
+            }
+        }
+    };
+    /**Event with signature `OperatorPISplitBipsSet(address,address,uint32,uint16,uint16)` and selector `0xd1e028bd664486a46ad26040e999cd2d22e1e9a094ee6afe19fcf64678f16f74`.
+    ```solidity
+    event OperatorPISplitBipsSet(address indexed caller, address indexed operator, uint32 activatedAt, uint16 oldOperatorPISplitBips, uint16 newOperatorPISplitBips);
+    ```*/
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    #[derive(Clone)]
+    pub struct OperatorPISplitBipsSet {
+        #[allow(missing_docs)]
+        pub caller: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
+        pub operator: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
+        pub activatedAt: u32,
+        #[allow(missing_docs)]
+        pub oldOperatorPISplitBips: u16,
+        #[allow(missing_docs)]
+        pub newOperatorPISplitBips: u16,
+    }
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[automatically_derived]
+        impl alloy_sol_types::SolEvent for OperatorPISplitBipsSet {
+            type DataTuple<'a> = (
+                alloy::sol_types::sol_data::Uint<32>,
+                alloy::sol_types::sol_data::Uint<16>,
+                alloy::sol_types::sol_data::Uint<16>,
+            );
+            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type TopicList = (
+                alloy_sol_types::sol_data::FixedBytes<32>,
+                alloy::sol_types::sol_data::Address,
+                alloy::sol_types::sol_data::Address,
+            );
+            const SIGNATURE: &'static str =
+                "OperatorPISplitBipsSet(address,address,uint32,uint16,uint16)";
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
+                alloy_sol_types::private::B256::new([
+                    209u8, 224u8, 40u8, 189u8, 102u8, 68u8, 134u8, 164u8, 106u8, 210u8, 96u8, 64u8,
+                    233u8, 153u8, 205u8, 45u8, 34u8, 225u8, 233u8, 160u8, 148u8, 238u8, 106u8,
+                    254u8, 25u8, 252u8, 246u8, 70u8, 120u8, 241u8, 111u8, 116u8,
+                ]);
+            const ANONYMOUS: bool = false;
+            #[allow(unused_variables)]
+            #[inline]
+            fn new(
+                topics: <Self::TopicList as alloy_sol_types::SolType>::RustType,
+                data: <Self::DataTuple<'_> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                Self {
+                    caller: topics.1,
+                    operator: topics.2,
+                    activatedAt: data.0,
+                    oldOperatorPISplitBips: data.1,
+                    newOperatorPISplitBips: data.2,
+                }
+            }
+            #[inline]
+            fn check_signature(
+                topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
+            ) -> alloy_sol_types::Result<()> {
+                if topics.0 != Self::SIGNATURE_HASH {
+                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
+                        Self::SIGNATURE,
+                        topics.0,
+                        Self::SIGNATURE_HASH,
+                    ));
+                }
+                Ok(())
+            }
+            #[inline]
+            fn tokenize_body(&self) -> Self::DataToken<'_> {
+                (
+                    <alloy::sol_types::sol_data::Uint<32> as alloy_sol_types::SolType>::tokenize(
+                        &self.activatedAt,
+                    ),
+                    <alloy::sol_types::sol_data::Uint<16> as alloy_sol_types::SolType>::tokenize(
+                        &self.oldOperatorPISplitBips,
+                    ),
+                    <alloy::sol_types::sol_data::Uint<16> as alloy_sol_types::SolType>::tokenize(
+                        &self.newOperatorPISplitBips,
+                    ),
+                )
+            }
+            #[inline]
+            fn topics(&self) -> <Self::TopicList as alloy_sol_types::SolType>::RustType {
+                (
+                    Self::SIGNATURE_HASH.into(),
+                    self.caller.clone(),
+                    self.operator.clone(),
+                )
+            }
+            #[inline]
+            fn encode_topics_raw(
+                &self,
+                out: &mut [alloy_sol_types::abi::token::WordToken],
+            ) -> alloy_sol_types::Result<()> {
+                if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
+                    return Err(alloy_sol_types::Error::Overrun);
+                }
+                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
+                out[1usize] = <alloy::sol_types::sol_data::Address as alloy_sol_types::EventTopic>::encode_topic(
+                    &self.caller,
+                );
+                out[2usize] = <alloy::sol_types::sol_data::Address as alloy_sol_types::EventTopic>::encode_topic(
+                    &self.operator,
+                );
+                Ok(())
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::private::IntoLogData for OperatorPISplitBipsSet {
+            fn to_log_data(&self) -> alloy_sol_types::private::LogData {
+                From::from(self)
+            }
+            fn into_log_data(self) -> alloy_sol_types::private::LogData {
+                From::from(&self)
+            }
+        }
+        #[automatically_derived]
+        impl From<&OperatorPISplitBipsSet> for alloy_sol_types::private::LogData {
+            #[inline]
+            fn from(this: &OperatorPISplitBipsSet) -> alloy_sol_types::private::LogData {
                 alloy_sol_types::SolEvent::encode_log_data(this)
             }
         }
@@ -2445,9 +3560,12 @@ pub mod IRewardsCoordinatorEvents {
         AVSRewardsSubmissionCreated(AVSRewardsSubmissionCreated),
         ActivationDelaySet(ActivationDelaySet),
         ClaimerForSet(ClaimerForSet),
+        DefaultOperatorSplitBipsSet(DefaultOperatorSplitBipsSet),
         DistributionRootDisabled(DistributionRootDisabled),
         DistributionRootSubmitted(DistributionRootSubmitted),
-        GlobalCommissionBipsSet(GlobalCommissionBipsSet),
+        OperatorAVSSplitBipsSet(OperatorAVSSplitBipsSet),
+        OperatorDirectedAVSRewardsSubmissionCreated(OperatorDirectedAVSRewardsSubmissionCreated),
+        OperatorPISplitBipsSet(OperatorPISplitBipsSet),
         RewardsClaimed(RewardsClaimed),
         RewardsForAllSubmitterSet(RewardsForAllSubmitterSet),
         RewardsSubmissionForAllCreated(RewardsSubmissionForAllCreated),
@@ -2474,6 +3592,11 @@ pub mod IRewardsCoordinatorEvents {
                 171u8, 216u8, 40u8, 248u8, 158u8, 98u8, 129u8,
             ],
             [
+                72u8, 225u8, 152u8, 182u8, 174u8, 53u8, 126u8, 82u8, 146u8, 4u8, 238u8, 83u8,
+                168u8, 229u8, 20u8, 196u8, 112u8, 255u8, 119u8, 217u8, 204u8, 142u8, 79u8, 114u8,
+                7u8, 248u8, 181u8, 212u8, 144u8, 174u8, 105u8, 52u8,
+            ],
+            [
                 77u8, 230u8, 41u8, 62u8, 102u8, 141u8, 241u8, 57u8, 132u8, 34u8, 225u8, 222u8,
                 241u8, 33u8, 24u8, 5u8, 44u8, 21u8, 57u8, 160u8, 60u8, 191u8, 237u8, 193u8, 69u8,
                 137u8, 93u8, 72u8, 215u8, 104u8, 95u8, 28u8,
@@ -2487,11 +3610,6 @@ pub mod IRewardsCoordinatorEvents {
                 82u8, 81u8, 182u8, 253u8, 239u8, 203u8, 93u8, 129u8, 20u8, 78u8, 115u8, 95u8,
                 105u8, 234u8, 76u8, 105u8, 95u8, 212u8, 59u8, 2u8, 137u8, 202u8, 83u8, 220u8, 7u8,
                 80u8, 51u8, 245u8, 252u8, 128u8, 6u8, 139u8,
-            ],
-            [
-                140u8, 220u8, 66u8, 139u8, 4u8, 49u8, 184u8, 45u8, 22u8, 25u8, 118u8, 63u8, 68u8,
-                58u8, 72u8, 25u8, 125u8, 179u8, 68u8, 186u8, 150u8, 144u8, 95u8, 57u8, 73u8, 100u8,
-                58u8, 205u8, 28u8, 134u8, 58u8, 6u8,
             ],
             [
                 149u8, 67u8, 219u8, 213u8, 85u8, 128u8, 132u8, 37u8, 134u8, 169u8, 81u8, 240u8,
@@ -2509,21 +3627,36 @@ pub mod IRewardsCoordinatorEvents {
                 180u8, 227u8, 170u8, 89u8, 89u8, 12u8, 163u8, 18u8,
             ],
             [
+                209u8, 224u8, 40u8, 189u8, 102u8, 68u8, 134u8, 164u8, 106u8, 210u8, 96u8, 64u8,
+                233u8, 153u8, 205u8, 45u8, 34u8, 225u8, 233u8, 160u8, 148u8, 238u8, 106u8, 254u8,
+                25u8, 252u8, 246u8, 70u8, 120u8, 241u8, 111u8, 116u8,
+            ],
+            [
                 216u8, 80u8, 230u8, 229u8, 223u8, 164u8, 151u8, 183u8, 38u8, 97u8, 250u8, 115u8,
                 223u8, 41u8, 35u8, 70u8, 78u8, 174u8, 217u8, 220u8, 47u8, 241u8, 211u8, 203u8,
                 130u8, 188u8, 203u8, 254u8, 171u8, 229u8, 196u8, 30u8,
+            ],
+            [
+                230u8, 205u8, 78u8, 223u8, 220u8, 193u8, 246u8, 209u8, 48u8, 171u8, 53u8, 247u8,
+                61u8, 114u8, 55u8, 143u8, 58u8, 100u8, 41u8, 68u8, 251u8, 78u8, 229u8, 189u8,
+                132u8, 183u8, 128u8, 122u8, 129u8, 234u8, 28u8, 78u8,
             ],
             [
                 236u8, 216u8, 102u8, 195u8, 193u8, 88u8, 250u8, 0u8, 191u8, 52u8, 216u8, 3u8,
                 213u8, 246u8, 2u8, 48u8, 0u8, 181u8, 112u8, 128u8, 188u8, 180u8, 138u8, 240u8, 4u8,
                 194u8, 180u8, 180u8, 107u8, 58u8, 253u8, 8u8,
             ],
+            [
+                252u8, 136u8, 136u8, 191u8, 253u8, 113u8, 29u8, 166u8, 11u8, 197u8, 9u8, 43u8,
+                51u8, 246u8, 119u8, 216u8, 24u8, 150u8, 254u8, 128u8, 236u8, 198u8, 119u8, 184u8,
+                76u8, 250u8, 184u8, 24u8, 68u8, 98u8, 182u8, 224u8,
+            ],
         ];
     }
     #[automatically_derived]
     impl alloy_sol_types::SolEventInterface for IRewardsCoordinatorEventsEvents {
         const NAME: &'static str = "IRewardsCoordinatorEventsEvents";
-        const COUNT: usize = 11usize;
+        const COUNT: usize = 14usize;
         fn decode_raw_log(
             topics: &[alloy_sol_types::Word],
             data: &[u8],
@@ -2559,6 +3692,16 @@ pub mod IRewardsCoordinatorEvents {
                         .map(Self::ClaimerForSet)
                 }
                 Some(
+                    <DefaultOperatorSplitBipsSet as alloy_sol_types::SolEvent>::SIGNATURE_HASH,
+                ) => {
+                    <DefaultOperatorSplitBipsSet as alloy_sol_types::SolEvent>::decode_raw_log(
+                            topics,
+                            data,
+                            validate,
+                        )
+                        .map(Self::DefaultOperatorSplitBipsSet)
+                }
+                Some(
                     <DistributionRootDisabled as alloy_sol_types::SolEvent>::SIGNATURE_HASH,
                 ) => {
                     <DistributionRootDisabled as alloy_sol_types::SolEvent>::decode_raw_log(
@@ -2579,14 +3722,34 @@ pub mod IRewardsCoordinatorEvents {
                         .map(Self::DistributionRootSubmitted)
                 }
                 Some(
-                    <GlobalCommissionBipsSet as alloy_sol_types::SolEvent>::SIGNATURE_HASH,
+                    <OperatorAVSSplitBipsSet as alloy_sol_types::SolEvent>::SIGNATURE_HASH,
                 ) => {
-                    <GlobalCommissionBipsSet as alloy_sol_types::SolEvent>::decode_raw_log(
+                    <OperatorAVSSplitBipsSet as alloy_sol_types::SolEvent>::decode_raw_log(
                             topics,
                             data,
                             validate,
                         )
-                        .map(Self::GlobalCommissionBipsSet)
+                        .map(Self::OperatorAVSSplitBipsSet)
+                }
+                Some(
+                    <OperatorDirectedAVSRewardsSubmissionCreated as alloy_sol_types::SolEvent>::SIGNATURE_HASH,
+                ) => {
+                    <OperatorDirectedAVSRewardsSubmissionCreated as alloy_sol_types::SolEvent>::decode_raw_log(
+                            topics,
+                            data,
+                            validate,
+                        )
+                        .map(Self::OperatorDirectedAVSRewardsSubmissionCreated)
+                }
+                Some(
+                    <OperatorPISplitBipsSet as alloy_sol_types::SolEvent>::SIGNATURE_HASH,
+                ) => {
+                    <OperatorPISplitBipsSet as alloy_sol_types::SolEvent>::decode_raw_log(
+                            topics,
+                            data,
+                            validate,
+                        )
+                        .map(Self::OperatorPISplitBipsSet)
                 }
                 Some(<RewardsClaimed as alloy_sol_types::SolEvent>::SIGNATURE_HASH) => {
                     <RewardsClaimed as alloy_sol_types::SolEvent>::decode_raw_log(
@@ -2663,13 +3826,22 @@ pub mod IRewardsCoordinatorEvents {
                 Self::ClaimerForSet(inner) => {
                     alloy_sol_types::private::IntoLogData::to_log_data(inner)
                 }
+                Self::DefaultOperatorSplitBipsSet(inner) => {
+                    alloy_sol_types::private::IntoLogData::to_log_data(inner)
+                }
                 Self::DistributionRootDisabled(inner) => {
                     alloy_sol_types::private::IntoLogData::to_log_data(inner)
                 }
                 Self::DistributionRootSubmitted(inner) => {
                     alloy_sol_types::private::IntoLogData::to_log_data(inner)
                 }
-                Self::GlobalCommissionBipsSet(inner) => {
+                Self::OperatorAVSSplitBipsSet(inner) => {
+                    alloy_sol_types::private::IntoLogData::to_log_data(inner)
+                }
+                Self::OperatorDirectedAVSRewardsSubmissionCreated(inner) => {
+                    alloy_sol_types::private::IntoLogData::to_log_data(inner)
+                }
+                Self::OperatorPISplitBipsSet(inner) => {
                     alloy_sol_types::private::IntoLogData::to_log_data(inner)
                 }
                 Self::RewardsClaimed(inner) => {
@@ -2700,13 +3872,22 @@ pub mod IRewardsCoordinatorEvents {
                 Self::ClaimerForSet(inner) => {
                     alloy_sol_types::private::IntoLogData::into_log_data(inner)
                 }
+                Self::DefaultOperatorSplitBipsSet(inner) => {
+                    alloy_sol_types::private::IntoLogData::into_log_data(inner)
+                }
                 Self::DistributionRootDisabled(inner) => {
                     alloy_sol_types::private::IntoLogData::into_log_data(inner)
                 }
                 Self::DistributionRootSubmitted(inner) => {
                     alloy_sol_types::private::IntoLogData::into_log_data(inner)
                 }
-                Self::GlobalCommissionBipsSet(inner) => {
+                Self::OperatorAVSSplitBipsSet(inner) => {
+                    alloy_sol_types::private::IntoLogData::into_log_data(inner)
+                }
+                Self::OperatorDirectedAVSRewardsSubmissionCreated(inner) => {
+                    alloy_sol_types::private::IntoLogData::into_log_data(inner)
+                }
+                Self::OperatorPISplitBipsSet(inner) => {
                     alloy_sol_types::private::IntoLogData::into_log_data(inner)
                 }
                 Self::RewardsClaimed(inner) => {
@@ -2928,6 +4109,12 @@ pub mod IRewardsCoordinatorEvents {
         pub fn ClaimerForSet_filter(&self) -> alloy_contract::Event<T, &P, ClaimerForSet, N> {
             self.event_filter::<ClaimerForSet>()
         }
+        ///Creates a new event filter for the [`DefaultOperatorSplitBipsSet`] event.
+        pub fn DefaultOperatorSplitBipsSet_filter(
+            &self,
+        ) -> alloy_contract::Event<T, &P, DefaultOperatorSplitBipsSet, N> {
+            self.event_filter::<DefaultOperatorSplitBipsSet>()
+        }
         ///Creates a new event filter for the [`DistributionRootDisabled`] event.
         pub fn DistributionRootDisabled_filter(
             &self,
@@ -2940,11 +4127,23 @@ pub mod IRewardsCoordinatorEvents {
         ) -> alloy_contract::Event<T, &P, DistributionRootSubmitted, N> {
             self.event_filter::<DistributionRootSubmitted>()
         }
-        ///Creates a new event filter for the [`GlobalCommissionBipsSet`] event.
-        pub fn GlobalCommissionBipsSet_filter(
+        ///Creates a new event filter for the [`OperatorAVSSplitBipsSet`] event.
+        pub fn OperatorAVSSplitBipsSet_filter(
             &self,
-        ) -> alloy_contract::Event<T, &P, GlobalCommissionBipsSet, N> {
-            self.event_filter::<GlobalCommissionBipsSet>()
+        ) -> alloy_contract::Event<T, &P, OperatorAVSSplitBipsSet, N> {
+            self.event_filter::<OperatorAVSSplitBipsSet>()
+        }
+        ///Creates a new event filter for the [`OperatorDirectedAVSRewardsSubmissionCreated`] event.
+        pub fn OperatorDirectedAVSRewardsSubmissionCreated_filter(
+            &self,
+        ) -> alloy_contract::Event<T, &P, OperatorDirectedAVSRewardsSubmissionCreated, N> {
+            self.event_filter::<OperatorDirectedAVSRewardsSubmissionCreated>()
+        }
+        ///Creates a new event filter for the [`OperatorPISplitBipsSet`] event.
+        pub fn OperatorPISplitBipsSet_filter(
+            &self,
+        ) -> alloy_contract::Event<T, &P, OperatorPISplitBipsSet, N> {
+            self.event_filter::<OperatorPISplitBipsSet>()
         }
         ///Creates a new event filter for the [`RewardsClaimed`] event.
         pub fn RewardsClaimed_filter(&self) -> alloy_contract::Event<T, &P, RewardsClaimed, N> {

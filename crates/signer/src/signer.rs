@@ -69,8 +69,8 @@ mod test {
     use alloy::consensus::{SignableTransaction, TxLegacy};
     use alloy::network::{TxSigner, TxSignerSync};
     use alloy::signers::local::PrivateKeySigner;
-    use alloy::signers::Signature;
     use alloy_primitives::{address, bytes, hex_literal::hex, keccak256, Address, U256};
+    use alloy_primitives::{Parity, Signature};
     use aws_config::{BehaviorVersion, Region, SdkConfig};
     use aws_sdk_kms::{
         self,
@@ -93,7 +93,6 @@ mod test {
         "99963972037857174861280476053118856715670512199525969754644366601434507134123";
     const SIGNATURE_S: &str =
         "54587766196536123534774489028213321677166972433316011091332824361042811624091";
-    const SIGNATURE_Y_PARITY: u64 = 37;
     const KEYSTORE_PATH: &str = "mockdata/dummy.key.json";
     const KEYSTORE_PASSWORD: &str = "testpassword";
     const LOCALSTACK_PORT: u16 = 4566;
@@ -116,14 +115,19 @@ mod test {
 
         let signer = Config::signer_from_config(config);
 
-        let signature = signer.unwrap().sign_transaction_sync(&mut tx).unwrap();
+        let signature: [u8; 65] = signer
+            .unwrap()
+            .sign_transaction_sync(&mut tx)
+            .unwrap()
+            .into();
+        let sig = Signature::try_from(&signature[..]).unwrap();
         let expected_signature = Signature::from_rs_and_parity(
             U256::from_str(SIGNATURE_R).unwrap(),
             U256::from_str(SIGNATURE_S).unwrap(),
-            SIGNATURE_Y_PARITY,
+            Parity::NonEip155(false),
         )
         .unwrap();
-        assert_eq!(signature, expected_signature);
+        assert_eq!(sig, expected_signature);
     }
 
     #[test]

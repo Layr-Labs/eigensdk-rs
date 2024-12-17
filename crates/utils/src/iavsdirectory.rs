@@ -633,17 +633,12 @@ library ISignatureUtils {
 }
 
 interface IAVSDirectory {
-    error InvalidAVS();
-    error InvalidOperator();
-    error InvalidOperatorSet();
     error InvalidSignature();
     error OperatorAlreadyRegisteredToAVS();
     error OperatorNotRegisteredToAVS();
     error OperatorNotRegisteredToEigenLayer();
     error SaltSpent();
     error SignatureExpired();
-    error StrategyAlreadyInOperatorSet();
-    error StrategyNotInOperatorSet();
 
     event AVSMetadataURIUpdated(address indexed avs, string metadataURI);
     event AVSMigratedToOperatorSets(address indexed avs);
@@ -925,21 +920,6 @@ interface IAVSDirectory {
   },
   {
     "type": "error",
-    "name": "InvalidAVS",
-    "inputs": []
-  },
-  {
-    "type": "error",
-    "name": "InvalidOperator",
-    "inputs": []
-  },
-  {
-    "type": "error",
-    "name": "InvalidOperatorSet",
-    "inputs": []
-  },
-  {
-    "type": "error",
     "name": "InvalidSignature",
     "inputs": []
   },
@@ -966,16 +946,6 @@ interface IAVSDirectory {
   {
     "type": "error",
     "name": "SignatureExpired",
-    "inputs": []
-  },
-  {
-    "type": "error",
-    "name": "StrategyAlreadyInOperatorSet",
-    "inputs": []
-  },
-  {
-    "type": "error",
-    "name": "StrategyNotInOperatorSet",
     "inputs": []
   }
 ]
@@ -1009,186 +979,6 @@ pub mod IAVSDirectory {
     pub static DEPLOYED_BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
         b"",
     );
-    /**Custom error with signature `InvalidAVS()` and selector `0x66e565df`.
-    ```solidity
-    error InvalidAVS();
-    ```*/
-    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
-    #[derive(Clone)]
-    pub struct InvalidAVS {}
-    #[allow(
-        non_camel_case_types,
-        non_snake_case,
-        clippy::pub_underscore_fields,
-        clippy::style
-    )]
-    const _: () = {
-        use alloy::sol_types as alloy_sol_types;
-        #[doc(hidden)]
-        type UnderlyingSolTuple<'a> = ();
-        #[doc(hidden)]
-        type UnderlyingRustTuple<'a> = ();
-        #[cfg(test)]
-        #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
-            match _t {
-                alloy_sol_types::private::AssertTypeEq::<
-                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
-                >(_) => {}
-            }
-        }
-        #[automatically_derived]
-        #[doc(hidden)]
-        impl ::core::convert::From<InvalidAVS> for UnderlyingRustTuple<'_> {
-            fn from(value: InvalidAVS) -> Self {
-                ()
-            }
-        }
-        #[automatically_derived]
-        #[doc(hidden)]
-        impl ::core::convert::From<UnderlyingRustTuple<'_>> for InvalidAVS {
-            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                Self {}
-            }
-        }
-        #[automatically_derived]
-        impl alloy_sol_types::SolError for InvalidAVS {
-            type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
-            const SIGNATURE: &'static str = "InvalidAVS()";
-            const SELECTOR: [u8; 4] = [102u8, 229u8, 101u8, 223u8];
-            #[inline]
-            fn new<'a>(
-                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
-            ) -> Self {
-                tuple.into()
-            }
-            #[inline]
-            fn tokenize(&self) -> Self::Token<'_> {
-                ()
-            }
-        }
-    };
-    /**Custom error with signature `InvalidOperator()` and selector `0xccea9e6f`.
-    ```solidity
-    error InvalidOperator();
-    ```*/
-    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
-    #[derive(Clone)]
-    pub struct InvalidOperator {}
-    #[allow(
-        non_camel_case_types,
-        non_snake_case,
-        clippy::pub_underscore_fields,
-        clippy::style
-    )]
-    const _: () = {
-        use alloy::sol_types as alloy_sol_types;
-        #[doc(hidden)]
-        type UnderlyingSolTuple<'a> = ();
-        #[doc(hidden)]
-        type UnderlyingRustTuple<'a> = ();
-        #[cfg(test)]
-        #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
-            match _t {
-                alloy_sol_types::private::AssertTypeEq::<
-                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
-                >(_) => {}
-            }
-        }
-        #[automatically_derived]
-        #[doc(hidden)]
-        impl ::core::convert::From<InvalidOperator> for UnderlyingRustTuple<'_> {
-            fn from(value: InvalidOperator) -> Self {
-                ()
-            }
-        }
-        #[automatically_derived]
-        #[doc(hidden)]
-        impl ::core::convert::From<UnderlyingRustTuple<'_>> for InvalidOperator {
-            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                Self {}
-            }
-        }
-        #[automatically_derived]
-        impl alloy_sol_types::SolError for InvalidOperator {
-            type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
-            const SIGNATURE: &'static str = "InvalidOperator()";
-            const SELECTOR: [u8; 4] = [204u8, 234u8, 158u8, 111u8];
-            #[inline]
-            fn new<'a>(
-                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
-            ) -> Self {
-                tuple.into()
-            }
-            #[inline]
-            fn tokenize(&self) -> Self::Token<'_> {
-                ()
-            }
-        }
-    };
-    /**Custom error with signature `InvalidOperatorSet()` and selector `0x7ec5c154`.
-    ```solidity
-    error InvalidOperatorSet();
-    ```*/
-    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
-    #[derive(Clone)]
-    pub struct InvalidOperatorSet {}
-    #[allow(
-        non_camel_case_types,
-        non_snake_case,
-        clippy::pub_underscore_fields,
-        clippy::style
-    )]
-    const _: () = {
-        use alloy::sol_types as alloy_sol_types;
-        #[doc(hidden)]
-        type UnderlyingSolTuple<'a> = ();
-        #[doc(hidden)]
-        type UnderlyingRustTuple<'a> = ();
-        #[cfg(test)]
-        #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
-            match _t {
-                alloy_sol_types::private::AssertTypeEq::<
-                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
-                >(_) => {}
-            }
-        }
-        #[automatically_derived]
-        #[doc(hidden)]
-        impl ::core::convert::From<InvalidOperatorSet> for UnderlyingRustTuple<'_> {
-            fn from(value: InvalidOperatorSet) -> Self {
-                ()
-            }
-        }
-        #[automatically_derived]
-        #[doc(hidden)]
-        impl ::core::convert::From<UnderlyingRustTuple<'_>> for InvalidOperatorSet {
-            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                Self {}
-            }
-        }
-        #[automatically_derived]
-        impl alloy_sol_types::SolError for InvalidOperatorSet {
-            type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
-            const SIGNATURE: &'static str = "InvalidOperatorSet()";
-            const SELECTOR: [u8; 4] = [126u8, 197u8, 193u8, 84u8];
-            #[inline]
-            fn new<'a>(
-                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
-            ) -> Self {
-                tuple.into()
-            }
-            #[inline]
-            fn tokenize(&self) -> Self::Token<'_> {
-                ()
-            }
-        }
-    };
     /**Custom error with signature `InvalidSignature()` and selector `0x8baa579f`.
     ```solidity
     error InvalidSignature();
@@ -1537,126 +1327,6 @@ pub mod IAVSDirectory {
             type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "SignatureExpired()";
             const SELECTOR: [u8; 4] = [8u8, 25u8, 189u8, 205u8];
-            #[inline]
-            fn new<'a>(
-                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
-            ) -> Self {
-                tuple.into()
-            }
-            #[inline]
-            fn tokenize(&self) -> Self::Token<'_> {
-                ()
-            }
-        }
-    };
-    /**Custom error with signature `StrategyAlreadyInOperatorSet()` and selector `0x585cfb2f`.
-    ```solidity
-    error StrategyAlreadyInOperatorSet();
-    ```*/
-    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
-    #[derive(Clone)]
-    pub struct StrategyAlreadyInOperatorSet {}
-    #[allow(
-        non_camel_case_types,
-        non_snake_case,
-        clippy::pub_underscore_fields,
-        clippy::style
-    )]
-    const _: () = {
-        use alloy::sol_types as alloy_sol_types;
-        #[doc(hidden)]
-        type UnderlyingSolTuple<'a> = ();
-        #[doc(hidden)]
-        type UnderlyingRustTuple<'a> = ();
-        #[cfg(test)]
-        #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
-            match _t {
-                alloy_sol_types::private::AssertTypeEq::<
-                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
-                >(_) => {}
-            }
-        }
-        #[automatically_derived]
-        #[doc(hidden)]
-        impl ::core::convert::From<StrategyAlreadyInOperatorSet> for UnderlyingRustTuple<'_> {
-            fn from(value: StrategyAlreadyInOperatorSet) -> Self {
-                ()
-            }
-        }
-        #[automatically_derived]
-        #[doc(hidden)]
-        impl ::core::convert::From<UnderlyingRustTuple<'_>> for StrategyAlreadyInOperatorSet {
-            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                Self {}
-            }
-        }
-        #[automatically_derived]
-        impl alloy_sol_types::SolError for StrategyAlreadyInOperatorSet {
-            type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
-            const SIGNATURE: &'static str = "StrategyAlreadyInOperatorSet()";
-            const SELECTOR: [u8; 4] = [88u8, 92u8, 251u8, 47u8];
-            #[inline]
-            fn new<'a>(
-                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
-            ) -> Self {
-                tuple.into()
-            }
-            #[inline]
-            fn tokenize(&self) -> Self::Token<'_> {
-                ()
-            }
-        }
-    };
-    /**Custom error with signature `StrategyNotInOperatorSet()` and selector `0x6378684e`.
-    ```solidity
-    error StrategyNotInOperatorSet();
-    ```*/
-    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
-    #[derive(Clone)]
-    pub struct StrategyNotInOperatorSet {}
-    #[allow(
-        non_camel_case_types,
-        non_snake_case,
-        clippy::pub_underscore_fields,
-        clippy::style
-    )]
-    const _: () = {
-        use alloy::sol_types as alloy_sol_types;
-        #[doc(hidden)]
-        type UnderlyingSolTuple<'a> = ();
-        #[doc(hidden)]
-        type UnderlyingRustTuple<'a> = ();
-        #[cfg(test)]
-        #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
-            match _t {
-                alloy_sol_types::private::AssertTypeEq::<
-                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
-                >(_) => {}
-            }
-        }
-        #[automatically_derived]
-        #[doc(hidden)]
-        impl ::core::convert::From<StrategyNotInOperatorSet> for UnderlyingRustTuple<'_> {
-            fn from(value: StrategyNotInOperatorSet) -> Self {
-                ()
-            }
-        }
-        #[automatically_derived]
-        #[doc(hidden)]
-        impl ::core::convert::From<UnderlyingRustTuple<'_>> for StrategyNotInOperatorSet {
-            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                Self {}
-            }
-        }
-        #[automatically_derived]
-        impl alloy_sol_types::SolError for StrategyNotInOperatorSet {
-            type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
-            const SIGNATURE: &'static str = "StrategyNotInOperatorSet()";
-            const SELECTOR: [u8; 4] = [99u8, 120u8, 104u8, 78u8];
             #[inline]
             fn new<'a>(
                 tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
@@ -3553,17 +3223,12 @@ pub mod IAVSDirectory {
     }
     ///Container for all the [`IAVSDirectory`](self) custom errors.
     pub enum IAVSDirectoryErrors {
-        InvalidAVS(InvalidAVS),
-        InvalidOperator(InvalidOperator),
-        InvalidOperatorSet(InvalidOperatorSet),
         InvalidSignature(InvalidSignature),
         OperatorAlreadyRegisteredToAVS(OperatorAlreadyRegisteredToAVS),
         OperatorNotRegisteredToAVS(OperatorNotRegisteredToAVS),
         OperatorNotRegisteredToEigenLayer(OperatorNotRegisteredToEigenLayer),
         SaltSpent(SaltSpent),
         SignatureExpired(SignatureExpired),
-        StrategyAlreadyInOperatorSet(StrategyAlreadyInOperatorSet),
-        StrategyNotInOperatorSet(StrategyNotInOperatorSet),
     }
     #[automatically_derived]
     impl IAVSDirectoryErrors {
@@ -3578,30 +3243,18 @@ pub mod IAVSDirectory {
             [53u8, 49u8, 50u8, 68u8],
             [53u8, 74u8, 81u8, 118u8],
             [82u8, 223u8, 69u8, 201u8],
-            [88u8, 92u8, 251u8, 47u8],
-            [99u8, 120u8, 104u8, 78u8],
-            [102u8, 229u8, 101u8, 223u8],
-            [126u8, 197u8, 193u8, 84u8],
             [139u8, 170u8, 87u8, 159u8],
             [159u8, 136u8, 200u8, 175u8],
-            [204u8, 234u8, 158u8, 111u8],
         ];
     }
     #[automatically_derived]
     impl alloy_sol_types::SolInterface for IAVSDirectoryErrors {
         const NAME: &'static str = "IAVSDirectoryErrors";
         const MIN_DATA_LENGTH: usize = 0usize;
-        const COUNT: usize = 11usize;
+        const COUNT: usize = 6usize;
         #[inline]
         fn selector(&self) -> [u8; 4] {
             match self {
-                Self::InvalidAVS(_) => <InvalidAVS as alloy_sol_types::SolError>::SELECTOR,
-                Self::InvalidOperator(_) => {
-                    <InvalidOperator as alloy_sol_types::SolError>::SELECTOR
-                }
-                Self::InvalidOperatorSet(_) => {
-                    <InvalidOperatorSet as alloy_sol_types::SolError>::SELECTOR
-                }
                 Self::InvalidSignature(_) => {
                     <InvalidSignature as alloy_sol_types::SolError>::SELECTOR
                 }
@@ -3617,12 +3270,6 @@ pub mod IAVSDirectory {
                 Self::SaltSpent(_) => <SaltSpent as alloy_sol_types::SolError>::SELECTOR,
                 Self::SignatureExpired(_) => {
                     <SignatureExpired as alloy_sol_types::SolError>::SELECTOR
-                }
-                Self::StrategyAlreadyInOperatorSet(_) => {
-                    <StrategyAlreadyInOperatorSet as alloy_sol_types::SolError>::SELECTOR
-                }
-                Self::StrategyNotInOperatorSet(_) => {
-                    <StrategyNotInOperatorSet as alloy_sol_types::SolError>::SELECTOR
                 }
             }
         }
@@ -3694,52 +3341,6 @@ pub mod IAVSDirectory {
                     OperatorNotRegisteredToAVS
                 },
                 {
-                    fn StrategyAlreadyInOperatorSet(
-                        data: &[u8],
-                        validate: bool,
-                    ) -> alloy_sol_types::Result<IAVSDirectoryErrors> {
-                        <StrategyAlreadyInOperatorSet as alloy_sol_types::SolError>::abi_decode_raw(
-                            data, validate,
-                        )
-                        .map(IAVSDirectoryErrors::StrategyAlreadyInOperatorSet)
-                    }
-                    StrategyAlreadyInOperatorSet
-                },
-                {
-                    fn StrategyNotInOperatorSet(
-                        data: &[u8],
-                        validate: bool,
-                    ) -> alloy_sol_types::Result<IAVSDirectoryErrors> {
-                        <StrategyNotInOperatorSet as alloy_sol_types::SolError>::abi_decode_raw(
-                            data, validate,
-                        )
-                        .map(IAVSDirectoryErrors::StrategyNotInOperatorSet)
-                    }
-                    StrategyNotInOperatorSet
-                },
-                {
-                    fn InvalidAVS(
-                        data: &[u8],
-                        validate: bool,
-                    ) -> alloy_sol_types::Result<IAVSDirectoryErrors> {
-                        <InvalidAVS as alloy_sol_types::SolError>::abi_decode_raw(data, validate)
-                            .map(IAVSDirectoryErrors::InvalidAVS)
-                    }
-                    InvalidAVS
-                },
-                {
-                    fn InvalidOperatorSet(
-                        data: &[u8],
-                        validate: bool,
-                    ) -> alloy_sol_types::Result<IAVSDirectoryErrors> {
-                        <InvalidOperatorSet as alloy_sol_types::SolError>::abi_decode_raw(
-                            data, validate,
-                        )
-                        .map(IAVSDirectoryErrors::InvalidOperatorSet)
-                    }
-                    InvalidOperatorSet
-                },
-                {
                     fn InvalidSignature(
                         data: &[u8],
                         validate: bool,
@@ -3764,18 +3365,6 @@ pub mod IAVSDirectory {
                     }
                     OperatorNotRegisteredToEigenLayer
                 },
-                {
-                    fn InvalidOperator(
-                        data: &[u8],
-                        validate: bool,
-                    ) -> alloy_sol_types::Result<IAVSDirectoryErrors> {
-                        <InvalidOperator as alloy_sol_types::SolError>::abi_decode_raw(
-                            data, validate,
-                        )
-                        .map(IAVSDirectoryErrors::InvalidOperator)
-                    }
-                    InvalidOperator
-                },
             ];
             let Ok(idx) = Self::SELECTORS.binary_search(&selector) else {
                 return Err(alloy_sol_types::Error::unknown_selector(
@@ -3788,19 +3377,6 @@ pub mod IAVSDirectory {
         #[inline]
         fn abi_encoded_size(&self) -> usize {
             match self {
-                Self::InvalidAVS(inner) => {
-                    <InvalidAVS as alloy_sol_types::SolError>::abi_encoded_size(inner)
-                }
-                Self::InvalidOperator(inner) => {
-                    <InvalidOperator as alloy_sol_types::SolError>::abi_encoded_size(
-                        inner,
-                    )
-                }
-                Self::InvalidOperatorSet(inner) => {
-                    <InvalidOperatorSet as alloy_sol_types::SolError>::abi_encoded_size(
-                        inner,
-                    )
-                }
                 Self::InvalidSignature(inner) => {
                     <InvalidSignature as alloy_sol_types::SolError>::abi_encoded_size(
                         inner,
@@ -3829,30 +3405,11 @@ pub mod IAVSDirectory {
                         inner,
                     )
                 }
-                Self::StrategyAlreadyInOperatorSet(inner) => {
-                    <StrategyAlreadyInOperatorSet as alloy_sol_types::SolError>::abi_encoded_size(
-                        inner,
-                    )
-                }
-                Self::StrategyNotInOperatorSet(inner) => {
-                    <StrategyNotInOperatorSet as alloy_sol_types::SolError>::abi_encoded_size(
-                        inner,
-                    )
-                }
             }
         }
         #[inline]
         fn abi_encode_raw(&self, out: &mut alloy_sol_types::private::Vec<u8>) {
             match self {
-                Self::InvalidAVS(inner) => {
-                    <InvalidAVS as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
-                }
-                Self::InvalidOperator(inner) => {
-                    <InvalidOperator as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
-                }
-                Self::InvalidOperatorSet(inner) => {
-                    <InvalidOperatorSet as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
-                }
                 Self::InvalidSignature(inner) => {
                     <InvalidSignature as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
                 }
@@ -3876,16 +3433,6 @@ pub mod IAVSDirectory {
                 }
                 Self::SignatureExpired(inner) => {
                     <SignatureExpired as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
-                }
-                Self::StrategyAlreadyInOperatorSet(inner) => {
-                    <StrategyAlreadyInOperatorSet as alloy_sol_types::SolError>::abi_encode_raw(
-                        inner, out,
-                    )
-                }
-                Self::StrategyNotInOperatorSet(inner) => {
-                    <StrategyNotInOperatorSet as alloy_sol_types::SolError>::abi_encode_raw(
-                        inner, out,
-                    )
                 }
             }
         }

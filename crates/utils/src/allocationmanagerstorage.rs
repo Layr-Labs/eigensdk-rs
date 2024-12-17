@@ -8,11 +8,9 @@ library IAllocationManagerTypes {
     struct CreateSetParams { uint32 operatorSetId; address[] strategies; }
     struct DeregisterParams { address operator; address avs; uint32[] operatorSetIds; }
     struct RegisterParams { address avs; uint32[] operatorSetIds; bytes data; }
-    struct SlashingParams { address operator; uint32 operatorSetId; uint256 wadToSlash; string description; }
+    struct SlashingParams { address operator; uint32 operatorSetId; address[] strategies; uint256[] wadsToSlash; string description; }
 }
 ```*/
-use crate::iallocationmanager::IAllocationManager::OperatorSet;
-
 #[allow(
     non_camel_case_types,
     non_snake_case,
@@ -21,6 +19,7 @@ use crate::iallocationmanager::IAllocationManager::OperatorSet;
 )]
 pub mod IAllocationManagerTypes {
     use super::*;
+    use crate::allocationmanager::AllocationManager::OperatorSet;
     use alloy::sol_types as alloy_sol_types;
     /**```solidity
     struct AllocateParams { OperatorSet operatorSet; address[] strategies; uint64[] newMagnitudes; }
@@ -1087,14 +1086,16 @@ pub mod IAllocationManagerTypes {
         }
     };
     /**```solidity
-    struct SlashingParams { address operator; uint32 operatorSetId; uint256 wadToSlash; string description; }
+    struct SlashingParams { address operator; uint32 operatorSetId; address[] strategies; uint256[] wadsToSlash; string description; }
     ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct SlashingParams {
         pub operator: alloy::sol_types::private::Address,
         pub operatorSetId: u32,
-        pub wadToSlash: alloy::sol_types::private::primitives::aliases::U256,
+        pub strategies: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
+        pub wadsToSlash:
+            alloy::sol_types::private::Vec<alloy::sol_types::private::primitives::aliases::U256>,
         pub description: alloy::sol_types::private::String,
     }
     #[allow(
@@ -1109,14 +1110,16 @@ pub mod IAllocationManagerTypes {
         type UnderlyingSolTuple<'a> = (
             alloy::sol_types::sol_data::Address,
             alloy::sol_types::sol_data::Uint<32>,
-            alloy::sol_types::sol_data::Uint<256>,
+            alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::Address>,
+            alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::Uint<256>>,
             alloy::sol_types::sol_data::String,
         );
         #[doc(hidden)]
         type UnderlyingRustTuple<'a> = (
             alloy::sol_types::private::Address,
             u32,
-            alloy::sol_types::private::primitives::aliases::U256,
+            alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
+            alloy::sol_types::private::Vec<alloy::sol_types::private::primitives::aliases::U256>,
             alloy::sol_types::private::String,
         );
         #[cfg(test)]
@@ -1135,7 +1138,8 @@ pub mod IAllocationManagerTypes {
                 (
                     value.operator,
                     value.operatorSetId,
-                    value.wadToSlash,
+                    value.strategies,
+                    value.wadsToSlash,
                     value.description,
                 )
             }
@@ -1147,8 +1151,9 @@ pub mod IAllocationManagerTypes {
                 Self {
                     operator: tuple.0,
                     operatorSetId: tuple.1,
-                    wadToSlash: tuple.2,
-                    description: tuple.3,
+                    strategies: tuple.2,
+                    wadsToSlash: tuple.3,
+                    description: tuple.4,
                 }
             }
         }
@@ -1164,12 +1169,15 @@ pub mod IAllocationManagerTypes {
                     <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
                         &self.operator,
                     ),
-                    <alloy::sol_types::sol_data::Uint<32> as alloy_sol_types::SolType>::tokenize(
-                        &self.operatorSetId,
-                    ),
-                    <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
-                        &self.wadToSlash,
-                    ),
+                    <alloy::sol_types::sol_data::Uint<
+                        32,
+                    > as alloy_sol_types::SolType>::tokenize(&self.operatorSetId),
+                    <alloy::sol_types::sol_data::Array<
+                        alloy::sol_types::sol_data::Address,
+                    > as alloy_sol_types::SolType>::tokenize(&self.strategies),
+                    <alloy::sol_types::sol_data::Array<
+                        alloy::sol_types::sol_data::Uint<256>,
+                    > as alloy_sol_types::SolType>::tokenize(&self.wadsToSlash),
                     <alloy::sol_types::sol_data::String as alloy_sol_types::SolType>::tokenize(
                         &self.description,
                     ),
@@ -1233,7 +1241,7 @@ pub mod IAllocationManagerTypes {
             #[inline]
             fn eip712_root_type() -> alloy_sol_types::private::Cow<'static, str> {
                 alloy_sol_types::private::Cow::Borrowed(
-                    "SlashingParams(address operator,uint32 operatorSetId,uint256 wadToSlash,string description)",
+                    "SlashingParams(address operator,uint32 operatorSetId,address[] strategies,uint256[] wadsToSlash,string description)",
                 )
             }
             #[inline]
@@ -1257,9 +1265,13 @@ pub mod IAllocationManagerTypes {
                         32,
                     > as alloy_sol_types::SolType>::eip712_data_word(&self.operatorSetId)
                         .0,
-                    <alloy::sol_types::sol_data::Uint<
-                        256,
-                    > as alloy_sol_types::SolType>::eip712_data_word(&self.wadToSlash)
+                    <alloy::sol_types::sol_data::Array<
+                        alloy::sol_types::sol_data::Address,
+                    > as alloy_sol_types::SolType>::eip712_data_word(&self.strategies)
+                        .0,
+                    <alloy::sol_types::sol_data::Array<
+                        alloy::sol_types::sol_data::Uint<256>,
+                    > as alloy_sol_types::SolType>::eip712_data_word(&self.wadsToSlash)
                         .0,
                     <alloy::sol_types::sol_data::String as alloy_sol_types::SolType>::eip712_data_word(
                             &self.description,
@@ -1282,10 +1294,15 @@ pub mod IAllocationManagerTypes {
                     > as alloy_sol_types::EventTopic>::topic_preimage_length(
                         &rust.operatorSetId,
                     )
-                    + <alloy::sol_types::sol_data::Uint<
-                        256,
+                    + <alloy::sol_types::sol_data::Array<
+                        alloy::sol_types::sol_data::Address,
                     > as alloy_sol_types::EventTopic>::topic_preimage_length(
-                        &rust.wadToSlash,
+                        &rust.strategies,
+                    )
+                    + <alloy::sol_types::sol_data::Array<
+                        alloy::sol_types::sol_data::Uint<256>,
+                    > as alloy_sol_types::EventTopic>::topic_preimage_length(
+                        &rust.wadsToSlash,
                     )
                     + <alloy::sol_types::sol_data::String as alloy_sol_types::EventTopic>::topic_preimage_length(
                         &rust.description,
@@ -1307,10 +1324,16 @@ pub mod IAllocationManagerTypes {
                     &rust.operatorSetId,
                     out,
                 );
-                <alloy::sol_types::sol_data::Uint<
-                    256,
+                <alloy::sol_types::sol_data::Array<
+                    alloy::sol_types::sol_data::Address,
                 > as alloy_sol_types::EventTopic>::encode_topic_preimage(
-                    &rust.wadToSlash,
+                    &rust.strategies,
+                    out,
+                );
+                <alloy::sol_types::sol_data::Array<
+                    alloy::sol_types::sol_data::Uint<256>,
+                > as alloy_sol_types::EventTopic>::encode_topic_preimage(
+                    &rust.wadsToSlash,
                     out,
                 );
                 <alloy::sol_types::sol_data::String as alloy_sol_types::EventTopic>::encode_topic_preimage(
@@ -1488,7 +1511,8 @@ library IAllocationManagerTypes {
     struct SlashingParams {
         address operator;
         uint32 operatorSetId;
-        uint256 wadToSlash;
+        address[] strategies;
+        uint256[] wadsToSlash;
         string description;
     }
 }
@@ -1502,20 +1526,18 @@ interface AllocationManagerStorage {
     error AlreadyMemberOfSet();
     error InputArrayLengthMismatch();
     error InsufficientMagnitude();
-    error InvalidBlockNumber();
     error InvalidCaller();
     error InvalidOperator();
     error InvalidOperatorSet();
     error InvalidSignature();
-    error InvalidStrategy();
     error InvalidWadToSlash();
+    error MaxStrategiesExceeded();
     error ModificationAlreadyPending();
     error NotMemberOfSet();
-    error OnlyDelegationManager();
-    error OperatorNotRegistered();
     error OperatorNotSlashable();
     error SameMagnitude();
     error SignatureExpired();
+    error StrategiesMustBeInAscendingOrder();
     error StrategyAlreadyInOperatorSet();
     error StrategyNotInOperatorSet();
     error UninitializedAllocationDelay();
@@ -1535,9 +1557,9 @@ interface AllocationManagerStorage {
 
     function ALLOCATION_CONFIGURATION_DELAY() external view returns (uint32);
     function DEALLOCATION_DELAY() external view returns (uint32);
-    function addStrategiesToOperatorSet(uint32 operatorSetId, address[] memory strategies) external;
+    function addStrategiesToOperatorSet(address avs, uint32 operatorSetId, address[] memory strategies) external;
     function clearDeallocationQueue(address operator, address[] memory strategies, uint16[] memory numToClear) external;
-    function createOperatorSets(IAllocationManagerTypes.CreateSetParams[] memory params) external;
+    function createOperatorSets(address avs, IAllocationManagerTypes.CreateSetParams[] memory params) external;
     function delegation() external view returns (address);
     function deregisterFromOperatorSets(IAllocationManagerTypes.DeregisterParams memory params) external;
     function encumberedMagnitude(address operator, address strategy) external view returns (uint64);
@@ -1555,19 +1577,20 @@ interface AllocationManagerStorage {
     function getMemberCount(OperatorSet memory operatorSet) external view returns (uint256);
     function getMembers(OperatorSet memory operatorSet) external view returns (address[] memory operators);
     function getMinimumSlashableStake(OperatorSet memory operatorSet, address[] memory operators, address[] memory strategies, uint32 futureBlock) external view returns (uint256[][] memory slashableStake);
+    function getOperatorSetCount(address avs) external view returns (uint256);
     function getRegisteredSets(address operator) external view returns (OperatorSet[] memory operatorSets);
     function getStrategiesInOperatorSet(OperatorSet memory operatorSet) external view returns (address[] memory strategies);
     function getStrategyAllocations(address operator, address strategy) external view returns (OperatorSet[] memory, IAllocationManagerTypes.Allocation[] memory);
     function initialize(address initialOwner, uint256 initialPausedStatus) external;
+    function isMemberOfOperatorSet(address operator, OperatorSet memory operatorSet) external view returns (bool);
     function isOperatorSet(OperatorSet memory operatorSet) external view returns (bool);
-    function modifyAllocations(IAllocationManagerTypes.AllocateParams[] memory params) external;
-    function registerForOperatorSets(IAllocationManagerTypes.RegisterParams memory params) external;
-    function removeStrategiesFromOperatorSet(uint32 operatorSetId, address[] memory strategies) external;
-    function setAVSRegistrar(address registrar) external;
+    function modifyAllocations(address operator, IAllocationManagerTypes.AllocateParams[] memory params) external;
+    function registerForOperatorSets(address operator, IAllocationManagerTypes.RegisterParams memory params) external;
+    function removeStrategiesFromOperatorSet(address avs, uint32 operatorSetId, address[] memory strategies) external;
+    function setAVSRegistrar(address avs, address registrar) external;
     function setAllocationDelay(address operator, uint32 delay) external;
-    function setAllocationDelay(uint32 delay) external;
-    function slashOperator(IAllocationManagerTypes.SlashingParams memory params) external;
-    function updateAVSMetadataURI(string memory metadataURI) external;
+    function slashOperator(address avs, IAllocationManagerTypes.SlashingParams memory params) external;
+    function updateAVSMetadataURI(address avs, string memory metadataURI) external;
 }
 ```
 
@@ -1604,6 +1627,11 @@ interface AllocationManagerStorage {
     "type": "function",
     "name": "addStrategiesToOperatorSet",
     "inputs": [
+      {
+        "name": "avs",
+        "type": "address",
+        "internalType": "address"
+      },
       {
         "name": "operatorSetId",
         "type": "uint32",
@@ -1645,6 +1673,11 @@ interface AllocationManagerStorage {
     "type": "function",
     "name": "createOperatorSets",
     "inputs": [
+      {
+        "name": "avs",
+        "type": "address",
+        "internalType": "address"
+      },
       {
         "name": "params",
         "type": "tuple[]",
@@ -2194,6 +2227,25 @@ interface AllocationManagerStorage {
   },
   {
     "type": "function",
+    "name": "getOperatorSetCount",
+    "inputs": [
+      {
+        "name": "avs",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
     "name": "getRegisteredSets",
     "inputs": [
       {
@@ -2332,6 +2384,42 @@ interface AllocationManagerStorage {
   },
   {
     "type": "function",
+    "name": "isMemberOfOperatorSet",
+    "inputs": [
+      {
+        "name": "operator",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "operatorSet",
+        "type": "tuple",
+        "internalType": "struct OperatorSet",
+        "components": [
+          {
+            "name": "avs",
+            "type": "address",
+            "internalType": "address"
+          },
+          {
+            "name": "id",
+            "type": "uint32",
+            "internalType": "uint32"
+          }
+        ]
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool",
+        "internalType": "bool"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
     "name": "isOperatorSet",
     "inputs": [
       {
@@ -2365,6 +2453,11 @@ interface AllocationManagerStorage {
     "type": "function",
     "name": "modifyAllocations",
     "inputs": [
+      {
+        "name": "operator",
+        "type": "address",
+        "internalType": "address"
+      },
       {
         "name": "params",
         "type": "tuple[]",
@@ -2408,6 +2501,11 @@ interface AllocationManagerStorage {
     "name": "registerForOperatorSets",
     "inputs": [
       {
+        "name": "operator",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
         "name": "params",
         "type": "tuple",
         "internalType": "struct IAllocationManagerTypes.RegisterParams",
@@ -2438,6 +2536,11 @@ interface AllocationManagerStorage {
     "name": "removeStrategiesFromOperatorSet",
     "inputs": [
       {
+        "name": "avs",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
         "name": "operatorSetId",
         "type": "uint32",
         "internalType": "uint32"
@@ -2455,6 +2558,11 @@ interface AllocationManagerStorage {
     "type": "function",
     "name": "setAVSRegistrar",
     "inputs": [
+      {
+        "name": "avs",
+        "type": "address",
+        "internalType": "address"
+      },
       {
         "name": "registrar",
         "type": "address",
@@ -2484,21 +2592,13 @@ interface AllocationManagerStorage {
   },
   {
     "type": "function",
-    "name": "setAllocationDelay",
-    "inputs": [
-      {
-        "name": "delay",
-        "type": "uint32",
-        "internalType": "uint32"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
     "name": "slashOperator",
     "inputs": [
+      {
+        "name": "avs",
+        "type": "address",
+        "internalType": "address"
+      },
       {
         "name": "params",
         "type": "tuple",
@@ -2515,9 +2615,14 @@ interface AllocationManagerStorage {
             "internalType": "uint32"
           },
           {
-            "name": "wadToSlash",
-            "type": "uint256",
-            "internalType": "uint256"
+            "name": "strategies",
+            "type": "address[]",
+            "internalType": "contract IStrategy[]"
+          },
+          {
+            "name": "wadsToSlash",
+            "type": "uint256[]",
+            "internalType": "uint256[]"
           },
           {
             "name": "description",
@@ -2534,6 +2639,11 @@ interface AllocationManagerStorage {
     "type": "function",
     "name": "updateAVSMetadataURI",
     "inputs": [
+      {
+        "name": "avs",
+        "type": "address",
+        "internalType": "address"
+      },
       {
         "name": "metadataURI",
         "type": "string",
@@ -2920,11 +3030,6 @@ interface AllocationManagerStorage {
   },
   {
     "type": "error",
-    "name": "InvalidBlockNumber",
-    "inputs": []
-  },
-  {
-    "type": "error",
     "name": "InvalidCaller",
     "inputs": []
   },
@@ -2945,12 +3050,12 @@ interface AllocationManagerStorage {
   },
   {
     "type": "error",
-    "name": "InvalidStrategy",
+    "name": "InvalidWadToSlash",
     "inputs": []
   },
   {
     "type": "error",
-    "name": "InvalidWadToSlash",
+    "name": "MaxStrategiesExceeded",
     "inputs": []
   },
   {
@@ -2961,16 +3066,6 @@ interface AllocationManagerStorage {
   {
     "type": "error",
     "name": "NotMemberOfSet",
-    "inputs": []
-  },
-  {
-    "type": "error",
-    "name": "OnlyDelegationManager",
-    "inputs": []
-  },
-  {
-    "type": "error",
-    "name": "OperatorNotRegistered",
     "inputs": []
   },
   {
@@ -2986,6 +3081,11 @@ interface AllocationManagerStorage {
   {
     "type": "error",
     "name": "SignatureExpired",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "StrategiesMustBeInAscendingOrder",
     "inputs": []
   },
   {
@@ -3399,66 +3499,6 @@ pub mod AllocationManagerStorage {
             }
         }
     };
-    /**Custom error with signature `InvalidBlockNumber()` and selector `0x4e47846c`.
-    ```solidity
-    error InvalidBlockNumber();
-    ```*/
-    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
-    #[derive(Clone)]
-    pub struct InvalidBlockNumber {}
-    #[allow(
-        non_camel_case_types,
-        non_snake_case,
-        clippy::pub_underscore_fields,
-        clippy::style
-    )]
-    const _: () = {
-        use alloy::sol_types as alloy_sol_types;
-        #[doc(hidden)]
-        type UnderlyingSolTuple<'a> = ();
-        #[doc(hidden)]
-        type UnderlyingRustTuple<'a> = ();
-        #[cfg(test)]
-        #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
-            match _t {
-                alloy_sol_types::private::AssertTypeEq::<
-                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
-                >(_) => {}
-            }
-        }
-        #[automatically_derived]
-        #[doc(hidden)]
-        impl ::core::convert::From<InvalidBlockNumber> for UnderlyingRustTuple<'_> {
-            fn from(value: InvalidBlockNumber) -> Self {
-                ()
-            }
-        }
-        #[automatically_derived]
-        #[doc(hidden)]
-        impl ::core::convert::From<UnderlyingRustTuple<'_>> for InvalidBlockNumber {
-            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                Self {}
-            }
-        }
-        #[automatically_derived]
-        impl alloy_sol_types::SolError for InvalidBlockNumber {
-            type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
-            const SIGNATURE: &'static str = "InvalidBlockNumber()";
-            const SELECTOR: [u8; 4] = [78u8, 71u8, 132u8, 108u8];
-            #[inline]
-            fn new<'a>(
-                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
-            ) -> Self {
-                tuple.into()
-            }
-            #[inline]
-            fn tokenize(&self) -> Self::Token<'_> {
-                ()
-            }
-        }
-    };
     /**Custom error with signature `InvalidCaller()` and selector `0x48f5c3ed`.
     ```solidity
     error InvalidCaller();
@@ -3699,66 +3739,6 @@ pub mod AllocationManagerStorage {
             }
         }
     };
-    /**Custom error with signature `InvalidStrategy()` and selector `0x4e236e9a`.
-    ```solidity
-    error InvalidStrategy();
-    ```*/
-    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
-    #[derive(Clone)]
-    pub struct InvalidStrategy {}
-    #[allow(
-        non_camel_case_types,
-        non_snake_case,
-        clippy::pub_underscore_fields,
-        clippy::style
-    )]
-    const _: () = {
-        use alloy::sol_types as alloy_sol_types;
-        #[doc(hidden)]
-        type UnderlyingSolTuple<'a> = ();
-        #[doc(hidden)]
-        type UnderlyingRustTuple<'a> = ();
-        #[cfg(test)]
-        #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
-            match _t {
-                alloy_sol_types::private::AssertTypeEq::<
-                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
-                >(_) => {}
-            }
-        }
-        #[automatically_derived]
-        #[doc(hidden)]
-        impl ::core::convert::From<InvalidStrategy> for UnderlyingRustTuple<'_> {
-            fn from(value: InvalidStrategy) -> Self {
-                ()
-            }
-        }
-        #[automatically_derived]
-        #[doc(hidden)]
-        impl ::core::convert::From<UnderlyingRustTuple<'_>> for InvalidStrategy {
-            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                Self {}
-            }
-        }
-        #[automatically_derived]
-        impl alloy_sol_types::SolError for InvalidStrategy {
-            type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
-            const SIGNATURE: &'static str = "InvalidStrategy()";
-            const SELECTOR: [u8; 4] = [78u8, 35u8, 110u8, 154u8];
-            #[inline]
-            fn new<'a>(
-                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
-            ) -> Self {
-                tuple.into()
-            }
-            #[inline]
-            fn tokenize(&self) -> Self::Token<'_> {
-                ()
-            }
-        }
-    };
     /**Custom error with signature `InvalidWadToSlash()` and selector `0x13536031`.
     ```solidity
     error InvalidWadToSlash();
@@ -3807,6 +3787,66 @@ pub mod AllocationManagerStorage {
             type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "InvalidWadToSlash()";
             const SELECTOR: [u8; 4] = [19u8, 83u8, 96u8, 49u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+        }
+    };
+    /**Custom error with signature `MaxStrategiesExceeded()` and selector `0x0d0a21c8`.
+    ```solidity
+    error MaxStrategiesExceeded();
+    ```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct MaxStrategiesExceeded {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<MaxStrategiesExceeded> for UnderlyingRustTuple<'_> {
+            fn from(value: MaxStrategiesExceeded) -> Self {
+                ()
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for MaxStrategiesExceeded {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolError for MaxStrategiesExceeded {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "MaxStrategiesExceeded()";
+            const SELECTOR: [u8; 4] = [13u8, 10u8, 33u8, 200u8];
             #[inline]
             fn new<'a>(
                 tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
@@ -3927,126 +3967,6 @@ pub mod AllocationManagerStorage {
             type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "NotMemberOfSet()";
             const SELECTOR: [u8; 4] = [37u8, 19u8, 29u8, 79u8];
-            #[inline]
-            fn new<'a>(
-                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
-            ) -> Self {
-                tuple.into()
-            }
-            #[inline]
-            fn tokenize(&self) -> Self::Token<'_> {
-                ()
-            }
-        }
-    };
-    /**Custom error with signature `OnlyDelegationManager()` and selector `0xf739589b`.
-    ```solidity
-    error OnlyDelegationManager();
-    ```*/
-    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
-    #[derive(Clone)]
-    pub struct OnlyDelegationManager {}
-    #[allow(
-        non_camel_case_types,
-        non_snake_case,
-        clippy::pub_underscore_fields,
-        clippy::style
-    )]
-    const _: () = {
-        use alloy::sol_types as alloy_sol_types;
-        #[doc(hidden)]
-        type UnderlyingSolTuple<'a> = ();
-        #[doc(hidden)]
-        type UnderlyingRustTuple<'a> = ();
-        #[cfg(test)]
-        #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
-            match _t {
-                alloy_sol_types::private::AssertTypeEq::<
-                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
-                >(_) => {}
-            }
-        }
-        #[automatically_derived]
-        #[doc(hidden)]
-        impl ::core::convert::From<OnlyDelegationManager> for UnderlyingRustTuple<'_> {
-            fn from(value: OnlyDelegationManager) -> Self {
-                ()
-            }
-        }
-        #[automatically_derived]
-        #[doc(hidden)]
-        impl ::core::convert::From<UnderlyingRustTuple<'_>> for OnlyDelegationManager {
-            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                Self {}
-            }
-        }
-        #[automatically_derived]
-        impl alloy_sol_types::SolError for OnlyDelegationManager {
-            type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
-            const SIGNATURE: &'static str = "OnlyDelegationManager()";
-            const SELECTOR: [u8; 4] = [247u8, 57u8, 88u8, 155u8];
-            #[inline]
-            fn new<'a>(
-                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
-            ) -> Self {
-                tuple.into()
-            }
-            #[inline]
-            fn tokenize(&self) -> Self::Token<'_> {
-                ()
-            }
-        }
-    };
-    /**Custom error with signature `OperatorNotRegistered()` and selector `0x25ec6c1f`.
-    ```solidity
-    error OperatorNotRegistered();
-    ```*/
-    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
-    #[derive(Clone)]
-    pub struct OperatorNotRegistered {}
-    #[allow(
-        non_camel_case_types,
-        non_snake_case,
-        clippy::pub_underscore_fields,
-        clippy::style
-    )]
-    const _: () = {
-        use alloy::sol_types as alloy_sol_types;
-        #[doc(hidden)]
-        type UnderlyingSolTuple<'a> = ();
-        #[doc(hidden)]
-        type UnderlyingRustTuple<'a> = ();
-        #[cfg(test)]
-        #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
-            match _t {
-                alloy_sol_types::private::AssertTypeEq::<
-                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
-                >(_) => {}
-            }
-        }
-        #[automatically_derived]
-        #[doc(hidden)]
-        impl ::core::convert::From<OperatorNotRegistered> for UnderlyingRustTuple<'_> {
-            fn from(value: OperatorNotRegistered) -> Self {
-                ()
-            }
-        }
-        #[automatically_derived]
-        #[doc(hidden)]
-        impl ::core::convert::From<UnderlyingRustTuple<'_>> for OperatorNotRegistered {
-            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                Self {}
-            }
-        }
-        #[automatically_derived]
-        impl alloy_sol_types::SolError for OperatorNotRegistered {
-            type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
-            const SIGNATURE: &'static str = "OperatorNotRegistered()";
-            const SELECTOR: [u8; 4] = [37u8, 236u8, 108u8, 31u8];
             #[inline]
             fn new<'a>(
                 tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
@@ -4227,6 +4147,66 @@ pub mod AllocationManagerStorage {
             type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "SignatureExpired()";
             const SELECTOR: [u8; 4] = [8u8, 25u8, 189u8, 205u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+        }
+    };
+    /**Custom error with signature `StrategiesMustBeInAscendingOrder()` and selector `0x9f1c8053`.
+    ```solidity
+    error StrategiesMustBeInAscendingOrder();
+    ```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct StrategiesMustBeInAscendingOrder {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<StrategiesMustBeInAscendingOrder> for UnderlyingRustTuple<'_> {
+            fn from(value: StrategiesMustBeInAscendingOrder) -> Self {
+                ()
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for StrategiesMustBeInAscendingOrder {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolError for StrategiesMustBeInAscendingOrder {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "StrategiesMustBeInAscendingOrder()";
+            const SELECTOR: [u8; 4] = [159u8, 28u8, 128u8, 83u8];
             #[inline]
             fn new<'a>(
                 tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
@@ -5988,17 +5968,18 @@ pub mod AllocationManagerStorage {
             }
         }
     };
-    /**Function with signature `addStrategiesToOperatorSet(uint32,address[])` and selector `0x76999342`.
+    /**Function with signature `addStrategiesToOperatorSet(address,uint32,address[])` and selector `0x50feea20`.
     ```solidity
-    function addStrategiesToOperatorSet(uint32 operatorSetId, address[] memory strategies) external;
+    function addStrategiesToOperatorSet(address avs, uint32 operatorSetId, address[] memory strategies) external;
     ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct addStrategiesToOperatorSetCall {
+        pub avs: alloy::sol_types::private::Address,
         pub operatorSetId: u32,
         pub strategies: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
     }
-    ///Container type for the return parameters of the [`addStrategiesToOperatorSet(uint32,address[])`](addStrategiesToOperatorSetCall) function.
+    ///Container type for the return parameters of the [`addStrategiesToOperatorSet(address,uint32,address[])`](addStrategiesToOperatorSetCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct addStrategiesToOperatorSetReturn {}
@@ -6013,11 +5994,13 @@ pub mod AllocationManagerStorage {
         {
             #[doc(hidden)]
             type UnderlyingSolTuple<'a> = (
+                alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Uint<32>,
                 alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::Address>,
             );
             #[doc(hidden)]
             type UnderlyingRustTuple<'a> = (
+                alloy::sol_types::private::Address,
                 u32,
                 alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
             );
@@ -6034,7 +6017,7 @@ pub mod AllocationManagerStorage {
             #[doc(hidden)]
             impl ::core::convert::From<addStrategiesToOperatorSetCall> for UnderlyingRustTuple<'_> {
                 fn from(value: addStrategiesToOperatorSetCall) -> Self {
-                    (value.operatorSetId, value.strategies)
+                    (value.avs, value.operatorSetId, value.strategies)
                 }
             }
             #[automatically_derived]
@@ -6042,8 +6025,9 @@ pub mod AllocationManagerStorage {
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for addStrategiesToOperatorSetCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {
-                        operatorSetId: tuple.0,
-                        strategies: tuple.1,
+                        avs: tuple.0,
+                        operatorSetId: tuple.1,
+                        strategies: tuple.2,
                     }
                 }
             }
@@ -6080,6 +6064,7 @@ pub mod AllocationManagerStorage {
         #[automatically_derived]
         impl alloy_sol_types::SolCall for addStrategiesToOperatorSetCall {
             type Parameters<'a> = (
+                alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Uint<32>,
                 alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::Address>,
             );
@@ -6087,8 +6072,8 @@ pub mod AllocationManagerStorage {
             type Return = addStrategiesToOperatorSetReturn;
             type ReturnTuple<'a> = ();
             type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
-            const SIGNATURE: &'static str = "addStrategiesToOperatorSet(uint32,address[])";
-            const SELECTOR: [u8; 4] = [118u8, 153u8, 147u8, 66u8];
+            const SIGNATURE: &'static str = "addStrategiesToOperatorSet(address,uint32,address[])";
+            const SELECTOR: [u8; 4] = [80u8, 254u8, 234u8, 32u8];
             #[inline]
             fn new<'a>(
                 tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
@@ -6098,6 +6083,9 @@ pub mod AllocationManagerStorage {
             #[inline]
             fn tokenize(&self) -> Self::Token<'_> {
                 (
+                    <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
+                        &self.avs,
+                    ),
                     <alloy::sol_types::sol_data::Uint<
                         32,
                     > as alloy_sol_types::SolType>::tokenize(&self.operatorSetId),
@@ -6256,18 +6244,19 @@ pub mod AllocationManagerStorage {
             }
         }
     };
-    /**Function with signature `createOperatorSets((uint32,address[])[])` and selector `0x847d634f`.
+    /**Function with signature `createOperatorSets(address,(uint32,address[])[])` and selector `0x261f84e0`.
     ```solidity
-    function createOperatorSets(IAllocationManagerTypes.CreateSetParams[] memory params) external;
+    function createOperatorSets(address avs, IAllocationManagerTypes.CreateSetParams[] memory params) external;
     ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct createOperatorSetsCall {
+        pub avs: alloy::sol_types::private::Address,
         pub params: alloy::sol_types::private::Vec<
             <IAllocationManagerTypes::CreateSetParams as alloy::sol_types::SolType>::RustType,
         >,
     }
-    ///Container type for the return parameters of the [`createOperatorSets((uint32,address[])[])`](createOperatorSetsCall) function.
+    ///Container type for the return parameters of the [`createOperatorSets(address,(uint32,address[])[])`](createOperatorSetsCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct createOperatorSetsReturn {}
@@ -6281,10 +6270,13 @@ pub mod AllocationManagerStorage {
         use alloy::sol_types as alloy_sol_types;
         {
             #[doc(hidden)]
-            type UnderlyingSolTuple<'a> =
-                (alloy::sol_types::sol_data::Array<IAllocationManagerTypes::CreateSetParams>,);
+            type UnderlyingSolTuple<'a> = (
+                alloy::sol_types::sol_data::Address,
+                alloy::sol_types::sol_data::Array<IAllocationManagerTypes::CreateSetParams>,
+            );
             #[doc(hidden)]
             type UnderlyingRustTuple<'a> = (
+                alloy::sol_types::private::Address,
                 alloy::sol_types::private::Vec<
                     <IAllocationManagerTypes::CreateSetParams as alloy::sol_types::SolType>::RustType,
                 >,
@@ -6302,14 +6294,17 @@ pub mod AllocationManagerStorage {
             #[doc(hidden)]
             impl ::core::convert::From<createOperatorSetsCall> for UnderlyingRustTuple<'_> {
                 fn from(value: createOperatorSetsCall) -> Self {
-                    (value.params,)
+                    (value.avs, value.params)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for createOperatorSetsCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self { params: tuple.0 }
+                    Self {
+                        avs: tuple.0,
+                        params: tuple.1,
+                    }
                 }
             }
         }
@@ -6344,14 +6339,16 @@ pub mod AllocationManagerStorage {
         }
         #[automatically_derived]
         impl alloy_sol_types::SolCall for createOperatorSetsCall {
-            type Parameters<'a> =
-                (alloy::sol_types::sol_data::Array<IAllocationManagerTypes::CreateSetParams>,);
+            type Parameters<'a> = (
+                alloy::sol_types::sol_data::Address,
+                alloy::sol_types::sol_data::Array<IAllocationManagerTypes::CreateSetParams>,
+            );
             type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = createOperatorSetsReturn;
             type ReturnTuple<'a> = ();
             type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
-            const SIGNATURE: &'static str = "createOperatorSets((uint32,address[])[])";
-            const SELECTOR: [u8; 4] = [132u8, 125u8, 99u8, 79u8];
+            const SIGNATURE: &'static str = "createOperatorSets(address,(uint32,address[])[])";
+            const SELECTOR: [u8; 4] = [38u8, 31u8, 132u8, 224u8];
             #[inline]
             fn new<'a>(
                 tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
@@ -6360,11 +6357,14 @@ pub mod AllocationManagerStorage {
             }
             #[inline]
             fn tokenize(&self) -> Self::Token<'_> {
-                (<alloy::sol_types::sol_data::Array<
-                    IAllocationManagerTypes::CreateSetParams,
-                > as alloy_sol_types::SolType>::tokenize(
-                    &self.params
-                ),)
+                (
+                    <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
+                        &self.avs,
+                    ),
+                    <alloy::sol_types::sol_data::Array<
+                        IAllocationManagerTypes::CreateSetParams,
+                    > as alloy_sol_types::SolType>::tokenize(&self.params),
+                )
             }
             #[inline]
             fn abi_decode_returns(
@@ -8596,6 +8596,122 @@ pub mod AllocationManagerStorage {
             }
         }
     };
+    /**Function with signature `getOperatorSetCount(address)` and selector `0xba1a84e5`.
+    ```solidity
+    function getOperatorSetCount(address avs) external view returns (uint256);
+    ```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct getOperatorSetCountCall {
+        pub avs: alloy::sol_types::private::Address,
+    }
+    ///Container type for the return parameters of the [`getOperatorSetCount(address)`](getOperatorSetCountCall) function.
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct getOperatorSetCountReturn {
+        pub _0: alloy::sol_types::private::primitives::aliases::U256,
+    }
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        {
+            #[doc(hidden)]
+            type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Address,);
+            #[doc(hidden)]
+            type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
+            #[cfg(test)]
+            #[allow(dead_code, unreachable_patterns)]
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+                match _t {
+                    alloy_sol_types::private::AssertTypeEq::<
+                        <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                    >(_) => {}
+                }
+            }
+            #[automatically_derived]
+            #[doc(hidden)]
+            impl ::core::convert::From<getOperatorSetCountCall> for UnderlyingRustTuple<'_> {
+                fn from(value: getOperatorSetCountCall) -> Self {
+                    (value.avs,)
+                }
+            }
+            #[automatically_derived]
+            #[doc(hidden)]
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for getOperatorSetCountCall {
+                fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                    Self { avs: tuple.0 }
+                }
+            }
+        }
+        {
+            #[doc(hidden)]
+            type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
+            #[doc(hidden)]
+            type UnderlyingRustTuple<'a> = (alloy::sol_types::private::primitives::aliases::U256,);
+            #[cfg(test)]
+            #[allow(dead_code, unreachable_patterns)]
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+                match _t {
+                    alloy_sol_types::private::AssertTypeEq::<
+                        <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                    >(_) => {}
+                }
+            }
+            #[automatically_derived]
+            #[doc(hidden)]
+            impl ::core::convert::From<getOperatorSetCountReturn> for UnderlyingRustTuple<'_> {
+                fn from(value: getOperatorSetCountReturn) -> Self {
+                    (value._0,)
+                }
+            }
+            #[automatically_derived]
+            #[doc(hidden)]
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for getOperatorSetCountReturn {
+                fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                    Self { _0: tuple.0 }
+                }
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolCall for getOperatorSetCountCall {
+            type Parameters<'a> = (alloy::sol_types::sol_data::Address,);
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Return = getOperatorSetCountReturn;
+            type ReturnTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "getOperatorSetCount(address)";
+            const SELECTOR: [u8; 4] = [186u8, 26u8, 132u8, 229u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                (
+                    <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
+                        &self.avs,
+                    ),
+                )
+            }
+            #[inline]
+            fn abi_decode_returns(
+                data: &[u8],
+                validate: bool,
+            ) -> alloy_sol_types::Result<Self::Return> {
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
+            }
+        }
+    };
     /**Function with signature `getRegisteredSets(address)` and selector `0x79ae50cd`.
     ```solidity
     function getRegisteredSets(address operator) external view returns (OperatorSet[] memory operatorSets);
@@ -9122,6 +9238,130 @@ pub mod AllocationManagerStorage {
             }
         }
     };
+    /**Function with signature `isMemberOfOperatorSet(address,(address,uint32))` and selector `0x670d3ba2`.
+    ```solidity
+    function isMemberOfOperatorSet(address operator, OperatorSet memory operatorSet) external view returns (bool);
+    ```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct isMemberOfOperatorSetCall {
+        pub operator: alloy::sol_types::private::Address,
+        pub operatorSet: <OperatorSet as alloy::sol_types::SolType>::RustType,
+    }
+    ///Container type for the return parameters of the [`isMemberOfOperatorSet(address,(address,uint32))`](isMemberOfOperatorSetCall) function.
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct isMemberOfOperatorSetReturn {
+        pub _0: bool,
+    }
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        {
+            #[doc(hidden)]
+            type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Address, OperatorSet);
+            #[doc(hidden)]
+            type UnderlyingRustTuple<'a> = (
+                alloy::sol_types::private::Address,
+                <OperatorSet as alloy::sol_types::SolType>::RustType,
+            );
+            #[cfg(test)]
+            #[allow(dead_code, unreachable_patterns)]
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+                match _t {
+                    alloy_sol_types::private::AssertTypeEq::<
+                        <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                    >(_) => {}
+                }
+            }
+            #[automatically_derived]
+            #[doc(hidden)]
+            impl ::core::convert::From<isMemberOfOperatorSetCall> for UnderlyingRustTuple<'_> {
+                fn from(value: isMemberOfOperatorSetCall) -> Self {
+                    (value.operator, value.operatorSet)
+                }
+            }
+            #[automatically_derived]
+            #[doc(hidden)]
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for isMemberOfOperatorSetCall {
+                fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                    Self {
+                        operator: tuple.0,
+                        operatorSet: tuple.1,
+                    }
+                }
+            }
+        }
+        {
+            #[doc(hidden)]
+            type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Bool,);
+            #[doc(hidden)]
+            type UnderlyingRustTuple<'a> = (bool,);
+            #[cfg(test)]
+            #[allow(dead_code, unreachable_patterns)]
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+                match _t {
+                    alloy_sol_types::private::AssertTypeEq::<
+                        <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                    >(_) => {}
+                }
+            }
+            #[automatically_derived]
+            #[doc(hidden)]
+            impl ::core::convert::From<isMemberOfOperatorSetReturn> for UnderlyingRustTuple<'_> {
+                fn from(value: isMemberOfOperatorSetReturn) -> Self {
+                    (value._0,)
+                }
+            }
+            #[automatically_derived]
+            #[doc(hidden)]
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for isMemberOfOperatorSetReturn {
+                fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                    Self { _0: tuple.0 }
+                }
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolCall for isMemberOfOperatorSetCall {
+            type Parameters<'a> = (alloy::sol_types::sol_data::Address, OperatorSet);
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Return = isMemberOfOperatorSetReturn;
+            type ReturnTuple<'a> = (alloy::sol_types::sol_data::Bool,);
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "isMemberOfOperatorSet(address,(address,uint32))";
+            const SELECTOR: [u8; 4] = [103u8, 13u8, 59u8, 162u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                (
+                    <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
+                        &self.operator,
+                    ),
+                    <OperatorSet as alloy_sol_types::SolType>::tokenize(&self.operatorSet),
+                )
+            }
+            #[inline]
+            fn abi_decode_returns(
+                data: &[u8],
+                validate: bool,
+            ) -> alloy_sol_types::Result<Self::Return> {
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
+            }
+        }
+    };
     /**Function with signature `isOperatorSet((address,uint32))` and selector `0x260dc758`.
     ```solidity
     function isOperatorSet(OperatorSet memory operatorSet) external view returns (bool);
@@ -9238,18 +9478,19 @@ pub mod AllocationManagerStorage {
             }
         }
     };
-    /**Function with signature `modifyAllocations(((address,uint32),address[],uint64[])[])` and selector `0x15ea7917`.
+    /**Function with signature `modifyAllocations(address,((address,uint32),address[],uint64[])[])` and selector `0x952899ee`.
     ```solidity
-    function modifyAllocations(IAllocationManagerTypes.AllocateParams[] memory params) external;
+    function modifyAllocations(address operator, IAllocationManagerTypes.AllocateParams[] memory params) external;
     ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct modifyAllocationsCall {
+        pub operator: alloy::sol_types::private::Address,
         pub params: alloy::sol_types::private::Vec<
             <IAllocationManagerTypes::AllocateParams as alloy::sol_types::SolType>::RustType,
         >,
     }
-    ///Container type for the return parameters of the [`modifyAllocations(((address,uint32),address[],uint64[])[])`](modifyAllocationsCall) function.
+    ///Container type for the return parameters of the [`modifyAllocations(address,((address,uint32),address[],uint64[])[])`](modifyAllocationsCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct modifyAllocationsReturn {}
@@ -9263,10 +9504,13 @@ pub mod AllocationManagerStorage {
         use alloy::sol_types as alloy_sol_types;
         {
             #[doc(hidden)]
-            type UnderlyingSolTuple<'a> =
-                (alloy::sol_types::sol_data::Array<IAllocationManagerTypes::AllocateParams>,);
+            type UnderlyingSolTuple<'a> = (
+                alloy::sol_types::sol_data::Address,
+                alloy::sol_types::sol_data::Array<IAllocationManagerTypes::AllocateParams>,
+            );
             #[doc(hidden)]
             type UnderlyingRustTuple<'a> = (
+                alloy::sol_types::private::Address,
                 alloy::sol_types::private::Vec<
                     <IAllocationManagerTypes::AllocateParams as alloy::sol_types::SolType>::RustType,
                 >,
@@ -9284,14 +9528,17 @@ pub mod AllocationManagerStorage {
             #[doc(hidden)]
             impl ::core::convert::From<modifyAllocationsCall> for UnderlyingRustTuple<'_> {
                 fn from(value: modifyAllocationsCall) -> Self {
-                    (value.params,)
+                    (value.operator, value.params)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for modifyAllocationsCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self { params: tuple.0 }
+                    Self {
+                        operator: tuple.0,
+                        params: tuple.1,
+                    }
                 }
             }
         }
@@ -9326,15 +9573,17 @@ pub mod AllocationManagerStorage {
         }
         #[automatically_derived]
         impl alloy_sol_types::SolCall for modifyAllocationsCall {
-            type Parameters<'a> =
-                (alloy::sol_types::sol_data::Array<IAllocationManagerTypes::AllocateParams>,);
+            type Parameters<'a> = (
+                alloy::sol_types::sol_data::Address,
+                alloy::sol_types::sol_data::Array<IAllocationManagerTypes::AllocateParams>,
+            );
             type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = modifyAllocationsReturn;
             type ReturnTuple<'a> = ();
             type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str =
-                "modifyAllocations(((address,uint32),address[],uint64[])[])";
-            const SELECTOR: [u8; 4] = [21u8, 234u8, 121u8, 23u8];
+                "modifyAllocations(address,((address,uint32),address[],uint64[])[])";
+            const SELECTOR: [u8; 4] = [149u8, 40u8, 153u8, 238u8];
             #[inline]
             fn new<'a>(
                 tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
@@ -9343,11 +9592,14 @@ pub mod AllocationManagerStorage {
             }
             #[inline]
             fn tokenize(&self) -> Self::Token<'_> {
-                (<alloy::sol_types::sol_data::Array<
-                    IAllocationManagerTypes::AllocateParams,
-                > as alloy_sol_types::SolType>::tokenize(
-                    &self.params
-                ),)
+                (
+                    <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
+                        &self.operator,
+                    ),
+                    <alloy::sol_types::sol_data::Array<
+                        IAllocationManagerTypes::AllocateParams,
+                    > as alloy_sol_types::SolType>::tokenize(&self.params),
+                )
             }
             #[inline]
             fn abi_decode_returns(
@@ -9361,17 +9613,18 @@ pub mod AllocationManagerStorage {
             }
         }
     };
-    /**Function with signature `registerForOperatorSets((address,uint32[],bytes))` and selector `0xb92f60a5`.
+    /**Function with signature `registerForOperatorSets(address,(address,uint32[],bytes))` and selector `0xadc2e3d9`.
     ```solidity
-    function registerForOperatorSets(IAllocationManagerTypes.RegisterParams memory params) external;
+    function registerForOperatorSets(address operator, IAllocationManagerTypes.RegisterParams memory params) external;
     ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct registerForOperatorSetsCall {
+        pub operator: alloy::sol_types::private::Address,
         pub params:
             <IAllocationManagerTypes::RegisterParams as alloy::sol_types::SolType>::RustType,
     }
-    ///Container type for the return parameters of the [`registerForOperatorSets((address,uint32[],bytes))`](registerForOperatorSetsCall) function.
+    ///Container type for the return parameters of the [`registerForOperatorSets(address,(address,uint32[],bytes))`](registerForOperatorSetsCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct registerForOperatorSetsReturn {}
@@ -9385,9 +9638,13 @@ pub mod AllocationManagerStorage {
         use alloy::sol_types as alloy_sol_types;
         {
             #[doc(hidden)]
-            type UnderlyingSolTuple<'a> = (IAllocationManagerTypes::RegisterParams,);
+            type UnderlyingSolTuple<'a> = (
+                alloy::sol_types::sol_data::Address,
+                IAllocationManagerTypes::RegisterParams,
+            );
             #[doc(hidden)]
             type UnderlyingRustTuple<'a> = (
+                alloy::sol_types::private::Address,
                 <IAllocationManagerTypes::RegisterParams as alloy::sol_types::SolType>::RustType,
             );
             #[cfg(test)]
@@ -9403,14 +9660,17 @@ pub mod AllocationManagerStorage {
             #[doc(hidden)]
             impl ::core::convert::From<registerForOperatorSetsCall> for UnderlyingRustTuple<'_> {
                 fn from(value: registerForOperatorSetsCall) -> Self {
-                    (value.params,)
+                    (value.operator, value.params)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for registerForOperatorSetsCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self { params: tuple.0 }
+                    Self {
+                        operator: tuple.0,
+                        params: tuple.1,
+                    }
                 }
             }
         }
@@ -9445,13 +9705,17 @@ pub mod AllocationManagerStorage {
         }
         #[automatically_derived]
         impl alloy_sol_types::SolCall for registerForOperatorSetsCall {
-            type Parameters<'a> = (IAllocationManagerTypes::RegisterParams,);
+            type Parameters<'a> = (
+                alloy::sol_types::sol_data::Address,
+                IAllocationManagerTypes::RegisterParams,
+            );
             type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = registerForOperatorSetsReturn;
             type ReturnTuple<'a> = ();
             type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
-            const SIGNATURE: &'static str = "registerForOperatorSets((address,uint32[],bytes))";
-            const SELECTOR: [u8; 4] = [185u8, 47u8, 96u8, 165u8];
+            const SIGNATURE: &'static str =
+                "registerForOperatorSets(address,(address,uint32[],bytes))";
+            const SELECTOR: [u8; 4] = [173u8, 194u8, 227u8, 217u8];
             #[inline]
             fn new<'a>(
                 tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
@@ -9461,6 +9725,9 @@ pub mod AllocationManagerStorage {
             #[inline]
             fn tokenize(&self) -> Self::Token<'_> {
                 (
+                    <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
+                        &self.operator,
+                    ),
                     <IAllocationManagerTypes::RegisterParams as alloy_sol_types::SolType>::tokenize(
                         &self.params,
                     ),
@@ -9478,17 +9745,18 @@ pub mod AllocationManagerStorage {
             }
         }
     };
-    /**Function with signature `removeStrategiesFromOperatorSet(uint32,address[])` and selector `0xce7b5e4b`.
+    /**Function with signature `removeStrategiesFromOperatorSet(address,uint32,address[])` and selector `0xb66bd989`.
     ```solidity
-    function removeStrategiesFromOperatorSet(uint32 operatorSetId, address[] memory strategies) external;
+    function removeStrategiesFromOperatorSet(address avs, uint32 operatorSetId, address[] memory strategies) external;
     ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct removeStrategiesFromOperatorSetCall {
+        pub avs: alloy::sol_types::private::Address,
         pub operatorSetId: u32,
         pub strategies: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
     }
-    ///Container type for the return parameters of the [`removeStrategiesFromOperatorSet(uint32,address[])`](removeStrategiesFromOperatorSetCall) function.
+    ///Container type for the return parameters of the [`removeStrategiesFromOperatorSet(address,uint32,address[])`](removeStrategiesFromOperatorSetCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct removeStrategiesFromOperatorSetReturn {}
@@ -9503,11 +9771,13 @@ pub mod AllocationManagerStorage {
         {
             #[doc(hidden)]
             type UnderlyingSolTuple<'a> = (
+                alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Uint<32>,
                 alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::Address>,
             );
             #[doc(hidden)]
             type UnderlyingRustTuple<'a> = (
+                alloy::sol_types::private::Address,
                 u32,
                 alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
             );
@@ -9524,7 +9794,7 @@ pub mod AllocationManagerStorage {
             #[doc(hidden)]
             impl ::core::convert::From<removeStrategiesFromOperatorSetCall> for UnderlyingRustTuple<'_> {
                 fn from(value: removeStrategiesFromOperatorSetCall) -> Self {
-                    (value.operatorSetId, value.strategies)
+                    (value.avs, value.operatorSetId, value.strategies)
                 }
             }
             #[automatically_derived]
@@ -9532,8 +9802,9 @@ pub mod AllocationManagerStorage {
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for removeStrategiesFromOperatorSetCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {
-                        operatorSetId: tuple.0,
-                        strategies: tuple.1,
+                        avs: tuple.0,
+                        operatorSetId: tuple.1,
+                        strategies: tuple.2,
                     }
                 }
             }
@@ -9570,6 +9841,7 @@ pub mod AllocationManagerStorage {
         #[automatically_derived]
         impl alloy_sol_types::SolCall for removeStrategiesFromOperatorSetCall {
             type Parameters<'a> = (
+                alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Uint<32>,
                 alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::Address>,
             );
@@ -9577,8 +9849,9 @@ pub mod AllocationManagerStorage {
             type Return = removeStrategiesFromOperatorSetReturn;
             type ReturnTuple<'a> = ();
             type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
-            const SIGNATURE: &'static str = "removeStrategiesFromOperatorSet(uint32,address[])";
-            const SELECTOR: [u8; 4] = [206u8, 123u8, 94u8, 75u8];
+            const SIGNATURE: &'static str =
+                "removeStrategiesFromOperatorSet(address,uint32,address[])";
+            const SELECTOR: [u8; 4] = [182u8, 107u8, 217u8, 137u8];
             #[inline]
             fn new<'a>(
                 tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
@@ -9588,6 +9861,9 @@ pub mod AllocationManagerStorage {
             #[inline]
             fn tokenize(&self) -> Self::Token<'_> {
                 (
+                    <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
+                        &self.avs,
+                    ),
                     <alloy::sol_types::sol_data::Uint<
                         32,
                     > as alloy_sol_types::SolType>::tokenize(&self.operatorSetId),
@@ -9608,16 +9884,17 @@ pub mod AllocationManagerStorage {
             }
         }
     };
-    /**Function with signature `setAVSRegistrar(address)` and selector `0xf25f1610`.
+    /**Function with signature `setAVSRegistrar(address,address)` and selector `0xd3d96ff4`.
     ```solidity
-    function setAVSRegistrar(address registrar) external;
+    function setAVSRegistrar(address avs, address registrar) external;
     ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setAVSRegistrarCall {
+        pub avs: alloy::sol_types::private::Address,
         pub registrar: alloy::sol_types::private::Address,
     }
-    ///Container type for the return parameters of the [`setAVSRegistrar(address)`](setAVSRegistrarCall) function.
+    ///Container type for the return parameters of the [`setAVSRegistrar(address,address)`](setAVSRegistrarCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setAVSRegistrarReturn {}
@@ -9631,9 +9908,15 @@ pub mod AllocationManagerStorage {
         use alloy::sol_types as alloy_sol_types;
         {
             #[doc(hidden)]
-            type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Address,);
+            type UnderlyingSolTuple<'a> = (
+                alloy::sol_types::sol_data::Address,
+                alloy::sol_types::sol_data::Address,
+            );
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
+            type UnderlyingRustTuple<'a> = (
+                alloy::sol_types::private::Address,
+                alloy::sol_types::private::Address,
+            );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
             fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
@@ -9647,14 +9930,17 @@ pub mod AllocationManagerStorage {
             #[doc(hidden)]
             impl ::core::convert::From<setAVSRegistrarCall> for UnderlyingRustTuple<'_> {
                 fn from(value: setAVSRegistrarCall) -> Self {
-                    (value.registrar,)
+                    (value.avs, value.registrar)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for setAVSRegistrarCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self { registrar: tuple.0 }
+                    Self {
+                        avs: tuple.0,
+                        registrar: tuple.1,
+                    }
                 }
             }
         }
@@ -9689,13 +9975,16 @@ pub mod AllocationManagerStorage {
         }
         #[automatically_derived]
         impl alloy_sol_types::SolCall for setAVSRegistrarCall {
-            type Parameters<'a> = (alloy::sol_types::sol_data::Address,);
+            type Parameters<'a> = (
+                alloy::sol_types::sol_data::Address,
+                alloy::sol_types::sol_data::Address,
+            );
             type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = setAVSRegistrarReturn;
             type ReturnTuple<'a> = ();
             type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
-            const SIGNATURE: &'static str = "setAVSRegistrar(address)";
-            const SELECTOR: [u8; 4] = [242u8, 95u8, 22u8, 16u8];
+            const SIGNATURE: &'static str = "setAVSRegistrar(address,address)";
+            const SELECTOR: [u8; 4] = [211u8, 217u8, 111u8, 244u8];
             #[inline]
             fn new<'a>(
                 tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
@@ -9705,6 +9994,9 @@ pub mod AllocationManagerStorage {
             #[inline]
             fn tokenize(&self) -> Self::Token<'_> {
                 (
+                    <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
+                        &self.avs,
+                    ),
                     <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
                         &self.registrar,
                     ),
@@ -9728,14 +10020,14 @@ pub mod AllocationManagerStorage {
     ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
-    pub struct setAllocationDelay_0Call {
+    pub struct setAllocationDelayCall {
         pub operator: alloy::sol_types::private::Address,
         pub delay: u32,
     }
-    ///Container type for the return parameters of the [`setAllocationDelay(address,uint32)`](setAllocationDelay_0Call) function.
+    ///Container type for the return parameters of the [`setAllocationDelay(address,uint32)`](setAllocationDelayCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
-    pub struct setAllocationDelay_0Return {}
+    pub struct setAllocationDelayReturn {}
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -9763,14 +10055,14 @@ pub mod AllocationManagerStorage {
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<setAllocationDelay_0Call> for UnderlyingRustTuple<'_> {
-                fn from(value: setAllocationDelay_0Call) -> Self {
+            impl ::core::convert::From<setAllocationDelayCall> for UnderlyingRustTuple<'_> {
+                fn from(value: setAllocationDelayCall) -> Self {
                     (value.operator, value.delay)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for setAllocationDelay_0Call {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for setAllocationDelayCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {
                         operator: tuple.0,
@@ -9795,27 +10087,27 @@ pub mod AllocationManagerStorage {
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<setAllocationDelay_0Return> for UnderlyingRustTuple<'_> {
-                fn from(value: setAllocationDelay_0Return) -> Self {
+            impl ::core::convert::From<setAllocationDelayReturn> for UnderlyingRustTuple<'_> {
+                fn from(value: setAllocationDelayReturn) -> Self {
                     ()
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for setAllocationDelay_0Return {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for setAllocationDelayReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
             }
         }
         #[automatically_derived]
-        impl alloy_sol_types::SolCall for setAllocationDelay_0Call {
+        impl alloy_sol_types::SolCall for setAllocationDelayCall {
             type Parameters<'a> = (
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Uint<32>,
             );
             type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
-            type Return = setAllocationDelay_0Return;
+            type Return = setAllocationDelayReturn;
             type ReturnTuple<'a> = ();
             type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "setAllocationDelay(address,uint32)";
@@ -9849,131 +10141,18 @@ pub mod AllocationManagerStorage {
             }
         }
     };
-    /**Function with signature `setAllocationDelay(uint32)` and selector `0x5c489bb5`.
+    /**Function with signature `slashOperator(address,(address,uint32,address[],uint256[],string))` and selector `0x36352057`.
     ```solidity
-    function setAllocationDelay(uint32 delay) external;
-    ```*/
-    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
-    #[derive(Clone)]
-    pub struct setAllocationDelay_1Call {
-        pub delay: u32,
-    }
-    ///Container type for the return parameters of the [`setAllocationDelay(uint32)`](setAllocationDelay_1Call) function.
-    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
-    #[derive(Clone)]
-    pub struct setAllocationDelay_1Return {}
-    #[allow(
-        non_camel_case_types,
-        non_snake_case,
-        clippy::pub_underscore_fields,
-        clippy::style
-    )]
-    const _: () = {
-        use alloy::sol_types as alloy_sol_types;
-        {
-            #[doc(hidden)]
-            type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Uint<32>,);
-            #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (u32,);
-            #[cfg(test)]
-            #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
-                match _t {
-                    alloy_sol_types::private::AssertTypeEq::<
-                        <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
-                    >(_) => {}
-                }
-            }
-            #[automatically_derived]
-            #[doc(hidden)]
-            impl ::core::convert::From<setAllocationDelay_1Call> for UnderlyingRustTuple<'_> {
-                fn from(value: setAllocationDelay_1Call) -> Self {
-                    (value.delay,)
-                }
-            }
-            #[automatically_derived]
-            #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for setAllocationDelay_1Call {
-                fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self { delay: tuple.0 }
-                }
-            }
-        }
-        {
-            #[doc(hidden)]
-            type UnderlyingSolTuple<'a> = ();
-            #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = ();
-            #[cfg(test)]
-            #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
-                match _t {
-                    alloy_sol_types::private::AssertTypeEq::<
-                        <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
-                    >(_) => {}
-                }
-            }
-            #[automatically_derived]
-            #[doc(hidden)]
-            impl ::core::convert::From<setAllocationDelay_1Return> for UnderlyingRustTuple<'_> {
-                fn from(value: setAllocationDelay_1Return) -> Self {
-                    ()
-                }
-            }
-            #[automatically_derived]
-            #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for setAllocationDelay_1Return {
-                fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self {}
-                }
-            }
-        }
-        #[automatically_derived]
-        impl alloy_sol_types::SolCall for setAllocationDelay_1Call {
-            type Parameters<'a> = (alloy::sol_types::sol_data::Uint<32>,);
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
-            type Return = setAllocationDelay_1Return;
-            type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
-            const SIGNATURE: &'static str = "setAllocationDelay(uint32)";
-            const SELECTOR: [u8; 4] = [92u8, 72u8, 155u8, 181u8];
-            #[inline]
-            fn new<'a>(
-                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
-            ) -> Self {
-                tuple.into()
-            }
-            #[inline]
-            fn tokenize(&self) -> Self::Token<'_> {
-                (
-                    <alloy::sol_types::sol_data::Uint<32> as alloy_sol_types::SolType>::tokenize(
-                        &self.delay,
-                    ),
-                )
-            }
-            #[inline]
-            fn abi_decode_returns(
-                data: &[u8],
-                validate: bool,
-            ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
-            }
-        }
-    };
-    /**Function with signature `slashOperator((address,uint32,uint256,string))` and selector `0x0ea43e43`.
-    ```solidity
-    function slashOperator(IAllocationManagerTypes.SlashingParams memory params) external;
+    function slashOperator(address avs, IAllocationManagerTypes.SlashingParams memory params) external;
     ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct slashOperatorCall {
+        pub avs: alloy::sol_types::private::Address,
         pub params:
             <IAllocationManagerTypes::SlashingParams as alloy::sol_types::SolType>::RustType,
     }
-    ///Container type for the return parameters of the [`slashOperator((address,uint32,uint256,string))`](slashOperatorCall) function.
+    ///Container type for the return parameters of the [`slashOperator(address,(address,uint32,address[],uint256[],string))`](slashOperatorCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct slashOperatorReturn {}
@@ -9987,9 +10166,13 @@ pub mod AllocationManagerStorage {
         use alloy::sol_types as alloy_sol_types;
         {
             #[doc(hidden)]
-            type UnderlyingSolTuple<'a> = (IAllocationManagerTypes::SlashingParams,);
+            type UnderlyingSolTuple<'a> = (
+                alloy::sol_types::sol_data::Address,
+                IAllocationManagerTypes::SlashingParams,
+            );
             #[doc(hidden)]
             type UnderlyingRustTuple<'a> = (
+                alloy::sol_types::private::Address,
                 <IAllocationManagerTypes::SlashingParams as alloy::sol_types::SolType>::RustType,
             );
             #[cfg(test)]
@@ -10005,14 +10188,17 @@ pub mod AllocationManagerStorage {
             #[doc(hidden)]
             impl ::core::convert::From<slashOperatorCall> for UnderlyingRustTuple<'_> {
                 fn from(value: slashOperatorCall) -> Self {
-                    (value.params,)
+                    (value.avs, value.params)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for slashOperatorCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self { params: tuple.0 }
+                    Self {
+                        avs: tuple.0,
+                        params: tuple.1,
+                    }
                 }
             }
         }
@@ -10047,13 +10233,17 @@ pub mod AllocationManagerStorage {
         }
         #[automatically_derived]
         impl alloy_sol_types::SolCall for slashOperatorCall {
-            type Parameters<'a> = (IAllocationManagerTypes::SlashingParams,);
+            type Parameters<'a> = (
+                alloy::sol_types::sol_data::Address,
+                IAllocationManagerTypes::SlashingParams,
+            );
             type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = slashOperatorReturn;
             type ReturnTuple<'a> = ();
             type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
-            const SIGNATURE: &'static str = "slashOperator((address,uint32,uint256,string))";
-            const SELECTOR: [u8; 4] = [14u8, 164u8, 62u8, 67u8];
+            const SIGNATURE: &'static str =
+                "slashOperator(address,(address,uint32,address[],uint256[],string))";
+            const SELECTOR: [u8; 4] = [54u8, 53u8, 32u8, 87u8];
             #[inline]
             fn new<'a>(
                 tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
@@ -10063,6 +10253,9 @@ pub mod AllocationManagerStorage {
             #[inline]
             fn tokenize(&self) -> Self::Token<'_> {
                 (
+                    <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
+                        &self.avs,
+                    ),
                     <IAllocationManagerTypes::SlashingParams as alloy_sol_types::SolType>::tokenize(
                         &self.params,
                     ),
@@ -10080,16 +10273,17 @@ pub mod AllocationManagerStorage {
             }
         }
     };
-    /**Function with signature `updateAVSMetadataURI(string)` and selector `0xa98fb355`.
+    /**Function with signature `updateAVSMetadataURI(address,string)` and selector `0xa9821821`.
     ```solidity
-    function updateAVSMetadataURI(string memory metadataURI) external;
+    function updateAVSMetadataURI(address avs, string memory metadataURI) external;
     ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct updateAVSMetadataURICall {
+        pub avs: alloy::sol_types::private::Address,
         pub metadataURI: alloy::sol_types::private::String,
     }
-    ///Container type for the return parameters of the [`updateAVSMetadataURI(string)`](updateAVSMetadataURICall) function.
+    ///Container type for the return parameters of the [`updateAVSMetadataURI(address,string)`](updateAVSMetadataURICall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct updateAVSMetadataURIReturn {}
@@ -10103,9 +10297,15 @@ pub mod AllocationManagerStorage {
         use alloy::sol_types as alloy_sol_types;
         {
             #[doc(hidden)]
-            type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::String,);
+            type UnderlyingSolTuple<'a> = (
+                alloy::sol_types::sol_data::Address,
+                alloy::sol_types::sol_data::String,
+            );
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (alloy::sol_types::private::String,);
+            type UnderlyingRustTuple<'a> = (
+                alloy::sol_types::private::Address,
+                alloy::sol_types::private::String,
+            );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
             fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
@@ -10119,7 +10319,7 @@ pub mod AllocationManagerStorage {
             #[doc(hidden)]
             impl ::core::convert::From<updateAVSMetadataURICall> for UnderlyingRustTuple<'_> {
                 fn from(value: updateAVSMetadataURICall) -> Self {
-                    (value.metadataURI,)
+                    (value.avs, value.metadataURI)
                 }
             }
             #[automatically_derived]
@@ -10127,7 +10327,8 @@ pub mod AllocationManagerStorage {
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for updateAVSMetadataURICall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {
-                        metadataURI: tuple.0,
+                        avs: tuple.0,
+                        metadataURI: tuple.1,
                     }
                 }
             }
@@ -10163,13 +10364,16 @@ pub mod AllocationManagerStorage {
         }
         #[automatically_derived]
         impl alloy_sol_types::SolCall for updateAVSMetadataURICall {
-            type Parameters<'a> = (alloy::sol_types::sol_data::String,);
+            type Parameters<'a> = (
+                alloy::sol_types::sol_data::Address,
+                alloy::sol_types::sol_data::String,
+            );
             type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = updateAVSMetadataURIReturn;
             type ReturnTuple<'a> = ();
             type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
-            const SIGNATURE: &'static str = "updateAVSMetadataURI(string)";
-            const SELECTOR: [u8; 4] = [169u8, 143u8, 179u8, 85u8];
+            const SIGNATURE: &'static str = "updateAVSMetadataURI(address,string)";
+            const SELECTOR: [u8; 4] = [169u8, 130u8, 24u8, 33u8];
             #[inline]
             fn new<'a>(
                 tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
@@ -10179,6 +10383,9 @@ pub mod AllocationManagerStorage {
             #[inline]
             fn tokenize(&self) -> Self::Token<'_> {
                 (
+                    <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
+                        &self.avs,
+                    ),
                     <alloy::sol_types::sol_data::String as alloy_sol_types::SolType>::tokenize(
                         &self.metadataURI,
                     ),
@@ -10220,17 +10427,18 @@ pub mod AllocationManagerStorage {
         getMemberCount(getMemberCountCall),
         getMembers(getMembersCall),
         getMinimumSlashableStake(getMinimumSlashableStakeCall),
+        getOperatorSetCount(getOperatorSetCountCall),
         getRegisteredSets(getRegisteredSetsCall),
         getStrategiesInOperatorSet(getStrategiesInOperatorSetCall),
         getStrategyAllocations(getStrategyAllocationsCall),
         initialize(initializeCall),
+        isMemberOfOperatorSet(isMemberOfOperatorSetCall),
         isOperatorSet(isOperatorSetCall),
         modifyAllocations(modifyAllocationsCall),
         registerForOperatorSets(registerForOperatorSetsCall),
         removeStrategiesFromOperatorSet(removeStrategiesFromOperatorSetCall),
         setAVSRegistrar(setAVSRegistrarCall),
-        setAllocationDelay_0(setAllocationDelay_0Call),
-        setAllocationDelay_1(setAllocationDelay_1Call),
+        setAllocationDelay(setAllocationDelayCall),
         slashOperator(slashOperatorCall),
         updateAVSMetadataURI(updateAVSMetadataURICall),
     }
@@ -10243,48 +10451,49 @@ pub mod AllocationManagerStorage {
         ///
         /// Prefer using `SolInterface` methods instead.
         pub const SELECTORS: &'static [[u8; 4usize]] = &[
-            [14u8, 164u8, 62u8, 67u8],
             [16u8, 225u8, 185u8, 184u8],
-            [21u8, 234u8, 121u8, 23u8],
             [21u8, 254u8, 80u8, 40u8],
             [38u8, 13u8, 199u8, 88u8],
+            [38u8, 31u8, 132u8, 224u8],
             [41u8, 129u8, 235u8, 119u8],
             [43u8, 171u8, 44u8, 74u8],
             [48u8, 76u8, 16u8, 205u8],
+            [54u8, 53u8, 32u8, 87u8],
             [64u8, 18u8, 13u8, 171u8],
             [65u8, 119u8, 168u8, 124u8],
             [74u8, 16u8, 255u8, 229u8],
             [75u8, 80u8, 70u8, 239u8],
+            [80u8, 254u8, 234u8, 32u8],
             [84u8, 122u8, 251u8, 135u8],
             [86u8, 196u8, 131u8, 230u8],
-            [92u8, 72u8, 155u8, 181u8],
+            [103u8, 13u8, 59u8, 162u8],
             [108u8, 251u8, 68u8, 129u8],
             [110u8, 52u8, 146u8, 181u8],
             [110u8, 135u8, 93u8, 186u8],
-            [118u8, 153u8, 147u8, 66u8],
             [121u8, 174u8, 80u8, 205u8],
             [123u8, 193u8, 239u8, 97u8],
-            [132u8, 125u8, 99u8, 79u8],
             [140u8, 230u8, 72u8, 84u8],
             [148u8, 215u8, 208u8, 12u8],
+            [149u8, 40u8, 153u8, 238u8],
             [169u8, 51u8, 62u8, 200u8],
+            [169u8, 130u8, 24u8, 33u8],
             [169u8, 132u8, 235u8, 58u8],
-            [169u8, 143u8, 179u8, 85u8],
+            [173u8, 194u8, 227u8, 217u8],
             [178u8, 68u8, 122u8, 247u8],
-            [185u8, 47u8, 96u8, 165u8],
+            [182u8, 107u8, 217u8, 137u8],
             [185u8, 251u8, 174u8, 209u8],
+            [186u8, 26u8, 132u8, 229u8],
             [194u8, 33u8, 216u8, 174u8],
             [205u8, 109u8, 198u8, 135u8],
-            [206u8, 123u8, 94u8, 75u8],
+            [211u8, 217u8, 111u8, 244u8],
             [223u8, 92u8, 247u8, 35u8],
-            [242u8, 95u8, 22u8, 16u8],
         ];
     }
     #[automatically_derived]
     impl alloy_sol_types::SolInterface for AllocationManagerStorageCalls {
         const NAME: &'static str = "AllocationManagerStorageCalls";
         const MIN_DATA_LENGTH: usize = 0usize;
-        const COUNT: usize = 35usize;
+        const COUNT: usize = 36usize;
         #[inline]
         fn selector(&self) -> [u8; 4] {
             match self {
@@ -10348,6 +10557,9 @@ pub mod AllocationManagerStorage {
                 Self::getMinimumSlashableStake(_) => {
                     <getMinimumSlashableStakeCall as alloy_sol_types::SolCall>::SELECTOR
                 }
+                Self::getOperatorSetCount(_) => {
+                    <getOperatorSetCountCall as alloy_sol_types::SolCall>::SELECTOR
+                }
                 Self::getRegisteredSets(_) => {
                     <getRegisteredSetsCall as alloy_sol_types::SolCall>::SELECTOR
                 }
@@ -10358,6 +10570,9 @@ pub mod AllocationManagerStorage {
                     <getStrategyAllocationsCall as alloy_sol_types::SolCall>::SELECTOR
                 }
                 Self::initialize(_) => <initializeCall as alloy_sol_types::SolCall>::SELECTOR,
+                Self::isMemberOfOperatorSet(_) => {
+                    <isMemberOfOperatorSetCall as alloy_sol_types::SolCall>::SELECTOR
+                }
                 Self::isOperatorSet(_) => <isOperatorSetCall as alloy_sol_types::SolCall>::SELECTOR,
                 Self::modifyAllocations(_) => {
                     <modifyAllocationsCall as alloy_sol_types::SolCall>::SELECTOR
@@ -10371,11 +10586,8 @@ pub mod AllocationManagerStorage {
                 Self::setAVSRegistrar(_) => {
                     <setAVSRegistrarCall as alloy_sol_types::SolCall>::SELECTOR
                 }
-                Self::setAllocationDelay_0(_) => {
-                    <setAllocationDelay_0Call as alloy_sol_types::SolCall>::SELECTOR
-                }
-                Self::setAllocationDelay_1(_) => {
-                    <setAllocationDelay_1Call as alloy_sol_types::SolCall>::SELECTOR
+                Self::setAllocationDelay(_) => {
+                    <setAllocationDelayCall as alloy_sol_types::SolCall>::SELECTOR
                 }
                 Self::slashOperator(_) => <slashOperatorCall as alloy_sol_types::SolCall>::SELECTOR,
                 Self::updateAVSMetadataURI(_) => {
@@ -10404,19 +10616,6 @@ pub mod AllocationManagerStorage {
             )
                 -> alloy_sol_types::Result<AllocationManagerStorageCalls>] = &[
                 {
-                    fn slashOperator(
-                        data: &[u8],
-                        validate: bool,
-                    ) -> alloy_sol_types::Result<AllocationManagerStorageCalls>
-                    {
-                        <slashOperatorCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                            data, validate,
-                        )
-                        .map(AllocationManagerStorageCalls::slashOperator)
-                    }
-                    slashOperator
-                },
-                {
                     fn getAllocation(
                         data: &[u8],
                         validate: bool,
@@ -10428,19 +10627,6 @@ pub mod AllocationManagerStorage {
                         .map(AllocationManagerStorageCalls::getAllocation)
                     }
                     getAllocation
-                },
-                {
-                    fn modifyAllocations(
-                        data: &[u8],
-                        validate: bool,
-                    ) -> alloy_sol_types::Result<AllocationManagerStorageCalls>
-                    {
-                        <modifyAllocationsCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                            data, validate,
-                        )
-                        .map(AllocationManagerStorageCalls::modifyAllocations)
-                    }
-                    modifyAllocations
                 },
                 {
                     fn getAllocatedSets(
@@ -10467,6 +10653,19 @@ pub mod AllocationManagerStorage {
                         .map(AllocationManagerStorageCalls::isOperatorSet)
                     }
                     isOperatorSet
+                },
+                {
+                    fn createOperatorSets(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<AllocationManagerStorageCalls>
+                    {
+                        <createOperatorSetsCall as alloy_sol_types::SolCall>::abi_decode_raw(
+                            data, validate,
+                        )
+                        .map(AllocationManagerStorageCalls::createOperatorSets)
+                    }
+                    createOperatorSets
                 },
                 {
                     fn DEALLOCATION_DELAY(
@@ -10506,6 +10705,19 @@ pub mod AllocationManagerStorage {
                         .map(AllocationManagerStorageCalls::getAVSRegistrar)
                     }
                     getAVSRegistrar
+                },
+                {
+                    fn slashOperator(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<AllocationManagerStorageCalls>
+                    {
+                        <slashOperatorCall as alloy_sol_types::SolCall>::abi_decode_raw(
+                            data, validate,
+                        )
+                        .map(AllocationManagerStorageCalls::slashOperator)
+                    }
+                    slashOperator
                 },
                 {
                     fn getStrategyAllocations(
@@ -10563,6 +10775,22 @@ pub mod AllocationManagerStorage {
                     clearDeallocationQueue
                 },
                 {
+                    fn addStrategiesToOperatorSet(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<AllocationManagerStorageCalls>
+                    {
+                        <addStrategiesToOperatorSetCall as alloy_sol_types::SolCall>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
+                            .map(
+                                AllocationManagerStorageCalls::addStrategiesToOperatorSet,
+                            )
+                    }
+                    addStrategiesToOperatorSet
+                },
+                {
                     fn getMaxMagnitudes_1(
                         data: &[u8],
                         validate: bool,
@@ -10576,30 +10804,30 @@ pub mod AllocationManagerStorage {
                     getMaxMagnitudes_1
                 },
                 {
-                    fn setAllocationDelay_0(
+                    fn setAllocationDelay(
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<AllocationManagerStorageCalls>
                     {
-                        <setAllocationDelay_0Call as alloy_sol_types::SolCall>::abi_decode_raw(
+                        <setAllocationDelayCall as alloy_sol_types::SolCall>::abi_decode_raw(
                             data, validate,
                         )
-                        .map(AllocationManagerStorageCalls::setAllocationDelay_0)
+                        .map(AllocationManagerStorageCalls::setAllocationDelay)
                     }
-                    setAllocationDelay_0
+                    setAllocationDelay
                 },
                 {
-                    fn setAllocationDelay_1(
+                    fn isMemberOfOperatorSet(
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<AllocationManagerStorageCalls>
                     {
-                        <setAllocationDelay_1Call as alloy_sol_types::SolCall>::abi_decode_raw(
+                        <isMemberOfOperatorSetCall as alloy_sol_types::SolCall>::abi_decode_raw(
                             data, validate,
                         )
-                        .map(AllocationManagerStorageCalls::setAllocationDelay_1)
+                        .map(AllocationManagerStorageCalls::isMemberOfOperatorSet)
                     }
-                    setAllocationDelay_1
+                    isMemberOfOperatorSet
                 },
                 {
                     fn getAllocatableMagnitude(
@@ -10642,22 +10870,6 @@ pub mod AllocationManagerStorage {
                     getMembers
                 },
                 {
-                    fn addStrategiesToOperatorSet(
-                        data: &[u8],
-                        validate: bool,
-                    ) -> alloy_sol_types::Result<AllocationManagerStorageCalls>
-                    {
-                        <addStrategiesToOperatorSetCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(
-                                AllocationManagerStorageCalls::addStrategiesToOperatorSet,
-                            )
-                    }
-                    addStrategiesToOperatorSet
-                },
-                {
                     fn getRegisteredSets(
                         data: &[u8],
                         validate: bool,
@@ -10687,19 +10899,6 @@ pub mod AllocationManagerStorage {
                     ALLOCATION_CONFIGURATION_DELAY
                 },
                 {
-                    fn createOperatorSets(
-                        data: &[u8],
-                        validate: bool,
-                    ) -> alloy_sol_types::Result<AllocationManagerStorageCalls>
-                    {
-                        <createOperatorSetsCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                            data, validate,
-                        )
-                        .map(AllocationManagerStorageCalls::createOperatorSets)
-                    }
-                    createOperatorSets
-                },
-                {
                     fn getAllocations(
                         data: &[u8],
                         validate: bool,
@@ -10726,6 +10925,19 @@ pub mod AllocationManagerStorage {
                     getMaxMagnitudesAtBlock
                 },
                 {
+                    fn modifyAllocations(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<AllocationManagerStorageCalls>
+                    {
+                        <modifyAllocationsCall as alloy_sol_types::SolCall>::abi_decode_raw(
+                            data, validate,
+                        )
+                        .map(AllocationManagerStorageCalls::modifyAllocations)
+                    }
+                    modifyAllocations
+                },
+                {
                     fn getMaxMagnitude(
                         data: &[u8],
                         validate: bool,
@@ -10737,19 +10949,6 @@ pub mod AllocationManagerStorage {
                         .map(AllocationManagerStorageCalls::getMaxMagnitude)
                     }
                     getMaxMagnitude
-                },
-                {
-                    fn encumberedMagnitude(
-                        data: &[u8],
-                        validate: bool,
-                    ) -> alloy_sol_types::Result<AllocationManagerStorageCalls>
-                    {
-                        <encumberedMagnitudeCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                            data, validate,
-                        )
-                        .map(AllocationManagerStorageCalls::encumberedMagnitude)
-                    }
-                    encumberedMagnitude
                 },
                 {
                     fn updateAVSMetadataURI(
@@ -10765,17 +10964,17 @@ pub mod AllocationManagerStorage {
                     updateAVSMetadataURI
                 },
                 {
-                    fn getMemberCount(
+                    fn encumberedMagnitude(
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<AllocationManagerStorageCalls>
                     {
-                        <getMemberCountCall as alloy_sol_types::SolCall>::abi_decode_raw(
+                        <encumberedMagnitudeCall as alloy_sol_types::SolCall>::abi_decode_raw(
                             data, validate,
                         )
-                        .map(AllocationManagerStorageCalls::getMemberCount)
+                        .map(AllocationManagerStorageCalls::encumberedMagnitude)
                     }
-                    getMemberCount
+                    encumberedMagnitude
                 },
                 {
                     fn registerForOperatorSets(
@@ -10791,6 +10990,35 @@ pub mod AllocationManagerStorage {
                     registerForOperatorSets
                 },
                 {
+                    fn getMemberCount(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<AllocationManagerStorageCalls>
+                    {
+                        <getMemberCountCall as alloy_sol_types::SolCall>::abi_decode_raw(
+                            data, validate,
+                        )
+                        .map(AllocationManagerStorageCalls::getMemberCount)
+                    }
+                    getMemberCount
+                },
+                {
+                    fn removeStrategiesFromOperatorSet(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<AllocationManagerStorageCalls>
+                    {
+                        <removeStrategiesFromOperatorSetCall as alloy_sol_types::SolCall>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
+                            .map(
+                                AllocationManagerStorageCalls::removeStrategiesFromOperatorSet,
+                            )
+                    }
+                    removeStrategiesFromOperatorSet
+                },
+                {
                     fn getAllocationDelay(
                         data: &[u8],
                         validate: bool,
@@ -10802,6 +11030,19 @@ pub mod AllocationManagerStorage {
                         .map(AllocationManagerStorageCalls::getAllocationDelay)
                     }
                     getAllocationDelay
+                },
+                {
+                    fn getOperatorSetCount(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<AllocationManagerStorageCalls>
+                    {
+                        <getOperatorSetCountCall as alloy_sol_types::SolCall>::abi_decode_raw(
+                            data, validate,
+                        )
+                        .map(AllocationManagerStorageCalls::getOperatorSetCount)
+                    }
+                    getOperatorSetCount
                 },
                 {
                     fn getAllocatedStrategies(
@@ -10828,33 +11069,6 @@ pub mod AllocationManagerStorage {
                     initialize
                 },
                 {
-                    fn removeStrategiesFromOperatorSet(
-                        data: &[u8],
-                        validate: bool,
-                    ) -> alloy_sol_types::Result<AllocationManagerStorageCalls>
-                    {
-                        <removeStrategiesFromOperatorSetCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(
-                                AllocationManagerStorageCalls::removeStrategiesFromOperatorSet,
-                            )
-                    }
-                    removeStrategiesFromOperatorSet
-                },
-                {
-                    fn delegation(
-                        data: &[u8],
-                        validate: bool,
-                    ) -> alloy_sol_types::Result<AllocationManagerStorageCalls>
-                    {
-                        <delegationCall as alloy_sol_types::SolCall>::abi_decode_raw(data, validate)
-                            .map(AllocationManagerStorageCalls::delegation)
-                    }
-                    delegation
-                },
-                {
                     fn setAVSRegistrar(
                         data: &[u8],
                         validate: bool,
@@ -10866,6 +11080,17 @@ pub mod AllocationManagerStorage {
                         .map(AllocationManagerStorageCalls::setAVSRegistrar)
                     }
                     setAVSRegistrar
+                },
+                {
+                    fn delegation(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<AllocationManagerStorageCalls>
+                    {
+                        <delegationCall as alloy_sol_types::SolCall>::abi_decode_raw(data, validate)
+                            .map(AllocationManagerStorageCalls::delegation)
+                    }
+                    delegation
                 },
             ];
             let Ok(idx) = Self::SELECTORS.binary_search(&selector) else {
@@ -10985,6 +11210,11 @@ pub mod AllocationManagerStorage {
                         inner,
                     )
                 }
+                Self::getOperatorSetCount(inner) => {
+                    <getOperatorSetCountCall as alloy_sol_types::SolCall>::abi_encoded_size(
+                        inner,
+                    )
+                }
                 Self::getRegisteredSets(inner) => {
                     <getRegisteredSetsCall as alloy_sol_types::SolCall>::abi_encoded_size(
                         inner,
@@ -11002,6 +11232,11 @@ pub mod AllocationManagerStorage {
                 }
                 Self::initialize(inner) => {
                     <initializeCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
+                }
+                Self::isMemberOfOperatorSet(inner) => {
+                    <isMemberOfOperatorSetCall as alloy_sol_types::SolCall>::abi_encoded_size(
+                        inner,
+                    )
                 }
                 Self::isOperatorSet(inner) => {
                     <isOperatorSetCall as alloy_sol_types::SolCall>::abi_encoded_size(
@@ -11028,13 +11263,8 @@ pub mod AllocationManagerStorage {
                         inner,
                     )
                 }
-                Self::setAllocationDelay_0(inner) => {
-                    <setAllocationDelay_0Call as alloy_sol_types::SolCall>::abi_encoded_size(
-                        inner,
-                    )
-                }
-                Self::setAllocationDelay_1(inner) => {
-                    <setAllocationDelay_1Call as alloy_sol_types::SolCall>::abi_encoded_size(
+                Self::setAllocationDelay(inner) => {
+                    <setAllocationDelayCall as alloy_sol_types::SolCall>::abi_encoded_size(
                         inner,
                     )
                 }
@@ -11185,6 +11415,12 @@ pub mod AllocationManagerStorage {
                         out,
                     )
                 }
+                Self::getOperatorSetCount(inner) => {
+                    <getOperatorSetCountCall as alloy_sol_types::SolCall>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
                 Self::getRegisteredSets(inner) => {
                     <getRegisteredSetsCall as alloy_sol_types::SolCall>::abi_encode_raw(
                         inner,
@@ -11205,6 +11441,12 @@ pub mod AllocationManagerStorage {
                 }
                 Self::initialize(inner) => {
                     <initializeCall as alloy_sol_types::SolCall>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
+                Self::isMemberOfOperatorSet(inner) => {
+                    <isMemberOfOperatorSetCall as alloy_sol_types::SolCall>::abi_encode_raw(
                         inner,
                         out,
                     )
@@ -11239,14 +11481,8 @@ pub mod AllocationManagerStorage {
                         out,
                     )
                 }
-                Self::setAllocationDelay_0(inner) => {
-                    <setAllocationDelay_0Call as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
-                }
-                Self::setAllocationDelay_1(inner) => {
-                    <setAllocationDelay_1Call as alloy_sol_types::SolCall>::abi_encode_raw(
+                Self::setAllocationDelay(inner) => {
+                    <setAllocationDelayCall as alloy_sol_types::SolCall>::abi_encode_raw(
                         inner,
                         out,
                     )
@@ -11271,20 +11507,18 @@ pub mod AllocationManagerStorage {
         AlreadyMemberOfSet(AlreadyMemberOfSet),
         InputArrayLengthMismatch(InputArrayLengthMismatch),
         InsufficientMagnitude(InsufficientMagnitude),
-        InvalidBlockNumber(InvalidBlockNumber),
         InvalidCaller(InvalidCaller),
         InvalidOperator(InvalidOperator),
         InvalidOperatorSet(InvalidOperatorSet),
         InvalidSignature(InvalidSignature),
-        InvalidStrategy(InvalidStrategy),
         InvalidWadToSlash(InvalidWadToSlash),
+        MaxStrategiesExceeded(MaxStrategiesExceeded),
         ModificationAlreadyPending(ModificationAlreadyPending),
         NotMemberOfSet(NotMemberOfSet),
-        OnlyDelegationManager(OnlyDelegationManager),
-        OperatorNotRegistered(OperatorNotRegistered),
         OperatorNotSlashable(OperatorNotSlashable),
         SameMagnitude(SameMagnitude),
         SignatureExpired(SignatureExpired),
+        StrategiesMustBeInAscendingOrder(StrategiesMustBeInAscendingOrder),
         StrategyAlreadyInOperatorSet(StrategyAlreadyInOperatorSet),
         StrategyNotInOperatorSet(StrategyNotInOperatorSet),
         UninitializedAllocationDelay(UninitializedAllocationDelay),
@@ -11299,24 +11533,22 @@ pub mod AllocationManagerStorage {
         /// Prefer using `SolInterface` methods instead.
         pub const SELECTORS: &'static [[u8; 4usize]] = &[
             [8u8, 25u8, 189u8, 205u8],
+            [13u8, 10u8, 33u8, 200u8],
             [19u8, 83u8, 96u8, 49u8],
             [37u8, 19u8, 29u8, 79u8],
-            [37u8, 236u8, 108u8, 31u8],
             [67u8, 113u8, 74u8, 253u8],
             [72u8, 245u8, 195u8, 237u8],
-            [78u8, 35u8, 110u8, 154u8],
-            [78u8, 71u8, 132u8, 108u8],
             [88u8, 92u8, 251u8, 47u8],
             [99u8, 120u8, 104u8, 78u8],
             [108u8, 155u8, 224u8, 191u8],
             [126u8, 197u8, 193u8, 84u8],
             [139u8, 170u8, 87u8, 159u8],
             [140u8, 12u8, 47u8, 38u8],
+            [159u8, 28u8, 128u8, 83u8],
             [204u8, 234u8, 158u8, 111u8],
             [216u8, 216u8, 220u8, 78u8],
             [216u8, 252u8, 190u8, 48u8],
             [235u8, 191u8, 244u8, 151u8],
-            [247u8, 57u8, 88u8, 155u8],
             [250u8, 85u8, 252u8, 129u8],
         ];
     }
@@ -11324,7 +11556,7 @@ pub mod AllocationManagerStorage {
     impl alloy_sol_types::SolInterface for AllocationManagerStorageErrors {
         const NAME: &'static str = "AllocationManagerStorageErrors";
         const MIN_DATA_LENGTH: usize = 0usize;
-        const COUNT: usize = 20usize;
+        const COUNT: usize = 18usize;
         #[inline]
         fn selector(&self) -> [u8; 4] {
             match self {
@@ -11337,9 +11569,6 @@ pub mod AllocationManagerStorage {
                 Self::InsufficientMagnitude(_) => {
                     <InsufficientMagnitude as alloy_sol_types::SolError>::SELECTOR
                 }
-                Self::InvalidBlockNumber(_) => {
-                    <InvalidBlockNumber as alloy_sol_types::SolError>::SELECTOR
-                }
                 Self::InvalidCaller(_) => <InvalidCaller as alloy_sol_types::SolError>::SELECTOR,
                 Self::InvalidOperator(_) => {
                     <InvalidOperator as alloy_sol_types::SolError>::SELECTOR
@@ -11350,28 +11579,25 @@ pub mod AllocationManagerStorage {
                 Self::InvalidSignature(_) => {
                     <InvalidSignature as alloy_sol_types::SolError>::SELECTOR
                 }
-                Self::InvalidStrategy(_) => {
-                    <InvalidStrategy as alloy_sol_types::SolError>::SELECTOR
-                }
                 Self::InvalidWadToSlash(_) => {
                     <InvalidWadToSlash as alloy_sol_types::SolError>::SELECTOR
+                }
+                Self::MaxStrategiesExceeded(_) => {
+                    <MaxStrategiesExceeded as alloy_sol_types::SolError>::SELECTOR
                 }
                 Self::ModificationAlreadyPending(_) => {
                     <ModificationAlreadyPending as alloy_sol_types::SolError>::SELECTOR
                 }
                 Self::NotMemberOfSet(_) => <NotMemberOfSet as alloy_sol_types::SolError>::SELECTOR,
-                Self::OnlyDelegationManager(_) => {
-                    <OnlyDelegationManager as alloy_sol_types::SolError>::SELECTOR
-                }
-                Self::OperatorNotRegistered(_) => {
-                    <OperatorNotRegistered as alloy_sol_types::SolError>::SELECTOR
-                }
                 Self::OperatorNotSlashable(_) => {
                     <OperatorNotSlashable as alloy_sol_types::SolError>::SELECTOR
                 }
                 Self::SameMagnitude(_) => <SameMagnitude as alloy_sol_types::SolError>::SELECTOR,
                 Self::SignatureExpired(_) => {
                     <SignatureExpired as alloy_sol_types::SolError>::SELECTOR
+                }
+                Self::StrategiesMustBeInAscendingOrder(_) => {
+                    <StrategiesMustBeInAscendingOrder as alloy_sol_types::SolError>::SELECTOR
                 }
                 Self::StrategyAlreadyInOperatorSet(_) => {
                     <StrategyAlreadyInOperatorSet as alloy_sol_types::SolError>::SELECTOR
@@ -11419,6 +11645,19 @@ pub mod AllocationManagerStorage {
                     SignatureExpired
                 },
                 {
+                    fn MaxStrategiesExceeded(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<AllocationManagerStorageErrors>
+                    {
+                        <MaxStrategiesExceeded as alloy_sol_types::SolError>::abi_decode_raw(
+                            data, validate,
+                        )
+                        .map(AllocationManagerStorageErrors::MaxStrategiesExceeded)
+                    }
+                    MaxStrategiesExceeded
+                },
+                {
                     fn InvalidWadToSlash(
                         data: &[u8],
                         validate: bool,
@@ -11445,19 +11684,6 @@ pub mod AllocationManagerStorage {
                     NotMemberOfSet
                 },
                 {
-                    fn OperatorNotRegistered(
-                        data: &[u8],
-                        validate: bool,
-                    ) -> alloy_sol_types::Result<AllocationManagerStorageErrors>
-                    {
-                        <OperatorNotRegistered as alloy_sol_types::SolError>::abi_decode_raw(
-                            data, validate,
-                        )
-                        .map(AllocationManagerStorageErrors::OperatorNotRegistered)
-                    }
-                    OperatorNotRegistered
-                },
-                {
                     fn InputArrayLengthMismatch(
                         data: &[u8],
                         validate: bool,
@@ -11480,32 +11706,6 @@ pub mod AllocationManagerStorage {
                             .map(AllocationManagerStorageErrors::InvalidCaller)
                     }
                     InvalidCaller
-                },
-                {
-                    fn InvalidStrategy(
-                        data: &[u8],
-                        validate: bool,
-                    ) -> alloy_sol_types::Result<AllocationManagerStorageErrors>
-                    {
-                        <InvalidStrategy as alloy_sol_types::SolError>::abi_decode_raw(
-                            data, validate,
-                        )
-                        .map(AllocationManagerStorageErrors::InvalidStrategy)
-                    }
-                    InvalidStrategy
-                },
-                {
-                    fn InvalidBlockNumber(
-                        data: &[u8],
-                        validate: bool,
-                    ) -> alloy_sol_types::Result<AllocationManagerStorageErrors>
-                    {
-                        <InvalidBlockNumber as alloy_sol_types::SolError>::abi_decode_raw(
-                            data, validate,
-                        )
-                        .map(AllocationManagerStorageErrors::InvalidBlockNumber)
-                    }
-                    InvalidBlockNumber
                 },
                 {
                     fn StrategyAlreadyInOperatorSet(
@@ -11584,6 +11784,22 @@ pub mod AllocationManagerStorage {
                     SameMagnitude
                 },
                 {
+                    fn StrategiesMustBeInAscendingOrder(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<AllocationManagerStorageErrors>
+                    {
+                        <StrategiesMustBeInAscendingOrder as alloy_sol_types::SolError>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
+                            .map(
+                                AllocationManagerStorageErrors::StrategiesMustBeInAscendingOrder,
+                            )
+                    }
+                    StrategiesMustBeInAscendingOrder
+                },
+                {
                     fn InvalidOperator(
                         data: &[u8],
                         validate: bool,
@@ -11636,19 +11852,6 @@ pub mod AllocationManagerStorage {
                     OperatorNotSlashable
                 },
                 {
-                    fn OnlyDelegationManager(
-                        data: &[u8],
-                        validate: bool,
-                    ) -> alloy_sol_types::Result<AllocationManagerStorageErrors>
-                    {
-                        <OnlyDelegationManager as alloy_sol_types::SolError>::abi_decode_raw(
-                            data, validate,
-                        )
-                        .map(AllocationManagerStorageErrors::OnlyDelegationManager)
-                    }
-                    OnlyDelegationManager
-                },
-                {
                     fn UninitializedAllocationDelay(
                         data: &[u8],
                         validate: bool,
@@ -11674,34 +11877,47 @@ pub mod AllocationManagerStorage {
         fn abi_encoded_size(&self) -> usize {
             match self {
                 Self::AlreadyMemberOfSet(inner) => {
-                    <AlreadyMemberOfSet as alloy_sol_types::SolError>::abi_encoded_size(inner)
+                    <AlreadyMemberOfSet as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
                 }
                 Self::InputArrayLengthMismatch(inner) => {
-                    <InputArrayLengthMismatch as alloy_sol_types::SolError>::abi_encoded_size(inner)
+                    <InputArrayLengthMismatch as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
                 }
                 Self::InsufficientMagnitude(inner) => {
-                    <InsufficientMagnitude as alloy_sol_types::SolError>::abi_encoded_size(inner)
-                }
-                Self::InvalidBlockNumber(inner) => {
-                    <InvalidBlockNumber as alloy_sol_types::SolError>::abi_encoded_size(inner)
+                    <InsufficientMagnitude as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
                 }
                 Self::InvalidCaller(inner) => {
                     <InvalidCaller as alloy_sol_types::SolError>::abi_encoded_size(inner)
                 }
                 Self::InvalidOperator(inner) => {
-                    <InvalidOperator as alloy_sol_types::SolError>::abi_encoded_size(inner)
+                    <InvalidOperator as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
                 }
                 Self::InvalidOperatorSet(inner) => {
-                    <InvalidOperatorSet as alloy_sol_types::SolError>::abi_encoded_size(inner)
+                    <InvalidOperatorSet as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
                 }
                 Self::InvalidSignature(inner) => {
-                    <InvalidSignature as alloy_sol_types::SolError>::abi_encoded_size(inner)
-                }
-                Self::InvalidStrategy(inner) => {
-                    <InvalidStrategy as alloy_sol_types::SolError>::abi_encoded_size(inner)
+                    <InvalidSignature as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
                 }
                 Self::InvalidWadToSlash(inner) => {
-                    <InvalidWadToSlash as alloy_sol_types::SolError>::abi_encoded_size(inner)
+                    <InvalidWadToSlash as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
+                }
+                Self::MaxStrategiesExceeded(inner) => {
+                    <MaxStrategiesExceeded as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
                 }
                 Self::ModificationAlreadyPending(inner) => {
                     <ModificationAlreadyPending as alloy_sol_types::SolError>::abi_encoded_size(
@@ -11709,22 +11925,27 @@ pub mod AllocationManagerStorage {
                     )
                 }
                 Self::NotMemberOfSet(inner) => {
-                    <NotMemberOfSet as alloy_sol_types::SolError>::abi_encoded_size(inner)
-                }
-                Self::OnlyDelegationManager(inner) => {
-                    <OnlyDelegationManager as alloy_sol_types::SolError>::abi_encoded_size(inner)
-                }
-                Self::OperatorNotRegistered(inner) => {
-                    <OperatorNotRegistered as alloy_sol_types::SolError>::abi_encoded_size(inner)
+                    <NotMemberOfSet as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
                 }
                 Self::OperatorNotSlashable(inner) => {
-                    <OperatorNotSlashable as alloy_sol_types::SolError>::abi_encoded_size(inner)
+                    <OperatorNotSlashable as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
                 }
                 Self::SameMagnitude(inner) => {
                     <SameMagnitude as alloy_sol_types::SolError>::abi_encoded_size(inner)
                 }
                 Self::SignatureExpired(inner) => {
-                    <SignatureExpired as alloy_sol_types::SolError>::abi_encoded_size(inner)
+                    <SignatureExpired as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
+                }
+                Self::StrategiesMustBeInAscendingOrder(inner) => {
+                    <StrategiesMustBeInAscendingOrder as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
                 }
                 Self::StrategyAlreadyInOperatorSet(inner) => {
                     <StrategyAlreadyInOperatorSet as alloy_sol_types::SolError>::abi_encoded_size(
@@ -11732,7 +11953,9 @@ pub mod AllocationManagerStorage {
                     )
                 }
                 Self::StrategyNotInOperatorSet(inner) => {
-                    <StrategyNotInOperatorSet as alloy_sol_types::SolError>::abi_encoded_size(inner)
+                    <StrategyNotInOperatorSet as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
                 }
                 Self::UninitializedAllocationDelay(inner) => {
                     <UninitializedAllocationDelay as alloy_sol_types::SolError>::abi_encoded_size(
@@ -11755,9 +11978,6 @@ pub mod AllocationManagerStorage {
                 Self::InsufficientMagnitude(inner) => {
                     <InsufficientMagnitude as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
                 }
-                Self::InvalidBlockNumber(inner) => {
-                    <InvalidBlockNumber as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
-                }
                 Self::InvalidCaller(inner) => {
                     <InvalidCaller as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
                 }
@@ -11770,11 +11990,11 @@ pub mod AllocationManagerStorage {
                 Self::InvalidSignature(inner) => {
                     <InvalidSignature as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
                 }
-                Self::InvalidStrategy(inner) => {
-                    <InvalidStrategy as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
-                }
                 Self::InvalidWadToSlash(inner) => {
                     <InvalidWadToSlash as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
+                }
+                Self::MaxStrategiesExceeded(inner) => {
+                    <MaxStrategiesExceeded as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
                 }
                 Self::ModificationAlreadyPending(inner) => {
                     <ModificationAlreadyPending as alloy_sol_types::SolError>::abi_encode_raw(
@@ -11784,12 +12004,6 @@ pub mod AllocationManagerStorage {
                 Self::NotMemberOfSet(inner) => {
                     <NotMemberOfSet as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
                 }
-                Self::OnlyDelegationManager(inner) => {
-                    <OnlyDelegationManager as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
-                }
-                Self::OperatorNotRegistered(inner) => {
-                    <OperatorNotRegistered as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
-                }
                 Self::OperatorNotSlashable(inner) => {
                     <OperatorNotSlashable as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
                 }
@@ -11798,6 +12012,11 @@ pub mod AllocationManagerStorage {
                 }
                 Self::SignatureExpired(inner) => {
                     <SignatureExpired as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
+                }
+                Self::StrategiesMustBeInAscendingOrder(inner) => {
+                    <StrategiesMustBeInAscendingOrder as alloy_sol_types::SolError>::abi_encode_raw(
+                        inner, out,
+                    )
                 }
                 Self::StrategyAlreadyInOperatorSet(inner) => {
                     <StrategyAlreadyInOperatorSet as alloy_sol_types::SolError>::abi_encode_raw(
@@ -12262,10 +12481,12 @@ pub mod AllocationManagerStorage {
         ///Creates a new call builder for the [`addStrategiesToOperatorSet`] function.
         pub fn addStrategiesToOperatorSet(
             &self,
+            avs: alloy::sol_types::private::Address,
             operatorSetId: u32,
             strategies: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
         ) -> alloy_contract::SolCallBuilder<T, &P, addStrategiesToOperatorSetCall, N> {
             self.call_builder(&addStrategiesToOperatorSetCall {
+                avs,
                 operatorSetId,
                 strategies,
             })
@@ -12286,11 +12507,12 @@ pub mod AllocationManagerStorage {
         ///Creates a new call builder for the [`createOperatorSets`] function.
         pub fn createOperatorSets(
             &self,
+            avs: alloy::sol_types::private::Address,
             params: alloy::sol_types::private::Vec<
                 <IAllocationManagerTypes::CreateSetParams as alloy::sol_types::SolType>::RustType,
             >,
         ) -> alloy_contract::SolCallBuilder<T, &P, createOperatorSetsCall, N> {
-            self.call_builder(&createOperatorSetsCall { params })
+            self.call_builder(&createOperatorSetsCall { avs, params })
         }
         ///Creates a new call builder for the [`delegation`] function.
         pub fn delegation(&self) -> alloy_contract::SolCallBuilder<T, &P, delegationCall, N> {
@@ -12449,6 +12671,13 @@ pub mod AllocationManagerStorage {
                 futureBlock,
             })
         }
+        ///Creates a new call builder for the [`getOperatorSetCount`] function.
+        pub fn getOperatorSetCount(
+            &self,
+            avs: alloy::sol_types::private::Address,
+        ) -> alloy_contract::SolCallBuilder<T, &P, getOperatorSetCountCall, N> {
+            self.call_builder(&getOperatorSetCountCall { avs })
+        }
         ///Creates a new call builder for the [`getRegisteredSets`] function.
         pub fn getRegisteredSets(
             &self,
@@ -12482,6 +12711,17 @@ pub mod AllocationManagerStorage {
                 initialPausedStatus,
             })
         }
+        ///Creates a new call builder for the [`isMemberOfOperatorSet`] function.
+        pub fn isMemberOfOperatorSet(
+            &self,
+            operator: alloy::sol_types::private::Address,
+            operatorSet: <OperatorSet as alloy::sol_types::SolType>::RustType,
+        ) -> alloy_contract::SolCallBuilder<T, &P, isMemberOfOperatorSetCall, N> {
+            self.call_builder(&isMemberOfOperatorSetCall {
+                operator,
+                operatorSet,
+            })
+        }
         ///Creates a new call builder for the [`isOperatorSet`] function.
         pub fn isOperatorSet(
             &self,
@@ -12492,26 +12732,30 @@ pub mod AllocationManagerStorage {
         ///Creates a new call builder for the [`modifyAllocations`] function.
         pub fn modifyAllocations(
             &self,
+            operator: alloy::sol_types::private::Address,
             params: alloy::sol_types::private::Vec<
                 <IAllocationManagerTypes::AllocateParams as alloy::sol_types::SolType>::RustType,
             >,
         ) -> alloy_contract::SolCallBuilder<T, &P, modifyAllocationsCall, N> {
-            self.call_builder(&modifyAllocationsCall { params })
+            self.call_builder(&modifyAllocationsCall { operator, params })
         }
         ///Creates a new call builder for the [`registerForOperatorSets`] function.
         pub fn registerForOperatorSets(
             &self,
+            operator: alloy::sol_types::private::Address,
             params: <IAllocationManagerTypes::RegisterParams as alloy::sol_types::SolType>::RustType,
         ) -> alloy_contract::SolCallBuilder<T, &P, registerForOperatorSetsCall, N> {
-            self.call_builder(&registerForOperatorSetsCall { params })
+            self.call_builder(&registerForOperatorSetsCall { operator, params })
         }
         ///Creates a new call builder for the [`removeStrategiesFromOperatorSet`] function.
         pub fn removeStrategiesFromOperatorSet(
             &self,
+            avs: alloy::sol_types::private::Address,
             operatorSetId: u32,
             strategies: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
         ) -> alloy_contract::SolCallBuilder<T, &P, removeStrategiesFromOperatorSetCall, N> {
             self.call_builder(&removeStrategiesFromOperatorSetCall {
+                avs,
                 operatorSetId,
                 strategies,
             })
@@ -12519,38 +12763,34 @@ pub mod AllocationManagerStorage {
         ///Creates a new call builder for the [`setAVSRegistrar`] function.
         pub fn setAVSRegistrar(
             &self,
+            avs: alloy::sol_types::private::Address,
             registrar: alloy::sol_types::private::Address,
         ) -> alloy_contract::SolCallBuilder<T, &P, setAVSRegistrarCall, N> {
-            self.call_builder(&setAVSRegistrarCall { registrar })
+            self.call_builder(&setAVSRegistrarCall { avs, registrar })
         }
-        ///Creates a new call builder for the [`setAllocationDelay_0`] function.
-        pub fn setAllocationDelay_0(
+        ///Creates a new call builder for the [`setAllocationDelay`] function.
+        pub fn setAllocationDelay(
             &self,
             operator: alloy::sol_types::private::Address,
             delay: u32,
-        ) -> alloy_contract::SolCallBuilder<T, &P, setAllocationDelay_0Call, N> {
-            self.call_builder(&setAllocationDelay_0Call { operator, delay })
-        }
-        ///Creates a new call builder for the [`setAllocationDelay_1`] function.
-        pub fn setAllocationDelay_1(
-            &self,
-            delay: u32,
-        ) -> alloy_contract::SolCallBuilder<T, &P, setAllocationDelay_1Call, N> {
-            self.call_builder(&setAllocationDelay_1Call { delay })
+        ) -> alloy_contract::SolCallBuilder<T, &P, setAllocationDelayCall, N> {
+            self.call_builder(&setAllocationDelayCall { operator, delay })
         }
         ///Creates a new call builder for the [`slashOperator`] function.
         pub fn slashOperator(
             &self,
+            avs: alloy::sol_types::private::Address,
             params: <IAllocationManagerTypes::SlashingParams as alloy::sol_types::SolType>::RustType,
         ) -> alloy_contract::SolCallBuilder<T, &P, slashOperatorCall, N> {
-            self.call_builder(&slashOperatorCall { params })
+            self.call_builder(&slashOperatorCall { avs, params })
         }
         ///Creates a new call builder for the [`updateAVSMetadataURI`] function.
         pub fn updateAVSMetadataURI(
             &self,
+            avs: alloy::sol_types::private::Address,
             metadataURI: alloy::sol_types::private::String,
         ) -> alloy_contract::SolCallBuilder<T, &P, updateAVSMetadataURICall, N> {
-            self.call_builder(&updateAVSMetadataURICall { metadataURI })
+            self.call_builder(&updateAVSMetadataURICall { avs, metadataURI })
         }
     }
     /// Event filters.

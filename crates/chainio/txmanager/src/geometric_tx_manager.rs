@@ -397,7 +397,7 @@ mod tests {
     use tokio::time::{sleep, Instant};
 
     const TEST_PRIVATE_KEY: &str =
-        "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
+        "2a871d0798f97d79848a013d4936a73bf4cc922c825d33c1cf7073dff6d409c6";
 
     fn new_test_tx() -> TransactionRequest {
         TransactionRequest::default()
@@ -439,7 +439,6 @@ mod tests {
     }
 
     #[tokio::test]
-    #[ignore] // TODO: fix problems with anvil new version
     async fn test_send_single_transaction() {
         // Send transaction using Alloy RootProvider
         let (_container, rpc_url, _ws_endpoint) = start_anvil_container().await;
@@ -451,7 +450,7 @@ mod tests {
         let geometric_tx_manager =
             GeometricTxManager::new(logger, signer, &rpc_url, params).unwrap();
 
-        let mut tx = new_test_tx().with_nonce(0x69);
+        let mut tx = new_test_tx();
 
         // send transaction and wait for receipt
         let receipt = geometric_tx_manager.send_tx(&mut tx).await.unwrap();
