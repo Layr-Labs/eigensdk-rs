@@ -227,9 +227,9 @@ pub mod IRewardsCoordinatorErrors {
         b"",
     );
     /**Custom error with signature `AmountExceedsMax()` and selector `0x1c2d69bc`.
-```solidity
-error AmountExceedsMax();
-```*/
+    ```solidity
+    error AmountExceedsMax();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct AmountExceedsMax {}
@@ -247,9 +247,7 @@ error AmountExceedsMax();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -273,9 +271,7 @@ error AmountExceedsMax();
         #[automatically_derived]
         impl alloy_sol_types::SolError for AmountExceedsMax {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "AmountExceedsMax()";
             const SELECTOR: [u8; 4] = [28u8, 45u8, 105u8, 188u8];
             #[inline]
@@ -291,9 +287,9 @@ error AmountExceedsMax();
         }
     };
     /**Custom error with signature `AmountIsZero()` and selector `0x43ad20fc`.
-```solidity
-error AmountIsZero();
-```*/
+    ```solidity
+    error AmountIsZero();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct AmountIsZero {}
@@ -311,9 +307,7 @@ error AmountIsZero();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -337,9 +331,7 @@ error AmountIsZero();
         #[automatically_derived]
         impl alloy_sol_types::SolError for AmountIsZero {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "AmountIsZero()";
             const SELECTOR: [u8; 4] = [67u8, 173u8, 32u8, 252u8];
             #[inline]
@@ -355,9 +347,9 @@ error AmountIsZero();
         }
     };
     /**Custom error with signature `DurationExceedsMax()` and selector `0x3742e7d4`.
-```solidity
-error DurationExceedsMax();
-```*/
+    ```solidity
+    error DurationExceedsMax();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct DurationExceedsMax {}
@@ -375,9 +367,7 @@ error DurationExceedsMax();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -401,9 +391,7 @@ error DurationExceedsMax();
         #[automatically_derived]
         impl alloy_sol_types::SolError for DurationExceedsMax {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "DurationExceedsMax()";
             const SELECTOR: [u8; 4] = [55u8, 66u8, 231u8, 212u8];
             #[inline]
@@ -419,9 +407,9 @@ error DurationExceedsMax();
         }
     };
     /**Custom error with signature `EarningsNotGreaterThanClaimed()` and selector `0xaa385e81`.
-```solidity
-error EarningsNotGreaterThanClaimed();
-```*/
+    ```solidity
+    error EarningsNotGreaterThanClaimed();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct EarningsNotGreaterThanClaimed {}
@@ -439,9 +427,7 @@ error EarningsNotGreaterThanClaimed();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -450,16 +436,14 @@ error EarningsNotGreaterThanClaimed();
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<EarningsNotGreaterThanClaimed>
-        for UnderlyingRustTuple<'_> {
+        impl ::core::convert::From<EarningsNotGreaterThanClaimed> for UnderlyingRustTuple<'_> {
             fn from(value: EarningsNotGreaterThanClaimed) -> Self {
                 ()
             }
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<UnderlyingRustTuple<'_>>
-        for EarningsNotGreaterThanClaimed {
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for EarningsNotGreaterThanClaimed {
             fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                 Self {}
             }
@@ -467,9 +451,7 @@ error EarningsNotGreaterThanClaimed();
         #[automatically_derived]
         impl alloy_sol_types::SolError for EarningsNotGreaterThanClaimed {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "EarningsNotGreaterThanClaimed()";
             const SELECTOR: [u8; 4] = [170u8, 56u8, 94u8, 129u8];
             #[inline]
@@ -485,9 +467,9 @@ error EarningsNotGreaterThanClaimed();
         }
     };
     /**Custom error with signature `InputArrayLengthMismatch()` and selector `0x43714afd`.
-```solidity
-error InputArrayLengthMismatch();
-```*/
+    ```solidity
+    error InputArrayLengthMismatch();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct InputArrayLengthMismatch {}
@@ -505,9 +487,7 @@ error InputArrayLengthMismatch();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -516,16 +496,14 @@ error InputArrayLengthMismatch();
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<InputArrayLengthMismatch>
-        for UnderlyingRustTuple<'_> {
+        impl ::core::convert::From<InputArrayLengthMismatch> for UnderlyingRustTuple<'_> {
             fn from(value: InputArrayLengthMismatch) -> Self {
                 ()
             }
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<UnderlyingRustTuple<'_>>
-        for InputArrayLengthMismatch {
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for InputArrayLengthMismatch {
             fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                 Self {}
             }
@@ -533,9 +511,7 @@ error InputArrayLengthMismatch();
         #[automatically_derived]
         impl alloy_sol_types::SolError for InputArrayLengthMismatch {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "InputArrayLengthMismatch()";
             const SELECTOR: [u8; 4] = [67u8, 113u8, 74u8, 253u8];
             #[inline]
@@ -551,9 +527,9 @@ error InputArrayLengthMismatch();
         }
     };
     /**Custom error with signature `InputArrayLengthZero()` and selector `0x796cc525`.
-```solidity
-error InputArrayLengthZero();
-```*/
+    ```solidity
+    error InputArrayLengthZero();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct InputArrayLengthZero {}
@@ -571,9 +547,7 @@ error InputArrayLengthZero();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -597,9 +571,7 @@ error InputArrayLengthZero();
         #[automatically_derived]
         impl alloy_sol_types::SolError for InputArrayLengthZero {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "InputArrayLengthZero()";
             const SELECTOR: [u8; 4] = [121u8, 108u8, 197u8, 37u8];
             #[inline]
@@ -615,9 +587,9 @@ error InputArrayLengthZero();
         }
     };
     /**Custom error with signature `InvalidAddressZero()` and selector `0x10c748a6`.
-```solidity
-error InvalidAddressZero();
-```*/
+    ```solidity
+    error InvalidAddressZero();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct InvalidAddressZero {}
@@ -635,9 +607,7 @@ error InvalidAddressZero();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -661,9 +631,7 @@ error InvalidAddressZero();
         #[automatically_derived]
         impl alloy_sol_types::SolError for InvalidAddressZero {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "InvalidAddressZero()";
             const SELECTOR: [u8; 4] = [16u8, 199u8, 72u8, 166u8];
             #[inline]
@@ -679,9 +647,9 @@ error InvalidAddressZero();
         }
     };
     /**Custom error with signature `InvalidCalculationIntervalSecondsRemainder()` and selector `0x4478f672`.
-```solidity
-error InvalidCalculationIntervalSecondsRemainder();
-```*/
+    ```solidity
+    error InvalidCalculationIntervalSecondsRemainder();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct InvalidCalculationIntervalSecondsRemainder {}
@@ -699,9 +667,7 @@ error InvalidCalculationIntervalSecondsRemainder();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -710,16 +676,14 @@ error InvalidCalculationIntervalSecondsRemainder();
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<InvalidCalculationIntervalSecondsRemainder>
-        for UnderlyingRustTuple<'_> {
+        impl ::core::convert::From<InvalidCalculationIntervalSecondsRemainder> for UnderlyingRustTuple<'_> {
             fn from(value: InvalidCalculationIntervalSecondsRemainder) -> Self {
                 ()
             }
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<UnderlyingRustTuple<'_>>
-        for InvalidCalculationIntervalSecondsRemainder {
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for InvalidCalculationIntervalSecondsRemainder {
             fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                 Self {}
             }
@@ -727,9 +691,7 @@ error InvalidCalculationIntervalSecondsRemainder();
         #[automatically_derived]
         impl alloy_sol_types::SolError for InvalidCalculationIntervalSecondsRemainder {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "InvalidCalculationIntervalSecondsRemainder()";
             const SELECTOR: [u8; 4] = [68u8, 120u8, 246u8, 114u8];
             #[inline]
@@ -745,9 +707,9 @@ error InvalidCalculationIntervalSecondsRemainder();
         }
     };
     /**Custom error with signature `InvalidClaimProof()` and selector `0x69ca16c9`.
-```solidity
-error InvalidClaimProof();
-```*/
+    ```solidity
+    error InvalidClaimProof();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct InvalidClaimProof {}
@@ -765,9 +727,7 @@ error InvalidClaimProof();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -791,9 +751,7 @@ error InvalidClaimProof();
         #[automatically_derived]
         impl alloy_sol_types::SolError for InvalidClaimProof {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "InvalidClaimProof()";
             const SELECTOR: [u8; 4] = [105u8, 202u8, 22u8, 201u8];
             #[inline]
@@ -809,9 +767,9 @@ error InvalidClaimProof();
         }
     };
     /**Custom error with signature `InvalidDurationRemainder()` and selector `0xee664705`.
-```solidity
-error InvalidDurationRemainder();
-```*/
+    ```solidity
+    error InvalidDurationRemainder();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct InvalidDurationRemainder {}
@@ -829,9 +787,7 @@ error InvalidDurationRemainder();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -840,16 +796,14 @@ error InvalidDurationRemainder();
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<InvalidDurationRemainder>
-        for UnderlyingRustTuple<'_> {
+        impl ::core::convert::From<InvalidDurationRemainder> for UnderlyingRustTuple<'_> {
             fn from(value: InvalidDurationRemainder) -> Self {
                 ()
             }
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<UnderlyingRustTuple<'_>>
-        for InvalidDurationRemainder {
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for InvalidDurationRemainder {
             fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                 Self {}
             }
@@ -857,9 +811,7 @@ error InvalidDurationRemainder();
         #[automatically_derived]
         impl alloy_sol_types::SolError for InvalidDurationRemainder {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "InvalidDurationRemainder()";
             const SELECTOR: [u8; 4] = [238u8, 102u8, 71u8, 5u8];
             #[inline]
@@ -875,9 +827,9 @@ error InvalidDurationRemainder();
         }
     };
     /**Custom error with signature `InvalidEarner()` and selector `0xfb494ea1`.
-```solidity
-error InvalidEarner();
-```*/
+    ```solidity
+    error InvalidEarner();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct InvalidEarner {}
@@ -895,9 +847,7 @@ error InvalidEarner();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -921,9 +871,7 @@ error InvalidEarner();
         #[automatically_derived]
         impl alloy_sol_types::SolError for InvalidEarner {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "InvalidEarner()";
             const SELECTOR: [u8; 4] = [251u8, 73u8, 78u8, 161u8];
             #[inline]
@@ -939,9 +887,9 @@ error InvalidEarner();
         }
     };
     /**Custom error with signature `InvalidEarnerLeafIndex()` and selector `0x6361ce80`.
-```solidity
-error InvalidEarnerLeafIndex();
-```*/
+    ```solidity
+    error InvalidEarnerLeafIndex();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct InvalidEarnerLeafIndex {}
@@ -959,9 +907,7 @@ error InvalidEarnerLeafIndex();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -985,9 +931,7 @@ error InvalidEarnerLeafIndex();
         #[automatically_derived]
         impl alloy_sol_types::SolError for InvalidEarnerLeafIndex {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "InvalidEarnerLeafIndex()";
             const SELECTOR: [u8; 4] = [99u8, 97u8, 206u8, 128u8];
             #[inline]
@@ -1003,9 +947,9 @@ error InvalidEarnerLeafIndex();
         }
     };
     /**Custom error with signature `InvalidGenesisRewardsTimestampRemainder()` and selector `0x0e06bd31`.
-```solidity
-error InvalidGenesisRewardsTimestampRemainder();
-```*/
+    ```solidity
+    error InvalidGenesisRewardsTimestampRemainder();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct InvalidGenesisRewardsTimestampRemainder {}
@@ -1023,9 +967,7 @@ error InvalidGenesisRewardsTimestampRemainder();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1034,16 +976,14 @@ error InvalidGenesisRewardsTimestampRemainder();
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<InvalidGenesisRewardsTimestampRemainder>
-        for UnderlyingRustTuple<'_> {
+        impl ::core::convert::From<InvalidGenesisRewardsTimestampRemainder> for UnderlyingRustTuple<'_> {
             fn from(value: InvalidGenesisRewardsTimestampRemainder) -> Self {
                 ()
             }
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<UnderlyingRustTuple<'_>>
-        for InvalidGenesisRewardsTimestampRemainder {
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for InvalidGenesisRewardsTimestampRemainder {
             fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                 Self {}
             }
@@ -1051,9 +991,7 @@ error InvalidGenesisRewardsTimestampRemainder();
         #[automatically_derived]
         impl alloy_sol_types::SolError for InvalidGenesisRewardsTimestampRemainder {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "InvalidGenesisRewardsTimestampRemainder()";
             const SELECTOR: [u8; 4] = [14u8, 6u8, 189u8, 49u8];
             #[inline]
@@ -1069,9 +1007,9 @@ error InvalidGenesisRewardsTimestampRemainder();
         }
     };
     /**Custom error with signature `InvalidRoot()` and selector `0x504570e3`.
-```solidity
-error InvalidRoot();
-```*/
+    ```solidity
+    error InvalidRoot();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct InvalidRoot {}
@@ -1089,9 +1027,7 @@ error InvalidRoot();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1115,9 +1051,7 @@ error InvalidRoot();
         #[automatically_derived]
         impl alloy_sol_types::SolError for InvalidRoot {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "InvalidRoot()";
             const SELECTOR: [u8; 4] = [80u8, 69u8, 112u8, 227u8];
             #[inline]
@@ -1133,9 +1067,9 @@ error InvalidRoot();
         }
     };
     /**Custom error with signature `InvalidRootIndex()` and selector `0x94a8d389`.
-```solidity
-error InvalidRootIndex();
-```*/
+    ```solidity
+    error InvalidRootIndex();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct InvalidRootIndex {}
@@ -1153,9 +1087,7 @@ error InvalidRootIndex();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1179,9 +1111,7 @@ error InvalidRootIndex();
         #[automatically_derived]
         impl alloy_sol_types::SolError for InvalidRootIndex {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "InvalidRootIndex()";
             const SELECTOR: [u8; 4] = [148u8, 168u8, 211u8, 137u8];
             #[inline]
@@ -1197,9 +1127,9 @@ error InvalidRootIndex();
         }
     };
     /**Custom error with signature `InvalidStartTimestampRemainder()` and selector `0xf06a53c4`.
-```solidity
-error InvalidStartTimestampRemainder();
-```*/
+    ```solidity
+    error InvalidStartTimestampRemainder();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct InvalidStartTimestampRemainder {}
@@ -1217,9 +1147,7 @@ error InvalidStartTimestampRemainder();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1228,16 +1156,14 @@ error InvalidStartTimestampRemainder();
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<InvalidStartTimestampRemainder>
-        for UnderlyingRustTuple<'_> {
+        impl ::core::convert::From<InvalidStartTimestampRemainder> for UnderlyingRustTuple<'_> {
             fn from(value: InvalidStartTimestampRemainder) -> Self {
                 ()
             }
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<UnderlyingRustTuple<'_>>
-        for InvalidStartTimestampRemainder {
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for InvalidStartTimestampRemainder {
             fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                 Self {}
             }
@@ -1245,9 +1171,7 @@ error InvalidStartTimestampRemainder();
         #[automatically_derived]
         impl alloy_sol_types::SolError for InvalidStartTimestampRemainder {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "InvalidStartTimestampRemainder()";
             const SELECTOR: [u8; 4] = [240u8, 106u8, 83u8, 196u8];
             #[inline]
@@ -1263,9 +1187,9 @@ error InvalidStartTimestampRemainder();
         }
     };
     /**Custom error with signature `InvalidTokenLeafIndex()` and selector `0xa9fe9be0`.
-```solidity
-error InvalidTokenLeafIndex();
-```*/
+    ```solidity
+    error InvalidTokenLeafIndex();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct InvalidTokenLeafIndex {}
@@ -1283,9 +1207,7 @@ error InvalidTokenLeafIndex();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1309,9 +1231,7 @@ error InvalidTokenLeafIndex();
         #[automatically_derived]
         impl alloy_sol_types::SolError for InvalidTokenLeafIndex {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "InvalidTokenLeafIndex()";
             const SELECTOR: [u8; 4] = [169u8, 254u8, 155u8, 224u8];
             #[inline]
@@ -1327,9 +1247,9 @@ error InvalidTokenLeafIndex();
         }
     };
     /**Custom error with signature `NewRootMustBeForNewCalculatedPeriod()` and selector `0x729f942c`.
-```solidity
-error NewRootMustBeForNewCalculatedPeriod();
-```*/
+    ```solidity
+    error NewRootMustBeForNewCalculatedPeriod();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct NewRootMustBeForNewCalculatedPeriod {}
@@ -1347,9 +1267,7 @@ error NewRootMustBeForNewCalculatedPeriod();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1358,16 +1276,14 @@ error NewRootMustBeForNewCalculatedPeriod();
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<NewRootMustBeForNewCalculatedPeriod>
-        for UnderlyingRustTuple<'_> {
+        impl ::core::convert::From<NewRootMustBeForNewCalculatedPeriod> for UnderlyingRustTuple<'_> {
             fn from(value: NewRootMustBeForNewCalculatedPeriod) -> Self {
                 ()
             }
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<UnderlyingRustTuple<'_>>
-        for NewRootMustBeForNewCalculatedPeriod {
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for NewRootMustBeForNewCalculatedPeriod {
             fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                 Self {}
             }
@@ -1375,9 +1291,7 @@ error NewRootMustBeForNewCalculatedPeriod();
         #[automatically_derived]
         impl alloy_sol_types::SolError for NewRootMustBeForNewCalculatedPeriod {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "NewRootMustBeForNewCalculatedPeriod()";
             const SELECTOR: [u8; 4] = [114u8, 159u8, 148u8, 44u8];
             #[inline]
@@ -1393,9 +1307,9 @@ error NewRootMustBeForNewCalculatedPeriod();
         }
     };
     /**Custom error with signature `OperatorsNotInAscendingOrder()` and selector `0x87da3f88`.
-```solidity
-error OperatorsNotInAscendingOrder();
-```*/
+    ```solidity
+    error OperatorsNotInAscendingOrder();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct OperatorsNotInAscendingOrder {}
@@ -1413,9 +1327,7 @@ error OperatorsNotInAscendingOrder();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1424,16 +1336,14 @@ error OperatorsNotInAscendingOrder();
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<OperatorsNotInAscendingOrder>
-        for UnderlyingRustTuple<'_> {
+        impl ::core::convert::From<OperatorsNotInAscendingOrder> for UnderlyingRustTuple<'_> {
             fn from(value: OperatorsNotInAscendingOrder) -> Self {
                 ()
             }
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<UnderlyingRustTuple<'_>>
-        for OperatorsNotInAscendingOrder {
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for OperatorsNotInAscendingOrder {
             fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                 Self {}
             }
@@ -1441,9 +1351,7 @@ error OperatorsNotInAscendingOrder();
         #[automatically_derived]
         impl alloy_sol_types::SolError for OperatorsNotInAscendingOrder {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "OperatorsNotInAscendingOrder()";
             const SELECTOR: [u8; 4] = [135u8, 218u8, 63u8, 136u8];
             #[inline]
@@ -1459,9 +1367,9 @@ error OperatorsNotInAscendingOrder();
         }
     };
     /**Custom error with signature `PreviousSplitPending()` and selector `0x7b1e25c5`.
-```solidity
-error PreviousSplitPending();
-```*/
+    ```solidity
+    error PreviousSplitPending();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct PreviousSplitPending {}
@@ -1479,9 +1387,7 @@ error PreviousSplitPending();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1505,9 +1411,7 @@ error PreviousSplitPending();
         #[automatically_derived]
         impl alloy_sol_types::SolError for PreviousSplitPending {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "PreviousSplitPending()";
             const SELECTOR: [u8; 4] = [123u8, 30u8, 37u8, 197u8];
             #[inline]
@@ -1523,9 +1427,9 @@ error PreviousSplitPending();
         }
     };
     /**Custom error with signature `RewardsEndTimestampNotElapsed()` and selector `0x0d2af922`.
-```solidity
-error RewardsEndTimestampNotElapsed();
-```*/
+    ```solidity
+    error RewardsEndTimestampNotElapsed();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct RewardsEndTimestampNotElapsed {}
@@ -1543,9 +1447,7 @@ error RewardsEndTimestampNotElapsed();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1554,16 +1456,14 @@ error RewardsEndTimestampNotElapsed();
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<RewardsEndTimestampNotElapsed>
-        for UnderlyingRustTuple<'_> {
+        impl ::core::convert::From<RewardsEndTimestampNotElapsed> for UnderlyingRustTuple<'_> {
             fn from(value: RewardsEndTimestampNotElapsed) -> Self {
                 ()
             }
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<UnderlyingRustTuple<'_>>
-        for RewardsEndTimestampNotElapsed {
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for RewardsEndTimestampNotElapsed {
             fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                 Self {}
             }
@@ -1571,9 +1471,7 @@ error RewardsEndTimestampNotElapsed();
         #[automatically_derived]
         impl alloy_sol_types::SolError for RewardsEndTimestampNotElapsed {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "RewardsEndTimestampNotElapsed()";
             const SELECTOR: [u8; 4] = [13u8, 42u8, 249u8, 34u8];
             #[inline]
@@ -1589,9 +1487,9 @@ error RewardsEndTimestampNotElapsed();
         }
     };
     /**Custom error with signature `RootAlreadyActivated()` and selector `0x30dbd994`.
-```solidity
-error RootAlreadyActivated();
-```*/
+    ```solidity
+    error RootAlreadyActivated();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct RootAlreadyActivated {}
@@ -1609,9 +1507,7 @@ error RootAlreadyActivated();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1635,9 +1531,7 @@ error RootAlreadyActivated();
         #[automatically_derived]
         impl alloy_sol_types::SolError for RootAlreadyActivated {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "RootAlreadyActivated()";
             const SELECTOR: [u8; 4] = [48u8, 219u8, 217u8, 148u8];
             #[inline]
@@ -1653,9 +1547,9 @@ error RootAlreadyActivated();
         }
     };
     /**Custom error with signature `RootDisabled()` and selector `0x1b14174b`.
-```solidity
-error RootDisabled();
-```*/
+    ```solidity
+    error RootDisabled();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct RootDisabled {}
@@ -1673,9 +1567,7 @@ error RootDisabled();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1699,9 +1591,7 @@ error RootDisabled();
         #[automatically_derived]
         impl alloy_sol_types::SolError for RootDisabled {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "RootDisabled()";
             const SELECTOR: [u8; 4] = [27u8, 20u8, 23u8, 75u8];
             #[inline]
@@ -1717,9 +1607,9 @@ error RootDisabled();
         }
     };
     /**Custom error with signature `RootNotActivated()` and selector `0xa1bd15d8`.
-```solidity
-error RootNotActivated();
-```*/
+    ```solidity
+    error RootNotActivated();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct RootNotActivated {}
@@ -1737,9 +1627,7 @@ error RootNotActivated();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1763,9 +1651,7 @@ error RootNotActivated();
         #[automatically_derived]
         impl alloy_sol_types::SolError for RootNotActivated {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "RootNotActivated()";
             const SELECTOR: [u8; 4] = [161u8, 189u8, 21u8, 216u8];
             #[inline]
@@ -1781,9 +1667,9 @@ error RootNotActivated();
         }
     };
     /**Custom error with signature `SplitExceedsMax()` and selector `0x891c63df`.
-```solidity
-error SplitExceedsMax();
-```*/
+    ```solidity
+    error SplitExceedsMax();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct SplitExceedsMax {}
@@ -1801,9 +1687,7 @@ error SplitExceedsMax();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1827,9 +1711,7 @@ error SplitExceedsMax();
         #[automatically_derived]
         impl alloy_sol_types::SolError for SplitExceedsMax {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "SplitExceedsMax()";
             const SELECTOR: [u8; 4] = [137u8, 28u8, 99u8, 223u8];
             #[inline]
@@ -1845,9 +1727,9 @@ error SplitExceedsMax();
         }
     };
     /**Custom error with signature `StartTimestampTooFarInFuture()` and selector `0x7ee2b443`.
-```solidity
-error StartTimestampTooFarInFuture();
-```*/
+    ```solidity
+    error StartTimestampTooFarInFuture();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct StartTimestampTooFarInFuture {}
@@ -1865,9 +1747,7 @@ error StartTimestampTooFarInFuture();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1876,16 +1756,14 @@ error StartTimestampTooFarInFuture();
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<StartTimestampTooFarInFuture>
-        for UnderlyingRustTuple<'_> {
+        impl ::core::convert::From<StartTimestampTooFarInFuture> for UnderlyingRustTuple<'_> {
             fn from(value: StartTimestampTooFarInFuture) -> Self {
                 ()
             }
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<UnderlyingRustTuple<'_>>
-        for StartTimestampTooFarInFuture {
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for StartTimestampTooFarInFuture {
             fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                 Self {}
             }
@@ -1893,9 +1771,7 @@ error StartTimestampTooFarInFuture();
         #[automatically_derived]
         impl alloy_sol_types::SolError for StartTimestampTooFarInFuture {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "StartTimestampTooFarInFuture()";
             const SELECTOR: [u8; 4] = [126u8, 226u8, 180u8, 67u8];
             #[inline]
@@ -1911,9 +1787,9 @@ error StartTimestampTooFarInFuture();
         }
     };
     /**Custom error with signature `StartTimestampTooFarInPast()` and selector `0x08354eae`.
-```solidity
-error StartTimestampTooFarInPast();
-```*/
+    ```solidity
+    error StartTimestampTooFarInPast();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct StartTimestampTooFarInPast {}
@@ -1931,9 +1807,7 @@ error StartTimestampTooFarInPast();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1942,16 +1816,14 @@ error StartTimestampTooFarInPast();
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<StartTimestampTooFarInPast>
-        for UnderlyingRustTuple<'_> {
+        impl ::core::convert::From<StartTimestampTooFarInPast> for UnderlyingRustTuple<'_> {
             fn from(value: StartTimestampTooFarInPast) -> Self {
                 ()
             }
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<UnderlyingRustTuple<'_>>
-        for StartTimestampTooFarInPast {
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for StartTimestampTooFarInPast {
             fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                 Self {}
             }
@@ -1959,9 +1831,7 @@ error StartTimestampTooFarInPast();
         #[automatically_derived]
         impl alloy_sol_types::SolError for StartTimestampTooFarInPast {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "StartTimestampTooFarInPast()";
             const SELECTOR: [u8; 4] = [8u8, 53u8, 78u8, 174u8];
             #[inline]
@@ -1977,9 +1847,9 @@ error StartTimestampTooFarInPast();
         }
     };
     /**Custom error with signature `StrategiesNotInAscendingOrder()` and selector `0xdfad9ca1`.
-```solidity
-error StrategiesNotInAscendingOrder();
-```*/
+    ```solidity
+    error StrategiesNotInAscendingOrder();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct StrategiesNotInAscendingOrder {}
@@ -1997,9 +1867,7 @@ error StrategiesNotInAscendingOrder();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -2008,16 +1876,14 @@ error StrategiesNotInAscendingOrder();
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<StrategiesNotInAscendingOrder>
-        for UnderlyingRustTuple<'_> {
+        impl ::core::convert::From<StrategiesNotInAscendingOrder> for UnderlyingRustTuple<'_> {
             fn from(value: StrategiesNotInAscendingOrder) -> Self {
                 ()
             }
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<UnderlyingRustTuple<'_>>
-        for StrategiesNotInAscendingOrder {
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for StrategiesNotInAscendingOrder {
             fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                 Self {}
             }
@@ -2025,9 +1891,7 @@ error StrategiesNotInAscendingOrder();
         #[automatically_derived]
         impl alloy_sol_types::SolError for StrategiesNotInAscendingOrder {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "StrategiesNotInAscendingOrder()";
             const SELECTOR: [u8; 4] = [223u8, 173u8, 156u8, 161u8];
             #[inline]
@@ -2043,9 +1907,9 @@ error StrategiesNotInAscendingOrder();
         }
     };
     /**Custom error with signature `StrategyNotWhitelisted()` and selector `0x5dfb2ca2`.
-```solidity
-error StrategyNotWhitelisted();
-```*/
+    ```solidity
+    error StrategyNotWhitelisted();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct StrategyNotWhitelisted {}
@@ -2063,9 +1927,7 @@ error StrategyNotWhitelisted();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -2089,9 +1951,7 @@ error StrategyNotWhitelisted();
         #[automatically_derived]
         impl alloy_sol_types::SolError for StrategyNotWhitelisted {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "StrategyNotWhitelisted()";
             const SELECTOR: [u8; 4] = [93u8, 251u8, 44u8, 162u8];
             #[inline]
@@ -2107,9 +1967,9 @@ error StrategyNotWhitelisted();
         }
     };
     /**Custom error with signature `SubmissionNotRetroactive()` and selector `0x540d6284`.
-```solidity
-error SubmissionNotRetroactive();
-```*/
+    ```solidity
+    error SubmissionNotRetroactive();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct SubmissionNotRetroactive {}
@@ -2127,9 +1987,7 @@ error SubmissionNotRetroactive();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -2138,16 +1996,14 @@ error SubmissionNotRetroactive();
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<SubmissionNotRetroactive>
-        for UnderlyingRustTuple<'_> {
+        impl ::core::convert::From<SubmissionNotRetroactive> for UnderlyingRustTuple<'_> {
             fn from(value: SubmissionNotRetroactive) -> Self {
                 ()
             }
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<UnderlyingRustTuple<'_>>
-        for SubmissionNotRetroactive {
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for SubmissionNotRetroactive {
             fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                 Self {}
             }
@@ -2155,9 +2011,7 @@ error SubmissionNotRetroactive();
         #[automatically_derived]
         impl alloy_sol_types::SolError for SubmissionNotRetroactive {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "SubmissionNotRetroactive()";
             const SELECTOR: [u8; 4] = [84u8, 13u8, 98u8, 132u8];
             #[inline]
@@ -2173,9 +2027,9 @@ error SubmissionNotRetroactive();
         }
     };
     /**Custom error with signature `UnauthorizedCaller()` and selector `0x5c427cd9`.
-```solidity
-error UnauthorizedCaller();
-```*/
+    ```solidity
+    error UnauthorizedCaller();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct UnauthorizedCaller {}
@@ -2193,9 +2047,7 @@ error UnauthorizedCaller();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -2219,9 +2071,7 @@ error UnauthorizedCaller();
         #[automatically_derived]
         impl alloy_sol_types::SolError for UnauthorizedCaller {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "UnauthorizedCaller()";
             const SELECTOR: [u8; 4] = [92u8, 66u8, 124u8, 217u8];
             #[inline]
@@ -2245,9 +2095,7 @@ error UnauthorizedCaller();
         InputArrayLengthMismatch(InputArrayLengthMismatch),
         InputArrayLengthZero(InputArrayLengthZero),
         InvalidAddressZero(InvalidAddressZero),
-        InvalidCalculationIntervalSecondsRemainder(
-            InvalidCalculationIntervalSecondsRemainder,
-        ),
+        InvalidCalculationIntervalSecondsRemainder(InvalidCalculationIntervalSecondsRemainder),
         InvalidClaimProof(InvalidClaimProof),
         InvalidDurationRemainder(InvalidDurationRemainder),
         InvalidEarner(InvalidEarner),
@@ -2435,19 +2283,19 @@ error UnauthorizedCaller();
             static DECODE_SHIMS: &[fn(
                 &[u8],
                 bool,
-            ) -> alloy_sol_types::Result<IRewardsCoordinatorErrorsErrors>] = &[
+            ) -> alloy_sol_types::Result<
+                IRewardsCoordinatorErrorsErrors,
+            >] = &[
                 {
                     fn StartTimestampTooFarInPast(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IRewardsCoordinatorErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IRewardsCoordinatorErrorsErrors>
+                    {
                         <StartTimestampTooFarInPast as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(
-                                IRewardsCoordinatorErrorsErrors::StartTimestampTooFarInPast,
-                            )
+                            data, validate,
+                        )
+                        .map(IRewardsCoordinatorErrorsErrors::StartTimestampTooFarInPast)
                     }
                     StartTimestampTooFarInPast
                 },
@@ -2455,7 +2303,8 @@ error UnauthorizedCaller();
                     fn RewardsEndTimestampNotElapsed(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IRewardsCoordinatorErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IRewardsCoordinatorErrorsErrors>
+                    {
                         <RewardsEndTimestampNotElapsed as alloy_sol_types::SolError>::abi_decode_raw(
                                 data,
                                 validate,
@@ -2470,7 +2319,8 @@ error UnauthorizedCaller();
                     fn InvalidGenesisRewardsTimestampRemainder(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IRewardsCoordinatorErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IRewardsCoordinatorErrorsErrors>
+                    {
                         <InvalidGenesisRewardsTimestampRemainder as alloy_sol_types::SolError>::abi_decode_raw(
                                 data,
                                 validate,
@@ -2485,12 +2335,12 @@ error UnauthorizedCaller();
                     fn InvalidAddressZero(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IRewardsCoordinatorErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IRewardsCoordinatorErrorsErrors>
+                    {
                         <InvalidAddressZero as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IRewardsCoordinatorErrorsErrors::InvalidAddressZero)
+                            data, validate,
+                        )
+                        .map(IRewardsCoordinatorErrorsErrors::InvalidAddressZero)
                     }
                     InvalidAddressZero
                 },
@@ -2498,11 +2348,9 @@ error UnauthorizedCaller();
                     fn RootDisabled(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IRewardsCoordinatorErrorsErrors> {
-                        <RootDisabled as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
+                    ) -> alloy_sol_types::Result<IRewardsCoordinatorErrorsErrors>
+                    {
+                        <RootDisabled as alloy_sol_types::SolError>::abi_decode_raw(data, validate)
                             .map(IRewardsCoordinatorErrorsErrors::RootDisabled)
                     }
                     RootDisabled
@@ -2511,12 +2359,12 @@ error UnauthorizedCaller();
                     fn AmountExceedsMax(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IRewardsCoordinatorErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IRewardsCoordinatorErrorsErrors>
+                    {
                         <AmountExceedsMax as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IRewardsCoordinatorErrorsErrors::AmountExceedsMax)
+                            data, validate,
+                        )
+                        .map(IRewardsCoordinatorErrorsErrors::AmountExceedsMax)
                     }
                     AmountExceedsMax
                 },
@@ -2524,12 +2372,12 @@ error UnauthorizedCaller();
                     fn RootAlreadyActivated(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IRewardsCoordinatorErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IRewardsCoordinatorErrorsErrors>
+                    {
                         <RootAlreadyActivated as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IRewardsCoordinatorErrorsErrors::RootAlreadyActivated)
+                            data, validate,
+                        )
+                        .map(IRewardsCoordinatorErrorsErrors::RootAlreadyActivated)
                     }
                     RootAlreadyActivated
                 },
@@ -2537,12 +2385,12 @@ error UnauthorizedCaller();
                     fn DurationExceedsMax(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IRewardsCoordinatorErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IRewardsCoordinatorErrorsErrors>
+                    {
                         <DurationExceedsMax as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IRewardsCoordinatorErrorsErrors::DurationExceedsMax)
+                            data, validate,
+                        )
+                        .map(IRewardsCoordinatorErrorsErrors::DurationExceedsMax)
                     }
                     DurationExceedsMax
                 },
@@ -2550,14 +2398,12 @@ error UnauthorizedCaller();
                     fn InputArrayLengthMismatch(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IRewardsCoordinatorErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IRewardsCoordinatorErrorsErrors>
+                    {
                         <InputArrayLengthMismatch as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(
-                                IRewardsCoordinatorErrorsErrors::InputArrayLengthMismatch,
-                            )
+                            data, validate,
+                        )
+                        .map(IRewardsCoordinatorErrorsErrors::InputArrayLengthMismatch)
                     }
                     InputArrayLengthMismatch
                 },
@@ -2565,11 +2411,9 @@ error UnauthorizedCaller();
                     fn AmountIsZero(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IRewardsCoordinatorErrorsErrors> {
-                        <AmountIsZero as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
+                    ) -> alloy_sol_types::Result<IRewardsCoordinatorErrorsErrors>
+                    {
+                        <AmountIsZero as alloy_sol_types::SolError>::abi_decode_raw(data, validate)
                             .map(IRewardsCoordinatorErrorsErrors::AmountIsZero)
                     }
                     AmountIsZero
@@ -2578,7 +2422,8 @@ error UnauthorizedCaller();
                     fn InvalidCalculationIntervalSecondsRemainder(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IRewardsCoordinatorErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IRewardsCoordinatorErrorsErrors>
+                    {
                         <InvalidCalculationIntervalSecondsRemainder as alloy_sol_types::SolError>::abi_decode_raw(
                                 data,
                                 validate,
@@ -2593,11 +2438,9 @@ error UnauthorizedCaller();
                     fn InvalidRoot(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IRewardsCoordinatorErrorsErrors> {
-                        <InvalidRoot as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
+                    ) -> alloy_sol_types::Result<IRewardsCoordinatorErrorsErrors>
+                    {
+                        <InvalidRoot as alloy_sol_types::SolError>::abi_decode_raw(data, validate)
                             .map(IRewardsCoordinatorErrorsErrors::InvalidRoot)
                     }
                     InvalidRoot
@@ -2606,14 +2449,12 @@ error UnauthorizedCaller();
                     fn SubmissionNotRetroactive(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IRewardsCoordinatorErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IRewardsCoordinatorErrorsErrors>
+                    {
                         <SubmissionNotRetroactive as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(
-                                IRewardsCoordinatorErrorsErrors::SubmissionNotRetroactive,
-                            )
+                            data, validate,
+                        )
+                        .map(IRewardsCoordinatorErrorsErrors::SubmissionNotRetroactive)
                     }
                     SubmissionNotRetroactive
                 },
@@ -2621,12 +2462,12 @@ error UnauthorizedCaller();
                     fn UnauthorizedCaller(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IRewardsCoordinatorErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IRewardsCoordinatorErrorsErrors>
+                    {
                         <UnauthorizedCaller as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IRewardsCoordinatorErrorsErrors::UnauthorizedCaller)
+                            data, validate,
+                        )
+                        .map(IRewardsCoordinatorErrorsErrors::UnauthorizedCaller)
                     }
                     UnauthorizedCaller
                 },
@@ -2634,12 +2475,12 @@ error UnauthorizedCaller();
                     fn StrategyNotWhitelisted(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IRewardsCoordinatorErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IRewardsCoordinatorErrorsErrors>
+                    {
                         <StrategyNotWhitelisted as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IRewardsCoordinatorErrorsErrors::StrategyNotWhitelisted)
+                            data, validate,
+                        )
+                        .map(IRewardsCoordinatorErrorsErrors::StrategyNotWhitelisted)
                     }
                     StrategyNotWhitelisted
                 },
@@ -2647,12 +2488,12 @@ error UnauthorizedCaller();
                     fn InvalidEarnerLeafIndex(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IRewardsCoordinatorErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IRewardsCoordinatorErrorsErrors>
+                    {
                         <InvalidEarnerLeafIndex as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IRewardsCoordinatorErrorsErrors::InvalidEarnerLeafIndex)
+                            data, validate,
+                        )
+                        .map(IRewardsCoordinatorErrorsErrors::InvalidEarnerLeafIndex)
                     }
                     InvalidEarnerLeafIndex
                 },
@@ -2660,12 +2501,12 @@ error UnauthorizedCaller();
                     fn InvalidClaimProof(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IRewardsCoordinatorErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IRewardsCoordinatorErrorsErrors>
+                    {
                         <InvalidClaimProof as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IRewardsCoordinatorErrorsErrors::InvalidClaimProof)
+                            data, validate,
+                        )
+                        .map(IRewardsCoordinatorErrorsErrors::InvalidClaimProof)
                     }
                     InvalidClaimProof
                 },
@@ -2673,7 +2514,8 @@ error UnauthorizedCaller();
                     fn NewRootMustBeForNewCalculatedPeriod(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IRewardsCoordinatorErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IRewardsCoordinatorErrorsErrors>
+                    {
                         <NewRootMustBeForNewCalculatedPeriod as alloy_sol_types::SolError>::abi_decode_raw(
                                 data,
                                 validate,
@@ -2688,12 +2530,12 @@ error UnauthorizedCaller();
                     fn InputArrayLengthZero(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IRewardsCoordinatorErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IRewardsCoordinatorErrorsErrors>
+                    {
                         <InputArrayLengthZero as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IRewardsCoordinatorErrorsErrors::InputArrayLengthZero)
+                            data, validate,
+                        )
+                        .map(IRewardsCoordinatorErrorsErrors::InputArrayLengthZero)
                     }
                     InputArrayLengthZero
                 },
@@ -2701,12 +2543,12 @@ error UnauthorizedCaller();
                     fn PreviousSplitPending(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IRewardsCoordinatorErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IRewardsCoordinatorErrorsErrors>
+                    {
                         <PreviousSplitPending as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IRewardsCoordinatorErrorsErrors::PreviousSplitPending)
+                            data, validate,
+                        )
+                        .map(IRewardsCoordinatorErrorsErrors::PreviousSplitPending)
                     }
                     PreviousSplitPending
                 },
@@ -2714,14 +2556,12 @@ error UnauthorizedCaller();
                     fn StartTimestampTooFarInFuture(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IRewardsCoordinatorErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IRewardsCoordinatorErrorsErrors>
+                    {
                         <StartTimestampTooFarInFuture as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(
-                                IRewardsCoordinatorErrorsErrors::StartTimestampTooFarInFuture,
-                            )
+                            data, validate,
+                        )
+                        .map(IRewardsCoordinatorErrorsErrors::StartTimestampTooFarInFuture)
                     }
                     StartTimestampTooFarInFuture
                 },
@@ -2729,14 +2569,12 @@ error UnauthorizedCaller();
                     fn OperatorsNotInAscendingOrder(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IRewardsCoordinatorErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IRewardsCoordinatorErrorsErrors>
+                    {
                         <OperatorsNotInAscendingOrder as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(
-                                IRewardsCoordinatorErrorsErrors::OperatorsNotInAscendingOrder,
-                            )
+                            data, validate,
+                        )
+                        .map(IRewardsCoordinatorErrorsErrors::OperatorsNotInAscendingOrder)
                     }
                     OperatorsNotInAscendingOrder
                 },
@@ -2744,12 +2582,12 @@ error UnauthorizedCaller();
                     fn SplitExceedsMax(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IRewardsCoordinatorErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IRewardsCoordinatorErrorsErrors>
+                    {
                         <SplitExceedsMax as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IRewardsCoordinatorErrorsErrors::SplitExceedsMax)
+                            data, validate,
+                        )
+                        .map(IRewardsCoordinatorErrorsErrors::SplitExceedsMax)
                     }
                     SplitExceedsMax
                 },
@@ -2757,12 +2595,12 @@ error UnauthorizedCaller();
                     fn InvalidRootIndex(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IRewardsCoordinatorErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IRewardsCoordinatorErrorsErrors>
+                    {
                         <InvalidRootIndex as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IRewardsCoordinatorErrorsErrors::InvalidRootIndex)
+                            data, validate,
+                        )
+                        .map(IRewardsCoordinatorErrorsErrors::InvalidRootIndex)
                     }
                     InvalidRootIndex
                 },
@@ -2770,12 +2608,12 @@ error UnauthorizedCaller();
                     fn RootNotActivated(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IRewardsCoordinatorErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IRewardsCoordinatorErrorsErrors>
+                    {
                         <RootNotActivated as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IRewardsCoordinatorErrorsErrors::RootNotActivated)
+                            data, validate,
+                        )
+                        .map(IRewardsCoordinatorErrorsErrors::RootNotActivated)
                     }
                     RootNotActivated
                 },
@@ -2783,12 +2621,12 @@ error UnauthorizedCaller();
                     fn InvalidTokenLeafIndex(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IRewardsCoordinatorErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IRewardsCoordinatorErrorsErrors>
+                    {
                         <InvalidTokenLeafIndex as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IRewardsCoordinatorErrorsErrors::InvalidTokenLeafIndex)
+                            data, validate,
+                        )
+                        .map(IRewardsCoordinatorErrorsErrors::InvalidTokenLeafIndex)
                     }
                     InvalidTokenLeafIndex
                 },
@@ -2796,7 +2634,8 @@ error UnauthorizedCaller();
                     fn EarningsNotGreaterThanClaimed(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IRewardsCoordinatorErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IRewardsCoordinatorErrorsErrors>
+                    {
                         <EarningsNotGreaterThanClaimed as alloy_sol_types::SolError>::abi_decode_raw(
                                 data,
                                 validate,
@@ -2811,7 +2650,8 @@ error UnauthorizedCaller();
                     fn StrategiesNotInAscendingOrder(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IRewardsCoordinatorErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IRewardsCoordinatorErrorsErrors>
+                    {
                         <StrategiesNotInAscendingOrder as alloy_sol_types::SolError>::abi_decode_raw(
                                 data,
                                 validate,
@@ -2826,14 +2666,12 @@ error UnauthorizedCaller();
                     fn InvalidDurationRemainder(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IRewardsCoordinatorErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IRewardsCoordinatorErrorsErrors>
+                    {
                         <InvalidDurationRemainder as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(
-                                IRewardsCoordinatorErrorsErrors::InvalidDurationRemainder,
-                            )
+                            data, validate,
+                        )
+                        .map(IRewardsCoordinatorErrorsErrors::InvalidDurationRemainder)
                     }
                     InvalidDurationRemainder
                 },
@@ -2841,7 +2679,8 @@ error UnauthorizedCaller();
                     fn InvalidStartTimestampRemainder(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IRewardsCoordinatorErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IRewardsCoordinatorErrorsErrors>
+                    {
                         <InvalidStartTimestampRemainder as alloy_sol_types::SolError>::abi_decode_raw(
                                 data,
                                 validate,
@@ -2856,23 +2695,19 @@ error UnauthorizedCaller();
                     fn InvalidEarner(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IRewardsCoordinatorErrorsErrors> {
-                        <InvalidEarner as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
+                    ) -> alloy_sol_types::Result<IRewardsCoordinatorErrorsErrors>
+                    {
+                        <InvalidEarner as alloy_sol_types::SolError>::abi_decode_raw(data, validate)
                             .map(IRewardsCoordinatorErrorsErrors::InvalidEarner)
                     }
                     InvalidEarner
                 },
             ];
             let Ok(idx) = Self::SELECTORS.binary_search(&selector) else {
-                return Err(
-                    alloy_sol_types::Error::unknown_selector(
-                        <Self as alloy_sol_types::SolInterface>::NAME,
-                        selector,
-                    ),
-                );
+                return Err(alloy_sol_types::Error::unknown_selector(
+                    <Self as alloy_sol_types::SolInterface>::NAME,
+                    selector,
+                ));
             };
             (unsafe { DECODE_SHIMS.get_unchecked(idx) })(data, validate)
         }
@@ -3223,7 +3058,7 @@ error UnauthorizedCaller();
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`IRewardsCoordinatorErrors`](self) contract instance.
 
-See the [wrapper's documentation](`IRewardsCoordinatorErrorsInstance`) for more details.*/
+    See the [wrapper's documentation](`IRewardsCoordinatorErrorsInstance`) for more details.*/
     #[inline]
     pub const fn new<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -3237,9 +3072,9 @@ See the [wrapper's documentation](`IRewardsCoordinatorErrorsInstance`) for more 
     }
     /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+    Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+    For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
     #[inline]
     pub fn deploy<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -3253,35 +3088,33 @@ For more fine-grained control over the deployment process, use [`deploy_builder`
         IRewardsCoordinatorErrorsInstance::<T, P, N>::deploy(provider)
     }
     /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+    and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+    This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+    the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     #[inline]
     pub fn deploy_builder<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
         P: alloy_contract::private::Provider<T, N>,
         N: alloy_contract::private::Network,
-    >(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
+    >(
+        provider: P,
+    ) -> alloy_contract::RawCallBuilder<T, P, N> {
         IRewardsCoordinatorErrorsInstance::<T, P, N>::deploy_builder(provider)
     }
     /**A [`IRewardsCoordinatorErrors`](self) instance.
 
-Contains type-safe methods for interacting with an on-chain instance of the
-[`IRewardsCoordinatorErrors`](self) contract located at a given `address`, using a given
-provider `P`.
+    Contains type-safe methods for interacting with an on-chain instance of the
+    [`IRewardsCoordinatorErrors`](self) contract located at a given `address`, using a given
+    provider `P`.
 
-If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
-documentation on how to provide it), the `deploy` and `deploy_builder` methods can
-be used to deploy a new instance of the contract.
+    If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
+    documentation on how to provide it), the `deploy` and `deploy_builder` methods can
+    be used to deploy a new instance of the contract.
 
-See the [module-level documentation](self) for all the available methods.*/
+    See the [module-level documentation](self) for all the available methods.*/
     #[derive(Clone)]
-    pub struct IRewardsCoordinatorErrorsInstance<
-        T,
-        P,
-        N = alloy_contract::private::Ethereum,
-    > {
+    pub struct IRewardsCoordinatorErrorsInstance<T, P, N = alloy_contract::private::Ethereum> {
         address: alloy_sol_types::private::Address,
         provider: P,
         _network_transport: ::core::marker::PhantomData<(N, T)>,
@@ -3298,18 +3131,16 @@ See the [module-level documentation](self) for all the available methods.*/
     /// Instantiation and getters/setters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > IRewardsCoordinatorErrorsInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > IRewardsCoordinatorErrorsInstance<T, P, N>
+    {
         /**Creates a new wrapper around an on-chain [`IRewardsCoordinatorErrors`](self) contract instance.
 
-See the [wrapper's documentation](`IRewardsCoordinatorErrorsInstance`) for more details.*/
+        See the [wrapper's documentation](`IRewardsCoordinatorErrorsInstance`) for more details.*/
         #[inline]
-        pub const fn new(
-            address: alloy_sol_types::private::Address,
-            provider: P,
-        ) -> Self {
+        pub const fn new(address: alloy_sol_types::private::Address, provider: P) -> Self {
             Self {
                 address,
                 provider,
@@ -3318,9 +3149,9 @@ See the [wrapper's documentation](`IRewardsCoordinatorErrorsInstance`) for more 
         }
         /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+        Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+        For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
         #[inline]
         pub async fn deploy(
             provider: P,
@@ -3330,10 +3161,10 @@ For more fine-grained control over the deployment process, use [`deploy_builder`
             Ok(Self::new(contract_address, call_builder.provider))
         }
         /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+        and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+        This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+        the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         #[inline]
         pub fn deploy_builder(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
             alloy_contract::RawCallBuilder::new_raw_deploy(
@@ -3376,10 +3207,11 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     /// Function calls.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > IRewardsCoordinatorErrorsInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > IRewardsCoordinatorErrorsInstance<T, P, N>
+    {
         /// Creates a new call builder using this contract instance's provider and address.
         ///
         /// Note that the call can be any function call, not just those defined in this
@@ -3394,10 +3226,11 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     /// Event filters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > IRewardsCoordinatorErrorsInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > IRewardsCoordinatorErrorsInstance<T, P, N>
+    {
         /// Creates a new event filter using this contract instance's provider and address.
         ///
         /// Note that the type can be any event, not just those defined in this contract.

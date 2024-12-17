@@ -185,9 +185,9 @@ pub mod IPermissionControllerEvents {
         b"",
     );
     /**Event with signature `AdminRemoved(address,address)` and selector `0xdb9d5d31320daf5bc7181d565b6da4d12e30f0f4d5aa324a992426c14a1d19ce`.
-```solidity
-event AdminRemoved(address indexed account, address admin);
-```*/
+    ```solidity
+    event AdminRemoved(address indexed account, address admin);
+    ```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -212,48 +212,18 @@ event AdminRemoved(address indexed account, address admin);
         #[automatically_derived]
         impl alloy_sol_types::SolEvent for AdminRemoved {
             type DataTuple<'a> = (alloy::sol_types::sol_data::Address,);
-            type DataToken<'a> = <Self::DataTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (
                 alloy_sol_types::sol_data::FixedBytes<32>,
                 alloy::sol_types::sol_data::Address,
             );
             const SIGNATURE: &'static str = "AdminRemoved(address,address)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
-                219u8,
-                157u8,
-                93u8,
-                49u8,
-                50u8,
-                13u8,
-                175u8,
-                91u8,
-                199u8,
-                24u8,
-                29u8,
-                86u8,
-                91u8,
-                109u8,
-                164u8,
-                209u8,
-                46u8,
-                48u8,
-                240u8,
-                244u8,
-                213u8,
-                170u8,
-                50u8,
-                74u8,
-                153u8,
-                36u8,
-                38u8,
-                193u8,
-                74u8,
-                29u8,
-                25u8,
-                206u8,
-            ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
+                alloy_sol_types::private::B256::new([
+                    219u8, 157u8, 93u8, 49u8, 50u8, 13u8, 175u8, 91u8, 199u8, 24u8, 29u8, 86u8,
+                    91u8, 109u8, 164u8, 209u8, 46u8, 48u8, 240u8, 244u8, 213u8, 170u8, 50u8, 74u8,
+                    153u8, 36u8, 38u8, 193u8, 74u8, 29u8, 25u8, 206u8,
+                ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -271,13 +241,11 @@ event AdminRemoved(address indexed account, address admin);
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(
-                        alloy_sol_types::Error::invalid_event_signature_hash(
-                            Self::SIGNATURE,
-                            topics.0,
-                            Self::SIGNATURE_HASH,
-                        ),
-                    );
+                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
+                        Self::SIGNATURE,
+                        topics.0,
+                        Self::SIGNATURE_HASH,
+                    ));
                 }
                 Ok(())
             }
@@ -301,9 +269,7 @@ event AdminRemoved(address indexed account, address admin);
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(
-                    Self::SIGNATURE_HASH,
-                );
+                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
                 out[1usize] = <alloy::sol_types::sol_data::Address as alloy_sol_types::EventTopic>::encode_topic(
                     &self.account,
                 );
@@ -328,9 +294,9 @@ event AdminRemoved(address indexed account, address admin);
         }
     };
     /**Event with signature `AdminSet(address,address)` and selector `0xbf265e8326285a2747e33e54d5945f7111f2b5edb826eb8c08d4677779b3ff97`.
-```solidity
-event AdminSet(address indexed account, address admin);
-```*/
+    ```solidity
+    event AdminSet(address indexed account, address admin);
+    ```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -355,48 +321,18 @@ event AdminSet(address indexed account, address admin);
         #[automatically_derived]
         impl alloy_sol_types::SolEvent for AdminSet {
             type DataTuple<'a> = (alloy::sol_types::sol_data::Address,);
-            type DataToken<'a> = <Self::DataTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (
                 alloy_sol_types::sol_data::FixedBytes<32>,
                 alloy::sol_types::sol_data::Address,
             );
             const SIGNATURE: &'static str = "AdminSet(address,address)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
-                191u8,
-                38u8,
-                94u8,
-                131u8,
-                38u8,
-                40u8,
-                90u8,
-                39u8,
-                71u8,
-                227u8,
-                62u8,
-                84u8,
-                213u8,
-                148u8,
-                95u8,
-                113u8,
-                17u8,
-                242u8,
-                181u8,
-                237u8,
-                184u8,
-                38u8,
-                235u8,
-                140u8,
-                8u8,
-                212u8,
-                103u8,
-                119u8,
-                121u8,
-                179u8,
-                255u8,
-                151u8,
-            ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
+                alloy_sol_types::private::B256::new([
+                    191u8, 38u8, 94u8, 131u8, 38u8, 40u8, 90u8, 39u8, 71u8, 227u8, 62u8, 84u8,
+                    213u8, 148u8, 95u8, 113u8, 17u8, 242u8, 181u8, 237u8, 184u8, 38u8, 235u8,
+                    140u8, 8u8, 212u8, 103u8, 119u8, 121u8, 179u8, 255u8, 151u8,
+                ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -414,13 +350,11 @@ event AdminSet(address indexed account, address admin);
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(
-                        alloy_sol_types::Error::invalid_event_signature_hash(
-                            Self::SIGNATURE,
-                            topics.0,
-                            Self::SIGNATURE_HASH,
-                        ),
-                    );
+                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
+                        Self::SIGNATURE,
+                        topics.0,
+                        Self::SIGNATURE_HASH,
+                    ));
                 }
                 Ok(())
             }
@@ -444,9 +378,7 @@ event AdminSet(address indexed account, address admin);
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(
-                    Self::SIGNATURE_HASH,
-                );
+                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
                 out[1usize] = <alloy::sol_types::sol_data::Address as alloy_sol_types::EventTopic>::encode_topic(
                     &self.account,
                 );
@@ -471,9 +403,9 @@ event AdminSet(address indexed account, address admin);
         }
     };
     /**Event with signature `AppointeeRemoved(address,address,address,bytes4)` and selector `0x18242326b6b862126970679759169f01f646bd55ec5bfcab85ba9f337a74e0c6`.
-```solidity
-event AppointeeRemoved(address indexed account, address indexed appointee, address target, bytes4 selector);
-```*/
+    ```solidity
+    event AppointeeRemoved(address indexed account, address indexed appointee, address target, bytes4 selector);
+    ```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -505,49 +437,19 @@ event AppointeeRemoved(address indexed account, address indexed appointee, addre
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::FixedBytes<4>,
             );
-            type DataToken<'a> = <Self::DataTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (
                 alloy_sol_types::sol_data::FixedBytes<32>,
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Address,
             );
             const SIGNATURE: &'static str = "AppointeeRemoved(address,address,address,bytes4)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
-                24u8,
-                36u8,
-                35u8,
-                38u8,
-                182u8,
-                184u8,
-                98u8,
-                18u8,
-                105u8,
-                112u8,
-                103u8,
-                151u8,
-                89u8,
-                22u8,
-                159u8,
-                1u8,
-                246u8,
-                70u8,
-                189u8,
-                85u8,
-                236u8,
-                91u8,
-                252u8,
-                171u8,
-                133u8,
-                186u8,
-                159u8,
-                51u8,
-                122u8,
-                116u8,
-                224u8,
-                198u8,
-            ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
+                alloy_sol_types::private::B256::new([
+                    24u8, 36u8, 35u8, 38u8, 182u8, 184u8, 98u8, 18u8, 105u8, 112u8, 103u8, 151u8,
+                    89u8, 22u8, 159u8, 1u8, 246u8, 70u8, 189u8, 85u8, 236u8, 91u8, 252u8, 171u8,
+                    133u8, 186u8, 159u8, 51u8, 122u8, 116u8, 224u8, 198u8,
+                ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -567,13 +469,11 @@ event AppointeeRemoved(address indexed account, address indexed appointee, addre
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(
-                        alloy_sol_types::Error::invalid_event_signature_hash(
-                            Self::SIGNATURE,
-                            topics.0,
-                            Self::SIGNATURE_HASH,
-                        ),
-                    );
+                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
+                        Self::SIGNATURE,
+                        topics.0,
+                        Self::SIGNATURE_HASH,
+                    ));
                 }
                 Ok(())
             }
@@ -604,9 +504,7 @@ event AppointeeRemoved(address indexed account, address indexed appointee, addre
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(
-                    Self::SIGNATURE_HASH,
-                );
+                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
                 out[1usize] = <alloy::sol_types::sol_data::Address as alloy_sol_types::EventTopic>::encode_topic(
                     &self.account,
                 );
@@ -634,9 +532,9 @@ event AppointeeRemoved(address indexed account, address indexed appointee, addre
         }
     };
     /**Event with signature `AppointeeSet(address,address,address,bytes4)` and selector `0x037f03a2ad6b967df4a01779b6d2b4c85950df83925d9e31362b519422fc0169`.
-```solidity
-event AppointeeSet(address indexed account, address indexed appointee, address target, bytes4 selector);
-```*/
+    ```solidity
+    event AppointeeSet(address indexed account, address indexed appointee, address target, bytes4 selector);
+    ```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -668,49 +566,19 @@ event AppointeeSet(address indexed account, address indexed appointee, address t
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::FixedBytes<4>,
             );
-            type DataToken<'a> = <Self::DataTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (
                 alloy_sol_types::sol_data::FixedBytes<32>,
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Address,
             );
             const SIGNATURE: &'static str = "AppointeeSet(address,address,address,bytes4)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
-                3u8,
-                127u8,
-                3u8,
-                162u8,
-                173u8,
-                107u8,
-                150u8,
-                125u8,
-                244u8,
-                160u8,
-                23u8,
-                121u8,
-                182u8,
-                210u8,
-                180u8,
-                200u8,
-                89u8,
-                80u8,
-                223u8,
-                131u8,
-                146u8,
-                93u8,
-                158u8,
-                49u8,
-                54u8,
-                43u8,
-                81u8,
-                148u8,
-                34u8,
-                252u8,
-                1u8,
-                105u8,
-            ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
+                alloy_sol_types::private::B256::new([
+                    3u8, 127u8, 3u8, 162u8, 173u8, 107u8, 150u8, 125u8, 244u8, 160u8, 23u8, 121u8,
+                    182u8, 210u8, 180u8, 200u8, 89u8, 80u8, 223u8, 131u8, 146u8, 93u8, 158u8, 49u8,
+                    54u8, 43u8, 81u8, 148u8, 34u8, 252u8, 1u8, 105u8,
+                ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -730,13 +598,11 @@ event AppointeeSet(address indexed account, address indexed appointee, address t
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(
-                        alloy_sol_types::Error::invalid_event_signature_hash(
-                            Self::SIGNATURE,
-                            topics.0,
-                            Self::SIGNATURE_HASH,
-                        ),
-                    );
+                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
+                        Self::SIGNATURE,
+                        topics.0,
+                        Self::SIGNATURE_HASH,
+                    ));
                 }
                 Ok(())
             }
@@ -767,9 +633,7 @@ event AppointeeSet(address indexed account, address indexed appointee, address t
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(
-                    Self::SIGNATURE_HASH,
-                );
+                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
                 out[1usize] = <alloy::sol_types::sol_data::Address as alloy_sol_types::EventTopic>::encode_topic(
                     &self.account,
                 );
@@ -797,9 +661,9 @@ event AppointeeSet(address indexed account, address indexed appointee, address t
         }
     };
     /**Event with signature `PendingAdminAdded(address,address)` and selector `0xb14b9a3d448c5b04f0e5b087b6f5193390db7955482a6ffb841e7b3ba61a460c`.
-```solidity
-event PendingAdminAdded(address indexed account, address admin);
-```*/
+    ```solidity
+    event PendingAdminAdded(address indexed account, address admin);
+    ```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -824,48 +688,18 @@ event PendingAdminAdded(address indexed account, address admin);
         #[automatically_derived]
         impl alloy_sol_types::SolEvent for PendingAdminAdded {
             type DataTuple<'a> = (alloy::sol_types::sol_data::Address,);
-            type DataToken<'a> = <Self::DataTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (
                 alloy_sol_types::sol_data::FixedBytes<32>,
                 alloy::sol_types::sol_data::Address,
             );
             const SIGNATURE: &'static str = "PendingAdminAdded(address,address)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
-                177u8,
-                75u8,
-                154u8,
-                61u8,
-                68u8,
-                140u8,
-                91u8,
-                4u8,
-                240u8,
-                229u8,
-                176u8,
-                135u8,
-                182u8,
-                245u8,
-                25u8,
-                51u8,
-                144u8,
-                219u8,
-                121u8,
-                85u8,
-                72u8,
-                42u8,
-                111u8,
-                251u8,
-                132u8,
-                30u8,
-                123u8,
-                59u8,
-                166u8,
-                26u8,
-                70u8,
-                12u8,
-            ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
+                alloy_sol_types::private::B256::new([
+                    177u8, 75u8, 154u8, 61u8, 68u8, 140u8, 91u8, 4u8, 240u8, 229u8, 176u8, 135u8,
+                    182u8, 245u8, 25u8, 51u8, 144u8, 219u8, 121u8, 85u8, 72u8, 42u8, 111u8, 251u8,
+                    132u8, 30u8, 123u8, 59u8, 166u8, 26u8, 70u8, 12u8,
+                ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -883,13 +717,11 @@ event PendingAdminAdded(address indexed account, address admin);
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(
-                        alloy_sol_types::Error::invalid_event_signature_hash(
-                            Self::SIGNATURE,
-                            topics.0,
-                            Self::SIGNATURE_HASH,
-                        ),
-                    );
+                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
+                        Self::SIGNATURE,
+                        topics.0,
+                        Self::SIGNATURE_HASH,
+                    ));
                 }
                 Ok(())
             }
@@ -913,9 +745,7 @@ event PendingAdminAdded(address indexed account, address admin);
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(
-                    Self::SIGNATURE_HASH,
-                );
+                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
                 out[1usize] = <alloy::sol_types::sol_data::Address as alloy_sol_types::EventTopic>::encode_topic(
                     &self.account,
                 );
@@ -940,9 +770,9 @@ event PendingAdminAdded(address indexed account, address admin);
         }
     };
     /**Event with signature `PendingAdminRemoved(address,address)` and selector `0xd706ed7ae044d795b49e54c9f519f663053951011985f663a862cd9ee72a9ac7`.
-```solidity
-event PendingAdminRemoved(address indexed account, address admin);
-```*/
+    ```solidity
+    event PendingAdminRemoved(address indexed account, address admin);
+    ```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -967,48 +797,18 @@ event PendingAdminRemoved(address indexed account, address admin);
         #[automatically_derived]
         impl alloy_sol_types::SolEvent for PendingAdminRemoved {
             type DataTuple<'a> = (alloy::sol_types::sol_data::Address,);
-            type DataToken<'a> = <Self::DataTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (
                 alloy_sol_types::sol_data::FixedBytes<32>,
                 alloy::sol_types::sol_data::Address,
             );
             const SIGNATURE: &'static str = "PendingAdminRemoved(address,address)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
-                215u8,
-                6u8,
-                237u8,
-                122u8,
-                224u8,
-                68u8,
-                215u8,
-                149u8,
-                180u8,
-                158u8,
-                84u8,
-                201u8,
-                245u8,
-                25u8,
-                246u8,
-                99u8,
-                5u8,
-                57u8,
-                81u8,
-                1u8,
-                25u8,
-                133u8,
-                246u8,
-                99u8,
-                168u8,
-                98u8,
-                205u8,
-                158u8,
-                231u8,
-                42u8,
-                154u8,
-                199u8,
-            ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
+                alloy_sol_types::private::B256::new([
+                    215u8, 6u8, 237u8, 122u8, 224u8, 68u8, 215u8, 149u8, 180u8, 158u8, 84u8, 201u8,
+                    245u8, 25u8, 246u8, 99u8, 5u8, 57u8, 81u8, 1u8, 25u8, 133u8, 246u8, 99u8,
+                    168u8, 98u8, 205u8, 158u8, 231u8, 42u8, 154u8, 199u8,
+                ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -1026,13 +826,11 @@ event PendingAdminRemoved(address indexed account, address admin);
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(
-                        alloy_sol_types::Error::invalid_event_signature_hash(
-                            Self::SIGNATURE,
-                            topics.0,
-                            Self::SIGNATURE_HASH,
-                        ),
-                    );
+                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
+                        Self::SIGNATURE,
+                        topics.0,
+                        Self::SIGNATURE_HASH,
+                    ));
                 }
                 Ok(())
             }
@@ -1056,9 +854,7 @@ event PendingAdminRemoved(address indexed account, address admin);
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(
-                    Self::SIGNATURE_HASH,
-                );
+                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
                 out[1usize] = <alloy::sol_types::sol_data::Address as alloy_sol_types::EventTopic>::encode_topic(
                     &self.account,
                 );
@@ -1101,208 +897,34 @@ event PendingAdminRemoved(address indexed account, address admin);
         /// Prefer using `SolInterface` methods instead.
         pub const SELECTORS: &'static [[u8; 32usize]] = &[
             [
-                3u8,
-                127u8,
-                3u8,
-                162u8,
-                173u8,
-                107u8,
-                150u8,
-                125u8,
-                244u8,
-                160u8,
-                23u8,
-                121u8,
-                182u8,
-                210u8,
-                180u8,
-                200u8,
-                89u8,
-                80u8,
-                223u8,
-                131u8,
-                146u8,
-                93u8,
-                158u8,
-                49u8,
-                54u8,
-                43u8,
-                81u8,
-                148u8,
-                34u8,
-                252u8,
-                1u8,
-                105u8,
+                3u8, 127u8, 3u8, 162u8, 173u8, 107u8, 150u8, 125u8, 244u8, 160u8, 23u8, 121u8,
+                182u8, 210u8, 180u8, 200u8, 89u8, 80u8, 223u8, 131u8, 146u8, 93u8, 158u8, 49u8,
+                54u8, 43u8, 81u8, 148u8, 34u8, 252u8, 1u8, 105u8,
             ],
             [
-                24u8,
-                36u8,
-                35u8,
-                38u8,
-                182u8,
-                184u8,
-                98u8,
-                18u8,
-                105u8,
-                112u8,
-                103u8,
-                151u8,
-                89u8,
-                22u8,
-                159u8,
-                1u8,
-                246u8,
-                70u8,
-                189u8,
-                85u8,
-                236u8,
-                91u8,
-                252u8,
-                171u8,
-                133u8,
-                186u8,
-                159u8,
-                51u8,
-                122u8,
-                116u8,
-                224u8,
-                198u8,
+                24u8, 36u8, 35u8, 38u8, 182u8, 184u8, 98u8, 18u8, 105u8, 112u8, 103u8, 151u8, 89u8,
+                22u8, 159u8, 1u8, 246u8, 70u8, 189u8, 85u8, 236u8, 91u8, 252u8, 171u8, 133u8,
+                186u8, 159u8, 51u8, 122u8, 116u8, 224u8, 198u8,
             ],
             [
-                177u8,
-                75u8,
-                154u8,
-                61u8,
-                68u8,
-                140u8,
-                91u8,
-                4u8,
-                240u8,
-                229u8,
-                176u8,
-                135u8,
-                182u8,
-                245u8,
-                25u8,
-                51u8,
-                144u8,
-                219u8,
-                121u8,
-                85u8,
-                72u8,
-                42u8,
-                111u8,
-                251u8,
-                132u8,
-                30u8,
-                123u8,
-                59u8,
-                166u8,
-                26u8,
-                70u8,
-                12u8,
+                177u8, 75u8, 154u8, 61u8, 68u8, 140u8, 91u8, 4u8, 240u8, 229u8, 176u8, 135u8,
+                182u8, 245u8, 25u8, 51u8, 144u8, 219u8, 121u8, 85u8, 72u8, 42u8, 111u8, 251u8,
+                132u8, 30u8, 123u8, 59u8, 166u8, 26u8, 70u8, 12u8,
             ],
             [
-                191u8,
-                38u8,
-                94u8,
-                131u8,
-                38u8,
-                40u8,
-                90u8,
-                39u8,
-                71u8,
-                227u8,
-                62u8,
-                84u8,
-                213u8,
-                148u8,
-                95u8,
-                113u8,
-                17u8,
-                242u8,
-                181u8,
-                237u8,
-                184u8,
-                38u8,
-                235u8,
-                140u8,
-                8u8,
-                212u8,
-                103u8,
-                119u8,
-                121u8,
-                179u8,
-                255u8,
-                151u8,
+                191u8, 38u8, 94u8, 131u8, 38u8, 40u8, 90u8, 39u8, 71u8, 227u8, 62u8, 84u8, 213u8,
+                148u8, 95u8, 113u8, 17u8, 242u8, 181u8, 237u8, 184u8, 38u8, 235u8, 140u8, 8u8,
+                212u8, 103u8, 119u8, 121u8, 179u8, 255u8, 151u8,
             ],
             [
-                215u8,
-                6u8,
-                237u8,
-                122u8,
-                224u8,
-                68u8,
-                215u8,
-                149u8,
-                180u8,
-                158u8,
-                84u8,
-                201u8,
-                245u8,
-                25u8,
-                246u8,
-                99u8,
-                5u8,
-                57u8,
-                81u8,
-                1u8,
-                25u8,
-                133u8,
-                246u8,
-                99u8,
-                168u8,
-                98u8,
-                205u8,
-                158u8,
-                231u8,
-                42u8,
-                154u8,
-                199u8,
+                215u8, 6u8, 237u8, 122u8, 224u8, 68u8, 215u8, 149u8, 180u8, 158u8, 84u8, 201u8,
+                245u8, 25u8, 246u8, 99u8, 5u8, 57u8, 81u8, 1u8, 25u8, 133u8, 246u8, 99u8, 168u8,
+                98u8, 205u8, 158u8, 231u8, 42u8, 154u8, 199u8,
             ],
             [
-                219u8,
-                157u8,
-                93u8,
-                49u8,
-                50u8,
-                13u8,
-                175u8,
-                91u8,
-                199u8,
-                24u8,
-                29u8,
-                86u8,
-                91u8,
-                109u8,
-                164u8,
-                209u8,
-                46u8,
-                48u8,
-                240u8,
-                244u8,
-                213u8,
-                170u8,
-                50u8,
-                74u8,
-                153u8,
-                36u8,
-                38u8,
-                193u8,
-                74u8,
-                29u8,
-                25u8,
-                206u8,
+                219u8, 157u8, 93u8, 49u8, 50u8, 13u8, 175u8, 91u8, 199u8, 24u8, 29u8, 86u8, 91u8,
+                109u8, 164u8, 209u8, 46u8, 48u8, 240u8, 244u8, 213u8, 170u8, 50u8, 74u8, 153u8,
+                36u8, 38u8, 193u8, 74u8, 29u8, 25u8, 206u8,
             ],
         ];
     }
@@ -1318,67 +940,47 @@ event PendingAdminRemoved(address indexed account, address admin);
             match topics.first().copied() {
                 Some(<AdminRemoved as alloy_sol_types::SolEvent>::SIGNATURE_HASH) => {
                     <AdminRemoved as alloy_sol_types::SolEvent>::decode_raw_log(
-                            topics,
-                            data,
-                            validate,
-                        )
-                        .map(Self::AdminRemoved)
+                        topics, data, validate,
+                    )
+                    .map(Self::AdminRemoved)
                 }
                 Some(<AdminSet as alloy_sol_types::SolEvent>::SIGNATURE_HASH) => {
-                    <AdminSet as alloy_sol_types::SolEvent>::decode_raw_log(
-                            topics,
-                            data,
-                            validate,
-                        )
+                    <AdminSet as alloy_sol_types::SolEvent>::decode_raw_log(topics, data, validate)
                         .map(Self::AdminSet)
                 }
                 Some(<AppointeeRemoved as alloy_sol_types::SolEvent>::SIGNATURE_HASH) => {
                     <AppointeeRemoved as alloy_sol_types::SolEvent>::decode_raw_log(
-                            topics,
-                            data,
-                            validate,
-                        )
-                        .map(Self::AppointeeRemoved)
+                        topics, data, validate,
+                    )
+                    .map(Self::AppointeeRemoved)
                 }
                 Some(<AppointeeSet as alloy_sol_types::SolEvent>::SIGNATURE_HASH) => {
                     <AppointeeSet as alloy_sol_types::SolEvent>::decode_raw_log(
-                            topics,
-                            data,
-                            validate,
-                        )
-                        .map(Self::AppointeeSet)
+                        topics, data, validate,
+                    )
+                    .map(Self::AppointeeSet)
                 }
-                Some(
-                    <PendingAdminAdded as alloy_sol_types::SolEvent>::SIGNATURE_HASH,
-                ) => {
+                Some(<PendingAdminAdded as alloy_sol_types::SolEvent>::SIGNATURE_HASH) => {
                     <PendingAdminAdded as alloy_sol_types::SolEvent>::decode_raw_log(
-                            topics,
-                            data,
-                            validate,
-                        )
-                        .map(Self::PendingAdminAdded)
+                        topics, data, validate,
+                    )
+                    .map(Self::PendingAdminAdded)
                 }
-                Some(
-                    <PendingAdminRemoved as alloy_sol_types::SolEvent>::SIGNATURE_HASH,
-                ) => {
+                Some(<PendingAdminRemoved as alloy_sol_types::SolEvent>::SIGNATURE_HASH) => {
                     <PendingAdminRemoved as alloy_sol_types::SolEvent>::decode_raw_log(
-                            topics,
-                            data,
-                            validate,
-                        )
-                        .map(Self::PendingAdminRemoved)
+                        topics, data, validate,
+                    )
+                    .map(Self::PendingAdminRemoved)
                 }
-                _ => {
-                    alloy_sol_types::private::Err(alloy_sol_types::Error::InvalidLog {
-                        name: <Self as alloy_sol_types::SolEventInterface>::NAME,
-                        log: alloy_sol_types::private::Box::new(
-                            alloy_sol_types::private::LogData::new_unchecked(
-                                topics.to_vec(),
-                                data.to_vec().into(),
-                            ),
+                _ => alloy_sol_types::private::Err(alloy_sol_types::Error::InvalidLog {
+                    name: <Self as alloy_sol_types::SolEventInterface>::NAME,
+                    log: alloy_sol_types::private::Box::new(
+                        alloy_sol_types::private::LogData::new_unchecked(
+                            topics.to_vec(),
+                            data.to_vec().into(),
                         ),
-                    })
-                }
+                    ),
+                }),
             }
         }
     }
@@ -1389,9 +991,7 @@ event PendingAdminRemoved(address indexed account, address admin);
                 Self::AdminRemoved(inner) => {
                     alloy_sol_types::private::IntoLogData::to_log_data(inner)
                 }
-                Self::AdminSet(inner) => {
-                    alloy_sol_types::private::IntoLogData::to_log_data(inner)
-                }
+                Self::AdminSet(inner) => alloy_sol_types::private::IntoLogData::to_log_data(inner),
                 Self::AppointeeRemoved(inner) => {
                     alloy_sol_types::private::IntoLogData::to_log_data(inner)
                 }
@@ -1432,7 +1032,7 @@ event PendingAdminRemoved(address indexed account, address admin);
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`IPermissionControllerEvents`](self) contract instance.
 
-See the [wrapper's documentation](`IPermissionControllerEventsInstance`) for more details.*/
+    See the [wrapper's documentation](`IPermissionControllerEventsInstance`) for more details.*/
     #[inline]
     pub const fn new<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -1446,9 +1046,9 @@ See the [wrapper's documentation](`IPermissionControllerEventsInstance`) for mor
     }
     /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+    Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+    For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
     #[inline]
     pub fn deploy<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -1462,35 +1062,33 @@ For more fine-grained control over the deployment process, use [`deploy_builder`
         IPermissionControllerEventsInstance::<T, P, N>::deploy(provider)
     }
     /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+    and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+    This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+    the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     #[inline]
     pub fn deploy_builder<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
         P: alloy_contract::private::Provider<T, N>,
         N: alloy_contract::private::Network,
-    >(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
+    >(
+        provider: P,
+    ) -> alloy_contract::RawCallBuilder<T, P, N> {
         IPermissionControllerEventsInstance::<T, P, N>::deploy_builder(provider)
     }
     /**A [`IPermissionControllerEvents`](self) instance.
 
-Contains type-safe methods for interacting with an on-chain instance of the
-[`IPermissionControllerEvents`](self) contract located at a given `address`, using a given
-provider `P`.
+    Contains type-safe methods for interacting with an on-chain instance of the
+    [`IPermissionControllerEvents`](self) contract located at a given `address`, using a given
+    provider `P`.
 
-If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
-documentation on how to provide it), the `deploy` and `deploy_builder` methods can
-be used to deploy a new instance of the contract.
+    If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
+    documentation on how to provide it), the `deploy` and `deploy_builder` methods can
+    be used to deploy a new instance of the contract.
 
-See the [module-level documentation](self) for all the available methods.*/
+    See the [module-level documentation](self) for all the available methods.*/
     #[derive(Clone)]
-    pub struct IPermissionControllerEventsInstance<
-        T,
-        P,
-        N = alloy_contract::private::Ethereum,
-    > {
+    pub struct IPermissionControllerEventsInstance<T, P, N = alloy_contract::private::Ethereum> {
         address: alloy_sol_types::private::Address,
         provider: P,
         _network_transport: ::core::marker::PhantomData<(N, T)>,
@@ -1507,18 +1105,16 @@ See the [module-level documentation](self) for all the available methods.*/
     /// Instantiation and getters/setters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > IPermissionControllerEventsInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > IPermissionControllerEventsInstance<T, P, N>
+    {
         /**Creates a new wrapper around an on-chain [`IPermissionControllerEvents`](self) contract instance.
 
-See the [wrapper's documentation](`IPermissionControllerEventsInstance`) for more details.*/
+        See the [wrapper's documentation](`IPermissionControllerEventsInstance`) for more details.*/
         #[inline]
-        pub const fn new(
-            address: alloy_sol_types::private::Address,
-            provider: P,
-        ) -> Self {
+        pub const fn new(address: alloy_sol_types::private::Address, provider: P) -> Self {
             Self {
                 address,
                 provider,
@@ -1527,9 +1123,9 @@ See the [wrapper's documentation](`IPermissionControllerEventsInstance`) for mor
         }
         /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+        Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+        For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
         #[inline]
         pub async fn deploy(
             provider: P,
@@ -1539,10 +1135,10 @@ For more fine-grained control over the deployment process, use [`deploy_builder`
             Ok(Self::new(contract_address, call_builder.provider))
         }
         /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+        and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+        This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+        the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         #[inline]
         pub fn deploy_builder(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
             alloy_contract::RawCallBuilder::new_raw_deploy(
@@ -1574,9 +1170,7 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     impl<T, P: ::core::clone::Clone, N> IPermissionControllerEventsInstance<T, &P, N> {
         /// Clones the provider and returns a new instance with the cloned provider.
         #[inline]
-        pub fn with_cloned_provider(
-            self,
-        ) -> IPermissionControllerEventsInstance<T, P, N> {
+        pub fn with_cloned_provider(self) -> IPermissionControllerEventsInstance<T, P, N> {
             IPermissionControllerEventsInstance {
                 address: self.address,
                 provider: ::core::clone::Clone::clone(&self.provider),
@@ -1587,10 +1181,11 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     /// Function calls.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > IPermissionControllerEventsInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > IPermissionControllerEventsInstance<T, P, N>
+    {
         /// Creates a new call builder using this contract instance's provider and address.
         ///
         /// Note that the call can be any function call, not just those defined in this
@@ -1605,10 +1200,11 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     /// Event filters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > IPermissionControllerEventsInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > IPermissionControllerEventsInstance<T, P, N>
+    {
         /// Creates a new event filter using this contract instance's provider and address.
         ///
         /// Note that the type can be any event, not just those defined in this contract.
@@ -1619,9 +1215,7 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
             alloy_contract::Event::new_sol(&self.provider, &self.address)
         }
         ///Creates a new event filter for the [`AdminRemoved`] event.
-        pub fn AdminRemoved_filter(
-            &self,
-        ) -> alloy_contract::Event<T, &P, AdminRemoved, N> {
+        pub fn AdminRemoved_filter(&self) -> alloy_contract::Event<T, &P, AdminRemoved, N> {
             self.event_filter::<AdminRemoved>()
         }
         ///Creates a new event filter for the [`AdminSet`] event.
@@ -1629,15 +1223,11 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
             self.event_filter::<AdminSet>()
         }
         ///Creates a new event filter for the [`AppointeeRemoved`] event.
-        pub fn AppointeeRemoved_filter(
-            &self,
-        ) -> alloy_contract::Event<T, &P, AppointeeRemoved, N> {
+        pub fn AppointeeRemoved_filter(&self) -> alloy_contract::Event<T, &P, AppointeeRemoved, N> {
             self.event_filter::<AppointeeRemoved>()
         }
         ///Creates a new event filter for the [`AppointeeSet`] event.
-        pub fn AppointeeSet_filter(
-            &self,
-        ) -> alloy_contract::Event<T, &P, AppointeeSet, N> {
+        pub fn AppointeeSet_filter(&self) -> alloy_contract::Event<T, &P, AppointeeSet, N> {
             self.event_filter::<AppointeeSet>()
         }
         ///Creates a new event filter for the [`PendingAdminAdded`] event.

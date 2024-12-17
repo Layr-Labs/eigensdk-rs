@@ -1,15 +1,16 @@
 //! Anvil utilities
 use std::str::FromStr;
 
+use alloy::sol;
 use alloy_primitives::{address, Address};
 use alloy_signer_local::PrivateKeySigner;
-use alloy::sol;
 use eigen_utils::delegationmanager::DelegationManager;
 use eigen_utils::{
     // contractsregistry::ContractsRegistry::{self},
-    get_provider, get_signer,
+    get_provider,
+    get_signer,
 };
-sol!{
+sol! {
     #[derive(Debug)]
     #[allow(missing_docs)]
     #[sol(rpc)]
@@ -17,7 +18,7 @@ sol!{
         mapping(string => address) public contracts;
         mapping(uint256 => string) public contractNames;
         uint256 public contractCount;
-    
+
         function registerContract(string memory name, address _contract) public {
             // we treat redeploys as a bug since this is only meant to be used for testing.
             // If new contracts need to be deployed just start from a fresh anvil state.
@@ -26,7 +27,7 @@ sol!{
             contractNames[contractCount] = name;
             contractCount++;
         }
-    
+
     }
 }
 use eyre::Result;

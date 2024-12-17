@@ -4,8 +4,7 @@ use alloy_primitives::{Address, FixedBytes, TxHash, U256};
 pub use eigen_types::operator::Operator;
 use eigen_utils::{
     delegationmanager::{
-        DelegationManager::{self}
-        // IDelegationManagerTypes::OperatorDetails,
+        DelegationManager::{self}, // IDelegationManagerTypes::OperatorDetails,
     },
     erc20::ERC20,
     get_signer,
@@ -128,13 +127,13 @@ impl ELChainWriter {
             "updating operator detils of operator {:?} to EigenLayer",
             operator.address
         );
-       
+
         let provider = get_signer(&self.signer.clone(), &self.provider);
 
         let contract_delegation_manager = DelegationManager::new(self.delegation_manager, provider);
 
-        let contract_call_modify_operator_details =
-            contract_delegation_manager.modifyOperatorDetails(operator.address,operator.delegation_approver_address);
+        let contract_call_modify_operator_details = contract_delegation_manager
+            .modifyOperatorDetails(operator.address, operator.delegation_approver_address);
 
         let modify_operator_tx = contract_call_modify_operator_details
             .send()
@@ -144,7 +143,7 @@ impl ELChainWriter {
         info!(tx_hash = %modify_operator_tx.tx_hash(), operator = %operator.address, "updated operator details tx");
 
         let contract_call_update_metadata_uri = contract_delegation_manager
-            .updateOperatorMetadataURI(operator.address,operator.metadata_url.unwrap_or_default());
+            .updateOperatorMetadataURI(operator.address, operator.metadata_url.unwrap_or_default());
 
         let metadata_tx = contract_call_update_metadata_uri.send().await?;
 

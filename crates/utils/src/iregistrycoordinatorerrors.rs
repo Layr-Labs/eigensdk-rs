@@ -173,9 +173,9 @@ pub mod IRegistryCoordinatorErrors {
         b"",
     );
     /**Custom error with signature `AlreadyRegisteredForQuorums()` and selector `0x0c6816cd`.
-```solidity
-error AlreadyRegisteredForQuorums();
-```*/
+    ```solidity
+    error AlreadyRegisteredForQuorums();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct AlreadyRegisteredForQuorums {}
@@ -193,9 +193,7 @@ error AlreadyRegisteredForQuorums();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -204,16 +202,14 @@ error AlreadyRegisteredForQuorums();
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<AlreadyRegisteredForQuorums>
-        for UnderlyingRustTuple<'_> {
+        impl ::core::convert::From<AlreadyRegisteredForQuorums> for UnderlyingRustTuple<'_> {
             fn from(value: AlreadyRegisteredForQuorums) -> Self {
                 ()
             }
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<UnderlyingRustTuple<'_>>
-        for AlreadyRegisteredForQuorums {
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for AlreadyRegisteredForQuorums {
             fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                 Self {}
             }
@@ -221,9 +217,7 @@ error AlreadyRegisteredForQuorums();
         #[automatically_derived]
         impl alloy_sol_types::SolError for AlreadyRegisteredForQuorums {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "AlreadyRegisteredForQuorums()";
             const SELECTOR: [u8; 4] = [12u8, 104u8, 22u8, 205u8];
             #[inline]
@@ -239,9 +233,9 @@ error AlreadyRegisteredForQuorums();
         }
     };
     /**Custom error with signature `BitmapCannotBeZero()` and selector `0xd16d50ea`.
-```solidity
-error BitmapCannotBeZero();
-```*/
+    ```solidity
+    error BitmapCannotBeZero();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct BitmapCannotBeZero {}
@@ -259,9 +253,7 @@ error BitmapCannotBeZero();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -285,9 +277,7 @@ error BitmapCannotBeZero();
         #[automatically_derived]
         impl alloy_sol_types::SolError for BitmapCannotBeZero {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "BitmapCannotBeZero()";
             const SELECTOR: [u8; 4] = [209u8, 109u8, 80u8, 234u8];
             #[inline]
@@ -303,9 +293,9 @@ error BitmapCannotBeZero();
         }
     };
     /**Custom error with signature `BitmapEmpty()` and selector `0x13ca4657`.
-```solidity
-error BitmapEmpty();
-```*/
+    ```solidity
+    error BitmapEmpty();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct BitmapEmpty {}
@@ -323,9 +313,7 @@ error BitmapEmpty();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -349,9 +337,7 @@ error BitmapEmpty();
         #[automatically_derived]
         impl alloy_sol_types::SolError for BitmapEmpty {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "BitmapEmpty()";
             const SELECTOR: [u8; 4] = [19u8, 202u8, 70u8, 87u8];
             #[inline]
@@ -367,9 +353,9 @@ error BitmapEmpty();
         }
     };
     /**Custom error with signature `CannotChurnSelf()` and selector `0xac2d1682`.
-```solidity
-error CannotChurnSelf();
-```*/
+    ```solidity
+    error CannotChurnSelf();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct CannotChurnSelf {}
@@ -387,9 +373,7 @@ error CannotChurnSelf();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -413,9 +397,7 @@ error CannotChurnSelf();
         #[automatically_derived]
         impl alloy_sol_types::SolError for CannotChurnSelf {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "CannotChurnSelf()";
             const SELECTOR: [u8; 4] = [172u8, 45u8, 22u8, 130u8];
             #[inline]
@@ -431,9 +413,9 @@ error CannotChurnSelf();
         }
     };
     /**Custom error with signature `CannotKickOperatorAboveThreshold()` and selector `0xb187e869`.
-```solidity
-error CannotKickOperatorAboveThreshold();
-```*/
+    ```solidity
+    error CannotKickOperatorAboveThreshold();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct CannotKickOperatorAboveThreshold {}
@@ -451,9 +433,7 @@ error CannotKickOperatorAboveThreshold();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -462,16 +442,14 @@ error CannotKickOperatorAboveThreshold();
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<CannotKickOperatorAboveThreshold>
-        for UnderlyingRustTuple<'_> {
+        impl ::core::convert::From<CannotKickOperatorAboveThreshold> for UnderlyingRustTuple<'_> {
             fn from(value: CannotKickOperatorAboveThreshold) -> Self {
                 ()
             }
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<UnderlyingRustTuple<'_>>
-        for CannotKickOperatorAboveThreshold {
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for CannotKickOperatorAboveThreshold {
             fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                 Self {}
             }
@@ -479,9 +457,7 @@ error CannotKickOperatorAboveThreshold();
         #[automatically_derived]
         impl alloy_sol_types::SolError for CannotKickOperatorAboveThreshold {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "CannotKickOperatorAboveThreshold()";
             const SELECTOR: [u8; 4] = [177u8, 135u8, 232u8, 105u8];
             #[inline]
@@ -497,9 +473,9 @@ error CannotKickOperatorAboveThreshold();
         }
     };
     /**Custom error with signature `CannotReregisterYet()` and selector `0x32d0cefa`.
-```solidity
-error CannotReregisterYet();
-```*/
+    ```solidity
+    error CannotReregisterYet();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct CannotReregisterYet {}
@@ -517,9 +493,7 @@ error CannotReregisterYet();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -543,9 +517,7 @@ error CannotReregisterYet();
         #[automatically_derived]
         impl alloy_sol_types::SolError for CannotReregisterYet {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "CannotReregisterYet()";
             const SELECTOR: [u8; 4] = [50u8, 208u8, 206u8, 250u8];
             #[inline]
@@ -561,9 +533,9 @@ error CannotReregisterYet();
         }
     };
     /**Custom error with signature `ChurnApproverSaltUsed()` and selector `0xdf7dfd86`.
-```solidity
-error ChurnApproverSaltUsed();
-```*/
+    ```solidity
+    error ChurnApproverSaltUsed();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct ChurnApproverSaltUsed {}
@@ -581,9 +553,7 @@ error ChurnApproverSaltUsed();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -607,9 +577,7 @@ error ChurnApproverSaltUsed();
         #[automatically_derived]
         impl alloy_sol_types::SolError for ChurnApproverSaltUsed {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "ChurnApproverSaltUsed()";
             const SELECTOR: [u8; 4] = [223u8, 125u8, 253u8, 134u8];
             #[inline]
@@ -625,9 +593,9 @@ error ChurnApproverSaltUsed();
         }
     };
     /**Custom error with signature `InputLengthMismatch()` and selector `0xaaad13f7`.
-```solidity
-error InputLengthMismatch();
-```*/
+    ```solidity
+    error InputLengthMismatch();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct InputLengthMismatch {}
@@ -645,9 +613,7 @@ error InputLengthMismatch();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -671,9 +637,7 @@ error InputLengthMismatch();
         #[automatically_derived]
         impl alloy_sol_types::SolError for InputLengthMismatch {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "InputLengthMismatch()";
             const SELECTOR: [u8; 4] = [170u8, 173u8, 19u8, 247u8];
             #[inline]
@@ -689,9 +653,9 @@ error InputLengthMismatch();
         }
     };
     /**Custom error with signature `InsufficientStakeForChurn()` and selector `0x4c44995d`.
-```solidity
-error InsufficientStakeForChurn();
-```*/
+    ```solidity
+    error InsufficientStakeForChurn();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct InsufficientStakeForChurn {}
@@ -709,9 +673,7 @@ error InsufficientStakeForChurn();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -720,16 +682,14 @@ error InsufficientStakeForChurn();
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<InsufficientStakeForChurn>
-        for UnderlyingRustTuple<'_> {
+        impl ::core::convert::From<InsufficientStakeForChurn> for UnderlyingRustTuple<'_> {
             fn from(value: InsufficientStakeForChurn) -> Self {
                 ()
             }
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<UnderlyingRustTuple<'_>>
-        for InsufficientStakeForChurn {
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for InsufficientStakeForChurn {
             fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                 Self {}
             }
@@ -737,9 +697,7 @@ error InsufficientStakeForChurn();
         #[automatically_derived]
         impl alloy_sol_types::SolError for InsufficientStakeForChurn {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "InsufficientStakeForChurn()";
             const SELECTOR: [u8; 4] = [76u8, 68u8, 153u8, 93u8];
             #[inline]
@@ -755,9 +713,9 @@ error InsufficientStakeForChurn();
         }
     };
     /**Custom error with signature `MaxQuorumsReached()` and selector `0x3cb89c97`.
-```solidity
-error MaxQuorumsReached();
-```*/
+    ```solidity
+    error MaxQuorumsReached();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct MaxQuorumsReached {}
@@ -775,9 +733,7 @@ error MaxQuorumsReached();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -801,9 +757,7 @@ error MaxQuorumsReached();
         #[automatically_derived]
         impl alloy_sol_types::SolError for MaxQuorumsReached {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "MaxQuorumsReached()";
             const SELECTOR: [u8; 4] = [60u8, 184u8, 156u8, 151u8];
             #[inline]
@@ -819,9 +773,9 @@ error MaxQuorumsReached();
         }
     };
     /**Custom error with signature `NotRegistered()` and selector `0xaba47339`.
-```solidity
-error NotRegistered();
-```*/
+    ```solidity
+    error NotRegistered();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct NotRegistered {}
@@ -839,9 +793,7 @@ error NotRegistered();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -865,9 +817,7 @@ error NotRegistered();
         #[automatically_derived]
         impl alloy_sol_types::SolError for NotRegistered {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "NotRegistered()";
             const SELECTOR: [u8; 4] = [171u8, 164u8, 115u8, 57u8];
             #[inline]
@@ -883,9 +833,9 @@ error NotRegistered();
         }
     };
     /**Custom error with signature `NotRegisteredForQuorum()` and selector `0xd053aa21`.
-```solidity
-error NotRegisteredForQuorum();
-```*/
+    ```solidity
+    error NotRegisteredForQuorum();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct NotRegisteredForQuorum {}
@@ -903,9 +853,7 @@ error NotRegisteredForQuorum();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -929,9 +877,7 @@ error NotRegisteredForQuorum();
         #[automatically_derived]
         impl alloy_sol_types::SolError for NotRegisteredForQuorum {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "NotRegisteredForQuorum()";
             const SELECTOR: [u8; 4] = [208u8, 83u8, 170u8, 33u8];
             #[inline]
@@ -947,9 +893,9 @@ error NotRegisteredForQuorum();
         }
     };
     /**Custom error with signature `NotSorted()` and selector `0xba50f911`.
-```solidity
-error NotSorted();
-```*/
+    ```solidity
+    error NotSorted();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct NotSorted {}
@@ -967,9 +913,7 @@ error NotSorted();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -993,9 +937,7 @@ error NotSorted();
         #[automatically_derived]
         impl alloy_sol_types::SolError for NotSorted {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "NotSorted()";
             const SELECTOR: [u8; 4] = [186u8, 80u8, 249u8, 17u8];
             #[inline]
@@ -1011,9 +953,9 @@ error NotSorted();
         }
     };
     /**Custom error with signature `OnlyAllocationManager()` and selector `0x23d871a5`.
-```solidity
-error OnlyAllocationManager();
-```*/
+    ```solidity
+    error OnlyAllocationManager();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct OnlyAllocationManager {}
@@ -1031,9 +973,7 @@ error OnlyAllocationManager();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1057,9 +997,7 @@ error OnlyAllocationManager();
         #[automatically_derived]
         impl alloy_sol_types::SolError for OnlyAllocationManager {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "OnlyAllocationManager()";
             const SELECTOR: [u8; 4] = [35u8, 216u8, 113u8, 165u8];
             #[inline]
@@ -1075,9 +1013,9 @@ error OnlyAllocationManager();
         }
     };
     /**Custom error with signature `OnlyEjector()` and selector `0xedb1562e`.
-```solidity
-error OnlyEjector();
-```*/
+    ```solidity
+    error OnlyEjector();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct OnlyEjector {}
@@ -1095,9 +1033,7 @@ error OnlyEjector();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1121,9 +1057,7 @@ error OnlyEjector();
         #[automatically_derived]
         impl alloy_sol_types::SolError for OnlyEjector {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "OnlyEjector()";
             const SELECTOR: [u8; 4] = [237u8, 177u8, 86u8, 46u8];
             #[inline]
@@ -1139,9 +1073,9 @@ error OnlyEjector();
         }
     };
     /**Custom error with signature `OperatorSetsEnabled()` and selector `0x0b88306f`.
-```solidity
-error OperatorSetsEnabled();
-```*/
+    ```solidity
+    error OperatorSetsEnabled();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct OperatorSetsEnabled {}
@@ -1159,9 +1093,7 @@ error OperatorSetsEnabled();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1185,9 +1117,7 @@ error OperatorSetsEnabled();
         #[automatically_derived]
         impl alloy_sol_types::SolError for OperatorSetsEnabled {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "OperatorSetsEnabled()";
             const SELECTOR: [u8; 4] = [11u8, 136u8, 48u8, 111u8];
             #[inline]
@@ -1203,9 +1133,9 @@ error OperatorSetsEnabled();
         }
     };
     /**Custom error with signature `OperatorSetsNotEnabled()` and selector `0x5b779019`.
-```solidity
-error OperatorSetsNotEnabled();
-```*/
+    ```solidity
+    error OperatorSetsNotEnabled();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct OperatorSetsNotEnabled {}
@@ -1223,9 +1153,7 @@ error OperatorSetsNotEnabled();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1249,9 +1177,7 @@ error OperatorSetsNotEnabled();
         #[automatically_derived]
         impl alloy_sol_types::SolError for OperatorSetsNotEnabled {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "OperatorSetsNotEnabled()";
             const SELECTOR: [u8; 4] = [91u8, 119u8, 144u8, 25u8];
             #[inline]
@@ -1267,9 +1193,9 @@ error OperatorSetsNotEnabled();
         }
     };
     /**Custom error with signature `OperatorSetsNotSupported()` and selector `0xfd2c1f4d`.
-```solidity
-error OperatorSetsNotSupported();
-```*/
+    ```solidity
+    error OperatorSetsNotSupported();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct OperatorSetsNotSupported {}
@@ -1287,9 +1213,7 @@ error OperatorSetsNotSupported();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1298,16 +1222,14 @@ error OperatorSetsNotSupported();
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<OperatorSetsNotSupported>
-        for UnderlyingRustTuple<'_> {
+        impl ::core::convert::From<OperatorSetsNotSupported> for UnderlyingRustTuple<'_> {
             fn from(value: OperatorSetsNotSupported) -> Self {
                 ()
             }
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<UnderlyingRustTuple<'_>>
-        for OperatorSetsNotSupported {
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for OperatorSetsNotSupported {
             fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                 Self {}
             }
@@ -1315,9 +1237,7 @@ error OperatorSetsNotSupported();
         #[automatically_derived]
         impl alloy_sol_types::SolError for OperatorSetsNotSupported {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "OperatorSetsNotSupported()";
             const SELECTOR: [u8; 4] = [253u8, 44u8, 31u8, 77u8];
             #[inline]
@@ -1333,9 +1253,9 @@ error OperatorSetsNotSupported();
         }
     };
     /**Custom error with signature `QuorumDoesNotExist()` and selector `0xe6219fea`.
-```solidity
-error QuorumDoesNotExist();
-```*/
+    ```solidity
+    error QuorumDoesNotExist();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct QuorumDoesNotExist {}
@@ -1353,9 +1273,7 @@ error QuorumDoesNotExist();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1379,9 +1297,7 @@ error QuorumDoesNotExist();
         #[automatically_derived]
         impl alloy_sol_types::SolError for QuorumDoesNotExist {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "QuorumDoesNotExist()";
             const SELECTOR: [u8; 4] = [230u8, 33u8, 159u8, 234u8];
             #[inline]
@@ -1397,9 +1313,9 @@ error QuorumDoesNotExist();
         }
     };
     /**Custom error with signature `QuorumOperatorCountMismatch()` and selector `0x8e5aeee7`.
-```solidity
-error QuorumOperatorCountMismatch();
-```*/
+    ```solidity
+    error QuorumOperatorCountMismatch();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct QuorumOperatorCountMismatch {}
@@ -1417,9 +1333,7 @@ error QuorumOperatorCountMismatch();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1428,16 +1342,14 @@ error QuorumOperatorCountMismatch();
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<QuorumOperatorCountMismatch>
-        for UnderlyingRustTuple<'_> {
+        impl ::core::convert::From<QuorumOperatorCountMismatch> for UnderlyingRustTuple<'_> {
             fn from(value: QuorumOperatorCountMismatch) -> Self {
                 ()
             }
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<UnderlyingRustTuple<'_>>
-        for QuorumOperatorCountMismatch {
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for QuorumOperatorCountMismatch {
             fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                 Self {}
             }
@@ -1445,9 +1357,7 @@ error QuorumOperatorCountMismatch();
         #[automatically_derived]
         impl alloy_sol_types::SolError for QuorumOperatorCountMismatch {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "QuorumOperatorCountMismatch()";
             const SELECTOR: [u8; 4] = [142u8, 90u8, 238u8, 231u8];
             #[inline]
@@ -1463,9 +1373,9 @@ error QuorumOperatorCountMismatch();
         }
     };
     /**Custom error with signature `RegistryCoordinatorSignatureExpired()` and selector `0x9a15098d`.
-```solidity
-error RegistryCoordinatorSignatureExpired();
-```*/
+    ```solidity
+    error RegistryCoordinatorSignatureExpired();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct RegistryCoordinatorSignatureExpired {}
@@ -1483,9 +1393,7 @@ error RegistryCoordinatorSignatureExpired();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1494,16 +1402,14 @@ error RegistryCoordinatorSignatureExpired();
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<RegistryCoordinatorSignatureExpired>
-        for UnderlyingRustTuple<'_> {
+        impl ::core::convert::From<RegistryCoordinatorSignatureExpired> for UnderlyingRustTuple<'_> {
             fn from(value: RegistryCoordinatorSignatureExpired) -> Self {
                 ()
             }
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<UnderlyingRustTuple<'_>>
-        for RegistryCoordinatorSignatureExpired {
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for RegistryCoordinatorSignatureExpired {
             fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                 Self {}
             }
@@ -1511,9 +1417,7 @@ error RegistryCoordinatorSignatureExpired();
         #[automatically_derived]
         impl alloy_sol_types::SolError for RegistryCoordinatorSignatureExpired {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "RegistryCoordinatorSignatureExpired()";
             const SELECTOR: [u8; 4] = [154u8, 21u8, 9u8, 141u8];
             #[inline]
@@ -1529,9 +1433,9 @@ error RegistryCoordinatorSignatureExpired();
         }
     };
     /**Custom error with signature `SaltAlreadyUsed()` and selector `0x0ced3043`.
-```solidity
-error SaltAlreadyUsed();
-```*/
+    ```solidity
+    error SaltAlreadyUsed();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct SaltAlreadyUsed {}
@@ -1549,9 +1453,7 @@ error SaltAlreadyUsed();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1575,9 +1477,7 @@ error SaltAlreadyUsed();
         #[automatically_derived]
         impl alloy_sol_types::SolError for SaltAlreadyUsed {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "SaltAlreadyUsed()";
             const SELECTOR: [u8; 4] = [12u8, 237u8, 48u8, 67u8];
             #[inline]
@@ -1664,9 +1564,7 @@ error SaltAlreadyUsed();
                 Self::BitmapCannotBeZero(_) => {
                     <BitmapCannotBeZero as alloy_sol_types::SolError>::SELECTOR
                 }
-                Self::BitmapEmpty(_) => {
-                    <BitmapEmpty as alloy_sol_types::SolError>::SELECTOR
-                }
+                Self::BitmapEmpty(_) => <BitmapEmpty as alloy_sol_types::SolError>::SELECTOR,
                 Self::CannotChurnSelf(_) => {
                     <CannotChurnSelf as alloy_sol_types::SolError>::SELECTOR
                 }
@@ -1688,9 +1586,7 @@ error SaltAlreadyUsed();
                 Self::MaxQuorumsReached(_) => {
                     <MaxQuorumsReached as alloy_sol_types::SolError>::SELECTOR
                 }
-                Self::NotRegistered(_) => {
-                    <NotRegistered as alloy_sol_types::SolError>::SELECTOR
-                }
+                Self::NotRegistered(_) => <NotRegistered as alloy_sol_types::SolError>::SELECTOR,
                 Self::NotRegisteredForQuorum(_) => {
                     <NotRegisteredForQuorum as alloy_sol_types::SolError>::SELECTOR
                 }
@@ -1698,9 +1594,7 @@ error SaltAlreadyUsed();
                 Self::OnlyAllocationManager(_) => {
                     <OnlyAllocationManager as alloy_sol_types::SolError>::SELECTOR
                 }
-                Self::OnlyEjector(_) => {
-                    <OnlyEjector as alloy_sol_types::SolError>::SELECTOR
-                }
+                Self::OnlyEjector(_) => <OnlyEjector as alloy_sol_types::SolError>::SELECTOR,
                 Self::OperatorSetsEnabled(_) => {
                     <OperatorSetsEnabled as alloy_sol_types::SolError>::SELECTOR
                 }
@@ -1742,17 +1636,19 @@ error SaltAlreadyUsed();
             static DECODE_SHIMS: &[fn(
                 &[u8],
                 bool,
-            ) -> alloy_sol_types::Result<IRegistryCoordinatorErrorsErrors>] = &[
+            ) -> alloy_sol_types::Result<
+                IRegistryCoordinatorErrorsErrors,
+            >] = &[
                 {
                     fn OperatorSetsEnabled(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IRegistryCoordinatorErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IRegistryCoordinatorErrorsErrors>
+                    {
                         <OperatorSetsEnabled as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IRegistryCoordinatorErrorsErrors::OperatorSetsEnabled)
+                            data, validate,
+                        )
+                        .map(IRegistryCoordinatorErrorsErrors::OperatorSetsEnabled)
                     }
                     OperatorSetsEnabled
                 },
@@ -1760,14 +1656,12 @@ error SaltAlreadyUsed();
                     fn AlreadyRegisteredForQuorums(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IRegistryCoordinatorErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IRegistryCoordinatorErrorsErrors>
+                    {
                         <AlreadyRegisteredForQuorums as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(
-                                IRegistryCoordinatorErrorsErrors::AlreadyRegisteredForQuorums,
-                            )
+                            data, validate,
+                        )
+                        .map(IRegistryCoordinatorErrorsErrors::AlreadyRegisteredForQuorums)
                     }
                     AlreadyRegisteredForQuorums
                 },
@@ -1775,12 +1669,12 @@ error SaltAlreadyUsed();
                     fn SaltAlreadyUsed(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IRegistryCoordinatorErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IRegistryCoordinatorErrorsErrors>
+                    {
                         <SaltAlreadyUsed as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IRegistryCoordinatorErrorsErrors::SaltAlreadyUsed)
+                            data, validate,
+                        )
+                        .map(IRegistryCoordinatorErrorsErrors::SaltAlreadyUsed)
                     }
                     SaltAlreadyUsed
                 },
@@ -1788,11 +1682,9 @@ error SaltAlreadyUsed();
                     fn BitmapEmpty(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IRegistryCoordinatorErrorsErrors> {
-                        <BitmapEmpty as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
+                    ) -> alloy_sol_types::Result<IRegistryCoordinatorErrorsErrors>
+                    {
+                        <BitmapEmpty as alloy_sol_types::SolError>::abi_decode_raw(data, validate)
                             .map(IRegistryCoordinatorErrorsErrors::BitmapEmpty)
                     }
                     BitmapEmpty
@@ -1801,12 +1693,12 @@ error SaltAlreadyUsed();
                     fn OnlyAllocationManager(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IRegistryCoordinatorErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IRegistryCoordinatorErrorsErrors>
+                    {
                         <OnlyAllocationManager as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IRegistryCoordinatorErrorsErrors::OnlyAllocationManager)
+                            data, validate,
+                        )
+                        .map(IRegistryCoordinatorErrorsErrors::OnlyAllocationManager)
                     }
                     OnlyAllocationManager
                 },
@@ -1814,12 +1706,12 @@ error SaltAlreadyUsed();
                     fn CannotReregisterYet(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IRegistryCoordinatorErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IRegistryCoordinatorErrorsErrors>
+                    {
                         <CannotReregisterYet as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IRegistryCoordinatorErrorsErrors::CannotReregisterYet)
+                            data, validate,
+                        )
+                        .map(IRegistryCoordinatorErrorsErrors::CannotReregisterYet)
                     }
                     CannotReregisterYet
                 },
@@ -1827,12 +1719,12 @@ error SaltAlreadyUsed();
                     fn MaxQuorumsReached(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IRegistryCoordinatorErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IRegistryCoordinatorErrorsErrors>
+                    {
                         <MaxQuorumsReached as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IRegistryCoordinatorErrorsErrors::MaxQuorumsReached)
+                            data, validate,
+                        )
+                        .map(IRegistryCoordinatorErrorsErrors::MaxQuorumsReached)
                     }
                     MaxQuorumsReached
                 },
@@ -1840,14 +1732,12 @@ error SaltAlreadyUsed();
                     fn InsufficientStakeForChurn(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IRegistryCoordinatorErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IRegistryCoordinatorErrorsErrors>
+                    {
                         <InsufficientStakeForChurn as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(
-                                IRegistryCoordinatorErrorsErrors::InsufficientStakeForChurn,
-                            )
+                            data, validate,
+                        )
+                        .map(IRegistryCoordinatorErrorsErrors::InsufficientStakeForChurn)
                     }
                     InsufficientStakeForChurn
                 },
@@ -1855,14 +1745,12 @@ error SaltAlreadyUsed();
                     fn OperatorSetsNotEnabled(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IRegistryCoordinatorErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IRegistryCoordinatorErrorsErrors>
+                    {
                         <OperatorSetsNotEnabled as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(
-                                IRegistryCoordinatorErrorsErrors::OperatorSetsNotEnabled,
-                            )
+                            data, validate,
+                        )
+                        .map(IRegistryCoordinatorErrorsErrors::OperatorSetsNotEnabled)
                     }
                     OperatorSetsNotEnabled
                 },
@@ -1870,14 +1758,12 @@ error SaltAlreadyUsed();
                     fn QuorumOperatorCountMismatch(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IRegistryCoordinatorErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IRegistryCoordinatorErrorsErrors>
+                    {
                         <QuorumOperatorCountMismatch as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(
-                                IRegistryCoordinatorErrorsErrors::QuorumOperatorCountMismatch,
-                            )
+                            data, validate,
+                        )
+                        .map(IRegistryCoordinatorErrorsErrors::QuorumOperatorCountMismatch)
                     }
                     QuorumOperatorCountMismatch
                 },
@@ -1885,7 +1771,8 @@ error SaltAlreadyUsed();
                     fn RegistryCoordinatorSignatureExpired(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IRegistryCoordinatorErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IRegistryCoordinatorErrorsErrors>
+                    {
                         <RegistryCoordinatorSignatureExpired as alloy_sol_types::SolError>::abi_decode_raw(
                                 data,
                                 validate,
@@ -1900,12 +1787,12 @@ error SaltAlreadyUsed();
                     fn InputLengthMismatch(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IRegistryCoordinatorErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IRegistryCoordinatorErrorsErrors>
+                    {
                         <InputLengthMismatch as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IRegistryCoordinatorErrorsErrors::InputLengthMismatch)
+                            data, validate,
+                        )
+                        .map(IRegistryCoordinatorErrorsErrors::InputLengthMismatch)
                     }
                     InputLengthMismatch
                 },
@@ -1913,11 +1800,9 @@ error SaltAlreadyUsed();
                     fn NotRegistered(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IRegistryCoordinatorErrorsErrors> {
-                        <NotRegistered as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
+                    ) -> alloy_sol_types::Result<IRegistryCoordinatorErrorsErrors>
+                    {
+                        <NotRegistered as alloy_sol_types::SolError>::abi_decode_raw(data, validate)
                             .map(IRegistryCoordinatorErrorsErrors::NotRegistered)
                     }
                     NotRegistered
@@ -1926,12 +1811,12 @@ error SaltAlreadyUsed();
                     fn CannotChurnSelf(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IRegistryCoordinatorErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IRegistryCoordinatorErrorsErrors>
+                    {
                         <CannotChurnSelf as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IRegistryCoordinatorErrorsErrors::CannotChurnSelf)
+                            data, validate,
+                        )
+                        .map(IRegistryCoordinatorErrorsErrors::CannotChurnSelf)
                     }
                     CannotChurnSelf
                 },
@@ -1939,7 +1824,8 @@ error SaltAlreadyUsed();
                     fn CannotKickOperatorAboveThreshold(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IRegistryCoordinatorErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IRegistryCoordinatorErrorsErrors>
+                    {
                         <CannotKickOperatorAboveThreshold as alloy_sol_types::SolError>::abi_decode_raw(
                                 data,
                                 validate,
@@ -1954,11 +1840,9 @@ error SaltAlreadyUsed();
                     fn NotSorted(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IRegistryCoordinatorErrorsErrors> {
-                        <NotSorted as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
+                    ) -> alloy_sol_types::Result<IRegistryCoordinatorErrorsErrors>
+                    {
+                        <NotSorted as alloy_sol_types::SolError>::abi_decode_raw(data, validate)
                             .map(IRegistryCoordinatorErrorsErrors::NotSorted)
                     }
                     NotSorted
@@ -1967,14 +1851,12 @@ error SaltAlreadyUsed();
                     fn NotRegisteredForQuorum(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IRegistryCoordinatorErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IRegistryCoordinatorErrorsErrors>
+                    {
                         <NotRegisteredForQuorum as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(
-                                IRegistryCoordinatorErrorsErrors::NotRegisteredForQuorum,
-                            )
+                            data, validate,
+                        )
+                        .map(IRegistryCoordinatorErrorsErrors::NotRegisteredForQuorum)
                     }
                     NotRegisteredForQuorum
                 },
@@ -1982,12 +1864,12 @@ error SaltAlreadyUsed();
                     fn BitmapCannotBeZero(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IRegistryCoordinatorErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IRegistryCoordinatorErrorsErrors>
+                    {
                         <BitmapCannotBeZero as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IRegistryCoordinatorErrorsErrors::BitmapCannotBeZero)
+                            data, validate,
+                        )
+                        .map(IRegistryCoordinatorErrorsErrors::BitmapCannotBeZero)
                     }
                     BitmapCannotBeZero
                 },
@@ -1995,12 +1877,12 @@ error SaltAlreadyUsed();
                     fn ChurnApproverSaltUsed(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IRegistryCoordinatorErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IRegistryCoordinatorErrorsErrors>
+                    {
                         <ChurnApproverSaltUsed as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IRegistryCoordinatorErrorsErrors::ChurnApproverSaltUsed)
+                            data, validate,
+                        )
+                        .map(IRegistryCoordinatorErrorsErrors::ChurnApproverSaltUsed)
                     }
                     ChurnApproverSaltUsed
                 },
@@ -2008,12 +1890,12 @@ error SaltAlreadyUsed();
                     fn QuorumDoesNotExist(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IRegistryCoordinatorErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IRegistryCoordinatorErrorsErrors>
+                    {
                         <QuorumDoesNotExist as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IRegistryCoordinatorErrorsErrors::QuorumDoesNotExist)
+                            data, validate,
+                        )
+                        .map(IRegistryCoordinatorErrorsErrors::QuorumDoesNotExist)
                     }
                     QuorumDoesNotExist
                 },
@@ -2021,11 +1903,9 @@ error SaltAlreadyUsed();
                     fn OnlyEjector(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IRegistryCoordinatorErrorsErrors> {
-                        <OnlyEjector as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
+                    ) -> alloy_sol_types::Result<IRegistryCoordinatorErrorsErrors>
+                    {
+                        <OnlyEjector as alloy_sol_types::SolError>::abi_decode_raw(data, validate)
                             .map(IRegistryCoordinatorErrorsErrors::OnlyEjector)
                     }
                     OnlyEjector
@@ -2034,25 +1914,21 @@ error SaltAlreadyUsed();
                     fn OperatorSetsNotSupported(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IRegistryCoordinatorErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IRegistryCoordinatorErrorsErrors>
+                    {
                         <OperatorSetsNotSupported as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(
-                                IRegistryCoordinatorErrorsErrors::OperatorSetsNotSupported,
-                            )
+                            data, validate,
+                        )
+                        .map(IRegistryCoordinatorErrorsErrors::OperatorSetsNotSupported)
                     }
                     OperatorSetsNotSupported
                 },
             ];
             let Ok(idx) = Self::SELECTORS.binary_search(&selector) else {
-                return Err(
-                    alloy_sol_types::Error::unknown_selector(
-                        <Self as alloy_sol_types::SolInterface>::NAME,
-                        selector,
-                    ),
-                );
+                return Err(alloy_sol_types::Error::unknown_selector(
+                    <Self as alloy_sol_types::SolInterface>::NAME,
+                    selector,
+                ));
             };
             (unsafe { DECODE_SHIMS.get_unchecked(idx) })(data, validate)
         }
@@ -2301,7 +2177,7 @@ error SaltAlreadyUsed();
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`IRegistryCoordinatorErrors`](self) contract instance.
 
-See the [wrapper's documentation](`IRegistryCoordinatorErrorsInstance`) for more details.*/
+    See the [wrapper's documentation](`IRegistryCoordinatorErrorsInstance`) for more details.*/
     #[inline]
     pub const fn new<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -2315,9 +2191,9 @@ See the [wrapper's documentation](`IRegistryCoordinatorErrorsInstance`) for more
     }
     /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+    Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+    For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
     #[inline]
     pub fn deploy<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -2331,35 +2207,33 @@ For more fine-grained control over the deployment process, use [`deploy_builder`
         IRegistryCoordinatorErrorsInstance::<T, P, N>::deploy(provider)
     }
     /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+    and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+    This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+    the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     #[inline]
     pub fn deploy_builder<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
         P: alloy_contract::private::Provider<T, N>,
         N: alloy_contract::private::Network,
-    >(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
+    >(
+        provider: P,
+    ) -> alloy_contract::RawCallBuilder<T, P, N> {
         IRegistryCoordinatorErrorsInstance::<T, P, N>::deploy_builder(provider)
     }
     /**A [`IRegistryCoordinatorErrors`](self) instance.
 
-Contains type-safe methods for interacting with an on-chain instance of the
-[`IRegistryCoordinatorErrors`](self) contract located at a given `address`, using a given
-provider `P`.
+    Contains type-safe methods for interacting with an on-chain instance of the
+    [`IRegistryCoordinatorErrors`](self) contract located at a given `address`, using a given
+    provider `P`.
 
-If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
-documentation on how to provide it), the `deploy` and `deploy_builder` methods can
-be used to deploy a new instance of the contract.
+    If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
+    documentation on how to provide it), the `deploy` and `deploy_builder` methods can
+    be used to deploy a new instance of the contract.
 
-See the [module-level documentation](self) for all the available methods.*/
+    See the [module-level documentation](self) for all the available methods.*/
     #[derive(Clone)]
-    pub struct IRegistryCoordinatorErrorsInstance<
-        T,
-        P,
-        N = alloy_contract::private::Ethereum,
-    > {
+    pub struct IRegistryCoordinatorErrorsInstance<T, P, N = alloy_contract::private::Ethereum> {
         address: alloy_sol_types::private::Address,
         provider: P,
         _network_transport: ::core::marker::PhantomData<(N, T)>,
@@ -2376,18 +2250,16 @@ See the [module-level documentation](self) for all the available methods.*/
     /// Instantiation and getters/setters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > IRegistryCoordinatorErrorsInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > IRegistryCoordinatorErrorsInstance<T, P, N>
+    {
         /**Creates a new wrapper around an on-chain [`IRegistryCoordinatorErrors`](self) contract instance.
 
-See the [wrapper's documentation](`IRegistryCoordinatorErrorsInstance`) for more details.*/
+        See the [wrapper's documentation](`IRegistryCoordinatorErrorsInstance`) for more details.*/
         #[inline]
-        pub const fn new(
-            address: alloy_sol_types::private::Address,
-            provider: P,
-        ) -> Self {
+        pub const fn new(address: alloy_sol_types::private::Address, provider: P) -> Self {
             Self {
                 address,
                 provider,
@@ -2396,9 +2268,9 @@ See the [wrapper's documentation](`IRegistryCoordinatorErrorsInstance`) for more
         }
         /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+        Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+        For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
         #[inline]
         pub async fn deploy(
             provider: P,
@@ -2408,10 +2280,10 @@ For more fine-grained control over the deployment process, use [`deploy_builder`
             Ok(Self::new(contract_address, call_builder.provider))
         }
         /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+        and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+        This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+        the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         #[inline]
         pub fn deploy_builder(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
             alloy_contract::RawCallBuilder::new_raw_deploy(
@@ -2443,9 +2315,7 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     impl<T, P: ::core::clone::Clone, N> IRegistryCoordinatorErrorsInstance<T, &P, N> {
         /// Clones the provider and returns a new instance with the cloned provider.
         #[inline]
-        pub fn with_cloned_provider(
-            self,
-        ) -> IRegistryCoordinatorErrorsInstance<T, P, N> {
+        pub fn with_cloned_provider(self) -> IRegistryCoordinatorErrorsInstance<T, P, N> {
             IRegistryCoordinatorErrorsInstance {
                 address: self.address,
                 provider: ::core::clone::Clone::clone(&self.provider),
@@ -2456,10 +2326,11 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     /// Function calls.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > IRegistryCoordinatorErrorsInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > IRegistryCoordinatorErrorsInstance<T, P, N>
+    {
         /// Creates a new call builder using this contract instance's provider and address.
         ///
         /// Note that the call can be any function call, not just those defined in this
@@ -2474,10 +2345,11 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     /// Event filters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > IRegistryCoordinatorErrorsInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > IRegistryCoordinatorErrorsInstance<T, P, N>
+    {
         /// Creates a new event filter using this contract instance's provider and address.
         ///
         /// Note that the type can be any event, not just those defined in this contract.

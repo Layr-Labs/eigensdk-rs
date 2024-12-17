@@ -173,9 +173,9 @@ pub mod IEigenPodErrors {
         b"",
     );
     /**Custom error with signature `BeaconTimestampTooFarInPast()` and selector `0x37e07ffd`.
-```solidity
-error BeaconTimestampTooFarInPast();
-```*/
+    ```solidity
+    error BeaconTimestampTooFarInPast();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct BeaconTimestampTooFarInPast {}
@@ -193,9 +193,7 @@ error BeaconTimestampTooFarInPast();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -204,16 +202,14 @@ error BeaconTimestampTooFarInPast();
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<BeaconTimestampTooFarInPast>
-        for UnderlyingRustTuple<'_> {
+        impl ::core::convert::From<BeaconTimestampTooFarInPast> for UnderlyingRustTuple<'_> {
             fn from(value: BeaconTimestampTooFarInPast) -> Self {
                 ()
             }
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<UnderlyingRustTuple<'_>>
-        for BeaconTimestampTooFarInPast {
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for BeaconTimestampTooFarInPast {
             fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                 Self {}
             }
@@ -221,9 +217,7 @@ error BeaconTimestampTooFarInPast();
         #[automatically_derived]
         impl alloy_sol_types::SolError for BeaconTimestampTooFarInPast {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "BeaconTimestampTooFarInPast()";
             const SELECTOR: [u8; 4] = [55u8, 224u8, 127u8, 253u8];
             #[inline]
@@ -239,9 +233,9 @@ error BeaconTimestampTooFarInPast();
         }
     };
     /**Custom error with signature `CannotCheckpointTwiceInSingleBlock()` and selector `0x67db5b8b`.
-```solidity
-error CannotCheckpointTwiceInSingleBlock();
-```*/
+    ```solidity
+    error CannotCheckpointTwiceInSingleBlock();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct CannotCheckpointTwiceInSingleBlock {}
@@ -259,9 +253,7 @@ error CannotCheckpointTwiceInSingleBlock();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -270,16 +262,14 @@ error CannotCheckpointTwiceInSingleBlock();
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<CannotCheckpointTwiceInSingleBlock>
-        for UnderlyingRustTuple<'_> {
+        impl ::core::convert::From<CannotCheckpointTwiceInSingleBlock> for UnderlyingRustTuple<'_> {
             fn from(value: CannotCheckpointTwiceInSingleBlock) -> Self {
                 ()
             }
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<UnderlyingRustTuple<'_>>
-        for CannotCheckpointTwiceInSingleBlock {
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for CannotCheckpointTwiceInSingleBlock {
             fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                 Self {}
             }
@@ -287,9 +277,7 @@ error CannotCheckpointTwiceInSingleBlock();
         #[automatically_derived]
         impl alloy_sol_types::SolError for CannotCheckpointTwiceInSingleBlock {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "CannotCheckpointTwiceInSingleBlock()";
             const SELECTOR: [u8; 4] = [103u8, 219u8, 91u8, 139u8];
             #[inline]
@@ -305,9 +293,9 @@ error CannotCheckpointTwiceInSingleBlock();
         }
     };
     /**Custom error with signature `CheckpointAlreadyActive()` and selector `0xbe9bc300`.
-```solidity
-error CheckpointAlreadyActive();
-```*/
+    ```solidity
+    error CheckpointAlreadyActive();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct CheckpointAlreadyActive {}
@@ -325,9 +313,7 @@ error CheckpointAlreadyActive();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -351,9 +337,7 @@ error CheckpointAlreadyActive();
         #[automatically_derived]
         impl alloy_sol_types::SolError for CheckpointAlreadyActive {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "CheckpointAlreadyActive()";
             const SELECTOR: [u8; 4] = [190u8, 155u8, 195u8, 0u8];
             #[inline]
@@ -369,9 +353,9 @@ error CheckpointAlreadyActive();
         }
     };
     /**Custom error with signature `CredentialsAlreadyVerified()` and selector `0x35e09e9d`.
-```solidity
-error CredentialsAlreadyVerified();
-```*/
+    ```solidity
+    error CredentialsAlreadyVerified();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct CredentialsAlreadyVerified {}
@@ -389,9 +373,7 @@ error CredentialsAlreadyVerified();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -400,16 +382,14 @@ error CredentialsAlreadyVerified();
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<CredentialsAlreadyVerified>
-        for UnderlyingRustTuple<'_> {
+        impl ::core::convert::From<CredentialsAlreadyVerified> for UnderlyingRustTuple<'_> {
             fn from(value: CredentialsAlreadyVerified) -> Self {
                 ()
             }
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<UnderlyingRustTuple<'_>>
-        for CredentialsAlreadyVerified {
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for CredentialsAlreadyVerified {
             fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                 Self {}
             }
@@ -417,9 +397,7 @@ error CredentialsAlreadyVerified();
         #[automatically_derived]
         impl alloy_sol_types::SolError for CredentialsAlreadyVerified {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "CredentialsAlreadyVerified()";
             const SELECTOR: [u8; 4] = [53u8, 224u8, 158u8, 157u8];
             #[inline]
@@ -435,9 +413,9 @@ error CredentialsAlreadyVerified();
         }
     };
     /**Custom error with signature `CurrentlyPaused()` and selector `0x840a48d5`.
-```solidity
-error CurrentlyPaused();
-```*/
+    ```solidity
+    error CurrentlyPaused();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct CurrentlyPaused {}
@@ -455,9 +433,7 @@ error CurrentlyPaused();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -481,9 +457,7 @@ error CurrentlyPaused();
         #[automatically_derived]
         impl alloy_sol_types::SolError for CurrentlyPaused {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "CurrentlyPaused()";
             const SELECTOR: [u8; 4] = [132u8, 10u8, 72u8, 213u8];
             #[inline]
@@ -499,9 +473,9 @@ error CurrentlyPaused();
         }
     };
     /**Custom error with signature `InputAddressZero()` and selector `0x73632176`.
-```solidity
-error InputAddressZero();
-```*/
+    ```solidity
+    error InputAddressZero();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct InputAddressZero {}
@@ -519,9 +493,7 @@ error InputAddressZero();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -545,9 +517,7 @@ error InputAddressZero();
         #[automatically_derived]
         impl alloy_sol_types::SolError for InputAddressZero {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "InputAddressZero()";
             const SELECTOR: [u8; 4] = [115u8, 99u8, 33u8, 118u8];
             #[inline]
@@ -563,9 +533,9 @@ error InputAddressZero();
         }
     };
     /**Custom error with signature `InputArrayLengthMismatch()` and selector `0x43714afd`.
-```solidity
-error InputArrayLengthMismatch();
-```*/
+    ```solidity
+    error InputArrayLengthMismatch();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct InputArrayLengthMismatch {}
@@ -583,9 +553,7 @@ error InputArrayLengthMismatch();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -594,16 +562,14 @@ error InputArrayLengthMismatch();
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<InputArrayLengthMismatch>
-        for UnderlyingRustTuple<'_> {
+        impl ::core::convert::From<InputArrayLengthMismatch> for UnderlyingRustTuple<'_> {
             fn from(value: InputArrayLengthMismatch) -> Self {
                 ()
             }
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<UnderlyingRustTuple<'_>>
-        for InputArrayLengthMismatch {
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for InputArrayLengthMismatch {
             fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                 Self {}
             }
@@ -611,9 +577,7 @@ error InputArrayLengthMismatch();
         #[automatically_derived]
         impl alloy_sol_types::SolError for InputArrayLengthMismatch {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "InputArrayLengthMismatch()";
             const SELECTOR: [u8; 4] = [67u8, 113u8, 74u8, 253u8];
             #[inline]
@@ -629,9 +593,9 @@ error InputArrayLengthMismatch();
         }
     };
     /**Custom error with signature `InsufficientWithdrawableBalance()` and selector `0x0b1bd51c`.
-```solidity
-error InsufficientWithdrawableBalance();
-```*/
+    ```solidity
+    error InsufficientWithdrawableBalance();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct InsufficientWithdrawableBalance {}
@@ -649,9 +613,7 @@ error InsufficientWithdrawableBalance();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -660,16 +622,14 @@ error InsufficientWithdrawableBalance();
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<InsufficientWithdrawableBalance>
-        for UnderlyingRustTuple<'_> {
+        impl ::core::convert::From<InsufficientWithdrawableBalance> for UnderlyingRustTuple<'_> {
             fn from(value: InsufficientWithdrawableBalance) -> Self {
                 ()
             }
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<UnderlyingRustTuple<'_>>
-        for InsufficientWithdrawableBalance {
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for InsufficientWithdrawableBalance {
             fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                 Self {}
             }
@@ -677,9 +637,7 @@ error InsufficientWithdrawableBalance();
         #[automatically_derived]
         impl alloy_sol_types::SolError for InsufficientWithdrawableBalance {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "InsufficientWithdrawableBalance()";
             const SELECTOR: [u8; 4] = [11u8, 27u8, 213u8, 28u8];
             #[inline]
@@ -695,9 +653,9 @@ error InsufficientWithdrawableBalance();
         }
     };
     /**Custom error with signature `InvalidEIP4788Response()` and selector `0x558ad0a3`.
-```solidity
-error InvalidEIP4788Response();
-```*/
+    ```solidity
+    error InvalidEIP4788Response();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct InvalidEIP4788Response {}
@@ -715,9 +673,7 @@ error InvalidEIP4788Response();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -741,9 +697,7 @@ error InvalidEIP4788Response();
         #[automatically_derived]
         impl alloy_sol_types::SolError for InvalidEIP4788Response {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "InvalidEIP4788Response()";
             const SELECTOR: [u8; 4] = [85u8, 138u8, 208u8, 163u8];
             #[inline]
@@ -759,9 +713,9 @@ error InvalidEIP4788Response();
         }
     };
     /**Custom error with signature `InvalidPubKeyLength()` and selector `0x9f106472`.
-```solidity
-error InvalidPubKeyLength();
-```*/
+    ```solidity
+    error InvalidPubKeyLength();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct InvalidPubKeyLength {}
@@ -779,9 +733,7 @@ error InvalidPubKeyLength();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -805,9 +757,7 @@ error InvalidPubKeyLength();
         #[automatically_derived]
         impl alloy_sol_types::SolError for InvalidPubKeyLength {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "InvalidPubKeyLength()";
             const SELECTOR: [u8; 4] = [159u8, 16u8, 100u8, 114u8];
             #[inline]
@@ -823,9 +773,9 @@ error InvalidPubKeyLength();
         }
     };
     /**Custom error with signature `MsgValueNot32ETH()` and selector `0x24b4b598`.
-```solidity
-error MsgValueNot32ETH();
-```*/
+    ```solidity
+    error MsgValueNot32ETH();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct MsgValueNot32ETH {}
@@ -843,9 +793,7 @@ error MsgValueNot32ETH();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -869,9 +817,7 @@ error MsgValueNot32ETH();
         #[automatically_derived]
         impl alloy_sol_types::SolError for MsgValueNot32ETH {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "MsgValueNot32ETH()";
             const SELECTOR: [u8; 4] = [36u8, 180u8, 181u8, 152u8];
             #[inline]
@@ -887,9 +833,9 @@ error MsgValueNot32ETH();
         }
     };
     /**Custom error with signature `NoActiveCheckpoint()` and selector `0x1a544f49`.
-```solidity
-error NoActiveCheckpoint();
-```*/
+    ```solidity
+    error NoActiveCheckpoint();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct NoActiveCheckpoint {}
@@ -907,9 +853,7 @@ error NoActiveCheckpoint();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -933,9 +877,7 @@ error NoActiveCheckpoint();
         #[automatically_derived]
         impl alloy_sol_types::SolError for NoActiveCheckpoint {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "NoActiveCheckpoint()";
             const SELECTOR: [u8; 4] = [26u8, 84u8, 79u8, 73u8];
             #[inline]
@@ -951,9 +893,9 @@ error NoActiveCheckpoint();
         }
     };
     /**Custom error with signature `NoBalanceToCheckpoint()` and selector `0xcb7aa564`.
-```solidity
-error NoBalanceToCheckpoint();
-```*/
+    ```solidity
+    error NoBalanceToCheckpoint();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct NoBalanceToCheckpoint {}
@@ -971,9 +913,7 @@ error NoBalanceToCheckpoint();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -997,9 +937,7 @@ error NoBalanceToCheckpoint();
         #[automatically_derived]
         impl alloy_sol_types::SolError for NoBalanceToCheckpoint {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "NoBalanceToCheckpoint()";
             const SELECTOR: [u8; 4] = [203u8, 122u8, 165u8, 100u8];
             #[inline]
@@ -1015,9 +953,9 @@ error NoBalanceToCheckpoint();
         }
     };
     /**Custom error with signature `OnlyEigenPodManager()` and selector `0xc84e9984`.
-```solidity
-error OnlyEigenPodManager();
-```*/
+    ```solidity
+    error OnlyEigenPodManager();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct OnlyEigenPodManager {}
@@ -1035,9 +973,7 @@ error OnlyEigenPodManager();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1061,9 +997,7 @@ error OnlyEigenPodManager();
         #[automatically_derived]
         impl alloy_sol_types::SolError for OnlyEigenPodManager {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "OnlyEigenPodManager()";
             const SELECTOR: [u8; 4] = [200u8, 78u8, 153u8, 132u8];
             #[inline]
@@ -1079,9 +1013,9 @@ error OnlyEigenPodManager();
         }
     };
     /**Custom error with signature `OnlyEigenPodOwner()` and selector `0xe33e6e06`.
-```solidity
-error OnlyEigenPodOwner();
-```*/
+    ```solidity
+    error OnlyEigenPodOwner();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct OnlyEigenPodOwner {}
@@ -1099,9 +1033,7 @@ error OnlyEigenPodOwner();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1125,9 +1057,7 @@ error OnlyEigenPodOwner();
         #[automatically_derived]
         impl alloy_sol_types::SolError for OnlyEigenPodOwner {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "OnlyEigenPodOwner()";
             const SELECTOR: [u8; 4] = [227u8, 62u8, 110u8, 6u8];
             #[inline]
@@ -1143,9 +1073,9 @@ error OnlyEigenPodOwner();
         }
     };
     /**Custom error with signature `OnlyEigenPodOwnerOrProofSubmitter()` and selector `0x427a7779`.
-```solidity
-error OnlyEigenPodOwnerOrProofSubmitter();
-```*/
+    ```solidity
+    error OnlyEigenPodOwnerOrProofSubmitter();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct OnlyEigenPodOwnerOrProofSubmitter {}
@@ -1163,9 +1093,7 @@ error OnlyEigenPodOwnerOrProofSubmitter();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1174,16 +1102,14 @@ error OnlyEigenPodOwnerOrProofSubmitter();
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<OnlyEigenPodOwnerOrProofSubmitter>
-        for UnderlyingRustTuple<'_> {
+        impl ::core::convert::From<OnlyEigenPodOwnerOrProofSubmitter> for UnderlyingRustTuple<'_> {
             fn from(value: OnlyEigenPodOwnerOrProofSubmitter) -> Self {
                 ()
             }
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<UnderlyingRustTuple<'_>>
-        for OnlyEigenPodOwnerOrProofSubmitter {
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for OnlyEigenPodOwnerOrProofSubmitter {
             fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                 Self {}
             }
@@ -1191,9 +1117,7 @@ error OnlyEigenPodOwnerOrProofSubmitter();
         #[automatically_derived]
         impl alloy_sol_types::SolError for OnlyEigenPodOwnerOrProofSubmitter {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "OnlyEigenPodOwnerOrProofSubmitter()";
             const SELECTOR: [u8; 4] = [66u8, 122u8, 119u8, 121u8];
             #[inline]
@@ -1209,9 +1133,9 @@ error OnlyEigenPodOwnerOrProofSubmitter();
         }
     };
     /**Custom error with signature `TimestampOutOfRange()` and selector `0xf289ccda`.
-```solidity
-error TimestampOutOfRange();
-```*/
+    ```solidity
+    error TimestampOutOfRange();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct TimestampOutOfRange {}
@@ -1229,9 +1153,7 @@ error TimestampOutOfRange();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1255,9 +1177,7 @@ error TimestampOutOfRange();
         #[automatically_derived]
         impl alloy_sol_types::SolError for TimestampOutOfRange {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "TimestampOutOfRange()";
             const SELECTOR: [u8; 4] = [242u8, 137u8, 204u8, 218u8];
             #[inline]
@@ -1273,9 +1193,9 @@ error TimestampOutOfRange();
         }
     };
     /**Custom error with signature `ValidatorInactiveOnBeaconChain()` and selector `0x65608db4`.
-```solidity
-error ValidatorInactiveOnBeaconChain();
-```*/
+    ```solidity
+    error ValidatorInactiveOnBeaconChain();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct ValidatorInactiveOnBeaconChain {}
@@ -1293,9 +1213,7 @@ error ValidatorInactiveOnBeaconChain();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1304,16 +1222,14 @@ error ValidatorInactiveOnBeaconChain();
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<ValidatorInactiveOnBeaconChain>
-        for UnderlyingRustTuple<'_> {
+        impl ::core::convert::From<ValidatorInactiveOnBeaconChain> for UnderlyingRustTuple<'_> {
             fn from(value: ValidatorInactiveOnBeaconChain) -> Self {
                 ()
             }
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<UnderlyingRustTuple<'_>>
-        for ValidatorInactiveOnBeaconChain {
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for ValidatorInactiveOnBeaconChain {
             fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                 Self {}
             }
@@ -1321,9 +1237,7 @@ error ValidatorInactiveOnBeaconChain();
         #[automatically_derived]
         impl alloy_sol_types::SolError for ValidatorInactiveOnBeaconChain {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "ValidatorInactiveOnBeaconChain()";
             const SELECTOR: [u8; 4] = [101u8, 96u8, 141u8, 180u8];
             #[inline]
@@ -1339,9 +1253,9 @@ error ValidatorInactiveOnBeaconChain();
         }
     };
     /**Custom error with signature `ValidatorIsExitingBeaconChain()` and selector `0x2eade637`.
-```solidity
-error ValidatorIsExitingBeaconChain();
-```*/
+    ```solidity
+    error ValidatorIsExitingBeaconChain();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct ValidatorIsExitingBeaconChain {}
@@ -1359,9 +1273,7 @@ error ValidatorIsExitingBeaconChain();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1370,16 +1282,14 @@ error ValidatorIsExitingBeaconChain();
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<ValidatorIsExitingBeaconChain>
-        for UnderlyingRustTuple<'_> {
+        impl ::core::convert::From<ValidatorIsExitingBeaconChain> for UnderlyingRustTuple<'_> {
             fn from(value: ValidatorIsExitingBeaconChain) -> Self {
                 ()
             }
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<UnderlyingRustTuple<'_>>
-        for ValidatorIsExitingBeaconChain {
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for ValidatorIsExitingBeaconChain {
             fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                 Self {}
             }
@@ -1387,9 +1297,7 @@ error ValidatorIsExitingBeaconChain();
         #[automatically_derived]
         impl alloy_sol_types::SolError for ValidatorIsExitingBeaconChain {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "ValidatorIsExitingBeaconChain()";
             const SELECTOR: [u8; 4] = [46u8, 173u8, 230u8, 55u8];
             #[inline]
@@ -1405,9 +1313,9 @@ error ValidatorIsExitingBeaconChain();
         }
     };
     /**Custom error with signature `ValidatorNotActiveInPod()` and selector `0xd49e19a7`.
-```solidity
-error ValidatorNotActiveInPod();
-```*/
+    ```solidity
+    error ValidatorNotActiveInPod();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct ValidatorNotActiveInPod {}
@@ -1425,9 +1333,7 @@ error ValidatorNotActiveInPod();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1451,9 +1357,7 @@ error ValidatorNotActiveInPod();
         #[automatically_derived]
         impl alloy_sol_types::SolError for ValidatorNotActiveInPod {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "ValidatorNotActiveInPod()";
             const SELECTOR: [u8; 4] = [212u8, 158u8, 25u8, 167u8];
             #[inline]
@@ -1469,9 +1373,9 @@ error ValidatorNotActiveInPod();
         }
     };
     /**Custom error with signature `ValidatorNotSlashedOnBeaconChain()` and selector `0xb0e72f68`.
-```solidity
-error ValidatorNotSlashedOnBeaconChain();
-```*/
+    ```solidity
+    error ValidatorNotSlashedOnBeaconChain();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct ValidatorNotSlashedOnBeaconChain {}
@@ -1489,9 +1393,7 @@ error ValidatorNotSlashedOnBeaconChain();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1500,16 +1402,14 @@ error ValidatorNotSlashedOnBeaconChain();
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<ValidatorNotSlashedOnBeaconChain>
-        for UnderlyingRustTuple<'_> {
+        impl ::core::convert::From<ValidatorNotSlashedOnBeaconChain> for UnderlyingRustTuple<'_> {
             fn from(value: ValidatorNotSlashedOnBeaconChain) -> Self {
                 ()
             }
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<UnderlyingRustTuple<'_>>
-        for ValidatorNotSlashedOnBeaconChain {
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for ValidatorNotSlashedOnBeaconChain {
             fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                 Self {}
             }
@@ -1517,9 +1417,7 @@ error ValidatorNotSlashedOnBeaconChain();
         #[automatically_derived]
         impl alloy_sol_types::SolError for ValidatorNotSlashedOnBeaconChain {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "ValidatorNotSlashedOnBeaconChain()";
             const SELECTOR: [u8; 4] = [176u8, 231u8, 47u8, 104u8];
             #[inline]
@@ -1535,9 +1433,9 @@ error ValidatorNotSlashedOnBeaconChain();
         }
     };
     /**Custom error with signature `WithdrawalCredentialsNotForEigenPod()` and selector `0x6ee5baa6`.
-```solidity
-error WithdrawalCredentialsNotForEigenPod();
-```*/
+    ```solidity
+    error WithdrawalCredentialsNotForEigenPod();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct WithdrawalCredentialsNotForEigenPod {}
@@ -1555,9 +1453,7 @@ error WithdrawalCredentialsNotForEigenPod();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1566,16 +1462,14 @@ error WithdrawalCredentialsNotForEigenPod();
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<WithdrawalCredentialsNotForEigenPod>
-        for UnderlyingRustTuple<'_> {
+        impl ::core::convert::From<WithdrawalCredentialsNotForEigenPod> for UnderlyingRustTuple<'_> {
             fn from(value: WithdrawalCredentialsNotForEigenPod) -> Self {
                 ()
             }
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<UnderlyingRustTuple<'_>>
-        for WithdrawalCredentialsNotForEigenPod {
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for WithdrawalCredentialsNotForEigenPod {
             fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                 Self {}
             }
@@ -1583,9 +1477,7 @@ error WithdrawalCredentialsNotForEigenPod();
         #[automatically_derived]
         impl alloy_sol_types::SolError for WithdrawalCredentialsNotForEigenPod {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "WithdrawalCredentialsNotForEigenPod()";
             const SELECTOR: [u8; 4] = [110u8, 229u8, 186u8, 166u8];
             #[inline]
@@ -1752,7 +1644,8 @@ error WithdrawalCredentialsNotForEigenPod();
             static DECODE_SHIMS: &[fn(
                 &[u8],
                 bool,
-            ) -> alloy_sol_types::Result<IEigenPodErrorsErrors>] = &[
+            )
+                -> alloy_sol_types::Result<IEigenPodErrorsErrors>] = &[
                 {
                     fn InsufficientWithdrawableBalance(
                         data: &[u8],
@@ -1772,10 +1665,9 @@ error WithdrawalCredentialsNotForEigenPod();
                         validate: bool,
                     ) -> alloy_sol_types::Result<IEigenPodErrorsErrors> {
                         <NoActiveCheckpoint as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IEigenPodErrorsErrors::NoActiveCheckpoint)
+                            data, validate,
+                        )
+                        .map(IEigenPodErrorsErrors::NoActiveCheckpoint)
                     }
                     NoActiveCheckpoint
                 },
@@ -1785,10 +1677,9 @@ error WithdrawalCredentialsNotForEigenPod();
                         validate: bool,
                     ) -> alloy_sol_types::Result<IEigenPodErrorsErrors> {
                         <MsgValueNot32ETH as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IEigenPodErrorsErrors::MsgValueNot32ETH)
+                            data, validate,
+                        )
+                        .map(IEigenPodErrorsErrors::MsgValueNot32ETH)
                     }
                     MsgValueNot32ETH
                 },
@@ -1811,10 +1702,9 @@ error WithdrawalCredentialsNotForEigenPod();
                         validate: bool,
                     ) -> alloy_sol_types::Result<IEigenPodErrorsErrors> {
                         <CredentialsAlreadyVerified as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IEigenPodErrorsErrors::CredentialsAlreadyVerified)
+                            data, validate,
+                        )
+                        .map(IEigenPodErrorsErrors::CredentialsAlreadyVerified)
                     }
                     CredentialsAlreadyVerified
                 },
@@ -1824,10 +1714,9 @@ error WithdrawalCredentialsNotForEigenPod();
                         validate: bool,
                     ) -> alloy_sol_types::Result<IEigenPodErrorsErrors> {
                         <BeaconTimestampTooFarInPast as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IEigenPodErrorsErrors::BeaconTimestampTooFarInPast)
+                            data, validate,
+                        )
+                        .map(IEigenPodErrorsErrors::BeaconTimestampTooFarInPast)
                     }
                     BeaconTimestampTooFarInPast
                 },
@@ -1852,10 +1741,9 @@ error WithdrawalCredentialsNotForEigenPod();
                         validate: bool,
                     ) -> alloy_sol_types::Result<IEigenPodErrorsErrors> {
                         <InputArrayLengthMismatch as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IEigenPodErrorsErrors::InputArrayLengthMismatch)
+                            data, validate,
+                        )
+                        .map(IEigenPodErrorsErrors::InputArrayLengthMismatch)
                     }
                     InputArrayLengthMismatch
                 },
@@ -1865,10 +1753,9 @@ error WithdrawalCredentialsNotForEigenPod();
                         validate: bool,
                     ) -> alloy_sol_types::Result<IEigenPodErrorsErrors> {
                         <InvalidEIP4788Response as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IEigenPodErrorsErrors::InvalidEIP4788Response)
+                            data, validate,
+                        )
+                        .map(IEigenPodErrorsErrors::InvalidEIP4788Response)
                     }
                     InvalidEIP4788Response
                 },
@@ -1921,10 +1808,9 @@ error WithdrawalCredentialsNotForEigenPod();
                         validate: bool,
                     ) -> alloy_sol_types::Result<IEigenPodErrorsErrors> {
                         <InputAddressZero as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IEigenPodErrorsErrors::InputAddressZero)
+                            data, validate,
+                        )
+                        .map(IEigenPodErrorsErrors::InputAddressZero)
                     }
                     InputAddressZero
                 },
@@ -1934,10 +1820,9 @@ error WithdrawalCredentialsNotForEigenPod();
                         validate: bool,
                     ) -> alloy_sol_types::Result<IEigenPodErrorsErrors> {
                         <CurrentlyPaused as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IEigenPodErrorsErrors::CurrentlyPaused)
+                            data, validate,
+                        )
+                        .map(IEigenPodErrorsErrors::CurrentlyPaused)
                     }
                     CurrentlyPaused
                 },
@@ -1947,10 +1832,9 @@ error WithdrawalCredentialsNotForEigenPod();
                         validate: bool,
                     ) -> alloy_sol_types::Result<IEigenPodErrorsErrors> {
                         <InvalidPubKeyLength as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IEigenPodErrorsErrors::InvalidPubKeyLength)
+                            data, validate,
+                        )
+                        .map(IEigenPodErrorsErrors::InvalidPubKeyLength)
                     }
                     InvalidPubKeyLength
                 },
@@ -1973,10 +1857,9 @@ error WithdrawalCredentialsNotForEigenPod();
                         validate: bool,
                     ) -> alloy_sol_types::Result<IEigenPodErrorsErrors> {
                         <CheckpointAlreadyActive as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IEigenPodErrorsErrors::CheckpointAlreadyActive)
+                            data, validate,
+                        )
+                        .map(IEigenPodErrorsErrors::CheckpointAlreadyActive)
                     }
                     CheckpointAlreadyActive
                 },
@@ -1986,10 +1869,9 @@ error WithdrawalCredentialsNotForEigenPod();
                         validate: bool,
                     ) -> alloy_sol_types::Result<IEigenPodErrorsErrors> {
                         <OnlyEigenPodManager as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IEigenPodErrorsErrors::OnlyEigenPodManager)
+                            data, validate,
+                        )
+                        .map(IEigenPodErrorsErrors::OnlyEigenPodManager)
                     }
                     OnlyEigenPodManager
                 },
@@ -1999,10 +1881,9 @@ error WithdrawalCredentialsNotForEigenPod();
                         validate: bool,
                     ) -> alloy_sol_types::Result<IEigenPodErrorsErrors> {
                         <NoBalanceToCheckpoint as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IEigenPodErrorsErrors::NoBalanceToCheckpoint)
+                            data, validate,
+                        )
+                        .map(IEigenPodErrorsErrors::NoBalanceToCheckpoint)
                     }
                     NoBalanceToCheckpoint
                 },
@@ -2012,10 +1893,9 @@ error WithdrawalCredentialsNotForEigenPod();
                         validate: bool,
                     ) -> alloy_sol_types::Result<IEigenPodErrorsErrors> {
                         <ValidatorNotActiveInPod as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IEigenPodErrorsErrors::ValidatorNotActiveInPod)
+                            data, validate,
+                        )
+                        .map(IEigenPodErrorsErrors::ValidatorNotActiveInPod)
                     }
                     ValidatorNotActiveInPod
                 },
@@ -2025,10 +1905,9 @@ error WithdrawalCredentialsNotForEigenPod();
                         validate: bool,
                     ) -> alloy_sol_types::Result<IEigenPodErrorsErrors> {
                         <OnlyEigenPodOwner as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IEigenPodErrorsErrors::OnlyEigenPodOwner)
+                            data, validate,
+                        )
+                        .map(IEigenPodErrorsErrors::OnlyEigenPodOwner)
                     }
                     OnlyEigenPodOwner
                 },
@@ -2038,21 +1917,18 @@ error WithdrawalCredentialsNotForEigenPod();
                         validate: bool,
                     ) -> alloy_sol_types::Result<IEigenPodErrorsErrors> {
                         <TimestampOutOfRange as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IEigenPodErrorsErrors::TimestampOutOfRange)
+                            data, validate,
+                        )
+                        .map(IEigenPodErrorsErrors::TimestampOutOfRange)
                     }
                     TimestampOutOfRange
                 },
             ];
             let Ok(idx) = Self::SELECTORS.binary_search(&selector) else {
-                return Err(
-                    alloy_sol_types::Error::unknown_selector(
-                        <Self as alloy_sol_types::SolInterface>::NAME,
-                        selector,
-                    ),
-                );
+                return Err(alloy_sol_types::Error::unknown_selector(
+                    <Self as alloy_sol_types::SolInterface>::NAME,
+                    selector,
+                ));
             };
             (unsafe { DECODE_SHIMS.get_unchecked(idx) })(data, validate)
         }
@@ -2312,7 +2188,7 @@ error WithdrawalCredentialsNotForEigenPod();
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`IEigenPodErrors`](self) contract instance.
 
-See the [wrapper's documentation](`IEigenPodErrorsInstance`) for more details.*/
+    See the [wrapper's documentation](`IEigenPodErrorsInstance`) for more details.*/
     #[inline]
     pub const fn new<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -2326,9 +2202,9 @@ See the [wrapper's documentation](`IEigenPodErrorsInstance`) for more details.*/
     }
     /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+    Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+    For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
     #[inline]
     pub fn deploy<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -2336,35 +2212,36 @@ For more fine-grained control over the deployment process, use [`deploy_builder`
         N: alloy_contract::private::Network,
     >(
         provider: P,
-    ) -> impl ::core::future::Future<
-        Output = alloy_contract::Result<IEigenPodErrorsInstance<T, P, N>>,
-    > {
+    ) -> impl ::core::future::Future<Output = alloy_contract::Result<IEigenPodErrorsInstance<T, P, N>>>
+    {
         IEigenPodErrorsInstance::<T, P, N>::deploy(provider)
     }
     /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+    and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+    This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+    the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     #[inline]
     pub fn deploy_builder<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
         P: alloy_contract::private::Provider<T, N>,
         N: alloy_contract::private::Network,
-    >(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
+    >(
+        provider: P,
+    ) -> alloy_contract::RawCallBuilder<T, P, N> {
         IEigenPodErrorsInstance::<T, P, N>::deploy_builder(provider)
     }
     /**A [`IEigenPodErrors`](self) instance.
 
-Contains type-safe methods for interacting with an on-chain instance of the
-[`IEigenPodErrors`](self) contract located at a given `address`, using a given
-provider `P`.
+    Contains type-safe methods for interacting with an on-chain instance of the
+    [`IEigenPodErrors`](self) contract located at a given `address`, using a given
+    provider `P`.
 
-If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
-documentation on how to provide it), the `deploy` and `deploy_builder` methods can
-be used to deploy a new instance of the contract.
+    If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
+    documentation on how to provide it), the `deploy` and `deploy_builder` methods can
+    be used to deploy a new instance of the contract.
 
-See the [module-level documentation](self) for all the available methods.*/
+    See the [module-level documentation](self) for all the available methods.*/
     #[derive(Clone)]
     pub struct IEigenPodErrorsInstance<T, P, N = alloy_contract::private::Ethereum> {
         address: alloy_sol_types::private::Address,
@@ -2375,24 +2252,24 @@ See the [module-level documentation](self) for all the available methods.*/
     impl<T, P, N> ::core::fmt::Debug for IEigenPodErrorsInstance<T, P, N> {
         #[inline]
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-            f.debug_tuple("IEigenPodErrorsInstance").field(&self.address).finish()
+            f.debug_tuple("IEigenPodErrorsInstance")
+                .field(&self.address)
+                .finish()
         }
     }
     /// Instantiation and getters/setters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > IEigenPodErrorsInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > IEigenPodErrorsInstance<T, P, N>
+    {
         /**Creates a new wrapper around an on-chain [`IEigenPodErrors`](self) contract instance.
 
-See the [wrapper's documentation](`IEigenPodErrorsInstance`) for more details.*/
+        See the [wrapper's documentation](`IEigenPodErrorsInstance`) for more details.*/
         #[inline]
-        pub const fn new(
-            address: alloy_sol_types::private::Address,
-            provider: P,
-        ) -> Self {
+        pub const fn new(address: alloy_sol_types::private::Address, provider: P) -> Self {
             Self {
                 address,
                 provider,
@@ -2401,9 +2278,9 @@ See the [wrapper's documentation](`IEigenPodErrorsInstance`) for more details.*/
         }
         /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+        Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+        For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
         #[inline]
         pub async fn deploy(
             provider: P,
@@ -2413,10 +2290,10 @@ For more fine-grained control over the deployment process, use [`deploy_builder`
             Ok(Self::new(contract_address, call_builder.provider))
         }
         /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+        and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+        This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+        the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         #[inline]
         pub fn deploy_builder(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
             alloy_contract::RawCallBuilder::new_raw_deploy(
@@ -2459,10 +2336,11 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     /// Function calls.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > IEigenPodErrorsInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > IEigenPodErrorsInstance<T, P, N>
+    {
         /// Creates a new call builder using this contract instance's provider and address.
         ///
         /// Note that the call can be any function call, not just those defined in this
@@ -2477,10 +2355,11 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     /// Event filters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > IEigenPodErrorsInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > IEigenPodErrorsInstance<T, P, N>
+    {
         /// Creates a new event filter using this contract instance's provider and address.
         ///
         /// Note that the type can be any event, not just those defined in this contract.

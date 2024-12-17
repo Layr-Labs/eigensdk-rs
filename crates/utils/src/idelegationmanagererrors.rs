@@ -143,9 +143,9 @@ pub mod IDelegationManagerErrors {
         b"",
     );
     /**Custom error with signature `ActivelyDelegated()` and selector `0x77e56a06`.
-```solidity
-error ActivelyDelegated();
-```*/
+    ```solidity
+    error ActivelyDelegated();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct ActivelyDelegated {}
@@ -163,9 +163,7 @@ error ActivelyDelegated();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -189,9 +187,7 @@ error ActivelyDelegated();
         #[automatically_derived]
         impl alloy_sol_types::SolError for ActivelyDelegated {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "ActivelyDelegated()";
             const SELECTOR: [u8; 4] = [119u8, 229u8, 106u8, 6u8];
             #[inline]
@@ -207,9 +203,9 @@ error ActivelyDelegated();
         }
     };
     /**Custom error with signature `CallerCannotUndelegate()` and selector `0x3c933446`.
-```solidity
-error CallerCannotUndelegate();
-```*/
+    ```solidity
+    error CallerCannotUndelegate();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct CallerCannotUndelegate {}
@@ -227,9 +223,7 @@ error CallerCannotUndelegate();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -253,9 +247,7 @@ error CallerCannotUndelegate();
         #[automatically_derived]
         impl alloy_sol_types::SolError for CallerCannotUndelegate {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "CallerCannotUndelegate()";
             const SELECTOR: [u8; 4] = [60u8, 147u8, 52u8, 70u8];
             #[inline]
@@ -271,9 +263,9 @@ error CallerCannotUndelegate();
         }
     };
     /**Custom error with signature `FullySlashed()` and selector `0x28cef1a4`.
-```solidity
-error FullySlashed();
-```*/
+    ```solidity
+    error FullySlashed();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct FullySlashed {}
@@ -291,9 +283,7 @@ error FullySlashed();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -317,9 +307,7 @@ error FullySlashed();
         #[automatically_derived]
         impl alloy_sol_types::SolError for FullySlashed {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "FullySlashed()";
             const SELECTOR: [u8; 4] = [40u8, 206u8, 241u8, 164u8];
             #[inline]
@@ -335,9 +323,9 @@ error FullySlashed();
         }
     };
     /**Custom error with signature `InputArrayLengthMismatch()` and selector `0x43714afd`.
-```solidity
-error InputArrayLengthMismatch();
-```*/
+    ```solidity
+    error InputArrayLengthMismatch();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct InputArrayLengthMismatch {}
@@ -355,9 +343,7 @@ error InputArrayLengthMismatch();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -366,16 +352,14 @@ error InputArrayLengthMismatch();
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<InputArrayLengthMismatch>
-        for UnderlyingRustTuple<'_> {
+        impl ::core::convert::From<InputArrayLengthMismatch> for UnderlyingRustTuple<'_> {
             fn from(value: InputArrayLengthMismatch) -> Self {
                 ()
             }
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<UnderlyingRustTuple<'_>>
-        for InputArrayLengthMismatch {
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for InputArrayLengthMismatch {
             fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                 Self {}
             }
@@ -383,9 +367,7 @@ error InputArrayLengthMismatch();
         #[automatically_derived]
         impl alloy_sol_types::SolError for InputArrayLengthMismatch {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "InputArrayLengthMismatch()";
             const SELECTOR: [u8; 4] = [67u8, 113u8, 74u8, 253u8];
             #[inline]
@@ -401,9 +383,9 @@ error InputArrayLengthMismatch();
         }
     };
     /**Custom error with signature `InputArrayLengthZero()` and selector `0x796cc525`.
-```solidity
-error InputArrayLengthZero();
-```*/
+    ```solidity
+    error InputArrayLengthZero();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct InputArrayLengthZero {}
@@ -421,9 +403,7 @@ error InputArrayLengthZero();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -447,9 +427,7 @@ error InputArrayLengthZero();
         #[automatically_derived]
         impl alloy_sol_types::SolError for InputArrayLengthZero {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "InputArrayLengthZero()";
             const SELECTOR: [u8; 4] = [121u8, 108u8, 197u8, 37u8];
             #[inline]
@@ -465,9 +443,9 @@ error InputArrayLengthZero();
         }
     };
     /**Custom error with signature `NotActivelyDelegated()` and selector `0xa5c7c445`.
-```solidity
-error NotActivelyDelegated();
-```*/
+    ```solidity
+    error NotActivelyDelegated();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct NotActivelyDelegated {}
@@ -485,9 +463,7 @@ error NotActivelyDelegated();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -511,9 +487,7 @@ error NotActivelyDelegated();
         #[automatically_derived]
         impl alloy_sol_types::SolError for NotActivelyDelegated {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "NotActivelyDelegated()";
             const SELECTOR: [u8; 4] = [165u8, 199u8, 196u8, 69u8];
             #[inline]
@@ -529,9 +503,9 @@ error NotActivelyDelegated();
         }
     };
     /**Custom error with signature `OnlyAllocationManager()` and selector `0x23d871a5`.
-```solidity
-error OnlyAllocationManager();
-```*/
+    ```solidity
+    error OnlyAllocationManager();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct OnlyAllocationManager {}
@@ -549,9 +523,7 @@ error OnlyAllocationManager();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -575,9 +547,7 @@ error OnlyAllocationManager();
         #[automatically_derived]
         impl alloy_sol_types::SolError for OnlyAllocationManager {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "OnlyAllocationManager()";
             const SELECTOR: [u8; 4] = [35u8, 216u8, 113u8, 165u8];
             #[inline]
@@ -593,9 +563,9 @@ error OnlyAllocationManager();
         }
     };
     /**Custom error with signature `OnlyEigenPodManager()` and selector `0xc84e9984`.
-```solidity
-error OnlyEigenPodManager();
-```*/
+    ```solidity
+    error OnlyEigenPodManager();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct OnlyEigenPodManager {}
@@ -613,9 +583,7 @@ error OnlyEigenPodManager();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -639,9 +607,7 @@ error OnlyEigenPodManager();
         #[automatically_derived]
         impl alloy_sol_types::SolError for OnlyEigenPodManager {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "OnlyEigenPodManager()";
             const SELECTOR: [u8; 4] = [200u8, 78u8, 153u8, 132u8];
             #[inline]
@@ -657,9 +623,9 @@ error OnlyEigenPodManager();
         }
     };
     /**Custom error with signature `OnlyStrategyManagerOrEigenPodManager()` and selector `0x11481a94`.
-```solidity
-error OnlyStrategyManagerOrEigenPodManager();
-```*/
+    ```solidity
+    error OnlyStrategyManagerOrEigenPodManager();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct OnlyStrategyManagerOrEigenPodManager {}
@@ -677,9 +643,7 @@ error OnlyStrategyManagerOrEigenPodManager();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -688,16 +652,14 @@ error OnlyStrategyManagerOrEigenPodManager();
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<OnlyStrategyManagerOrEigenPodManager>
-        for UnderlyingRustTuple<'_> {
+        impl ::core::convert::From<OnlyStrategyManagerOrEigenPodManager> for UnderlyingRustTuple<'_> {
             fn from(value: OnlyStrategyManagerOrEigenPodManager) -> Self {
                 ()
             }
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<UnderlyingRustTuple<'_>>
-        for OnlyStrategyManagerOrEigenPodManager {
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for OnlyStrategyManagerOrEigenPodManager {
             fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                 Self {}
             }
@@ -705,9 +667,7 @@ error OnlyStrategyManagerOrEigenPodManager();
         #[automatically_derived]
         impl alloy_sol_types::SolError for OnlyStrategyManagerOrEigenPodManager {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "OnlyStrategyManagerOrEigenPodManager()";
             const SELECTOR: [u8; 4] = [17u8, 72u8, 26u8, 148u8];
             #[inline]
@@ -723,9 +683,9 @@ error OnlyStrategyManagerOrEigenPodManager();
         }
     };
     /**Custom error with signature `OperatorNotRegistered()` and selector `0x25ec6c1f`.
-```solidity
-error OperatorNotRegistered();
-```*/
+    ```solidity
+    error OperatorNotRegistered();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct OperatorNotRegistered {}
@@ -743,9 +703,7 @@ error OperatorNotRegistered();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -769,9 +727,7 @@ error OperatorNotRegistered();
         #[automatically_derived]
         impl alloy_sol_types::SolError for OperatorNotRegistered {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "OperatorNotRegistered()";
             const SELECTOR: [u8; 4] = [37u8, 236u8, 108u8, 31u8];
             #[inline]
@@ -787,9 +743,9 @@ error OperatorNotRegistered();
         }
     };
     /**Custom error with signature `OperatorsCannotUndelegate()` and selector `0x8e5199a8`.
-```solidity
-error OperatorsCannotUndelegate();
-```*/
+    ```solidity
+    error OperatorsCannotUndelegate();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct OperatorsCannotUndelegate {}
@@ -807,9 +763,7 @@ error OperatorsCannotUndelegate();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -818,16 +772,14 @@ error OperatorsCannotUndelegate();
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<OperatorsCannotUndelegate>
-        for UnderlyingRustTuple<'_> {
+        impl ::core::convert::From<OperatorsCannotUndelegate> for UnderlyingRustTuple<'_> {
             fn from(value: OperatorsCannotUndelegate) -> Self {
                 ()
             }
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<UnderlyingRustTuple<'_>>
-        for OperatorsCannotUndelegate {
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for OperatorsCannotUndelegate {
             fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                 Self {}
             }
@@ -835,9 +787,7 @@ error OperatorsCannotUndelegate();
         #[automatically_derived]
         impl alloy_sol_types::SolError for OperatorsCannotUndelegate {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "OperatorsCannotUndelegate()";
             const SELECTOR: [u8; 4] = [142u8, 81u8, 153u8, 168u8];
             #[inline]
@@ -853,9 +803,9 @@ error OperatorsCannotUndelegate();
         }
     };
     /**Custom error with signature `SaltSpent()` and selector `0x35313244`.
-```solidity
-error SaltSpent();
-```*/
+    ```solidity
+    error SaltSpent();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct SaltSpent {}
@@ -873,9 +823,7 @@ error SaltSpent();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -899,9 +847,7 @@ error SaltSpent();
         #[automatically_derived]
         impl alloy_sol_types::SolError for SaltSpent {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "SaltSpent()";
             const SELECTOR: [u8; 4] = [53u8, 49u8, 50u8, 68u8];
             #[inline]
@@ -917,9 +863,9 @@ error SaltSpent();
         }
     };
     /**Custom error with signature `WithdrawalDelayNotElapsed()` and selector `0xf1ecf5c2`.
-```solidity
-error WithdrawalDelayNotElapsed();
-```*/
+    ```solidity
+    error WithdrawalDelayNotElapsed();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct WithdrawalDelayNotElapsed {}
@@ -937,9 +883,7 @@ error WithdrawalDelayNotElapsed();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -948,16 +892,14 @@ error WithdrawalDelayNotElapsed();
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<WithdrawalDelayNotElapsed>
-        for UnderlyingRustTuple<'_> {
+        impl ::core::convert::From<WithdrawalDelayNotElapsed> for UnderlyingRustTuple<'_> {
             fn from(value: WithdrawalDelayNotElapsed) -> Self {
                 ()
             }
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<UnderlyingRustTuple<'_>>
-        for WithdrawalDelayNotElapsed {
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for WithdrawalDelayNotElapsed {
             fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                 Self {}
             }
@@ -965,9 +907,7 @@ error WithdrawalDelayNotElapsed();
         #[automatically_derived]
         impl alloy_sol_types::SolError for WithdrawalDelayNotElapsed {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "WithdrawalDelayNotElapsed()";
             const SELECTOR: [u8; 4] = [241u8, 236u8, 245u8, 194u8];
             #[inline]
@@ -983,9 +923,9 @@ error WithdrawalDelayNotElapsed();
         }
     };
     /**Custom error with signature `WithdrawalExceedsMax()` and selector `0xf020e5b9`.
-```solidity
-error WithdrawalExceedsMax();
-```*/
+    ```solidity
+    error WithdrawalExceedsMax();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct WithdrawalExceedsMax {}
@@ -1003,9 +943,7 @@ error WithdrawalExceedsMax();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1029,9 +967,7 @@ error WithdrawalExceedsMax();
         #[automatically_derived]
         impl alloy_sol_types::SolError for WithdrawalExceedsMax {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "WithdrawalExceedsMax()";
             const SELECTOR: [u8; 4] = [240u8, 32u8, 229u8, 185u8];
             #[inline]
@@ -1047,9 +983,9 @@ error WithdrawalExceedsMax();
         }
     };
     /**Custom error with signature `WithdrawalNotQueued()` and selector `0x87c9d219`.
-```solidity
-error WithdrawalNotQueued();
-```*/
+    ```solidity
+    error WithdrawalNotQueued();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct WithdrawalNotQueued {}
@@ -1067,9 +1003,7 @@ error WithdrawalNotQueued();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1093,9 +1027,7 @@ error WithdrawalNotQueued();
         #[automatically_derived]
         impl alloy_sol_types::SolError for WithdrawalNotQueued {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "WithdrawalNotQueued()";
             const SELECTOR: [u8; 4] = [135u8, 201u8, 210u8, 25u8];
             #[inline]
@@ -1111,9 +1043,9 @@ error WithdrawalNotQueued();
         }
     };
     /**Custom error with signature `WithdrawerNotCaller()` and selector `0x584434d4`.
-```solidity
-error WithdrawerNotCaller();
-```*/
+    ```solidity
+    error WithdrawerNotCaller();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct WithdrawerNotCaller {}
@@ -1131,9 +1063,7 @@ error WithdrawerNotCaller();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1157,9 +1087,7 @@ error WithdrawerNotCaller();
         #[automatically_derived]
         impl alloy_sol_types::SolError for WithdrawerNotCaller {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "WithdrawerNotCaller()";
             const SELECTOR: [u8; 4] = [88u8, 68u8, 52u8, 212u8];
             #[inline]
@@ -1175,9 +1103,9 @@ error WithdrawerNotCaller();
         }
     };
     /**Custom error with signature `WithdrawerNotStaker()` and selector `0xc311c5a4`.
-```solidity
-error WithdrawerNotStaker();
-```*/
+    ```solidity
+    error WithdrawerNotStaker();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct WithdrawerNotStaker {}
@@ -1195,9 +1123,7 @@ error WithdrawerNotStaker();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1221,9 +1147,7 @@ error WithdrawerNotStaker();
         #[automatically_derived]
         impl alloy_sol_types::SolError for WithdrawerNotStaker {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "WithdrawerNotStaker()";
             const SELECTOR: [u8; 4] = [195u8, 17u8, 197u8, 164u8];
             #[inline]
@@ -1300,9 +1224,7 @@ error WithdrawerNotStaker();
                 Self::CallerCannotUndelegate(_) => {
                     <CallerCannotUndelegate as alloy_sol_types::SolError>::SELECTOR
                 }
-                Self::FullySlashed(_) => {
-                    <FullySlashed as alloy_sol_types::SolError>::SELECTOR
-                }
+                Self::FullySlashed(_) => <FullySlashed as alloy_sol_types::SolError>::SELECTOR,
                 Self::InputArrayLengthMismatch(_) => {
                     <InputArrayLengthMismatch as alloy_sol_types::SolError>::SELECTOR
                 }
@@ -1363,12 +1285,15 @@ error WithdrawerNotStaker();
             static DECODE_SHIMS: &[fn(
                 &[u8],
                 bool,
-            ) -> alloy_sol_types::Result<IDelegationManagerErrorsErrors>] = &[
+            ) -> alloy_sol_types::Result<
+                IDelegationManagerErrorsErrors,
+            >] = &[
                 {
                     fn OnlyStrategyManagerOrEigenPodManager(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IDelegationManagerErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IDelegationManagerErrorsErrors>
+                    {
                         <OnlyStrategyManagerOrEigenPodManager as alloy_sol_types::SolError>::abi_decode_raw(
                                 data,
                                 validate,
@@ -1383,12 +1308,12 @@ error WithdrawerNotStaker();
                     fn OnlyAllocationManager(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IDelegationManagerErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IDelegationManagerErrorsErrors>
+                    {
                         <OnlyAllocationManager as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IDelegationManagerErrorsErrors::OnlyAllocationManager)
+                            data, validate,
+                        )
+                        .map(IDelegationManagerErrorsErrors::OnlyAllocationManager)
                     }
                     OnlyAllocationManager
                 },
@@ -1396,12 +1321,12 @@ error WithdrawerNotStaker();
                     fn OperatorNotRegistered(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IDelegationManagerErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IDelegationManagerErrorsErrors>
+                    {
                         <OperatorNotRegistered as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IDelegationManagerErrorsErrors::OperatorNotRegistered)
+                            data, validate,
+                        )
+                        .map(IDelegationManagerErrorsErrors::OperatorNotRegistered)
                     }
                     OperatorNotRegistered
                 },
@@ -1409,11 +1334,9 @@ error WithdrawerNotStaker();
                     fn FullySlashed(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IDelegationManagerErrorsErrors> {
-                        <FullySlashed as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
+                    ) -> alloy_sol_types::Result<IDelegationManagerErrorsErrors>
+                    {
+                        <FullySlashed as alloy_sol_types::SolError>::abi_decode_raw(data, validate)
                             .map(IDelegationManagerErrorsErrors::FullySlashed)
                     }
                     FullySlashed
@@ -1422,11 +1345,9 @@ error WithdrawerNotStaker();
                     fn SaltSpent(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IDelegationManagerErrorsErrors> {
-                        <SaltSpent as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
+                    ) -> alloy_sol_types::Result<IDelegationManagerErrorsErrors>
+                    {
+                        <SaltSpent as alloy_sol_types::SolError>::abi_decode_raw(data, validate)
                             .map(IDelegationManagerErrorsErrors::SaltSpent)
                     }
                     SaltSpent
@@ -1435,12 +1356,12 @@ error WithdrawerNotStaker();
                     fn CallerCannotUndelegate(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IDelegationManagerErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IDelegationManagerErrorsErrors>
+                    {
                         <CallerCannotUndelegate as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IDelegationManagerErrorsErrors::CallerCannotUndelegate)
+                            data, validate,
+                        )
+                        .map(IDelegationManagerErrorsErrors::CallerCannotUndelegate)
                     }
                     CallerCannotUndelegate
                 },
@@ -1448,14 +1369,12 @@ error WithdrawerNotStaker();
                     fn InputArrayLengthMismatch(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IDelegationManagerErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IDelegationManagerErrorsErrors>
+                    {
                         <InputArrayLengthMismatch as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(
-                                IDelegationManagerErrorsErrors::InputArrayLengthMismatch,
-                            )
+                            data, validate,
+                        )
+                        .map(IDelegationManagerErrorsErrors::InputArrayLengthMismatch)
                     }
                     InputArrayLengthMismatch
                 },
@@ -1463,12 +1382,12 @@ error WithdrawerNotStaker();
                     fn WithdrawerNotCaller(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IDelegationManagerErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IDelegationManagerErrorsErrors>
+                    {
                         <WithdrawerNotCaller as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IDelegationManagerErrorsErrors::WithdrawerNotCaller)
+                            data, validate,
+                        )
+                        .map(IDelegationManagerErrorsErrors::WithdrawerNotCaller)
                     }
                     WithdrawerNotCaller
                 },
@@ -1476,12 +1395,12 @@ error WithdrawerNotStaker();
                     fn ActivelyDelegated(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IDelegationManagerErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IDelegationManagerErrorsErrors>
+                    {
                         <ActivelyDelegated as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IDelegationManagerErrorsErrors::ActivelyDelegated)
+                            data, validate,
+                        )
+                        .map(IDelegationManagerErrorsErrors::ActivelyDelegated)
                     }
                     ActivelyDelegated
                 },
@@ -1489,12 +1408,12 @@ error WithdrawerNotStaker();
                     fn InputArrayLengthZero(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IDelegationManagerErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IDelegationManagerErrorsErrors>
+                    {
                         <InputArrayLengthZero as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IDelegationManagerErrorsErrors::InputArrayLengthZero)
+                            data, validate,
+                        )
+                        .map(IDelegationManagerErrorsErrors::InputArrayLengthZero)
                     }
                     InputArrayLengthZero
                 },
@@ -1502,12 +1421,12 @@ error WithdrawerNotStaker();
                     fn WithdrawalNotQueued(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IDelegationManagerErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IDelegationManagerErrorsErrors>
+                    {
                         <WithdrawalNotQueued as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IDelegationManagerErrorsErrors::WithdrawalNotQueued)
+                            data, validate,
+                        )
+                        .map(IDelegationManagerErrorsErrors::WithdrawalNotQueued)
                     }
                     WithdrawalNotQueued
                 },
@@ -1515,14 +1434,12 @@ error WithdrawerNotStaker();
                     fn OperatorsCannotUndelegate(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IDelegationManagerErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IDelegationManagerErrorsErrors>
+                    {
                         <OperatorsCannotUndelegate as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(
-                                IDelegationManagerErrorsErrors::OperatorsCannotUndelegate,
-                            )
+                            data, validate,
+                        )
+                        .map(IDelegationManagerErrorsErrors::OperatorsCannotUndelegate)
                     }
                     OperatorsCannotUndelegate
                 },
@@ -1530,12 +1447,12 @@ error WithdrawerNotStaker();
                     fn NotActivelyDelegated(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IDelegationManagerErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IDelegationManagerErrorsErrors>
+                    {
                         <NotActivelyDelegated as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IDelegationManagerErrorsErrors::NotActivelyDelegated)
+                            data, validate,
+                        )
+                        .map(IDelegationManagerErrorsErrors::NotActivelyDelegated)
                     }
                     NotActivelyDelegated
                 },
@@ -1543,12 +1460,12 @@ error WithdrawerNotStaker();
                     fn WithdrawerNotStaker(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IDelegationManagerErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IDelegationManagerErrorsErrors>
+                    {
                         <WithdrawerNotStaker as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IDelegationManagerErrorsErrors::WithdrawerNotStaker)
+                            data, validate,
+                        )
+                        .map(IDelegationManagerErrorsErrors::WithdrawerNotStaker)
                     }
                     WithdrawerNotStaker
                 },
@@ -1556,12 +1473,12 @@ error WithdrawerNotStaker();
                     fn OnlyEigenPodManager(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IDelegationManagerErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IDelegationManagerErrorsErrors>
+                    {
                         <OnlyEigenPodManager as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IDelegationManagerErrorsErrors::OnlyEigenPodManager)
+                            data, validate,
+                        )
+                        .map(IDelegationManagerErrorsErrors::OnlyEigenPodManager)
                     }
                     OnlyEigenPodManager
                 },
@@ -1569,12 +1486,12 @@ error WithdrawerNotStaker();
                     fn WithdrawalExceedsMax(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IDelegationManagerErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IDelegationManagerErrorsErrors>
+                    {
                         <WithdrawalExceedsMax as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IDelegationManagerErrorsErrors::WithdrawalExceedsMax)
+                            data, validate,
+                        )
+                        .map(IDelegationManagerErrorsErrors::WithdrawalExceedsMax)
                     }
                     WithdrawalExceedsMax
                 },
@@ -1582,25 +1499,21 @@ error WithdrawerNotStaker();
                     fn WithdrawalDelayNotElapsed(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IDelegationManagerErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IDelegationManagerErrorsErrors>
+                    {
                         <WithdrawalDelayNotElapsed as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(
-                                IDelegationManagerErrorsErrors::WithdrawalDelayNotElapsed,
-                            )
+                            data, validate,
+                        )
+                        .map(IDelegationManagerErrorsErrors::WithdrawalDelayNotElapsed)
                     }
                     WithdrawalDelayNotElapsed
                 },
             ];
             let Ok(idx) = Self::SELECTORS.binary_search(&selector) else {
-                return Err(
-                    alloy_sol_types::Error::unknown_selector(
-                        <Self as alloy_sol_types::SolInterface>::NAME,
-                        selector,
-                    ),
-                );
+                return Err(alloy_sol_types::Error::unknown_selector(
+                    <Self as alloy_sol_types::SolInterface>::NAME,
+                    selector,
+                ));
             };
             (unsafe { DECODE_SHIMS.get_unchecked(idx) })(data, validate)
         }
@@ -1798,7 +1711,7 @@ error WithdrawerNotStaker();
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`IDelegationManagerErrors`](self) contract instance.
 
-See the [wrapper's documentation](`IDelegationManagerErrorsInstance`) for more details.*/
+    See the [wrapper's documentation](`IDelegationManagerErrorsInstance`) for more details.*/
     #[inline]
     pub const fn new<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -1812,9 +1725,9 @@ See the [wrapper's documentation](`IDelegationManagerErrorsInstance`) for more d
     }
     /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+    Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+    For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
     #[inline]
     pub fn deploy<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -1828,35 +1741,33 @@ For more fine-grained control over the deployment process, use [`deploy_builder`
         IDelegationManagerErrorsInstance::<T, P, N>::deploy(provider)
     }
     /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+    and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+    This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+    the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     #[inline]
     pub fn deploy_builder<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
         P: alloy_contract::private::Provider<T, N>,
         N: alloy_contract::private::Network,
-    >(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
+    >(
+        provider: P,
+    ) -> alloy_contract::RawCallBuilder<T, P, N> {
         IDelegationManagerErrorsInstance::<T, P, N>::deploy_builder(provider)
     }
     /**A [`IDelegationManagerErrors`](self) instance.
 
-Contains type-safe methods for interacting with an on-chain instance of the
-[`IDelegationManagerErrors`](self) contract located at a given `address`, using a given
-provider `P`.
+    Contains type-safe methods for interacting with an on-chain instance of the
+    [`IDelegationManagerErrors`](self) contract located at a given `address`, using a given
+    provider `P`.
 
-If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
-documentation on how to provide it), the `deploy` and `deploy_builder` methods can
-be used to deploy a new instance of the contract.
+    If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
+    documentation on how to provide it), the `deploy` and `deploy_builder` methods can
+    be used to deploy a new instance of the contract.
 
-See the [module-level documentation](self) for all the available methods.*/
+    See the [module-level documentation](self) for all the available methods.*/
     #[derive(Clone)]
-    pub struct IDelegationManagerErrorsInstance<
-        T,
-        P,
-        N = alloy_contract::private::Ethereum,
-    > {
+    pub struct IDelegationManagerErrorsInstance<T, P, N = alloy_contract::private::Ethereum> {
         address: alloy_sol_types::private::Address,
         provider: P,
         _network_transport: ::core::marker::PhantomData<(N, T)>,
@@ -1873,18 +1784,16 @@ See the [module-level documentation](self) for all the available methods.*/
     /// Instantiation and getters/setters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > IDelegationManagerErrorsInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > IDelegationManagerErrorsInstance<T, P, N>
+    {
         /**Creates a new wrapper around an on-chain [`IDelegationManagerErrors`](self) contract instance.
 
-See the [wrapper's documentation](`IDelegationManagerErrorsInstance`) for more details.*/
+        See the [wrapper's documentation](`IDelegationManagerErrorsInstance`) for more details.*/
         #[inline]
-        pub const fn new(
-            address: alloy_sol_types::private::Address,
-            provider: P,
-        ) -> Self {
+        pub const fn new(address: alloy_sol_types::private::Address, provider: P) -> Self {
             Self {
                 address,
                 provider,
@@ -1893,9 +1802,9 @@ See the [wrapper's documentation](`IDelegationManagerErrorsInstance`) for more d
         }
         /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+        Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+        For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
         #[inline]
         pub async fn deploy(
             provider: P,
@@ -1905,10 +1814,10 @@ For more fine-grained control over the deployment process, use [`deploy_builder`
             Ok(Self::new(contract_address, call_builder.provider))
         }
         /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+        and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+        This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+        the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         #[inline]
         pub fn deploy_builder(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
             alloy_contract::RawCallBuilder::new_raw_deploy(
@@ -1951,10 +1860,11 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     /// Function calls.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > IDelegationManagerErrorsInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > IDelegationManagerErrorsInstance<T, P, N>
+    {
         /// Creates a new call builder using this contract instance's provider and address.
         ///
         /// Note that the call can be any function call, not just those defined in this
@@ -1969,10 +1879,11 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     /// Event filters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > IDelegationManagerErrorsInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > IDelegationManagerErrorsInstance<T, P, N>
+    {
         /// Creates a new event filter using this contract instance's provider and address.
         ///
         /// Note that the type can be any event, not just those defined in this contract.

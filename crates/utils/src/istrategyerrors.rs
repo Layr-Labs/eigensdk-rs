@@ -83,9 +83,9 @@ pub mod IStrategyErrors {
         b"",
     );
     /**Custom error with signature `BalanceExceedsMaxTotalDeposits()` and selector `0xd86bae67`.
-```solidity
-error BalanceExceedsMaxTotalDeposits();
-```*/
+    ```solidity
+    error BalanceExceedsMaxTotalDeposits();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct BalanceExceedsMaxTotalDeposits {}
@@ -103,9 +103,7 @@ error BalanceExceedsMaxTotalDeposits();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -114,16 +112,14 @@ error BalanceExceedsMaxTotalDeposits();
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<BalanceExceedsMaxTotalDeposits>
-        for UnderlyingRustTuple<'_> {
+        impl ::core::convert::From<BalanceExceedsMaxTotalDeposits> for UnderlyingRustTuple<'_> {
             fn from(value: BalanceExceedsMaxTotalDeposits) -> Self {
                 ()
             }
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<UnderlyingRustTuple<'_>>
-        for BalanceExceedsMaxTotalDeposits {
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for BalanceExceedsMaxTotalDeposits {
             fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                 Self {}
             }
@@ -131,9 +127,7 @@ error BalanceExceedsMaxTotalDeposits();
         #[automatically_derived]
         impl alloy_sol_types::SolError for BalanceExceedsMaxTotalDeposits {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "BalanceExceedsMaxTotalDeposits()";
             const SELECTOR: [u8; 4] = [216u8, 107u8, 174u8, 103u8];
             #[inline]
@@ -149,9 +143,9 @@ error BalanceExceedsMaxTotalDeposits();
         }
     };
     /**Custom error with signature `MaxPerDepositExceedsMax()` and selector `0x14ac1edc`.
-```solidity
-error MaxPerDepositExceedsMax();
-```*/
+    ```solidity
+    error MaxPerDepositExceedsMax();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct MaxPerDepositExceedsMax {}
@@ -169,9 +163,7 @@ error MaxPerDepositExceedsMax();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -195,9 +187,7 @@ error MaxPerDepositExceedsMax();
         #[automatically_derived]
         impl alloy_sol_types::SolError for MaxPerDepositExceedsMax {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "MaxPerDepositExceedsMax()";
             const SELECTOR: [u8; 4] = [20u8, 172u8, 30u8, 220u8];
             #[inline]
@@ -213,9 +203,9 @@ error MaxPerDepositExceedsMax();
         }
     };
     /**Custom error with signature `NewSharesZero()` and selector `0x18725da6`.
-```solidity
-error NewSharesZero();
-```*/
+    ```solidity
+    error NewSharesZero();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct NewSharesZero {}
@@ -233,9 +223,7 @@ error NewSharesZero();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -259,9 +247,7 @@ error NewSharesZero();
         #[automatically_derived]
         impl alloy_sol_types::SolError for NewSharesZero {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "NewSharesZero()";
             const SELECTOR: [u8; 4] = [24u8, 114u8, 93u8, 166u8];
             #[inline]
@@ -277,9 +263,9 @@ error NewSharesZero();
         }
     };
     /**Custom error with signature `OnlyStrategyManager()` and selector `0x48da714f`.
-```solidity
-error OnlyStrategyManager();
-```*/
+    ```solidity
+    error OnlyStrategyManager();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct OnlyStrategyManager {}
@@ -297,9 +283,7 @@ error OnlyStrategyManager();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -323,9 +307,7 @@ error OnlyStrategyManager();
         #[automatically_derived]
         impl alloy_sol_types::SolError for OnlyStrategyManager {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "OnlyStrategyManager()";
             const SELECTOR: [u8; 4] = [72u8, 218u8, 113u8, 79u8];
             #[inline]
@@ -341,9 +323,9 @@ error OnlyStrategyManager();
         }
     };
     /**Custom error with signature `OnlyUnderlyingToken()` and selector `0xc4aaf740`.
-```solidity
-error OnlyUnderlyingToken();
-```*/
+    ```solidity
+    error OnlyUnderlyingToken();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct OnlyUnderlyingToken {}
@@ -361,9 +343,7 @@ error OnlyUnderlyingToken();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -387,9 +367,7 @@ error OnlyUnderlyingToken();
         #[automatically_derived]
         impl alloy_sol_types::SolError for OnlyUnderlyingToken {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "OnlyUnderlyingToken()";
             const SELECTOR: [u8; 4] = [196u8, 170u8, 247u8, 64u8];
             #[inline]
@@ -405,9 +383,9 @@ error OnlyUnderlyingToken();
         }
     };
     /**Custom error with signature `TotalSharesExceedsMax()` and selector `0x5e29d146`.
-```solidity
-error TotalSharesExceedsMax();
-```*/
+    ```solidity
+    error TotalSharesExceedsMax();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct TotalSharesExceedsMax {}
@@ -425,9 +403,7 @@ error TotalSharesExceedsMax();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -451,9 +427,7 @@ error TotalSharesExceedsMax();
         #[automatically_derived]
         impl alloy_sol_types::SolError for TotalSharesExceedsMax {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "TotalSharesExceedsMax()";
             const SELECTOR: [u8; 4] = [94u8, 41u8, 209u8, 70u8];
             #[inline]
@@ -469,9 +443,9 @@ error TotalSharesExceedsMax();
         }
     };
     /**Custom error with signature `WithdrawalAmountExceedsTotalDeposits()` and selector `0xb469df30`.
-```solidity
-error WithdrawalAmountExceedsTotalDeposits();
-```*/
+    ```solidity
+    error WithdrawalAmountExceedsTotalDeposits();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct WithdrawalAmountExceedsTotalDeposits {}
@@ -489,9 +463,7 @@ error WithdrawalAmountExceedsTotalDeposits();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -500,16 +472,14 @@ error WithdrawalAmountExceedsTotalDeposits();
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<WithdrawalAmountExceedsTotalDeposits>
-        for UnderlyingRustTuple<'_> {
+        impl ::core::convert::From<WithdrawalAmountExceedsTotalDeposits> for UnderlyingRustTuple<'_> {
             fn from(value: WithdrawalAmountExceedsTotalDeposits) -> Self {
                 ()
             }
         }
         #[automatically_derived]
         #[doc(hidden)]
-        impl ::core::convert::From<UnderlyingRustTuple<'_>>
-        for WithdrawalAmountExceedsTotalDeposits {
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for WithdrawalAmountExceedsTotalDeposits {
             fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                 Self {}
             }
@@ -517,9 +487,7 @@ error WithdrawalAmountExceedsTotalDeposits();
         #[automatically_derived]
         impl alloy_sol_types::SolError for WithdrawalAmountExceedsTotalDeposits {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "WithdrawalAmountExceedsTotalDeposits()";
             const SELECTOR: [u8; 4] = [180u8, 105u8, 223u8, 48u8];
             #[inline]
@@ -576,9 +544,7 @@ error WithdrawalAmountExceedsTotalDeposits();
                 Self::MaxPerDepositExceedsMax(_) => {
                     <MaxPerDepositExceedsMax as alloy_sol_types::SolError>::SELECTOR
                 }
-                Self::NewSharesZero(_) => {
-                    <NewSharesZero as alloy_sol_types::SolError>::SELECTOR
-                }
+                Self::NewSharesZero(_) => <NewSharesZero as alloy_sol_types::SolError>::SELECTOR,
                 Self::OnlyStrategyManager(_) => {
                     <OnlyStrategyManager as alloy_sol_types::SolError>::SELECTOR
                 }
@@ -611,17 +577,17 @@ error WithdrawalAmountExceedsTotalDeposits();
             static DECODE_SHIMS: &[fn(
                 &[u8],
                 bool,
-            ) -> alloy_sol_types::Result<IStrategyErrorsErrors>] = &[
+            )
+                -> alloy_sol_types::Result<IStrategyErrorsErrors>] = &[
                 {
                     fn MaxPerDepositExceedsMax(
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<IStrategyErrorsErrors> {
                         <MaxPerDepositExceedsMax as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IStrategyErrorsErrors::MaxPerDepositExceedsMax)
+                            data, validate,
+                        )
+                        .map(IStrategyErrorsErrors::MaxPerDepositExceedsMax)
                     }
                     MaxPerDepositExceedsMax
                 },
@@ -630,10 +596,7 @@ error WithdrawalAmountExceedsTotalDeposits();
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<IStrategyErrorsErrors> {
-                        <NewSharesZero as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
+                        <NewSharesZero as alloy_sol_types::SolError>::abi_decode_raw(data, validate)
                             .map(IStrategyErrorsErrors::NewSharesZero)
                     }
                     NewSharesZero
@@ -644,10 +607,9 @@ error WithdrawalAmountExceedsTotalDeposits();
                         validate: bool,
                     ) -> alloy_sol_types::Result<IStrategyErrorsErrors> {
                         <OnlyStrategyManager as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IStrategyErrorsErrors::OnlyStrategyManager)
+                            data, validate,
+                        )
+                        .map(IStrategyErrorsErrors::OnlyStrategyManager)
                     }
                     OnlyStrategyManager
                 },
@@ -657,10 +619,9 @@ error WithdrawalAmountExceedsTotalDeposits();
                         validate: bool,
                     ) -> alloy_sol_types::Result<IStrategyErrorsErrors> {
                         <TotalSharesExceedsMax as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IStrategyErrorsErrors::TotalSharesExceedsMax)
+                            data, validate,
+                        )
+                        .map(IStrategyErrorsErrors::TotalSharesExceedsMax)
                     }
                     TotalSharesExceedsMax
                 },
@@ -685,10 +646,9 @@ error WithdrawalAmountExceedsTotalDeposits();
                         validate: bool,
                     ) -> alloy_sol_types::Result<IStrategyErrorsErrors> {
                         <OnlyUnderlyingToken as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IStrategyErrorsErrors::OnlyUnderlyingToken)
+                            data, validate,
+                        )
+                        .map(IStrategyErrorsErrors::OnlyUnderlyingToken)
                     }
                     OnlyUnderlyingToken
                 },
@@ -707,12 +667,10 @@ error WithdrawalAmountExceedsTotalDeposits();
                 },
             ];
             let Ok(idx) = Self::SELECTORS.binary_search(&selector) else {
-                return Err(
-                    alloy_sol_types::Error::unknown_selector(
-                        <Self as alloy_sol_types::SolInterface>::NAME,
-                        selector,
-                    ),
-                );
+                return Err(alloy_sol_types::Error::unknown_selector(
+                    <Self as alloy_sol_types::SolInterface>::NAME,
+                    selector,
+                ));
             };
             (unsafe { DECODE_SHIMS.get_unchecked(idx) })(data, validate)
         }
@@ -805,7 +763,7 @@ error WithdrawalAmountExceedsTotalDeposits();
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`IStrategyErrors`](self) contract instance.
 
-See the [wrapper's documentation](`IStrategyErrorsInstance`) for more details.*/
+    See the [wrapper's documentation](`IStrategyErrorsInstance`) for more details.*/
     #[inline]
     pub const fn new<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -819,9 +777,9 @@ See the [wrapper's documentation](`IStrategyErrorsInstance`) for more details.*/
     }
     /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+    Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+    For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
     #[inline]
     pub fn deploy<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -829,35 +787,36 @@ For more fine-grained control over the deployment process, use [`deploy_builder`
         N: alloy_contract::private::Network,
     >(
         provider: P,
-    ) -> impl ::core::future::Future<
-        Output = alloy_contract::Result<IStrategyErrorsInstance<T, P, N>>,
-    > {
+    ) -> impl ::core::future::Future<Output = alloy_contract::Result<IStrategyErrorsInstance<T, P, N>>>
+    {
         IStrategyErrorsInstance::<T, P, N>::deploy(provider)
     }
     /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+    and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+    This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+    the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     #[inline]
     pub fn deploy_builder<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
         P: alloy_contract::private::Provider<T, N>,
         N: alloy_contract::private::Network,
-    >(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
+    >(
+        provider: P,
+    ) -> alloy_contract::RawCallBuilder<T, P, N> {
         IStrategyErrorsInstance::<T, P, N>::deploy_builder(provider)
     }
     /**A [`IStrategyErrors`](self) instance.
 
-Contains type-safe methods for interacting with an on-chain instance of the
-[`IStrategyErrors`](self) contract located at a given `address`, using a given
-provider `P`.
+    Contains type-safe methods for interacting with an on-chain instance of the
+    [`IStrategyErrors`](self) contract located at a given `address`, using a given
+    provider `P`.
 
-If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
-documentation on how to provide it), the `deploy` and `deploy_builder` methods can
-be used to deploy a new instance of the contract.
+    If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
+    documentation on how to provide it), the `deploy` and `deploy_builder` methods can
+    be used to deploy a new instance of the contract.
 
-See the [module-level documentation](self) for all the available methods.*/
+    See the [module-level documentation](self) for all the available methods.*/
     #[derive(Clone)]
     pub struct IStrategyErrorsInstance<T, P, N = alloy_contract::private::Ethereum> {
         address: alloy_sol_types::private::Address,
@@ -868,24 +827,24 @@ See the [module-level documentation](self) for all the available methods.*/
     impl<T, P, N> ::core::fmt::Debug for IStrategyErrorsInstance<T, P, N> {
         #[inline]
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-            f.debug_tuple("IStrategyErrorsInstance").field(&self.address).finish()
+            f.debug_tuple("IStrategyErrorsInstance")
+                .field(&self.address)
+                .finish()
         }
     }
     /// Instantiation and getters/setters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > IStrategyErrorsInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > IStrategyErrorsInstance<T, P, N>
+    {
         /**Creates a new wrapper around an on-chain [`IStrategyErrors`](self) contract instance.
 
-See the [wrapper's documentation](`IStrategyErrorsInstance`) for more details.*/
+        See the [wrapper's documentation](`IStrategyErrorsInstance`) for more details.*/
         #[inline]
-        pub const fn new(
-            address: alloy_sol_types::private::Address,
-            provider: P,
-        ) -> Self {
+        pub const fn new(address: alloy_sol_types::private::Address, provider: P) -> Self {
             Self {
                 address,
                 provider,
@@ -894,9 +853,9 @@ See the [wrapper's documentation](`IStrategyErrorsInstance`) for more details.*/
         }
         /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+        Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+        For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
         #[inline]
         pub async fn deploy(
             provider: P,
@@ -906,10 +865,10 @@ For more fine-grained control over the deployment process, use [`deploy_builder`
             Ok(Self::new(contract_address, call_builder.provider))
         }
         /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+        and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+        This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+        the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         #[inline]
         pub fn deploy_builder(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
             alloy_contract::RawCallBuilder::new_raw_deploy(
@@ -952,10 +911,11 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     /// Function calls.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > IStrategyErrorsInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > IStrategyErrorsInstance<T, P, N>
+    {
         /// Creates a new call builder using this contract instance's provider and address.
         ///
         /// Note that the call can be any function call, not just those defined in this
@@ -970,10 +930,11 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     /// Event filters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > IStrategyErrorsInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > IStrategyErrorsInstance<T, P, N>
+    {
         /// Creates a new event filter using this contract instance's provider and address.
         ///
         /// Note that the type can be any event, not just those defined in this contract.

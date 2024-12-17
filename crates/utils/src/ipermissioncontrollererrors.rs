@@ -89,9 +89,9 @@ pub mod IPermissionControllerErrors {
         b"",
     );
     /**Custom error with signature `AdminAlreadyPending()` and selector `0x3357dbc6`.
-```solidity
-error AdminAlreadyPending();
-```*/
+    ```solidity
+    error AdminAlreadyPending();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct AdminAlreadyPending {}
@@ -109,9 +109,7 @@ error AdminAlreadyPending();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -135,9 +133,7 @@ error AdminAlreadyPending();
         #[automatically_derived]
         impl alloy_sol_types::SolError for AdminAlreadyPending {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "AdminAlreadyPending()";
             const SELECTOR: [u8; 4] = [51u8, 87u8, 219u8, 198u8];
             #[inline]
@@ -153,9 +149,9 @@ error AdminAlreadyPending();
         }
     };
     /**Custom error with signature `AdminAlreadySet()` and selector `0x980b0728`.
-```solidity
-error AdminAlreadySet();
-```*/
+    ```solidity
+    error AdminAlreadySet();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct AdminAlreadySet {}
@@ -173,9 +169,7 @@ error AdminAlreadySet();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -199,9 +193,7 @@ error AdminAlreadySet();
         #[automatically_derived]
         impl alloy_sol_types::SolError for AdminAlreadySet {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "AdminAlreadySet()";
             const SELECTOR: [u8; 4] = [152u8, 11u8, 7u8, 40u8];
             #[inline]
@@ -217,9 +209,9 @@ error AdminAlreadySet();
         }
     };
     /**Custom error with signature `AdminNotPending()` and selector `0xbed8295f`.
-```solidity
-error AdminNotPending();
-```*/
+    ```solidity
+    error AdminNotPending();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct AdminNotPending {}
@@ -237,9 +229,7 @@ error AdminNotPending();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -263,9 +253,7 @@ error AdminNotPending();
         #[automatically_derived]
         impl alloy_sol_types::SolError for AdminNotPending {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "AdminNotPending()";
             const SELECTOR: [u8; 4] = [190u8, 216u8, 41u8, 95u8];
             #[inline]
@@ -281,9 +269,9 @@ error AdminNotPending();
         }
     };
     /**Custom error with signature `AdminNotSet()` and selector `0xe2db0360`.
-```solidity
-error AdminNotSet();
-```*/
+    ```solidity
+    error AdminNotSet();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct AdminNotSet {}
@@ -301,9 +289,7 @@ error AdminNotSet();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -327,9 +313,7 @@ error AdminNotSet();
         #[automatically_derived]
         impl alloy_sol_types::SolError for AdminNotSet {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "AdminNotSet()";
             const SELECTOR: [u8; 4] = [226u8, 219u8, 3u8, 96u8];
             #[inline]
@@ -345,9 +329,9 @@ error AdminNotSet();
         }
     };
     /**Custom error with signature `AppointeeAlreadySet()` and selector `0xad8efeb7`.
-```solidity
-error AppointeeAlreadySet();
-```*/
+    ```solidity
+    error AppointeeAlreadySet();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct AppointeeAlreadySet {}
@@ -365,9 +349,7 @@ error AppointeeAlreadySet();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -391,9 +373,7 @@ error AppointeeAlreadySet();
         #[automatically_derived]
         impl alloy_sol_types::SolError for AppointeeAlreadySet {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "AppointeeAlreadySet()";
             const SELECTOR: [u8; 4] = [173u8, 142u8, 254u8, 183u8];
             #[inline]
@@ -409,9 +389,9 @@ error AppointeeAlreadySet();
         }
     };
     /**Custom error with signature `AppointeeNotSet()` and selector `0x262118cd`.
-```solidity
-error AppointeeNotSet();
-```*/
+    ```solidity
+    error AppointeeNotSet();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct AppointeeNotSet {}
@@ -429,9 +409,7 @@ error AppointeeNotSet();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -455,9 +433,7 @@ error AppointeeNotSet();
         #[automatically_derived]
         impl alloy_sol_types::SolError for AppointeeNotSet {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "AppointeeNotSet()";
             const SELECTOR: [u8; 4] = [38u8, 33u8, 24u8, 205u8];
             #[inline]
@@ -473,9 +449,9 @@ error AppointeeNotSet();
         }
     };
     /**Custom error with signature `CannotHaveZeroAdmins()` and selector `0x86744958`.
-```solidity
-error CannotHaveZeroAdmins();
-```*/
+    ```solidity
+    error CannotHaveZeroAdmins();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct CannotHaveZeroAdmins {}
@@ -493,9 +469,7 @@ error CannotHaveZeroAdmins();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -519,9 +493,7 @@ error CannotHaveZeroAdmins();
         #[automatically_derived]
         impl alloy_sol_types::SolError for CannotHaveZeroAdmins {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "CannotHaveZeroAdmins()";
             const SELECTOR: [u8; 4] = [134u8, 116u8, 73u8, 88u8];
             #[inline]
@@ -537,9 +509,9 @@ error CannotHaveZeroAdmins();
         }
     };
     /**Custom error with signature `NotAdmin()` and selector `0x7bfa4b9f`.
-```solidity
-error NotAdmin();
-```*/
+    ```solidity
+    error NotAdmin();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct NotAdmin {}
@@ -557,9 +529,7 @@ error NotAdmin();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -583,9 +553,7 @@ error NotAdmin();
         #[automatically_derived]
         impl alloy_sol_types::SolError for NotAdmin {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "NotAdmin()";
             const SELECTOR: [u8; 4] = [123u8, 250u8, 75u8, 159u8];
             #[inline]
@@ -647,9 +615,7 @@ error NotAdmin();
                 Self::AdminNotPending(_) => {
                     <AdminNotPending as alloy_sol_types::SolError>::SELECTOR
                 }
-                Self::AdminNotSet(_) => {
-                    <AdminNotSet as alloy_sol_types::SolError>::SELECTOR
-                }
+                Self::AdminNotSet(_) => <AdminNotSet as alloy_sol_types::SolError>::SELECTOR,
                 Self::AppointeeAlreadySet(_) => {
                     <AppointeeAlreadySet as alloy_sol_types::SolError>::SELECTOR
                 }
@@ -680,17 +646,19 @@ error NotAdmin();
             static DECODE_SHIMS: &[fn(
                 &[u8],
                 bool,
-            ) -> alloy_sol_types::Result<IPermissionControllerErrorsErrors>] = &[
+            ) -> alloy_sol_types::Result<
+                IPermissionControllerErrorsErrors,
+            >] = &[
                 {
                     fn AppointeeNotSet(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IPermissionControllerErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IPermissionControllerErrorsErrors>
+                    {
                         <AppointeeNotSet as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IPermissionControllerErrorsErrors::AppointeeNotSet)
+                            data, validate,
+                        )
+                        .map(IPermissionControllerErrorsErrors::AppointeeNotSet)
                     }
                     AppointeeNotSet
                 },
@@ -698,12 +666,12 @@ error NotAdmin();
                     fn AdminAlreadyPending(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IPermissionControllerErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IPermissionControllerErrorsErrors>
+                    {
                         <AdminAlreadyPending as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IPermissionControllerErrorsErrors::AdminAlreadyPending)
+                            data, validate,
+                        )
+                        .map(IPermissionControllerErrorsErrors::AdminAlreadyPending)
                     }
                     AdminAlreadyPending
                 },
@@ -711,11 +679,9 @@ error NotAdmin();
                     fn NotAdmin(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IPermissionControllerErrorsErrors> {
-                        <NotAdmin as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
+                    ) -> alloy_sol_types::Result<IPermissionControllerErrorsErrors>
+                    {
+                        <NotAdmin as alloy_sol_types::SolError>::abi_decode_raw(data, validate)
                             .map(IPermissionControllerErrorsErrors::NotAdmin)
                     }
                     NotAdmin
@@ -724,12 +690,12 @@ error NotAdmin();
                     fn CannotHaveZeroAdmins(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IPermissionControllerErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IPermissionControllerErrorsErrors>
+                    {
                         <CannotHaveZeroAdmins as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IPermissionControllerErrorsErrors::CannotHaveZeroAdmins)
+                            data, validate,
+                        )
+                        .map(IPermissionControllerErrorsErrors::CannotHaveZeroAdmins)
                     }
                     CannotHaveZeroAdmins
                 },
@@ -737,12 +703,12 @@ error NotAdmin();
                     fn AdminAlreadySet(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IPermissionControllerErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IPermissionControllerErrorsErrors>
+                    {
                         <AdminAlreadySet as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IPermissionControllerErrorsErrors::AdminAlreadySet)
+                            data, validate,
+                        )
+                        .map(IPermissionControllerErrorsErrors::AdminAlreadySet)
                     }
                     AdminAlreadySet
                 },
@@ -750,12 +716,12 @@ error NotAdmin();
                     fn AppointeeAlreadySet(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IPermissionControllerErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IPermissionControllerErrorsErrors>
+                    {
                         <AppointeeAlreadySet as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IPermissionControllerErrorsErrors::AppointeeAlreadySet)
+                            data, validate,
+                        )
+                        .map(IPermissionControllerErrorsErrors::AppointeeAlreadySet)
                     }
                     AppointeeAlreadySet
                 },
@@ -763,12 +729,12 @@ error NotAdmin();
                     fn AdminNotPending(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IPermissionControllerErrorsErrors> {
+                    ) -> alloy_sol_types::Result<IPermissionControllerErrorsErrors>
+                    {
                         <AdminNotPending as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IPermissionControllerErrorsErrors::AdminNotPending)
+                            data, validate,
+                        )
+                        .map(IPermissionControllerErrorsErrors::AdminNotPending)
                     }
                     AdminNotPending
                 },
@@ -776,23 +742,19 @@ error NotAdmin();
                     fn AdminNotSet(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<IPermissionControllerErrorsErrors> {
-                        <AdminNotSet as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
+                    ) -> alloy_sol_types::Result<IPermissionControllerErrorsErrors>
+                    {
+                        <AdminNotSet as alloy_sol_types::SolError>::abi_decode_raw(data, validate)
                             .map(IPermissionControllerErrorsErrors::AdminNotSet)
                     }
                     AdminNotSet
                 },
             ];
             let Ok(idx) = Self::SELECTORS.binary_search(&selector) else {
-                return Err(
-                    alloy_sol_types::Error::unknown_selector(
-                        <Self as alloy_sol_types::SolInterface>::NAME,
-                        selector,
-                    ),
-                );
+                return Err(alloy_sol_types::Error::unknown_selector(
+                    <Self as alloy_sol_types::SolInterface>::NAME,
+                    selector,
+                ));
             };
             (unsafe { DECODE_SHIMS.get_unchecked(idx) })(data, validate)
         }
@@ -800,37 +762,25 @@ error NotAdmin();
         fn abi_encoded_size(&self) -> usize {
             match self {
                 Self::AdminAlreadyPending(inner) => {
-                    <AdminAlreadyPending as alloy_sol_types::SolError>::abi_encoded_size(
-                        inner,
-                    )
+                    <AdminAlreadyPending as alloy_sol_types::SolError>::abi_encoded_size(inner)
                 }
                 Self::AdminAlreadySet(inner) => {
-                    <AdminAlreadySet as alloy_sol_types::SolError>::abi_encoded_size(
-                        inner,
-                    )
+                    <AdminAlreadySet as alloy_sol_types::SolError>::abi_encoded_size(inner)
                 }
                 Self::AdminNotPending(inner) => {
-                    <AdminNotPending as alloy_sol_types::SolError>::abi_encoded_size(
-                        inner,
-                    )
+                    <AdminNotPending as alloy_sol_types::SolError>::abi_encoded_size(inner)
                 }
                 Self::AdminNotSet(inner) => {
                     <AdminNotSet as alloy_sol_types::SolError>::abi_encoded_size(inner)
                 }
                 Self::AppointeeAlreadySet(inner) => {
-                    <AppointeeAlreadySet as alloy_sol_types::SolError>::abi_encoded_size(
-                        inner,
-                    )
+                    <AppointeeAlreadySet as alloy_sol_types::SolError>::abi_encoded_size(inner)
                 }
                 Self::AppointeeNotSet(inner) => {
-                    <AppointeeNotSet as alloy_sol_types::SolError>::abi_encoded_size(
-                        inner,
-                    )
+                    <AppointeeNotSet as alloy_sol_types::SolError>::abi_encoded_size(inner)
                 }
                 Self::CannotHaveZeroAdmins(inner) => {
-                    <CannotHaveZeroAdmins as alloy_sol_types::SolError>::abi_encoded_size(
-                        inner,
-                    )
+                    <CannotHaveZeroAdmins as alloy_sol_types::SolError>::abi_encoded_size(inner)
                 }
                 Self::NotAdmin(inner) => {
                     <NotAdmin as alloy_sol_types::SolError>::abi_encoded_size(inner)
@@ -841,46 +791,25 @@ error NotAdmin();
         fn abi_encode_raw(&self, out: &mut alloy_sol_types::private::Vec<u8>) {
             match self {
                 Self::AdminAlreadyPending(inner) => {
-                    <AdminAlreadyPending as alloy_sol_types::SolError>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <AdminAlreadyPending as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
                 }
                 Self::AdminAlreadySet(inner) => {
-                    <AdminAlreadySet as alloy_sol_types::SolError>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <AdminAlreadySet as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
                 }
                 Self::AdminNotPending(inner) => {
-                    <AdminNotPending as alloy_sol_types::SolError>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <AdminNotPending as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
                 }
                 Self::AdminNotSet(inner) => {
-                    <AdminNotSet as alloy_sol_types::SolError>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <AdminNotSet as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
                 }
                 Self::AppointeeAlreadySet(inner) => {
-                    <AppointeeAlreadySet as alloy_sol_types::SolError>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <AppointeeAlreadySet as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
                 }
                 Self::AppointeeNotSet(inner) => {
-                    <AppointeeNotSet as alloy_sol_types::SolError>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <AppointeeNotSet as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
                 }
                 Self::CannotHaveZeroAdmins(inner) => {
-                    <CannotHaveZeroAdmins as alloy_sol_types::SolError>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <CannotHaveZeroAdmins as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
                 }
                 Self::NotAdmin(inner) => {
                     <NotAdmin as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
@@ -891,7 +820,7 @@ error NotAdmin();
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`IPermissionControllerErrors`](self) contract instance.
 
-See the [wrapper's documentation](`IPermissionControllerErrorsInstance`) for more details.*/
+    See the [wrapper's documentation](`IPermissionControllerErrorsInstance`) for more details.*/
     #[inline]
     pub const fn new<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -905,9 +834,9 @@ See the [wrapper's documentation](`IPermissionControllerErrorsInstance`) for mor
     }
     /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+    Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+    For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
     #[inline]
     pub fn deploy<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -921,35 +850,33 @@ For more fine-grained control over the deployment process, use [`deploy_builder`
         IPermissionControllerErrorsInstance::<T, P, N>::deploy(provider)
     }
     /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+    and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+    This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+    the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     #[inline]
     pub fn deploy_builder<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
         P: alloy_contract::private::Provider<T, N>,
         N: alloy_contract::private::Network,
-    >(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
+    >(
+        provider: P,
+    ) -> alloy_contract::RawCallBuilder<T, P, N> {
         IPermissionControllerErrorsInstance::<T, P, N>::deploy_builder(provider)
     }
     /**A [`IPermissionControllerErrors`](self) instance.
 
-Contains type-safe methods for interacting with an on-chain instance of the
-[`IPermissionControllerErrors`](self) contract located at a given `address`, using a given
-provider `P`.
+    Contains type-safe methods for interacting with an on-chain instance of the
+    [`IPermissionControllerErrors`](self) contract located at a given `address`, using a given
+    provider `P`.
 
-If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
-documentation on how to provide it), the `deploy` and `deploy_builder` methods can
-be used to deploy a new instance of the contract.
+    If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
+    documentation on how to provide it), the `deploy` and `deploy_builder` methods can
+    be used to deploy a new instance of the contract.
 
-See the [module-level documentation](self) for all the available methods.*/
+    See the [module-level documentation](self) for all the available methods.*/
     #[derive(Clone)]
-    pub struct IPermissionControllerErrorsInstance<
-        T,
-        P,
-        N = alloy_contract::private::Ethereum,
-    > {
+    pub struct IPermissionControllerErrorsInstance<T, P, N = alloy_contract::private::Ethereum> {
         address: alloy_sol_types::private::Address,
         provider: P,
         _network_transport: ::core::marker::PhantomData<(N, T)>,
@@ -966,18 +893,16 @@ See the [module-level documentation](self) for all the available methods.*/
     /// Instantiation and getters/setters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > IPermissionControllerErrorsInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > IPermissionControllerErrorsInstance<T, P, N>
+    {
         /**Creates a new wrapper around an on-chain [`IPermissionControllerErrors`](self) contract instance.
 
-See the [wrapper's documentation](`IPermissionControllerErrorsInstance`) for more details.*/
+        See the [wrapper's documentation](`IPermissionControllerErrorsInstance`) for more details.*/
         #[inline]
-        pub const fn new(
-            address: alloy_sol_types::private::Address,
-            provider: P,
-        ) -> Self {
+        pub const fn new(address: alloy_sol_types::private::Address, provider: P) -> Self {
             Self {
                 address,
                 provider,
@@ -986,9 +911,9 @@ See the [wrapper's documentation](`IPermissionControllerErrorsInstance`) for mor
         }
         /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+        Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+        For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
         #[inline]
         pub async fn deploy(
             provider: P,
@@ -998,10 +923,10 @@ For more fine-grained control over the deployment process, use [`deploy_builder`
             Ok(Self::new(contract_address, call_builder.provider))
         }
         /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+        and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+        This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+        the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         #[inline]
         pub fn deploy_builder(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
             alloy_contract::RawCallBuilder::new_raw_deploy(
@@ -1033,9 +958,7 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     impl<T, P: ::core::clone::Clone, N> IPermissionControllerErrorsInstance<T, &P, N> {
         /// Clones the provider and returns a new instance with the cloned provider.
         #[inline]
-        pub fn with_cloned_provider(
-            self,
-        ) -> IPermissionControllerErrorsInstance<T, P, N> {
+        pub fn with_cloned_provider(self) -> IPermissionControllerErrorsInstance<T, P, N> {
             IPermissionControllerErrorsInstance {
                 address: self.address,
                 provider: ::core::clone::Clone::clone(&self.provider),
@@ -1046,10 +969,11 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     /// Function calls.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > IPermissionControllerErrorsInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > IPermissionControllerErrorsInstance<T, P, N>
+    {
         /// Creates a new call builder using this contract instance's provider and address.
         ///
         /// Note that the call can be any function call, not just those defined in this
@@ -1064,10 +988,11 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     /// Event filters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > IPermissionControllerErrorsInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > IPermissionControllerErrorsInstance<T, P, N>
+    {
         /// Creates a new event filter using this contract instance's provider and address.
         ///
         /// Note that the type can be any event, not just those defined in this contract.

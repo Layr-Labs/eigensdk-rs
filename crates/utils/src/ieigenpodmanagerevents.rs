@@ -191,9 +191,9 @@ pub mod IEigenPodManagerEvents {
         b"",
     );
     /**Event with signature `BeaconChainETHDeposited(address,uint256)` and selector `0x35a85cabc603f48abb2b71d9fbd8adea7c449d7f0be900ae7a2986ea369c3d0d`.
-```solidity
-event BeaconChainETHDeposited(address indexed podOwner, uint256 amount);
-```*/
+    ```solidity
+    event BeaconChainETHDeposited(address indexed podOwner, uint256 amount);
+    ```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -218,48 +218,18 @@ event BeaconChainETHDeposited(address indexed podOwner, uint256 amount);
         #[automatically_derived]
         impl alloy_sol_types::SolEvent for BeaconChainETHDeposited {
             type DataTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
-            type DataToken<'a> = <Self::DataTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (
                 alloy_sol_types::sol_data::FixedBytes<32>,
                 alloy::sol_types::sol_data::Address,
             );
             const SIGNATURE: &'static str = "BeaconChainETHDeposited(address,uint256)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
-                53u8,
-                168u8,
-                92u8,
-                171u8,
-                198u8,
-                3u8,
-                244u8,
-                138u8,
-                187u8,
-                43u8,
-                113u8,
-                217u8,
-                251u8,
-                216u8,
-                173u8,
-                234u8,
-                124u8,
-                68u8,
-                157u8,
-                127u8,
-                11u8,
-                233u8,
-                0u8,
-                174u8,
-                122u8,
-                41u8,
-                134u8,
-                234u8,
-                54u8,
-                156u8,
-                61u8,
-                13u8,
-            ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
+                alloy_sol_types::private::B256::new([
+                    53u8, 168u8, 92u8, 171u8, 198u8, 3u8, 244u8, 138u8, 187u8, 43u8, 113u8, 217u8,
+                    251u8, 216u8, 173u8, 234u8, 124u8, 68u8, 157u8, 127u8, 11u8, 233u8, 0u8, 174u8,
+                    122u8, 41u8, 134u8, 234u8, 54u8, 156u8, 61u8, 13u8,
+                ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -277,22 +247,20 @@ event BeaconChainETHDeposited(address indexed podOwner, uint256 amount);
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(
-                        alloy_sol_types::Error::invalid_event_signature_hash(
-                            Self::SIGNATURE,
-                            topics.0,
-                            Self::SIGNATURE_HASH,
-                        ),
-                    );
+                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
+                        Self::SIGNATURE,
+                        topics.0,
+                        Self::SIGNATURE_HASH,
+                    ));
                 }
                 Ok(())
             }
             #[inline]
             fn tokenize_body(&self) -> Self::DataToken<'_> {
                 (
-                    <alloy::sol_types::sol_data::Uint<
-                        256,
-                    > as alloy_sol_types::SolType>::tokenize(&self.amount),
+                    <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
+                        &self.amount,
+                    ),
                 )
             }
             #[inline]
@@ -307,9 +275,7 @@ event BeaconChainETHDeposited(address indexed podOwner, uint256 amount);
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(
-                    Self::SIGNATURE_HASH,
-                );
+                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
                 out[1usize] = <alloy::sol_types::sol_data::Address as alloy_sol_types::EventTopic>::encode_topic(
                     &self.podOwner,
                 );
@@ -328,17 +294,15 @@ event BeaconChainETHDeposited(address indexed podOwner, uint256 amount);
         #[automatically_derived]
         impl From<&BeaconChainETHDeposited> for alloy_sol_types::private::LogData {
             #[inline]
-            fn from(
-                this: &BeaconChainETHDeposited,
-            ) -> alloy_sol_types::private::LogData {
+            fn from(this: &BeaconChainETHDeposited) -> alloy_sol_types::private::LogData {
                 alloy_sol_types::SolEvent::encode_log_data(this)
             }
         }
     };
     /**Event with signature `BeaconChainETHWithdrawalCompleted(address,uint256,uint96,address,address,bytes32)` and selector `0xa6bab1d55a361fcea2eee2bc9491e4f01e6cf333df03c9c4f2c144466429f7d6`.
-```solidity
-event BeaconChainETHWithdrawalCompleted(address indexed podOwner, uint256 shares, uint96 nonce, address delegatedAddress, address withdrawer, bytes32 withdrawalRoot);
-```*/
+    ```solidity
+    event BeaconChainETHWithdrawalCompleted(address indexed podOwner, uint256 shares, uint96 nonce, address delegatedAddress, address withdrawer, bytes32 withdrawalRoot);
+    ```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -377,48 +341,19 @@ event BeaconChainETHWithdrawalCompleted(address indexed podOwner, uint256 shares
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::FixedBytes<32>,
             );
-            type DataToken<'a> = <Self::DataTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (
                 alloy_sol_types::sol_data::FixedBytes<32>,
                 alloy::sol_types::sol_data::Address,
             );
-            const SIGNATURE: &'static str = "BeaconChainETHWithdrawalCompleted(address,uint256,uint96,address,address,bytes32)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
-                166u8,
-                186u8,
-                177u8,
-                213u8,
-                90u8,
-                54u8,
-                31u8,
-                206u8,
-                162u8,
-                238u8,
-                226u8,
-                188u8,
-                148u8,
-                145u8,
-                228u8,
-                240u8,
-                30u8,
-                108u8,
-                243u8,
-                51u8,
-                223u8,
-                3u8,
-                201u8,
-                196u8,
-                242u8,
-                193u8,
-                68u8,
-                70u8,
-                100u8,
-                41u8,
-                247u8,
-                214u8,
-            ]);
+            const SIGNATURE: &'static str =
+                "BeaconChainETHWithdrawalCompleted(address,uint256,uint96,address,address,bytes32)";
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
+                alloy_sol_types::private::B256::new([
+                    166u8, 186u8, 177u8, 213u8, 90u8, 54u8, 31u8, 206u8, 162u8, 238u8, 226u8,
+                    188u8, 148u8, 145u8, 228u8, 240u8, 30u8, 108u8, 243u8, 51u8, 223u8, 3u8, 201u8,
+                    196u8, 242u8, 193u8, 68u8, 70u8, 100u8, 41u8, 247u8, 214u8,
+                ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -440,13 +375,11 @@ event BeaconChainETHWithdrawalCompleted(address indexed podOwner, uint256 shares
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(
-                        alloy_sol_types::Error::invalid_event_signature_hash(
-                            Self::SIGNATURE,
-                            topics.0,
-                            Self::SIGNATURE_HASH,
-                        ),
-                    );
+                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
+                        Self::SIGNATURE,
+                        topics.0,
+                        Self::SIGNATURE_HASH,
+                    ));
                 }
                 Ok(())
             }
@@ -482,9 +415,7 @@ event BeaconChainETHWithdrawalCompleted(address indexed podOwner, uint256 shares
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(
-                    Self::SIGNATURE_HASH,
-                );
+                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
                 out[1usize] = <alloy::sol_types::sol_data::Address as alloy_sol_types::EventTopic>::encode_topic(
                     &self.podOwner,
                 );
@@ -492,8 +423,7 @@ event BeaconChainETHWithdrawalCompleted(address indexed podOwner, uint256 shares
             }
         }
         #[automatically_derived]
-        impl alloy_sol_types::private::IntoLogData
-        for BeaconChainETHWithdrawalCompleted {
+        impl alloy_sol_types::private::IntoLogData for BeaconChainETHWithdrawalCompleted {
             fn to_log_data(&self) -> alloy_sol_types::private::LogData {
                 From::from(self)
             }
@@ -502,20 +432,17 @@ event BeaconChainETHWithdrawalCompleted(address indexed podOwner, uint256 shares
             }
         }
         #[automatically_derived]
-        impl From<&BeaconChainETHWithdrawalCompleted>
-        for alloy_sol_types::private::LogData {
+        impl From<&BeaconChainETHWithdrawalCompleted> for alloy_sol_types::private::LogData {
             #[inline]
-            fn from(
-                this: &BeaconChainETHWithdrawalCompleted,
-            ) -> alloy_sol_types::private::LogData {
+            fn from(this: &BeaconChainETHWithdrawalCompleted) -> alloy_sol_types::private::LogData {
                 alloy_sol_types::SolEvent::encode_log_data(this)
             }
         }
     };
     /**Event with signature `BeaconChainSlashingFactorDecreased(address,uint64,uint64)` and selector `0xb160ab8589bf47dc04ea11b50d46678d21590cea2ed3e454e7bd3e41510f98cf`.
-```solidity
-event BeaconChainSlashingFactorDecreased(address staker, uint64 prevBeaconChainSlashingFactor, uint64 newBeaconChainSlashingFactor);
-```*/
+    ```solidity
+    event BeaconChainSlashingFactorDecreased(address staker, uint64 prevBeaconChainSlashingFactor, uint64 newBeaconChainSlashingFactor);
+    ```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -546,45 +473,16 @@ event BeaconChainSlashingFactorDecreased(address staker, uint64 prevBeaconChainS
                 alloy::sol_types::sol_data::Uint<64>,
                 alloy::sol_types::sol_data::Uint<64>,
             );
-            type DataToken<'a> = <Self::DataTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (alloy_sol_types::sol_data::FixedBytes<32>,);
-            const SIGNATURE: &'static str = "BeaconChainSlashingFactorDecreased(address,uint64,uint64)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
-                177u8,
-                96u8,
-                171u8,
-                133u8,
-                137u8,
-                191u8,
-                71u8,
-                220u8,
-                4u8,
-                234u8,
-                17u8,
-                181u8,
-                13u8,
-                70u8,
-                103u8,
-                141u8,
-                33u8,
-                89u8,
-                12u8,
-                234u8,
-                46u8,
-                211u8,
-                228u8,
-                84u8,
-                231u8,
-                189u8,
-                62u8,
-                65u8,
-                81u8,
-                15u8,
-                152u8,
-                207u8,
-            ]);
+            const SIGNATURE: &'static str =
+                "BeaconChainSlashingFactorDecreased(address,uint64,uint64)";
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
+                alloy_sol_types::private::B256::new([
+                    177u8, 96u8, 171u8, 133u8, 137u8, 191u8, 71u8, 220u8, 4u8, 234u8, 17u8, 181u8,
+                    13u8, 70u8, 103u8, 141u8, 33u8, 89u8, 12u8, 234u8, 46u8, 211u8, 228u8, 84u8,
+                    231u8, 189u8, 62u8, 65u8, 81u8, 15u8, 152u8, 207u8,
+                ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -603,13 +501,11 @@ event BeaconChainSlashingFactorDecreased(address staker, uint64 prevBeaconChainS
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(
-                        alloy_sol_types::Error::invalid_event_signature_hash(
-                            Self::SIGNATURE,
-                            topics.0,
-                            Self::SIGNATURE_HASH,
-                        ),
-                    );
+                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
+                        Self::SIGNATURE,
+                        topics.0,
+                        Self::SIGNATURE_HASH,
+                    ));
                 }
                 Ok(())
             }
@@ -619,14 +515,10 @@ event BeaconChainSlashingFactorDecreased(address staker, uint64 prevBeaconChainS
                     <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
                         &self.staker,
                     ),
-                    <alloy::sol_types::sol_data::Uint<
-                        64,
-                    > as alloy_sol_types::SolType>::tokenize(
+                    <alloy::sol_types::sol_data::Uint<64> as alloy_sol_types::SolType>::tokenize(
                         &self.prevBeaconChainSlashingFactor,
                     ),
-                    <alloy::sol_types::sol_data::Uint<
-                        64,
-                    > as alloy_sol_types::SolType>::tokenize(
+                    <alloy::sol_types::sol_data::Uint<64> as alloy_sol_types::SolType>::tokenize(
                         &self.newBeaconChainSlashingFactor,
                     ),
                 )
@@ -643,15 +535,12 @@ event BeaconChainSlashingFactorDecreased(address staker, uint64 prevBeaconChainS
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(
-                    Self::SIGNATURE_HASH,
-                );
+                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
                 Ok(())
             }
         }
         #[automatically_derived]
-        impl alloy_sol_types::private::IntoLogData
-        for BeaconChainSlashingFactorDecreased {
+        impl alloy_sol_types::private::IntoLogData for BeaconChainSlashingFactorDecreased {
             fn to_log_data(&self) -> alloy_sol_types::private::LogData {
                 From::from(self)
             }
@@ -660,8 +549,7 @@ event BeaconChainSlashingFactorDecreased(address staker, uint64 prevBeaconChainS
             }
         }
         #[automatically_derived]
-        impl From<&BeaconChainSlashingFactorDecreased>
-        for alloy_sol_types::private::LogData {
+        impl From<&BeaconChainSlashingFactorDecreased> for alloy_sol_types::private::LogData {
             #[inline]
             fn from(
                 this: &BeaconChainSlashingFactorDecreased,
@@ -671,9 +559,9 @@ event BeaconChainSlashingFactorDecreased(address staker, uint64 prevBeaconChainS
         }
     };
     /**Event with signature `NewTotalShares(address,int256)` and selector `0xd4def76d6d2bed6f14d5cd9af73cc2913d618d00edde42432e81c09bfe077098`.
-```solidity
-event NewTotalShares(address indexed podOwner, int256 newTotalShares);
-```*/
+    ```solidity
+    event NewTotalShares(address indexed podOwner, int256 newTotalShares);
+    ```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -698,48 +586,18 @@ event NewTotalShares(address indexed podOwner, int256 newTotalShares);
         #[automatically_derived]
         impl alloy_sol_types::SolEvent for NewTotalShares {
             type DataTuple<'a> = (alloy::sol_types::sol_data::Int<256>,);
-            type DataToken<'a> = <Self::DataTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (
                 alloy_sol_types::sol_data::FixedBytes<32>,
                 alloy::sol_types::sol_data::Address,
             );
             const SIGNATURE: &'static str = "NewTotalShares(address,int256)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
-                212u8,
-                222u8,
-                247u8,
-                109u8,
-                109u8,
-                43u8,
-                237u8,
-                111u8,
-                20u8,
-                213u8,
-                205u8,
-                154u8,
-                247u8,
-                60u8,
-                194u8,
-                145u8,
-                61u8,
-                97u8,
-                141u8,
-                0u8,
-                237u8,
-                222u8,
-                66u8,
-                67u8,
-                46u8,
-                129u8,
-                192u8,
-                155u8,
-                254u8,
-                7u8,
-                112u8,
-                152u8,
-            ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
+                alloy_sol_types::private::B256::new([
+                    212u8, 222u8, 247u8, 109u8, 109u8, 43u8, 237u8, 111u8, 20u8, 213u8, 205u8,
+                    154u8, 247u8, 60u8, 194u8, 145u8, 61u8, 97u8, 141u8, 0u8, 237u8, 222u8, 66u8,
+                    67u8, 46u8, 129u8, 192u8, 155u8, 254u8, 7u8, 112u8, 152u8,
+                ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -757,22 +615,20 @@ event NewTotalShares(address indexed podOwner, int256 newTotalShares);
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(
-                        alloy_sol_types::Error::invalid_event_signature_hash(
-                            Self::SIGNATURE,
-                            topics.0,
-                            Self::SIGNATURE_HASH,
-                        ),
-                    );
+                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
+                        Self::SIGNATURE,
+                        topics.0,
+                        Self::SIGNATURE_HASH,
+                    ));
                 }
                 Ok(())
             }
             #[inline]
             fn tokenize_body(&self) -> Self::DataToken<'_> {
                 (
-                    <alloy::sol_types::sol_data::Int<
-                        256,
-                    > as alloy_sol_types::SolType>::tokenize(&self.newTotalShares),
+                    <alloy::sol_types::sol_data::Int<256> as alloy_sol_types::SolType>::tokenize(
+                        &self.newTotalShares,
+                    ),
                 )
             }
             #[inline]
@@ -787,9 +643,7 @@ event NewTotalShares(address indexed podOwner, int256 newTotalShares);
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(
-                    Self::SIGNATURE_HASH,
-                );
+                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
                 out[1usize] = <alloy::sol_types::sol_data::Address as alloy_sol_types::EventTopic>::encode_topic(
                     &self.podOwner,
                 );
@@ -814,9 +668,9 @@ event NewTotalShares(address indexed podOwner, int256 newTotalShares);
         }
     };
     /**Event with signature `PodDeployed(address,address)` and selector `0x21c99d0db02213c32fff5b05cf0a718ab5f858802b91498f80d82270289d856a`.
-```solidity
-event PodDeployed(address indexed eigenPod, address indexed podOwner);
-```*/
+    ```solidity
+    event PodDeployed(address indexed eigenPod, address indexed podOwner);
+    ```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -841,49 +695,19 @@ event PodDeployed(address indexed eigenPod, address indexed podOwner);
         #[automatically_derived]
         impl alloy_sol_types::SolEvent for PodDeployed {
             type DataTuple<'a> = ();
-            type DataToken<'a> = <Self::DataTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (
                 alloy_sol_types::sol_data::FixedBytes<32>,
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Address,
             );
             const SIGNATURE: &'static str = "PodDeployed(address,address)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
-                33u8,
-                201u8,
-                157u8,
-                13u8,
-                176u8,
-                34u8,
-                19u8,
-                195u8,
-                47u8,
-                255u8,
-                91u8,
-                5u8,
-                207u8,
-                10u8,
-                113u8,
-                138u8,
-                181u8,
-                248u8,
-                88u8,
-                128u8,
-                43u8,
-                145u8,
-                73u8,
-                143u8,
-                128u8,
-                216u8,
-                34u8,
-                112u8,
-                40u8,
-                157u8,
-                133u8,
-                106u8,
-            ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
+                alloy_sol_types::private::B256::new([
+                    33u8, 201u8, 157u8, 13u8, 176u8, 34u8, 19u8, 195u8, 47u8, 255u8, 91u8, 5u8,
+                    207u8, 10u8, 113u8, 138u8, 181u8, 248u8, 88u8, 128u8, 43u8, 145u8, 73u8, 143u8,
+                    128u8, 216u8, 34u8, 112u8, 40u8, 157u8, 133u8, 106u8,
+                ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -901,13 +725,11 @@ event PodDeployed(address indexed eigenPod, address indexed podOwner);
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(
-                        alloy_sol_types::Error::invalid_event_signature_hash(
-                            Self::SIGNATURE,
-                            topics.0,
-                            Self::SIGNATURE_HASH,
-                        ),
-                    );
+                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
+                        Self::SIGNATURE,
+                        topics.0,
+                        Self::SIGNATURE_HASH,
+                    ));
                 }
                 Ok(())
             }
@@ -931,9 +753,7 @@ event PodDeployed(address indexed eigenPod, address indexed podOwner);
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(
-                    Self::SIGNATURE_HASH,
-                );
+                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
                 out[1usize] = <alloy::sol_types::sol_data::Address as alloy_sol_types::EventTopic>::encode_topic(
                     &self.eigenPod,
                 );
@@ -961,9 +781,9 @@ event PodDeployed(address indexed eigenPod, address indexed podOwner);
         }
     };
     /**Event with signature `PodSharesUpdated(address,int256)` and selector `0x4e2b791dedccd9fb30141b088cabf5c14a8912b52f59375c95c010700b8c6193`.
-```solidity
-event PodSharesUpdated(address indexed podOwner, int256 sharesDelta);
-```*/
+    ```solidity
+    event PodSharesUpdated(address indexed podOwner, int256 sharesDelta);
+    ```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -988,48 +808,18 @@ event PodSharesUpdated(address indexed podOwner, int256 sharesDelta);
         #[automatically_derived]
         impl alloy_sol_types::SolEvent for PodSharesUpdated {
             type DataTuple<'a> = (alloy::sol_types::sol_data::Int<256>,);
-            type DataToken<'a> = <Self::DataTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (
                 alloy_sol_types::sol_data::FixedBytes<32>,
                 alloy::sol_types::sol_data::Address,
             );
             const SIGNATURE: &'static str = "PodSharesUpdated(address,int256)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
-                78u8,
-                43u8,
-                121u8,
-                29u8,
-                237u8,
-                204u8,
-                217u8,
-                251u8,
-                48u8,
-                20u8,
-                27u8,
-                8u8,
-                140u8,
-                171u8,
-                245u8,
-                193u8,
-                74u8,
-                137u8,
-                18u8,
-                181u8,
-                47u8,
-                89u8,
-                55u8,
-                92u8,
-                149u8,
-                192u8,
-                16u8,
-                112u8,
-                11u8,
-                140u8,
-                97u8,
-                147u8,
-            ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
+                alloy_sol_types::private::B256::new([
+                    78u8, 43u8, 121u8, 29u8, 237u8, 204u8, 217u8, 251u8, 48u8, 20u8, 27u8, 8u8,
+                    140u8, 171u8, 245u8, 193u8, 74u8, 137u8, 18u8, 181u8, 47u8, 89u8, 55u8, 92u8,
+                    149u8, 192u8, 16u8, 112u8, 11u8, 140u8, 97u8, 147u8,
+                ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -1047,22 +837,20 @@ event PodSharesUpdated(address indexed podOwner, int256 sharesDelta);
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(
-                        alloy_sol_types::Error::invalid_event_signature_hash(
-                            Self::SIGNATURE,
-                            topics.0,
-                            Self::SIGNATURE_HASH,
-                        ),
-                    );
+                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
+                        Self::SIGNATURE,
+                        topics.0,
+                        Self::SIGNATURE_HASH,
+                    ));
                 }
                 Ok(())
             }
             #[inline]
             fn tokenize_body(&self) -> Self::DataToken<'_> {
                 (
-                    <alloy::sol_types::sol_data::Int<
-                        256,
-                    > as alloy_sol_types::SolType>::tokenize(&self.sharesDelta),
+                    <alloy::sol_types::sol_data::Int<256> as alloy_sol_types::SolType>::tokenize(
+                        &self.sharesDelta,
+                    ),
                 )
             }
             #[inline]
@@ -1077,9 +865,7 @@ event PodSharesUpdated(address indexed podOwner, int256 sharesDelta);
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(
-                    Self::SIGNATURE_HASH,
-                );
+                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
                 out[1usize] = <alloy::sol_types::sol_data::Address as alloy_sol_types::EventTopic>::encode_topic(
                     &self.podOwner,
                 );
@@ -1122,208 +908,34 @@ event PodSharesUpdated(address indexed podOwner, int256 sharesDelta);
         /// Prefer using `SolInterface` methods instead.
         pub const SELECTORS: &'static [[u8; 32usize]] = &[
             [
-                33u8,
-                201u8,
-                157u8,
-                13u8,
-                176u8,
-                34u8,
-                19u8,
-                195u8,
-                47u8,
-                255u8,
-                91u8,
-                5u8,
-                207u8,
-                10u8,
-                113u8,
-                138u8,
-                181u8,
-                248u8,
-                88u8,
-                128u8,
-                43u8,
-                145u8,
-                73u8,
-                143u8,
-                128u8,
-                216u8,
-                34u8,
-                112u8,
-                40u8,
-                157u8,
-                133u8,
-                106u8,
+                33u8, 201u8, 157u8, 13u8, 176u8, 34u8, 19u8, 195u8, 47u8, 255u8, 91u8, 5u8, 207u8,
+                10u8, 113u8, 138u8, 181u8, 248u8, 88u8, 128u8, 43u8, 145u8, 73u8, 143u8, 128u8,
+                216u8, 34u8, 112u8, 40u8, 157u8, 133u8, 106u8,
             ],
             [
-                53u8,
-                168u8,
-                92u8,
-                171u8,
-                198u8,
-                3u8,
-                244u8,
-                138u8,
-                187u8,
-                43u8,
-                113u8,
-                217u8,
-                251u8,
-                216u8,
-                173u8,
-                234u8,
-                124u8,
-                68u8,
-                157u8,
-                127u8,
-                11u8,
-                233u8,
-                0u8,
-                174u8,
-                122u8,
-                41u8,
-                134u8,
-                234u8,
-                54u8,
-                156u8,
-                61u8,
-                13u8,
+                53u8, 168u8, 92u8, 171u8, 198u8, 3u8, 244u8, 138u8, 187u8, 43u8, 113u8, 217u8,
+                251u8, 216u8, 173u8, 234u8, 124u8, 68u8, 157u8, 127u8, 11u8, 233u8, 0u8, 174u8,
+                122u8, 41u8, 134u8, 234u8, 54u8, 156u8, 61u8, 13u8,
             ],
             [
-                78u8,
-                43u8,
-                121u8,
-                29u8,
-                237u8,
-                204u8,
-                217u8,
-                251u8,
-                48u8,
-                20u8,
-                27u8,
-                8u8,
-                140u8,
-                171u8,
-                245u8,
-                193u8,
-                74u8,
-                137u8,
-                18u8,
-                181u8,
-                47u8,
-                89u8,
-                55u8,
-                92u8,
-                149u8,
-                192u8,
-                16u8,
-                112u8,
-                11u8,
-                140u8,
-                97u8,
-                147u8,
+                78u8, 43u8, 121u8, 29u8, 237u8, 204u8, 217u8, 251u8, 48u8, 20u8, 27u8, 8u8, 140u8,
+                171u8, 245u8, 193u8, 74u8, 137u8, 18u8, 181u8, 47u8, 89u8, 55u8, 92u8, 149u8,
+                192u8, 16u8, 112u8, 11u8, 140u8, 97u8, 147u8,
             ],
             [
-                166u8,
-                186u8,
-                177u8,
-                213u8,
-                90u8,
-                54u8,
-                31u8,
-                206u8,
-                162u8,
-                238u8,
-                226u8,
-                188u8,
-                148u8,
-                145u8,
-                228u8,
-                240u8,
-                30u8,
-                108u8,
-                243u8,
-                51u8,
-                223u8,
-                3u8,
-                201u8,
-                196u8,
-                242u8,
-                193u8,
-                68u8,
-                70u8,
-                100u8,
-                41u8,
-                247u8,
-                214u8,
+                166u8, 186u8, 177u8, 213u8, 90u8, 54u8, 31u8, 206u8, 162u8, 238u8, 226u8, 188u8,
+                148u8, 145u8, 228u8, 240u8, 30u8, 108u8, 243u8, 51u8, 223u8, 3u8, 201u8, 196u8,
+                242u8, 193u8, 68u8, 70u8, 100u8, 41u8, 247u8, 214u8,
             ],
             [
-                177u8,
-                96u8,
-                171u8,
-                133u8,
-                137u8,
-                191u8,
-                71u8,
-                220u8,
-                4u8,
-                234u8,
-                17u8,
-                181u8,
-                13u8,
-                70u8,
-                103u8,
-                141u8,
-                33u8,
-                89u8,
-                12u8,
-                234u8,
-                46u8,
-                211u8,
-                228u8,
-                84u8,
-                231u8,
-                189u8,
-                62u8,
-                65u8,
-                81u8,
-                15u8,
-                152u8,
-                207u8,
+                177u8, 96u8, 171u8, 133u8, 137u8, 191u8, 71u8, 220u8, 4u8, 234u8, 17u8, 181u8,
+                13u8, 70u8, 103u8, 141u8, 33u8, 89u8, 12u8, 234u8, 46u8, 211u8, 228u8, 84u8, 231u8,
+                189u8, 62u8, 65u8, 81u8, 15u8, 152u8, 207u8,
             ],
             [
-                212u8,
-                222u8,
-                247u8,
-                109u8,
-                109u8,
-                43u8,
-                237u8,
-                111u8,
-                20u8,
-                213u8,
-                205u8,
-                154u8,
-                247u8,
-                60u8,
-                194u8,
-                145u8,
-                61u8,
-                97u8,
-                141u8,
-                0u8,
-                237u8,
-                222u8,
-                66u8,
-                67u8,
-                46u8,
-                129u8,
-                192u8,
-                155u8,
-                254u8,
-                7u8,
-                112u8,
-                152u8,
+                212u8, 222u8, 247u8, 109u8, 109u8, 43u8, 237u8, 111u8, 20u8, 213u8, 205u8, 154u8,
+                247u8, 60u8, 194u8, 145u8, 61u8, 97u8, 141u8, 0u8, 237u8, 222u8, 66u8, 67u8, 46u8,
+                129u8, 192u8, 155u8, 254u8, 7u8, 112u8, 152u8,
             ],
         ];
     }
@@ -1455,7 +1067,7 @@ event PodSharesUpdated(address indexed podOwner, int256 sharesDelta);
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`IEigenPodManagerEvents`](self) contract instance.
 
-See the [wrapper's documentation](`IEigenPodManagerEventsInstance`) for more details.*/
+    See the [wrapper's documentation](`IEigenPodManagerEventsInstance`) for more details.*/
     #[inline]
     pub const fn new<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -1469,9 +1081,9 @@ See the [wrapper's documentation](`IEigenPodManagerEventsInstance`) for more det
     }
     /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+    Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+    For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
     #[inline]
     pub fn deploy<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -1485,35 +1097,33 @@ For more fine-grained control over the deployment process, use [`deploy_builder`
         IEigenPodManagerEventsInstance::<T, P, N>::deploy(provider)
     }
     /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+    and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+    This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+    the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     #[inline]
     pub fn deploy_builder<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
         P: alloy_contract::private::Provider<T, N>,
         N: alloy_contract::private::Network,
-    >(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
+    >(
+        provider: P,
+    ) -> alloy_contract::RawCallBuilder<T, P, N> {
         IEigenPodManagerEventsInstance::<T, P, N>::deploy_builder(provider)
     }
     /**A [`IEigenPodManagerEvents`](self) instance.
 
-Contains type-safe methods for interacting with an on-chain instance of the
-[`IEigenPodManagerEvents`](self) contract located at a given `address`, using a given
-provider `P`.
+    Contains type-safe methods for interacting with an on-chain instance of the
+    [`IEigenPodManagerEvents`](self) contract located at a given `address`, using a given
+    provider `P`.
 
-If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
-documentation on how to provide it), the `deploy` and `deploy_builder` methods can
-be used to deploy a new instance of the contract.
+    If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
+    documentation on how to provide it), the `deploy` and `deploy_builder` methods can
+    be used to deploy a new instance of the contract.
 
-See the [module-level documentation](self) for all the available methods.*/
+    See the [module-level documentation](self) for all the available methods.*/
     #[derive(Clone)]
-    pub struct IEigenPodManagerEventsInstance<
-        T,
-        P,
-        N = alloy_contract::private::Ethereum,
-    > {
+    pub struct IEigenPodManagerEventsInstance<T, P, N = alloy_contract::private::Ethereum> {
         address: alloy_sol_types::private::Address,
         provider: P,
         _network_transport: ::core::marker::PhantomData<(N, T)>,
@@ -1522,24 +1132,24 @@ See the [module-level documentation](self) for all the available methods.*/
     impl<T, P, N> ::core::fmt::Debug for IEigenPodManagerEventsInstance<T, P, N> {
         #[inline]
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-            f.debug_tuple("IEigenPodManagerEventsInstance").field(&self.address).finish()
+            f.debug_tuple("IEigenPodManagerEventsInstance")
+                .field(&self.address)
+                .finish()
         }
     }
     /// Instantiation and getters/setters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > IEigenPodManagerEventsInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > IEigenPodManagerEventsInstance<T, P, N>
+    {
         /**Creates a new wrapper around an on-chain [`IEigenPodManagerEvents`](self) contract instance.
 
-See the [wrapper's documentation](`IEigenPodManagerEventsInstance`) for more details.*/
+        See the [wrapper's documentation](`IEigenPodManagerEventsInstance`) for more details.*/
         #[inline]
-        pub const fn new(
-            address: alloy_sol_types::private::Address,
-            provider: P,
-        ) -> Self {
+        pub const fn new(address: alloy_sol_types::private::Address, provider: P) -> Self {
             Self {
                 address,
                 provider,
@@ -1548,9 +1158,9 @@ See the [wrapper's documentation](`IEigenPodManagerEventsInstance`) for more det
         }
         /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+        Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+        For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
         #[inline]
         pub async fn deploy(
             provider: P,
@@ -1560,10 +1170,10 @@ For more fine-grained control over the deployment process, use [`deploy_builder`
             Ok(Self::new(contract_address, call_builder.provider))
         }
         /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+        and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+        This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+        the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         #[inline]
         pub fn deploy_builder(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
             alloy_contract::RawCallBuilder::new_raw_deploy(
@@ -1606,10 +1216,11 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     /// Function calls.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > IEigenPodManagerEventsInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > IEigenPodManagerEventsInstance<T, P, N>
+    {
         /// Creates a new call builder using this contract instance's provider and address.
         ///
         /// Note that the call can be any function call, not just those defined in this
@@ -1624,10 +1235,11 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     /// Event filters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > IEigenPodManagerEventsInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > IEigenPodManagerEventsInstance<T, P, N>
+    {
         /// Creates a new event filter using this contract instance's provider and address.
         ///
         /// Note that the type can be any event, not just those defined in this contract.
@@ -1656,21 +1268,15 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
             self.event_filter::<BeaconChainSlashingFactorDecreased>()
         }
         ///Creates a new event filter for the [`NewTotalShares`] event.
-        pub fn NewTotalShares_filter(
-            &self,
-        ) -> alloy_contract::Event<T, &P, NewTotalShares, N> {
+        pub fn NewTotalShares_filter(&self) -> alloy_contract::Event<T, &P, NewTotalShares, N> {
             self.event_filter::<NewTotalShares>()
         }
         ///Creates a new event filter for the [`PodDeployed`] event.
-        pub fn PodDeployed_filter(
-            &self,
-        ) -> alloy_contract::Event<T, &P, PodDeployed, N> {
+        pub fn PodDeployed_filter(&self) -> alloy_contract::Event<T, &P, PodDeployed, N> {
             self.event_filter::<PodDeployed>()
         }
         ///Creates a new event filter for the [`PodSharesUpdated`] event.
-        pub fn PodSharesUpdated_filter(
-            &self,
-        ) -> alloy_contract::Event<T, &P, PodSharesUpdated, N> {
+        pub fn PodSharesUpdated_filter(&self) -> alloy_contract::Event<T, &P, PodSharesUpdated, N> {
             self.event_filter::<PodSharesUpdated>()
         }
     }

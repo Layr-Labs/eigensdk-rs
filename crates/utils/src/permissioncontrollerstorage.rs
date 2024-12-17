@@ -549,9 +549,9 @@ pub mod PermissionControllerStorage {
         b"",
     );
     /**Custom error with signature `AdminAlreadyPending()` and selector `0x3357dbc6`.
-```solidity
-error AdminAlreadyPending();
-```*/
+    ```solidity
+    error AdminAlreadyPending();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct AdminAlreadyPending {}
@@ -569,9 +569,7 @@ error AdminAlreadyPending();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -595,9 +593,7 @@ error AdminAlreadyPending();
         #[automatically_derived]
         impl alloy_sol_types::SolError for AdminAlreadyPending {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "AdminAlreadyPending()";
             const SELECTOR: [u8; 4] = [51u8, 87u8, 219u8, 198u8];
             #[inline]
@@ -613,9 +609,9 @@ error AdminAlreadyPending();
         }
     };
     /**Custom error with signature `AdminAlreadySet()` and selector `0x980b0728`.
-```solidity
-error AdminAlreadySet();
-```*/
+    ```solidity
+    error AdminAlreadySet();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct AdminAlreadySet {}
@@ -633,9 +629,7 @@ error AdminAlreadySet();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -659,9 +653,7 @@ error AdminAlreadySet();
         #[automatically_derived]
         impl alloy_sol_types::SolError for AdminAlreadySet {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "AdminAlreadySet()";
             const SELECTOR: [u8; 4] = [152u8, 11u8, 7u8, 40u8];
             #[inline]
@@ -677,9 +669,9 @@ error AdminAlreadySet();
         }
     };
     /**Custom error with signature `AdminNotPending()` and selector `0xbed8295f`.
-```solidity
-error AdminNotPending();
-```*/
+    ```solidity
+    error AdminNotPending();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct AdminNotPending {}
@@ -697,9 +689,7 @@ error AdminNotPending();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -723,9 +713,7 @@ error AdminNotPending();
         #[automatically_derived]
         impl alloy_sol_types::SolError for AdminNotPending {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "AdminNotPending()";
             const SELECTOR: [u8; 4] = [190u8, 216u8, 41u8, 95u8];
             #[inline]
@@ -741,9 +729,9 @@ error AdminNotPending();
         }
     };
     /**Custom error with signature `AdminNotSet()` and selector `0xe2db0360`.
-```solidity
-error AdminNotSet();
-```*/
+    ```solidity
+    error AdminNotSet();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct AdminNotSet {}
@@ -761,9 +749,7 @@ error AdminNotSet();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -787,9 +773,7 @@ error AdminNotSet();
         #[automatically_derived]
         impl alloy_sol_types::SolError for AdminNotSet {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "AdminNotSet()";
             const SELECTOR: [u8; 4] = [226u8, 219u8, 3u8, 96u8];
             #[inline]
@@ -805,9 +789,9 @@ error AdminNotSet();
         }
     };
     /**Custom error with signature `AppointeeAlreadySet()` and selector `0xad8efeb7`.
-```solidity
-error AppointeeAlreadySet();
-```*/
+    ```solidity
+    error AppointeeAlreadySet();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct AppointeeAlreadySet {}
@@ -825,9 +809,7 @@ error AppointeeAlreadySet();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -851,9 +833,7 @@ error AppointeeAlreadySet();
         #[automatically_derived]
         impl alloy_sol_types::SolError for AppointeeAlreadySet {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "AppointeeAlreadySet()";
             const SELECTOR: [u8; 4] = [173u8, 142u8, 254u8, 183u8];
             #[inline]
@@ -869,9 +849,9 @@ error AppointeeAlreadySet();
         }
     };
     /**Custom error with signature `AppointeeNotSet()` and selector `0x262118cd`.
-```solidity
-error AppointeeNotSet();
-```*/
+    ```solidity
+    error AppointeeNotSet();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct AppointeeNotSet {}
@@ -889,9 +869,7 @@ error AppointeeNotSet();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -915,9 +893,7 @@ error AppointeeNotSet();
         #[automatically_derived]
         impl alloy_sol_types::SolError for AppointeeNotSet {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "AppointeeNotSet()";
             const SELECTOR: [u8; 4] = [38u8, 33u8, 24u8, 205u8];
             #[inline]
@@ -933,9 +909,9 @@ error AppointeeNotSet();
         }
     };
     /**Custom error with signature `CannotHaveZeroAdmins()` and selector `0x86744958`.
-```solidity
-error CannotHaveZeroAdmins();
-```*/
+    ```solidity
+    error CannotHaveZeroAdmins();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct CannotHaveZeroAdmins {}
@@ -953,9 +929,7 @@ error CannotHaveZeroAdmins();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -979,9 +953,7 @@ error CannotHaveZeroAdmins();
         #[automatically_derived]
         impl alloy_sol_types::SolError for CannotHaveZeroAdmins {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "CannotHaveZeroAdmins()";
             const SELECTOR: [u8; 4] = [134u8, 116u8, 73u8, 88u8];
             #[inline]
@@ -997,9 +969,9 @@ error CannotHaveZeroAdmins();
         }
     };
     /**Custom error with signature `NotAdmin()` and selector `0x7bfa4b9f`.
-```solidity
-error NotAdmin();
-```*/
+    ```solidity
+    error NotAdmin();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct NotAdmin {}
@@ -1017,9 +989,7 @@ error NotAdmin();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1043,9 +1013,7 @@ error NotAdmin();
         #[automatically_derived]
         impl alloy_sol_types::SolError for NotAdmin {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "NotAdmin()";
             const SELECTOR: [u8; 4] = [123u8, 250u8, 75u8, 159u8];
             #[inline]
@@ -1061,9 +1029,9 @@ error NotAdmin();
         }
     };
     /**Event with signature `AdminRemoved(address,address)` and selector `0xdb9d5d31320daf5bc7181d565b6da4d12e30f0f4d5aa324a992426c14a1d19ce`.
-```solidity
-event AdminRemoved(address indexed account, address admin);
-```*/
+    ```solidity
+    event AdminRemoved(address indexed account, address admin);
+    ```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -1088,48 +1056,18 @@ event AdminRemoved(address indexed account, address admin);
         #[automatically_derived]
         impl alloy_sol_types::SolEvent for AdminRemoved {
             type DataTuple<'a> = (alloy::sol_types::sol_data::Address,);
-            type DataToken<'a> = <Self::DataTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (
                 alloy_sol_types::sol_data::FixedBytes<32>,
                 alloy::sol_types::sol_data::Address,
             );
             const SIGNATURE: &'static str = "AdminRemoved(address,address)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
-                219u8,
-                157u8,
-                93u8,
-                49u8,
-                50u8,
-                13u8,
-                175u8,
-                91u8,
-                199u8,
-                24u8,
-                29u8,
-                86u8,
-                91u8,
-                109u8,
-                164u8,
-                209u8,
-                46u8,
-                48u8,
-                240u8,
-                244u8,
-                213u8,
-                170u8,
-                50u8,
-                74u8,
-                153u8,
-                36u8,
-                38u8,
-                193u8,
-                74u8,
-                29u8,
-                25u8,
-                206u8,
-            ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
+                alloy_sol_types::private::B256::new([
+                    219u8, 157u8, 93u8, 49u8, 50u8, 13u8, 175u8, 91u8, 199u8, 24u8, 29u8, 86u8,
+                    91u8, 109u8, 164u8, 209u8, 46u8, 48u8, 240u8, 244u8, 213u8, 170u8, 50u8, 74u8,
+                    153u8, 36u8, 38u8, 193u8, 74u8, 29u8, 25u8, 206u8,
+                ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -1147,13 +1085,11 @@ event AdminRemoved(address indexed account, address admin);
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(
-                        alloy_sol_types::Error::invalid_event_signature_hash(
-                            Self::SIGNATURE,
-                            topics.0,
-                            Self::SIGNATURE_HASH,
-                        ),
-                    );
+                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
+                        Self::SIGNATURE,
+                        topics.0,
+                        Self::SIGNATURE_HASH,
+                    ));
                 }
                 Ok(())
             }
@@ -1177,9 +1113,7 @@ event AdminRemoved(address indexed account, address admin);
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(
-                    Self::SIGNATURE_HASH,
-                );
+                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
                 out[1usize] = <alloy::sol_types::sol_data::Address as alloy_sol_types::EventTopic>::encode_topic(
                     &self.account,
                 );
@@ -1204,9 +1138,9 @@ event AdminRemoved(address indexed account, address admin);
         }
     };
     /**Event with signature `AdminSet(address,address)` and selector `0xbf265e8326285a2747e33e54d5945f7111f2b5edb826eb8c08d4677779b3ff97`.
-```solidity
-event AdminSet(address indexed account, address admin);
-```*/
+    ```solidity
+    event AdminSet(address indexed account, address admin);
+    ```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -1231,48 +1165,18 @@ event AdminSet(address indexed account, address admin);
         #[automatically_derived]
         impl alloy_sol_types::SolEvent for AdminSet {
             type DataTuple<'a> = (alloy::sol_types::sol_data::Address,);
-            type DataToken<'a> = <Self::DataTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (
                 alloy_sol_types::sol_data::FixedBytes<32>,
                 alloy::sol_types::sol_data::Address,
             );
             const SIGNATURE: &'static str = "AdminSet(address,address)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
-                191u8,
-                38u8,
-                94u8,
-                131u8,
-                38u8,
-                40u8,
-                90u8,
-                39u8,
-                71u8,
-                227u8,
-                62u8,
-                84u8,
-                213u8,
-                148u8,
-                95u8,
-                113u8,
-                17u8,
-                242u8,
-                181u8,
-                237u8,
-                184u8,
-                38u8,
-                235u8,
-                140u8,
-                8u8,
-                212u8,
-                103u8,
-                119u8,
-                121u8,
-                179u8,
-                255u8,
-                151u8,
-            ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
+                alloy_sol_types::private::B256::new([
+                    191u8, 38u8, 94u8, 131u8, 38u8, 40u8, 90u8, 39u8, 71u8, 227u8, 62u8, 84u8,
+                    213u8, 148u8, 95u8, 113u8, 17u8, 242u8, 181u8, 237u8, 184u8, 38u8, 235u8,
+                    140u8, 8u8, 212u8, 103u8, 119u8, 121u8, 179u8, 255u8, 151u8,
+                ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -1290,13 +1194,11 @@ event AdminSet(address indexed account, address admin);
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(
-                        alloy_sol_types::Error::invalid_event_signature_hash(
-                            Self::SIGNATURE,
-                            topics.0,
-                            Self::SIGNATURE_HASH,
-                        ),
-                    );
+                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
+                        Self::SIGNATURE,
+                        topics.0,
+                        Self::SIGNATURE_HASH,
+                    ));
                 }
                 Ok(())
             }
@@ -1320,9 +1222,7 @@ event AdminSet(address indexed account, address admin);
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(
-                    Self::SIGNATURE_HASH,
-                );
+                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
                 out[1usize] = <alloy::sol_types::sol_data::Address as alloy_sol_types::EventTopic>::encode_topic(
                     &self.account,
                 );
@@ -1347,9 +1247,9 @@ event AdminSet(address indexed account, address admin);
         }
     };
     /**Event with signature `AppointeeRemoved(address,address,address,bytes4)` and selector `0x18242326b6b862126970679759169f01f646bd55ec5bfcab85ba9f337a74e0c6`.
-```solidity
-event AppointeeRemoved(address indexed account, address indexed appointee, address target, bytes4 selector);
-```*/
+    ```solidity
+    event AppointeeRemoved(address indexed account, address indexed appointee, address target, bytes4 selector);
+    ```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -1381,49 +1281,19 @@ event AppointeeRemoved(address indexed account, address indexed appointee, addre
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::FixedBytes<4>,
             );
-            type DataToken<'a> = <Self::DataTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (
                 alloy_sol_types::sol_data::FixedBytes<32>,
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Address,
             );
             const SIGNATURE: &'static str = "AppointeeRemoved(address,address,address,bytes4)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
-                24u8,
-                36u8,
-                35u8,
-                38u8,
-                182u8,
-                184u8,
-                98u8,
-                18u8,
-                105u8,
-                112u8,
-                103u8,
-                151u8,
-                89u8,
-                22u8,
-                159u8,
-                1u8,
-                246u8,
-                70u8,
-                189u8,
-                85u8,
-                236u8,
-                91u8,
-                252u8,
-                171u8,
-                133u8,
-                186u8,
-                159u8,
-                51u8,
-                122u8,
-                116u8,
-                224u8,
-                198u8,
-            ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
+                alloy_sol_types::private::B256::new([
+                    24u8, 36u8, 35u8, 38u8, 182u8, 184u8, 98u8, 18u8, 105u8, 112u8, 103u8, 151u8,
+                    89u8, 22u8, 159u8, 1u8, 246u8, 70u8, 189u8, 85u8, 236u8, 91u8, 252u8, 171u8,
+                    133u8, 186u8, 159u8, 51u8, 122u8, 116u8, 224u8, 198u8,
+                ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -1443,13 +1313,11 @@ event AppointeeRemoved(address indexed account, address indexed appointee, addre
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(
-                        alloy_sol_types::Error::invalid_event_signature_hash(
-                            Self::SIGNATURE,
-                            topics.0,
-                            Self::SIGNATURE_HASH,
-                        ),
-                    );
+                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
+                        Self::SIGNATURE,
+                        topics.0,
+                        Self::SIGNATURE_HASH,
+                    ));
                 }
                 Ok(())
             }
@@ -1480,9 +1348,7 @@ event AppointeeRemoved(address indexed account, address indexed appointee, addre
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(
-                    Self::SIGNATURE_HASH,
-                );
+                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
                 out[1usize] = <alloy::sol_types::sol_data::Address as alloy_sol_types::EventTopic>::encode_topic(
                     &self.account,
                 );
@@ -1510,9 +1376,9 @@ event AppointeeRemoved(address indexed account, address indexed appointee, addre
         }
     };
     /**Event with signature `AppointeeSet(address,address,address,bytes4)` and selector `0x037f03a2ad6b967df4a01779b6d2b4c85950df83925d9e31362b519422fc0169`.
-```solidity
-event AppointeeSet(address indexed account, address indexed appointee, address target, bytes4 selector);
-```*/
+    ```solidity
+    event AppointeeSet(address indexed account, address indexed appointee, address target, bytes4 selector);
+    ```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -1544,49 +1410,19 @@ event AppointeeSet(address indexed account, address indexed appointee, address t
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::FixedBytes<4>,
             );
-            type DataToken<'a> = <Self::DataTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (
                 alloy_sol_types::sol_data::FixedBytes<32>,
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Address,
             );
             const SIGNATURE: &'static str = "AppointeeSet(address,address,address,bytes4)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
-                3u8,
-                127u8,
-                3u8,
-                162u8,
-                173u8,
-                107u8,
-                150u8,
-                125u8,
-                244u8,
-                160u8,
-                23u8,
-                121u8,
-                182u8,
-                210u8,
-                180u8,
-                200u8,
-                89u8,
-                80u8,
-                223u8,
-                131u8,
-                146u8,
-                93u8,
-                158u8,
-                49u8,
-                54u8,
-                43u8,
-                81u8,
-                148u8,
-                34u8,
-                252u8,
-                1u8,
-                105u8,
-            ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
+                alloy_sol_types::private::B256::new([
+                    3u8, 127u8, 3u8, 162u8, 173u8, 107u8, 150u8, 125u8, 244u8, 160u8, 23u8, 121u8,
+                    182u8, 210u8, 180u8, 200u8, 89u8, 80u8, 223u8, 131u8, 146u8, 93u8, 158u8, 49u8,
+                    54u8, 43u8, 81u8, 148u8, 34u8, 252u8, 1u8, 105u8,
+                ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -1606,13 +1442,11 @@ event AppointeeSet(address indexed account, address indexed appointee, address t
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(
-                        alloy_sol_types::Error::invalid_event_signature_hash(
-                            Self::SIGNATURE,
-                            topics.0,
-                            Self::SIGNATURE_HASH,
-                        ),
-                    );
+                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
+                        Self::SIGNATURE,
+                        topics.0,
+                        Self::SIGNATURE_HASH,
+                    ));
                 }
                 Ok(())
             }
@@ -1643,9 +1477,7 @@ event AppointeeSet(address indexed account, address indexed appointee, address t
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(
-                    Self::SIGNATURE_HASH,
-                );
+                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
                 out[1usize] = <alloy::sol_types::sol_data::Address as alloy_sol_types::EventTopic>::encode_topic(
                     &self.account,
                 );
@@ -1673,9 +1505,9 @@ event AppointeeSet(address indexed account, address indexed appointee, address t
         }
     };
     /**Event with signature `PendingAdminAdded(address,address)` and selector `0xb14b9a3d448c5b04f0e5b087b6f5193390db7955482a6ffb841e7b3ba61a460c`.
-```solidity
-event PendingAdminAdded(address indexed account, address admin);
-```*/
+    ```solidity
+    event PendingAdminAdded(address indexed account, address admin);
+    ```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -1700,48 +1532,18 @@ event PendingAdminAdded(address indexed account, address admin);
         #[automatically_derived]
         impl alloy_sol_types::SolEvent for PendingAdminAdded {
             type DataTuple<'a> = (alloy::sol_types::sol_data::Address,);
-            type DataToken<'a> = <Self::DataTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (
                 alloy_sol_types::sol_data::FixedBytes<32>,
                 alloy::sol_types::sol_data::Address,
             );
             const SIGNATURE: &'static str = "PendingAdminAdded(address,address)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
-                177u8,
-                75u8,
-                154u8,
-                61u8,
-                68u8,
-                140u8,
-                91u8,
-                4u8,
-                240u8,
-                229u8,
-                176u8,
-                135u8,
-                182u8,
-                245u8,
-                25u8,
-                51u8,
-                144u8,
-                219u8,
-                121u8,
-                85u8,
-                72u8,
-                42u8,
-                111u8,
-                251u8,
-                132u8,
-                30u8,
-                123u8,
-                59u8,
-                166u8,
-                26u8,
-                70u8,
-                12u8,
-            ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
+                alloy_sol_types::private::B256::new([
+                    177u8, 75u8, 154u8, 61u8, 68u8, 140u8, 91u8, 4u8, 240u8, 229u8, 176u8, 135u8,
+                    182u8, 245u8, 25u8, 51u8, 144u8, 219u8, 121u8, 85u8, 72u8, 42u8, 111u8, 251u8,
+                    132u8, 30u8, 123u8, 59u8, 166u8, 26u8, 70u8, 12u8,
+                ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -1759,13 +1561,11 @@ event PendingAdminAdded(address indexed account, address admin);
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(
-                        alloy_sol_types::Error::invalid_event_signature_hash(
-                            Self::SIGNATURE,
-                            topics.0,
-                            Self::SIGNATURE_HASH,
-                        ),
-                    );
+                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
+                        Self::SIGNATURE,
+                        topics.0,
+                        Self::SIGNATURE_HASH,
+                    ));
                 }
                 Ok(())
             }
@@ -1789,9 +1589,7 @@ event PendingAdminAdded(address indexed account, address admin);
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(
-                    Self::SIGNATURE_HASH,
-                );
+                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
                 out[1usize] = <alloy::sol_types::sol_data::Address as alloy_sol_types::EventTopic>::encode_topic(
                     &self.account,
                 );
@@ -1816,9 +1614,9 @@ event PendingAdminAdded(address indexed account, address admin);
         }
     };
     /**Event with signature `PendingAdminRemoved(address,address)` and selector `0xd706ed7ae044d795b49e54c9f519f663053951011985f663a862cd9ee72a9ac7`.
-```solidity
-event PendingAdminRemoved(address indexed account, address admin);
-```*/
+    ```solidity
+    event PendingAdminRemoved(address indexed account, address admin);
+    ```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -1843,48 +1641,18 @@ event PendingAdminRemoved(address indexed account, address admin);
         #[automatically_derived]
         impl alloy_sol_types::SolEvent for PendingAdminRemoved {
             type DataTuple<'a> = (alloy::sol_types::sol_data::Address,);
-            type DataToken<'a> = <Self::DataTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (
                 alloy_sol_types::sol_data::FixedBytes<32>,
                 alloy::sol_types::sol_data::Address,
             );
             const SIGNATURE: &'static str = "PendingAdminRemoved(address,address)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
-                215u8,
-                6u8,
-                237u8,
-                122u8,
-                224u8,
-                68u8,
-                215u8,
-                149u8,
-                180u8,
-                158u8,
-                84u8,
-                201u8,
-                245u8,
-                25u8,
-                246u8,
-                99u8,
-                5u8,
-                57u8,
-                81u8,
-                1u8,
-                25u8,
-                133u8,
-                246u8,
-                99u8,
-                168u8,
-                98u8,
-                205u8,
-                158u8,
-                231u8,
-                42u8,
-                154u8,
-                199u8,
-            ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
+                alloy_sol_types::private::B256::new([
+                    215u8, 6u8, 237u8, 122u8, 224u8, 68u8, 215u8, 149u8, 180u8, 158u8, 84u8, 201u8,
+                    245u8, 25u8, 246u8, 99u8, 5u8, 57u8, 81u8, 1u8, 25u8, 133u8, 246u8, 99u8,
+                    168u8, 98u8, 205u8, 158u8, 231u8, 42u8, 154u8, 199u8,
+                ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -1902,13 +1670,11 @@ event PendingAdminRemoved(address indexed account, address admin);
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(
-                        alloy_sol_types::Error::invalid_event_signature_hash(
-                            Self::SIGNATURE,
-                            topics.0,
-                            Self::SIGNATURE_HASH,
-                        ),
-                    );
+                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
+                        Self::SIGNATURE,
+                        topics.0,
+                        Self::SIGNATURE_HASH,
+                    ));
                 }
                 Ok(())
             }
@@ -1932,9 +1698,7 @@ event PendingAdminRemoved(address indexed account, address admin);
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(
-                    Self::SIGNATURE_HASH,
-                );
+                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
                 out[1usize] = <alloy::sol_types::sol_data::Address as alloy_sol_types::EventTopic>::encode_topic(
                     &self.account,
                 );
@@ -1959,9 +1723,9 @@ event PendingAdminRemoved(address indexed account, address admin);
         }
     };
     /**Function with signature `acceptAdmin(address)` and selector `0x628806ef`.
-```solidity
-function acceptAdmin(address account) external;
-```*/
+    ```solidity
+    function acceptAdmin(address account) external;
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct acceptAdminCall {
@@ -1986,9 +1750,7 @@ function acceptAdmin(address account) external;
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -2017,9 +1779,7 @@ function acceptAdmin(address account) external;
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -2044,14 +1804,10 @@ function acceptAdmin(address account) external;
         #[automatically_derived]
         impl alloy_sol_types::SolCall for acceptAdminCall {
             type Parameters<'a> = (alloy::sol_types::sol_data::Address,);
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = acceptAdminReturn;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "acceptAdmin(address)";
             const SELECTOR: [u8; 4] = [98u8, 136u8, 6u8, 239u8];
             #[inline]
@@ -2073,17 +1829,17 @@ function acceptAdmin(address account) external;
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `addPendingAdmin(address,address)` and selector `0xeb5a4e87`.
-```solidity
-function addPendingAdmin(address account, address admin) external;
-```*/
+    ```solidity
+    function addPendingAdmin(address account, address admin) external;
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct addPendingAdminCall {
@@ -2115,9 +1871,7 @@ function addPendingAdmin(address account, address admin) external;
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -2149,9 +1903,7 @@ function addPendingAdmin(address account, address admin) external;
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -2160,16 +1912,14 @@ function addPendingAdmin(address account, address admin) external;
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<addPendingAdminReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<addPendingAdminReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: addPendingAdminReturn) -> Self {
                     ()
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for addPendingAdminReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for addPendingAdminReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
@@ -2181,14 +1931,10 @@ function addPendingAdmin(address account, address admin) external;
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Address,
             );
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = addPendingAdminReturn;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "addPendingAdmin(address,address)";
             const SELECTOR: [u8; 4] = [235u8, 90u8, 78u8, 135u8];
             #[inline]
@@ -2213,17 +1959,17 @@ function addPendingAdmin(address account, address admin) external;
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `canCall(address,address,address,bytes4)` and selector `0xdf595cb8`.
-```solidity
-function canCall(address account, address caller, address target, bytes4 selector) external returns (bool);
-```*/
+    ```solidity
+    function canCall(address account, address caller, address target, bytes4 selector) external returns (bool);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct canCallCall {
@@ -2263,9 +2009,7 @@ function canCall(address account, address caller, address target, bytes4 selecto
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -2299,9 +2043,7 @@ function canCall(address account, address caller, address target, bytes4 selecto
             type UnderlyingRustTuple<'a> = (bool,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -2331,14 +2073,10 @@ function canCall(address account, address caller, address target, bytes4 selecto
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::FixedBytes<4>,
             );
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = canCallReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Bool,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "canCall(address,address,address,bytes4)";
             const SELECTOR: [u8; 4] = [223u8, 89u8, 92u8, 184u8];
             #[inline]
@@ -2369,17 +2107,17 @@ function canCall(address account, address caller, address target, bytes4 selecto
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `getAdmins(address)` and selector `0xad5f2210`.
-```solidity
-function getAdmins(address account) external view returns (address[] memory);
-```*/
+    ```solidity
+    function getAdmins(address account) external view returns (address[] memory);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getAdminsCall {
@@ -2406,9 +2144,7 @@ function getAdmins(address account) external view returns (address[] memory);
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -2432,18 +2168,14 @@ function getAdmins(address account) external view returns (address[] memory);
         }
         {
             #[doc(hidden)]
-            type UnderlyingSolTuple<'a> = (
-                alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::Address>,
-            );
+            type UnderlyingSolTuple<'a> =
+                (alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::Address>,);
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (
-                alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
-            );
+            type UnderlyingRustTuple<'a> =
+                (alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -2468,16 +2200,11 @@ function getAdmins(address account) external view returns (address[] memory);
         #[automatically_derived]
         impl alloy_sol_types::SolCall for getAdminsCall {
             type Parameters<'a> = (alloy::sol_types::sol_data::Address,);
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = getAdminsReturn;
-            type ReturnTuple<'a> = (
-                alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::Address>,
-            );
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnTuple<'a> =
+                (alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::Address>,);
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "getAdmins(address)";
             const SELECTOR: [u8; 4] = [173u8, 95u8, 34u8, 16u8];
             #[inline]
@@ -2499,17 +2226,17 @@ function getAdmins(address account) external view returns (address[] memory);
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `getAppointeePermissions(address,address)` and selector `0x882a3b38`.
-```solidity
-function getAppointeePermissions(address account, address appointee) external returns (address[] memory, bytes4[] memory);
-```*/
+    ```solidity
+    function getAppointeePermissions(address account, address appointee) external returns (address[] memory, bytes4[] memory);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getAppointeePermissionsCall {
@@ -2544,9 +2271,7 @@ function getAppointeePermissions(address account, address appointee) external re
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -2555,16 +2280,14 @@ function getAppointeePermissions(address account, address appointee) external re
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<getAppointeePermissionsCall>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<getAppointeePermissionsCall> for UnderlyingRustTuple<'_> {
                 fn from(value: getAppointeePermissionsCall) -> Self {
                     (value.account, value.appointee)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for getAppointeePermissionsCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for getAppointeePermissionsCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {
                         account: tuple.0,
@@ -2577,9 +2300,7 @@ function getAppointeePermissions(address account, address appointee) external re
             #[doc(hidden)]
             type UnderlyingSolTuple<'a> = (
                 alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::Address>,
-                alloy::sol_types::sol_data::Array<
-                    alloy::sol_types::sol_data::FixedBytes<4>,
-                >,
+                alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::FixedBytes<4>>,
             );
             #[doc(hidden)]
             type UnderlyingRustTuple<'a> = (
@@ -2588,9 +2309,7 @@ function getAppointeePermissions(address account, address appointee) external re
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -2599,18 +2318,19 @@ function getAppointeePermissions(address account, address appointee) external re
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<getAppointeePermissionsReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<getAppointeePermissionsReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: getAppointeePermissionsReturn) -> Self {
                     (value._0, value._1)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for getAppointeePermissionsReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for getAppointeePermissionsReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self { _0: tuple.0, _1: tuple.1 }
+                    Self {
+                        _0: tuple.0,
+                        _1: tuple.1,
+                    }
                 }
             }
         }
@@ -2620,19 +2340,13 @@ function getAppointeePermissions(address account, address appointee) external re
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Address,
             );
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = getAppointeePermissionsReturn;
             type ReturnTuple<'a> = (
                 alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::Address>,
-                alloy::sol_types::sol_data::Array<
-                    alloy::sol_types::sol_data::FixedBytes<4>,
-                >,
+                alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::FixedBytes<4>>,
             );
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "getAppointeePermissions(address,address)";
             const SELECTOR: [u8; 4] = [136u8, 42u8, 59u8, 56u8];
             #[inline]
@@ -2657,17 +2371,17 @@ function getAppointeePermissions(address account, address appointee) external re
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `getAppointees(address,address,bytes4)` and selector `0xfddbdefd`.
-```solidity
-function getAppointees(address account, address target, bytes4 selector) external returns (address[] memory);
-```*/
+    ```solidity
+    function getAppointees(address account, address target, bytes4 selector) external returns (address[] memory);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getAppointeesCall {
@@ -2704,9 +2418,7 @@ function getAppointees(address account, address target, bytes4 selector) externa
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -2734,18 +2446,14 @@ function getAppointees(address account, address target, bytes4 selector) externa
         }
         {
             #[doc(hidden)]
-            type UnderlyingSolTuple<'a> = (
-                alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::Address>,
-            );
+            type UnderlyingSolTuple<'a> =
+                (alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::Address>,);
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (
-                alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
-            );
+            type UnderlyingRustTuple<'a> =
+                (alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -2774,16 +2482,11 @@ function getAppointees(address account, address target, bytes4 selector) externa
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::FixedBytes<4>,
             );
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = getAppointeesReturn;
-            type ReturnTuple<'a> = (
-                alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::Address>,
-            );
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnTuple<'a> =
+                (alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::Address>,);
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "getAppointees(address,address,bytes4)";
             const SELECTOR: [u8; 4] = [253u8, 219u8, 222u8, 253u8];
             #[inline]
@@ -2811,17 +2514,17 @@ function getAppointees(address account, address target, bytes4 selector) externa
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `getPendingAdmins(address)` and selector `0x6bddfa1f`.
-```solidity
-function getPendingAdmins(address account) external view returns (address[] memory);
-```*/
+    ```solidity
+    function getPendingAdmins(address account) external view returns (address[] memory);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getPendingAdminsCall {
@@ -2848,9 +2551,7 @@ function getPendingAdmins(address account) external view returns (address[] memo
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -2859,16 +2560,14 @@ function getPendingAdmins(address account) external view returns (address[] memo
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<getPendingAdminsCall>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<getPendingAdminsCall> for UnderlyingRustTuple<'_> {
                 fn from(value: getPendingAdminsCall) -> Self {
                     (value.account,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for getPendingAdminsCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for getPendingAdminsCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { account: tuple.0 }
                 }
@@ -2876,18 +2575,14 @@ function getPendingAdmins(address account) external view returns (address[] memo
         }
         {
             #[doc(hidden)]
-            type UnderlyingSolTuple<'a> = (
-                alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::Address>,
-            );
+            type UnderlyingSolTuple<'a> =
+                (alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::Address>,);
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (
-                alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
-            );
+            type UnderlyingRustTuple<'a> =
+                (alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -2896,16 +2591,14 @@ function getPendingAdmins(address account) external view returns (address[] memo
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<getPendingAdminsReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<getPendingAdminsReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: getPendingAdminsReturn) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for getPendingAdminsReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for getPendingAdminsReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -2914,16 +2607,11 @@ function getPendingAdmins(address account) external view returns (address[] memo
         #[automatically_derived]
         impl alloy_sol_types::SolCall for getPendingAdminsCall {
             type Parameters<'a> = (alloy::sol_types::sol_data::Address,);
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = getPendingAdminsReturn;
-            type ReturnTuple<'a> = (
-                alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::Address>,
-            );
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnTuple<'a> =
+                (alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::Address>,);
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "getPendingAdmins(address)";
             const SELECTOR: [u8; 4] = [107u8, 221u8, 250u8, 31u8];
             #[inline]
@@ -2945,17 +2633,17 @@ function getPendingAdmins(address account) external view returns (address[] memo
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `isAdmin(address,address)` and selector `0x91006745`.
-```solidity
-function isAdmin(address account, address caller) external view returns (bool);
-```*/
+    ```solidity
+    function isAdmin(address account, address caller) external view returns (bool);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct isAdminCall {
@@ -2989,9 +2677,7 @@ function isAdmin(address account, address caller) external view returns (bool);
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -3023,9 +2709,7 @@ function isAdmin(address account, address caller) external view returns (bool);
             type UnderlyingRustTuple<'a> = (bool,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -3053,14 +2737,10 @@ function isAdmin(address account, address caller) external view returns (bool);
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Address,
             );
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = isAdminReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Bool,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "isAdmin(address,address)";
             const SELECTOR: [u8; 4] = [145u8, 0u8, 103u8, 69u8];
             #[inline]
@@ -3085,17 +2765,17 @@ function isAdmin(address account, address caller) external view returns (bool);
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `isPendingAdmin(address,address)` and selector `0xad8aca77`.
-```solidity
-function isPendingAdmin(address account, address pendingAdmin) external view returns (bool);
-```*/
+    ```solidity
+    function isPendingAdmin(address account, address pendingAdmin) external view returns (bool);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct isPendingAdminCall {
@@ -3129,9 +2809,7 @@ function isPendingAdmin(address account, address pendingAdmin) external view ret
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -3163,9 +2841,7 @@ function isPendingAdmin(address account, address pendingAdmin) external view ret
             type UnderlyingRustTuple<'a> = (bool,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -3174,16 +2850,14 @@ function isPendingAdmin(address account, address pendingAdmin) external view ret
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<isPendingAdminReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<isPendingAdminReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: isPendingAdminReturn) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for isPendingAdminReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for isPendingAdminReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -3195,14 +2869,10 @@ function isPendingAdmin(address account, address pendingAdmin) external view ret
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Address,
             );
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = isPendingAdminReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Bool,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "isPendingAdmin(address,address)";
             const SELECTOR: [u8; 4] = [173u8, 138u8, 202u8, 119u8];
             #[inline]
@@ -3227,17 +2897,17 @@ function isPendingAdmin(address account, address pendingAdmin) external view ret
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `removeAdmin(address,address)` and selector `0x268959e5`.
-```solidity
-function removeAdmin(address account, address admin) external;
-```*/
+    ```solidity
+    function removeAdmin(address account, address admin) external;
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct removeAdminCall {
@@ -3269,9 +2939,7 @@ function removeAdmin(address account, address admin) external;
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -3303,9 +2971,7 @@ function removeAdmin(address account, address admin) external;
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -3333,14 +2999,10 @@ function removeAdmin(address account, address admin) external;
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Address,
             );
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = removeAdminReturn;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "removeAdmin(address,address)";
             const SELECTOR: [u8; 4] = [38u8, 137u8, 89u8, 229u8];
             #[inline]
@@ -3365,17 +3027,17 @@ function removeAdmin(address account, address admin) external;
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `removeAppointee(address,address,address,bytes4)` and selector `0x06641201`.
-```solidity
-function removeAppointee(address account, address appointee, address target, bytes4 selector) external;
-```*/
+    ```solidity
+    function removeAppointee(address account, address appointee, address target, bytes4 selector) external;
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct removeAppointeeCall {
@@ -3413,9 +3075,7 @@ function removeAppointee(address account, address appointee, address target, byt
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -3449,9 +3109,7 @@ function removeAppointee(address account, address appointee, address target, byt
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -3460,16 +3118,14 @@ function removeAppointee(address account, address appointee, address target, byt
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<removeAppointeeReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<removeAppointeeReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: removeAppointeeReturn) -> Self {
                     ()
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for removeAppointeeReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for removeAppointeeReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
@@ -3483,14 +3139,10 @@ function removeAppointee(address account, address appointee, address target, byt
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::FixedBytes<4>,
             );
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = removeAppointeeReturn;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "removeAppointee(address,address,address,bytes4)";
             const SELECTOR: [u8; 4] = [6u8, 100u8, 18u8, 1u8];
             #[inline]
@@ -3521,17 +3173,17 @@ function removeAppointee(address account, address appointee, address target, byt
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `removePendingAdmin(address,address)` and selector `0x4f906cf9`.
-```solidity
-function removePendingAdmin(address account, address admin) external;
-```*/
+    ```solidity
+    function removePendingAdmin(address account, address admin) external;
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct removePendingAdminCall {
@@ -3563,9 +3215,7 @@ function removePendingAdmin(address account, address admin) external;
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -3574,16 +3224,14 @@ function removePendingAdmin(address account, address admin) external;
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<removePendingAdminCall>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<removePendingAdminCall> for UnderlyingRustTuple<'_> {
                 fn from(value: removePendingAdminCall) -> Self {
                     (value.account, value.admin)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for removePendingAdminCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for removePendingAdminCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {
                         account: tuple.0,
@@ -3599,9 +3247,7 @@ function removePendingAdmin(address account, address admin) external;
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -3610,16 +3256,14 @@ function removePendingAdmin(address account, address admin) external;
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<removePendingAdminReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<removePendingAdminReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: removePendingAdminReturn) -> Self {
                     ()
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for removePendingAdminReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for removePendingAdminReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
@@ -3631,14 +3275,10 @@ function removePendingAdmin(address account, address admin) external;
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Address,
             );
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = removePendingAdminReturn;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "removePendingAdmin(address,address)";
             const SELECTOR: [u8; 4] = [79u8, 144u8, 108u8, 249u8];
             #[inline]
@@ -3663,17 +3303,17 @@ function removePendingAdmin(address account, address admin) external;
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `setAppointee(address,address,address,bytes4)` and selector `0x950d806e`.
-```solidity
-function setAppointee(address account, address appointee, address target, bytes4 selector) external;
-```*/
+    ```solidity
+    function setAppointee(address account, address appointee, address target, bytes4 selector) external;
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setAppointeeCall {
@@ -3711,9 +3351,7 @@ function setAppointee(address account, address appointee, address target, bytes4
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -3747,9 +3385,7 @@ function setAppointee(address account, address appointee, address target, bytes4
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -3779,14 +3415,10 @@ function setAppointee(address account, address appointee, address target, bytes4
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::FixedBytes<4>,
             );
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = setAppointeeReturn;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "setAppointee(address,address,address,bytes4)";
             const SELECTOR: [u8; 4] = [149u8, 13u8, 128u8, 110u8];
             #[inline]
@@ -3817,10 +3449,10 @@ function setAppointee(address account, address appointee, address target, bytes4
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
@@ -3872,22 +3504,16 @@ function setAppointee(address account, address appointee, address target, bytes4
         #[inline]
         fn selector(&self) -> [u8; 4] {
             match self {
-                Self::acceptAdmin(_) => {
-                    <acceptAdminCall as alloy_sol_types::SolCall>::SELECTOR
-                }
+                Self::acceptAdmin(_) => <acceptAdminCall as alloy_sol_types::SolCall>::SELECTOR,
                 Self::addPendingAdmin(_) => {
                     <addPendingAdminCall as alloy_sol_types::SolCall>::SELECTOR
                 }
                 Self::canCall(_) => <canCallCall as alloy_sol_types::SolCall>::SELECTOR,
-                Self::getAdmins(_) => {
-                    <getAdminsCall as alloy_sol_types::SolCall>::SELECTOR
-                }
+                Self::getAdmins(_) => <getAdminsCall as alloy_sol_types::SolCall>::SELECTOR,
                 Self::getAppointeePermissions(_) => {
                     <getAppointeePermissionsCall as alloy_sol_types::SolCall>::SELECTOR
                 }
-                Self::getAppointees(_) => {
-                    <getAppointeesCall as alloy_sol_types::SolCall>::SELECTOR
-                }
+                Self::getAppointees(_) => <getAppointeesCall as alloy_sol_types::SolCall>::SELECTOR,
                 Self::getPendingAdmins(_) => {
                     <getPendingAdminsCall as alloy_sol_types::SolCall>::SELECTOR
                 }
@@ -3895,18 +3521,14 @@ function setAppointee(address account, address appointee, address target, bytes4
                 Self::isPendingAdmin(_) => {
                     <isPendingAdminCall as alloy_sol_types::SolCall>::SELECTOR
                 }
-                Self::removeAdmin(_) => {
-                    <removeAdminCall as alloy_sol_types::SolCall>::SELECTOR
-                }
+                Self::removeAdmin(_) => <removeAdminCall as alloy_sol_types::SolCall>::SELECTOR,
                 Self::removeAppointee(_) => {
                     <removeAppointeeCall as alloy_sol_types::SolCall>::SELECTOR
                 }
                 Self::removePendingAdmin(_) => {
                     <removePendingAdminCall as alloy_sol_types::SolCall>::SELECTOR
                 }
-                Self::setAppointee(_) => {
-                    <setAppointeeCall as alloy_sol_types::SolCall>::SELECTOR
-                }
+                Self::setAppointee(_) => <setAppointeeCall as alloy_sol_types::SolCall>::SELECTOR,
             }
         }
         #[inline]
@@ -3927,17 +3549,19 @@ function setAppointee(address account, address appointee, address target, bytes4
             static DECODE_SHIMS: &[fn(
                 &[u8],
                 bool,
-            ) -> alloy_sol_types::Result<PermissionControllerStorageCalls>] = &[
+            ) -> alloy_sol_types::Result<
+                PermissionControllerStorageCalls,
+            >] = &[
                 {
                     fn removeAppointee(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<PermissionControllerStorageCalls> {
+                    ) -> alloy_sol_types::Result<PermissionControllerStorageCalls>
+                    {
                         <removeAppointeeCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(PermissionControllerStorageCalls::removeAppointee)
+                            data, validate,
+                        )
+                        .map(PermissionControllerStorageCalls::removeAppointee)
                     }
                     removeAppointee
                 },
@@ -3945,12 +3569,12 @@ function setAppointee(address account, address appointee, address target, bytes4
                     fn removeAdmin(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<PermissionControllerStorageCalls> {
+                    ) -> alloy_sol_types::Result<PermissionControllerStorageCalls>
+                    {
                         <removeAdminCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(PermissionControllerStorageCalls::removeAdmin)
+                            data, validate,
+                        )
+                        .map(PermissionControllerStorageCalls::removeAdmin)
                     }
                     removeAdmin
                 },
@@ -3958,12 +3582,12 @@ function setAppointee(address account, address appointee, address target, bytes4
                     fn removePendingAdmin(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<PermissionControllerStorageCalls> {
+                    ) -> alloy_sol_types::Result<PermissionControllerStorageCalls>
+                    {
                         <removePendingAdminCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(PermissionControllerStorageCalls::removePendingAdmin)
+                            data, validate,
+                        )
+                        .map(PermissionControllerStorageCalls::removePendingAdmin)
                     }
                     removePendingAdmin
                 },
@@ -3971,12 +3595,12 @@ function setAppointee(address account, address appointee, address target, bytes4
                     fn acceptAdmin(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<PermissionControllerStorageCalls> {
+                    ) -> alloy_sol_types::Result<PermissionControllerStorageCalls>
+                    {
                         <acceptAdminCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(PermissionControllerStorageCalls::acceptAdmin)
+                            data, validate,
+                        )
+                        .map(PermissionControllerStorageCalls::acceptAdmin)
                     }
                     acceptAdmin
                 },
@@ -3984,12 +3608,12 @@ function setAppointee(address account, address appointee, address target, bytes4
                     fn getPendingAdmins(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<PermissionControllerStorageCalls> {
+                    ) -> alloy_sol_types::Result<PermissionControllerStorageCalls>
+                    {
                         <getPendingAdminsCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(PermissionControllerStorageCalls::getPendingAdmins)
+                            data, validate,
+                        )
+                        .map(PermissionControllerStorageCalls::getPendingAdmins)
                     }
                     getPendingAdmins
                 },
@@ -3997,14 +3621,12 @@ function setAppointee(address account, address appointee, address target, bytes4
                     fn getAppointeePermissions(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<PermissionControllerStorageCalls> {
+                    ) -> alloy_sol_types::Result<PermissionControllerStorageCalls>
+                    {
                         <getAppointeePermissionsCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(
-                                PermissionControllerStorageCalls::getAppointeePermissions,
-                            )
+                            data, validate,
+                        )
+                        .map(PermissionControllerStorageCalls::getAppointeePermissions)
                     }
                     getAppointeePermissions
                 },
@@ -4012,11 +3634,9 @@ function setAppointee(address account, address appointee, address target, bytes4
                     fn isAdmin(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<PermissionControllerStorageCalls> {
-                        <isAdminCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
+                    ) -> alloy_sol_types::Result<PermissionControllerStorageCalls>
+                    {
+                        <isAdminCall as alloy_sol_types::SolCall>::abi_decode_raw(data, validate)
                             .map(PermissionControllerStorageCalls::isAdmin)
                     }
                     isAdmin
@@ -4025,12 +3645,12 @@ function setAppointee(address account, address appointee, address target, bytes4
                     fn setAppointee(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<PermissionControllerStorageCalls> {
+                    ) -> alloy_sol_types::Result<PermissionControllerStorageCalls>
+                    {
                         <setAppointeeCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(PermissionControllerStorageCalls::setAppointee)
+                            data, validate,
+                        )
+                        .map(PermissionControllerStorageCalls::setAppointee)
                     }
                     setAppointee
                 },
@@ -4038,11 +3658,9 @@ function setAppointee(address account, address appointee, address target, bytes4
                     fn getAdmins(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<PermissionControllerStorageCalls> {
-                        <getAdminsCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
+                    ) -> alloy_sol_types::Result<PermissionControllerStorageCalls>
+                    {
+                        <getAdminsCall as alloy_sol_types::SolCall>::abi_decode_raw(data, validate)
                             .map(PermissionControllerStorageCalls::getAdmins)
                     }
                     getAdmins
@@ -4051,12 +3669,12 @@ function setAppointee(address account, address appointee, address target, bytes4
                     fn isPendingAdmin(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<PermissionControllerStorageCalls> {
+                    ) -> alloy_sol_types::Result<PermissionControllerStorageCalls>
+                    {
                         <isPendingAdminCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(PermissionControllerStorageCalls::isPendingAdmin)
+                            data, validate,
+                        )
+                        .map(PermissionControllerStorageCalls::isPendingAdmin)
                     }
                     isPendingAdmin
                 },
@@ -4064,11 +3682,9 @@ function setAppointee(address account, address appointee, address target, bytes4
                     fn canCall(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<PermissionControllerStorageCalls> {
-                        <canCallCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
+                    ) -> alloy_sol_types::Result<PermissionControllerStorageCalls>
+                    {
+                        <canCallCall as alloy_sol_types::SolCall>::abi_decode_raw(data, validate)
                             .map(PermissionControllerStorageCalls::canCall)
                     }
                     canCall
@@ -4077,12 +3693,12 @@ function setAppointee(address account, address appointee, address target, bytes4
                     fn addPendingAdmin(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<PermissionControllerStorageCalls> {
+                    ) -> alloy_sol_types::Result<PermissionControllerStorageCalls>
+                    {
                         <addPendingAdminCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(PermissionControllerStorageCalls::addPendingAdmin)
+                            data, validate,
+                        )
+                        .map(PermissionControllerStorageCalls::addPendingAdmin)
                     }
                     addPendingAdmin
                 },
@@ -4090,23 +3706,21 @@ function setAppointee(address account, address appointee, address target, bytes4
                     fn getAppointees(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<PermissionControllerStorageCalls> {
+                    ) -> alloy_sol_types::Result<PermissionControllerStorageCalls>
+                    {
                         <getAppointeesCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(PermissionControllerStorageCalls::getAppointees)
+                            data, validate,
+                        )
+                        .map(PermissionControllerStorageCalls::getAppointees)
                     }
                     getAppointees
                 },
             ];
             let Ok(idx) = Self::SELECTORS.binary_search(&selector) else {
-                return Err(
-                    alloy_sol_types::Error::unknown_selector(
-                        <Self as alloy_sol_types::SolInterface>::NAME,
-                        selector,
-                    ),
-                );
+                return Err(alloy_sol_types::Error::unknown_selector(
+                    <Self as alloy_sol_types::SolInterface>::NAME,
+                    selector,
+                ));
             };
             (unsafe { DECODE_SHIMS.get_unchecked(idx) })(data, validate)
         }
@@ -4114,14 +3728,10 @@ function setAppointee(address account, address appointee, address target, bytes4
         fn abi_encoded_size(&self) -> usize {
             match self {
                 Self::acceptAdmin(inner) => {
-                    <acceptAdminCall as alloy_sol_types::SolCall>::abi_encoded_size(
-                        inner,
-                    )
+                    <acceptAdminCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
                 }
                 Self::addPendingAdmin(inner) => {
-                    <addPendingAdminCall as alloy_sol_types::SolCall>::abi_encoded_size(
-                        inner,
-                    )
+                    <addPendingAdminCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
                 }
                 Self::canCall(inner) => {
                     <canCallCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
@@ -4135,42 +3745,28 @@ function setAppointee(address account, address appointee, address target, bytes4
                     )
                 }
                 Self::getAppointees(inner) => {
-                    <getAppointeesCall as alloy_sol_types::SolCall>::abi_encoded_size(
-                        inner,
-                    )
+                    <getAppointeesCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
                 }
                 Self::getPendingAdmins(inner) => {
-                    <getPendingAdminsCall as alloy_sol_types::SolCall>::abi_encoded_size(
-                        inner,
-                    )
+                    <getPendingAdminsCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
                 }
                 Self::isAdmin(inner) => {
                     <isAdminCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
                 }
                 Self::isPendingAdmin(inner) => {
-                    <isPendingAdminCall as alloy_sol_types::SolCall>::abi_encoded_size(
-                        inner,
-                    )
+                    <isPendingAdminCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
                 }
                 Self::removeAdmin(inner) => {
-                    <removeAdminCall as alloy_sol_types::SolCall>::abi_encoded_size(
-                        inner,
-                    )
+                    <removeAdminCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
                 }
                 Self::removeAppointee(inner) => {
-                    <removeAppointeeCall as alloy_sol_types::SolCall>::abi_encoded_size(
-                        inner,
-                    )
+                    <removeAppointeeCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
                 }
                 Self::removePendingAdmin(inner) => {
-                    <removePendingAdminCall as alloy_sol_types::SolCall>::abi_encoded_size(
-                        inner,
-                    )
+                    <removePendingAdminCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
                 }
                 Self::setAppointee(inner) => {
-                    <setAppointeeCall as alloy_sol_types::SolCall>::abi_encoded_size(
-                        inner,
-                    )
+                    <setAppointeeCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
                 }
             }
         }
@@ -4178,76 +3774,45 @@ function setAppointee(address account, address appointee, address target, bytes4
         fn abi_encode_raw(&self, out: &mut alloy_sol_types::private::Vec<u8>) {
             match self {
                 Self::acceptAdmin(inner) => {
-                    <acceptAdminCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <acceptAdminCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
                 }
                 Self::addPendingAdmin(inner) => {
-                    <addPendingAdminCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <addPendingAdminCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
                 }
                 Self::canCall(inner) => {
                     <canCallCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
                 }
                 Self::getAdmins(inner) => {
-                    <getAdminsCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <getAdminsCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
                 }
                 Self::getAppointeePermissions(inner) => {
                     <getAppointeePermissionsCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
+                        inner, out,
                     )
                 }
                 Self::getAppointees(inner) => {
-                    <getAppointeesCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <getAppointeesCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
                 }
                 Self::getPendingAdmins(inner) => {
-                    <getPendingAdminsCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <getPendingAdminsCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
                 }
                 Self::isAdmin(inner) => {
                     <isAdminCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
                 }
                 Self::isPendingAdmin(inner) => {
-                    <isPendingAdminCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <isPendingAdminCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
                 }
                 Self::removeAdmin(inner) => {
-                    <removeAdminCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <removeAdminCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
                 }
                 Self::removeAppointee(inner) => {
-                    <removeAppointeeCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <removeAppointeeCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
                 }
                 Self::removePendingAdmin(inner) => {
-                    <removePendingAdminCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <removePendingAdminCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
                 }
                 Self::setAppointee(inner) => {
-                    <setAppointeeCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <setAppointeeCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
                 }
             }
         }
@@ -4299,9 +3864,7 @@ function setAppointee(address account, address appointee, address target, bytes4
                 Self::AdminNotPending(_) => {
                     <AdminNotPending as alloy_sol_types::SolError>::SELECTOR
                 }
-                Self::AdminNotSet(_) => {
-                    <AdminNotSet as alloy_sol_types::SolError>::SELECTOR
-                }
+                Self::AdminNotSet(_) => <AdminNotSet as alloy_sol_types::SolError>::SELECTOR,
                 Self::AppointeeAlreadySet(_) => {
                     <AppointeeAlreadySet as alloy_sol_types::SolError>::SELECTOR
                 }
@@ -4332,17 +3895,19 @@ function setAppointee(address account, address appointee, address target, bytes4
             static DECODE_SHIMS: &[fn(
                 &[u8],
                 bool,
-            ) -> alloy_sol_types::Result<PermissionControllerStorageErrors>] = &[
+            ) -> alloy_sol_types::Result<
+                PermissionControllerStorageErrors,
+            >] = &[
                 {
                     fn AppointeeNotSet(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<PermissionControllerStorageErrors> {
+                    ) -> alloy_sol_types::Result<PermissionControllerStorageErrors>
+                    {
                         <AppointeeNotSet as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(PermissionControllerStorageErrors::AppointeeNotSet)
+                            data, validate,
+                        )
+                        .map(PermissionControllerStorageErrors::AppointeeNotSet)
                     }
                     AppointeeNotSet
                 },
@@ -4350,12 +3915,12 @@ function setAppointee(address account, address appointee, address target, bytes4
                     fn AdminAlreadyPending(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<PermissionControllerStorageErrors> {
+                    ) -> alloy_sol_types::Result<PermissionControllerStorageErrors>
+                    {
                         <AdminAlreadyPending as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(PermissionControllerStorageErrors::AdminAlreadyPending)
+                            data, validate,
+                        )
+                        .map(PermissionControllerStorageErrors::AdminAlreadyPending)
                     }
                     AdminAlreadyPending
                 },
@@ -4363,11 +3928,9 @@ function setAppointee(address account, address appointee, address target, bytes4
                     fn NotAdmin(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<PermissionControllerStorageErrors> {
-                        <NotAdmin as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
+                    ) -> alloy_sol_types::Result<PermissionControllerStorageErrors>
+                    {
+                        <NotAdmin as alloy_sol_types::SolError>::abi_decode_raw(data, validate)
                             .map(PermissionControllerStorageErrors::NotAdmin)
                     }
                     NotAdmin
@@ -4376,12 +3939,12 @@ function setAppointee(address account, address appointee, address target, bytes4
                     fn CannotHaveZeroAdmins(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<PermissionControllerStorageErrors> {
+                    ) -> alloy_sol_types::Result<PermissionControllerStorageErrors>
+                    {
                         <CannotHaveZeroAdmins as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(PermissionControllerStorageErrors::CannotHaveZeroAdmins)
+                            data, validate,
+                        )
+                        .map(PermissionControllerStorageErrors::CannotHaveZeroAdmins)
                     }
                     CannotHaveZeroAdmins
                 },
@@ -4389,12 +3952,12 @@ function setAppointee(address account, address appointee, address target, bytes4
                     fn AdminAlreadySet(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<PermissionControllerStorageErrors> {
+                    ) -> alloy_sol_types::Result<PermissionControllerStorageErrors>
+                    {
                         <AdminAlreadySet as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(PermissionControllerStorageErrors::AdminAlreadySet)
+                            data, validate,
+                        )
+                        .map(PermissionControllerStorageErrors::AdminAlreadySet)
                     }
                     AdminAlreadySet
                 },
@@ -4402,12 +3965,12 @@ function setAppointee(address account, address appointee, address target, bytes4
                     fn AppointeeAlreadySet(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<PermissionControllerStorageErrors> {
+                    ) -> alloy_sol_types::Result<PermissionControllerStorageErrors>
+                    {
                         <AppointeeAlreadySet as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(PermissionControllerStorageErrors::AppointeeAlreadySet)
+                            data, validate,
+                        )
+                        .map(PermissionControllerStorageErrors::AppointeeAlreadySet)
                     }
                     AppointeeAlreadySet
                 },
@@ -4415,12 +3978,12 @@ function setAppointee(address account, address appointee, address target, bytes4
                     fn AdminNotPending(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<PermissionControllerStorageErrors> {
+                    ) -> alloy_sol_types::Result<PermissionControllerStorageErrors>
+                    {
                         <AdminNotPending as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(PermissionControllerStorageErrors::AdminNotPending)
+                            data, validate,
+                        )
+                        .map(PermissionControllerStorageErrors::AdminNotPending)
                     }
                     AdminNotPending
                 },
@@ -4428,23 +3991,19 @@ function setAppointee(address account, address appointee, address target, bytes4
                     fn AdminNotSet(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<PermissionControllerStorageErrors> {
-                        <AdminNotSet as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
+                    ) -> alloy_sol_types::Result<PermissionControllerStorageErrors>
+                    {
+                        <AdminNotSet as alloy_sol_types::SolError>::abi_decode_raw(data, validate)
                             .map(PermissionControllerStorageErrors::AdminNotSet)
                     }
                     AdminNotSet
                 },
             ];
             let Ok(idx) = Self::SELECTORS.binary_search(&selector) else {
-                return Err(
-                    alloy_sol_types::Error::unknown_selector(
-                        <Self as alloy_sol_types::SolInterface>::NAME,
-                        selector,
-                    ),
-                );
+                return Err(alloy_sol_types::Error::unknown_selector(
+                    <Self as alloy_sol_types::SolInterface>::NAME,
+                    selector,
+                ));
             };
             (unsafe { DECODE_SHIMS.get_unchecked(idx) })(data, validate)
         }
@@ -4452,37 +4011,25 @@ function setAppointee(address account, address appointee, address target, bytes4
         fn abi_encoded_size(&self) -> usize {
             match self {
                 Self::AdminAlreadyPending(inner) => {
-                    <AdminAlreadyPending as alloy_sol_types::SolError>::abi_encoded_size(
-                        inner,
-                    )
+                    <AdminAlreadyPending as alloy_sol_types::SolError>::abi_encoded_size(inner)
                 }
                 Self::AdminAlreadySet(inner) => {
-                    <AdminAlreadySet as alloy_sol_types::SolError>::abi_encoded_size(
-                        inner,
-                    )
+                    <AdminAlreadySet as alloy_sol_types::SolError>::abi_encoded_size(inner)
                 }
                 Self::AdminNotPending(inner) => {
-                    <AdminNotPending as alloy_sol_types::SolError>::abi_encoded_size(
-                        inner,
-                    )
+                    <AdminNotPending as alloy_sol_types::SolError>::abi_encoded_size(inner)
                 }
                 Self::AdminNotSet(inner) => {
                     <AdminNotSet as alloy_sol_types::SolError>::abi_encoded_size(inner)
                 }
                 Self::AppointeeAlreadySet(inner) => {
-                    <AppointeeAlreadySet as alloy_sol_types::SolError>::abi_encoded_size(
-                        inner,
-                    )
+                    <AppointeeAlreadySet as alloy_sol_types::SolError>::abi_encoded_size(inner)
                 }
                 Self::AppointeeNotSet(inner) => {
-                    <AppointeeNotSet as alloy_sol_types::SolError>::abi_encoded_size(
-                        inner,
-                    )
+                    <AppointeeNotSet as alloy_sol_types::SolError>::abi_encoded_size(inner)
                 }
                 Self::CannotHaveZeroAdmins(inner) => {
-                    <CannotHaveZeroAdmins as alloy_sol_types::SolError>::abi_encoded_size(
-                        inner,
-                    )
+                    <CannotHaveZeroAdmins as alloy_sol_types::SolError>::abi_encoded_size(inner)
                 }
                 Self::NotAdmin(inner) => {
                     <NotAdmin as alloy_sol_types::SolError>::abi_encoded_size(inner)
@@ -4493,46 +4040,25 @@ function setAppointee(address account, address appointee, address target, bytes4
         fn abi_encode_raw(&self, out: &mut alloy_sol_types::private::Vec<u8>) {
             match self {
                 Self::AdminAlreadyPending(inner) => {
-                    <AdminAlreadyPending as alloy_sol_types::SolError>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <AdminAlreadyPending as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
                 }
                 Self::AdminAlreadySet(inner) => {
-                    <AdminAlreadySet as alloy_sol_types::SolError>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <AdminAlreadySet as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
                 }
                 Self::AdminNotPending(inner) => {
-                    <AdminNotPending as alloy_sol_types::SolError>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <AdminNotPending as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
                 }
                 Self::AdminNotSet(inner) => {
-                    <AdminNotSet as alloy_sol_types::SolError>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <AdminNotSet as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
                 }
                 Self::AppointeeAlreadySet(inner) => {
-                    <AppointeeAlreadySet as alloy_sol_types::SolError>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <AppointeeAlreadySet as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
                 }
                 Self::AppointeeNotSet(inner) => {
-                    <AppointeeNotSet as alloy_sol_types::SolError>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <AppointeeNotSet as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
                 }
                 Self::CannotHaveZeroAdmins(inner) => {
-                    <CannotHaveZeroAdmins as alloy_sol_types::SolError>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <CannotHaveZeroAdmins as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
                 }
                 Self::NotAdmin(inner) => {
                     <NotAdmin as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
@@ -4559,208 +4085,34 @@ function setAppointee(address account, address appointee, address target, bytes4
         /// Prefer using `SolInterface` methods instead.
         pub const SELECTORS: &'static [[u8; 32usize]] = &[
             [
-                3u8,
-                127u8,
-                3u8,
-                162u8,
-                173u8,
-                107u8,
-                150u8,
-                125u8,
-                244u8,
-                160u8,
-                23u8,
-                121u8,
-                182u8,
-                210u8,
-                180u8,
-                200u8,
-                89u8,
-                80u8,
-                223u8,
-                131u8,
-                146u8,
-                93u8,
-                158u8,
-                49u8,
-                54u8,
-                43u8,
-                81u8,
-                148u8,
-                34u8,
-                252u8,
-                1u8,
-                105u8,
+                3u8, 127u8, 3u8, 162u8, 173u8, 107u8, 150u8, 125u8, 244u8, 160u8, 23u8, 121u8,
+                182u8, 210u8, 180u8, 200u8, 89u8, 80u8, 223u8, 131u8, 146u8, 93u8, 158u8, 49u8,
+                54u8, 43u8, 81u8, 148u8, 34u8, 252u8, 1u8, 105u8,
             ],
             [
-                24u8,
-                36u8,
-                35u8,
-                38u8,
-                182u8,
-                184u8,
-                98u8,
-                18u8,
-                105u8,
-                112u8,
-                103u8,
-                151u8,
-                89u8,
-                22u8,
-                159u8,
-                1u8,
-                246u8,
-                70u8,
-                189u8,
-                85u8,
-                236u8,
-                91u8,
-                252u8,
-                171u8,
-                133u8,
-                186u8,
-                159u8,
-                51u8,
-                122u8,
-                116u8,
-                224u8,
-                198u8,
+                24u8, 36u8, 35u8, 38u8, 182u8, 184u8, 98u8, 18u8, 105u8, 112u8, 103u8, 151u8, 89u8,
+                22u8, 159u8, 1u8, 246u8, 70u8, 189u8, 85u8, 236u8, 91u8, 252u8, 171u8, 133u8,
+                186u8, 159u8, 51u8, 122u8, 116u8, 224u8, 198u8,
             ],
             [
-                177u8,
-                75u8,
-                154u8,
-                61u8,
-                68u8,
-                140u8,
-                91u8,
-                4u8,
-                240u8,
-                229u8,
-                176u8,
-                135u8,
-                182u8,
-                245u8,
-                25u8,
-                51u8,
-                144u8,
-                219u8,
-                121u8,
-                85u8,
-                72u8,
-                42u8,
-                111u8,
-                251u8,
-                132u8,
-                30u8,
-                123u8,
-                59u8,
-                166u8,
-                26u8,
-                70u8,
-                12u8,
+                177u8, 75u8, 154u8, 61u8, 68u8, 140u8, 91u8, 4u8, 240u8, 229u8, 176u8, 135u8,
+                182u8, 245u8, 25u8, 51u8, 144u8, 219u8, 121u8, 85u8, 72u8, 42u8, 111u8, 251u8,
+                132u8, 30u8, 123u8, 59u8, 166u8, 26u8, 70u8, 12u8,
             ],
             [
-                191u8,
-                38u8,
-                94u8,
-                131u8,
-                38u8,
-                40u8,
-                90u8,
-                39u8,
-                71u8,
-                227u8,
-                62u8,
-                84u8,
-                213u8,
-                148u8,
-                95u8,
-                113u8,
-                17u8,
-                242u8,
-                181u8,
-                237u8,
-                184u8,
-                38u8,
-                235u8,
-                140u8,
-                8u8,
-                212u8,
-                103u8,
-                119u8,
-                121u8,
-                179u8,
-                255u8,
-                151u8,
+                191u8, 38u8, 94u8, 131u8, 38u8, 40u8, 90u8, 39u8, 71u8, 227u8, 62u8, 84u8, 213u8,
+                148u8, 95u8, 113u8, 17u8, 242u8, 181u8, 237u8, 184u8, 38u8, 235u8, 140u8, 8u8,
+                212u8, 103u8, 119u8, 121u8, 179u8, 255u8, 151u8,
             ],
             [
-                215u8,
-                6u8,
-                237u8,
-                122u8,
-                224u8,
-                68u8,
-                215u8,
-                149u8,
-                180u8,
-                158u8,
-                84u8,
-                201u8,
-                245u8,
-                25u8,
-                246u8,
-                99u8,
-                5u8,
-                57u8,
-                81u8,
-                1u8,
-                25u8,
-                133u8,
-                246u8,
-                99u8,
-                168u8,
-                98u8,
-                205u8,
-                158u8,
-                231u8,
-                42u8,
-                154u8,
-                199u8,
+                215u8, 6u8, 237u8, 122u8, 224u8, 68u8, 215u8, 149u8, 180u8, 158u8, 84u8, 201u8,
+                245u8, 25u8, 246u8, 99u8, 5u8, 57u8, 81u8, 1u8, 25u8, 133u8, 246u8, 99u8, 168u8,
+                98u8, 205u8, 158u8, 231u8, 42u8, 154u8, 199u8,
             ],
             [
-                219u8,
-                157u8,
-                93u8,
-                49u8,
-                50u8,
-                13u8,
-                175u8,
-                91u8,
-                199u8,
-                24u8,
-                29u8,
-                86u8,
-                91u8,
-                109u8,
-                164u8,
-                209u8,
-                46u8,
-                48u8,
-                240u8,
-                244u8,
-                213u8,
-                170u8,
-                50u8,
-                74u8,
-                153u8,
-                36u8,
-                38u8,
-                193u8,
-                74u8,
-                29u8,
-                25u8,
-                206u8,
+                219u8, 157u8, 93u8, 49u8, 50u8, 13u8, 175u8, 91u8, 199u8, 24u8, 29u8, 86u8, 91u8,
+                109u8, 164u8, 209u8, 46u8, 48u8, 240u8, 244u8, 213u8, 170u8, 50u8, 74u8, 153u8,
+                36u8, 38u8, 193u8, 74u8, 29u8, 25u8, 206u8,
             ],
         ];
     }
@@ -4776,67 +4128,47 @@ function setAppointee(address account, address appointee, address target, bytes4
             match topics.first().copied() {
                 Some(<AdminRemoved as alloy_sol_types::SolEvent>::SIGNATURE_HASH) => {
                     <AdminRemoved as alloy_sol_types::SolEvent>::decode_raw_log(
-                            topics,
-                            data,
-                            validate,
-                        )
-                        .map(Self::AdminRemoved)
+                        topics, data, validate,
+                    )
+                    .map(Self::AdminRemoved)
                 }
                 Some(<AdminSet as alloy_sol_types::SolEvent>::SIGNATURE_HASH) => {
-                    <AdminSet as alloy_sol_types::SolEvent>::decode_raw_log(
-                            topics,
-                            data,
-                            validate,
-                        )
+                    <AdminSet as alloy_sol_types::SolEvent>::decode_raw_log(topics, data, validate)
                         .map(Self::AdminSet)
                 }
                 Some(<AppointeeRemoved as alloy_sol_types::SolEvent>::SIGNATURE_HASH) => {
                     <AppointeeRemoved as alloy_sol_types::SolEvent>::decode_raw_log(
-                            topics,
-                            data,
-                            validate,
-                        )
-                        .map(Self::AppointeeRemoved)
+                        topics, data, validate,
+                    )
+                    .map(Self::AppointeeRemoved)
                 }
                 Some(<AppointeeSet as alloy_sol_types::SolEvent>::SIGNATURE_HASH) => {
                     <AppointeeSet as alloy_sol_types::SolEvent>::decode_raw_log(
-                            topics,
-                            data,
-                            validate,
-                        )
-                        .map(Self::AppointeeSet)
+                        topics, data, validate,
+                    )
+                    .map(Self::AppointeeSet)
                 }
-                Some(
-                    <PendingAdminAdded as alloy_sol_types::SolEvent>::SIGNATURE_HASH,
-                ) => {
+                Some(<PendingAdminAdded as alloy_sol_types::SolEvent>::SIGNATURE_HASH) => {
                     <PendingAdminAdded as alloy_sol_types::SolEvent>::decode_raw_log(
-                            topics,
-                            data,
-                            validate,
-                        )
-                        .map(Self::PendingAdminAdded)
+                        topics, data, validate,
+                    )
+                    .map(Self::PendingAdminAdded)
                 }
-                Some(
-                    <PendingAdminRemoved as alloy_sol_types::SolEvent>::SIGNATURE_HASH,
-                ) => {
+                Some(<PendingAdminRemoved as alloy_sol_types::SolEvent>::SIGNATURE_HASH) => {
                     <PendingAdminRemoved as alloy_sol_types::SolEvent>::decode_raw_log(
-                            topics,
-                            data,
-                            validate,
-                        )
-                        .map(Self::PendingAdminRemoved)
+                        topics, data, validate,
+                    )
+                    .map(Self::PendingAdminRemoved)
                 }
-                _ => {
-                    alloy_sol_types::private::Err(alloy_sol_types::Error::InvalidLog {
-                        name: <Self as alloy_sol_types::SolEventInterface>::NAME,
-                        log: alloy_sol_types::private::Box::new(
-                            alloy_sol_types::private::LogData::new_unchecked(
-                                topics.to_vec(),
-                                data.to_vec().into(),
-                            ),
+                _ => alloy_sol_types::private::Err(alloy_sol_types::Error::InvalidLog {
+                    name: <Self as alloy_sol_types::SolEventInterface>::NAME,
+                    log: alloy_sol_types::private::Box::new(
+                        alloy_sol_types::private::LogData::new_unchecked(
+                            topics.to_vec(),
+                            data.to_vec().into(),
                         ),
-                    })
-                }
+                    ),
+                }),
             }
         }
     }
@@ -4847,9 +4179,7 @@ function setAppointee(address account, address appointee, address target, bytes4
                 Self::AdminRemoved(inner) => {
                     alloy_sol_types::private::IntoLogData::to_log_data(inner)
                 }
-                Self::AdminSet(inner) => {
-                    alloy_sol_types::private::IntoLogData::to_log_data(inner)
-                }
+                Self::AdminSet(inner) => alloy_sol_types::private::IntoLogData::to_log_data(inner),
                 Self::AppointeeRemoved(inner) => {
                     alloy_sol_types::private::IntoLogData::to_log_data(inner)
                 }
@@ -4890,7 +4220,7 @@ function setAppointee(address account, address appointee, address target, bytes4
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`PermissionControllerStorage`](self) contract instance.
 
-See the [wrapper's documentation](`PermissionControllerStorageInstance`) for more details.*/
+    See the [wrapper's documentation](`PermissionControllerStorageInstance`) for more details.*/
     #[inline]
     pub const fn new<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -4904,9 +4234,9 @@ See the [wrapper's documentation](`PermissionControllerStorageInstance`) for mor
     }
     /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+    Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+    For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
     #[inline]
     pub fn deploy<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -4920,35 +4250,33 @@ For more fine-grained control over the deployment process, use [`deploy_builder`
         PermissionControllerStorageInstance::<T, P, N>::deploy(provider)
     }
     /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+    and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+    This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+    the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     #[inline]
     pub fn deploy_builder<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
         P: alloy_contract::private::Provider<T, N>,
         N: alloy_contract::private::Network,
-    >(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
+    >(
+        provider: P,
+    ) -> alloy_contract::RawCallBuilder<T, P, N> {
         PermissionControllerStorageInstance::<T, P, N>::deploy_builder(provider)
     }
     /**A [`PermissionControllerStorage`](self) instance.
 
-Contains type-safe methods for interacting with an on-chain instance of the
-[`PermissionControllerStorage`](self) contract located at a given `address`, using a given
-provider `P`.
+    Contains type-safe methods for interacting with an on-chain instance of the
+    [`PermissionControllerStorage`](self) contract located at a given `address`, using a given
+    provider `P`.
 
-If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
-documentation on how to provide it), the `deploy` and `deploy_builder` methods can
-be used to deploy a new instance of the contract.
+    If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
+    documentation on how to provide it), the `deploy` and `deploy_builder` methods can
+    be used to deploy a new instance of the contract.
 
-See the [module-level documentation](self) for all the available methods.*/
+    See the [module-level documentation](self) for all the available methods.*/
     #[derive(Clone)]
-    pub struct PermissionControllerStorageInstance<
-        T,
-        P,
-        N = alloy_contract::private::Ethereum,
-    > {
+    pub struct PermissionControllerStorageInstance<T, P, N = alloy_contract::private::Ethereum> {
         address: alloy_sol_types::private::Address,
         provider: P,
         _network_transport: ::core::marker::PhantomData<(N, T)>,
@@ -4965,18 +4293,16 @@ See the [module-level documentation](self) for all the available methods.*/
     /// Instantiation and getters/setters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > PermissionControllerStorageInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > PermissionControllerStorageInstance<T, P, N>
+    {
         /**Creates a new wrapper around an on-chain [`PermissionControllerStorage`](self) contract instance.
 
-See the [wrapper's documentation](`PermissionControllerStorageInstance`) for more details.*/
+        See the [wrapper's documentation](`PermissionControllerStorageInstance`) for more details.*/
         #[inline]
-        pub const fn new(
-            address: alloy_sol_types::private::Address,
-            provider: P,
-        ) -> Self {
+        pub const fn new(address: alloy_sol_types::private::Address, provider: P) -> Self {
             Self {
                 address,
                 provider,
@@ -4985,9 +4311,9 @@ See the [wrapper's documentation](`PermissionControllerStorageInstance`) for mor
         }
         /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+        Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+        For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
         #[inline]
         pub async fn deploy(
             provider: P,
@@ -4997,10 +4323,10 @@ For more fine-grained control over the deployment process, use [`deploy_builder`
             Ok(Self::new(contract_address, call_builder.provider))
         }
         /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+        and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+        This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+        the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         #[inline]
         pub fn deploy_builder(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
             alloy_contract::RawCallBuilder::new_raw_deploy(
@@ -5032,9 +4358,7 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     impl<T, P: ::core::clone::Clone, N> PermissionControllerStorageInstance<T, &P, N> {
         /// Clones the provider and returns a new instance with the cloned provider.
         #[inline]
-        pub fn with_cloned_provider(
-            self,
-        ) -> PermissionControllerStorageInstance<T, P, N> {
+        pub fn with_cloned_provider(self) -> PermissionControllerStorageInstance<T, P, N> {
             PermissionControllerStorageInstance {
                 address: self.address,
                 provider: ::core::clone::Clone::clone(&self.provider),
@@ -5045,10 +4369,11 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     /// Function calls.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > PermissionControllerStorageInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > PermissionControllerStorageInstance<T, P, N>
+    {
         /// Creates a new call builder using this contract instance's provider and address.
         ///
         /// Note that the call can be any function call, not just those defined in this
@@ -5072,12 +4397,7 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
             account: alloy::sol_types::private::Address,
             admin: alloy::sol_types::private::Address,
         ) -> alloy_contract::SolCallBuilder<T, &P, addPendingAdminCall, N> {
-            self.call_builder(
-                &addPendingAdminCall {
-                    account,
-                    admin,
-                },
-            )
+            self.call_builder(&addPendingAdminCall { account, admin })
         }
         ///Creates a new call builder for the [`canCall`] function.
         pub fn canCall(
@@ -5087,14 +4407,12 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
             target: alloy::sol_types::private::Address,
             selector: alloy::sol_types::private::FixedBytes<4>,
         ) -> alloy_contract::SolCallBuilder<T, &P, canCallCall, N> {
-            self.call_builder(
-                &canCallCall {
-                    account,
-                    caller,
-                    target,
-                    selector,
-                },
-            )
+            self.call_builder(&canCallCall {
+                account,
+                caller,
+                target,
+                selector,
+            })
         }
         ///Creates a new call builder for the [`getAdmins`] function.
         pub fn getAdmins(
@@ -5109,12 +4427,7 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
             account: alloy::sol_types::private::Address,
             appointee: alloy::sol_types::private::Address,
         ) -> alloy_contract::SolCallBuilder<T, &P, getAppointeePermissionsCall, N> {
-            self.call_builder(
-                &getAppointeePermissionsCall {
-                    account,
-                    appointee,
-                },
-            )
+            self.call_builder(&getAppointeePermissionsCall { account, appointee })
         }
         ///Creates a new call builder for the [`getAppointees`] function.
         pub fn getAppointees(
@@ -5123,13 +4436,11 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
             target: alloy::sol_types::private::Address,
             selector: alloy::sol_types::private::FixedBytes<4>,
         ) -> alloy_contract::SolCallBuilder<T, &P, getAppointeesCall, N> {
-            self.call_builder(
-                &getAppointeesCall {
-                    account,
-                    target,
-                    selector,
-                },
-            )
+            self.call_builder(&getAppointeesCall {
+                account,
+                target,
+                selector,
+            })
         }
         ///Creates a new call builder for the [`getPendingAdmins`] function.
         pub fn getPendingAdmins(
@@ -5152,12 +4463,10 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
             account: alloy::sol_types::private::Address,
             pendingAdmin: alloy::sol_types::private::Address,
         ) -> alloy_contract::SolCallBuilder<T, &P, isPendingAdminCall, N> {
-            self.call_builder(
-                &isPendingAdminCall {
-                    account,
-                    pendingAdmin,
-                },
-            )
+            self.call_builder(&isPendingAdminCall {
+                account,
+                pendingAdmin,
+            })
         }
         ///Creates a new call builder for the [`removeAdmin`] function.
         pub fn removeAdmin(
@@ -5175,14 +4484,12 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
             target: alloy::sol_types::private::Address,
             selector: alloy::sol_types::private::FixedBytes<4>,
         ) -> alloy_contract::SolCallBuilder<T, &P, removeAppointeeCall, N> {
-            self.call_builder(
-                &removeAppointeeCall {
-                    account,
-                    appointee,
-                    target,
-                    selector,
-                },
-            )
+            self.call_builder(&removeAppointeeCall {
+                account,
+                appointee,
+                target,
+                selector,
+            })
         }
         ///Creates a new call builder for the [`removePendingAdmin`] function.
         pub fn removePendingAdmin(
@@ -5190,12 +4497,7 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
             account: alloy::sol_types::private::Address,
             admin: alloy::sol_types::private::Address,
         ) -> alloy_contract::SolCallBuilder<T, &P, removePendingAdminCall, N> {
-            self.call_builder(
-                &removePendingAdminCall {
-                    account,
-                    admin,
-                },
-            )
+            self.call_builder(&removePendingAdminCall { account, admin })
         }
         ///Creates a new call builder for the [`setAppointee`] function.
         pub fn setAppointee(
@@ -5205,23 +4507,22 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
             target: alloy::sol_types::private::Address,
             selector: alloy::sol_types::private::FixedBytes<4>,
         ) -> alloy_contract::SolCallBuilder<T, &P, setAppointeeCall, N> {
-            self.call_builder(
-                &setAppointeeCall {
-                    account,
-                    appointee,
-                    target,
-                    selector,
-                },
-            )
+            self.call_builder(&setAppointeeCall {
+                account,
+                appointee,
+                target,
+                selector,
+            })
         }
     }
     /// Event filters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > PermissionControllerStorageInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > PermissionControllerStorageInstance<T, P, N>
+    {
         /// Creates a new event filter using this contract instance's provider and address.
         ///
         /// Note that the type can be any event, not just those defined in this contract.
@@ -5232,9 +4533,7 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
             alloy_contract::Event::new_sol(&self.provider, &self.address)
         }
         ///Creates a new event filter for the [`AdminRemoved`] event.
-        pub fn AdminRemoved_filter(
-            &self,
-        ) -> alloy_contract::Event<T, &P, AdminRemoved, N> {
+        pub fn AdminRemoved_filter(&self) -> alloy_contract::Event<T, &P, AdminRemoved, N> {
             self.event_filter::<AdminRemoved>()
         }
         ///Creates a new event filter for the [`AdminSet`] event.
@@ -5242,15 +4541,11 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
             self.event_filter::<AdminSet>()
         }
         ///Creates a new event filter for the [`AppointeeRemoved`] event.
-        pub fn AppointeeRemoved_filter(
-            &self,
-        ) -> alloy_contract::Event<T, &P, AppointeeRemoved, N> {
+        pub fn AppointeeRemoved_filter(&self) -> alloy_contract::Event<T, &P, AppointeeRemoved, N> {
             self.event_filter::<AppointeeRemoved>()
         }
         ///Creates a new event filter for the [`AppointeeSet`] event.
-        pub fn AppointeeSet_filter(
-            &self,
-        ) -> alloy_contract::Event<T, &P, AppointeeSet, N> {
+        pub fn AppointeeSet_filter(&self) -> alloy_contract::Event<T, &P, AppointeeSet, N> {
             self.event_filter::<AppointeeSet>()
         }
         ///Creates a new event filter for the [`PendingAdminAdded`] event.

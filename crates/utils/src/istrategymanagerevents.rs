@@ -121,9 +121,9 @@ pub mod IStrategyManagerEvents {
         b"",
     );
     /**Event with signature `Deposit(address,address,address,uint256)` and selector `0x7cfff908a4b583f36430b25d75964c458d8ede8a99bd61be750e97ee1b2f3a96`.
-```solidity
-event Deposit(address staker, address token, address strategy, uint256 shares);
-```*/
+    ```solidity
+    event Deposit(address staker, address token, address strategy, uint256 shares);
+    ```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -157,45 +157,15 @@ event Deposit(address staker, address token, address strategy, uint256 shares);
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Uint<256>,
             );
-            type DataToken<'a> = <Self::DataTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (alloy_sol_types::sol_data::FixedBytes<32>,);
             const SIGNATURE: &'static str = "Deposit(address,address,address,uint256)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
-                124u8,
-                255u8,
-                249u8,
-                8u8,
-                164u8,
-                181u8,
-                131u8,
-                243u8,
-                100u8,
-                48u8,
-                178u8,
-                93u8,
-                117u8,
-                150u8,
-                76u8,
-                69u8,
-                141u8,
-                142u8,
-                222u8,
-                138u8,
-                153u8,
-                189u8,
-                97u8,
-                190u8,
-                117u8,
-                14u8,
-                151u8,
-                238u8,
-                27u8,
-                47u8,
-                58u8,
-                150u8,
-            ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
+                alloy_sol_types::private::B256::new([
+                    124u8, 255u8, 249u8, 8u8, 164u8, 181u8, 131u8, 243u8, 100u8, 48u8, 178u8, 93u8,
+                    117u8, 150u8, 76u8, 69u8, 141u8, 142u8, 222u8, 138u8, 153u8, 189u8, 97u8,
+                    190u8, 117u8, 14u8, 151u8, 238u8, 27u8, 47u8, 58u8, 150u8,
+                ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -215,13 +185,11 @@ event Deposit(address staker, address token, address strategy, uint256 shares);
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(
-                        alloy_sol_types::Error::invalid_event_signature_hash(
-                            Self::SIGNATURE,
-                            topics.0,
-                            Self::SIGNATURE_HASH,
-                        ),
-                    );
+                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
+                        Self::SIGNATURE,
+                        topics.0,
+                        Self::SIGNATURE_HASH,
+                    ));
                 }
                 Ok(())
             }
@@ -237,9 +205,9 @@ event Deposit(address staker, address token, address strategy, uint256 shares);
                     <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
                         &self.strategy,
                     ),
-                    <alloy::sol_types::sol_data::Uint<
-                        256,
-                    > as alloy_sol_types::SolType>::tokenize(&self.shares),
+                    <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
+                        &self.shares,
+                    ),
                 )
             }
             #[inline]
@@ -254,9 +222,7 @@ event Deposit(address staker, address token, address strategy, uint256 shares);
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(
-                    Self::SIGNATURE_HASH,
-                );
+                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
                 Ok(())
             }
         }
@@ -278,9 +244,9 @@ event Deposit(address staker, address token, address strategy, uint256 shares);
         }
     };
     /**Event with signature `StrategyAddedToDepositWhitelist(address)` and selector `0x0c35b17d91c96eb2751cd456e1252f42a386e524ef9ff26ecc9950859fdc04fe`.
-```solidity
-event StrategyAddedToDepositWhitelist(address strategy);
-```*/
+    ```solidity
+    event StrategyAddedToDepositWhitelist(address strategy);
+    ```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -303,45 +269,15 @@ event StrategyAddedToDepositWhitelist(address strategy);
         #[automatically_derived]
         impl alloy_sol_types::SolEvent for StrategyAddedToDepositWhitelist {
             type DataTuple<'a> = (alloy::sol_types::sol_data::Address,);
-            type DataToken<'a> = <Self::DataTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (alloy_sol_types::sol_data::FixedBytes<32>,);
             const SIGNATURE: &'static str = "StrategyAddedToDepositWhitelist(address)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
-                12u8,
-                53u8,
-                177u8,
-                125u8,
-                145u8,
-                201u8,
-                110u8,
-                178u8,
-                117u8,
-                28u8,
-                212u8,
-                86u8,
-                225u8,
-                37u8,
-                47u8,
-                66u8,
-                163u8,
-                134u8,
-                229u8,
-                36u8,
-                239u8,
-                159u8,
-                242u8,
-                110u8,
-                204u8,
-                153u8,
-                80u8,
-                133u8,
-                159u8,
-                220u8,
-                4u8,
-                254u8,
-            ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
+                alloy_sol_types::private::B256::new([
+                    12u8, 53u8, 177u8, 125u8, 145u8, 201u8, 110u8, 178u8, 117u8, 28u8, 212u8, 86u8,
+                    225u8, 37u8, 47u8, 66u8, 163u8, 134u8, 229u8, 36u8, 239u8, 159u8, 242u8, 110u8,
+                    204u8, 153u8, 80u8, 133u8, 159u8, 220u8, 4u8, 254u8,
+                ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -356,13 +292,11 @@ event StrategyAddedToDepositWhitelist(address strategy);
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(
-                        alloy_sol_types::Error::invalid_event_signature_hash(
-                            Self::SIGNATURE,
-                            topics.0,
-                            Self::SIGNATURE_HASH,
-                        ),
-                    );
+                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
+                        Self::SIGNATURE,
+                        topics.0,
+                        Self::SIGNATURE_HASH,
+                    ));
                 }
                 Ok(())
             }
@@ -386,9 +320,7 @@ event StrategyAddedToDepositWhitelist(address strategy);
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(
-                    Self::SIGNATURE_HASH,
-                );
+                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
                 Ok(())
             }
         }
@@ -402,20 +334,17 @@ event StrategyAddedToDepositWhitelist(address strategy);
             }
         }
         #[automatically_derived]
-        impl From<&StrategyAddedToDepositWhitelist>
-        for alloy_sol_types::private::LogData {
+        impl From<&StrategyAddedToDepositWhitelist> for alloy_sol_types::private::LogData {
             #[inline]
-            fn from(
-                this: &StrategyAddedToDepositWhitelist,
-            ) -> alloy_sol_types::private::LogData {
+            fn from(this: &StrategyAddedToDepositWhitelist) -> alloy_sol_types::private::LogData {
                 alloy_sol_types::SolEvent::encode_log_data(this)
             }
         }
     };
     /**Event with signature `StrategyRemovedFromDepositWhitelist(address)` and selector `0x4074413b4b443e4e58019f2855a8765113358c7c72e39509c6af45fc0f5ba030`.
-```solidity
-event StrategyRemovedFromDepositWhitelist(address strategy);
-```*/
+    ```solidity
+    event StrategyRemovedFromDepositWhitelist(address strategy);
+    ```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -438,45 +367,15 @@ event StrategyRemovedFromDepositWhitelist(address strategy);
         #[automatically_derived]
         impl alloy_sol_types::SolEvent for StrategyRemovedFromDepositWhitelist {
             type DataTuple<'a> = (alloy::sol_types::sol_data::Address,);
-            type DataToken<'a> = <Self::DataTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (alloy_sol_types::sol_data::FixedBytes<32>,);
             const SIGNATURE: &'static str = "StrategyRemovedFromDepositWhitelist(address)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
-                64u8,
-                116u8,
-                65u8,
-                59u8,
-                75u8,
-                68u8,
-                62u8,
-                78u8,
-                88u8,
-                1u8,
-                159u8,
-                40u8,
-                85u8,
-                168u8,
-                118u8,
-                81u8,
-                19u8,
-                53u8,
-                140u8,
-                124u8,
-                114u8,
-                227u8,
-                149u8,
-                9u8,
-                198u8,
-                175u8,
-                69u8,
-                252u8,
-                15u8,
-                91u8,
-                160u8,
-                48u8,
-            ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
+                alloy_sol_types::private::B256::new([
+                    64u8, 116u8, 65u8, 59u8, 75u8, 68u8, 62u8, 78u8, 88u8, 1u8, 159u8, 40u8, 85u8,
+                    168u8, 118u8, 81u8, 19u8, 53u8, 140u8, 124u8, 114u8, 227u8, 149u8, 9u8, 198u8,
+                    175u8, 69u8, 252u8, 15u8, 91u8, 160u8, 48u8,
+                ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -491,13 +390,11 @@ event StrategyRemovedFromDepositWhitelist(address strategy);
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(
-                        alloy_sol_types::Error::invalid_event_signature_hash(
-                            Self::SIGNATURE,
-                            topics.0,
-                            Self::SIGNATURE_HASH,
-                        ),
-                    );
+                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
+                        Self::SIGNATURE,
+                        topics.0,
+                        Self::SIGNATURE_HASH,
+                    ));
                 }
                 Ok(())
             }
@@ -521,15 +418,12 @@ event StrategyRemovedFromDepositWhitelist(address strategy);
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(
-                    Self::SIGNATURE_HASH,
-                );
+                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
                 Ok(())
             }
         }
         #[automatically_derived]
-        impl alloy_sol_types::private::IntoLogData
-        for StrategyRemovedFromDepositWhitelist {
+        impl alloy_sol_types::private::IntoLogData for StrategyRemovedFromDepositWhitelist {
             fn to_log_data(&self) -> alloy_sol_types::private::LogData {
                 From::from(self)
             }
@@ -538,8 +432,7 @@ event StrategyRemovedFromDepositWhitelist(address strategy);
             }
         }
         #[automatically_derived]
-        impl From<&StrategyRemovedFromDepositWhitelist>
-        for alloy_sol_types::private::LogData {
+        impl From<&StrategyRemovedFromDepositWhitelist> for alloy_sol_types::private::LogData {
             #[inline]
             fn from(
                 this: &StrategyRemovedFromDepositWhitelist,
@@ -549,9 +442,9 @@ event StrategyRemovedFromDepositWhitelist(address strategy);
         }
     };
     /**Event with signature `StrategyWhitelisterChanged(address,address)` and selector `0x4264275e593955ff9d6146a51a4525f6ddace2e81db9391abcc9d1ca48047d29`.
-```solidity
-event StrategyWhitelisterChanged(address previousAddress, address newAddress);
-```*/
+    ```solidity
+    event StrategyWhitelisterChanged(address previousAddress, address newAddress);
+    ```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -579,45 +472,15 @@ event StrategyWhitelisterChanged(address previousAddress, address newAddress);
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Address,
             );
-            type DataToken<'a> = <Self::DataTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (alloy_sol_types::sol_data::FixedBytes<32>,);
             const SIGNATURE: &'static str = "StrategyWhitelisterChanged(address,address)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
-                66u8,
-                100u8,
-                39u8,
-                94u8,
-                89u8,
-                57u8,
-                85u8,
-                255u8,
-                157u8,
-                97u8,
-                70u8,
-                165u8,
-                26u8,
-                69u8,
-                37u8,
-                246u8,
-                221u8,
-                172u8,
-                226u8,
-                232u8,
-                29u8,
-                185u8,
-                57u8,
-                26u8,
-                188u8,
-                201u8,
-                209u8,
-                202u8,
-                72u8,
-                4u8,
-                125u8,
-                41u8,
-            ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
+                alloy_sol_types::private::B256::new([
+                    66u8, 100u8, 39u8, 94u8, 89u8, 57u8, 85u8, 255u8, 157u8, 97u8, 70u8, 165u8,
+                    26u8, 69u8, 37u8, 246u8, 221u8, 172u8, 226u8, 232u8, 29u8, 185u8, 57u8, 26u8,
+                    188u8, 201u8, 209u8, 202u8, 72u8, 4u8, 125u8, 41u8,
+                ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -635,13 +498,11 @@ event StrategyWhitelisterChanged(address previousAddress, address newAddress);
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(
-                        alloy_sol_types::Error::invalid_event_signature_hash(
-                            Self::SIGNATURE,
-                            topics.0,
-                            Self::SIGNATURE_HASH,
-                        ),
-                    );
+                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
+                        Self::SIGNATURE,
+                        topics.0,
+                        Self::SIGNATURE_HASH,
+                    ));
                 }
                 Ok(())
             }
@@ -668,9 +529,7 @@ event StrategyWhitelisterChanged(address previousAddress, address newAddress);
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(
-                    Self::SIGNATURE_HASH,
-                );
+                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
                 Ok(())
             }
         }
@@ -686,9 +545,7 @@ event StrategyWhitelisterChanged(address previousAddress, address newAddress);
         #[automatically_derived]
         impl From<&StrategyWhitelisterChanged> for alloy_sol_types::private::LogData {
             #[inline]
-            fn from(
-                this: &StrategyWhitelisterChanged,
-            ) -> alloy_sol_types::private::LogData {
+            fn from(this: &StrategyWhitelisterChanged) -> alloy_sol_types::private::LogData {
                 alloy_sol_types::SolEvent::encode_log_data(this)
             }
         }
@@ -710,140 +567,24 @@ event StrategyWhitelisterChanged(address previousAddress, address newAddress);
         /// Prefer using `SolInterface` methods instead.
         pub const SELECTORS: &'static [[u8; 32usize]] = &[
             [
-                12u8,
-                53u8,
-                177u8,
-                125u8,
-                145u8,
-                201u8,
-                110u8,
-                178u8,
-                117u8,
-                28u8,
-                212u8,
-                86u8,
-                225u8,
-                37u8,
-                47u8,
-                66u8,
-                163u8,
-                134u8,
-                229u8,
-                36u8,
-                239u8,
-                159u8,
-                242u8,
-                110u8,
-                204u8,
-                153u8,
-                80u8,
-                133u8,
-                159u8,
-                220u8,
-                4u8,
-                254u8,
+                12u8, 53u8, 177u8, 125u8, 145u8, 201u8, 110u8, 178u8, 117u8, 28u8, 212u8, 86u8,
+                225u8, 37u8, 47u8, 66u8, 163u8, 134u8, 229u8, 36u8, 239u8, 159u8, 242u8, 110u8,
+                204u8, 153u8, 80u8, 133u8, 159u8, 220u8, 4u8, 254u8,
             ],
             [
-                64u8,
-                116u8,
-                65u8,
-                59u8,
-                75u8,
-                68u8,
-                62u8,
-                78u8,
-                88u8,
-                1u8,
-                159u8,
-                40u8,
-                85u8,
-                168u8,
-                118u8,
-                81u8,
-                19u8,
-                53u8,
-                140u8,
-                124u8,
-                114u8,
-                227u8,
-                149u8,
-                9u8,
-                198u8,
-                175u8,
-                69u8,
-                252u8,
-                15u8,
-                91u8,
-                160u8,
-                48u8,
+                64u8, 116u8, 65u8, 59u8, 75u8, 68u8, 62u8, 78u8, 88u8, 1u8, 159u8, 40u8, 85u8,
+                168u8, 118u8, 81u8, 19u8, 53u8, 140u8, 124u8, 114u8, 227u8, 149u8, 9u8, 198u8,
+                175u8, 69u8, 252u8, 15u8, 91u8, 160u8, 48u8,
             ],
             [
-                66u8,
-                100u8,
-                39u8,
-                94u8,
-                89u8,
-                57u8,
-                85u8,
-                255u8,
-                157u8,
-                97u8,
-                70u8,
-                165u8,
-                26u8,
-                69u8,
-                37u8,
-                246u8,
-                221u8,
-                172u8,
-                226u8,
-                232u8,
-                29u8,
-                185u8,
-                57u8,
-                26u8,
-                188u8,
-                201u8,
-                209u8,
-                202u8,
-                72u8,
-                4u8,
-                125u8,
-                41u8,
+                66u8, 100u8, 39u8, 94u8, 89u8, 57u8, 85u8, 255u8, 157u8, 97u8, 70u8, 165u8, 26u8,
+                69u8, 37u8, 246u8, 221u8, 172u8, 226u8, 232u8, 29u8, 185u8, 57u8, 26u8, 188u8,
+                201u8, 209u8, 202u8, 72u8, 4u8, 125u8, 41u8,
             ],
             [
-                124u8,
-                255u8,
-                249u8,
-                8u8,
-                164u8,
-                181u8,
-                131u8,
-                243u8,
-                100u8,
-                48u8,
-                178u8,
-                93u8,
-                117u8,
-                150u8,
-                76u8,
-                69u8,
-                141u8,
-                142u8,
-                222u8,
-                138u8,
-                153u8,
-                189u8,
-                97u8,
-                190u8,
-                117u8,
-                14u8,
-                151u8,
-                238u8,
-                27u8,
-                47u8,
-                58u8,
-                150u8,
+                124u8, 255u8, 249u8, 8u8, 164u8, 181u8, 131u8, 243u8, 100u8, 48u8, 178u8, 93u8,
+                117u8, 150u8, 76u8, 69u8, 141u8, 142u8, 222u8, 138u8, 153u8, 189u8, 97u8, 190u8,
+                117u8, 14u8, 151u8, 238u8, 27u8, 47u8, 58u8, 150u8,
             ],
         ];
     }
@@ -913,9 +654,7 @@ event StrategyWhitelisterChanged(address previousAddress, address newAddress);
     impl alloy_sol_types::private::IntoLogData for IStrategyManagerEventsEvents {
         fn to_log_data(&self) -> alloy_sol_types::private::LogData {
             match self {
-                Self::Deposit(inner) => {
-                    alloy_sol_types::private::IntoLogData::to_log_data(inner)
-                }
+                Self::Deposit(inner) => alloy_sol_types::private::IntoLogData::to_log_data(inner),
                 Self::StrategyAddedToDepositWhitelist(inner) => {
                     alloy_sol_types::private::IntoLogData::to_log_data(inner)
                 }
@@ -929,9 +668,7 @@ event StrategyWhitelisterChanged(address previousAddress, address newAddress);
         }
         fn into_log_data(self) -> alloy_sol_types::private::LogData {
             match self {
-                Self::Deposit(inner) => {
-                    alloy_sol_types::private::IntoLogData::into_log_data(inner)
-                }
+                Self::Deposit(inner) => alloy_sol_types::private::IntoLogData::into_log_data(inner),
                 Self::StrategyAddedToDepositWhitelist(inner) => {
                     alloy_sol_types::private::IntoLogData::into_log_data(inner)
                 }
@@ -947,7 +684,7 @@ event StrategyWhitelisterChanged(address previousAddress, address newAddress);
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`IStrategyManagerEvents`](self) contract instance.
 
-See the [wrapper's documentation](`IStrategyManagerEventsInstance`) for more details.*/
+    See the [wrapper's documentation](`IStrategyManagerEventsInstance`) for more details.*/
     #[inline]
     pub const fn new<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -961,9 +698,9 @@ See the [wrapper's documentation](`IStrategyManagerEventsInstance`) for more det
     }
     /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+    Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+    For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
     #[inline]
     pub fn deploy<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -977,35 +714,33 @@ For more fine-grained control over the deployment process, use [`deploy_builder`
         IStrategyManagerEventsInstance::<T, P, N>::deploy(provider)
     }
     /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+    and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+    This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+    the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     #[inline]
     pub fn deploy_builder<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
         P: alloy_contract::private::Provider<T, N>,
         N: alloy_contract::private::Network,
-    >(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
+    >(
+        provider: P,
+    ) -> alloy_contract::RawCallBuilder<T, P, N> {
         IStrategyManagerEventsInstance::<T, P, N>::deploy_builder(provider)
     }
     /**A [`IStrategyManagerEvents`](self) instance.
 
-Contains type-safe methods for interacting with an on-chain instance of the
-[`IStrategyManagerEvents`](self) contract located at a given `address`, using a given
-provider `P`.
+    Contains type-safe methods for interacting with an on-chain instance of the
+    [`IStrategyManagerEvents`](self) contract located at a given `address`, using a given
+    provider `P`.
 
-If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
-documentation on how to provide it), the `deploy` and `deploy_builder` methods can
-be used to deploy a new instance of the contract.
+    If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
+    documentation on how to provide it), the `deploy` and `deploy_builder` methods can
+    be used to deploy a new instance of the contract.
 
-See the [module-level documentation](self) for all the available methods.*/
+    See the [module-level documentation](self) for all the available methods.*/
     #[derive(Clone)]
-    pub struct IStrategyManagerEventsInstance<
-        T,
-        P,
-        N = alloy_contract::private::Ethereum,
-    > {
+    pub struct IStrategyManagerEventsInstance<T, P, N = alloy_contract::private::Ethereum> {
         address: alloy_sol_types::private::Address,
         provider: P,
         _network_transport: ::core::marker::PhantomData<(N, T)>,
@@ -1014,24 +749,24 @@ See the [module-level documentation](self) for all the available methods.*/
     impl<T, P, N> ::core::fmt::Debug for IStrategyManagerEventsInstance<T, P, N> {
         #[inline]
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-            f.debug_tuple("IStrategyManagerEventsInstance").field(&self.address).finish()
+            f.debug_tuple("IStrategyManagerEventsInstance")
+                .field(&self.address)
+                .finish()
         }
     }
     /// Instantiation and getters/setters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > IStrategyManagerEventsInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > IStrategyManagerEventsInstance<T, P, N>
+    {
         /**Creates a new wrapper around an on-chain [`IStrategyManagerEvents`](self) contract instance.
 
-See the [wrapper's documentation](`IStrategyManagerEventsInstance`) for more details.*/
+        See the [wrapper's documentation](`IStrategyManagerEventsInstance`) for more details.*/
         #[inline]
-        pub const fn new(
-            address: alloy_sol_types::private::Address,
-            provider: P,
-        ) -> Self {
+        pub const fn new(address: alloy_sol_types::private::Address, provider: P) -> Self {
             Self {
                 address,
                 provider,
@@ -1040,9 +775,9 @@ See the [wrapper's documentation](`IStrategyManagerEventsInstance`) for more det
         }
         /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+        Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+        For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
         #[inline]
         pub async fn deploy(
             provider: P,
@@ -1052,10 +787,10 @@ For more fine-grained control over the deployment process, use [`deploy_builder`
             Ok(Self::new(contract_address, call_builder.provider))
         }
         /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+        and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+        This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+        the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         #[inline]
         pub fn deploy_builder(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
             alloy_contract::RawCallBuilder::new_raw_deploy(
@@ -1098,10 +833,11 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     /// Function calls.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > IStrategyManagerEventsInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > IStrategyManagerEventsInstance<T, P, N>
+    {
         /// Creates a new call builder using this contract instance's provider and address.
         ///
         /// Note that the call can be any function call, not just those defined in this
@@ -1116,10 +852,11 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     /// Event filters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > IStrategyManagerEventsInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > IStrategyManagerEventsInstance<T, P, N>
+    {
         /// Creates a new event filter using this contract instance's provider and address.
         ///
         /// Note that the type can be any event, not just those defined in this contract.
