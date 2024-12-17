@@ -4,6 +4,7 @@ use alloy::providers::Provider;
 use alloy::rpc::types::Filter;
 use ark_ff::Zero;
 use async_trait::async_trait;
+use eigen_common::{get_provider, get_ws_provider, NEW_PUBKEY_REGISTRATION_EVENT};
 use eigen_crypto_bls::{
     alloy_registry_g1_point_to_g1_affine, alloy_registry_g2_point_to_g2_affine, BlsG1Point,
     BlsG2Point,
@@ -13,12 +14,11 @@ use eigen_types::operator::{
     bitmap_to_quorum_ids, bitmap_to_quorum_ids_from_u192, OperatorPubKeys,
 };
 use eigen_utils::{
-    get_provider, get_ws_provider, NEW_PUBKEY_REGISTRATION_EVENT,
-    {
-        blsapkregistry::BLSApkRegistry, operatorstateretriever::OperatorStateRetriever,
-        registrycoordinator::RegistryCoordinator, stakeregistry::StakeRegistry,
-    },
+    deploy::stakeregistry::StakeRegistry, middleware::blsapkregistry::BLSApkRegistry,
+    middleware::operatorstateretriever::OperatorStateRetriever,
+    middleware::registrycoordinator::RegistryCoordinator,
 };
+
 use num_bigint::BigInt;
 use std::fmt::Debug;
 use std::{collections::HashMap, str::FromStr};

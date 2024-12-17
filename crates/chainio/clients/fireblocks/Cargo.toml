@@ -14,7 +14,7 @@ alloy-primitives.workspace = true
 chrono = "0.4"
 
 #eigen
-eigen-utils.workspace = true
+eigen-common.workspace = true
 hex = "0.4"
 jsonwebtoken = "7"
 mime = "0.3.17"

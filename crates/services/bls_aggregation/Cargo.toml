@@ -14,6 +14,7 @@ alloy-primitives.workspace = true
 ark-bn254.workspace = true
 ark-ec.workspace = true
 eigen-client-avsregistry.workspace = true
+eigen-common.workspace = true
 eigen-crypto-bls.workspace = true
 eigen-crypto-bn254.workspace = true
 eigen-services-avsregistry.workspace = true

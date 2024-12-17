@@ -10,7 +10,7 @@ use eigen_types::{
     operator::{OperatorAvsState, OperatorInfo, OperatorPubKeys, QuorumAvsState, QuorumNum},
     test::TestOperator,
 };
-use eigen_utils::operatorstateretriever::OperatorStateRetriever::CheckSignaturesIndices;
+use eigen_utils::middleware::operatorstateretriever::OperatorStateRetriever::CheckSignaturesIndices;
 
 use crate::AvsRegistryService;
 
