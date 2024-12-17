@@ -42,9 +42,8 @@ impl ELChainWriter {
         {
             let _ = tokio::task::spawn_blocking(move || {
                 let _ = eigen_telemetry::telemetry::Telemetry::capture_event("elchainwriter.new")
-                    .map_err(|e| AvsRegistryError::TelemetryError(e.to_string()));
-            })
-            .await;
+                    .map_err(|e| ElContractsError::TelemetryError(e.to_string()));
+            });
         }
 
         Self {
@@ -80,7 +79,7 @@ impl ELChainWriter {
                 let _ = eigen_telemetry::telemetry::Telemetry::capture_event(
                     "elchainwriter.register_as_operator",
                 )
-                .map_err(|e| AvsRegistryError::TelemetryError(e.to_string()));
+                .map_err(|e| ElContractsError::TelemetryError(e.to_string()));
             })
             .await;
         }
@@ -144,7 +143,7 @@ impl ELChainWriter {
                 let _ = eigen_telemetry::telemetry::Telemetry::capture_event(
                     "elchainwriter.update_operator_details",
                 )
-                .map_err(|e| AvsRegistryError::TelemetryError(e.to_string()));
+                .map_err(|e| ElContractsError::TelemetryError(e.to_string()));
             })
             .await;
         }
@@ -205,7 +204,7 @@ impl ELChainWriter {
                 let _ = eigen_telemetry::telemetry::Telemetry::capture_event(
                     "elchainwriter.deposit_erc20_into_strategy",
                 )
-                .map_err(|e| AvsRegistryError::TelemetryError(e.to_string()));
+                .map_err(|e| ElContractsError::TelemetryError(e.to_string()));
             })
             .await;
         }
@@ -258,7 +257,7 @@ impl ELChainWriter {
                 let _ = eigen_telemetry::telemetry::Telemetry::capture_event(
                     "elchainwriter.set_claimer_for",
                 )
-                .map_err(|e| AvsRegistryError::TelemetryError(e.to_string()));
+                .map_err(|e| ElContractsError::TelemetryError(e.to_string()));
             })
             .await;
         }
@@ -300,7 +299,7 @@ impl ELChainWriter {
                 let _ = eigen_telemetry::telemetry::Telemetry::capture_event(
                     "elchainwriter.process_claim",
                 )
-                .map_err(|e| AvsRegistryError::TelemetryError(e.to_string()));
+                .map_err(|e| ElContractsError::TelemetryError(e.to_string()));
             })
             .await;
         }

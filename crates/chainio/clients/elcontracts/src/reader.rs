@@ -44,9 +44,8 @@ impl ELChainReader {
         {
             let _ = tokio::task::spawn_blocking(move || {
                 let _ = eigen_telemetry::telemetry::Telemetry::capture_event("elchainreader.new")
-                    .map_err(|e| AvsRegistryError::TelemetryError(e.to_string()));
-            })
-            .await;
+                    .map_err(|e| ElContractsError::TelemetryError(e.to_string()));
+            });
         }
 
         ELChainReader {
@@ -83,7 +82,7 @@ impl ELChainReader {
         {
             let _ = tokio::task::spawn_blocking(move || {
                 let _ = eigen_telemetry::telemetry::Telemetry::capture_event("elchainreader.build")
-                    .map_err(|e| AvsRegistryError::TelemetryError(e.to_string()));
+                    .map_err(|e| ElContractsError::TelemetryError(e.to_string()));
             })
             .await;
         }
@@ -140,7 +139,7 @@ impl ELChainReader {
                 let _ = eigen_telemetry::telemetry::Telemetry::capture_event(
                     "elchainreader.calculate_delegation_approval_digest_hash",
                 )
-                .map_err(|e| AvsRegistryError::TelemetryError(e.to_string()));
+                .map_err(|e| ElContractsError::TelemetryError(e.to_string()));
             })
             .await;
         }
@@ -194,7 +193,7 @@ impl ELChainReader {
                 let _ = eigen_telemetry::telemetry::Telemetry::capture_event(
                     "elchainreader.calculate_operator_avs_registration_digest_hash",
                 )
-                .map_err(|e| AvsRegistryError::TelemetryError(e.to_string()));
+                .map_err(|e| ElContractsError::TelemetryError(e.to_string()));
             })
             .await;
         }
@@ -240,7 +239,7 @@ impl ELChainReader {
                 let _ = eigen_telemetry::telemetry::Telemetry::capture_event(
                     "elchainreader.get_operator_shares_in_strategy",
                 )
-                .map_err(|e| AvsRegistryError::TelemetryError(e.to_string()));
+                .map_err(|e| ElContractsError::TelemetryError(e.to_string()));
             })
             .await;
         }
@@ -280,7 +279,7 @@ impl ELChainReader {
                 let _ = eigen_telemetry::telemetry::Telemetry::capture_event(
                     "elchainreader.operator_is_frozen",
                 )
-                .map_err(|e| AvsRegistryError::TelemetryError(e.to_string()));
+                .map_err(|e| ElContractsError::TelemetryError(e.to_string()));
             })
             .await;
         }
@@ -324,7 +323,7 @@ impl ELChainReader {
                 let _ = eigen_telemetry::telemetry::Telemetry::capture_event(
                     "elchainreader.service_manager_can_slash_operator_until_block",
                 )
-                .map_err(|e| AvsRegistryError::TelemetryError(e.to_string()));
+                .map_err(|e| ElContractsError::TelemetryError(e.to_string()));
             })
             .await;
         }
@@ -370,7 +369,7 @@ impl ELChainReader {
                 let _ = eigen_telemetry::telemetry::Telemetry::capture_event(
                     "elchainreader.get_strategy_and_underlying_erc20_token",
                 )
-                .map_err(|e| AvsRegistryError::TelemetryError(e.to_string()));
+                .map_err(|e| ElContractsError::TelemetryError(e.to_string()));
             })
             .await;
         }
@@ -421,7 +420,7 @@ impl ELChainReader {
                 let _ = eigen_telemetry::telemetry::Telemetry::capture_event(
                     "elchainreader.get_operator_details",
                 )
-                .map_err(|e| AvsRegistryError::TelemetryError(e.to_string()));
+                .map_err(|e| ElContractsError::TelemetryError(e.to_string()));
             })
             .await;
         }
@@ -473,7 +472,7 @@ impl ELChainReader {
                 let _ = eigen_telemetry::telemetry::Telemetry::capture_event(
                     "elchainreader.is_operator_registered",
                 )
-                .map_err(|e| AvsRegistryError::TelemetryError(e.to_string()));
+                .map_err(|e| ElContractsError::TelemetryError(e.to_string()));
             })
             .await;
         }
