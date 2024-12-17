@@ -670,4 +670,381 @@ pub mod integration_test {
             .await
             .unwrap();
     }
+
+    #[tokio::test]
+    async fn test_2_quorums_2_operators_shared() {
+        // operator 1 stakes on quorums [0, 1]
+        // operator 2 stakes on quorums [1]
+        let (container, http_endpoint, ws_endpoint) = start_anvil_container().await;
+
+        let registry_coordinator_address =
+            get_registry_coordinator_address(http_endpoint.clone()).await;
+        let operator_state_retriever_address =
+            get_operator_state_retriever_address(http_endpoint.clone()).await;
+        let service_manager_address = get_service_manager_address(http_endpoint.clone()).await;
+        let provider = get_provider(http_endpoint.as_str());
+        let salt: FixedBytes<32> = FixedBytes::from([0x02; 32]);
+
+        let bls_key_pair_1 = BlsKeyPair::new(BLS_KEY_1.to_string()).unwrap();
+        let operator_id_1 =
+            hex!("fd329fe7e54f459b9c104064efe0172db113a50b5f394949b4ef80b3c34ca7f5").into();
+
+        let bls_key_pair_2 = BlsKeyPair::new(BLS_KEY_2.to_string()).unwrap();
+        let operator_id_2 =
+            hex!("7213614953817d00866957a5f866c67a5fb8d4e392af501701f7ab35294dc4b3").into();
+
+        let quorum_nums = Bytes::from([0u8, 1u8]);
+        let quorum_threshold_percentages: QuorumThresholdPercentages = vec![100, 100];
+
+        let contract_registry_coordinator = RegistryCoordinator::new(
+            registry_coordinator_address,
+            get_signer(PRIVATE_KEY_1, &http_endpoint),
+        );
+
+        // Create quorums
+        let operator_set_params = OperatorSetParam {
+            maxOperatorCount: 10,
+            kickBIPsOfOperatorStake: 100,
+            kickBIPsOfTotalStake: 1000,
+        };
+        let strategy_params = vec![StrategyParams {
+            strategy: get_erc20_mock_strategy(http_endpoint.clone()).await,
+            multiplier: U96::from(1),
+        }];
+        let _ = contract_registry_coordinator
+            .createQuorum(
+                operator_set_params.clone(),
+                U96::from(0),
+                strategy_params.clone(),
+            )
+            .send()
+            .await
+            .unwrap()
+            .watch()
+            .await;
+        let _ = contract_registry_coordinator
+            .createQuorum(operator_set_params, U96::from(0), strategy_params)
+            .send()
+            .await
+            .unwrap()
+            .watch()
+            .await;
+
+        // Create avs clients to interact with contracts deployed on anvil
+        let avs_registry_reader = AvsRegistryChainReader::new(
+            get_test_logger(),
+            registry_coordinator_address,
+            operator_state_retriever_address,
+            http_endpoint.to_string(),
+        )
+        .await
+        .unwrap();
+
+        let avs_writer = AvsRegistryChainWriter::build_avs_registry_chain_writer(
+            get_test_logger(),
+            http_endpoint.to_string(),
+            PRIVATE_KEY_1.to_string(),
+            registry_coordinator_address,
+            operator_state_retriever_address,
+        )
+        .await
+        .unwrap();
+
+        let operators_info = OperatorInfoServiceInMemory::new(
+            get_test_logger(),
+            avs_registry_reader.clone(),
+            ws_endpoint.to_string(),
+        )
+        .await
+        .unwrap()
+        .0;
+
+        let cancellation_token = CancellationToken::new();
+        let operators_info_clone = operators_info.clone();
+        let token_clone = cancellation_token.clone();
+        task::spawn(async move { operators_info_clone.start_service(&token_clone, 0, 0).await });
+        // Sleep to wait for the operator info service to start
+        sleep(Duration::from_secs(1)).await;
+
+        // Register operator
+        let tx_hash = avs_writer
+            .register_operator_in_quorum_with_avs_registry_coordinator(
+                bls_key_pair_1.clone(),
+                salt,
+                U256::from_be_slice(&[0xff; 32]),
+                quorum_nums.clone(),
+                "socket".to_string(),
+            )
+            .await
+            .unwrap();
+        wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+
+        let avs_writer = AvsRegistryChainWriter::build_avs_registry_chain_writer(
+            get_test_logger(),
+            http_endpoint.to_string(),
+            PRIVATE_KEY_2.to_string(),
+            registry_coordinator_address,
+            operator_state_retriever_address,
+        )
+        .await
+        .unwrap();
+
+        let tx_hash = avs_writer
+            .register_operator_in_quorum_with_avs_registry_coordinator(
+                bls_key_pair_2.clone(),
+                salt,
+                U256::from_be_slice(&[0xff; 32]),
+                Bytes::from([quorum_nums[1]]),
+                "socket".to_string(),
+            )
+            .await
+            .unwrap();
+        wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+
+        // Create aggregation service
+        let avs_registry_service =
+            AvsRegistryServiceChainCaller::new(avs_registry_reader.clone(), operators_info);
+
+        let bls_agg_service = BlsAggregatorService::new(avs_registry_service);
+
+        let current_block_num = provider.get_block_number().await.unwrap();
+
+        mine_anvil_blocks(&container, 1).await;
+
+        // Create the task related parameters
+        let task_index: TaskIndex = 0;
+        let time_to_expiry = Duration::from_secs(1);
+
+        // Initialize the task
+        bls_agg_service
+            .initialize_new_task(
+                task_index,
+                current_block_num as u32,
+                quorum_nums.to_vec(),
+                quorum_threshold_percentages,
+                time_to_expiry,
+            )
+            .await
+            .unwrap();
+
+        // Compute the signature and send it to the aggregation service
+        let task_response = 123;
+        let task_response_digest = hash(task_response);
+
+        let bls_signature_1 = bls_key_pair_1.sign_message(task_response_digest.as_ref());
+        bls_agg_service
+            .process_new_signature(
+                task_index,
+                task_response_digest,
+                bls_signature_1,
+                operator_id_1,
+            )
+            .await
+            .unwrap();
+
+        let bls_signature_2 = bls_key_pair_2.sign_message(task_response_digest.as_ref());
+        bls_agg_service
+            .process_new_signature(
+                task_index,
+                task_response_digest,
+                bls_signature_2,
+                operator_id_2,
+            )
+            .await
+            .unwrap();
+
+        // Wait for the response from the aggregation service
+        let bls_agg_response = bls_agg_service
+            .aggregated_response_receiver
+            .lock()
+            .await
+            .recv()
+            .await
+            .unwrap()
+            .unwrap();
+
+        // Send the shutdown signal to the OperatorInfoServiceInMemory
+        cancellation_token.cancel();
+
+        // Check the response
+        let service_manager = IBLSSignatureChecker::new(service_manager_address, provider);
+        service_manager
+            .checkSignatures(
+                task_response_digest,
+                quorum_nums,
+                current_block_num as u32,
+                agg_response_to_non_signer_stakes_and_signature(bls_agg_response),
+            )
+            .call()
+            .await
+            .unwrap();
+    }
+
+    #[tokio::test]
+    async fn test_2_quorums_1_operator() {
+        let (container, http_endpoint, ws_endpoint) = start_anvil_container().await;
+
+        let registry_coordinator_address =
+            get_registry_coordinator_address(http_endpoint.clone()).await;
+        let operator_state_retriever_address =
+            get_operator_state_retriever_address(http_endpoint.clone()).await;
+        let service_manager_address = get_service_manager_address(http_endpoint.clone()).await;
+        let provider = get_provider(http_endpoint.as_str());
+        let salt: FixedBytes<32> = FixedBytes::from([0x02; 32]);
+
+        let bls_key_pair_1 = BlsKeyPair::new(BLS_KEY_1.to_string()).unwrap();
+        let operator_id_1 =
+            hex!("fd329fe7e54f459b9c104064efe0172db113a50b5f394949b4ef80b3c34ca7f5").into();
+
+        let quorum_nums = Bytes::from([0u8, 1u8]);
+        let quorum_threshold_percentages: QuorumThresholdPercentages = vec![100, 100];
+
+        let contract_registry_coordinator = RegistryCoordinator::new(
+            registry_coordinator_address,
+            get_signer(PRIVATE_KEY_1, &http_endpoint),
+        );
+
+        // Create quorums
+        let operator_set_params = OperatorSetParam {
+            maxOperatorCount: 10,
+            kickBIPsOfOperatorStake: 100,
+            kickBIPsOfTotalStake: 1000,
+        };
+        let strategy_params = vec![StrategyParams {
+            strategy: get_erc20_mock_strategy(http_endpoint.clone()).await,
+            multiplier: U96::from(1),
+        }];
+        let _ = contract_registry_coordinator
+            .createQuorum(
+                operator_set_params.clone(),
+                U96::from(0),
+                strategy_params.clone(),
+            )
+            .send()
+            .await
+            .unwrap()
+            .watch()
+            .await;
+        let _ = contract_registry_coordinator
+            .createQuorum(operator_set_params, U96::from(0), strategy_params)
+            .send()
+            .await
+            .unwrap()
+            .watch()
+            .await;
+
+        // Create avs clients to interact with contracts deployed on anvil
+        let avs_registry_reader = AvsRegistryChainReader::new(
+            get_test_logger(),
+            registry_coordinator_address,
+            operator_state_retriever_address,
+            http_endpoint.to_string(),
+        )
+        .await
+        .unwrap();
+
+        let avs_writer = AvsRegistryChainWriter::build_avs_registry_chain_writer(
+            get_test_logger(),
+            http_endpoint.to_string(),
+            PRIVATE_KEY_1.to_string(),
+            registry_coordinator_address,
+            operator_state_retriever_address,
+        )
+        .await
+        .unwrap();
+
+        let operators_info = OperatorInfoServiceInMemory::new(
+            get_test_logger(),
+            avs_registry_reader.clone(),
+            ws_endpoint.to_string(),
+        )
+        .await
+        .unwrap()
+        .0;
+
+        let cancellation_token = CancellationToken::new();
+        let operators_info_clone = operators_info.clone();
+        let token_clone = cancellation_token.clone();
+        task::spawn(async move { operators_info_clone.start_service(&token_clone, 0, 0).await });
+        sleep(Duration::from_secs(1)).await;
+
+        // Register operator
+        let tx_hash = avs_writer
+            .register_operator_in_quorum_with_avs_registry_coordinator(
+                bls_key_pair_1.clone(),
+                salt,
+                U256::from_be_slice(&[0xff; 32]),
+                quorum_nums.clone(),
+                "socket".to_string(),
+            )
+            .await
+            .unwrap();
+        wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+
+        // Create aggregation service
+        let avs_registry_service =
+            AvsRegistryServiceChainCaller::new(avs_registry_reader.clone(), operators_info);
+
+        let bls_agg_service = BlsAggregatorService::new(avs_registry_service);
+
+        let current_block_num = provider.get_block_number().await.unwrap();
+        mine_anvil_blocks(&container, 1).await;
+
+        // Create the task related parameters
+        let task_index: TaskIndex = 0;
+        let time_to_expiry = Duration::from_secs(1);
+
+        // Initialize the task
+        bls_agg_service
+            .initialize_new_task(
+                task_index,
+                current_block_num as u32,
+                quorum_nums.to_vec(),
+                quorum_threshold_percentages,
+                time_to_expiry,
+            )
+            .await
+            .unwrap();
+
+        // Compute the signature and send it to the aggregation service
+        let task_response = 123;
+        let task_response_digest = hash(task_response);
+
+        let bls_signature_1 = bls_key_pair_1.sign_message(task_response_digest.as_ref());
+        bls_agg_service
+            .process_new_signature(
+                task_index,
+                task_response_digest,
+                bls_signature_1.clone(),
+                operator_id_1,
+            )
+            .await
+            .unwrap();
+
+        // Wait for the response from the aggregation service
+        let bls_agg_response = bls_agg_service
+            .aggregated_response_receiver
+            .lock()
+            .await
+            .recv()
+            .await
+            .unwrap()
+            .unwrap();
+
+        // Send the shutdown signal to the OperatorInfoServiceInMemory
+        cancellation_token.cancel();
+
+        // Check the response
+        let service_manager = IBLSSignatureChecker::new(service_manager_address, provider);
+        service_manager
+            .checkSignatures(
+                task_response_digest,
+                quorum_nums,
+                current_block_num as u32,
+                agg_response_to_non_signer_stakes_and_signature(bls_agg_response),
+            )
+            .call()
+            .await
+            .unwrap();
+    }
 }

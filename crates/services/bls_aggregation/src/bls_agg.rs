@@ -1,7 +1,7 @@
 use super::bls_aggregation_service_error::BlsAggregationServiceError;
 use super::bls_aggregation_service_response::BlsAggregationServiceResponse;
 use alloy_primitives::{FixedBytes, Uint, U256};
-use ark_bn254::G2Affine;
+use ark_bn254::{G1Affine, G2Affine};
 use ark_ec::AffineRepr;
 use eigen_crypto_bls::{BlsG1Point, BlsG2Point, Signature};
 use eigen_crypto_bn254::utils::verify_message;
@@ -253,11 +253,6 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         signed_task_digest: SignedTaskResponseDigest,
         logger: Option<SharedLogger>,
     ) -> &mut AggregatedOperators {
-        aggregated_operators.signers_agg_sig_g1 = Signature::new(
-            (aggregated_operators.signers_agg_sig_g1.g1_point().g1()
-                + signed_task_digest.bls_signature.g1_point().g1())
-            .into(),
-        );
         let operator_g2_pubkey = operator_state
             .operator_info
             .pub_keys
@@ -265,8 +260,6 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
             .unwrap()
             .g2_pub_key
             .g2();
-        aggregated_operators.signers_apk_g2 =
-            BlsG2Point::new((aggregated_operators.signers_apk_g2.g2() + operator_g2_pubkey).into());
         aggregated_operators
             .signers_operator_ids_set
             .insert(signed_task_digest.operator_id, true);
@@ -282,6 +275,15 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         }
 
         for (quorum_num, stake) in operator_state.stake_per_quorum.iter() {
+            // For each quorum the operator has stake in, we aggregate the signature and update the stake
+            aggregated_operators.signers_agg_sig_g1 = Signature::new(
+                (aggregated_operators.signers_agg_sig_g1.g1_point().g1()
+                    + signed_task_digest.bls_signature.g1_point().g1())
+                .into(),
+            );
+            aggregated_operators.signers_apk_g2 = BlsG2Point::new(
+                (aggregated_operators.signers_apk_g2.g2() + operator_g2_pubkey).into(),
+            );
             aggregated_operators
                 .signers_total_stake_per_quorum
                 .entry(*quorum_num)
@@ -397,84 +399,85 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
             tokio::select! {
                 _ = &mut task_expired_timer => {
                     // Task expired. If window is open, send aggregated reponse. Else, send error
-                    if open_window {
-                        if let Some(logger) = logger {
-                            logger.debug(
-                                &format!(
-                                    "task_expired_timer while in the waiting window for task index: {}",
-                                    task_index
-                                ),
-                                "eigen-services-blsaggregation.bls_agg.loop_task_aggregator",
-                            );
-                        }
 
-                        aggregated_response_sender
-                            .send(Ok(current_aggregated_response.unwrap()))
-                            .map_err(|_| BlsAggregationServiceError::ChannelError)?;
-                    } else {
-                        if let Some(logger) = logger {
-                            logger.debug(
-                                &format!(
-                                    "task_expired_timer NOT in the waiting window for task index: {}",
-                                    task_index
-                                ),
-                                "eigen-services-blsaggregation.bls_agg.loop_task_aggregator",
-                            );
-                        }
-
-                        let _ = aggregated_response_sender.send(Err(BlsAggregationServiceError::TaskExpired));
-                    }
-                    return Ok(());
-                },
-                _ = window_rx.recv() => {
+                dbg!("Task expired for task index: {:?}", task_index);
+                if open_window {
                     if let Some(logger) = logger {
                         logger.debug(
                             &format!(
-                                "Window finished. Send aggregated response for task index: {}",
+                                "task_expired_timer while in the waiting window for task index: {}",
                                 task_index
                             ),
                             "eigen-services-blsaggregation.bls_agg.loop_task_aggregator",
                         );
                     }
-
-                    // Window finished. Send aggregated response
                     aggregated_response_sender
                         .send(Ok(current_aggregated_response.unwrap()))
                         .map_err(|_| BlsAggregationServiceError::ChannelError)?;
-                    return Ok(());
-                },
-                signed_task_digest = signatures_rx.recv() =>{
-                    if let Some(ref logger) = logger {
+                } else {
+                    if let Some(logger) = logger {
                         logger.debug(
                             &format!(
-                                "New signature received for task index: {}",
+                                "task_expired_timer NOT in the waiting window for task index: {}",
                                 task_index
                             ),
                             "eigen-services-blsaggregation.bls_agg.loop_task_aggregator",
                         );
                     }
 
-                    // New signature, aggregate it. If threshold is met, start window
-                    let Some(digest) = signed_task_digest else {
-                        return Err(BlsAggregationServiceError::SignaturesChannelClosed);
-                    };
-                    // check if the operator has already signed for this digest
-                    if aggregated_operators
-                        .get(&digest.task_response_digest)
-                        .map(|operators| {
-                            operators
-                                .signers_operator_ids_set
-                                .contains_key(&digest.operator_id)
-                        })
-                        .unwrap_or(false)
-                    {
-                        digest
-                            .signature_verification_channel
-                            .send(Err(SignatureVerificationError::DuplicateSignature))
-                            .await
-                            .map_err(|_| BlsAggregationServiceError::ChannelError)?;
-                        continue;
-                    }
+                    let _ = aggregated_response_sender.send(Err(BlsAggregationServiceError::TaskExpired));
+                }
+                return Ok(());
+            },
+            _ = window_rx.recv() => {
+                if let Some(logger) = logger {
+                    logger.debug(
+                        &format!(
+                            "Window finished. Send aggregated response for task index: {}",
+                            task_index
+                        ),
+                        "eigen-services-blsaggregation.bls_agg.loop_task_aggregator",
+                    );
+                }
+
+                // Window finished. Send aggregated response
+                aggregated_response_sender
+                    .send(Ok(current_aggregated_response.unwrap()))
+                    .map_err(|_| BlsAggregationServiceError::ChannelError)?;
+                return Ok(());
+            },
+            signed_task_digest = signatures_rx.recv() =>{
+                if let Some(ref logger) = logger {
+                    logger.debug(
+                        &format!(
+                            "New signature received for task index: {}",
+                            task_index
+                        ),
+                        "eigen-services-blsaggregation.bls_agg.loop_task_aggregator",
+                    );
+                }
+
+                // New signature, aggregate it. If threshold is met, start window
+                let Some(digest) = signed_task_digest else {
+                    return Err(BlsAggregationServiceError::SignaturesChannelClosed);
+                };
+                // check if the operator has already signed for this digest
+                if aggregated_operators
+                    .get(&digest.task_response_digest)
+                    .map(|operators| {
+                        operators
+                            .signers_operator_ids_set
+                            .contains_key(&digest.operator_id)
+                    })
+                    .unwrap_or(false)
+                {
+                    digest
+                        .signature_verification_channel
+                        .send(Err(SignatureVerificationError::DuplicateSignature))
+                        .await
+                        .map_err(|_| BlsAggregationServiceError::ChannelError)?;
+                    continue;
+                }
 
                     let verification_result = BlsAggregatorService::<A>::verify_signature(
                         task_index,
@@ -518,15 +521,33 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                             )
                             .clone()
                         })
-                        .unwrap_or(AggregatedOperators {
-                            signers_apk_g2: BlsG2Point::new((G2Affine::zero() + operator_g2_pubkey).into()),
-                            signers_agg_sig_g1: digest.bls_signature.clone(),
-                            signers_operator_ids_set: HashMap::from([(
-                                operator_state.operator_id.into(),
-                                true,
-                            )]),
-                            signers_total_stake_per_quorum: operator_state.stake_per_quorum.clone(),
+                        .unwrap_or_else(|| {
+                            let mut signers_apk_g2 = BlsG2Point::new(G2Affine::zero());
+                            let mut signers_agg_sig_g1 = Signature::new(G1Affine::zero());
+                            for _ in 0..operator_state.stake_per_quorum.len() {
+                                // for each quorum the operator has stake in, the signature is aggregated
+                                // see signature verification logic here:
+                                // https://github.com/Layr-Labs/eigenlayer-middleware/blob/7d49b5181b09198ed275783453aa082bb3766990/src/BLSSignatureChecker.sol#L161-L168
+                                signers_apk_g2 =
+                                    BlsG2Point::new((signers_apk_g2.g2() + operator_g2_pubkey).into());
+                                signers_agg_sig_g1 = Signature::new(
+                                    (signers_agg_sig_g1.g1_point().g1()
+                                        + digest.bls_signature.g1_point().g1())
+                                    .into(),
+                                );
+                            }
+                            AggregatedOperators {
+                                signers_apk_g2,
+                                signers_agg_sig_g1,
+                                signers_operator_ids_set: HashMap::from([(
+                                    operator_state.operator_id.into(),
+                                    true,
+                                )]),
+                                signers_total_stake_per_quorum: operator_state.stake_per_quorum.clone(),
+                            }
                         });
+
+
 
                     aggregated_operators.insert(
                         digest.task_response_digest,
@@ -538,6 +559,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                         &total_stake_per_quorum,
                         &quorum_threshold_percentage_map,
                     ) {
+                        dbg!("Stake threshold not met for task index: {:?}", task_index);
                         continue;
                     }
 
@@ -569,6 +591,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                             tokio::time::sleep(window_duration).await;
                             let _ = sender_cloned.send(true);
                         });
+                        dbg!("Opened window for task index: {:?}", task_index);
                     }
 
                     current_aggregated_response = Some(BlsAggregatorService::build_aggregated_response(
@@ -714,9 +737,15 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
             return Err(SignatureVerificationError::OperatorPublicKeyNotFound);
         };
 
+        let message = signed_task_response_digest
+            .task_response_digest
+            .as_slice()
+            .try_into()
+            .map_err(|_| SignatureVerificationError::IncorrectSignature)?;
+
         verify_message(
             pub_keys.g2_pub_key.g2(),
-            signed_task_response_digest.task_response_digest.as_slice(),
+            message,
             signed_task_response_digest.bls_signature.g1_point().g1(),
         )
         .then_some(())
@@ -1198,8 +1227,14 @@ mod tests {
             .unwrap();
 
         let quorum_apks_g1 = aggregate_g1_public_keys(&test_operators);
-        let signers_apk_g2 = aggregate_g2_public_keys(&test_operators);
-        let signers_agg_sig_g1 = aggregate_g1_signatures(&[bls_sig_op_1, bls_sig_op_2]);
+        let signers_apk_g2 =
+            aggregate_g2_public_keys(&[test_operators.clone(), test_operators].concat());
+        let signers_agg_sig_g1 = aggregate_g1_signatures(&[
+            bls_sig_op_1.clone(),
+            bls_sig_op_1,
+            bls_sig_op_2.clone(),
+            bls_sig_op_2,
+        ]);
 
         let expected_agg_service_response = BlsAggregationServiceResponse {
             task_index,
@@ -1329,9 +1364,14 @@ mod tests {
             .unwrap();
 
         let quorum_apks_g1 = aggregate_g1_public_keys(&test_operators);
-        let signers_apk_g2 = aggregate_g2_public_keys(&test_operators);
-        let signers_agg_sig_g1_task_1 =
-            aggregate_g1_signatures(&[bls_sig_task_1_op_1, bls_sig_task_1_op_2]);
+        let signers_apk_g2 =
+            aggregate_g2_public_keys(&[test_operators.clone(), test_operators].concat());
+        let signers_agg_sig_g1_task_1 = aggregate_g1_signatures(&[
+            bls_sig_task_1_op_1.clone(),
+            bls_sig_task_1_op_1,
+            bls_sig_task_1_op_2.clone(),
+            bls_sig_task_1_op_2,
+        ]);
 
         let expected_response_task_1 = BlsAggregationServiceResponse {
             task_index: task_1_index,
@@ -1346,8 +1386,12 @@ mod tests {
             non_signer_stake_indices: vec![],
         };
 
-        let signers_agg_sig_g1_task_2 =
-            aggregate_g1_signatures(&[bls_sig_task_2_op_1, bls_sig_task_2_op_2]);
+        let signers_agg_sig_g1_task_2 = aggregate_g1_signatures(&[
+            bls_sig_task_2_op_1.clone(),
+            bls_sig_task_2_op_1,
+            bls_sig_task_2_op_2.clone(),
+            bls_sig_task_2_op_2,
+        ]);
 
         let expected_response_task_2 = BlsAggregationServiceResponse {
             task_index: task_2_index,
