@@ -1,6 +1,4 @@
 use crate::error::AvsRegistryError;
-use alloy::dyn_abi::DynSolValue;
-use alloy::sol_types::SolValue;
 use alloy_primitives::{Address, Bytes, FixedBytes, TxHash, U256};
 use alloy_signer::Signer;
 use alloy_signer_local::PrivateKeySigner;

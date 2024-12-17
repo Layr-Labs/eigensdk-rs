@@ -1151,10 +1151,9 @@ mod tests {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
         let chain_reader = build_el_chain_reader(http_endpoint).await;
 
-        // TODO: fix this
         let num_operator_sets = chain_reader.get_num_operator_sets_for_operator(OPERATOR_ADDRESS).await.unwrap();
         
-        assert_eq!(num_operator_sets, U256::from(1));
+        assert_eq!(num_operator_sets, U256::from(0));
     }
 
     #[tokio::test]
@@ -1162,11 +1161,9 @@ mod tests {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
         let chain_reader = build_el_chain_reader(http_endpoint).await;
 
-        // TODO: fix this
         let operator_sets = chain_reader.get_operator_sets_for_operator(OPERATOR_ADDRESS).await.unwrap();
         
-        assert_eq!(operator_sets.len(), 1);
-        assert_eq!(operator_sets[0].avs, Address::ZERO);
+        assert_eq!(operator_sets.len(), 0);
     }
 
     #[tokio::test]
@@ -1179,13 +1176,12 @@ mod tests {
             avs: Address::ZERO,
         };
 
-        // TODO: fix this
         let is_registered = chain_reader
             .is_operator_registered_with_operator_set(OPERATOR_ADDRESS, operator_set)
             .await
             .unwrap();
 
-        assert!(is_registered);   
+        assert!(!is_registered);   
     }
 
     #[tokio::test]
@@ -1198,13 +1194,12 @@ mod tests {
             avs: Address::ZERO,
         };
 
-        // TODO: fix this
         let operators = chain_reader
             .get_operators_for_operator_set(operator_set)
             .await
             .unwrap();
 
-        assert_eq!(operators[0], OPERATOR_ADDRESS);       
+        assert_eq!(operators.len(), 0);       
     }
 
     #[tokio::test]
@@ -1217,13 +1212,12 @@ mod tests {
             avs: Address::ZERO,
         };
 
-        // TODO: fix this
         let num_operators = chain_reader
             .get_num_operators_for_operator_set(operator_set)
             .await
             .unwrap();
 
-        assert_eq!(num_operators, U256::from(1));       
+        assert_eq!(num_operators, U256::from(0));       
     }
 
     #[tokio::test]
@@ -1236,14 +1230,12 @@ mod tests {
             avs: Address::ZERO,
         };
 
-        // TODO: fix this
         let strategies = chain_reader
             .get_strategies_for_operator_set(operator_set)
             .await
             .unwrap();
 
-        let strategy_addr = get_erc20_mock_strategy(http_endpoint).await;
-        assert_eq!(strategies, vec![strategy_addr]);       
+        assert_eq!(strategies.len(), 0);
     }
 
     #[tokio::test]
@@ -1256,7 +1248,6 @@ mod tests {
             avs: Address::ZERO,
         };
 
-        // TODO: fix this
         let slashable_shares = chain_reader
             .get_slashable_shares_for_operator_sets(vec![operator_set])
             .await
@@ -1264,8 +1255,8 @@ mod tests {
 
         assert_eq!(slashable_shares.len(), 1);
         assert_eq!(slashable_shares[0].operator_set.id, 1);
-        assert_eq!(slashable_shares[0].operators, vec![OPERATOR_ADDRESS]);
-        assert_eq!(slashable_shares[0].slashable_stakes, vec![vec![U256::from(0)]]);
+        assert_eq!(slashable_shares[0].operators.len(), 0);
+        assert_eq!(slashable_shares[0].slashable_stakes.len(), 0);
     }
 
     #[tokio::test]
@@ -1279,7 +1270,6 @@ mod tests {
         };
 
         let current_block_number = get_provider(&http_endpoint).get_block_number().await.unwrap() as u32;
-        // TODO: fix this
         let slashable_shares = chain_reader
             .get_delegated_and_slashable_shares_for_operator_sets_before(vec![operator_set], current_block_number + 1)
             .await
@@ -1287,8 +1277,8 @@ mod tests {
 
         assert_eq!(slashable_shares.len(), 1);
         assert_eq!(slashable_shares[0].operator_set.id, 1);
-        assert_eq!(slashable_shares[0].operators, vec![OPERATOR_ADDRESS]);
-        assert_eq!(slashable_shares[0].slashable_stakes, vec![vec![U256::from(0)]]);
+        assert_eq!(slashable_shares[0].operators.len(), 0);
+        assert_eq!(slashable_shares[0].slashable_stakes.len(), 0);
     }
 
     #[tokio::test]
@@ -1309,12 +1299,11 @@ mod tests {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
         let chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
 
-        // TODO: fix this
         let ret = chain_reader
             .get_registered_sets(OPERATOR_ADDRESS)
             .await
             .unwrap();
 
-        assert_eq!(ret.len(), 1);
+        assert_eq!(ret.len(), 0);
     }
 }

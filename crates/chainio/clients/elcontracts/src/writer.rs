@@ -629,6 +629,7 @@ mod tests {
         };
 
         // Second test: update operator details
+        // TODO: fix permission error
         let tx_hash = el_chain_writer
             .update_operator_details(operator_modified)
             .await
