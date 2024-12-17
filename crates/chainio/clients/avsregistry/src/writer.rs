@@ -193,7 +193,7 @@ impl AvsRegistryChainWriter {
             salt: operator_to_avs_registration_sig_salt,
             expiry: operator_to_avs_registration_sig_expiry,
         };
-        let contract_call = contract_registry_coordinator.registerOperator(
+        let contract_call = contract_registry_coordinator.registerOperator_0(
             quorum_numbers.clone(),
             socket,
             pub_key_reg_params,
@@ -301,7 +301,7 @@ impl AvsRegistryChainWriter {
         let contract_registry_coordinator =
             RegistryCoordinator::new(self.registry_coordinator_addr, provider);
 
-        let contract_call = contract_registry_coordinator.deregisterOperator(quorum_numbers);
+        let contract_call = contract_registry_coordinator.deregisterOperator_1(quorum_numbers);
 
         let tx = contract_call
             .send()

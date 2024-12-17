@@ -12,14 +12,6 @@ contract ContractsRegistry {
     mapping(uint256 => string) public contractNames;
     uint256 public contractCount;
 
-    mapping(bytes32 => BlockAndTimestamp) public anvilTest;
-
-    struct BlockAndTimestamp {
-        uint256 timestamp;
-        uint256 blockNumber;
-        int256 index;
-    }
-
     function registerContract(string memory name, address _contract) public {
         // we treat redeploys as a bug since this is only meant to be used for testing.
         // If new contracts need to be deployed just start from a fresh anvil state.
@@ -29,34 +21,4 @@ contract ContractsRegistry {
         contractCount++;
     }
 
-    function storeTest(
-        string memory testName,
-        int256 index,
-        uint256 timestamp,
-        uint256 blockNumber
-    ) public {
-        require(
-            anvilTest[keccak256(abi.encodePacked(testName, index))]
-                .timestamp == 0
-        );
-        anvilTest[keccak256(abi.encodePacked(testName))] = BlockAndTimestamp({
-            timestamp: timestamp,
-            blockNumber: blockNumber,
-            index: index
-        });
-    }
-
-    function getTestValues(
-        string memory testName,
-        int256 index
-    ) public view returns (uint256, uint256, int256) {
-        BlockAndTimestamp memory testDetails = anvilTest[
-            keccak256(abi.encodePacked(testName, index))
-        ];
-        return (
-            testDetails.timestamp,
-            testDetails.blockNumber,
-            testDetails.index
-        );
-    }
 }
