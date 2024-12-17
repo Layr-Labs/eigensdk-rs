@@ -16,6 +16,7 @@ eigen-telemetry = { workspace = true, optional = true }
 eigen-types.workspace = true
 eigen-utils.workspace = true
 thiserror.workspace = true
+tokio = { workspace = true, optional = true }
 tracing.workspace = true
 
 [dev-dependencies]
@@ -26,7 +27,6 @@ eigen-testing-utils.workspace = true
 eigen-utils.workspace = true
 once_cell.workspace = true
 serial_test.workspace = true
-tokio.workspace = true
 
 [features]
 telemetry = ["dep:eigen-telemetry", "dep:tokio"]
