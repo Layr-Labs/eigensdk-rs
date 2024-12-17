@@ -805,7 +805,7 @@ pub mod integration_test {
         let avs_registry_service =
             AvsRegistryServiceChainCaller::new(avs_registry_reader.clone(), operators_info);
 
-        let bls_agg_service = BlsAggregatorService::new(avs_registry_service);
+        let bls_agg_service = BlsAggregatorService::new(avs_registry_service, get_test_logger());
 
         let current_block_num = provider.get_block_number().await.unwrap();
 
@@ -985,7 +985,7 @@ pub mod integration_test {
         let avs_registry_service =
             AvsRegistryServiceChainCaller::new(avs_registry_reader.clone(), operators_info);
 
-        let bls_agg_service = BlsAggregatorService::new(avs_registry_service);
+        let bls_agg_service = BlsAggregatorService::new(avs_registry_service, get_test_logger());
 
         let current_block_num = provider.get_block_number().await.unwrap();
         mine_anvil_blocks(&container, 1).await;
