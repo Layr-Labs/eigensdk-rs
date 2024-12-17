@@ -135,27 +135,27 @@ pub mod UpgradeableBeacon {
     /// The creation / init bytecode of the contract.
     ///
     /// ```text
-    ///0x608060405234801561000f575f5ffd5b506040516109913803806109918339818101604052810190610031919061023b565b61004d61004261006260201b60201c565b61006960201b60201c565b61005c8161012a60201b60201c565b50610304565b5f33905090565b5f5f5f9054906101000a900473ffffffffffffffffffffffffffffffffffffffff169050815f5f6101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055508173ffffffffffffffffffffffffffffffffffffffff168173ffffffffffffffffffffffffffffffffffffffff167f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e060405160405180910390a35050565b610139816101bb60201b60201c565b610178576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040161016f906102e6565b60405180910390fd5b8060015f6101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555050565b5f5f8273ffffffffffffffffffffffffffffffffffffffff163b119050919050565b5f5ffd5b5f73ffffffffffffffffffffffffffffffffffffffff82169050919050565b5f61020a826101e1565b9050919050565b61021a81610200565b8114610224575f5ffd5b50565b5f8151905061023581610211565b92915050565b5f602082840312156102505761024f6101dd565b5b5f61025d84828501610227565b91505092915050565b5f82825260208201905092915050565b7f5570677261646561626c65426561636f6e3a20696d706c656d656e746174696f5f8201527f6e206973206e6f74206120636f6e747261637400000000000000000000000000602082015250565b5f6102d0603383610266565b91506102db82610276565b604082019050919050565b5f6020820190508181035f8301526102fd816102c4565b9050919050565b610680806103115f395ff3fe608060405234801561000f575f5ffd5b5060043610610055575f3560e01c80633659cfe6146100595780635c60da1b14610075578063715018a6146100935780638da5cb5b1461009d578063f2fde38b146100bb575b5f5ffd5b610073600480360381019061006e9190610463565b6100d7565b005b61007d61012e565b60405161008a919061049d565b60405180910390f35b61009b610156565b005b6100a5610169565b6040516100b2919061049d565b60405180910390f35b6100d560048036038101906100d09190610463565b610190565b005b6100df610212565b6100e881610290565b8073ffffffffffffffffffffffffffffffffffffffff167fbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b60405160405180910390a250565b5f60015f9054906101000a900473ffffffffffffffffffffffffffffffffffffffff16905090565b61015e610212565b6101675f61031b565b565b5f5f5f9054906101000a900473ffffffffffffffffffffffffffffffffffffffff16905090565b610198610212565b5f73ffffffffffffffffffffffffffffffffffffffff168173ffffffffffffffffffffffffffffffffffffffff1603610206576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004016101fd90610536565b60405180910390fd5b61020f8161031b565b50565b61021a6103dc565b73ffffffffffffffffffffffffffffffffffffffff16610238610169565b73ffffffffffffffffffffffffffffffffffffffff161461028e576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004016102859061059e565b60405180910390fd5b565b610299816103e3565b6102d8576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004016102cf9061062c565b60405180910390fd5b8060015f6101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555050565b5f5f5f9054906101000a900473ffffffffffffffffffffffffffffffffffffffff169050815f5f6101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055508173ffffffffffffffffffffffffffffffffffffffff168173ffffffffffffffffffffffffffffffffffffffff167f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e060405160405180910390a35050565b5f33905090565b5f5f8273ffffffffffffffffffffffffffffffffffffffff163b119050919050565b5f5ffd5b5f73ffffffffffffffffffffffffffffffffffffffff82169050919050565b5f61043282610409565b9050919050565b61044281610428565b811461044c575f5ffd5b50565b5f8135905061045d81610439565b92915050565b5f6020828403121561047857610477610405565b5b5f6104858482850161044f565b91505092915050565b61049781610428565b82525050565b5f6020820190506104b05f83018461048e565b92915050565b5f82825260208201905092915050565b7f4f776e61626c653a206e6577206f776e657220697320746865207a65726f20615f8201527f6464726573730000000000000000000000000000000000000000000000000000602082015250565b5f6105206026836104b6565b915061052b826104c6565b604082019050919050565b5f6020820190508181035f83015261054d81610514565b9050919050565b7f4f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e65725f82015250565b5f6105886020836104b6565b915061059382610554565b602082019050919050565b5f6020820190508181035f8301526105b58161057c565b9050919050565b7f5570677261646561626c65426561636f6e3a20696d706c656d656e746174696f5f8201527f6e206973206e6f74206120636f6e747261637400000000000000000000000000602082015250565b5f6106166033836104b6565b9150610621826105bc565b604082019050919050565b5f6020820190508181035f8301526106438161060a565b905091905056fea26469706673582212209f0cb8f15c348f8ea110c6651709b3f82b487a91e7e3d6bdf37f308f8f857e4c64736f6c634300081b0033
+    ///0x60803461012b57601f61046238819003918201601f19168301916001600160401b0383118484101761012f5780849260209460405283398101031261012b57516001600160a01b0381169081810361012b575f8054336001600160a01b0319821681178355604051939290916001600160a01b0316907f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e09080a33b156100c35750600180546001600160a01b03191691909117905560405161031e90816101448239f35b62461bcd60e51b815260206004820152603360248201527f5570677261646561626c65426561636f6e3a20696d706c656d656e746174696f60448201527f6e206973206e6f74206120636f6e7472616374000000000000000000000000006064820152608490fd5b5f80fd5b634e487b7160e01b5f52604160045260245ffdfe60806040526004361015610011575f80fd5b5f3560e01c80633659cfe6146101c45780635c60da1b1461019c578063715018a6146101455780638da5cb5b1461011e5763f2fde38b14610050575f80fd5b3461011a57602036600319011261011a576004356001600160a01b0381169081900361011a5761007e610291565b80156100c6575f80546001600160a01b03198116831782556001600160a01b0316907f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e09080a3005b60405162461bcd60e51b815260206004820152602660248201527f4f776e61626c653a206e6577206f776e657220697320746865207a65726f206160448201526564647265737360d01b6064820152608490fd5b5f80fd5b3461011a575f36600319011261011a575f546040516001600160a01b039091168152602090f35b3461011a575f36600319011261011a5761015d610291565b5f80546001600160a01b0319811682556001600160a01b03167f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e08280a3005b3461011a575f36600319011261011a576001546040516001600160a01b039091168152602090f35b3461011a57602036600319011261011a576004356001600160a01b0381169081810361011a576101f2610291565b3b1561023057600180546001600160a01b031916821790557fbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b5f80a2005b60405162461bcd60e51b815260206004820152603360248201527f5570677261646561626c65426561636f6e3a20696d706c656d656e746174696f6044820152721b881a5cc81b9bdd08184818dbdb9d1c9858dd606a1b6064820152608490fd5b5f546001600160a01b031633036102a457565b606460405162461bcd60e51b815260206004820152602060248201527f4f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e65726044820152fdfea2646970667358221220886cf3357c18b03d4b40b4b2ad36b5a31a1465294b24a1b110d4f6315b571db264736f6c634300081b0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"`\x80`@R4\x80\x15a\0\x0FW__\xFD[P`@Qa\t\x918\x03\x80a\t\x91\x839\x81\x81\x01`@R\x81\x01\x90a\x001\x91\x90a\x02;V[a\0Ma\0Ba\0b` \x1B` \x1CV[a\0i` \x1B` \x1CV[a\0\\\x81a\x01*` \x1B` \x1CV[Pa\x03\x04V[_3\x90P\x90V[___\x90T\x90a\x01\0\n\x90\x04s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x16\x90P\x81__a\x01\0\n\x81T\x81s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x02\x19\x16\x90\x83s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x16\x02\x17\x90UP\x81s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x16\x81s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x16\x7F\x8B\xE0\x07\x9CS\x16Y\x14\x13D\xCD\x1F\xD0\xA4\xF2\x84\x19I\x7F\x97\"\xA3\xDA\xAF\xE3\xB4\x18okdW\xE0`@Q`@Q\x80\x91\x03\x90\xA3PPV[a\x019\x81a\x01\xBB` \x1B` \x1CV[a\x01xW`@Q\x7F\x08\xC3y\xA0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x81R`\x04\x01a\x01o\x90a\x02\xE6V[`@Q\x80\x91\x03\x90\xFD[\x80`\x01_a\x01\0\n\x81T\x81s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x02\x19\x16\x90\x83s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x16\x02\x17\x90UPPV[__\x82s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x16;\x11\x90P\x91\x90PV[__\xFD[_s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x82\x16\x90P\x91\x90PV[_a\x02\n\x82a\x01\xE1V[\x90P\x91\x90PV[a\x02\x1A\x81a\x02\0V[\x81\x14a\x02$W__\xFD[PV[_\x81Q\x90Pa\x025\x81a\x02\x11V[\x92\x91PPV[_` \x82\x84\x03\x12\x15a\x02PWa\x02Oa\x01\xDDV[[_a\x02]\x84\x82\x85\x01a\x02'V[\x91PP\x92\x91PPV[_\x82\x82R` \x82\x01\x90P\x92\x91PPV[\x7FUpgradeableBeacon: implementatio_\x82\x01R\x7Fn is not a contract\0\0\0\0\0\0\0\0\0\0\0\0\0` \x82\x01RPV[_a\x02\xD0`3\x83a\x02fV[\x91Pa\x02\xDB\x82a\x02vV[`@\x82\x01\x90P\x91\x90PV[_` \x82\x01\x90P\x81\x81\x03_\x83\x01Ra\x02\xFD\x81a\x02\xC4V[\x90P\x91\x90PV[a\x06\x80\x80a\x03\x11_9_\xF3\xFE`\x80`@R4\x80\x15a\0\x0FW__\xFD[P`\x046\x10a\0UW_5`\xE0\x1C\x80c6Y\xCF\xE6\x14a\0YW\x80c\\`\xDA\x1B\x14a\0uW\x80cqP\x18\xA6\x14a\0\x93W\x80c\x8D\xA5\xCB[\x14a\0\x9DW\x80c\xF2\xFD\xE3\x8B\x14a\0\xBBW[__\xFD[a\0s`\x04\x806\x03\x81\x01\x90a\0n\x91\x90a\x04cV[a\0\xD7V[\0[a\0}a\x01.V[`@Qa\0\x8A\x91\x90a\x04\x9DV[`@Q\x80\x91\x03\x90\xF3[a\0\x9Ba\x01VV[\0[a\0\xA5a\x01iV[`@Qa\0\xB2\x91\x90a\x04\x9DV[`@Q\x80\x91\x03\x90\xF3[a\0\xD5`\x04\x806\x03\x81\x01\x90a\0\xD0\x91\x90a\x04cV[a\x01\x90V[\0[a\0\xDFa\x02\x12V[a\0\xE8\x81a\x02\x90V[\x80s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x16\x7F\xBC|\xD7Z \xEE'\xFD\x9A\xDE\xBA\xB3 A\xF7U!M\xBCk\xFF\xA9\x0C\xC0\"[9\xDA.\\-;`@Q`@Q\x80\x91\x03\x90\xA2PV[_`\x01_\x90T\x90a\x01\0\n\x90\x04s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x16\x90P\x90V[a\x01^a\x02\x12V[a\x01g_a\x03\x1BV[V[___\x90T\x90a\x01\0\n\x90\x04s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x16\x90P\x90V[a\x01\x98a\x02\x12V[_s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x16\x81s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x16\x03a\x02\x06W`@Q\x7F\x08\xC3y\xA0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x81R`\x04\x01a\x01\xFD\x90a\x056V[`@Q\x80\x91\x03\x90\xFD[a\x02\x0F\x81a\x03\x1BV[PV[a\x02\x1Aa\x03\xDCV[s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x16a\x028a\x01iV[s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x16\x14a\x02\x8EW`@Q\x7F\x08\xC3y\xA0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x81R`\x04\x01a\x02\x85\x90a\x05\x9EV[`@Q\x80\x91\x03\x90\xFD[V[a\x02\x99\x81a\x03\xE3V[a\x02\xD8W`@Q\x7F\x08\xC3y\xA0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x81R`\x04\x01a\x02\xCF\x90a\x06,V[`@Q\x80\x91\x03\x90\xFD[\x80`\x01_a\x01\0\n\x81T\x81s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x02\x19\x16\x90\x83s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x16\x02\x17\x90UPPV[___\x90T\x90a\x01\0\n\x90\x04s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x16\x90P\x81__a\x01\0\n\x81T\x81s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x02\x19\x16\x90\x83s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x16\x02\x17\x90UP\x81s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x16\x81s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x16\x7F\x8B\xE0\x07\x9CS\x16Y\x14\x13D\xCD\x1F\xD0\xA4\xF2\x84\x19I\x7F\x97\"\xA3\xDA\xAF\xE3\xB4\x18okdW\xE0`@Q`@Q\x80\x91\x03\x90\xA3PPV[_3\x90P\x90V[__\x82s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x16;\x11\x90P\x91\x90PV[__\xFD[_s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x82\x16\x90P\x91\x90PV[_a\x042\x82a\x04\tV[\x90P\x91\x90PV[a\x04B\x81a\x04(V[\x81\x14a\x04LW__\xFD[PV[_\x815\x90Pa\x04]\x81a\x049V[\x92\x91PPV[_` \x82\x84\x03\x12\x15a\x04xWa\x04wa\x04\x05V[[_a\x04\x85\x84\x82\x85\x01a\x04OV[\x91PP\x92\x91PPV[a\x04\x97\x81a\x04(V[\x82RPPV[_` \x82\x01\x90Pa\x04\xB0_\x83\x01\x84a\x04\x8EV[\x92\x91PPV[_\x82\x82R` \x82\x01\x90P\x92\x91PPV[\x7FOwnable: new owner is the zero a_\x82\x01R\x7Fddress\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0` \x82\x01RPV[_a\x05 `&\x83a\x04\xB6V[\x91Pa\x05+\x82a\x04\xC6V[`@\x82\x01\x90P\x91\x90PV[_` \x82\x01\x90P\x81\x81\x03_\x83\x01Ra\x05M\x81a\x05\x14V[\x90P\x91\x90PV[\x7FOwnable: caller is not the owner_\x82\x01RPV[_a\x05\x88` \x83a\x04\xB6V[\x91Pa\x05\x93\x82a\x05TV[` \x82\x01\x90P\x91\x90PV[_` \x82\x01\x90P\x81\x81\x03_\x83\x01Ra\x05\xB5\x81a\x05|V[\x90P\x91\x90PV[\x7FUpgradeableBeacon: implementatio_\x82\x01R\x7Fn is not a contract\0\0\0\0\0\0\0\0\0\0\0\0\0` \x82\x01RPV[_a\x06\x16`3\x83a\x04\xB6V[\x91Pa\x06!\x82a\x05\xBCV[`@\x82\x01\x90P\x91\x90PV[_` \x82\x01\x90P\x81\x81\x03_\x83\x01Ra\x06C\x81a\x06\nV[\x90P\x91\x90PV\xFE\xA2dipfsX\"\x12 \x9F\x0C\xB8\xF1\\4\x8F\x8E\xA1\x10\xC6e\x17\t\xB3\xF8+Hz\x91\xE7\xE3\xD6\xBD\xF3\x7F0\x8F\x8F\x85~LdsolcC\0\x08\x1B\x003",
+        b"`\x804a\x01+W`\x1Fa\x04b8\x81\x90\x03\x91\x82\x01`\x1F\x19\x16\x83\x01\x91`\x01`\x01`@\x1B\x03\x83\x11\x84\x84\x10\x17a\x01/W\x80\x84\x92` \x94`@R\x839\x81\x01\x03\x12a\x01+WQ`\x01`\x01`\xA0\x1B\x03\x81\x16\x90\x81\x81\x03a\x01+W_\x80T3`\x01`\x01`\xA0\x1B\x03\x19\x82\x16\x81\x17\x83U`@Q\x93\x92\x90\x91`\x01`\x01`\xA0\x1B\x03\x16\x90\x7F\x8B\xE0\x07\x9CS\x16Y\x14\x13D\xCD\x1F\xD0\xA4\xF2\x84\x19I\x7F\x97\"\xA3\xDA\xAF\xE3\xB4\x18okdW\xE0\x90\x80\xA3;\x15a\0\xC3WP`\x01\x80T`\x01`\x01`\xA0\x1B\x03\x19\x16\x91\x90\x91\x17\x90U`@Qa\x03\x1E\x90\x81a\x01D\x829\xF3[bF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`3`$\x82\x01R\x7FUpgradeableBeacon: implementatio`D\x82\x01R\x7Fn is not a contract\0\0\0\0\0\0\0\0\0\0\0\0\0`d\x82\x01R`\x84\x90\xFD[_\x80\xFD[cNH{q`\xE0\x1B_R`A`\x04R`$_\xFD\xFE`\x80`@R`\x046\x10\x15a\0\x11W_\x80\xFD[_5`\xE0\x1C\x80c6Y\xCF\xE6\x14a\x01\xC4W\x80c\\`\xDA\x1B\x14a\x01\x9CW\x80cqP\x18\xA6\x14a\x01EW\x80c\x8D\xA5\xCB[\x14a\x01\x1EWc\xF2\xFD\xE3\x8B\x14a\0PW_\x80\xFD[4a\x01\x1AW` 6`\x03\x19\x01\x12a\x01\x1AW`\x045`\x01`\x01`\xA0\x1B\x03\x81\x16\x90\x81\x90\x03a\x01\x1AWa\0~a\x02\x91V[\x80\x15a\0\xC6W_\x80T`\x01`\x01`\xA0\x1B\x03\x19\x81\x16\x83\x17\x82U`\x01`\x01`\xA0\x1B\x03\x16\x90\x7F\x8B\xE0\x07\x9CS\x16Y\x14\x13D\xCD\x1F\xD0\xA4\xF2\x84\x19I\x7F\x97\"\xA3\xDA\xAF\xE3\xB4\x18okdW\xE0\x90\x80\xA3\0[`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`&`$\x82\x01R\x7FOwnable: new owner is the zero a`D\x82\x01Reddress`\xD0\x1B`d\x82\x01R`\x84\x90\xFD[_\x80\xFD[4a\x01\x1AW_6`\x03\x19\x01\x12a\x01\x1AW_T`@Q`\x01`\x01`\xA0\x1B\x03\x90\x91\x16\x81R` \x90\xF3[4a\x01\x1AW_6`\x03\x19\x01\x12a\x01\x1AWa\x01]a\x02\x91V[_\x80T`\x01`\x01`\xA0\x1B\x03\x19\x81\x16\x82U`\x01`\x01`\xA0\x1B\x03\x16\x7F\x8B\xE0\x07\x9CS\x16Y\x14\x13D\xCD\x1F\xD0\xA4\xF2\x84\x19I\x7F\x97\"\xA3\xDA\xAF\xE3\xB4\x18okdW\xE0\x82\x80\xA3\0[4a\x01\x1AW_6`\x03\x19\x01\x12a\x01\x1AW`\x01T`@Q`\x01`\x01`\xA0\x1B\x03\x90\x91\x16\x81R` \x90\xF3[4a\x01\x1AW` 6`\x03\x19\x01\x12a\x01\x1AW`\x045`\x01`\x01`\xA0\x1B\x03\x81\x16\x90\x81\x81\x03a\x01\x1AWa\x01\xF2a\x02\x91V[;\x15a\x020W`\x01\x80T`\x01`\x01`\xA0\x1B\x03\x19\x16\x82\x17\x90U\x7F\xBC|\xD7Z \xEE'\xFD\x9A\xDE\xBA\xB3 A\xF7U!M\xBCk\xFF\xA9\x0C\xC0\"[9\xDA.\\-;_\x80\xA2\0[`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`3`$\x82\x01R\x7FUpgradeableBeacon: implementatio`D\x82\x01Rr\x1B\x88\x1A\\\xC8\x1B\x9B\xDD\x08\x18H\x18\xDB\xDB\x9D\x1C\x98X\xDD`j\x1B`d\x82\x01R`\x84\x90\xFD[_T`\x01`\x01`\xA0\x1B\x03\x163\x03a\x02\xA4WV[`d`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R` `$\x82\x01R\x7FOwnable: caller is not the owner`D\x82\x01R\xFD\xFE\xA2dipfsX\"\x12 \x88l\xF35|\x18\xB0=K@\xB4\xB2\xAD6\xB5\xA3\x1A\x14e)K$\xA1\xB1\x10\xD4\xF61[W\x1D\xB2dsolcC\0\x08\x1B\x003",
     );
     /// The runtime bytecode of the contract, as deployed on the network.
     ///
     /// ```text
-    ///0x608060405234801561000f575f5ffd5b5060043610610055575f3560e01c80633659cfe6146100595780635c60da1b14610075578063715018a6146100935780638da5cb5b1461009d578063f2fde38b146100bb575b5f5ffd5b610073600480360381019061006e9190610463565b6100d7565b005b61007d61012e565b60405161008a919061049d565b60405180910390f35b61009b610156565b005b6100a5610169565b6040516100b2919061049d565b60405180910390f35b6100d560048036038101906100d09190610463565b610190565b005b6100df610212565b6100e881610290565b8073ffffffffffffffffffffffffffffffffffffffff167fbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b60405160405180910390a250565b5f60015f9054906101000a900473ffffffffffffffffffffffffffffffffffffffff16905090565b61015e610212565b6101675f61031b565b565b5f5f5f9054906101000a900473ffffffffffffffffffffffffffffffffffffffff16905090565b610198610212565b5f73ffffffffffffffffffffffffffffffffffffffff168173ffffffffffffffffffffffffffffffffffffffff1603610206576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004016101fd90610536565b60405180910390fd5b61020f8161031b565b50565b61021a6103dc565b73ffffffffffffffffffffffffffffffffffffffff16610238610169565b73ffffffffffffffffffffffffffffffffffffffff161461028e576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004016102859061059e565b60405180910390fd5b565b610299816103e3565b6102d8576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004016102cf9061062c565b60405180910390fd5b8060015f6101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555050565b5f5f5f9054906101000a900473ffffffffffffffffffffffffffffffffffffffff169050815f5f6101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055508173ffffffffffffffffffffffffffffffffffffffff168173ffffffffffffffffffffffffffffffffffffffff167f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e060405160405180910390a35050565b5f33905090565b5f5f8273ffffffffffffffffffffffffffffffffffffffff163b119050919050565b5f5ffd5b5f73ffffffffffffffffffffffffffffffffffffffff82169050919050565b5f61043282610409565b9050919050565b61044281610428565b811461044c575f5ffd5b50565b5f8135905061045d81610439565b92915050565b5f6020828403121561047857610477610405565b5b5f6104858482850161044f565b91505092915050565b61049781610428565b82525050565b5f6020820190506104b05f83018461048e565b92915050565b5f82825260208201905092915050565b7f4f776e61626c653a206e6577206f776e657220697320746865207a65726f20615f8201527f6464726573730000000000000000000000000000000000000000000000000000602082015250565b5f6105206026836104b6565b915061052b826104c6565b604082019050919050565b5f6020820190508181035f83015261054d81610514565b9050919050565b7f4f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e65725f82015250565b5f6105886020836104b6565b915061059382610554565b602082019050919050565b5f6020820190508181035f8301526105b58161057c565b9050919050565b7f5570677261646561626c65426561636f6e3a20696d706c656d656e746174696f5f8201527f6e206973206e6f74206120636f6e747261637400000000000000000000000000602082015250565b5f6106166033836104b6565b9150610621826105bc565b604082019050919050565b5f6020820190508181035f8301526106438161060a565b905091905056fea26469706673582212209f0cb8f15c348f8ea110c6651709b3f82b487a91e7e3d6bdf37f308f8f857e4c64736f6c634300081b0033
+    ///0x60806040526004361015610011575f80fd5b5f3560e01c80633659cfe6146101c45780635c60da1b1461019c578063715018a6146101455780638da5cb5b1461011e5763f2fde38b14610050575f80fd5b3461011a57602036600319011261011a576004356001600160a01b0381169081900361011a5761007e610291565b80156100c6575f80546001600160a01b03198116831782556001600160a01b0316907f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e09080a3005b60405162461bcd60e51b815260206004820152602660248201527f4f776e61626c653a206e6577206f776e657220697320746865207a65726f206160448201526564647265737360d01b6064820152608490fd5b5f80fd5b3461011a575f36600319011261011a575f546040516001600160a01b039091168152602090f35b3461011a575f36600319011261011a5761015d610291565b5f80546001600160a01b0319811682556001600160a01b03167f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e08280a3005b3461011a575f36600319011261011a576001546040516001600160a01b039091168152602090f35b3461011a57602036600319011261011a576004356001600160a01b0381169081810361011a576101f2610291565b3b1561023057600180546001600160a01b031916821790557fbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b5f80a2005b60405162461bcd60e51b815260206004820152603360248201527f5570677261646561626c65426561636f6e3a20696d706c656d656e746174696f6044820152721b881a5cc81b9bdd08184818dbdb9d1c9858dd606a1b6064820152608490fd5b5f546001600160a01b031633036102a457565b606460405162461bcd60e51b815260206004820152602060248201527f4f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e65726044820152fdfea2646970667358221220886cf3357c18b03d4b40b4b2ad36b5a31a1465294b24a1b110d4f6315b571db264736f6c634300081b0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static DEPLOYED_BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"`\x80`@R4\x80\x15a\0\x0FW__\xFD[P`\x046\x10a\0UW_5`\xE0\x1C\x80c6Y\xCF\xE6\x14a\0YW\x80c\\`\xDA\x1B\x14a\0uW\x80cqP\x18\xA6\x14a\0\x93W\x80c\x8D\xA5\xCB[\x14a\0\x9DW\x80c\xF2\xFD\xE3\x8B\x14a\0\xBBW[__\xFD[a\0s`\x04\x806\x03\x81\x01\x90a\0n\x91\x90a\x04cV[a\0\xD7V[\0[a\0}a\x01.V[`@Qa\0\x8A\x91\x90a\x04\x9DV[`@Q\x80\x91\x03\x90\xF3[a\0\x9Ba\x01VV[\0[a\0\xA5a\x01iV[`@Qa\0\xB2\x91\x90a\x04\x9DV[`@Q\x80\x91\x03\x90\xF3[a\0\xD5`\x04\x806\x03\x81\x01\x90a\0\xD0\x91\x90a\x04cV[a\x01\x90V[\0[a\0\xDFa\x02\x12V[a\0\xE8\x81a\x02\x90V[\x80s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x16\x7F\xBC|\xD7Z \xEE'\xFD\x9A\xDE\xBA\xB3 A\xF7U!M\xBCk\xFF\xA9\x0C\xC0\"[9\xDA.\\-;`@Q`@Q\x80\x91\x03\x90\xA2PV[_`\x01_\x90T\x90a\x01\0\n\x90\x04s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x16\x90P\x90V[a\x01^a\x02\x12V[a\x01g_a\x03\x1BV[V[___\x90T\x90a\x01\0\n\x90\x04s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x16\x90P\x90V[a\x01\x98a\x02\x12V[_s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x16\x81s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x16\x03a\x02\x06W`@Q\x7F\x08\xC3y\xA0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x81R`\x04\x01a\x01\xFD\x90a\x056V[`@Q\x80\x91\x03\x90\xFD[a\x02\x0F\x81a\x03\x1BV[PV[a\x02\x1Aa\x03\xDCV[s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x16a\x028a\x01iV[s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x16\x14a\x02\x8EW`@Q\x7F\x08\xC3y\xA0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x81R`\x04\x01a\x02\x85\x90a\x05\x9EV[`@Q\x80\x91\x03\x90\xFD[V[a\x02\x99\x81a\x03\xE3V[a\x02\xD8W`@Q\x7F\x08\xC3y\xA0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x81R`\x04\x01a\x02\xCF\x90a\x06,V[`@Q\x80\x91\x03\x90\xFD[\x80`\x01_a\x01\0\n\x81T\x81s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x02\x19\x16\x90\x83s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x16\x02\x17\x90UPPV[___\x90T\x90a\x01\0\n\x90\x04s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x16\x90P\x81__a\x01\0\n\x81T\x81s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x02\x19\x16\x90\x83s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x16\x02\x17\x90UP\x81s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x16\x81s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x16\x7F\x8B\xE0\x07\x9CS\x16Y\x14\x13D\xCD\x1F\xD0\xA4\xF2\x84\x19I\x7F\x97\"\xA3\xDA\xAF\xE3\xB4\x18okdW\xE0`@Q`@Q\x80\x91\x03\x90\xA3PPV[_3\x90P\x90V[__\x82s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x16;\x11\x90P\x91\x90PV[__\xFD[_s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x82\x16\x90P\x91\x90PV[_a\x042\x82a\x04\tV[\x90P\x91\x90PV[a\x04B\x81a\x04(V[\x81\x14a\x04LW__\xFD[PV[_\x815\x90Pa\x04]\x81a\x049V[\x92\x91PPV[_` \x82\x84\x03\x12\x15a\x04xWa\x04wa\x04\x05V[[_a\x04\x85\x84\x82\x85\x01a\x04OV[\x91PP\x92\x91PPV[a\x04\x97\x81a\x04(V[\x82RPPV[_` \x82\x01\x90Pa\x04\xB0_\x83\x01\x84a\x04\x8EV[\x92\x91PPV[_\x82\x82R` \x82\x01\x90P\x92\x91PPV[\x7FOwnable: new owner is the zero a_\x82\x01R\x7Fddress\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0` \x82\x01RPV[_a\x05 `&\x83a\x04\xB6V[\x91Pa\x05+\x82a\x04\xC6V[`@\x82\x01\x90P\x91\x90PV[_` \x82\x01\x90P\x81\x81\x03_\x83\x01Ra\x05M\x81a\x05\x14V[\x90P\x91\x90PV[\x7FOwnable: caller is not the owner_\x82\x01RPV[_a\x05\x88` \x83a\x04\xB6V[\x91Pa\x05\x93\x82a\x05TV[` \x82\x01\x90P\x91\x90PV[_` \x82\x01\x90P\x81\x81\x03_\x83\x01Ra\x05\xB5\x81a\x05|V[\x90P\x91\x90PV[\x7FUpgradeableBeacon: implementatio_\x82\x01R\x7Fn is not a contract\0\0\0\0\0\0\0\0\0\0\0\0\0` \x82\x01RPV[_a\x06\x16`3\x83a\x04\xB6V[\x91Pa\x06!\x82a\x05\xBCV[`@\x82\x01\x90P\x91\x90PV[_` \x82\x01\x90P\x81\x81\x03_\x83\x01Ra\x06C\x81a\x06\nV[\x90P\x91\x90PV\xFE\xA2dipfsX\"\x12 \x9F\x0C\xB8\xF1\\4\x8F\x8E\xA1\x10\xC6e\x17\t\xB3\xF8+Hz\x91\xE7\xE3\xD6\xBD\xF3\x7F0\x8F\x8F\x85~LdsolcC\0\x08\x1B\x003",
+        b"`\x80`@R`\x046\x10\x15a\0\x11W_\x80\xFD[_5`\xE0\x1C\x80c6Y\xCF\xE6\x14a\x01\xC4W\x80c\\`\xDA\x1B\x14a\x01\x9CW\x80cqP\x18\xA6\x14a\x01EW\x80c\x8D\xA5\xCB[\x14a\x01\x1EWc\xF2\xFD\xE3\x8B\x14a\0PW_\x80\xFD[4a\x01\x1AW` 6`\x03\x19\x01\x12a\x01\x1AW`\x045`\x01`\x01`\xA0\x1B\x03\x81\x16\x90\x81\x90\x03a\x01\x1AWa\0~a\x02\x91V[\x80\x15a\0\xC6W_\x80T`\x01`\x01`\xA0\x1B\x03\x19\x81\x16\x83\x17\x82U`\x01`\x01`\xA0\x1B\x03\x16\x90\x7F\x8B\xE0\x07\x9CS\x16Y\x14\x13D\xCD\x1F\xD0\xA4\xF2\x84\x19I\x7F\x97\"\xA3\xDA\xAF\xE3\xB4\x18okdW\xE0\x90\x80\xA3\0[`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`&`$\x82\x01R\x7FOwnable: new owner is the zero a`D\x82\x01Reddress`\xD0\x1B`d\x82\x01R`\x84\x90\xFD[_\x80\xFD[4a\x01\x1AW_6`\x03\x19\x01\x12a\x01\x1AW_T`@Q`\x01`\x01`\xA0\x1B\x03\x90\x91\x16\x81R` \x90\xF3[4a\x01\x1AW_6`\x03\x19\x01\x12a\x01\x1AWa\x01]a\x02\x91V[_\x80T`\x01`\x01`\xA0\x1B\x03\x19\x81\x16\x82U`\x01`\x01`\xA0\x1B\x03\x16\x7F\x8B\xE0\x07\x9CS\x16Y\x14\x13D\xCD\x1F\xD0\xA4\xF2\x84\x19I\x7F\x97\"\xA3\xDA\xAF\xE3\xB4\x18okdW\xE0\x82\x80\xA3\0[4a\x01\x1AW_6`\x03\x19\x01\x12a\x01\x1AW`\x01T`@Q`\x01`\x01`\xA0\x1B\x03\x90\x91\x16\x81R` \x90\xF3[4a\x01\x1AW` 6`\x03\x19\x01\x12a\x01\x1AW`\x045`\x01`\x01`\xA0\x1B\x03\x81\x16\x90\x81\x81\x03a\x01\x1AWa\x01\xF2a\x02\x91V[;\x15a\x020W`\x01\x80T`\x01`\x01`\xA0\x1B\x03\x19\x16\x82\x17\x90U\x7F\xBC|\xD7Z \xEE'\xFD\x9A\xDE\xBA\xB3 A\xF7U!M\xBCk\xFF\xA9\x0C\xC0\"[9\xDA.\\-;_\x80\xA2\0[`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`3`$\x82\x01R\x7FUpgradeableBeacon: implementatio`D\x82\x01Rr\x1B\x88\x1A\\\xC8\x1B\x9B\xDD\x08\x18H\x18\xDB\xDB\x9D\x1C\x98X\xDD`j\x1B`d\x82\x01R`\x84\x90\xFD[_T`\x01`\x01`\xA0\x1B\x03\x163\x03a\x02\xA4WV[`d`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R` `$\x82\x01R\x7FOwnable: caller is not the owner`D\x82\x01R\xFD\xFE\xA2dipfsX\"\x12 \x88l\xF35|\x18\xB0=K@\xB4\xB2\xAD6\xB5\xA3\x1A\x14e)K$\xA1\xB1\x10\xD4\xF61[W\x1D\xB2dsolcC\0\x08\x1B\x003",
     );
     /**Event with signature `OwnershipTransferred(address,address)` and selector `0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0`.
-```solidity
-event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
-```*/
+    ```solidity
+    event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
+    ```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -180,49 +180,19 @@ event OwnershipTransferred(address indexed previousOwner, address indexed newOwn
         #[automatically_derived]
         impl alloy_sol_types::SolEvent for OwnershipTransferred {
             type DataTuple<'a> = ();
-            type DataToken<'a> = <Self::DataTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (
                 alloy_sol_types::sol_data::FixedBytes<32>,
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Address,
             );
             const SIGNATURE: &'static str = "OwnershipTransferred(address,address)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
-                139u8,
-                224u8,
-                7u8,
-                156u8,
-                83u8,
-                22u8,
-                89u8,
-                20u8,
-                19u8,
-                68u8,
-                205u8,
-                31u8,
-                208u8,
-                164u8,
-                242u8,
-                132u8,
-                25u8,
-                73u8,
-                127u8,
-                151u8,
-                34u8,
-                163u8,
-                218u8,
-                175u8,
-                227u8,
-                180u8,
-                24u8,
-                111u8,
-                107u8,
-                100u8,
-                87u8,
-                224u8,
-            ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
+                alloy_sol_types::private::B256::new([
+                    139u8, 224u8, 7u8, 156u8, 83u8, 22u8, 89u8, 20u8, 19u8, 68u8, 205u8, 31u8,
+                    208u8, 164u8, 242u8, 132u8, 25u8, 73u8, 127u8, 151u8, 34u8, 163u8, 218u8,
+                    175u8, 227u8, 180u8, 24u8, 111u8, 107u8, 100u8, 87u8, 224u8,
+                ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -240,13 +210,11 @@ event OwnershipTransferred(address indexed previousOwner, address indexed newOwn
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(
-                        alloy_sol_types::Error::invalid_event_signature_hash(
-                            Self::SIGNATURE,
-                            topics.0,
-                            Self::SIGNATURE_HASH,
-                        ),
-                    );
+                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
+                        Self::SIGNATURE,
+                        topics.0,
+                        Self::SIGNATURE_HASH,
+                    ));
                 }
                 Ok(())
             }
@@ -270,9 +238,7 @@ event OwnershipTransferred(address indexed previousOwner, address indexed newOwn
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(
-                    Self::SIGNATURE_HASH,
-                );
+                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
                 out[1usize] = <alloy::sol_types::sol_data::Address as alloy_sol_types::EventTopic>::encode_topic(
                     &self.previousOwner,
                 );
@@ -300,9 +266,9 @@ event OwnershipTransferred(address indexed previousOwner, address indexed newOwn
         }
     };
     /**Event with signature `Upgraded(address)` and selector `0xbc7cd75a20ee27fd9adebab32041f755214dbc6bffa90cc0225b39da2e5c2d3b`.
-```solidity
-event Upgraded(address indexed implementation);
-```*/
+    ```solidity
+    event Upgraded(address indexed implementation);
+    ```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -325,48 +291,18 @@ event Upgraded(address indexed implementation);
         #[automatically_derived]
         impl alloy_sol_types::SolEvent for Upgraded {
             type DataTuple<'a> = ();
-            type DataToken<'a> = <Self::DataTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (
                 alloy_sol_types::sol_data::FixedBytes<32>,
                 alloy::sol_types::sol_data::Address,
             );
             const SIGNATURE: &'static str = "Upgraded(address)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
-                188u8,
-                124u8,
-                215u8,
-                90u8,
-                32u8,
-                238u8,
-                39u8,
-                253u8,
-                154u8,
-                222u8,
-                186u8,
-                179u8,
-                32u8,
-                65u8,
-                247u8,
-                85u8,
-                33u8,
-                77u8,
-                188u8,
-                107u8,
-                255u8,
-                169u8,
-                12u8,
-                192u8,
-                34u8,
-                91u8,
-                57u8,
-                218u8,
-                46u8,
-                92u8,
-                45u8,
-                59u8,
-            ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
+                alloy_sol_types::private::B256::new([
+                    188u8, 124u8, 215u8, 90u8, 32u8, 238u8, 39u8, 253u8, 154u8, 222u8, 186u8,
+                    179u8, 32u8, 65u8, 247u8, 85u8, 33u8, 77u8, 188u8, 107u8, 255u8, 169u8, 12u8,
+                    192u8, 34u8, 91u8, 57u8, 218u8, 46u8, 92u8, 45u8, 59u8,
+                ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -374,20 +310,20 @@ event Upgraded(address indexed implementation);
                 topics: <Self::TopicList as alloy_sol_types::SolType>::RustType,
                 data: <Self::DataTuple<'_> as alloy_sol_types::SolType>::RustType,
             ) -> Self {
-                Self { implementation: topics.1 }
+                Self {
+                    implementation: topics.1,
+                }
             }
             #[inline]
             fn check_signature(
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(
-                        alloy_sol_types::Error::invalid_event_signature_hash(
-                            Self::SIGNATURE,
-                            topics.0,
-                            Self::SIGNATURE_HASH,
-                        ),
-                    );
+                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
+                        Self::SIGNATURE,
+                        topics.0,
+                        Self::SIGNATURE_HASH,
+                    ));
                 }
                 Ok(())
             }
@@ -407,9 +343,7 @@ event Upgraded(address indexed implementation);
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(
-                    Self::SIGNATURE_HASH,
-                );
+                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
                 out[1usize] = <alloy::sol_types::sol_data::Address as alloy_sol_types::EventTopic>::encode_topic(
                     &self.implementation,
                 );
@@ -434,9 +368,9 @@ event Upgraded(address indexed implementation);
         }
     };
     /**Constructor`.
-```solidity
-constructor(address implementation_);
-```*/
+    ```solidity
+    constructor(address implementation_);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct constructorCall {
@@ -451,9 +385,7 @@ constructor(address implementation_);
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -471,16 +403,16 @@ constructor(address implementation_);
             #[doc(hidden)]
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for constructorCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self { implementation_: tuple.0 }
+                    Self {
+                        implementation_: tuple.0,
+                    }
                 }
             }
         }
         #[automatically_derived]
         impl alloy_sol_types::SolConstructor for constructorCall {
             type Parameters<'a> = (alloy::sol_types::sol_data::Address,);
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             #[inline]
             fn new<'a>(
                 tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
@@ -498,9 +430,9 @@ constructor(address implementation_);
         }
     };
     /**Function with signature `implementation()` and selector `0x5c60da1b`.
-```solidity
-function implementation() external view returns (address);
-```*/
+    ```solidity
+    function implementation() external view returns (address);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct implementationCall {}
@@ -525,9 +457,7 @@ function implementation() external view returns (address);
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -556,9 +486,7 @@ function implementation() external view returns (address);
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -567,16 +495,14 @@ function implementation() external view returns (address);
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<implementationReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<implementationReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: implementationReturn) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for implementationReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for implementationReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -585,14 +511,10 @@ function implementation() external view returns (address);
         #[automatically_derived]
         impl alloy_sol_types::SolCall for implementationCall {
             type Parameters<'a> = ();
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = implementationReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Address,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "implementation()";
             const SELECTOR: [u8; 4] = [92u8, 96u8, 218u8, 27u8];
             #[inline]
@@ -610,17 +532,17 @@ function implementation() external view returns (address);
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `owner()` and selector `0x8da5cb5b`.
-```solidity
-function owner() external view returns (address);
-```*/
+    ```solidity
+    function owner() external view returns (address);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct ownerCall {}
@@ -645,9 +567,7 @@ function owner() external view returns (address);
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -676,9 +596,7 @@ function owner() external view returns (address);
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -703,14 +621,10 @@ function owner() external view returns (address);
         #[automatically_derived]
         impl alloy_sol_types::SolCall for ownerCall {
             type Parameters<'a> = ();
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = ownerReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Address,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "owner()";
             const SELECTOR: [u8; 4] = [141u8, 165u8, 203u8, 91u8];
             #[inline]
@@ -728,17 +642,17 @@ function owner() external view returns (address);
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `renounceOwnership()` and selector `0x715018a6`.
-```solidity
-function renounceOwnership() external;
-```*/
+    ```solidity
+    function renounceOwnership() external;
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct renounceOwnershipCall {}
@@ -761,9 +675,7 @@ function renounceOwnership() external;
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -772,16 +684,14 @@ function renounceOwnership() external;
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<renounceOwnershipCall>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<renounceOwnershipCall> for UnderlyingRustTuple<'_> {
                 fn from(value: renounceOwnershipCall) -> Self {
                     ()
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for renounceOwnershipCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for renounceOwnershipCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
@@ -794,9 +704,7 @@ function renounceOwnership() external;
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -805,16 +713,14 @@ function renounceOwnership() external;
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<renounceOwnershipReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<renounceOwnershipReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: renounceOwnershipReturn) -> Self {
                     ()
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for renounceOwnershipReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for renounceOwnershipReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
@@ -823,14 +729,10 @@ function renounceOwnership() external;
         #[automatically_derived]
         impl alloy_sol_types::SolCall for renounceOwnershipCall {
             type Parameters<'a> = ();
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = renounceOwnershipReturn;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "renounceOwnership()";
             const SELECTOR: [u8; 4] = [113u8, 80u8, 24u8, 166u8];
             #[inline]
@@ -848,17 +750,17 @@ function renounceOwnership() external;
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `transferOwnership(address)` and selector `0xf2fde38b`.
-```solidity
-function transferOwnership(address newOwner) external;
-```*/
+    ```solidity
+    function transferOwnership(address newOwner) external;
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct transferOwnershipCall {
@@ -883,9 +785,7 @@ function transferOwnership(address newOwner) external;
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -894,16 +794,14 @@ function transferOwnership(address newOwner) external;
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<transferOwnershipCall>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<transferOwnershipCall> for UnderlyingRustTuple<'_> {
                 fn from(value: transferOwnershipCall) -> Self {
                     (value.newOwner,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for transferOwnershipCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for transferOwnershipCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { newOwner: tuple.0 }
                 }
@@ -916,9 +814,7 @@ function transferOwnership(address newOwner) external;
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -927,16 +823,14 @@ function transferOwnership(address newOwner) external;
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<transferOwnershipReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<transferOwnershipReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: transferOwnershipReturn) -> Self {
                     ()
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for transferOwnershipReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for transferOwnershipReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
@@ -945,14 +839,10 @@ function transferOwnership(address newOwner) external;
         #[automatically_derived]
         impl alloy_sol_types::SolCall for transferOwnershipCall {
             type Parameters<'a> = (alloy::sol_types::sol_data::Address,);
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = transferOwnershipReturn;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "transferOwnership(address)";
             const SELECTOR: [u8; 4] = [242u8, 253u8, 227u8, 139u8];
             #[inline]
@@ -974,17 +864,17 @@ function transferOwnership(address newOwner) external;
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `upgradeTo(address)` and selector `0x3659cfe6`.
-```solidity
-function upgradeTo(address newImplementation) external;
-```*/
+    ```solidity
+    function upgradeTo(address newImplementation) external;
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct upgradeToCall {
@@ -1009,9 +899,7 @@ function upgradeTo(address newImplementation) external;
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1029,7 +917,9 @@ function upgradeTo(address newImplementation) external;
             #[doc(hidden)]
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for upgradeToCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self { newImplementation: tuple.0 }
+                    Self {
+                        newImplementation: tuple.0,
+                    }
                 }
             }
         }
@@ -1040,9 +930,7 @@ function upgradeTo(address newImplementation) external;
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1067,14 +955,10 @@ function upgradeTo(address newImplementation) external;
         #[automatically_derived]
         impl alloy_sol_types::SolCall for upgradeToCall {
             type Parameters<'a> = (alloy::sol_types::sol_data::Address,);
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = upgradeToReturn;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "upgradeTo(address)";
             const SELECTOR: [u8; 4] = [54u8, 89u8, 207u8, 230u8];
             #[inline]
@@ -1096,10 +980,10 @@ function upgradeTo(address newImplementation) external;
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
@@ -1145,9 +1029,7 @@ function upgradeTo(address newImplementation) external;
                 Self::transferOwnership(_) => {
                     <transferOwnershipCall as alloy_sol_types::SolCall>::SELECTOR
                 }
-                Self::upgradeTo(_) => {
-                    <upgradeToCall as alloy_sol_types::SolCall>::SELECTOR
-                }
+                Self::upgradeTo(_) => <upgradeToCall as alloy_sol_types::SolCall>::SELECTOR,
             }
         }
         #[inline]
@@ -1168,16 +1050,14 @@ function upgradeTo(address newImplementation) external;
             static DECODE_SHIMS: &[fn(
                 &[u8],
                 bool,
-            ) -> alloy_sol_types::Result<UpgradeableBeaconCalls>] = &[
+            )
+                -> alloy_sol_types::Result<UpgradeableBeaconCalls>] = &[
                 {
                     fn upgradeTo(
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<UpgradeableBeaconCalls> {
-                        <upgradeToCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
+                        <upgradeToCall as alloy_sol_types::SolCall>::abi_decode_raw(data, validate)
                             .map(UpgradeableBeaconCalls::upgradeTo)
                     }
                     upgradeTo
@@ -1188,10 +1068,9 @@ function upgradeTo(address newImplementation) external;
                         validate: bool,
                     ) -> alloy_sol_types::Result<UpgradeableBeaconCalls> {
                         <implementationCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(UpgradeableBeaconCalls::implementation)
+                            data, validate,
+                        )
+                        .map(UpgradeableBeaconCalls::implementation)
                     }
                     implementation
                 },
@@ -1201,10 +1080,9 @@ function upgradeTo(address newImplementation) external;
                         validate: bool,
                     ) -> alloy_sol_types::Result<UpgradeableBeaconCalls> {
                         <renounceOwnershipCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(UpgradeableBeaconCalls::renounceOwnership)
+                            data, validate,
+                        )
+                        .map(UpgradeableBeaconCalls::renounceOwnership)
                     }
                     renounceOwnership
                 },
@@ -1213,10 +1091,7 @@ function upgradeTo(address newImplementation) external;
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<UpgradeableBeaconCalls> {
-                        <ownerCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
+                        <ownerCall as alloy_sol_types::SolCall>::abi_decode_raw(data, validate)
                             .map(UpgradeableBeaconCalls::owner)
                     }
                     owner
@@ -1227,21 +1102,18 @@ function upgradeTo(address newImplementation) external;
                         validate: bool,
                     ) -> alloy_sol_types::Result<UpgradeableBeaconCalls> {
                         <transferOwnershipCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(UpgradeableBeaconCalls::transferOwnership)
+                            data, validate,
+                        )
+                        .map(UpgradeableBeaconCalls::transferOwnership)
                     }
                     transferOwnership
                 },
             ];
             let Ok(idx) = Self::SELECTORS.binary_search(&selector) else {
-                return Err(
-                    alloy_sol_types::Error::unknown_selector(
-                        <Self as alloy_sol_types::SolInterface>::NAME,
-                        selector,
-                    ),
-                );
+                return Err(alloy_sol_types::Error::unknown_selector(
+                    <Self as alloy_sol_types::SolInterface>::NAME,
+                    selector,
+                ));
             };
             (unsafe { DECODE_SHIMS.get_unchecked(idx) })(data, validate)
         }
@@ -1249,22 +1121,16 @@ function upgradeTo(address newImplementation) external;
         fn abi_encoded_size(&self) -> usize {
             match self {
                 Self::implementation(inner) => {
-                    <implementationCall as alloy_sol_types::SolCall>::abi_encoded_size(
-                        inner,
-                    )
+                    <implementationCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
                 }
                 Self::owner(inner) => {
                     <ownerCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
                 }
                 Self::renounceOwnership(inner) => {
-                    <renounceOwnershipCall as alloy_sol_types::SolCall>::abi_encoded_size(
-                        inner,
-                    )
+                    <renounceOwnershipCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
                 }
                 Self::transferOwnership(inner) => {
-                    <transferOwnershipCall as alloy_sol_types::SolCall>::abi_encoded_size(
-                        inner,
-                    )
+                    <transferOwnershipCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
                 }
                 Self::upgradeTo(inner) => {
                     <upgradeToCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
@@ -1275,31 +1141,19 @@ function upgradeTo(address newImplementation) external;
         fn abi_encode_raw(&self, out: &mut alloy_sol_types::private::Vec<u8>) {
             match self {
                 Self::implementation(inner) => {
-                    <implementationCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <implementationCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
                 }
                 Self::owner(inner) => {
                     <ownerCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
                 }
                 Self::renounceOwnership(inner) => {
-                    <renounceOwnershipCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <renounceOwnershipCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
                 }
                 Self::transferOwnership(inner) => {
-                    <transferOwnershipCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <transferOwnershipCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
                 }
                 Self::upgradeTo(inner) => {
-                    <upgradeToCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <upgradeToCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
                 }
             }
         }
@@ -1319,72 +1173,14 @@ function upgradeTo(address newImplementation) external;
         /// Prefer using `SolInterface` methods instead.
         pub const SELECTORS: &'static [[u8; 32usize]] = &[
             [
-                139u8,
-                224u8,
-                7u8,
-                156u8,
-                83u8,
-                22u8,
-                89u8,
-                20u8,
-                19u8,
-                68u8,
-                205u8,
-                31u8,
-                208u8,
-                164u8,
-                242u8,
-                132u8,
-                25u8,
-                73u8,
-                127u8,
-                151u8,
-                34u8,
-                163u8,
-                218u8,
-                175u8,
-                227u8,
-                180u8,
-                24u8,
-                111u8,
-                107u8,
-                100u8,
-                87u8,
-                224u8,
+                139u8, 224u8, 7u8, 156u8, 83u8, 22u8, 89u8, 20u8, 19u8, 68u8, 205u8, 31u8, 208u8,
+                164u8, 242u8, 132u8, 25u8, 73u8, 127u8, 151u8, 34u8, 163u8, 218u8, 175u8, 227u8,
+                180u8, 24u8, 111u8, 107u8, 100u8, 87u8, 224u8,
             ],
             [
-                188u8,
-                124u8,
-                215u8,
-                90u8,
-                32u8,
-                238u8,
-                39u8,
-                253u8,
-                154u8,
-                222u8,
-                186u8,
-                179u8,
-                32u8,
-                65u8,
-                247u8,
-                85u8,
-                33u8,
-                77u8,
-                188u8,
-                107u8,
-                255u8,
-                169u8,
-                12u8,
-                192u8,
-                34u8,
-                91u8,
-                57u8,
-                218u8,
-                46u8,
-                92u8,
-                45u8,
-                59u8,
+                188u8, 124u8, 215u8, 90u8, 32u8, 238u8, 39u8, 253u8, 154u8, 222u8, 186u8, 179u8,
+                32u8, 65u8, 247u8, 85u8, 33u8, 77u8, 188u8, 107u8, 255u8, 169u8, 12u8, 192u8, 34u8,
+                91u8, 57u8, 218u8, 46u8, 92u8, 45u8, 59u8,
             ],
         ];
     }
@@ -1398,35 +1194,25 @@ function upgradeTo(address newImplementation) external;
             validate: bool,
         ) -> alloy_sol_types::Result<Self> {
             match topics.first().copied() {
-                Some(
-                    <OwnershipTransferred as alloy_sol_types::SolEvent>::SIGNATURE_HASH,
-                ) => {
+                Some(<OwnershipTransferred as alloy_sol_types::SolEvent>::SIGNATURE_HASH) => {
                     <OwnershipTransferred as alloy_sol_types::SolEvent>::decode_raw_log(
-                            topics,
-                            data,
-                            validate,
-                        )
-                        .map(Self::OwnershipTransferred)
+                        topics, data, validate,
+                    )
+                    .map(Self::OwnershipTransferred)
                 }
                 Some(<Upgraded as alloy_sol_types::SolEvent>::SIGNATURE_HASH) => {
-                    <Upgraded as alloy_sol_types::SolEvent>::decode_raw_log(
-                            topics,
-                            data,
-                            validate,
-                        )
+                    <Upgraded as alloy_sol_types::SolEvent>::decode_raw_log(topics, data, validate)
                         .map(Self::Upgraded)
                 }
-                _ => {
-                    alloy_sol_types::private::Err(alloy_sol_types::Error::InvalidLog {
-                        name: <Self as alloy_sol_types::SolEventInterface>::NAME,
-                        log: alloy_sol_types::private::Box::new(
-                            alloy_sol_types::private::LogData::new_unchecked(
-                                topics.to_vec(),
-                                data.to_vec().into(),
-                            ),
+                _ => alloy_sol_types::private::Err(alloy_sol_types::Error::InvalidLog {
+                    name: <Self as alloy_sol_types::SolEventInterface>::NAME,
+                    log: alloy_sol_types::private::Box::new(
+                        alloy_sol_types::private::LogData::new_unchecked(
+                            topics.to_vec(),
+                            data.to_vec().into(),
                         ),
-                    })
-                }
+                    ),
+                }),
             }
         }
     }
@@ -1437,9 +1223,7 @@ function upgradeTo(address newImplementation) external;
                 Self::OwnershipTransferred(inner) => {
                     alloy_sol_types::private::IntoLogData::to_log_data(inner)
                 }
-                Self::Upgraded(inner) => {
-                    alloy_sol_types::private::IntoLogData::to_log_data(inner)
-                }
+                Self::Upgraded(inner) => alloy_sol_types::private::IntoLogData::to_log_data(inner),
             }
         }
         fn into_log_data(self) -> alloy_sol_types::private::LogData {
@@ -1456,7 +1240,7 @@ function upgradeTo(address newImplementation) external;
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`UpgradeableBeacon`](self) contract instance.
 
-See the [wrapper's documentation](`UpgradeableBeaconInstance`) for more details.*/
+    See the [wrapper's documentation](`UpgradeableBeaconInstance`) for more details.*/
     #[inline]
     pub const fn new<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -1470,9 +1254,9 @@ See the [wrapper's documentation](`UpgradeableBeaconInstance`) for more details.
     }
     /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+    Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+    For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
     #[inline]
     pub fn deploy<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -1481,16 +1265,15 @@ For more fine-grained control over the deployment process, use [`deploy_builder`
     >(
         provider: P,
         implementation_: alloy::sol_types::private::Address,
-    ) -> impl ::core::future::Future<
-        Output = alloy_contract::Result<UpgradeableBeaconInstance<T, P, N>>,
-    > {
+    ) -> impl ::core::future::Future<Output = alloy_contract::Result<UpgradeableBeaconInstance<T, P, N>>>
+    {
         UpgradeableBeaconInstance::<T, P, N>::deploy(provider, implementation_)
     }
     /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+    and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+    This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+    the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     #[inline]
     pub fn deploy_builder<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -1504,15 +1287,15 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     }
     /**A [`UpgradeableBeacon`](self) instance.
 
-Contains type-safe methods for interacting with an on-chain instance of the
-[`UpgradeableBeacon`](self) contract located at a given `address`, using a given
-provider `P`.
+    Contains type-safe methods for interacting with an on-chain instance of the
+    [`UpgradeableBeacon`](self) contract located at a given `address`, using a given
+    provider `P`.
 
-If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
-documentation on how to provide it), the `deploy` and `deploy_builder` methods can
-be used to deploy a new instance of the contract.
+    If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
+    documentation on how to provide it), the `deploy` and `deploy_builder` methods can
+    be used to deploy a new instance of the contract.
 
-See the [module-level documentation](self) for all the available methods.*/
+    See the [module-level documentation](self) for all the available methods.*/
     #[derive(Clone)]
     pub struct UpgradeableBeaconInstance<T, P, N = alloy_contract::private::Ethereum> {
         address: alloy_sol_types::private::Address,
@@ -1523,24 +1306,24 @@ See the [module-level documentation](self) for all the available methods.*/
     impl<T, P, N> ::core::fmt::Debug for UpgradeableBeaconInstance<T, P, N> {
         #[inline]
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-            f.debug_tuple("UpgradeableBeaconInstance").field(&self.address).finish()
+            f.debug_tuple("UpgradeableBeaconInstance")
+                .field(&self.address)
+                .finish()
         }
     }
     /// Instantiation and getters/setters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > UpgradeableBeaconInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > UpgradeableBeaconInstance<T, P, N>
+    {
         /**Creates a new wrapper around an on-chain [`UpgradeableBeacon`](self) contract instance.
 
-See the [wrapper's documentation](`UpgradeableBeaconInstance`) for more details.*/
+        See the [wrapper's documentation](`UpgradeableBeaconInstance`) for more details.*/
         #[inline]
-        pub const fn new(
-            address: alloy_sol_types::private::Address,
-            provider: P,
-        ) -> Self {
+        pub const fn new(address: alloy_sol_types::private::Address, provider: P) -> Self {
             Self {
                 address,
                 provider,
@@ -1549,9 +1332,9 @@ See the [wrapper's documentation](`UpgradeableBeaconInstance`) for more details.
         }
         /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+        Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+        For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
         #[inline]
         pub async fn deploy(
             provider: P,
@@ -1562,10 +1345,10 @@ For more fine-grained control over the deployment process, use [`deploy_builder`
             Ok(Self::new(contract_address, call_builder.provider))
         }
         /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+        and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+        This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+        the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         #[inline]
         pub fn deploy_builder(
             provider: P,
@@ -1575,12 +1358,12 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
                 provider,
                 [
                     &BYTECODE[..],
-                    &alloy_sol_types::SolConstructor::abi_encode(
-                        &constructorCall { implementation_ },
-                    )[..],
+                    &alloy_sol_types::SolConstructor::abi_encode(&constructorCall {
+                        implementation_,
+                    })[..],
                 ]
-                    .concat()
-                    .into(),
+                .concat()
+                .into(),
             )
         }
         /// Returns a reference to the address.
@@ -1618,10 +1401,11 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     /// Function calls.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > UpgradeableBeaconInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > UpgradeableBeaconInstance<T, P, N>
+    {
         /// Creates a new call builder using this contract instance's provider and address.
         ///
         /// Note that the call can be any function call, not just those defined in this
@@ -1666,10 +1450,11 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     /// Event filters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > UpgradeableBeaconInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > UpgradeableBeaconInstance<T, P, N>
+    {
         /// Creates a new event filter using this contract instance's provider and address.
         ///
         /// Note that the type can be any event, not just those defined in this contract.

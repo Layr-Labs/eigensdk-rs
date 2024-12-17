@@ -162,27 +162,27 @@ pub mod PauserRegistry {
     /// The creation / init bytecode of the contract.
     ///
     /// ```text
-    ///0x608060405234801561000f575f5ffd5b50604051610b4d380380610b4d83398181016040528101906100319190610440565b5f5f90505b82518110156100775761006a8382815181106100555761005461049a565b5b6020026020010151600161008e60201b60201c565b8080600101915050610036565b506100878161018360201b60201c565b505061053e565b5f73ffffffffffffffffffffffffffffffffffffffff168273ffffffffffffffffffffffffffffffffffffffff16036100f3576040517f7363217600000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b805f5f8473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020015f205f6101000a81548160ff0219169083151502179055507f65d3a1fd4c13f05cba164f80d03ce90fb4b5e21946bfc3ab7dbd434c2d0b915282826040516101779291906104f0565b60405180910390a15050565b5f73ffffffffffffffffffffffffffffffffffffffff168173ffffffffffffffffffffffffffffffffffffffff16036101e8576040517f7363217600000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b7f06b4167a2528887a1e97a366eefe8549bfbf1ea3e6ac81cb2564a934d20e889260015f9054906101000a900473ffffffffffffffffffffffffffffffffffffffff168260405161023a929190610517565b60405180910390a18060015f6101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555050565b5f604051905090565b5f5ffd5b5f5ffd5b5f5ffd5b5f601f19601f8301169050919050565b7f4e487b71000000000000000000000000000000000000000000000000000000005f52604160045260245ffd5b6102e08261029a565b810181811067ffffffffffffffff821117156102ff576102fe6102aa565b5b80604052505050565b5f610311610285565b905061031d82826102d7565b919050565b5f67ffffffffffffffff82111561033c5761033b6102aa565b5b602082029050602081019050919050565b5f5ffd5b5f73ffffffffffffffffffffffffffffffffffffffff82169050919050565b5f61037a82610351565b9050919050565b61038a81610370565b8114610394575f5ffd5b50565b5f815190506103a581610381565b92915050565b5f6103bd6103b884610322565b610308565b905080838252602082019050602084028301858111156103e0576103df61034d565b5b835b8181101561040957806103f58882610397565b8452602084019350506020810190506103e2565b5050509392505050565b5f82601f83011261042757610426610296565b5b81516104378482602086016103ab565b91505092915050565b5f5f604083850312156104565761045561028e565b5b5f83015167ffffffffffffffff81111561047357610472610292565b5b61047f85828601610413565b925050602061049085828601610397565b9150509250929050565b7f4e487b71000000000000000000000000000000000000000000000000000000005f52603260045260245ffd5b6104d081610370565b82525050565b5f8115159050919050565b6104ea816104d6565b82525050565b5f6040820190506105035f8301856104c7565b61051060208301846104e1565b9392505050565b5f60408201905061052a5f8301856104c7565b61053760208301846104c7565b9392505050565b6106028061054b5f395ff3fe608060405234801561000f575f5ffd5b506004361061004a575f3560e01c806346fbf68e1461004e578063856852061461007e578063ce5484281461009a578063eab66d7a146100b6575b5f5ffd5b61006860048036038101906100639190610490565b6100d4565b60405161007591906104d5565b60405180910390f35b61009860048036038101906100939190610518565b6100f0565b005b6100b460048036038101906100af9190610490565b610184565b005b6100be610216565b6040516100cb9190610565565b60405180910390f35b5f602052805f5260405f205f915054906101000a900460ff1681565b60015f9054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff1614610176576040517f794821ff00000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b610180828261023b565b5050565b60015f9054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff161461020a576040517f794821ff00000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b61021381610330565b50565b60015f9054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b5f73ffffffffffffffffffffffffffffffffffffffff168273ffffffffffffffffffffffffffffffffffffffff16036102a0576040517f7363217600000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b805f5f8473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020015f205f6101000a81548160ff0219169083151502179055507f65d3a1fd4c13f05cba164f80d03ce90fb4b5e21946bfc3ab7dbd434c2d0b9152828260405161032492919061057e565b60405180910390a15050565b5f73ffffffffffffffffffffffffffffffffffffffff168173ffffffffffffffffffffffffffffffffffffffff1603610395576040517f7363217600000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b7f06b4167a2528887a1e97a366eefe8549bfbf1ea3e6ac81cb2564a934d20e889260015f9054906101000a900473ffffffffffffffffffffffffffffffffffffffff16826040516103e79291906105a5565b60405180910390a18060015f6101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555050565b5f5ffd5b5f73ffffffffffffffffffffffffffffffffffffffff82169050919050565b5f61045f82610436565b9050919050565b61046f81610455565b8114610479575f5ffd5b50565b5f8135905061048a81610466565b92915050565b5f602082840312156104a5576104a4610432565b5b5f6104b28482850161047c565b91505092915050565b5f8115159050919050565b6104cf816104bb565b82525050565b5f6020820190506104e85f8301846104c6565b92915050565b6104f7816104bb565b8114610501575f5ffd5b50565b5f81359050610512816104ee565b92915050565b5f5f6040838503121561052e5761052d610432565b5b5f61053b8582860161047c565b925050602061054c85828601610504565b9150509250929050565b61055f81610455565b82525050565b5f6020820190506105785f830184610556565b92915050565b5f6040820190506105915f830185610556565b61059e60208301846104c6565b9392505050565b5f6040820190506105b85f830185610556565b6105c56020830184610556565b939250505056fea2646970667358221220ce4baf9379c8459309ab696ae54959220b929a77218090214b3bc2adb3113fb464736f6c634300081b0033
+    ///0x6080604052346101995761041280380380610019816101b1565b9283398101906040818303126101995780516001600160401b0381116101995781019180601f84011215610199578251926001600160401b03841161019d578360051b9060208061006b8185016101b1565b80978152019282010192831161019957602001905b8282106101815784610094602086016101d6565b905f5b815181101561011657600581901b8201602001516001600160a01b0316908115610107577f65d3a1fd4c13f05cba164f80d03ce90fb4b5e21946bfc3ab7dbd434c2d0b91526040836001945f525f602052815f208560ff198254161790558151908152846020820152a101610097565b6339b190bb60e11b5f5260045ffd5b6001600160a01b038316801561010757600154604080516001600160a01b0383168152602081018490527f06b4167a2528887a1e97a366eefe8549bfbf1ea3e6ac81cb2564a934d20e88929190a16001600160a01b0319161760015560405161022790816101eb8239f35b6020809161018e846101d6565b815201910190610080565b5f80fd5b634e487b7160e01b5f52604160045260245ffd5b6040519190601f01601f191682016001600160401b0381118382101761019d57604052565b51906001600160a01b03821682036101995756fe6080806040526004361015610012575f80fd5b5f3560e01c90816346fbf68e146101a3575080638568520614610111578063ce548428146100745763eab66d7a14610048575f80fd5b34610070575f366003190112610070576001546040516001600160a01b039091168152602090f35b5f80fd5b346100705760203660031901126100705761008d6101db565b6001546001600160a01b0381169133839003610102576001600160a01b03169182156100f35760407f06b4167a2528887a1e97a366eefe8549bfbf1ea3e6ac81cb2564a934d20e8892918151908152846020820152a16001600160a01b03191617600155005b6339b190bb60e11b5f5260045ffd5b63794821ff60e01b5f5260045ffd5b346100705760403660031901126100705761012a6101db565b60243590811515809203610070576001546001600160a01b03163303610102576001600160a01b03169081156100f357816040917f65d3a1fd4c13f05cba164f80d03ce90fb4b5e21946bfc3ab7dbd434c2d0b9152935f525f602052825f2060ff1981541660ff831617905582519182526020820152a1005b34610070576020366003190112610070576020906001600160a01b036101c76101db565b165f525f825260ff60405f20541615158152f35b600435906001600160a01b03821682036100705756fea26469706673582212203c3f6427ef58c0bcee8f999d49d516f0bacb5f558d8ed817825aa68c2f169fdc64736f6c634300081b0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"`\x80`@R4\x80\x15a\0\x0FW__\xFD[P`@Qa\x0BM8\x03\x80a\x0BM\x839\x81\x81\x01`@R\x81\x01\x90a\x001\x91\x90a\x04@V[__\x90P[\x82Q\x81\x10\x15a\0wWa\0j\x83\x82\x81Q\x81\x10a\0UWa\0Ta\x04\x9AV[[` \x02` \x01\x01Q`\x01a\0\x8E` \x1B` \x1CV[\x80\x80`\x01\x01\x91PPa\x006V[Pa\0\x87\x81a\x01\x83` \x1B` \x1CV[PPa\x05>V[_s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x16\x82s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x16\x03a\0\xF3W`@Q\x7Fsc!v\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x81R`\x04\x01`@Q\x80\x91\x03\x90\xFD[\x80__\x84s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x16s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x16\x81R` \x01\x90\x81R` \x01_ _a\x01\0\n\x81T\x81`\xFF\x02\x19\x16\x90\x83\x15\x15\x02\x17\x90UP\x7Fe\xD3\xA1\xFDL\x13\xF0\\\xBA\x16O\x80\xD0<\xE9\x0F\xB4\xB5\xE2\x19F\xBF\xC3\xAB}\xBDCL-\x0B\x91R\x82\x82`@Qa\x01w\x92\x91\x90a\x04\xF0V[`@Q\x80\x91\x03\x90\xA1PPV[_s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x16\x81s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x16\x03a\x01\xE8W`@Q\x7Fsc!v\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x81R`\x04\x01`@Q\x80\x91\x03\x90\xFD[\x7F\x06\xB4\x16z%(\x88z\x1E\x97\xA3f\xEE\xFE\x85I\xBF\xBF\x1E\xA3\xE6\xAC\x81\xCB%d\xA94\xD2\x0E\x88\x92`\x01_\x90T\x90a\x01\0\n\x90\x04s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x16\x82`@Qa\x02:\x92\x91\x90a\x05\x17V[`@Q\x80\x91\x03\x90\xA1\x80`\x01_a\x01\0\n\x81T\x81s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x02\x19\x16\x90\x83s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x16\x02\x17\x90UPPV[_`@Q\x90P\x90V[__\xFD[__\xFD[__\xFD[_`\x1F\x19`\x1F\x83\x01\x16\x90P\x91\x90PV[\x7FNH{q\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0_R`A`\x04R`$_\xFD[a\x02\xE0\x82a\x02\x9AV[\x81\x01\x81\x81\x10g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x82\x11\x17\x15a\x02\xFFWa\x02\xFEa\x02\xAAV[[\x80`@RPPPV[_a\x03\x11a\x02\x85V[\x90Pa\x03\x1D\x82\x82a\x02\xD7V[\x91\x90PV[_g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x82\x11\x15a\x03<Wa\x03;a\x02\xAAV[[` \x82\x02\x90P` \x81\x01\x90P\x91\x90PV[__\xFD[_s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x82\x16\x90P\x91\x90PV[_a\x03z\x82a\x03QV[\x90P\x91\x90PV[a\x03\x8A\x81a\x03pV[\x81\x14a\x03\x94W__\xFD[PV[_\x81Q\x90Pa\x03\xA5\x81a\x03\x81V[\x92\x91PPV[_a\x03\xBDa\x03\xB8\x84a\x03\"V[a\x03\x08V[\x90P\x80\x83\x82R` \x82\x01\x90P` \x84\x02\x83\x01\x85\x81\x11\x15a\x03\xE0Wa\x03\xDFa\x03MV[[\x83[\x81\x81\x10\x15a\x04\tW\x80a\x03\xF5\x88\x82a\x03\x97V[\x84R` \x84\x01\x93PP` \x81\x01\x90Pa\x03\xE2V[PPP\x93\x92PPPV[_\x82`\x1F\x83\x01\x12a\x04'Wa\x04&a\x02\x96V[[\x81Qa\x047\x84\x82` \x86\x01a\x03\xABV[\x91PP\x92\x91PPV[__`@\x83\x85\x03\x12\x15a\x04VWa\x04Ua\x02\x8EV[[_\x83\x01Qg\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x81\x11\x15a\x04sWa\x04ra\x02\x92V[[a\x04\x7F\x85\x82\x86\x01a\x04\x13V[\x92PP` a\x04\x90\x85\x82\x86\x01a\x03\x97V[\x91PP\x92P\x92\x90PV[\x7FNH{q\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0_R`2`\x04R`$_\xFD[a\x04\xD0\x81a\x03pV[\x82RPPV[_\x81\x15\x15\x90P\x91\x90PV[a\x04\xEA\x81a\x04\xD6V[\x82RPPV[_`@\x82\x01\x90Pa\x05\x03_\x83\x01\x85a\x04\xC7V[a\x05\x10` \x83\x01\x84a\x04\xE1V[\x93\x92PPPV[_`@\x82\x01\x90Pa\x05*_\x83\x01\x85a\x04\xC7V[a\x057` \x83\x01\x84a\x04\xC7V[\x93\x92PPPV[a\x06\x02\x80a\x05K_9_\xF3\xFE`\x80`@R4\x80\x15a\0\x0FW__\xFD[P`\x046\x10a\0JW_5`\xE0\x1C\x80cF\xFB\xF6\x8E\x14a\0NW\x80c\x85hR\x06\x14a\0~W\x80c\xCET\x84(\x14a\0\x9AW\x80c\xEA\xB6mz\x14a\0\xB6W[__\xFD[a\0h`\x04\x806\x03\x81\x01\x90a\0c\x91\x90a\x04\x90V[a\0\xD4V[`@Qa\0u\x91\x90a\x04\xD5V[`@Q\x80\x91\x03\x90\xF3[a\0\x98`\x04\x806\x03\x81\x01\x90a\0\x93\x91\x90a\x05\x18V[a\0\xF0V[\0[a\0\xB4`\x04\x806\x03\x81\x01\x90a\0\xAF\x91\x90a\x04\x90V[a\x01\x84V[\0[a\0\xBEa\x02\x16V[`@Qa\0\xCB\x91\x90a\x05eV[`@Q\x80\x91\x03\x90\xF3[_` R\x80_R`@_ _\x91PT\x90a\x01\0\n\x90\x04`\xFF\x16\x81V[`\x01_\x90T\x90a\x01\0\n\x90\x04s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x16s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x163s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x16\x14a\x01vW`@Q\x7FyH!\xFF\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x81R`\x04\x01`@Q\x80\x91\x03\x90\xFD[a\x01\x80\x82\x82a\x02;V[PPV[`\x01_\x90T\x90a\x01\0\n\x90\x04s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x16s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x163s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x16\x14a\x02\nW`@Q\x7FyH!\xFF\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x81R`\x04\x01`@Q\x80\x91\x03\x90\xFD[a\x02\x13\x81a\x030V[PV[`\x01_\x90T\x90a\x01\0\n\x90\x04s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x16\x81V[_s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x16\x82s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x16\x03a\x02\xA0W`@Q\x7Fsc!v\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x81R`\x04\x01`@Q\x80\x91\x03\x90\xFD[\x80__\x84s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x16s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x16\x81R` \x01\x90\x81R` \x01_ _a\x01\0\n\x81T\x81`\xFF\x02\x19\x16\x90\x83\x15\x15\x02\x17\x90UP\x7Fe\xD3\xA1\xFDL\x13\xF0\\\xBA\x16O\x80\xD0<\xE9\x0F\xB4\xB5\xE2\x19F\xBF\xC3\xAB}\xBDCL-\x0B\x91R\x82\x82`@Qa\x03$\x92\x91\x90a\x05~V[`@Q\x80\x91\x03\x90\xA1PPV[_s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x16\x81s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x16\x03a\x03\x95W`@Q\x7Fsc!v\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x81R`\x04\x01`@Q\x80\x91\x03\x90\xFD[\x7F\x06\xB4\x16z%(\x88z\x1E\x97\xA3f\xEE\xFE\x85I\xBF\xBF\x1E\xA3\xE6\xAC\x81\xCB%d\xA94\xD2\x0E\x88\x92`\x01_\x90T\x90a\x01\0\n\x90\x04s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x16\x82`@Qa\x03\xE7\x92\x91\x90a\x05\xA5V[`@Q\x80\x91\x03\x90\xA1\x80`\x01_a\x01\0\n\x81T\x81s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x02\x19\x16\x90\x83s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x16\x02\x17\x90UPPV[__\xFD[_s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x82\x16\x90P\x91\x90PV[_a\x04_\x82a\x046V[\x90P\x91\x90PV[a\x04o\x81a\x04UV[\x81\x14a\x04yW__\xFD[PV[_\x815\x90Pa\x04\x8A\x81a\x04fV[\x92\x91PPV[_` \x82\x84\x03\x12\x15a\x04\xA5Wa\x04\xA4a\x042V[[_a\x04\xB2\x84\x82\x85\x01a\x04|V[\x91PP\x92\x91PPV[_\x81\x15\x15\x90P\x91\x90PV[a\x04\xCF\x81a\x04\xBBV[\x82RPPV[_` \x82\x01\x90Pa\x04\xE8_\x83\x01\x84a\x04\xC6V[\x92\x91PPV[a\x04\xF7\x81a\x04\xBBV[\x81\x14a\x05\x01W__\xFD[PV[_\x815\x90Pa\x05\x12\x81a\x04\xEEV[\x92\x91PPV[__`@\x83\x85\x03\x12\x15a\x05.Wa\x05-a\x042V[[_a\x05;\x85\x82\x86\x01a\x04|V[\x92PP` a\x05L\x85\x82\x86\x01a\x05\x04V[\x91PP\x92P\x92\x90PV[a\x05_\x81a\x04UV[\x82RPPV[_` \x82\x01\x90Pa\x05x_\x83\x01\x84a\x05VV[\x92\x91PPV[_`@\x82\x01\x90Pa\x05\x91_\x83\x01\x85a\x05VV[a\x05\x9E` \x83\x01\x84a\x04\xC6V[\x93\x92PPPV[_`@\x82\x01\x90Pa\x05\xB8_\x83\x01\x85a\x05VV[a\x05\xC5` \x83\x01\x84a\x05VV[\x93\x92PPPV\xFE\xA2dipfsX\"\x12 \xCEK\xAF\x93y\xC8E\x93\t\xABij\xE5IY\"\x0B\x92\x9Aw!\x80\x90!K;\xC2\xAD\xB3\x11?\xB4dsolcC\0\x08\x1B\x003",
+        b"`\x80`@R4a\x01\x99Wa\x04\x12\x808\x03\x80a\0\x19\x81a\x01\xB1V[\x92\x839\x81\x01\x90`@\x81\x83\x03\x12a\x01\x99W\x80Q`\x01`\x01`@\x1B\x03\x81\x11a\x01\x99W\x81\x01\x91\x80`\x1F\x84\x01\x12\x15a\x01\x99W\x82Q\x92`\x01`\x01`@\x1B\x03\x84\x11a\x01\x9DW\x83`\x05\x1B\x90` \x80a\0k\x81\x85\x01a\x01\xB1V[\x80\x97\x81R\x01\x92\x82\x01\x01\x92\x83\x11a\x01\x99W` \x01\x90[\x82\x82\x10a\x01\x81W\x84a\0\x94` \x86\x01a\x01\xD6V[\x90_[\x81Q\x81\x10\x15a\x01\x16W`\x05\x81\x90\x1B\x82\x01` \x01Q`\x01`\x01`\xA0\x1B\x03\x16\x90\x81\x15a\x01\x07W\x7Fe\xD3\xA1\xFDL\x13\xF0\\\xBA\x16O\x80\xD0<\xE9\x0F\xB4\xB5\xE2\x19F\xBF\xC3\xAB}\xBDCL-\x0B\x91R`@\x83`\x01\x94_R_` R\x81_ \x85`\xFF\x19\x82T\x16\x17\x90U\x81Q\x90\x81R\x84` \x82\x01R\xA1\x01a\0\x97V[c9\xB1\x90\xBB`\xE1\x1B_R`\x04_\xFD[`\x01`\x01`\xA0\x1B\x03\x83\x16\x80\x15a\x01\x07W`\x01T`@\x80Q`\x01`\x01`\xA0\x1B\x03\x83\x16\x81R` \x81\x01\x84\x90R\x7F\x06\xB4\x16z%(\x88z\x1E\x97\xA3f\xEE\xFE\x85I\xBF\xBF\x1E\xA3\xE6\xAC\x81\xCB%d\xA94\xD2\x0E\x88\x92\x91\x90\xA1`\x01`\x01`\xA0\x1B\x03\x19\x16\x17`\x01U`@Qa\x02'\x90\x81a\x01\xEB\x829\xF3[` \x80\x91a\x01\x8E\x84a\x01\xD6V[\x81R\x01\x91\x01\x90a\0\x80V[_\x80\xFD[cNH{q`\xE0\x1B_R`A`\x04R`$_\xFD[`@Q\x91\x90`\x1F\x01`\x1F\x19\x16\x82\x01`\x01`\x01`@\x1B\x03\x81\x11\x83\x82\x10\x17a\x01\x9DW`@RV[Q\x90`\x01`\x01`\xA0\x1B\x03\x82\x16\x82\x03a\x01\x99WV\xFE`\x80\x80`@R`\x046\x10\x15a\0\x12W_\x80\xFD[_5`\xE0\x1C\x90\x81cF\xFB\xF6\x8E\x14a\x01\xA3WP\x80c\x85hR\x06\x14a\x01\x11W\x80c\xCET\x84(\x14a\0tWc\xEA\xB6mz\x14a\0HW_\x80\xFD[4a\0pW_6`\x03\x19\x01\x12a\0pW`\x01T`@Q`\x01`\x01`\xA0\x1B\x03\x90\x91\x16\x81R` \x90\xF3[_\x80\xFD[4a\0pW` 6`\x03\x19\x01\x12a\0pWa\0\x8Da\x01\xDBV[`\x01T`\x01`\x01`\xA0\x1B\x03\x81\x16\x913\x83\x90\x03a\x01\x02W`\x01`\x01`\xA0\x1B\x03\x16\x91\x82\x15a\0\xF3W`@\x7F\x06\xB4\x16z%(\x88z\x1E\x97\xA3f\xEE\xFE\x85I\xBF\xBF\x1E\xA3\xE6\xAC\x81\xCB%d\xA94\xD2\x0E\x88\x92\x91\x81Q\x90\x81R\x84` \x82\x01R\xA1`\x01`\x01`\xA0\x1B\x03\x19\x16\x17`\x01U\0[c9\xB1\x90\xBB`\xE1\x1B_R`\x04_\xFD[cyH!\xFF`\xE0\x1B_R`\x04_\xFD[4a\0pW`@6`\x03\x19\x01\x12a\0pWa\x01*a\x01\xDBV[`$5\x90\x81\x15\x15\x80\x92\x03a\0pW`\x01T`\x01`\x01`\xA0\x1B\x03\x163\x03a\x01\x02W`\x01`\x01`\xA0\x1B\x03\x16\x90\x81\x15a\0\xF3W\x81`@\x91\x7Fe\xD3\xA1\xFDL\x13\xF0\\\xBA\x16O\x80\xD0<\xE9\x0F\xB4\xB5\xE2\x19F\xBF\xC3\xAB}\xBDCL-\x0B\x91R\x93_R_` R\x82_ `\xFF\x19\x81T\x16`\xFF\x83\x16\x17\x90U\x82Q\x91\x82R` \x82\x01R\xA1\0[4a\0pW` 6`\x03\x19\x01\x12a\0pW` \x90`\x01`\x01`\xA0\x1B\x03a\x01\xC7a\x01\xDBV[\x16_R_\x82R`\xFF`@_ T\x16\x15\x15\x81R\xF3[`\x045\x90`\x01`\x01`\xA0\x1B\x03\x82\x16\x82\x03a\0pWV\xFE\xA2dipfsX\"\x12 <?d'\xEFX\xC0\xBC\xEE\x8F\x99\x9DI\xD5\x16\xF0\xBA\xCB_U\x8D\x8E\xD8\x17\x82Z\xA6\x8C/\x16\x9F\xDCdsolcC\0\x08\x1B\x003",
     );
     /// The runtime bytecode of the contract, as deployed on the network.
     ///
     /// ```text
-    ///0x608060405234801561000f575f5ffd5b506004361061004a575f3560e01c806346fbf68e1461004e578063856852061461007e578063ce5484281461009a578063eab66d7a146100b6575b5f5ffd5b61006860048036038101906100639190610490565b6100d4565b60405161007591906104d5565b60405180910390f35b61009860048036038101906100939190610518565b6100f0565b005b6100b460048036038101906100af9190610490565b610184565b005b6100be610216565b6040516100cb9190610565565b60405180910390f35b5f602052805f5260405f205f915054906101000a900460ff1681565b60015f9054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff1614610176576040517f794821ff00000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b610180828261023b565b5050565b60015f9054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff161461020a576040517f794821ff00000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b61021381610330565b50565b60015f9054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b5f73ffffffffffffffffffffffffffffffffffffffff168273ffffffffffffffffffffffffffffffffffffffff16036102a0576040517f7363217600000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b805f5f8473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020015f205f6101000a81548160ff0219169083151502179055507f65d3a1fd4c13f05cba164f80d03ce90fb4b5e21946bfc3ab7dbd434c2d0b9152828260405161032492919061057e565b60405180910390a15050565b5f73ffffffffffffffffffffffffffffffffffffffff168173ffffffffffffffffffffffffffffffffffffffff1603610395576040517f7363217600000000000000000000000000000000000000000000000000000000815260040160405180910390fd5b7f06b4167a2528887a1e97a366eefe8549bfbf1ea3e6ac81cb2564a934d20e889260015f9054906101000a900473ffffffffffffffffffffffffffffffffffffffff16826040516103e79291906105a5565b60405180910390a18060015f6101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555050565b5f5ffd5b5f73ffffffffffffffffffffffffffffffffffffffff82169050919050565b5f61045f82610436565b9050919050565b61046f81610455565b8114610479575f5ffd5b50565b5f8135905061048a81610466565b92915050565b5f602082840312156104a5576104a4610432565b5b5f6104b28482850161047c565b91505092915050565b5f8115159050919050565b6104cf816104bb565b82525050565b5f6020820190506104e85f8301846104c6565b92915050565b6104f7816104bb565b8114610501575f5ffd5b50565b5f81359050610512816104ee565b92915050565b5f5f6040838503121561052e5761052d610432565b5b5f61053b8582860161047c565b925050602061054c85828601610504565b9150509250929050565b61055f81610455565b82525050565b5f6020820190506105785f830184610556565b92915050565b5f6040820190506105915f830185610556565b61059e60208301846104c6565b9392505050565b5f6040820190506105b85f830185610556565b6105c56020830184610556565b939250505056fea2646970667358221220ce4baf9379c8459309ab696ae54959220b929a77218090214b3bc2adb3113fb464736f6c634300081b0033
+    ///0x6080806040526004361015610012575f80fd5b5f3560e01c90816346fbf68e146101a3575080638568520614610111578063ce548428146100745763eab66d7a14610048575f80fd5b34610070575f366003190112610070576001546040516001600160a01b039091168152602090f35b5f80fd5b346100705760203660031901126100705761008d6101db565b6001546001600160a01b0381169133839003610102576001600160a01b03169182156100f35760407f06b4167a2528887a1e97a366eefe8549bfbf1ea3e6ac81cb2564a934d20e8892918151908152846020820152a16001600160a01b03191617600155005b6339b190bb60e11b5f5260045ffd5b63794821ff60e01b5f5260045ffd5b346100705760403660031901126100705761012a6101db565b60243590811515809203610070576001546001600160a01b03163303610102576001600160a01b03169081156100f357816040917f65d3a1fd4c13f05cba164f80d03ce90fb4b5e21946bfc3ab7dbd434c2d0b9152935f525f602052825f2060ff1981541660ff831617905582519182526020820152a1005b34610070576020366003190112610070576020906001600160a01b036101c76101db565b165f525f825260ff60405f20541615158152f35b600435906001600160a01b03821682036100705756fea26469706673582212203c3f6427ef58c0bcee8f999d49d516f0bacb5f558d8ed817825aa68c2f169fdc64736f6c634300081b0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static DEPLOYED_BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"`\x80`@R4\x80\x15a\0\x0FW__\xFD[P`\x046\x10a\0JW_5`\xE0\x1C\x80cF\xFB\xF6\x8E\x14a\0NW\x80c\x85hR\x06\x14a\0~W\x80c\xCET\x84(\x14a\0\x9AW\x80c\xEA\xB6mz\x14a\0\xB6W[__\xFD[a\0h`\x04\x806\x03\x81\x01\x90a\0c\x91\x90a\x04\x90V[a\0\xD4V[`@Qa\0u\x91\x90a\x04\xD5V[`@Q\x80\x91\x03\x90\xF3[a\0\x98`\x04\x806\x03\x81\x01\x90a\0\x93\x91\x90a\x05\x18V[a\0\xF0V[\0[a\0\xB4`\x04\x806\x03\x81\x01\x90a\0\xAF\x91\x90a\x04\x90V[a\x01\x84V[\0[a\0\xBEa\x02\x16V[`@Qa\0\xCB\x91\x90a\x05eV[`@Q\x80\x91\x03\x90\xF3[_` R\x80_R`@_ _\x91PT\x90a\x01\0\n\x90\x04`\xFF\x16\x81V[`\x01_\x90T\x90a\x01\0\n\x90\x04s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x16s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x163s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x16\x14a\x01vW`@Q\x7FyH!\xFF\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x81R`\x04\x01`@Q\x80\x91\x03\x90\xFD[a\x01\x80\x82\x82a\x02;V[PPV[`\x01_\x90T\x90a\x01\0\n\x90\x04s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x16s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x163s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x16\x14a\x02\nW`@Q\x7FyH!\xFF\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x81R`\x04\x01`@Q\x80\x91\x03\x90\xFD[a\x02\x13\x81a\x030V[PV[`\x01_\x90T\x90a\x01\0\n\x90\x04s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x16\x81V[_s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x16\x82s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x16\x03a\x02\xA0W`@Q\x7Fsc!v\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x81R`\x04\x01`@Q\x80\x91\x03\x90\xFD[\x80__\x84s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x16s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x16\x81R` \x01\x90\x81R` \x01_ _a\x01\0\n\x81T\x81`\xFF\x02\x19\x16\x90\x83\x15\x15\x02\x17\x90UP\x7Fe\xD3\xA1\xFDL\x13\xF0\\\xBA\x16O\x80\xD0<\xE9\x0F\xB4\xB5\xE2\x19F\xBF\xC3\xAB}\xBDCL-\x0B\x91R\x82\x82`@Qa\x03$\x92\x91\x90a\x05~V[`@Q\x80\x91\x03\x90\xA1PPV[_s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x16\x81s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x16\x03a\x03\x95W`@Q\x7Fsc!v\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x81R`\x04\x01`@Q\x80\x91\x03\x90\xFD[\x7F\x06\xB4\x16z%(\x88z\x1E\x97\xA3f\xEE\xFE\x85I\xBF\xBF\x1E\xA3\xE6\xAC\x81\xCB%d\xA94\xD2\x0E\x88\x92`\x01_\x90T\x90a\x01\0\n\x90\x04s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x16\x82`@Qa\x03\xE7\x92\x91\x90a\x05\xA5V[`@Q\x80\x91\x03\x90\xA1\x80`\x01_a\x01\0\n\x81T\x81s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x02\x19\x16\x90\x83s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x16\x02\x17\x90UPPV[__\xFD[_s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x82\x16\x90P\x91\x90PV[_a\x04_\x82a\x046V[\x90P\x91\x90PV[a\x04o\x81a\x04UV[\x81\x14a\x04yW__\xFD[PV[_\x815\x90Pa\x04\x8A\x81a\x04fV[\x92\x91PPV[_` \x82\x84\x03\x12\x15a\x04\xA5Wa\x04\xA4a\x042V[[_a\x04\xB2\x84\x82\x85\x01a\x04|V[\x91PP\x92\x91PPV[_\x81\x15\x15\x90P\x91\x90PV[a\x04\xCF\x81a\x04\xBBV[\x82RPPV[_` \x82\x01\x90Pa\x04\xE8_\x83\x01\x84a\x04\xC6V[\x92\x91PPV[a\x04\xF7\x81a\x04\xBBV[\x81\x14a\x05\x01W__\xFD[PV[_\x815\x90Pa\x05\x12\x81a\x04\xEEV[\x92\x91PPV[__`@\x83\x85\x03\x12\x15a\x05.Wa\x05-a\x042V[[_a\x05;\x85\x82\x86\x01a\x04|V[\x92PP` a\x05L\x85\x82\x86\x01a\x05\x04V[\x91PP\x92P\x92\x90PV[a\x05_\x81a\x04UV[\x82RPPV[_` \x82\x01\x90Pa\x05x_\x83\x01\x84a\x05VV[\x92\x91PPV[_`@\x82\x01\x90Pa\x05\x91_\x83\x01\x85a\x05VV[a\x05\x9E` \x83\x01\x84a\x04\xC6V[\x93\x92PPPV[_`@\x82\x01\x90Pa\x05\xB8_\x83\x01\x85a\x05VV[a\x05\xC5` \x83\x01\x84a\x05VV[\x93\x92PPPV\xFE\xA2dipfsX\"\x12 \xCEK\xAF\x93y\xC8E\x93\t\xABij\xE5IY\"\x0B\x92\x9Aw!\x80\x90!K;\xC2\xAD\xB3\x11?\xB4dsolcC\0\x08\x1B\x003",
+        b"`\x80\x80`@R`\x046\x10\x15a\0\x12W_\x80\xFD[_5`\xE0\x1C\x90\x81cF\xFB\xF6\x8E\x14a\x01\xA3WP\x80c\x85hR\x06\x14a\x01\x11W\x80c\xCET\x84(\x14a\0tWc\xEA\xB6mz\x14a\0HW_\x80\xFD[4a\0pW_6`\x03\x19\x01\x12a\0pW`\x01T`@Q`\x01`\x01`\xA0\x1B\x03\x90\x91\x16\x81R` \x90\xF3[_\x80\xFD[4a\0pW` 6`\x03\x19\x01\x12a\0pWa\0\x8Da\x01\xDBV[`\x01T`\x01`\x01`\xA0\x1B\x03\x81\x16\x913\x83\x90\x03a\x01\x02W`\x01`\x01`\xA0\x1B\x03\x16\x91\x82\x15a\0\xF3W`@\x7F\x06\xB4\x16z%(\x88z\x1E\x97\xA3f\xEE\xFE\x85I\xBF\xBF\x1E\xA3\xE6\xAC\x81\xCB%d\xA94\xD2\x0E\x88\x92\x91\x81Q\x90\x81R\x84` \x82\x01R\xA1`\x01`\x01`\xA0\x1B\x03\x19\x16\x17`\x01U\0[c9\xB1\x90\xBB`\xE1\x1B_R`\x04_\xFD[cyH!\xFF`\xE0\x1B_R`\x04_\xFD[4a\0pW`@6`\x03\x19\x01\x12a\0pWa\x01*a\x01\xDBV[`$5\x90\x81\x15\x15\x80\x92\x03a\0pW`\x01T`\x01`\x01`\xA0\x1B\x03\x163\x03a\x01\x02W`\x01`\x01`\xA0\x1B\x03\x16\x90\x81\x15a\0\xF3W\x81`@\x91\x7Fe\xD3\xA1\xFDL\x13\xF0\\\xBA\x16O\x80\xD0<\xE9\x0F\xB4\xB5\xE2\x19F\xBF\xC3\xAB}\xBDCL-\x0B\x91R\x93_R_` R\x82_ `\xFF\x19\x81T\x16`\xFF\x83\x16\x17\x90U\x82Q\x91\x82R` \x82\x01R\xA1\0[4a\0pW` 6`\x03\x19\x01\x12a\0pW` \x90`\x01`\x01`\xA0\x1B\x03a\x01\xC7a\x01\xDBV[\x16_R_\x82R`\xFF`@_ T\x16\x15\x15\x81R\xF3[`\x045\x90`\x01`\x01`\xA0\x1B\x03\x82\x16\x82\x03a\0pWV\xFE\xA2dipfsX\"\x12 <?d'\xEFX\xC0\xBC\xEE\x8F\x99\x9DI\xD5\x16\xF0\xBA\xCB_U\x8D\x8E\xD8\x17\x82Z\xA6\x8C/\x16\x9F\xDCdsolcC\0\x08\x1B\x003",
     );
     /**Custom error with signature `InputAddressZero()` and selector `0x73632176`.
-```solidity
-error InputAddressZero();
-```*/
+    ```solidity
+    error InputAddressZero();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct InputAddressZero {}
@@ -200,9 +200,7 @@ error InputAddressZero();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -226,9 +224,7 @@ error InputAddressZero();
         #[automatically_derived]
         impl alloy_sol_types::SolError for InputAddressZero {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "InputAddressZero()";
             const SELECTOR: [u8; 4] = [115u8, 99u8, 33u8, 118u8];
             #[inline]
@@ -244,9 +240,9 @@ error InputAddressZero();
         }
     };
     /**Custom error with signature `OnlyUnpauser()` and selector `0x794821ff`.
-```solidity
-error OnlyUnpauser();
-```*/
+    ```solidity
+    error OnlyUnpauser();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct OnlyUnpauser {}
@@ -264,9 +260,7 @@ error OnlyUnpauser();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -290,9 +284,7 @@ error OnlyUnpauser();
         #[automatically_derived]
         impl alloy_sol_types::SolError for OnlyUnpauser {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "OnlyUnpauser()";
             const SELECTOR: [u8; 4] = [121u8, 72u8, 33u8, 255u8];
             #[inline]
@@ -308,9 +300,9 @@ error OnlyUnpauser();
         }
     };
     /**Event with signature `PauserStatusChanged(address,bool)` and selector `0x65d3a1fd4c13f05cba164f80d03ce90fb4b5e21946bfc3ab7dbd434c2d0b9152`.
-```solidity
-event PauserStatusChanged(address pauser, bool canPause);
-```*/
+    ```solidity
+    event PauserStatusChanged(address pauser, bool canPause);
+    ```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -338,45 +330,15 @@ event PauserStatusChanged(address pauser, bool canPause);
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Bool,
             );
-            type DataToken<'a> = <Self::DataTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (alloy_sol_types::sol_data::FixedBytes<32>,);
             const SIGNATURE: &'static str = "PauserStatusChanged(address,bool)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
-                101u8,
-                211u8,
-                161u8,
-                253u8,
-                76u8,
-                19u8,
-                240u8,
-                92u8,
-                186u8,
-                22u8,
-                79u8,
-                128u8,
-                208u8,
-                60u8,
-                233u8,
-                15u8,
-                180u8,
-                181u8,
-                226u8,
-                25u8,
-                70u8,
-                191u8,
-                195u8,
-                171u8,
-                125u8,
-                189u8,
-                67u8,
-                76u8,
-                45u8,
-                11u8,
-                145u8,
-                82u8,
-            ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
+                alloy_sol_types::private::B256::new([
+                    101u8, 211u8, 161u8, 253u8, 76u8, 19u8, 240u8, 92u8, 186u8, 22u8, 79u8, 128u8,
+                    208u8, 60u8, 233u8, 15u8, 180u8, 181u8, 226u8, 25u8, 70u8, 191u8, 195u8, 171u8,
+                    125u8, 189u8, 67u8, 76u8, 45u8, 11u8, 145u8, 82u8,
+                ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -394,13 +356,11 @@ event PauserStatusChanged(address pauser, bool canPause);
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(
-                        alloy_sol_types::Error::invalid_event_signature_hash(
-                            Self::SIGNATURE,
-                            topics.0,
-                            Self::SIGNATURE_HASH,
-                        ),
-                    );
+                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
+                        Self::SIGNATURE,
+                        topics.0,
+                        Self::SIGNATURE_HASH,
+                    ));
                 }
                 Ok(())
             }
@@ -427,9 +387,7 @@ event PauserStatusChanged(address pauser, bool canPause);
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(
-                    Self::SIGNATURE_HASH,
-                );
+                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
                 Ok(())
             }
         }
@@ -451,9 +409,9 @@ event PauserStatusChanged(address pauser, bool canPause);
         }
     };
     /**Event with signature `UnpauserChanged(address,address)` and selector `0x06b4167a2528887a1e97a366eefe8549bfbf1ea3e6ac81cb2564a934d20e8892`.
-```solidity
-event UnpauserChanged(address previousUnpauser, address newUnpauser);
-```*/
+    ```solidity
+    event UnpauserChanged(address previousUnpauser, address newUnpauser);
+    ```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -481,45 +439,15 @@ event UnpauserChanged(address previousUnpauser, address newUnpauser);
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Address,
             );
-            type DataToken<'a> = <Self::DataTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (alloy_sol_types::sol_data::FixedBytes<32>,);
             const SIGNATURE: &'static str = "UnpauserChanged(address,address)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
-                6u8,
-                180u8,
-                22u8,
-                122u8,
-                37u8,
-                40u8,
-                136u8,
-                122u8,
-                30u8,
-                151u8,
-                163u8,
-                102u8,
-                238u8,
-                254u8,
-                133u8,
-                73u8,
-                191u8,
-                191u8,
-                30u8,
-                163u8,
-                230u8,
-                172u8,
-                129u8,
-                203u8,
-                37u8,
-                100u8,
-                169u8,
-                52u8,
-                210u8,
-                14u8,
-                136u8,
-                146u8,
-            ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
+                alloy_sol_types::private::B256::new([
+                    6u8, 180u8, 22u8, 122u8, 37u8, 40u8, 136u8, 122u8, 30u8, 151u8, 163u8, 102u8,
+                    238u8, 254u8, 133u8, 73u8, 191u8, 191u8, 30u8, 163u8, 230u8, 172u8, 129u8,
+                    203u8, 37u8, 100u8, 169u8, 52u8, 210u8, 14u8, 136u8, 146u8,
+                ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -537,13 +465,11 @@ event UnpauserChanged(address previousUnpauser, address newUnpauser);
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(
-                        alloy_sol_types::Error::invalid_event_signature_hash(
-                            Self::SIGNATURE,
-                            topics.0,
-                            Self::SIGNATURE_HASH,
-                        ),
-                    );
+                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
+                        Self::SIGNATURE,
+                        topics.0,
+                        Self::SIGNATURE_HASH,
+                    ));
                 }
                 Ok(())
             }
@@ -570,9 +496,7 @@ event UnpauserChanged(address previousUnpauser, address newUnpauser);
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(
-                    Self::SIGNATURE_HASH,
-                );
+                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
                 Ok(())
             }
         }
@@ -594,9 +518,9 @@ event UnpauserChanged(address previousUnpauser, address newUnpauser);
         }
     };
     /**Constructor`.
-```solidity
-constructor(address[] _pausers, address _unpauser);
-```*/
+    ```solidity
+    constructor(address[] _pausers, address _unpauser);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct constructorCall {
@@ -618,9 +542,7 @@ constructor(address[] _pausers, address _unpauser);
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -651,9 +573,7 @@ constructor(address[] _pausers, address _unpauser);
                 alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::Address>,
                 alloy::sol_types::sol_data::Address,
             );
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             #[inline]
             fn new<'a>(
                 tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
@@ -674,9 +594,9 @@ constructor(address[] _pausers, address _unpauser);
         }
     };
     /**Function with signature `isPauser(address)` and selector `0x46fbf68e`.
-```solidity
-function isPauser(address) external view returns (bool);
-```*/
+    ```solidity
+    function isPauser(address) external view returns (bool);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct isPauserCall {
@@ -703,9 +623,7 @@ function isPauser(address) external view returns (bool);
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -734,9 +652,7 @@ function isPauser(address) external view returns (bool);
             type UnderlyingRustTuple<'a> = (bool,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -761,14 +677,10 @@ function isPauser(address) external view returns (bool);
         #[automatically_derived]
         impl alloy_sol_types::SolCall for isPauserCall {
             type Parameters<'a> = (alloy::sol_types::sol_data::Address,);
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = isPauserReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Bool,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "isPauser(address)";
             const SELECTOR: [u8; 4] = [70u8, 251u8, 246u8, 142u8];
             #[inline]
@@ -790,17 +702,17 @@ function isPauser(address) external view returns (bool);
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `setIsPauser(address,bool)` and selector `0x85685206`.
-```solidity
-function setIsPauser(address newPauser, bool canPause) external;
-```*/
+    ```solidity
+    function setIsPauser(address newPauser, bool canPause) external;
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setIsPauserCall {
@@ -829,9 +741,7 @@ function setIsPauser(address newPauser, bool canPause) external;
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address, bool);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -863,9 +773,7 @@ function setIsPauser(address newPauser, bool canPause) external;
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -893,14 +801,10 @@ function setIsPauser(address newPauser, bool canPause) external;
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Bool,
             );
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = setIsPauserReturn;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "setIsPauser(address,bool)";
             const SELECTOR: [u8; 4] = [133u8, 104u8, 82u8, 6u8];
             #[inline]
@@ -925,17 +829,17 @@ function setIsPauser(address newPauser, bool canPause) external;
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `setUnpauser(address)` and selector `0xce548428`.
-```solidity
-function setUnpauser(address newUnpauser) external;
-```*/
+    ```solidity
+    function setUnpauser(address newUnpauser) external;
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setUnpauserCall {
@@ -960,9 +864,7 @@ function setUnpauser(address newUnpauser) external;
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -980,7 +882,9 @@ function setUnpauser(address newUnpauser) external;
             #[doc(hidden)]
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for setUnpauserCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self { newUnpauser: tuple.0 }
+                    Self {
+                        newUnpauser: tuple.0,
+                    }
                 }
             }
         }
@@ -991,9 +895,7 @@ function setUnpauser(address newUnpauser) external;
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1018,14 +920,10 @@ function setUnpauser(address newUnpauser) external;
         #[automatically_derived]
         impl alloy_sol_types::SolCall for setUnpauserCall {
             type Parameters<'a> = (alloy::sol_types::sol_data::Address,);
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = setUnpauserReturn;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "setUnpauser(address)";
             const SELECTOR: [u8; 4] = [206u8, 84u8, 132u8, 40u8];
             #[inline]
@@ -1047,17 +945,17 @@ function setUnpauser(address newUnpauser) external;
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `unpauser()` and selector `0xeab66d7a`.
-```solidity
-function unpauser() external view returns (address);
-```*/
+    ```solidity
+    function unpauser() external view returns (address);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct unpauserCall {}
@@ -1082,9 +980,7 @@ function unpauser() external view returns (address);
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1113,9 +1009,7 @@ function unpauser() external view returns (address);
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1140,14 +1034,10 @@ function unpauser() external view returns (address);
         #[automatically_derived]
         impl alloy_sol_types::SolCall for unpauserCall {
             type Parameters<'a> = ();
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = unpauserReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Address,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "unpauser()";
             const SELECTOR: [u8; 4] = [234u8, 182u8, 109u8, 122u8];
             #[inline]
@@ -1165,10 +1055,10 @@ function unpauser() external view returns (address);
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
@@ -1203,12 +1093,8 @@ function unpauser() external view returns (address);
         fn selector(&self) -> [u8; 4] {
             match self {
                 Self::isPauser(_) => <isPauserCall as alloy_sol_types::SolCall>::SELECTOR,
-                Self::setIsPauser(_) => {
-                    <setIsPauserCall as alloy_sol_types::SolCall>::SELECTOR
-                }
-                Self::setUnpauser(_) => {
-                    <setUnpauserCall as alloy_sol_types::SolCall>::SELECTOR
-                }
+                Self::setIsPauser(_) => <setIsPauserCall as alloy_sol_types::SolCall>::SELECTOR,
+                Self::setUnpauser(_) => <setUnpauserCall as alloy_sol_types::SolCall>::SELECTOR,
                 Self::unpauser(_) => <unpauserCall as alloy_sol_types::SolCall>::SELECTOR,
             }
         }
@@ -1230,16 +1116,14 @@ function unpauser() external view returns (address);
             static DECODE_SHIMS: &[fn(
                 &[u8],
                 bool,
-            ) -> alloy_sol_types::Result<PauserRegistryCalls>] = &[
+            )
+                -> alloy_sol_types::Result<PauserRegistryCalls>] = &[
                 {
                     fn isPauser(
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<PauserRegistryCalls> {
-                        <isPauserCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
+                        <isPauserCall as alloy_sol_types::SolCall>::abi_decode_raw(data, validate)
                             .map(PauserRegistryCalls::isPauser)
                     }
                     isPauser
@@ -1250,10 +1134,9 @@ function unpauser() external view returns (address);
                         validate: bool,
                     ) -> alloy_sol_types::Result<PauserRegistryCalls> {
                         <setIsPauserCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(PauserRegistryCalls::setIsPauser)
+                            data, validate,
+                        )
+                        .map(PauserRegistryCalls::setIsPauser)
                     }
                     setIsPauser
                 },
@@ -1263,10 +1146,9 @@ function unpauser() external view returns (address);
                         validate: bool,
                     ) -> alloy_sol_types::Result<PauserRegistryCalls> {
                         <setUnpauserCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(PauserRegistryCalls::setUnpauser)
+                            data, validate,
+                        )
+                        .map(PauserRegistryCalls::setUnpauser)
                     }
                     setUnpauser
                 },
@@ -1275,22 +1157,17 @@ function unpauser() external view returns (address);
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<PauserRegistryCalls> {
-                        <unpauserCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
+                        <unpauserCall as alloy_sol_types::SolCall>::abi_decode_raw(data, validate)
                             .map(PauserRegistryCalls::unpauser)
                     }
                     unpauser
                 },
             ];
             let Ok(idx) = Self::SELECTORS.binary_search(&selector) else {
-                return Err(
-                    alloy_sol_types::Error::unknown_selector(
-                        <Self as alloy_sol_types::SolInterface>::NAME,
-                        selector,
-                    ),
-                );
+                return Err(alloy_sol_types::Error::unknown_selector(
+                    <Self as alloy_sol_types::SolInterface>::NAME,
+                    selector,
+                ));
             };
             (unsafe { DECODE_SHIMS.get_unchecked(idx) })(data, validate)
         }
@@ -1301,14 +1178,10 @@ function unpauser() external view returns (address);
                     <isPauserCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
                 }
                 Self::setIsPauser(inner) => {
-                    <setIsPauserCall as alloy_sol_types::SolCall>::abi_encoded_size(
-                        inner,
-                    )
+                    <setIsPauserCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
                 }
                 Self::setUnpauser(inner) => {
-                    <setUnpauserCall as alloy_sol_types::SolCall>::abi_encoded_size(
-                        inner,
-                    )
+                    <setUnpauserCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
                 }
                 Self::unpauser(inner) => {
                     <unpauserCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
@@ -1319,28 +1192,16 @@ function unpauser() external view returns (address);
         fn abi_encode_raw(&self, out: &mut alloy_sol_types::private::Vec<u8>) {
             match self {
                 Self::isPauser(inner) => {
-                    <isPauserCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <isPauserCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
                 }
                 Self::setIsPauser(inner) => {
-                    <setIsPauserCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <setIsPauserCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
                 }
                 Self::setUnpauser(inner) => {
-                    <setUnpauserCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <setUnpauserCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
                 }
                 Self::unpauser(inner) => {
-                    <unpauserCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <unpauserCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
                 }
             }
         }
@@ -1358,10 +1219,8 @@ function unpauser() external view returns (address);
         /// No guarantees are made about the order of the selectors.
         ///
         /// Prefer using `SolInterface` methods instead.
-        pub const SELECTORS: &'static [[u8; 4usize]] = &[
-            [115u8, 99u8, 33u8, 118u8],
-            [121u8, 72u8, 33u8, 255u8],
-        ];
+        pub const SELECTORS: &'static [[u8; 4usize]] =
+            &[[115u8, 99u8, 33u8, 118u8], [121u8, 72u8, 33u8, 255u8]];
     }
     #[automatically_derived]
     impl alloy_sol_types::SolInterface for PauserRegistryErrors {
@@ -1374,9 +1233,7 @@ function unpauser() external view returns (address);
                 Self::InputAddressZero(_) => {
                     <InputAddressZero as alloy_sol_types::SolError>::SELECTOR
                 }
-                Self::OnlyUnpauser(_) => {
-                    <OnlyUnpauser as alloy_sol_types::SolError>::SELECTOR
-                }
+                Self::OnlyUnpauser(_) => <OnlyUnpauser as alloy_sol_types::SolError>::SELECTOR,
             }
         }
         #[inline]
@@ -1397,17 +1254,17 @@ function unpauser() external view returns (address);
             static DECODE_SHIMS: &[fn(
                 &[u8],
                 bool,
-            ) -> alloy_sol_types::Result<PauserRegistryErrors>] = &[
+            )
+                -> alloy_sol_types::Result<PauserRegistryErrors>] = &[
                 {
                     fn InputAddressZero(
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<PauserRegistryErrors> {
                         <InputAddressZero as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(PauserRegistryErrors::InputAddressZero)
+                            data, validate,
+                        )
+                        .map(PauserRegistryErrors::InputAddressZero)
                     }
                     InputAddressZero
                 },
@@ -1416,22 +1273,17 @@ function unpauser() external view returns (address);
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<PauserRegistryErrors> {
-                        <OnlyUnpauser as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
+                        <OnlyUnpauser as alloy_sol_types::SolError>::abi_decode_raw(data, validate)
                             .map(PauserRegistryErrors::OnlyUnpauser)
                     }
                     OnlyUnpauser
                 },
             ];
             let Ok(idx) = Self::SELECTORS.binary_search(&selector) else {
-                return Err(
-                    alloy_sol_types::Error::unknown_selector(
-                        <Self as alloy_sol_types::SolInterface>::NAME,
-                        selector,
-                    ),
-                );
+                return Err(alloy_sol_types::Error::unknown_selector(
+                    <Self as alloy_sol_types::SolInterface>::NAME,
+                    selector,
+                ));
             };
             (unsafe { DECODE_SHIMS.get_unchecked(idx) })(data, validate)
         }
@@ -1439,9 +1291,7 @@ function unpauser() external view returns (address);
         fn abi_encoded_size(&self) -> usize {
             match self {
                 Self::InputAddressZero(inner) => {
-                    <InputAddressZero as alloy_sol_types::SolError>::abi_encoded_size(
-                        inner,
-                    )
+                    <InputAddressZero as alloy_sol_types::SolError>::abi_encoded_size(inner)
                 }
                 Self::OnlyUnpauser(inner) => {
                     <OnlyUnpauser as alloy_sol_types::SolError>::abi_encoded_size(inner)
@@ -1452,16 +1302,10 @@ function unpauser() external view returns (address);
         fn abi_encode_raw(&self, out: &mut alloy_sol_types::private::Vec<u8>) {
             match self {
                 Self::InputAddressZero(inner) => {
-                    <InputAddressZero as alloy_sol_types::SolError>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <InputAddressZero as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
                 }
                 Self::OnlyUnpauser(inner) => {
-                    <OnlyUnpauser as alloy_sol_types::SolError>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <OnlyUnpauser as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
                 }
             }
         }
@@ -1481,72 +1325,14 @@ function unpauser() external view returns (address);
         /// Prefer using `SolInterface` methods instead.
         pub const SELECTORS: &'static [[u8; 32usize]] = &[
             [
-                6u8,
-                180u8,
-                22u8,
-                122u8,
-                37u8,
-                40u8,
-                136u8,
-                122u8,
-                30u8,
-                151u8,
-                163u8,
-                102u8,
-                238u8,
-                254u8,
-                133u8,
-                73u8,
-                191u8,
-                191u8,
-                30u8,
-                163u8,
-                230u8,
-                172u8,
-                129u8,
-                203u8,
-                37u8,
-                100u8,
-                169u8,
-                52u8,
-                210u8,
-                14u8,
-                136u8,
-                146u8,
+                6u8, 180u8, 22u8, 122u8, 37u8, 40u8, 136u8, 122u8, 30u8, 151u8, 163u8, 102u8,
+                238u8, 254u8, 133u8, 73u8, 191u8, 191u8, 30u8, 163u8, 230u8, 172u8, 129u8, 203u8,
+                37u8, 100u8, 169u8, 52u8, 210u8, 14u8, 136u8, 146u8,
             ],
             [
-                101u8,
-                211u8,
-                161u8,
-                253u8,
-                76u8,
-                19u8,
-                240u8,
-                92u8,
-                186u8,
-                22u8,
-                79u8,
-                128u8,
-                208u8,
-                60u8,
-                233u8,
-                15u8,
-                180u8,
-                181u8,
-                226u8,
-                25u8,
-                70u8,
-                191u8,
-                195u8,
-                171u8,
-                125u8,
-                189u8,
-                67u8,
-                76u8,
-                45u8,
-                11u8,
-                145u8,
-                82u8,
+                101u8, 211u8, 161u8, 253u8, 76u8, 19u8, 240u8, 92u8, 186u8, 22u8, 79u8, 128u8,
+                208u8, 60u8, 233u8, 15u8, 180u8, 181u8, 226u8, 25u8, 70u8, 191u8, 195u8, 171u8,
+                125u8, 189u8, 67u8, 76u8, 45u8, 11u8, 145u8, 82u8,
             ],
         ];
     }
@@ -1560,35 +1346,27 @@ function unpauser() external view returns (address);
             validate: bool,
         ) -> alloy_sol_types::Result<Self> {
             match topics.first().copied() {
-                Some(
-                    <PauserStatusChanged as alloy_sol_types::SolEvent>::SIGNATURE_HASH,
-                ) => {
+                Some(<PauserStatusChanged as alloy_sol_types::SolEvent>::SIGNATURE_HASH) => {
                     <PauserStatusChanged as alloy_sol_types::SolEvent>::decode_raw_log(
-                            topics,
-                            data,
-                            validate,
-                        )
-                        .map(Self::PauserStatusChanged)
+                        topics, data, validate,
+                    )
+                    .map(Self::PauserStatusChanged)
                 }
                 Some(<UnpauserChanged as alloy_sol_types::SolEvent>::SIGNATURE_HASH) => {
                     <UnpauserChanged as alloy_sol_types::SolEvent>::decode_raw_log(
-                            topics,
-                            data,
-                            validate,
-                        )
-                        .map(Self::UnpauserChanged)
+                        topics, data, validate,
+                    )
+                    .map(Self::UnpauserChanged)
                 }
-                _ => {
-                    alloy_sol_types::private::Err(alloy_sol_types::Error::InvalidLog {
-                        name: <Self as alloy_sol_types::SolEventInterface>::NAME,
-                        log: alloy_sol_types::private::Box::new(
-                            alloy_sol_types::private::LogData::new_unchecked(
-                                topics.to_vec(),
-                                data.to_vec().into(),
-                            ),
+                _ => alloy_sol_types::private::Err(alloy_sol_types::Error::InvalidLog {
+                    name: <Self as alloy_sol_types::SolEventInterface>::NAME,
+                    log: alloy_sol_types::private::Box::new(
+                        alloy_sol_types::private::LogData::new_unchecked(
+                            topics.to_vec(),
+                            data.to_vec().into(),
                         ),
-                    })
-                }
+                    ),
+                }),
             }
         }
     }
@@ -1618,7 +1396,7 @@ function unpauser() external view returns (address);
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`PauserRegistry`](self) contract instance.
 
-See the [wrapper's documentation](`PauserRegistryInstance`) for more details.*/
+    See the [wrapper's documentation](`PauserRegistryInstance`) for more details.*/
     #[inline]
     pub const fn new<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -1632,9 +1410,9 @@ See the [wrapper's documentation](`PauserRegistryInstance`) for more details.*/
     }
     /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+    Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+    For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
     #[inline]
     pub fn deploy<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -1644,16 +1422,15 @@ For more fine-grained control over the deployment process, use [`deploy_builder`
         provider: P,
         _pausers: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
         _unpauser: alloy::sol_types::private::Address,
-    ) -> impl ::core::future::Future<
-        Output = alloy_contract::Result<PauserRegistryInstance<T, P, N>>,
-    > {
+    ) -> impl ::core::future::Future<Output = alloy_contract::Result<PauserRegistryInstance<T, P, N>>>
+    {
         PauserRegistryInstance::<T, P, N>::deploy(provider, _pausers, _unpauser)
     }
     /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+    and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+    This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+    the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     #[inline]
     pub fn deploy_builder<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -1668,15 +1445,15 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     }
     /**A [`PauserRegistry`](self) instance.
 
-Contains type-safe methods for interacting with an on-chain instance of the
-[`PauserRegistry`](self) contract located at a given `address`, using a given
-provider `P`.
+    Contains type-safe methods for interacting with an on-chain instance of the
+    [`PauserRegistry`](self) contract located at a given `address`, using a given
+    provider `P`.
 
-If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
-documentation on how to provide it), the `deploy` and `deploy_builder` methods can
-be used to deploy a new instance of the contract.
+    If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
+    documentation on how to provide it), the `deploy` and `deploy_builder` methods can
+    be used to deploy a new instance of the contract.
 
-See the [module-level documentation](self) for all the available methods.*/
+    See the [module-level documentation](self) for all the available methods.*/
     #[derive(Clone)]
     pub struct PauserRegistryInstance<T, P, N = alloy_contract::private::Ethereum> {
         address: alloy_sol_types::private::Address,
@@ -1687,24 +1464,24 @@ See the [module-level documentation](self) for all the available methods.*/
     impl<T, P, N> ::core::fmt::Debug for PauserRegistryInstance<T, P, N> {
         #[inline]
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-            f.debug_tuple("PauserRegistryInstance").field(&self.address).finish()
+            f.debug_tuple("PauserRegistryInstance")
+                .field(&self.address)
+                .finish()
         }
     }
     /// Instantiation and getters/setters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > PauserRegistryInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > PauserRegistryInstance<T, P, N>
+    {
         /**Creates a new wrapper around an on-chain [`PauserRegistry`](self) contract instance.
 
-See the [wrapper's documentation](`PauserRegistryInstance`) for more details.*/
+        See the [wrapper's documentation](`PauserRegistryInstance`) for more details.*/
         #[inline]
-        pub const fn new(
-            address: alloy_sol_types::private::Address,
-            provider: P,
-        ) -> Self {
+        pub const fn new(address: alloy_sol_types::private::Address, provider: P) -> Self {
             Self {
                 address,
                 provider,
@@ -1713,9 +1490,9 @@ See the [wrapper's documentation](`PauserRegistryInstance`) for more details.*/
         }
         /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+        Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+        For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
         #[inline]
         pub async fn deploy(
             provider: P,
@@ -1727,10 +1504,10 @@ For more fine-grained control over the deployment process, use [`deploy_builder`
             Ok(Self::new(contract_address, call_builder.provider))
         }
         /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+        and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+        This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+        the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         #[inline]
         pub fn deploy_builder(
             provider: P,
@@ -1741,15 +1518,13 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
                 provider,
                 [
                     &BYTECODE[..],
-                    &alloy_sol_types::SolConstructor::abi_encode(
-                        &constructorCall {
-                            _pausers,
-                            _unpauser,
-                        },
-                    )[..],
+                    &alloy_sol_types::SolConstructor::abi_encode(&constructorCall {
+                        _pausers,
+                        _unpauser,
+                    })[..],
                 ]
-                    .concat()
-                    .into(),
+                .concat()
+                .into(),
             )
         }
         /// Returns a reference to the address.
@@ -1787,10 +1562,11 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     /// Function calls.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > PauserRegistryInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > PauserRegistryInstance<T, P, N>
+    {
         /// Creates a new call builder using this contract instance's provider and address.
         ///
         /// Note that the call can be any function call, not just those defined in this
@@ -1814,12 +1590,10 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
             newPauser: alloy::sol_types::private::Address,
             canPause: bool,
         ) -> alloy_contract::SolCallBuilder<T, &P, setIsPauserCall, N> {
-            self.call_builder(
-                &setIsPauserCall {
-                    newPauser,
-                    canPause,
-                },
-            )
+            self.call_builder(&setIsPauserCall {
+                newPauser,
+                canPause,
+            })
         }
         ///Creates a new call builder for the [`setUnpauser`] function.
         pub fn setUnpauser(
@@ -1829,19 +1603,18 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
             self.call_builder(&setUnpauserCall { newUnpauser })
         }
         ///Creates a new call builder for the [`unpauser`] function.
-        pub fn unpauser(
-            &self,
-        ) -> alloy_contract::SolCallBuilder<T, &P, unpauserCall, N> {
+        pub fn unpauser(&self) -> alloy_contract::SolCallBuilder<T, &P, unpauserCall, N> {
             self.call_builder(&unpauserCall {})
         }
     }
     /// Event filters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > PauserRegistryInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > PauserRegistryInstance<T, P, N>
+    {
         /// Creates a new event filter using this contract instance's provider and address.
         ///
         /// Note that the type can be any event, not just those defined in this contract.
@@ -1858,9 +1631,7 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
             self.event_filter::<PauserStatusChanged>()
         }
         ///Creates a new event filter for the [`UnpauserChanged`] event.
-        pub fn UnpauserChanged_filter(
-            &self,
-        ) -> alloy_contract::Event<T, &P, UnpauserChanged, N> {
+        pub fn UnpauserChanged_filter(&self) -> alloy_contract::Event<T, &P, UnpauserChanged, N> {
             self.event_filter::<UnpauserChanged>()
         }
     }

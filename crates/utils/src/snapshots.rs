@@ -29,27 +29,27 @@ pub mod Snapshots {
     /// The creation / init bytecode of the contract.
     ///
     /// ```text
-    ///0x6055604b600b8282823980515f1a607314603f577f4e487b71000000000000000000000000000000000000000000000000000000005f525f60045260245ffd5b305f52607381538281f3fe730000000000000000000000000000000000000000301460806040525f5ffdfea2646970667358221220c5f21ee22f6315d1e461b207174a8e07d6d221b07f22765d20a383d905a8d81664736f6c634300081b0033
+    ///0x6080806040523460175760399081601c823930815050f35b5f80fdfe5f80fdfea264697066735822122031ac7248c52309c4579d55023ca380d7ab2b01b70e733101d60536c9348123b864736f6c634300081b0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"`U`K`\x0B\x82\x82\x829\x80Q_\x1A`s\x14`?W\x7FNH{q\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0_R_`\x04R`$_\xFD[0_R`s\x81S\x82\x81\xF3\xFEs\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x000\x14`\x80`@R__\xFD\xFE\xA2dipfsX\"\x12 \xC5\xF2\x1E\xE2/c\x15\xD1\xE4a\xB2\x07\x17J\x8E\x07\xD6\xD2!\xB0\x7F\"v] \xA3\x83\xD9\x05\xA8\xD8\x16dsolcC\0\x08\x1B\x003",
+        b"`\x80\x80`@R4`\x17W`9\x90\x81`\x1C\x8290\x81PP\xF3[_\x80\xFD\xFE_\x80\xFD\xFE\xA2dipfsX\"\x12 1\xACrH\xC5#\t\xC4W\x9DU\x02<\xA3\x80\xD7\xAB+\x01\xB7\x0Es1\x01\xD6\x056\xC94\x81#\xB8dsolcC\0\x08\x1B\x003",
     );
     /// The runtime bytecode of the contract, as deployed on the network.
     ///
     /// ```text
-    ///0x730000000000000000000000000000000000000000301460806040525f5ffdfea2646970667358221220c5f21ee22f6315d1e461b207174a8e07d6d221b07f22765d20a383d905a8d81664736f6c634300081b0033
+    ///0x5f80fdfea264697066735822122031ac7248c52309c4579d55023ca380d7ab2b01b70e733101d60536c9348123b864736f6c634300081b0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static DEPLOYED_BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"s\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x000\x14`\x80`@R__\xFD\xFE\xA2dipfsX\"\x12 \xC5\xF2\x1E\xE2/c\x15\xD1\xE4a\xB2\x07\x17J\x8E\x07\xD6\xD2!\xB0\x7F\"v] \xA3\x83\xD9\x05\xA8\xD8\x16dsolcC\0\x08\x1B\x003",
+        b"_\x80\xFD\xFE\xA2dipfsX\"\x12 1\xACrH\xC5#\t\xC4W\x9DU\x02<\xA3\x80\xD7\xAB+\x01\xB7\x0Es1\x01\xD6\x056\xC94\x81#\xB8dsolcC\0\x08\x1B\x003",
     );
     /**Custom error with signature `InvalidSnapshotOrdering()` and selector `0x2a371c7e`.
-```solidity
-error InvalidSnapshotOrdering();
-```*/
+    ```solidity
+    error InvalidSnapshotOrdering();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct InvalidSnapshotOrdering {}
@@ -67,9 +67,7 @@ error InvalidSnapshotOrdering();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -93,9 +91,7 @@ error InvalidSnapshotOrdering();
         #[automatically_derived]
         impl alloy_sol_types::SolError for InvalidSnapshotOrdering {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "InvalidSnapshotOrdering()";
             const SELECTOR: [u8; 4] = [42u8, 55u8, 28u8, 126u8];
             #[inline]
@@ -152,31 +148,24 @@ error InvalidSnapshotOrdering();
             data: &[u8],
             validate: bool,
         ) -> alloy_sol_types::Result<Self> {
-            static DECODE_SHIMS: &[fn(
-                &[u8],
-                bool,
-            ) -> alloy_sol_types::Result<SnapshotsErrors>] = &[
-                {
+            static DECODE_SHIMS: &[fn(&[u8], bool) -> alloy_sol_types::Result<SnapshotsErrors>] =
+                &[{
                     fn InvalidSnapshotOrdering(
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<SnapshotsErrors> {
                         <InvalidSnapshotOrdering as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(SnapshotsErrors::InvalidSnapshotOrdering)
+                            data, validate,
+                        )
+                        .map(SnapshotsErrors::InvalidSnapshotOrdering)
                     }
                     InvalidSnapshotOrdering
-                },
-            ];
+                }];
             let Ok(idx) = Self::SELECTORS.binary_search(&selector) else {
-                return Err(
-                    alloy_sol_types::Error::unknown_selector(
-                        <Self as alloy_sol_types::SolInterface>::NAME,
-                        selector,
-                    ),
-                );
+                return Err(alloy_sol_types::Error::unknown_selector(
+                    <Self as alloy_sol_types::SolInterface>::NAME,
+                    selector,
+                ));
             };
             (unsafe { DECODE_SHIMS.get_unchecked(idx) })(data, validate)
         }
@@ -184,9 +173,7 @@ error InvalidSnapshotOrdering();
         fn abi_encoded_size(&self) -> usize {
             match self {
                 Self::InvalidSnapshotOrdering(inner) => {
-                    <InvalidSnapshotOrdering as alloy_sol_types::SolError>::abi_encoded_size(
-                        inner,
-                    )
+                    <InvalidSnapshotOrdering as alloy_sol_types::SolError>::abi_encoded_size(inner)
                 }
             }
         }
@@ -195,8 +182,7 @@ error InvalidSnapshotOrdering();
             match self {
                 Self::InvalidSnapshotOrdering(inner) => {
                     <InvalidSnapshotOrdering as alloy_sol_types::SolError>::abi_encode_raw(
-                        inner,
-                        out,
+                        inner, out,
                     )
                 }
             }
@@ -205,7 +191,7 @@ error InvalidSnapshotOrdering();
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`Snapshots`](self) contract instance.
 
-See the [wrapper's documentation](`SnapshotsInstance`) for more details.*/
+    See the [wrapper's documentation](`SnapshotsInstance`) for more details.*/
     #[inline]
     pub const fn new<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -219,9 +205,9 @@ See the [wrapper's documentation](`SnapshotsInstance`) for more details.*/
     }
     /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+    Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+    For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
     #[inline]
     pub fn deploy<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -229,35 +215,36 @@ For more fine-grained control over the deployment process, use [`deploy_builder`
         N: alloy_contract::private::Network,
     >(
         provider: P,
-    ) -> impl ::core::future::Future<
-        Output = alloy_contract::Result<SnapshotsInstance<T, P, N>>,
-    > {
+    ) -> impl ::core::future::Future<Output = alloy_contract::Result<SnapshotsInstance<T, P, N>>>
+    {
         SnapshotsInstance::<T, P, N>::deploy(provider)
     }
     /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+    and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+    This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+    the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     #[inline]
     pub fn deploy_builder<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
         P: alloy_contract::private::Provider<T, N>,
         N: alloy_contract::private::Network,
-    >(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
+    >(
+        provider: P,
+    ) -> alloy_contract::RawCallBuilder<T, P, N> {
         SnapshotsInstance::<T, P, N>::deploy_builder(provider)
     }
     /**A [`Snapshots`](self) instance.
 
-Contains type-safe methods for interacting with an on-chain instance of the
-[`Snapshots`](self) contract located at a given `address`, using a given
-provider `P`.
+    Contains type-safe methods for interacting with an on-chain instance of the
+    [`Snapshots`](self) contract located at a given `address`, using a given
+    provider `P`.
 
-If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
-documentation on how to provide it), the `deploy` and `deploy_builder` methods can
-be used to deploy a new instance of the contract.
+    If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
+    documentation on how to provide it), the `deploy` and `deploy_builder` methods can
+    be used to deploy a new instance of the contract.
 
-See the [module-level documentation](self) for all the available methods.*/
+    See the [module-level documentation](self) for all the available methods.*/
     #[derive(Clone)]
     pub struct SnapshotsInstance<T, P, N = alloy_contract::private::Ethereum> {
         address: alloy_sol_types::private::Address,
@@ -268,24 +255,24 @@ See the [module-level documentation](self) for all the available methods.*/
     impl<T, P, N> ::core::fmt::Debug for SnapshotsInstance<T, P, N> {
         #[inline]
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-            f.debug_tuple("SnapshotsInstance").field(&self.address).finish()
+            f.debug_tuple("SnapshotsInstance")
+                .field(&self.address)
+                .finish()
         }
     }
     /// Instantiation and getters/setters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > SnapshotsInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > SnapshotsInstance<T, P, N>
+    {
         /**Creates a new wrapper around an on-chain [`Snapshots`](self) contract instance.
 
-See the [wrapper's documentation](`SnapshotsInstance`) for more details.*/
+        See the [wrapper's documentation](`SnapshotsInstance`) for more details.*/
         #[inline]
-        pub const fn new(
-            address: alloy_sol_types::private::Address,
-            provider: P,
-        ) -> Self {
+        pub const fn new(address: alloy_sol_types::private::Address, provider: P) -> Self {
             Self {
                 address,
                 provider,
@@ -294,22 +281,20 @@ See the [wrapper's documentation](`SnapshotsInstance`) for more details.*/
         }
         /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+        Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+        For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
         #[inline]
-        pub async fn deploy(
-            provider: P,
-        ) -> alloy_contract::Result<SnapshotsInstance<T, P, N>> {
+        pub async fn deploy(provider: P) -> alloy_contract::Result<SnapshotsInstance<T, P, N>> {
             let call_builder = Self::deploy_builder(provider);
             let contract_address = call_builder.deploy().await?;
             Ok(Self::new(contract_address, call_builder.provider))
         }
         /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+        and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+        This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+        the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         #[inline]
         pub fn deploy_builder(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
             alloy_contract::RawCallBuilder::new_raw_deploy(
@@ -352,10 +337,11 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     /// Function calls.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > SnapshotsInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > SnapshotsInstance<T, P, N>
+    {
         /// Creates a new call builder using this contract instance's provider and address.
         ///
         /// Note that the call can be any function call, not just those defined in this
@@ -370,10 +356,11 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     /// Event filters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > SnapshotsInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > SnapshotsInstance<T, P, N>
+    {
         /// Creates a new event filter using this contract instance's provider and address.
         ///
         /// Note that the type can be any event, not just those defined in this contract.

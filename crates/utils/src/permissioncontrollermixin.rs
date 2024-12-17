@@ -62,9 +62,9 @@ pub mod PermissionControllerMixin {
         b"",
     );
     /**Custom error with signature `InvalidPermissions()` and selector `0x932d94f7`.
-```solidity
-error InvalidPermissions();
-```*/
+    ```solidity
+    error InvalidPermissions();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct InvalidPermissions {}
@@ -82,9 +82,7 @@ error InvalidPermissions();
         type UnderlyingRustTuple<'a> = ();
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -108,9 +106,7 @@ error InvalidPermissions();
         #[automatically_derived]
         impl alloy_sol_types::SolError for InvalidPermissions {
             type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "InvalidPermissions()";
             const SELECTOR: [u8; 4] = [147u8, 45u8, 148u8, 247u8];
             #[inline]
@@ -126,9 +122,9 @@ error InvalidPermissions();
         }
     };
     /**Function with signature `permissionController()` and selector `0x4657e26a`.
-```solidity
-function permissionController() external view returns (address);
-```*/
+    ```solidity
+    function permissionController() external view returns (address);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct permissionControllerCall {}
@@ -153,9 +149,7 @@ function permissionController() external view returns (address);
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -164,16 +158,14 @@ function permissionController() external view returns (address);
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<permissionControllerCall>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<permissionControllerCall> for UnderlyingRustTuple<'_> {
                 fn from(value: permissionControllerCall) -> Self {
                     ()
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for permissionControllerCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for permissionControllerCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
@@ -186,9 +178,7 @@ function permissionController() external view returns (address);
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -197,16 +187,14 @@ function permissionController() external view returns (address);
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<permissionControllerReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<permissionControllerReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: permissionControllerReturn) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for permissionControllerReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for permissionControllerReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -215,14 +203,10 @@ function permissionController() external view returns (address);
         #[automatically_derived]
         impl alloy_sol_types::SolCall for permissionControllerCall {
             type Parameters<'a> = ();
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = permissionControllerReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Address,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "permissionController()";
             const SELECTOR: [u8; 4] = [70u8, 87u8, 226u8, 106u8];
             #[inline]
@@ -240,10 +224,10 @@ function permissionController() external view returns (address);
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
@@ -292,28 +276,25 @@ function permissionController() external view returns (address);
             static DECODE_SHIMS: &[fn(
                 &[u8],
                 bool,
-            ) -> alloy_sol_types::Result<PermissionControllerMixinCalls>] = &[
-                {
-                    fn permissionController(
-                        data: &[u8],
-                        validate: bool,
-                    ) -> alloy_sol_types::Result<PermissionControllerMixinCalls> {
-                        <permissionControllerCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(PermissionControllerMixinCalls::permissionController)
-                    }
-                    permissionController
-                },
-            ];
+            ) -> alloy_sol_types::Result<
+                PermissionControllerMixinCalls,
+            >] = &[{
+                fn permissionController(
+                    data: &[u8],
+                    validate: bool,
+                ) -> alloy_sol_types::Result<PermissionControllerMixinCalls> {
+                    <permissionControllerCall as alloy_sol_types::SolCall>::abi_decode_raw(
+                        data, validate,
+                    )
+                    .map(PermissionControllerMixinCalls::permissionController)
+                }
+                permissionController
+            }];
             let Ok(idx) = Self::SELECTORS.binary_search(&selector) else {
-                return Err(
-                    alloy_sol_types::Error::unknown_selector(
-                        <Self as alloy_sol_types::SolInterface>::NAME,
-                        selector,
-                    ),
-                );
+                return Err(alloy_sol_types::Error::unknown_selector(
+                    <Self as alloy_sol_types::SolInterface>::NAME,
+                    selector,
+                ));
             };
             (unsafe { DECODE_SHIMS.get_unchecked(idx) })(data, validate)
         }
@@ -321,9 +302,7 @@ function permissionController() external view returns (address);
         fn abi_encoded_size(&self) -> usize {
             match self {
                 Self::permissionController(inner) => {
-                    <permissionControllerCall as alloy_sol_types::SolCall>::abi_encoded_size(
-                        inner,
-                    )
+                    <permissionControllerCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
                 }
             }
         }
@@ -332,8 +311,7 @@ function permissionController() external view returns (address);
             match self {
                 Self::permissionController(inner) => {
                     <permissionControllerCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
+                        inner, out,
                     )
                 }
             }
@@ -384,28 +362,25 @@ function permissionController() external view returns (address);
             static DECODE_SHIMS: &[fn(
                 &[u8],
                 bool,
-            ) -> alloy_sol_types::Result<PermissionControllerMixinErrors>] = &[
-                {
-                    fn InvalidPermissions(
-                        data: &[u8],
-                        validate: bool,
-                    ) -> alloy_sol_types::Result<PermissionControllerMixinErrors> {
-                        <InvalidPermissions as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(PermissionControllerMixinErrors::InvalidPermissions)
-                    }
-                    InvalidPermissions
-                },
-            ];
+            ) -> alloy_sol_types::Result<
+                PermissionControllerMixinErrors,
+            >] = &[{
+                fn InvalidPermissions(
+                    data: &[u8],
+                    validate: bool,
+                ) -> alloy_sol_types::Result<PermissionControllerMixinErrors> {
+                    <InvalidPermissions as alloy_sol_types::SolError>::abi_decode_raw(
+                        data, validate,
+                    )
+                    .map(PermissionControllerMixinErrors::InvalidPermissions)
+                }
+                InvalidPermissions
+            }];
             let Ok(idx) = Self::SELECTORS.binary_search(&selector) else {
-                return Err(
-                    alloy_sol_types::Error::unknown_selector(
-                        <Self as alloy_sol_types::SolInterface>::NAME,
-                        selector,
-                    ),
-                );
+                return Err(alloy_sol_types::Error::unknown_selector(
+                    <Self as alloy_sol_types::SolInterface>::NAME,
+                    selector,
+                ));
             };
             (unsafe { DECODE_SHIMS.get_unchecked(idx) })(data, validate)
         }
@@ -413,9 +388,7 @@ function permissionController() external view returns (address);
         fn abi_encoded_size(&self) -> usize {
             match self {
                 Self::InvalidPermissions(inner) => {
-                    <InvalidPermissions as alloy_sol_types::SolError>::abi_encoded_size(
-                        inner,
-                    )
+                    <InvalidPermissions as alloy_sol_types::SolError>::abi_encoded_size(inner)
                 }
             }
         }
@@ -423,10 +396,7 @@ function permissionController() external view returns (address);
         fn abi_encode_raw(&self, out: &mut alloy_sol_types::private::Vec<u8>) {
             match self {
                 Self::InvalidPermissions(inner) => {
-                    <InvalidPermissions as alloy_sol_types::SolError>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <InvalidPermissions as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
                 }
             }
         }
@@ -434,7 +404,7 @@ function permissionController() external view returns (address);
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`PermissionControllerMixin`](self) contract instance.
 
-See the [wrapper's documentation](`PermissionControllerMixinInstance`) for more details.*/
+    See the [wrapper's documentation](`PermissionControllerMixinInstance`) for more details.*/
     #[inline]
     pub const fn new<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -448,9 +418,9 @@ See the [wrapper's documentation](`PermissionControllerMixinInstance`) for more 
     }
     /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+    Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+    For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
     #[inline]
     pub fn deploy<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -464,35 +434,33 @@ For more fine-grained control over the deployment process, use [`deploy_builder`
         PermissionControllerMixinInstance::<T, P, N>::deploy(provider)
     }
     /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+    and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+    This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+    the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     #[inline]
     pub fn deploy_builder<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
         P: alloy_contract::private::Provider<T, N>,
         N: alloy_contract::private::Network,
-    >(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
+    >(
+        provider: P,
+    ) -> alloy_contract::RawCallBuilder<T, P, N> {
         PermissionControllerMixinInstance::<T, P, N>::deploy_builder(provider)
     }
     /**A [`PermissionControllerMixin`](self) instance.
 
-Contains type-safe methods for interacting with an on-chain instance of the
-[`PermissionControllerMixin`](self) contract located at a given `address`, using a given
-provider `P`.
+    Contains type-safe methods for interacting with an on-chain instance of the
+    [`PermissionControllerMixin`](self) contract located at a given `address`, using a given
+    provider `P`.
 
-If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
-documentation on how to provide it), the `deploy` and `deploy_builder` methods can
-be used to deploy a new instance of the contract.
+    If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
+    documentation on how to provide it), the `deploy` and `deploy_builder` methods can
+    be used to deploy a new instance of the contract.
 
-See the [module-level documentation](self) for all the available methods.*/
+    See the [module-level documentation](self) for all the available methods.*/
     #[derive(Clone)]
-    pub struct PermissionControllerMixinInstance<
-        T,
-        P,
-        N = alloy_contract::private::Ethereum,
-    > {
+    pub struct PermissionControllerMixinInstance<T, P, N = alloy_contract::private::Ethereum> {
         address: alloy_sol_types::private::Address,
         provider: P,
         _network_transport: ::core::marker::PhantomData<(N, T)>,
@@ -509,18 +477,16 @@ See the [module-level documentation](self) for all the available methods.*/
     /// Instantiation and getters/setters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > PermissionControllerMixinInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > PermissionControllerMixinInstance<T, P, N>
+    {
         /**Creates a new wrapper around an on-chain [`PermissionControllerMixin`](self) contract instance.
 
-See the [wrapper's documentation](`PermissionControllerMixinInstance`) for more details.*/
+        See the [wrapper's documentation](`PermissionControllerMixinInstance`) for more details.*/
         #[inline]
-        pub const fn new(
-            address: alloy_sol_types::private::Address,
-            provider: P,
-        ) -> Self {
+        pub const fn new(address: alloy_sol_types::private::Address, provider: P) -> Self {
             Self {
                 address,
                 provider,
@@ -529,9 +495,9 @@ See the [wrapper's documentation](`PermissionControllerMixinInstance`) for more 
         }
         /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+        Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+        For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
         #[inline]
         pub async fn deploy(
             provider: P,
@@ -541,10 +507,10 @@ For more fine-grained control over the deployment process, use [`deploy_builder`
             Ok(Self::new(contract_address, call_builder.provider))
         }
         /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+        and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+        This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+        the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         #[inline]
         pub fn deploy_builder(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
             alloy_contract::RawCallBuilder::new_raw_deploy(
@@ -587,10 +553,11 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     /// Function calls.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > PermissionControllerMixinInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > PermissionControllerMixinInstance<T, P, N>
+    {
         /// Creates a new call builder using this contract instance's provider and address.
         ///
         /// Note that the call can be any function call, not just those defined in this
@@ -611,10 +578,11 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     /// Event filters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > PermissionControllerMixinInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > PermissionControllerMixinInstance<T, P, N>
+    {
         /// Creates a new event filter using this contract instance's provider and address.
         ///
         /// Note that the type can be any event, not just those defined in this contract.

@@ -21,27 +21,27 @@ pub mod SafeCast {
     /// The creation / init bytecode of the contract.
     ///
     /// ```text
-    ///0x6055604b600b8282823980515f1a607314603f577f4e487b71000000000000000000000000000000000000000000000000000000005f525f60045260245ffd5b305f52607381538281f3fe730000000000000000000000000000000000000000301460806040525f5ffdfea26469706673582212203da8090e55013e99782fd0db9f8ccb1bf54438c2a4c75e369c97f8d8c8a0171b64736f6c634300081b0033
+    ///0x6080806040523460175760399081601c823930815050f35b5f80fdfe5f80fdfea26469706673582212209319d9f7f8227bb58e4ff1409dc1bd4866a7e4666a33ae9cccf4224a74e346e364736f6c634300081b0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"`U`K`\x0B\x82\x82\x829\x80Q_\x1A`s\x14`?W\x7FNH{q\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0_R_`\x04R`$_\xFD[0_R`s\x81S\x82\x81\xF3\xFEs\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x000\x14`\x80`@R__\xFD\xFE\xA2dipfsX\"\x12 =\xA8\t\x0EU\x01>\x99x/\xD0\xDB\x9F\x8C\xCB\x1B\xF5D8\xC2\xA4\xC7^6\x9C\x97\xF8\xD8\xC8\xA0\x17\x1BdsolcC\0\x08\x1B\x003",
+        b"`\x80\x80`@R4`\x17W`9\x90\x81`\x1C\x8290\x81PP\xF3[_\x80\xFD\xFE_\x80\xFD\xFE\xA2dipfsX\"\x12 \x93\x19\xD9\xF7\xF8\"{\xB5\x8EO\xF1@\x9D\xC1\xBDHf\xA7\xE4fj3\xAE\x9C\xCC\xF4\"Jt\xE3F\xE3dsolcC\0\x08\x1B\x003",
     );
     /// The runtime bytecode of the contract, as deployed on the network.
     ///
     /// ```text
-    ///0x730000000000000000000000000000000000000000301460806040525f5ffdfea26469706673582212203da8090e55013e99782fd0db9f8ccb1bf54438c2a4c75e369c97f8d8c8a0171b64736f6c634300081b0033
+    ///0x5f80fdfea26469706673582212209319d9f7f8227bb58e4ff1409dc1bd4866a7e4666a33ae9cccf4224a74e346e364736f6c634300081b0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static DEPLOYED_BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"s\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x000\x14`\x80`@R__\xFD\xFE\xA2dipfsX\"\x12 =\xA8\t\x0EU\x01>\x99x/\xD0\xDB\x9F\x8C\xCB\x1B\xF5D8\xC2\xA4\xC7^6\x9C\x97\xF8\xD8\xC8\xA0\x17\x1BdsolcC\0\x08\x1B\x003",
+        b"_\x80\xFD\xFE\xA2dipfsX\"\x12 \x93\x19\xD9\xF7\xF8\"{\xB5\x8EO\xF1@\x9D\xC1\xBDHf\xA7\xE4fj3\xAE\x9C\xCC\xF4\"Jt\xE3F\xE3dsolcC\0\x08\x1B\x003",
     );
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`SafeCast`](self) contract instance.
 
-See the [wrapper's documentation](`SafeCastInstance`) for more details.*/
+    See the [wrapper's documentation](`SafeCastInstance`) for more details.*/
     #[inline]
     pub const fn new<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -55,9 +55,9 @@ See the [wrapper's documentation](`SafeCastInstance`) for more details.*/
     }
     /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+    Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+    For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
     #[inline]
     pub fn deploy<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -65,35 +65,36 @@ For more fine-grained control over the deployment process, use [`deploy_builder`
         N: alloy_contract::private::Network,
     >(
         provider: P,
-    ) -> impl ::core::future::Future<
-        Output = alloy_contract::Result<SafeCastInstance<T, P, N>>,
-    > {
+    ) -> impl ::core::future::Future<Output = alloy_contract::Result<SafeCastInstance<T, P, N>>>
+    {
         SafeCastInstance::<T, P, N>::deploy(provider)
     }
     /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+    and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+    This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+    the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     #[inline]
     pub fn deploy_builder<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
         P: alloy_contract::private::Provider<T, N>,
         N: alloy_contract::private::Network,
-    >(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
+    >(
+        provider: P,
+    ) -> alloy_contract::RawCallBuilder<T, P, N> {
         SafeCastInstance::<T, P, N>::deploy_builder(provider)
     }
     /**A [`SafeCast`](self) instance.
 
-Contains type-safe methods for interacting with an on-chain instance of the
-[`SafeCast`](self) contract located at a given `address`, using a given
-provider `P`.
+    Contains type-safe methods for interacting with an on-chain instance of the
+    [`SafeCast`](self) contract located at a given `address`, using a given
+    provider `P`.
 
-If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
-documentation on how to provide it), the `deploy` and `deploy_builder` methods can
-be used to deploy a new instance of the contract.
+    If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
+    documentation on how to provide it), the `deploy` and `deploy_builder` methods can
+    be used to deploy a new instance of the contract.
 
-See the [module-level documentation](self) for all the available methods.*/
+    See the [module-level documentation](self) for all the available methods.*/
     #[derive(Clone)]
     pub struct SafeCastInstance<T, P, N = alloy_contract::private::Ethereum> {
         address: alloy_sol_types::private::Address,
@@ -104,24 +105,24 @@ See the [module-level documentation](self) for all the available methods.*/
     impl<T, P, N> ::core::fmt::Debug for SafeCastInstance<T, P, N> {
         #[inline]
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-            f.debug_tuple("SafeCastInstance").field(&self.address).finish()
+            f.debug_tuple("SafeCastInstance")
+                .field(&self.address)
+                .finish()
         }
     }
     /// Instantiation and getters/setters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > SafeCastInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > SafeCastInstance<T, P, N>
+    {
         /**Creates a new wrapper around an on-chain [`SafeCast`](self) contract instance.
 
-See the [wrapper's documentation](`SafeCastInstance`) for more details.*/
+        See the [wrapper's documentation](`SafeCastInstance`) for more details.*/
         #[inline]
-        pub const fn new(
-            address: alloy_sol_types::private::Address,
-            provider: P,
-        ) -> Self {
+        pub const fn new(address: alloy_sol_types::private::Address, provider: P) -> Self {
             Self {
                 address,
                 provider,
@@ -130,22 +131,20 @@ See the [wrapper's documentation](`SafeCastInstance`) for more details.*/
         }
         /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+        Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+        For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
         #[inline]
-        pub async fn deploy(
-            provider: P,
-        ) -> alloy_contract::Result<SafeCastInstance<T, P, N>> {
+        pub async fn deploy(provider: P) -> alloy_contract::Result<SafeCastInstance<T, P, N>> {
             let call_builder = Self::deploy_builder(provider);
             let contract_address = call_builder.deploy().await?;
             Ok(Self::new(contract_address, call_builder.provider))
         }
         /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+        and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+        This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+        the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         #[inline]
         pub fn deploy_builder(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
             alloy_contract::RawCallBuilder::new_raw_deploy(
@@ -188,10 +187,11 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     /// Function calls.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > SafeCastInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > SafeCastInstance<T, P, N>
+    {
         /// Creates a new call builder using this contract instance's provider and address.
         ///
         /// Note that the call can be any function call, not just those defined in this
@@ -206,10 +206,11 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     /// Event filters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > SafeCastInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > SafeCastInstance<T, P, N>
+    {
         /// Creates a new event filter using this contract instance's provider and address.
         ///
         /// Note that the type can be any event, not just those defined in this contract.

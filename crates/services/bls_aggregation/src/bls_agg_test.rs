@@ -213,7 +213,11 @@ pub mod integration_test {
             multiplier: U96::from(1),
         };
         let _ = contract_registry_coordinator
-            .createQuorum(operator_set_params, U96::from(0), vec![strategy_params])
+            .createTotalDelegatedStakeQuorum(
+                operator_set_params,
+                U96::from(0),
+                vec![strategy_params],
+            )
             .send()
             .await
             .unwrap();
@@ -317,7 +321,7 @@ pub mod integration_test {
             multiplier: U96::from(1),
         }];
         let _ = contract_registry_coordinator
-            .createQuorum(
+            .createTotalDelegatedStakeQuorum(
                 operator_set_params.clone(),
                 U96::from(0),
                 strategy_params.clone(),
@@ -522,7 +526,7 @@ pub mod integration_test {
             multiplier: U96::from(1),
         }];
         let _ = contract_registry_coordinator
-            .createQuorum(
+            .createTotalDelegatedStakeQuorum(
                 operator_set_params.clone(),
                 U96::from(0),
                 strategy_params.clone(),
@@ -533,7 +537,7 @@ pub mod integration_test {
             .watch()
             .await;
         let _ = contract_registry_coordinator
-            .createQuorum(
+            .createTotalDelegatedStakeQuorum(
                 operator_set_params.clone(),
                 U96::from(0),
                 strategy_params.clone(),
@@ -544,7 +548,7 @@ pub mod integration_test {
             .watch()
             .await;
         let _ = contract_registry_coordinator
-            .createQuorum(operator_set_params, U96::from(0), strategy_params)
+            .createTotalDelegatedStakeQuorum(operator_set_params, U96::from(0), strategy_params)
             .send()
             .await
             .unwrap()
@@ -742,7 +746,7 @@ pub mod integration_test {
             multiplier: U96::from(1),
         }];
         let _ = contract_registry_coordinator
-            .createQuorum(
+            .createTotalDelegatedStakeQuorum(
                 operator_set_params.clone(),
                 U96::from(0),
                 strategy_params.clone(),
@@ -753,7 +757,7 @@ pub mod integration_test {
             .watch()
             .await;
         let _ = contract_registry_coordinator
-            .createQuorum(operator_set_params, U96::from(0), strategy_params)
+            .createTotalDelegatedStakeQuorum(operator_set_params, U96::from(0), strategy_params)
             .send()
             .await
             .unwrap()
@@ -945,7 +949,7 @@ pub mod integration_test {
             multiplier: U96::from(1),
         }];
         let _ = contract_registry_coordinator
-            .createQuorum(
+            .createTotalDelegatedStakeQuorum(
                 operator_set_params.clone(),
                 U96::from(0),
                 strategy_params.clone(),
@@ -956,7 +960,7 @@ pub mod integration_test {
             .watch()
             .await;
         let _ = contract_registry_coordinator
-            .createQuorum(operator_set_params, U96::from(0), strategy_params)
+            .createTotalDelegatedStakeQuorum(operator_set_params, U96::from(0), strategy_params)
             .send()
             .await
             .unwrap()

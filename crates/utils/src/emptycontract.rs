@@ -37,27 +37,27 @@ pub mod EmptyContract {
     /// The creation / init bytecode of the contract.
     ///
     /// ```text
-    ///0x6080604052348015600e575f5ffd5b5060ae80601a5f395ff3fe6080604052348015600e575f5ffd5b50600436106026575f3560e01c8063c298557814602a575b5f5ffd5b60306044565b604051603b91906061565b60405180910390f35b5f5f905090565b5f819050919050565b605b81604b565b82525050565b5f60208201905060725f8301846054565b9291505056fea26469706673582212208ee61d9eee9227e997aeba72b24d15d241f569f1d5fd3d138941e65bae00407264736f6c634300081b0033
+    ///0x608080604052346013576073908160188239f35b5f80fdfe60808060405260043610156011575f80fd5b5f3560e01c63c2985578146023575f80fd5b346039575f366003190112603957805f60209252f35b5f80fdfea26469706673582212209c068529a4aa7d8d950107045536035a37a2378614f141c60f540b91ac731b0e64736f6c634300081b0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"`\x80`@R4\x80\x15`\x0EW__\xFD[P`\xAE\x80`\x1A_9_\xF3\xFE`\x80`@R4\x80\x15`\x0EW__\xFD[P`\x046\x10`&W_5`\xE0\x1C\x80c\xC2\x98Ux\x14`*W[__\xFD[`0`DV[`@Q`;\x91\x90`aV[`@Q\x80\x91\x03\x90\xF3[__\x90P\x90V[_\x81\x90P\x91\x90PV[`[\x81`KV[\x82RPPV[_` \x82\x01\x90P`r_\x83\x01\x84`TV[\x92\x91PPV\xFE\xA2dipfsX\"\x12 \x8E\xE6\x1D\x9E\xEE\x92'\xE9\x97\xAE\xBAr\xB2M\x15\xD2A\xF5i\xF1\xD5\xFD=\x13\x89A\xE6[\xAE\0@rdsolcC\0\x08\x1B\x003",
+        b"`\x80\x80`@R4`\x13W`s\x90\x81`\x18\x829\xF3[_\x80\xFD\xFE`\x80\x80`@R`\x046\x10\x15`\x11W_\x80\xFD[_5`\xE0\x1Cc\xC2\x98Ux\x14`#W_\x80\xFD[4`9W_6`\x03\x19\x01\x12`9W\x80_` \x92R\xF3[_\x80\xFD\xFE\xA2dipfsX\"\x12 \x9C\x06\x85)\xA4\xAA}\x8D\x95\x01\x07\x04U6\x03Z7\xA27\x86\x14\xF1A\xC6\x0FT\x0B\x91\xACs\x1B\x0EdsolcC\0\x08\x1B\x003",
     );
     /// The runtime bytecode of the contract, as deployed on the network.
     ///
     /// ```text
-    ///0x6080604052348015600e575f5ffd5b50600436106026575f3560e01c8063c298557814602a575b5f5ffd5b60306044565b604051603b91906061565b60405180910390f35b5f5f905090565b5f819050919050565b605b81604b565b82525050565b5f60208201905060725f8301846054565b9291505056fea26469706673582212208ee61d9eee9227e997aeba72b24d15d241f569f1d5fd3d138941e65bae00407264736f6c634300081b0033
+    ///0x60808060405260043610156011575f80fd5b5f3560e01c63c2985578146023575f80fd5b346039575f366003190112603957805f60209252f35b5f80fdfea26469706673582212209c068529a4aa7d8d950107045536035a37a2378614f141c60f540b91ac731b0e64736f6c634300081b0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static DEPLOYED_BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"`\x80`@R4\x80\x15`\x0EW__\xFD[P`\x046\x10`&W_5`\xE0\x1C\x80c\xC2\x98Ux\x14`*W[__\xFD[`0`DV[`@Q`;\x91\x90`aV[`@Q\x80\x91\x03\x90\xF3[__\x90P\x90V[_\x81\x90P\x91\x90PV[`[\x81`KV[\x82RPPV[_` \x82\x01\x90P`r_\x83\x01\x84`TV[\x92\x91PPV\xFE\xA2dipfsX\"\x12 \x8E\xE6\x1D\x9E\xEE\x92'\xE9\x97\xAE\xBAr\xB2M\x15\xD2A\xF5i\xF1\xD5\xFD=\x13\x89A\xE6[\xAE\0@rdsolcC\0\x08\x1B\x003",
+        b"`\x80\x80`@R`\x046\x10\x15`\x11W_\x80\xFD[_5`\xE0\x1Cc\xC2\x98Ux\x14`#W_\x80\xFD[4`9W_6`\x03\x19\x01\x12`9W\x80_` \x92R\xF3[_\x80\xFD\xFE\xA2dipfsX\"\x12 \x9C\x06\x85)\xA4\xAA}\x8D\x95\x01\x07\x04U6\x03Z7\xA27\x86\x14\xF1A\xC6\x0FT\x0B\x91\xACs\x1B\x0EdsolcC\0\x08\x1B\x003",
     );
     /**Function with signature `foo()` and selector `0xc2985578`.
-```solidity
-function foo() external pure returns (uint256);
-```*/
+    ```solidity
+    function foo() external pure returns (uint256);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct fooCall {}
@@ -82,9 +82,7 @@ function foo() external pure returns (uint256);
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -110,14 +108,10 @@ function foo() external pure returns (uint256);
             #[doc(hidden)]
             type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (
-                alloy::sol_types::private::primitives::aliases::U256,
-            );
+            type UnderlyingRustTuple<'a> = (alloy::sol_types::private::primitives::aliases::U256,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -142,14 +136,10 @@ function foo() external pure returns (uint256);
         #[automatically_derived]
         impl alloy_sol_types::SolCall for fooCall {
             type Parameters<'a> = ();
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = fooReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "foo()";
             const SELECTOR: [u8; 4] = [194u8, 152u8, 85u8, 120u8];
             #[inline]
@@ -167,10 +157,10 @@ function foo() external pure returns (uint256);
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
@@ -217,37 +207,26 @@ function foo() external pure returns (uint256);
             static DECODE_SHIMS: &[fn(
                 &[u8],
                 bool,
-            ) -> alloy_sol_types::Result<EmptyContractCalls>] = &[
-                {
-                    fn foo(
-                        data: &[u8],
-                        validate: bool,
-                    ) -> alloy_sol_types::Result<EmptyContractCalls> {
-                        <fooCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(EmptyContractCalls::foo)
-                    }
-                    foo
-                },
-            ];
+            )
+                -> alloy_sol_types::Result<EmptyContractCalls>] = &[{
+                fn foo(data: &[u8], validate: bool) -> alloy_sol_types::Result<EmptyContractCalls> {
+                    <fooCall as alloy_sol_types::SolCall>::abi_decode_raw(data, validate)
+                        .map(EmptyContractCalls::foo)
+                }
+                foo
+            }];
             let Ok(idx) = Self::SELECTORS.binary_search(&selector) else {
-                return Err(
-                    alloy_sol_types::Error::unknown_selector(
-                        <Self as alloy_sol_types::SolInterface>::NAME,
-                        selector,
-                    ),
-                );
+                return Err(alloy_sol_types::Error::unknown_selector(
+                    <Self as alloy_sol_types::SolInterface>::NAME,
+                    selector,
+                ));
             };
             (unsafe { DECODE_SHIMS.get_unchecked(idx) })(data, validate)
         }
         #[inline]
         fn abi_encoded_size(&self) -> usize {
             match self {
-                Self::foo(inner) => {
-                    <fooCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
-                }
+                Self::foo(inner) => <fooCall as alloy_sol_types::SolCall>::abi_encoded_size(inner),
             }
         }
         #[inline]
@@ -262,7 +241,7 @@ function foo() external pure returns (uint256);
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`EmptyContract`](self) contract instance.
 
-See the [wrapper's documentation](`EmptyContractInstance`) for more details.*/
+    See the [wrapper's documentation](`EmptyContractInstance`) for more details.*/
     #[inline]
     pub const fn new<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -276,9 +255,9 @@ See the [wrapper's documentation](`EmptyContractInstance`) for more details.*/
     }
     /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+    Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+    For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
     #[inline]
     pub fn deploy<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -286,35 +265,36 @@ For more fine-grained control over the deployment process, use [`deploy_builder`
         N: alloy_contract::private::Network,
     >(
         provider: P,
-    ) -> impl ::core::future::Future<
-        Output = alloy_contract::Result<EmptyContractInstance<T, P, N>>,
-    > {
+    ) -> impl ::core::future::Future<Output = alloy_contract::Result<EmptyContractInstance<T, P, N>>>
+    {
         EmptyContractInstance::<T, P, N>::deploy(provider)
     }
     /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+    and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+    This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+    the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     #[inline]
     pub fn deploy_builder<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
         P: alloy_contract::private::Provider<T, N>,
         N: alloy_contract::private::Network,
-    >(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
+    >(
+        provider: P,
+    ) -> alloy_contract::RawCallBuilder<T, P, N> {
         EmptyContractInstance::<T, P, N>::deploy_builder(provider)
     }
     /**A [`EmptyContract`](self) instance.
 
-Contains type-safe methods for interacting with an on-chain instance of the
-[`EmptyContract`](self) contract located at a given `address`, using a given
-provider `P`.
+    Contains type-safe methods for interacting with an on-chain instance of the
+    [`EmptyContract`](self) contract located at a given `address`, using a given
+    provider `P`.
 
-If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
-documentation on how to provide it), the `deploy` and `deploy_builder` methods can
-be used to deploy a new instance of the contract.
+    If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
+    documentation on how to provide it), the `deploy` and `deploy_builder` methods can
+    be used to deploy a new instance of the contract.
 
-See the [module-level documentation](self) for all the available methods.*/
+    See the [module-level documentation](self) for all the available methods.*/
     #[derive(Clone)]
     pub struct EmptyContractInstance<T, P, N = alloy_contract::private::Ethereum> {
         address: alloy_sol_types::private::Address,
@@ -325,24 +305,24 @@ See the [module-level documentation](self) for all the available methods.*/
     impl<T, P, N> ::core::fmt::Debug for EmptyContractInstance<T, P, N> {
         #[inline]
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-            f.debug_tuple("EmptyContractInstance").field(&self.address).finish()
+            f.debug_tuple("EmptyContractInstance")
+                .field(&self.address)
+                .finish()
         }
     }
     /// Instantiation and getters/setters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > EmptyContractInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > EmptyContractInstance<T, P, N>
+    {
         /**Creates a new wrapper around an on-chain [`EmptyContract`](self) contract instance.
 
-See the [wrapper's documentation](`EmptyContractInstance`) for more details.*/
+        See the [wrapper's documentation](`EmptyContractInstance`) for more details.*/
         #[inline]
-        pub const fn new(
-            address: alloy_sol_types::private::Address,
-            provider: P,
-        ) -> Self {
+        pub const fn new(address: alloy_sol_types::private::Address, provider: P) -> Self {
             Self {
                 address,
                 provider,
@@ -351,22 +331,20 @@ See the [wrapper's documentation](`EmptyContractInstance`) for more details.*/
         }
         /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+        Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+        For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
         #[inline]
-        pub async fn deploy(
-            provider: P,
-        ) -> alloy_contract::Result<EmptyContractInstance<T, P, N>> {
+        pub async fn deploy(provider: P) -> alloy_contract::Result<EmptyContractInstance<T, P, N>> {
             let call_builder = Self::deploy_builder(provider);
             let contract_address = call_builder.deploy().await?;
             Ok(Self::new(contract_address, call_builder.provider))
         }
         /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+        and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+        This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+        the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         #[inline]
         pub fn deploy_builder(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
             alloy_contract::RawCallBuilder::new_raw_deploy(
@@ -409,10 +387,11 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     /// Function calls.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > EmptyContractInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > EmptyContractInstance<T, P, N>
+    {
         /// Creates a new call builder using this contract instance's provider and address.
         ///
         /// Note that the call can be any function call, not just those defined in this
@@ -431,10 +410,11 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     /// Event filters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > EmptyContractInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > EmptyContractInstance<T, P, N>
+    {
         /// Creates a new event filter using this contract instance's provider and address.
         ///
         /// Note that the type can be any event, not just those defined in this contract.

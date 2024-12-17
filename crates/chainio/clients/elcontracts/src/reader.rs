@@ -265,43 +265,43 @@ impl ELChainReader {
     /// # Errors
     ///
     /// * `ElContractsError` - if the call to the contract fails
-    pub async fn get_operator_details(
-        &self,
-        operator: Address,
-    ) -> Result<Operator, ElContractsError> {
-        let provider = get_provider(&self.provider);
+    // pub async fn get_operator_details(
+    //     &self,
+    //     operator: Address,
+    // ) -> Result<Operator, ElContractsError> {
+    //     let provider = get_provider(&self.provider);
 
-        let contract_delegation_manager =
-            DelegationManager::new(self.delegation_manager, &provider);
+    //     let contract_delegation_manager =
+    //         DelegationManager::new(self.delegation_manager, &provider);
 
-        let operator_det = contract_delegation_manager
-            .operatorDetails(operator)
-            .call()
-            .await
-            .map_err(ElContractsError::AlloyContractError)?;
+    //     let operator_det = contract_delegation_manager
+    //         .operatorDetails(operator)
+    //         .call()
+    //         .await
+    //         .map_err(ElContractsError::AlloyContractError)?;
 
-        let DelegationManager::operatorDetailsReturn {
-            _0: operator_details,
-        } = operator_det;
+    //     let DelegationManager::operatorDetailsReturn {
+    //         _0: operator_details,
+    //     } = operator_det;
 
-        let AllocationManager::getAllocationDelayReturn {
-            _0: is_set,
-            _1: delay,
-        } = AllocationManager::new(self.allocation_manager, &provider)
-            .getAllocationDelay(operator)
-            .call()
-            .await
-            .map_err(ElContractsError::AlloyContractError)?;
-        let allocation_delay = if is_set { delay } else { 0 };
+    //     let AllocationManager::getAllocationDelayReturn {
+    //         _0: is_set,
+    //         _1: delay,
+    //     } = AllocationManager::new(self.allocation_manager, &provider)
+    //         .getAllocationDelay(operator)
+    //         .call()
+    //         .await
+    //         .map_err(ElContractsError::AlloyContractError)?;
+    //     let allocation_delay = if is_set { delay } else { 0 };
 
-        Ok(Operator {
-            address: operator,
-            staker_opt_out_window_blocks: operator_details.__deprecated_stakerOptOutWindowBlocks,
-            metadata_url: None,
-            allocation_delay,
-            delegation_approver_address: operator_details.delegationApprover,
-        })
-    }
+    //     Ok(Operator {
+    //         address: operator,
+    //         staker_opt_out_window_blocks: operator_details.__deprecated_stakerOptOutWindowBlocks,
+    //         metadata_url: None,
+    //         allocation_delay,
+    //         delegation_approver_address: operator_details.delegationApprover,
+    //     })
+    // }
 
     /// Check if the operator is registered
     ///
@@ -969,17 +969,18 @@ mod tests {
     }
 
     #[tokio::test]
+    #[ignore]
     async fn test_get_operator_details() {
-        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let chain_reader = build_el_chain_reader(http_endpoint).await;
+        // let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        // let chain_reader = build_el_chain_reader(http_endpoint).await;
 
-        let operator = chain_reader
-            .get_operator_details(OPERATOR_ADDRESS)
-            .await
-            .unwrap();
+        // let operator = chain_reader
+        //     .get_operator_details(OPERATOR_ADDRESS)
+        //     .await
+        //     .unwrap();
 
-        assert!(operator.metadata_url.is_none());
-        println!("{:?}", operator.metadata_url);
+        // assert!(operator.metadata_url.is_none());
+        // println!("{:?}", operator.metadata_url);
     }
 
     #[tokio::test]

@@ -17,8 +17,8 @@ pub mod IIndexRegistry {
     use super::*;
     use alloy::sol_types as alloy_sol_types;
     /**```solidity
-struct OperatorUpdate { uint32 fromBlockNumber; bytes32 operatorId; }
-```*/
+    struct OperatorUpdate { uint32 fromBlockNumber; bytes32 operatorId; }
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct OperatorUpdate {
@@ -42,9 +42,7 @@ struct OperatorUpdate { uint32 fromBlockNumber; bytes32 operatorId; }
         type UnderlyingRustTuple<'a> = (u32, alloy::sol_types::private::FixedBytes<32>);
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -90,64 +88,50 @@ struct OperatorUpdate { uint32 fromBlockNumber; bytes32 operatorId; }
                 if let Some(size) = <Self as alloy_sol_types::SolType>::ENCODED_SIZE {
                     return size;
                 }
-                let tuple = <UnderlyingRustTuple<
-                    '_,
-                > as ::core::convert::From<Self>>::from(self.clone());
-                <UnderlyingSolTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_encoded_size(&tuple)
+                let tuple =
+                    <UnderlyingRustTuple<'_> as ::core::convert::From<Self>>::from(self.clone());
+                <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::abi_encoded_size(&tuple)
             }
             #[inline]
             fn stv_eip712_data_word(&self) -> alloy_sol_types::Word {
                 <Self as alloy_sol_types::SolStruct>::eip712_hash_struct(self)
             }
             #[inline]
-            fn stv_abi_encode_packed_to(
-                &self,
-                out: &mut alloy_sol_types::private::Vec<u8>,
-            ) {
-                let tuple = <UnderlyingRustTuple<
-                    '_,
-                > as ::core::convert::From<Self>>::from(self.clone());
-                <UnderlyingSolTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_encode_packed_to(&tuple, out)
+            fn stv_abi_encode_packed_to(&self, out: &mut alloy_sol_types::private::Vec<u8>) {
+                let tuple =
+                    <UnderlyingRustTuple<'_> as ::core::convert::From<Self>>::from(self.clone());
+                <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::abi_encode_packed_to(
+                    &tuple, out,
+                )
             }
             #[inline]
             fn stv_abi_packed_encoded_size(&self) -> usize {
                 if let Some(size) = <Self as alloy_sol_types::SolType>::PACKED_ENCODED_SIZE {
                     return size;
                 }
-                let tuple = <UnderlyingRustTuple<
-                    '_,
-                > as ::core::convert::From<Self>>::from(self.clone());
-                <UnderlyingSolTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_packed_encoded_size(&tuple)
+                let tuple =
+                    <UnderlyingRustTuple<'_> as ::core::convert::From<Self>>::from(self.clone());
+                <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::abi_packed_encoded_size(
+                    &tuple,
+                )
             }
         }
         #[automatically_derived]
         impl alloy_sol_types::SolType for OperatorUpdate {
             type RustType = Self;
-            type Token<'a> = <UnderlyingSolTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <UnderlyingSolTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SOL_NAME: &'static str = <Self as alloy_sol_types::SolStruct>::NAME;
-            const ENCODED_SIZE: Option<usize> = <UnderlyingSolTuple<
-                '_,
-            > as alloy_sol_types::SolType>::ENCODED_SIZE;
-            const PACKED_ENCODED_SIZE: Option<usize> = <UnderlyingSolTuple<
-                '_,
-            > as alloy_sol_types::SolType>::PACKED_ENCODED_SIZE;
+            const ENCODED_SIZE: Option<usize> =
+                <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::ENCODED_SIZE;
+            const PACKED_ENCODED_SIZE: Option<usize> =
+                <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::PACKED_ENCODED_SIZE;
             #[inline]
             fn valid_token(token: &Self::Token<'_>) -> bool {
                 <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::valid_token(token)
             }
             #[inline]
             fn detokenize(token: Self::Token<'_>) -> Self::RustType {
-                let tuple = <UnderlyingSolTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::detokenize(token);
+                let tuple = <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::detokenize(token);
                 <Self as ::core::convert::From<UnderlyingRustTuple<'_>>>::from(tuple)
             }
         }
@@ -161,9 +145,9 @@ struct OperatorUpdate { uint32 fromBlockNumber; bytes32 operatorId; }
                 )
             }
             #[inline]
-            fn eip712_components() -> alloy_sol_types::private::Vec<
-                alloy_sol_types::private::Cow<'static, str>,
-            > {
+            fn eip712_components(
+            ) -> alloy_sol_types::private::Vec<alloy_sol_types::private::Cow<'static, str>>
+            {
                 alloy_sol_types::private::Vec::new()
             }
             #[inline]
@@ -208,9 +192,7 @@ struct OperatorUpdate { uint32 fromBlockNumber; bytes32 operatorId; }
                 rust: &Self::RustType,
                 out: &mut alloy_sol_types::private::Vec<u8>,
             ) {
-                out.reserve(
-                    <Self as alloy_sol_types::EventTopic>::topic_preimage_length(rust),
-                );
+                out.reserve(<Self as alloy_sol_types::EventTopic>::topic_preimage_length(rust));
                 <alloy::sol_types::sol_data::Uint<
                     32,
                 > as alloy_sol_types::EventTopic>::encode_topic_preimage(
@@ -225,23 +207,16 @@ struct OperatorUpdate { uint32 fromBlockNumber; bytes32 operatorId; }
                 );
             }
             #[inline]
-            fn encode_topic(
-                rust: &Self::RustType,
-            ) -> alloy_sol_types::abi::token::WordToken {
+            fn encode_topic(rust: &Self::RustType) -> alloy_sol_types::abi::token::WordToken {
                 let mut out = alloy_sol_types::private::Vec::new();
-                <Self as alloy_sol_types::EventTopic>::encode_topic_preimage(
-                    rust,
-                    &mut out,
-                );
-                alloy_sol_types::abi::token::WordToken(
-                    alloy_sol_types::private::keccak256(out),
-                )
+                <Self as alloy_sol_types::EventTopic>::encode_topic_preimage(rust, &mut out);
+                alloy_sol_types::abi::token::WordToken(alloy_sol_types::private::keccak256(out))
             }
         }
     };
     /**```solidity
-struct QuorumUpdate { uint32 fromBlockNumber; uint32 numOperators; }
-```*/
+    struct QuorumUpdate { uint32 fromBlockNumber; uint32 numOperators; }
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct QuorumUpdate {
@@ -265,9 +240,7 @@ struct QuorumUpdate { uint32 fromBlockNumber; uint32 numOperators; }
         type UnderlyingRustTuple<'a> = (u32, u32);
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -300,12 +273,12 @@ struct QuorumUpdate { uint32 fromBlockNumber; uint32 numOperators; }
             #[inline]
             fn stv_to_tokens(&self) -> <Self as alloy_sol_types::SolType>::Token<'_> {
                 (
-                    <alloy::sol_types::sol_data::Uint<
-                        32,
-                    > as alloy_sol_types::SolType>::tokenize(&self.fromBlockNumber),
-                    <alloy::sol_types::sol_data::Uint<
-                        32,
-                    > as alloy_sol_types::SolType>::tokenize(&self.numOperators),
+                    <alloy::sol_types::sol_data::Uint<32> as alloy_sol_types::SolType>::tokenize(
+                        &self.fromBlockNumber,
+                    ),
+                    <alloy::sol_types::sol_data::Uint<32> as alloy_sol_types::SolType>::tokenize(
+                        &self.numOperators,
+                    ),
                 )
             }
             #[inline]
@@ -313,64 +286,50 @@ struct QuorumUpdate { uint32 fromBlockNumber; uint32 numOperators; }
                 if let Some(size) = <Self as alloy_sol_types::SolType>::ENCODED_SIZE {
                     return size;
                 }
-                let tuple = <UnderlyingRustTuple<
-                    '_,
-                > as ::core::convert::From<Self>>::from(self.clone());
-                <UnderlyingSolTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_encoded_size(&tuple)
+                let tuple =
+                    <UnderlyingRustTuple<'_> as ::core::convert::From<Self>>::from(self.clone());
+                <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::abi_encoded_size(&tuple)
             }
             #[inline]
             fn stv_eip712_data_word(&self) -> alloy_sol_types::Word {
                 <Self as alloy_sol_types::SolStruct>::eip712_hash_struct(self)
             }
             #[inline]
-            fn stv_abi_encode_packed_to(
-                &self,
-                out: &mut alloy_sol_types::private::Vec<u8>,
-            ) {
-                let tuple = <UnderlyingRustTuple<
-                    '_,
-                > as ::core::convert::From<Self>>::from(self.clone());
-                <UnderlyingSolTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_encode_packed_to(&tuple, out)
+            fn stv_abi_encode_packed_to(&self, out: &mut alloy_sol_types::private::Vec<u8>) {
+                let tuple =
+                    <UnderlyingRustTuple<'_> as ::core::convert::From<Self>>::from(self.clone());
+                <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::abi_encode_packed_to(
+                    &tuple, out,
+                )
             }
             #[inline]
             fn stv_abi_packed_encoded_size(&self) -> usize {
                 if let Some(size) = <Self as alloy_sol_types::SolType>::PACKED_ENCODED_SIZE {
                     return size;
                 }
-                let tuple = <UnderlyingRustTuple<
-                    '_,
-                > as ::core::convert::From<Self>>::from(self.clone());
-                <UnderlyingSolTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_packed_encoded_size(&tuple)
+                let tuple =
+                    <UnderlyingRustTuple<'_> as ::core::convert::From<Self>>::from(self.clone());
+                <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::abi_packed_encoded_size(
+                    &tuple,
+                )
             }
         }
         #[automatically_derived]
         impl alloy_sol_types::SolType for QuorumUpdate {
             type RustType = Self;
-            type Token<'a> = <UnderlyingSolTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <UnderlyingSolTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SOL_NAME: &'static str = <Self as alloy_sol_types::SolStruct>::NAME;
-            const ENCODED_SIZE: Option<usize> = <UnderlyingSolTuple<
-                '_,
-            > as alloy_sol_types::SolType>::ENCODED_SIZE;
-            const PACKED_ENCODED_SIZE: Option<usize> = <UnderlyingSolTuple<
-                '_,
-            > as alloy_sol_types::SolType>::PACKED_ENCODED_SIZE;
+            const ENCODED_SIZE: Option<usize> =
+                <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::ENCODED_SIZE;
+            const PACKED_ENCODED_SIZE: Option<usize> =
+                <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::PACKED_ENCODED_SIZE;
             #[inline]
             fn valid_token(token: &Self::Token<'_>) -> bool {
                 <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::valid_token(token)
             }
             #[inline]
             fn detokenize(token: Self::Token<'_>) -> Self::RustType {
-                let tuple = <UnderlyingSolTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::detokenize(token);
+                let tuple = <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::detokenize(token);
                 <Self as ::core::convert::From<UnderlyingRustTuple<'_>>>::from(tuple)
             }
         }
@@ -384,9 +343,9 @@ struct QuorumUpdate { uint32 fromBlockNumber; uint32 numOperators; }
                 )
             }
             #[inline]
-            fn eip712_components() -> alloy_sol_types::private::Vec<
-                alloy_sol_types::private::Cow<'static, str>,
-            > {
+            fn eip712_components(
+            ) -> alloy_sol_types::private::Vec<alloy_sol_types::private::Cow<'static, str>>
+            {
                 alloy_sol_types::private::Vec::new()
             }
             #[inline]
@@ -431,9 +390,7 @@ struct QuorumUpdate { uint32 fromBlockNumber; uint32 numOperators; }
                 rust: &Self::RustType,
                 out: &mut alloy_sol_types::private::Vec<u8>,
             ) {
-                out.reserve(
-                    <Self as alloy_sol_types::EventTopic>::topic_preimage_length(rust),
-                );
+                out.reserve(<Self as alloy_sol_types::EventTopic>::topic_preimage_length(rust));
                 <alloy::sol_types::sol_data::Uint<
                     32,
                 > as alloy_sol_types::EventTopic>::encode_topic_preimage(
@@ -448,24 +405,17 @@ struct QuorumUpdate { uint32 fromBlockNumber; uint32 numOperators; }
                 );
             }
             #[inline]
-            fn encode_topic(
-                rust: &Self::RustType,
-            ) -> alloy_sol_types::abi::token::WordToken {
+            fn encode_topic(rust: &Self::RustType) -> alloy_sol_types::abi::token::WordToken {
                 let mut out = alloy_sol_types::private::Vec::new();
-                <Self as alloy_sol_types::EventTopic>::encode_topic_preimage(
-                    rust,
-                    &mut out,
-                );
-                alloy_sol_types::abi::token::WordToken(
-                    alloy_sol_types::private::keccak256(out),
-                )
+                <Self as alloy_sol_types::EventTopic>::encode_topic_preimage(rust, &mut out);
+                alloy_sol_types::abi::token::WordToken(alloy_sol_types::private::keccak256(out))
             }
         }
     };
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`IIndexRegistry`](self) contract instance.
 
-See the [wrapper's documentation](`IIndexRegistryInstance`) for more details.*/
+    See the [wrapper's documentation](`IIndexRegistryInstance`) for more details.*/
     #[inline]
     pub const fn new<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -479,15 +429,15 @@ See the [wrapper's documentation](`IIndexRegistryInstance`) for more details.*/
     }
     /**A [`IIndexRegistry`](self) instance.
 
-Contains type-safe methods for interacting with an on-chain instance of the
-[`IIndexRegistry`](self) contract located at a given `address`, using a given
-provider `P`.
+    Contains type-safe methods for interacting with an on-chain instance of the
+    [`IIndexRegistry`](self) contract located at a given `address`, using a given
+    provider `P`.
 
-If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
-documentation on how to provide it), the `deploy` and `deploy_builder` methods can
-be used to deploy a new instance of the contract.
+    If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
+    documentation on how to provide it), the `deploy` and `deploy_builder` methods can
+    be used to deploy a new instance of the contract.
 
-See the [module-level documentation](self) for all the available methods.*/
+    See the [module-level documentation](self) for all the available methods.*/
     #[derive(Clone)]
     pub struct IIndexRegistryInstance<T, P, N = alloy_contract::private::Ethereum> {
         address: alloy_sol_types::private::Address,
@@ -498,24 +448,24 @@ See the [module-level documentation](self) for all the available methods.*/
     impl<T, P, N> ::core::fmt::Debug for IIndexRegistryInstance<T, P, N> {
         #[inline]
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-            f.debug_tuple("IIndexRegistryInstance").field(&self.address).finish()
+            f.debug_tuple("IIndexRegistryInstance")
+                .field(&self.address)
+                .finish()
         }
     }
     /// Instantiation and getters/setters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > IIndexRegistryInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > IIndexRegistryInstance<T, P, N>
+    {
         /**Creates a new wrapper around an on-chain [`IIndexRegistry`](self) contract instance.
 
-See the [wrapper's documentation](`IIndexRegistryInstance`) for more details.*/
+        See the [wrapper's documentation](`IIndexRegistryInstance`) for more details.*/
         #[inline]
-        pub const fn new(
-            address: alloy_sol_types::private::Address,
-            provider: P,
-        ) -> Self {
+        pub const fn new(address: alloy_sol_types::private::Address, provider: P) -> Self {
             Self {
                 address,
                 provider,
@@ -557,10 +507,11 @@ See the [wrapper's documentation](`IIndexRegistryInstance`) for more details.*/
     /// Function calls.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > IIndexRegistryInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > IIndexRegistryInstance<T, P, N>
+    {
         /// Creates a new call builder using this contract instance's provider and address.
         ///
         /// Note that the call can be any function call, not just those defined in this
@@ -575,10 +526,11 @@ See the [wrapper's documentation](`IIndexRegistryInstance`) for more details.*/
     /// Event filters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > IIndexRegistryInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > IIndexRegistryInstance<T, P, N>
+    {
         /// Creates a new event filter using this contract instance's provider and address.
         ///
         /// Note that the type can be any event, not just those defined in this contract.
@@ -984,27 +936,27 @@ pub mod IndexRegistry {
     /// The creation / init bytecode of the contract.
     ///
     /// ```text
-    ///0x60a060405234801561000f575f5ffd5b50604051611f1f380380611f1f833981810160405281019061003191906101a9565b808073ffffffffffffffffffffffffffffffffffffffff1660808173ffffffffffffffffffffffffffffffffffffffff168152505061007461007b60201b60201c565b50506102a6565b5f60019054906101000a900460ff16156100ca576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004016100c190610254565b60405180910390fd5b60ff80165f5f9054906101000a900460ff1660ff1610156101385760ff5f5f6101000a81548160ff021916908360ff1602179055507f7f26b83ff96e1f2b6a682f133852f6798a09c465da95921460cefb384740249860ff60405161012f919061028d565b60405180910390a15b565b5f5ffd5b5f73ffffffffffffffffffffffffffffffffffffffff82169050919050565b5f6101678261013e565b9050919050565b5f6101788261015d565b9050919050565b6101888161016e565b8114610192575f5ffd5b50565b5f815190506101a38161017f565b92915050565b5f602082840312156101be576101bd61013a565b5b5f6101cb84828501610195565b91505092915050565b5f82825260208201905092915050565b7f496e697469616c697a61626c653a20636f6e747261637420697320696e6974695f8201527f616c697a696e6700000000000000000000000000000000000000000000000000602082015250565b5f61023e6027836101d4565b9150610249826101e4565b604082019050919050565b5f6020820190508181035f83015261026b81610232565b9050919050565b5f60ff82169050919050565b61028781610272565b82525050565b5f6020820190506102a05f83018461027e565b92915050565b608051611c5a6102c55f395f818161060401526109b30152611c5a5ff3fe608060405234801561000f575f5ffd5b50600436106100b1575f3560e01c8063890262451161006f57806389026245146101af578063a48bb0ac146101df578063bd29b8cd1461020f578063caa3cd761461022b578063e2e6858014610249578063f341092214610279576100b1565b8062bff04d146100b557806312d1d74d146100e557806326d941f2146101155780632ed583e5146101315780636d14a987146101615780638121906f1461017f575b5f5ffd5b6100cf60048036038101906100ca91906112a9565b6102a9565b6040516100dc91906113cc565b60405180910390f35b6100ff60048036038101906100fa919061144c565b610402565b60405161010c91906114c6565b60405180910390f35b61012f600480360381019061012a91906114df565b610455565b005b61014b6004803603810190610146919061150a565b610562565b60405161015891906114c6565b60405180910390f35b610169610602565b6040516101769190611599565b60405180910390f35b610199600480360381019061019491906114df565b610626565b6040516101a691906115df565b60405180910390f35b6101c960048036038101906101c4919061144c565b610692565b6040516101d691906116a0565b60405180910390f35b6101f960048036038101906101f4919061144c565b6107a7565b60405161020691906115df565b60405180910390f35b610229600480360381019061022491906112a9565b610842565b005b61023361095a565b60405161024091906116cf565b60405180910390f35b610263600480360381019061025e91906116e8565b610960565b6040516102709190611735565b60405180910390f35b610293600480360381019061028e91906114df565b61098d565b6040516102a09190611735565b60405180910390f35b60606102b36109b1565b5f8383905067ffffffffffffffff8111156102d1576102d061174e565b5b6040519080825280602002602001820160405280156102ff5781602001602082028036833780820191505090505b5090505f5f90505b848490508110156103f6575f8585838181106103265761032561177b565b5b9050013560f81c60f81b60f81c90505f60035f8360ff1660ff1681526020019081526020015f208054905090505f8103610395576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040161038c90611828565b60405180910390fd5b5f61039f83610a41565b90506103b889846001846103b39190611873565b610b80565b808585815181106103cc576103cb61177b565b5b602002602001019063ffffffff16908163ffffffff16815250505050508080600101915050610307565b50809150509392505050565b61040a6111cb565b6104148383610c1d565b6040518060400160405290815f82015f9054906101000a900463ffffffff1663ffffffff1663ffffffff168152602001600182015481525050905092915050565b61045d6109b1565b5f60035f8360ff1660ff1681526020019081526020015f2080549050146104b9576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004016104b09061191a565b60405180910390fd5b60035f8260ff1660ff1681526020019081526020015f2060405180604001604052804363ffffffff1681526020015f63ffffffff16815250908060018154018082558091505060019003905f5260205f20015f909190919091505f820151815f015f6101000a81548163ffffffff021916908363ffffffff1602179055506020820151815f0160046101000a81548163ffffffff021916908363ffffffff160217905550505050565b61056a6111cb565b60025f8560ff1660ff1681526020019081526020015f205f8463ffffffff1663ffffffff1681526020019081526020015f208263ffffffff16815481106105b4576105b361177b565b5b905f5260205f2090600202016040518060400160405290815f82015f9054906101000a900463ffffffff1663ffffffff1663ffffffff16815260200160018201548152505090509392505050565b7f000000000000000000000000000000000000000000000000000000000000000081565b61062e6111e9565b61063782610cbc565b6040518060400160405290815f82015f9054906101000a900463ffffffff1663ffffffff1663ffffffff1681526020015f820160049054906101000a900463ffffffff1663ffffffff1663ffffffff16815250509050919050565b60605f61069f8484610d20565b90505f8163ffffffff1667ffffffffffffffff8111156106c2576106c161174e565b5b6040519080825280602002602001820160405280156106f05781602001602082028036833780820191505090505b5090505f5f90505b8263ffffffff1681101561079b57610711868287610e5b565b8282815181106107245761072361177b565b5b6020026020010181815250505f5f1b8282815181106107465761074561177b565b5b60200260200101510361078e576040517f08c379a0000000000000000000000000000000000000000000000000000000008152600401610785906119ce565b60405180910390fd5b80806001019150506106f8565b50809250505092915050565b6107af6111e9565b60035f8460ff1660ff1681526020019081526020015f208263ffffffff16815481106107de576107dd61177b565b5b905f5260205f20016040518060400160405290815f82015f9054906101000a900463ffffffff1663ffffffff1663ffffffff1681526020015f820160049054906101000a900463ffffffff1663ffffffff1663ffffffff1681525050905092915050565b61084a6109b1565b5f5f90505b82829050811015610954575f83838381811061086e5761086d61177b565b5b9050013560f81c60f81b60f81c90505f60035f8360ff1660ff1681526020019081526020015f208054905090505f81036108dd576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004016108d490611828565b60405180910390fd5b5f60015f8460ff1660ff1681526020019081526020015f205f8881526020019081526020015f205f9054906101000a900463ffffffff1690505f61092084610f82565b90505f61092d8583610fc7565b905080891461094257610941818685610b80565b5b5050505050808060010191505061084f565b50505050565b5f5f1b81565b6001602052815f5260405f20602052805f5260405f205f915091509054906101000a900463ffffffff1681565b5f61099782610cbc565b5f0160049054906101000a900463ffffffff169050919050565b7f000000000000000000000000000000000000000000000000000000000000000073ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff1614610a3f576040517f08c379a0000000000000000000000000000000000000000000000000000000008152600401610a3690611a82565b60405180910390fd5b565b5f5f610a4c83610cbc565b90505f6001825f0160049054906101000a900463ffffffff16610a6f9190611aa0565b9050610a7c848383610ff6565b5f60025f8660ff1660ff1681526020019081526020015f205f600184610aa29190611873565b63ffffffff1663ffffffff1681526020019081526020015f208054905003610b765760025f8560ff1660ff1681526020019081526020015f205f600183610ae99190611873565b63ffffffff1663ffffffff1681526020019081526020015f2060405180604001604052804363ffffffff1681526020015f5f1b815250908060018154018082558091505060019003905f5260205f2090600202015f909190919091505f820151815f015f6101000a81548163ffffffff021916908363ffffffff1602179055506020820151816001015550505b8092505050919050565b5f610b8b8383610c1d565b9050610b99838383876110ee565b8160015f8560ff1660ff1681526020019081526020015f205f8681526020019081526020015f205f6101000a81548163ffffffff021916908363ffffffff160217905550837f6ee1e4f4075f3d067176140d34e87874244dd273294c05b2218133e49a2ba6f68484604051610c0f929190611ae6565b60405180910390a250505050565b5f5f60025f8560ff1660ff1681526020019081526020015f205f8463ffffffff1663ffffffff1681526020019081526020015f2080549050905060025f8560ff1660ff1681526020019081526020015f205f8463ffffffff1663ffffffff1681526020019081526020015f20600182610c969190611b16565b81548110610ca757610ca661177b565b5b905f5260205f20906002020191505092915050565b5f5f60035f8460ff1660ff1681526020019081526020015f2080549050905060035f8460ff1660ff1681526020019081526020015f20600182610cff9190611b16565b81548110610d1057610d0f61177b565b5b905f5260205f2001915050919050565b5f5f60035f8560ff1660ff1681526020019081526020015f208054905090505f8190505b5f811115610e19575f60035f8760ff1660ff1681526020019081526020015f20600183610d719190611b16565b81548110610d8257610d8161177b565b5b905f5260205f20016040518060400160405290815f82015f9054906101000a900463ffffffff1663ffffffff1663ffffffff1681526020015f820160049054906101000a900463ffffffff1663ffffffff1663ffffffff168152505090508463ffffffff16815f015163ffffffff1611610e055780602001519350505050610e55565b508080610e1190611b49565b915050610d44565b506040517f08c379a0000000000000000000000000000000000000000000000000000000008152600401610e4c90611c06565b60405180910390fd5b92915050565b5f5f60025f8660ff1660ff1681526020019081526020015f205f8563ffffffff1663ffffffff1681526020019081526020015f208054905090505f8190505b5f811115610f73575f60025f8860ff1660ff1681526020019081526020015f205f8763ffffffff1663ffffffff1681526020019081526020015f20600183610ee29190611b16565b81548110610ef357610ef261177b565b5b905f5260205f2090600202016040518060400160405290815f82015f9054906101000a900463ffffffff1663ffffffff1663ffffffff16815260200160018201548152505090508463ffffffff16815f015163ffffffff1611610f5f5780602001519350505050610f7b565b508080610f6b90611b49565b915050610e9a565b505f5f1b9150505b9392505050565b5f5f610f8d83610cbc565b90505f6001825f0160049054906101000a900463ffffffff16610fb09190611873565b9050610fbd848383610ff6565b8092505050919050565b5f5f610fd38484610c1d565b90505f81600101549050610feb8585845f5f1b6110ee565b809250505092915050565b4363ffffffff16825f015f9054906101000a900463ffffffff1663ffffffff16036110425780825f0160046101000a81548163ffffffff021916908363ffffffff1602179055506110e9565b60035f8460ff1660ff1681526020019081526020015f2060405180604001604052804363ffffffff1681526020018363ffffffff16815250908060018154018082558091505060019003905f5260205f20015f909190919091505f820151815f015f6101000a81548163ffffffff021916908363ffffffff1602179055506020820151815f0160046101000a81548163ffffffff021916908363ffffffff16021790555050505b505050565b4363ffffffff16825f015f9054906101000a900463ffffffff1663ffffffff1603611121578082600101819055506111c5565b60025f8560ff1660ff1681526020019081526020015f205f8463ffffffff1663ffffffff1681526020019081526020015f2060405180604001604052804363ffffffff16815260200183815250908060018154018082558091505060019003905f5260205f2090600202015f909190919091505f820151815f015f6101000a81548163ffffffff021916908363ffffffff1602179055506020820151816001015550505b50505050565b60405180604001604052805f63ffffffff1681526020015f81525090565b60405180604001604052805f63ffffffff1681526020015f63ffffffff1681525090565b5f5ffd5b5f5ffd5b5f819050919050565b61122781611215565b8114611231575f5ffd5b50565b5f813590506112428161121e565b92915050565b5f5ffd5b5f5ffd5b5f5ffd5b5f5f83601f84011261126957611268611248565b5b8235905067ffffffffffffffff8111156112865761128561124c565b5b6020830191508360018202830111156112a2576112a1611250565b5b9250929050565b5f5f5f604084860312156112c0576112bf61120d565b5b5f6112cd86828701611234565b935050602084013567ffffffffffffffff8111156112ee576112ed611211565b5b6112fa86828701611254565b92509250509250925092565b5f81519050919050565b5f82825260208201905092915050565b5f819050602082019050919050565b5f63ffffffff82169050919050565b6113478161132f565b82525050565b5f611358838361133e565b60208301905092915050565b5f602082019050919050565b5f61137a82611306565b6113848185611310565b935061138f83611320565b805f5b838110156113bf5781516113a6888261134d565b97506113b183611364565b925050600181019050611392565b5085935050505092915050565b5f6020820190508181035f8301526113e48184611370565b905092915050565b5f60ff82169050919050565b611401816113ec565b811461140b575f5ffd5b50565b5f8135905061141c816113f8565b92915050565b61142b8161132f565b8114611435575f5ffd5b50565b5f8135905061144681611422565b92915050565b5f5f604083850312156114625761146161120d565b5b5f61146f8582860161140e565b925050602061148085828601611438565b9150509250929050565b61149381611215565b82525050565b604082015f8201516114ad5f85018261133e565b5060208201516114c0602085018261148a565b50505050565b5f6040820190506114d95f830184611499565b92915050565b5f602082840312156114f4576114f361120d565b5b5f6115018482850161140e565b91505092915050565b5f5f5f606084860312156115215761152061120d565b5b5f61152e8682870161140e565b935050602061153f86828701611438565b925050604061155086828701611438565b9150509250925092565b5f73ffffffffffffffffffffffffffffffffffffffff82169050919050565b5f6115838261155a565b9050919050565b61159381611579565b82525050565b5f6020820190506115ac5f83018461158a565b92915050565b604082015f8201516115c65f85018261133e565b5060208201516115d9602085018261133e565b50505050565b5f6040820190506115f25f8301846115b2565b92915050565b5f81519050919050565b5f82825260208201905092915050565b5f819050602082019050919050565b5f61162c838361148a565b60208301905092915050565b5f602082019050919050565b5f61164e826115f8565b6116588185611602565b935061166383611612565b805f5b8381101561169357815161167a8882611621565b975061168583611638565b925050600181019050611666565b5085935050505092915050565b5f6020820190508181035f8301526116b88184611644565b905092915050565b6116c981611215565b82525050565b5f6020820190506116e25f8301846116c0565b92915050565b5f5f604083850312156116fe576116fd61120d565b5b5f61170b8582860161140e565b925050602061171c85828601611234565b9150509250929050565b61172f8161132f565b82525050565b5f6020820190506117485f830184611726565b92915050565b7f4e487b71000000000000000000000000000000000000000000000000000000005f52604160045260245ffd5b7f4e487b71000000000000000000000000000000000000000000000000000000005f52603260045260245ffd5b5f82825260208201905092915050565b7f496e64657852656769737472792e72656769737465724f70657261746f723a205f8201527f71756f72756d20646f6573206e6f742065786973740000000000000000000000602082015250565b5f6118126035836117a8565b915061181d826117b8565b604082019050919050565b5f6020820190508181035f83015261183f81611806565b9050919050565b7f4e487b71000000000000000000000000000000000000000000000000000000005f52601160045260245ffd5b5f61187d8261132f565b91506118888361132f565b9250828203905063ffffffff8111156118a4576118a3611846565b5b92915050565b7f496e64657852656769737472792e63726561746551756f72756d3a2071756f725f8201527f756d20616c726561647920657869737473000000000000000000000000000000602082015250565b5f6119046031836117a8565b915061190f826118aa565b604082019050919050565b5f6020820190508181035f830152611931816118f8565b9050919050565b7f496e64657852656769737472792e6765744f70657261746f724c6973744174425f8201527f6c6f636b4e756d6265723a206f70657261746f7220646f6573206e6f7420657860208201527f6973742061742074686520676976656e20626c6f636b206e756d626572000000604082015250565b5f6119b8605d836117a8565b91506119c382611938565b606082019050919050565b5f6020820190508181035f8301526119e5816119ac565b9050919050565b7f496e64657852656769737472792e5f636865636b5265676973747279436f6f725f8201527f64696e61746f723a2063616c6c6572206973206e6f742074686520726567697360208201527f74727920636f6f7264696e61746f720000000000000000000000000000000000604082015250565b5f611a6c604f836117a8565b9150611a77826119ec565b606082019050919050565b5f6020820190508181035f830152611a9981611a60565b9050919050565b5f611aaa8261132f565b9150611ab58361132f565b9250828201905063ffffffff811115611ad157611ad0611846565b5b92915050565b611ae0816113ec565b82525050565b5f604082019050611af95f830185611ad7565b611b066020830184611726565b9392505050565b5f819050919050565b5f611b2082611b0d565b9150611b2b83611b0d565b9250828203905081811115611b4357611b42611846565b5b92915050565b5f611b5382611b0d565b91505f8203611b6557611b64611846565b5b600182039050919050565b7f496e64657852656769737472792e5f6f70657261746f72436f756e744174426c5f8201527f6f636b4e756d6265723a2071756f72756d20646964206e6f742065786973742060208201527f617420676976656e20626c6f636b206e756d6265720000000000000000000000604082015250565b5f611bf06055836117a8565b9150611bfb82611b70565b606082019050919050565b5f6020820190508181035f830152611c1d81611be4565b905091905056fea26469706673582212209f760e1941a5da3a38b510b4b789fecd0a4df76d61939ddb0518f3f8aa71977364736f6c634300081b0033
+    ///0x60a03461011a57601f610ffd38819003918201601f19168301916001600160401b0383118484101761011e5780849260209460405283398101031261011a57516001600160a01b0381169081900361011a576080525f5460ff8160081c166100c55760ff8082161061008b575b604051610eca9081610133823960805181818161048a0152610a710152f35b60ff90811916175f557f7f26b83ff96e1f2b6a682f133852f6798a09c465da95921460cefb3847402498602060405160ff8152a15f61006c565b60405162461bcd60e51b815260206004820152602760248201527f496e697469616c697a61626c653a20636f6e747261637420697320696e697469604482015266616c697a696e6760c81b6064820152608490fd5b5f80fd5b634e487b7160e01b5f52604160045260245ffdfe60806040526004361015610011575f80fd5b5f3560e01c8062bff04d1461065957806312d1d74d1461061457806326d941f2146105535780632ed583e5146104b95780636d14a987146104755780638121906f1461043957806389026245146102ca578063a48bb0ac1461024d578063bd29b8cd14610132578063caa3cd7614610118578063e2e68580146100d45763f34109221461009c575f80fd5b346100d05760203660031901126100d057602063ffffffff6100c46100bf610849565b610c5b565b54821c16604051908152f35b5f80fd5b346100d05760403660031901126100d05760ff6100ef610849565b165f52600160205260405f206024355f52602052602063ffffffff60405f205416604051908152f35b346100d0575f3660031901126100d05760206040515f8152f35b346100d057610140366107f5565b919061014a610a6f565b4363ffffffff16915f5b84811061015d57005b8061016b60019287866108de565b3560f81c805f52600360205261018660405f205415156108fe565b805f528260205260405f20845f5260205263ffffffff60405f2054166101ab82610c5b565b916101ca6101c263ffffffff855460201c16610968565b809483610e21565b6101d48382610c1f565b928584018963ffffffff8254965416145f14610211575f9150555b828603610200575b50505001610154565b61020992610b6a565b8680806101f7565b50815f52600260205263ffffffff60405f2091165f5260205261024860405f2061023961086c565b908a82525f6020830152610b24565b6101ef565b346100d05760403660031901126100d0576102c66102a161029b61026f610849565b60ff610279610859565b915f602061028561086c565b8281520152165f52600360205260405f206109b3565b50610a4f565b60405191829182919091602063ffffffff816040840195828151168552015116910152565b0390f35b346100d05760403660031901126100d0576102e3610849565b6102eb610859565b9063ffffffff6102fb8383610c8d565b1661030d610308826108c6565b6108a0565b9281845261031a826108c6565b602085019390601f19013685375f5b838110610374578486604051918291602083019060208452518091526040830191905f5b81811061035b575050500390f35b825184528594506020938401939092019160010161034d565b6103858363ffffffff831684610d88565b61038f8288610980565b5261039a8187610980565b51156103a857600101610329565b60405162461bcd60e51b815260206004820152605d60248201527f496e64657852656769737472792e6765744f70657261746f724c69737441744260448201527f6c6f636b4e756d6265723a206f70657261746f7220646f6573206e6f7420657860648201527f6973742061742074686520676976656e20626c6f636b206e756d626572000000608482015260a490fd5b346100d05760203660031901126100d0576102c66102a161047061045b610849565b5f602061046661086c565b8281520152610c5b565b610a4f565b346100d0575f3660031901126100d0576040517f00000000000000000000000000000000000000000000000000000000000000006001600160a01b03168152602090f35b346100d05760603660031901126100d0576104d2610849565b6104da610859565b6044359163ffffffff831683036100d0576102c6926105309260ff61052a935f602061050461086c565b8281520152165f52600260205263ffffffff60405f2091165f5260205260405f20610a36565b50610994565b60405191829182919091602080604083019463ffffffff81511684520151910152565b346100d05760203660031901126100d05760ff61056e610849565b610576610a6f565b16805f52600360205260405f20546105b5575f5260036020526105b360405f2061059e61086c565b9063ffffffff431682525f60208301526109c8565b005b60405162461bcd60e51b815260206004820152603160248201527f496e64657852656769737472792e63726561746551756f72756d3a2071756f72604482015270756d20616c72656164792065786973747360781b6064820152608490fd5b346100d05760403660031901126100d0576102c6610530610654610636610849565b61063e610859565b905f602061064a61086c565b8281520152610c1f565b610994565b346100d057610667366107f5565b90610670610a6f565b61067c610308836108c6565b92828452610689836108c6565b602085019390601f19013685375f5b8181106106e9578486604051918291602083019060208452518091526040830191905f5b8181106106ca575050500390f35b825163ffffffff168452859450602093840193909201916001016106bc565b6106f48183866108de565b3560f81c90815f52600360205261071060405f205415156108fe565b61071982610c5b565b600163ffffffff825460201c16019063ffffffff82116107e157836107448361077f93600197610e21565b805f52600260205260405f2063ffffffff61075e85610968565b165f5260205260405f205415610798575b61077883610968565b9087610b6a565b63ffffffff61078e838a610980565b9116905201610698565b805f52600260205260405f2063ffffffff6107b285610968565b165f526020526107dc60405f206107c761086c565b9063ffffffff431682525f6020830152610b24565b61076f565b634e487b7160e01b5f52601160045260245ffd5b60406003198201126100d0576004359160243567ffffffffffffffff81116100d057826023820112156100d05780600401359267ffffffffffffffff84116100d057602484830101116100d0576024019190565b6004359060ff821682036100d057565b6024359063ffffffff821682036100d057565b604051906040820182811067ffffffffffffffff82111761088c57604052565b634e487b7160e01b5f52604160045260245ffd5b6040519190601f01601f1916820167ffffffffffffffff81118382101761088c57604052565b67ffffffffffffffff811161088c5760051b60200190565b908210156108ea570190565b634e487b7160e01b5f52603260045260245ffd5b1561090557565b60405162461bcd60e51b815260206004820152603560248201527f496e64657852656769737472792e72656769737465724f70657261746f723a206044820152741c5d5bdc9d5b48191bd95cc81b9bdd08195e1a5cdd605a1b6064820152608490fd5b63ffffffff5f199116019063ffffffff82116107e157565b80518210156108ea5760209160051b010190565b90600161099f61086c565b9263ffffffff815416845201546020830152565b80548210156108ea575f5260205f2001905f90565b8054600160401b81101561088c576109e5916001820181556109b3565b610a23578151815460209384015167ffffffffffffffff1990911663ffffffff9290921691909117921b67ffffffff0000000016919091179055565b565b634e487b7160e01b5f525f60045260245ffd5b80548210156108ea575f5260205f209060011b01905f90565b9063ffffffff610a5d61086c565b9254818116845260201c166020830152565b7f00000000000000000000000000000000000000000000000000000000000000006001600160a01b03163303610aa157565b60405162461bcd60e51b815260206004820152604f60248201527f496e64657852656769737472792e5f636865636b5265676973747279436f6f7260448201527f64696e61746f723a2063616c6c6572206973206e6f742074686520726567697360648201526e3a393c9031b7b7b93234b730ba37b960891b608482015260a490fd5b8054600160401b81101561088c57610b4191600182018155610a36565b919091610a235760208163ffffffff8060019451161663ffffffff198554161784550151910155565b9160409063ffffffff60ff7f6ee1e4f4075f3d067176140d34e87874244dd273294c05b2218133e49a2ba6f69486610ba28583610c1f565b80544386169086168103610be55750600101555b1691825f526001602052835f20865f52602052835f2082821683198254161790558351928352166020820152a2565b9050610c1a91508383165f526002602052865f208587165f52602052865f20610c0c61086c565b918252896020830152610b24565b610bb6565b60ff165f90815260026020908152604080832063ffffffff9490941683529290522080545f1981019081116107e157610c5791610a36565b5090565b60ff165f90815260036020526040902080545f1981019081116107e157610c57916109b3565b80156107e1575f190190565b60ff1690815f52600360205260405f2054805b610d2d5760405162461bcd60e51b815260206004820152605560248201527f496e64657852656769737472792e5f6f70657261746f72436f756e744174426c60448201527f6f636b4e756d6265723a2071756f72756d20646964206e6f742065786973742060648201527430ba1033b4bb32b710313637b1b590373ab6b132b960591b608482015260a490fd5b825f52600360205260405f205f198201908282116107e157610d529161029b916109b3565b63ffffffff81511663ffffffff84161015610d775750610d7190610c81565b80610ca0565b6020015163ffffffff169392505050565b60ff909291921691825f52600260205260405f2063ffffffff82165f5260205260405f2054805b610dbb57505050505f90565b835f52600260205260405f2063ffffffff83165f5260205260405f205f198201908282116107e157610df09161052a91610a36565b63ffffffff81511663ffffffff85161015610e155750610e0f90610c81565b80610daf565b60200151949350505050565b919063ffffffff81541663ffffffff43168091145f14610e635750610a2192509067ffffffff0000000082549160201b169067ffffffff000000001916179055565b91905060ff610a2193165f52600360205263ffffffff60405f2091610e8661086c565b9384521660208301526109c856fea26469706673582212205abe67ddeb674d2bcbcc31eb9506f73c41f02638f5d5516176da77605ebff1c264736f6c634300081b0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"`\xA0`@R4\x80\x15a\0\x0FW__\xFD[P`@Qa\x1F\x1F8\x03\x80a\x1F\x1F\x839\x81\x81\x01`@R\x81\x01\x90a\x001\x91\x90a\x01\xA9V[\x80\x80s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x16`\x80\x81s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x16\x81RPPa\0ta\0{` \x1B` \x1CV[PPa\x02\xA6V[_`\x01\x90T\x90a\x01\0\n\x90\x04`\xFF\x16\x15a\0\xCAW`@Q\x7F\x08\xC3y\xA0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x81R`\x04\x01a\0\xC1\x90a\x02TV[`@Q\x80\x91\x03\x90\xFD[`\xFF\x80\x16__\x90T\x90a\x01\0\n\x90\x04`\xFF\x16`\xFF\x16\x10\x15a\x018W`\xFF__a\x01\0\n\x81T\x81`\xFF\x02\x19\x16\x90\x83`\xFF\x16\x02\x17\x90UP\x7F\x7F&\xB8?\xF9n\x1F+jh/\x138R\xF6y\x8A\t\xC4e\xDA\x95\x92\x14`\xCE\xFB8G@$\x98`\xFF`@Qa\x01/\x91\x90a\x02\x8DV[`@Q\x80\x91\x03\x90\xA1[V[__\xFD[_s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x82\x16\x90P\x91\x90PV[_a\x01g\x82a\x01>V[\x90P\x91\x90PV[_a\x01x\x82a\x01]V[\x90P\x91\x90PV[a\x01\x88\x81a\x01nV[\x81\x14a\x01\x92W__\xFD[PV[_\x81Q\x90Pa\x01\xA3\x81a\x01\x7FV[\x92\x91PPV[_` \x82\x84\x03\x12\x15a\x01\xBEWa\x01\xBDa\x01:V[[_a\x01\xCB\x84\x82\x85\x01a\x01\x95V[\x91PP\x92\x91PPV[_\x82\x82R` \x82\x01\x90P\x92\x91PPV[\x7FInitializable: contract is initi_\x82\x01R\x7Falizing\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0` \x82\x01RPV[_a\x02>`'\x83a\x01\xD4V[\x91Pa\x02I\x82a\x01\xE4V[`@\x82\x01\x90P\x91\x90PV[_` \x82\x01\x90P\x81\x81\x03_\x83\x01Ra\x02k\x81a\x022V[\x90P\x91\x90PV[_`\xFF\x82\x16\x90P\x91\x90PV[a\x02\x87\x81a\x02rV[\x82RPPV[_` \x82\x01\x90Pa\x02\xA0_\x83\x01\x84a\x02~V[\x92\x91PPV[`\x80Qa\x1CZa\x02\xC5_9_\x81\x81a\x06\x04\x01Ra\t\xB3\x01Ra\x1CZ_\xF3\xFE`\x80`@R4\x80\x15a\0\x0FW__\xFD[P`\x046\x10a\0\xB1W_5`\xE0\x1C\x80c\x89\x02bE\x11a\0oW\x80c\x89\x02bE\x14a\x01\xAFW\x80c\xA4\x8B\xB0\xAC\x14a\x01\xDFW\x80c\xBD)\xB8\xCD\x14a\x02\x0FW\x80c\xCA\xA3\xCDv\x14a\x02+W\x80c\xE2\xE6\x85\x80\x14a\x02IW\x80c\xF3A\t\"\x14a\x02yWa\0\xB1V[\x80b\xBF\xF0M\x14a\0\xB5W\x80c\x12\xD1\xD7M\x14a\0\xE5W\x80c&\xD9A\xF2\x14a\x01\x15W\x80c.\xD5\x83\xE5\x14a\x011W\x80cm\x14\xA9\x87\x14a\x01aW\x80c\x81!\x90o\x14a\x01\x7FW[__\xFD[a\0\xCF`\x04\x806\x03\x81\x01\x90a\0\xCA\x91\x90a\x12\xA9V[a\x02\xA9V[`@Qa\0\xDC\x91\x90a\x13\xCCV[`@Q\x80\x91\x03\x90\xF3[a\0\xFF`\x04\x806\x03\x81\x01\x90a\0\xFA\x91\x90a\x14LV[a\x04\x02V[`@Qa\x01\x0C\x91\x90a\x14\xC6V[`@Q\x80\x91\x03\x90\xF3[a\x01/`\x04\x806\x03\x81\x01\x90a\x01*\x91\x90a\x14\xDFV[a\x04UV[\0[a\x01K`\x04\x806\x03\x81\x01\x90a\x01F\x91\x90a\x15\nV[a\x05bV[`@Qa\x01X\x91\x90a\x14\xC6V[`@Q\x80\x91\x03\x90\xF3[a\x01ia\x06\x02V[`@Qa\x01v\x91\x90a\x15\x99V[`@Q\x80\x91\x03\x90\xF3[a\x01\x99`\x04\x806\x03\x81\x01\x90a\x01\x94\x91\x90a\x14\xDFV[a\x06&V[`@Qa\x01\xA6\x91\x90a\x15\xDFV[`@Q\x80\x91\x03\x90\xF3[a\x01\xC9`\x04\x806\x03\x81\x01\x90a\x01\xC4\x91\x90a\x14LV[a\x06\x92V[`@Qa\x01\xD6\x91\x90a\x16\xA0V[`@Q\x80\x91\x03\x90\xF3[a\x01\xF9`\x04\x806\x03\x81\x01\x90a\x01\xF4\x91\x90a\x14LV[a\x07\xA7V[`@Qa\x02\x06\x91\x90a\x15\xDFV[`@Q\x80\x91\x03\x90\xF3[a\x02)`\x04\x806\x03\x81\x01\x90a\x02$\x91\x90a\x12\xA9V[a\x08BV[\0[a\x023a\tZV[`@Qa\x02@\x91\x90a\x16\xCFV[`@Q\x80\x91\x03\x90\xF3[a\x02c`\x04\x806\x03\x81\x01\x90a\x02^\x91\x90a\x16\xE8V[a\t`V[`@Qa\x02p\x91\x90a\x175V[`@Q\x80\x91\x03\x90\xF3[a\x02\x93`\x04\x806\x03\x81\x01\x90a\x02\x8E\x91\x90a\x14\xDFV[a\t\x8DV[`@Qa\x02\xA0\x91\x90a\x175V[`@Q\x80\x91\x03\x90\xF3[``a\x02\xB3a\t\xB1V[_\x83\x83\x90Pg\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x81\x11\x15a\x02\xD1Wa\x02\xD0a\x17NV[[`@Q\x90\x80\x82R\x80` \x02` \x01\x82\x01`@R\x80\x15a\x02\xFFW\x81` \x01` \x82\x02\x806\x837\x80\x82\x01\x91PP\x90P[P\x90P__\x90P[\x84\x84\x90P\x81\x10\x15a\x03\xF6W_\x85\x85\x83\x81\x81\x10a\x03&Wa\x03%a\x17{V[[\x90P\x015`\xF8\x1C`\xF8\x1B`\xF8\x1C\x90P_`\x03_\x83`\xFF\x16`\xFF\x16\x81R` \x01\x90\x81R` \x01_ \x80T\x90P\x90P_\x81\x03a\x03\x95W`@Q\x7F\x08\xC3y\xA0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x81R`\x04\x01a\x03\x8C\x90a\x18(V[`@Q\x80\x91\x03\x90\xFD[_a\x03\x9F\x83a\nAV[\x90Pa\x03\xB8\x89\x84`\x01\x84a\x03\xB3\x91\x90a\x18sV[a\x0B\x80V[\x80\x85\x85\x81Q\x81\x10a\x03\xCCWa\x03\xCBa\x17{V[[` \x02` \x01\x01\x90c\xFF\xFF\xFF\xFF\x16\x90\x81c\xFF\xFF\xFF\xFF\x16\x81RPPPPP\x80\x80`\x01\x01\x91PPa\x03\x07V[P\x80\x91PP\x93\x92PPPV[a\x04\na\x11\xCBV[a\x04\x14\x83\x83a\x0C\x1DV[`@Q\x80`@\x01`@R\x90\x81_\x82\x01_\x90T\x90a\x01\0\n\x90\x04c\xFF\xFF\xFF\xFF\x16c\xFF\xFF\xFF\xFF\x16c\xFF\xFF\xFF\xFF\x16\x81R` \x01`\x01\x82\x01T\x81RPP\x90P\x92\x91PPV[a\x04]a\t\xB1V[_`\x03_\x83`\xFF\x16`\xFF\x16\x81R` \x01\x90\x81R` \x01_ \x80T\x90P\x14a\x04\xB9W`@Q\x7F\x08\xC3y\xA0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x81R`\x04\x01a\x04\xB0\x90a\x19\x1AV[`@Q\x80\x91\x03\x90\xFD[`\x03_\x82`\xFF\x16`\xFF\x16\x81R` \x01\x90\x81R` \x01_ `@Q\x80`@\x01`@R\x80Cc\xFF\xFF\xFF\xFF\x16\x81R` \x01_c\xFF\xFF\xFF\xFF\x16\x81RP\x90\x80`\x01\x81T\x01\x80\x82U\x80\x91PP`\x01\x90\x03\x90_R` _ \x01_\x90\x91\x90\x91\x90\x91P_\x82\x01Q\x81_\x01_a\x01\0\n\x81T\x81c\xFF\xFF\xFF\xFF\x02\x19\x16\x90\x83c\xFF\xFF\xFF\xFF\x16\x02\x17\x90UP` \x82\x01Q\x81_\x01`\x04a\x01\0\n\x81T\x81c\xFF\xFF\xFF\xFF\x02\x19\x16\x90\x83c\xFF\xFF\xFF\xFF\x16\x02\x17\x90UPPPPV[a\x05ja\x11\xCBV[`\x02_\x85`\xFF\x16`\xFF\x16\x81R` \x01\x90\x81R` \x01_ _\x84c\xFF\xFF\xFF\xFF\x16c\xFF\xFF\xFF\xFF\x16\x81R` \x01\x90\x81R` \x01_ \x82c\xFF\xFF\xFF\xFF\x16\x81T\x81\x10a\x05\xB4Wa\x05\xB3a\x17{V[[\x90_R` _ \x90`\x02\x02\x01`@Q\x80`@\x01`@R\x90\x81_\x82\x01_\x90T\x90a\x01\0\n\x90\x04c\xFF\xFF\xFF\xFF\x16c\xFF\xFF\xFF\xFF\x16c\xFF\xFF\xFF\xFF\x16\x81R` \x01`\x01\x82\x01T\x81RPP\x90P\x93\x92PPPV[\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x81V[a\x06.a\x11\xE9V[a\x067\x82a\x0C\xBCV[`@Q\x80`@\x01`@R\x90\x81_\x82\x01_\x90T\x90a\x01\0\n\x90\x04c\xFF\xFF\xFF\xFF\x16c\xFF\xFF\xFF\xFF\x16c\xFF\xFF\xFF\xFF\x16\x81R` \x01_\x82\x01`\x04\x90T\x90a\x01\0\n\x90\x04c\xFF\xFF\xFF\xFF\x16c\xFF\xFF\xFF\xFF\x16c\xFF\xFF\xFF\xFF\x16\x81RPP\x90P\x91\x90PV[``_a\x06\x9F\x84\x84a\r V[\x90P_\x81c\xFF\xFF\xFF\xFF\x16g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x81\x11\x15a\x06\xC2Wa\x06\xC1a\x17NV[[`@Q\x90\x80\x82R\x80` \x02` \x01\x82\x01`@R\x80\x15a\x06\xF0W\x81` \x01` \x82\x02\x806\x837\x80\x82\x01\x91PP\x90P[P\x90P__\x90P[\x82c\xFF\xFF\xFF\xFF\x16\x81\x10\x15a\x07\x9BWa\x07\x11\x86\x82\x87a\x0E[V[\x82\x82\x81Q\x81\x10a\x07$Wa\x07#a\x17{V[[` \x02` \x01\x01\x81\x81RPP__\x1B\x82\x82\x81Q\x81\x10a\x07FWa\x07Ea\x17{V[[` \x02` \x01\x01Q\x03a\x07\x8EW`@Q\x7F\x08\xC3y\xA0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x81R`\x04\x01a\x07\x85\x90a\x19\xCEV[`@Q\x80\x91\x03\x90\xFD[\x80\x80`\x01\x01\x91PPa\x06\xF8V[P\x80\x92PPP\x92\x91PPV[a\x07\xAFa\x11\xE9V[`\x03_\x84`\xFF\x16`\xFF\x16\x81R` \x01\x90\x81R` \x01_ \x82c\xFF\xFF\xFF\xFF\x16\x81T\x81\x10a\x07\xDEWa\x07\xDDa\x17{V[[\x90_R` _ \x01`@Q\x80`@\x01`@R\x90\x81_\x82\x01_\x90T\x90a\x01\0\n\x90\x04c\xFF\xFF\xFF\xFF\x16c\xFF\xFF\xFF\xFF\x16c\xFF\xFF\xFF\xFF\x16\x81R` \x01_\x82\x01`\x04\x90T\x90a\x01\0\n\x90\x04c\xFF\xFF\xFF\xFF\x16c\xFF\xFF\xFF\xFF\x16c\xFF\xFF\xFF\xFF\x16\x81RPP\x90P\x92\x91PPV[a\x08Ja\t\xB1V[__\x90P[\x82\x82\x90P\x81\x10\x15a\tTW_\x83\x83\x83\x81\x81\x10a\x08nWa\x08ma\x17{V[[\x90P\x015`\xF8\x1C`\xF8\x1B`\xF8\x1C\x90P_`\x03_\x83`\xFF\x16`\xFF\x16\x81R` \x01\x90\x81R` \x01_ \x80T\x90P\x90P_\x81\x03a\x08\xDDW`@Q\x7F\x08\xC3y\xA0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x81R`\x04\x01a\x08\xD4\x90a\x18(V[`@Q\x80\x91\x03\x90\xFD[_`\x01_\x84`\xFF\x16`\xFF\x16\x81R` \x01\x90\x81R` \x01_ _\x88\x81R` \x01\x90\x81R` \x01_ _\x90T\x90a\x01\0\n\x90\x04c\xFF\xFF\xFF\xFF\x16\x90P_a\t \x84a\x0F\x82V[\x90P_a\t-\x85\x83a\x0F\xC7V[\x90P\x80\x89\x14a\tBWa\tA\x81\x86\x85a\x0B\x80V[[PPPPP\x80\x80`\x01\x01\x91PPa\x08OV[PPPPV[__\x1B\x81V[`\x01` R\x81_R`@_ ` R\x80_R`@_ _\x91P\x91P\x90T\x90a\x01\0\n\x90\x04c\xFF\xFF\xFF\xFF\x16\x81V[_a\t\x97\x82a\x0C\xBCV[_\x01`\x04\x90T\x90a\x01\0\n\x90\x04c\xFF\xFF\xFF\xFF\x16\x90P\x91\x90PV[\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x163s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x16\x14a\n?W`@Q\x7F\x08\xC3y\xA0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x81R`\x04\x01a\n6\x90a\x1A\x82V[`@Q\x80\x91\x03\x90\xFD[V[__a\nL\x83a\x0C\xBCV[\x90P_`\x01\x82_\x01`\x04\x90T\x90a\x01\0\n\x90\x04c\xFF\xFF\xFF\xFF\x16a\no\x91\x90a\x1A\xA0V[\x90Pa\n|\x84\x83\x83a\x0F\xF6V[_`\x02_\x86`\xFF\x16`\xFF\x16\x81R` \x01\x90\x81R` \x01_ _`\x01\x84a\n\xA2\x91\x90a\x18sV[c\xFF\xFF\xFF\xFF\x16c\xFF\xFF\xFF\xFF\x16\x81R` \x01\x90\x81R` \x01_ \x80T\x90P\x03a\x0BvW`\x02_\x85`\xFF\x16`\xFF\x16\x81R` \x01\x90\x81R` \x01_ _`\x01\x83a\n\xE9\x91\x90a\x18sV[c\xFF\xFF\xFF\xFF\x16c\xFF\xFF\xFF\xFF\x16\x81R` \x01\x90\x81R` \x01_ `@Q\x80`@\x01`@R\x80Cc\xFF\xFF\xFF\xFF\x16\x81R` \x01__\x1B\x81RP\x90\x80`\x01\x81T\x01\x80\x82U\x80\x91PP`\x01\x90\x03\x90_R` _ \x90`\x02\x02\x01_\x90\x91\x90\x91\x90\x91P_\x82\x01Q\x81_\x01_a\x01\0\n\x81T\x81c\xFF\xFF\xFF\xFF\x02\x19\x16\x90\x83c\xFF\xFF\xFF\xFF\x16\x02\x17\x90UP` \x82\x01Q\x81`\x01\x01UPP[\x80\x92PPP\x91\x90PV[_a\x0B\x8B\x83\x83a\x0C\x1DV[\x90Pa\x0B\x99\x83\x83\x83\x87a\x10\xEEV[\x81`\x01_\x85`\xFF\x16`\xFF\x16\x81R` \x01\x90\x81R` \x01_ _\x86\x81R` \x01\x90\x81R` \x01_ _a\x01\0\n\x81T\x81c\xFF\xFF\xFF\xFF\x02\x19\x16\x90\x83c\xFF\xFF\xFF\xFF\x16\x02\x17\x90UP\x83\x7Fn\xE1\xE4\xF4\x07_=\x06qv\x14\r4\xE8xt$M\xD2s)L\x05\xB2!\x813\xE4\x9A+\xA6\xF6\x84\x84`@Qa\x0C\x0F\x92\x91\x90a\x1A\xE6V[`@Q\x80\x91\x03\x90\xA2PPPPV[__`\x02_\x85`\xFF\x16`\xFF\x16\x81R` \x01\x90\x81R` \x01_ _\x84c\xFF\xFF\xFF\xFF\x16c\xFF\xFF\xFF\xFF\x16\x81R` \x01\x90\x81R` \x01_ \x80T\x90P\x90P`\x02_\x85`\xFF\x16`\xFF\x16\x81R` \x01\x90\x81R` \x01_ _\x84c\xFF\xFF\xFF\xFF\x16c\xFF\xFF\xFF\xFF\x16\x81R` \x01\x90\x81R` \x01_ `\x01\x82a\x0C\x96\x91\x90a\x1B\x16V[\x81T\x81\x10a\x0C\xA7Wa\x0C\xA6a\x17{V[[\x90_R` _ \x90`\x02\x02\x01\x91PP\x92\x91PPV[__`\x03_\x84`\xFF\x16`\xFF\x16\x81R` \x01\x90\x81R` \x01_ \x80T\x90P\x90P`\x03_\x84`\xFF\x16`\xFF\x16\x81R` \x01\x90\x81R` \x01_ `\x01\x82a\x0C\xFF\x91\x90a\x1B\x16V[\x81T\x81\x10a\r\x10Wa\r\x0Fa\x17{V[[\x90_R` _ \x01\x91PP\x91\x90PV[__`\x03_\x85`\xFF\x16`\xFF\x16\x81R` \x01\x90\x81R` \x01_ \x80T\x90P\x90P_\x81\x90P[_\x81\x11\x15a\x0E\x19W_`\x03_\x87`\xFF\x16`\xFF\x16\x81R` \x01\x90\x81R` \x01_ `\x01\x83a\rq\x91\x90a\x1B\x16V[\x81T\x81\x10a\r\x82Wa\r\x81a\x17{V[[\x90_R` _ \x01`@Q\x80`@\x01`@R\x90\x81_\x82\x01_\x90T\x90a\x01\0\n\x90\x04c\xFF\xFF\xFF\xFF\x16c\xFF\xFF\xFF\xFF\x16c\xFF\xFF\xFF\xFF\x16\x81R` \x01_\x82\x01`\x04\x90T\x90a\x01\0\n\x90\x04c\xFF\xFF\xFF\xFF\x16c\xFF\xFF\xFF\xFF\x16c\xFF\xFF\xFF\xFF\x16\x81RPP\x90P\x84c\xFF\xFF\xFF\xFF\x16\x81_\x01Qc\xFF\xFF\xFF\xFF\x16\x11a\x0E\x05W\x80` \x01Q\x93PPPPa\x0EUV[P\x80\x80a\x0E\x11\x90a\x1BIV[\x91PPa\rDV[P`@Q\x7F\x08\xC3y\xA0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x81R`\x04\x01a\x0EL\x90a\x1C\x06V[`@Q\x80\x91\x03\x90\xFD[\x92\x91PPV[__`\x02_\x86`\xFF\x16`\xFF\x16\x81R` \x01\x90\x81R` \x01_ _\x85c\xFF\xFF\xFF\xFF\x16c\xFF\xFF\xFF\xFF\x16\x81R` \x01\x90\x81R` \x01_ \x80T\x90P\x90P_\x81\x90P[_\x81\x11\x15a\x0FsW_`\x02_\x88`\xFF\x16`\xFF\x16\x81R` \x01\x90\x81R` \x01_ _\x87c\xFF\xFF\xFF\xFF\x16c\xFF\xFF\xFF\xFF\x16\x81R` \x01\x90\x81R` \x01_ `\x01\x83a\x0E\xE2\x91\x90a\x1B\x16V[\x81T\x81\x10a\x0E\xF3Wa\x0E\xF2a\x17{V[[\x90_R` _ \x90`\x02\x02\x01`@Q\x80`@\x01`@R\x90\x81_\x82\x01_\x90T\x90a\x01\0\n\x90\x04c\xFF\xFF\xFF\xFF\x16c\xFF\xFF\xFF\xFF\x16c\xFF\xFF\xFF\xFF\x16\x81R` \x01`\x01\x82\x01T\x81RPP\x90P\x84c\xFF\xFF\xFF\xFF\x16\x81_\x01Qc\xFF\xFF\xFF\xFF\x16\x11a\x0F_W\x80` \x01Q\x93PPPPa\x0F{V[P\x80\x80a\x0Fk\x90a\x1BIV[\x91PPa\x0E\x9AV[P__\x1B\x91PP[\x93\x92PPPV[__a\x0F\x8D\x83a\x0C\xBCV[\x90P_`\x01\x82_\x01`\x04\x90T\x90a\x01\0\n\x90\x04c\xFF\xFF\xFF\xFF\x16a\x0F\xB0\x91\x90a\x18sV[\x90Pa\x0F\xBD\x84\x83\x83a\x0F\xF6V[\x80\x92PPP\x91\x90PV[__a\x0F\xD3\x84\x84a\x0C\x1DV[\x90P_\x81`\x01\x01T\x90Pa\x0F\xEB\x85\x85\x84__\x1Ba\x10\xEEV[\x80\x92PPP\x92\x91PPV[Cc\xFF\xFF\xFF\xFF\x16\x82_\x01_\x90T\x90a\x01\0\n\x90\x04c\xFF\xFF\xFF\xFF\x16c\xFF\xFF\xFF\xFF\x16\x03a\x10BW\x80\x82_\x01`\x04a\x01\0\n\x81T\x81c\xFF\xFF\xFF\xFF\x02\x19\x16\x90\x83c\xFF\xFF\xFF\xFF\x16\x02\x17\x90UPa\x10\xE9V[`\x03_\x84`\xFF\x16`\xFF\x16\x81R` \x01\x90\x81R` \x01_ `@Q\x80`@\x01`@R\x80Cc\xFF\xFF\xFF\xFF\x16\x81R` \x01\x83c\xFF\xFF\xFF\xFF\x16\x81RP\x90\x80`\x01\x81T\x01\x80\x82U\x80\x91PP`\x01\x90\x03\x90_R` _ \x01_\x90\x91\x90\x91\x90\x91P_\x82\x01Q\x81_\x01_a\x01\0\n\x81T\x81c\xFF\xFF\xFF\xFF\x02\x19\x16\x90\x83c\xFF\xFF\xFF\xFF\x16\x02\x17\x90UP` \x82\x01Q\x81_\x01`\x04a\x01\0\n\x81T\x81c\xFF\xFF\xFF\xFF\x02\x19\x16\x90\x83c\xFF\xFF\xFF\xFF\x16\x02\x17\x90UPPP[PPPV[Cc\xFF\xFF\xFF\xFF\x16\x82_\x01_\x90T\x90a\x01\0\n\x90\x04c\xFF\xFF\xFF\xFF\x16c\xFF\xFF\xFF\xFF\x16\x03a\x11!W\x80\x82`\x01\x01\x81\x90UPa\x11\xC5V[`\x02_\x85`\xFF\x16`\xFF\x16\x81R` \x01\x90\x81R` \x01_ _\x84c\xFF\xFF\xFF\xFF\x16c\xFF\xFF\xFF\xFF\x16\x81R` \x01\x90\x81R` \x01_ `@Q\x80`@\x01`@R\x80Cc\xFF\xFF\xFF\xFF\x16\x81R` \x01\x83\x81RP\x90\x80`\x01\x81T\x01\x80\x82U\x80\x91PP`\x01\x90\x03\x90_R` _ \x90`\x02\x02\x01_\x90\x91\x90\x91\x90\x91P_\x82\x01Q\x81_\x01_a\x01\0\n\x81T\x81c\xFF\xFF\xFF\xFF\x02\x19\x16\x90\x83c\xFF\xFF\xFF\xFF\x16\x02\x17\x90UP` \x82\x01Q\x81`\x01\x01UPP[PPPPV[`@Q\x80`@\x01`@R\x80_c\xFF\xFF\xFF\xFF\x16\x81R` \x01_\x81RP\x90V[`@Q\x80`@\x01`@R\x80_c\xFF\xFF\xFF\xFF\x16\x81R` \x01_c\xFF\xFF\xFF\xFF\x16\x81RP\x90V[__\xFD[__\xFD[_\x81\x90P\x91\x90PV[a\x12'\x81a\x12\x15V[\x81\x14a\x121W__\xFD[PV[_\x815\x90Pa\x12B\x81a\x12\x1EV[\x92\x91PPV[__\xFD[__\xFD[__\xFD[__\x83`\x1F\x84\x01\x12a\x12iWa\x12ha\x12HV[[\x825\x90Pg\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x81\x11\x15a\x12\x86Wa\x12\x85a\x12LV[[` \x83\x01\x91P\x83`\x01\x82\x02\x83\x01\x11\x15a\x12\xA2Wa\x12\xA1a\x12PV[[\x92P\x92\x90PV[___`@\x84\x86\x03\x12\x15a\x12\xC0Wa\x12\xBFa\x12\rV[[_a\x12\xCD\x86\x82\x87\x01a\x124V[\x93PP` \x84\x015g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x81\x11\x15a\x12\xEEWa\x12\xEDa\x12\x11V[[a\x12\xFA\x86\x82\x87\x01a\x12TV[\x92P\x92PP\x92P\x92P\x92V[_\x81Q\x90P\x91\x90PV[_\x82\x82R` \x82\x01\x90P\x92\x91PPV[_\x81\x90P` \x82\x01\x90P\x91\x90PV[_c\xFF\xFF\xFF\xFF\x82\x16\x90P\x91\x90PV[a\x13G\x81a\x13/V[\x82RPPV[_a\x13X\x83\x83a\x13>V[` \x83\x01\x90P\x92\x91PPV[_` \x82\x01\x90P\x91\x90PV[_a\x13z\x82a\x13\x06V[a\x13\x84\x81\x85a\x13\x10V[\x93Pa\x13\x8F\x83a\x13 V[\x80_[\x83\x81\x10\x15a\x13\xBFW\x81Qa\x13\xA6\x88\x82a\x13MV[\x97Pa\x13\xB1\x83a\x13dV[\x92PP`\x01\x81\x01\x90Pa\x13\x92V[P\x85\x93PPPP\x92\x91PPV[_` \x82\x01\x90P\x81\x81\x03_\x83\x01Ra\x13\xE4\x81\x84a\x13pV[\x90P\x92\x91PPV[_`\xFF\x82\x16\x90P\x91\x90PV[a\x14\x01\x81a\x13\xECV[\x81\x14a\x14\x0BW__\xFD[PV[_\x815\x90Pa\x14\x1C\x81a\x13\xF8V[\x92\x91PPV[a\x14+\x81a\x13/V[\x81\x14a\x145W__\xFD[PV[_\x815\x90Pa\x14F\x81a\x14\"V[\x92\x91PPV[__`@\x83\x85\x03\x12\x15a\x14bWa\x14aa\x12\rV[[_a\x14o\x85\x82\x86\x01a\x14\x0EV[\x92PP` a\x14\x80\x85\x82\x86\x01a\x148V[\x91PP\x92P\x92\x90PV[a\x14\x93\x81a\x12\x15V[\x82RPPV[`@\x82\x01_\x82\x01Qa\x14\xAD_\x85\x01\x82a\x13>V[P` \x82\x01Qa\x14\xC0` \x85\x01\x82a\x14\x8AV[PPPPV[_`@\x82\x01\x90Pa\x14\xD9_\x83\x01\x84a\x14\x99V[\x92\x91PPV[_` \x82\x84\x03\x12\x15a\x14\xF4Wa\x14\xF3a\x12\rV[[_a\x15\x01\x84\x82\x85\x01a\x14\x0EV[\x91PP\x92\x91PPV[___``\x84\x86\x03\x12\x15a\x15!Wa\x15 a\x12\rV[[_a\x15.\x86\x82\x87\x01a\x14\x0EV[\x93PP` a\x15?\x86\x82\x87\x01a\x148V[\x92PP`@a\x15P\x86\x82\x87\x01a\x148V[\x91PP\x92P\x92P\x92V[_s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x82\x16\x90P\x91\x90PV[_a\x15\x83\x82a\x15ZV[\x90P\x91\x90PV[a\x15\x93\x81a\x15yV[\x82RPPV[_` \x82\x01\x90Pa\x15\xAC_\x83\x01\x84a\x15\x8AV[\x92\x91PPV[`@\x82\x01_\x82\x01Qa\x15\xC6_\x85\x01\x82a\x13>V[P` \x82\x01Qa\x15\xD9` \x85\x01\x82a\x13>V[PPPPV[_`@\x82\x01\x90Pa\x15\xF2_\x83\x01\x84a\x15\xB2V[\x92\x91PPV[_\x81Q\x90P\x91\x90PV[_\x82\x82R` \x82\x01\x90P\x92\x91PPV[_\x81\x90P` \x82\x01\x90P\x91\x90PV[_a\x16,\x83\x83a\x14\x8AV[` \x83\x01\x90P\x92\x91PPV[_` \x82\x01\x90P\x91\x90PV[_a\x16N\x82a\x15\xF8V[a\x16X\x81\x85a\x16\x02V[\x93Pa\x16c\x83a\x16\x12V[\x80_[\x83\x81\x10\x15a\x16\x93W\x81Qa\x16z\x88\x82a\x16!V[\x97Pa\x16\x85\x83a\x168V[\x92PP`\x01\x81\x01\x90Pa\x16fV[P\x85\x93PPPP\x92\x91PPV[_` \x82\x01\x90P\x81\x81\x03_\x83\x01Ra\x16\xB8\x81\x84a\x16DV[\x90P\x92\x91PPV[a\x16\xC9\x81a\x12\x15V[\x82RPPV[_` \x82\x01\x90Pa\x16\xE2_\x83\x01\x84a\x16\xC0V[\x92\x91PPV[__`@\x83\x85\x03\x12\x15a\x16\xFEWa\x16\xFDa\x12\rV[[_a\x17\x0B\x85\x82\x86\x01a\x14\x0EV[\x92PP` a\x17\x1C\x85\x82\x86\x01a\x124V[\x91PP\x92P\x92\x90PV[a\x17/\x81a\x13/V[\x82RPPV[_` \x82\x01\x90Pa\x17H_\x83\x01\x84a\x17&V[\x92\x91PPV[\x7FNH{q\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0_R`A`\x04R`$_\xFD[\x7FNH{q\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0_R`2`\x04R`$_\xFD[_\x82\x82R` \x82\x01\x90P\x92\x91PPV[\x7FIndexRegistry.registerOperator: _\x82\x01R\x7Fquorum does not exist\0\0\0\0\0\0\0\0\0\0\0` \x82\x01RPV[_a\x18\x12`5\x83a\x17\xA8V[\x91Pa\x18\x1D\x82a\x17\xB8V[`@\x82\x01\x90P\x91\x90PV[_` \x82\x01\x90P\x81\x81\x03_\x83\x01Ra\x18?\x81a\x18\x06V[\x90P\x91\x90PV[\x7FNH{q\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0_R`\x11`\x04R`$_\xFD[_a\x18}\x82a\x13/V[\x91Pa\x18\x88\x83a\x13/V[\x92P\x82\x82\x03\x90Pc\xFF\xFF\xFF\xFF\x81\x11\x15a\x18\xA4Wa\x18\xA3a\x18FV[[\x92\x91PPV[\x7FIndexRegistry.createQuorum: quor_\x82\x01R\x7Fum already exists\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0` \x82\x01RPV[_a\x19\x04`1\x83a\x17\xA8V[\x91Pa\x19\x0F\x82a\x18\xAAV[`@\x82\x01\x90P\x91\x90PV[_` \x82\x01\x90P\x81\x81\x03_\x83\x01Ra\x191\x81a\x18\xF8V[\x90P\x91\x90PV[\x7FIndexRegistry.getOperatorListAtB_\x82\x01R\x7FlockNumber: operator does not ex` \x82\x01R\x7Fist at the given block number\0\0\0`@\x82\x01RPV[_a\x19\xB8`]\x83a\x17\xA8V[\x91Pa\x19\xC3\x82a\x198V[``\x82\x01\x90P\x91\x90PV[_` \x82\x01\x90P\x81\x81\x03_\x83\x01Ra\x19\xE5\x81a\x19\xACV[\x90P\x91\x90PV[\x7FIndexRegistry._checkRegistryCoor_\x82\x01R\x7Fdinator: caller is not the regis` \x82\x01R\x7Ftry coordinator\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0`@\x82\x01RPV[_a\x1Al`O\x83a\x17\xA8V[\x91Pa\x1Aw\x82a\x19\xECV[``\x82\x01\x90P\x91\x90PV[_` \x82\x01\x90P\x81\x81\x03_\x83\x01Ra\x1A\x99\x81a\x1A`V[\x90P\x91\x90PV[_a\x1A\xAA\x82a\x13/V[\x91Pa\x1A\xB5\x83a\x13/V[\x92P\x82\x82\x01\x90Pc\xFF\xFF\xFF\xFF\x81\x11\x15a\x1A\xD1Wa\x1A\xD0a\x18FV[[\x92\x91PPV[a\x1A\xE0\x81a\x13\xECV[\x82RPPV[_`@\x82\x01\x90Pa\x1A\xF9_\x83\x01\x85a\x1A\xD7V[a\x1B\x06` \x83\x01\x84a\x17&V[\x93\x92PPPV[_\x81\x90P\x91\x90PV[_a\x1B \x82a\x1B\rV[\x91Pa\x1B+\x83a\x1B\rV[\x92P\x82\x82\x03\x90P\x81\x81\x11\x15a\x1BCWa\x1BBa\x18FV[[\x92\x91PPV[_a\x1BS\x82a\x1B\rV[\x91P_\x82\x03a\x1BeWa\x1Bda\x18FV[[`\x01\x82\x03\x90P\x91\x90PV[\x7FIndexRegistry._operatorCountAtBl_\x82\x01R\x7FockNumber: quorum did not exist ` \x82\x01R\x7Fat given block number\0\0\0\0\0\0\0\0\0\0\0`@\x82\x01RPV[_a\x1B\xF0`U\x83a\x17\xA8V[\x91Pa\x1B\xFB\x82a\x1BpV[``\x82\x01\x90P\x91\x90PV[_` \x82\x01\x90P\x81\x81\x03_\x83\x01Ra\x1C\x1D\x81a\x1B\xE4V[\x90P\x91\x90PV\xFE\xA2dipfsX\"\x12 \x9Fv\x0E\x19A\xA5\xDA:8\xB5\x10\xB4\xB7\x89\xFE\xCD\nM\xF7ma\x93\x9D\xDB\x05\x18\xF3\xF8\xAAq\x97sdsolcC\0\x08\x1B\x003",
+        b"`\xA04a\x01\x1AW`\x1Fa\x0F\xFD8\x81\x90\x03\x91\x82\x01`\x1F\x19\x16\x83\x01\x91`\x01`\x01`@\x1B\x03\x83\x11\x84\x84\x10\x17a\x01\x1EW\x80\x84\x92` \x94`@R\x839\x81\x01\x03\x12a\x01\x1AWQ`\x01`\x01`\xA0\x1B\x03\x81\x16\x90\x81\x90\x03a\x01\x1AW`\x80R_T`\xFF\x81`\x08\x1C\x16a\0\xC5W`\xFF\x80\x82\x16\x10a\0\x8BW[`@Qa\x0E\xCA\x90\x81a\x013\x829`\x80Q\x81\x81\x81a\x04\x8A\x01Ra\nq\x01R\xF3[`\xFF\x90\x81\x19\x16\x17_U\x7F\x7F&\xB8?\xF9n\x1F+jh/\x138R\xF6y\x8A\t\xC4e\xDA\x95\x92\x14`\xCE\xFB8G@$\x98` `@Q`\xFF\x81R\xA1_a\0lV[`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`'`$\x82\x01R\x7FInitializable: contract is initi`D\x82\x01Rfalizing`\xC8\x1B`d\x82\x01R`\x84\x90\xFD[_\x80\xFD[cNH{q`\xE0\x1B_R`A`\x04R`$_\xFD\xFE`\x80`@R`\x046\x10\x15a\0\x11W_\x80\xFD[_5`\xE0\x1C\x80b\xBF\xF0M\x14a\x06YW\x80c\x12\xD1\xD7M\x14a\x06\x14W\x80c&\xD9A\xF2\x14a\x05SW\x80c.\xD5\x83\xE5\x14a\x04\xB9W\x80cm\x14\xA9\x87\x14a\x04uW\x80c\x81!\x90o\x14a\x049W\x80c\x89\x02bE\x14a\x02\xCAW\x80c\xA4\x8B\xB0\xAC\x14a\x02MW\x80c\xBD)\xB8\xCD\x14a\x012W\x80c\xCA\xA3\xCDv\x14a\x01\x18W\x80c\xE2\xE6\x85\x80\x14a\0\xD4Wc\xF3A\t\"\x14a\0\x9CW_\x80\xFD[4a\0\xD0W` 6`\x03\x19\x01\x12a\0\xD0W` c\xFF\xFF\xFF\xFFa\0\xC4a\0\xBFa\x08IV[a\x0C[V[T\x82\x1C\x16`@Q\x90\x81R\xF3[_\x80\xFD[4a\0\xD0W`@6`\x03\x19\x01\x12a\0\xD0W`\xFFa\0\xEFa\x08IV[\x16_R`\x01` R`@_ `$5_R` R` c\xFF\xFF\xFF\xFF`@_ T\x16`@Q\x90\x81R\xF3[4a\0\xD0W_6`\x03\x19\x01\x12a\0\xD0W` `@Q_\x81R\xF3[4a\0\xD0Wa\x01@6a\x07\xF5V[\x91\x90a\x01Ja\noV[Cc\xFF\xFF\xFF\xFF\x16\x91_[\x84\x81\x10a\x01]W\0[\x80a\x01k`\x01\x92\x87\x86a\x08\xDEV[5`\xF8\x1C\x80_R`\x03` Ra\x01\x86`@_ T\x15\x15a\x08\xFEV[\x80_R\x82` R`@_ \x84_R` Rc\xFF\xFF\xFF\xFF`@_ T\x16a\x01\xAB\x82a\x0C[V[\x91a\x01\xCAa\x01\xC2c\xFF\xFF\xFF\xFF\x85T` \x1C\x16a\thV[\x80\x94\x83a\x0E!V[a\x01\xD4\x83\x82a\x0C\x1FV[\x92\x85\x84\x01\x89c\xFF\xFF\xFF\xFF\x82T\x96T\x16\x14_\x14a\x02\x11W_\x91PU[\x82\x86\x03a\x02\0W[PPP\x01a\x01TV[a\x02\t\x92a\x0BjV[\x86\x80\x80a\x01\xF7V[P\x81_R`\x02` Rc\xFF\xFF\xFF\xFF`@_ \x91\x16_R` Ra\x02H`@_ a\x029a\x08lV[\x90\x8A\x82R_` \x83\x01Ra\x0B$V[a\x01\xEFV[4a\0\xD0W`@6`\x03\x19\x01\x12a\0\xD0Wa\x02\xC6a\x02\xA1a\x02\x9Ba\x02oa\x08IV[`\xFFa\x02ya\x08YV[\x91_` a\x02\x85a\x08lV[\x82\x81R\x01R\x16_R`\x03` R`@_ a\t\xB3V[Pa\nOV[`@Q\x91\x82\x91\x82\x91\x90\x91` c\xFF\xFF\xFF\xFF\x81`@\x84\x01\x95\x82\x81Q\x16\x85R\x01Q\x16\x91\x01RV[\x03\x90\xF3[4a\0\xD0W`@6`\x03\x19\x01\x12a\0\xD0Wa\x02\xE3a\x08IV[a\x02\xEBa\x08YV[\x90c\xFF\xFF\xFF\xFFa\x02\xFB\x83\x83a\x0C\x8DV[\x16a\x03\ra\x03\x08\x82a\x08\xC6V[a\x08\xA0V[\x92\x81\x84Ra\x03\x1A\x82a\x08\xC6V[` \x85\x01\x93\x90`\x1F\x19\x016\x857_[\x83\x81\x10a\x03tW\x84\x86`@Q\x91\x82\x91` \x83\x01\x90` \x84RQ\x80\x91R`@\x83\x01\x91\x90_[\x81\x81\x10a\x03[WPPP\x03\x90\xF3[\x82Q\x84R\x85\x94P` \x93\x84\x01\x93\x90\x92\x01\x91`\x01\x01a\x03MV[a\x03\x85\x83c\xFF\xFF\xFF\xFF\x83\x16\x84a\r\x88V[a\x03\x8F\x82\x88a\t\x80V[Ra\x03\x9A\x81\x87a\t\x80V[Q\x15a\x03\xA8W`\x01\x01a\x03)V[`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`]`$\x82\x01R\x7FIndexRegistry.getOperatorListAtB`D\x82\x01R\x7FlockNumber: operator does not ex`d\x82\x01R\x7Fist at the given block number\0\0\0`\x84\x82\x01R`\xA4\x90\xFD[4a\0\xD0W` 6`\x03\x19\x01\x12a\0\xD0Wa\x02\xC6a\x02\xA1a\x04pa\x04[a\x08IV[_` a\x04fa\x08lV[\x82\x81R\x01Ra\x0C[V[a\nOV[4a\0\xD0W_6`\x03\x19\x01\x12a\0\xD0W`@Q\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0`\x01`\x01`\xA0\x1B\x03\x16\x81R` \x90\xF3[4a\0\xD0W``6`\x03\x19\x01\x12a\0\xD0Wa\x04\xD2a\x08IV[a\x04\xDAa\x08YV[`D5\x91c\xFF\xFF\xFF\xFF\x83\x16\x83\x03a\0\xD0Wa\x02\xC6\x92a\x050\x92`\xFFa\x05*\x93_` a\x05\x04a\x08lV[\x82\x81R\x01R\x16_R`\x02` Rc\xFF\xFF\xFF\xFF`@_ \x91\x16_R` R`@_ a\n6V[Pa\t\x94V[`@Q\x91\x82\x91\x82\x91\x90\x91` \x80`@\x83\x01\x94c\xFF\xFF\xFF\xFF\x81Q\x16\x84R\x01Q\x91\x01RV[4a\0\xD0W` 6`\x03\x19\x01\x12a\0\xD0W`\xFFa\x05na\x08IV[a\x05va\noV[\x16\x80_R`\x03` R`@_ Ta\x05\xB5W_R`\x03` Ra\x05\xB3`@_ a\x05\x9Ea\x08lV[\x90c\xFF\xFF\xFF\xFFC\x16\x82R_` \x83\x01Ra\t\xC8V[\0[`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`1`$\x82\x01R\x7FIndexRegistry.createQuorum: quor`D\x82\x01Rpum already exists`x\x1B`d\x82\x01R`\x84\x90\xFD[4a\0\xD0W`@6`\x03\x19\x01\x12a\0\xD0Wa\x02\xC6a\x050a\x06Ta\x066a\x08IV[a\x06>a\x08YV[\x90_` a\x06Ja\x08lV[\x82\x81R\x01Ra\x0C\x1FV[a\t\x94V[4a\0\xD0Wa\x06g6a\x07\xF5V[\x90a\x06pa\noV[a\x06|a\x03\x08\x83a\x08\xC6V[\x92\x82\x84Ra\x06\x89\x83a\x08\xC6V[` \x85\x01\x93\x90`\x1F\x19\x016\x857_[\x81\x81\x10a\x06\xE9W\x84\x86`@Q\x91\x82\x91` \x83\x01\x90` \x84RQ\x80\x91R`@\x83\x01\x91\x90_[\x81\x81\x10a\x06\xCAWPPP\x03\x90\xF3[\x82Qc\xFF\xFF\xFF\xFF\x16\x84R\x85\x94P` \x93\x84\x01\x93\x90\x92\x01\x91`\x01\x01a\x06\xBCV[a\x06\xF4\x81\x83\x86a\x08\xDEV[5`\xF8\x1C\x90\x81_R`\x03` Ra\x07\x10`@_ T\x15\x15a\x08\xFEV[a\x07\x19\x82a\x0C[V[`\x01c\xFF\xFF\xFF\xFF\x82T` \x1C\x16\x01\x90c\xFF\xFF\xFF\xFF\x82\x11a\x07\xE1W\x83a\x07D\x83a\x07\x7F\x93`\x01\x97a\x0E!V[\x80_R`\x02` R`@_ c\xFF\xFF\xFF\xFFa\x07^\x85a\thV[\x16_R` R`@_ T\x15a\x07\x98W[a\x07x\x83a\thV[\x90\x87a\x0BjV[c\xFF\xFF\xFF\xFFa\x07\x8E\x83\x8Aa\t\x80V[\x91\x16\x90R\x01a\x06\x98V[\x80_R`\x02` R`@_ c\xFF\xFF\xFF\xFFa\x07\xB2\x85a\thV[\x16_R` Ra\x07\xDC`@_ a\x07\xC7a\x08lV[\x90c\xFF\xFF\xFF\xFFC\x16\x82R_` \x83\x01Ra\x0B$V[a\x07oV[cNH{q`\xE0\x1B_R`\x11`\x04R`$_\xFD[`@`\x03\x19\x82\x01\x12a\0\xD0W`\x045\x91`$5g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x81\x11a\0\xD0W\x82`#\x82\x01\x12\x15a\0\xD0W\x80`\x04\x015\x92g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x84\x11a\0\xD0W`$\x84\x83\x01\x01\x11a\0\xD0W`$\x01\x91\x90V[`\x045\x90`\xFF\x82\x16\x82\x03a\0\xD0WV[`$5\x90c\xFF\xFF\xFF\xFF\x82\x16\x82\x03a\0\xD0WV[`@Q\x90`@\x82\x01\x82\x81\x10g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x82\x11\x17a\x08\x8CW`@RV[cNH{q`\xE0\x1B_R`A`\x04R`$_\xFD[`@Q\x91\x90`\x1F\x01`\x1F\x19\x16\x82\x01g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x81\x11\x83\x82\x10\x17a\x08\x8CW`@RV[g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x81\x11a\x08\x8CW`\x05\x1B` \x01\x90V[\x90\x82\x10\x15a\x08\xEAW\x01\x90V[cNH{q`\xE0\x1B_R`2`\x04R`$_\xFD[\x15a\t\x05WV[`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`5`$\x82\x01R\x7FIndexRegistry.registerOperator: `D\x82\x01Rt\x1C][\xDC\x9D[H\x19\x1B\xD9\\\xC8\x1B\x9B\xDD\x08\x19^\x1A\\\xDD`Z\x1B`d\x82\x01R`\x84\x90\xFD[c\xFF\xFF\xFF\xFF_\x19\x91\x16\x01\x90c\xFF\xFF\xFF\xFF\x82\x11a\x07\xE1WV[\x80Q\x82\x10\x15a\x08\xEAW` \x91`\x05\x1B\x01\x01\x90V[\x90`\x01a\t\x9Fa\x08lV[\x92c\xFF\xFF\xFF\xFF\x81T\x16\x84R\x01T` \x83\x01RV[\x80T\x82\x10\x15a\x08\xEAW_R` _ \x01\x90_\x90V[\x80T`\x01`@\x1B\x81\x10\x15a\x08\x8CWa\t\xE5\x91`\x01\x82\x01\x81Ua\t\xB3V[a\n#W\x81Q\x81T` \x93\x84\x01Qg\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x19\x90\x91\x16c\xFF\xFF\xFF\xFF\x92\x90\x92\x16\x91\x90\x91\x17\x92\x1Bg\xFF\xFF\xFF\xFF\0\0\0\0\x16\x91\x90\x91\x17\x90UV[V[cNH{q`\xE0\x1B_R_`\x04R`$_\xFD[\x80T\x82\x10\x15a\x08\xEAW_R` _ \x90`\x01\x1B\x01\x90_\x90V[\x90c\xFF\xFF\xFF\xFFa\n]a\x08lV[\x92T\x81\x81\x16\x84R` \x1C\x16` \x83\x01RV[\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0`\x01`\x01`\xA0\x1B\x03\x163\x03a\n\xA1WV[`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`O`$\x82\x01R\x7FIndexRegistry._checkRegistryCoor`D\x82\x01R\x7Fdinator: caller is not the regis`d\x82\x01Rn:9<\x901\xB7\xB7\xB924\xB70\xBA7\xB9`\x89\x1B`\x84\x82\x01R`\xA4\x90\xFD[\x80T`\x01`@\x1B\x81\x10\x15a\x08\x8CWa\x0BA\x91`\x01\x82\x01\x81Ua\n6V[\x91\x90\x91a\n#W` \x81c\xFF\xFF\xFF\xFF\x80`\x01\x94Q\x16\x16c\xFF\xFF\xFF\xFF\x19\x85T\x16\x17\x84U\x01Q\x91\x01UV[\x91`@\x90c\xFF\xFF\xFF\xFF`\xFF\x7Fn\xE1\xE4\xF4\x07_=\x06qv\x14\r4\xE8xt$M\xD2s)L\x05\xB2!\x813\xE4\x9A+\xA6\xF6\x94\x86a\x0B\xA2\x85\x83a\x0C\x1FV[\x80TC\x86\x16\x90\x86\x16\x81\x03a\x0B\xE5WP`\x01\x01U[\x16\x91\x82_R`\x01` R\x83_ \x86_R` R\x83_ \x82\x82\x16\x83\x19\x82T\x16\x17\x90U\x83Q\x92\x83R\x16` \x82\x01R\xA2V[\x90Pa\x0C\x1A\x91P\x83\x83\x16_R`\x02` R\x86_ \x85\x87\x16_R` R\x86_ a\x0C\x0Ca\x08lV[\x91\x82R\x89` \x83\x01Ra\x0B$V[a\x0B\xB6V[`\xFF\x16_\x90\x81R`\x02` \x90\x81R`@\x80\x83 c\xFF\xFF\xFF\xFF\x94\x90\x94\x16\x83R\x92\x90R \x80T_\x19\x81\x01\x90\x81\x11a\x07\xE1Wa\x0CW\x91a\n6V[P\x90V[`\xFF\x16_\x90\x81R`\x03` R`@\x90 \x80T_\x19\x81\x01\x90\x81\x11a\x07\xE1Wa\x0CW\x91a\t\xB3V[\x80\x15a\x07\xE1W_\x19\x01\x90V[`\xFF\x16\x90\x81_R`\x03` R`@_ T\x80[a\r-W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`U`$\x82\x01R\x7FIndexRegistry._operatorCountAtBl`D\x82\x01R\x7FockNumber: quorum did not exist `d\x82\x01Rt0\xBA\x103\xB4\xBB2\xB7\x10167\xB1\xB5\x907:\xB6\xB12\xB9`Y\x1B`\x84\x82\x01R`\xA4\x90\xFD[\x82_R`\x03` R`@_ _\x19\x82\x01\x90\x82\x82\x11a\x07\xE1Wa\rR\x91a\x02\x9B\x91a\t\xB3V[c\xFF\xFF\xFF\xFF\x81Q\x16c\xFF\xFF\xFF\xFF\x84\x16\x10\x15a\rwWPa\rq\x90a\x0C\x81V[\x80a\x0C\xA0V[` \x01Qc\xFF\xFF\xFF\xFF\x16\x93\x92PPPV[`\xFF\x90\x92\x91\x92\x16\x91\x82_R`\x02` R`@_ c\xFF\xFF\xFF\xFF\x82\x16_R` R`@_ T\x80[a\r\xBBWPPPP_\x90V[\x83_R`\x02` R`@_ c\xFF\xFF\xFF\xFF\x83\x16_R` R`@_ _\x19\x82\x01\x90\x82\x82\x11a\x07\xE1Wa\r\xF0\x91a\x05*\x91a\n6V[c\xFF\xFF\xFF\xFF\x81Q\x16c\xFF\xFF\xFF\xFF\x85\x16\x10\x15a\x0E\x15WPa\x0E\x0F\x90a\x0C\x81V[\x80a\r\xAFV[` \x01Q\x94\x93PPPPV[\x91\x90c\xFF\xFF\xFF\xFF\x81T\x16c\xFF\xFF\xFF\xFFC\x16\x80\x91\x14_\x14a\x0EcWPa\n!\x92P\x90g\xFF\xFF\xFF\xFF\0\0\0\0\x82T\x91` \x1B\x16\x90g\xFF\xFF\xFF\xFF\0\0\0\0\x19\x16\x17\x90UV[\x91\x90P`\xFFa\n!\x93\x16_R`\x03` Rc\xFF\xFF\xFF\xFF`@_ \x91a\x0E\x86a\x08lV[\x93\x84R\x16` \x83\x01Ra\t\xC8V\xFE\xA2dipfsX\"\x12 Z\xBEg\xDD\xEBgM+\xCB\xCC1\xEB\x95\x06\xF7<A\xF0&8\xF5\xD5Qav\xDAw`^\xBF\xF1\xC2dsolcC\0\x08\x1B\x003",
     );
     /// The runtime bytecode of the contract, as deployed on the network.
     ///
     /// ```text
-    ///0x608060405234801561000f575f5ffd5b50600436106100b1575f3560e01c8063890262451161006f57806389026245146101af578063a48bb0ac146101df578063bd29b8cd1461020f578063caa3cd761461022b578063e2e6858014610249578063f341092214610279576100b1565b8062bff04d146100b557806312d1d74d146100e557806326d941f2146101155780632ed583e5146101315780636d14a987146101615780638121906f1461017f575b5f5ffd5b6100cf60048036038101906100ca91906112a9565b6102a9565b6040516100dc91906113cc565b60405180910390f35b6100ff60048036038101906100fa919061144c565b610402565b60405161010c91906114c6565b60405180910390f35b61012f600480360381019061012a91906114df565b610455565b005b61014b6004803603810190610146919061150a565b610562565b60405161015891906114c6565b60405180910390f35b610169610602565b6040516101769190611599565b60405180910390f35b610199600480360381019061019491906114df565b610626565b6040516101a691906115df565b60405180910390f35b6101c960048036038101906101c4919061144c565b610692565b6040516101d691906116a0565b60405180910390f35b6101f960048036038101906101f4919061144c565b6107a7565b60405161020691906115df565b60405180910390f35b610229600480360381019061022491906112a9565b610842565b005b61023361095a565b60405161024091906116cf565b60405180910390f35b610263600480360381019061025e91906116e8565b610960565b6040516102709190611735565b60405180910390f35b610293600480360381019061028e91906114df565b61098d565b6040516102a09190611735565b60405180910390f35b60606102b36109b1565b5f8383905067ffffffffffffffff8111156102d1576102d061174e565b5b6040519080825280602002602001820160405280156102ff5781602001602082028036833780820191505090505b5090505f5f90505b848490508110156103f6575f8585838181106103265761032561177b565b5b9050013560f81c60f81b60f81c90505f60035f8360ff1660ff1681526020019081526020015f208054905090505f8103610395576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040161038c90611828565b60405180910390fd5b5f61039f83610a41565b90506103b889846001846103b39190611873565b610b80565b808585815181106103cc576103cb61177b565b5b602002602001019063ffffffff16908163ffffffff16815250505050508080600101915050610307565b50809150509392505050565b61040a6111cb565b6104148383610c1d565b6040518060400160405290815f82015f9054906101000a900463ffffffff1663ffffffff1663ffffffff168152602001600182015481525050905092915050565b61045d6109b1565b5f60035f8360ff1660ff1681526020019081526020015f2080549050146104b9576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004016104b09061191a565b60405180910390fd5b60035f8260ff1660ff1681526020019081526020015f2060405180604001604052804363ffffffff1681526020015f63ffffffff16815250908060018154018082558091505060019003905f5260205f20015f909190919091505f820151815f015f6101000a81548163ffffffff021916908363ffffffff1602179055506020820151815f0160046101000a81548163ffffffff021916908363ffffffff160217905550505050565b61056a6111cb565b60025f8560ff1660ff1681526020019081526020015f205f8463ffffffff1663ffffffff1681526020019081526020015f208263ffffffff16815481106105b4576105b361177b565b5b905f5260205f2090600202016040518060400160405290815f82015f9054906101000a900463ffffffff1663ffffffff1663ffffffff16815260200160018201548152505090509392505050565b7f000000000000000000000000000000000000000000000000000000000000000081565b61062e6111e9565b61063782610cbc565b6040518060400160405290815f82015f9054906101000a900463ffffffff1663ffffffff1663ffffffff1681526020015f820160049054906101000a900463ffffffff1663ffffffff1663ffffffff16815250509050919050565b60605f61069f8484610d20565b90505f8163ffffffff1667ffffffffffffffff8111156106c2576106c161174e565b5b6040519080825280602002602001820160405280156106f05781602001602082028036833780820191505090505b5090505f5f90505b8263ffffffff1681101561079b57610711868287610e5b565b8282815181106107245761072361177b565b5b6020026020010181815250505f5f1b8282815181106107465761074561177b565b5b60200260200101510361078e576040517f08c379a0000000000000000000000000000000000000000000000000000000008152600401610785906119ce565b60405180910390fd5b80806001019150506106f8565b50809250505092915050565b6107af6111e9565b60035f8460ff1660ff1681526020019081526020015f208263ffffffff16815481106107de576107dd61177b565b5b905f5260205f20016040518060400160405290815f82015f9054906101000a900463ffffffff1663ffffffff1663ffffffff1681526020015f820160049054906101000a900463ffffffff1663ffffffff1663ffffffff1681525050905092915050565b61084a6109b1565b5f5f90505b82829050811015610954575f83838381811061086e5761086d61177b565b5b9050013560f81c60f81b60f81c90505f60035f8360ff1660ff1681526020019081526020015f208054905090505f81036108dd576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004016108d490611828565b60405180910390fd5b5f60015f8460ff1660ff1681526020019081526020015f205f8881526020019081526020015f205f9054906101000a900463ffffffff1690505f61092084610f82565b90505f61092d8583610fc7565b905080891461094257610941818685610b80565b5b5050505050808060010191505061084f565b50505050565b5f5f1b81565b6001602052815f5260405f20602052805f5260405f205f915091509054906101000a900463ffffffff1681565b5f61099782610cbc565b5f0160049054906101000a900463ffffffff169050919050565b7f000000000000000000000000000000000000000000000000000000000000000073ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff1614610a3f576040517f08c379a0000000000000000000000000000000000000000000000000000000008152600401610a3690611a82565b60405180910390fd5b565b5f5f610a4c83610cbc565b90505f6001825f0160049054906101000a900463ffffffff16610a6f9190611aa0565b9050610a7c848383610ff6565b5f60025f8660ff1660ff1681526020019081526020015f205f600184610aa29190611873565b63ffffffff1663ffffffff1681526020019081526020015f208054905003610b765760025f8560ff1660ff1681526020019081526020015f205f600183610ae99190611873565b63ffffffff1663ffffffff1681526020019081526020015f2060405180604001604052804363ffffffff1681526020015f5f1b815250908060018154018082558091505060019003905f5260205f2090600202015f909190919091505f820151815f015f6101000a81548163ffffffff021916908363ffffffff1602179055506020820151816001015550505b8092505050919050565b5f610b8b8383610c1d565b9050610b99838383876110ee565b8160015f8560ff1660ff1681526020019081526020015f205f8681526020019081526020015f205f6101000a81548163ffffffff021916908363ffffffff160217905550837f6ee1e4f4075f3d067176140d34e87874244dd273294c05b2218133e49a2ba6f68484604051610c0f929190611ae6565b60405180910390a250505050565b5f5f60025f8560ff1660ff1681526020019081526020015f205f8463ffffffff1663ffffffff1681526020019081526020015f2080549050905060025f8560ff1660ff1681526020019081526020015f205f8463ffffffff1663ffffffff1681526020019081526020015f20600182610c969190611b16565b81548110610ca757610ca661177b565b5b905f5260205f20906002020191505092915050565b5f5f60035f8460ff1660ff1681526020019081526020015f2080549050905060035f8460ff1660ff1681526020019081526020015f20600182610cff9190611b16565b81548110610d1057610d0f61177b565b5b905f5260205f2001915050919050565b5f5f60035f8560ff1660ff1681526020019081526020015f208054905090505f8190505b5f811115610e19575f60035f8760ff1660ff1681526020019081526020015f20600183610d719190611b16565b81548110610d8257610d8161177b565b5b905f5260205f20016040518060400160405290815f82015f9054906101000a900463ffffffff1663ffffffff1663ffffffff1681526020015f820160049054906101000a900463ffffffff1663ffffffff1663ffffffff168152505090508463ffffffff16815f015163ffffffff1611610e055780602001519350505050610e55565b508080610e1190611b49565b915050610d44565b506040517f08c379a0000000000000000000000000000000000000000000000000000000008152600401610e4c90611c06565b60405180910390fd5b92915050565b5f5f60025f8660ff1660ff1681526020019081526020015f205f8563ffffffff1663ffffffff1681526020019081526020015f208054905090505f8190505b5f811115610f73575f60025f8860ff1660ff1681526020019081526020015f205f8763ffffffff1663ffffffff1681526020019081526020015f20600183610ee29190611b16565b81548110610ef357610ef261177b565b5b905f5260205f2090600202016040518060400160405290815f82015f9054906101000a900463ffffffff1663ffffffff1663ffffffff16815260200160018201548152505090508463ffffffff16815f015163ffffffff1611610f5f5780602001519350505050610f7b565b508080610f6b90611b49565b915050610e9a565b505f5f1b9150505b9392505050565b5f5f610f8d83610cbc565b90505f6001825f0160049054906101000a900463ffffffff16610fb09190611873565b9050610fbd848383610ff6565b8092505050919050565b5f5f610fd38484610c1d565b90505f81600101549050610feb8585845f5f1b6110ee565b809250505092915050565b4363ffffffff16825f015f9054906101000a900463ffffffff1663ffffffff16036110425780825f0160046101000a81548163ffffffff021916908363ffffffff1602179055506110e9565b60035f8460ff1660ff1681526020019081526020015f2060405180604001604052804363ffffffff1681526020018363ffffffff16815250908060018154018082558091505060019003905f5260205f20015f909190919091505f820151815f015f6101000a81548163ffffffff021916908363ffffffff1602179055506020820151815f0160046101000a81548163ffffffff021916908363ffffffff16021790555050505b505050565b4363ffffffff16825f015f9054906101000a900463ffffffff1663ffffffff1603611121578082600101819055506111c5565b60025f8560ff1660ff1681526020019081526020015f205f8463ffffffff1663ffffffff1681526020019081526020015f2060405180604001604052804363ffffffff16815260200183815250908060018154018082558091505060019003905f5260205f2090600202015f909190919091505f820151815f015f6101000a81548163ffffffff021916908363ffffffff1602179055506020820151816001015550505b50505050565b60405180604001604052805f63ffffffff1681526020015f81525090565b60405180604001604052805f63ffffffff1681526020015f63ffffffff1681525090565b5f5ffd5b5f5ffd5b5f819050919050565b61122781611215565b8114611231575f5ffd5b50565b5f813590506112428161121e565b92915050565b5f5ffd5b5f5ffd5b5f5ffd5b5f5f83601f84011261126957611268611248565b5b8235905067ffffffffffffffff8111156112865761128561124c565b5b6020830191508360018202830111156112a2576112a1611250565b5b9250929050565b5f5f5f604084860312156112c0576112bf61120d565b5b5f6112cd86828701611234565b935050602084013567ffffffffffffffff8111156112ee576112ed611211565b5b6112fa86828701611254565b92509250509250925092565b5f81519050919050565b5f82825260208201905092915050565b5f819050602082019050919050565b5f63ffffffff82169050919050565b6113478161132f565b82525050565b5f611358838361133e565b60208301905092915050565b5f602082019050919050565b5f61137a82611306565b6113848185611310565b935061138f83611320565b805f5b838110156113bf5781516113a6888261134d565b97506113b183611364565b925050600181019050611392565b5085935050505092915050565b5f6020820190508181035f8301526113e48184611370565b905092915050565b5f60ff82169050919050565b611401816113ec565b811461140b575f5ffd5b50565b5f8135905061141c816113f8565b92915050565b61142b8161132f565b8114611435575f5ffd5b50565b5f8135905061144681611422565b92915050565b5f5f604083850312156114625761146161120d565b5b5f61146f8582860161140e565b925050602061148085828601611438565b9150509250929050565b61149381611215565b82525050565b604082015f8201516114ad5f85018261133e565b5060208201516114c0602085018261148a565b50505050565b5f6040820190506114d95f830184611499565b92915050565b5f602082840312156114f4576114f361120d565b5b5f6115018482850161140e565b91505092915050565b5f5f5f606084860312156115215761152061120d565b5b5f61152e8682870161140e565b935050602061153f86828701611438565b925050604061155086828701611438565b9150509250925092565b5f73ffffffffffffffffffffffffffffffffffffffff82169050919050565b5f6115838261155a565b9050919050565b61159381611579565b82525050565b5f6020820190506115ac5f83018461158a565b92915050565b604082015f8201516115c65f85018261133e565b5060208201516115d9602085018261133e565b50505050565b5f6040820190506115f25f8301846115b2565b92915050565b5f81519050919050565b5f82825260208201905092915050565b5f819050602082019050919050565b5f61162c838361148a565b60208301905092915050565b5f602082019050919050565b5f61164e826115f8565b6116588185611602565b935061166383611612565b805f5b8381101561169357815161167a8882611621565b975061168583611638565b925050600181019050611666565b5085935050505092915050565b5f6020820190508181035f8301526116b88184611644565b905092915050565b6116c981611215565b82525050565b5f6020820190506116e25f8301846116c0565b92915050565b5f5f604083850312156116fe576116fd61120d565b5b5f61170b8582860161140e565b925050602061171c85828601611234565b9150509250929050565b61172f8161132f565b82525050565b5f6020820190506117485f830184611726565b92915050565b7f4e487b71000000000000000000000000000000000000000000000000000000005f52604160045260245ffd5b7f4e487b71000000000000000000000000000000000000000000000000000000005f52603260045260245ffd5b5f82825260208201905092915050565b7f496e64657852656769737472792e72656769737465724f70657261746f723a205f8201527f71756f72756d20646f6573206e6f742065786973740000000000000000000000602082015250565b5f6118126035836117a8565b915061181d826117b8565b604082019050919050565b5f6020820190508181035f83015261183f81611806565b9050919050565b7f4e487b71000000000000000000000000000000000000000000000000000000005f52601160045260245ffd5b5f61187d8261132f565b91506118888361132f565b9250828203905063ffffffff8111156118a4576118a3611846565b5b92915050565b7f496e64657852656769737472792e63726561746551756f72756d3a2071756f725f8201527f756d20616c726561647920657869737473000000000000000000000000000000602082015250565b5f6119046031836117a8565b915061190f826118aa565b604082019050919050565b5f6020820190508181035f830152611931816118f8565b9050919050565b7f496e64657852656769737472792e6765744f70657261746f724c6973744174425f8201527f6c6f636b4e756d6265723a206f70657261746f7220646f6573206e6f7420657860208201527f6973742061742074686520676976656e20626c6f636b206e756d626572000000604082015250565b5f6119b8605d836117a8565b91506119c382611938565b606082019050919050565b5f6020820190508181035f8301526119e5816119ac565b9050919050565b7f496e64657852656769737472792e5f636865636b5265676973747279436f6f725f8201527f64696e61746f723a2063616c6c6572206973206e6f742074686520726567697360208201527f74727920636f6f7264696e61746f720000000000000000000000000000000000604082015250565b5f611a6c604f836117a8565b9150611a77826119ec565b606082019050919050565b5f6020820190508181035f830152611a9981611a60565b9050919050565b5f611aaa8261132f565b9150611ab58361132f565b9250828201905063ffffffff811115611ad157611ad0611846565b5b92915050565b611ae0816113ec565b82525050565b5f604082019050611af95f830185611ad7565b611b066020830184611726565b9392505050565b5f819050919050565b5f611b2082611b0d565b9150611b2b83611b0d565b9250828203905081811115611b4357611b42611846565b5b92915050565b5f611b5382611b0d565b91505f8203611b6557611b64611846565b5b600182039050919050565b7f496e64657852656769737472792e5f6f70657261746f72436f756e744174426c5f8201527f6f636b4e756d6265723a2071756f72756d20646964206e6f742065786973742060208201527f617420676976656e20626c6f636b206e756d6265720000000000000000000000604082015250565b5f611bf06055836117a8565b9150611bfb82611b70565b606082019050919050565b5f6020820190508181035f830152611c1d81611be4565b905091905056fea26469706673582212209f760e1941a5da3a38b510b4b789fecd0a4df76d61939ddb0518f3f8aa71977364736f6c634300081b0033
+    ///0x60806040526004361015610011575f80fd5b5f3560e01c8062bff04d1461065957806312d1d74d1461061457806326d941f2146105535780632ed583e5146104b95780636d14a987146104755780638121906f1461043957806389026245146102ca578063a48bb0ac1461024d578063bd29b8cd14610132578063caa3cd7614610118578063e2e68580146100d45763f34109221461009c575f80fd5b346100d05760203660031901126100d057602063ffffffff6100c46100bf610849565b610c5b565b54821c16604051908152f35b5f80fd5b346100d05760403660031901126100d05760ff6100ef610849565b165f52600160205260405f206024355f52602052602063ffffffff60405f205416604051908152f35b346100d0575f3660031901126100d05760206040515f8152f35b346100d057610140366107f5565b919061014a610a6f565b4363ffffffff16915f5b84811061015d57005b8061016b60019287866108de565b3560f81c805f52600360205261018660405f205415156108fe565b805f528260205260405f20845f5260205263ffffffff60405f2054166101ab82610c5b565b916101ca6101c263ffffffff855460201c16610968565b809483610e21565b6101d48382610c1f565b928584018963ffffffff8254965416145f14610211575f9150555b828603610200575b50505001610154565b61020992610b6a565b8680806101f7565b50815f52600260205263ffffffff60405f2091165f5260205261024860405f2061023961086c565b908a82525f6020830152610b24565b6101ef565b346100d05760403660031901126100d0576102c66102a161029b61026f610849565b60ff610279610859565b915f602061028561086c565b8281520152165f52600360205260405f206109b3565b50610a4f565b60405191829182919091602063ffffffff816040840195828151168552015116910152565b0390f35b346100d05760403660031901126100d0576102e3610849565b6102eb610859565b9063ffffffff6102fb8383610c8d565b1661030d610308826108c6565b6108a0565b9281845261031a826108c6565b602085019390601f19013685375f5b838110610374578486604051918291602083019060208452518091526040830191905f5b81811061035b575050500390f35b825184528594506020938401939092019160010161034d565b6103858363ffffffff831684610d88565b61038f8288610980565b5261039a8187610980565b51156103a857600101610329565b60405162461bcd60e51b815260206004820152605d60248201527f496e64657852656769737472792e6765744f70657261746f724c69737441744260448201527f6c6f636b4e756d6265723a206f70657261746f7220646f6573206e6f7420657860648201527f6973742061742074686520676976656e20626c6f636b206e756d626572000000608482015260a490fd5b346100d05760203660031901126100d0576102c66102a161047061045b610849565b5f602061046661086c565b8281520152610c5b565b610a4f565b346100d0575f3660031901126100d0576040517f00000000000000000000000000000000000000000000000000000000000000006001600160a01b03168152602090f35b346100d05760603660031901126100d0576104d2610849565b6104da610859565b6044359163ffffffff831683036100d0576102c6926105309260ff61052a935f602061050461086c565b8281520152165f52600260205263ffffffff60405f2091165f5260205260405f20610a36565b50610994565b60405191829182919091602080604083019463ffffffff81511684520151910152565b346100d05760203660031901126100d05760ff61056e610849565b610576610a6f565b16805f52600360205260405f20546105b5575f5260036020526105b360405f2061059e61086c565b9063ffffffff431682525f60208301526109c8565b005b60405162461bcd60e51b815260206004820152603160248201527f496e64657852656769737472792e63726561746551756f72756d3a2071756f72604482015270756d20616c72656164792065786973747360781b6064820152608490fd5b346100d05760403660031901126100d0576102c6610530610654610636610849565b61063e610859565b905f602061064a61086c565b8281520152610c1f565b610994565b346100d057610667366107f5565b90610670610a6f565b61067c610308836108c6565b92828452610689836108c6565b602085019390601f19013685375f5b8181106106e9578486604051918291602083019060208452518091526040830191905f5b8181106106ca575050500390f35b825163ffffffff168452859450602093840193909201916001016106bc565b6106f48183866108de565b3560f81c90815f52600360205261071060405f205415156108fe565b61071982610c5b565b600163ffffffff825460201c16019063ffffffff82116107e157836107448361077f93600197610e21565b805f52600260205260405f2063ffffffff61075e85610968565b165f5260205260405f205415610798575b61077883610968565b9087610b6a565b63ffffffff61078e838a610980565b9116905201610698565b805f52600260205260405f2063ffffffff6107b285610968565b165f526020526107dc60405f206107c761086c565b9063ffffffff431682525f6020830152610b24565b61076f565b634e487b7160e01b5f52601160045260245ffd5b60406003198201126100d0576004359160243567ffffffffffffffff81116100d057826023820112156100d05780600401359267ffffffffffffffff84116100d057602484830101116100d0576024019190565b6004359060ff821682036100d057565b6024359063ffffffff821682036100d057565b604051906040820182811067ffffffffffffffff82111761088c57604052565b634e487b7160e01b5f52604160045260245ffd5b6040519190601f01601f1916820167ffffffffffffffff81118382101761088c57604052565b67ffffffffffffffff811161088c5760051b60200190565b908210156108ea570190565b634e487b7160e01b5f52603260045260245ffd5b1561090557565b60405162461bcd60e51b815260206004820152603560248201527f496e64657852656769737472792e72656769737465724f70657261746f723a206044820152741c5d5bdc9d5b48191bd95cc81b9bdd08195e1a5cdd605a1b6064820152608490fd5b63ffffffff5f199116019063ffffffff82116107e157565b80518210156108ea5760209160051b010190565b90600161099f61086c565b9263ffffffff815416845201546020830152565b80548210156108ea575f5260205f2001905f90565b8054600160401b81101561088c576109e5916001820181556109b3565b610a23578151815460209384015167ffffffffffffffff1990911663ffffffff9290921691909117921b67ffffffff0000000016919091179055565b565b634e487b7160e01b5f525f60045260245ffd5b80548210156108ea575f5260205f209060011b01905f90565b9063ffffffff610a5d61086c565b9254818116845260201c166020830152565b7f00000000000000000000000000000000000000000000000000000000000000006001600160a01b03163303610aa157565b60405162461bcd60e51b815260206004820152604f60248201527f496e64657852656769737472792e5f636865636b5265676973747279436f6f7260448201527f64696e61746f723a2063616c6c6572206973206e6f742074686520726567697360648201526e3a393c9031b7b7b93234b730ba37b960891b608482015260a490fd5b8054600160401b81101561088c57610b4191600182018155610a36565b919091610a235760208163ffffffff8060019451161663ffffffff198554161784550151910155565b9160409063ffffffff60ff7f6ee1e4f4075f3d067176140d34e87874244dd273294c05b2218133e49a2ba6f69486610ba28583610c1f565b80544386169086168103610be55750600101555b1691825f526001602052835f20865f52602052835f2082821683198254161790558351928352166020820152a2565b9050610c1a91508383165f526002602052865f208587165f52602052865f20610c0c61086c565b918252896020830152610b24565b610bb6565b60ff165f90815260026020908152604080832063ffffffff9490941683529290522080545f1981019081116107e157610c5791610a36565b5090565b60ff165f90815260036020526040902080545f1981019081116107e157610c57916109b3565b80156107e1575f190190565b60ff1690815f52600360205260405f2054805b610d2d5760405162461bcd60e51b815260206004820152605560248201527f496e64657852656769737472792e5f6f70657261746f72436f756e744174426c60448201527f6f636b4e756d6265723a2071756f72756d20646964206e6f742065786973742060648201527430ba1033b4bb32b710313637b1b590373ab6b132b960591b608482015260a490fd5b825f52600360205260405f205f198201908282116107e157610d529161029b916109b3565b63ffffffff81511663ffffffff84161015610d775750610d7190610c81565b80610ca0565b6020015163ffffffff169392505050565b60ff909291921691825f52600260205260405f2063ffffffff82165f5260205260405f2054805b610dbb57505050505f90565b835f52600260205260405f2063ffffffff83165f5260205260405f205f198201908282116107e157610df09161052a91610a36565b63ffffffff81511663ffffffff85161015610e155750610e0f90610c81565b80610daf565b60200151949350505050565b919063ffffffff81541663ffffffff43168091145f14610e635750610a2192509067ffffffff0000000082549160201b169067ffffffff000000001916179055565b91905060ff610a2193165f52600360205263ffffffff60405f2091610e8661086c565b9384521660208301526109c856fea26469706673582212205abe67ddeb674d2bcbcc31eb9506f73c41f02638f5d5516176da77605ebff1c264736f6c634300081b0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static DEPLOYED_BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"`\x80`@R4\x80\x15a\0\x0FW__\xFD[P`\x046\x10a\0\xB1W_5`\xE0\x1C\x80c\x89\x02bE\x11a\0oW\x80c\x89\x02bE\x14a\x01\xAFW\x80c\xA4\x8B\xB0\xAC\x14a\x01\xDFW\x80c\xBD)\xB8\xCD\x14a\x02\x0FW\x80c\xCA\xA3\xCDv\x14a\x02+W\x80c\xE2\xE6\x85\x80\x14a\x02IW\x80c\xF3A\t\"\x14a\x02yWa\0\xB1V[\x80b\xBF\xF0M\x14a\0\xB5W\x80c\x12\xD1\xD7M\x14a\0\xE5W\x80c&\xD9A\xF2\x14a\x01\x15W\x80c.\xD5\x83\xE5\x14a\x011W\x80cm\x14\xA9\x87\x14a\x01aW\x80c\x81!\x90o\x14a\x01\x7FW[__\xFD[a\0\xCF`\x04\x806\x03\x81\x01\x90a\0\xCA\x91\x90a\x12\xA9V[a\x02\xA9V[`@Qa\0\xDC\x91\x90a\x13\xCCV[`@Q\x80\x91\x03\x90\xF3[a\0\xFF`\x04\x806\x03\x81\x01\x90a\0\xFA\x91\x90a\x14LV[a\x04\x02V[`@Qa\x01\x0C\x91\x90a\x14\xC6V[`@Q\x80\x91\x03\x90\xF3[a\x01/`\x04\x806\x03\x81\x01\x90a\x01*\x91\x90a\x14\xDFV[a\x04UV[\0[a\x01K`\x04\x806\x03\x81\x01\x90a\x01F\x91\x90a\x15\nV[a\x05bV[`@Qa\x01X\x91\x90a\x14\xC6V[`@Q\x80\x91\x03\x90\xF3[a\x01ia\x06\x02V[`@Qa\x01v\x91\x90a\x15\x99V[`@Q\x80\x91\x03\x90\xF3[a\x01\x99`\x04\x806\x03\x81\x01\x90a\x01\x94\x91\x90a\x14\xDFV[a\x06&V[`@Qa\x01\xA6\x91\x90a\x15\xDFV[`@Q\x80\x91\x03\x90\xF3[a\x01\xC9`\x04\x806\x03\x81\x01\x90a\x01\xC4\x91\x90a\x14LV[a\x06\x92V[`@Qa\x01\xD6\x91\x90a\x16\xA0V[`@Q\x80\x91\x03\x90\xF3[a\x01\xF9`\x04\x806\x03\x81\x01\x90a\x01\xF4\x91\x90a\x14LV[a\x07\xA7V[`@Qa\x02\x06\x91\x90a\x15\xDFV[`@Q\x80\x91\x03\x90\xF3[a\x02)`\x04\x806\x03\x81\x01\x90a\x02$\x91\x90a\x12\xA9V[a\x08BV[\0[a\x023a\tZV[`@Qa\x02@\x91\x90a\x16\xCFV[`@Q\x80\x91\x03\x90\xF3[a\x02c`\x04\x806\x03\x81\x01\x90a\x02^\x91\x90a\x16\xE8V[a\t`V[`@Qa\x02p\x91\x90a\x175V[`@Q\x80\x91\x03\x90\xF3[a\x02\x93`\x04\x806\x03\x81\x01\x90a\x02\x8E\x91\x90a\x14\xDFV[a\t\x8DV[`@Qa\x02\xA0\x91\x90a\x175V[`@Q\x80\x91\x03\x90\xF3[``a\x02\xB3a\t\xB1V[_\x83\x83\x90Pg\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x81\x11\x15a\x02\xD1Wa\x02\xD0a\x17NV[[`@Q\x90\x80\x82R\x80` \x02` \x01\x82\x01`@R\x80\x15a\x02\xFFW\x81` \x01` \x82\x02\x806\x837\x80\x82\x01\x91PP\x90P[P\x90P__\x90P[\x84\x84\x90P\x81\x10\x15a\x03\xF6W_\x85\x85\x83\x81\x81\x10a\x03&Wa\x03%a\x17{V[[\x90P\x015`\xF8\x1C`\xF8\x1B`\xF8\x1C\x90P_`\x03_\x83`\xFF\x16`\xFF\x16\x81R` \x01\x90\x81R` \x01_ \x80T\x90P\x90P_\x81\x03a\x03\x95W`@Q\x7F\x08\xC3y\xA0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x81R`\x04\x01a\x03\x8C\x90a\x18(V[`@Q\x80\x91\x03\x90\xFD[_a\x03\x9F\x83a\nAV[\x90Pa\x03\xB8\x89\x84`\x01\x84a\x03\xB3\x91\x90a\x18sV[a\x0B\x80V[\x80\x85\x85\x81Q\x81\x10a\x03\xCCWa\x03\xCBa\x17{V[[` \x02` \x01\x01\x90c\xFF\xFF\xFF\xFF\x16\x90\x81c\xFF\xFF\xFF\xFF\x16\x81RPPPPP\x80\x80`\x01\x01\x91PPa\x03\x07V[P\x80\x91PP\x93\x92PPPV[a\x04\na\x11\xCBV[a\x04\x14\x83\x83a\x0C\x1DV[`@Q\x80`@\x01`@R\x90\x81_\x82\x01_\x90T\x90a\x01\0\n\x90\x04c\xFF\xFF\xFF\xFF\x16c\xFF\xFF\xFF\xFF\x16c\xFF\xFF\xFF\xFF\x16\x81R` \x01`\x01\x82\x01T\x81RPP\x90P\x92\x91PPV[a\x04]a\t\xB1V[_`\x03_\x83`\xFF\x16`\xFF\x16\x81R` \x01\x90\x81R` \x01_ \x80T\x90P\x14a\x04\xB9W`@Q\x7F\x08\xC3y\xA0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x81R`\x04\x01a\x04\xB0\x90a\x19\x1AV[`@Q\x80\x91\x03\x90\xFD[`\x03_\x82`\xFF\x16`\xFF\x16\x81R` \x01\x90\x81R` \x01_ `@Q\x80`@\x01`@R\x80Cc\xFF\xFF\xFF\xFF\x16\x81R` \x01_c\xFF\xFF\xFF\xFF\x16\x81RP\x90\x80`\x01\x81T\x01\x80\x82U\x80\x91PP`\x01\x90\x03\x90_R` _ \x01_\x90\x91\x90\x91\x90\x91P_\x82\x01Q\x81_\x01_a\x01\0\n\x81T\x81c\xFF\xFF\xFF\xFF\x02\x19\x16\x90\x83c\xFF\xFF\xFF\xFF\x16\x02\x17\x90UP` \x82\x01Q\x81_\x01`\x04a\x01\0\n\x81T\x81c\xFF\xFF\xFF\xFF\x02\x19\x16\x90\x83c\xFF\xFF\xFF\xFF\x16\x02\x17\x90UPPPPV[a\x05ja\x11\xCBV[`\x02_\x85`\xFF\x16`\xFF\x16\x81R` \x01\x90\x81R` \x01_ _\x84c\xFF\xFF\xFF\xFF\x16c\xFF\xFF\xFF\xFF\x16\x81R` \x01\x90\x81R` \x01_ \x82c\xFF\xFF\xFF\xFF\x16\x81T\x81\x10a\x05\xB4Wa\x05\xB3a\x17{V[[\x90_R` _ \x90`\x02\x02\x01`@Q\x80`@\x01`@R\x90\x81_\x82\x01_\x90T\x90a\x01\0\n\x90\x04c\xFF\xFF\xFF\xFF\x16c\xFF\xFF\xFF\xFF\x16c\xFF\xFF\xFF\xFF\x16\x81R` \x01`\x01\x82\x01T\x81RPP\x90P\x93\x92PPPV[\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x81V[a\x06.a\x11\xE9V[a\x067\x82a\x0C\xBCV[`@Q\x80`@\x01`@R\x90\x81_\x82\x01_\x90T\x90a\x01\0\n\x90\x04c\xFF\xFF\xFF\xFF\x16c\xFF\xFF\xFF\xFF\x16c\xFF\xFF\xFF\xFF\x16\x81R` \x01_\x82\x01`\x04\x90T\x90a\x01\0\n\x90\x04c\xFF\xFF\xFF\xFF\x16c\xFF\xFF\xFF\xFF\x16c\xFF\xFF\xFF\xFF\x16\x81RPP\x90P\x91\x90PV[``_a\x06\x9F\x84\x84a\r V[\x90P_\x81c\xFF\xFF\xFF\xFF\x16g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x81\x11\x15a\x06\xC2Wa\x06\xC1a\x17NV[[`@Q\x90\x80\x82R\x80` \x02` \x01\x82\x01`@R\x80\x15a\x06\xF0W\x81` \x01` \x82\x02\x806\x837\x80\x82\x01\x91PP\x90P[P\x90P__\x90P[\x82c\xFF\xFF\xFF\xFF\x16\x81\x10\x15a\x07\x9BWa\x07\x11\x86\x82\x87a\x0E[V[\x82\x82\x81Q\x81\x10a\x07$Wa\x07#a\x17{V[[` \x02` \x01\x01\x81\x81RPP__\x1B\x82\x82\x81Q\x81\x10a\x07FWa\x07Ea\x17{V[[` \x02` \x01\x01Q\x03a\x07\x8EW`@Q\x7F\x08\xC3y\xA0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x81R`\x04\x01a\x07\x85\x90a\x19\xCEV[`@Q\x80\x91\x03\x90\xFD[\x80\x80`\x01\x01\x91PPa\x06\xF8V[P\x80\x92PPP\x92\x91PPV[a\x07\xAFa\x11\xE9V[`\x03_\x84`\xFF\x16`\xFF\x16\x81R` \x01\x90\x81R` \x01_ \x82c\xFF\xFF\xFF\xFF\x16\x81T\x81\x10a\x07\xDEWa\x07\xDDa\x17{V[[\x90_R` _ \x01`@Q\x80`@\x01`@R\x90\x81_\x82\x01_\x90T\x90a\x01\0\n\x90\x04c\xFF\xFF\xFF\xFF\x16c\xFF\xFF\xFF\xFF\x16c\xFF\xFF\xFF\xFF\x16\x81R` \x01_\x82\x01`\x04\x90T\x90a\x01\0\n\x90\x04c\xFF\xFF\xFF\xFF\x16c\xFF\xFF\xFF\xFF\x16c\xFF\xFF\xFF\xFF\x16\x81RPP\x90P\x92\x91PPV[a\x08Ja\t\xB1V[__\x90P[\x82\x82\x90P\x81\x10\x15a\tTW_\x83\x83\x83\x81\x81\x10a\x08nWa\x08ma\x17{V[[\x90P\x015`\xF8\x1C`\xF8\x1B`\xF8\x1C\x90P_`\x03_\x83`\xFF\x16`\xFF\x16\x81R` \x01\x90\x81R` \x01_ \x80T\x90P\x90P_\x81\x03a\x08\xDDW`@Q\x7F\x08\xC3y\xA0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x81R`\x04\x01a\x08\xD4\x90a\x18(V[`@Q\x80\x91\x03\x90\xFD[_`\x01_\x84`\xFF\x16`\xFF\x16\x81R` \x01\x90\x81R` \x01_ _\x88\x81R` \x01\x90\x81R` \x01_ _\x90T\x90a\x01\0\n\x90\x04c\xFF\xFF\xFF\xFF\x16\x90P_a\t \x84a\x0F\x82V[\x90P_a\t-\x85\x83a\x0F\xC7V[\x90P\x80\x89\x14a\tBWa\tA\x81\x86\x85a\x0B\x80V[[PPPPP\x80\x80`\x01\x01\x91PPa\x08OV[PPPPV[__\x1B\x81V[`\x01` R\x81_R`@_ ` R\x80_R`@_ _\x91P\x91P\x90T\x90a\x01\0\n\x90\x04c\xFF\xFF\xFF\xFF\x16\x81V[_a\t\x97\x82a\x0C\xBCV[_\x01`\x04\x90T\x90a\x01\0\n\x90\x04c\xFF\xFF\xFF\xFF\x16\x90P\x91\x90PV[\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x163s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x16\x14a\n?W`@Q\x7F\x08\xC3y\xA0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x81R`\x04\x01a\n6\x90a\x1A\x82V[`@Q\x80\x91\x03\x90\xFD[V[__a\nL\x83a\x0C\xBCV[\x90P_`\x01\x82_\x01`\x04\x90T\x90a\x01\0\n\x90\x04c\xFF\xFF\xFF\xFF\x16a\no\x91\x90a\x1A\xA0V[\x90Pa\n|\x84\x83\x83a\x0F\xF6V[_`\x02_\x86`\xFF\x16`\xFF\x16\x81R` \x01\x90\x81R` \x01_ _`\x01\x84a\n\xA2\x91\x90a\x18sV[c\xFF\xFF\xFF\xFF\x16c\xFF\xFF\xFF\xFF\x16\x81R` \x01\x90\x81R` \x01_ \x80T\x90P\x03a\x0BvW`\x02_\x85`\xFF\x16`\xFF\x16\x81R` \x01\x90\x81R` \x01_ _`\x01\x83a\n\xE9\x91\x90a\x18sV[c\xFF\xFF\xFF\xFF\x16c\xFF\xFF\xFF\xFF\x16\x81R` \x01\x90\x81R` \x01_ `@Q\x80`@\x01`@R\x80Cc\xFF\xFF\xFF\xFF\x16\x81R` \x01__\x1B\x81RP\x90\x80`\x01\x81T\x01\x80\x82U\x80\x91PP`\x01\x90\x03\x90_R` _ \x90`\x02\x02\x01_\x90\x91\x90\x91\x90\x91P_\x82\x01Q\x81_\x01_a\x01\0\n\x81T\x81c\xFF\xFF\xFF\xFF\x02\x19\x16\x90\x83c\xFF\xFF\xFF\xFF\x16\x02\x17\x90UP` \x82\x01Q\x81`\x01\x01UPP[\x80\x92PPP\x91\x90PV[_a\x0B\x8B\x83\x83a\x0C\x1DV[\x90Pa\x0B\x99\x83\x83\x83\x87a\x10\xEEV[\x81`\x01_\x85`\xFF\x16`\xFF\x16\x81R` \x01\x90\x81R` \x01_ _\x86\x81R` \x01\x90\x81R` \x01_ _a\x01\0\n\x81T\x81c\xFF\xFF\xFF\xFF\x02\x19\x16\x90\x83c\xFF\xFF\xFF\xFF\x16\x02\x17\x90UP\x83\x7Fn\xE1\xE4\xF4\x07_=\x06qv\x14\r4\xE8xt$M\xD2s)L\x05\xB2!\x813\xE4\x9A+\xA6\xF6\x84\x84`@Qa\x0C\x0F\x92\x91\x90a\x1A\xE6V[`@Q\x80\x91\x03\x90\xA2PPPPV[__`\x02_\x85`\xFF\x16`\xFF\x16\x81R` \x01\x90\x81R` \x01_ _\x84c\xFF\xFF\xFF\xFF\x16c\xFF\xFF\xFF\xFF\x16\x81R` \x01\x90\x81R` \x01_ \x80T\x90P\x90P`\x02_\x85`\xFF\x16`\xFF\x16\x81R` \x01\x90\x81R` \x01_ _\x84c\xFF\xFF\xFF\xFF\x16c\xFF\xFF\xFF\xFF\x16\x81R` \x01\x90\x81R` \x01_ `\x01\x82a\x0C\x96\x91\x90a\x1B\x16V[\x81T\x81\x10a\x0C\xA7Wa\x0C\xA6a\x17{V[[\x90_R` _ \x90`\x02\x02\x01\x91PP\x92\x91PPV[__`\x03_\x84`\xFF\x16`\xFF\x16\x81R` \x01\x90\x81R` \x01_ \x80T\x90P\x90P`\x03_\x84`\xFF\x16`\xFF\x16\x81R` \x01\x90\x81R` \x01_ `\x01\x82a\x0C\xFF\x91\x90a\x1B\x16V[\x81T\x81\x10a\r\x10Wa\r\x0Fa\x17{V[[\x90_R` _ \x01\x91PP\x91\x90PV[__`\x03_\x85`\xFF\x16`\xFF\x16\x81R` \x01\x90\x81R` \x01_ \x80T\x90P\x90P_\x81\x90P[_\x81\x11\x15a\x0E\x19W_`\x03_\x87`\xFF\x16`\xFF\x16\x81R` \x01\x90\x81R` \x01_ `\x01\x83a\rq\x91\x90a\x1B\x16V[\x81T\x81\x10a\r\x82Wa\r\x81a\x17{V[[\x90_R` _ \x01`@Q\x80`@\x01`@R\x90\x81_\x82\x01_\x90T\x90a\x01\0\n\x90\x04c\xFF\xFF\xFF\xFF\x16c\xFF\xFF\xFF\xFF\x16c\xFF\xFF\xFF\xFF\x16\x81R` \x01_\x82\x01`\x04\x90T\x90a\x01\0\n\x90\x04c\xFF\xFF\xFF\xFF\x16c\xFF\xFF\xFF\xFF\x16c\xFF\xFF\xFF\xFF\x16\x81RPP\x90P\x84c\xFF\xFF\xFF\xFF\x16\x81_\x01Qc\xFF\xFF\xFF\xFF\x16\x11a\x0E\x05W\x80` \x01Q\x93PPPPa\x0EUV[P\x80\x80a\x0E\x11\x90a\x1BIV[\x91PPa\rDV[P`@Q\x7F\x08\xC3y\xA0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x81R`\x04\x01a\x0EL\x90a\x1C\x06V[`@Q\x80\x91\x03\x90\xFD[\x92\x91PPV[__`\x02_\x86`\xFF\x16`\xFF\x16\x81R` \x01\x90\x81R` \x01_ _\x85c\xFF\xFF\xFF\xFF\x16c\xFF\xFF\xFF\xFF\x16\x81R` \x01\x90\x81R` \x01_ \x80T\x90P\x90P_\x81\x90P[_\x81\x11\x15a\x0FsW_`\x02_\x88`\xFF\x16`\xFF\x16\x81R` \x01\x90\x81R` \x01_ _\x87c\xFF\xFF\xFF\xFF\x16c\xFF\xFF\xFF\xFF\x16\x81R` \x01\x90\x81R` \x01_ `\x01\x83a\x0E\xE2\x91\x90a\x1B\x16V[\x81T\x81\x10a\x0E\xF3Wa\x0E\xF2a\x17{V[[\x90_R` _ \x90`\x02\x02\x01`@Q\x80`@\x01`@R\x90\x81_\x82\x01_\x90T\x90a\x01\0\n\x90\x04c\xFF\xFF\xFF\xFF\x16c\xFF\xFF\xFF\xFF\x16c\xFF\xFF\xFF\xFF\x16\x81R` \x01`\x01\x82\x01T\x81RPP\x90P\x84c\xFF\xFF\xFF\xFF\x16\x81_\x01Qc\xFF\xFF\xFF\xFF\x16\x11a\x0F_W\x80` \x01Q\x93PPPPa\x0F{V[P\x80\x80a\x0Fk\x90a\x1BIV[\x91PPa\x0E\x9AV[P__\x1B\x91PP[\x93\x92PPPV[__a\x0F\x8D\x83a\x0C\xBCV[\x90P_`\x01\x82_\x01`\x04\x90T\x90a\x01\0\n\x90\x04c\xFF\xFF\xFF\xFF\x16a\x0F\xB0\x91\x90a\x18sV[\x90Pa\x0F\xBD\x84\x83\x83a\x0F\xF6V[\x80\x92PPP\x91\x90PV[__a\x0F\xD3\x84\x84a\x0C\x1DV[\x90P_\x81`\x01\x01T\x90Pa\x0F\xEB\x85\x85\x84__\x1Ba\x10\xEEV[\x80\x92PPP\x92\x91PPV[Cc\xFF\xFF\xFF\xFF\x16\x82_\x01_\x90T\x90a\x01\0\n\x90\x04c\xFF\xFF\xFF\xFF\x16c\xFF\xFF\xFF\xFF\x16\x03a\x10BW\x80\x82_\x01`\x04a\x01\0\n\x81T\x81c\xFF\xFF\xFF\xFF\x02\x19\x16\x90\x83c\xFF\xFF\xFF\xFF\x16\x02\x17\x90UPa\x10\xE9V[`\x03_\x84`\xFF\x16`\xFF\x16\x81R` \x01\x90\x81R` \x01_ `@Q\x80`@\x01`@R\x80Cc\xFF\xFF\xFF\xFF\x16\x81R` \x01\x83c\xFF\xFF\xFF\xFF\x16\x81RP\x90\x80`\x01\x81T\x01\x80\x82U\x80\x91PP`\x01\x90\x03\x90_R` _ \x01_\x90\x91\x90\x91\x90\x91P_\x82\x01Q\x81_\x01_a\x01\0\n\x81T\x81c\xFF\xFF\xFF\xFF\x02\x19\x16\x90\x83c\xFF\xFF\xFF\xFF\x16\x02\x17\x90UP` \x82\x01Q\x81_\x01`\x04a\x01\0\n\x81T\x81c\xFF\xFF\xFF\xFF\x02\x19\x16\x90\x83c\xFF\xFF\xFF\xFF\x16\x02\x17\x90UPPP[PPPV[Cc\xFF\xFF\xFF\xFF\x16\x82_\x01_\x90T\x90a\x01\0\n\x90\x04c\xFF\xFF\xFF\xFF\x16c\xFF\xFF\xFF\xFF\x16\x03a\x11!W\x80\x82`\x01\x01\x81\x90UPa\x11\xC5V[`\x02_\x85`\xFF\x16`\xFF\x16\x81R` \x01\x90\x81R` \x01_ _\x84c\xFF\xFF\xFF\xFF\x16c\xFF\xFF\xFF\xFF\x16\x81R` \x01\x90\x81R` \x01_ `@Q\x80`@\x01`@R\x80Cc\xFF\xFF\xFF\xFF\x16\x81R` \x01\x83\x81RP\x90\x80`\x01\x81T\x01\x80\x82U\x80\x91PP`\x01\x90\x03\x90_R` _ \x90`\x02\x02\x01_\x90\x91\x90\x91\x90\x91P_\x82\x01Q\x81_\x01_a\x01\0\n\x81T\x81c\xFF\xFF\xFF\xFF\x02\x19\x16\x90\x83c\xFF\xFF\xFF\xFF\x16\x02\x17\x90UP` \x82\x01Q\x81`\x01\x01UPP[PPPPV[`@Q\x80`@\x01`@R\x80_c\xFF\xFF\xFF\xFF\x16\x81R` \x01_\x81RP\x90V[`@Q\x80`@\x01`@R\x80_c\xFF\xFF\xFF\xFF\x16\x81R` \x01_c\xFF\xFF\xFF\xFF\x16\x81RP\x90V[__\xFD[__\xFD[_\x81\x90P\x91\x90PV[a\x12'\x81a\x12\x15V[\x81\x14a\x121W__\xFD[PV[_\x815\x90Pa\x12B\x81a\x12\x1EV[\x92\x91PPV[__\xFD[__\xFD[__\xFD[__\x83`\x1F\x84\x01\x12a\x12iWa\x12ha\x12HV[[\x825\x90Pg\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x81\x11\x15a\x12\x86Wa\x12\x85a\x12LV[[` \x83\x01\x91P\x83`\x01\x82\x02\x83\x01\x11\x15a\x12\xA2Wa\x12\xA1a\x12PV[[\x92P\x92\x90PV[___`@\x84\x86\x03\x12\x15a\x12\xC0Wa\x12\xBFa\x12\rV[[_a\x12\xCD\x86\x82\x87\x01a\x124V[\x93PP` \x84\x015g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x81\x11\x15a\x12\xEEWa\x12\xEDa\x12\x11V[[a\x12\xFA\x86\x82\x87\x01a\x12TV[\x92P\x92PP\x92P\x92P\x92V[_\x81Q\x90P\x91\x90PV[_\x82\x82R` \x82\x01\x90P\x92\x91PPV[_\x81\x90P` \x82\x01\x90P\x91\x90PV[_c\xFF\xFF\xFF\xFF\x82\x16\x90P\x91\x90PV[a\x13G\x81a\x13/V[\x82RPPV[_a\x13X\x83\x83a\x13>V[` \x83\x01\x90P\x92\x91PPV[_` \x82\x01\x90P\x91\x90PV[_a\x13z\x82a\x13\x06V[a\x13\x84\x81\x85a\x13\x10V[\x93Pa\x13\x8F\x83a\x13 V[\x80_[\x83\x81\x10\x15a\x13\xBFW\x81Qa\x13\xA6\x88\x82a\x13MV[\x97Pa\x13\xB1\x83a\x13dV[\x92PP`\x01\x81\x01\x90Pa\x13\x92V[P\x85\x93PPPP\x92\x91PPV[_` \x82\x01\x90P\x81\x81\x03_\x83\x01Ra\x13\xE4\x81\x84a\x13pV[\x90P\x92\x91PPV[_`\xFF\x82\x16\x90P\x91\x90PV[a\x14\x01\x81a\x13\xECV[\x81\x14a\x14\x0BW__\xFD[PV[_\x815\x90Pa\x14\x1C\x81a\x13\xF8V[\x92\x91PPV[a\x14+\x81a\x13/V[\x81\x14a\x145W__\xFD[PV[_\x815\x90Pa\x14F\x81a\x14\"V[\x92\x91PPV[__`@\x83\x85\x03\x12\x15a\x14bWa\x14aa\x12\rV[[_a\x14o\x85\x82\x86\x01a\x14\x0EV[\x92PP` a\x14\x80\x85\x82\x86\x01a\x148V[\x91PP\x92P\x92\x90PV[a\x14\x93\x81a\x12\x15V[\x82RPPV[`@\x82\x01_\x82\x01Qa\x14\xAD_\x85\x01\x82a\x13>V[P` \x82\x01Qa\x14\xC0` \x85\x01\x82a\x14\x8AV[PPPPV[_`@\x82\x01\x90Pa\x14\xD9_\x83\x01\x84a\x14\x99V[\x92\x91PPV[_` \x82\x84\x03\x12\x15a\x14\xF4Wa\x14\xF3a\x12\rV[[_a\x15\x01\x84\x82\x85\x01a\x14\x0EV[\x91PP\x92\x91PPV[___``\x84\x86\x03\x12\x15a\x15!Wa\x15 a\x12\rV[[_a\x15.\x86\x82\x87\x01a\x14\x0EV[\x93PP` a\x15?\x86\x82\x87\x01a\x148V[\x92PP`@a\x15P\x86\x82\x87\x01a\x148V[\x91PP\x92P\x92P\x92V[_s\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x82\x16\x90P\x91\x90PV[_a\x15\x83\x82a\x15ZV[\x90P\x91\x90PV[a\x15\x93\x81a\x15yV[\x82RPPV[_` \x82\x01\x90Pa\x15\xAC_\x83\x01\x84a\x15\x8AV[\x92\x91PPV[`@\x82\x01_\x82\x01Qa\x15\xC6_\x85\x01\x82a\x13>V[P` \x82\x01Qa\x15\xD9` \x85\x01\x82a\x13>V[PPPPV[_`@\x82\x01\x90Pa\x15\xF2_\x83\x01\x84a\x15\xB2V[\x92\x91PPV[_\x81Q\x90P\x91\x90PV[_\x82\x82R` \x82\x01\x90P\x92\x91PPV[_\x81\x90P` \x82\x01\x90P\x91\x90PV[_a\x16,\x83\x83a\x14\x8AV[` \x83\x01\x90P\x92\x91PPV[_` \x82\x01\x90P\x91\x90PV[_a\x16N\x82a\x15\xF8V[a\x16X\x81\x85a\x16\x02V[\x93Pa\x16c\x83a\x16\x12V[\x80_[\x83\x81\x10\x15a\x16\x93W\x81Qa\x16z\x88\x82a\x16!V[\x97Pa\x16\x85\x83a\x168V[\x92PP`\x01\x81\x01\x90Pa\x16fV[P\x85\x93PPPP\x92\x91PPV[_` \x82\x01\x90P\x81\x81\x03_\x83\x01Ra\x16\xB8\x81\x84a\x16DV[\x90P\x92\x91PPV[a\x16\xC9\x81a\x12\x15V[\x82RPPV[_` \x82\x01\x90Pa\x16\xE2_\x83\x01\x84a\x16\xC0V[\x92\x91PPV[__`@\x83\x85\x03\x12\x15a\x16\xFEWa\x16\xFDa\x12\rV[[_a\x17\x0B\x85\x82\x86\x01a\x14\x0EV[\x92PP` a\x17\x1C\x85\x82\x86\x01a\x124V[\x91PP\x92P\x92\x90PV[a\x17/\x81a\x13/V[\x82RPPV[_` \x82\x01\x90Pa\x17H_\x83\x01\x84a\x17&V[\x92\x91PPV[\x7FNH{q\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0_R`A`\x04R`$_\xFD[\x7FNH{q\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0_R`2`\x04R`$_\xFD[_\x82\x82R` \x82\x01\x90P\x92\x91PPV[\x7FIndexRegistry.registerOperator: _\x82\x01R\x7Fquorum does not exist\0\0\0\0\0\0\0\0\0\0\0` \x82\x01RPV[_a\x18\x12`5\x83a\x17\xA8V[\x91Pa\x18\x1D\x82a\x17\xB8V[`@\x82\x01\x90P\x91\x90PV[_` \x82\x01\x90P\x81\x81\x03_\x83\x01Ra\x18?\x81a\x18\x06V[\x90P\x91\x90PV[\x7FNH{q\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0_R`\x11`\x04R`$_\xFD[_a\x18}\x82a\x13/V[\x91Pa\x18\x88\x83a\x13/V[\x92P\x82\x82\x03\x90Pc\xFF\xFF\xFF\xFF\x81\x11\x15a\x18\xA4Wa\x18\xA3a\x18FV[[\x92\x91PPV[\x7FIndexRegistry.createQuorum: quor_\x82\x01R\x7Fum already exists\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0` \x82\x01RPV[_a\x19\x04`1\x83a\x17\xA8V[\x91Pa\x19\x0F\x82a\x18\xAAV[`@\x82\x01\x90P\x91\x90PV[_` \x82\x01\x90P\x81\x81\x03_\x83\x01Ra\x191\x81a\x18\xF8V[\x90P\x91\x90PV[\x7FIndexRegistry.getOperatorListAtB_\x82\x01R\x7FlockNumber: operator does not ex` \x82\x01R\x7Fist at the given block number\0\0\0`@\x82\x01RPV[_a\x19\xB8`]\x83a\x17\xA8V[\x91Pa\x19\xC3\x82a\x198V[``\x82\x01\x90P\x91\x90PV[_` \x82\x01\x90P\x81\x81\x03_\x83\x01Ra\x19\xE5\x81a\x19\xACV[\x90P\x91\x90PV[\x7FIndexRegistry._checkRegistryCoor_\x82\x01R\x7Fdinator: caller is not the regis` \x82\x01R\x7Ftry coordinator\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0`@\x82\x01RPV[_a\x1Al`O\x83a\x17\xA8V[\x91Pa\x1Aw\x82a\x19\xECV[``\x82\x01\x90P\x91\x90PV[_` \x82\x01\x90P\x81\x81\x03_\x83\x01Ra\x1A\x99\x81a\x1A`V[\x90P\x91\x90PV[_a\x1A\xAA\x82a\x13/V[\x91Pa\x1A\xB5\x83a\x13/V[\x92P\x82\x82\x01\x90Pc\xFF\xFF\xFF\xFF\x81\x11\x15a\x1A\xD1Wa\x1A\xD0a\x18FV[[\x92\x91PPV[a\x1A\xE0\x81a\x13\xECV[\x82RPPV[_`@\x82\x01\x90Pa\x1A\xF9_\x83\x01\x85a\x1A\xD7V[a\x1B\x06` \x83\x01\x84a\x17&V[\x93\x92PPPV[_\x81\x90P\x91\x90PV[_a\x1B \x82a\x1B\rV[\x91Pa\x1B+\x83a\x1B\rV[\x92P\x82\x82\x03\x90P\x81\x81\x11\x15a\x1BCWa\x1BBa\x18FV[[\x92\x91PPV[_a\x1BS\x82a\x1B\rV[\x91P_\x82\x03a\x1BeWa\x1Bda\x18FV[[`\x01\x82\x03\x90P\x91\x90PV[\x7FIndexRegistry._operatorCountAtBl_\x82\x01R\x7FockNumber: quorum did not exist ` \x82\x01R\x7Fat given block number\0\0\0\0\0\0\0\0\0\0\0`@\x82\x01RPV[_a\x1B\xF0`U\x83a\x17\xA8V[\x91Pa\x1B\xFB\x82a\x1BpV[``\x82\x01\x90P\x91\x90PV[_` \x82\x01\x90P\x81\x81\x03_\x83\x01Ra\x1C\x1D\x81a\x1B\xE4V[\x90P\x91\x90PV\xFE\xA2dipfsX\"\x12 \x9Fv\x0E\x19A\xA5\xDA:8\xB5\x10\xB4\xB7\x89\xFE\xCD\nM\xF7ma\x93\x9D\xDB\x05\x18\xF3\xF8\xAAq\x97sdsolcC\0\x08\x1B\x003",
+        b"`\x80`@R`\x046\x10\x15a\0\x11W_\x80\xFD[_5`\xE0\x1C\x80b\xBF\xF0M\x14a\x06YW\x80c\x12\xD1\xD7M\x14a\x06\x14W\x80c&\xD9A\xF2\x14a\x05SW\x80c.\xD5\x83\xE5\x14a\x04\xB9W\x80cm\x14\xA9\x87\x14a\x04uW\x80c\x81!\x90o\x14a\x049W\x80c\x89\x02bE\x14a\x02\xCAW\x80c\xA4\x8B\xB0\xAC\x14a\x02MW\x80c\xBD)\xB8\xCD\x14a\x012W\x80c\xCA\xA3\xCDv\x14a\x01\x18W\x80c\xE2\xE6\x85\x80\x14a\0\xD4Wc\xF3A\t\"\x14a\0\x9CW_\x80\xFD[4a\0\xD0W` 6`\x03\x19\x01\x12a\0\xD0W` c\xFF\xFF\xFF\xFFa\0\xC4a\0\xBFa\x08IV[a\x0C[V[T\x82\x1C\x16`@Q\x90\x81R\xF3[_\x80\xFD[4a\0\xD0W`@6`\x03\x19\x01\x12a\0\xD0W`\xFFa\0\xEFa\x08IV[\x16_R`\x01` R`@_ `$5_R` R` c\xFF\xFF\xFF\xFF`@_ T\x16`@Q\x90\x81R\xF3[4a\0\xD0W_6`\x03\x19\x01\x12a\0\xD0W` `@Q_\x81R\xF3[4a\0\xD0Wa\x01@6a\x07\xF5V[\x91\x90a\x01Ja\noV[Cc\xFF\xFF\xFF\xFF\x16\x91_[\x84\x81\x10a\x01]W\0[\x80a\x01k`\x01\x92\x87\x86a\x08\xDEV[5`\xF8\x1C\x80_R`\x03` Ra\x01\x86`@_ T\x15\x15a\x08\xFEV[\x80_R\x82` R`@_ \x84_R` Rc\xFF\xFF\xFF\xFF`@_ T\x16a\x01\xAB\x82a\x0C[V[\x91a\x01\xCAa\x01\xC2c\xFF\xFF\xFF\xFF\x85T` \x1C\x16a\thV[\x80\x94\x83a\x0E!V[a\x01\xD4\x83\x82a\x0C\x1FV[\x92\x85\x84\x01\x89c\xFF\xFF\xFF\xFF\x82T\x96T\x16\x14_\x14a\x02\x11W_\x91PU[\x82\x86\x03a\x02\0W[PPP\x01a\x01TV[a\x02\t\x92a\x0BjV[\x86\x80\x80a\x01\xF7V[P\x81_R`\x02` Rc\xFF\xFF\xFF\xFF`@_ \x91\x16_R` Ra\x02H`@_ a\x029a\x08lV[\x90\x8A\x82R_` \x83\x01Ra\x0B$V[a\x01\xEFV[4a\0\xD0W`@6`\x03\x19\x01\x12a\0\xD0Wa\x02\xC6a\x02\xA1a\x02\x9Ba\x02oa\x08IV[`\xFFa\x02ya\x08YV[\x91_` a\x02\x85a\x08lV[\x82\x81R\x01R\x16_R`\x03` R`@_ a\t\xB3V[Pa\nOV[`@Q\x91\x82\x91\x82\x91\x90\x91` c\xFF\xFF\xFF\xFF\x81`@\x84\x01\x95\x82\x81Q\x16\x85R\x01Q\x16\x91\x01RV[\x03\x90\xF3[4a\0\xD0W`@6`\x03\x19\x01\x12a\0\xD0Wa\x02\xE3a\x08IV[a\x02\xEBa\x08YV[\x90c\xFF\xFF\xFF\xFFa\x02\xFB\x83\x83a\x0C\x8DV[\x16a\x03\ra\x03\x08\x82a\x08\xC6V[a\x08\xA0V[\x92\x81\x84Ra\x03\x1A\x82a\x08\xC6V[` \x85\x01\x93\x90`\x1F\x19\x016\x857_[\x83\x81\x10a\x03tW\x84\x86`@Q\x91\x82\x91` \x83\x01\x90` \x84RQ\x80\x91R`@\x83\x01\x91\x90_[\x81\x81\x10a\x03[WPPP\x03\x90\xF3[\x82Q\x84R\x85\x94P` \x93\x84\x01\x93\x90\x92\x01\x91`\x01\x01a\x03MV[a\x03\x85\x83c\xFF\xFF\xFF\xFF\x83\x16\x84a\r\x88V[a\x03\x8F\x82\x88a\t\x80V[Ra\x03\x9A\x81\x87a\t\x80V[Q\x15a\x03\xA8W`\x01\x01a\x03)V[`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`]`$\x82\x01R\x7FIndexRegistry.getOperatorListAtB`D\x82\x01R\x7FlockNumber: operator does not ex`d\x82\x01R\x7Fist at the given block number\0\0\0`\x84\x82\x01R`\xA4\x90\xFD[4a\0\xD0W` 6`\x03\x19\x01\x12a\0\xD0Wa\x02\xC6a\x02\xA1a\x04pa\x04[a\x08IV[_` a\x04fa\x08lV[\x82\x81R\x01Ra\x0C[V[a\nOV[4a\0\xD0W_6`\x03\x19\x01\x12a\0\xD0W`@Q\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0`\x01`\x01`\xA0\x1B\x03\x16\x81R` \x90\xF3[4a\0\xD0W``6`\x03\x19\x01\x12a\0\xD0Wa\x04\xD2a\x08IV[a\x04\xDAa\x08YV[`D5\x91c\xFF\xFF\xFF\xFF\x83\x16\x83\x03a\0\xD0Wa\x02\xC6\x92a\x050\x92`\xFFa\x05*\x93_` a\x05\x04a\x08lV[\x82\x81R\x01R\x16_R`\x02` Rc\xFF\xFF\xFF\xFF`@_ \x91\x16_R` R`@_ a\n6V[Pa\t\x94V[`@Q\x91\x82\x91\x82\x91\x90\x91` \x80`@\x83\x01\x94c\xFF\xFF\xFF\xFF\x81Q\x16\x84R\x01Q\x91\x01RV[4a\0\xD0W` 6`\x03\x19\x01\x12a\0\xD0W`\xFFa\x05na\x08IV[a\x05va\noV[\x16\x80_R`\x03` R`@_ Ta\x05\xB5W_R`\x03` Ra\x05\xB3`@_ a\x05\x9Ea\x08lV[\x90c\xFF\xFF\xFF\xFFC\x16\x82R_` \x83\x01Ra\t\xC8V[\0[`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`1`$\x82\x01R\x7FIndexRegistry.createQuorum: quor`D\x82\x01Rpum already exists`x\x1B`d\x82\x01R`\x84\x90\xFD[4a\0\xD0W`@6`\x03\x19\x01\x12a\0\xD0Wa\x02\xC6a\x050a\x06Ta\x066a\x08IV[a\x06>a\x08YV[\x90_` a\x06Ja\x08lV[\x82\x81R\x01Ra\x0C\x1FV[a\t\x94V[4a\0\xD0Wa\x06g6a\x07\xF5V[\x90a\x06pa\noV[a\x06|a\x03\x08\x83a\x08\xC6V[\x92\x82\x84Ra\x06\x89\x83a\x08\xC6V[` \x85\x01\x93\x90`\x1F\x19\x016\x857_[\x81\x81\x10a\x06\xE9W\x84\x86`@Q\x91\x82\x91` \x83\x01\x90` \x84RQ\x80\x91R`@\x83\x01\x91\x90_[\x81\x81\x10a\x06\xCAWPPP\x03\x90\xF3[\x82Qc\xFF\xFF\xFF\xFF\x16\x84R\x85\x94P` \x93\x84\x01\x93\x90\x92\x01\x91`\x01\x01a\x06\xBCV[a\x06\xF4\x81\x83\x86a\x08\xDEV[5`\xF8\x1C\x90\x81_R`\x03` Ra\x07\x10`@_ T\x15\x15a\x08\xFEV[a\x07\x19\x82a\x0C[V[`\x01c\xFF\xFF\xFF\xFF\x82T` \x1C\x16\x01\x90c\xFF\xFF\xFF\xFF\x82\x11a\x07\xE1W\x83a\x07D\x83a\x07\x7F\x93`\x01\x97a\x0E!V[\x80_R`\x02` R`@_ c\xFF\xFF\xFF\xFFa\x07^\x85a\thV[\x16_R` R`@_ T\x15a\x07\x98W[a\x07x\x83a\thV[\x90\x87a\x0BjV[c\xFF\xFF\xFF\xFFa\x07\x8E\x83\x8Aa\t\x80V[\x91\x16\x90R\x01a\x06\x98V[\x80_R`\x02` R`@_ c\xFF\xFF\xFF\xFFa\x07\xB2\x85a\thV[\x16_R` Ra\x07\xDC`@_ a\x07\xC7a\x08lV[\x90c\xFF\xFF\xFF\xFFC\x16\x82R_` \x83\x01Ra\x0B$V[a\x07oV[cNH{q`\xE0\x1B_R`\x11`\x04R`$_\xFD[`@`\x03\x19\x82\x01\x12a\0\xD0W`\x045\x91`$5g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x81\x11a\0\xD0W\x82`#\x82\x01\x12\x15a\0\xD0W\x80`\x04\x015\x92g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x84\x11a\0\xD0W`$\x84\x83\x01\x01\x11a\0\xD0W`$\x01\x91\x90V[`\x045\x90`\xFF\x82\x16\x82\x03a\0\xD0WV[`$5\x90c\xFF\xFF\xFF\xFF\x82\x16\x82\x03a\0\xD0WV[`@Q\x90`@\x82\x01\x82\x81\x10g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x82\x11\x17a\x08\x8CW`@RV[cNH{q`\xE0\x1B_R`A`\x04R`$_\xFD[`@Q\x91\x90`\x1F\x01`\x1F\x19\x16\x82\x01g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x81\x11\x83\x82\x10\x17a\x08\x8CW`@RV[g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x81\x11a\x08\x8CW`\x05\x1B` \x01\x90V[\x90\x82\x10\x15a\x08\xEAW\x01\x90V[cNH{q`\xE0\x1B_R`2`\x04R`$_\xFD[\x15a\t\x05WV[`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`5`$\x82\x01R\x7FIndexRegistry.registerOperator: `D\x82\x01Rt\x1C][\xDC\x9D[H\x19\x1B\xD9\\\xC8\x1B\x9B\xDD\x08\x19^\x1A\\\xDD`Z\x1B`d\x82\x01R`\x84\x90\xFD[c\xFF\xFF\xFF\xFF_\x19\x91\x16\x01\x90c\xFF\xFF\xFF\xFF\x82\x11a\x07\xE1WV[\x80Q\x82\x10\x15a\x08\xEAW` \x91`\x05\x1B\x01\x01\x90V[\x90`\x01a\t\x9Fa\x08lV[\x92c\xFF\xFF\xFF\xFF\x81T\x16\x84R\x01T` \x83\x01RV[\x80T\x82\x10\x15a\x08\xEAW_R` _ \x01\x90_\x90V[\x80T`\x01`@\x1B\x81\x10\x15a\x08\x8CWa\t\xE5\x91`\x01\x82\x01\x81Ua\t\xB3V[a\n#W\x81Q\x81T` \x93\x84\x01Qg\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x19\x90\x91\x16c\xFF\xFF\xFF\xFF\x92\x90\x92\x16\x91\x90\x91\x17\x92\x1Bg\xFF\xFF\xFF\xFF\0\0\0\0\x16\x91\x90\x91\x17\x90UV[V[cNH{q`\xE0\x1B_R_`\x04R`$_\xFD[\x80T\x82\x10\x15a\x08\xEAW_R` _ \x90`\x01\x1B\x01\x90_\x90V[\x90c\xFF\xFF\xFF\xFFa\n]a\x08lV[\x92T\x81\x81\x16\x84R` \x1C\x16` \x83\x01RV[\x7F\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0`\x01`\x01`\xA0\x1B\x03\x163\x03a\n\xA1WV[`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`O`$\x82\x01R\x7FIndexRegistry._checkRegistryCoor`D\x82\x01R\x7Fdinator: caller is not the regis`d\x82\x01Rn:9<\x901\xB7\xB7\xB924\xB70\xBA7\xB9`\x89\x1B`\x84\x82\x01R`\xA4\x90\xFD[\x80T`\x01`@\x1B\x81\x10\x15a\x08\x8CWa\x0BA\x91`\x01\x82\x01\x81Ua\n6V[\x91\x90\x91a\n#W` \x81c\xFF\xFF\xFF\xFF\x80`\x01\x94Q\x16\x16c\xFF\xFF\xFF\xFF\x19\x85T\x16\x17\x84U\x01Q\x91\x01UV[\x91`@\x90c\xFF\xFF\xFF\xFF`\xFF\x7Fn\xE1\xE4\xF4\x07_=\x06qv\x14\r4\xE8xt$M\xD2s)L\x05\xB2!\x813\xE4\x9A+\xA6\xF6\x94\x86a\x0B\xA2\x85\x83a\x0C\x1FV[\x80TC\x86\x16\x90\x86\x16\x81\x03a\x0B\xE5WP`\x01\x01U[\x16\x91\x82_R`\x01` R\x83_ \x86_R` R\x83_ \x82\x82\x16\x83\x19\x82T\x16\x17\x90U\x83Q\x92\x83R\x16` \x82\x01R\xA2V[\x90Pa\x0C\x1A\x91P\x83\x83\x16_R`\x02` R\x86_ \x85\x87\x16_R` R\x86_ a\x0C\x0Ca\x08lV[\x91\x82R\x89` \x83\x01Ra\x0B$V[a\x0B\xB6V[`\xFF\x16_\x90\x81R`\x02` \x90\x81R`@\x80\x83 c\xFF\xFF\xFF\xFF\x94\x90\x94\x16\x83R\x92\x90R \x80T_\x19\x81\x01\x90\x81\x11a\x07\xE1Wa\x0CW\x91a\n6V[P\x90V[`\xFF\x16_\x90\x81R`\x03` R`@\x90 \x80T_\x19\x81\x01\x90\x81\x11a\x07\xE1Wa\x0CW\x91a\t\xB3V[\x80\x15a\x07\xE1W_\x19\x01\x90V[`\xFF\x16\x90\x81_R`\x03` R`@_ T\x80[a\r-W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`U`$\x82\x01R\x7FIndexRegistry._operatorCountAtBl`D\x82\x01R\x7FockNumber: quorum did not exist `d\x82\x01Rt0\xBA\x103\xB4\xBB2\xB7\x10167\xB1\xB5\x907:\xB6\xB12\xB9`Y\x1B`\x84\x82\x01R`\xA4\x90\xFD[\x82_R`\x03` R`@_ _\x19\x82\x01\x90\x82\x82\x11a\x07\xE1Wa\rR\x91a\x02\x9B\x91a\t\xB3V[c\xFF\xFF\xFF\xFF\x81Q\x16c\xFF\xFF\xFF\xFF\x84\x16\x10\x15a\rwWPa\rq\x90a\x0C\x81V[\x80a\x0C\xA0V[` \x01Qc\xFF\xFF\xFF\xFF\x16\x93\x92PPPV[`\xFF\x90\x92\x91\x92\x16\x91\x82_R`\x02` R`@_ c\xFF\xFF\xFF\xFF\x82\x16_R` R`@_ T\x80[a\r\xBBWPPPP_\x90V[\x83_R`\x02` R`@_ c\xFF\xFF\xFF\xFF\x83\x16_R` R`@_ _\x19\x82\x01\x90\x82\x82\x11a\x07\xE1Wa\r\xF0\x91a\x05*\x91a\n6V[c\xFF\xFF\xFF\xFF\x81Q\x16c\xFF\xFF\xFF\xFF\x85\x16\x10\x15a\x0E\x15WPa\x0E\x0F\x90a\x0C\x81V[\x80a\r\xAFV[` \x01Q\x94\x93PPPPV[\x91\x90c\xFF\xFF\xFF\xFF\x81T\x16c\xFF\xFF\xFF\xFFC\x16\x80\x91\x14_\x14a\x0EcWPa\n!\x92P\x90g\xFF\xFF\xFF\xFF\0\0\0\0\x82T\x91` \x1B\x16\x90g\xFF\xFF\xFF\xFF\0\0\0\0\x19\x16\x17\x90UV[\x91\x90P`\xFFa\n!\x93\x16_R`\x03` Rc\xFF\xFF\xFF\xFF`@_ \x91a\x0E\x86a\x08lV[\x93\x84R\x16` \x83\x01Ra\t\xC8V\xFE\xA2dipfsX\"\x12 Z\xBEg\xDD\xEBgM+\xCB\xCC1\xEB\x95\x06\xF7<A\xF0&8\xF5\xD5Qav\xDAw`^\xBF\xF1\xC2dsolcC\0\x08\x1B\x003",
     );
     /**Event with signature `Initialized(uint8)` and selector `0x7f26b83ff96e1f2b6a682f133852f6798a09c465da95921460cefb3847402498`.
-```solidity
-event Initialized(uint8 version);
-```*/
+    ```solidity
+    event Initialized(uint8 version);
+    ```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -1027,45 +979,15 @@ event Initialized(uint8 version);
         #[automatically_derived]
         impl alloy_sol_types::SolEvent for Initialized {
             type DataTuple<'a> = (alloy::sol_types::sol_data::Uint<8>,);
-            type DataToken<'a> = <Self::DataTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (alloy_sol_types::sol_data::FixedBytes<32>,);
             const SIGNATURE: &'static str = "Initialized(uint8)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
-                127u8,
-                38u8,
-                184u8,
-                63u8,
-                249u8,
-                110u8,
-                31u8,
-                43u8,
-                106u8,
-                104u8,
-                47u8,
-                19u8,
-                56u8,
-                82u8,
-                246u8,
-                121u8,
-                138u8,
-                9u8,
-                196u8,
-                101u8,
-                218u8,
-                149u8,
-                146u8,
-                20u8,
-                96u8,
-                206u8,
-                251u8,
-                56u8,
-                71u8,
-                64u8,
-                36u8,
-                152u8,
-            ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
+                alloy_sol_types::private::B256::new([
+                    127u8, 38u8, 184u8, 63u8, 249u8, 110u8, 31u8, 43u8, 106u8, 104u8, 47u8, 19u8,
+                    56u8, 82u8, 246u8, 121u8, 138u8, 9u8, 196u8, 101u8, 218u8, 149u8, 146u8, 20u8,
+                    96u8, 206u8, 251u8, 56u8, 71u8, 64u8, 36u8, 152u8,
+                ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -1080,22 +1002,20 @@ event Initialized(uint8 version);
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(
-                        alloy_sol_types::Error::invalid_event_signature_hash(
-                            Self::SIGNATURE,
-                            topics.0,
-                            Self::SIGNATURE_HASH,
-                        ),
-                    );
+                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
+                        Self::SIGNATURE,
+                        topics.0,
+                        Self::SIGNATURE_HASH,
+                    ));
                 }
                 Ok(())
             }
             #[inline]
             fn tokenize_body(&self) -> Self::DataToken<'_> {
                 (
-                    <alloy::sol_types::sol_data::Uint<
-                        8,
-                    > as alloy_sol_types::SolType>::tokenize(&self.version),
+                    <alloy::sol_types::sol_data::Uint<8> as alloy_sol_types::SolType>::tokenize(
+                        &self.version,
+                    ),
                 )
             }
             #[inline]
@@ -1110,9 +1030,7 @@ event Initialized(uint8 version);
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(
-                    Self::SIGNATURE_HASH,
-                );
+                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
                 Ok(())
             }
         }
@@ -1134,9 +1052,9 @@ event Initialized(uint8 version);
         }
     };
     /**Event with signature `QuorumIndexUpdate(bytes32,uint8,uint32)` and selector `0x6ee1e4f4075f3d067176140d34e87874244dd273294c05b2218133e49a2ba6f6`.
-```solidity
-event QuorumIndexUpdate(bytes32 indexed operatorId, uint8 quorumNumber, uint32 newOperatorIndex);
-```*/
+    ```solidity
+    event QuorumIndexUpdate(bytes32 indexed operatorId, uint8 quorumNumber, uint32 newOperatorIndex);
+    ```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -1166,48 +1084,18 @@ event QuorumIndexUpdate(bytes32 indexed operatorId, uint8 quorumNumber, uint32 n
                 alloy::sol_types::sol_data::Uint<8>,
                 alloy::sol_types::sol_data::Uint<32>,
             );
-            type DataToken<'a> = <Self::DataTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (
                 alloy_sol_types::sol_data::FixedBytes<32>,
                 alloy::sol_types::sol_data::FixedBytes<32>,
             );
             const SIGNATURE: &'static str = "QuorumIndexUpdate(bytes32,uint8,uint32)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
-                110u8,
-                225u8,
-                228u8,
-                244u8,
-                7u8,
-                95u8,
-                61u8,
-                6u8,
-                113u8,
-                118u8,
-                20u8,
-                13u8,
-                52u8,
-                232u8,
-                120u8,
-                116u8,
-                36u8,
-                77u8,
-                210u8,
-                115u8,
-                41u8,
-                76u8,
-                5u8,
-                178u8,
-                33u8,
-                129u8,
-                51u8,
-                228u8,
-                154u8,
-                43u8,
-                166u8,
-                246u8,
-            ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
+                alloy_sol_types::private::B256::new([
+                    110u8, 225u8, 228u8, 244u8, 7u8, 95u8, 61u8, 6u8, 113u8, 118u8, 20u8, 13u8,
+                    52u8, 232u8, 120u8, 116u8, 36u8, 77u8, 210u8, 115u8, 41u8, 76u8, 5u8, 178u8,
+                    33u8, 129u8, 51u8, 228u8, 154u8, 43u8, 166u8, 246u8,
+                ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -1226,25 +1114,23 @@ event QuorumIndexUpdate(bytes32 indexed operatorId, uint8 quorumNumber, uint32 n
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(
-                        alloy_sol_types::Error::invalid_event_signature_hash(
-                            Self::SIGNATURE,
-                            topics.0,
-                            Self::SIGNATURE_HASH,
-                        ),
-                    );
+                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
+                        Self::SIGNATURE,
+                        topics.0,
+                        Self::SIGNATURE_HASH,
+                    ));
                 }
                 Ok(())
             }
             #[inline]
             fn tokenize_body(&self) -> Self::DataToken<'_> {
                 (
-                    <alloy::sol_types::sol_data::Uint<
-                        8,
-                    > as alloy_sol_types::SolType>::tokenize(&self.quorumNumber),
-                    <alloy::sol_types::sol_data::Uint<
-                        32,
-                    > as alloy_sol_types::SolType>::tokenize(&self.newOperatorIndex),
+                    <alloy::sol_types::sol_data::Uint<8> as alloy_sol_types::SolType>::tokenize(
+                        &self.quorumNumber,
+                    ),
+                    <alloy::sol_types::sol_data::Uint<32> as alloy_sol_types::SolType>::tokenize(
+                        &self.newOperatorIndex,
+                    ),
                 )
             }
             #[inline]
@@ -1259,9 +1145,7 @@ event QuorumIndexUpdate(bytes32 indexed operatorId, uint8 quorumNumber, uint32 n
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(
-                    Self::SIGNATURE_HASH,
-                );
+                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
                 out[1usize] = <alloy::sol_types::sol_data::FixedBytes<
                     32,
                 > as alloy_sol_types::EventTopic>::encode_topic(&self.operatorId);
@@ -1286,9 +1170,9 @@ event QuorumIndexUpdate(bytes32 indexed operatorId, uint8 quorumNumber, uint32 n
         }
     };
     /**Constructor`.
-```solidity
-constructor(address _registryCoordinator);
-```*/
+    ```solidity
+    constructor(address _registryCoordinator);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct constructorCall {
@@ -1303,9 +1187,7 @@ constructor(address _registryCoordinator);
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1332,9 +1214,7 @@ constructor(address _registryCoordinator);
         #[automatically_derived]
         impl alloy_sol_types::SolConstructor for constructorCall {
             type Parameters<'a> = (alloy::sol_types::sol_data::Address,);
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             #[inline]
             fn new<'a>(
                 tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
@@ -1352,9 +1232,9 @@ constructor(address _registryCoordinator);
         }
     };
     /**Function with signature `OPERATOR_DOES_NOT_EXIST_ID()` and selector `0xcaa3cd76`.
-```solidity
-function OPERATOR_DOES_NOT_EXIST_ID() external view returns (bytes32);
-```*/
+    ```solidity
+    function OPERATOR_DOES_NOT_EXIST_ID() external view returns (bytes32);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct OPERATOR_DOES_NOT_EXIST_IDCall {}
@@ -1379,9 +1259,7 @@ function OPERATOR_DOES_NOT_EXIST_ID() external view returns (bytes32);
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1390,16 +1268,14 @@ function OPERATOR_DOES_NOT_EXIST_ID() external view returns (bytes32);
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<OPERATOR_DOES_NOT_EXIST_IDCall>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<OPERATOR_DOES_NOT_EXIST_IDCall> for UnderlyingRustTuple<'_> {
                 fn from(value: OPERATOR_DOES_NOT_EXIST_IDCall) -> Self {
                     ()
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for OPERATOR_DOES_NOT_EXIST_IDCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for OPERATOR_DOES_NOT_EXIST_IDCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
@@ -1412,9 +1288,7 @@ function OPERATOR_DOES_NOT_EXIST_ID() external view returns (bytes32);
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::FixedBytes<32>,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1423,16 +1297,14 @@ function OPERATOR_DOES_NOT_EXIST_ID() external view returns (bytes32);
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<OPERATOR_DOES_NOT_EXIST_IDReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<OPERATOR_DOES_NOT_EXIST_IDReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: OPERATOR_DOES_NOT_EXIST_IDReturn) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for OPERATOR_DOES_NOT_EXIST_IDReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for OPERATOR_DOES_NOT_EXIST_IDReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -1441,14 +1313,10 @@ function OPERATOR_DOES_NOT_EXIST_ID() external view returns (bytes32);
         #[automatically_derived]
         impl alloy_sol_types::SolCall for OPERATOR_DOES_NOT_EXIST_IDCall {
             type Parameters<'a> = ();
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = OPERATOR_DOES_NOT_EXIST_IDReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::FixedBytes<32>,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "OPERATOR_DOES_NOT_EXIST_ID()";
             const SELECTOR: [u8; 4] = [202u8, 163u8, 205u8, 118u8];
             #[inline]
@@ -1466,17 +1334,17 @@ function OPERATOR_DOES_NOT_EXIST_ID() external view returns (bytes32);
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `currentOperatorIndex(uint8,bytes32)` and selector `0xe2e68580`.
-```solidity
-function currentOperatorIndex(uint8, bytes32) external view returns (uint32);
-```*/
+    ```solidity
+    function currentOperatorIndex(uint8, bytes32) external view returns (uint32);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct currentOperatorIndexCall {
@@ -1504,15 +1372,10 @@ function currentOperatorIndex(uint8, bytes32) external view returns (uint32);
                 alloy::sol_types::sol_data::FixedBytes<32>,
             );
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (
-                u8,
-                alloy::sol_types::private::FixedBytes<32>,
-            );
+            type UnderlyingRustTuple<'a> = (u8, alloy::sol_types::private::FixedBytes<32>);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1521,18 +1384,19 @@ function currentOperatorIndex(uint8, bytes32) external view returns (uint32);
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<currentOperatorIndexCall>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<currentOperatorIndexCall> for UnderlyingRustTuple<'_> {
                 fn from(value: currentOperatorIndexCall) -> Self {
                     (value._0, value._1)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for currentOperatorIndexCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for currentOperatorIndexCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self { _0: tuple.0, _1: tuple.1 }
+                    Self {
+                        _0: tuple.0,
+                        _1: tuple.1,
+                    }
                 }
             }
         }
@@ -1543,9 +1407,7 @@ function currentOperatorIndex(uint8, bytes32) external view returns (uint32);
             type UnderlyingRustTuple<'a> = (u32,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1554,16 +1416,14 @@ function currentOperatorIndex(uint8, bytes32) external view returns (uint32);
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<currentOperatorIndexReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<currentOperatorIndexReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: currentOperatorIndexReturn) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for currentOperatorIndexReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for currentOperatorIndexReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -1575,14 +1435,10 @@ function currentOperatorIndex(uint8, bytes32) external view returns (uint32);
                 alloy::sol_types::sol_data::Uint<8>,
                 alloy::sol_types::sol_data::FixedBytes<32>,
             );
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = currentOperatorIndexReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Uint<32>,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "currentOperatorIndex(uint8,bytes32)";
             const SELECTOR: [u8; 4] = [226u8, 230u8, 133u8, 128u8];
             #[inline]
@@ -1607,17 +1463,17 @@ function currentOperatorIndex(uint8, bytes32) external view returns (uint32);
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `deregisterOperator(bytes32,bytes)` and selector `0xbd29b8cd`.
-```solidity
-function deregisterOperator(bytes32 operatorId, bytes memory quorumNumbers) external;
-```*/
+    ```solidity
+    function deregisterOperator(bytes32 operatorId, bytes memory quorumNumbers) external;
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct deregisterOperatorCall {
@@ -1649,9 +1505,7 @@ function deregisterOperator(bytes32 operatorId, bytes memory quorumNumbers) exte
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1660,16 +1514,14 @@ function deregisterOperator(bytes32 operatorId, bytes memory quorumNumbers) exte
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<deregisterOperatorCall>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<deregisterOperatorCall> for UnderlyingRustTuple<'_> {
                 fn from(value: deregisterOperatorCall) -> Self {
                     (value.operatorId, value.quorumNumbers)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for deregisterOperatorCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for deregisterOperatorCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {
                         operatorId: tuple.0,
@@ -1685,9 +1537,7 @@ function deregisterOperator(bytes32 operatorId, bytes memory quorumNumbers) exte
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1696,16 +1546,14 @@ function deregisterOperator(bytes32 operatorId, bytes memory quorumNumbers) exte
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<deregisterOperatorReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<deregisterOperatorReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: deregisterOperatorReturn) -> Self {
                     ()
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for deregisterOperatorReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for deregisterOperatorReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
@@ -1717,14 +1565,10 @@ function deregisterOperator(bytes32 operatorId, bytes memory quorumNumbers) exte
                 alloy::sol_types::sol_data::FixedBytes<32>,
                 alloy::sol_types::sol_data::Bytes,
             );
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = deregisterOperatorReturn;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "deregisterOperator(bytes32,bytes)";
             const SELECTOR: [u8; 4] = [189u8, 41u8, 184u8, 205u8];
             #[inline]
@@ -1749,17 +1593,17 @@ function deregisterOperator(bytes32 operatorId, bytes memory quorumNumbers) exte
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `getLatestOperatorUpdate(uint8,uint32)` and selector `0x12d1d74d`.
-```solidity
-function getLatestOperatorUpdate(uint8 quorumNumber, uint32 operatorIndex) external view returns (IIndexRegistry.OperatorUpdate memory);
-```*/
+    ```solidity
+    function getLatestOperatorUpdate(uint8 quorumNumber, uint32 operatorIndex) external view returns (IIndexRegistry.OperatorUpdate memory);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getLatestOperatorUpdateCall {
@@ -1790,9 +1634,7 @@ function getLatestOperatorUpdate(uint8 quorumNumber, uint32 operatorIndex) exter
             type UnderlyingRustTuple<'a> = (u8, u32);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1801,16 +1643,14 @@ function getLatestOperatorUpdate(uint8 quorumNumber, uint32 operatorIndex) exter
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<getLatestOperatorUpdateCall>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<getLatestOperatorUpdateCall> for UnderlyingRustTuple<'_> {
                 fn from(value: getLatestOperatorUpdateCall) -> Self {
                     (value.quorumNumber, value.operatorIndex)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for getLatestOperatorUpdateCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for getLatestOperatorUpdateCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {
                         quorumNumber: tuple.0,
@@ -1823,14 +1663,11 @@ function getLatestOperatorUpdate(uint8 quorumNumber, uint32 operatorIndex) exter
             #[doc(hidden)]
             type UnderlyingSolTuple<'a> = (IIndexRegistry::OperatorUpdate,);
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (
-                <IIndexRegistry::OperatorUpdate as alloy::sol_types::SolType>::RustType,
-            );
+            type UnderlyingRustTuple<'a> =
+                (<IIndexRegistry::OperatorUpdate as alloy::sol_types::SolType>::RustType,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1839,16 +1676,14 @@ function getLatestOperatorUpdate(uint8 quorumNumber, uint32 operatorIndex) exter
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<getLatestOperatorUpdateReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<getLatestOperatorUpdateReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: getLatestOperatorUpdateReturn) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for getLatestOperatorUpdateReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for getLatestOperatorUpdateReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -1860,14 +1695,10 @@ function getLatestOperatorUpdate(uint8 quorumNumber, uint32 operatorIndex) exter
                 alloy::sol_types::sol_data::Uint<8>,
                 alloy::sol_types::sol_data::Uint<32>,
             );
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = getLatestOperatorUpdateReturn;
             type ReturnTuple<'a> = (IIndexRegistry::OperatorUpdate,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "getLatestOperatorUpdate(uint8,uint32)";
             const SELECTOR: [u8; 4] = [18u8, 209u8, 215u8, 77u8];
             #[inline]
@@ -1879,12 +1710,12 @@ function getLatestOperatorUpdate(uint8 quorumNumber, uint32 operatorIndex) exter
             #[inline]
             fn tokenize(&self) -> Self::Token<'_> {
                 (
-                    <alloy::sol_types::sol_data::Uint<
-                        8,
-                    > as alloy_sol_types::SolType>::tokenize(&self.quorumNumber),
-                    <alloy::sol_types::sol_data::Uint<
-                        32,
-                    > as alloy_sol_types::SolType>::tokenize(&self.operatorIndex),
+                    <alloy::sol_types::sol_data::Uint<8> as alloy_sol_types::SolType>::tokenize(
+                        &self.quorumNumber,
+                    ),
+                    <alloy::sol_types::sol_data::Uint<32> as alloy_sol_types::SolType>::tokenize(
+                        &self.operatorIndex,
+                    ),
                 )
             }
             #[inline]
@@ -1892,17 +1723,17 @@ function getLatestOperatorUpdate(uint8 quorumNumber, uint32 operatorIndex) exter
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `getLatestQuorumUpdate(uint8)` and selector `0x8121906f`.
-```solidity
-function getLatestQuorumUpdate(uint8 quorumNumber) external view returns (IIndexRegistry.QuorumUpdate memory);
-```*/
+    ```solidity
+    function getLatestQuorumUpdate(uint8 quorumNumber) external view returns (IIndexRegistry.QuorumUpdate memory);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getLatestQuorumUpdateCall {
@@ -1929,9 +1760,7 @@ function getLatestQuorumUpdate(uint8 quorumNumber) external view returns (IIndex
             type UnderlyingRustTuple<'a> = (u8,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1940,18 +1769,18 @@ function getLatestQuorumUpdate(uint8 quorumNumber) external view returns (IIndex
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<getLatestQuorumUpdateCall>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<getLatestQuorumUpdateCall> for UnderlyingRustTuple<'_> {
                 fn from(value: getLatestQuorumUpdateCall) -> Self {
                     (value.quorumNumber,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for getLatestQuorumUpdateCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for getLatestQuorumUpdateCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self { quorumNumber: tuple.0 }
+                    Self {
+                        quorumNumber: tuple.0,
+                    }
                 }
             }
         }
@@ -1959,14 +1788,11 @@ function getLatestQuorumUpdate(uint8 quorumNumber) external view returns (IIndex
             #[doc(hidden)]
             type UnderlyingSolTuple<'a> = (IIndexRegistry::QuorumUpdate,);
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (
-                <IIndexRegistry::QuorumUpdate as alloy::sol_types::SolType>::RustType,
-            );
+            type UnderlyingRustTuple<'a> =
+                (<IIndexRegistry::QuorumUpdate as alloy::sol_types::SolType>::RustType,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1975,16 +1801,14 @@ function getLatestQuorumUpdate(uint8 quorumNumber) external view returns (IIndex
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<getLatestQuorumUpdateReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<getLatestQuorumUpdateReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: getLatestQuorumUpdateReturn) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for getLatestQuorumUpdateReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for getLatestQuorumUpdateReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -1993,14 +1817,10 @@ function getLatestQuorumUpdate(uint8 quorumNumber) external view returns (IIndex
         #[automatically_derived]
         impl alloy_sol_types::SolCall for getLatestQuorumUpdateCall {
             type Parameters<'a> = (alloy::sol_types::sol_data::Uint<8>,);
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = getLatestQuorumUpdateReturn;
             type ReturnTuple<'a> = (IIndexRegistry::QuorumUpdate,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "getLatestQuorumUpdate(uint8)";
             const SELECTOR: [u8; 4] = [129u8, 33u8, 144u8, 111u8];
             #[inline]
@@ -2012,9 +1832,9 @@ function getLatestQuorumUpdate(uint8 quorumNumber) external view returns (IIndex
             #[inline]
             fn tokenize(&self) -> Self::Token<'_> {
                 (
-                    <alloy::sol_types::sol_data::Uint<
-                        8,
-                    > as alloy_sol_types::SolType>::tokenize(&self.quorumNumber),
+                    <alloy::sol_types::sol_data::Uint<8> as alloy_sol_types::SolType>::tokenize(
+                        &self.quorumNumber,
+                    ),
                 )
             }
             #[inline]
@@ -2022,17 +1842,17 @@ function getLatestQuorumUpdate(uint8 quorumNumber) external view returns (IIndex
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `getOperatorListAtBlockNumber(uint8,uint32)` and selector `0x89026245`.
-```solidity
-function getOperatorListAtBlockNumber(uint8 quorumNumber, uint32 blockNumber) external view returns (bytes32[] memory);
-```*/
+    ```solidity
+    function getOperatorListAtBlockNumber(uint8 quorumNumber, uint32 blockNumber) external view returns (bytes32[] memory);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getOperatorListAtBlockNumberCall {
@@ -2043,9 +1863,7 @@ function getOperatorListAtBlockNumber(uint8 quorumNumber, uint32 blockNumber) ex
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getOperatorListAtBlockNumberReturn {
-        pub _0: alloy::sol_types::private::Vec<
-            alloy::sol_types::private::FixedBytes<32>,
-        >,
+        pub _0: alloy::sol_types::private::Vec<alloy::sol_types::private::FixedBytes<32>>,
     }
     #[allow(
         non_camel_case_types,
@@ -2065,9 +1883,7 @@ function getOperatorListAtBlockNumber(uint8 quorumNumber, uint32 blockNumber) ex
             type UnderlyingRustTuple<'a> = (u8, u32);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -2076,16 +1892,14 @@ function getOperatorListAtBlockNumber(uint8 quorumNumber, uint32 blockNumber) ex
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<getOperatorListAtBlockNumberCall>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<getOperatorListAtBlockNumberCall> for UnderlyingRustTuple<'_> {
                 fn from(value: getOperatorListAtBlockNumberCall) -> Self {
                     (value.quorumNumber, value.blockNumber)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for getOperatorListAtBlockNumberCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for getOperatorListAtBlockNumberCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {
                         quorumNumber: tuple.0,
@@ -2096,22 +1910,14 @@ function getOperatorListAtBlockNumber(uint8 quorumNumber, uint32 blockNumber) ex
         }
         {
             #[doc(hidden)]
-            type UnderlyingSolTuple<'a> = (
-                alloy::sol_types::sol_data::Array<
-                    alloy::sol_types::sol_data::FixedBytes<32>,
-                >,
-            );
+            type UnderlyingSolTuple<'a> =
+                (alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::FixedBytes<32>>,);
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (
-                alloy::sol_types::private::Vec<
-                    alloy::sol_types::private::FixedBytes<32>,
-                >,
-            );
+            type UnderlyingRustTuple<'a> =
+                (alloy::sol_types::private::Vec<alloy::sol_types::private::FixedBytes<32>>,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -2120,16 +1926,14 @@ function getOperatorListAtBlockNumber(uint8 quorumNumber, uint32 blockNumber) ex
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<getOperatorListAtBlockNumberReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<getOperatorListAtBlockNumberReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: getOperatorListAtBlockNumberReturn) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for getOperatorListAtBlockNumberReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for getOperatorListAtBlockNumberReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -2141,18 +1945,11 @@ function getOperatorListAtBlockNumber(uint8 quorumNumber, uint32 blockNumber) ex
                 alloy::sol_types::sol_data::Uint<8>,
                 alloy::sol_types::sol_data::Uint<32>,
             );
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = getOperatorListAtBlockNumberReturn;
-            type ReturnTuple<'a> = (
-                alloy::sol_types::sol_data::Array<
-                    alloy::sol_types::sol_data::FixedBytes<32>,
-                >,
-            );
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnTuple<'a> =
+                (alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::FixedBytes<32>>,);
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "getOperatorListAtBlockNumber(uint8,uint32)";
             const SELECTOR: [u8; 4] = [137u8, 2u8, 98u8, 69u8];
             #[inline]
@@ -2164,12 +1961,12 @@ function getOperatorListAtBlockNumber(uint8 quorumNumber, uint32 blockNumber) ex
             #[inline]
             fn tokenize(&self) -> Self::Token<'_> {
                 (
-                    <alloy::sol_types::sol_data::Uint<
-                        8,
-                    > as alloy_sol_types::SolType>::tokenize(&self.quorumNumber),
-                    <alloy::sol_types::sol_data::Uint<
-                        32,
-                    > as alloy_sol_types::SolType>::tokenize(&self.blockNumber),
+                    <alloy::sol_types::sol_data::Uint<8> as alloy_sol_types::SolType>::tokenize(
+                        &self.quorumNumber,
+                    ),
+                    <alloy::sol_types::sol_data::Uint<32> as alloy_sol_types::SolType>::tokenize(
+                        &self.blockNumber,
+                    ),
                 )
             }
             #[inline]
@@ -2177,17 +1974,17 @@ function getOperatorListAtBlockNumber(uint8 quorumNumber, uint32 blockNumber) ex
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `getOperatorUpdateAtIndex(uint8,uint32,uint32)` and selector `0x2ed583e5`.
-```solidity
-function getOperatorUpdateAtIndex(uint8 quorumNumber, uint32 operatorIndex, uint32 arrayIndex) external view returns (IIndexRegistry.OperatorUpdate memory);
-```*/
+    ```solidity
+    function getOperatorUpdateAtIndex(uint8 quorumNumber, uint32 operatorIndex, uint32 arrayIndex) external view returns (IIndexRegistry.OperatorUpdate memory);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getOperatorUpdateAtIndexCall {
@@ -2220,9 +2017,7 @@ function getOperatorUpdateAtIndex(uint8 quorumNumber, uint32 operatorIndex, uint
             type UnderlyingRustTuple<'a> = (u8, u32, u32);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -2231,16 +2026,14 @@ function getOperatorUpdateAtIndex(uint8 quorumNumber, uint32 operatorIndex, uint
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<getOperatorUpdateAtIndexCall>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<getOperatorUpdateAtIndexCall> for UnderlyingRustTuple<'_> {
                 fn from(value: getOperatorUpdateAtIndexCall) -> Self {
                     (value.quorumNumber, value.operatorIndex, value.arrayIndex)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for getOperatorUpdateAtIndexCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for getOperatorUpdateAtIndexCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {
                         quorumNumber: tuple.0,
@@ -2254,14 +2047,11 @@ function getOperatorUpdateAtIndex(uint8 quorumNumber, uint32 operatorIndex, uint
             #[doc(hidden)]
             type UnderlyingSolTuple<'a> = (IIndexRegistry::OperatorUpdate,);
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (
-                <IIndexRegistry::OperatorUpdate as alloy::sol_types::SolType>::RustType,
-            );
+            type UnderlyingRustTuple<'a> =
+                (<IIndexRegistry::OperatorUpdate as alloy::sol_types::SolType>::RustType,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -2270,16 +2060,14 @@ function getOperatorUpdateAtIndex(uint8 quorumNumber, uint32 operatorIndex, uint
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<getOperatorUpdateAtIndexReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<getOperatorUpdateAtIndexReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: getOperatorUpdateAtIndexReturn) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for getOperatorUpdateAtIndexReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for getOperatorUpdateAtIndexReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -2292,14 +2080,10 @@ function getOperatorUpdateAtIndex(uint8 quorumNumber, uint32 operatorIndex, uint
                 alloy::sol_types::sol_data::Uint<32>,
                 alloy::sol_types::sol_data::Uint<32>,
             );
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = getOperatorUpdateAtIndexReturn;
             type ReturnTuple<'a> = (IIndexRegistry::OperatorUpdate,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "getOperatorUpdateAtIndex(uint8,uint32,uint32)";
             const SELECTOR: [u8; 4] = [46u8, 213u8, 131u8, 229u8];
             #[inline]
@@ -2311,15 +2095,15 @@ function getOperatorUpdateAtIndex(uint8 quorumNumber, uint32 operatorIndex, uint
             #[inline]
             fn tokenize(&self) -> Self::Token<'_> {
                 (
-                    <alloy::sol_types::sol_data::Uint<
-                        8,
-                    > as alloy_sol_types::SolType>::tokenize(&self.quorumNumber),
-                    <alloy::sol_types::sol_data::Uint<
-                        32,
-                    > as alloy_sol_types::SolType>::tokenize(&self.operatorIndex),
-                    <alloy::sol_types::sol_data::Uint<
-                        32,
-                    > as alloy_sol_types::SolType>::tokenize(&self.arrayIndex),
+                    <alloy::sol_types::sol_data::Uint<8> as alloy_sol_types::SolType>::tokenize(
+                        &self.quorumNumber,
+                    ),
+                    <alloy::sol_types::sol_data::Uint<32> as alloy_sol_types::SolType>::tokenize(
+                        &self.operatorIndex,
+                    ),
+                    <alloy::sol_types::sol_data::Uint<32> as alloy_sol_types::SolType>::tokenize(
+                        &self.arrayIndex,
+                    ),
                 )
             }
             #[inline]
@@ -2327,17 +2111,17 @@ function getOperatorUpdateAtIndex(uint8 quorumNumber, uint32 operatorIndex, uint
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `getQuorumUpdateAtIndex(uint8,uint32)` and selector `0xa48bb0ac`.
-```solidity
-function getQuorumUpdateAtIndex(uint8 quorumNumber, uint32 quorumIndex) external view returns (IIndexRegistry.QuorumUpdate memory);
-```*/
+    ```solidity
+    function getQuorumUpdateAtIndex(uint8 quorumNumber, uint32 quorumIndex) external view returns (IIndexRegistry.QuorumUpdate memory);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getQuorumUpdateAtIndexCall {
@@ -2368,9 +2152,7 @@ function getQuorumUpdateAtIndex(uint8 quorumNumber, uint32 quorumIndex) external
             type UnderlyingRustTuple<'a> = (u8, u32);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -2379,16 +2161,14 @@ function getQuorumUpdateAtIndex(uint8 quorumNumber, uint32 quorumIndex) external
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<getQuorumUpdateAtIndexCall>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<getQuorumUpdateAtIndexCall> for UnderlyingRustTuple<'_> {
                 fn from(value: getQuorumUpdateAtIndexCall) -> Self {
                     (value.quorumNumber, value.quorumIndex)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for getQuorumUpdateAtIndexCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for getQuorumUpdateAtIndexCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {
                         quorumNumber: tuple.0,
@@ -2401,14 +2181,11 @@ function getQuorumUpdateAtIndex(uint8 quorumNumber, uint32 quorumIndex) external
             #[doc(hidden)]
             type UnderlyingSolTuple<'a> = (IIndexRegistry::QuorumUpdate,);
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (
-                <IIndexRegistry::QuorumUpdate as alloy::sol_types::SolType>::RustType,
-            );
+            type UnderlyingRustTuple<'a> =
+                (<IIndexRegistry::QuorumUpdate as alloy::sol_types::SolType>::RustType,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -2417,16 +2194,14 @@ function getQuorumUpdateAtIndex(uint8 quorumNumber, uint32 quorumIndex) external
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<getQuorumUpdateAtIndexReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<getQuorumUpdateAtIndexReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: getQuorumUpdateAtIndexReturn) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for getQuorumUpdateAtIndexReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for getQuorumUpdateAtIndexReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -2438,14 +2213,10 @@ function getQuorumUpdateAtIndex(uint8 quorumNumber, uint32 quorumIndex) external
                 alloy::sol_types::sol_data::Uint<8>,
                 alloy::sol_types::sol_data::Uint<32>,
             );
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = getQuorumUpdateAtIndexReturn;
             type ReturnTuple<'a> = (IIndexRegistry::QuorumUpdate,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "getQuorumUpdateAtIndex(uint8,uint32)";
             const SELECTOR: [u8; 4] = [164u8, 139u8, 176u8, 172u8];
             #[inline]
@@ -2457,12 +2228,12 @@ function getQuorumUpdateAtIndex(uint8 quorumNumber, uint32 quorumIndex) external
             #[inline]
             fn tokenize(&self) -> Self::Token<'_> {
                 (
-                    <alloy::sol_types::sol_data::Uint<
-                        8,
-                    > as alloy_sol_types::SolType>::tokenize(&self.quorumNumber),
-                    <alloy::sol_types::sol_data::Uint<
-                        32,
-                    > as alloy_sol_types::SolType>::tokenize(&self.quorumIndex),
+                    <alloy::sol_types::sol_data::Uint<8> as alloy_sol_types::SolType>::tokenize(
+                        &self.quorumNumber,
+                    ),
+                    <alloy::sol_types::sol_data::Uint<32> as alloy_sol_types::SolType>::tokenize(
+                        &self.quorumIndex,
+                    ),
                 )
             }
             #[inline]
@@ -2470,17 +2241,17 @@ function getQuorumUpdateAtIndex(uint8 quorumNumber, uint32 quorumIndex) external
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `initializeQuorum(uint8)` and selector `0x26d941f2`.
-```solidity
-function initializeQuorum(uint8 quorumNumber) external;
-```*/
+    ```solidity
+    function initializeQuorum(uint8 quorumNumber) external;
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct initializeQuorumCall {
@@ -2505,9 +2276,7 @@ function initializeQuorum(uint8 quorumNumber) external;
             type UnderlyingRustTuple<'a> = (u8,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -2516,18 +2285,18 @@ function initializeQuorum(uint8 quorumNumber) external;
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<initializeQuorumCall>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<initializeQuorumCall> for UnderlyingRustTuple<'_> {
                 fn from(value: initializeQuorumCall) -> Self {
                     (value.quorumNumber,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for initializeQuorumCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for initializeQuorumCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self { quorumNumber: tuple.0 }
+                    Self {
+                        quorumNumber: tuple.0,
+                    }
                 }
             }
         }
@@ -2538,9 +2307,7 @@ function initializeQuorum(uint8 quorumNumber) external;
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -2549,16 +2316,14 @@ function initializeQuorum(uint8 quorumNumber) external;
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<initializeQuorumReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<initializeQuorumReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: initializeQuorumReturn) -> Self {
                     ()
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for initializeQuorumReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for initializeQuorumReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
@@ -2567,14 +2332,10 @@ function initializeQuorum(uint8 quorumNumber) external;
         #[automatically_derived]
         impl alloy_sol_types::SolCall for initializeQuorumCall {
             type Parameters<'a> = (alloy::sol_types::sol_data::Uint<8>,);
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = initializeQuorumReturn;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "initializeQuorum(uint8)";
             const SELECTOR: [u8; 4] = [38u8, 217u8, 65u8, 242u8];
             #[inline]
@@ -2586,9 +2347,9 @@ function initializeQuorum(uint8 quorumNumber) external;
             #[inline]
             fn tokenize(&self) -> Self::Token<'_> {
                 (
-                    <alloy::sol_types::sol_data::Uint<
-                        8,
-                    > as alloy_sol_types::SolType>::tokenize(&self.quorumNumber),
+                    <alloy::sol_types::sol_data::Uint<8> as alloy_sol_types::SolType>::tokenize(
+                        &self.quorumNumber,
+                    ),
                 )
             }
             #[inline]
@@ -2596,17 +2357,17 @@ function initializeQuorum(uint8 quorumNumber) external;
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `registerOperator(bytes32,bytes)` and selector `0x00bff04d`.
-```solidity
-function registerOperator(bytes32 operatorId, bytes memory quorumNumbers) external returns (uint32[] memory);
-```*/
+    ```solidity
+    function registerOperator(bytes32 operatorId, bytes memory quorumNumbers) external returns (uint32[] memory);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct registerOperatorCall {
@@ -2640,9 +2401,7 @@ function registerOperator(bytes32 operatorId, bytes memory quorumNumbers) extern
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -2651,16 +2410,14 @@ function registerOperator(bytes32 operatorId, bytes memory quorumNumbers) extern
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<registerOperatorCall>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<registerOperatorCall> for UnderlyingRustTuple<'_> {
                 fn from(value: registerOperatorCall) -> Self {
                     (value.operatorId, value.quorumNumbers)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for registerOperatorCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for registerOperatorCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {
                         operatorId: tuple.0,
@@ -2671,16 +2428,13 @@ function registerOperator(bytes32 operatorId, bytes memory quorumNumbers) extern
         }
         {
             #[doc(hidden)]
-            type UnderlyingSolTuple<'a> = (
-                alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::Uint<32>>,
-            );
+            type UnderlyingSolTuple<'a> =
+                (alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::Uint<32>>,);
             #[doc(hidden)]
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Vec<u32>,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -2689,16 +2443,14 @@ function registerOperator(bytes32 operatorId, bytes memory quorumNumbers) extern
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<registerOperatorReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<registerOperatorReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: registerOperatorReturn) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for registerOperatorReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for registerOperatorReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -2710,16 +2462,11 @@ function registerOperator(bytes32 operatorId, bytes memory quorumNumbers) extern
                 alloy::sol_types::sol_data::FixedBytes<32>,
                 alloy::sol_types::sol_data::Bytes,
             );
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = registerOperatorReturn;
-            type ReturnTuple<'a> = (
-                alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::Uint<32>>,
-            );
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnTuple<'a> =
+                (alloy::sol_types::sol_data::Array<alloy::sol_types::sol_data::Uint<32>>,);
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "registerOperator(bytes32,bytes)";
             const SELECTOR: [u8; 4] = [0u8, 191u8, 240u8, 77u8];
             #[inline]
@@ -2744,17 +2491,17 @@ function registerOperator(bytes32 operatorId, bytes memory quorumNumbers) extern
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `registryCoordinator()` and selector `0x6d14a987`.
-```solidity
-function registryCoordinator() external view returns (address);
-```*/
+    ```solidity
+    function registryCoordinator() external view returns (address);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct registryCoordinatorCall {}
@@ -2779,9 +2526,7 @@ function registryCoordinator() external view returns (address);
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -2790,16 +2535,14 @@ function registryCoordinator() external view returns (address);
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<registryCoordinatorCall>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<registryCoordinatorCall> for UnderlyingRustTuple<'_> {
                 fn from(value: registryCoordinatorCall) -> Self {
                     ()
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for registryCoordinatorCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for registryCoordinatorCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
@@ -2812,9 +2555,7 @@ function registryCoordinator() external view returns (address);
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -2823,16 +2564,14 @@ function registryCoordinator() external view returns (address);
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<registryCoordinatorReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<registryCoordinatorReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: registryCoordinatorReturn) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for registryCoordinatorReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for registryCoordinatorReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -2841,14 +2580,10 @@ function registryCoordinator() external view returns (address);
         #[automatically_derived]
         impl alloy_sol_types::SolCall for registryCoordinatorCall {
             type Parameters<'a> = ();
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = registryCoordinatorReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Address,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "registryCoordinator()";
             const SELECTOR: [u8; 4] = [109u8, 20u8, 169u8, 135u8];
             #[inline]
@@ -2866,17 +2601,17 @@ function registryCoordinator() external view returns (address);
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `totalOperatorsForQuorum(uint8)` and selector `0xf3410922`.
-```solidity
-function totalOperatorsForQuorum(uint8 quorumNumber) external view returns (uint32);
-```*/
+    ```solidity
+    function totalOperatorsForQuorum(uint8 quorumNumber) external view returns (uint32);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct totalOperatorsForQuorumCall {
@@ -2903,9 +2638,7 @@ function totalOperatorsForQuorum(uint8 quorumNumber) external view returns (uint
             type UnderlyingRustTuple<'a> = (u8,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -2914,18 +2647,18 @@ function totalOperatorsForQuorum(uint8 quorumNumber) external view returns (uint
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<totalOperatorsForQuorumCall>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<totalOperatorsForQuorumCall> for UnderlyingRustTuple<'_> {
                 fn from(value: totalOperatorsForQuorumCall) -> Self {
                     (value.quorumNumber,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for totalOperatorsForQuorumCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for totalOperatorsForQuorumCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self { quorumNumber: tuple.0 }
+                    Self {
+                        quorumNumber: tuple.0,
+                    }
                 }
             }
         }
@@ -2936,9 +2669,7 @@ function totalOperatorsForQuorum(uint8 quorumNumber) external view returns (uint
             type UnderlyingRustTuple<'a> = (u32,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -2947,16 +2678,14 @@ function totalOperatorsForQuorum(uint8 quorumNumber) external view returns (uint
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<totalOperatorsForQuorumReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<totalOperatorsForQuorumReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: totalOperatorsForQuorumReturn) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for totalOperatorsForQuorumReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for totalOperatorsForQuorumReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -2965,14 +2694,10 @@ function totalOperatorsForQuorum(uint8 quorumNumber) external view returns (uint
         #[automatically_derived]
         impl alloy_sol_types::SolCall for totalOperatorsForQuorumCall {
             type Parameters<'a> = (alloy::sol_types::sol_data::Uint<8>,);
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = totalOperatorsForQuorumReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Uint<32>,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "totalOperatorsForQuorum(uint8)";
             const SELECTOR: [u8; 4] = [243u8, 65u8, 9u8, 34u8];
             #[inline]
@@ -2984,9 +2709,9 @@ function totalOperatorsForQuorum(uint8 quorumNumber) external view returns (uint
             #[inline]
             fn tokenize(&self) -> Self::Token<'_> {
                 (
-                    <alloy::sol_types::sol_data::Uint<
-                        8,
-                    > as alloy_sol_types::SolType>::tokenize(&self.quorumNumber),
+                    <alloy::sol_types::sol_data::Uint<8> as alloy_sol_types::SolType>::tokenize(
+                        &self.quorumNumber,
+                    ),
                 )
             }
             #[inline]
@@ -2994,10 +2719,10 @@ function totalOperatorsForQuorum(uint8 quorumNumber) external view returns (uint
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
@@ -3103,17 +2828,17 @@ function totalOperatorsForQuorum(uint8 quorumNumber) external view returns (uint
             static DECODE_SHIMS: &[fn(
                 &[u8],
                 bool,
-            ) -> alloy_sol_types::Result<IndexRegistryCalls>] = &[
+            )
+                -> alloy_sol_types::Result<IndexRegistryCalls>] = &[
                 {
                     fn registerOperator(
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<IndexRegistryCalls> {
                         <registerOperatorCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IndexRegistryCalls::registerOperator)
+                            data, validate,
+                        )
+                        .map(IndexRegistryCalls::registerOperator)
                     }
                     registerOperator
                 },
@@ -3123,10 +2848,9 @@ function totalOperatorsForQuorum(uint8 quorumNumber) external view returns (uint
                         validate: bool,
                     ) -> alloy_sol_types::Result<IndexRegistryCalls> {
                         <getLatestOperatorUpdateCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IndexRegistryCalls::getLatestOperatorUpdate)
+                            data, validate,
+                        )
+                        .map(IndexRegistryCalls::getLatestOperatorUpdate)
                     }
                     getLatestOperatorUpdate
                 },
@@ -3136,10 +2860,9 @@ function totalOperatorsForQuorum(uint8 quorumNumber) external view returns (uint
                         validate: bool,
                     ) -> alloy_sol_types::Result<IndexRegistryCalls> {
                         <initializeQuorumCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IndexRegistryCalls::initializeQuorum)
+                            data, validate,
+                        )
+                        .map(IndexRegistryCalls::initializeQuorum)
                     }
                     initializeQuorum
                 },
@@ -3149,10 +2872,9 @@ function totalOperatorsForQuorum(uint8 quorumNumber) external view returns (uint
                         validate: bool,
                     ) -> alloy_sol_types::Result<IndexRegistryCalls> {
                         <getOperatorUpdateAtIndexCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IndexRegistryCalls::getOperatorUpdateAtIndex)
+                            data, validate,
+                        )
+                        .map(IndexRegistryCalls::getOperatorUpdateAtIndex)
                     }
                     getOperatorUpdateAtIndex
                 },
@@ -3162,10 +2884,9 @@ function totalOperatorsForQuorum(uint8 quorumNumber) external view returns (uint
                         validate: bool,
                     ) -> alloy_sol_types::Result<IndexRegistryCalls> {
                         <registryCoordinatorCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IndexRegistryCalls::registryCoordinator)
+                            data, validate,
+                        )
+                        .map(IndexRegistryCalls::registryCoordinator)
                     }
                     registryCoordinator
                 },
@@ -3175,10 +2896,9 @@ function totalOperatorsForQuorum(uint8 quorumNumber) external view returns (uint
                         validate: bool,
                     ) -> alloy_sol_types::Result<IndexRegistryCalls> {
                         <getLatestQuorumUpdateCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IndexRegistryCalls::getLatestQuorumUpdate)
+                            data, validate,
+                        )
+                        .map(IndexRegistryCalls::getLatestQuorumUpdate)
                     }
                     getLatestQuorumUpdate
                 },
@@ -3201,10 +2921,9 @@ function totalOperatorsForQuorum(uint8 quorumNumber) external view returns (uint
                         validate: bool,
                     ) -> alloy_sol_types::Result<IndexRegistryCalls> {
                         <getQuorumUpdateAtIndexCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IndexRegistryCalls::getQuorumUpdateAtIndex)
+                            data, validate,
+                        )
+                        .map(IndexRegistryCalls::getQuorumUpdateAtIndex)
                     }
                     getQuorumUpdateAtIndex
                 },
@@ -3214,10 +2933,9 @@ function totalOperatorsForQuorum(uint8 quorumNumber) external view returns (uint
                         validate: bool,
                     ) -> alloy_sol_types::Result<IndexRegistryCalls> {
                         <deregisterOperatorCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IndexRegistryCalls::deregisterOperator)
+                            data, validate,
+                        )
+                        .map(IndexRegistryCalls::deregisterOperator)
                     }
                     deregisterOperator
                 },
@@ -3240,10 +2958,9 @@ function totalOperatorsForQuorum(uint8 quorumNumber) external view returns (uint
                         validate: bool,
                     ) -> alloy_sol_types::Result<IndexRegistryCalls> {
                         <currentOperatorIndexCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IndexRegistryCalls::currentOperatorIndex)
+                            data, validate,
+                        )
+                        .map(IndexRegistryCalls::currentOperatorIndex)
                     }
                     currentOperatorIndex
                 },
@@ -3253,21 +2970,18 @@ function totalOperatorsForQuorum(uint8 quorumNumber) external view returns (uint
                         validate: bool,
                     ) -> alloy_sol_types::Result<IndexRegistryCalls> {
                         <totalOperatorsForQuorumCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IndexRegistryCalls::totalOperatorsForQuorum)
+                            data, validate,
+                        )
+                        .map(IndexRegistryCalls::totalOperatorsForQuorum)
                     }
                     totalOperatorsForQuorum
                 },
             ];
             let Ok(idx) = Self::SELECTORS.binary_search(&selector) else {
-                return Err(
-                    alloy_sol_types::Error::unknown_selector(
-                        <Self as alloy_sol_types::SolInterface>::NAME,
-                        selector,
-                    ),
-                );
+                return Err(alloy_sol_types::Error::unknown_selector(
+                    <Self as alloy_sol_types::SolInterface>::NAME,
+                    selector,
+                ));
             };
             (unsafe { DECODE_SHIMS.get_unchecked(idx) })(data, validate)
         }
@@ -3280,14 +2994,10 @@ function totalOperatorsForQuorum(uint8 quorumNumber) external view returns (uint
                     )
                 }
                 Self::currentOperatorIndex(inner) => {
-                    <currentOperatorIndexCall as alloy_sol_types::SolCall>::abi_encoded_size(
-                        inner,
-                    )
+                    <currentOperatorIndexCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
                 }
                 Self::deregisterOperator(inner) => {
-                    <deregisterOperatorCall as alloy_sol_types::SolCall>::abi_encoded_size(
-                        inner,
-                    )
+                    <deregisterOperatorCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
                 }
                 Self::getLatestOperatorUpdate(inner) => {
                     <getLatestOperatorUpdateCall as alloy_sol_types::SolCall>::abi_encoded_size(
@@ -3295,9 +3005,7 @@ function totalOperatorsForQuorum(uint8 quorumNumber) external view returns (uint
                     )
                 }
                 Self::getLatestQuorumUpdate(inner) => {
-                    <getLatestQuorumUpdateCall as alloy_sol_types::SolCall>::abi_encoded_size(
-                        inner,
-                    )
+                    <getLatestQuorumUpdateCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
                 }
                 Self::getOperatorListAtBlockNumber(inner) => {
                     <getOperatorListAtBlockNumberCall as alloy_sol_types::SolCall>::abi_encoded_size(
@@ -3315,19 +3023,13 @@ function totalOperatorsForQuorum(uint8 quorumNumber) external view returns (uint
                     )
                 }
                 Self::initializeQuorum(inner) => {
-                    <initializeQuorumCall as alloy_sol_types::SolCall>::abi_encoded_size(
-                        inner,
-                    )
+                    <initializeQuorumCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
                 }
                 Self::registerOperator(inner) => {
-                    <registerOperatorCall as alloy_sol_types::SolCall>::abi_encoded_size(
-                        inner,
-                    )
+                    <registerOperatorCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
                 }
                 Self::registryCoordinator(inner) => {
-                    <registryCoordinatorCall as alloy_sol_types::SolCall>::abi_encoded_size(
-                        inner,
-                    )
+                    <registryCoordinatorCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
                 }
                 Self::totalOperatorsForQuorum(inner) => {
                     <totalOperatorsForQuorumCall as alloy_sol_types::SolCall>::abi_encoded_size(
@@ -3341,74 +3043,56 @@ function totalOperatorsForQuorum(uint8 quorumNumber) external view returns (uint
             match self {
                 Self::OPERATOR_DOES_NOT_EXIST_ID(inner) => {
                     <OPERATOR_DOES_NOT_EXIST_IDCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
+                        inner, out,
                     )
                 }
                 Self::currentOperatorIndex(inner) => {
                     <currentOperatorIndexCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
+                        inner, out,
                     )
                 }
                 Self::deregisterOperator(inner) => {
-                    <deregisterOperatorCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <deregisterOperatorCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
                 }
                 Self::getLatestOperatorUpdate(inner) => {
                     <getLatestOperatorUpdateCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
+                        inner, out,
                     )
                 }
                 Self::getLatestQuorumUpdate(inner) => {
                     <getLatestQuorumUpdateCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
+                        inner, out,
                     )
                 }
                 Self::getOperatorListAtBlockNumber(inner) => {
                     <getOperatorListAtBlockNumberCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
+                        inner, out,
                     )
                 }
                 Self::getOperatorUpdateAtIndex(inner) => {
                     <getOperatorUpdateAtIndexCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
+                        inner, out,
                     )
                 }
                 Self::getQuorumUpdateAtIndex(inner) => {
                     <getQuorumUpdateAtIndexCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
+                        inner, out,
                     )
                 }
                 Self::initializeQuorum(inner) => {
-                    <initializeQuorumCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <initializeQuorumCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
                 }
                 Self::registerOperator(inner) => {
-                    <registerOperatorCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <registerOperatorCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
                 }
                 Self::registryCoordinator(inner) => {
                     <registryCoordinatorCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
+                        inner, out,
                     )
                 }
                 Self::totalOperatorsForQuorum(inner) => {
                     <totalOperatorsForQuorumCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
+                        inner, out,
                     )
                 }
             }
@@ -3429,72 +3113,14 @@ function totalOperatorsForQuorum(uint8 quorumNumber) external view returns (uint
         /// Prefer using `SolInterface` methods instead.
         pub const SELECTORS: &'static [[u8; 32usize]] = &[
             [
-                110u8,
-                225u8,
-                228u8,
-                244u8,
-                7u8,
-                95u8,
-                61u8,
-                6u8,
-                113u8,
-                118u8,
-                20u8,
-                13u8,
-                52u8,
-                232u8,
-                120u8,
-                116u8,
-                36u8,
-                77u8,
-                210u8,
-                115u8,
-                41u8,
-                76u8,
-                5u8,
-                178u8,
-                33u8,
-                129u8,
-                51u8,
-                228u8,
-                154u8,
-                43u8,
-                166u8,
-                246u8,
+                110u8, 225u8, 228u8, 244u8, 7u8, 95u8, 61u8, 6u8, 113u8, 118u8, 20u8, 13u8, 52u8,
+                232u8, 120u8, 116u8, 36u8, 77u8, 210u8, 115u8, 41u8, 76u8, 5u8, 178u8, 33u8, 129u8,
+                51u8, 228u8, 154u8, 43u8, 166u8, 246u8,
             ],
             [
-                127u8,
-                38u8,
-                184u8,
-                63u8,
-                249u8,
-                110u8,
-                31u8,
-                43u8,
-                106u8,
-                104u8,
-                47u8,
-                19u8,
-                56u8,
-                82u8,
-                246u8,
-                121u8,
-                138u8,
-                9u8,
-                196u8,
-                101u8,
-                218u8,
-                149u8,
-                146u8,
-                20u8,
-                96u8,
-                206u8,
-                251u8,
-                56u8,
-                71u8,
-                64u8,
-                36u8,
-                152u8,
+                127u8, 38u8, 184u8, 63u8, 249u8, 110u8, 31u8, 43u8, 106u8, 104u8, 47u8, 19u8, 56u8,
+                82u8, 246u8, 121u8, 138u8, 9u8, 196u8, 101u8, 218u8, 149u8, 146u8, 20u8, 96u8,
+                206u8, 251u8, 56u8, 71u8, 64u8, 36u8, 152u8,
             ],
         ];
     }
@@ -3510,33 +3136,25 @@ function totalOperatorsForQuorum(uint8 quorumNumber) external view returns (uint
             match topics.first().copied() {
                 Some(<Initialized as alloy_sol_types::SolEvent>::SIGNATURE_HASH) => {
                     <Initialized as alloy_sol_types::SolEvent>::decode_raw_log(
-                            topics,
-                            data,
-                            validate,
-                        )
-                        .map(Self::Initialized)
+                        topics, data, validate,
+                    )
+                    .map(Self::Initialized)
                 }
-                Some(
-                    <QuorumIndexUpdate as alloy_sol_types::SolEvent>::SIGNATURE_HASH,
-                ) => {
+                Some(<QuorumIndexUpdate as alloy_sol_types::SolEvent>::SIGNATURE_HASH) => {
                     <QuorumIndexUpdate as alloy_sol_types::SolEvent>::decode_raw_log(
-                            topics,
-                            data,
-                            validate,
-                        )
-                        .map(Self::QuorumIndexUpdate)
+                        topics, data, validate,
+                    )
+                    .map(Self::QuorumIndexUpdate)
                 }
-                _ => {
-                    alloy_sol_types::private::Err(alloy_sol_types::Error::InvalidLog {
-                        name: <Self as alloy_sol_types::SolEventInterface>::NAME,
-                        log: alloy_sol_types::private::Box::new(
-                            alloy_sol_types::private::LogData::new_unchecked(
-                                topics.to_vec(),
-                                data.to_vec().into(),
-                            ),
+                _ => alloy_sol_types::private::Err(alloy_sol_types::Error::InvalidLog {
+                    name: <Self as alloy_sol_types::SolEventInterface>::NAME,
+                    log: alloy_sol_types::private::Box::new(
+                        alloy_sol_types::private::LogData::new_unchecked(
+                            topics.to_vec(),
+                            data.to_vec().into(),
                         ),
-                    })
-                }
+                    ),
+                }),
             }
         }
     }
@@ -3566,7 +3184,7 @@ function totalOperatorsForQuorum(uint8 quorumNumber) external view returns (uint
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`IndexRegistry`](self) contract instance.
 
-See the [wrapper's documentation](`IndexRegistryInstance`) for more details.*/
+    See the [wrapper's documentation](`IndexRegistryInstance`) for more details.*/
     #[inline]
     pub const fn new<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -3580,9 +3198,9 @@ See the [wrapper's documentation](`IndexRegistryInstance`) for more details.*/
     }
     /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+    Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+    For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
     #[inline]
     pub fn deploy<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -3591,16 +3209,15 @@ For more fine-grained control over the deployment process, use [`deploy_builder`
     >(
         provider: P,
         _registryCoordinator: alloy::sol_types::private::Address,
-    ) -> impl ::core::future::Future<
-        Output = alloy_contract::Result<IndexRegistryInstance<T, P, N>>,
-    > {
+    ) -> impl ::core::future::Future<Output = alloy_contract::Result<IndexRegistryInstance<T, P, N>>>
+    {
         IndexRegistryInstance::<T, P, N>::deploy(provider, _registryCoordinator)
     }
     /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+    and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+    This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+    the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     #[inline]
     pub fn deploy_builder<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -3614,15 +3231,15 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     }
     /**A [`IndexRegistry`](self) instance.
 
-Contains type-safe methods for interacting with an on-chain instance of the
-[`IndexRegistry`](self) contract located at a given `address`, using a given
-provider `P`.
+    Contains type-safe methods for interacting with an on-chain instance of the
+    [`IndexRegistry`](self) contract located at a given `address`, using a given
+    provider `P`.
 
-If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
-documentation on how to provide it), the `deploy` and `deploy_builder` methods can
-be used to deploy a new instance of the contract.
+    If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
+    documentation on how to provide it), the `deploy` and `deploy_builder` methods can
+    be used to deploy a new instance of the contract.
 
-See the [module-level documentation](self) for all the available methods.*/
+    See the [module-level documentation](self) for all the available methods.*/
     #[derive(Clone)]
     pub struct IndexRegistryInstance<T, P, N = alloy_contract::private::Ethereum> {
         address: alloy_sol_types::private::Address,
@@ -3633,24 +3250,24 @@ See the [module-level documentation](self) for all the available methods.*/
     impl<T, P, N> ::core::fmt::Debug for IndexRegistryInstance<T, P, N> {
         #[inline]
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-            f.debug_tuple("IndexRegistryInstance").field(&self.address).finish()
+            f.debug_tuple("IndexRegistryInstance")
+                .field(&self.address)
+                .finish()
         }
     }
     /// Instantiation and getters/setters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > IndexRegistryInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > IndexRegistryInstance<T, P, N>
+    {
         /**Creates a new wrapper around an on-chain [`IndexRegistry`](self) contract instance.
 
-See the [wrapper's documentation](`IndexRegistryInstance`) for more details.*/
+        See the [wrapper's documentation](`IndexRegistryInstance`) for more details.*/
         #[inline]
-        pub const fn new(
-            address: alloy_sol_types::private::Address,
-            provider: P,
-        ) -> Self {
+        pub const fn new(address: alloy_sol_types::private::Address, provider: P) -> Self {
             Self {
                 address,
                 provider,
@@ -3659,9 +3276,9 @@ See the [wrapper's documentation](`IndexRegistryInstance`) for more details.*/
         }
         /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+        Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+        For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
         #[inline]
         pub async fn deploy(
             provider: P,
@@ -3672,10 +3289,10 @@ For more fine-grained control over the deployment process, use [`deploy_builder`
             Ok(Self::new(contract_address, call_builder.provider))
         }
         /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+        and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+        This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+        the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         #[inline]
         pub fn deploy_builder(
             provider: P,
@@ -3685,14 +3302,12 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
                 provider,
                 [
                     &BYTECODE[..],
-                    &alloy_sol_types::SolConstructor::abi_encode(
-                        &constructorCall {
-                            _registryCoordinator,
-                        },
-                    )[..],
+                    &alloy_sol_types::SolConstructor::abi_encode(&constructorCall {
+                        _registryCoordinator,
+                    })[..],
                 ]
-                    .concat()
-                    .into(),
+                .concat()
+                .into(),
             )
         }
         /// Returns a reference to the address.
@@ -3730,10 +3345,11 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     /// Function calls.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > IndexRegistryInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > IndexRegistryInstance<T, P, N>
+    {
         /// Creates a new call builder using this contract instance's provider and address.
         ///
         /// Note that the call can be any function call, not just those defined in this
@@ -3764,12 +3380,10 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
             operatorId: alloy::sol_types::private::FixedBytes<32>,
             quorumNumbers: alloy::sol_types::private::Bytes,
         ) -> alloy_contract::SolCallBuilder<T, &P, deregisterOperatorCall, N> {
-            self.call_builder(
-                &deregisterOperatorCall {
-                    operatorId,
-                    quorumNumbers,
-                },
-            )
+            self.call_builder(&deregisterOperatorCall {
+                operatorId,
+                quorumNumbers,
+            })
         }
         ///Creates a new call builder for the [`getLatestOperatorUpdate`] function.
         pub fn getLatestOperatorUpdate(
@@ -3777,23 +3391,17 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
             quorumNumber: u8,
             operatorIndex: u32,
         ) -> alloy_contract::SolCallBuilder<T, &P, getLatestOperatorUpdateCall, N> {
-            self.call_builder(
-                &getLatestOperatorUpdateCall {
-                    quorumNumber,
-                    operatorIndex,
-                },
-            )
+            self.call_builder(&getLatestOperatorUpdateCall {
+                quorumNumber,
+                operatorIndex,
+            })
         }
         ///Creates a new call builder for the [`getLatestQuorumUpdate`] function.
         pub fn getLatestQuorumUpdate(
             &self,
             quorumNumber: u8,
         ) -> alloy_contract::SolCallBuilder<T, &P, getLatestQuorumUpdateCall, N> {
-            self.call_builder(
-                &getLatestQuorumUpdateCall {
-                    quorumNumber,
-                },
-            )
+            self.call_builder(&getLatestQuorumUpdateCall { quorumNumber })
         }
         ///Creates a new call builder for the [`getOperatorListAtBlockNumber`] function.
         pub fn getOperatorListAtBlockNumber(
@@ -3801,12 +3409,10 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
             quorumNumber: u8,
             blockNumber: u32,
         ) -> alloy_contract::SolCallBuilder<T, &P, getOperatorListAtBlockNumberCall, N> {
-            self.call_builder(
-                &getOperatorListAtBlockNumberCall {
-                    quorumNumber,
-                    blockNumber,
-                },
-            )
+            self.call_builder(&getOperatorListAtBlockNumberCall {
+                quorumNumber,
+                blockNumber,
+            })
         }
         ///Creates a new call builder for the [`getOperatorUpdateAtIndex`] function.
         pub fn getOperatorUpdateAtIndex(
@@ -3815,13 +3421,11 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
             operatorIndex: u32,
             arrayIndex: u32,
         ) -> alloy_contract::SolCallBuilder<T, &P, getOperatorUpdateAtIndexCall, N> {
-            self.call_builder(
-                &getOperatorUpdateAtIndexCall {
-                    quorumNumber,
-                    operatorIndex,
-                    arrayIndex,
-                },
-            )
+            self.call_builder(&getOperatorUpdateAtIndexCall {
+                quorumNumber,
+                operatorIndex,
+                arrayIndex,
+            })
         }
         ///Creates a new call builder for the [`getQuorumUpdateAtIndex`] function.
         pub fn getQuorumUpdateAtIndex(
@@ -3829,23 +3433,17 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
             quorumNumber: u8,
             quorumIndex: u32,
         ) -> alloy_contract::SolCallBuilder<T, &P, getQuorumUpdateAtIndexCall, N> {
-            self.call_builder(
-                &getQuorumUpdateAtIndexCall {
-                    quorumNumber,
-                    quorumIndex,
-                },
-            )
+            self.call_builder(&getQuorumUpdateAtIndexCall {
+                quorumNumber,
+                quorumIndex,
+            })
         }
         ///Creates a new call builder for the [`initializeQuorum`] function.
         pub fn initializeQuorum(
             &self,
             quorumNumber: u8,
         ) -> alloy_contract::SolCallBuilder<T, &P, initializeQuorumCall, N> {
-            self.call_builder(
-                &initializeQuorumCall {
-                    quorumNumber,
-                },
-            )
+            self.call_builder(&initializeQuorumCall { quorumNumber })
         }
         ///Creates a new call builder for the [`registerOperator`] function.
         pub fn registerOperator(
@@ -3853,12 +3451,10 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
             operatorId: alloy::sol_types::private::FixedBytes<32>,
             quorumNumbers: alloy::sol_types::private::Bytes,
         ) -> alloy_contract::SolCallBuilder<T, &P, registerOperatorCall, N> {
-            self.call_builder(
-                &registerOperatorCall {
-                    operatorId,
-                    quorumNumbers,
-                },
-            )
+            self.call_builder(&registerOperatorCall {
+                operatorId,
+                quorumNumbers,
+            })
         }
         ///Creates a new call builder for the [`registryCoordinator`] function.
         pub fn registryCoordinator(
@@ -3871,20 +3467,17 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
             &self,
             quorumNumber: u8,
         ) -> alloy_contract::SolCallBuilder<T, &P, totalOperatorsForQuorumCall, N> {
-            self.call_builder(
-                &totalOperatorsForQuorumCall {
-                    quorumNumber,
-                },
-            )
+            self.call_builder(&totalOperatorsForQuorumCall { quorumNumber })
         }
     }
     /// Event filters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > IndexRegistryInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > IndexRegistryInstance<T, P, N>
+    {
         /// Creates a new event filter using this contract instance's provider and address.
         ///
         /// Note that the type can be any event, not just those defined in this contract.
@@ -3895,9 +3488,7 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
             alloy_contract::Event::new_sol(&self.provider, &self.address)
         }
         ///Creates a new event filter for the [`Initialized`] event.
-        pub fn Initialized_filter(
-            &self,
-        ) -> alloy_contract::Event<T, &P, Initialized, N> {
+        pub fn Initialized_filter(&self) -> alloy_contract::Event<T, &P, Initialized, N> {
             self.event_filter::<Initialized>()
         }
         ///Creates a new event filter for the [`QuorumIndexUpdate`] event.
