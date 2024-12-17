@@ -4,8 +4,8 @@ use alloy_primitives::{Address, FixedBytes, TxHash, U256};
 pub use eigen_types::operator::Operator;
 use eigen_utils::{
     delegationmanager::{
-        DelegationManager::{self},
-        IDelegationManagerTypes::OperatorDetails,
+        DelegationManager::{self}
+        // IDelegationManagerTypes::OperatorDetails,
     },
     erc20::ERC20,
     get_signer,
@@ -69,18 +69,18 @@ impl ELChainWriter {
         operator: Operator,
     ) -> Result<FixedBytes<32>, ElContractsError> {
         info!("registering operator {:?} to EigenLayer", operator.address);
-        let op_details = OperatorDetails {
-            __deprecated_earningsReceiver: operator.address,
-            delegationApprover: operator.delegation_approver_address,
-            __deprecated_stakerOptOutWindowBlocks: operator.staker_opt_out_window_blocks,
-        };
+        // let op_details = OperatorDetails {
+        //     __deprecated_earningsReceiver: operator.address,
+        //     delegationApprover: operator.delegation_approver_address,
+        //     __deprecated_stakerOptOutWindowBlocks: operator.staker_opt_out_window_blocks,
+        // };
         let provider = get_signer(&self.signer.clone(), &self.provider);
 
         let contract_delegation_manager = DelegationManager::new(self.delegation_manager, provider);
 
         let binding = {
             let contract_call = contract_delegation_manager.registerAsOperator(
-                op_details,
+                operator.address,
                 operator.allocation_delay,
                 operator.metadata_url.unwrap_or_default(),
             );
@@ -128,17 +128,13 @@ impl ELChainWriter {
             "updating operator detils of operator {:?} to EigenLayer",
             operator.address
         );
-        let operator_details = OperatorDetails {
-            __deprecated_earningsReceiver: operator.address,
-            __deprecated_stakerOptOutWindowBlocks: operator.staker_opt_out_window_blocks,
-            delegationApprover: operator.delegation_approver_address,
-        };
+       
         let provider = get_signer(&self.signer.clone(), &self.provider);
 
         let contract_delegation_manager = DelegationManager::new(self.delegation_manager, provider);
 
         let contract_call_modify_operator_details =
-            contract_delegation_manager.modifyOperatorDetails(operator_details);
+            contract_delegation_manager.modifyOperatorDetails(operator.address,operator.delegation_approver_address);
 
         let modify_operator_tx = contract_call_modify_operator_details
             .send()
@@ -148,7 +144,7 @@ impl ELChainWriter {
         info!(tx_hash = %modify_operator_tx.tx_hash(), operator = %operator.address, "updated operator details tx");
 
         let contract_call_update_metadata_uri = contract_delegation_manager
-            .updateOperatorMetadataURI(operator.metadata_url.unwrap_or_default());
+            .updateOperatorMetadataURI(operator.address,operator.metadata_url.unwrap_or_default());
 
         let metadata_tx = contract_call_update_metadata_uri.send().await?;
 
@@ -221,7 +217,7 @@ impl ELChainWriter {
         let contract_rewards_coordinator =
             IRewardsCoordinator::new(self.rewards_coordinator, &provider);
 
-        let set_claimer_for_call = contract_rewards_coordinator.setClaimerFor(claimer);
+        let set_claimer_for_call = contract_rewards_coordinator.setClaimerFor_0(claimer);
 
         let tx = set_claimer_for_call.send().await?;
         Ok(*tx.tx_hash())
