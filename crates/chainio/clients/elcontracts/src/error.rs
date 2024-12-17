@@ -35,10 +35,6 @@ pub enum ElContractsError {
     #[error("Failed to get underlying token")]
     GetUnderlyingToken,
 
-    /// Get operator details
-    #[error("Failed to get oeprator details")]
-    GetOperatorDetails,
-
     /// is operator or not
     #[error("Is operator or not ")]
     IsOperator,

@@ -3,9 +3,7 @@ use crate::reader::ELChainReader;
 use alloy_primitives::{Address, FixedBytes, TxHash, U256};
 pub use eigen_types::operator::Operator;
 use eigen_utils::{
-    delegationmanager::{
-        DelegationManager::{self}, // IDelegationManagerTypes::OperatorDetails,
-    },
+    delegationmanager::DelegationManager,
     erc20::ERC20,
     get_signer,
     irewardscoordinator::{
@@ -68,11 +66,6 @@ impl ELChainWriter {
         operator: Operator,
     ) -> Result<FixedBytes<32>, ElContractsError> {
         info!("registering operator {:?} to EigenLayer", operator.address);
-        // let op_details = OperatorDetails {
-        //     __deprecated_earningsReceiver: operator.address,
-        //     delegationApprover: operator.delegation_approver_address,
-        //     __deprecated_stakerOptOutWindowBlocks: operator.staker_opt_out_window_blocks,
-        // };
         let provider = get_signer(&self.signer.clone(), &self.provider);
 
         let contract_delegation_manager = DelegationManager::new(self.delegation_manager, provider);
