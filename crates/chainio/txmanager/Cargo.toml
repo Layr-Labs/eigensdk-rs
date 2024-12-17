@@ -15,6 +15,7 @@ eigen-signer.workspace = true
 reqwest.workspace = true
 thiserror.workspace = true
 tokio.workspace = true
+backoff.workspace = true
 
 [dev-dependencies]
 eigen-testing-utils.workspace = true
