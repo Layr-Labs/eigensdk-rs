@@ -2389,6 +2389,7 @@ interface RewardsCoordinatorStorage {
     error InvalidTokenLeafIndex();
     error NewRootMustBeForNewCalculatedPeriod();
     error OperatorsNotInAscendingOrder();
+    error PreviousSplitPending();
     error RewardsEndTimestampNotElapsed();
     error RootAlreadyActivated();
     error RootDisabled();
@@ -2428,7 +2429,7 @@ interface RewardsCoordinatorStorage {
     function calculateTokenLeafHash(IRewardsCoordinatorTypes.TokenTreeMerkleLeaf memory leaf) external pure returns (bytes32);
     function checkClaim(IRewardsCoordinatorTypes.RewardsMerkleClaim memory claim) external view returns (bool);
     function claimerFor(address earner) external view returns (address claimer);
-    function createAVSRewardsSubmission(address avs, IRewardsCoordinatorTypes.RewardsSubmission[] memory rewardsSubmissions) external;
+    function createAVSRewardsSubmission(IRewardsCoordinatorTypes.RewardsSubmission[] memory rewardsSubmissions) external;
     function createOperatorDirectedAVSRewardsSubmission(address avs, IRewardsCoordinatorTypes.OperatorDirectedRewardsSubmission[] memory operatorDirectedRewardsSubmissions) external;
     function createRewardsForAllEarners(IRewardsCoordinatorTypes.RewardsSubmission[] memory rewardsSubmissions) external;
     function createRewardsForAllSubmission(IRewardsCoordinatorTypes.RewardsSubmission[] memory rewardsSubmissions) external;
@@ -2739,11 +2740,6 @@ interface RewardsCoordinatorStorage {
     "type": "function",
     "name": "createAVSRewardsSubmission",
     "inputs": [
-      {
-        "name": "avs",
-        "type": "address",
-        "internalType": "address"
-      },
       {
         "name": "rewardsSubmissions",
         "type": "tuple[]",
@@ -4404,6 +4400,11 @@ interface RewardsCoordinatorStorage {
   },
   {
     "type": "error",
+    "name": "PreviousSplitPending",
+    "inputs": []
+  },
+  {
+    "type": "error",
     "name": "RewardsEndTimestampNotElapsed",
     "inputs": []
   },
@@ -5708,6 +5709,70 @@ error OperatorsNotInAscendingOrder();
             > as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "OperatorsNotInAscendingOrder()";
             const SELECTOR: [u8; 4] = [135u8, 218u8, 63u8, 136u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+        }
+    };
+    /**Custom error with signature `PreviousSplitPending()` and selector `0x7b1e25c5`.
+```solidity
+error PreviousSplitPending();
+```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct PreviousSplitPending {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(
+            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+        ) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<PreviousSplitPending> for UnderlyingRustTuple<'_> {
+            fn from(value: PreviousSplitPending) -> Self {
+                ()
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for PreviousSplitPending {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolError for PreviousSplitPending {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "PreviousSplitPending()";
+            const SELECTOR: [u8; 4] = [123u8, 30u8, 37u8, 197u8];
             #[inline]
             fn new<'a>(
                 tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
@@ -10189,19 +10254,18 @@ function claimerFor(address earner) external view returns (address claimer);
             }
         }
     };
-    /**Function with signature `createAVSRewardsSubmission(address,((address,uint96)[],address,uint256,uint32,uint32)[])` and selector `0x43ea4476`.
+    /**Function with signature `createAVSRewardsSubmission(((address,uint96)[],address,uint256,uint32,uint32)[])` and selector `0xfce36c7d`.
 ```solidity
-function createAVSRewardsSubmission(address avs, IRewardsCoordinatorTypes.RewardsSubmission[] memory rewardsSubmissions) external;
+function createAVSRewardsSubmission(IRewardsCoordinatorTypes.RewardsSubmission[] memory rewardsSubmissions) external;
 ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct createAVSRewardsSubmissionCall {
-        pub avs: alloy::sol_types::private::Address,
         pub rewardsSubmissions: alloy::sol_types::private::Vec<
             <IRewardsCoordinatorTypes::RewardsSubmission as alloy::sol_types::SolType>::RustType,
         >,
     }
-    ///Container type for the return parameters of the [`createAVSRewardsSubmission(address,((address,uint96)[],address,uint256,uint32,uint32)[])`](createAVSRewardsSubmissionCall) function.
+    ///Container type for the return parameters of the [`createAVSRewardsSubmission(((address,uint96)[],address,uint256,uint32,uint32)[])`](createAVSRewardsSubmissionCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct createAVSRewardsSubmissionReturn {}
@@ -10216,14 +10280,12 @@ function createAVSRewardsSubmission(address avs, IRewardsCoordinatorTypes.Reward
         {
             #[doc(hidden)]
             type UnderlyingSolTuple<'a> = (
-                alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Array<
                     IRewardsCoordinatorTypes::RewardsSubmission,
                 >,
             );
             #[doc(hidden)]
             type UnderlyingRustTuple<'a> = (
-                alloy::sol_types::private::Address,
                 alloy::sol_types::private::Vec<
                     <IRewardsCoordinatorTypes::RewardsSubmission as alloy::sol_types::SolType>::RustType,
                 >,
@@ -10244,7 +10306,7 @@ function createAVSRewardsSubmission(address avs, IRewardsCoordinatorTypes.Reward
             impl ::core::convert::From<createAVSRewardsSubmissionCall>
             for UnderlyingRustTuple<'_> {
                 fn from(value: createAVSRewardsSubmissionCall) -> Self {
-                    (value.avs, value.rewardsSubmissions)
+                    (value.rewardsSubmissions,)
                 }
             }
             #[automatically_derived]
@@ -10253,8 +10315,7 @@ function createAVSRewardsSubmission(address avs, IRewardsCoordinatorTypes.Reward
             for createAVSRewardsSubmissionCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {
-                        avs: tuple.0,
-                        rewardsSubmissions: tuple.1,
+                        rewardsSubmissions: tuple.0,
                     }
                 }
             }
@@ -10295,7 +10356,6 @@ function createAVSRewardsSubmission(address avs, IRewardsCoordinatorTypes.Reward
         #[automatically_derived]
         impl alloy_sol_types::SolCall for createAVSRewardsSubmissionCall {
             type Parameters<'a> = (
-                alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Array<
                     IRewardsCoordinatorTypes::RewardsSubmission,
                 >,
@@ -10308,8 +10368,8 @@ function createAVSRewardsSubmission(address avs, IRewardsCoordinatorTypes.Reward
             type ReturnToken<'a> = <Self::ReturnTuple<
                 'a,
             > as alloy_sol_types::SolType>::Token<'a>;
-            const SIGNATURE: &'static str = "createAVSRewardsSubmission(address,((address,uint96)[],address,uint256,uint32,uint32)[])";
-            const SELECTOR: [u8; 4] = [67u8, 234u8, 68u8, 118u8];
+            const SIGNATURE: &'static str = "createAVSRewardsSubmission(((address,uint96)[],address,uint256,uint32,uint32)[])";
+            const SELECTOR: [u8; 4] = [252u8, 227u8, 108u8, 125u8];
             #[inline]
             fn new<'a>(
                 tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
@@ -10319,9 +10379,6 @@ function createAVSRewardsSubmission(address avs, IRewardsCoordinatorTypes.Reward
             #[inline]
             fn tokenize(&self) -> Self::Token<'_> {
                 (
-                    <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
-                        &self.avs,
-                    ),
                     <alloy::sol_types::sol_data::Array<
                         IRewardsCoordinatorTypes::RewardsSubmission,
                     > as alloy_sol_types::SolType>::tokenize(&self.rewardsSubmissions),
@@ -15127,7 +15184,6 @@ function submitRoot(bytes32 root, uint32 rewardsCalculationEndTimestamp) externa
             [58u8, 140u8, 7u8, 134u8],
             [60u8, 204u8, 134u8, 29u8],
             [62u8, 254u8, 29u8, 182u8],
-            [67u8, 234u8, 68u8, 118u8],
             [69u8, 150u8, 2u8, 28u8],
             [75u8, 148u8, 57u8, 96u8],
             [77u8, 24u8, 204u8, 53u8],
@@ -15161,6 +15217,7 @@ function submitRoot(bytes32 root, uint32 rewardsCalculationEndTimestamp) externa
             [248u8, 205u8, 132u8, 72u8],
             [249u8, 106u8, 191u8, 46u8],
             [251u8, 241u8, 226u8, 193u8],
+            [252u8, 227u8, 108u8, 125u8],
             [255u8, 159u8, 108u8, 206u8],
         ];
     }
@@ -15515,21 +15572,6 @@ function submitRoot(bytes32 root, uint32 rewardsCalculationEndTimestamp) externa
                             .map(RewardsCoordinatorStorageCalls::submitRoot)
                     }
                     submitRoot
-                },
-                {
-                    fn createAVSRewardsSubmission(
-                        data: &[u8],
-                        validate: bool,
-                    ) -> alloy_sol_types::Result<RewardsCoordinatorStorageCalls> {
-                        <createAVSRewardsSubmissionCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(
-                                RewardsCoordinatorStorageCalls::createAVSRewardsSubmission,
-                            )
-                    }
-                    createAVSRewardsSubmission
                 },
                 {
                     fn processClaims(
@@ -15981,6 +16023,21 @@ function submitRoot(bytes32 root, uint32 rewardsCalculationEndTimestamp) externa
                             .map(RewardsCoordinatorStorageCalls::rewardsUpdater)
                     }
                     rewardsUpdater
+                },
+                {
+                    fn createAVSRewardsSubmission(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<RewardsCoordinatorStorageCalls> {
+                        <createAVSRewardsSubmissionCall as alloy_sol_types::SolCall>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
+                            .map(
+                                RewardsCoordinatorStorageCalls::createAVSRewardsSubmission,
+                            )
+                    }
+                    createAVSRewardsSubmission
                 },
                 {
                     fn createRewardsForAllEarners(
@@ -16562,6 +16619,7 @@ function submitRoot(bytes32 root, uint32 rewardsCalculationEndTimestamp) externa
         InvalidTokenLeafIndex(InvalidTokenLeafIndex),
         NewRootMustBeForNewCalculatedPeriod(NewRootMustBeForNewCalculatedPeriod),
         OperatorsNotInAscendingOrder(OperatorsNotInAscendingOrder),
+        PreviousSplitPending(PreviousSplitPending),
         RewardsEndTimestampNotElapsed(RewardsEndTimestampNotElapsed),
         RootAlreadyActivated(RootAlreadyActivated),
         RootDisabled(RootDisabled),
@@ -16602,6 +16660,7 @@ function submitRoot(bytes32 root, uint32 rewardsCalculationEndTimestamp) externa
             [105u8, 202u8, 22u8, 201u8],
             [114u8, 159u8, 148u8, 44u8],
             [121u8, 108u8, 197u8, 37u8],
+            [123u8, 30u8, 37u8, 197u8],
             [126u8, 226u8, 180u8, 67u8],
             [135u8, 218u8, 63u8, 136u8],
             [137u8, 28u8, 99u8, 223u8],
@@ -16619,7 +16678,7 @@ function submitRoot(bytes32 root, uint32 rewardsCalculationEndTimestamp) externa
     impl alloy_sol_types::SolInterface for RewardsCoordinatorStorageErrors {
         const NAME: &'static str = "RewardsCoordinatorStorageErrors";
         const MIN_DATA_LENGTH: usize = 0usize;
-        const COUNT: usize = 30usize;
+        const COUNT: usize = 31usize;
         #[inline]
         fn selector(&self) -> [u8; 4] {
             match self {
@@ -16679,6 +16738,9 @@ function submitRoot(bytes32 root, uint32 rewardsCalculationEndTimestamp) externa
                 }
                 Self::OperatorsNotInAscendingOrder(_) => {
                     <OperatorsNotInAscendingOrder as alloy_sol_types::SolError>::SELECTOR
+                }
+                Self::PreviousSplitPending(_) => {
+                    <PreviousSplitPending as alloy_sol_types::SolError>::SELECTOR
                 }
                 Self::RewardsEndTimestampNotElapsed(_) => {
                     <RewardsEndTimestampNotElapsed as alloy_sol_types::SolError>::SELECTOR
@@ -16996,6 +17058,19 @@ function submitRoot(bytes32 root, uint32 rewardsCalculationEndTimestamp) externa
                     InputArrayLengthZero
                 },
                 {
+                    fn PreviousSplitPending(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<RewardsCoordinatorStorageErrors> {
+                        <PreviousSplitPending as alloy_sol_types::SolError>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
+                            .map(RewardsCoordinatorStorageErrors::PreviousSplitPending)
+                    }
+                    PreviousSplitPending
+                },
+                {
                     fn StartTimestampTooFarInFuture(
                         data: &[u8],
                         validate: bool,
@@ -17253,6 +17328,11 @@ function submitRoot(bytes32 root, uint32 rewardsCalculationEndTimestamp) externa
                         inner,
                     )
                 }
+                Self::PreviousSplitPending(inner) => {
+                    <PreviousSplitPending as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
+                }
                 Self::RewardsEndTimestampNotElapsed(inner) => {
                     <RewardsEndTimestampNotElapsed as alloy_sol_types::SolError>::abi_encoded_size(
                         inner,
@@ -17421,6 +17501,12 @@ function submitRoot(bytes32 root, uint32 rewardsCalculationEndTimestamp) externa
                 }
                 Self::OperatorsNotInAscendingOrder(inner) => {
                     <OperatorsNotInAscendingOrder as alloy_sol_types::SolError>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
+                Self::PreviousSplitPending(inner) => {
+                    <PreviousSplitPending as alloy_sol_types::SolError>::abi_encode_raw(
                         inner,
                         out,
                     )
@@ -18511,14 +18597,12 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         ///Creates a new call builder for the [`createAVSRewardsSubmission`] function.
         pub fn createAVSRewardsSubmission(
             &self,
-            avs: alloy::sol_types::private::Address,
             rewardsSubmissions: alloy::sol_types::private::Vec<
                 <IRewardsCoordinatorTypes::RewardsSubmission as alloy::sol_types::SolType>::RustType,
             >,
         ) -> alloy_contract::SolCallBuilder<T, &P, createAVSRewardsSubmissionCall, N> {
             self.call_builder(
                 &createAVSRewardsSubmissionCall {
-                    avs,
                     rewardsSubmissions,
                 },
             )

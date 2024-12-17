@@ -22,6 +22,7 @@ interface IRewardsCoordinatorErrors {
     error InvalidTokenLeafIndex();
     error NewRootMustBeForNewCalculatedPeriod();
     error OperatorsNotInAscendingOrder();
+    error PreviousSplitPending();
     error RewardsEndTimestampNotElapsed();
     error RootAlreadyActivated();
     error RootDisabled();
@@ -132,6 +133,11 @@ interface IRewardsCoordinatorErrors {
   {
     "type": "error",
     "name": "OperatorsNotInAscendingOrder",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "PreviousSplitPending",
     "inputs": []
   },
   {
@@ -1452,6 +1458,70 @@ error OperatorsNotInAscendingOrder();
             }
         }
     };
+    /**Custom error with signature `PreviousSplitPending()` and selector `0x7b1e25c5`.
+```solidity
+error PreviousSplitPending();
+```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct PreviousSplitPending {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(
+            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+        ) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<PreviousSplitPending> for UnderlyingRustTuple<'_> {
+            fn from(value: PreviousSplitPending) -> Self {
+                ()
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for PreviousSplitPending {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolError for PreviousSplitPending {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "PreviousSplitPending()";
+            const SELECTOR: [u8; 4] = [123u8, 30u8, 37u8, 197u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+        }
+    };
     /**Custom error with signature `RewardsEndTimestampNotElapsed()` and selector `0x0d2af922`.
 ```solidity
 error RewardsEndTimestampNotElapsed();
@@ -2189,6 +2259,7 @@ error UnauthorizedCaller();
         InvalidTokenLeafIndex(InvalidTokenLeafIndex),
         NewRootMustBeForNewCalculatedPeriod(NewRootMustBeForNewCalculatedPeriod),
         OperatorsNotInAscendingOrder(OperatorsNotInAscendingOrder),
+        PreviousSplitPending(PreviousSplitPending),
         RewardsEndTimestampNotElapsed(RewardsEndTimestampNotElapsed),
         RootAlreadyActivated(RootAlreadyActivated),
         RootDisabled(RootDisabled),
@@ -2229,6 +2300,7 @@ error UnauthorizedCaller();
             [105u8, 202u8, 22u8, 201u8],
             [114u8, 159u8, 148u8, 44u8],
             [121u8, 108u8, 197u8, 37u8],
+            [123u8, 30u8, 37u8, 197u8],
             [126u8, 226u8, 180u8, 67u8],
             [135u8, 218u8, 63u8, 136u8],
             [137u8, 28u8, 99u8, 223u8],
@@ -2246,7 +2318,7 @@ error UnauthorizedCaller();
     impl alloy_sol_types::SolInterface for IRewardsCoordinatorErrorsErrors {
         const NAME: &'static str = "IRewardsCoordinatorErrorsErrors";
         const MIN_DATA_LENGTH: usize = 0usize;
-        const COUNT: usize = 30usize;
+        const COUNT: usize = 31usize;
         #[inline]
         fn selector(&self) -> [u8; 4] {
             match self {
@@ -2306,6 +2378,9 @@ error UnauthorizedCaller();
                 }
                 Self::OperatorsNotInAscendingOrder(_) => {
                     <OperatorsNotInAscendingOrder as alloy_sol_types::SolError>::SELECTOR
+                }
+                Self::PreviousSplitPending(_) => {
+                    <PreviousSplitPending as alloy_sol_types::SolError>::SELECTOR
                 }
                 Self::RewardsEndTimestampNotElapsed(_) => {
                     <RewardsEndTimestampNotElapsed as alloy_sol_types::SolError>::SELECTOR
@@ -2623,6 +2698,19 @@ error UnauthorizedCaller();
                     InputArrayLengthZero
                 },
                 {
+                    fn PreviousSplitPending(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<IRewardsCoordinatorErrorsErrors> {
+                        <PreviousSplitPending as alloy_sol_types::SolError>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
+                            .map(IRewardsCoordinatorErrorsErrors::PreviousSplitPending)
+                    }
+                    PreviousSplitPending
+                },
+                {
                     fn StartTimestampTooFarInFuture(
                         data: &[u8],
                         validate: bool,
@@ -2880,6 +2968,11 @@ error UnauthorizedCaller();
                         inner,
                     )
                 }
+                Self::PreviousSplitPending(inner) => {
+                    <PreviousSplitPending as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
+                }
                 Self::RewardsEndTimestampNotElapsed(inner) => {
                     <RewardsEndTimestampNotElapsed as alloy_sol_types::SolError>::abi_encoded_size(
                         inner,
@@ -3048,6 +3141,12 @@ error UnauthorizedCaller();
                 }
                 Self::OperatorsNotInAscendingOrder(inner) => {
                     <OperatorsNotInAscendingOrder as alloy_sol_types::SolError>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
+                Self::PreviousSplitPending(inner) => {
+                    <PreviousSplitPending as alloy_sol_types::SolError>::abi_encode_raw(
                         inner,
                         out,
                     )

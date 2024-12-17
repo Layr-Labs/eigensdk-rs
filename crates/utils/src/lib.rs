@@ -4,74 +4,45 @@
 //! Do not manually edit these files.
 //! These files may be overwritten by the codegen system at any time.
 pub mod avsdirectory;
-pub mod avsdirectoryharness;
-pub mod avsdirectorymock;
 pub mod avsdirectorystorage;
 pub mod avsregistrar;
-pub mod avsregistrarmock;
 pub mod address;
 pub mod addressupgradeable;
 pub mod allocationmanager;
-pub mod allocationmanagerintermediate;
-pub mod allocationmanagermock;
 pub mod allocationmanagerstorage;
 pub mod blsapkregistry;
-pub mod blsapkregistryharness;
 pub mod blsapkregistrystorage;
-pub mod blsmockavsdeployer;
 pub mod blssignaturechecker;
 pub mod bn254;
-pub mod beaconchainoraclemock;
 pub mod beaconchainproofs;
-pub mod bitmapstrings;
+pub mod beaconproxy;
 pub mod bitmaputils;
-pub mod bitmaputilswrapper;
 pub mod byteslib;
-pub mod checkpointsupgradeable;
+pub mod configsreadwriter;
 pub mod context;
 pub mod contextupgradeable;
+pub mod contractsregistry;
+pub mod coredeploymentlib;
 pub mod create2;
 pub mod delegationmanager;
 pub mod delegationmanagerstorage;
-pub mod delegationintermediate;
-pub mod delegationmock;
+pub mod deployeigenlayercore;
 pub mod doubleendedqueue;
 pub mod ecdsa;
-pub mod ecdsaservicemanagersetup;
-pub mod mockavsdirectory;
-pub mod mockallocationmanager;
-pub mod mockdelegationmanager;
-pub mod mockrewardscoordinator;
-pub mod ecdsaservicemanagerbase;
-pub mod ecdsaservicemanagermock;
-pub mod ecdsastakeregistry;
-pub mod ecdsastakeregistryequalweight;
-pub mod equalweightecdsaregistry;
-pub mod ecdsastakeregistrymock;
-pub mod ecdsastakeregistrypermissioned;
-pub mod ecdsastakeregistrystorage;
-pub mod ecdsastakeregistrysetup;
-pub mod mockservicemanager;
 pub mod ecdsaupgradeable;
 pub mod erc1967proxy;
 pub mod erc1967upgrade;
 pub mod ierc20;
 pub mod erc20;
-pub mod erc20burnable;
-pub mod erc20presetfixedsupply;
-pub mod ethposdepositmock;
 pub mod eigenpod;
 pub mod eigenpodmanager;
-pub mod eigenpodmanagermock;
 pub mod eigenpodmanagerstorage;
 pub mod eigenpodpausingconstants;
 pub mod eigenpodstorage;
-pub mod ejectionmanager;
 pub mod emptycontract;
 pub mod endian;
 pub mod enumerableset;
-pub mod integration_full_register_deregister;
-pub mod g2operations;
+pub mod fundoperator;
 pub mod iavsdirectory;
 pub mod iavsdirectoryerrors;
 pub mod iavsdirectoryevents;
@@ -82,7 +53,6 @@ pub mod iallocationmanagererrors;
 pub mod iallocationmanagerevents;
 pub mod iallocationmanagertypes;
 pub mod iblsapkregistry;
-pub mod iblsapkregistryevents;
 pub mod iblssignaturechecker;
 pub mod ibeacon;
 pub mod idelegationmanager;
@@ -106,9 +76,7 @@ pub mod ieigenpodmanager;
 pub mod ieigenpodmanagererrors;
 pub mod ieigenpodmanagerevents;
 pub mod ieigenpodmanagertypes;
-pub mod iejectionmanager;
 pub mod iindexregistry;
-pub mod iindexregistryevents;
 pub mod ipausable;
 pub mod ipauserregistry;
 pub mod ipermissioncontroller;
@@ -116,182 +84,79 @@ pub mod ipermissioncontrollererrors;
 pub mod ipermissioncontrollerevents;
 pub mod iregistry;
 pub mod iregistrycoordinator;
+pub mod iregistrycoordinatorerrors;
 pub mod irewardscoordinator;
 pub mod irewardscoordinatorerrors;
 pub mod irewardscoordinatorevents;
 pub mod irewardscoordinatortypes;
 pub mod iservicemanager;
-pub mod iservicemanagerbaseevents;
 pub mod iservicemanagerui;
 pub mod isharemanager;
 pub mod isignatureutils;
-pub mod islasher;
-pub mod islasherevents;
-pub mod islashertypes;
 pub mod isocketupdater;
 pub mod istakeregistry;
-pub mod istakeregistryevents;
 pub mod istrategy;
 pub mod istrategyerrors;
 pub mod istrategyevents;
+pub mod istrategyfactory;
 pub mod istrategymanager;
 pub mod istrategymanagererrors;
 pub mod istrategymanagerevents;
 pub mod indexregistry;
 pub mod indexregistrystorage;
 pub mod initializable;
-pub mod instantslasher;
-pub mod integrationbase;
-pub mod integrationchecks;
-pub mod constants;
-pub mod integrationconfig;
-pub mod integrationdeployer;
 pub mod libmergesort;
 pub mod math;
 pub mod mathupgradeable;
 pub mod merkle;
-pub mod mockavsdeployer;
+pub mod mockavscontractsparser;
+pub mod mockavsdeploymentlib;
+pub mod mockavsservicemanager;
 pub mod mockerc20;
 pub mod mockerc721;
-pub mod integration_nonfull_register_corebalancechange_update;
-pub mod integration_nonfull_register_deregister;
 pub mod operatorsetlib;
-pub mod operatorsetupgradelib;
 pub mod operatorstateretriever;
-pub mod operators;
 pub mod ownable;
 pub mod ownableupgradeable;
-pub mod owners;
 pub mod pausable;
 pub mod pauserregistry;
 pub mod permissioncontroller;
 pub mod permissioncontrollermixin;
-pub mod permissioncontrollerintermediate;
-pub mod permissioncontrollermock;
 pub mod permissioncontrollerstorage;
-pub mod proofparsing;
 pub mod proxy;
 pub mod proxyadmin;
 pub mod quorumbitmaphistorylib;
 pub mod reentrancyguardupgradeable;
 pub mod registrycoordinator;
-pub mod registrycoordinatorharness;
-pub mod registrycoordinatormock;
 pub mod registrycoordinatorstorage;
 pub mod rewardscoordinator;
-pub mod rewardscoordinatormock;
 pub mod rewardscoordinatorstorage;
 pub mod safecast;
 pub mod safecastupgradeable;
 pub mod safeerc20;
 pub mod servicemanagerbase;
 pub mod servicemanagerbasestorage;
-pub mod servicemanagermock;
-pub mod servicemanagerrouter;
-pub mod servicemanagerrouterdeploy;
 pub mod signaturecheckerlib;
 pub mod signaturecheckerupgradeable;
-pub mod signaturecompaction;
 pub mod signatureutils;
-pub mod slasherbase;
-pub mod slasherstorage;
 pub mod slashinglib;
 pub mod snapshots;
-pub mod sort;
 pub mod stakeregistry;
-pub mod stakeregistryharness;
-pub mod stakeregistrymock;
 pub mod stakeregistrystorage;
 pub mod storageslot;
 pub mod strategybase;
+pub mod strategybasetvllimits;
+pub mod strategyfactory;
+pub mod strategyfactorystorage;
 pub mod strategymanager;
-pub mod strategymanagermock;
 pub mod strategymanagerstorage;
 pub mod strings;
 pub mod stringsupgradeable;
-pub mod timemachine;
+pub mod tokenandstrategycontractsparser;
 pub mod transparentupgradeableproxy;
-pub mod integration_avs_sync_gascosts_ffi;
 pub mod upgradeablebeacon;
 pub mod upgradeableproxylib;
-pub mod iuserdeployer;
-pub mod user;
-pub mod user_altmethods;
-pub mod utils;
-pub mod vetoableslashing;
+pub mod writetocontractsregistrylib;
 pub mod eip712;
 pub mod ierc1822proxiable;
 pub mod ierc20permit;
-pub mod contractsregistry;
-
-use alloy::network::{Ethereum, EthereumWallet};
-use alloy::providers::{
-    fillers::{
-        BlobGasFiller, ChainIdFiller, FillProvider, GasFiller, JoinFill, NonceFiller, WalletFiller,
-    },
-    Identity, ProviderBuilder, RootProvider, WsConnect,
-};
-use alloy::pubsub::PubSubFrontend;
-use alloy::signers::local::PrivateKeySigner;
-use alloy::transports::http::{Client, Http};
-use alloy::transports::RpcError;
-use alloy::transports::TransportErrorKind;
-use reqwest::Url;
-use std::str::FromStr;
-
-#[allow(clippy::type_complexity)]
-pub fn get_signer(
-    key: &str,
-    rpc_url: &str,
-) -> alloy::providers::fillers::FillProvider<
-    JoinFill<
-        JoinFill<
-            Identity,
-            JoinFill<GasFiller, JoinFill<BlobGasFiller, JoinFill<NonceFiller, ChainIdFiller>>>,
-        >,
-        WalletFiller<EthereumWallet>,
-    >,
-    RootProvider<Http<Client>>,
-    Http<Client>,
-    Ethereum,
-> {
-    let signer = PrivateKeySigner::from_str(key).expect("wrong key ");
-    let wallet = EthereumWallet::from(signer);
-    let url = Url::parse(rpc_url).expect("Wrong rpc url");
-    ProviderBuilder::new()
-        .with_recommended_fillers()
-        .wallet(wallet.clone())
-        .on_http(url)
-}
-
-#[allow(clippy::type_complexity)]
-pub fn get_provider(
-    rpc_url: &str,
-) -> FillProvider<
-    JoinFill<
-        Identity,
-        JoinFill<GasFiller, JoinFill<BlobGasFiller, JoinFill<NonceFiller, ChainIdFiller>>>,
-    >,
-    RootProvider<Http<Client>>,
-    Http<Client>,
-    Ethereum,
-> {
-    let url = Url::parse(rpc_url).expect("Wrong rpc url");
-    ProviderBuilder::new()
-        .with_recommended_fillers()
-        .on_http(url)
-}
-
-#[allow(clippy::type_complexity)]
-pub async fn get_ws_provider(
-    rpc_url: &str,
-) -> Result<RootProvider<PubSubFrontend>, RpcError<TransportErrorKind>> {
-    let ws = WsConnect::new(rpc_url);
-    ProviderBuilder::new().on_ws(ws).await
-}
-
-/// Emitted when a new pubkey is registered
-pub const NEW_PUBKEY_REGISTRATION_EVENT: &str =
-    "NewPubkeyRegistration(address,(uint256,uint256),(uint256[2],uint256[2]))";
-
-pub const OPERATOR_SOCKET_UPDATE: &str = "OperatorSocketUpdate(bytes32,string)";

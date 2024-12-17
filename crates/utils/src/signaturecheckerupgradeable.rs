@@ -21,22 +21,22 @@ pub mod SignatureCheckerUpgradeable {
     /// The creation / init bytecode of the contract.
     ///
     /// ```text
-    ///0x6055604b600b8282823980515f1a607314603f577f4e487b71000000000000000000000000000000000000000000000000000000005f525f60045260245ffd5b305f52607381538281f3fe730000000000000000000000000000000000000000301460806040525f5ffdfea264697066735822122074c8e25a38532e400e283a28a6310de8aa74d1b8c7a6cdb9b8316c67bff1191164736f6c634300081b0033
+    ///0x6080806040523460175760399081601c823930815050f35b5f80fdfe5f80fdfea2646970667358221220631a54d206b4d988919dbdd54ea6c939fdd41b80f62a38be26b686c2414b736264736f6c634300081b0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"`U`K`\x0B\x82\x82\x829\x80Q_\x1A`s\x14`?W\x7FNH{q\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0_R_`\x04R`$_\xFD[0_R`s\x81S\x82\x81\xF3\xFEs\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x000\x14`\x80`@R__\xFD\xFE\xA2dipfsX\"\x12 t\xC8\xE2Z8S.@\x0E(:(\xA61\r\xE8\xAAt\xD1\xB8\xC7\xA6\xCD\xB9\xB81lg\xBF\xF1\x19\x11dsolcC\0\x08\x1B\x003",
+        b"`\x80\x80`@R4`\x17W`9\x90\x81`\x1C\x8290\x81PP\xF3[_\x80\xFD\xFE_\x80\xFD\xFE\xA2dipfsX\"\x12 c\x1AT\xD2\x06\xB4\xD9\x88\x91\x9D\xBD\xD5N\xA6\xC99\xFD\xD4\x1B\x80\xF6*8\xBE&\xB6\x86\xC2AKsbdsolcC\0\x08\x1B\x003",
     );
     /// The runtime bytecode of the contract, as deployed on the network.
     ///
     /// ```text
-    ///0x730000000000000000000000000000000000000000301460806040525f5ffdfea264697066735822122074c8e25a38532e400e283a28a6310de8aa74d1b8c7a6cdb9b8316c67bff1191164736f6c634300081b0033
+    ///0x5f80fdfea2646970667358221220631a54d206b4d988919dbdd54ea6c939fdd41b80f62a38be26b686c2414b736264736f6c634300081b0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static DEPLOYED_BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"s\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x000\x14`\x80`@R__\xFD\xFE\xA2dipfsX\"\x12 t\xC8\xE2Z8S.@\x0E(:(\xA61\r\xE8\xAAt\xD1\xB8\xC7\xA6\xCD\xB9\xB81lg\xBF\xF1\x19\x11dsolcC\0\x08\x1B\x003",
+        b"_\x80\xFD\xFE\xA2dipfsX\"\x12 c\x1AT\xD2\x06\xB4\xD9\x88\x91\x9D\xBD\xD5N\xA6\xC99\xFD\xD4\x1B\x80\xF6*8\xBE&\xB6\x86\xC2AKsbdsolcC\0\x08\x1B\x003",
     );
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`SignatureCheckerUpgradeable`](self) contract instance.

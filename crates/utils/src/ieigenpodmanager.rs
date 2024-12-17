@@ -18,7 +18,7 @@ interface IEigenPodManager {
 
     event BeaconChainETHDeposited(address indexed podOwner, uint256 amount);
     event BeaconChainETHWithdrawalCompleted(address indexed podOwner, uint256 shares, uint96 nonce, address delegatedAddress, address withdrawer, bytes32 withdrawalRoot);
-    event BeaconChainSlashingFactorDecreased(address staker, uint256 wadSlashed, uint64 newBeaconChainSlashingFactor);
+    event BeaconChainSlashingFactorDecreased(address staker, uint64 prevBeaconChainSlashingFactor, uint64 newBeaconChainSlashingFactor);
     event NewTotalShares(address indexed podOwner, int256 newTotalShares);
     event Paused(address indexed account, uint256 newPausedStatus);
     event PodDeployed(address indexed eigenPod, address indexed podOwner);
@@ -524,10 +524,10 @@ interface IEigenPodManager {
         "internalType": "address"
       },
       {
-        "name": "wadSlashed",
-        "type": "uint256",
+        "name": "prevBeaconChainSlashingFactor",
+        "type": "uint64",
         "indexed": false,
-        "internalType": "uint256"
+        "internalType": "uint64"
       },
       {
         "name": "newBeaconChainSlashingFactor",
@@ -1816,9 +1816,9 @@ event BeaconChainETHWithdrawalCompleted(address indexed podOwner, uint256 shares
             }
         }
     };
-    /**Event with signature `BeaconChainSlashingFactorDecreased(address,uint256,uint64)` and selector `0x20c132e52d15486003bc2f07898f8e5fc4995a4eab251f1b32b9ac9556e16d75`.
+    /**Event with signature `BeaconChainSlashingFactorDecreased(address,uint64,uint64)` and selector `0xb160ab8589bf47dc04ea11b50d46678d21590cea2ed3e454e7bd3e41510f98cf`.
 ```solidity
-event BeaconChainSlashingFactorDecreased(address staker, uint256 wadSlashed, uint64 newBeaconChainSlashingFactor);
+event BeaconChainSlashingFactorDecreased(address staker, uint64 prevBeaconChainSlashingFactor, uint64 newBeaconChainSlashingFactor);
 ```*/
     #[allow(
         non_camel_case_types,
@@ -1831,7 +1831,7 @@ event BeaconChainSlashingFactorDecreased(address staker, uint256 wadSlashed, uin
         #[allow(missing_docs)]
         pub staker: alloy::sol_types::private::Address,
         #[allow(missing_docs)]
-        pub wadSlashed: alloy::sol_types::private::primitives::aliases::U256,
+        pub prevBeaconChainSlashingFactor: u64,
         #[allow(missing_docs)]
         pub newBeaconChainSlashingFactor: u64,
     }
@@ -1847,47 +1847,47 @@ event BeaconChainSlashingFactorDecreased(address staker, uint256 wadSlashed, uin
         impl alloy_sol_types::SolEvent for BeaconChainSlashingFactorDecreased {
             type DataTuple<'a> = (
                 alloy::sol_types::sol_data::Address,
-                alloy::sol_types::sol_data::Uint<256>,
+                alloy::sol_types::sol_data::Uint<64>,
                 alloy::sol_types::sol_data::Uint<64>,
             );
             type DataToken<'a> = <Self::DataTuple<
                 'a,
             > as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (alloy_sol_types::sol_data::FixedBytes<32>,);
-            const SIGNATURE: &'static str = "BeaconChainSlashingFactorDecreased(address,uint256,uint64)";
+            const SIGNATURE: &'static str = "BeaconChainSlashingFactorDecreased(address,uint64,uint64)";
             const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
-                32u8,
-                193u8,
-                50u8,
-                229u8,
-                45u8,
-                21u8,
-                72u8,
+                177u8,
                 96u8,
-                3u8,
-                188u8,
-                47u8,
-                7u8,
-                137u8,
-                143u8,
-                142u8,
-                95u8,
-                196u8,
-                153u8,
-                90u8,
-                78u8,
                 171u8,
-                37u8,
-                31u8,
-                27u8,
-                50u8,
-                185u8,
-                172u8,
-                149u8,
-                86u8,
-                225u8,
-                109u8,
-                117u8,
+                133u8,
+                137u8,
+                191u8,
+                71u8,
+                220u8,
+                4u8,
+                234u8,
+                17u8,
+                181u8,
+                13u8,
+                70u8,
+                103u8,
+                141u8,
+                33u8,
+                89u8,
+                12u8,
+                234u8,
+                46u8,
+                211u8,
+                228u8,
+                84u8,
+                231u8,
+                189u8,
+                62u8,
+                65u8,
+                81u8,
+                15u8,
+                152u8,
+                207u8,
             ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
@@ -1898,7 +1898,7 @@ event BeaconChainSlashingFactorDecreased(address staker, uint256 wadSlashed, uin
             ) -> Self {
                 Self {
                     staker: data.0,
-                    wadSlashed: data.1,
+                    prevBeaconChainSlashingFactor: data.1,
                     newBeaconChainSlashingFactor: data.2,
                 }
             }
@@ -1924,8 +1924,10 @@ event BeaconChainSlashingFactorDecreased(address staker, uint256 wadSlashed, uin
                         &self.staker,
                     ),
                     <alloy::sol_types::sol_data::Uint<
-                        256,
-                    > as alloy_sol_types::SolType>::tokenize(&self.wadSlashed),
+                        64,
+                    > as alloy_sol_types::SolType>::tokenize(
+                        &self.prevBeaconChainSlashingFactor,
+                    ),
                     <alloy::sol_types::sol_data::Uint<
                         64,
                     > as alloy_sol_types::SolType>::tokenize(
@@ -6628,40 +6630,6 @@ function withdrawSharesAsTokens(address staker, address strategy, address token,
         /// Prefer using `SolInterface` methods instead.
         pub const SELECTORS: &'static [[u8; 32usize]] = &[
             [
-                32u8,
-                193u8,
-                50u8,
-                229u8,
-                45u8,
-                21u8,
-                72u8,
-                96u8,
-                3u8,
-                188u8,
-                47u8,
-                7u8,
-                137u8,
-                143u8,
-                142u8,
-                95u8,
-                196u8,
-                153u8,
-                90u8,
-                78u8,
-                171u8,
-                37u8,
-                31u8,
-                27u8,
-                50u8,
-                185u8,
-                172u8,
-                149u8,
-                86u8,
-                225u8,
-                109u8,
-                117u8,
-            ],
-            [
                 33u8,
                 201u8,
                 157u8,
@@ -6864,6 +6832,40 @@ function withdrawSharesAsTokens(address staker, address strategy, address token,
                 22u8,
                 239u8,
                 61u8,
+            ],
+            [
+                177u8,
+                96u8,
+                171u8,
+                133u8,
+                137u8,
+                191u8,
+                71u8,
+                220u8,
+                4u8,
+                234u8,
+                17u8,
+                181u8,
+                13u8,
+                70u8,
+                103u8,
+                141u8,
+                33u8,
+                89u8,
+                12u8,
+                234u8,
+                46u8,
+                211u8,
+                228u8,
+                84u8,
+                231u8,
+                189u8,
+                62u8,
+                65u8,
+                81u8,
+                15u8,
+                152u8,
+                207u8,
             ],
             [
                 212u8,

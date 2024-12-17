@@ -21,22 +21,22 @@ pub mod BN254 {
     /// The creation / init bytecode of the contract.
     ///
     /// ```text
-    ///0x6055604b600b8282823980515f1a607314603f577f4e487b71000000000000000000000000000000000000000000000000000000005f525f60045260245ffd5b305f52607381538281f3fe730000000000000000000000000000000000000000301460806040525f5ffdfea2646970667358221220921271cba1bfae85382a575842bfd50bbfa726445dfedc9b4d4d1c8dedc9f82b64736f6c634300081b0033
+    ///0x6080806040523460175760399081601c823930815050f35b5f80fdfe5f80fdfea2646970667358221220e7164f4503ea033c6c04d20eae0a3d5a5a82ee9b864931a0dcf5f5fce6eff06864736f6c634300081b0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"`U`K`\x0B\x82\x82\x829\x80Q_\x1A`s\x14`?W\x7FNH{q\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0_R_`\x04R`$_\xFD[0_R`s\x81S\x82\x81\xF3\xFEs\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x000\x14`\x80`@R__\xFD\xFE\xA2dipfsX\"\x12 \x92\x12q\xCB\xA1\xBF\xAE\x858*WXB\xBF\xD5\x0B\xBF\xA7&D]\xFE\xDC\x9BMM\x1C\x8D\xED\xC9\xF8+dsolcC\0\x08\x1B\x003",
+        b"`\x80\x80`@R4`\x17W`9\x90\x81`\x1C\x8290\x81PP\xF3[_\x80\xFD\xFE_\x80\xFD\xFE\xA2dipfsX\"\x12 \xE7\x16OE\x03\xEA\x03<l\x04\xD2\x0E\xAE\n=ZZ\x82\xEE\x9B\x86I1\xA0\xDC\xF5\xF5\xFC\xE6\xEF\xF0hdsolcC\0\x08\x1B\x003",
     );
     /// The runtime bytecode of the contract, as deployed on the network.
     ///
     /// ```text
-    ///0x730000000000000000000000000000000000000000301460806040525f5ffdfea2646970667358221220921271cba1bfae85382a575842bfd50bbfa726445dfedc9b4d4d1c8dedc9f82b64736f6c634300081b0033
+    ///0x5f80fdfea2646970667358221220e7164f4503ea033c6c04d20eae0a3d5a5a82ee9b864931a0dcf5f5fce6eff06864736f6c634300081b0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static DEPLOYED_BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"s\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x000\x14`\x80`@R__\xFD\xFE\xA2dipfsX\"\x12 \x92\x12q\xCB\xA1\xBF\xAE\x858*WXB\xBF\xD5\x0B\xBF\xA7&D]\xFE\xDC\x9BMM\x1C\x8D\xED\xC9\xF8+dsolcC\0\x08\x1B\x003",
+        b"_\x80\xFD\xFE\xA2dipfsX\"\x12 \xE7\x16OE\x03\xEA\x03<l\x04\xD2\x0E\xAE\n=ZZ\x82\xEE\x9B\x86I1\xA0\xDC\xF5\xF5\xFC\xE6\xEF\xF0hdsolcC\0\x08\x1B\x003",
     );
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`BN254`](self) contract instance.

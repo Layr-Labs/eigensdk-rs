@@ -21,22 +21,22 @@ pub mod SlashingLib {
     /// The creation / init bytecode of the contract.
     ///
     /// ```text
-    ///0x6055604b600b8282823980515f1a607314603f577f4e487b71000000000000000000000000000000000000000000000000000000005f525f60045260245ffd5b305f52607381538281f3fe730000000000000000000000000000000000000000301460806040525f5ffdfea2646970667358221220369bd661fa5a6036dacaf9bcd5217f3cc1c79a934b9ded83a1e2c3c2920d6d8164736f6c634300081b0033
+    ///0x6080806040523460175760399081601c823930815050f35b5f80fdfe5f80fdfea2646970667358221220288c1886bd4086fb5a4f00723fe6947d2002b3bc611f4b334b196336848a0de764736f6c634300081b0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"`U`K`\x0B\x82\x82\x829\x80Q_\x1A`s\x14`?W\x7FNH{q\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0_R_`\x04R`$_\xFD[0_R`s\x81S\x82\x81\xF3\xFEs\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x000\x14`\x80`@R__\xFD\xFE\xA2dipfsX\"\x12 6\x9B\xD6a\xFAZ`6\xDA\xCA\xF9\xBC\xD5!\x7F<\xC1\xC7\x9A\x93K\x9D\xED\x83\xA1\xE2\xC3\xC2\x92\rm\x81dsolcC\0\x08\x1B\x003",
+        b"`\x80\x80`@R4`\x17W`9\x90\x81`\x1C\x8290\x81PP\xF3[_\x80\xFD\xFE_\x80\xFD\xFE\xA2dipfsX\"\x12 (\x8C\x18\x86\xBD@\x86\xFBZO\0r?\xE6\x94} \x02\xB3\xBCa\x1FK3K\x19c6\x84\x8A\r\xE7dsolcC\0\x08\x1B\x003",
     );
     /// The runtime bytecode of the contract, as deployed on the network.
     ///
     /// ```text
-    ///0x730000000000000000000000000000000000000000301460806040525f5ffdfea2646970667358221220369bd661fa5a6036dacaf9bcd5217f3cc1c79a934b9ded83a1e2c3c2920d6d8164736f6c634300081b0033
+    ///0x5f80fdfea2646970667358221220288c1886bd4086fb5a4f00723fe6947d2002b3bc611f4b334b196336848a0de764736f6c634300081b0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static DEPLOYED_BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"s\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x000\x14`\x80`@R__\xFD\xFE\xA2dipfsX\"\x12 6\x9B\xD6a\xFAZ`6\xDA\xCA\xF9\xBC\xD5!\x7F<\xC1\xC7\x9A\x93K\x9D\xED\x83\xA1\xE2\xC3\xC2\x92\rm\x81dsolcC\0\x08\x1B\x003",
+        b"_\x80\xFD\xFE\xA2dipfsX\"\x12 (\x8C\x18\x86\xBD@\x86\xFBZO\0r?\xE6\x94} \x02\xB3\xBCa\x1FK3K\x19c6\x84\x8A\r\xE7dsolcC\0\x08\x1B\x003",
     );
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`SlashingLib`](self) contract instance.

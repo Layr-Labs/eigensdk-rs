@@ -21,22 +21,22 @@ pub mod BitmapUtils {
     /// The creation / init bytecode of the contract.
     ///
     /// ```text
-    ///0x6055604b600b8282823980515f1a607314603f577f4e487b71000000000000000000000000000000000000000000000000000000005f525f60045260245ffd5b305f52607381538281f3fe730000000000000000000000000000000000000000301460806040525f5ffdfea2646970667358221220c3d9b554193604b55e5e8495bd23330716ce36145c7771cb89f42d468b9e2d3864736f6c634300081b0033
+    ///0x6080806040523460175760399081601c823930815050f35b5f80fdfe5f80fdfea264697066735822122027a937de298ce9a5e56a1edd0822d7c9504b3b3de36d6e579593d21be8ebeb8c64736f6c634300081b0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"`U`K`\x0B\x82\x82\x829\x80Q_\x1A`s\x14`?W\x7FNH{q\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0_R_`\x04R`$_\xFD[0_R`s\x81S\x82\x81\xF3\xFEs\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x000\x14`\x80`@R__\xFD\xFE\xA2dipfsX\"\x12 \xC3\xD9\xB5T\x196\x04\xB5^^\x84\x95\xBD#3\x07\x16\xCE6\x14\\wq\xCB\x89\xF4-F\x8B\x9E-8dsolcC\0\x08\x1B\x003",
+        b"`\x80\x80`@R4`\x17W`9\x90\x81`\x1C\x8290\x81PP\xF3[_\x80\xFD\xFE_\x80\xFD\xFE\xA2dipfsX\"\x12 '\xA97\xDE)\x8C\xE9\xA5\xE5j\x1E\xDD\x08\"\xD7\xC9PK;=\xE3mnW\x95\x93\xD2\x1B\xE8\xEB\xEB\x8CdsolcC\0\x08\x1B\x003",
     );
     /// The runtime bytecode of the contract, as deployed on the network.
     ///
     /// ```text
-    ///0x730000000000000000000000000000000000000000301460806040525f5ffdfea2646970667358221220c3d9b554193604b55e5e8495bd23330716ce36145c7771cb89f42d468b9e2d3864736f6c634300081b0033
+    ///0x5f80fdfea264697066735822122027a937de298ce9a5e56a1edd0822d7c9504b3b3de36d6e579593d21be8ebeb8c64736f6c634300081b0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static DEPLOYED_BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"s\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x000\x14`\x80`@R__\xFD\xFE\xA2dipfsX\"\x12 \xC3\xD9\xB5T\x196\x04\xB5^^\x84\x95\xBD#3\x07\x16\xCE6\x14\\wq\xCB\x89\xF4-F\x8B\x9E-8dsolcC\0\x08\x1B\x003",
+        b"_\x80\xFD\xFE\xA2dipfsX\"\x12 '\xA97\xDE)\x8C\xE9\xA5\xE5j\x1E\xDD\x08\"\xD7\xC9PK;=\xE3mnW\x95\x93\xD2\x1B\xE8\xEB\xEB\x8CdsolcC\0\x08\x1B\x003",
     );
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`BitmapUtils`](self) contract instance.

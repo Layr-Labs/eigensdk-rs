@@ -1952,7 +1952,6 @@ library IEigenPodTypes {
 }
 
 interface IEigenPod {
-    error AmountMustBeMultipleOfGwei();
     error BeaconTimestampTooFarInPast();
     error CannotCheckpointTwiceInSingleBlock();
     error CheckpointAlreadyActive();
@@ -2733,11 +2732,6 @@ interface IEigenPod {
   },
   {
     "type": "error",
-    "name": "AmountMustBeMultipleOfGwei",
-    "inputs": []
-  },
-  {
-    "type": "error",
     "name": "BeaconTimestampTooFarInPast",
     "inputs": []
   },
@@ -2877,72 +2871,6 @@ pub mod IEigenPod {
     pub static DEPLOYED_BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
         b"",
     );
-    /**Custom error with signature `AmountMustBeMultipleOfGwei()` and selector `0x8777ac5c`.
-```solidity
-error AmountMustBeMultipleOfGwei();
-```*/
-    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
-    #[derive(Clone)]
-    pub struct AmountMustBeMultipleOfGwei {}
-    #[allow(
-        non_camel_case_types,
-        non_snake_case,
-        clippy::pub_underscore_fields,
-        clippy::style
-    )]
-    const _: () = {
-        use alloy::sol_types as alloy_sol_types;
-        #[doc(hidden)]
-        type UnderlyingSolTuple<'a> = ();
-        #[doc(hidden)]
-        type UnderlyingRustTuple<'a> = ();
-        #[cfg(test)]
-        #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
-            match _t {
-                alloy_sol_types::private::AssertTypeEq::<
-                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
-                >(_) => {}
-            }
-        }
-        #[automatically_derived]
-        #[doc(hidden)]
-        impl ::core::convert::From<AmountMustBeMultipleOfGwei>
-        for UnderlyingRustTuple<'_> {
-            fn from(value: AmountMustBeMultipleOfGwei) -> Self {
-                ()
-            }
-        }
-        #[automatically_derived]
-        #[doc(hidden)]
-        impl ::core::convert::From<UnderlyingRustTuple<'_>>
-        for AmountMustBeMultipleOfGwei {
-            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                Self {}
-            }
-        }
-        #[automatically_derived]
-        impl alloy_sol_types::SolError for AmountMustBeMultipleOfGwei {
-            type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
-            const SIGNATURE: &'static str = "AmountMustBeMultipleOfGwei()";
-            const SELECTOR: [u8; 4] = [135u8, 119u8, 172u8, 92u8];
-            #[inline]
-            fn new<'a>(
-                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
-            ) -> Self {
-                tuple.into()
-            }
-            #[inline]
-            fn tokenize(&self) -> Self::Token<'_> {
-                ()
-            }
-        }
-    };
     /**Custom error with signature `BeaconTimestampTooFarInPast()` and selector `0x37e07ffd`.
 ```solidity
 error BeaconTimestampTooFarInPast();
@@ -9588,7 +9516,6 @@ function withdrawableRestakedExecutionLayerGwei() external view returns (uint64)
     }
     ///Container for all the [`IEigenPod`](self) custom errors.
     pub enum IEigenPodErrors {
-        AmountMustBeMultipleOfGwei(AmountMustBeMultipleOfGwei),
         BeaconTimestampTooFarInPast(BeaconTimestampTooFarInPast),
         CannotCheckpointTwiceInSingleBlock(CannotCheckpointTwiceInSingleBlock),
         CheckpointAlreadyActive(CheckpointAlreadyActive),
@@ -9635,7 +9562,6 @@ function withdrawableRestakedExecutionLayerGwei() external view returns (uint64)
             [110u8, 229u8, 186u8, 166u8],
             [115u8, 99u8, 33u8, 118u8],
             [132u8, 10u8, 72u8, 213u8],
-            [135u8, 119u8, 172u8, 92u8],
             [159u8, 16u8, 100u8, 114u8],
             [176u8, 231u8, 47u8, 104u8],
             [190u8, 155u8, 195u8, 0u8],
@@ -9650,13 +9576,10 @@ function withdrawableRestakedExecutionLayerGwei() external view returns (uint64)
     impl alloy_sol_types::SolInterface for IEigenPodErrors {
         const NAME: &'static str = "IEigenPodErrors";
         const MIN_DATA_LENGTH: usize = 0usize;
-        const COUNT: usize = 23usize;
+        const COUNT: usize = 22usize;
         #[inline]
         fn selector(&self) -> [u8; 4] {
             match self {
-                Self::AmountMustBeMultipleOfGwei(_) => {
-                    <AmountMustBeMultipleOfGwei as alloy_sol_types::SolError>::SELECTOR
-                }
                 Self::BeaconTimestampTooFarInPast(_) => {
                     <BeaconTimestampTooFarInPast as alloy_sol_types::SolError>::SELECTOR
                 }
@@ -9927,19 +9850,6 @@ function withdrawableRestakedExecutionLayerGwei() external view returns (uint64)
                     CurrentlyPaused
                 },
                 {
-                    fn AmountMustBeMultipleOfGwei(
-                        data: &[u8],
-                        validate: bool,
-                    ) -> alloy_sol_types::Result<IEigenPodErrors> {
-                        <AmountMustBeMultipleOfGwei as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IEigenPodErrors::AmountMustBeMultipleOfGwei)
-                    }
-                    AmountMustBeMultipleOfGwei
-                },
-                {
                     fn InvalidPubKeyLength(
                         data: &[u8],
                         validate: bool,
@@ -10057,11 +9967,6 @@ function withdrawableRestakedExecutionLayerGwei() external view returns (uint64)
         #[inline]
         fn abi_encoded_size(&self) -> usize {
             match self {
-                Self::AmountMustBeMultipleOfGwei(inner) => {
-                    <AmountMustBeMultipleOfGwei as alloy_sol_types::SolError>::abi_encoded_size(
-                        inner,
-                    )
-                }
                 Self::BeaconTimestampTooFarInPast(inner) => {
                     <BeaconTimestampTooFarInPast as alloy_sol_types::SolError>::abi_encoded_size(
                         inner,
@@ -10177,12 +10082,6 @@ function withdrawableRestakedExecutionLayerGwei() external view returns (uint64)
         #[inline]
         fn abi_encode_raw(&self, out: &mut alloy_sol_types::private::Vec<u8>) {
             match self {
-                Self::AmountMustBeMultipleOfGwei(inner) => {
-                    <AmountMustBeMultipleOfGwei as alloy_sol_types::SolError>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
-                }
                 Self::BeaconTimestampTooFarInPast(inner) => {
                     <BeaconTimestampTooFarInPast as alloy_sol_types::SolError>::abi_encode_raw(
                         inner,

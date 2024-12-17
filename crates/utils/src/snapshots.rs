@@ -29,22 +29,22 @@ pub mod Snapshots {
     /// The creation / init bytecode of the contract.
     ///
     /// ```text
-    ///0x6055604b600b8282823980515f1a607314603f577f4e487b71000000000000000000000000000000000000000000000000000000005f525f60045260245ffd5b305f52607381538281f3fe730000000000000000000000000000000000000000301460806040525f5ffdfea2646970667358221220c5f21ee22f6315d1e461b207174a8e07d6d221b07f22765d20a383d905a8d81664736f6c634300081b0033
+    ///0x6080806040523460175760399081601c823930815050f35b5f80fdfe5f80fdfea264697066735822122031ac7248c52309c4579d55023ca380d7ab2b01b70e733101d60536c9348123b864736f6c634300081b0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"`U`K`\x0B\x82\x82\x829\x80Q_\x1A`s\x14`?W\x7FNH{q\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0_R_`\x04R`$_\xFD[0_R`s\x81S\x82\x81\xF3\xFEs\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x000\x14`\x80`@R__\xFD\xFE\xA2dipfsX\"\x12 \xC5\xF2\x1E\xE2/c\x15\xD1\xE4a\xB2\x07\x17J\x8E\x07\xD6\xD2!\xB0\x7F\"v] \xA3\x83\xD9\x05\xA8\xD8\x16dsolcC\0\x08\x1B\x003",
+        b"`\x80\x80`@R4`\x17W`9\x90\x81`\x1C\x8290\x81PP\xF3[_\x80\xFD\xFE_\x80\xFD\xFE\xA2dipfsX\"\x12 1\xACrH\xC5#\t\xC4W\x9DU\x02<\xA3\x80\xD7\xAB+\x01\xB7\x0Es1\x01\xD6\x056\xC94\x81#\xB8dsolcC\0\x08\x1B\x003",
     );
     /// The runtime bytecode of the contract, as deployed on the network.
     ///
     /// ```text
-    ///0x730000000000000000000000000000000000000000301460806040525f5ffdfea2646970667358221220c5f21ee22f6315d1e461b207174a8e07d6d221b07f22765d20a383d905a8d81664736f6c634300081b0033
+    ///0x5f80fdfea264697066735822122031ac7248c52309c4579d55023ca380d7ab2b01b70e733101d60536c9348123b864736f6c634300081b0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static DEPLOYED_BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"s\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x000\x14`\x80`@R__\xFD\xFE\xA2dipfsX\"\x12 \xC5\xF2\x1E\xE2/c\x15\xD1\xE4a\xB2\x07\x17J\x8E\x07\xD6\xD2!\xB0\x7F\"v] \xA3\x83\xD9\x05\xA8\xD8\x16dsolcC\0\x08\x1B\x003",
+        b"_\x80\xFD\xFE\xA2dipfsX\"\x12 1\xACrH\xC5#\t\xC4W\x9DU\x02<\xA3\x80\xD7\xAB+\x01\xB7\x0Es1\x01\xD6\x056\xC94\x81#\xB8dsolcC\0\x08\x1B\x003",
     );
     /**Custom error with signature `InvalidSnapshotOrdering()` and selector `0x2a371c7e`.
 ```solidity

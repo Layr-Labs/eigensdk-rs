@@ -20,7 +20,6 @@ library IAllocationManagerTypes {
 pub mod IAllocationManagerTypes {
     use super::*;
     use alloy::sol_types as alloy_sol_types;
-    use crate::iallocationmanager::IAllocationManager::OperatorSet;
     /**```solidity
 struct AllocateParams { OperatorSet operatorSet; address[] strategies; uint64[] newMagnitudes; }
 ```*/
@@ -1703,7 +1702,6 @@ interface IAllocationManager {
     error MaxStrategiesExceeded();
     error ModificationAlreadyPending();
     error NotMemberOfSet();
-    error OperatorNotRegistered();
     error OperatorNotSlashable();
     error SameMagnitude();
     error SignatureExpired();
@@ -3173,11 +3171,6 @@ interface IAllocationManager {
   },
   {
     "type": "error",
-    "name": "OperatorNotRegistered",
-    "inputs": []
-  },
-  {
-    "type": "error",
     "name": "OperatorNotSlashable",
     "inputs": []
   },
@@ -4147,70 +4140,6 @@ error NotMemberOfSet();
             > as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "NotMemberOfSet()";
             const SELECTOR: [u8; 4] = [37u8, 19u8, 29u8, 79u8];
-            #[inline]
-            fn new<'a>(
-                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
-            ) -> Self {
-                tuple.into()
-            }
-            #[inline]
-            fn tokenize(&self) -> Self::Token<'_> {
-                ()
-            }
-        }
-    };
-    /**Custom error with signature `OperatorNotRegistered()` and selector `0x25ec6c1f`.
-```solidity
-error OperatorNotRegistered();
-```*/
-    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
-    #[derive(Clone)]
-    pub struct OperatorNotRegistered {}
-    #[allow(
-        non_camel_case_types,
-        non_snake_case,
-        clippy::pub_underscore_fields,
-        clippy::style
-    )]
-    const _: () = {
-        use alloy::sol_types as alloy_sol_types;
-        #[doc(hidden)]
-        type UnderlyingSolTuple<'a> = ();
-        #[doc(hidden)]
-        type UnderlyingRustTuple<'a> = ();
-        #[cfg(test)]
-        #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
-            match _t {
-                alloy_sol_types::private::AssertTypeEq::<
-                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
-                >(_) => {}
-            }
-        }
-        #[automatically_derived]
-        #[doc(hidden)]
-        impl ::core::convert::From<OperatorNotRegistered> for UnderlyingRustTuple<'_> {
-            fn from(value: OperatorNotRegistered) -> Self {
-                ()
-            }
-        }
-        #[automatically_derived]
-        #[doc(hidden)]
-        impl ::core::convert::From<UnderlyingRustTuple<'_>> for OperatorNotRegistered {
-            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                Self {}
-            }
-        }
-        #[automatically_derived]
-        impl alloy_sol_types::SolError for OperatorNotRegistered {
-            type Parameters<'a> = UnderlyingSolTuple<'a>;
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
-            const SIGNATURE: &'static str = "OperatorNotRegistered()";
-            const SELECTOR: [u8; 4] = [37u8, 236u8, 108u8, 31u8];
             #[inline]
             fn new<'a>(
                 tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
@@ -12047,7 +11976,6 @@ function updateAVSMetadataURI(address avs, string memory metadataURI) external;
         MaxStrategiesExceeded(MaxStrategiesExceeded),
         ModificationAlreadyPending(ModificationAlreadyPending),
         NotMemberOfSet(NotMemberOfSet),
-        OperatorNotRegistered(OperatorNotRegistered),
         OperatorNotSlashable(OperatorNotSlashable),
         SameMagnitude(SameMagnitude),
         SignatureExpired(SignatureExpired),
@@ -12069,7 +11997,6 @@ function updateAVSMetadataURI(address avs, string memory metadataURI) external;
             [13u8, 10u8, 33u8, 200u8],
             [19u8, 83u8, 96u8, 49u8],
             [37u8, 19u8, 29u8, 79u8],
-            [37u8, 236u8, 108u8, 31u8],
             [67u8, 113u8, 74u8, 253u8],
             [72u8, 245u8, 195u8, 237u8],
             [88u8, 92u8, 251u8, 47u8],
@@ -12090,7 +12017,7 @@ function updateAVSMetadataURI(address avs, string memory metadataURI) external;
     impl alloy_sol_types::SolInterface for IAllocationManagerErrors {
         const NAME: &'static str = "IAllocationManagerErrors";
         const MIN_DATA_LENGTH: usize = 0usize;
-        const COUNT: usize = 19usize;
+        const COUNT: usize = 18usize;
         #[inline]
         fn selector(&self) -> [u8; 4] {
             match self {
@@ -12126,9 +12053,6 @@ function updateAVSMetadataURI(address avs, string memory metadataURI) external;
                 }
                 Self::NotMemberOfSet(_) => {
                     <NotMemberOfSet as alloy_sol_types::SolError>::SELECTOR
-                }
-                Self::OperatorNotRegistered(_) => {
-                    <OperatorNotRegistered as alloy_sol_types::SolError>::SELECTOR
                 }
                 Self::OperatorNotSlashable(_) => {
                     <OperatorNotSlashable as alloy_sol_types::SolError>::SELECTOR
@@ -12223,19 +12147,6 @@ function updateAVSMetadataURI(address avs, string memory metadataURI) external;
                             .map(IAllocationManagerErrors::NotMemberOfSet)
                     }
                     NotMemberOfSet
-                },
-                {
-                    fn OperatorNotRegistered(
-                        data: &[u8],
-                        validate: bool,
-                    ) -> alloy_sol_types::Result<IAllocationManagerErrors> {
-                        <OperatorNotRegistered as alloy_sol_types::SolError>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IAllocationManagerErrors::OperatorNotRegistered)
-                    }
-                    OperatorNotRegistered
                 },
                 {
                     fn InputArrayLengthMismatch(
@@ -12488,11 +12399,6 @@ function updateAVSMetadataURI(address avs, string memory metadataURI) external;
                         inner,
                     )
                 }
-                Self::OperatorNotRegistered(inner) => {
-                    <OperatorNotRegistered as alloy_sol_types::SolError>::abi_encoded_size(
-                        inner,
-                    )
-                }
                 Self::OperatorNotSlashable(inner) => {
                     <OperatorNotSlashable as alloy_sol_types::SolError>::abi_encoded_size(
                         inner,
@@ -12593,12 +12499,6 @@ function updateAVSMetadataURI(address avs, string memory metadataURI) external;
                 }
                 Self::NotMemberOfSet(inner) => {
                     <NotMemberOfSet as alloy_sol_types::SolError>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
-                }
-                Self::OperatorNotRegistered(inner) => {
-                    <OperatorNotRegistered as alloy_sol_types::SolError>::abi_encode_raw(
                         inner,
                         out,
                     )

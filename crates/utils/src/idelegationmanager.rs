@@ -1160,7 +1160,6 @@ interface IDelegationManager {
     event StakerUndelegated(address indexed staker, address indexed operator);
 
     function DELEGATION_APPROVAL_TYPEHASH() external view returns (bytes32);
-    function MIN_WITHDRAWAL_DELAY_BLOCKS() external view returns (uint32);
     function beaconChainETHStrategy() external view returns (address);
     function burnOperatorShares(address operator, address strategy, uint64 prevMaxMagnitude, uint64 newMaxMagnitude) external;
     function calculateDelegationApprovalDigestHash(address staker, address operator, address _delegationApprover, bytes32 approverSalt, uint256 expiry) external view returns (bytes32);
@@ -1169,7 +1168,7 @@ interface IDelegationManager {
     function completeQueuedWithdrawals(address[][] memory tokens, bool[] memory receiveAsTokens, uint256 numToComplete) external;
     function completeQueuedWithdrawals(IDelegationManagerTypes.Withdrawal[] memory withdrawals, address[][] memory tokens, bool[] memory receiveAsTokens) external;
     function cumulativeWithdrawalsQueued(address staker) external view returns (uint256);
-    function decreaseDelegatedShares(address staker, uint256 curDepositShares, uint64 prevBeaconChainSlashingFactor, uint256 wadSlashed) external;
+    function decreaseDelegatedShares(address staker, uint256 curDepositShares, uint64 beaconChainSlashingFactorDecrease) external;
     function delegateTo(address operator, ISignatureUtils.SignatureWithExpiry memory approverSignatureAndExpiry, bytes32 approverSalt) external;
     function delegatedTo(address staker) external view returns (address);
     function delegationApprover(address operator) external view returns (address);
@@ -1185,6 +1184,7 @@ interface IDelegationManager {
     function initialize(address initialOwner, uint256 initialPausedStatus) external;
     function isDelegated(address staker) external view returns (bool);
     function isOperator(address operator) external view returns (bool);
+    function minWithdrawalDelayBlocks() external view returns (uint32);
     function modifyOperatorDetails(address operator, address newDelegationApprover) external;
     function queueWithdrawals(IDelegationManagerTypes.QueuedWithdrawalParams[] memory params) external returns (bytes32[] memory);
     function redelegate(address newOperator, ISignatureUtils.SignatureWithExpiry memory newOperatorApproverSig, bytes32 approverSalt) external returns (bytes32[] memory withdrawalRoots);
@@ -1206,19 +1206,6 @@ interface IDelegationManager {
         "name": "",
         "type": "bytes32",
         "internalType": "bytes32"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "MIN_WITHDRAWAL_DELAY_BLOCKS",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint32",
-        "internalType": "uint32"
       }
     ],
     "stateMutability": "view"
@@ -1536,14 +1523,9 @@ interface IDelegationManager {
         "internalType": "uint256"
       },
       {
-        "name": "prevBeaconChainSlashingFactor",
+        "name": "beaconChainSlashingFactorDecrease",
         "type": "uint64",
         "internalType": "uint64"
-      },
-      {
-        "name": "wadSlashed",
-        "type": "uint256",
-        "internalType": "uint256"
       }
     ],
     "outputs": [],
@@ -1936,6 +1918,19 @@ interface IDelegationManager {
         "name": "",
         "type": "bool",
         "internalType": "bool"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "minWithdrawalDelayBlocks",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint32",
+        "internalType": "uint32"
       }
     ],
     "stateMutability": "view"
@@ -5646,128 +5641,6 @@ function DELEGATION_APPROVAL_TYPEHASH() external view returns (bytes32);
             }
         }
     };
-    /**Function with signature `MIN_WITHDRAWAL_DELAY_BLOCKS()` and selector `0x77a6a019`.
-```solidity
-function MIN_WITHDRAWAL_DELAY_BLOCKS() external view returns (uint32);
-```*/
-    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
-    #[derive(Clone)]
-    pub struct MIN_WITHDRAWAL_DELAY_BLOCKSCall {}
-    ///Container type for the return parameters of the [`MIN_WITHDRAWAL_DELAY_BLOCKS()`](MIN_WITHDRAWAL_DELAY_BLOCKSCall) function.
-    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
-    #[derive(Clone)]
-    pub struct MIN_WITHDRAWAL_DELAY_BLOCKSReturn {
-        pub _0: u32,
-    }
-    #[allow(
-        non_camel_case_types,
-        non_snake_case,
-        clippy::pub_underscore_fields,
-        clippy::style
-    )]
-    const _: () = {
-        use alloy::sol_types as alloy_sol_types;
-        {
-            #[doc(hidden)]
-            type UnderlyingSolTuple<'a> = ();
-            #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = ();
-            #[cfg(test)]
-            #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
-                match _t {
-                    alloy_sol_types::private::AssertTypeEq::<
-                        <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
-                    >(_) => {}
-                }
-            }
-            #[automatically_derived]
-            #[doc(hidden)]
-            impl ::core::convert::From<MIN_WITHDRAWAL_DELAY_BLOCKSCall>
-            for UnderlyingRustTuple<'_> {
-                fn from(value: MIN_WITHDRAWAL_DELAY_BLOCKSCall) -> Self {
-                    ()
-                }
-            }
-            #[automatically_derived]
-            #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for MIN_WITHDRAWAL_DELAY_BLOCKSCall {
-                fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self {}
-                }
-            }
-        }
-        {
-            #[doc(hidden)]
-            type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Uint<32>,);
-            #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (u32,);
-            #[cfg(test)]
-            #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
-                match _t {
-                    alloy_sol_types::private::AssertTypeEq::<
-                        <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
-                    >(_) => {}
-                }
-            }
-            #[automatically_derived]
-            #[doc(hidden)]
-            impl ::core::convert::From<MIN_WITHDRAWAL_DELAY_BLOCKSReturn>
-            for UnderlyingRustTuple<'_> {
-                fn from(value: MIN_WITHDRAWAL_DELAY_BLOCKSReturn) -> Self {
-                    (value._0,)
-                }
-            }
-            #[automatically_derived]
-            #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for MIN_WITHDRAWAL_DELAY_BLOCKSReturn {
-                fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self { _0: tuple.0 }
-                }
-            }
-        }
-        #[automatically_derived]
-        impl alloy_sol_types::SolCall for MIN_WITHDRAWAL_DELAY_BLOCKSCall {
-            type Parameters<'a> = ();
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
-            type Return = MIN_WITHDRAWAL_DELAY_BLOCKSReturn;
-            type ReturnTuple<'a> = (alloy::sol_types::sol_data::Uint<32>,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
-            const SIGNATURE: &'static str = "MIN_WITHDRAWAL_DELAY_BLOCKS()";
-            const SELECTOR: [u8; 4] = [119u8, 166u8, 160u8, 25u8];
-            #[inline]
-            fn new<'a>(
-                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
-            ) -> Self {
-                tuple.into()
-            }
-            #[inline]
-            fn tokenize(&self) -> Self::Token<'_> {
-                ()
-            }
-            #[inline]
-            fn abi_decode_returns(
-                data: &[u8],
-                validate: bool,
-            ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
-            }
-        }
-    };
     /**Function with signature `beaconChainETHStrategy()` and selector `0x9104c319`.
 ```solidity
 function beaconChainETHStrategy() external view returns (address);
@@ -6969,19 +6842,18 @@ function cumulativeWithdrawalsQueued(address staker) external view returns (uint
             }
         }
     };
-    /**Function with signature `decreaseDelegatedShares(address,uint256,uint64,uint256)` and selector `0x63ceb57d`.
+    /**Function with signature `decreaseDelegatedShares(address,uint256,uint64)` and selector `0x60a0d1ce`.
 ```solidity
-function decreaseDelegatedShares(address staker, uint256 curDepositShares, uint64 prevBeaconChainSlashingFactor, uint256 wadSlashed) external;
+function decreaseDelegatedShares(address staker, uint256 curDepositShares, uint64 beaconChainSlashingFactorDecrease) external;
 ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct decreaseDelegatedSharesCall {
         pub staker: alloy::sol_types::private::Address,
         pub curDepositShares: alloy::sol_types::private::primitives::aliases::U256,
-        pub prevBeaconChainSlashingFactor: u64,
-        pub wadSlashed: alloy::sol_types::private::primitives::aliases::U256,
+        pub beaconChainSlashingFactorDecrease: u64,
     }
-    ///Container type for the return parameters of the [`decreaseDelegatedShares(address,uint256,uint64,uint256)`](decreaseDelegatedSharesCall) function.
+    ///Container type for the return parameters of the [`decreaseDelegatedShares(address,uint256,uint64)`](decreaseDelegatedSharesCall) function.
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct decreaseDelegatedSharesReturn {}
@@ -6999,14 +6871,12 @@ function decreaseDelegatedShares(address staker, uint256 curDepositShares, uint6
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Uint<256>,
                 alloy::sol_types::sol_data::Uint<64>,
-                alloy::sol_types::sol_data::Uint<256>,
             );
             #[doc(hidden)]
             type UnderlyingRustTuple<'a> = (
                 alloy::sol_types::private::Address,
                 alloy::sol_types::private::primitives::aliases::U256,
                 u64,
-                alloy::sol_types::private::primitives::aliases::U256,
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
@@ -7027,8 +6897,7 @@ function decreaseDelegatedShares(address staker, uint256 curDepositShares, uint6
                     (
                         value.staker,
                         value.curDepositShares,
-                        value.prevBeaconChainSlashingFactor,
-                        value.wadSlashed,
+                        value.beaconChainSlashingFactorDecrease,
                     )
                 }
             }
@@ -7040,8 +6909,7 @@ function decreaseDelegatedShares(address staker, uint256 curDepositShares, uint6
                     Self {
                         staker: tuple.0,
                         curDepositShares: tuple.1,
-                        prevBeaconChainSlashingFactor: tuple.2,
-                        wadSlashed: tuple.3,
+                        beaconChainSlashingFactorDecrease: tuple.2,
                     }
                 }
             }
@@ -7085,7 +6953,6 @@ function decreaseDelegatedShares(address staker, uint256 curDepositShares, uint6
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Uint<256>,
                 alloy::sol_types::sol_data::Uint<64>,
-                alloy::sol_types::sol_data::Uint<256>,
             );
             type Token<'a> = <Self::Parameters<
                 'a,
@@ -7095,8 +6962,8 @@ function decreaseDelegatedShares(address staker, uint256 curDepositShares, uint6
             type ReturnToken<'a> = <Self::ReturnTuple<
                 'a,
             > as alloy_sol_types::SolType>::Token<'a>;
-            const SIGNATURE: &'static str = "decreaseDelegatedShares(address,uint256,uint64,uint256)";
-            const SELECTOR: [u8; 4] = [99u8, 206u8, 181u8, 125u8];
+            const SIGNATURE: &'static str = "decreaseDelegatedShares(address,uint256,uint64)";
+            const SELECTOR: [u8; 4] = [96u8, 160u8, 209u8, 206u8];
             #[inline]
             fn new<'a>(
                 tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
@@ -7115,11 +6982,8 @@ function decreaseDelegatedShares(address staker, uint256 curDepositShares, uint6
                     <alloy::sol_types::sol_data::Uint<
                         64,
                     > as alloy_sol_types::SolType>::tokenize(
-                        &self.prevBeaconChainSlashingFactor,
+                        &self.beaconChainSlashingFactorDecrease,
                     ),
-                    <alloy::sol_types::sol_data::Uint<
-                        256,
-                    > as alloy_sol_types::SolType>::tokenize(&self.wadSlashed),
                 )
             }
             #[inline]
@@ -9317,6 +9181,128 @@ function isOperator(address operator) external view returns (bool);
             }
         }
     };
+    /**Function with signature `minWithdrawalDelayBlocks()` and selector `0xc448feb8`.
+```solidity
+function minWithdrawalDelayBlocks() external view returns (uint32);
+```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct minWithdrawalDelayBlocksCall {}
+    ///Container type for the return parameters of the [`minWithdrawalDelayBlocks()`](minWithdrawalDelayBlocksCall) function.
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct minWithdrawalDelayBlocksReturn {
+        pub _0: u32,
+    }
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        {
+            #[doc(hidden)]
+            type UnderlyingSolTuple<'a> = ();
+            #[doc(hidden)]
+            type UnderlyingRustTuple<'a> = ();
+            #[cfg(test)]
+            #[allow(dead_code, unreachable_patterns)]
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
+                match _t {
+                    alloy_sol_types::private::AssertTypeEq::<
+                        <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                    >(_) => {}
+                }
+            }
+            #[automatically_derived]
+            #[doc(hidden)]
+            impl ::core::convert::From<minWithdrawalDelayBlocksCall>
+            for UnderlyingRustTuple<'_> {
+                fn from(value: minWithdrawalDelayBlocksCall) -> Self {
+                    ()
+                }
+            }
+            #[automatically_derived]
+            #[doc(hidden)]
+            impl ::core::convert::From<UnderlyingRustTuple<'_>>
+            for minWithdrawalDelayBlocksCall {
+                fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                    Self {}
+                }
+            }
+        }
+        {
+            #[doc(hidden)]
+            type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Uint<32>,);
+            #[doc(hidden)]
+            type UnderlyingRustTuple<'a> = (u32,);
+            #[cfg(test)]
+            #[allow(dead_code, unreachable_patterns)]
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
+                match _t {
+                    alloy_sol_types::private::AssertTypeEq::<
+                        <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                    >(_) => {}
+                }
+            }
+            #[automatically_derived]
+            #[doc(hidden)]
+            impl ::core::convert::From<minWithdrawalDelayBlocksReturn>
+            for UnderlyingRustTuple<'_> {
+                fn from(value: minWithdrawalDelayBlocksReturn) -> Self {
+                    (value._0,)
+                }
+            }
+            #[automatically_derived]
+            #[doc(hidden)]
+            impl ::core::convert::From<UnderlyingRustTuple<'_>>
+            for minWithdrawalDelayBlocksReturn {
+                fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                    Self { _0: tuple.0 }
+                }
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolCall for minWithdrawalDelayBlocksCall {
+            type Parameters<'a> = ();
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
+            type Return = minWithdrawalDelayBlocksReturn;
+            type ReturnTuple<'a> = (alloy::sol_types::sol_data::Uint<32>,);
+            type ReturnToken<'a> = <Self::ReturnTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "minWithdrawalDelayBlocks()";
+            const SELECTOR: [u8; 4] = [196u8, 72u8, 254u8, 184u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+            #[inline]
+            fn abi_decode_returns(
+                data: &[u8],
+                validate: bool,
+            ) -> alloy_sol_types::Result<Self::Return> {
+                <Self::ReturnTuple<
+                    '_,
+                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
+                    .map(Into::into)
+            }
+        }
+    };
     /**Function with signature `modifyOperatorDetails(address,address)` and selector `0x54b7c96c`.
 ```solidity
 function modifyOperatorDetails(address operator, address newDelegationApprover) external;
@@ -10214,7 +10200,6 @@ function updateOperatorMetadataURI(address operator, string memory metadataURI) 
     ///Container for all the [`IDelegationManager`](self) function calls.
     pub enum IDelegationManagerCalls {
         DELEGATION_APPROVAL_TYPEHASH(DELEGATION_APPROVAL_TYPEHASHCall),
-        MIN_WITHDRAWAL_DELAY_BLOCKS(MIN_WITHDRAWAL_DELAY_BLOCKSCall),
         beaconChainETHStrategy(beaconChainETHStrategyCall),
         burnOperatorShares(burnOperatorSharesCall),
         calculateDelegationApprovalDigestHash(calculateDelegationApprovalDigestHashCall),
@@ -10239,6 +10224,7 @@ function updateOperatorMetadataURI(address operator, string memory metadataURI) 
         initialize(initializeCall),
         isDelegated(isDelegatedCall),
         isOperator(isOperatorCall),
+        minWithdrawalDelayBlocks(minWithdrawalDelayBlocksCall),
         modifyOperatorDetails(modifyOperatorDetailsCall),
         queueWithdrawals(queueWithdrawalsCall),
         redelegate(redelegateCall),
@@ -10266,12 +10252,11 @@ function updateOperatorMetadataURI(address operator, string memory metadataURI) 
             [89u8, 123u8, 54u8, 218u8],
             [93u8, 214u8, 133u8, 121u8],
             [95u8, 72u8, 230u8, 103u8],
-            [99u8, 206u8, 181u8, 125u8],
+            [96u8, 160u8, 209u8, 206u8],
             [101u8, 218u8, 18u8, 100u8],
             [102u8, 213u8, 186u8, 147u8],
             [109u8, 112u8, 247u8, 174u8],
             [110u8, 23u8, 68u8, 72u8],
-            [119u8, 166u8, 160u8, 25u8],
             [120u8, 41u8, 110u8, 197u8],
             [144u8, 4u8, 19u8, 71u8],
             [145u8, 4u8, 195u8, 25u8],
@@ -10280,6 +10265,7 @@ function updateOperatorMetadataURI(address operator, string memory metadataURI) 
             [163u8, 58u8, 52u8, 51u8],
             [187u8, 69u8, 254u8, 242u8],
             [191u8, 174u8, 63u8, 210u8],
+            [196u8, 72u8, 254u8, 184u8],
             [201u8, 120u8, 247u8, 172u8],
             [205u8, 109u8, 198u8, 135u8],
             [218u8, 139u8, 232u8, 100u8],
@@ -10299,9 +10285,6 @@ function updateOperatorMetadataURI(address operator, string memory metadataURI) 
             match self {
                 Self::DELEGATION_APPROVAL_TYPEHASH(_) => {
                     <DELEGATION_APPROVAL_TYPEHASHCall as alloy_sol_types::SolCall>::SELECTOR
-                }
-                Self::MIN_WITHDRAWAL_DELAY_BLOCKS(_) => {
-                    <MIN_WITHDRAWAL_DELAY_BLOCKSCall as alloy_sol_types::SolCall>::SELECTOR
                 }
                 Self::beaconChainETHStrategy(_) => {
                     <beaconChainETHStrategyCall as alloy_sol_types::SolCall>::SELECTOR
@@ -10374,6 +10357,9 @@ function updateOperatorMetadataURI(address operator, string memory metadataURI) 
                 }
                 Self::isOperator(_) => {
                     <isOperatorCall as alloy_sol_types::SolCall>::SELECTOR
+                }
+                Self::minWithdrawalDelayBlocks(_) => {
+                    <minWithdrawalDelayBlocksCall as alloy_sol_types::SolCall>::SELECTOR
                 }
                 Self::modifyOperatorDetails(_) => {
                     <modifyOperatorDetailsCall as alloy_sol_types::SolCall>::SELECTOR
@@ -10625,19 +10611,6 @@ function updateOperatorMetadataURI(address operator, string memory metadataURI) 
                     getSlashableSharesInQueue
                 },
                 {
-                    fn MIN_WITHDRAWAL_DELAY_BLOCKS(
-                        data: &[u8],
-                        validate: bool,
-                    ) -> alloy_sol_types::Result<IDelegationManagerCalls> {
-                        <MIN_WITHDRAWAL_DELAY_BLOCKSCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(IDelegationManagerCalls::MIN_WITHDRAWAL_DELAY_BLOCKS)
-                    }
-                    MIN_WITHDRAWAL_DELAY_BLOCKS
-                },
-                {
                     fn updateOperatorMetadataURI(
                         data: &[u8],
                         validate: bool,
@@ -10740,6 +10713,19 @@ function updateOperatorMetadataURI(address operator, string memory metadataURI) 
                             .map(IDelegationManagerCalls::depositScalingFactor)
                     }
                     depositScalingFactor
+                },
+                {
+                    fn minWithdrawalDelayBlocks(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<IDelegationManagerCalls> {
+                        <minWithdrawalDelayBlocksCall as alloy_sol_types::SolCall>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
+                            .map(IDelegationManagerCalls::minWithdrawalDelayBlocks)
+                    }
+                    minWithdrawalDelayBlocks
                 },
                 {
                     fn getWithdrawableShares(
@@ -10848,11 +10834,6 @@ function updateOperatorMetadataURI(address operator, string memory metadataURI) 
             match self {
                 Self::DELEGATION_APPROVAL_TYPEHASH(inner) => {
                     <DELEGATION_APPROVAL_TYPEHASHCall as alloy_sol_types::SolCall>::abi_encoded_size(
-                        inner,
-                    )
-                }
-                Self::MIN_WITHDRAWAL_DELAY_BLOCKS(inner) => {
-                    <MIN_WITHDRAWAL_DELAY_BLOCKSCall as alloy_sol_types::SolCall>::abi_encoded_size(
                         inner,
                     )
                 }
@@ -10970,6 +10951,11 @@ function updateOperatorMetadataURI(address operator, string memory metadataURI) 
                 Self::isOperator(inner) => {
                     <isOperatorCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
                 }
+                Self::minWithdrawalDelayBlocks(inner) => {
+                    <minWithdrawalDelayBlocksCall as alloy_sol_types::SolCall>::abi_encoded_size(
+                        inner,
+                    )
+                }
                 Self::modifyOperatorDetails(inner) => {
                     <modifyOperatorDetailsCall as alloy_sol_types::SolCall>::abi_encoded_size(
                         inner,
@@ -11003,12 +10989,6 @@ function updateOperatorMetadataURI(address operator, string memory metadataURI) 
             match self {
                 Self::DELEGATION_APPROVAL_TYPEHASH(inner) => {
                     <DELEGATION_APPROVAL_TYPEHASHCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
-                }
-                Self::MIN_WITHDRAWAL_DELAY_BLOCKS(inner) => {
-                    <MIN_WITHDRAWAL_DELAY_BLOCKSCall as alloy_sol_types::SolCall>::abi_encode_raw(
                         inner,
                         out,
                     )
@@ -11153,6 +11133,12 @@ function updateOperatorMetadataURI(address operator, string memory metadataURI) 
                 }
                 Self::isOperator(inner) => {
                     <isOperatorCall as alloy_sol_types::SolCall>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
+                Self::minWithdrawalDelayBlocks(inner) => {
+                    <minWithdrawalDelayBlocksCall as alloy_sol_types::SolCall>::abi_encode_raw(
                         inner,
                         out,
                     )
@@ -12637,12 +12623,6 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
                 },
             )
         }
-        ///Creates a new call builder for the [`MIN_WITHDRAWAL_DELAY_BLOCKS`] function.
-        pub fn MIN_WITHDRAWAL_DELAY_BLOCKS(
-            &self,
-        ) -> alloy_contract::SolCallBuilder<T, &P, MIN_WITHDRAWAL_DELAY_BLOCKSCall, N> {
-            self.call_builder(&MIN_WITHDRAWAL_DELAY_BLOCKSCall {})
-        }
         ///Creates a new call builder for the [`beaconChainETHStrategy`] function.
         pub fn beaconChainETHStrategy(
             &self,
@@ -12768,15 +12748,13 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
             &self,
             staker: alloy::sol_types::private::Address,
             curDepositShares: alloy::sol_types::private::primitives::aliases::U256,
-            prevBeaconChainSlashingFactor: u64,
-            wadSlashed: alloy::sol_types::private::primitives::aliases::U256,
+            beaconChainSlashingFactorDecrease: u64,
         ) -> alloy_contract::SolCallBuilder<T, &P, decreaseDelegatedSharesCall, N> {
             self.call_builder(
                 &decreaseDelegatedSharesCall {
                     staker,
                     curDepositShares,
-                    prevBeaconChainSlashingFactor,
-                    wadSlashed,
+                    beaconChainSlashingFactorDecrease,
                 },
             )
         }
@@ -12957,6 +12935,12 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
             operator: alloy::sol_types::private::Address,
         ) -> alloy_contract::SolCallBuilder<T, &P, isOperatorCall, N> {
             self.call_builder(&isOperatorCall { operator })
+        }
+        ///Creates a new call builder for the [`minWithdrawalDelayBlocks`] function.
+        pub fn minWithdrawalDelayBlocks(
+            &self,
+        ) -> alloy_contract::SolCallBuilder<T, &P, minWithdrawalDelayBlocksCall, N> {
+            self.call_builder(&minWithdrawalDelayBlocksCall {})
         }
         ///Creates a new call builder for the [`modifyOperatorDetails`] function.
         pub fn modifyOperatorDetails(

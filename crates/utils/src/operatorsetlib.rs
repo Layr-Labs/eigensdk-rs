@@ -21,22 +21,22 @@ pub mod OperatorSetLib {
     /// The creation / init bytecode of the contract.
     ///
     /// ```text
-    ///0x6055604b600b8282823980515f1a607314603f577f4e487b71000000000000000000000000000000000000000000000000000000005f525f60045260245ffd5b305f52607381538281f3fe730000000000000000000000000000000000000000301460806040525f5ffdfea2646970667358221220ec7568aafa924cd47c757ba673e07fb90c8cc8a16e3a07bc51b92f55881c309664736f6c634300081b0033
+    ///0x6080806040523460175760399081601c823930815050f35b5f80fdfe5f80fdfea2646970667358221220ee28a22c4635e79c6094cda426a1367c4f286c7b5403e861df63d249da139f2364736f6c634300081b0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"`U`K`\x0B\x82\x82\x829\x80Q_\x1A`s\x14`?W\x7FNH{q\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0_R_`\x04R`$_\xFD[0_R`s\x81S\x82\x81\xF3\xFEs\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x000\x14`\x80`@R__\xFD\xFE\xA2dipfsX\"\x12 \xECuh\xAA\xFA\x92L\xD4|u{\xA6s\xE0\x7F\xB9\x0C\x8C\xC8\xA1n:\x07\xBCQ\xB9/U\x88\x1C0\x96dsolcC\0\x08\x1B\x003",
+        b"`\x80\x80`@R4`\x17W`9\x90\x81`\x1C\x8290\x81PP\xF3[_\x80\xFD\xFE_\x80\xFD\xFE\xA2dipfsX\"\x12 \xEE(\xA2,F5\xE7\x9C`\x94\xCD\xA4&\xA16|O(l{T\x03\xE8a\xDFc\xD2I\xDA\x13\x9F#dsolcC\0\x08\x1B\x003",
     );
     /// The runtime bytecode of the contract, as deployed on the network.
     ///
     /// ```text
-    ///0x730000000000000000000000000000000000000000301460806040525f5ffdfea2646970667358221220ec7568aafa924cd47c757ba673e07fb90c8cc8a16e3a07bc51b92f55881c309664736f6c634300081b0033
+    ///0x5f80fdfea2646970667358221220ee28a22c4635e79c6094cda426a1367c4f286c7b5403e861df63d249da139f2364736f6c634300081b0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static DEPLOYED_BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"s\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x000\x14`\x80`@R__\xFD\xFE\xA2dipfsX\"\x12 \xECuh\xAA\xFA\x92L\xD4|u{\xA6s\xE0\x7F\xB9\x0C\x8C\xC8\xA1n:\x07\xBCQ\xB9/U\x88\x1C0\x96dsolcC\0\x08\x1B\x003",
+        b"_\x80\xFD\xFE\xA2dipfsX\"\x12 \xEE(\xA2,F5\xE7\x9C`\x94\xCD\xA4&\xA16|O(l{T\x03\xE8a\xDFc\xD2I\xDA\x13\x9F#dsolcC\0\x08\x1B\x003",
     );
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`OperatorSetLib`](self) contract instance.

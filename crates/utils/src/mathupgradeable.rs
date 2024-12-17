@@ -21,22 +21,22 @@ pub mod MathUpgradeable {
     /// The creation / init bytecode of the contract.
     ///
     /// ```text
-    ///0x6055604b600b8282823980515f1a607314603f577f4e487b71000000000000000000000000000000000000000000000000000000005f525f60045260245ffd5b305f52607381538281f3fe730000000000000000000000000000000000000000301460806040525f5ffdfea264697066735822122012d9b0f8a398f377d762a31b30e339760faf41490f8737becbf9802af13900c664736f6c634300081b0033
+    ///0x6080806040523460175760399081601c823930815050f35b5f80fdfe5f80fdfea264697066735822122045c367129537beef6ba6db9016322c7efdf1d2a675a5114f3bcc236aea898d0964736f6c634300081b0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"`U`K`\x0B\x82\x82\x829\x80Q_\x1A`s\x14`?W\x7FNH{q\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0_R_`\x04R`$_\xFD[0_R`s\x81S\x82\x81\xF3\xFEs\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x000\x14`\x80`@R__\xFD\xFE\xA2dipfsX\"\x12 \x12\xD9\xB0\xF8\xA3\x98\xF3w\xD7b\xA3\x1B0\xE39v\x0F\xAFAI\x0F\x877\xBE\xCB\xF9\x80*\xF19\0\xC6dsolcC\0\x08\x1B\x003",
+        b"`\x80\x80`@R4`\x17W`9\x90\x81`\x1C\x8290\x81PP\xF3[_\x80\xFD\xFE_\x80\xFD\xFE\xA2dipfsX\"\x12 E\xC3g\x12\x957\xBE\xEFk\xA6\xDB\x90\x162,~\xFD\xF1\xD2\xA6u\xA5\x11O;\xCC#j\xEA\x89\x8D\tdsolcC\0\x08\x1B\x003",
     );
     /// The runtime bytecode of the contract, as deployed on the network.
     ///
     /// ```text
-    ///0x730000000000000000000000000000000000000000301460806040525f5ffdfea264697066735822122012d9b0f8a398f377d762a31b30e339760faf41490f8737becbf9802af13900c664736f6c634300081b0033
+    ///0x5f80fdfea264697066735822122045c367129537beef6ba6db9016322c7efdf1d2a675a5114f3bcc236aea898d0964736f6c634300081b0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static DEPLOYED_BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"s\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x000\x14`\x80`@R__\xFD\xFE\xA2dipfsX\"\x12 \x12\xD9\xB0\xF8\xA3\x98\xF3w\xD7b\xA3\x1B0\xE39v\x0F\xAFAI\x0F\x877\xBE\xCB\xF9\x80*\xF19\0\xC6dsolcC\0\x08\x1B\x003",
+        b"_\x80\xFD\xFE\xA2dipfsX\"\x12 E\xC3g\x12\x957\xBE\xEFk\xA6\xDB\x90\x162,~\xFD\xF1\xD2\xA6u\xA5\x11O;\xCC#j\xEA\x89\x8D\tdsolcC\0\x08\x1B\x003",
     );
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`MathUpgradeable`](self) contract instance.

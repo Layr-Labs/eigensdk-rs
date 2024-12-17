@@ -41,22 +41,22 @@ pub mod BeaconChainProofs {
     /// The creation / init bytecode of the contract.
     ///
     /// ```text
-    ///0x6055604b600b8282823980515f1a607314603f577f4e487b71000000000000000000000000000000000000000000000000000000005f525f60045260245ffd5b305f52607381538281f3fe730000000000000000000000000000000000000000301460806040525f5ffdfea26469706673582212209de2eb6b8187ace2173b7333b68949e707f6edfef10fe3f904bf2a753190b43d64736f6c634300081b0033
+    ///0x6080806040523460175760399081601c823930815050f35b5f80fdfe5f80fdfea264697066735822122038dabeff0e71da021c4618e3627e0342bcf7817b9f4c978a3fdd5ab62376b24c64736f6c634300081b0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"`U`K`\x0B\x82\x82\x829\x80Q_\x1A`s\x14`?W\x7FNH{q\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0_R_`\x04R`$_\xFD[0_R`s\x81S\x82\x81\xF3\xFEs\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x000\x14`\x80`@R__\xFD\xFE\xA2dipfsX\"\x12 \x9D\xE2\xEBk\x81\x87\xAC\xE2\x17;s3\xB6\x89I\xE7\x07\xF6\xED\xFE\xF1\x0F\xE3\xF9\x04\xBF*u1\x90\xB4=dsolcC\0\x08\x1B\x003",
+        b"`\x80\x80`@R4`\x17W`9\x90\x81`\x1C\x8290\x81PP\xF3[_\x80\xFD\xFE_\x80\xFD\xFE\xA2dipfsX\"\x12 8\xDA\xBE\xFF\x0Eq\xDA\x02\x1CF\x18\xE3b~\x03B\xBC\xF7\x81{\x9FL\x97\x8A?\xDDZ\xB6#v\xB2LdsolcC\0\x08\x1B\x003",
     );
     /// The runtime bytecode of the contract, as deployed on the network.
     ///
     /// ```text
-    ///0x730000000000000000000000000000000000000000301460806040525f5ffdfea26469706673582212209de2eb6b8187ace2173b7333b68949e707f6edfef10fe3f904bf2a753190b43d64736f6c634300081b0033
+    ///0x5f80fdfea264697066735822122038dabeff0e71da021c4618e3627e0342bcf7817b9f4c978a3fdd5ab62376b24c64736f6c634300081b0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static DEPLOYED_BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"s\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x000\x14`\x80`@R__\xFD\xFE\xA2dipfsX\"\x12 \x9D\xE2\xEBk\x81\x87\xAC\xE2\x17;s3\xB6\x89I\xE7\x07\xF6\xED\xFE\xF1\x0F\xE3\xF9\x04\xBF*u1\x90\xB4=dsolcC\0\x08\x1B\x003",
+        b"_\x80\xFD\xFE\xA2dipfsX\"\x12 8\xDA\xBE\xFF\x0Eq\xDA\x02\x1CF\x18\xE3b~\x03B\xBC\xF7\x81{\x9FL\x97\x8A?\xDDZ\xB6#v\xB2LdsolcC\0\x08\x1B\x003",
     );
     /**Custom error with signature `InvalidProof()` and selector `0x09bde339`.
 ```solidity

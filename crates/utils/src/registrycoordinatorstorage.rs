@@ -1386,6 +1386,29 @@ library IRegistryCoordinator {
 }
 
 interface RegistryCoordinatorStorage {
+    error AlreadyRegisteredForQuorums();
+    error BitmapCannotBeZero();
+    error BitmapEmpty();
+    error CannotChurnSelf();
+    error CannotKickOperatorAboveThreshold();
+    error CannotReregisterYet();
+    error ChurnApproverSaltUsed();
+    error InputLengthMismatch();
+    error InsufficientStakeForChurn();
+    error MaxQuorumsReached();
+    error NotRegistered();
+    error NotRegisteredForQuorum();
+    error NotSorted();
+    error OnlyAllocationManager();
+    error OnlyEjector();
+    error OperatorSetsEnabled();
+    error OperatorSetsNotEnabled();
+    error OperatorSetsNotSupported();
+    error QuorumDoesNotExist();
+    error QuorumOperatorCountMismatch();
+    error RegistryCoordinatorSignatureExpired();
+    error SaltAlreadyUsed();
+
     event ChurnApproverUpdated(address prevChurnApprover, address newChurnApprover);
     event EjectorUpdated(address prevEjector, address newEjector);
     event OperatorDeregistered(address indexed operator, bytes32 indexed operatorId);
@@ -2142,6 +2165,116 @@ interface RegistryCoordinatorStorage {
       }
     ],
     "anonymous": false
+  },
+  {
+    "type": "error",
+    "name": "AlreadyRegisteredForQuorums",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "BitmapCannotBeZero",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "BitmapEmpty",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "CannotChurnSelf",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "CannotKickOperatorAboveThreshold",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "CannotReregisterYet",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "ChurnApproverSaltUsed",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "InputLengthMismatch",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "InsufficientStakeForChurn",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "MaxQuorumsReached",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "NotRegistered",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "NotRegisteredForQuorum",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "NotSorted",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "OnlyAllocationManager",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "OnlyEjector",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "OperatorSetsEnabled",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "OperatorSetsNotEnabled",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "OperatorSetsNotSupported",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "QuorumDoesNotExist",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "QuorumOperatorCountMismatch",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "RegistryCoordinatorSignatureExpired",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "SaltAlreadyUsed",
+    "inputs": []
   }
 ]
 ```*/
@@ -2174,6 +2307,1426 @@ pub mod RegistryCoordinatorStorage {
     pub static DEPLOYED_BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
         b"",
     );
+    /**Custom error with signature `AlreadyRegisteredForQuorums()` and selector `0x0c6816cd`.
+```solidity
+error AlreadyRegisteredForQuorums();
+```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct AlreadyRegisteredForQuorums {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(
+            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+        ) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<AlreadyRegisteredForQuorums>
+        for UnderlyingRustTuple<'_> {
+            fn from(value: AlreadyRegisteredForQuorums) -> Self {
+                ()
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>>
+        for AlreadyRegisteredForQuorums {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolError for AlreadyRegisteredForQuorums {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "AlreadyRegisteredForQuorums()";
+            const SELECTOR: [u8; 4] = [12u8, 104u8, 22u8, 205u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+        }
+    };
+    /**Custom error with signature `BitmapCannotBeZero()` and selector `0xd16d50ea`.
+```solidity
+error BitmapCannotBeZero();
+```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct BitmapCannotBeZero {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(
+            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+        ) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<BitmapCannotBeZero> for UnderlyingRustTuple<'_> {
+            fn from(value: BitmapCannotBeZero) -> Self {
+                ()
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for BitmapCannotBeZero {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolError for BitmapCannotBeZero {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "BitmapCannotBeZero()";
+            const SELECTOR: [u8; 4] = [209u8, 109u8, 80u8, 234u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+        }
+    };
+    /**Custom error with signature `BitmapEmpty()` and selector `0x13ca4657`.
+```solidity
+error BitmapEmpty();
+```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct BitmapEmpty {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(
+            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+        ) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<BitmapEmpty> for UnderlyingRustTuple<'_> {
+            fn from(value: BitmapEmpty) -> Self {
+                ()
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for BitmapEmpty {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolError for BitmapEmpty {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "BitmapEmpty()";
+            const SELECTOR: [u8; 4] = [19u8, 202u8, 70u8, 87u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+        }
+    };
+    /**Custom error with signature `CannotChurnSelf()` and selector `0xac2d1682`.
+```solidity
+error CannotChurnSelf();
+```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct CannotChurnSelf {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(
+            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+        ) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<CannotChurnSelf> for UnderlyingRustTuple<'_> {
+            fn from(value: CannotChurnSelf) -> Self {
+                ()
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for CannotChurnSelf {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolError for CannotChurnSelf {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "CannotChurnSelf()";
+            const SELECTOR: [u8; 4] = [172u8, 45u8, 22u8, 130u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+        }
+    };
+    /**Custom error with signature `CannotKickOperatorAboveThreshold()` and selector `0xb187e869`.
+```solidity
+error CannotKickOperatorAboveThreshold();
+```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct CannotKickOperatorAboveThreshold {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(
+            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+        ) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<CannotKickOperatorAboveThreshold>
+        for UnderlyingRustTuple<'_> {
+            fn from(value: CannotKickOperatorAboveThreshold) -> Self {
+                ()
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>>
+        for CannotKickOperatorAboveThreshold {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolError for CannotKickOperatorAboveThreshold {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "CannotKickOperatorAboveThreshold()";
+            const SELECTOR: [u8; 4] = [177u8, 135u8, 232u8, 105u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+        }
+    };
+    /**Custom error with signature `CannotReregisterYet()` and selector `0x32d0cefa`.
+```solidity
+error CannotReregisterYet();
+```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct CannotReregisterYet {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(
+            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+        ) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<CannotReregisterYet> for UnderlyingRustTuple<'_> {
+            fn from(value: CannotReregisterYet) -> Self {
+                ()
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for CannotReregisterYet {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolError for CannotReregisterYet {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "CannotReregisterYet()";
+            const SELECTOR: [u8; 4] = [50u8, 208u8, 206u8, 250u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+        }
+    };
+    /**Custom error with signature `ChurnApproverSaltUsed()` and selector `0xdf7dfd86`.
+```solidity
+error ChurnApproverSaltUsed();
+```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct ChurnApproverSaltUsed {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(
+            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+        ) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<ChurnApproverSaltUsed> for UnderlyingRustTuple<'_> {
+            fn from(value: ChurnApproverSaltUsed) -> Self {
+                ()
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for ChurnApproverSaltUsed {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolError for ChurnApproverSaltUsed {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "ChurnApproverSaltUsed()";
+            const SELECTOR: [u8; 4] = [223u8, 125u8, 253u8, 134u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+        }
+    };
+    /**Custom error with signature `InputLengthMismatch()` and selector `0xaaad13f7`.
+```solidity
+error InputLengthMismatch();
+```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct InputLengthMismatch {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(
+            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+        ) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<InputLengthMismatch> for UnderlyingRustTuple<'_> {
+            fn from(value: InputLengthMismatch) -> Self {
+                ()
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for InputLengthMismatch {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolError for InputLengthMismatch {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "InputLengthMismatch()";
+            const SELECTOR: [u8; 4] = [170u8, 173u8, 19u8, 247u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+        }
+    };
+    /**Custom error with signature `InsufficientStakeForChurn()` and selector `0x4c44995d`.
+```solidity
+error InsufficientStakeForChurn();
+```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct InsufficientStakeForChurn {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(
+            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+        ) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<InsufficientStakeForChurn>
+        for UnderlyingRustTuple<'_> {
+            fn from(value: InsufficientStakeForChurn) -> Self {
+                ()
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>>
+        for InsufficientStakeForChurn {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolError for InsufficientStakeForChurn {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "InsufficientStakeForChurn()";
+            const SELECTOR: [u8; 4] = [76u8, 68u8, 153u8, 93u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+        }
+    };
+    /**Custom error with signature `MaxQuorumsReached()` and selector `0x3cb89c97`.
+```solidity
+error MaxQuorumsReached();
+```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct MaxQuorumsReached {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(
+            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+        ) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<MaxQuorumsReached> for UnderlyingRustTuple<'_> {
+            fn from(value: MaxQuorumsReached) -> Self {
+                ()
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for MaxQuorumsReached {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolError for MaxQuorumsReached {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "MaxQuorumsReached()";
+            const SELECTOR: [u8; 4] = [60u8, 184u8, 156u8, 151u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+        }
+    };
+    /**Custom error with signature `NotRegistered()` and selector `0xaba47339`.
+```solidity
+error NotRegistered();
+```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct NotRegistered {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(
+            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+        ) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<NotRegistered> for UnderlyingRustTuple<'_> {
+            fn from(value: NotRegistered) -> Self {
+                ()
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for NotRegistered {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolError for NotRegistered {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "NotRegistered()";
+            const SELECTOR: [u8; 4] = [171u8, 164u8, 115u8, 57u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+        }
+    };
+    /**Custom error with signature `NotRegisteredForQuorum()` and selector `0xd053aa21`.
+```solidity
+error NotRegisteredForQuorum();
+```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct NotRegisteredForQuorum {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(
+            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+        ) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<NotRegisteredForQuorum> for UnderlyingRustTuple<'_> {
+            fn from(value: NotRegisteredForQuorum) -> Self {
+                ()
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for NotRegisteredForQuorum {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolError for NotRegisteredForQuorum {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "NotRegisteredForQuorum()";
+            const SELECTOR: [u8; 4] = [208u8, 83u8, 170u8, 33u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+        }
+    };
+    /**Custom error with signature `NotSorted()` and selector `0xba50f911`.
+```solidity
+error NotSorted();
+```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct NotSorted {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(
+            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+        ) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<NotSorted> for UnderlyingRustTuple<'_> {
+            fn from(value: NotSorted) -> Self {
+                ()
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for NotSorted {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolError for NotSorted {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "NotSorted()";
+            const SELECTOR: [u8; 4] = [186u8, 80u8, 249u8, 17u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+        }
+    };
+    /**Custom error with signature `OnlyAllocationManager()` and selector `0x23d871a5`.
+```solidity
+error OnlyAllocationManager();
+```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct OnlyAllocationManager {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(
+            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+        ) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<OnlyAllocationManager> for UnderlyingRustTuple<'_> {
+            fn from(value: OnlyAllocationManager) -> Self {
+                ()
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for OnlyAllocationManager {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolError for OnlyAllocationManager {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "OnlyAllocationManager()";
+            const SELECTOR: [u8; 4] = [35u8, 216u8, 113u8, 165u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+        }
+    };
+    /**Custom error with signature `OnlyEjector()` and selector `0xedb1562e`.
+```solidity
+error OnlyEjector();
+```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct OnlyEjector {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(
+            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+        ) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<OnlyEjector> for UnderlyingRustTuple<'_> {
+            fn from(value: OnlyEjector) -> Self {
+                ()
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for OnlyEjector {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolError for OnlyEjector {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "OnlyEjector()";
+            const SELECTOR: [u8; 4] = [237u8, 177u8, 86u8, 46u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+        }
+    };
+    /**Custom error with signature `OperatorSetsEnabled()` and selector `0x0b88306f`.
+```solidity
+error OperatorSetsEnabled();
+```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct OperatorSetsEnabled {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(
+            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+        ) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<OperatorSetsEnabled> for UnderlyingRustTuple<'_> {
+            fn from(value: OperatorSetsEnabled) -> Self {
+                ()
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for OperatorSetsEnabled {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolError for OperatorSetsEnabled {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "OperatorSetsEnabled()";
+            const SELECTOR: [u8; 4] = [11u8, 136u8, 48u8, 111u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+        }
+    };
+    /**Custom error with signature `OperatorSetsNotEnabled()` and selector `0x5b779019`.
+```solidity
+error OperatorSetsNotEnabled();
+```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct OperatorSetsNotEnabled {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(
+            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+        ) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<OperatorSetsNotEnabled> for UnderlyingRustTuple<'_> {
+            fn from(value: OperatorSetsNotEnabled) -> Self {
+                ()
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for OperatorSetsNotEnabled {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolError for OperatorSetsNotEnabled {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "OperatorSetsNotEnabled()";
+            const SELECTOR: [u8; 4] = [91u8, 119u8, 144u8, 25u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+        }
+    };
+    /**Custom error with signature `OperatorSetsNotSupported()` and selector `0xfd2c1f4d`.
+```solidity
+error OperatorSetsNotSupported();
+```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct OperatorSetsNotSupported {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(
+            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+        ) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<OperatorSetsNotSupported>
+        for UnderlyingRustTuple<'_> {
+            fn from(value: OperatorSetsNotSupported) -> Self {
+                ()
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>>
+        for OperatorSetsNotSupported {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolError for OperatorSetsNotSupported {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "OperatorSetsNotSupported()";
+            const SELECTOR: [u8; 4] = [253u8, 44u8, 31u8, 77u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+        }
+    };
+    /**Custom error with signature `QuorumDoesNotExist()` and selector `0xe6219fea`.
+```solidity
+error QuorumDoesNotExist();
+```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct QuorumDoesNotExist {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(
+            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+        ) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<QuorumDoesNotExist> for UnderlyingRustTuple<'_> {
+            fn from(value: QuorumDoesNotExist) -> Self {
+                ()
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for QuorumDoesNotExist {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolError for QuorumDoesNotExist {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "QuorumDoesNotExist()";
+            const SELECTOR: [u8; 4] = [230u8, 33u8, 159u8, 234u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+        }
+    };
+    /**Custom error with signature `QuorumOperatorCountMismatch()` and selector `0x8e5aeee7`.
+```solidity
+error QuorumOperatorCountMismatch();
+```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct QuorumOperatorCountMismatch {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(
+            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+        ) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<QuorumOperatorCountMismatch>
+        for UnderlyingRustTuple<'_> {
+            fn from(value: QuorumOperatorCountMismatch) -> Self {
+                ()
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>>
+        for QuorumOperatorCountMismatch {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolError for QuorumOperatorCountMismatch {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "QuorumOperatorCountMismatch()";
+            const SELECTOR: [u8; 4] = [142u8, 90u8, 238u8, 231u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+        }
+    };
+    /**Custom error with signature `RegistryCoordinatorSignatureExpired()` and selector `0x9a15098d`.
+```solidity
+error RegistryCoordinatorSignatureExpired();
+```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct RegistryCoordinatorSignatureExpired {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(
+            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+        ) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<RegistryCoordinatorSignatureExpired>
+        for UnderlyingRustTuple<'_> {
+            fn from(value: RegistryCoordinatorSignatureExpired) -> Self {
+                ()
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>>
+        for RegistryCoordinatorSignatureExpired {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolError for RegistryCoordinatorSignatureExpired {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "RegistryCoordinatorSignatureExpired()";
+            const SELECTOR: [u8; 4] = [154u8, 21u8, 9u8, 141u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+        }
+    };
+    /**Custom error with signature `SaltAlreadyUsed()` and selector `0x0ced3043`.
+```solidity
+error SaltAlreadyUsed();
+```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct SaltAlreadyUsed {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(
+            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+        ) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<SaltAlreadyUsed> for UnderlyingRustTuple<'_> {
+            fn from(value: SaltAlreadyUsed) -> Self {
+                ()
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for SaltAlreadyUsed {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolError for SaltAlreadyUsed {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "SaltAlreadyUsed()";
+            const SELECTOR: [u8; 4] = [12u8, 237u8, 48u8, 67u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+        }
+    };
     /**Event with signature `ChurnApproverUpdated(address,address)` and selector `0x315457d8a8fe60f04af17c16e2f5a5e1db612b31648e58030360759ef8f3528c`.
 ```solidity
 event ChurnApproverUpdated(address prevChurnApprover, address newChurnApprover);
@@ -7935,6 +9488,712 @@ function stakeRegistry() external view returns (address);
                 }
                 Self::stakeRegistry(inner) => {
                     <stakeRegistryCall as alloy_sol_types::SolCall>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
+            }
+        }
+    }
+    ///Container for all the [`RegistryCoordinatorStorage`](self) custom errors.
+    pub enum RegistryCoordinatorStorageErrors {
+        AlreadyRegisteredForQuorums(AlreadyRegisteredForQuorums),
+        BitmapCannotBeZero(BitmapCannotBeZero),
+        BitmapEmpty(BitmapEmpty),
+        CannotChurnSelf(CannotChurnSelf),
+        CannotKickOperatorAboveThreshold(CannotKickOperatorAboveThreshold),
+        CannotReregisterYet(CannotReregisterYet),
+        ChurnApproverSaltUsed(ChurnApproverSaltUsed),
+        InputLengthMismatch(InputLengthMismatch),
+        InsufficientStakeForChurn(InsufficientStakeForChurn),
+        MaxQuorumsReached(MaxQuorumsReached),
+        NotRegistered(NotRegistered),
+        NotRegisteredForQuorum(NotRegisteredForQuorum),
+        NotSorted(NotSorted),
+        OnlyAllocationManager(OnlyAllocationManager),
+        OnlyEjector(OnlyEjector),
+        OperatorSetsEnabled(OperatorSetsEnabled),
+        OperatorSetsNotEnabled(OperatorSetsNotEnabled),
+        OperatorSetsNotSupported(OperatorSetsNotSupported),
+        QuorumDoesNotExist(QuorumDoesNotExist),
+        QuorumOperatorCountMismatch(QuorumOperatorCountMismatch),
+        RegistryCoordinatorSignatureExpired(RegistryCoordinatorSignatureExpired),
+        SaltAlreadyUsed(SaltAlreadyUsed),
+    }
+    #[automatically_derived]
+    impl RegistryCoordinatorStorageErrors {
+        /// All the selectors of this enum.
+        ///
+        /// Note that the selectors might not be in the same order as the variants.
+        /// No guarantees are made about the order of the selectors.
+        ///
+        /// Prefer using `SolInterface` methods instead.
+        pub const SELECTORS: &'static [[u8; 4usize]] = &[
+            [11u8, 136u8, 48u8, 111u8],
+            [12u8, 104u8, 22u8, 205u8],
+            [12u8, 237u8, 48u8, 67u8],
+            [19u8, 202u8, 70u8, 87u8],
+            [35u8, 216u8, 113u8, 165u8],
+            [50u8, 208u8, 206u8, 250u8],
+            [60u8, 184u8, 156u8, 151u8],
+            [76u8, 68u8, 153u8, 93u8],
+            [91u8, 119u8, 144u8, 25u8],
+            [142u8, 90u8, 238u8, 231u8],
+            [154u8, 21u8, 9u8, 141u8],
+            [170u8, 173u8, 19u8, 247u8],
+            [171u8, 164u8, 115u8, 57u8],
+            [172u8, 45u8, 22u8, 130u8],
+            [177u8, 135u8, 232u8, 105u8],
+            [186u8, 80u8, 249u8, 17u8],
+            [208u8, 83u8, 170u8, 33u8],
+            [209u8, 109u8, 80u8, 234u8],
+            [223u8, 125u8, 253u8, 134u8],
+            [230u8, 33u8, 159u8, 234u8],
+            [237u8, 177u8, 86u8, 46u8],
+            [253u8, 44u8, 31u8, 77u8],
+        ];
+    }
+    #[automatically_derived]
+    impl alloy_sol_types::SolInterface for RegistryCoordinatorStorageErrors {
+        const NAME: &'static str = "RegistryCoordinatorStorageErrors";
+        const MIN_DATA_LENGTH: usize = 0usize;
+        const COUNT: usize = 22usize;
+        #[inline]
+        fn selector(&self) -> [u8; 4] {
+            match self {
+                Self::AlreadyRegisteredForQuorums(_) => {
+                    <AlreadyRegisteredForQuorums as alloy_sol_types::SolError>::SELECTOR
+                }
+                Self::BitmapCannotBeZero(_) => {
+                    <BitmapCannotBeZero as alloy_sol_types::SolError>::SELECTOR
+                }
+                Self::BitmapEmpty(_) => {
+                    <BitmapEmpty as alloy_sol_types::SolError>::SELECTOR
+                }
+                Self::CannotChurnSelf(_) => {
+                    <CannotChurnSelf as alloy_sol_types::SolError>::SELECTOR
+                }
+                Self::CannotKickOperatorAboveThreshold(_) => {
+                    <CannotKickOperatorAboveThreshold as alloy_sol_types::SolError>::SELECTOR
+                }
+                Self::CannotReregisterYet(_) => {
+                    <CannotReregisterYet as alloy_sol_types::SolError>::SELECTOR
+                }
+                Self::ChurnApproverSaltUsed(_) => {
+                    <ChurnApproverSaltUsed as alloy_sol_types::SolError>::SELECTOR
+                }
+                Self::InputLengthMismatch(_) => {
+                    <InputLengthMismatch as alloy_sol_types::SolError>::SELECTOR
+                }
+                Self::InsufficientStakeForChurn(_) => {
+                    <InsufficientStakeForChurn as alloy_sol_types::SolError>::SELECTOR
+                }
+                Self::MaxQuorumsReached(_) => {
+                    <MaxQuorumsReached as alloy_sol_types::SolError>::SELECTOR
+                }
+                Self::NotRegistered(_) => {
+                    <NotRegistered as alloy_sol_types::SolError>::SELECTOR
+                }
+                Self::NotRegisteredForQuorum(_) => {
+                    <NotRegisteredForQuorum as alloy_sol_types::SolError>::SELECTOR
+                }
+                Self::NotSorted(_) => <NotSorted as alloy_sol_types::SolError>::SELECTOR,
+                Self::OnlyAllocationManager(_) => {
+                    <OnlyAllocationManager as alloy_sol_types::SolError>::SELECTOR
+                }
+                Self::OnlyEjector(_) => {
+                    <OnlyEjector as alloy_sol_types::SolError>::SELECTOR
+                }
+                Self::OperatorSetsEnabled(_) => {
+                    <OperatorSetsEnabled as alloy_sol_types::SolError>::SELECTOR
+                }
+                Self::OperatorSetsNotEnabled(_) => {
+                    <OperatorSetsNotEnabled as alloy_sol_types::SolError>::SELECTOR
+                }
+                Self::OperatorSetsNotSupported(_) => {
+                    <OperatorSetsNotSupported as alloy_sol_types::SolError>::SELECTOR
+                }
+                Self::QuorumDoesNotExist(_) => {
+                    <QuorumDoesNotExist as alloy_sol_types::SolError>::SELECTOR
+                }
+                Self::QuorumOperatorCountMismatch(_) => {
+                    <QuorumOperatorCountMismatch as alloy_sol_types::SolError>::SELECTOR
+                }
+                Self::RegistryCoordinatorSignatureExpired(_) => {
+                    <RegistryCoordinatorSignatureExpired as alloy_sol_types::SolError>::SELECTOR
+                }
+                Self::SaltAlreadyUsed(_) => {
+                    <SaltAlreadyUsed as alloy_sol_types::SolError>::SELECTOR
+                }
+            }
+        }
+        #[inline]
+        fn selector_at(i: usize) -> ::core::option::Option<[u8; 4]> {
+            Self::SELECTORS.get(i).copied()
+        }
+        #[inline]
+        fn valid_selector(selector: [u8; 4]) -> bool {
+            Self::SELECTORS.binary_search(&selector).is_ok()
+        }
+        #[inline]
+        #[allow(unsafe_code, non_snake_case)]
+        fn abi_decode_raw(
+            selector: [u8; 4],
+            data: &[u8],
+            validate: bool,
+        ) -> alloy_sol_types::Result<Self> {
+            static DECODE_SHIMS: &[fn(
+                &[u8],
+                bool,
+            ) -> alloy_sol_types::Result<RegistryCoordinatorStorageErrors>] = &[
+                {
+                    fn OperatorSetsEnabled(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<RegistryCoordinatorStorageErrors> {
+                        <OperatorSetsEnabled as alloy_sol_types::SolError>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
+                            .map(RegistryCoordinatorStorageErrors::OperatorSetsEnabled)
+                    }
+                    OperatorSetsEnabled
+                },
+                {
+                    fn AlreadyRegisteredForQuorums(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<RegistryCoordinatorStorageErrors> {
+                        <AlreadyRegisteredForQuorums as alloy_sol_types::SolError>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
+                            .map(
+                                RegistryCoordinatorStorageErrors::AlreadyRegisteredForQuorums,
+                            )
+                    }
+                    AlreadyRegisteredForQuorums
+                },
+                {
+                    fn SaltAlreadyUsed(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<RegistryCoordinatorStorageErrors> {
+                        <SaltAlreadyUsed as alloy_sol_types::SolError>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
+                            .map(RegistryCoordinatorStorageErrors::SaltAlreadyUsed)
+                    }
+                    SaltAlreadyUsed
+                },
+                {
+                    fn BitmapEmpty(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<RegistryCoordinatorStorageErrors> {
+                        <BitmapEmpty as alloy_sol_types::SolError>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
+                            .map(RegistryCoordinatorStorageErrors::BitmapEmpty)
+                    }
+                    BitmapEmpty
+                },
+                {
+                    fn OnlyAllocationManager(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<RegistryCoordinatorStorageErrors> {
+                        <OnlyAllocationManager as alloy_sol_types::SolError>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
+                            .map(RegistryCoordinatorStorageErrors::OnlyAllocationManager)
+                    }
+                    OnlyAllocationManager
+                },
+                {
+                    fn CannotReregisterYet(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<RegistryCoordinatorStorageErrors> {
+                        <CannotReregisterYet as alloy_sol_types::SolError>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
+                            .map(RegistryCoordinatorStorageErrors::CannotReregisterYet)
+                    }
+                    CannotReregisterYet
+                },
+                {
+                    fn MaxQuorumsReached(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<RegistryCoordinatorStorageErrors> {
+                        <MaxQuorumsReached as alloy_sol_types::SolError>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
+                            .map(RegistryCoordinatorStorageErrors::MaxQuorumsReached)
+                    }
+                    MaxQuorumsReached
+                },
+                {
+                    fn InsufficientStakeForChurn(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<RegistryCoordinatorStorageErrors> {
+                        <InsufficientStakeForChurn as alloy_sol_types::SolError>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
+                            .map(
+                                RegistryCoordinatorStorageErrors::InsufficientStakeForChurn,
+                            )
+                    }
+                    InsufficientStakeForChurn
+                },
+                {
+                    fn OperatorSetsNotEnabled(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<RegistryCoordinatorStorageErrors> {
+                        <OperatorSetsNotEnabled as alloy_sol_types::SolError>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
+                            .map(
+                                RegistryCoordinatorStorageErrors::OperatorSetsNotEnabled,
+                            )
+                    }
+                    OperatorSetsNotEnabled
+                },
+                {
+                    fn QuorumOperatorCountMismatch(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<RegistryCoordinatorStorageErrors> {
+                        <QuorumOperatorCountMismatch as alloy_sol_types::SolError>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
+                            .map(
+                                RegistryCoordinatorStorageErrors::QuorumOperatorCountMismatch,
+                            )
+                    }
+                    QuorumOperatorCountMismatch
+                },
+                {
+                    fn RegistryCoordinatorSignatureExpired(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<RegistryCoordinatorStorageErrors> {
+                        <RegistryCoordinatorSignatureExpired as alloy_sol_types::SolError>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
+                            .map(
+                                RegistryCoordinatorStorageErrors::RegistryCoordinatorSignatureExpired,
+                            )
+                    }
+                    RegistryCoordinatorSignatureExpired
+                },
+                {
+                    fn InputLengthMismatch(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<RegistryCoordinatorStorageErrors> {
+                        <InputLengthMismatch as alloy_sol_types::SolError>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
+                            .map(RegistryCoordinatorStorageErrors::InputLengthMismatch)
+                    }
+                    InputLengthMismatch
+                },
+                {
+                    fn NotRegistered(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<RegistryCoordinatorStorageErrors> {
+                        <NotRegistered as alloy_sol_types::SolError>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
+                            .map(RegistryCoordinatorStorageErrors::NotRegistered)
+                    }
+                    NotRegistered
+                },
+                {
+                    fn CannotChurnSelf(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<RegistryCoordinatorStorageErrors> {
+                        <CannotChurnSelf as alloy_sol_types::SolError>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
+                            .map(RegistryCoordinatorStorageErrors::CannotChurnSelf)
+                    }
+                    CannotChurnSelf
+                },
+                {
+                    fn CannotKickOperatorAboveThreshold(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<RegistryCoordinatorStorageErrors> {
+                        <CannotKickOperatorAboveThreshold as alloy_sol_types::SolError>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
+                            .map(
+                                RegistryCoordinatorStorageErrors::CannotKickOperatorAboveThreshold,
+                            )
+                    }
+                    CannotKickOperatorAboveThreshold
+                },
+                {
+                    fn NotSorted(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<RegistryCoordinatorStorageErrors> {
+                        <NotSorted as alloy_sol_types::SolError>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
+                            .map(RegistryCoordinatorStorageErrors::NotSorted)
+                    }
+                    NotSorted
+                },
+                {
+                    fn NotRegisteredForQuorum(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<RegistryCoordinatorStorageErrors> {
+                        <NotRegisteredForQuorum as alloy_sol_types::SolError>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
+                            .map(
+                                RegistryCoordinatorStorageErrors::NotRegisteredForQuorum,
+                            )
+                    }
+                    NotRegisteredForQuorum
+                },
+                {
+                    fn BitmapCannotBeZero(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<RegistryCoordinatorStorageErrors> {
+                        <BitmapCannotBeZero as alloy_sol_types::SolError>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
+                            .map(RegistryCoordinatorStorageErrors::BitmapCannotBeZero)
+                    }
+                    BitmapCannotBeZero
+                },
+                {
+                    fn ChurnApproverSaltUsed(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<RegistryCoordinatorStorageErrors> {
+                        <ChurnApproverSaltUsed as alloy_sol_types::SolError>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
+                            .map(RegistryCoordinatorStorageErrors::ChurnApproverSaltUsed)
+                    }
+                    ChurnApproverSaltUsed
+                },
+                {
+                    fn QuorumDoesNotExist(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<RegistryCoordinatorStorageErrors> {
+                        <QuorumDoesNotExist as alloy_sol_types::SolError>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
+                            .map(RegistryCoordinatorStorageErrors::QuorumDoesNotExist)
+                    }
+                    QuorumDoesNotExist
+                },
+                {
+                    fn OnlyEjector(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<RegistryCoordinatorStorageErrors> {
+                        <OnlyEjector as alloy_sol_types::SolError>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
+                            .map(RegistryCoordinatorStorageErrors::OnlyEjector)
+                    }
+                    OnlyEjector
+                },
+                {
+                    fn OperatorSetsNotSupported(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<RegistryCoordinatorStorageErrors> {
+                        <OperatorSetsNotSupported as alloy_sol_types::SolError>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
+                            .map(
+                                RegistryCoordinatorStorageErrors::OperatorSetsNotSupported,
+                            )
+                    }
+                    OperatorSetsNotSupported
+                },
+            ];
+            let Ok(idx) = Self::SELECTORS.binary_search(&selector) else {
+                return Err(
+                    alloy_sol_types::Error::unknown_selector(
+                        <Self as alloy_sol_types::SolInterface>::NAME,
+                        selector,
+                    ),
+                );
+            };
+            (unsafe { DECODE_SHIMS.get_unchecked(idx) })(data, validate)
+        }
+        #[inline]
+        fn abi_encoded_size(&self) -> usize {
+            match self {
+                Self::AlreadyRegisteredForQuorums(inner) => {
+                    <AlreadyRegisteredForQuorums as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
+                }
+                Self::BitmapCannotBeZero(inner) => {
+                    <BitmapCannotBeZero as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
+                }
+                Self::BitmapEmpty(inner) => {
+                    <BitmapEmpty as alloy_sol_types::SolError>::abi_encoded_size(inner)
+                }
+                Self::CannotChurnSelf(inner) => {
+                    <CannotChurnSelf as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
+                }
+                Self::CannotKickOperatorAboveThreshold(inner) => {
+                    <CannotKickOperatorAboveThreshold as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
+                }
+                Self::CannotReregisterYet(inner) => {
+                    <CannotReregisterYet as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
+                }
+                Self::ChurnApproverSaltUsed(inner) => {
+                    <ChurnApproverSaltUsed as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
+                }
+                Self::InputLengthMismatch(inner) => {
+                    <InputLengthMismatch as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
+                }
+                Self::InsufficientStakeForChurn(inner) => {
+                    <InsufficientStakeForChurn as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
+                }
+                Self::MaxQuorumsReached(inner) => {
+                    <MaxQuorumsReached as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
+                }
+                Self::NotRegistered(inner) => {
+                    <NotRegistered as alloy_sol_types::SolError>::abi_encoded_size(inner)
+                }
+                Self::NotRegisteredForQuorum(inner) => {
+                    <NotRegisteredForQuorum as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
+                }
+                Self::NotSorted(inner) => {
+                    <NotSorted as alloy_sol_types::SolError>::abi_encoded_size(inner)
+                }
+                Self::OnlyAllocationManager(inner) => {
+                    <OnlyAllocationManager as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
+                }
+                Self::OnlyEjector(inner) => {
+                    <OnlyEjector as alloy_sol_types::SolError>::abi_encoded_size(inner)
+                }
+                Self::OperatorSetsEnabled(inner) => {
+                    <OperatorSetsEnabled as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
+                }
+                Self::OperatorSetsNotEnabled(inner) => {
+                    <OperatorSetsNotEnabled as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
+                }
+                Self::OperatorSetsNotSupported(inner) => {
+                    <OperatorSetsNotSupported as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
+                }
+                Self::QuorumDoesNotExist(inner) => {
+                    <QuorumDoesNotExist as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
+                }
+                Self::QuorumOperatorCountMismatch(inner) => {
+                    <QuorumOperatorCountMismatch as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
+                }
+                Self::RegistryCoordinatorSignatureExpired(inner) => {
+                    <RegistryCoordinatorSignatureExpired as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
+                }
+                Self::SaltAlreadyUsed(inner) => {
+                    <SaltAlreadyUsed as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
+                }
+            }
+        }
+        #[inline]
+        fn abi_encode_raw(&self, out: &mut alloy_sol_types::private::Vec<u8>) {
+            match self {
+                Self::AlreadyRegisteredForQuorums(inner) => {
+                    <AlreadyRegisteredForQuorums as alloy_sol_types::SolError>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
+                Self::BitmapCannotBeZero(inner) => {
+                    <BitmapCannotBeZero as alloy_sol_types::SolError>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
+                Self::BitmapEmpty(inner) => {
+                    <BitmapEmpty as alloy_sol_types::SolError>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
+                Self::CannotChurnSelf(inner) => {
+                    <CannotChurnSelf as alloy_sol_types::SolError>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
+                Self::CannotKickOperatorAboveThreshold(inner) => {
+                    <CannotKickOperatorAboveThreshold as alloy_sol_types::SolError>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
+                Self::CannotReregisterYet(inner) => {
+                    <CannotReregisterYet as alloy_sol_types::SolError>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
+                Self::ChurnApproverSaltUsed(inner) => {
+                    <ChurnApproverSaltUsed as alloy_sol_types::SolError>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
+                Self::InputLengthMismatch(inner) => {
+                    <InputLengthMismatch as alloy_sol_types::SolError>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
+                Self::InsufficientStakeForChurn(inner) => {
+                    <InsufficientStakeForChurn as alloy_sol_types::SolError>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
+                Self::MaxQuorumsReached(inner) => {
+                    <MaxQuorumsReached as alloy_sol_types::SolError>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
+                Self::NotRegistered(inner) => {
+                    <NotRegistered as alloy_sol_types::SolError>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
+                Self::NotRegisteredForQuorum(inner) => {
+                    <NotRegisteredForQuorum as alloy_sol_types::SolError>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
+                Self::NotSorted(inner) => {
+                    <NotSorted as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
+                }
+                Self::OnlyAllocationManager(inner) => {
+                    <OnlyAllocationManager as alloy_sol_types::SolError>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
+                Self::OnlyEjector(inner) => {
+                    <OnlyEjector as alloy_sol_types::SolError>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
+                Self::OperatorSetsEnabled(inner) => {
+                    <OperatorSetsEnabled as alloy_sol_types::SolError>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
+                Self::OperatorSetsNotEnabled(inner) => {
+                    <OperatorSetsNotEnabled as alloy_sol_types::SolError>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
+                Self::OperatorSetsNotSupported(inner) => {
+                    <OperatorSetsNotSupported as alloy_sol_types::SolError>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
+                Self::QuorumDoesNotExist(inner) => {
+                    <QuorumDoesNotExist as alloy_sol_types::SolError>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
+                Self::QuorumOperatorCountMismatch(inner) => {
+                    <QuorumOperatorCountMismatch as alloy_sol_types::SolError>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
+                Self::RegistryCoordinatorSignatureExpired(inner) => {
+                    <RegistryCoordinatorSignatureExpired as alloy_sol_types::SolError>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
+                Self::SaltAlreadyUsed(inner) => {
+                    <SaltAlreadyUsed as alloy_sol_types::SolError>::abi_encode_raw(
                         inner,
                         out,
                     )
