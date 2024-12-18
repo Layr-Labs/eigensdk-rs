@@ -71,4 +71,7 @@ pub enum ElContractsError {
 
     #[error("Allocation delay not set for operator")]
     AllocationDelayNotSet,
+
+    #[error("No slashable shares found for operator")]
+    NoSlashableSharesFound,
 }

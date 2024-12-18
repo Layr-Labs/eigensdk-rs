@@ -1,4 +1,5 @@
 use crate::error::ElContractsError;
+use std::collections::HashMap;
 use alloy::providers::Provider;
 use alloy_primitives::{ruint::aliases::U256, Address, FixedBytes};
 use eigen_logging::logger::SharedLogger;
@@ -344,7 +345,7 @@ impl ELChainReader {
         Ok(operator)
     }
 
-    /// Returns the strategy contract and the underlying token address.
+    /// # Returns the strategy contract and the underlying token address.
     ///
     /// # Arguments
     ///
@@ -705,12 +706,52 @@ impl ELChainReader {
         Ok(strategies)
     }
 
+    /// Get the slashable shares for an operator.
+    /// # Arguments
+    /// * `operator_address` - The operator's address to query
+    /// * `operator_set` - The operator set to query
+    /// * `strategies` - The strategies to query
+    /// # Returns
+    /// * `Vec<U256>` - The amount of slashable shares for each strategy
+    /// # Errors
+    /// * `ElContractsError` - if the call to the contract fails
+    pub async fn get_slashable_shares(
+        &self,
+        operator_address: Address,
+        operator_set: OperatorSet,
+        strategies: Vec<Address>,
+    ) -> Result<Vec<U256>, ElContractsError> {
+        let provider = get_provider(&self.provider);
+        let current_block_number = provider.get_block_number().await.map_err(|e| {
+            ElContractsError::AlloyContractError(alloy::contract::Error::TransportError(e))
+        })?;
+
+        let contract_allocation_manager = AllocationManager::new(self.allocation_manager, provider);
+
+        let slashable_stake = contract_allocation_manager
+            .getMinimumSlashableStake(
+                operator_set,
+                vec![operator_address],
+                strategies.clone(),
+                current_block_number as u32,
+            )
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?.slashableStake;
+
+        let Some(slashable_operator_stake) = slashable_stake.first() else {
+            return Err(ElContractsError::NoSlashableSharesFound);
+        };
+        
+        Ok(slashable_operator_stake.clone().into())
+    }
+
     /// Get the minimum amount of shares that are slashable by the operator sets. Not supported for M2 AVSs.
-    /// Arguments
+    /// # Arguments
     /// * `operator_sets` - The operator sets to query
-    /// Returns
+    /// # Returns
     /// * `Vec<OperatorSetStakes>` - The operator sets, their strategies, operators, and slashable stakes
-    /// Errors
+    /// # Errors
     /// * `ElContractsError` - if the call to the contract fails
     pub async fn get_slashable_shares_for_operator_sets(
         &self,
@@ -732,12 +773,12 @@ impl ELChainReader {
     /// - the strategies,
     /// - the minimum amount of shares that are slashable before a given block.
     /// Not supported for M2 AVSs.
-    /// Arguments
+    /// # Arguments
     /// * `operator_sets` - The operator sets to query
     /// * `future_block` - The block at which to get allocation information. It must be greater that the current block number.
-    /// Returns
+    /// # Returns
     /// * `Vec<OperatorSetStakes>` - The operator sets, their strategies, operators, and slashable stakes
-    /// Errors
+    /// # Errors
     /// * `ElContractsError` - if the call to the contract fails
     pub async fn get_delegated_and_slashable_shares_for_operator_sets_before(
         &self,
@@ -777,11 +818,11 @@ impl ELChainReader {
     }
 
     /// Get the allocation delay for an operator. Is the number of blocks between an operator allocating slashable magnitude and the magnitude becoming slashable.
-    /// Arguments
+    /// # Arguments
     /// * `operator_address` - The operator's address to query
-    /// Returns
+    /// # Returns
     /// * `u32` - The allocation delay
-    /// Errors
+    /// # Errors
     /// * `ElContractsError` - if the call to the contract fails
     /// * `AllocationDelayNotSet` - if the allocation delay is not set
     pub async fn get_allocation_delay(
@@ -811,11 +852,11 @@ impl ELChainReader {
     }
 
     /// Get the operator sets that the operator is registered for
-    /// Arguments
+    /// # Arguments
     /// * `operator_address` - The operator's address to query
-    /// Returns
+    /// # Returns
     /// * `Vec<OperatorSet>` - The operator sets the operator is registered for
-    /// Errors
+    /// # Errors
     /// * `ElContractsError` - if the call to the contract fails
     pub async fn get_registered_sets(
         &self,
