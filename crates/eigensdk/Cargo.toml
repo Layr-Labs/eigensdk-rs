@@ -12,7 +12,6 @@ eigen-client-avsregistry = { workspace = true, optional = true }
 eigen-client-elcontracts = { workspace = true, optional = true }
 eigen-client-eth = { workspace = true, optional = true }
 eigen-client-fireblocks = { workspace = true, optional = true }
-eigen-contract-bindings = { workspace = true, optional = true }
 eigen-crypto-bls = { workspace = true, optional = true }
 eigen-crypto-bn254 = { workspace = true, optional = true }
 eigen-logging = { workspace = true, optional = true }
@@ -40,7 +39,6 @@ full = [
     "client-elcontracts",
     "client-eth",
     "client-fireblocks",
-    "contract-bindings",
     "crypto-bls",
     "crypto-bn254",
     "logging",
@@ -59,8 +57,6 @@ client-elcontracts = ["dep:eigen-client-elcontracts"]
 client-eth = ["dep:eigen-client-eth"]
 client-fireblocks = ["dep:eigen-client-fireblocks"]
 
-# Contract-related features
-contract-bindings = ["dep:eigen-contract-bindings"]
 
 # Crypto-related features
 crypto-bls = ["dep:eigen-crypto-bls"]
