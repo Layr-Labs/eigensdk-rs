@@ -30,7 +30,7 @@ pub struct ELChainWriter {
 }
 
 impl ELChainWriter {
-    pub fn new(
+    pub async fn new(
         delegation_manager: Address,
         strategy_manager: Address,
         rewards_coordinator: Address,
@@ -40,17 +40,11 @@ impl ELChainWriter {
     ) -> Self {
         #[cfg(feature = "telemetry")]
         {
-            if let Ok(runtime) = tokio::runtime::Runtime::new() {
-                runtime.block_on(async {
-                    let _ = tokio::task::spawn_blocking(move || {
-                        let _ = eigen_telemetry::telemetry::Telemetry::capture_event(
-                            "elchainwriter.new",
-                        )
-                        .map_err(|e| ElContractsError::TelemetryError(e.to_string()));
-                    })
-                    .await;
-                });
-            }
+            let _ = tokio::task::spawn_blocking(move || {
+                let _ = eigen_telemetry::telemetry::Telemetry::capture_event("elchainwriter.new")
+                    .map_err(|e| ElContractsError::TelemetryError(e.to_string()));
+            })
+            .await;
         }
 
         Self {
@@ -391,7 +385,8 @@ mod tests {
                 delegation_manager_address,
                 avs_directory_address,
                 http_endpoint,
-            ),
+            )
+            .await,
             delegation_manager_address,
         )
     }
@@ -412,6 +407,7 @@ mod tests {
             http_endpoint.clone(),
             operator_private_key,
         )
+        .await
     }
 
     #[tokio::test]

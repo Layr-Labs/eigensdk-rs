@@ -33,7 +33,7 @@ impl ELChainReader {
     /// # Returns
     ///
     /// A new `ELChainReader` instance.
-    pub fn new(
+    pub async fn new(
         _logger: SharedLogger,
         slasher: Address,
         delegation_manager: Address,
@@ -42,17 +42,11 @@ impl ELChainReader {
     ) -> Self {
         #[cfg(feature = "telemetry")]
         {
-            if let Ok(runtime) = tokio::runtime::Runtime::new() {
-                runtime.block_on(async {
-                    let _ = tokio::task::spawn_blocking(move || {
-                        let _ = eigen_telemetry::telemetry::Telemetry::capture_event(
-                            "elchainreader.new",
-                        )
-                        .map_err(|e| ElContractsError::TelemetryError(e.to_string()));
-                    })
-                    .await;
-                });
-            }
+            let _ = tokio::task::spawn_blocking(move || {
+                let _ = eigen_telemetry::telemetry::Telemetry::capture_event("elchainreader.new")
+                    .map_err(|e| ElContractsError::TelemetryError(e.to_string()));
+            })
+            .await;
         }
 
         ELChainReader {
@@ -551,6 +545,7 @@ mod tests {
             avs_directory_address,
             http_endpoint,
         )
+        .await
     }
 
     #[tokio::test]

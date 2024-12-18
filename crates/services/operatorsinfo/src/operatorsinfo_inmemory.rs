@@ -650,7 +650,8 @@ mod tests {
             delegation_manager_address,
             avs_directory_address,
             http_endpoint.to_string(),
-        );
+        )
+        .await;
         let signer = PrivateKeySigner::from_str(pvt_key).unwrap();
 
         let el_chain_writer = ELChainWriter::new(
@@ -660,7 +661,8 @@ mod tests {
             el_chain_reader,
             http_endpoint.to_string(),
             pvt_key.to_string(),
-        );
+        )
+        .await;
 
         let operator_details = Operator {
             address: signer.address(),
