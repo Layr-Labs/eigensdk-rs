@@ -3433,7 +3433,7 @@ pub mod AllocationManager {
     struct OperatorSet { address avs; uint32 id; }
     ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
-    #[derive(Clone)]
+    #[derive(Clone, Debug)]
     pub struct OperatorSet {
         pub avs: alloy::sol_types::private::Address,
         pub id: u32,
