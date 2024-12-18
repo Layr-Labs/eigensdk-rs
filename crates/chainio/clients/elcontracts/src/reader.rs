@@ -954,6 +954,39 @@ impl ELChainReader {
 
         Ok(appointees)
     }
+
+    /// Get the list of permissions of an appointee for a given account
+    /// # Arguments
+    /// * `account_address` - The account address to get appointee permissions for
+    /// * `appointee_address` - The appointee address to get permissions
+    /// # Returns
+    /// * `Vec<Address>` - The list of targets
+    /// * `Vec<FixedBytes<4>>` - The list of selectors
+    /// # Errors
+    /// * `ElContractsError` - if the call to the contract fails
+    pub async fn list_appointee_permissions(
+        &self,
+        account_address: Address,
+        appointee_address: Address,
+    ) -> Result<(Vec<Address>, Vec<FixedBytes<4>>), ElContractsError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_permission_controller =
+            PermissionController::new(self.permission_controller, provider);
+
+        let appointee_permissions = contract_permission_controller
+            .getAppointeePermissions(account_address, appointee_address)
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        let PermissionController::getAppointeePermissionsReturn {
+            _0: targets,
+            _1: selectors,
+        } = appointee_permissions;
+
+        Ok((targets, selectors))
+    }
 }
 
 // TODO: move to types.rs?
