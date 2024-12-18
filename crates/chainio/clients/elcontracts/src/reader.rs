@@ -987,6 +987,58 @@ impl ELChainReader {
 
         Ok((targets, selectors))
     }
+
+    /// Get the list of pending admins of a given account
+    /// # Arguments
+    /// * `account_address` - The account address to get pending admins of
+    /// # Returns
+    /// * `Vec<Address>` - The list of pending admins
+    /// # Errors
+    /// * `ElContractsError` - if the call to the contract fails
+    pub async fn list_pending_admins(
+        &self,
+        account_address: Address,
+    ) -> Result<Vec<Address>, ElContractsError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_permission_controller =
+            PermissionController::new(self.permission_controller, provider);
+
+        let pending_admins = contract_permission_controller
+            .getPendingAdmins(account_address)
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?
+            ._0;
+
+        Ok(pending_admins)
+    }
+
+    /// Get the list of admins of a given account
+    /// # Arguments
+    /// * `account_address` - The account address
+    /// # Returns
+    /// * `Vec<Address>` - The list of admins
+    /// # Errors
+    /// * `ElContractsError` - if the call to the contract fails
+    pub async fn list_admins(
+        &self,
+        account_address: Address,
+    ) -> Result<Vec<Address>, ElContractsError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_permission_controller =
+            PermissionController::new(self.permission_controller, provider);
+
+        let admins = contract_permission_controller
+            .getAdmins(account_address)
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?
+            ._0;
+
+        Ok(admins)
+    }
 }
 
 // TODO: move to types.rs?
