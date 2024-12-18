@@ -1045,7 +1045,7 @@ impl ELChainReader {
     /// * `account_address` - The account address
     /// * `pending_admin_address` - The pending admin address to check
     /// # Returns
-    /// * `bool` - true if the address is a pending admin, false otherwise
+    /// * `bool` - true if the pending_admin_address is a pending admin, false otherwise
     /// # Errors
     /// * `ElContractsError` - if the call to the contract fails
     pub async fn is_pending_admin(
@@ -1066,6 +1066,34 @@ impl ELChainReader {
             ._0;
 
         Ok(is_pending_admin)
+    }
+
+    /// Check if an address is an admin of another account
+    /// # Arguments
+    /// * `account_address` - The account address
+    /// * `admin_address` - The admin address to check
+    /// # Returns
+    /// * `bool` - true if the admin_address is an admin, false otherwise
+    /// # Errors
+    /// * `ElContractsError` - if the call to the contract fails
+    pub async fn is_admin(
+        &self,
+        account_address: Address,
+        admin_address: Address,
+    ) -> Result<bool, ElContractsError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_permission_controller =
+            PermissionController::new(self.permission_controller, provider);
+
+        let is_admin = contract_permission_controller
+            .isAdmin(account_address, admin_address)
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?
+            ._0;
+
+        Ok(is_admin)
     }
 }
 
