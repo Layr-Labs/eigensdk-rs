@@ -1,5 +1,6 @@
 use crate::error::ElContractsError;
 use crate::reader::ELChainReader;
+use alloy::rpc::types::eth::TransactionReceipt;
 use alloy_primitives::{Address, FixedBytes, TxHash, U256};
 pub use eigen_types::operator::Operator;
 use eigen_utils::{
@@ -432,6 +433,38 @@ impl ELChainWriter {
         } = cumulative_claimed_call;
 
         Ok(cumulative_claim_ret)
+    }
+
+    /*
+    func (w *ChainWriter) RemovePermission(
+        ctx context.Context,
+        request RemovePermissionRequest,
+    ) (*gethtypes.Receipt, error) {
+        txOpts, err := w.txMgr.GetNoSendTxOpts()
+        if err != nil {
+            return nil, utils.WrapError("failed to get no-send tx opts", err)
+        }
+        tx, err := w.NewRemovePermissionTx(txOpts, request)
+        if err != nil {
+            return nil, utils.WrapError("failed to create NewRemovePermissionTx", err)
+        }
+        return w.txMgr.Send(ctx, tx, request.WaitForReceipt)
+    }
+    */
+
+    pub async fn remove_permission(
+        &self,
+        account_address: Address,
+        appointee_address: Address,
+        target: Address,
+        selector: [u8; 4],
+        wait_for_receipt: bool,
+        //request: RemovePermissionRequest,
+    ) -> Result<TransactionReceipt, ElContractsError> {
+        //let tx_opts = self.tx_mgr.get_no_send_tx_opts()?;
+        //let tx = self.new_remove_permission_tx(tx_opts, request)?;
+        //self.tx_mgr.send(ctx, tx, request.wait_for_receipt)
+        todo!("remove_permission")
     }
 }
 
