@@ -85,7 +85,8 @@ pub async fn register_operator(pvt_key: &str, bls_key: &str, http_endpoint: &str
         delegation_manager_address,
         avs_directory_address,
         http_endpoint.to_owned(),
-    );
+    )
+    .await;
 
     let el_chain_writer = ELChainWriter::new(
         delegation_manager_address,
@@ -94,7 +95,8 @@ pub async fn register_operator(pvt_key: &str, bls_key: &str, http_endpoint: &str
         el_chain_reader,
         http_endpoint.to_string(),
         pvt_key.to_string(),
-    );
+    )
+    .await;
 
     let operator_details = Operator {
         address: signer.address(),
