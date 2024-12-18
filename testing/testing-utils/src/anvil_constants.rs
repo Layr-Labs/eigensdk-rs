@@ -14,8 +14,6 @@ pub const ANVIL_HTTP_URL: &str = "http://localhost:8545";
 /// Local anvil rpc WS url
 pub const ANVIL_WS_URL: &str = "ws://localhost:8545";
 
-#[allow(clippy::type_complexity)]
-
 /// Service Manager contract address
 pub async fn get_service_manager_address(rpc_url: String) -> Address {
     let provider = get_provider(&rpc_url);
