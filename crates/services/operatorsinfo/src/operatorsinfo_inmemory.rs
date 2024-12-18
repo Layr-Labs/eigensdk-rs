@@ -436,6 +436,7 @@ mod tests {
     };
     use eigen_testing_utils::transaction::wait_transaction;
     use eigen_types::operator::Operator;
+    use eigen_utils::delegationmanager::DelegationManager;
     use eigen_utils::get_provider;
     use std::str::FromStr;
     use std::time::{Duration, SystemTime, UNIX_EPOCH};
@@ -642,13 +643,25 @@ mod tests {
             get_delegation_manager_address(http_endpoint.clone()).await;
         let avs_directory_address = get_avs_directory_address(http_endpoint.clone()).await;
         let strategy_manager_address = get_strategy_manager_address(http_endpoint.clone()).await;
+
+        let contract_delegation_manager =
+            DelegationManager::new(delegation_manager_address, get_provider(&http_endpoint));
         let rewards_coordinator_address =
             get_rewards_coordinator_address(http_endpoint.clone()).await;
+        let DelegationManager::permissionControllerReturn {
+            _0: permission_controller,
+        } = contract_delegation_manager
+            .permissionController()
+            .call()
+            .await
+            .unwrap();
+
         let el_chain_reader = ELChainReader::new(
             get_test_logger(),
             Address::ZERO,
             delegation_manager_address,
             avs_directory_address,
+            permission_controller,
             http_endpoint.to_string(),
         );
         let signer = PrivateKeySigner::from_str(pvt_key).unwrap();
