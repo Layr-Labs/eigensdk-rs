@@ -2480,6 +2480,7 @@ dependencies = [
  "syn 2.0.90",
 ]
 
+[[package]]
 name = "eigen-cli"
 version = "0.1.1"
 dependencies = [
