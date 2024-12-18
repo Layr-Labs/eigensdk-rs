@@ -126,7 +126,15 @@ uuid = { version = "1.11", features = ["v4"] }
 parking_lot = "0.12"
 
 
-anvil-utils = { path = "examples/anvil-utils" } #alloy
+anvil-utils = { path = "examples/anvil-utils" }
+
+#alloy
+alloy = { version = "0.7.0", features = [
+    "sol-types",
+    "contract",
+    "full",
+    "signer-aws",
+] }
 alloy-json-rpc = { version = "0.7", default-features = false }
 alloy-network = { version = "0.7", default-features = false }
 alloy-node-bindings = { version = "0.7", default-features = false }
@@ -152,11 +160,6 @@ alloy-transport-http = { version = "0.7", features = [
 ], default-features = false }
 alloy-transport-ipc = { version = "0.7.0", default-features = false }
 alloy-transport-ws = { version = "0.7.0", default-features = false }
-alloy = { version = "0.7.0", features = [
-    "sol-types",
-    "contract",
-    "full",
-    "signer-aws",
-] }
+
 avsregistry-read = { path = "examples/avsregistry-read" }
 avsregistry-write = { path = "examples/avsregistry-write" }
