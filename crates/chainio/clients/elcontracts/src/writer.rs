@@ -441,7 +441,6 @@ mod tests {
     use crate::reader::ELChainReader;
     use alloy::{hex::FromHex, providers::Provider};
     use alloy_primitives::{address, Address, Bytes, FixedBytes, U256};
-    use alloy_signer_local::PrivateKeySigner;
     use eigen_logging::get_test_logger;
     use eigen_testing_utils::{
         anvil::start_anvil_container,
@@ -592,16 +591,10 @@ mod tests {
 
         let el_chain_writer = new_test_writer(http_endpoint.clone()).await;
 
-        // define an operator
-        let wallet = PrivateKeySigner::from_str(
-            "bead471191bea97fc3aeac36c9d74c895e8a6242602e144e43152f96219e96e8",
-        )
-        .expect("no key");
-
         let operator = Operator {
-            address: wallet.address(),
+            address: OPERATOR_ADDRESS,
             staker_opt_out_window_blocks: 3,
-            delegation_approver_address: wallet.address(),
+            delegation_approver_address: OPERATOR_ADDRESS,
             metadata_url: Some("eigensdk-rs".to_string()),
             allocation_delay: 1,
         };
@@ -615,21 +608,15 @@ mod tests {
         let receipt = provider.get_transaction_receipt(tx_hash).await.unwrap();
         assert!(receipt.unwrap().status());
 
-        let wallet_modified = PrivateKeySigner::from_str(
-            "2a871d0798f97d79848a013d4936a73bf4cc922c825d33c1cf7073dff6d409c6",
-        )
-        .expect("no key");
-
         let operator_modified = Operator {
-            address: wallet_modified.address(),
+            address: OPERATOR_ADDRESS,
             staker_opt_out_window_blocks: 3,
-            delegation_approver_address: wallet_modified.address(),
-            metadata_url: Some("eigensdk-rs".to_string()),
+            delegation_approver_address: Address::ZERO,
+            metadata_url: Some("new-metadata".to_string()),
             allocation_delay: 1,
         };
 
         // Second test: update operator details
-        // TODO: fix permission error
         let tx_hash = el_chain_writer
             .update_operator_details(operator_modified)
             .await
