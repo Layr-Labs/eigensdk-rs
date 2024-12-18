@@ -66,7 +66,8 @@ async fn main() -> Result<()> {
         DELEGATION_MANAGER_ADDRESS,
         AVS_DIRECTORY_ADDRESS,
         "https://ethereum-holesky.blockpi.network/v1/rpc/public".to_string(),
-    );
+    )
+    .await;
     // A new ElChainWriter instance
     let el_writer = ELChainWriter::new(
         DELEGATION_MANAGER_ADDRESS,
@@ -75,7 +76,8 @@ async fn main() -> Result<()> {
         el_chain_reader,
         "https://ethereum-holesky.blockpi.network/v1/rpc/public".to_string(),
         "bead471191bea97fc3aeac36c9d74c895e8a6242602e144e43152f96219e96e8".to_string(),
-    );
+    )
+    .await;
 
     let wallet = PrivateKeySigner::from_str(
         "bead471191bea97fc3aeac36c9d74c895e8a6242602e144e43152f96219e96e8",

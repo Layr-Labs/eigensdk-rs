@@ -72,4 +72,8 @@ pub enum ElContractsError {
 
     #[error("Alloy pending Transaction error {0}")]
     AlloyPendingTransactionError(#[from] PendingTransactionError),
+
+    /// Telemetry error
+    #[error("Telemetry error")]
+    TelemetryError(String),
 }
