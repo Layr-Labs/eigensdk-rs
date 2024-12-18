@@ -934,7 +934,7 @@ impl ELChainReader {
     /// * `Vec<Address>` - The list of appointees
     /// # Errors
     /// * `ElContractsError` - if the call to the contract fails
-    pub async fn list_appointees(
+    pub async fn list_appointee(
         &self,
         account_address: Address,
         target: Address,
@@ -1358,12 +1358,12 @@ mod tests {
         let strategy_addr = get_erc20_mock_strategy(http_endpoint.clone()).await;
         let chain_reader = build_el_chain_reader(http_endpoint).await;
 
-        // TODO: fix this, `getStrategyAllocations` call reverts
-        let allocation_info = chain_reader
+        let allocations_info = chain_reader
             .get_allocation_info(OPERATOR_ADDRESS, strategy_addr)
             .await
             .unwrap();
-        dbg!(allocation_info);
+
+        assert!(allocations_info.is_empty());
     }
 
     #[tokio::test]
@@ -1496,6 +1496,26 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn test_get_slashable_shares() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
+
+        let operator_set = OperatorSet {
+            id: 1,
+            avs: Address::ZERO,
+        };
+
+        let strategies = vec![get_erc20_mock_strategy(http_endpoint).await];
+        let slashable_shares = chain_reader
+            .get_slashable_shares(OPERATOR_ADDRESS, operator_set, strategies)
+            .await
+            .unwrap();
+
+        assert_eq!(slashable_shares.len(), 1);
+        assert_eq!(slashable_shares[0], U256::ZERO);
+    }
+
+    #[tokio::test]
     async fn test_get_slashable_shares_for_operator_sets() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
         let chain_reader = build_el_chain_reader(http_endpoint).await;
@@ -1568,5 +1588,104 @@ mod tests {
             .unwrap();
 
         assert_eq!(ret.len(), 0);
+    }
+
+    #[tokio::test]
+    async fn test_can_call() {
+        // TODO: test with real values
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
+
+        let account_address = Address::ZERO;
+        let target = Address::ZERO;
+        let selector = FixedBytes::from([0x00; 4]);
+        let can_call = chain_reader
+            .can_call(account_address, OPERATOR_ADDRESS, target, selector)
+            .await
+            .unwrap();
+
+        assert!(!can_call);
+    }
+
+    #[tokio::test]
+    async fn test_list_appointee() {
+        // TODO: test with real values
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
+
+        let target = Address::ZERO;
+        let selector = FixedBytes::from([0x00; 4]);
+        let appointees = chain_reader
+            .list_appointee(OPERATOR_ADDRESS, target, selector)
+            .await
+            .unwrap();
+
+        assert!(appointees.is_empty());
+    }
+
+    #[tokio::test]
+    async fn test_list_appointee_permissions() {
+        // TODO: test with real values
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
+
+        let account_address = OPERATOR_ADDRESS;
+        let appointee_address = OPERATOR_ADDRESS;
+        let (targets, selectors) = chain_reader
+            .list_appointee_permissions(account_address, appointee_address)
+            .await
+            .unwrap();
+
+        assert!(targets.is_empty());
+        assert!(selectors.is_empty());
+    }
+
+    #[tokio::test]
+    async fn test_list_pending_admins() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
+
+        let pending_admins = chain_reader
+            .list_pending_admins(OPERATOR_ADDRESS)
+            .await
+            .unwrap();
+
+        assert!(pending_admins.is_empty());
+    }
+
+    #[tokio::test]
+    async fn test_list_admins() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
+
+        let admins = chain_reader.list_admins(OPERATOR_ADDRESS).await.unwrap();
+
+        assert_eq!(admins, vec![OPERATOR_ADDRESS]);
+    }
+
+    #[tokio::test]
+    async fn test_is_pending_admin() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
+
+        let is_pending_admin = chain_reader
+            .is_pending_admin(OPERATOR_ADDRESS, OPERATOR_ADDRESS)
+            .await
+            .unwrap();
+
+        assert_eq!(is_pending_admin, false);
+    }
+
+    #[tokio::test]
+    async fn test_is_admin() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
+
+        let is_admin = chain_reader
+            .is_admin(OPERATOR_ADDRESS, OPERATOR_ADDRESS)
+            .await
+            .unwrap();
+
+        assert_eq!(is_admin, true);
     }
 }
