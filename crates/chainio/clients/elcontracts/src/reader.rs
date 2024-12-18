@@ -1,5 +1,4 @@
 use crate::error::ElContractsError;
-use std::collections::HashMap;
 use alloy::providers::Provider;
 use alloy_primitives::{ruint::aliases::U256, Address, FixedBytes};
 use eigen_logging::logger::SharedLogger;
@@ -10,6 +9,7 @@ use eigen_utils::{
     erc20::ERC20,
     get_provider,
     istrategy::IStrategy,
+    permissioncontroller::PermissionController,
 };
 
 #[derive(Debug, Clone)]
@@ -18,6 +18,7 @@ pub struct ELChainReader {
     allocation_manager: Address,
     delegation_manager: Address,
     avs_directory: Address,
+    permission_controller: Address,
     pub provider: String,
 }
 
@@ -40,6 +41,7 @@ impl ELChainReader {
         allocation_manager: Address,
         delegation_manager: Address,
         avs_directory: Address,
+        permission_controller: Address,
         provider: String,
     ) -> Self {
         ELChainReader {
@@ -47,6 +49,7 @@ impl ELChainReader {
             allocation_manager,
             delegation_manager,
             avs_directory,
+            permission_controller,
             provider,
         }
     }
@@ -84,11 +87,20 @@ impl ELChainReader {
             .await
             .unwrap();
 
+        let DelegationManager::permissionControllerReturn {
+            _0: permission_controller,
+        } = contract_delegation_manager
+            .permissionController()
+            .call()
+            .await
+            .unwrap();
+
         Ok(Self {
             _logger,
             avs_directory,
             allocation_manager,
             delegation_manager,
+            permission_controller,
             provider: client.to_string(),
         })
     }
@@ -460,7 +472,8 @@ impl ELChainReader {
             .getStrategyAllocations(operator_address, strategy_address)
             .call()
             .await
-            .map_err(ElContractsError::AlloyContractError).unwrap();
+            .map_err(ElContractsError::AlloyContractError)
+            .unwrap();
 
         let AllocationManager::getStrategyAllocationsReturn {
             _0: operator_sets,
@@ -737,12 +750,13 @@ impl ELChainReader {
             )
             .call()
             .await
-            .map_err(ElContractsError::AlloyContractError)?.slashableStake;
+            .map_err(ElContractsError::AlloyContractError)?
+            .slashableStake;
 
         let Some(slashable_operator_stake) = slashable_stake.first() else {
             return Err(ElContractsError::NoSlashableSharesFound);
         };
-        
+
         Ok(slashable_operator_stake.clone().into())
     }
 
@@ -878,6 +892,38 @@ impl ELChainReader {
 
         Ok(registered_sets)
     }
+
+    /// Check if the given caller has permissions to call the function
+    /// # Arguments
+    /// * `account_address` - The account address to check
+    /// * `appointee_address` - The caller address to check permissions for
+    /// * `target` - The target address to check permissions for
+    /// * `selector` - The selector of the function to check permissions for
+    /// # Returns
+    /// * `bool` - true if the account has permissions to call the function, false otherwise
+    /// # Errors
+    /// * `ElContractsError` - if the call to the contract fails
+    pub async fn can_call(
+        &self,
+        account_address: Address,
+        appointee_address: Address,
+        target: Address,
+        selector: FixedBytes<4>,
+    ) -> Result<bool, ElContractsError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_permission_controller =
+            PermissionController::new(self.permission_controller, provider);
+
+        let can_call = contract_permission_controller
+            .canCall(account_address, appointee_address, target, selector)
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?
+            ._0;
+
+        Ok(can_call)
+    }
 }
 
 // TODO: move to types.rs?
@@ -904,18 +950,17 @@ mod tests {
     use alloy_primitives::{address, keccak256, Address, FixedBytes, U256};
     use eigen_logging::get_test_logger;
     use eigen_testing_utils::anvil_constants::{
-        get_erc20_mock_strategy, register_operator_to_el_if_not_registered,
+        get_allocation_manager_address, get_avs_directory_address, get_erc20_mock_strategy,
+        register_operator_to_el_if_not_registered,
     };
     use eigen_testing_utils::{
-        anvil::start_anvil_container,
-        anvil_constants::{get_delegation_manager_address, get_service_manager_address},
+        anvil::start_anvil_container, anvil_constants::get_delegation_manager_address,
     };
     use eigen_utils::{
         avsdirectory::AVSDirectory,
         avsdirectory::AVSDirectory::calculateOperatorAVSRegistrationDigestHashReturn,
         delegationmanager::DelegationManager,
         delegationmanager::DelegationManager::calculateDelegationApprovalDigestHashReturn,
-        mockavsservicemanager::MockAvsServiceManager,
     };
 
     const OPERATOR_ADDRESS: Address = address!("70997970C51812dc3A010C7d01b50e0d17dc79C8");
@@ -934,21 +979,14 @@ mod tests {
 
         let delegation_manager_address =
             get_delegation_manager_address(http_endpoint.clone()).await;
+        let allocation_manager_address =
+            get_allocation_manager_address(http_endpoint.clone()).await;
+        let avs_directory_address = get_avs_directory_address(http_endpoint.clone()).await;
+
         let delegation_manager_contract =
             DelegationManager::new(delegation_manager_address, get_provider(&http_endpoint));
-        let service_manager_address = get_service_manager_address(http_endpoint.clone()).await;
-        let service_manager_contract =
-            MockAvsServiceManager::new(service_manager_address, get_provider(&http_endpoint));
-        let avs_directory_address_return = service_manager_contract
-            .avsDirectory()
-            .call()
-            .await
-            .unwrap();
-        let MockAvsServiceManager::avsDirectoryReturn {
-            _0: avs_directory_address,
-        } = avs_directory_address_return;
-        let allocation_manager_address = delegation_manager_contract
-            .allocationManager()
+        let permission_controller_address = delegation_manager_contract
+            .permissionController()
             .call()
             .await
             .unwrap()
@@ -959,6 +997,7 @@ mod tests {
             allocation_manager_address,
             delegation_manager_address,
             avs_directory_address,
+            permission_controller_address,
             http_endpoint,
         )
     }
@@ -1188,12 +1227,15 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn test_get_num_operator_sets_for_operator(){
+    async fn test_get_num_operator_sets_for_operator() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
         let chain_reader = build_el_chain_reader(http_endpoint).await;
 
-        let num_operator_sets = chain_reader.get_num_operator_sets_for_operator(OPERATOR_ADDRESS).await.unwrap();
-        
+        let num_operator_sets = chain_reader
+            .get_num_operator_sets_for_operator(OPERATOR_ADDRESS)
+            .await
+            .unwrap();
+
         assert_eq!(num_operator_sets, U256::from(0));
     }
 
@@ -1202,8 +1244,11 @@ mod tests {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
         let chain_reader = build_el_chain_reader(http_endpoint).await;
 
-        let operator_sets = chain_reader.get_operator_sets_for_operator(OPERATOR_ADDRESS).await.unwrap();
-        
+        let operator_sets = chain_reader
+            .get_operator_sets_for_operator(OPERATOR_ADDRESS)
+            .await
+            .unwrap();
+
         assert_eq!(operator_sets.len(), 0);
     }
 
@@ -1222,7 +1267,7 @@ mod tests {
             .await
             .unwrap();
 
-        assert!(!is_registered);   
+        assert!(!is_registered);
     }
 
     #[tokio::test]
@@ -1240,7 +1285,7 @@ mod tests {
             .await
             .unwrap();
 
-        assert_eq!(operators.len(), 0);       
+        assert_eq!(operators.len(), 0);
     }
 
     #[tokio::test]
@@ -1258,7 +1303,7 @@ mod tests {
             .await
             .unwrap();
 
-        assert_eq!(num_operators, U256::from(0));       
+        assert_eq!(num_operators, U256::from(0));
     }
 
     #[tokio::test]
@@ -1310,9 +1355,15 @@ mod tests {
             avs: Address::ZERO,
         };
 
-        let current_block_number = get_provider(&http_endpoint).get_block_number().await.unwrap() as u32;
+        let current_block_number = get_provider(&http_endpoint)
+            .get_block_number()
+            .await
+            .unwrap() as u32;
         let slashable_shares = chain_reader
-            .get_delegated_and_slashable_shares_for_operator_sets_before(vec![operator_set], current_block_number + 1)
+            .get_delegated_and_slashable_shares_for_operator_sets_before(
+                vec![operator_set],
+                current_block_number + 1,
+            )
             .await
             .unwrap();
 

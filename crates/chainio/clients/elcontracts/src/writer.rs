@@ -453,6 +453,7 @@ mod tests {
     };
     use eigen_types::operator::Operator;
     use eigen_utils::{
+        delegationmanager::DelegationManager,
         get_provider, get_signer,
         irewardscoordinator::{
             IRewardsCoordinator,
@@ -478,12 +479,22 @@ mod tests {
         let avs_directory_address = get_avs_directory_address(http_endpoint.clone()).await;
         let allocation_manager_address =
             get_allocation_manager_address(http_endpoint.clone()).await;
+        let delegation_manager_contract =
+            DelegationManager::new(delegation_manager_address, get_provider(&http_endpoint));
+        let permission_controller_address = delegation_manager_contract
+            .permissionController()
+            .call()
+            .await
+            .unwrap()
+            ._0;
+
         (
             ELChainReader::new(
                 get_test_logger().clone(),
                 allocation_manager_address,
                 delegation_manager_address,
                 avs_directory_address,
+                permission_controller_address,
                 http_endpoint,
             ),
             delegation_manager_address,

@@ -481,6 +481,7 @@ library CoreDeploymentLib {
             ".addresses.allocationManager"
         );
         data.pauserRegistry = json.readAddress(".addresses.pauserRegistry");
+        data.permissionController = json.readAddress(".addresses.permissionController");
 
         return data;
     }
@@ -568,6 +569,8 @@ library CoreDeploymentLib {
                 data.pauserRegistry.toHexString(),
                 '","allocationManager":"',
                 data.allocationManager.toHexString(),
+                '","permissionController":"',
+                data.permissionController.toHexString(),
                 '"}'
             );
     }
