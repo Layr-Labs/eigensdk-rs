@@ -597,10 +597,11 @@ impl AvsRegistryChainReader {
 mod tests {
     use super::*;
     use eigen_logging::get_test_logger;
+    use eigen_testing_utils::anvil_constants::{
+        HOLESKY_OPERATOR_STATE_RETRIEVER, HOLESKY_REGISTRY_COORDINATOR, HOLESKY_RPC_PROVIDER,
+    };
     use hex::FromHex;
     use std::str::FromStr;
-    const HOLESKY_REGISTRY_COORDINATOR: &str = "0x53012C69A189cfA2D9d29eb6F19B32e0A2EA3490";
-    const HOLESKY_OPERATOR_STATE_RETRIEVER: &str = "0xB4baAfee917fb4449f5ec64804217bccE9f46C67";
 
     async fn build_avs_registry_chain_reader() -> AvsRegistryChainReader {
         let holesky_registry_coordinator =
@@ -608,12 +609,11 @@ mod tests {
         let holesky_operator_state_retriever =
             Address::from_str(HOLESKY_OPERATOR_STATE_RETRIEVER).expect("failed to parse address");
 
-        let holesky_provider = "https://ethereum-holesky.blockpi.network/v1/rpc/public";
         AvsRegistryChainReader::new(
             get_test_logger(),
             holesky_registry_coordinator,
             holesky_operator_state_retriever,
-            holesky_provider.to_string(),
+            HOLESKY_RPC_PROVIDER.to_string(),
         )
         .await
         .unwrap()
