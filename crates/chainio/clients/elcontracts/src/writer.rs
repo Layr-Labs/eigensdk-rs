@@ -541,6 +541,33 @@ impl ELChainWriter {
 
         Ok(*tx.tx_hash())
     }
+
+    /// Remove an admin. The sender of the transaction must be an admin.
+    /// # Arguments
+    /// * `account` - account to remove admin from
+    /// * `admin` - admin to remove
+    /// # Returns
+    /// * `TxHash` - The transaction hash of the generated transaction.
+    /// # Errors
+    /// * `ElContractsError` - if the call to the contract fails. Fails if the admin being removed is the only admin.
+    pub async fn remove_admin(
+        &self,
+        account: Address,
+        admin: Address,
+    ) -> Result<TxHash, ElContractsError> {
+        let provider = get_signer(&self.signer, &self.provider);
+
+        let permission_controller_contract =
+            PermissionController::new(self.permission_controller, provider);
+
+        let tx = permission_controller_contract
+            .removeAdmin(account, admin)
+            .send()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        Ok(*tx.tx_hash())
+    }
 }
 
 #[cfg(test)]
@@ -864,11 +891,10 @@ mod tests {
             new_test_writer(http_endpoint.to_string(), OPERATOR_PRIVATE_KEY.to_string()).await;
 
         let pending_admin = address!("14dC79964da2C08b23698B3D3cc7Ca32193d9955");
-        let tx_hash = el_chain_writer
+        el_chain_writer
             .add_pending_admin(OPERATOR_ADDRESS, pending_admin)
             .await
             .unwrap();
-        wait_transaction(&http_endpoint, tx_hash).await.unwrap();
 
         let is_admin = el_chain_writer
             .el_chain_reader
@@ -877,11 +903,10 @@ mod tests {
             .unwrap();
         assert_eq!(is_admin, true);
 
-        let tx_hash = el_chain_writer
+        el_chain_writer
             .remove_pending_admin(OPERATOR_ADDRESS, pending_admin)
             .await
             .unwrap();
-        wait_transaction(&http_endpoint, tx_hash).await.unwrap();
 
         let is_admin = el_chain_writer
             .el_chain_reader
@@ -901,17 +926,15 @@ mod tests {
         let pending_admin_key =
             "0x4bbbf85ce3377467afe5d46f804f221813b2bb87f24d81f60f1fcdbf7cbf4356";
 
-        let tx_hash = el_chain_writer
+        el_chain_writer
             .add_pending_admin(OPERATOR_ADDRESS, pending_admin)
             .await
             .unwrap();
-        wait_transaction(&http_endpoint, tx_hash).await.unwrap();
 
         let admin_writer =
             new_test_writer(http_endpoint.to_string(), pending_admin_key.to_string()).await;
 
-        let tx_hash = admin_writer.accept_admin(OPERATOR_ADDRESS).await.unwrap();
-        wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+        admin_writer.accept_admin(OPERATOR_ADDRESS).await.unwrap();
 
         let is_admin = admin_writer
             .el_chain_reader
@@ -919,5 +942,49 @@ mod tests {
             .await
             .unwrap();
         assert_eq!(is_admin, true);
+    }
+
+    #[tokio::test]
+    async fn test_remove_admin() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let el_chain_writer =
+            new_test_writer(http_endpoint.to_string(), OPERATOR_PRIVATE_KEY.to_string()).await;
+
+        let pending_admin_1 = address!("14dC79964da2C08b23698B3D3cc7Ca32193d9955");
+        let pending_admin_1_key =
+            "0x4bbbf85ce3377467afe5d46f804f221813b2bb87f24d81f60f1fcdbf7cbf4356";
+
+        let pending_admin_2 = address!("23618e81E3f5cdF7f54C3d65f7FBc0aBf5B21E8f");
+        let pending_admin_2_key =
+            "0xdbda1821b80551c9d65939329250298aa3472ba22feea921c0cf5d620ea67b97";
+
+        // Adding two admins and removing one. Cannot remove the last admin, so one must remain
+        el_chain_writer
+            .add_pending_admin(OPERATOR_ADDRESS, pending_admin_1)
+            .await
+            .unwrap();
+        el_chain_writer
+            .add_pending_admin(OPERATOR_ADDRESS, pending_admin_2)
+            .await
+            .unwrap();
+
+        let admin_1_writer =
+            new_test_writer(http_endpoint.to_string(), pending_admin_1_key.to_string()).await;
+        admin_1_writer.accept_admin(OPERATOR_ADDRESS).await.unwrap();
+        let admin_2_writer =
+            new_test_writer(http_endpoint.to_string(), pending_admin_2_key.to_string()).await;
+        admin_2_writer.accept_admin(OPERATOR_ADDRESS).await.unwrap();
+
+        admin_1_writer
+            .remove_admin(OPERATOR_ADDRESS, pending_admin_2)
+            .await
+            .unwrap();
+
+        let is_admin = el_chain_writer
+            .el_chain_reader
+            .is_admin(OPERATOR_ADDRESS, pending_admin_2)
+            .await
+            .unwrap();
+        assert_eq!(is_admin, false);
     }
 }
