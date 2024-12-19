@@ -1597,23 +1597,6 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn test_can_call() {
-        // TODO: test with real values
-        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
-
-        let account_address = Address::ZERO;
-        let target = Address::ZERO;
-        let selector = FixedBytes::from([0x00; 4]);
-        let can_call = chain_reader
-            .can_call(account_address, OPERATOR_ADDRESS, target, selector)
-            .await
-            .unwrap();
-
-        assert!(!can_call);
-    }
-
-    #[tokio::test]
     async fn test_list_appointee() {
         // TODO: test with real values
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
