@@ -258,14 +258,13 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         aggregated_operators: &mut AggregatedOperators,
         operator_state: OperatorAvsState,
         signed_task_digest: SignedTaskResponseDigest,
-    ) -> &mut AggregatedOperators {
-        let operator_g2_pubkey = operator_state
-            .operator_info
-            .pub_keys
-            .clone()
-            .unwrap()
-            .g2_pub_key
-            .g2();
+    ) -> Result<&mut AggregatedOperators, BlsAggregationServiceError> {
+        let Some(operator_pub_keys) = operator_state.operator_info.pub_keys.clone() else {
+            return Err(BlsAggregationServiceError::SignatureVerificationError(
+                SignatureVerificationError::OperatorPublicKeyNotFound,
+            ));
+        };
+        let operator_g2_pubkey = operator_pub_keys.g2_pub_key.g2();
         aggregated_operators
             .signers_operator_ids_set
             .insert(signed_task_digest.operator_id, true);
@@ -285,7 +284,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                 .and_modify(|v| *v += stake)
                 .or_insert(*stake);
         }
-        aggregated_operators
+        Ok(aggregated_operators)
     }
 
     /// Processes each signed task responses given a task_index for a single task.
@@ -435,6 +434,8 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                         &operator_state_avs,
                     )
                     .await;
+
+
                     let verification_failed = verification_result.is_err();
 
                     digest
@@ -460,15 +461,15 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                         .g2_pub_key
                         .g2();
 
-                    let digest_aggregated_operators = aggregated_operators
+                    let digest_aggregated_operators:Result<AggregatedOperators,BlsAggregationServiceError> = aggregated_operators
                         .get_mut(&digest.task_response_digest)
                         .map(|digest_aggregated_operators| {
-                            BlsAggregatorService::<A>::aggregate_new_operator(
+                            Ok(BlsAggregatorService::<A>::aggregate_new_operator(
                                 digest_aggregated_operators,
                                 operator_state.clone(),
                                 digest.clone(),
-                            )
-                            .clone()
+                            )?
+                            .clone())
                         })
                         .unwrap_or_else(|| {
                             let mut signers_apk_g2 = BlsG2Point::new(G2Affine::zero());
@@ -485,7 +486,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                                     .into(),
                                 );
                             }
-                            AggregatedOperators {
+                            Ok(AggregatedOperators {
                                 signers_apk_g2,
                                 signers_agg_sig_g1,
                                 signers_operator_ids_set: HashMap::from([(
@@ -493,16 +494,16 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                                     true,
                                 )]),
                                 signers_total_stake_per_quorum: operator_state.stake_per_quorum.clone(),
-                            }
+                            })
                         });
 
                     aggregated_operators.insert(
                         digest.task_response_digest,
-                        digest_aggregated_operators.clone(),
+                        digest_aggregated_operators.clone()?,
                     );
 
                     if !BlsAggregatorService::<A>::check_if_stake_thresholds_met(
-                        &digest_aggregated_operators.signers_total_stake_per_quorum,
+                        &digest_aggregated_operators.clone()?.signers_total_stake_per_quorum,
                         &total_stake_per_quorum,
                         &quorum_threshold_percentage_map,
                     ) {
@@ -525,7 +526,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                         task_created_block,
                         digest,
                         &operator_state_avs,
-                        digest_aggregated_operators,
+                        digest_aggregated_operators?,
                         &avs_registry_service,
                         &quorum_apks_g1,
                         &quorum_nums,
