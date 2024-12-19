@@ -5,10 +5,7 @@ use alloy::sol;
 use alloy_primitives::{address, Address};
 use alloy_signer_local::PrivateKeySigner;
 use eigen_utils::delegationmanager::DelegationManager;
-use eigen_utils::{
-    get_provider,
-    get_signer,
-};
+use eigen_utils::{get_provider, get_signer};
 sol! {
     #[derive(Debug)]
     #[allow(missing_docs)]

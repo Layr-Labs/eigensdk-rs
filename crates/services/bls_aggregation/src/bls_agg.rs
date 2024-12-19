@@ -240,7 +240,10 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         rx.recv()
             .await
             .ok_or(BlsAggregationServiceError::SignaturesChannelClosed)?
-            .map_err(BlsAggregationServiceError::SignatureVerificationError)
+            .map_err(|e| {
+                dbg!("signature verification error:", &e); // Debug the error
+                BlsAggregationServiceError::SignatureVerificationError(e) // Return the new error
+            })
     }
 
     /// Adds a new operator to the aggregated operators by aggregating its public key, signature and stake.
