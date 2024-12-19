@@ -1,5 +1,8 @@
 use alloy_primitives::{address, Address};
 
+/// Holesky rpc provider
+pub const HOLESKY_RPC_PROVIDER: &str = "https://ethereum-holesky-rpc.publicnode.com";
+
 /// https://holesky.etherscan.io/address/0xA44151489861Fe9e3055d95adC98FbD462B948e7
 pub const DELEGATION_MANAGER_ADDRESS: Address =
     address!("A44151489861Fe9e3055d95adC98FbD462B948e7");
