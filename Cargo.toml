@@ -4,7 +4,6 @@ members = [
     "crates/chainio/clients/elcontracts/",
     "crates/chainio/clients/eth/",
     "crates/chainio/clients/fireblocks/",
-    "crates/chainio/txmanager/",
     "crates/crypto/bls/",
     "crates/crypto/bn254/",
     "crates/eigen-cli/",
@@ -56,6 +55,7 @@ clippy.question_mark = "warn"
 clippy.implicit_return = "allow"
 
 [workspace.dependencies]
+eigen-client-avsregistry = { path = "crates/chainio/clients/avsregistry" }
 ark-bn254 = "0.5.0"
 ark-ec = "0.5.0"
 ark-ff = "0.5.0"
@@ -66,7 +66,6 @@ aws-sdk-kms = "1.49.0"
 backoff = { version = "0.4.0", features = ["futures", "tokio"] }
 clap = { version = "4.5.20", features = ["derive"] }
 eigen-chainio-txmanager = { path = "crates/chainio/txmanager/" }
-eigen-client-avsregistry = { path = "crates/chainio/clients/avsregistry" }
 eigen-client-elcontracts = { path = "crates/chainio/clients/elcontracts" }
 eigen-client-eth = { path = "crates/chainio/clients/eth" }
 eigen-client-fireblocks = { path = "crates/chainio/clients/fireblocks" }
@@ -160,6 +159,5 @@ alloy-transport-http = { version = "0.7", features = [
 ], default-features = false }
 alloy-transport-ipc = { version = "0.7.0", default-features = false }
 alloy-transport-ws = { version = "0.7.0", default-features = false }
-
 avsregistry-read = { path = "examples/avsregistry-read" }
 avsregistry-write = { path = "examples/avsregistry-write" }
