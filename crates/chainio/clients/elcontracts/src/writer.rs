@@ -4,10 +4,7 @@ use alloy::rpc::types::eth::TransactionReceipt;
 use alloy_primitives::{Address, Bytes, FixedBytes, TxHash, U256};
 pub use eigen_types::operator::Operator;
 use eigen_utils::{
-    allocationmanager::{
-        AllocationManager,
-        IAllocationManagerTypes::{self, Allocation},
-    },
+    allocationmanager::{AllocationManager, IAllocationManagerTypes},
     delegationmanager::DelegationManager,
     erc20::ERC20,
     get_signer,
@@ -477,6 +474,38 @@ impl ELChainWriter {
         todo!("remove_permission")
     }
 
+    /// Set an appointee for a given account. Only the admin of the account can set an appointee.
+    /// The appointee will be able to call the target contract function with the given selector.
+    /// # Arguments
+    /// * `account_address` - account address set appointee for
+    /// * `appointee_address` - appointee address to set
+    /// * `target` - target contract address
+    /// * `selector` - function selector
+    /// # Returns
+    /// * `TxHash` - The transaction hash of the generated transaction.
+    /// # Errors
+    /// * `ElContractsError` - if the call to the contract fails.
+    pub async fn set_permission(
+        &self,
+        account_address: Address,
+        appointee_address: Address,
+        target: Address,
+        selector: FixedBytes<4>,
+    ) -> Result<TxHash, ElContractsError> {
+        let provider = get_signer(&self.signer, &self.provider);
+
+        let permission_controller_contract =
+            PermissionController::new(self.permission_controller, provider);
+
+        let tx = permission_controller_contract
+            .setAppointee(account_address, appointee_address, target, selector)
+            .send()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        Ok(*tx.tx_hash())
+    }
+
     /// Remove pending admin. Only the admin of the account can remove a pending admin
     /// # Arguments
     /// * `account_address` - account address
@@ -503,6 +532,7 @@ impl ELChainWriter {
     }
 
     /// Set a pending admin. Multiple admins can be set for an account.
+    /// The caller must be an admin. If the account does not have an admin, the caller must be the account.
     /// # Arguments
     /// * `account_address` - account address
     /// * `admin_address` - admin address to set
@@ -1044,14 +1074,14 @@ mod tests {
     #[tokio::test]
     async fn test_accept_admin() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let el_chain_writer =
+        let account_writer =
             new_test_writer(http_endpoint.to_string(), OPERATOR_PRIVATE_KEY.to_string()).await;
 
         let pending_admin = address!("14dC79964da2C08b23698B3D3cc7Ca32193d9955");
         let pending_admin_key =
             "0x4bbbf85ce3377467afe5d46f804f221813b2bb87f24d81f60f1fcdbf7cbf4356";
 
-        el_chain_writer
+        account_writer
             .add_pending_admin(OPERATOR_ADDRESS, pending_admin)
             .await
             .unwrap();
@@ -1111,5 +1141,45 @@ mod tests {
             .await
             .unwrap();
         assert_eq!(is_admin, false);
+    }
+
+    #[tokio::test]
+    async fn test_set_permission() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let account_address = OPERATOR_ADDRESS;
+        let admin = address!("14dC79964da2C08b23698B3D3cc7Ca32193d9955");
+        let admin_key = "0x4bbbf85ce3377467afe5d46f804f221813b2bb87f24d81f60f1fcdbf7cbf4356";
+        let appointee_address = address!("a0Ee7A142d267C1f36714E4a8F75612F20a79720");
+        let appointee_key = "0x2a871d0798f97d79848a013d4936a73bf4cc922c825d33c1cf7073dff6d409c6";
+        let target = address!("14dC79964da2C08b23698B3D3cc7Ca32193d9955");
+        let selector = [0, 1, 2, 3].into();
+
+        // add an admin
+        let account_writer =
+            new_test_writer(http_endpoint.to_string(), OPERATOR_PRIVATE_KEY.to_string()).await;
+        account_writer
+            .add_pending_admin(account_address, admin)
+            .await
+            .unwrap();
+        let admin_writer = new_test_writer(http_endpoint.to_string(), admin_key.to_string()).await;
+        admin_writer.accept_admin(account_address).await.unwrap();
+
+        // set permission
+        let tx_hash = admin_writer
+            .set_permission(account_address, appointee_address, target, selector)
+            .await
+            .unwrap();
+        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+        assert!(receipt.status());
+
+        // check if appointee can call the set target
+        let appointee_writer =
+            new_test_writer(http_endpoint.to_string(), appointee_key.to_string()).await;
+        let can_call = appointee_writer
+            .el_chain_reader
+            .can_call(account_address, appointee_address, target, selector)
+            .await
+            .unwrap();
+        assert!(can_call);
     }
 }
