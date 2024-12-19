@@ -894,14 +894,20 @@ impl ELChainReader {
     }
 
     /// Check if the given caller has permissions to call the function
+    ///
     /// # Arguments
+    ///
     /// * `account_address` - The account address to check
     /// * `appointee_address` - The caller address to check permissions for
     /// * `target` - The target address to check permissions for
     /// * `selector` - The selector of the function to check permissions for
+    ///
     /// # Returns
+    ///
     /// * `bool` - true if the account has permissions to call the function, false otherwise
+    ///
     /// # Errors
+    ///
     /// * `ElContractsError` - if the call to the contract fails
     pub async fn can_call(
         &self,
