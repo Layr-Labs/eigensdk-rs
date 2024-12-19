@@ -52,7 +52,7 @@ impl ELChainWriter {
             strategy_manager,
             rewards_coordinator,
             permission_controller,
-            allocation_manager: Address,
+            allocation_manager,
             el_chain_reader,
             provider,
             signer,
@@ -610,7 +610,7 @@ impl ELChainWriter {
     }
 
     /// Deregister an operator from one or more of the AVS's operator sets. If the operator
-    /// has any slashable stake allocated to the AVS, it remains slashable until the DEALLOCATION_DELAY has passed.
+    /// has any slashable stake allocated to the AVS, it remains slashable until the deallocation delay has passed.
     /// # Arguments
     /// * `operator_address` - operator address to deregister
     /// * `avs_address` - AVS address
@@ -635,6 +635,32 @@ impl ELChainWriter {
         };
         let tx = allocation_manager_contract
             .deregisterFromOperatorSets(params)
+            .send()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        Ok(*tx.tx_hash())
+    }
+
+    /// Set the allocation delay for an operator. It is the number of blocks between an operator
+    /// allocating magnitude to an operator set, and the magnitude becoming slashable
+    /// # Arguments
+    /// * `operator_address` - operator address to set allocation delay for
+    /// * `delay` - delay in blocks
+    /// # Returns
+    /// * `TxHash` - The transaction hash of the generated transaction.
+    /// # Errors
+    /// * `ElContractsError` - if the call to the contract fails.
+    pub async fn set_allocation_delay(
+        &self,
+        operator_address: Address,
+        delay: u32,
+    ) -> Result<TxHash, ElContractsError> {
+        let provider = get_signer(&self.signer, &self.provider);
+        let allocation_manager_contract = AllocationManager::new(self.allocation_manager, provider);
+
+        let tx = allocation_manager_contract
+            .setAllocationDelay(operator_address, delay)
             .send()
             .await
             .map_err(ElContractsError::AlloyContractError)?;
