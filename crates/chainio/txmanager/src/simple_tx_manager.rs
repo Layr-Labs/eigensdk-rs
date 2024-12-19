@@ -4,9 +4,11 @@ use alloy::primitives::U256;
 use alloy::providers::{PendingTransactionBuilder, Provider, ProviderBuilder, RootProvider};
 use alloy::rpc::types::eth::{TransactionInput, TransactionReceipt, TransactionRequest};
 use alloy::signers::local::PrivateKeySigner;
+use backoff::{future::retry, ExponentialBackoffBuilder};
 use eigen_logging::logger::SharedLogger;
 use eigen_signer::signer::Config;
 use reqwest::Url;
+use std::time::Duration;
 use thiserror::Error;
 
 static FALLBACK_GAS_TIP_CAP: u128 = 5_000_000_000;
@@ -14,7 +16,7 @@ static FALLBACK_GAS_TIP_CAP: u128 = 5_000_000_000;
 pub type Transport = alloy::transports::http::Http<reqwest::Client>;
 
 /// Possible errors raised in Tx Manager
-#[derive(Error, Debug)]
+#[derive(Error, Debug, PartialEq)]
 pub enum TxManagerError {
     #[error("signer error")]
     SignerError,
@@ -156,6 +158,48 @@ impl SimpleTxManager {
         SimpleTxManager::wait_for_receipt(self, pending_tx).await
     }
 
+    /// Send a transaction to the Ethereum node. It takes an unsigned/signed transaction,
+    /// sends it to the Ethereum node and waits for the receipt.
+    /// If you pass in a signed transaction it will ignore the signature
+    /// and re-sign the transaction after adding the nonce and gas limit.
+    /// If the transaction fails, it will retry sending the transaction until it gets a receipt,
+    /// using an **exponential backoff** strategy.
+    /// If no receipt is received after `max_elapsed_time`, it will return an error.
+    ///
+    /// # Arguments
+    ///
+    /// * `tx`: The transaction to be sent.
+    /// * `initial_interval`: The initial interval duration for the backoff.
+    /// * `max_elapsed_time`: The maximum elapsed time for retrying.
+    /// * `multiplier`: The multiplier used to compute the exponential backoff.
+    ///
+    /// # Returns
+    ///
+    /// * `TransactionReceipt` The transaction receipt.
+    ///
+    /// # Errors
+    ///
+    /// * `TxManagerError` - If the transaction cannot be sent, or there is an error
+    ///   signing the transaction or estimating gas and nonce.
+    pub async fn send_tx_with_retries(
+        &self,
+        tx: &mut TransactionRequest,
+        initial_interval: Duration,
+        max_elapsed_time: Duration,
+        multiplier: f64,
+    ) -> Result<TransactionReceipt, TxManagerError> {
+        let backoff_config = ExponentialBackoffBuilder::default()
+            .with_initial_interval(initial_interval)
+            .with_max_elapsed_time(Some(max_elapsed_time))
+            .with_multiplier(multiplier)
+            .build();
+        retry(backoff_config, || async {
+            let mut cloned_tx = tx.clone();
+            Ok(self.send_tx(&mut cloned_tx).await?)
+        })
+        .await
+    }
+
     /// Estimates the gas and nonce for a transaction.
     ///
     /// # Arguments
@@ -270,14 +314,16 @@ impl SimpleTxManager {
 
 #[cfg(test)]
 mod tests {
-    use super::SimpleTxManager;
+    use super::{SimpleTxManager, TxManagerError};
     use alloy::consensus::TxLegacy;
     use alloy::network::TransactionBuilder;
     use alloy::primitives::{address, bytes, TxKind::Call, U256};
     use alloy::rpc::types::eth::TransactionRequest;
     use eigen_logging::get_test_logger;
     use eigen_testing_utils::anvil::start_anvil_container;
+    use std::time::Duration;
     use tokio;
+    use tokio::time::Instant;
 
     #[tokio::test]
     async fn test_send_transaction_from_legacy() {
@@ -336,5 +382,41 @@ mod tests {
         println!("Transaction mined in block: {}", block_number);
         assert!(block_number > 0);
         assert_eq!(receipt.to, Some(to));
+    }
+
+    #[tokio::test]
+    async fn test_send_transaction_with_retries_returns_after_timeout() {
+        let rpc_url = "http://fake:8545";
+        let logger = get_test_logger();
+        let private_key =
+            "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80".to_string();
+        let simple_tx_manager =
+            SimpleTxManager::new(logger, 1.0, private_key.as_str(), rpc_url).unwrap();
+        let to = address!("a0Ee7A142d267C1f36714E4a8F75612F20a79720");
+
+        let account_nonce = 0x69;
+        let mut tx = TransactionRequest::default()
+            .with_to(to)
+            .with_nonce(account_nonce)
+            .with_chain_id(31337)
+            .with_value(U256::from(100))
+            .with_gas_limit(21_000)
+            .with_max_priority_fee_per_gas(1_000_000_000)
+            .with_max_fee_per_gas(20_000_000_000)
+            .with_gas_price(21_000_000_000);
+        let start = Instant::now();
+
+        let result = simple_tx_manager
+            .send_tx_with_retries(
+                &mut tx,
+                Duration::from_millis(5),
+                Duration::from_secs(1),
+                1.0,
+            )
+            .await;
+        assert_eq!(result, Err(TxManagerError::SendTxError));
+        // substract one interval for asserting, because if the last try does not fit in the max_elapsed_time, it will not be executed
+        let elapsed = start.elapsed();
+        assert!(elapsed >= Duration::from_secs(1) - Duration::from_millis(5));
     }
 }
