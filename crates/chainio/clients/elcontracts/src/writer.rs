@@ -608,6 +608,39 @@ impl ELChainWriter {
 
         Ok(*tx.tx_hash())
     }
+
+    /// Deregister an operator from one or more of the AVS's operator sets. If the operator
+    /// has any slashable stake allocated to the AVS, it remains slashable until the DEALLOCATION_DELAY has passed.
+    /// # Arguments
+    /// * `operator_address` - operator address to deregister
+    /// * `avs_address` - AVS address
+    /// * `operator_set_ids` - operator set ids to deregister from
+    /// # Returns
+    /// * `TxHash` - The transaction hash of the generated transaction.
+    /// # Errors
+    /// * `ElContractsError` - if the call to the contract fails.
+    pub async fn deregister_from_operator_sets(
+        &self,
+        operator_address: Address,
+        avs_address: Address,
+        operator_set_ids: Vec<u32>,
+    ) -> Result<TxHash, ElContractsError> {
+        let provider = get_signer(&self.signer, &self.provider);
+        let allocation_manager_contract = AllocationManager::new(self.allocation_manager, provider);
+
+        let params = IAllocationManagerTypes::DeregisterParams {
+            operator: operator_address,
+            avs: avs_address,
+            operatorSetIds: operator_set_ids,
+        };
+        let tx = allocation_manager_contract
+            .deregisterFromOperatorSets(params)
+            .send()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        Ok(*tx.tx_hash())
+    }
 }
 
 #[cfg(test)]
