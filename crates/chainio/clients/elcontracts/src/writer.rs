@@ -11,9 +11,9 @@ use eigen_utils::{
         IRewardsCoordinator,
         IRewardsCoordinatorTypes::{self, RewardsMerkleClaim},
     },
+    permissioncontroller::PermissionController,
     strategymanager::StrategyManager,
 };
-
 use tracing::info;
 
 /// Gas limit for registerAsOperator in [`DelegationManager`]
@@ -25,6 +25,7 @@ pub struct ELChainWriter {
     delegation_manager: Address,
     strategy_manager: Address,
     rewards_coordinator: Address,
+    permission_controller: Address,
     el_chain_reader: ELChainReader,
     provider: String,
     signer: String,
@@ -35,6 +36,7 @@ impl ELChainWriter {
         delegation_manager: Address,
         strategy_manager: Address,
         rewards_coordinator: Address,
+        permission_controller: Address,
         el_chain_reader: ELChainReader,
         provider: String,
         signer: String,
@@ -43,6 +45,7 @@ impl ELChainWriter {
             delegation_manager,
             strategy_manager,
             rewards_coordinator,
+            permission_controller,
             el_chain_reader,
             provider,
             signer,
@@ -466,6 +469,56 @@ impl ELChainWriter {
         //self.tx_mgr.send(ctx, tx, request.wait_for_receipt)
         todo!("remove_permission")
     }
+
+    /// Remove pending admin. Only the admin of the account can remove a pending admin
+    /// # Arguments
+    /// * `account_address` - account address
+    /// * `admin_address` - admin address to remove
+    /// # Returns
+    /// * `TxHash` - The transaction hash of the generated transaction.
+    pub async fn remove_pending_admin(
+        &self,
+        account_address: Address,
+        admin_address: Address,
+    ) -> Result<TxHash, ElContractsError> {
+        let provider = get_signer(&self.signer, &self.provider);
+
+        let permission_controller_contract =
+            PermissionController::new(self.permission_controller, provider);
+
+        let tx = permission_controller_contract
+            .removePendingAdmin(account_address, admin_address)
+            .send()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        Ok(*tx.tx_hash())
+    }
+
+    /// Set a pending admin. Multiple admins can be set for an account.
+    /// # Arguments
+    /// * `account_address` - account address
+    /// * `admin_address` - admin address to set
+    /// # Returns
+    /// * `TxHash` - The transaction hash of the generated transaction.
+    pub async fn add_pending_admin(
+        &self,
+        account_address: Address,
+        admin_address: Address,
+    ) -> Result<TxHash, ElContractsError> {
+        let provider = get_signer(&self.signer, &self.provider);
+
+        let permission_controller_contract =
+            PermissionController::new(self.permission_controller, provider);
+
+        let tx = permission_controller_contract
+            .addPendingAdmin(account_address, admin_address)
+            .send()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        Ok(*tx.tx_hash())
+    }
 }
 
 #[cfg(test)]
@@ -540,10 +593,20 @@ mod tests {
         let rewards_coordinator = get_rewards_coordinator_address(http_endpoint.clone()).await;
         let delegation_manager = get_delegation_manager_address(http_endpoint.clone()).await;
 
+        let contract_delegation_manager =
+            DelegationManager::new(delegation_manager, get_provider(&http_endpoint));
+        let permission_controller = contract_delegation_manager
+            .permissionController()
+            .call()
+            .await
+            .unwrap()
+            ._0;
+
         ELChainWriter::new(
             delegation_manager,
             strategy_manager,
             rewards_coordinator,
+            permission_controller,
             el_chain_reader,
             http_endpoint.clone(),
             OPERATOR_PRIVATE_KEY.to_string(),
@@ -779,5 +842,38 @@ mod tests {
             .unwrap();
 
         assert_eq!(distribution_root.root, root);
+    }
+
+    #[tokio::test]
+    async fn test_add_and_remove_pending_admin() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let avs_writer = new_test_writer(http_endpoint.clone()).await;
+
+        let pending_admin = address!("14dC79964da2C08b23698B3D3cc7Ca32193d9955");
+        let tx_hash = avs_writer
+            .add_pending_admin(OPERATOR_ADDRESS, pending_admin)
+            .await
+            .unwrap();
+        wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+
+        let is_admin = avs_writer
+            .el_chain_reader
+            .is_pending_admin(OPERATOR_ADDRESS, pending_admin)
+            .await
+            .unwrap();
+        assert_eq!(is_admin, true);
+
+        let tx_hash = avs_writer
+            .remove_pending_admin(OPERATOR_ADDRESS, pending_admin)
+            .await
+            .unwrap();
+        wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+
+        let is_admin = avs_writer
+            .el_chain_reader
+            .is_pending_admin(OPERATOR_ADDRESS, pending_admin)
+            .await
+            .unwrap();
+        assert_eq!(is_admin, false);
     }
 }
