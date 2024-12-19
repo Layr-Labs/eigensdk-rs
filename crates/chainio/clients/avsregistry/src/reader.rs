@@ -597,22 +597,17 @@ impl AvsRegistryChainReader {
 mod tests {
     use super::*;
     use eigen_logging::get_test_logger;
-    use eigen_testing_utils::anvil_constants::{
-        HOLESKY_OPERATOR_STATE_RETRIEVER, HOLESKY_REGISTRY_COORDINATOR, HOLESKY_RPC_PROVIDER,
+    use eigen_testing_utils::m2_holesky_constants::{
+        HOLESKY_RPC_PROVIDER, OPERATOR_STATE_RETRIEVER, REGISTRY_COORDINATOR,
     };
     use hex::FromHex;
     use std::str::FromStr;
 
     async fn build_avs_registry_chain_reader() -> AvsRegistryChainReader {
-        let holesky_registry_coordinator =
-            Address::from_str(HOLESKY_REGISTRY_COORDINATOR).expect("failed to parse address");
-        let holesky_operator_state_retriever =
-            Address::from_str(HOLESKY_OPERATOR_STATE_RETRIEVER).expect("failed to parse address");
-
         AvsRegistryChainReader::new(
             get_test_logger(),
-            holesky_registry_coordinator,
-            holesky_operator_state_retriever,
+            REGISTRY_COORDINATOR,
+            OPERATOR_STATE_RETRIEVER,
             HOLESKY_RPC_PROVIDER.to_string(),
         )
         .await
@@ -697,9 +692,11 @@ mod tests {
     #[tokio::test]
     async fn test_is_operator_registered() {
         let avs_reader = build_avs_registry_chain_reader().await;
-        let address = Address::from_str(HOLESKY_REGISTRY_COORDINATOR).unwrap();
 
-        let is_registered = avs_reader.is_operator_registered(address).await.unwrap();
+        let is_registered = avs_reader
+            .is_operator_registered(REGISTRY_COORDINATOR)
+            .await
+            .unwrap();
         assert!(!is_registered);
     }
 
