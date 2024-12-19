@@ -170,35 +170,45 @@ interface ProxyAdmin {
   }
 ]
 ```*/
-#[allow(non_camel_case_types, non_snake_case, clippy::style)]
+#[allow(
+    non_camel_case_types,
+    non_snake_case,
+    clippy::pub_underscore_fields,
+    clippy::style
+)]
 pub mod ProxyAdmin {
     use super::*;
     use alloy::sol_types as alloy_sol_types;
     /// The creation / init bytecode of the contract.
     ///
     /// ```text
-    ///0x608060405234801561001057600080fd5b5061001a3361001f565b61006f565b600080546001600160a01b038381166001600160a01b0319831681178455604051919092169283917f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e09190a35050565b61069a8061007e6000396000f3fe60806040526004361061007b5760003560e01c80639623609d1161004e5780639623609d1461011157806399a88ec414610124578063f2fde38b14610144578063f3b7dead1461016457600080fd5b8063204e1c7a14610080578063715018a6146100bc5780637eff275e146100d35780638da5cb5b146100f3575b600080fd5b34801561008c57600080fd5b506100a061009b366004610499565b610184565b6040516001600160a01b03909116815260200160405180910390f35b3480156100c857600080fd5b506100d1610215565b005b3480156100df57600080fd5b506100d16100ee3660046104bd565b610229565b3480156100ff57600080fd5b506000546001600160a01b03166100a0565b6100d161011f36600461050c565b610291565b34801561013057600080fd5b506100d161013f3660046104bd565b610300565b34801561015057600080fd5b506100d161015f366004610499565b610336565b34801561017057600080fd5b506100a061017f366004610499565b6103b4565b6000806000836001600160a01b03166040516101aa90635c60da1b60e01b815260040190565b600060405180830381855afa9150503d80600081146101e5576040519150601f19603f3d011682016040523d82523d6000602084013e6101ea565b606091505b5091509150816101f957600080fd5b8080602001905181019061020d91906105e2565b949350505050565b61021d6103da565b6102276000610434565b565b6102316103da565b6040516308f2839760e41b81526001600160a01b038281166004830152831690638f283970906024015b600060405180830381600087803b15801561027557600080fd5b505af1158015610289573d6000803e3d6000fd5b505050505050565b6102996103da565b60405163278f794360e11b81526001600160a01b03841690634f1ef2869034906102c990869086906004016105ff565b6000604051808303818588803b1580156102e257600080fd5b505af11580156102f6573d6000803e3d6000fd5b5050505050505050565b6103086103da565b604051631b2ce7f360e11b81526001600160a01b038281166004830152831690633659cfe69060240161025b565b61033e6103da565b6001600160a01b0381166103a85760405162461bcd60e51b815260206004820152602660248201527f4f776e61626c653a206e6577206f776e657220697320746865207a65726f206160448201526564647265737360d01b60648201526084015b60405180910390fd5b6103b181610434565b50565b6000806000836001600160a01b03166040516101aa906303e1469160e61b815260040190565b6000546001600160a01b031633146102275760405162461bcd60e51b815260206004820181905260248201527f4f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e6572604482015260640161039f565b600080546001600160a01b038381166001600160a01b0319831681178455604051919092169283917f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e09190a35050565b6001600160a01b03811681146103b157600080fd5b6000602082840312156104ab57600080fd5b81356104b681610484565b9392505050565b600080604083850312156104d057600080fd5b82356104db81610484565b915060208301356104eb81610484565b809150509250929050565b634e487b7160e01b600052604160045260246000fd5b60008060006060848603121561052157600080fd5b833561052c81610484565b9250602084013561053c81610484565b9150604084013567ffffffffffffffff8082111561055957600080fd5b818601915086601f83011261056d57600080fd5b81358181111561057f5761057f6104f6565b604051601f8201601f19908116603f011681019083821181831017156105a7576105a76104f6565b816040528281528960208487010111156105c057600080fd5b8260208601602083013760006020848301015280955050505050509250925092565b6000602082840312156105f457600080fd5b81516104b681610484565b60018060a01b038316815260006020604081840152835180604085015260005b8181101561063b5785810183015185820160600152820161061f565b8181111561064d576000606083870101525b50601f01601f19169290920160600194935050505056fea2646970667358221220d2defa3201be949322800c3098b574d26d9d6a6cbac4560c147ae4c675a9d47a64736f6c634300080c0033
+    ///0x608080604052346059575f8054336001600160a01b0319821681178355916001600160a01b03909116907f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e09080a361060b908161005e8239f35b5f80fdfe6080806040526004361015610012575f80fd5b5f905f3560e01c908163204e1c7a1461045057508063715018a6146103f95780637eff275e146103675780638da5cb5b146103405780639623609d1461024257806399a88ec4146101ad578063f2fde38b146100e75763f3b7dead14610076575f80fd5b346100e45760203660031901126100e457808060046001600160a01b0361009b6104b2565b6040516303e1469160e61b815291165afa6100b4610530565b90156100e25780516020916001600160a01b03916100d991908101840190840161055f565b16604051908152f35b505b80fd5b50346100e45760203660031901126100e4576101016104b2565b61010961057e565b6001600160a01b031680156101595781546001600160a01b03198116821783556001600160a01b03167f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e08380a380f35b60405162461bcd60e51b815260206004820152602660248201527f4f776e61626c653a206e6577206f776e657220697320746865207a65726f206160448201526564647265737360d01b6064820152608490fd5b50346100e45760403660031901126100e457806101c86104b2565b6101d06104c8565b906101d961057e565b6001600160a01b031690813b1561023e57604051631b2ce7f360e11b81526001600160a01b0390911660048201529082908290602490829084905af18015610233576102225750f35b8161022c916104de565b6100e45780f35b6040513d84823e3d90fd5b5050fd5b5060603660031901126100e457806102586104b2565b6102606104c8565b6044359167ffffffffffffffff831161033b573660238401121561033b5782600401359061028d82610514565b9161029b60405193846104de565b80835260208301943660248383010111610337578187926024602093018837840101526102c661057e565b6001600160a01b0316803b15610333578492606460405180968195829463278f794360e11b845260018060a01b03166004840152604060248401525180918160448501528484015e8181018301879052601f01601f1916810103019134905af18015610233576102225750f35b8480fd5b8680fd5b505050fd5b50346100e457806003193601126100e457546040516001600160a01b039091168152602090f35b50346103f55760403660031901126103f5576103816104b2565b6103896104c8565b9061039261057e565b6001600160a01b031690813b156103f5576040516308f2839760e41b81526001600160a01b039091166004820152905f908290602490829084905af180156103ea576103dc575080f35b6103e891505f906104de565b005b6040513d5f823e3d90fd5b5f80fd5b346103f5575f3660031901126103f55761041161057e565b5f80546001600160a01b0319811682556001600160a01b03167f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e08280a3005b346103f55760203660031901126103f5575f9081906004906001600160a01b036104786104b2565b635c60da1b60e01b8352165afa61048d610530565b90156103f55780516020916001600160a01b03916100d991908101840190840161055f565b600435906001600160a01b03821682036103f557565b602435906001600160a01b03821682036103f557565b90601f8019910116810190811067ffffffffffffffff82111761050057604052565b634e487b7160e01b5f52604160045260245ffd5b67ffffffffffffffff811161050057601f01601f191660200190565b3d1561055a573d9061054182610514565b9161054f60405193846104de565b82523d5f602084013e565b606090565b908160209103126103f557516001600160a01b03811681036103f55790565b5f546001600160a01b0316330361059157565b606460405162461bcd60e51b815260206004820152602060248201527f4f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e65726044820152fdfea2646970667358221220f5ecd6dda39c6e810544b08cc042ca0a7be425bedfde470e058349527627614e64736f6c634300081b0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"`\x80`@R4\x80\x15a\0\x10W`\0\x80\xFD[Pa\0\x1A3a\0\x1FV[a\0oV[`\0\x80T`\x01`\x01`\xA0\x1B\x03\x83\x81\x16`\x01`\x01`\xA0\x1B\x03\x19\x83\x16\x81\x17\x84U`@Q\x91\x90\x92\x16\x92\x83\x91\x7F\x8B\xE0\x07\x9CS\x16Y\x14\x13D\xCD\x1F\xD0\xA4\xF2\x84\x19I\x7F\x97\"\xA3\xDA\xAF\xE3\xB4\x18okdW\xE0\x91\x90\xA3PPV[a\x06\x9A\x80a\0~`\09`\0\xF3\xFE`\x80`@R`\x046\x10a\0{W`\x005`\xE0\x1C\x80c\x96#`\x9D\x11a\0NW\x80c\x96#`\x9D\x14a\x01\x11W\x80c\x99\xA8\x8E\xC4\x14a\x01$W\x80c\xF2\xFD\xE3\x8B\x14a\x01DW\x80c\xF3\xB7\xDE\xAD\x14a\x01dW`\0\x80\xFD[\x80c N\x1Cz\x14a\0\x80W\x80cqP\x18\xA6\x14a\0\xBCW\x80c~\xFF'^\x14a\0\xD3W\x80c\x8D\xA5\xCB[\x14a\0\xF3W[`\0\x80\xFD[4\x80\x15a\0\x8CW`\0\x80\xFD[Pa\0\xA0a\0\x9B6`\x04a\x04\x99V[a\x01\x84V[`@Q`\x01`\x01`\xA0\x1B\x03\x90\x91\x16\x81R` \x01`@Q\x80\x91\x03\x90\xF3[4\x80\x15a\0\xC8W`\0\x80\xFD[Pa\0\xD1a\x02\x15V[\0[4\x80\x15a\0\xDFW`\0\x80\xFD[Pa\0\xD1a\0\xEE6`\x04a\x04\xBDV[a\x02)V[4\x80\x15a\0\xFFW`\0\x80\xFD[P`\0T`\x01`\x01`\xA0\x1B\x03\x16a\0\xA0V[a\0\xD1a\x01\x1F6`\x04a\x05\x0CV[a\x02\x91V[4\x80\x15a\x010W`\0\x80\xFD[Pa\0\xD1a\x01?6`\x04a\x04\xBDV[a\x03\0V[4\x80\x15a\x01PW`\0\x80\xFD[Pa\0\xD1a\x01_6`\x04a\x04\x99V[a\x036V[4\x80\x15a\x01pW`\0\x80\xFD[Pa\0\xA0a\x01\x7F6`\x04a\x04\x99V[a\x03\xB4V[`\0\x80`\0\x83`\x01`\x01`\xA0\x1B\x03\x16`@Qa\x01\xAA\x90c\\`\xDA\x1B`\xE0\x1B\x81R`\x04\x01\x90V[`\0`@Q\x80\x83\x03\x81\x85Z\xFA\x91PP=\x80`\0\x81\x14a\x01\xE5W`@Q\x91P`\x1F\x19`?=\x01\x16\x82\x01`@R=\x82R=`\0` \x84\x01>a\x01\xEAV[``\x91P[P\x91P\x91P\x81a\x01\xF9W`\0\x80\xFD[\x80\x80` \x01\x90Q\x81\x01\x90a\x02\r\x91\x90a\x05\xE2V[\x94\x93PPPPV[a\x02\x1Da\x03\xDAV[a\x02'`\0a\x044V[V[a\x021a\x03\xDAV[`@Qc\x08\xF2\x83\x97`\xE4\x1B\x81R`\x01`\x01`\xA0\x1B\x03\x82\x81\x16`\x04\x83\x01R\x83\x16\x90c\x8F(9p\x90`$\x01[`\0`@Q\x80\x83\x03\x81`\0\x87\x80;\x15\x80\x15a\x02uW`\0\x80\xFD[PZ\xF1\x15\x80\x15a\x02\x89W=`\0\x80>=`\0\xFD[PPPPPPV[a\x02\x99a\x03\xDAV[`@Qc'\x8FyC`\xE1\x1B\x81R`\x01`\x01`\xA0\x1B\x03\x84\x16\x90cO\x1E\xF2\x86\x904\x90a\x02\xC9\x90\x86\x90\x86\x90`\x04\x01a\x05\xFFV[`\0`@Q\x80\x83\x03\x81\x85\x88\x80;\x15\x80\x15a\x02\xE2W`\0\x80\xFD[PZ\xF1\x15\x80\x15a\x02\xF6W=`\0\x80>=`\0\xFD[PPPPPPPPV[a\x03\x08a\x03\xDAV[`@Qc\x1B,\xE7\xF3`\xE1\x1B\x81R`\x01`\x01`\xA0\x1B\x03\x82\x81\x16`\x04\x83\x01R\x83\x16\x90c6Y\xCF\xE6\x90`$\x01a\x02[V[a\x03>a\x03\xDAV[`\x01`\x01`\xA0\x1B\x03\x81\x16a\x03\xA8W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`&`$\x82\x01R\x7FOwnable: new owner is the zero a`D\x82\x01Reddress`\xD0\x1B`d\x82\x01R`\x84\x01[`@Q\x80\x91\x03\x90\xFD[a\x03\xB1\x81a\x044V[PV[`\0\x80`\0\x83`\x01`\x01`\xA0\x1B\x03\x16`@Qa\x01\xAA\x90c\x03\xE1F\x91`\xE6\x1B\x81R`\x04\x01\x90V[`\0T`\x01`\x01`\xA0\x1B\x03\x163\x14a\x02'W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01\x81\x90R`$\x82\x01R\x7FOwnable: caller is not the owner`D\x82\x01R`d\x01a\x03\x9FV[`\0\x80T`\x01`\x01`\xA0\x1B\x03\x83\x81\x16`\x01`\x01`\xA0\x1B\x03\x19\x83\x16\x81\x17\x84U`@Q\x91\x90\x92\x16\x92\x83\x91\x7F\x8B\xE0\x07\x9CS\x16Y\x14\x13D\xCD\x1F\xD0\xA4\xF2\x84\x19I\x7F\x97\"\xA3\xDA\xAF\xE3\xB4\x18okdW\xE0\x91\x90\xA3PPV[`\x01`\x01`\xA0\x1B\x03\x81\x16\x81\x14a\x03\xB1W`\0\x80\xFD[`\0` \x82\x84\x03\x12\x15a\x04\xABW`\0\x80\xFD[\x815a\x04\xB6\x81a\x04\x84V[\x93\x92PPPV[`\0\x80`@\x83\x85\x03\x12\x15a\x04\xD0W`\0\x80\xFD[\x825a\x04\xDB\x81a\x04\x84V[\x91P` \x83\x015a\x04\xEB\x81a\x04\x84V[\x80\x91PP\x92P\x92\x90PV[cNH{q`\xE0\x1B`\0R`A`\x04R`$`\0\xFD[`\0\x80`\0``\x84\x86\x03\x12\x15a\x05!W`\0\x80\xFD[\x835a\x05,\x81a\x04\x84V[\x92P` \x84\x015a\x05<\x81a\x04\x84V[\x91P`@\x84\x015g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x80\x82\x11\x15a\x05YW`\0\x80\xFD[\x81\x86\x01\x91P\x86`\x1F\x83\x01\x12a\x05mW`\0\x80\xFD[\x815\x81\x81\x11\x15a\x05\x7FWa\x05\x7Fa\x04\xF6V[`@Q`\x1F\x82\x01`\x1F\x19\x90\x81\x16`?\x01\x16\x81\x01\x90\x83\x82\x11\x81\x83\x10\x17\x15a\x05\xA7Wa\x05\xA7a\x04\xF6V[\x81`@R\x82\x81R\x89` \x84\x87\x01\x01\x11\x15a\x05\xC0W`\0\x80\xFD[\x82` \x86\x01` \x83\x017`\0` \x84\x83\x01\x01R\x80\x95PPPPPP\x92P\x92P\x92V[`\0` \x82\x84\x03\x12\x15a\x05\xF4W`\0\x80\xFD[\x81Qa\x04\xB6\x81a\x04\x84V[`\x01\x80`\xA0\x1B\x03\x83\x16\x81R`\0` `@\x81\x84\x01R\x83Q\x80`@\x85\x01R`\0[\x81\x81\x10\x15a\x06;W\x85\x81\x01\x83\x01Q\x85\x82\x01``\x01R\x82\x01a\x06\x1FV[\x81\x81\x11\x15a\x06MW`\0``\x83\x87\x01\x01R[P`\x1F\x01`\x1F\x19\x16\x92\x90\x92\x01``\x01\x94\x93PPPPV\xFE\xA2dipfsX\"\x12 \xD2\xDE\xFA2\x01\xBE\x94\x93\"\x80\x0C0\x98\xB5t\xD2m\x9Djl\xBA\xC4V\x0C\x14z\xE4\xC6u\xA9\xD4zdsolcC\0\x08\x0C\x003",
+        b"`\x80\x80`@R4`YW_\x80T3`\x01`\x01`\xA0\x1B\x03\x19\x82\x16\x81\x17\x83U\x91`\x01`\x01`\xA0\x1B\x03\x90\x91\x16\x90\x7F\x8B\xE0\x07\x9CS\x16Y\x14\x13D\xCD\x1F\xD0\xA4\xF2\x84\x19I\x7F\x97\"\xA3\xDA\xAF\xE3\xB4\x18okdW\xE0\x90\x80\xA3a\x06\x0B\x90\x81a\0^\x829\xF3[_\x80\xFD\xFE`\x80\x80`@R`\x046\x10\x15a\0\x12W_\x80\xFD[_\x90_5`\xE0\x1C\x90\x81c N\x1Cz\x14a\x04PWP\x80cqP\x18\xA6\x14a\x03\xF9W\x80c~\xFF'^\x14a\x03gW\x80c\x8D\xA5\xCB[\x14a\x03@W\x80c\x96#`\x9D\x14a\x02BW\x80c\x99\xA8\x8E\xC4\x14a\x01\xADW\x80c\xF2\xFD\xE3\x8B\x14a\0\xE7Wc\xF3\xB7\xDE\xAD\x14a\0vW_\x80\xFD[4a\0\xE4W` 6`\x03\x19\x01\x12a\0\xE4W\x80\x80`\x04`\x01`\x01`\xA0\x1B\x03a\0\x9Ba\x04\xB2V[`@Qc\x03\xE1F\x91`\xE6\x1B\x81R\x91\x16Z\xFAa\0\xB4a\x050V[\x90\x15a\0\xE2W\x80Q` \x91`\x01`\x01`\xA0\x1B\x03\x91a\0\xD9\x91\x90\x81\x01\x84\x01\x90\x84\x01a\x05_V[\x16`@Q\x90\x81R\xF3[P[\x80\xFD[P4a\0\xE4W` 6`\x03\x19\x01\x12a\0\xE4Wa\x01\x01a\x04\xB2V[a\x01\ta\x05~V[`\x01`\x01`\xA0\x1B\x03\x16\x80\x15a\x01YW\x81T`\x01`\x01`\xA0\x1B\x03\x19\x81\x16\x82\x17\x83U`\x01`\x01`\xA0\x1B\x03\x16\x7F\x8B\xE0\x07\x9CS\x16Y\x14\x13D\xCD\x1F\xD0\xA4\xF2\x84\x19I\x7F\x97\"\xA3\xDA\xAF\xE3\xB4\x18okdW\xE0\x83\x80\xA3\x80\xF3[`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`&`$\x82\x01R\x7FOwnable: new owner is the zero a`D\x82\x01Reddress`\xD0\x1B`d\x82\x01R`\x84\x90\xFD[P4a\0\xE4W`@6`\x03\x19\x01\x12a\0\xE4W\x80a\x01\xC8a\x04\xB2V[a\x01\xD0a\x04\xC8V[\x90a\x01\xD9a\x05~V[`\x01`\x01`\xA0\x1B\x03\x16\x90\x81;\x15a\x02>W`@Qc\x1B,\xE7\xF3`\xE1\x1B\x81R`\x01`\x01`\xA0\x1B\x03\x90\x91\x16`\x04\x82\x01R\x90\x82\x90\x82\x90`$\x90\x82\x90\x84\x90Z\xF1\x80\x15a\x023Wa\x02\"WP\xF3[\x81a\x02,\x91a\x04\xDEV[a\0\xE4W\x80\xF3[`@Q=\x84\x82>=\x90\xFD[PP\xFD[P``6`\x03\x19\x01\x12a\0\xE4W\x80a\x02Xa\x04\xB2V[a\x02`a\x04\xC8V[`D5\x91g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x83\x11a\x03;W6`#\x84\x01\x12\x15a\x03;W\x82`\x04\x015\x90a\x02\x8D\x82a\x05\x14V[\x91a\x02\x9B`@Q\x93\x84a\x04\xDEV[\x80\x83R` \x83\x01\x946`$\x83\x83\x01\x01\x11a\x037W\x81\x87\x92`$` \x93\x01\x887\x84\x01\x01Ra\x02\xC6a\x05~V[`\x01`\x01`\xA0\x1B\x03\x16\x80;\x15a\x033W\x84\x92`d`@Q\x80\x96\x81\x95\x82\x94c'\x8FyC`\xE1\x1B\x84R`\x01\x80`\xA0\x1B\x03\x16`\x04\x84\x01R`@`$\x84\x01RQ\x80\x91\x81`D\x85\x01R\x84\x84\x01^\x81\x81\x01\x83\x01\x87\x90R`\x1F\x01`\x1F\x19\x16\x81\x01\x03\x01\x914\x90Z\xF1\x80\x15a\x023Wa\x02\"WP\xF3[\x84\x80\xFD[\x86\x80\xFD[PPP\xFD[P4a\0\xE4W\x80`\x03\x196\x01\x12a\0\xE4WT`@Q`\x01`\x01`\xA0\x1B\x03\x90\x91\x16\x81R` \x90\xF3[P4a\x03\xF5W`@6`\x03\x19\x01\x12a\x03\xF5Wa\x03\x81a\x04\xB2V[a\x03\x89a\x04\xC8V[\x90a\x03\x92a\x05~V[`\x01`\x01`\xA0\x1B\x03\x16\x90\x81;\x15a\x03\xF5W`@Qc\x08\xF2\x83\x97`\xE4\x1B\x81R`\x01`\x01`\xA0\x1B\x03\x90\x91\x16`\x04\x82\x01R\x90_\x90\x82\x90`$\x90\x82\x90\x84\x90Z\xF1\x80\x15a\x03\xEAWa\x03\xDCWP\x80\xF3[a\x03\xE8\x91P_\x90a\x04\xDEV[\0[`@Q=_\x82>=\x90\xFD[_\x80\xFD[4a\x03\xF5W_6`\x03\x19\x01\x12a\x03\xF5Wa\x04\x11a\x05~V[_\x80T`\x01`\x01`\xA0\x1B\x03\x19\x81\x16\x82U`\x01`\x01`\xA0\x1B\x03\x16\x7F\x8B\xE0\x07\x9CS\x16Y\x14\x13D\xCD\x1F\xD0\xA4\xF2\x84\x19I\x7F\x97\"\xA3\xDA\xAF\xE3\xB4\x18okdW\xE0\x82\x80\xA3\0[4a\x03\xF5W` 6`\x03\x19\x01\x12a\x03\xF5W_\x90\x81\x90`\x04\x90`\x01`\x01`\xA0\x1B\x03a\x04xa\x04\xB2V[c\\`\xDA\x1B`\xE0\x1B\x83R\x16Z\xFAa\x04\x8Da\x050V[\x90\x15a\x03\xF5W\x80Q` \x91`\x01`\x01`\xA0\x1B\x03\x91a\0\xD9\x91\x90\x81\x01\x84\x01\x90\x84\x01a\x05_V[`\x045\x90`\x01`\x01`\xA0\x1B\x03\x82\x16\x82\x03a\x03\xF5WV[`$5\x90`\x01`\x01`\xA0\x1B\x03\x82\x16\x82\x03a\x03\xF5WV[\x90`\x1F\x80\x19\x91\x01\x16\x81\x01\x90\x81\x10g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x82\x11\x17a\x05\0W`@RV[cNH{q`\xE0\x1B_R`A`\x04R`$_\xFD[g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x81\x11a\x05\0W`\x1F\x01`\x1F\x19\x16` \x01\x90V[=\x15a\x05ZW=\x90a\x05A\x82a\x05\x14V[\x91a\x05O`@Q\x93\x84a\x04\xDEV[\x82R=_` \x84\x01>V[``\x90V[\x90\x81` \x91\x03\x12a\x03\xF5WQ`\x01`\x01`\xA0\x1B\x03\x81\x16\x81\x03a\x03\xF5W\x90V[_T`\x01`\x01`\xA0\x1B\x03\x163\x03a\x05\x91WV[`d`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R` `$\x82\x01R\x7FOwnable: caller is not the owner`D\x82\x01R\xFD\xFE\xA2dipfsX\"\x12 \xF5\xEC\xD6\xDD\xA3\x9Cn\x81\x05D\xB0\x8C\xC0B\xCA\n{\xE4%\xBE\xDF\xDEG\x0E\x05\x83IRv'aNdsolcC\0\x08\x1B\x003",
     );
     /// The runtime bytecode of the contract, as deployed on the network.
     ///
     /// ```text
-    ///0x60806040526004361061007b5760003560e01c80639623609d1161004e5780639623609d1461011157806399a88ec414610124578063f2fde38b14610144578063f3b7dead1461016457600080fd5b8063204e1c7a14610080578063715018a6146100bc5780637eff275e146100d35780638da5cb5b146100f3575b600080fd5b34801561008c57600080fd5b506100a061009b366004610499565b610184565b6040516001600160a01b03909116815260200160405180910390f35b3480156100c857600080fd5b506100d1610215565b005b3480156100df57600080fd5b506100d16100ee3660046104bd565b610229565b3480156100ff57600080fd5b506000546001600160a01b03166100a0565b6100d161011f36600461050c565b610291565b34801561013057600080fd5b506100d161013f3660046104bd565b610300565b34801561015057600080fd5b506100d161015f366004610499565b610336565b34801561017057600080fd5b506100a061017f366004610499565b6103b4565b6000806000836001600160a01b03166040516101aa90635c60da1b60e01b815260040190565b600060405180830381855afa9150503d80600081146101e5576040519150601f19603f3d011682016040523d82523d6000602084013e6101ea565b606091505b5091509150816101f957600080fd5b8080602001905181019061020d91906105e2565b949350505050565b61021d6103da565b6102276000610434565b565b6102316103da565b6040516308f2839760e41b81526001600160a01b038281166004830152831690638f283970906024015b600060405180830381600087803b15801561027557600080fd5b505af1158015610289573d6000803e3d6000fd5b505050505050565b6102996103da565b60405163278f794360e11b81526001600160a01b03841690634f1ef2869034906102c990869086906004016105ff565b6000604051808303818588803b1580156102e257600080fd5b505af11580156102f6573d6000803e3d6000fd5b5050505050505050565b6103086103da565b604051631b2ce7f360e11b81526001600160a01b038281166004830152831690633659cfe69060240161025b565b61033e6103da565b6001600160a01b0381166103a85760405162461bcd60e51b815260206004820152602660248201527f4f776e61626c653a206e6577206f776e657220697320746865207a65726f206160448201526564647265737360d01b60648201526084015b60405180910390fd5b6103b181610434565b50565b6000806000836001600160a01b03166040516101aa906303e1469160e61b815260040190565b6000546001600160a01b031633146102275760405162461bcd60e51b815260206004820181905260248201527f4f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e6572604482015260640161039f565b600080546001600160a01b038381166001600160a01b0319831681178455604051919092169283917f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e09190a35050565b6001600160a01b03811681146103b157600080fd5b6000602082840312156104ab57600080fd5b81356104b681610484565b9392505050565b600080604083850312156104d057600080fd5b82356104db81610484565b915060208301356104eb81610484565b809150509250929050565b634e487b7160e01b600052604160045260246000fd5b60008060006060848603121561052157600080fd5b833561052c81610484565b9250602084013561053c81610484565b9150604084013567ffffffffffffffff8082111561055957600080fd5b818601915086601f83011261056d57600080fd5b81358181111561057f5761057f6104f6565b604051601f8201601f19908116603f011681019083821181831017156105a7576105a76104f6565b816040528281528960208487010111156105c057600080fd5b8260208601602083013760006020848301015280955050505050509250925092565b6000602082840312156105f457600080fd5b81516104b681610484565b60018060a01b038316815260006020604081840152835180604085015260005b8181101561063b5785810183015185820160600152820161061f565b8181111561064d576000606083870101525b50601f01601f19169290920160600194935050505056fea2646970667358221220d2defa3201be949322800c3098b574d26d9d6a6cbac4560c147ae4c675a9d47a64736f6c634300080c0033
+    ///0x6080806040526004361015610012575f80fd5b5f905f3560e01c908163204e1c7a1461045057508063715018a6146103f95780637eff275e146103675780638da5cb5b146103405780639623609d1461024257806399a88ec4146101ad578063f2fde38b146100e75763f3b7dead14610076575f80fd5b346100e45760203660031901126100e457808060046001600160a01b0361009b6104b2565b6040516303e1469160e61b815291165afa6100b4610530565b90156100e25780516020916001600160a01b03916100d991908101840190840161055f565b16604051908152f35b505b80fd5b50346100e45760203660031901126100e4576101016104b2565b61010961057e565b6001600160a01b031680156101595781546001600160a01b03198116821783556001600160a01b03167f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e08380a380f35b60405162461bcd60e51b815260206004820152602660248201527f4f776e61626c653a206e6577206f776e657220697320746865207a65726f206160448201526564647265737360d01b6064820152608490fd5b50346100e45760403660031901126100e457806101c86104b2565b6101d06104c8565b906101d961057e565b6001600160a01b031690813b1561023e57604051631b2ce7f360e11b81526001600160a01b0390911660048201529082908290602490829084905af18015610233576102225750f35b8161022c916104de565b6100e45780f35b6040513d84823e3d90fd5b5050fd5b5060603660031901126100e457806102586104b2565b6102606104c8565b6044359167ffffffffffffffff831161033b573660238401121561033b5782600401359061028d82610514565b9161029b60405193846104de565b80835260208301943660248383010111610337578187926024602093018837840101526102c661057e565b6001600160a01b0316803b15610333578492606460405180968195829463278f794360e11b845260018060a01b03166004840152604060248401525180918160448501528484015e8181018301879052601f01601f1916810103019134905af18015610233576102225750f35b8480fd5b8680fd5b505050fd5b50346100e457806003193601126100e457546040516001600160a01b039091168152602090f35b50346103f55760403660031901126103f5576103816104b2565b6103896104c8565b9061039261057e565b6001600160a01b031690813b156103f5576040516308f2839760e41b81526001600160a01b039091166004820152905f908290602490829084905af180156103ea576103dc575080f35b6103e891505f906104de565b005b6040513d5f823e3d90fd5b5f80fd5b346103f5575f3660031901126103f55761041161057e565b5f80546001600160a01b0319811682556001600160a01b03167f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e08280a3005b346103f55760203660031901126103f5575f9081906004906001600160a01b036104786104b2565b635c60da1b60e01b8352165afa61048d610530565b90156103f55780516020916001600160a01b03916100d991908101840190840161055f565b600435906001600160a01b03821682036103f557565b602435906001600160a01b03821682036103f557565b90601f8019910116810190811067ffffffffffffffff82111761050057604052565b634e487b7160e01b5f52604160045260245ffd5b67ffffffffffffffff811161050057601f01601f191660200190565b3d1561055a573d9061054182610514565b9161054f60405193846104de565b82523d5f602084013e565b606090565b908160209103126103f557516001600160a01b03811681036103f55790565b5f546001600160a01b0316330361059157565b606460405162461bcd60e51b815260206004820152602060248201527f4f776e61626c653a2063616c6c6572206973206e6f7420746865206f776e65726044820152fdfea2646970667358221220f5ecd6dda39c6e810544b08cc042ca0a7be425bedfde470e058349527627614e64736f6c634300081b0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static DEPLOYED_BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"`\x80`@R`\x046\x10a\0{W`\x005`\xE0\x1C\x80c\x96#`\x9D\x11a\0NW\x80c\x96#`\x9D\x14a\x01\x11W\x80c\x99\xA8\x8E\xC4\x14a\x01$W\x80c\xF2\xFD\xE3\x8B\x14a\x01DW\x80c\xF3\xB7\xDE\xAD\x14a\x01dW`\0\x80\xFD[\x80c N\x1Cz\x14a\0\x80W\x80cqP\x18\xA6\x14a\0\xBCW\x80c~\xFF'^\x14a\0\xD3W\x80c\x8D\xA5\xCB[\x14a\0\xF3W[`\0\x80\xFD[4\x80\x15a\0\x8CW`\0\x80\xFD[Pa\0\xA0a\0\x9B6`\x04a\x04\x99V[a\x01\x84V[`@Q`\x01`\x01`\xA0\x1B\x03\x90\x91\x16\x81R` \x01`@Q\x80\x91\x03\x90\xF3[4\x80\x15a\0\xC8W`\0\x80\xFD[Pa\0\xD1a\x02\x15V[\0[4\x80\x15a\0\xDFW`\0\x80\xFD[Pa\0\xD1a\0\xEE6`\x04a\x04\xBDV[a\x02)V[4\x80\x15a\0\xFFW`\0\x80\xFD[P`\0T`\x01`\x01`\xA0\x1B\x03\x16a\0\xA0V[a\0\xD1a\x01\x1F6`\x04a\x05\x0CV[a\x02\x91V[4\x80\x15a\x010W`\0\x80\xFD[Pa\0\xD1a\x01?6`\x04a\x04\xBDV[a\x03\0V[4\x80\x15a\x01PW`\0\x80\xFD[Pa\0\xD1a\x01_6`\x04a\x04\x99V[a\x036V[4\x80\x15a\x01pW`\0\x80\xFD[Pa\0\xA0a\x01\x7F6`\x04a\x04\x99V[a\x03\xB4V[`\0\x80`\0\x83`\x01`\x01`\xA0\x1B\x03\x16`@Qa\x01\xAA\x90c\\`\xDA\x1B`\xE0\x1B\x81R`\x04\x01\x90V[`\0`@Q\x80\x83\x03\x81\x85Z\xFA\x91PP=\x80`\0\x81\x14a\x01\xE5W`@Q\x91P`\x1F\x19`?=\x01\x16\x82\x01`@R=\x82R=`\0` \x84\x01>a\x01\xEAV[``\x91P[P\x91P\x91P\x81a\x01\xF9W`\0\x80\xFD[\x80\x80` \x01\x90Q\x81\x01\x90a\x02\r\x91\x90a\x05\xE2V[\x94\x93PPPPV[a\x02\x1Da\x03\xDAV[a\x02'`\0a\x044V[V[a\x021a\x03\xDAV[`@Qc\x08\xF2\x83\x97`\xE4\x1B\x81R`\x01`\x01`\xA0\x1B\x03\x82\x81\x16`\x04\x83\x01R\x83\x16\x90c\x8F(9p\x90`$\x01[`\0`@Q\x80\x83\x03\x81`\0\x87\x80;\x15\x80\x15a\x02uW`\0\x80\xFD[PZ\xF1\x15\x80\x15a\x02\x89W=`\0\x80>=`\0\xFD[PPPPPPV[a\x02\x99a\x03\xDAV[`@Qc'\x8FyC`\xE1\x1B\x81R`\x01`\x01`\xA0\x1B\x03\x84\x16\x90cO\x1E\xF2\x86\x904\x90a\x02\xC9\x90\x86\x90\x86\x90`\x04\x01a\x05\xFFV[`\0`@Q\x80\x83\x03\x81\x85\x88\x80;\x15\x80\x15a\x02\xE2W`\0\x80\xFD[PZ\xF1\x15\x80\x15a\x02\xF6W=`\0\x80>=`\0\xFD[PPPPPPPPV[a\x03\x08a\x03\xDAV[`@Qc\x1B,\xE7\xF3`\xE1\x1B\x81R`\x01`\x01`\xA0\x1B\x03\x82\x81\x16`\x04\x83\x01R\x83\x16\x90c6Y\xCF\xE6\x90`$\x01a\x02[V[a\x03>a\x03\xDAV[`\x01`\x01`\xA0\x1B\x03\x81\x16a\x03\xA8W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`&`$\x82\x01R\x7FOwnable: new owner is the zero a`D\x82\x01Reddress`\xD0\x1B`d\x82\x01R`\x84\x01[`@Q\x80\x91\x03\x90\xFD[a\x03\xB1\x81a\x044V[PV[`\0\x80`\0\x83`\x01`\x01`\xA0\x1B\x03\x16`@Qa\x01\xAA\x90c\x03\xE1F\x91`\xE6\x1B\x81R`\x04\x01\x90V[`\0T`\x01`\x01`\xA0\x1B\x03\x163\x14a\x02'W`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01\x81\x90R`$\x82\x01R\x7FOwnable: caller is not the owner`D\x82\x01R`d\x01a\x03\x9FV[`\0\x80T`\x01`\x01`\xA0\x1B\x03\x83\x81\x16`\x01`\x01`\xA0\x1B\x03\x19\x83\x16\x81\x17\x84U`@Q\x91\x90\x92\x16\x92\x83\x91\x7F\x8B\xE0\x07\x9CS\x16Y\x14\x13D\xCD\x1F\xD0\xA4\xF2\x84\x19I\x7F\x97\"\xA3\xDA\xAF\xE3\xB4\x18okdW\xE0\x91\x90\xA3PPV[`\x01`\x01`\xA0\x1B\x03\x81\x16\x81\x14a\x03\xB1W`\0\x80\xFD[`\0` \x82\x84\x03\x12\x15a\x04\xABW`\0\x80\xFD[\x815a\x04\xB6\x81a\x04\x84V[\x93\x92PPPV[`\0\x80`@\x83\x85\x03\x12\x15a\x04\xD0W`\0\x80\xFD[\x825a\x04\xDB\x81a\x04\x84V[\x91P` \x83\x015a\x04\xEB\x81a\x04\x84V[\x80\x91PP\x92P\x92\x90PV[cNH{q`\xE0\x1B`\0R`A`\x04R`$`\0\xFD[`\0\x80`\0``\x84\x86\x03\x12\x15a\x05!W`\0\x80\xFD[\x835a\x05,\x81a\x04\x84V[\x92P` \x84\x015a\x05<\x81a\x04\x84V[\x91P`@\x84\x015g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x80\x82\x11\x15a\x05YW`\0\x80\xFD[\x81\x86\x01\x91P\x86`\x1F\x83\x01\x12a\x05mW`\0\x80\xFD[\x815\x81\x81\x11\x15a\x05\x7FWa\x05\x7Fa\x04\xF6V[`@Q`\x1F\x82\x01`\x1F\x19\x90\x81\x16`?\x01\x16\x81\x01\x90\x83\x82\x11\x81\x83\x10\x17\x15a\x05\xA7Wa\x05\xA7a\x04\xF6V[\x81`@R\x82\x81R\x89` \x84\x87\x01\x01\x11\x15a\x05\xC0W`\0\x80\xFD[\x82` \x86\x01` \x83\x017`\0` \x84\x83\x01\x01R\x80\x95PPPPPP\x92P\x92P\x92V[`\0` \x82\x84\x03\x12\x15a\x05\xF4W`\0\x80\xFD[\x81Qa\x04\xB6\x81a\x04\x84V[`\x01\x80`\xA0\x1B\x03\x83\x16\x81R`\0` `@\x81\x84\x01R\x83Q\x80`@\x85\x01R`\0[\x81\x81\x10\x15a\x06;W\x85\x81\x01\x83\x01Q\x85\x82\x01``\x01R\x82\x01a\x06\x1FV[\x81\x81\x11\x15a\x06MW`\0``\x83\x87\x01\x01R[P`\x1F\x01`\x1F\x19\x16\x92\x90\x92\x01``\x01\x94\x93PPPPV\xFE\xA2dipfsX\"\x12 \xD2\xDE\xFA2\x01\xBE\x94\x93\"\x80\x0C0\x98\xB5t\xD2m\x9Djl\xBA\xC4V\x0C\x14z\xE4\xC6u\xA9\xD4zdsolcC\0\x08\x0C\x003",
+        b"`\x80\x80`@R`\x046\x10\x15a\0\x12W_\x80\xFD[_\x90_5`\xE0\x1C\x90\x81c N\x1Cz\x14a\x04PWP\x80cqP\x18\xA6\x14a\x03\xF9W\x80c~\xFF'^\x14a\x03gW\x80c\x8D\xA5\xCB[\x14a\x03@W\x80c\x96#`\x9D\x14a\x02BW\x80c\x99\xA8\x8E\xC4\x14a\x01\xADW\x80c\xF2\xFD\xE3\x8B\x14a\0\xE7Wc\xF3\xB7\xDE\xAD\x14a\0vW_\x80\xFD[4a\0\xE4W` 6`\x03\x19\x01\x12a\0\xE4W\x80\x80`\x04`\x01`\x01`\xA0\x1B\x03a\0\x9Ba\x04\xB2V[`@Qc\x03\xE1F\x91`\xE6\x1B\x81R\x91\x16Z\xFAa\0\xB4a\x050V[\x90\x15a\0\xE2W\x80Q` \x91`\x01`\x01`\xA0\x1B\x03\x91a\0\xD9\x91\x90\x81\x01\x84\x01\x90\x84\x01a\x05_V[\x16`@Q\x90\x81R\xF3[P[\x80\xFD[P4a\0\xE4W` 6`\x03\x19\x01\x12a\0\xE4Wa\x01\x01a\x04\xB2V[a\x01\ta\x05~V[`\x01`\x01`\xA0\x1B\x03\x16\x80\x15a\x01YW\x81T`\x01`\x01`\xA0\x1B\x03\x19\x81\x16\x82\x17\x83U`\x01`\x01`\xA0\x1B\x03\x16\x7F\x8B\xE0\x07\x9CS\x16Y\x14\x13D\xCD\x1F\xD0\xA4\xF2\x84\x19I\x7F\x97\"\xA3\xDA\xAF\xE3\xB4\x18okdW\xE0\x83\x80\xA3\x80\xF3[`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`&`$\x82\x01R\x7FOwnable: new owner is the zero a`D\x82\x01Reddress`\xD0\x1B`d\x82\x01R`\x84\x90\xFD[P4a\0\xE4W`@6`\x03\x19\x01\x12a\0\xE4W\x80a\x01\xC8a\x04\xB2V[a\x01\xD0a\x04\xC8V[\x90a\x01\xD9a\x05~V[`\x01`\x01`\xA0\x1B\x03\x16\x90\x81;\x15a\x02>W`@Qc\x1B,\xE7\xF3`\xE1\x1B\x81R`\x01`\x01`\xA0\x1B\x03\x90\x91\x16`\x04\x82\x01R\x90\x82\x90\x82\x90`$\x90\x82\x90\x84\x90Z\xF1\x80\x15a\x023Wa\x02\"WP\xF3[\x81a\x02,\x91a\x04\xDEV[a\0\xE4W\x80\xF3[`@Q=\x84\x82>=\x90\xFD[PP\xFD[P``6`\x03\x19\x01\x12a\0\xE4W\x80a\x02Xa\x04\xB2V[a\x02`a\x04\xC8V[`D5\x91g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x83\x11a\x03;W6`#\x84\x01\x12\x15a\x03;W\x82`\x04\x015\x90a\x02\x8D\x82a\x05\x14V[\x91a\x02\x9B`@Q\x93\x84a\x04\xDEV[\x80\x83R` \x83\x01\x946`$\x83\x83\x01\x01\x11a\x037W\x81\x87\x92`$` \x93\x01\x887\x84\x01\x01Ra\x02\xC6a\x05~V[`\x01`\x01`\xA0\x1B\x03\x16\x80;\x15a\x033W\x84\x92`d`@Q\x80\x96\x81\x95\x82\x94c'\x8FyC`\xE1\x1B\x84R`\x01\x80`\xA0\x1B\x03\x16`\x04\x84\x01R`@`$\x84\x01RQ\x80\x91\x81`D\x85\x01R\x84\x84\x01^\x81\x81\x01\x83\x01\x87\x90R`\x1F\x01`\x1F\x19\x16\x81\x01\x03\x01\x914\x90Z\xF1\x80\x15a\x023Wa\x02\"WP\xF3[\x84\x80\xFD[\x86\x80\xFD[PPP\xFD[P4a\0\xE4W\x80`\x03\x196\x01\x12a\0\xE4WT`@Q`\x01`\x01`\xA0\x1B\x03\x90\x91\x16\x81R` \x90\xF3[P4a\x03\xF5W`@6`\x03\x19\x01\x12a\x03\xF5Wa\x03\x81a\x04\xB2V[a\x03\x89a\x04\xC8V[\x90a\x03\x92a\x05~V[`\x01`\x01`\xA0\x1B\x03\x16\x90\x81;\x15a\x03\xF5W`@Qc\x08\xF2\x83\x97`\xE4\x1B\x81R`\x01`\x01`\xA0\x1B\x03\x90\x91\x16`\x04\x82\x01R\x90_\x90\x82\x90`$\x90\x82\x90\x84\x90Z\xF1\x80\x15a\x03\xEAWa\x03\xDCWP\x80\xF3[a\x03\xE8\x91P_\x90a\x04\xDEV[\0[`@Q=_\x82>=\x90\xFD[_\x80\xFD[4a\x03\xF5W_6`\x03\x19\x01\x12a\x03\xF5Wa\x04\x11a\x05~V[_\x80T`\x01`\x01`\xA0\x1B\x03\x19\x81\x16\x82U`\x01`\x01`\xA0\x1B\x03\x16\x7F\x8B\xE0\x07\x9CS\x16Y\x14\x13D\xCD\x1F\xD0\xA4\xF2\x84\x19I\x7F\x97\"\xA3\xDA\xAF\xE3\xB4\x18okdW\xE0\x82\x80\xA3\0[4a\x03\xF5W` 6`\x03\x19\x01\x12a\x03\xF5W_\x90\x81\x90`\x04\x90`\x01`\x01`\xA0\x1B\x03a\x04xa\x04\xB2V[c\\`\xDA\x1B`\xE0\x1B\x83R\x16Z\xFAa\x04\x8Da\x050V[\x90\x15a\x03\xF5W\x80Q` \x91`\x01`\x01`\xA0\x1B\x03\x91a\0\xD9\x91\x90\x81\x01\x84\x01\x90\x84\x01a\x05_V[`\x045\x90`\x01`\x01`\xA0\x1B\x03\x82\x16\x82\x03a\x03\xF5WV[`$5\x90`\x01`\x01`\xA0\x1B\x03\x82\x16\x82\x03a\x03\xF5WV[\x90`\x1F\x80\x19\x91\x01\x16\x81\x01\x90\x81\x10g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x82\x11\x17a\x05\0W`@RV[cNH{q`\xE0\x1B_R`A`\x04R`$_\xFD[g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x81\x11a\x05\0W`\x1F\x01`\x1F\x19\x16` \x01\x90V[=\x15a\x05ZW=\x90a\x05A\x82a\x05\x14V[\x91a\x05O`@Q\x93\x84a\x04\xDEV[\x82R=_` \x84\x01>V[``\x90V[\x90\x81` \x91\x03\x12a\x03\xF5WQ`\x01`\x01`\xA0\x1B\x03\x81\x16\x81\x03a\x03\xF5W\x90V[_T`\x01`\x01`\xA0\x1B\x03\x163\x03a\x05\x91WV[`d`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R` `$\x82\x01R\x7FOwnable: caller is not the owner`D\x82\x01R\xFD\xFE\xA2dipfsX\"\x12 \xF5\xEC\xD6\xDD\xA3\x9Cn\x81\x05D\xB0\x8C\xC0B\xCA\n{\xE4%\xBE\xDF\xDEG\x0E\x05\x83IRv'aNdsolcC\0\x08\x1B\x003",
     );
     /**Event with signature `OwnershipTransferred(address,address)` and selector `0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0`.
     ```solidity
     event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
     ```*/
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     #[derive(Clone)]
     pub struct OwnershipTransferred {
         #[allow(missing_docs)]
@@ -206,7 +216,12 @@ pub mod ProxyAdmin {
         #[allow(missing_docs)]
         pub newOwner: alloy::sol_types::private::Address,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         #[automatically_derived]
@@ -301,17 +316,22 @@ pub mod ProxyAdmin {
     ```solidity
     function changeProxyAdmin(address proxy, address newAdmin) external;
     ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct changeProxyAdminCall {
         pub proxy: alloy::sol_types::private::Address,
         pub newAdmin: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`changeProxyAdmin(address,address)`](changeProxyAdminCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct changeProxyAdminReturn {}
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -426,18 +446,23 @@ pub mod ProxyAdmin {
     ```solidity
     function getProxyAdmin(address proxy) external view returns (address);
     ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getProxyAdminCall {
         pub proxy: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`getProxyAdmin(address)`](getProxyAdminCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getProxyAdminReturn {
         pub _0: alloy::sol_types::private::Address,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -537,18 +562,23 @@ pub mod ProxyAdmin {
     ```solidity
     function getProxyImplementation(address proxy) external view returns (address);
     ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getProxyImplementationCall {
         pub proxy: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`getProxyImplementation(address)`](getProxyImplementationCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getProxyImplementationReturn {
         pub _0: alloy::sol_types::private::Address,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -648,16 +678,21 @@ pub mod ProxyAdmin {
     ```solidity
     function owner() external view returns (address);
     ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct ownerCall {}
     ///Container type for the return parameters of the [`owner()`](ownerCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct ownerReturn {
         pub _0: alloy::sol_types::private::Address,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -753,14 +788,19 @@ pub mod ProxyAdmin {
     ```solidity
     function renounceOwnership() external;
     ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct renounceOwnershipCall {}
     ///Container type for the return parameters of the [`renounceOwnership()`](renounceOwnershipCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct renounceOwnershipReturn {}
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -856,16 +896,21 @@ pub mod ProxyAdmin {
     ```solidity
     function transferOwnership(address newOwner) external;
     ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct transferOwnershipCall {
         pub newOwner: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`transferOwnership(address)`](transferOwnershipCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct transferOwnershipReturn {}
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -965,17 +1010,22 @@ pub mod ProxyAdmin {
     ```solidity
     function upgrade(address proxy, address implementation) external;
     ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct upgradeCall {
         pub proxy: alloy::sol_types::private::Address,
         pub implementation: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`upgrade(address,address)`](upgradeCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct upgradeReturn {}
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -1090,7 +1140,7 @@ pub mod ProxyAdmin {
     ```solidity
     function upgradeAndCall(address proxy, address implementation, bytes memory data) external payable;
     ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct upgradeAndCallCall {
         pub proxy: alloy::sol_types::private::Address,
@@ -1098,10 +1148,15 @@ pub mod ProxyAdmin {
         pub data: alloy::sol_types::private::Bytes,
     }
     ///Container type for the return parameters of the [`upgradeAndCall(address,address,bytes)`](upgradeAndCallCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct upgradeAndCallReturn {}
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {

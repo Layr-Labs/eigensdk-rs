@@ -2567,7 +2567,6 @@ dependencies = [
  "eigen-types",
  "eigen-utils",
  "once_cell",
- "serial_test",
  "thiserror",
  "tokio",
  "tracing",
@@ -2817,11 +2816,14 @@ dependencies = [
 name = "eigen-testing-utils"
 version = "0.1.1"
 dependencies = [
+ "alloy",
  "alloy-primitives",
  "alloy-provider",
  "alloy-rpc-types",
+ "alloy-signer-local",
  "alloy-transport",
  "eigen-utils",
+ "eyre",
  "serde",
  "serde_json",
  "testcontainers",

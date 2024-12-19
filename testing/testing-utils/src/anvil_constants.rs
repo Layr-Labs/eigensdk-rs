@@ -1,9 +1,36 @@
 //! Anvil utilities
+use std::str::FromStr;
+
+use alloy::sol;
 use alloy_primitives::{address, Address};
+use alloy_signer_local::PrivateKeySigner;
+use eigen_utils::delegationmanager::DelegationManager;
 use eigen_utils::{
-    contractsregistry::ContractsRegistry::{self, contractsReturn},
     get_provider,
+    get_signer,
 };
+sol! {
+    #[derive(Debug)]
+    #[allow(missing_docs)]
+    #[sol(rpc)]
+    contract ContractsRegistry {
+        mapping(string => address) public contracts;
+        mapping(uint256 => string) public contractNames;
+        uint256 public contractCount;
+
+        function registerContract(string memory name, address _contract) public {
+            // we treat redeploys as a bug since this is only meant to be used for testing.
+            // If new contracts need to be deployed just start from a fresh anvil state.
+            require(contracts[name] == address(0), "contract already registered");
+            contracts[name] = _contract;
+            contractNames[contractCount] = name;
+            contractCount++;
+        }
+
+    }
+}
+use eyre::Result;
+use ContractsRegistry::contractsReturn;
 
 /// Local anvil ContractsRegistry which contains a mapping of all locally deployed EL contracts.
 pub const CONTRACTS_REGISTRY: Address = address!("5FbDB2315678afecb367f032d93F642f64180aa3");
@@ -136,7 +163,7 @@ pub async fn get_proxy_admin(rpc_url: String) -> Address {
     address
 }
 
-/// Avs Directory contract address
+/// Rewards contract address
 pub async fn get_rewards_coordinator_address(rpc_url: String) -> Address {
     let contracts_registry = ContractsRegistry::new(CONTRACTS_REGISTRY, get_provider(&rpc_url));
 
@@ -149,4 +176,47 @@ pub async fn get_rewards_coordinator_address(rpc_url: String) -> Address {
     let contractsReturn { _0: address } = val;
 
     address
+}
+
+/// Allocation Manager contract address
+pub async fn get_allocation_manager_address(rpc_url: String) -> Address {
+    let contracts_registry = ContractsRegistry::new(CONTRACTS_REGISTRY, get_provider(&rpc_url));
+
+    let val = contracts_registry
+        .contracts("allocationManager".to_string())
+        .call()
+        .await
+        .unwrap();
+
+    let contractsReturn { _0: address } = val;
+
+    address
+}
+
+/// Register an operator in the DelegationManager contract. If its already registered, it will not do anything.
+pub async fn register_operator_to_el_if_not_registered(
+    pvt_key: &str,
+    rpc_url: &str,
+    delegation_approver: Address,
+    metadata_uri: &str,
+) -> Result<()> {
+    let wallet = PrivateKeySigner::from_str(pvt_key)?;
+    let signer = get_signer(pvt_key, rpc_url);
+    let contract_instance = DelegationManager::new(
+        get_delegation_manager_address(rpc_url.to_string()).await,
+        signer,
+    );
+    let is_registered = contract_instance
+        .isOperator(wallet.address())
+        .call()
+        .await?
+        ._0;
+    if !is_registered {
+        let register_instance = contract_instance
+            .registerAsOperator(delegation_approver, 1, metadata_uri.to_string())
+            .send()
+            .await?;
+        register_instance.get_receipt().await?;
+    }
+    Ok(())
 }
