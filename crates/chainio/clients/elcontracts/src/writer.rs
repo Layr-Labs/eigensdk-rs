@@ -1,7 +1,6 @@
 use crate::error::ElContractsError;
 use crate::reader::ELChainReader;
-use alloy::rpc::types::eth::TransactionReceipt;
-use alloy_primitives::{Address, Bytes, FixedBytes, TxHash, U256};
+use alloy_primitives::{ruint::aliases::U256, Address, Bytes, FixedBytes, TxHash};
 pub use eigen_types::operator::Operator;
 use eigen_utils::{
     allocationmanager::{AllocationManager, IAllocationManagerTypes},
@@ -384,12 +383,15 @@ impl ELChainWriter {
     /// Check if a claim would currently pass the validations in `process_claim`
     ///
     /// # Arguments
+    ///
     /// * `claim` - The claim to check
     ///
     /// # Returns
+    ///
     /// * `Result<bool, ElContractsError>` - True if the claim would pass the validations, false otherwise
     ///
     /// # Errors
+    ///
     /// * `ElContractsError` - if the call to the contract fails. Also fails if no root has been submitted yet.
     pub async fn check_claim(&self, claim: RewardsMerkleClaim) -> Result<bool, ElContractsError> {
         let provider = get_signer(&self.signer, &self.provider);
@@ -411,13 +413,16 @@ impl ELChainWriter {
     /// Get the cumulative claimed amount for a given earner address and token.
     ///
     /// # Arguments
+    ///
     /// * `earner_address` - The address of the earner.
     /// * `token` - The address of the token.
     ///
     /// # Returns
+    ///
     /// * `Result<U256, ElContractsError>` - The cumulative claimed amount if the call is successful.
     ///
     /// # Errors
+    ///
     /// * `ElContractsError` - if the call to the contract fails.
     pub async fn get_cumulative_claimed(
         &self,
@@ -442,36 +447,41 @@ impl ELChainWriter {
         Ok(cumulative_claim_ret)
     }
 
-    /*
-    func (w *ChainWriter) RemovePermission(
-        ctx context.Context,
-        request RemovePermissionRequest,
-    ) (*gethtypes.Receipt, error) {
-        txOpts, err := w.txMgr.GetNoSendTxOpts()
-        if err != nil {
-            return nil, utils.WrapError("failed to get no-send tx opts", err)
-        }
-        tx, err := w.NewRemovePermissionTx(txOpts, request)
-        if err != nil {
-            return nil, utils.WrapError("failed to create NewRemovePermissionTx", err)
-        }
-        return w.txMgr.Send(ctx, tx, request.WaitForReceipt)
-    }
-    */
-
+    /// Removes permission of an appointee on a target contract, given an account address.
+    ///
+    /// # Arguments
+    ///
+    /// * `account_address` - account address from which to remove permission
+    /// * `appointee_address` - Address to remove
+    /// * `target` - contract address that the appointee has permission to
+    /// * `selector` - The selector of the function to remove permissions for
+    ///
+    /// # Returns
+    ///
+    /// * `TxHash` - The transaction hash of the generated transaction.
+    ///
+    /// # Errors
+    ///
+    /// * `ElContractsError` - if the call to the contract fails.
     pub async fn remove_permission(
         &self,
         account_address: Address,
         appointee_address: Address,
         target: Address,
-        selector: [u8; 4],
-        wait_for_receipt: bool,
-        //request: RemovePermissionRequest,
-    ) -> Result<TransactionReceipt, ElContractsError> {
-        //let tx_opts = self.tx_mgr.get_no_send_tx_opts()?;
-        //let tx = self.new_remove_permission_tx(tx_opts, request)?;
-        //self.tx_mgr.send(ctx, tx, request.wait_for_receipt)
-        todo!("remove_permission")
+        selector: FixedBytes<4>,
+    ) -> Result<TxHash, ElContractsError> {
+        let provider = get_signer(&self.signer, &self.provider);
+
+        let permission_controller_contract =
+            PermissionController::new(self.permission_controller, provider);
+
+        let tx = permission_controller_contract
+            .removeAppointee(account_address, appointee_address, target, selector)
+            .send()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        Ok(*tx.tx_hash())
     }
 
     /// Set an appointee for a given account. Only the admin of the account can set an appointee.
@@ -507,10 +517,14 @@ impl ELChainWriter {
     }
 
     /// Remove pending admin. Only the admin of the account can remove a pending admin
+    ///
     /// # Arguments
+    ///
     /// * `account_address` - account address
     /// * `admin_address` - admin address to remove
+    ///
     /// # Returns
+    ///
     /// * `TxHash` - The transaction hash of the generated transaction.
     pub async fn remove_pending_admin(
         &self,
@@ -533,10 +547,14 @@ impl ELChainWriter {
 
     /// Set a pending admin. Multiple admins can be set for an account.
     /// The caller must be an admin. If the account does not have an admin, the caller must be the account.
+    ///
     /// # Arguments
+    ///
     /// * `account_address` - account address
     /// * `admin_address` - admin address to set
+    ///
     /// # Returns
+    ///
     /// * `TxHash` - The transaction hash of the generated transaction.
     pub async fn add_pending_admin(
         &self,
@@ -558,11 +576,17 @@ impl ELChainWriter {
     }
 
     /// Accept a pending admin. The sender of the transaction must be the pending admin.
+    ///
     /// # Arguments
+    ///
     /// * `account` - account to accept admin for
+    ///
     /// # Returns
+    ///
     /// * `TxHash` - The transaction hash of the generated transaction.
+    ///
     /// # Errors
+    ///
     /// * `ElContractsError` - if the call to the contract fails.
     pub async fn accept_admin(&self, account: Address) -> Result<TxHash, ElContractsError> {
         let provider = get_signer(&self.signer, &self.provider);
@@ -580,12 +604,18 @@ impl ELChainWriter {
     }
 
     /// Remove an admin. The sender of the transaction must be an admin.
+    ///
     /// # Arguments
+    ///
     /// * `account` - account to remove admin from
     /// * `admin` - admin to remove
+    ///
     /// # Returns
+    ///
     /// * `TxHash` - The transaction hash of the generated transaction.
+    ///
     /// # Errors
+    ///
     /// * `ElContractsError` - if the call to the contract fails. Fails if the admin being removed is the only admin.
     pub async fn remove_admin(
         &self,
@@ -608,13 +638,19 @@ impl ELChainWriter {
 
     /// Register an operator for one or more operator sets for an AVS. If the operator
     /// has any stake allocated to these operator sets, it immediately becomes slashable.
+    ///
     /// # Arguments
+    ///
     /// * `operator_address` - operator address to register
     /// * `avs_address` - AVS address
     /// * `operator_set_ids` - operator set ids to register on
+    ///
     /// # Returns
+    ///
     /// * `TxHash` - The transaction hash of the generated transaction.
+    ///
     /// # Errors
+    ///
     /// * `ElContractsError` - if the call to the contract fails.
     pub async fn register_for_operator_sets(
         &self,
@@ -641,13 +677,19 @@ impl ELChainWriter {
 
     /// Deregister an operator from one or more of the AVS's operator sets. If the operator
     /// has any slashable stake allocated to the AVS, it remains slashable until the deallocation delay has passed.
+    ///
     /// # Arguments
+    ///
     /// * `operator_address` - operator address to deregister
     /// * `avs_address` - AVS address
     /// * `operator_set_ids` - operator set ids to deregister from
+    ///
     /// # Returns
+    ///
     /// * `TxHash` - The transaction hash of the generated transaction.
+    ///
     /// # Errors
+    ///
     /// * `ElContractsError` - if the call to the contract fails.
     pub async fn deregister_from_operator_sets(
         &self,
@@ -674,12 +716,18 @@ impl ELChainWriter {
 
     /// Set the allocation delay for an operator. It is the number of blocks between an operator
     /// allocating magnitude to an operator set, and the magnitude becoming slashable
+    ///
     /// # Arguments
+    ///
     /// * `operator_address` - operator address to set allocation delay for
     /// * `delay` - delay in blocks
+    ///
     /// # Returns
+    ///
     /// * `TxHash` - The transaction hash of the generated transaction.
+    ///
     /// # Errors
+    ///
     /// * `ElContractsError` - if the call to the contract fails.
     pub async fn set_allocation_delay(
         &self,
