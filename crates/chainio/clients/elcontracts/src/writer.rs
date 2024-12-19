@@ -1,9 +1,13 @@
 use crate::error::ElContractsError;
 use crate::reader::ELChainReader;
 use alloy::rpc::types::eth::TransactionReceipt;
-use alloy_primitives::{Address, FixedBytes, TxHash, U256};
+use alloy_primitives::{Address, Bytes, FixedBytes, TxHash, U256};
 pub use eigen_types::operator::Operator;
 use eigen_utils::{
+    allocationmanager::{
+        AllocationManager,
+        IAllocationManagerTypes::{self, Allocation},
+    },
     delegationmanager::DelegationManager,
     erc20::ERC20,
     get_signer,
@@ -26,6 +30,7 @@ pub struct ELChainWriter {
     strategy_manager: Address,
     rewards_coordinator: Address,
     permission_controller: Address,
+    allocation_manager: Address,
     el_chain_reader: ELChainReader,
     provider: String,
     signer: String,
@@ -37,6 +42,7 @@ impl ELChainWriter {
         strategy_manager: Address,
         rewards_coordinator: Address,
         permission_controller: Address,
+        allocation_manager: Address,
         el_chain_reader: ELChainReader,
         provider: String,
         signer: String,
@@ -46,6 +52,7 @@ impl ELChainWriter {
             strategy_manager,
             rewards_coordinator,
             permission_controller,
+            allocation_manager: Address,
             el_chain_reader,
             provider,
             signer,
@@ -568,6 +575,39 @@ impl ELChainWriter {
 
         Ok(*tx.tx_hash())
     }
+
+    /// Register an operator for one or more operator sets for an AVS. If the operator
+    /// has any stake allocated to these operator sets, it immediately becomes slashable.
+    /// # Arguments
+    /// * `operator_address` - operator address to register
+    /// * `avs_address` - AVS address
+    /// * `operator_set_ids` - operator set ids to register on
+    /// # Returns
+    /// * `TxHash` - The transaction hash of the generated transaction.
+    /// # Errors
+    /// * `ElContractsError` - if the call to the contract fails.
+    pub async fn register_for_operator_sets(
+        &self,
+        operator_address: Address,
+        avs_address: Address,
+        operator_set_ids: Vec<u32>,
+    ) -> Result<TxHash, ElContractsError> {
+        let provider = get_signer(&self.signer, &self.provider);
+        let allocation_manager_contract = AllocationManager::new(self.allocation_manager, provider);
+
+        let params = IAllocationManagerTypes::RegisterParams {
+            avs: avs_address,
+            operatorSetIds: operator_set_ids,
+            data: Bytes::new(),
+        };
+        let tx = allocation_manager_contract
+            .registerForOperatorSets(operator_address, params)
+            .send()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        Ok(*tx.tx_hash())
+    }
 }
 
 #[cfg(test)]
@@ -580,7 +620,8 @@ mod tests {
     use eigen_testing_utils::{
         anvil::start_anvil_container,
         anvil_constants::{
-            get_avs_directory_address, get_delegation_manager_address, get_erc20_mock_strategy,
+            get_allocation_manager_address, get_avs_directory_address,
+            get_delegation_manager_address, get_erc20_mock_strategy,
             get_rewards_coordinator_address, get_strategy_manager_address,
         },
         transaction::wait_transaction,
@@ -623,7 +664,7 @@ mod tests {
         let strategy_manager = get_strategy_manager_address(http_endpoint.clone()).await;
         let rewards_coordinator = get_rewards_coordinator_address(http_endpoint.clone()).await;
         let delegation_manager = get_delegation_manager_address(http_endpoint.clone()).await;
-
+        let allocation_manager = get_allocation_manager_address(http_endpoint.clone()).await;
         let contract_delegation_manager =
             DelegationManager::new(delegation_manager, get_provider(&http_endpoint));
         let permission_controller = contract_delegation_manager
@@ -638,6 +679,7 @@ mod tests {
             strategy_manager,
             rewards_coordinator,
             permission_controller,
+            allocation_manager,
             el_chain_reader,
             http_endpoint.clone(),
             private_key,
@@ -761,7 +803,6 @@ mod tests {
             .update_operator_details(operator_modified)
             .await
             .unwrap();
-
         let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
         assert!(receipt.status());
     }
