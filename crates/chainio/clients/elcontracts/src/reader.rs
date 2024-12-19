@@ -54,8 +54,8 @@ impl ELChainReader {
         }
     }
 
-    /// Builds a new `ELChainReader` instance, getting the slasher address from the delegation manager
-    /// by calling the `slasher()` function and the corresponding Contract function.
+    /// Builds a new `ELChainReader` instance, getting the AllocationManager and PermissionController addresses
+    /// from the delegation manager.
     ///
     /// # Arguments
     ///

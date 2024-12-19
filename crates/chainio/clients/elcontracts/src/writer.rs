@@ -519,6 +519,28 @@ impl ELChainWriter {
 
         Ok(*tx.tx_hash())
     }
+
+    /// Accept a pending admin. The sender of the transaction must be the pending admin.
+    /// # Arguments
+    /// * `account` - account to accept admin for
+    /// # Returns
+    /// * `TxHash` - The transaction hash of the generated transaction.
+    /// # Errors
+    /// * `ElContractsError` - if the call to the contract fails.
+    pub async fn accept_admin(&self, account: Address) -> Result<TxHash, ElContractsError> {
+        let provider = get_signer(&self.signer, &self.provider);
+
+        let permission_controller_contract =
+            PermissionController::new(self.permission_controller, provider);
+
+        let tx = permission_controller_contract
+            .acceptAdmin(account)
+            .send()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        Ok(*tx.tx_hash())
+    }
 }
 
 #[cfg(test)]
@@ -531,8 +553,7 @@ mod tests {
     use eigen_testing_utils::{
         anvil::start_anvil_container,
         anvil_constants::{
-            get_allocation_manager_address, get_avs_directory_address,
-            get_delegation_manager_address, get_erc20_mock_strategy,
+            get_avs_directory_address, get_delegation_manager_address, get_erc20_mock_strategy,
             get_rewards_coordinator_address, get_strategy_manager_address,
         },
         transaction::wait_transaction,
@@ -554,41 +575,24 @@ mod tests {
     const OPERATOR_PRIVATE_KEY: &str =
         "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
 
-    /// Returns a new instance of ELChainWriter and the address of the delegation manager contract
-    ///
-    /// # Returns
-    ///
-    /// A tuple containing an instance of ELChainWriter and the address of the delegation manager contract
-    async fn setup_el_chain_reader(http_endpoint: String) -> (ELChainReader, Address) {
+    /// Returns a new instance of ELChainWriter
+    async fn setup_el_chain_reader(http_endpoint: String) -> ELChainReader {
         let delegation_manager_address =
             get_delegation_manager_address(http_endpoint.clone()).await;
         let avs_directory_address = get_avs_directory_address(http_endpoint.clone()).await;
-        let allocation_manager_address =
-            get_allocation_manager_address(http_endpoint.clone()).await;
-        let delegation_manager_contract =
-            DelegationManager::new(delegation_manager_address, get_provider(&http_endpoint));
-        let permission_controller_address = delegation_manager_contract
-            .permissionController()
-            .call()
-            .await
-            .unwrap()
-            ._0;
 
-        (
-            ELChainReader::new(
-                get_test_logger().clone(),
-                allocation_manager_address,
-                delegation_manager_address,
-                avs_directory_address,
-                permission_controller_address,
-                http_endpoint,
-            ),
+        ELChainReader::build(
+            get_test_logger().clone(),
             delegation_manager_address,
+            avs_directory_address,
+            &http_endpoint,
         )
+        .await
+        .unwrap()
     }
 
-    async fn new_test_writer(http_endpoint: String) -> ELChainWriter {
-        let (el_chain_reader, _) = setup_el_chain_reader(http_endpoint.clone()).await;
+    async fn new_test_writer(http_endpoint: String, private_key: String) -> ELChainWriter {
+        let el_chain_reader = setup_el_chain_reader(http_endpoint.clone()).await;
         let strategy_manager = get_strategy_manager_address(http_endpoint.clone()).await;
         let rewards_coordinator = get_rewards_coordinator_address(http_endpoint.clone()).await;
         let delegation_manager = get_delegation_manager_address(http_endpoint.clone()).await;
@@ -609,12 +613,13 @@ mod tests {
             permission_controller,
             el_chain_reader,
             http_endpoint.clone(),
-            OPERATOR_PRIVATE_KEY.to_string(),
+            private_key,
         )
     }
 
     async fn new_claim(http_endpoint: &str) -> (FixedBytes<32>, RewardsMerkleClaim) {
-        let el_chain_writer = new_test_writer(http_endpoint.to_string()).await;
+        let el_chain_writer =
+            new_test_writer(http_endpoint.to_string(), OPERATOR_PRIVATE_KEY.to_string()).await;
 
         let earner_address = address!("25a1b7322f9796b26a4bec125913b34c292b28d6");
         let claim = RewardsMerkleClaim {
@@ -668,9 +673,9 @@ mod tests {
     #[tokio::test]
     async fn test_register_operator() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let (el_chain_reader, _delegation_manager_address) =
-            setup_el_chain_reader(http_endpoint.clone()).await;
-        let el_chain_writer = new_test_writer(http_endpoint.clone()).await;
+        let el_chain_reader = setup_el_chain_reader(http_endpoint.clone()).await;
+        let el_chain_writer =
+            new_test_writer(http_endpoint.to_string(), OPERATOR_PRIVATE_KEY.to_string()).await;
 
         let operator = Operator {
             address: OPERATOR_ADDRESS, // can only register the address corresponding to the signer used in the writer
@@ -696,7 +701,8 @@ mod tests {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
         let provider = get_provider(&http_endpoint);
 
-        let el_chain_writer = new_test_writer(http_endpoint.clone()).await;
+        let el_chain_writer =
+            new_test_writer(http_endpoint.to_string(), OPERATOR_PRIVATE_KEY.to_string()).await;
 
         let operator = Operator {
             address: OPERATOR_ADDRESS,
@@ -736,7 +742,8 @@ mod tests {
     #[tokio::test]
     async fn test_deposit_erc20_into_strategy() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let el_chain_writer = new_test_writer(http_endpoint.clone()).await;
+        let el_chain_writer =
+            new_test_writer(http_endpoint.to_string(), OPERATOR_PRIVATE_KEY.to_string()).await;
 
         let amount = U256::from_str("100").unwrap();
         let strategy_addr = get_erc20_mock_strategy(http_endpoint.clone()).await;
@@ -752,7 +759,8 @@ mod tests {
     #[tokio::test]
     async fn test_set_claimer_for() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let el_chain_writer = new_test_writer(http_endpoint.clone()).await;
+        let el_chain_writer =
+            new_test_writer(http_endpoint.to_string(), OPERATOR_PRIVATE_KEY.to_string()).await;
 
         let claimer = address!("5eb15C0992734B5e77c888D713b4FC67b3D679A2");
 
@@ -765,7 +773,8 @@ mod tests {
     #[tokio::test]
     async fn test_check_claim() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let el_chain_writer = new_test_writer(http_endpoint.clone()).await;
+        let el_chain_writer =
+            new_test_writer(http_endpoint.to_string(), OPERATOR_PRIVATE_KEY.to_string()).await;
 
         let (_, claim) = new_claim(&http_endpoint).await;
 
@@ -782,7 +791,8 @@ mod tests {
     #[tokio::test]
     async fn test_get_distribution_roots_length() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let el_chain_writer = new_test_writer(http_endpoint.clone()).await;
+        let el_chain_writer =
+            new_test_writer(http_endpoint.to_string(), OPERATOR_PRIVATE_KEY.to_string()).await;
         new_claim(&http_endpoint).await;
 
         let distribution_roots_length_ret = el_chain_writer
@@ -796,7 +806,8 @@ mod tests {
     #[tokio::test]
     async fn test_get_root_index_from_hash() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let el_chain_writer = new_test_writer(http_endpoint.clone()).await;
+        let el_chain_writer =
+            new_test_writer(http_endpoint.to_string(), OPERATOR_PRIVATE_KEY.to_string()).await;
         let (root, _) = new_claim(&http_endpoint).await;
 
         let index = el_chain_writer
@@ -810,7 +821,8 @@ mod tests {
     #[tokio::test]
     async fn test_get_cumulative_claimed() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let el_chain_writer = new_test_writer(http_endpoint.clone()).await;
+        let el_chain_writer =
+            new_test_writer(http_endpoint.to_string(), OPERATOR_PRIVATE_KEY.to_string()).await;
 
         let earner_address = address!("F2288D736d27C1584Ebf7be5f52f9E4d47251AeE");
         let (_, _, token_address) = el_chain_writer
@@ -833,7 +845,8 @@ mod tests {
     #[tokio::test]
     async fn test_get_cumulative_claimed_for_root() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let el_chain_writer = new_test_writer(http_endpoint.clone()).await;
+        let el_chain_writer =
+            new_test_writer(http_endpoint.to_string(), OPERATOR_PRIVATE_KEY.to_string()).await;
         let (root, _) = new_claim(&http_endpoint).await;
 
         let distribution_root = el_chain_writer
@@ -847,33 +860,64 @@ mod tests {
     #[tokio::test]
     async fn test_add_and_remove_pending_admin() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let avs_writer = new_test_writer(http_endpoint.clone()).await;
+        let el_chain_writer =
+            new_test_writer(http_endpoint.to_string(), OPERATOR_PRIVATE_KEY.to_string()).await;
 
         let pending_admin = address!("14dC79964da2C08b23698B3D3cc7Ca32193d9955");
-        let tx_hash = avs_writer
+        let tx_hash = el_chain_writer
             .add_pending_admin(OPERATOR_ADDRESS, pending_admin)
             .await
             .unwrap();
         wait_transaction(&http_endpoint, tx_hash).await.unwrap();
 
-        let is_admin = avs_writer
+        let is_admin = el_chain_writer
             .el_chain_reader
             .is_pending_admin(OPERATOR_ADDRESS, pending_admin)
             .await
             .unwrap();
         assert_eq!(is_admin, true);
 
-        let tx_hash = avs_writer
+        let tx_hash = el_chain_writer
             .remove_pending_admin(OPERATOR_ADDRESS, pending_admin)
             .await
             .unwrap();
         wait_transaction(&http_endpoint, tx_hash).await.unwrap();
 
-        let is_admin = avs_writer
+        let is_admin = el_chain_writer
             .el_chain_reader
             .is_pending_admin(OPERATOR_ADDRESS, pending_admin)
             .await
             .unwrap();
         assert_eq!(is_admin, false);
+    }
+
+    #[tokio::test]
+    async fn test_accept_admin() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let el_chain_writer =
+            new_test_writer(http_endpoint.to_string(), OPERATOR_PRIVATE_KEY.to_string()).await;
+
+        let pending_admin = address!("14dC79964da2C08b23698B3D3cc7Ca32193d9955");
+        let pending_admin_key =
+            "0x4bbbf85ce3377467afe5d46f804f221813b2bb87f24d81f60f1fcdbf7cbf4356";
+
+        let tx_hash = el_chain_writer
+            .add_pending_admin(OPERATOR_ADDRESS, pending_admin)
+            .await
+            .unwrap();
+        wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+
+        let admin_writer =
+            new_test_writer(http_endpoint.to_string(), pending_admin_key.to_string()).await;
+
+        let tx_hash = admin_writer.accept_admin(OPERATOR_ADDRESS).await.unwrap();
+        wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+
+        let is_admin = admin_writer
+            .el_chain_reader
+            .is_admin(OPERATOR_ADDRESS, pending_admin)
+            .await
+            .unwrap();
+        assert_eq!(is_admin, true);
     }
 }
