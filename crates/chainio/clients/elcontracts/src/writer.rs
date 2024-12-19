@@ -667,6 +667,31 @@ impl ELChainWriter {
 
         Ok(*tx.tx_hash())
     }
+
+    /// Modifiy the proportions of slashable stake allocated to an operator set from a list of strategies.
+    /// # Arguments
+    /// * `operator_address` - operator address to modify allocations for
+    /// * `allocations` - list of magnitude adjustments for one or more operator sets
+    /// # Returns
+    /// * `TxHash` - The transaction hash of the generated transaction.
+    /// # Errors
+    /// * `ElContractsError` - if the call to the contract fails.
+    pub async fn modify_allocations(
+        &self,
+        operator_address: Address,
+        allocations: Vec<IAllocationManagerTypes::AllocateParams>,
+    ) -> Result<TxHash, ElContractsError> {
+        let provider = get_signer(&self.signer, &self.provider);
+        let allocation_manager_contract = AllocationManager::new(self.allocation_manager, provider);
+
+        let tx = allocation_manager_contract
+            .modifyAllocations(operator_address, allocations)
+            .send()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        Ok(*tx.tx_hash())
+    }
 }
 
 #[cfg(test)]
