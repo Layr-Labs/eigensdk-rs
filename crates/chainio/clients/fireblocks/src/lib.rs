@@ -98,7 +98,13 @@ impl FireblocksWallet {
 
                 match contains_account {
                     true => {
-                        if self.whitelisted_accounts.get(&address).unwrap().id().eq("") {
+                        if self
+                            .whitelisted_accounts
+                            .get(&address)
+                            .unwrap()
+                            .id()
+                            .is_empty()
+                        {
                             Err(FireBlockError::AccountNotFoundError(address.to_string()))
                         } else {
                             Ok(self.whitelisted_accounts.get(&address).unwrap().clone())
@@ -146,7 +152,7 @@ impl FireblocksWallet {
                             .get(&address)
                             .unwrap()
                             .id()
-                            .eq("")
+                            .is_empty()
                         {
                             Err(FireBlockError::ContractNotFound(address.to_string()))
                         } else {
