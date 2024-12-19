@@ -304,7 +304,6 @@ impl AvsRegistryChainReader {
     /// - a vector of the quorum numbers the operator was registered for at `block_number`.
     /// - for each of the quorums mentioned above, a vector of the operators registered for
     ///   that quorum at `block_number`, containing each operator's `operatorId` and `stake`.
-
     pub async fn get_operators_stake_in_quorums_of_operator_at_block(
         &self,
         operator_id: B256,
@@ -430,8 +429,9 @@ impl AvsRegistryChainReader {
         let inner_value = quorum_bitmap._0.into_limbs()[0];
         let mut quorums: [bool; 64] = [false; 64];
         for i in 0..64_u64 {
-            let other = inner_value & (1 << i) != 0;
-            quorums[i as usize] = other;
+            if let Some(value) = quorums.get_mut(i as usize) {
+                *value = inner_value & (1 << i) != 0;
+            }
         }
         Ok(quorums)
     }
@@ -634,23 +634,18 @@ impl AvsRegistryChainReader {
 mod tests {
     use super::*;
     use eigen_logging::get_test_logger;
+    use eigen_testing_utils::m2_holesky_constants::{
+        HOLESKY_RPC_PROVIDER, OPERATOR_STATE_RETRIEVER, REGISTRY_COORDINATOR,
+    };
     use hex::FromHex;
     use std::str::FromStr;
-    const HOLESKY_REGISTRY_COORDINATOR: &str = "0x53012C69A189cfA2D9d29eb6F19B32e0A2EA3490";
-    const HOLESKY_OPERATOR_STATE_RETRIEVER: &str = "0xB4baAfee917fb4449f5ec64804217bccE9f46C67";
 
     async fn build_avs_registry_chain_reader() -> AvsRegistryChainReader {
-        let holesky_registry_coordinator =
-            Address::from_str(HOLESKY_REGISTRY_COORDINATOR).expect("failed to parse address");
-        let holesky_operator_state_retriever =
-            Address::from_str(HOLESKY_OPERATOR_STATE_RETRIEVER).expect("failed to parse address");
-
-        let holesky_provider = "https://ethereum-holesky.blockpi.network/v1/rpc/public";
         AvsRegistryChainReader::new(
             get_test_logger(),
-            holesky_registry_coordinator,
-            holesky_operator_state_retriever,
-            holesky_provider.to_string(),
+            REGISTRY_COORDINATOR,
+            OPERATOR_STATE_RETRIEVER,
+            HOLESKY_RPC_PROVIDER.to_string(),
         )
         .await
         .unwrap()
@@ -734,9 +729,11 @@ mod tests {
     #[tokio::test]
     async fn test_is_operator_registered() {
         let avs_reader = build_avs_registry_chain_reader().await;
-        let address = Address::from_str(HOLESKY_REGISTRY_COORDINATOR).unwrap();
 
-        let is_registered = avs_reader.is_operator_registered(address).await.unwrap();
+        let is_registered = avs_reader
+            .is_operator_registered(REGISTRY_COORDINATOR)
+            .await
+            .unwrap();
         assert!(!is_registered);
     }
 
