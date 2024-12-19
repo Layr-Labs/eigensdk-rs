@@ -6,7 +6,7 @@ use eigen_client_avsregistry::{error::AvsRegistryError, reader::AvsRegistryReade
 use eigen_crypto_bls::{BlsG1Point, PublicKey};
 use eigen_services_operatorsinfo::operator_info::OperatorInfoService;
 use eigen_types::operator::{OperatorAvsState, OperatorInfo, OperatorPubKeys, QuorumAvsState};
-use eigen_utils::operatorstateretriever::OperatorStateRetriever::CheckSignaturesIndices;
+use eigen_utils::middleware::operatorstateretriever::OperatorStateRetriever::CheckSignaturesIndices;
 use std::collections::HashMap;
 
 use crate::AvsRegistryService;

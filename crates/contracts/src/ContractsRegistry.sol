@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.12;
+pragma solidity ^0.8.20;
 
 // ContractsRegistry store the address of all the contracts deployed for eigenlayer and avss
 // It is used for testing purpose only, so that we can retrieve the addresses without having to store them in a json file
@@ -29,14 +29,34 @@ contract ContractsRegistry {
         contractCount++;
     }
 
-    function store_test(string memory test_name, int256 index, uint256 timestamp, uint256 block_number) public {
-        require(anvil_test[keccak256(abi.encodePacked(test_name,index))].timestamp == 0);
-        anvil_test[keccak256(abi.encodePacked(test_name))] =
-            BlockAndTimestamp({timestamp: timestamp, block_number: block_number, index: index});
+    function store_test(
+        string memory test_name,
+        int256 index,
+        uint256 timestamp,
+        uint256 block_number
+    ) public {
+        require(
+            anvil_test[keccak256(abi.encodePacked(test_name, index))]
+                .timestamp == 0
+        );
+        anvil_test[keccak256(abi.encodePacked(test_name))] = BlockAndTimestamp({
+            timestamp: timestamp,
+            block_number: block_number,
+            index: index
+        });
     }
 
-    function get_test_values(string memory test_name,int index) public view returns (uint256, uint256, int256) {
-        BlockAndTimestamp memory test_details = anvil_test[keccak256(abi.encodePacked(test_name,index))];
-        return (test_details.timestamp, test_details.block_number, test_details.index);
+    function get_test_values(
+        string memory test_name,
+        int index
+    ) public view returns (uint256, uint256, int256) {
+        BlockAndTimestamp memory test_details = anvil_test[
+            keccak256(abi.encodePacked(test_name, index))
+        ];
+        return (
+            test_details.timestamp,
+            test_details.block_number,
+            test_details.index
+        );
     }
 }

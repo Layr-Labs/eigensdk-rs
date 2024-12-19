@@ -835,10 +835,10 @@ mod tests {
         pubsub::SubscriptionResult, BlockId, BlockNumberOrTag, BlockTransactionsKind,
     };
     use alloy_primitives::address;
+    use eigen_common::get_provider;
     use eigen_signer::signer::Config;
     use eigen_testing_utils::anvil::start_anvil_container;
     use eigen_testing_utils::transaction::wait_transaction;
-    use eigen_utils::get_provider;
     use tokio;
 
     #[tokio::test]
