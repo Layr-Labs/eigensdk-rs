@@ -1241,4 +1241,13 @@ mod tests {
         let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
         assert!(receipt.status());
     }
+
+    #[tokio::test]
+    async fn test_register_for_operator_sets() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let account_address = OPERATOR_ADDRESS;
+        let operator_address = address!("a0Ee7A142d267C1f36714E4a8F75612F20a79720");
+
+        todo!()
+    }
 }
