@@ -1192,7 +1192,7 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn test_set_permission() {
+    async fn test_set_and_remove_permission() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
         let account_address = OPERATOR_ADDRESS;
         let admin = address!("14dC79964da2C08b23698B3D3cc7Ca32193d9955");
@@ -1229,5 +1229,16 @@ mod tests {
             .await
             .unwrap();
         assert!(can_call);
+
+        // test remove permission
+        let el_chain_writer =
+            new_test_writer(http_endpoint.to_string(), OPERATOR_PRIVATE_KEY.to_string()).await;
+
+        let tx_hash = el_chain_writer
+            .remove_permission(account_address, appointee_address, target, selector)
+            .unwrap();
+
+        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+        assert!(receipt.status());
     }
 }
