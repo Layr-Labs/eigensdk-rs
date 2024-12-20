@@ -1,9 +1,11 @@
 #[cfg(test)]
 pub mod integration_test {
-    use crate::bls_agg::BlsAggregatorService;
-    use crate::bls_aggregation_service_response::BlsAggregationServiceResponse;
-    use alloy::providers::Provider;
-    use alloy_primitives::{address, aliases::U96, hex, Bytes, FixedBytes, B256, U256};
+    use crate::{
+        bls_agg::BlsAggregatorService,
+        bls_aggregation_service_response::BlsAggregationServiceResponse,
+    };
+    use alloy::{providers::Provider, signers::local::PrivateKeySigner};
+    use alloy_primitives::{aliases::U96, hex, Bytes, FixedBytes, B256, U256};
     use eigen_client_avsregistry::{
         reader::AvsRegistryChainReader, writer::AvsRegistryChainWriter,
     };
@@ -41,6 +43,7 @@ pub mod integration_test {
     };
     use serde::Deserialize;
     use sha2::{Digest, Sha256};
+    use std::str::FromStr;
     use std::time::Duration;
     use tokio::{task, time::sleep};
     use tokio_util::sync::CancellationToken;
@@ -93,12 +96,12 @@ pub mod integration_test {
     }
 
     async fn register_operator(
+        private_key: &str,
         rpc_url: &str,
         bls_key_pair: BlsKeyPair,
         quorum_nums: Bytes,
     ) -> FixedBytes<32> {
-        let private_key = "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
-        let address = address!("f39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+        let address = PrivateKeySigner::from_str(private_key).unwrap().address();
 
         // register to eigenlayer
         register_operator_to_el_if_not_registered(private_key, rpc_url, address, "uri")
@@ -164,15 +167,14 @@ pub mod integration_test {
             test_data.input.quorum_threshold_percentages;
 
         let bls_key_pair = BlsKeyPair::new(test_data.input.bls_key).unwrap();
-        // let operator_id =
-        // hex!("fd329fe7e54f459b9c104064efe0172db113a50b5f394949b4ef80b3c34ca7f5").into();
         let operator_id = register_operator(
+            PRIVATE_KEY_1,
             http_endpoint.as_str(),
             bls_key_pair.clone(),
             quorum_nums.clone(),
         )
         .await;
-        dbg!(&operator_id);
+
         // Create avs clients to interact with contracts deployed on anvil
         let avs_registry_reader = AvsRegistryChainReader::new(
             get_test_logger(),
@@ -293,18 +295,27 @@ pub mod integration_test {
             get_operator_state_retriever_address(http_endpoint.clone()).await;
         let service_manager_address = get_service_manager_address(http_endpoint.clone()).await;
         let provider = get_provider(http_endpoint.as_str());
-        let salt: FixedBytes<32> = FixedBytes::from([0x02; 32]);
-
-        let bls_key_pair_1 = BlsKeyPair::new(BLS_KEY_1.to_string()).unwrap();
-        let operator_id_1 =
-            hex!("fd329fe7e54f459b9c104064efe0172db113a50b5f394949b4ef80b3c34ca7f5").into();
-
-        let bls_key_pair_2 = BlsKeyPair::new(BLS_KEY_2.to_string()).unwrap();
-        let operator_id_2 =
-            hex!("7213614953817d00866957a5f866c67a5fb8d4e392af501701f7ab35294dc4b3").into();
 
         let quorum_nums = Bytes::from([1u8]);
         let quorum_threshold_percentages: QuorumThresholdPercentages = vec![100];
+
+        let bls_key_pair_1 = BlsKeyPair::new(BLS_KEY_1.to_string()).unwrap();
+        let operator_id_1 = register_operator(
+            PRIVATE_KEY_1,
+            http_endpoint.as_str(),
+            bls_key_pair_1.clone(),
+            quorum_nums.clone(),
+        )
+        .await;
+
+        let bls_key_pair_2 = BlsKeyPair::new(BLS_KEY_2.to_string()).unwrap();
+        let operator_id_2 = register_operator(
+            PRIVATE_KEY_2,
+            http_endpoint.as_str(),
+            bls_key_pair_2.clone(),
+            quorum_nums.clone(),
+        )
+        .await;
 
         let contract_registry_coordinator = RegistryCoordinator::new(
             registry_coordinator_address,
@@ -343,15 +354,6 @@ pub mod integration_test {
         .await
         .unwrap();
 
-        let avs_writer = AvsRegistryChainWriter::build_avs_registry_chain_writer(
-            get_test_logger(),
-            http_endpoint.clone(),
-            PRIVATE_KEY_1.to_string(),
-            registry_coordinator_address,
-            operator_state_retriever_address,
-        )
-        .await
-        .unwrap();
         let operators_info = OperatorInfoServiceInMemory::new(
             get_test_logger(),
             avs_registry_reader.clone(),
@@ -372,40 +374,6 @@ pub mod integration_test {
         });
         // Sleep to wait for the operator info service to start
         sleep(Duration::from_secs(1)).await;
-
-        // Register operator
-        let tx_hash = avs_writer
-            .register_operator_in_quorum_with_avs_registry_coordinator(
-                bls_key_pair_1.clone(),
-                salt,
-                U256::from_be_slice(&[0xff; 32]),
-                quorum_nums.clone(),
-                "socket".to_string(),
-            )
-            .await
-            .unwrap();
-        wait_transaction(&http_endpoint, tx_hash).await.unwrap();
-
-        let avs_writer = AvsRegistryChainWriter::build_avs_registry_chain_writer(
-            get_test_logger(),
-            http_endpoint.clone(),
-            PRIVATE_KEY_2.to_string(),
-            registry_coordinator_address,
-            operator_state_retriever_address,
-        )
-        .await
-        .unwrap();
-        let tx_hash = avs_writer
-            .register_operator_in_quorum_with_avs_registry_coordinator(
-                bls_key_pair_2.clone(),
-                salt,
-                U256::from_be_slice(&[0xff; 32]),
-                quorum_nums.clone(),
-                "socket".to_string(),
-            )
-            .await
-            .unwrap();
-        wait_transaction(&http_endpoint, tx_hash).await.unwrap();
 
         // Create aggregation service
         let avs_registry_service =
