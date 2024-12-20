@@ -223,15 +223,17 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
 
         let mut rx = {
             let task_channel = self.signed_task_response.read();
-
+            
             let sender = task_channel
                 .get(&task_index)
                 .ok_or(BlsAggregationServiceError::TaskNotFound)?;
-
+            dbg!("seee{:?}",sender);
             // send the task to the aggregator thread
             sender
                 .send(task)
-                .map_err(|_| BlsAggregationServiceError::ChannelError)?;
+                .map_err(|e| {
+                    dbg!("yyyy{:?}",e);
+                    BlsAggregationServiceError::ChannelError})?;
             rx
             // release the lock
         };
@@ -239,7 +241,10 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         // return the signature verification result
         rx.recv()
             .await
-            .ok_or(BlsAggregationServiceError::SignaturesChannelClosed)?
+            .ok_or({
+                dbg!("ssss");
+                BlsAggregationServiceError::SignaturesChannelClosed
+            })?
             .map_err(|e| {
                 dbg!("signature verification error:", &e); // Debug the error
                 BlsAggregationServiceError::SignatureVerificationError(e) // Return the new error
@@ -326,15 +331,21 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
             .map(|(i, quorum_number)| (*quorum_number, quorum_threshold_percentages[i]))
             .collect();
 
-        let operator_state_avs = avs_registry_service
+        let operator_state_avs: HashMap<FixedBytes<32>, OperatorAvsState> = avs_registry_service
             .get_operators_avs_state_at_block(task_created_block, &quorum_nums)
             .await
-            .map_err(|_| BlsAggregationServiceError::RegistryError)?;
+            .map_err(|e| {
+                dbg!("get_operators_avs_state_at_block err: {:?}",e);
+                BlsAggregationServiceError::RegistryError}
+            )?;
 
         let quorums_avs_state = avs_registry_service
             .get_quorums_avs_state_at_block(&quorum_nums, task_created_block)
             .await
-            .map_err(|_| BlsAggregationServiceError::RegistryError)?;
+            .map_err(|e| {
+                dbg!("get_quorums_avs_state_at_block err: {:?}",e);
+                BlsAggregationServiceError::RegistryError
+            })?;
         let total_stake_per_quorum: HashMap<_, _> = quorums_avs_state
             .iter()
             .map(|(k, v)| (*k, v.total_stake))
@@ -411,6 +422,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                 signed_task_digest = signatures_rx.recv() =>{
                     // New signature, aggregate it. If threshold is met, start window
                     let Some(digest) = signed_task_digest else {
+                        dbg!("Could not receive new signature due to channel closed");
                         return Err(BlsAggregationServiceError::SignaturesChannelClosed);
                     };
                     // check if the operator has already signed for this digest
@@ -594,7 +606,10 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                 non_signers_operators_ids,
             )
             .await
-            .map_err(|_err| BlsAggregationServiceError::RegistryError)?;
+            .map_err(|e| {
+                dbg!("get_check_signatures_indices err:{:?}",e);
+                BlsAggregationServiceError::RegistryError
+            })?;
 
         Ok(BlsAggregationServiceResponse {
             task_index,

@@ -2730,6 +2730,7 @@ dependencies = [
  "hex",
  "serde",
  "tokio",
+ "tracing",
 ]
 
 [[package]]

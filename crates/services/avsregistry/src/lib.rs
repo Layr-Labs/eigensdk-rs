@@ -33,6 +33,7 @@ pub trait AvsRegistryService {
         quorum_nums: &[u8],
     ) -> Result<HashMap<FixedBytes<32>, OperatorAvsState>, AvsRegistryError>;
 
+
     /// Get the quorum AVS state at a specific block
     ///
     /// # Arguments

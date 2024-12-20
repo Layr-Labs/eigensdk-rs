@@ -8,6 +8,7 @@ use eigen_services_operatorsinfo::operator_info::OperatorInfoService;
 use eigen_types::operator::{OperatorAvsState, OperatorInfo, OperatorPubKeys, QuorumAvsState};
 use eigen_utils::operatorstateretriever::OperatorStateRetriever::CheckSignaturesIndices;
 use std::collections::HashMap;
+use tracing::info;
 
 use crate::AvsRegistryService;
 
@@ -46,7 +47,6 @@ impl<R: AvsRegistryReader + Sync, S: OperatorInfoService + Sync> AvsRegistryServ
             .avs_registry
             .get_operators_stake_in_quorums_at_block(block_num, Bytes::from(Vec::from(quorum_nums)))
             .await?;
-
         if operators_stakes_in_quorums.len() != quorum_nums.len() {
             // the list of quorum nums and the list of operators stakes in quorums should have the same length
             return Err(AvsRegistryError::InvalidQuorumNums);
@@ -74,6 +74,42 @@ impl<R: AvsRegistryReader + Sync, S: OperatorInfoService + Sync> AvsRegistryServ
 
         Ok(operators_avs_state)
     }
+
+    // async fn get_operators_avs_state_at_block_using_operator_id( &self,
+    //     block_num:u32,
+    //     operator_id:FixedBytes<32>) -> Result<HashMap<FixedBytes<32>, OperatorAvsState>, AvsRegistryError>{
+
+    //         let mut operators_avs_state: HashMap<FixedBytes<32>, OperatorAvsState> = HashMap::new();
+
+    //         let operators_stakes_for_operator_id = self
+    //             .avs_registry
+    //             .get_operators_stake_for_operator_id_at_block(operator_id,block_num)
+    //             .await?;
+
+
+    
+    //         for (quorum_id, quorum_num) in quorum_nums.iter().enumerate() {
+    //             for operator in &operators_stakes_in_quorums[quorum_id] {
+    //                 let info = self.get_operator_info(*operator.operatorId).await?;
+    //                 let stake_per_quorum = HashMap::new();
+    //                 let avs_state = operators_avs_state
+    //                     .entry(FixedBytes(*operator.operatorId))
+    //                     .or_insert_with(|| OperatorAvsState {
+    //                         operator_id: *operator.operatorId,
+    //                         operator_info: OperatorInfo {
+    //                             pub_keys: Some(info),
+    //                         },
+    //                         stake_per_quorum,
+    //                         block_num: block_num.into(),
+    //                     });
+    //                 avs_state
+    //                     .stake_per_quorum
+    //                     .insert(*quorum_num, U256::from(operator.stake));
+    //             }
+    //         }
+    
+    //         Ok(operators_avs_state)
+    //     }
 
     async fn get_quorums_avs_state_at_block(
         &self,

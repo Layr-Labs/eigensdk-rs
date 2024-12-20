@@ -18,7 +18,7 @@ eigen-crypto-bls.workspace = true
 eigen-services-operatorsinfo.workspace = true
 eigen-types.workspace = true
 eigen-utils.workspace = true
-
+tracing.workspace = true
 [dev-dependencies]
 eigen-testing-utils.workspace = true
 hex.workspace = true

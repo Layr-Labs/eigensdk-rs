@@ -53,6 +53,7 @@ pub trait AvsRegistryReader {
         quorum_numbers: Bytes,
     ) -> Result<Vec<Vec<OperatorStateRetriever::Operator>>, AvsRegistryError>;
 
+
     /// Get signature indices
     ///
     /// # Arguments
@@ -107,6 +108,21 @@ impl AvsRegistryReader for AvsRegistryChainReader {
         let OperatorStateRetriever::getOperatorState_0Return { _0: quorum } = operator_state;
         Ok(quorum)
     }
+
+    // async fn get_operators_stake_for_operator_id_at_block(&self,operator_id:FixedBytes<32>,block_number: u32) -> Result<(U256,Vec<Vec<OperatorStateRetriever::Operator>>), AvsRegistryError>{
+    //     let provider = get_provider(&self.provider);
+
+    //     let contract_operator_state_retriever =
+    //         OperatorStateRetriever::new(self.operator_state_retriever, provider);
+    //     let operator_state = contract_operator_state_retriever
+    //         .getOperatorState_1(self.registry_coordinator_addr, operator_id, block_number)
+    //         .call()
+    //         .await
+    //         .map_err(|_| AvsRegistryError::GetOperatorState)?;
+
+    //     let OperatorStateRetriever::getOperatorState_1Return { _0: quorum,_1:state } = operator_state;
+    //     Ok((quorum,state))
+    // }
 
     async fn get_check_signatures_indices(
         &self,

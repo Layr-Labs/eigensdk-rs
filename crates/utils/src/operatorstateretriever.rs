@@ -559,7 +559,7 @@ pub mod OperatorStateRetriever {
     struct Operator { address operator; bytes32 operatorId; uint96 stake; }
     ```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
-    #[derive(Clone)]
+    #[derive(Clone,Debug)]
     pub struct Operator {
         pub operator: alloy::sol_types::private::Address,
         pub operatorId: alloy::sol_types::private::FixedBytes<32>,
