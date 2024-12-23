@@ -25,44 +25,54 @@ interface EmptyContract {
   }
 ]
 ```*/
-#[allow(non_camel_case_types, non_snake_case, clippy::style)]
+#[allow(
+    non_camel_case_types,
+    non_snake_case,
+    clippy::pub_underscore_fields,
+    clippy::style
+)]
 pub mod EmptyContract {
     use super::*;
     use alloy::sol_types as alloy_sol_types;
     /// The creation / init bytecode of the contract.
     ///
     /// ```text
-    ///0x6080604052348015600f57600080fd5b50607780601d6000396000f3fe6080604052348015600f57600080fd5b506004361060285760003560e01c8063c298557814602d575b600080fd5b600060405190815260200160405180910390f3fea264697066735822122007c80e3ab75b64ab2851d22a863601e8064735da0ba4040cde0990cb0528b7c064736f6c634300080c0033
+    ///0x608080604052346013576073908160188239f35b5f80fdfe60808060405260043610156011575f80fd5b5f3560e01c63c2985578146023575f80fd5b346039575f366003190112603957805f60209252f35b5f80fdfea26469706673582212209c068529a4aa7d8d950107045536035a37a2378614f141c60f540b91ac731b0e64736f6c634300081b0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"`\x80`@R4\x80\x15`\x0FW`\0\x80\xFD[P`w\x80`\x1D`\09`\0\xF3\xFE`\x80`@R4\x80\x15`\x0FW`\0\x80\xFD[P`\x046\x10`(W`\x005`\xE0\x1C\x80c\xC2\x98Ux\x14`-W[`\0\x80\xFD[`\0`@Q\x90\x81R` \x01`@Q\x80\x91\x03\x90\xF3\xFE\xA2dipfsX\"\x12 \x07\xC8\x0E:\xB7[d\xAB(Q\xD2*\x866\x01\xE8\x06G5\xDA\x0B\xA4\x04\x0C\xDE\t\x90\xCB\x05(\xB7\xC0dsolcC\0\x08\x0C\x003",
+        b"`\x80\x80`@R4`\x13W`s\x90\x81`\x18\x829\xF3[_\x80\xFD\xFE`\x80\x80`@R`\x046\x10\x15`\x11W_\x80\xFD[_5`\xE0\x1Cc\xC2\x98Ux\x14`#W_\x80\xFD[4`9W_6`\x03\x19\x01\x12`9W\x80_` \x92R\xF3[_\x80\xFD\xFE\xA2dipfsX\"\x12 \x9C\x06\x85)\xA4\xAA}\x8D\x95\x01\x07\x04U6\x03Z7\xA27\x86\x14\xF1A\xC6\x0FT\x0B\x91\xACs\x1B\x0EdsolcC\0\x08\x1B\x003",
     );
     /// The runtime bytecode of the contract, as deployed on the network.
     ///
     /// ```text
-    ///0x6080604052348015600f57600080fd5b506004361060285760003560e01c8063c298557814602d575b600080fd5b600060405190815260200160405180910390f3fea264697066735822122007c80e3ab75b64ab2851d22a863601e8064735da0ba4040cde0990cb0528b7c064736f6c634300080c0033
+    ///0x60808060405260043610156011575f80fd5b5f3560e01c63c2985578146023575f80fd5b346039575f366003190112603957805f60209252f35b5f80fdfea26469706673582212209c068529a4aa7d8d950107045536035a37a2378614f141c60f540b91ac731b0e64736f6c634300081b0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static DEPLOYED_BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"`\x80`@R4\x80\x15`\x0FW`\0\x80\xFD[P`\x046\x10`(W`\x005`\xE0\x1C\x80c\xC2\x98Ux\x14`-W[`\0\x80\xFD[`\0`@Q\x90\x81R` \x01`@Q\x80\x91\x03\x90\xF3\xFE\xA2dipfsX\"\x12 \x07\xC8\x0E:\xB7[d\xAB(Q\xD2*\x866\x01\xE8\x06G5\xDA\x0B\xA4\x04\x0C\xDE\t\x90\xCB\x05(\xB7\xC0dsolcC\0\x08\x0C\x003",
+        b"`\x80\x80`@R`\x046\x10\x15`\x11W_\x80\xFD[_5`\xE0\x1Cc\xC2\x98Ux\x14`#W_\x80\xFD[4`9W_6`\x03\x19\x01\x12`9W\x80_` \x92R\xF3[_\x80\xFD\xFE\xA2dipfsX\"\x12 \x9C\x06\x85)\xA4\xAA}\x8D\x95\x01\x07\x04U6\x03Z7\xA27\x86\x14\xF1A\xC6\x0FT\x0B\x91\xACs\x1B\x0EdsolcC\0\x08\x1B\x003",
     );
     /**Function with signature `foo()` and selector `0xc2985578`.
     ```solidity
     function foo() external pure returns (uint256);
     ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct fooCall {}
     ///Container type for the return parameters of the [`foo()`](fooCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct fooReturn {
         pub _0: alloy::sol_types::private::primitives::aliases::U256,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {

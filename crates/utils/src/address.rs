@@ -9,29 +9,34 @@ interface Address {}
 ```json
 []
 ```*/
-#[allow(non_camel_case_types, non_snake_case, clippy::style)]
+#[allow(
+    non_camel_case_types,
+    non_snake_case,
+    clippy::pub_underscore_fields,
+    clippy::style
+)]
 pub mod Address {
     use super::*;
     use alloy::sol_types as alloy_sol_types;
     /// The creation / init bytecode of the contract.
     ///
     /// ```text
-    ///0x60566037600b82828239805160001a607314602a57634e487b7160e01b600052600060045260246000fd5b30600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600080fdfea2646970667358221220e007c97e6583d7762f50b4057f1f6ec1f4f767c599ec480095bc4d502af0445a64736f6c634300080c0033
+    ///0x6080806040523460175760399081601c823930815050f35b5f80fdfe5f80fdfea2646970667358221220fffb0eac69312fa3b21206b189eca886d5276ece2d1b2b1156a0ff6eab938c5764736f6c634300081b0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"`V`7`\x0B\x82\x82\x829\x80Q`\0\x1A`s\x14`*WcNH{q`\xE0\x1B`\0R`\0`\x04R`$`\0\xFD[0`\0R`s\x81S\x82\x81\xF3\xFEs\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x000\x14`\x80`@R`\0\x80\xFD\xFE\xA2dipfsX\"\x12 \xE0\x07\xC9~e\x83\xD7v/P\xB4\x05\x7F\x1Fn\xC1\xF4\xF7g\xC5\x99\xECH\0\x95\xBCMP*\xF0DZdsolcC\0\x08\x0C\x003",
+        b"`\x80\x80`@R4`\x17W`9\x90\x81`\x1C\x8290\x81PP\xF3[_\x80\xFD\xFE_\x80\xFD\xFE\xA2dipfsX\"\x12 \xFF\xFB\x0E\xACi1/\xA3\xB2\x12\x06\xB1\x89\xEC\xA8\x86\xD5'n\xCE-\x1B+\x11V\xA0\xFFn\xAB\x93\x8CWdsolcC\0\x08\x1B\x003",
     );
     /// The runtime bytecode of the contract, as deployed on the network.
     ///
     /// ```text
-    ///0x73000000000000000000000000000000000000000030146080604052600080fdfea2646970667358221220e007c97e6583d7762f50b4057f1f6ec1f4f767c599ec480095bc4d502af0445a64736f6c634300080c0033
+    ///0x5f80fdfea2646970667358221220fffb0eac69312fa3b21206b189eca886d5276ece2d1b2b1156a0ff6eab938c5764736f6c634300081b0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static DEPLOYED_BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"s\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x000\x14`\x80`@R`\0\x80\xFD\xFE\xA2dipfsX\"\x12 \xE0\x07\xC9~e\x83\xD7v/P\xB4\x05\x7F\x1Fn\xC1\xF4\xF7g\xC5\x99\xECH\0\x95\xBCMP*\xF0DZdsolcC\0\x08\x0C\x003",
+        b"_\x80\xFD\xFE\xA2dipfsX\"\x12 \xFF\xFB\x0E\xACi1/\xA3\xB2\x12\x06\xB1\x89\xEC\xA8\x86\xD5'n\xCE-\x1B+\x11V\xA0\xFFn\xAB\x93\x8CWdsolcC\0\x08\x1B\x003",
     );
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`Address`](self) contract instance.

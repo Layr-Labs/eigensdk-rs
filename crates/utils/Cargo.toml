@@ -10,5 +10,3 @@ license-file.workspace = true
 [dependencies]
 alloy.workspace = true
 reqwest.workspace = true
-
-
