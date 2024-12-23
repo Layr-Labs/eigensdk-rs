@@ -9,6 +9,7 @@ import {StrategyFactory} from "@eigenlayer/contracts/strategies/StrategyFactory.
 import {MockERC20} from "../src/MockERC20.sol";
 import {Vm} from "forge-std/Vm.sol";
 import {UpgradeableProxyLib} from "./utils/UpgradeableProxyLib.sol";
+import {StrategyManager} from "@eigenlayer/contracts/core/StrategyManager.sol";
 
 // forge script script/DeployMockAvs.s.sol --rpc-url $RPC_URL --private-key $PRIVATE_KEY --etherscan-api-key $ETHERSCAN_API_KEY --broadcast --verify
 contract DeployMockAvs {
@@ -49,6 +50,11 @@ contract DeployMockAvs {
             StrategyFactory(_configData.strategyFactory).deployNewStrategy(
                 erc20Mock
             )
+        );
+        StrategyManager(_configData.strategyManager).depositIntoStrategy(
+            _mockAvsStrategy,
+            erc20Mock,
+            10e18
         );
         MockAvsDeploymentLib.DeploymentData
             memory depData = MockAvsDeploymentLib.deployContracts(
