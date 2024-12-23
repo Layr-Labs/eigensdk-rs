@@ -1249,6 +1249,22 @@ mod tests {
         let account_address = OPERATOR_ADDRESS;
         let operator_address = address!("a0Ee7A142d267C1f36714E4a8F75612F20a79720");
 
-        todo!()
+        // test remove permission
+        let el_chain_writer =
+            new_test_writer(http_endpoint.to_string(), OPERATOR_PRIVATE_KEY.to_string()).await;
+
+        let tx_hash = el_chain_writer
+            .register_for_operator_sets(operator_address, account_address, vec![1, 2, 3])
+            .await
+            .unwrap();
+
+        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+        assert!(receipt.status());
+
+        // TODO fix test:
+        // ---- writer::tests::test_register_for_operator_sets stdout ----
+        // thread 'writer::tests::test_register_for_operator_sets' panicked at crates/chainio/clients/elcontracts/src/writer.rs:1259:14:
+        // called `Result::unwrap()` on an `Err` value: AlloyContractError(TransportError(ErrorResp(ErrorPayload { code: 3, message: "execution reverted: custom error 0x932d94f7", data: Some(RawValue("0x932d94f7")) })))
+        // note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
     }
 }
