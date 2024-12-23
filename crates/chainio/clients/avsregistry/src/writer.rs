@@ -121,7 +121,6 @@ impl AvsRegistryChainWriter {
         })
     }
 
- 
     /// Register operator in quorum with avs registry coordinator
     ///
     /// # Arguments
