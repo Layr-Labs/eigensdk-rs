@@ -51,11 +51,6 @@ contract DeployMockAvs {
                 erc20Mock
             )
         );
-        StrategyManager(_configData.strategyManager).depositIntoStrategy(
-            _mockAvsStrategy,
-            erc20Mock,
-            10e18
-        );
         MockAvsDeploymentLib.DeploymentData
             memory depData = MockAvsDeploymentLib.deployContracts(
                 _proxyAdmin,
@@ -64,6 +59,11 @@ contract DeployMockAvs {
                 avsconfig,
                 msg.sender
             );
+        StrategyManager(_configData.strategyManager).depositIntoStrategy(
+            _mockAvsStrategy,
+            erc20Mock,
+            10e18
+        );
         IStrategy(
             StrategyFactory(_configData.strategyFactory).deployNewStrategy(
                 erc20MockRewards
