@@ -1236,6 +1236,7 @@ mod tests {
 
         let tx_hash = el_chain_writer
             .remove_permission(account_address, appointee_address, target, selector)
+            .await
             .unwrap();
 
         let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
