@@ -33,6 +33,7 @@ pub struct ELChainWriter {
 }
 
 impl ELChainWriter {
+    #[allow(clippy::too_many_arguments)]
     pub fn new(
         delegation_manager: Address,
         strategy_manager: Address,

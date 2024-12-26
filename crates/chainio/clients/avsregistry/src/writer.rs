@@ -352,7 +352,6 @@ mod tests {
                 .to_string();
         let private_key =
             "8b3a350cf5c34c9194ca85829a2df0ec3153be0318b5e2d3348e872092edffba".to_string();
-        let address = address!("f39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
         let avs_writer =
             build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
         let operator_addr = Address::from_str("9965507D1a55bcC2695C58ba16FB37d819B0A4dc").unwrap();

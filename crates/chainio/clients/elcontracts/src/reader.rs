@@ -757,7 +757,7 @@ impl ELChainReader {
             return Err(ElContractsError::NoSlashableSharesFound);
         };
 
-        Ok(slashable_operator_stake.clone().into())
+        Ok(slashable_operator_stake.clone())
     }
 
     /// Get the minimum amount of shares that are slashable by the operator sets. Not supported for M2 AVSs.
@@ -786,7 +786,7 @@ impl ELChainReader {
     /// - the operators,
     /// - the strategies,
     /// - the minimum amount of shares that are slashable before a given block.
-    /// Not supported for M2 AVSs.
+    ///   Not supported for M2 AVSs.
     /// # Arguments
     /// * `operator_sets` - The operator sets to query
     /// * `future_block` - The block at which to get allocation information. It must be greater that the current block number.
