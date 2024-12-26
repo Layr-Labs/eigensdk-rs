@@ -1111,7 +1111,7 @@ mod tests {
             .is_pending_admin(OPERATOR_ADDRESS, pending_admin)
             .await
             .unwrap();
-        assert_eq!(is_pending_admin, true);
+        assert!(is_pending_admin);
 
         let tx_hash = el_chain_writer
             .remove_pending_admin(OPERATOR_ADDRESS, pending_admin)
@@ -1124,7 +1124,7 @@ mod tests {
             .is_pending_admin(OPERATOR_ADDRESS, pending_admin)
             .await
             .unwrap();
-        assert_eq!(is_admin, false);
+        assert!(!is_admin);
     }
 
     #[tokio::test]
@@ -1152,7 +1152,7 @@ mod tests {
             .is_admin(OPERATOR_ADDRESS, pending_admin)
             .await
             .unwrap();
-        assert_eq!(is_admin, true);
+        assert!(is_admin);
     }
 
     #[tokio::test]
@@ -1196,7 +1196,7 @@ mod tests {
             .is_admin(OPERATOR_ADDRESS, pending_admin_2)
             .await
             .unwrap();
-        assert_eq!(is_admin, false);
+        assert!(!is_admin);
     }
 
     #[tokio::test]

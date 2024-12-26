@@ -64,12 +64,12 @@ async fn main() -> Result<()> {
     let quorum_nums = Bytes::from([0x01]);
 
     let delegation_manager_contract =
-        DelegationManager::new(DELEGATION_MANAGER_ADDRESS, get_provider(&holesky_provider));
+        DelegationManager::new(DELEGATION_MANAGER_ADDRESS, get_provider(holesky_provider));
     let permission_controller = delegation_manager_contract
         .permissionController()
         .call()
         .await
-        .unwrap()
+        .expect("DelegationManager contract failed when accessing PermissionController")
         ._0;
 
     // A new ElChainReader instance

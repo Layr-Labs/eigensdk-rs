@@ -1650,7 +1650,7 @@ mod tests {
             .await
             .unwrap();
 
-        assert_eq!(is_pending_admin, false);
+        assert!(!is_pending_admin);
     }
 
     #[tokio::test]
@@ -1663,6 +1663,6 @@ mod tests {
             .await
             .unwrap();
 
-        assert_eq!(is_admin, true);
+        assert!(is_admin);
     }
 }
