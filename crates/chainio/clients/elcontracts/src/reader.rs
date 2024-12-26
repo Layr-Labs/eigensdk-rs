@@ -1281,7 +1281,7 @@ mod tests {
             .await
             .unwrap();
 
-        let expected_strategies: Vec<Address> = vec![];
+        let expected_strategies: Vec<Address> = vec![get_erc20_mock_strategy(http_endpoint).await];
 
         assert!(strategies.len() == shares.len());
         assert_eq!(strategies, expected_strategies);
@@ -1372,7 +1372,7 @@ mod tests {
             .unwrap();
 
         assert_eq!(operator_shares.len(), 1);
-        assert_eq!(operator_shares[0], U256::from(0));
+        assert_eq!(operator_shares[0], U256::from(10e18));
     }
 
     #[tokio::test]
@@ -1388,7 +1388,7 @@ mod tests {
 
         assert_eq!(operator_shares.len(), 1);
         assert_eq!(operator_shares[0].len(), 1);
-        assert_eq!(operator_shares[0][0], U256::from(0));
+        assert_eq!(operator_shares[0][0], U256::from(10e18));
     }
 
     #[tokio::test]

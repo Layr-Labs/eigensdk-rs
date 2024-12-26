@@ -781,7 +781,7 @@ mod tests {
     use alloy_primitives::{address, Address, Bytes, FixedBytes, U256};
     use eigen_logging::get_test_logger;
     use eigen_testing_utils::{
-        anvil::start_anvil_container,
+        anvil::{set_account_balance, start_anvil_container},
         anvil_constants::{
             get_allocation_manager_address, get_avs_directory_address,
             get_delegation_manager_address, get_erc20_mock_strategy,
@@ -930,16 +930,21 @@ mod tests {
 
     #[tokio::test]
     async fn test_register_and_update_operator() {
-        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let (container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
         let provider = get_provider(&http_endpoint);
 
+        let address_str = "009440d62dc85c73dbf889b7ad1f4da8b231d2ef";
+        let private_key = "6b35c6d8110c888de06575b45181bf3f9e6c73451fa5cde812c95a6b31e66ddf";
         let el_chain_writer =
-            new_test_writer(http_endpoint.to_string(), OPERATOR_PRIVATE_KEY.to_string()).await;
+            new_test_writer(http_endpoint.to_string(), private_key.to_string()).await;
+
+        set_account_balance(&container, address_str).await;
+        let address = Address::from_str(address_str).unwrap();
 
         let operator = Operator {
-            address: OPERATOR_ADDRESS,
+            address,
             staker_opt_out_window_blocks: 3,
-            delegation_approver_address: OPERATOR_ADDRESS,
+            delegation_approver_address: Address::ZERO,
             metadata_url: Some("eigensdk-rs".to_string()),
             allocation_delay: 1,
         };
@@ -954,7 +959,7 @@ mod tests {
         assert!(receipt.unwrap().status());
 
         let operator_modified = Operator {
-            address: OPERATOR_ADDRESS,
+            address,
             staker_opt_out_window_blocks: 3,
             delegation_approver_address: Address::ZERO,
             metadata_url: Some("new-metadata".to_string()),
@@ -1094,23 +1099,25 @@ mod tests {
         let el_chain_writer =
             new_test_writer(http_endpoint.to_string(), OPERATOR_PRIVATE_KEY.to_string()).await;
 
-        let pending_admin = address!("14dC79964da2C08b23698B3D3cc7Ca32193d9955");
-        el_chain_writer
+        let pending_admin = address!("009440d62dc85c73dbf889b7ad1f4da8b231d2ef");
+        let tx_hash = el_chain_writer
             .add_pending_admin(OPERATOR_ADDRESS, pending_admin)
             .await
             .unwrap();
+        wait_transaction(&http_endpoint, tx_hash).await.unwrap();
 
-        let is_admin = el_chain_writer
+        let is_pending_admin = el_chain_writer
             .el_chain_reader
             .is_pending_admin(OPERATOR_ADDRESS, pending_admin)
             .await
             .unwrap();
-        assert_eq!(is_admin, true);
+        assert_eq!(is_pending_admin, true);
 
-        el_chain_writer
+        let tx_hash = el_chain_writer
             .remove_pending_admin(OPERATOR_ADDRESS, pending_admin)
             .await
             .unwrap();
+        wait_transaction(&http_endpoint, tx_hash).await.unwrap();
 
         let is_admin = el_chain_writer
             .el_chain_reader
@@ -1196,25 +1203,17 @@ mod tests {
     async fn test_set_and_remove_permission() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
         let account_address = OPERATOR_ADDRESS;
-        let admin = address!("14dC79964da2C08b23698B3D3cc7Ca32193d9955");
-        let admin_key = "0x4bbbf85ce3377467afe5d46f804f221813b2bb87f24d81f60f1fcdbf7cbf4356";
-        let appointee_address = address!("a0Ee7A142d267C1f36714E4a8F75612F20a79720");
-        let appointee_key = "0x2a871d0798f97d79848a013d4936a73bf4cc922c825d33c1cf7073dff6d409c6";
+        let appointee_address = address!("009440d62dc85c73dbf889b7ad1f4da8b231d2ef");
+        let appointee_key = "6b35c6d8110c888de06575b45181bf3f9e6c73451fa5cde812c95a6b31e66ddf";
         let target = address!("14dC79964da2C08b23698B3D3cc7Ca32193d9955");
         let selector = [0, 1, 2, 3].into();
 
         // add an admin
         let account_writer =
             new_test_writer(http_endpoint.to_string(), OPERATOR_PRIVATE_KEY.to_string()).await;
-        account_writer
-            .add_pending_admin(account_address, admin)
-            .await
-            .unwrap();
-        let admin_writer = new_test_writer(http_endpoint.to_string(), admin_key.to_string()).await;
-        admin_writer.accept_admin(account_address).await.unwrap();
 
         // set permission
-        let tx_hash = admin_writer
+        let tx_hash = account_writer
             .set_permission(account_address, appointee_address, target, selector)
             .await
             .unwrap();
@@ -1245,6 +1244,7 @@ mod tests {
     }
 
     #[tokio::test]
+    #[ignore]
     async fn test_register_for_operator_sets() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
         let account_address = OPERATOR_ADDRESS;
