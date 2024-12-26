@@ -1128,7 +1128,6 @@ mod tests {
     use eigen_logging::get_test_logger;
     use eigen_testing_utils::anvil_constants::{
         get_allocation_manager_address, get_avs_directory_address, get_erc20_mock_strategy,
-        register_operator_to_el_if_not_registered,
     };
     use eigen_testing_utils::{
         anvil::start_anvil_container, anvil_constants::get_delegation_manager_address,
@@ -1141,19 +1140,8 @@ mod tests {
     };
 
     const OPERATOR_ADDRESS: Address = address!("70997970C51812dc3A010C7d01b50e0d17dc79C8");
-    const OPERATOR_PRIVATE_KEY: &str =
-        "0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d";
 
     async fn build_el_chain_reader(http_endpoint: String) -> ELChainReader {
-        register_operator_to_el_if_not_registered(
-            OPERATOR_PRIVATE_KEY,
-            &http_endpoint,
-            OPERATOR_ADDRESS,
-            "metadata_uri",
-        )
-        .await
-        .unwrap();
-
         let delegation_manager_address =
             get_delegation_manager_address(http_endpoint.clone()).await;
         let allocation_manager_address =

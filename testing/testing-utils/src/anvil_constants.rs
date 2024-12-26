@@ -1,11 +1,7 @@
 //! Anvil utilities
-use std::str::FromStr;
-
 use alloy::sol;
 use alloy_primitives::{address, Address};
-use alloy_signer_local::PrivateKeySigner;
-use eigen_utils::delegationmanager::DelegationManager;
-use eigen_utils::{get_provider, get_signer};
+use eigen_utils::get_provider;
 sol! {
     #[derive(Debug)]
     #[allow(missing_docs)]
@@ -26,7 +22,6 @@ sol! {
 
     }
 }
-use eyre::Result;
 use ContractsRegistry::contractsReturn;
 
 /// Local anvil ContractsRegistry which contains a mapping of all locally deployed EL contracts.
@@ -186,32 +181,4 @@ pub async fn get_allocation_manager_address(rpc_url: String) -> Address {
     let contractsReturn { _0: address } = val;
 
     address
-}
-
-/// Register an operator in the DelegationManager contract. If its already registered, it will not do anything.
-pub async fn register_operator_to_el_if_not_registered(
-    pvt_key: &str,
-    rpc_url: &str,
-    delegation_approver: Address,
-    metadata_uri: &str,
-) -> Result<()> {
-    let wallet = PrivateKeySigner::from_str(pvt_key)?;
-    let signer = get_signer(pvt_key, rpc_url);
-    let contract_instance = DelegationManager::new(
-        get_delegation_manager_address(rpc_url.to_string()).await,
-        signer,
-    );
-    let is_registered = contract_instance
-        .isOperator(wallet.address())
-        .call()
-        .await?
-        ._0;
-    if !is_registered {
-        let register_instance = contract_instance
-            .registerAsOperator(delegation_approver, 1, metadata_uri.to_string())
-            .send()
-            .await?;
-        register_instance.get_receipt().await?;
-    }
-    Ok(())
 }

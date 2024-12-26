@@ -321,7 +321,6 @@ mod tests {
     use eigen_testing_utils::anvil::start_anvil_container;
     use eigen_testing_utils::anvil_constants::{
         get_operator_state_retriever_address, get_registry_coordinator_address,
-        register_operator_to_el_if_not_registered,
     };
     use eigen_testing_utils::transaction::wait_transaction;
     use std::str::FromStr;
@@ -359,9 +358,6 @@ mod tests {
         let operator_addr = Address::from_str("9965507D1a55bcC2695C58ba16FB37d819B0A4dc").unwrap();
         let quorum_nums = Bytes::from([0]);
 
-        register_operator_to_el_if_not_registered(&private_key, &http_endpoint, address, "uri")
-            .await
-            .unwrap();
         test_register_operator(
             &avs_writer,
             bls_key,
