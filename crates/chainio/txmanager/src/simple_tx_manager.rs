@@ -320,20 +320,23 @@ mod tests {
     use alloy::primitives::{address, bytes, TxKind::Call, U256};
     use alloy::rpc::types::eth::TransactionRequest;
     use eigen_logging::get_test_logger;
-    use eigen_testing_utils::anvil::start_anvil_container;
+    use eigen_testing_utils::anvil::{set_account_balance, start_anvil_container};
     use std::time::Duration;
     use tokio;
     use tokio::time::Instant;
 
     #[tokio::test]
     async fn test_send_transaction_from_legacy() {
-        let (_container, rpc_url, _ws_endpoint) = start_anvil_container().await;
+        let (container, rpc_url, _ws_endpoint) = start_anvil_container().await;
         let logger = get_test_logger();
 
-        let private_key =
-            "2a871d0798f97d79848a013d4936a73bf4cc922c825d33c1cf7073dff6d409c6".to_string();
+        // Set balance on a random address to use as sender
+        let private_key = "6b35c6d8110c888de06575b45181bf3f9e6c73451fa5cde812c95a6b31e66ddf";
+        let address = "009440d62dc85c73dbf889b7ad1f4da8b231d2ef";
+        set_account_balance(&container, address).await;
+
         let simple_tx_manager =
-            SimpleTxManager::new(logger, 1.0, private_key.as_str(), rpc_url.as_str()).unwrap();
+            SimpleTxManager::new(logger, 1.0, private_key, rpc_url.as_str()).unwrap();
         let to = address!("a0Ee7A142d267C1f36714E4a8F75612F20a79720");
 
         let tx = TxLegacy {
@@ -357,13 +360,16 @@ mod tests {
 
     #[tokio::test]
     async fn test_send_transaction_from_eip1559() {
-        let (_container, rpc_url, _ws_endpoint) = start_anvil_container().await;
-        let logger = get_test_logger();
+        let (container, rpc_url, _ws_endpoint) = start_anvil_container().await;
 
-        let private_key =
-            "2a871d0798f97d79848a013d4936a73bf4cc922c825d33c1cf7073dff6d409c6".to_string();
+        // Set balance on a random address to use as sender
+        let private_key = "6b35c6d8110c888de06575b45181bf3f9e6c73451fa5cde812c95a6b31e66ddf";
+        let address = "009440d62dc85c73dbf889b7ad1f4da8b231d2ef";
+        set_account_balance(&container, address).await;
+
+        let logger = get_test_logger();
         let simple_tx_manager =
-            SimpleTxManager::new(logger, 1.0, private_key.as_str(), rpc_url.as_str()).unwrap();
+            SimpleTxManager::new(logger, 1.0, private_key, rpc_url.as_str()).unwrap();
         let to = address!("a0Ee7A142d267C1f36714E4a8F75612F20a79720");
 
         let mut tx = TransactionRequest::default()
