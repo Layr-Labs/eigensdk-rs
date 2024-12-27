@@ -1,6 +1,9 @@
 use crate::error::ElContractsError;
 use crate::reader::ELChainReader;
 use alloy_primitives::{ruint::aliases::U256, Address, Bytes, FixedBytes, TxHash};
+use eigen_crypto_bls::{
+    alloy_g1_point_to_g1_affine, convert_to_g1_point, convert_to_g2_point, BlsKeyPair,
+};
 pub use eigen_types::operator::Operator;
 use eigen_utils::{
     allocationmanager::{AllocationManager, IAllocationManagerTypes},
@@ -12,8 +15,10 @@ use eigen_utils::{
         IRewardsCoordinatorTypes::{self, RewardsMerkleClaim},
     },
     permissioncontroller::PermissionController,
+    registrycoordinator::{IBLSApkRegistry::PubkeyRegistrationParams, RegistryCoordinator},
     strategymanager::StrategyManager,
 };
+
 use tracing::info;
 
 /// Gas limit for registerAsOperator in [`DelegationManager`]
@@ -658,14 +663,40 @@ impl ELChainWriter {
         operator_address: Address,
         avs_address: Address,
         operator_set_ids: Vec<u32>,
+        bls_key_pair: BlsKeyPair,
     ) -> Result<TxHash, ElContractsError> {
         let provider = get_signer(&self.signer, &self.provider);
-        let allocation_manager_contract = AllocationManager::new(self.allocation_manager, provider);
+        let allocation_manager_contract =
+            AllocationManager::new(self.allocation_manager, provider.clone());
 
+        let registry_coordinator_addr = Address::ZERO; // TODO: set registry_coordinator_addr as class attribute
+        let contract_registry_coordinator =
+            RegistryCoordinator::new(registry_coordinator_addr, provider);
+        let g1_hashed_msg_to_sign = contract_registry_coordinator
+            .pubkeyRegistrationMessageHash(operator_address)
+            .call()
+            .await
+            .unwrap()
+            ._0;
+
+        let sig = bls_key_pair
+            .sign_hashed_to_curve_message(alloy_g1_point_to_g1_affine(g1_hashed_msg_to_sign))
+            .g1_point();
+        let alloy_g1_point_signed_msg = convert_to_g1_point(sig.g1()).unwrap();
+        let g1_pub_key_bn254 = convert_to_g1_point(bls_key_pair.public_key().g1()).unwrap();
+        let g2_pub_key_bn254 = convert_to_g2_point(bls_key_pair.public_key_g2().g2()).unwrap();
+
+        let params = PubkeyRegistrationParams {
+            pubkeyRegistrationSignature: alloy_g1_point_signed_msg,
+            pubkeyG1: g1_pub_key_bn254,
+            pubkeyG2: g2_pub_key_bn254,
+        };
+
+        let data = ("socket", params); // TODO: abi encode this
         let params = IAllocationManagerTypes::RegisterParams {
             avs: avs_address,
             operatorSetIds: operator_set_ids,
-            data: Bytes::new(),
+            data: Bytes::new(), // TODO: FIX THIS
         };
         let tx = allocation_manager_contract
             .registerForOperatorSets(operator_address, params)
@@ -778,19 +809,21 @@ mod tests {
     use super::ELChainWriter;
     use crate::reader::ELChainReader;
     use alloy::{hex::FromHex, providers::Provider};
-    use alloy_primitives::{address, Address, Bytes, FixedBytes, U256};
+    use alloy_primitives::{address, aliases::U96, Address, Bytes, FixedBytes, U256};
     use eigen_logging::get_test_logger;
     use eigen_testing_utils::{
         anvil::{set_account_balance, start_anvil_container},
         anvil_constants::{
             get_allocation_manager_address, get_avs_directory_address,
             get_delegation_manager_address, get_erc20_mock_strategy,
-            get_rewards_coordinator_address, get_strategy_manager_address,
+            get_registry_coordinator_address, get_rewards_coordinator_address,
+            get_strategy_manager_address,
         },
         transaction::wait_transaction,
     };
     use eigen_types::operator::Operator;
     use eigen_utils::{
+        allocationmanager::{AllocationManager, IAllocationManagerTypes},
         delegationmanager::DelegationManager,
         get_provider, get_signer,
         irewardscoordinator::{
@@ -798,6 +831,10 @@ mod tests {
             IRewardsCoordinatorTypes::{
                 EarnerTreeMerkleLeaf, RewardsMerkleClaim, TokenTreeMerkleLeaf,
             },
+        },
+        registrycoordinator::{
+            IRegistryCoordinator::OperatorSetParam, IStakeRegistry::StrategyParams,
+            RegistryCoordinator,
         },
     };
     use std::str::FromStr;
@@ -1244,28 +1281,112 @@ mod tests {
     }
 
     #[tokio::test]
-    #[ignore]
     async fn test_register_for_operator_sets() {
-        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let account_address = OPERATOR_ADDRESS;
-        let operator_address = address!("a0Ee7A142d267C1f36714E4a8F75612F20a79720");
+        // let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let http_endpoint = "http://localhost:8545".to_string();
 
-        // test remove permission
+        let avs_address = OPERATOR_ADDRESS;
+
+        // set registrar - otherwise i dont know how to get permissions for registry coordinator address
+        // check if this is needed (should be done on deploy) or is already set
+        let allocation_manager_addr = get_allocation_manager_address(http_endpoint.clone()).await;
+        let signer = get_signer(OPERATOR_PRIVATE_KEY, &http_endpoint);
+        let allocation_manager = AllocationManager::new(allocation_manager_addr, signer.clone());
+        let registry_coordinator_addr =
+            get_registry_coordinator_address(http_endpoint.clone()).await;
+        allocation_manager
+            .setAVSRegistrar(avs_address, registry_coordinator_addr)
+            .send()
+            .await
+            .unwrap()
+            .get_receipt()
+            .await
+            .unwrap();
+
+        // enable operator sets in Registry Coordinator
+        let registry_coordinator =
+            RegistryCoordinator::new(registry_coordinator_addr, signer.clone());
+        registry_coordinator
+            .enableOperatorSets()
+            .send()
+            .await
+            .unwrap()
+            .get_receipt()
+            .await
+            .unwrap();
+
+        // create slashable quorum
+        let contract_registry_coordinator =
+            RegistryCoordinator::new(registry_coordinator_addr, signer.clone());
+        let operator_set_params = OperatorSetParam {
+            maxOperatorCount: 10,
+            kickBIPsOfOperatorStake: 100,
+            kickBIPsOfTotalStake: 1000,
+        };
+        let strategy_params = StrategyParams {
+            strategy: get_erc20_mock_strategy(http_endpoint.to_string()).await,
+            multiplier: U96::from(1),
+        };
+        contract_registry_coordinator
+            .createSlashableStakeQuorum(operator_set_params, U96::from(0), vec![strategy_params], 0)
+            .send()
+            .await
+            .unwrap()
+            .get_receipt()
+            .await
+            .unwrap();
+
+        // create operator set
+        let operator_set_id = 1;
+        let params = IAllocationManagerTypes::CreateSetParams {
+            operatorSetId: operator_set_id,
+            strategies: vec![get_erc20_mock_strategy(http_endpoint.clone()).await],
+        };
+        allocation_manager
+            .createOperatorSets(avs_address, vec![params])
+            .send()
+            .await
+            .unwrap()
+            .get_receipt()
+            .await
+            .unwrap();
+
+        // register to operator set
+        let operator_addr = address!("70997970C51812dc3A010C7d01b50e0d17dc79C8");
+        let operator_private_key =
+            "0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d";
         let el_chain_writer =
-            new_test_writer(http_endpoint.to_string(), OPERATOR_PRIVATE_KEY.to_string()).await;
-
+            new_test_writer(http_endpoint.clone(), operator_private_key.to_string()).await;
         let tx_hash = el_chain_writer
-            .register_for_operator_sets(operator_address, account_address, vec![1, 2, 3])
+            .register_for_operator_sets(operator_addr, avs_address, vec![operator_set_id])
             .await
             .unwrap();
 
         let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
         assert!(receipt.status());
+    }
 
-        // TODO fix test:
-        // ---- writer::tests::test_register_for_operator_sets stdout ----
-        // thread 'writer::tests::test_register_for_operator_sets' panicked at crates/chainio/clients/elcontracts/src/writer.rs:1259:14:
-        // called `Result::unwrap()` on an `Err` value: AlloyContractError(TransportError(ErrorResp(ErrorPayload { code: 3, message: "execution reverted: custom error 0x932d94f7", data: Some(RawValue("0x932d94f7")) })))
-        // note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+    #[tokio::test]
+    async fn test_set_allocation_delay() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let el_chain_writer =
+            new_test_writer(http_endpoint.to_string(), OPERATOR_PRIVATE_KEY.to_string()).await;
+
+        let delay = 10;
+
+        let tx_hash = el_chain_writer
+            .set_allocation_delay(OPERATOR_ADDRESS, delay)
+            .await
+            .unwrap();
+        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+        assert!(receipt.status());
+
+        let allocation_delay = el_chain_writer
+            .el_chain_reader
+            .get_allocation_delay(OPERATOR_ADDRESS)
+            .await
+            .unwrap();
+
+        assert_eq!(allocation_delay, delay);
     }
 }
