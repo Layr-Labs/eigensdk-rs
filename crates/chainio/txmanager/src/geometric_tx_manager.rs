@@ -390,14 +390,15 @@ mod tests {
     use alloy::rpc::types::eth::TransactionRequest;
     use eigen_logging::get_test_logger;
     use eigen_signer::signer::Config;
-    use eigen_testing_utils::anvil::start_anvil_container;
+    use eigen_testing_utils::anvil::{set_account_balance, start_anvil_container};
     use std::sync::Arc;
     use std::time::Duration;
     use tokio::sync::Mutex;
     use tokio::time::{sleep, Instant};
 
     const TEST_PRIVATE_KEY: &str =
-        "2a871d0798f97d79848a013d4936a73bf4cc922c825d33c1cf7073dff6d409c6";
+        "6b35c6d8110c888de06575b45181bf3f9e6c73451fa5cde812c95a6b31e66ddf";
+    const TEST_ADDRESS: &str = "009440d62dc85c73dbf889b7ad1f4da8b231d2ef";
 
     fn new_test_tx() -> TransactionRequest {
         TransactionRequest::default()
@@ -441,7 +442,10 @@ mod tests {
     #[tokio::test]
     async fn test_send_single_transaction() {
         // Send transaction using Alloy RootProvider
-        let (_container, rpc_url, _ws_endpoint) = start_anvil_container().await;
+        let (container, rpc_url, _ws_endpoint) = start_anvil_container().await;
+
+        set_account_balance(&container, TEST_ADDRESS).await;
+
         let logger = get_test_logger();
         let config = Config::PrivateKey(TEST_PRIVATE_KEY.to_string());
         let signer = Config::signer_from_config(config).unwrap();

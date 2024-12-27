@@ -427,10 +427,10 @@ mod tests {
     use eigen_client_avsregistry::writer::AvsRegistryChainWriter;
     use eigen_client_elcontracts::{reader::ELChainReader, writer::ELChainWriter};
     use eigen_crypto_bls::BlsKeyPair;
-    use eigen_logging::{get_logger, get_test_logger, init_logger};
+    use eigen_logging::get_test_logger;
     use eigen_testing_utils::anvil::start_anvil_container;
     use eigen_testing_utils::anvil_constants::{
-        get_avs_directory_address, get_delegation_manager_address,
+        get_allocation_manager_address, get_avs_directory_address, get_delegation_manager_address,
         get_operator_state_retriever_address, get_registry_coordinator_address,
         get_rewards_coordinator_address, get_strategy_manager_address,
     };
@@ -445,8 +445,7 @@ mod tests {
     #[tokio::test]
     async fn test_query_past_registered_operator_events_and_fill_db() {
         let (_container, http_endpoint, ws_endpoint) = start_anvil_container().await;
-        init_logger(eigen_logging::log_level::LogLevel::Debug);
-        let test_logger = get_logger();
+        let test_logger = get_test_logger();
         register_operator(
             http_endpoint.clone(),
             "0x7c852118294e51e653712a81e05800f419141751be58f605c371e15141b007a6",
@@ -646,8 +645,10 @@ mod tests {
 
         let contract_delegation_manager =
             DelegationManager::new(delegation_manager_address, get_provider(&http_endpoint));
+
         let rewards_coordinator_address =
             get_rewards_coordinator_address(http_endpoint.clone()).await;
+
         let DelegationManager::permissionControllerReturn {
             _0: permission_controller,
         } = contract_delegation_manager
@@ -666,10 +667,14 @@ mod tests {
         );
         let signer = PrivateKeySigner::from_str(pvt_key).unwrap();
 
+        let allocation_manager = get_allocation_manager_address(http_endpoint.clone()).await;
+
         let el_chain_writer = ELChainWriter::new(
             delegation_manager_address,
             strategy_manager_address,
             rewards_coordinator_address,
+            permission_controller,
+            allocation_manager,
             el_chain_reader,
             http_endpoint.to_string(),
             pvt_key.to_string(),

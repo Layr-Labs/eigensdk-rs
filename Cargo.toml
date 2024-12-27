@@ -46,7 +46,14 @@ rust.rust_2018_idioms = { level = "deny", priority = -1 }
 rustdoc.all = "warn"
 clippy.unwrap_used = "warn"
 clippy.expect_used = "warn"
+clippy.panic = "warn"
 clippy.todo = "warn"
+clippy.indexing_slicing = "warn"
+clippy.string_slice = "warn"
+clippy.panic_in_result_fn = "warn"
+clippy.panicking_overflow_checks = "warn"
+clippy.question_mark = "warn"
+clippy.implicit_return = "allow"
 
 [workspace.dependencies]
 ark-bn254 = "0.5.0"
@@ -56,6 +63,7 @@ ark-serialize = "0.5.0"
 async-trait = "0.1.83"
 aws-config = "1.5.9"
 aws-sdk-kms = "1.49.0"
+backoff = { version = "0.4.0", features = ["futures", "tokio"] }
 clap = { version = "4.5.20", features = ["derive"] }
 eigen-chainio-txmanager = { path = "crates/chainio/txmanager/" }
 eigen-client-avsregistry = { path = "crates/chainio/clients/avsregistry" }
@@ -110,14 +118,23 @@ tracing-subscriber = { version = "0.3", features = ["json"] }
 url = "2.5"
 
 #misc
-rust-bls-bn254 = { version = "0.2.1" , features = ["std"] }
+rust-bls-bn254 = { version = "0.2.1", features = ["std"] }
 uuid = { version = "1.11", features = ["v4"] }
 
 
 #misc
 parking_lot = "0.12"
 
+
+anvil-utils = { path = "examples/anvil-utils" }
+
 #alloy
+alloy = { version = "0.7.0", features = [
+    "sol-types",
+    "contract",
+    "full",
+    "signer-aws",
+] }
 alloy-json-rpc = { version = "0.7", default-features = false }
 alloy-network = { version = "0.7", default-features = false }
 alloy-node-bindings = { version = "0.7", default-features = false }
@@ -138,10 +155,11 @@ alloy-signer-aws = "0.7"
 alloy-signer-local = { version = "0.7", default-features = false }
 alloy-sol-types = "0.8"
 alloy-transport = { version = "0.7" }
-alloy-transport-http = { version = "0.7", features = ["reqwest-rustls-tls"], default-features = false }
+alloy-transport-http = { version = "0.7", features = [
+    "reqwest-rustls-tls",
+], default-features = false }
 alloy-transport-ipc = { version = "0.7.0", default-features = false }
 alloy-transport-ws = { version = "0.7.0", default-features = false }
-alloy = { version = "0.7.0", features = ["sol-types", "contract","full","signer-aws"] }
-anvil-utils = { path = "examples/anvil-utils" }
+
 avsregistry-read = { path = "examples/avsregistry-read" }
 avsregistry-write = { path = "examples/avsregistry-write" }

@@ -54,8 +54,8 @@ impl ELChainReader {
         }
     }
 
-    /// Builds a new `ELChainReader` instance, getting the slasher address from the delegation manager
-    /// by calling the `slasher()` function and the corresponding Contract function.
+    /// Builds a new `ELChainReader` instance, getting the AllocationManager and PermissionController addresses
+    /// from the delegation manager.
     ///
     /// # Arguments
     ///
@@ -757,7 +757,7 @@ impl ELChainReader {
             return Err(ElContractsError::NoSlashableSharesFound);
         };
 
-        Ok(slashable_operator_stake.clone().into())
+        Ok(slashable_operator_stake.clone())
     }
 
     /// Get the minimum amount of shares that are slashable by the operator sets. Not supported for M2 AVSs.
@@ -786,7 +786,7 @@ impl ELChainReader {
     /// - the operators,
     /// - the strategies,
     /// - the minimum amount of shares that are slashable before a given block.
-    /// Not supported for M2 AVSs.
+    ///   Not supported for M2 AVSs.
     /// # Arguments
     /// * `operator_sets` - The operator sets to query
     /// * `future_block` - The block at which to get allocation information. It must be greater that the current block number.
@@ -894,14 +894,20 @@ impl ELChainReader {
     }
 
     /// Check if the given caller has permissions to call the function
+    ///
     /// # Arguments
+    ///
     /// * `account_address` - The account address to check
     /// * `appointee_address` - The caller address to check permissions for
     /// * `target` - The target address to check permissions for
     /// * `selector` - The selector of the function to check permissions for
+    ///
     /// # Returns
+    ///
     /// * `bool` - true if the account has permissions to call the function, false otherwise
+    ///
     /// # Errors
+    ///
     /// * `ElContractsError` - if the call to the contract fails
     pub async fn can_call(
         &self,
@@ -1122,7 +1128,6 @@ mod tests {
     use eigen_logging::get_test_logger;
     use eigen_testing_utils::anvil_constants::{
         get_allocation_manager_address, get_avs_directory_address, get_erc20_mock_strategy,
-        register_operator_to_el_if_not_registered,
     };
     use eigen_testing_utils::{
         anvil::start_anvil_container, anvil_constants::get_delegation_manager_address,
@@ -1135,19 +1140,8 @@ mod tests {
     };
 
     const OPERATOR_ADDRESS: Address = address!("70997970C51812dc3A010C7d01b50e0d17dc79C8");
-    const OPERATOR_PRIVATE_KEY: &str =
-        "0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d";
 
     async fn build_el_chain_reader(http_endpoint: String) -> ELChainReader {
-        register_operator_to_el_if_not_registered(
-            OPERATOR_PRIVATE_KEY,
-            &http_endpoint,
-            OPERATOR_ADDRESS,
-            "metadata_uri",
-        )
-        .await
-        .unwrap();
-
         let delegation_manager_address =
             get_delegation_manager_address(http_endpoint.clone()).await;
         let allocation_manager_address =
@@ -1287,7 +1281,7 @@ mod tests {
             .await
             .unwrap();
 
-        let expected_strategies: Vec<Address> = vec![];
+        let expected_strategies: Vec<Address> = vec![get_erc20_mock_strategy(http_endpoint).await];
 
         assert!(strategies.len() == shares.len());
         assert_eq!(strategies, expected_strategies);
@@ -1378,7 +1372,7 @@ mod tests {
             .unwrap();
 
         assert_eq!(operator_shares.len(), 1);
-        assert_eq!(operator_shares[0], U256::from(0));
+        assert_eq!(operator_shares[0], U256::from(10e18));
     }
 
     #[tokio::test]
@@ -1394,7 +1388,7 @@ mod tests {
 
         assert_eq!(operator_shares.len(), 1);
         assert_eq!(operator_shares[0].len(), 1);
-        assert_eq!(operator_shares[0][0], U256::from(0));
+        assert_eq!(operator_shares[0][0], U256::from(10e18));
     }
 
     #[tokio::test]
@@ -1591,23 +1585,6 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn test_can_call() {
-        // TODO: test with real values
-        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
-
-        let account_address = Address::ZERO;
-        let target = Address::ZERO;
-        let selector = FixedBytes::from([0x00; 4]);
-        let can_call = chain_reader
-            .can_call(account_address, OPERATOR_ADDRESS, target, selector)
-            .await
-            .unwrap();
-
-        assert!(!can_call);
-    }
-
-    #[tokio::test]
     async fn test_list_appointee() {
         // TODO: test with real values
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
@@ -1673,7 +1650,7 @@ mod tests {
             .await
             .unwrap();
 
-        assert_eq!(is_pending_admin, false);
+        assert!(!is_pending_admin);
     }
 
     #[tokio::test]
@@ -1686,6 +1663,6 @@ mod tests {
             .await
             .unwrap();
 
-        assert_eq!(is_admin, true);
+        assert!(is_admin);
     }
 }

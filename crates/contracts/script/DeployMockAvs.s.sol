@@ -9,6 +9,9 @@ import {StrategyFactory} from "@eigenlayer/contracts/strategies/StrategyFactory.
 import {MockERC20} from "../src/MockERC20.sol";
 import {Vm} from "forge-std/Vm.sol";
 import {UpgradeableProxyLib} from "./utils/UpgradeableProxyLib.sol";
+import {StrategyManager} from "@eigenlayer/contracts/core/StrategyManager.sol";
+import {DelegationManager} from "@eigenlayer/contracts/core/DelegationManager.sol";
+import "forge-std/StdCheats.sol";
 
 // forge script script/DeployMockAvs.s.sol --rpc-url $RPC_URL --private-key $PRIVATE_KEY --etherscan-api-key $ETHERSCAN_API_KEY --broadcast --verify
 contract DeployMockAvs {
@@ -64,11 +67,49 @@ contract DeployMockAvs {
             )
         );
 
+        // Register operators with EigenLayer
+        uint256 numberOfOperators = 10;
+        string
+            memory mnemonic = "test test test test test test test test test test test junk";
+        address[] memory operators = new address[](numberOfOperators);
+        uint256[] memory operatorTokenAmounts = new uint256[](
+            numberOfOperators
+        );
+        for (uint256 i; i < numberOfOperators; i++) {
+            uint256 privateKey = _VM.deriveKey(mnemonic, uint32(i));
+            address operator = _VM.rememberKey(privateKey);
+            operators[i] = operator;
+            operatorTokenAmounts[i] = 10 ether;
+            FundOperator.fundOperator(address(erc20Mock), operator, 10e18);
+        }
+
+        _VM.stopBroadcast();
+
+        for (uint256 i = 0; i < numberOfOperators; i++) {
+            address delegationApprover = address(0); // anyone can delegate to this operator
+            uint32 allocationDelayBlocks = 1;
+            string memory metadataURI = string.concat(
+                "https://coolstuff.com/operator/",
+                _VM.toString(i)
+            );
+            uint256 privateKey = _VM.deriveKey(mnemonic, uint32(i));
+            _VM.startBroadcast(privateKey);
+            DelegationManager(_configData.delegationManager).registerAsOperator(
+                delegationApprover,
+                allocationDelayBlocks,
+                metadataURI
+            );
+            StrategyManager(_configData.strategyManager).depositIntoStrategy(
+                _mockAvsStrategy,
+                erc20Mock,
+                operatorTokenAmounts[i]
+            );
+            _VM.stopBroadcast();
+        }
+
         depData.tokenRewards = address(erc20MockRewards);
         depData.token = address(erc20Mock);
 
         MockAvsDeploymentLib.writeDeploymentJson(depData);
-
-        _VM.stopBroadcast();
     }
 }

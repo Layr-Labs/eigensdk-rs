@@ -836,7 +836,7 @@ mod tests {
     };
     use alloy_primitives::address;
     use eigen_signer::signer::Config;
-    use eigen_testing_utils::anvil::start_anvil_container;
+    use eigen_testing_utils::anvil::{set_account_balance, start_anvil_container};
     use eigen_testing_utils::transaction::wait_transaction;
     use eigen_utils::get_provider;
     use tokio;
@@ -1006,10 +1006,14 @@ mod tests {
     /// * `transaction_in_block`
     #[tokio::test]
     async fn test_transaction_methods() {
-        let (_container, rpc_url, _ws_endpoint) = start_anvil_container().await;
+        let (container, rpc_url, _ws_endpoint) = start_anvil_container().await;
         let instrumented_client = InstrumentedClient::new(&rpc_url).await.unwrap();
+
+        // Set balance on a random address to use as sender
         let private_key_hex =
-            "2a871d0798f97d79848a013d4936a73bf4cc922c825d33c1cf7073dff6d409c6".to_string();
+            "6b35c6d8110c888de06575b45181bf3f9e6c73451fa5cde812c95a6b31e66ddf".to_string();
+        let address = "009440d62dc85c73dbf889b7ad1f4da8b231d2ef";
+        set_account_balance(&container, address).await;
 
         // build the transaction
         let to = address!("a0Ee7A142d267C1f36714E4a8F75612F20a79720");

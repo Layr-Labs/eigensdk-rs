@@ -315,13 +315,12 @@ impl AvsRegistryChainWriter {
 #[cfg(test)]
 mod tests {
     use super::AvsRegistryChainWriter;
-    use alloy_primitives::{address, Address, Bytes, FixedBytes, U256};
+    use alloy_primitives::{Address, Bytes, FixedBytes, U256};
     use eigen_crypto_bls::BlsKeyPair;
     use eigen_logging::get_test_logger;
     use eigen_testing_utils::anvil::start_anvil_container;
     use eigen_testing_utils::anvil_constants::{
         get_operator_state_retriever_address, get_registry_coordinator_address,
-        register_operator_to_el_if_not_registered,
     };
     use eigen_testing_utils::transaction::wait_transaction;
     use std::str::FromStr;
@@ -353,15 +352,11 @@ mod tests {
                 .to_string();
         let private_key =
             "8b3a350cf5c34c9194ca85829a2df0ec3153be0318b5e2d3348e872092edffba".to_string();
-        let address = address!("f39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
         let avs_writer =
             build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
         let operator_addr = Address::from_str("9965507D1a55bcC2695C58ba16FB37d819B0A4dc").unwrap();
         let quorum_nums = Bytes::from([0]);
 
-        register_operator_to_el_if_not_registered(&private_key, &http_endpoint, address, "uri")
-            .await
-            .unwrap();
         test_register_operator(
             &avs_writer,
             bls_key,

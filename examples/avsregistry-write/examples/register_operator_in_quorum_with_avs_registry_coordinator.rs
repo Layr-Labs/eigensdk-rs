@@ -7,11 +7,15 @@ use eigen_client_elcontracts::reader::ELChainReader;
 use eigen_client_elcontracts::writer::ELChainWriter;
 use eigen_crypto_bls::BlsKeyPair;
 use eigen_logging::get_test_logger;
-use eigen_testing_utils::m2_holesky_constants::{
-    AVS_DIRECTORY_ADDRESS, DELEGATION_MANAGER_ADDRESS, OPERATOR_STATE_RETRIEVER,
-    REGISTRY_COORDINATOR, REWARDS_COORDINATOR, SLASHER_ADDRESS, STRATEGY_MANAGER_ADDRESS,
+use eigen_testing_utils::{
+    anvil_constants::get_allocation_manager_address,
+    m2_holesky_constants::{
+        AVS_DIRECTORY_ADDRESS, DELEGATION_MANAGER_ADDRESS, OPERATOR_STATE_RETRIEVER,
+        REGISTRY_COORDINATOR, REWARDS_COORDINATOR, SLASHER_ADDRESS, STRATEGY_MANAGER_ADDRESS,
+    },
 };
 use eigen_types::operator::Operator;
+use eigen_utils::{delegationmanager::DelegationManager, get_provider};
 use eyre::Result;
 use lazy_static::lazy_static;
 use std::str::FromStr;
@@ -59,23 +63,38 @@ async fn main() -> Result<()> {
     // }
     // let quorum_nums = Bytes::from([0x01]);
 
-    // // A new ElChainReader instance
-    // let el_chain_reader = ELChainReader::new(
-    //     get_test_logger().clone(),
-    //     SLASHER_ADDRESS,
-    //     DELEGATION_MANAGER_ADDRESS,
-    //     AVS_DIRECTORY_ADDRESS,
-    //     "https://ethereum-holesky.blockpi.network/v1/rpc/public".to_string(),
-    // );
-    // // A new ElChainWriter instance
-    // let el_writer = ELChainWriter::new(
-    //     DELEGATION_MANAGER_ADDRESS,
-    //     STRATEGY_MANAGER_ADDRESS,
-    //     REWARDS_COORDINATOR,
-    //     el_chain_reader,
-    //     "https://ethereum-holesky.blockpi.network/v1/rpc/public".to_string(),
-    //     "bead471191bea97fc3aeac36c9d74c895e8a6242602e144e43152f96219e96e8".to_string(),
-    // );
+    let delegation_manager_contract =
+        DelegationManager::new(DELEGATION_MANAGER_ADDRESS, get_provider(holesky_provider));
+    let permission_controller = delegation_manager_contract
+        .permissionController()
+        .call()
+        .await
+        .expect("DelegationManager contract failed when accessing PermissionController")
+        ._0;
+
+    // A new ElChainReader instance
+    let el_chain_reader = ELChainReader::new(
+        get_test_logger().clone(),
+        SLASHER_ADDRESS,
+        DELEGATION_MANAGER_ADDRESS,
+        AVS_DIRECTORY_ADDRESS,
+        permission_controller,
+        holesky_provider.to_string(),
+    );
+
+    let allocation_manager = get_allocation_manager_address(holesky_provider.to_string()).await;
+
+    // A new ElChainWriter instance
+    let el_writer = ELChainWriter::new(
+        DELEGATION_MANAGER_ADDRESS,
+        STRATEGY_MANAGER_ADDRESS,
+        REWARDS_COORDINATOR,
+        permission_controller,
+        allocation_manager,
+        el_chain_reader,
+        holesky_provider.to_string(),
+        "bead471191bea97fc3aeac36c9d74c895e8a6242602e144e43152f96219e96e8".to_string(),
+    );
 
     // let wallet = PrivateKeySigner::from_str(
     //     "bead471191bea97fc3aeac36c9d74c895e8a6242602e144e43152f96219e96e8",
