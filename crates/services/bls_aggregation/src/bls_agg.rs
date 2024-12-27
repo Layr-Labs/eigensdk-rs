@@ -259,6 +259,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         aggregated_operators: &mut AggregatedOperators,
         operator_state: OperatorAvsState,
         signed_task_digest: SignedTaskResponseDigest,
+        logger: SharedLogger
     ) -> Result<&mut AggregatedOperators, BlsAggregationServiceError> {
         let Some(operator_pub_keys) = operator_state.operator_info.pub_keys.clone() else {
             return Err(BlsAggregationServiceError::SignatureVerificationError(
@@ -521,8 +522,8 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                                 operator_state.clone(),
                                 digest.clone(),
                                 logger.clone()
-                            )
-                            .clone()
+                            )?
+                            .clone())
                         })
                         .unwrap_or_else(|| {
                             let mut signers_apk_g2 = BlsG2Point::new(G2Affine::zero());
