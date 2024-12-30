@@ -1586,7 +1586,6 @@ mod tests {
 
     #[tokio::test]
     async fn test_list_appointee() {
-        // TODO: test with real values
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
         let chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
 
@@ -1602,7 +1601,6 @@ mod tests {
 
     #[tokio::test]
     async fn test_list_appointee_permissions() {
-        // TODO: test with real values
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
         let chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
 

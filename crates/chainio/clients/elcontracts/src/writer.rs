@@ -32,6 +32,7 @@ pub struct ELChainWriter {
     rewards_coordinator: Address,
     permission_controller: Address,
     allocation_manager: Address,
+    registry_coordinator: Address,
     el_chain_reader: ELChainReader,
     provider: String,
     signer: String,
@@ -45,6 +46,7 @@ impl ELChainWriter {
         rewards_coordinator: Address,
         permission_controller: Address,
         allocation_manager: Address,
+        registry_coordinator: Address,
         el_chain_reader: ELChainReader,
         provider: String,
         signer: String,
@@ -55,6 +57,7 @@ impl ELChainWriter {
             rewards_coordinator,
             permission_controller,
             allocation_manager,
+            registry_coordinator,
             el_chain_reader,
             provider,
             signer,
@@ -664,14 +667,13 @@ impl ELChainWriter {
         avs_address: Address,
         operator_set_ids: Vec<u32>,
         bls_key_pair: BlsKeyPair,
-        registry_coordinator_addr: Address, // TODO: add registry_coordinator_addr as class attribute?
         socket: &str,
     ) -> Result<TxHash, ElContractsError> {
         let provider = get_signer(&self.signer, &self.provider);
         let allocation_manager_contract =
             AllocationManager::new(self.allocation_manager, provider.clone());
         let contract_registry_coordinator =
-            RegistryCoordinator::new(registry_coordinator_addr, provider);
+            RegistryCoordinator::new(self.registry_coordinator, provider);
 
         let g1_hashed_msg_to_sign = contract_registry_coordinator
             .pubkeyRegistrationMessageHash(operator_address)
@@ -820,7 +822,7 @@ mod tests {
     use eigen_crypto_bls::BlsKeyPair;
     use eigen_logging::get_test_logger;
     use eigen_testing_utils::{
-        anvil::{set_account_balance, start_anvil_container},
+        anvil::{mine_anvil_blocks, set_account_balance, start_anvil_container},
         anvil_constants::{
             get_allocation_manager_address, get_avs_directory_address,
             get_delegation_manager_address, get_erc20_mock_strategy,
@@ -884,6 +886,7 @@ mod tests {
             .await
             .unwrap()
             ._0;
+        let registry_coordinator = get_registry_coordinator_address(http_endpoint.clone()).await;
 
         ELChainWriter::new(
             delegation_manager,
@@ -891,6 +894,7 @@ mod tests {
             rewards_coordinator,
             permission_controller,
             allocation_manager,
+            registry_coordinator,
             el_chain_reader,
             http_endpoint.clone(),
             private_key,
@@ -1291,20 +1295,14 @@ mod tests {
         assert!(receipt.status());
     }
 
-    #[tokio::test]
-    async fn test_register_for_operator_sets() {
-        // let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let http_endpoint = "http://localhost:8545".to_string();
-
-        let avs_address = OPERATOR_ADDRESS;
-
-        // Set registrar - otherwise i dont know how to get permissions for registry coordinator address
-        // TODO: Check if this is needed or is already set (should be done on deploy)
-        let allocation_manager_addr = get_allocation_manager_address(http_endpoint.clone()).await;
+    async fn create_operator_set(http_endpoint: &str, avs_address: Address, operator_set_id: u32) {
+        let allocation_manager_addr =
+            get_allocation_manager_address(http_endpoint.to_string()).await;
         let signer = get_signer(OPERATOR_PRIVATE_KEY, &http_endpoint);
         let allocation_manager = AllocationManager::new(allocation_manager_addr, signer.clone());
         let registry_coordinator_addr =
-            get_registry_coordinator_address(http_endpoint.clone()).await;
+            get_registry_coordinator_address(http_endpoint.to_string()).await;
+
         allocation_manager
             .setAVSRegistrar(avs_address, registry_coordinator_addr)
             .send()
@@ -1334,8 +1332,9 @@ mod tests {
             kickBIPsOfOperatorStake: 100,
             kickBIPsOfTotalStake: 1000,
         };
+        let strategy = get_erc20_mock_strategy(http_endpoint.to_string()).await;
         let strategy_params = StrategyParams {
-            strategy: get_erc20_mock_strategy(http_endpoint.to_string()).await,
+            strategy,
             multiplier: U96::from(1),
         };
         contract_registry_coordinator
@@ -1348,10 +1347,9 @@ mod tests {
             .unwrap();
 
         // Create operator set
-        let operator_set_id = 1;
         let params = IAllocationManagerTypes::CreateSetParams {
             operatorSetId: operator_set_id,
-            strategies: vec![get_erc20_mock_strategy(http_endpoint.clone()).await],
+            strategies: vec![strategy],
         };
         allocation_manager
             .createOperatorSets(avs_address, vec![params])
@@ -1361,21 +1359,29 @@ mod tests {
             .get_receipt()
             .await
             .unwrap();
+    }
 
-        // Register to operator set
+    #[tokio::test]
+    async fn test_register_for_operator_sets() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+
+        let avs_address = OPERATOR_ADDRESS;
+        let operator_set_id = 1;
+        create_operator_set(http_endpoint.as_str(), avs_address, operator_set_id).await;
+
         let operator_addr = address!("70997970C51812dc3A010C7d01b50e0d17dc79C8");
         let operator_private_key =
             "0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d";
         let el_chain_writer =
             new_test_writer(http_endpoint.clone(), operator_private_key.to_string()).await;
         let bls_key = BlsKeyPair::new("1".to_string()).unwrap();
+
         let tx_hash = el_chain_writer
             .register_for_operator_sets(
                 operator_addr,
                 avs_address,
                 vec![operator_set_id],
                 bls_key,
-                registry_coordinator_addr,
                 "socket",
             )
             .await
@@ -1383,6 +1389,17 @@ mod tests {
 
         let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
         assert!(receipt.status());
+
+        let operator_set = OperatorSet {
+            avs: avs_address,
+            id: operator_set_id,
+        };
+        let is_registered = el_chain_writer
+            .el_chain_reader
+            .is_operator_registered_with_operator_set(operator_addr, operator_set.clone())
+            .await
+            .unwrap();
+        assert!(is_registered);
     }
 
     #[tokio::test]
@@ -1411,22 +1428,26 @@ mod tests {
 
     #[tokio::test]
     async fn test_modify_allocations() {
-        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let (container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
         let el_chain_writer =
             new_test_writer(http_endpoint.to_string(), OPERATOR_PRIVATE_KEY.to_string()).await;
 
         let operator_address = OPERATOR_ADDRESS;
         let strategy_addr = get_erc20_mock_strategy(http_endpoint.clone()).await;
-        // TODO: create operator set before modifying allocations
+
+        let avs_address = OPERATOR_ADDRESS;
+        let operator_set_id = 1;
+        create_operator_set(http_endpoint.as_str(), avs_address, operator_set_id).await;
+
+        let new_allocation = 100;
         let allocate_params = IAllocationManagerTypes::AllocateParams {
             strategies: vec![strategy_addr],
             operatorSet: OperatorSet {
-                avs: Address::ZERO,
-                id: 1,
+                avs: avs_address,
+                id: operator_set_id,
             },
-            newMagnitudes: vec![100],
+            newMagnitudes: vec![new_allocation],
         };
-
         let tx_hash = el_chain_writer
             .modify_allocations(operator_address, vec![allocate_params])
             .await
@@ -1440,6 +1461,26 @@ mod tests {
             .await
             .unwrap();
 
-        assert_eq!(allocation_info[0].current_magnitude, U256::from(100));
+        // Allocation should be pending
+        assert_eq!(allocation_info[0].pending_diff, U256::from(new_allocation));
+
+        let allocation_delay = el_chain_writer
+            .el_chain_reader
+            .get_allocation_delay(OPERATOR_ADDRESS)
+            .await
+            .unwrap();
+        mine_anvil_blocks(&container, allocation_delay).await;
+
+        let allocation_info = el_chain_writer
+            .el_chain_reader
+            .get_allocation_info(operator_address, strategy_addr)
+            .await
+            .unwrap();
+
+        // After the allocation delay blocks, the allocation should be set
+        assert_eq!(
+            allocation_info[0].current_magnitude,
+            U256::from(new_allocation)
+        );
     }
 }
