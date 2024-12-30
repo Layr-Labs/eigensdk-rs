@@ -665,26 +665,29 @@ impl ELChainWriter {
         operator_set_ids: Vec<u32>,
         bls_key_pair: BlsKeyPair,
         registry_coordinator_addr: Address, // TODO: add registry_coordinator_addr as class attribute?
+        socket: &str,
     ) -> Result<TxHash, ElContractsError> {
         let provider = get_signer(&self.signer, &self.provider);
         let allocation_manager_contract =
             AllocationManager::new(self.allocation_manager, provider.clone());
-
         let contract_registry_coordinator =
             RegistryCoordinator::new(registry_coordinator_addr, provider);
+
         let g1_hashed_msg_to_sign = contract_registry_coordinator
             .pubkeyRegistrationMessageHash(operator_address)
             .call()
-            .await
-            .unwrap() // TODO: handle unwrap
+            .await?
             ._0;
 
         let sig = bls_key_pair
             .sign_hashed_to_curve_message(alloy_g1_point_to_g1_affine(g1_hashed_msg_to_sign))
             .g1_point();
-        let alloy_g1_point_signed_msg = convert_to_g1_point(sig.g1()).unwrap();
-        let g1_pub_key_bn254 = convert_to_g1_point(bls_key_pair.public_key().g1()).unwrap();
-        let g2_pub_key_bn254 = convert_to_g2_point(bls_key_pair.public_key_g2().g2()).unwrap();
+        let alloy_g1_point_signed_msg =
+            convert_to_g1_point(sig.g1()).map_err(|_| ElContractsError::BLSKeyPairInvalid)?;
+        let g1_pub_key_bn254 = convert_to_g1_point(bls_key_pair.public_key().g1())
+            .map_err(|_| ElContractsError::BLSKeyPairInvalid)?;
+        let g2_pub_key_bn254 = convert_to_g2_point(bls_key_pair.public_key_g2().g2())
+            .map_err(|_| ElContractsError::BLSKeyPairInvalid)?;
 
         let params = PubkeyRegistrationParams {
             pubkeyRegistrationSignature: alloy_g1_point_signed_msg,
@@ -692,8 +695,11 @@ impl ELChainWriter {
             pubkeyG2: g2_pub_key_bn254,
         };
 
-        let socket = "socket".to_string();
-        let data: Bytes = (socket, params).abi_encode().into();
+        let mut data: Bytes = (socket, params).abi_encode().into();
+
+        // The encoder is prepending 32 bytes to the data as if it was used in a dynamic function parameter.
+        // This is not used when decoding the bytes directly, so we need to remove it.
+        data = data.slice(32..);
 
         let params = IAllocationManagerTypes::RegisterParams {
             avs: avs_address,
@@ -703,8 +709,7 @@ impl ELChainWriter {
         let tx = allocation_manager_contract
             .registerForOperatorSets(operator_address, params)
             .send()
-            .await
-            .map_err(ElContractsError::AlloyContractError)?;
+            .await?;
 
         Ok(*tx.tx_hash())
     }
@@ -1371,6 +1376,7 @@ mod tests {
                 vec![operator_set_id],
                 bls_key,
                 registry_coordinator_addr,
+                "socket",
             )
             .await
             .unwrap();

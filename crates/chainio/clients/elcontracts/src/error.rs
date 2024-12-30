@@ -74,4 +74,7 @@ pub enum ElContractsError {
 
     #[error("No slashable shares found for operator")]
     NoSlashableSharesFound,
+
+    #[error("BLS key pair invalid")]
+    BLSKeyPairInvalid,
 }
