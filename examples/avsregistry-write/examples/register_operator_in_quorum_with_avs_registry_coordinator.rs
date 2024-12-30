@@ -7,6 +7,7 @@ use eigen_client_elcontracts::reader::ELChainReader;
 use eigen_client_elcontracts::writer::ELChainWriter;
 use eigen_crypto_bls::BlsKeyPair;
 use eigen_logging::get_test_logger;
+use eigen_testing_utils::anvil_constants::get_registry_coordinator_address;
 use eigen_testing_utils::{
     anvil_constants::get_allocation_manager_address,
     m2_holesky_constants::{
@@ -83,6 +84,7 @@ async fn main() -> Result<()> {
     );
 
     let allocation_manager = get_allocation_manager_address(holesky_provider.to_string()).await;
+    let registry_coordinator = get_registry_coordinator_address(holesky_provider.to_string()).await;
 
     // A new ElChainWriter instance
     let el_writer = ELChainWriter::new(
@@ -91,6 +93,7 @@ async fn main() -> Result<()> {
         REWARDS_COORDINATOR,
         permission_controller,
         allocation_manager,
+        registry_coordinator,
         el_chain_reader,
         holesky_provider.to_string(),
         "bead471191bea97fc3aeac36c9d74c895e8a6242602e144e43152f96219e96e8".to_string(),
