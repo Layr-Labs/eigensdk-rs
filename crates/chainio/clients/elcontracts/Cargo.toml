@@ -11,6 +11,8 @@ license-file.workspace = true
 [dependencies]
 alloy.workspace = true
 alloy-primitives.workspace = true
+alloy-sol-types.workspace = true
+eigen-crypto-bls.workspace = true
 eigen-logging.workspace = true
 eigen-types.workspace = true
 eigen-utils.workspace = true

@@ -1,6 +1,7 @@
 use crate::error::ElContractsError;
 use crate::reader::ELChainReader;
 use alloy_primitives::{ruint::aliases::U256, Address, Bytes, FixedBytes, TxHash};
+use alloy_sol_types::SolValue;
 use eigen_crypto_bls::{
     alloy_g1_point_to_g1_affine, convert_to_g1_point, convert_to_g2_point, BlsKeyPair,
 };
@@ -18,7 +19,6 @@ use eigen_utils::{
     registrycoordinator::{IBLSApkRegistry::PubkeyRegistrationParams, RegistryCoordinator},
     strategymanager::StrategyManager,
 };
-
 use tracing::info;
 
 /// Gas limit for registerAsOperator in [`DelegationManager`]
@@ -664,19 +664,19 @@ impl ELChainWriter {
         avs_address: Address,
         operator_set_ids: Vec<u32>,
         bls_key_pair: BlsKeyPair,
+        registry_coordinator_addr: Address, // TODO: add registry_coordinator_addr as class attribute?
     ) -> Result<TxHash, ElContractsError> {
         let provider = get_signer(&self.signer, &self.provider);
         let allocation_manager_contract =
             AllocationManager::new(self.allocation_manager, provider.clone());
 
-        let registry_coordinator_addr = Address::ZERO; // TODO: set registry_coordinator_addr as class attribute
         let contract_registry_coordinator =
             RegistryCoordinator::new(registry_coordinator_addr, provider);
         let g1_hashed_msg_to_sign = contract_registry_coordinator
             .pubkeyRegistrationMessageHash(operator_address)
             .call()
             .await
-            .unwrap()
+            .unwrap() // TODO: handle unwrap
             ._0;
 
         let sig = bls_key_pair
@@ -692,11 +692,13 @@ impl ELChainWriter {
             pubkeyG2: g2_pub_key_bn254,
         };
 
-        let data = ("socket", params); // TODO: abi encode this
+        let socket = "socket".to_string();
+        let data: Bytes = (socket, params).abi_encode().into();
+
         let params = IAllocationManagerTypes::RegisterParams {
             avs: avs_address,
             operatorSetIds: operator_set_ids,
-            data: Bytes::new(), // TODO: FIX THIS
+            data,
         };
         let tx = allocation_manager_contract
             .registerForOperatorSets(operator_address, params)
@@ -810,6 +812,7 @@ mod tests {
     use crate::reader::ELChainReader;
     use alloy::{hex::FromHex, providers::Provider};
     use alloy_primitives::{address, aliases::U96, Address, Bytes, FixedBytes, U256};
+    use eigen_crypto_bls::BlsKeyPair;
     use eigen_logging::get_test_logger;
     use eigen_testing_utils::{
         anvil::{set_account_balance, start_anvil_container},
@@ -823,7 +826,10 @@ mod tests {
     };
     use eigen_types::operator::Operator;
     use eigen_utils::{
-        allocationmanager::{AllocationManager, IAllocationManagerTypes},
+        allocationmanager::{
+            AllocationManager::{self, OperatorSet},
+            IAllocationManagerTypes,
+        },
         delegationmanager::DelegationManager,
         get_provider, get_signer,
         irewardscoordinator::{
@@ -1287,8 +1293,8 @@ mod tests {
 
         let avs_address = OPERATOR_ADDRESS;
 
-        // set registrar - otherwise i dont know how to get permissions for registry coordinator address
-        // check if this is needed (should be done on deploy) or is already set
+        // Set registrar - otherwise i dont know how to get permissions for registry coordinator address
+        // TODO: Check if this is needed or is already set (should be done on deploy)
         let allocation_manager_addr = get_allocation_manager_address(http_endpoint.clone()).await;
         let signer = get_signer(OPERATOR_PRIVATE_KEY, &http_endpoint);
         let allocation_manager = AllocationManager::new(allocation_manager_addr, signer.clone());
@@ -1303,7 +1309,7 @@ mod tests {
             .await
             .unwrap();
 
-        // enable operator sets in Registry Coordinator
+        // Enable operator sets in Registry Coordinator
         let registry_coordinator =
             RegistryCoordinator::new(registry_coordinator_addr, signer.clone());
         registry_coordinator
@@ -1315,7 +1321,7 @@ mod tests {
             .await
             .unwrap();
 
-        // create slashable quorum
+        // Create slashable quorum
         let contract_registry_coordinator =
             RegistryCoordinator::new(registry_coordinator_addr, signer.clone());
         let operator_set_params = OperatorSetParam {
@@ -1336,7 +1342,7 @@ mod tests {
             .await
             .unwrap();
 
-        // create operator set
+        // Create operator set
         let operator_set_id = 1;
         let params = IAllocationManagerTypes::CreateSetParams {
             operatorSetId: operator_set_id,
@@ -1351,14 +1357,21 @@ mod tests {
             .await
             .unwrap();
 
-        // register to operator set
+        // Register to operator set
         let operator_addr = address!("70997970C51812dc3A010C7d01b50e0d17dc79C8");
         let operator_private_key =
             "0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d";
         let el_chain_writer =
             new_test_writer(http_endpoint.clone(), operator_private_key.to_string()).await;
+        let bls_key = BlsKeyPair::new("1".to_string()).unwrap();
         let tx_hash = el_chain_writer
-            .register_for_operator_sets(operator_addr, avs_address, vec![operator_set_id])
+            .register_for_operator_sets(
+                operator_addr,
+                avs_address,
+                vec![operator_set_id],
+                bls_key,
+                registry_coordinator_addr,
+            )
             .await
             .unwrap();
 
