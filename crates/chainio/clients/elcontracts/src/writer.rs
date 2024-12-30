@@ -1298,7 +1298,7 @@ mod tests {
     async fn create_operator_set(http_endpoint: &str, avs_address: Address, operator_set_id: u32) {
         let allocation_manager_addr =
             get_allocation_manager_address(http_endpoint.to_string()).await;
-        let signer = get_signer(OPERATOR_PRIVATE_KEY, &http_endpoint);
+        let signer = get_signer(OPERATOR_PRIVATE_KEY, http_endpoint);
         let allocation_manager = AllocationManager::new(allocation_manager_addr, signer.clone());
         let registry_coordinator_addr =
             get_registry_coordinator_address(http_endpoint.to_string()).await;
