@@ -642,7 +642,8 @@ mod tests {
             get_delegation_manager_address(http_endpoint.clone()).await;
         let avs_directory_address = get_avs_directory_address(http_endpoint.clone()).await;
         let strategy_manager_address = get_strategy_manager_address(http_endpoint.clone()).await;
-
+        let registry_coordinator_address =
+            get_registry_coordinator_address(http_endpoint.clone()).await;
         let contract_delegation_manager =
             DelegationManager::new(delegation_manager_address, get_provider(&http_endpoint));
 
@@ -675,6 +676,7 @@ mod tests {
             rewards_coordinator_address,
             permission_controller,
             allocation_manager,
+            registry_coordinator_address,
             el_chain_reader,
             http_endpoint.to_string(),
             pvt_key.to_string(),
