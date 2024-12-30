@@ -1389,4 +1389,38 @@ mod tests {
 
         assert_eq!(allocation_delay, delay);
     }
+
+    #[tokio::test]
+    async fn test_modify_allocations() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let el_chain_writer =
+            new_test_writer(http_endpoint.to_string(), OPERATOR_PRIVATE_KEY.to_string()).await;
+
+        let operator_address = OPERATOR_ADDRESS;
+        let strategy_addr = get_erc20_mock_strategy(http_endpoint.clone()).await;
+        // TODO: create operator set before modifying allocations
+        let allocate_params = IAllocationManagerTypes::AllocateParams {
+            strategies: vec![strategy_addr],
+            operatorSet: OperatorSet {
+                avs: Address::ZERO,
+                id: 1,
+            },
+            newMagnitudes: vec![100],
+        };
+
+        let tx_hash = el_chain_writer
+            .modify_allocations(operator_address, vec![allocate_params])
+            .await
+            .unwrap();
+        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+        assert!(receipt.status());
+
+        let allocation_info = el_chain_writer
+            .el_chain_reader
+            .get_allocation_info(operator_address, strategy_addr)
+            .await
+            .unwrap();
+
+        assert_eq!(allocation_info[0].current_magnitude, U256::from(100));
+    }
 }
