@@ -182,3 +182,18 @@ pub async fn get_allocation_manager_address(rpc_url: String) -> Address {
 
     address
 }
+
+/// Permission Controller contract address
+pub async fn get_permission_controller_address(rpc_url: String) -> Address {
+    let contracts_registry = ContractsRegistry::new(CONTRACTS_REGISTRY, get_provider(&rpc_url));
+
+    let val = contracts_registry
+        .contracts("permissionController".to_string())
+        .call()
+        .await
+        .unwrap();
+
+    let contractsReturn { _0: address } = val;
+
+    address
+}
