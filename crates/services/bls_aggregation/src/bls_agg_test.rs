@@ -295,9 +295,7 @@ pub mod integration_test {
 
     #[tokio::test]
     async fn test_bls_agg_operator_sets_enabled() {
-        // let (container, http_endpoint, ws_endpoint) = start_anvil_container().await;
-        let http_endpoint = "http://localhost:8545".to_string();
-        let ws_endpoint = "ws://localhost:8545".to_string();
+        let (_container, http_endpoint, ws_endpoint) = start_anvil_container().await;
 
         let default_input = Input {
             bls_key: BLS_KEY_1.to_string(),
@@ -322,7 +320,6 @@ pub mod integration_test {
         let avs_directory_address = get_avs_directory_address(http_endpoint.clone()).await;
         let rewards_coordinator_address =
             get_rewards_coordinator_address(http_endpoint.clone()).await;
-        let mock_strategy_address = get_erc20_mock_strategy(http_endpoint.clone()).await;
         let provider = get_provider(http_endpoint.as_str());
 
         let signer = get_signer(PRIVATE_KEY_1, &http_endpoint);
