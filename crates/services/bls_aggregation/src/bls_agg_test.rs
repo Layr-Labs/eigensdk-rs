@@ -5,10 +5,12 @@ pub mod integration_test {
         bls_aggregation_service_response::BlsAggregationServiceResponse,
     };
     use alloy::{providers::Provider, signers::local::PrivateKeySigner};
-    use alloy_primitives::{aliases::U96, Bytes, FixedBytes, B256, U256};
+    use alloy_primitives::{aliases::U96, Address, Bytes, FixedBytes, B256, U256};
+    use alloy_provider::WalletProvider;
     use eigen_client_avsregistry::{
         reader::AvsRegistryChainReader, writer::AvsRegistryChainWriter,
     };
+    use eigen_client_elcontracts::{reader::ELChainReader, writer::ELChainWriter};
     use eigen_crypto_bls::{
         convert_to_bls_checker_g1_point, convert_to_bls_checker_g2_point, BlsKeyPair,
     };
@@ -18,8 +20,7 @@ pub mod integration_test {
     use eigen_testing_utils::{
         anvil::{mine_anvil_blocks, start_anvil_container},
         anvil_constants::{
-            get_erc20_mock_strategy, get_operator_state_retriever_address,
-            get_registry_coordinator_address, get_service_manager_address,
+            get_allocation_manager_address, get_avs_directory_address, get_delegation_manager_address, get_erc20_mock_strategy, get_operator_state_retriever_address, get_registry_coordinator_address, get_rewards_coordinator_address, get_service_manager_address
         },
         test_data::TestData,
         transaction::wait_transaction,
@@ -135,6 +136,8 @@ pub mod integration_test {
             .unwrap()
             ._0
     }
+
+   
 
     async fn create_quorum(http_endpoint: &str) {
         let registry_coordinator_address =
@@ -282,6 +285,43 @@ pub mod integration_test {
             .call()
             .await
             .unwrap();
+    }
+
+    #[tokio::test]
+    async fn test_bls_agg_operator_sets_enabled() {
+        // let (container, http_endpoint, ws_endpoint) = start_anvil_container().await;
+        let http_endpoint = "http://localhost:8545".to_string();
+        let registry_coordinator_address =
+        get_registry_coordinator_address(http_endpoint.clone()).await;
+    let operator_state_retriever_address =
+        get_operator_state_retriever_address(http_endpoint.clone()).await;
+    let service_manager_address = get_service_manager_address(http_endpoint.clone()).await;
+    let delegation_manager_address = get_delegation_manager_address(http_endpoint.clone()).await;
+    let allocation_manager_address = get_allocation_manager_address(http_endpoint.clone()).await;
+    let avs_directory_address = get_avs_directory_address(http_endpoint.clone()).await;
+    let rewards_coordinator_address = get_rewards_coordinator_address(http_endpoint.clone()).await;
+    let provider = get_provider(http_endpoint.as_str());
+    
+    let signer = get_signer(PRIVATE_KEY_1, &http_endpoint);
+    
+    let registry_coordinator_instance = RegistryCoordinator::new(registry_coordinator_address, signer.clone());
+    let enable_operator_sets_status = registry_coordinator_instance.enableOperatorSets().send().await.unwrap().get_receipt().await.unwrap().status();
+    assert!(enable_operator_sets_status);
+    let el_chain_reader = ELChainReader::new(get_test_logger(), allocation_manager_address, delegation_manager_address, avs_directory_address, Address::ZERO, http_endpoint.clone());
+    let el_chain_writer = ELChainWriter::new(delegation_manager_address,Address::ZERO,rewards_coordinator_address,Address::ZERO,allocation_manager_address,registry_coordinator_address,el_chain_reader,http_endpoint.clone(),PRIVATE_KEY_1.to_string());
+
+    let default_input = Input {
+        bls_key: BLS_KEY_1.to_string(),
+        quorum_numbers: vec![1],
+        quorum_threshold_percentages: vec![100_u8],
+    };
+    let test_data: TestData<Input> = TestData::new(default_input);
+    let bls_key_pair = BlsKeyPair::new(test_data.input.bls_key).unwrap();
+
+
+    let s = el_chain_writer.register_for_operator_sets(signer.default_signer_address(), service_manager_address, [1].to_vec(), bls_key_pair, "socket1").await.unwrap();
+    let a = wait_transaction(&http_endpoint,s).await.unwrap().status();
+    assert!(a);
     }
 
     #[tokio::test]
