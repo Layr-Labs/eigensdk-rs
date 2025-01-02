@@ -33,14 +33,12 @@ pub mod integration_test {
         operator::{QuorumNum, QuorumThresholdPercentages},
     };
     use eigen_utils::{
-        allocationmanager::IAllocationManagerTypes,
         blsapkregistry::BLSApkRegistry,
         get_provider, get_signer,
         iblssignaturechecker::{
             IBLSSignatureChecker::{self, NonSignerStakesAndSignature},
             BN254::G1Point,
         },
-        mockavsservicemanager::MockAvsServiceManager,
         registrycoordinator::{
             IRegistryCoordinator::OperatorSetParam, IStakeRegistry::StrategyParams,
             RegistryCoordinator,
