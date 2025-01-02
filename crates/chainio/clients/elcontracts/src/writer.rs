@@ -274,7 +274,6 @@ mod tests {
     use eigen_types::operator::Operator;
     use eigen_utils::{
         contractsregistry::ContractsRegistry::{self, get_test_valuesReturn},
-        delegationmanager::DelegationManager,
         get_provider,
         irewardscoordinator::IRewardsCoordinator::{EarnerTreeMerkleLeaf, RewardsMerkleClaim},
         mockavsservicemanager::MockAvsServiceManager,
@@ -290,14 +289,6 @@ mod tests {
     async fn setup_el_chain_reader(http_endpoint: String) -> (ELChainReader, Address) {
         let delegation_manager_address =
             get_delegation_manager_address(http_endpoint.clone()).await;
-        let delegation_manager_contract = DelegationManager::new(
-            delegation_manager_address,
-            get_provider(http_endpoint.as_str()),
-        );
-        let slasher_address_return = delegation_manager_contract.slasher().call().await.unwrap();
-        let DelegationManager::slasherReturn {
-            _0: slasher_address,
-        } = slasher_address_return;
 
         let service_manager_address = get_service_manager_address(http_endpoint.clone()).await;
         let service_manager_contract = MockAvsServiceManager::new(
@@ -317,7 +308,6 @@ mod tests {
         (
             ELChainReader::new(
                 get_test_logger().clone(),
-                slasher_address,
                 delegation_manager_address,
                 avs_directory_address,
                 http_endpoint,

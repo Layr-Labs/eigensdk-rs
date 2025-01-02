@@ -646,7 +646,6 @@ mod tests {
             get_rewards_coordinator_address(http_endpoint.clone()).await;
         let el_chain_reader = ELChainReader::new(
             get_test_logger(),
-            Address::ZERO,
             delegation_manager_address,
             avs_directory_address,
             http_endpoint.to_string(),

@@ -20,7 +20,7 @@ pub struct Collector {
     logger: SharedLogger,
     operator_addr: Address,
     operator_id: OperatorId,
-    el_reader: ELChainReader,
+    _el_reader: ELChainReader,
     avs_registry_reader: AvsRegistryChainReader,
     quorum_names: HashMap<u64, String>,
     avs_name: String,
@@ -28,7 +28,10 @@ pub struct Collector {
 
 impl Collector {
     /// Operator stakes in AVS registry contract.
-    /// Most commonly represents a weighted combination of delegated shares in the DelegationManager EigenLayer contract.
+    /// Most commonly represents a weighted combination
+    /// of delegated shares in the DelegationManager EigenLayer contract.
+    ///
+    /// * `_el_reader` is not used in this metric and is kept for backward compatibility.
     pub fn new(
         logger: SharedLogger,
         operator_addr: Address,
@@ -51,7 +54,7 @@ impl Collector {
         Self {
             logger,
             operator_addr,
-            el_reader,
+            _el_reader: el_reader,
             avs_registry_reader,
             operator_id,
             quorum_names,
@@ -80,18 +83,6 @@ impl Collector {
     }
 
     pub async fn collect(&mut self) -> Result<(), CollectorMetricError> {
-        let operator_is_frozen = self
-            .el_reader
-            .operator_is_frozen(self.operator_addr)
-            .await?;
-
-        let mut operator_is_frozen_float = 0.0;
-        if operator_is_frozen {
-            operator_is_frozen_float = 1.0;
-        }
-
-        gauge!("e_slashing_status").set(operator_is_frozen_float);
-
         self.init_operator_id().await.inspect_err(|e| {
             self.logger.warn(
                 &format!("Failed to fetch and cache operator id. Skipping collection of registeredStake metric. , err {}", e),

@@ -81,7 +81,6 @@ pub async fn register_operator(pvt_key: &str, bls_key: &str, http_endpoint: &str
         get_rewards_coordinator_address(http_endpoint.to_owned()).await;
     let el_chain_reader = ELChainReader::new(
         get_test_logger(),
-        Address::ZERO,
         delegation_manager_address,
         avs_directory_address,
         http_endpoint.to_owned(),
