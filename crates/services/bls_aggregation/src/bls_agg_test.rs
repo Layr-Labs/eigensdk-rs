@@ -46,11 +46,8 @@ pub mod integration_test {
     };
     use serde::Deserialize;
     use sha2::{Digest, Sha256};
+    use std::str::FromStr;
     use std::time::Duration;
-    use std::{
-        process::{Command, Stdio},
-        str::FromStr,
-    };
     use tokio::{task, time::sleep};
     use tokio_util::sync::CancellationToken;
 
@@ -399,10 +396,6 @@ pub mod integration_test {
 
         let bls_agg_service = BlsAggregatorService::new(avs_registry_service, get_test_logger());
         let current_block_num = provider.get_block_number().await.unwrap();
-        let current_block_number = get_provider(&http_endpoint)
-            .get_block_number()
-            .await
-            .unwrap();
 
         mine_anvil_blocks(&container, 1).await;
 
