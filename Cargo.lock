@@ -2760,6 +2760,7 @@ dependencies = [
  "ark-bn254 0.5.0",
  "ark-ec 0.5.0",
  "eigen-client-avsregistry",
+ "eigen-client-elcontracts",
  "eigen-crypto-bls",
  "eigen-crypto-bn254",
  "eigen-logging",
