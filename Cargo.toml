@@ -110,7 +110,7 @@ serde_json = "1.0"
 serial_test = "3.1"
 syn = "2.0"
 tempfile = "3.13"
-testcontainers = "0.23"
+testcontainers = "0.23.1"
 thiserror = "1.0"
 tokio = { version = "1.41", features = ["test-util", "full", "sync"] }
 tracing = "0.1"
@@ -138,7 +138,7 @@ alloy = { version = "0.7.0", features = [
 alloy-json-rpc = { version = "0.7", default-features = false }
 alloy-network = { version = "0.7", default-features = false }
 alloy-node-bindings = { version = "0.7", default-features = false }
-alloy-primitives = "0.8.14"
+alloy-primitives = "0.8"
 alloy-provider = { version = "0.7", default-features = false, features = [
     "reqwest",
     "ws",

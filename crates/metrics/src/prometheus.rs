@@ -15,7 +15,6 @@ pub fn init_registry(socket_addr: SocketAddr) {
 }
 
 #[cfg(test)]
-
 mod tests {
     use std::collections::HashMap;
 

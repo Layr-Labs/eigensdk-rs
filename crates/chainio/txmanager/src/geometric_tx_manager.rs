@@ -390,14 +390,15 @@ mod tests {
     use alloy::rpc::types::eth::TransactionRequest;
     use eigen_logging::get_test_logger;
     use eigen_signer::signer::Config;
-    use eigen_testing_utils::anvil::start_anvil_container;
+    use eigen_testing_utils::anvil::{set_account_balance, start_anvil_container};
     use std::sync::Arc;
     use std::time::Duration;
     use tokio::sync::Mutex;
     use tokio::time::{sleep, Instant};
 
     const TEST_PRIVATE_KEY: &str =
-        "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
+        "6b35c6d8110c888de06575b45181bf3f9e6c73451fa5cde812c95a6b31e66ddf";
+    const TEST_ADDRESS: &str = "009440d62dc85c73dbf889b7ad1f4da8b231d2ef";
 
     fn new_test_tx() -> TransactionRequest {
         TransactionRequest::default()
@@ -441,7 +442,10 @@ mod tests {
     #[tokio::test]
     async fn test_send_single_transaction() {
         // Send transaction using Alloy RootProvider
-        let (_container, rpc_url, _ws_endpoint) = start_anvil_container().await;
+        let (container, rpc_url, _ws_endpoint) = start_anvil_container().await;
+
+        set_account_balance(&container, TEST_ADDRESS).await;
+
         let logger = get_test_logger();
         let config = Config::PrivateKey(TEST_PRIVATE_KEY.to_string());
         let signer = Config::signer_from_config(config).unwrap();
@@ -450,7 +454,7 @@ mod tests {
         let geometric_tx_manager =
             GeometricTxManager::new(logger, signer, &rpc_url, params).unwrap();
 
-        let mut tx = new_test_tx().with_nonce(0x69);
+        let mut tx = new_test_tx();
 
         // send transaction and wait for receipt
         let receipt = geometric_tx_manager.send_tx(&mut tx).await.unwrap();

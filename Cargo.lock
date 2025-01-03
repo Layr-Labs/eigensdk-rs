@@ -2577,12 +2577,13 @@ dependencies = [
  "alloy-primitives",
  "alloy-provider",
  "alloy-signer-local",
+ "alloy-sol-types",
+ "eigen-crypto-bls",
  "eigen-logging",
  "eigen-testing-utils",
  "eigen-types",
  "eigen-utils",
  "once_cell",
- "serial_test",
  "thiserror",
  "tokio",
  "tracing",
@@ -2759,6 +2760,7 @@ dependencies = [
  "ark-bn254 0.5.0",
  "ark-ec 0.5.0",
  "eigen-client-avsregistry",
+ "eigen-client-elcontracts",
  "eigen-crypto-bls",
  "eigen-crypto-bn254",
  "eigen-logging",
@@ -2832,6 +2834,7 @@ dependencies = [
 name = "eigen-testing-utils"
 version = "0.1.1"
 dependencies = [
+ "alloy",
  "alloy-primitives",
  "alloy-provider",
  "alloy-rpc-types",
