@@ -293,7 +293,7 @@ pub mod integration_test {
 
     #[tokio::test]
     async fn test_bls_agg_operator_sets_enabled() {
-        let (_container, http_endpoint, ws_endpoint) = start_anvil_container().await;
+        let (container, http_endpoint, ws_endpoint) = start_anvil_container().await;
 
         let default_input = Input {
             bls_key: BLS_KEY_1.to_string(),
@@ -404,20 +404,7 @@ pub mod integration_test {
             .await
             .unwrap();
 
-        fn mine_anvil_block(rpc_url: &str, blocks: u64) {
-            Command::new("cast")
-                .args([
-                    "rpc",
-                    "anvil_mine",
-                    &blocks.to_string(),
-                    "--rpc-url",
-                    rpc_url,
-                ])
-                .stdout(Stdio::null())
-                .output()
-                .expect("Failed to execute command");
-        }
-        mine_anvil_block(&http_endpoint, current_block_number + 2);
+        mine_anvil_blocks(&container, 1).await;
 
         // Create the task related parameters
         let task_index: TaskIndex = 0;
