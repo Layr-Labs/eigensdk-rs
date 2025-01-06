@@ -1152,7 +1152,7 @@ pub struct AllocationInfo {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::test_utils::{build_el_chain_reader, OPERATOR_ADDRESS};
+    use crate::test_utils::{build_el_chain_reader, new_claim, OPERATOR_ADDRESS};
     use alloy::providers::Provider;
     use alloy::{eips::eip1898::BlockNumberOrTag::Number, rpc::types::BlockTransactionsKind};
     use alloy_primitives::{address, keccak256, Address, FixedBytes, U256};
@@ -1262,6 +1262,15 @@ mod tests {
     async fn test_get_distribution_roots_length() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
         let el_chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
+
+        let distribution_roots_length_ret = el_chain_reader
+            .get_distribution_roots_length()
+            .await
+            .unwrap();
+
+        assert_eq!(distribution_roots_length_ret, U256::from(0));
+
+        _ = new_claim(&http_endpoint).await;
 
         let distribution_roots_length_ret = el_chain_reader
             .get_distribution_roots_length()
