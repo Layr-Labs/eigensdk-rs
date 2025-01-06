@@ -281,10 +281,10 @@ impl ELChainReader {
             .isOperator(operator)
             .call()
             .await
-            .map_err(ElContractsError::AlloyContractError)?;
+            .map_err(ElContractsError::AlloyContractError)?
+            ._0;
 
-        let DelegationManager::isOperatorReturn { _0: is_operator_is } = is_operator;
-        Ok(is_operator_is)
+        Ok(is_operator)
     }
 
     /// Get the staker's shares in all of the strategies in which they have nonzero shares
