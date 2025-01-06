@@ -1,15 +1,19 @@
 use crate::error::ElContractsError;
-use alloy::providers::Provider;
+use alloy::{
+    providers::Provider,
+    transports::http::{Client, Http},
+};
 use alloy_primitives::{ruint::aliases::U256, Address, FixedBytes};
 use eigen_logging::logger::SharedLogger;
 use eigen_utils::{
     allocationmanager::AllocationManager::{self, OperatorSet},
     avsdirectory::AVSDirectory,
     delegationmanager::DelegationManager,
-    erc20::ERC20,
+    erc20::ERC20::{self, ERC20Instance},
     get_provider,
-    istrategy::IStrategy,
+    istrategy::IStrategy::{self, IStrategyInstance},
     permissioncontroller::PermissionController,
+    SdkProvider,
 };
 
 #[derive(Debug, Clone)]
@@ -239,28 +243,28 @@ impl ELChainReader {
     pub async fn get_strategy_and_underlying_erc20_token(
         &self,
         strategy_addr: Address,
-    ) -> Result<(Address, Address, Address), ElContractsError> {
+    ) -> Result<
+        (
+            IStrategyInstance<Http<Client>, SdkProvider>,
+            ERC20Instance<Http<Client>, SdkProvider>,
+            Address,
+        ),
+        ElContractsError,
+    > {
         let provider = get_provider(&self.provider);
 
-        let contract_strategy = IStrategy::new(strategy_addr, &provider);
+        let contract_strategy = IStrategy::new(strategy_addr, provider.clone());
 
         let underlying_token = contract_strategy
             .underlyingToken()
             .call()
             .await
-            .map_err(ElContractsError::AlloyContractError)?;
+            .map_err(ElContractsError::AlloyContractError)?
+            ._0;
 
-        let IStrategy::underlyingTokenReturn {
-            _0: underlying_token_addr,
-        } = underlying_token;
+        let token_contract = ERC20::new(underlying_token, provider);
 
-        let contract_ierc20 = ERC20::new(underlying_token_addr, &provider);
-
-        Ok((
-            strategy_addr,
-            *contract_ierc20.address(),
-            underlying_token_addr,
-        ))
+        Ok((contract_strategy, token_contract, underlying_token))
     }
 
     /// Check if the operator is registered

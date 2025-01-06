@@ -9,7 +9,6 @@ pub use eigen_types::operator::Operator;
 use eigen_utils::{
     allocationmanager::{AllocationManager, IAllocationManagerTypes},
     delegationmanager::DelegationManager,
-    erc20::ERC20,
     get_signer,
     irewardscoordinator::{
         IRewardsCoordinator,
@@ -179,23 +178,20 @@ impl ELChainWriter {
         amount: U256,
     ) -> Result<TxHash, ElContractsError> {
         info!("depositing {amount:?} tokens into strategy {strategy_addr:?}");
-        let tokens = self
+        let (_strategy, token_contract, token_address) = self
             .el_chain_reader
             .get_strategy_and_underlying_erc20_token(strategy_addr)
             .await?;
-        let (_, underlying_token_contract, underlying_token) = tokens;
         let provider = get_signer(&self.signer.clone(), &self.provider);
 
-        let contract_underlying_token = ERC20::new(underlying_token_contract, &provider);
-
-        let contract_call = contract_underlying_token.approve(self.strategy_manager, amount);
+        let contract_call = token_contract.approve(self.strategy_manager, amount);
 
         let _approve = contract_call.send().await?;
 
         let contract_strategy_manager = StrategyManager::new(self.strategy_manager, &provider);
 
         let deposit_contract_call =
-            contract_strategy_manager.depositIntoStrategy(strategy_addr, underlying_token, amount);
+            contract_strategy_manager.depositIntoStrategy(strategy_addr, token_address, amount);
 
         let tx = deposit_contract_call.send().await?;
 
