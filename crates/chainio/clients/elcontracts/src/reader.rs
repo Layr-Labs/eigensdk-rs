@@ -229,6 +229,32 @@ impl ELChainReader {
         Ok(distribution_roots_length)
     }
 
+    /// Get the current rewards calculation end timestamp (the timestamp until which rewards have been calculated).
+    ///
+    /// # Returns
+    ///
+    /// * `Result<u32, ElContractsError>` - The current rewards calculation
+    ///   end timestamp if the call is successful.
+    ///
+    /// # Errors
+    ///
+    /// * `ElContractsError` - if the call to the contract fails.
+    pub async fn curr_rewards_calculation_end_timestamp(&self) -> Result<u32, ElContractsError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_rewards_coordinator =
+            IRewardsCoordinator::new(self.rewards_coordinator, &provider);
+
+        let end_timestamp = contract_rewards_coordinator
+            .currRewardsCalculationEndTimestamp()
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?
+            ._0;
+
+        Ok(end_timestamp)
+    }
+
     /// Get the operator's shares in a strategy
     ///
     /// # Arguments

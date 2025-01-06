@@ -87,11 +87,7 @@ pub(crate) mod test_utils {
     }
 
     pub async fn new_claim(http_endpoint: &str) -> (FixedBytes<32>, RewardsMerkleClaim) {
-        let el_chain_writer = new_test_writer(
-            http_endpoint.to_string(),
-            ANVIL_FIRST_PRIVATE_KEY.to_string(),
-        )
-        .await;
+        let el_chain_reader = build_el_chain_reader(http_endpoint.to_string()).await;
 
         let earner_address = address!("25a1b7322f9796b26a4bec125913b34c292b28d6");
         let claim = RewardsMerkleClaim {
@@ -127,8 +123,8 @@ pub(crate) mod test_utils {
             get_rewards_coordinator_address(http_endpoint.to_string()).await,
             get_signer(key, http_endpoint),
         );
-        let curr_rewards_calculation_end_timestamp = el_chain_writer
-            .get_curr_rewards_calculation_end_timestamp()
+        let curr_rewards_calculation_end_timestamp = el_chain_reader
+            .curr_rewards_calculation_end_timestamp()
             .await
             .unwrap();
         let submit_tx = rewards_coordinator
