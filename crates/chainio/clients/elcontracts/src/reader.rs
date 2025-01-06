@@ -766,7 +766,7 @@ impl ELChainReader {
         let current_block_number = provider.get_block_number().await.map_err(|e| {
             ElContractsError::AlloyContractError(alloy::contract::Error::TransportError(e))
         })?;
-        self.get_delegated_and_slashable_shares_for_operator_sets_before(
+        self.get_slashable_shares_for_operator_sets_before(
             operator_sets,
             current_block_number as u32,
         )
@@ -785,7 +785,7 @@ impl ELChainReader {
     /// * `Vec<OperatorSetStakes>` - The operator sets, their strategies, operators, and slashable stakes
     /// # Errors
     /// * `ElContractsError` - if the call to the contract fails
-    pub async fn get_delegated_and_slashable_shares_for_operator_sets_before(
+    pub async fn get_slashable_shares_for_operator_sets_before(
         &self,
         operator_sets: Vec<OperatorSet>,
         future_block: u32,
@@ -1538,7 +1538,7 @@ mod tests {
             .await
             .unwrap() as u32;
         let slashable_shares = chain_reader
-            .get_delegated_and_slashable_shares_for_operator_sets_before(
+            .get_slashable_shares_for_operator_sets_before(
                 vec![operator_set],
                 current_block_number + 1,
             )
