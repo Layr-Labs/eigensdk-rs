@@ -103,6 +103,7 @@ impl AvsRegistryChainWriter {
             logger.clone(),
             delegation_manager_addr,
             avs_directory,
+            Address::ZERO,
             &provider,
         )
         .await

@@ -23,6 +23,7 @@ pub struct ELChainReader {
     delegation_manager: Address,
     avs_directory: Address,
     permission_controller: Address,
+    rewards_coordinator: Address,
     pub provider: String,
 }
 
@@ -34,6 +35,7 @@ impl ELChainReader {
     /// * `_logger` - The logger to use for logging.
     /// * `allocation_manager` - The address of the allocation manager contract.
     /// * `delegation_manager` - The address of the delegation manager contract.
+    /// * `rewards_coordinator` - The address of the rewards coordinator contract.
     /// * `avs_directory` - The address of the avs directory contract.
     /// * `permission_controller` - The address of the permission controller contract.
     /// * `provider` - The provider to use for the RPC client.
@@ -45,6 +47,7 @@ impl ELChainReader {
         _logger: SharedLogger,
         allocation_manager: Address,
         delegation_manager: Address,
+        rewards_coordinator: Address,
         avs_directory: Address,
         permission_controller: Address,
         provider: String,
@@ -53,6 +56,7 @@ impl ELChainReader {
             _logger,
             allocation_manager,
             delegation_manager,
+            rewards_coordinator,
             avs_directory,
             permission_controller,
             provider,
@@ -67,6 +71,7 @@ impl ELChainReader {
     /// * `_logger` - The logger to use for logging.
     /// * `delegation_manager` - The address of the delegation manager contract.
     /// * `avs_directory` - The address of the avs directory contract.
+    /// * `rewards_coordinator` - The address of the rewards coordinator contract.
     /// * `client` - The provider to use for the RPC client to call the contracts.
     ///
     /// # Returns
@@ -78,6 +83,7 @@ impl ELChainReader {
         _logger: SharedLogger,
         delegation_manager: Address,
         avs_directory: Address,
+        rewards_coordinator: Address,
         client: &String,
     ) -> Result<Self, ElContractsError> {
         let provider = get_provider(client);
@@ -103,6 +109,7 @@ impl ELChainReader {
             avs_directory,
             allocation_manager,
             delegation_manager,
+            rewards_coordinator,
             permission_controller,
             provider: client.to_string(),
         })
@@ -1121,6 +1128,7 @@ mod tests {
     use eigen_logging::get_test_logger;
     use eigen_testing_utils::anvil_constants::{
         get_allocation_manager_address, get_avs_directory_address, get_erc20_mock_strategy,
+        get_rewards_coordinator_address,
     };
     use eigen_testing_utils::{
         anvil::start_anvil_container, anvil_constants::get_delegation_manager_address,
@@ -1140,6 +1148,8 @@ mod tests {
         let allocation_manager_address =
             get_allocation_manager_address(http_endpoint.clone()).await;
         let avs_directory_address = get_avs_directory_address(http_endpoint.clone()).await;
+        let rewards_coordinator_address =
+            get_rewards_coordinator_address(http_endpoint.clone()).await;
 
         let delegation_manager_contract =
             DelegationManager::new(delegation_manager_address, get_provider(&http_endpoint));
@@ -1154,6 +1164,7 @@ mod tests {
             get_test_logger(),
             allocation_manager_address,
             delegation_manager_address,
+            rewards_coordinator_address,
             avs_directory_address,
             permission_controller_address,
             http_endpoint,

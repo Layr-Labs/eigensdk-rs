@@ -335,6 +335,7 @@ pub mod integration_test {
             get_test_logger(),
             allocation_manager_address,
             delegation_manager_address,
+            rewards_coordinator_address,
             avs_directory_address,
             Address::ZERO,
             http_endpoint.clone(),

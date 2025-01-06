@@ -859,11 +859,13 @@ mod tests {
         let delegation_manager_address =
             get_delegation_manager_address(http_endpoint.clone()).await;
         let avs_directory_address = get_avs_directory_address(http_endpoint.clone()).await;
+        let rewards_coordinator = get_rewards_coordinator_address(http_endpoint.clone()).await;
 
         ELChainReader::build(
             get_test_logger().clone(),
             delegation_manager_address,
             avs_directory_address,
+            rewards_coordinator,
             &http_endpoint,
         )
         .await

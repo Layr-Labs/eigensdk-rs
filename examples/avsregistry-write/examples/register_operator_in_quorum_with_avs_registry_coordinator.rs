@@ -78,6 +78,7 @@ async fn main() -> Result<()> {
         get_test_logger().clone(),
         SLASHER_ADDRESS,
         DELEGATION_MANAGER_ADDRESS,
+        REWARDS_COORDINATOR,
         AVS_DIRECTORY_ADDRESS,
         permission_controller,
         holesky_provider.to_string(),
