@@ -389,6 +389,39 @@ impl ELChainReader {
         Ok(claim_ret)
     }
 
+    /// Gets the split of a specific `operator` for a specific `avs`
+    ///
+    /// # Arguments
+    ///
+    /// * `operator` - The operator address
+    /// * `avs` - The AVS address
+    ///
+    /// # Returns
+    ///
+    /// * `Result<u16, ElContractsError>` - The split of the operator for the AVS, if the call is successful
+    ///
+    /// # Errors
+    ///
+    /// * `ElContractsError` - if the call to the contract fails.
+    pub async fn get_operator_avs_split(
+        &self,
+        operator: Address,
+        avs: Address,
+    ) -> Result<u16, ElContractsError> {
+        let provider = get_provider(&self.provider);
+
+        let rewards_coordinator = IRewardsCoordinator::new(self.rewards_coordinator, provider);
+
+        let operator_avs_split = rewards_coordinator
+            .getOperatorAVSSplit(operator, avs)
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?
+            ._0;
+
+        Ok(operator_avs_split)
+    }
+
     /// Get the operator's shares in a strategy
     ///
     /// # Arguments
