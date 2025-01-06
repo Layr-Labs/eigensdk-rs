@@ -422,6 +422,34 @@ impl ELChainReader {
         Ok(operator_avs_split)
     }
 
+    /// Gets the split of a specific `operator` for Programmatic Incentives
+    ///
+    /// # Arguments
+    ///
+    /// * `operator` - The operator address
+    ///
+    /// # Returns
+    ///
+    /// * `Result<u16, ElContractsError>` - The split of the operator for PI, if the call is successful
+    ///
+    /// # Errors
+    ///
+    /// * `ElContractsError` - if the call to the contract fails.
+    pub async fn get_operator_pi_split(&self, operator: Address) -> Result<u16, ElContractsError> {
+        let provider = get_provider(&self.provider);
+
+        let rewards_coordinator = IRewardsCoordinator::new(self.rewards_coordinator, provider);
+
+        let operator_pi_split = rewards_coordinator
+            .getOperatorPISplit(operator)
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?
+            ._0;
+
+        Ok(operator_pi_split)
+    }
+
     /// Get the operator's shares in a strategy
     ///
     /// # Arguments
