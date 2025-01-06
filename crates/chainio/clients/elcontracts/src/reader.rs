@@ -31,6 +31,7 @@ impl ELChainReader {
     /// * `allocation_manager` - The address of the allocation manager contract.
     /// * `delegation_manager` - The address of the delegation manager contract.
     /// * `avs_directory` - The address of the avs directory contract.
+    /// * `permission_controller` - The address of the permission controller contract.
     /// * `provider` - The provider to use for the RPC client.
     ///
     /// # Returns
