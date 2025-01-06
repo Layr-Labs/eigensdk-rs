@@ -931,7 +931,7 @@ impl ELChainReader {
     /// * `Vec<Address>` - The list of appointees
     /// # Errors
     /// * `ElContractsError` - if the call to the contract fails
-    pub async fn list_appointee(
+    pub async fn list_appointees(
         &self,
         account_address: Address,
         target: Address,
@@ -1095,6 +1095,8 @@ impl ELChainReader {
 }
 
 // TODO: move to types.rs?
+
+#[derive(Debug, Clone)]
 pub struct OperatorSetStakes {
     pub operator_set: OperatorSet,
     pub strategies: Vec<Address>,
@@ -1583,7 +1585,7 @@ mod tests {
         let target = Address::ZERO;
         let selector = FixedBytes::from([0x00; 4]);
         let appointees = chain_reader
-            .list_appointee(OPERATOR_ADDRESS, target, selector)
+            .list_appointees(OPERATOR_ADDRESS, target, selector)
             .await
             .unwrap();
 
