@@ -80,20 +80,18 @@ impl ELChainReader {
 
         let contract_delegation_manager = DelegationManager::new(delegation_manager, provider);
 
-        // TODO: remove unwrap
         let allocation_manager = contract_delegation_manager
             .allocationManager()
             .call()
             .await
-            .unwrap()
+            .map_err(ElContractsError::AlloyContractError)?
             ._0;
 
-        // TODO: remove unwrap
         let permission_controller = contract_delegation_manager
             .permissionController()
             .call()
             .await
-            .unwrap()
+            .map_err(ElContractsError::AlloyContractError)?
             ._0;
 
         Ok(Self {
