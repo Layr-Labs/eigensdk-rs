@@ -1,7 +1,5 @@
 #!/bin/bash
 
-
-# pinning at old foundry commit because of https://github.com/foundry-rs/foundry/issues/7502
 FOUNDRY_IMAGE=ghcr.io/foundry-rs/foundry:latest
 
 set -e -o nounset
@@ -37,5 +35,4 @@ start_anvil_docker() {
         $FOUNDRY_IMAGE \
         $LOAD_STATE_ANVIL_ARG $DUMP_STATE_ANVIL_ARG --host 0.0.0.0 -v \
         --base-fee 0
-    sleep 2
 }
