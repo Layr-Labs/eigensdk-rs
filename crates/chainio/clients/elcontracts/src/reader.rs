@@ -11,6 +11,7 @@ use eigen_utils::{
     delegationmanager::DelegationManager,
     erc20::ERC20::{self, ERC20Instance},
     get_provider,
+    irewardscoordinator::IRewardsCoordinator,
     istrategy::IStrategy::{self, IStrategyInstance},
     permissioncontroller::PermissionController,
     SdkProvider,
@@ -197,6 +198,35 @@ impl ELChainReader {
             operator_avs_registration_digest_hash;
 
         Ok(avs_hash)
+    }
+
+    /// Get the length of the distribution roots.
+    ///
+    /// # Returns
+    ///
+    /// * `Result<U256, ElContractsError>` - The length of the distribution roots if the call is successful,
+    ///   otherwise an error.
+    ///
+    /// # Errors
+    ///
+    /// * `ElContractsError` - if the call to the contract fails.
+    pub async fn get_distribution_roots_length(&self) -> Result<U256, ElContractsError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_rewards_coordinator =
+            IRewardsCoordinator::new(self.rewards_coordinator, &provider);
+
+        let distribution_roots_lenght_call = contract_rewards_coordinator
+            .getDistributionRootsLength()
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        let IRewardsCoordinator::getDistributionRootsLengthReturn {
+            _0: distribution_roots_length,
+        } = distribution_roots_lenght_call;
+
+        Ok(distribution_roots_length)
     }
 
     /// Get the operator's shares in a strategy
@@ -1122,14 +1152,11 @@ pub struct AllocationInfo {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::test_utils::{build_el_chain_reader, OPERATOR_ADDRESS};
     use alloy::providers::Provider;
     use alloy::{eips::eip1898::BlockNumberOrTag::Number, rpc::types::BlockTransactionsKind};
     use alloy_primitives::{address, keccak256, Address, FixedBytes, U256};
-    use eigen_logging::get_test_logger;
-    use eigen_testing_utils::anvil_constants::{
-        get_allocation_manager_address, get_avs_directory_address, get_erc20_mock_strategy,
-        get_rewards_coordinator_address,
-    };
+    use eigen_testing_utils::anvil_constants::get_erc20_mock_strategy;
     use eigen_testing_utils::{
         anvil::start_anvil_container, anvil_constants::get_delegation_manager_address,
     };
@@ -1139,37 +1166,6 @@ mod tests {
         delegationmanager::DelegationManager,
         delegationmanager::DelegationManager::calculateDelegationApprovalDigestHashReturn,
     };
-
-    const OPERATOR_ADDRESS: Address = address!("70997970C51812dc3A010C7d01b50e0d17dc79C8");
-
-    async fn build_el_chain_reader(http_endpoint: String) -> ELChainReader {
-        let delegation_manager_address =
-            get_delegation_manager_address(http_endpoint.clone()).await;
-        let allocation_manager_address =
-            get_allocation_manager_address(http_endpoint.clone()).await;
-        let avs_directory_address = get_avs_directory_address(http_endpoint.clone()).await;
-        let rewards_coordinator_address =
-            get_rewards_coordinator_address(http_endpoint.clone()).await;
-
-        let delegation_manager_contract =
-            DelegationManager::new(delegation_manager_address, get_provider(&http_endpoint));
-        let permission_controller_address = delegation_manager_contract
-            .permissionController()
-            .call()
-            .await
-            .unwrap()
-            ._0;
-
-        ELChainReader::new(
-            get_test_logger(),
-            allocation_manager_address,
-            delegation_manager_address,
-            rewards_coordinator_address,
-            avs_directory_address,
-            permission_controller_address,
-            http_endpoint,
-        )
-    }
 
     #[tokio::test]
     async fn test_calculate_delegation_approval_digest_hash() {
@@ -1260,6 +1256,19 @@ mod tests {
             operator_hash_from_bindings;
 
         assert_eq!(hash, operator_hash);
+    }
+
+    #[tokio::test]
+    async fn test_get_distribution_roots_length() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let el_chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
+
+        let distribution_roots_length_ret = el_chain_reader
+            .get_distribution_roots_length()
+            .await
+            .unwrap();
+
+        assert_eq!(distribution_roots_length_ret, U256::from(1));
     }
 
     #[tokio::test]
