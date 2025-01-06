@@ -11,7 +11,7 @@ use eigen_utils::{
     delegationmanager::DelegationManager,
     erc20::ERC20::{self, ERC20Instance},
     get_provider,
-    irewardscoordinator::IRewardsCoordinator,
+    irewardscoordinator::{IRewardsCoordinator, IRewardsCoordinatorTypes::DistributionRoot},
     istrategy::IStrategy::{self, IStrategyInstance},
     permissioncontroller::PermissionController,
     SdkProvider,
@@ -254,6 +254,34 @@ impl ELChainReader {
             ._0;
 
         Ok(end_timestamp)
+    }
+
+    /// Get the latest claimable distribution root.
+    ///
+    /// # Returns
+    /// * `Result<DistributionRoot, ElContractsError>` - The latest claimable distribution root if the call is successful.
+    ///
+    /// # Errors
+    /// * `ElContractsError` - if the call to the contract fails.
+    pub async fn get_current_claimable_distribution_root(
+        &self,
+    ) -> Result<DistributionRoot, ElContractsError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_rewards_coordinator =
+            IRewardsCoordinator::new(self.rewards_coordinator, &provider);
+
+        let cumulative_claimed_for_root_call = contract_rewards_coordinator
+            .getCurrentClaimableDistributionRoot()
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        let IRewardsCoordinator::getCurrentClaimableDistributionRootReturn {
+            _0: cumulative_claimed_for_root_ret,
+        } = cumulative_claimed_for_root_call;
+
+        Ok(cumulative_claimed_for_root_ret)
     }
 
     /// Get the operator's shares in a strategy
@@ -1327,6 +1355,28 @@ mod tests {
             .unwrap();
 
         assert_eq!(end_timestamp, 1);
+    }
+
+    #[tokio::test]
+    async fn test_get_current_claimable_distribution_root() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let el_chain_reader = build_el_chain_reader(http_endpoint.to_string()).await;
+
+        let distribution_root = el_chain_reader
+            .get_current_claimable_distribution_root()
+            .await
+            .unwrap();
+        // The root starts being zero
+        assert_eq!(distribution_root.root, FixedBytes::ZERO);
+
+        let (root, _) = new_claim(&http_endpoint).await;
+
+        let distribution_root = el_chain_reader
+            .get_current_claimable_distribution_root()
+            .await
+            .unwrap();
+
+        assert_eq!(distribution_root.root, root);
     }
 
     #[tokio::test]

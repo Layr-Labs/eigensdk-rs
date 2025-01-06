@@ -11,10 +11,7 @@ use eigen_utils::{
     delegationmanager::DelegationManager,
     erc20::ERC20,
     get_signer,
-    irewardscoordinator::{
-        IRewardsCoordinator,
-        IRewardsCoordinatorTypes::{self, RewardsMerkleClaim},
-    },
+    irewardscoordinator::{IRewardsCoordinator, IRewardsCoordinatorTypes::RewardsMerkleClaim},
     permissioncontroller::PermissionController,
     registrycoordinator::{IBLSApkRegistry::PubkeyRegistrationParams, RegistryCoordinator},
     strategymanager::StrategyManager,
@@ -262,34 +259,6 @@ impl ELChainWriter {
 
         let tx = process_claim_call.send().await?;
         Ok(*tx.tx_hash())
-    }
-
-    /// Get the latest claimable distribution root.
-    ///
-    /// # Returns
-    /// * `Result<DistributionRoot, ElContractsError>` - The latest claimable distribution root if the call is successful.
-    ///
-    /// # Errors
-    /// * `ElContractsError` - if the call to the contract fails.
-    pub async fn get_current_claimable_distribution_root(
-        &self,
-    ) -> Result<IRewardsCoordinatorTypes::DistributionRoot, ElContractsError> {
-        let provider = get_signer(&self.signer, &self.provider);
-
-        let contract_rewards_coordinator =
-            IRewardsCoordinator::new(self.rewards_coordinator, &provider);
-
-        let cumulative_claimed_for_root_call = contract_rewards_coordinator
-            .getCurrentClaimableDistributionRoot()
-            .call()
-            .await
-            .map_err(ElContractsError::AlloyContractError)?;
-
-        let IRewardsCoordinator::getCurrentClaimableDistributionRootReturn {
-            _0: cumulative_claimed_for_root_ret,
-        } = cumulative_claimed_for_root_call;
-
-        Ok(cumulative_claimed_for_root_ret)
     }
 
     /// Get the root index from a given hash.
@@ -956,24 +925,6 @@ mod tests {
 
         // No claims so cumulative claimed should be zero
         assert_eq!(cumulative_claimed_ret, U256::from(0));
-    }
-
-    #[tokio::test]
-    async fn test_get_cumulative_claimed_for_root() {
-        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let el_chain_writer = new_test_writer(
-            http_endpoint.to_string(),
-            ANVIL_FIRST_PRIVATE_KEY.to_string(),
-        )
-        .await;
-        let (root, _) = new_claim(&http_endpoint).await;
-
-        let distribution_root = el_chain_writer
-            .get_current_claimable_distribution_root()
-            .await
-            .unwrap();
-
-        assert_eq!(distribution_root.root, root);
     }
 
     #[tokio::test]
