@@ -1,18 +1,15 @@
 use crate::error::ElContractsError;
-use alloy::{
-    providers::Provider,
-    transports::http::{Client, Http},
-};
+use alloy::providers::Provider;
 use alloy_primitives::{ruint::aliases::U256, Address, FixedBytes};
 use eigen_logging::logger::SharedLogger;
 use eigen_utils::{
     allocationmanager::AllocationManager::{self, OperatorSet},
     avsdirectory::AVSDirectory,
     delegationmanager::DelegationManager,
+    erc20::ERC20,
     get_provider,
-    istrategy::IStrategy::{self, IStrategyInstance},
+    istrategy::IStrategy,
     permissioncontroller::PermissionController,
-    SdkProvider,
 };
 
 #[derive(Debug, Clone)]
@@ -233,6 +230,7 @@ impl ELChainReader {
     /// # Returns
     ///
     /// - the strategy contract,
+    /// - the erc20 bindings for the underlying token
     /// - and the underlying token address
     ///
     /// # Errors
@@ -241,19 +239,28 @@ impl ELChainReader {
     pub async fn get_strategy_and_underlying_erc20_token(
         &self,
         strategy_addr: Address,
-    ) -> Result<(IStrategyInstance<Http<Client>, SdkProvider>, Address), ElContractsError> {
+    ) -> Result<(Address, Address, Address), ElContractsError> {
         let provider = get_provider(&self.provider);
 
-        let contract_strategy = IStrategy::new(strategy_addr, provider);
+        let contract_strategy = IStrategy::new(strategy_addr, &provider);
 
         let underlying_token = contract_strategy
             .underlyingToken()
             .call()
             .await
-            .map_err(ElContractsError::AlloyContractError)?
-            ._0;
+            .map_err(ElContractsError::AlloyContractError)?;
 
-        Ok((contract_strategy, underlying_token))
+        let IStrategy::underlyingTokenReturn {
+            _0: underlying_token_addr,
+        } = underlying_token;
+
+        let contract_ierc20 = ERC20::new(underlying_token_addr, &provider);
+
+        Ok((
+            strategy_addr,
+            *contract_ierc20.address(),
+            underlying_token_addr,
+        ))
     }
 
     /// Check if the operator is registered
