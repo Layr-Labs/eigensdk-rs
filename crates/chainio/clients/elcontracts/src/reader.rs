@@ -80,21 +80,21 @@ impl ELChainReader {
 
         let contract_delegation_manager = DelegationManager::new(delegation_manager, provider);
 
-        let DelegationManager::allocationManagerReturn {
-            _0: allocation_manager,
-        } = contract_delegation_manager
+        // TODO: remove unwrap
+        let allocation_manager = contract_delegation_manager
             .allocationManager()
             .call()
             .await
-            .unwrap();
+            .unwrap()
+            ._0;
 
-        let DelegationManager::permissionControllerReturn {
-            _0: permission_controller,
-        } = contract_delegation_manager
+        // TODO: remove unwrap
+        let permission_controller = contract_delegation_manager
             .permissionController()
             .call()
             .await
-            .unwrap();
+            .unwrap()
+            ._0;
 
         Ok(Self {
             _logger,
