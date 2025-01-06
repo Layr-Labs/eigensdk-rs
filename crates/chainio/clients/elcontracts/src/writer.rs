@@ -261,41 +261,6 @@ impl ELChainWriter {
         Ok(*tx.tx_hash())
     }
 
-    /// Get the root index from a given hash.
-    ///
-    /// # Arguments
-    ///
-    /// * `hash` - The hash to get the root index from.
-    ///
-    /// # Returns
-    ///
-    /// * `Result<u32, ElContractsError>` - The root index if the
-    ///   call is successful.
-    ///
-    /// # Errors
-    ///
-    /// * `ElContractsError` - if the call to the contract fails.
-    pub async fn get_root_index_from_hash(
-        &self,
-        hash: FixedBytes<32>,
-    ) -> Result<u32, ElContractsError> {
-        let provider = get_signer(&self.signer, &self.provider);
-
-        let contract_rewards_coordinator =
-            IRewardsCoordinator::new(self.rewards_coordinator, &provider);
-
-        let get_root_index_from_hash_call = contract_rewards_coordinator
-            .getRootIndexFromHash(hash)
-            .call()
-            .await
-            .map_err(ElContractsError::AlloyContractError)?;
-
-        let IRewardsCoordinator::getRootIndexFromHashReturn { _0: root_index } =
-            get_root_index_from_hash_call;
-
-        Ok(root_index)
-    }
-
     /// Check if a claim would currently pass the validations in `process_claim`
     ///
     /// # Arguments
@@ -880,24 +845,6 @@ mod tests {
 
         let valid_claim = el_chain_writer.check_claim(claim.clone()).await.unwrap();
         assert!(valid_claim);
-    }
-
-    #[tokio::test]
-    async fn test_get_root_index_from_hash() {
-        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let el_chain_writer = new_test_writer(
-            http_endpoint.to_string(),
-            ANVIL_FIRST_PRIVATE_KEY.to_string(),
-        )
-        .await;
-        let (root, _) = new_claim(&http_endpoint).await;
-
-        let index = el_chain_writer
-            .get_root_index_from_hash(root)
-            .await
-            .unwrap();
-
-        assert_eq!(index, 0);
     }
 
     #[tokio::test]
