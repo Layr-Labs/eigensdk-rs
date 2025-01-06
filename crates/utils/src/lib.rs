@@ -201,10 +201,7 @@ pub fn get_signer(
         .on_http(url)
 }
 
-#[allow(clippy::type_complexity)]
-pub fn get_provider(
-    rpc_url: &str,
-) -> FillProvider<
+pub type SdkProvider = FillProvider<
     JoinFill<
         Identity,
         JoinFill<GasFiller, JoinFill<BlobGasFiller, JoinFill<NonceFiller, ChainIdFiller>>>,
@@ -212,7 +209,9 @@ pub fn get_provider(
     RootProvider<Http<Client>>,
     Http<Client>,
     Ethereum,
-> {
+>;
+
+pub fn get_provider(rpc_url: &str) -> SdkProvider {
     let url = Url::parse(rpc_url).expect("Wrong rpc url");
     ProviderBuilder::new()
         .with_recommended_fillers()

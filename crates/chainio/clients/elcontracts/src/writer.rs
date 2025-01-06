@@ -179,14 +179,13 @@ impl ELChainWriter {
         amount: U256,
     ) -> Result<TxHash, ElContractsError> {
         info!("depositing {amount:?} tokens into strategy {strategy_addr:?}");
-        let tokens = self
+        let (_strategy, token_address) = self
             .el_chain_reader
             .get_strategy_and_underlying_erc20_token(strategy_addr)
             .await?;
-        let (_, underlying_token_contract, underlying_token) = tokens;
         let provider = get_signer(&self.signer.clone(), &self.provider);
 
-        let contract_underlying_token = ERC20::new(underlying_token_contract, &provider);
+        let contract_underlying_token = ERC20::new(token_address, &provider);
 
         let contract_call = contract_underlying_token.approve(self.strategy_manager, amount);
 
@@ -195,7 +194,7 @@ impl ELChainWriter {
         let contract_strategy_manager = StrategyManager::new(self.strategy_manager, &provider);
 
         let deposit_contract_call =
-            contract_strategy_manager.depositIntoStrategy(strategy_addr, underlying_token, amount);
+            contract_strategy_manager.depositIntoStrategy(strategy_addr, token_address, amount);
 
         let tx = deposit_contract_call.send().await?;
 
@@ -1113,7 +1112,7 @@ mod tests {
             new_test_writer(http_endpoint.to_string(), OPERATOR_PRIVATE_KEY.to_string()).await;
 
         let earner_address = address!("F2288D736d27C1584Ebf7be5f52f9E4d47251AeE");
-        let (_, _, token_address) = el_chain_writer
+        let (_, token_address) = el_chain_writer
             .el_chain_reader
             .get_strategy_and_underlying_erc20_token(
                 get_erc20_mock_strategy(http_endpoint.clone()).await,
