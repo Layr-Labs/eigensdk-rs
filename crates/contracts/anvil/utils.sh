@@ -39,12 +39,3 @@ start_anvil_docker() {
         --base-fee 0
     sleep 2
 }
-
-
-
-
-
-
-
-
-
