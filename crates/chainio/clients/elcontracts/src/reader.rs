@@ -251,18 +251,11 @@ impl ELChainReader {
         ),
         ElContractsError,
     > {
-        let provider = get_provider(&self.provider);
+        let (contract_strategy, underlying_token) = self
+            .get_strategy_and_underlying_token(strategy_addr)
+            .await?;
 
-        let contract_strategy = IStrategy::new(strategy_addr, provider.clone());
-
-        let underlying_token = contract_strategy
-            .underlyingToken()
-            .call()
-            .await
-            .map_err(ElContractsError::AlloyContractError)?
-            ._0;
-
-        let token_contract = ERC20::new(underlying_token, provider);
+        let token_contract = ERC20::new(underlying_token, contract_strategy.provider().to_owned());
 
         Ok((contract_strategy, token_contract, underlying_token))
     }
@@ -377,23 +370,19 @@ impl ELChainReader {
     pub async fn get_strategy_and_underlying_token(
         &self,
         strategy_addr: Address,
-    ) -> Result<(Address, Address), ElContractsError> {
+    ) -> Result<(IStrategyInstance<Http<Client>, SdkProvider>, Address), ElContractsError> {
         let provider = get_provider(&self.provider);
 
-        let contract_strategy = IStrategy::new(strategy_addr, &provider);
-        let contract_strategy_address = contract_strategy.address();
+        let contract_strategy = IStrategy::new(strategy_addr, provider);
 
         let underlying_token = contract_strategy
             .underlyingToken()
             .call()
             .await
-            .map_err(ElContractsError::AlloyContractError)?;
+            .map_err(ElContractsError::AlloyContractError)?
+            ._0;
 
-        let IStrategy::underlyingTokenReturn {
-            _0: underlying_token_addr,
-        } = underlying_token;
-
-        Ok((*contract_strategy_address, underlying_token_addr))
+        Ok((contract_strategy, underlying_token))
     }
 
     /// For a strategy, get the amount of magnitude not currently allocated to any operator set
@@ -1320,7 +1309,7 @@ mod tests {
             "0x36C02dA8a0983159322a80FFE9F24b1acfF8B570"
         );
 
-        let strategy_contract_addr_str = strategy_contract_addr.to_string();
+        let strategy_contract_addr_str = strategy_contract_addr.address().to_string();
         assert_eq!(
             strategy_contract_addr_str,
             "0xeC4cFde48EAdca2bC63E94BB437BbeAcE1371bF3"
