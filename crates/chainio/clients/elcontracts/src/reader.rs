@@ -464,8 +464,7 @@ impl ELChainReader {
             .getStrategyAllocations(operator_address, strategy_address)
             .call()
             .await
-            .map_err(ElContractsError::AlloyContractError)
-            .unwrap();
+            .map_err(ElContractsError::AlloyContractError)?;
 
         let AllocationManager::getStrategyAllocationsReturn {
             _0: operator_sets,
