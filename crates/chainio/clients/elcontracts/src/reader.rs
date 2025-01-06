@@ -319,6 +319,43 @@ impl ELChainReader {
         Ok(root_index)
     }
 
+    /// Get the cumulative claimed amount for a given earner address and token.
+    ///
+    /// # Arguments
+    ///
+    /// * `earner_address` - The address of the earner.
+    /// * `token` - The address of the token.
+    ///
+    /// # Returns
+    ///
+    /// * `Result<U256, ElContractsError>` - The cumulative claimed amount if the call is successful.
+    ///
+    /// # Errors
+    ///
+    /// * `ElContractsError` - if the call to the contract fails.
+    pub async fn get_cumulative_claimed(
+        &self,
+        earner_address: Address,
+        token: Address,
+    ) -> Result<U256, ElContractsError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_rewards_coordinator =
+            IRewardsCoordinator::new(self.rewards_coordinator, &provider);
+
+        let cumulative_claimed_call = contract_rewards_coordinator
+            .cumulativeClaimed(earner_address, token)
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        let IRewardsCoordinator::cumulativeClaimedReturn {
+            _0: cumulative_claim_ret,
+        } = cumulative_claimed_call;
+
+        Ok(cumulative_claim_ret)
+    }
+
     /// Get the operator's shares in a strategy
     ///
     /// # Arguments
@@ -1426,6 +1463,28 @@ mod tests {
             .unwrap();
 
         assert_eq!(index, 0);
+    }
+
+    #[tokio::test]
+    async fn test_get_cumulative_claimed() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let el_chain_reader = build_el_chain_reader(http_endpoint.to_string()).await;
+
+        let earner_address = address!("F2288D736d27C1584Ebf7be5f52f9E4d47251AeE");
+        let (_, _, token_address) = el_chain_reader
+            .get_strategy_and_underlying_erc20_token(
+                get_erc20_mock_strategy(http_endpoint.clone()).await,
+            )
+            .await
+            .unwrap();
+
+        let cumulative_claimed_ret = el_chain_reader
+            .get_cumulative_claimed(earner_address, token_address)
+            .await
+            .unwrap();
+
+        // No claims so cumulative claimed should be zero
+        assert_eq!(cumulative_claimed_ret, U256::from(0));
     }
 
     #[tokio::test]
