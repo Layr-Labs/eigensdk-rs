@@ -25,6 +25,7 @@ pub struct ELChainReader {
     avs_directory: Address,
     permission_controller: Address,
     rewards_coordinator: Address,
+    // TODO: we should make this private
     pub provider: String,
 }
 
@@ -1304,6 +1305,28 @@ mod tests {
             .unwrap();
 
         assert_eq!(distribution_roots_length_ret, U256::from(1));
+    }
+
+    #[tokio::test]
+    async fn test_curr_rewards_calculation_end_timestamp() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let el_chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
+
+        let end_timestamp = el_chain_reader
+            .curr_rewards_calculation_end_timestamp()
+            .await
+            .unwrap();
+
+        assert_eq!(end_timestamp, 0);
+
+        _ = new_claim(&http_endpoint).await;
+
+        let end_timestamp = el_chain_reader
+            .curr_rewards_calculation_end_timestamp()
+            .await
+            .unwrap();
+
+        assert_eq!(end_timestamp, 1);
     }
 
     #[tokio::test]
