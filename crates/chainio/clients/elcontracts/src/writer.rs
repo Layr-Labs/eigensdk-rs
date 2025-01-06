@@ -261,36 +261,6 @@ impl ELChainWriter {
         Ok(*tx.tx_hash())
     }
 
-    /// Check if a claim would currently pass the validations in `process_claim`
-    ///
-    /// # Arguments
-    ///
-    /// * `claim` - The claim to check
-    ///
-    /// # Returns
-    ///
-    /// * `Result<bool, ElContractsError>` - True if the claim would pass the validations, false otherwise
-    ///
-    /// # Errors
-    ///
-    /// * `ElContractsError` - if the call to the contract fails. Also fails if no root has been submitted yet.
-    pub async fn check_claim(&self, claim: RewardsMerkleClaim) -> Result<bool, ElContractsError> {
-        let provider = get_signer(&self.signer, &self.provider);
-
-        let contract_rewards_coordinator =
-            IRewardsCoordinator::new(self.rewards_coordinator, &provider);
-
-        let check_claim_call = contract_rewards_coordinator
-            .checkClaim(claim)
-            .call()
-            .await
-            .map_err(ElContractsError::AlloyContractError)?;
-
-        let IRewardsCoordinator::checkClaimReturn { _0: claim_ret } = check_claim_call;
-
-        Ok(claim_ret)
-    }
-
     /// Removes permission of an appointee on a target contract, given an account address.
     ///
     /// # Arguments
@@ -654,8 +624,7 @@ mod test_utils {}
 #[cfg(test)]
 mod tests {
     use crate::test_utils::{
-        build_el_chain_reader, new_claim, new_test_writer, ANVIL_FIRST_ADDRESS,
-        ANVIL_FIRST_PRIVATE_KEY,
+        build_el_chain_reader, new_test_writer, ANVIL_FIRST_ADDRESS, ANVIL_FIRST_PRIVATE_KEY,
     };
     use alloy::providers::Provider;
     use alloy_primitives::{address, aliases::U96, Address, U256};
@@ -793,21 +762,6 @@ mod tests {
 
         let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
         assert!(receipt.status());
-    }
-
-    #[tokio::test]
-    async fn test_check_claim() {
-        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let el_chain_writer = new_test_writer(
-            http_endpoint.to_string(),
-            ANVIL_FIRST_PRIVATE_KEY.to_string(),
-        )
-        .await;
-
-        let (_, claim) = new_claim(&http_endpoint).await;
-
-        let valid_claim = el_chain_writer.check_claim(claim.clone()).await.unwrap();
-        assert!(valid_claim);
     }
 
     #[tokio::test]

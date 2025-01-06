@@ -11,7 +11,10 @@ use eigen_utils::{
     delegationmanager::DelegationManager,
     erc20::ERC20::{self, ERC20Instance},
     get_provider,
-    irewardscoordinator::{IRewardsCoordinator, IRewardsCoordinatorTypes::DistributionRoot},
+    irewardscoordinator::{
+        IRewardsCoordinator,
+        IRewardsCoordinatorTypes::{DistributionRoot, RewardsMerkleClaim},
+    },
     istrategy::IStrategy::{self, IStrategyInstance},
     permissioncontroller::PermissionController,
     SdkProvider,
@@ -354,6 +357,36 @@ impl ELChainReader {
         } = cumulative_claimed_call;
 
         Ok(cumulative_claim_ret)
+    }
+
+    /// Check if a claim would currently pass the validations in `process_claim`
+    ///
+    /// # Arguments
+    ///
+    /// * `claim` - The claim to check
+    ///
+    /// # Returns
+    ///
+    /// * `Result<bool, ElContractsError>` - True if the claim would pass the validations, false otherwise
+    ///
+    /// # Errors
+    ///
+    /// * `ElContractsError` - if the call to the contract fails. Also fails if no root has been submitted yet.
+    pub async fn check_claim(&self, claim: RewardsMerkleClaim) -> Result<bool, ElContractsError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_rewards_coordinator =
+            IRewardsCoordinator::new(self.rewards_coordinator, &provider);
+
+        let check_claim_call = contract_rewards_coordinator
+            .checkClaim(claim)
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        let IRewardsCoordinator::checkClaimReturn { _0: claim_ret } = check_claim_call;
+
+        Ok(claim_ret)
     }
 
     /// Get the operator's shares in a strategy
@@ -1485,6 +1518,17 @@ mod tests {
 
         // No claims so cumulative claimed should be zero
         assert_eq!(cumulative_claimed_ret, U256::from(0));
+    }
+
+    #[tokio::test]
+    async fn test_check_claim() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let el_chain_reader = build_el_chain_reader(http_endpoint.to_string()).await;
+
+        let (_, claim) = new_claim(&http_endpoint).await;
+
+        let valid_claim = el_chain_reader.check_claim(claim.clone()).await.unwrap();
+        assert!(valid_claim);
     }
 
     #[tokio::test]
