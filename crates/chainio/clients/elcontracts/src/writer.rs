@@ -261,6 +261,72 @@ impl ELChainWriter {
         Ok(*tx.tx_hash())
     }
 
+    /// Sets the split of a specific `operator` for a specific `avs`
+    ///
+    /// # Arguments
+    ///
+    /// * `operator` - The operator address
+    /// * `avs` - The AVS address
+    /// * `split` - The new split of the operator for the AVS
+    ///
+    /// # Returns
+    ///
+    /// * `Result<FixedBytes<32>, ElContractsError>` - The transaction hash if the transaction is sent, otherwise an error.
+    ///
+    /// # Errors
+    ///
+    /// * `ElContractsError` - if the call to the contract fails.
+    pub async fn set_operator_avs_split(
+        &self,
+        operator: Address,
+        avs: Address,
+        split: u16,
+    ) -> Result<FixedBytes<32>, ElContractsError> {
+        let signer = get_signer(&self.signer, &self.provider);
+
+        let rewards_coordinator = IRewardsCoordinator::new(self.rewards_coordinator, signer);
+
+        let tx = rewards_coordinator
+            .setOperatorAVSSplit(operator, avs, split)
+            .send()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        Ok(*tx.tx_hash())
+    }
+
+    /// sets the split of a specific `operator` for Programmatic Incentives
+    ///
+    /// # Arguments
+    ///
+    /// * `operator` - The operator address
+    /// * `split` - The new split of the operator for PI
+    ///
+    /// # Returns
+    ///
+    /// * `Result<FixedBytes<32>, ElContractsError>` - The transaction hash if the transaction is sent, otherwise an error.
+    ///
+    /// # Errors
+    ///
+    /// * `ElContractsError` - if the call to the contract fails.
+    pub async fn set_operator_pi_split(
+        &self,
+        operator: Address,
+        split: u16,
+    ) -> Result<FixedBytes<32>, ElContractsError> {
+        let signer = get_signer(&self.signer, &self.provider);
+
+        let rewards_coordinator = IRewardsCoordinator::new(self.rewards_coordinator, signer);
+
+        let tx = rewards_coordinator
+            .setOperatorPISplit(operator, split)
+            .send()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        Ok(*tx.tx_hash())
+    }
+
     /// Removes permission of an appointee on a target contract, given an account address.
     ///
     /// # Arguments
