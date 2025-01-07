@@ -844,7 +844,8 @@ mod tests {
             .add_pending_admin(ANVIL_FIRST_ADDRESS, pending_admin)
             .await
             .unwrap();
-        wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+        assert!(receipt.status());
 
         let is_pending_admin = el_chain_writer
             .el_chain_reader
@@ -857,7 +858,8 @@ mod tests {
             .remove_pending_admin(ANVIL_FIRST_ADDRESS, pending_admin)
             .await
             .unwrap();
-        wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+        assert!(receipt.status());
 
         let is_admin = el_chain_writer
             .el_chain_reader
@@ -880,18 +882,24 @@ mod tests {
         let pending_admin_key =
             "0x4bbbf85ce3377467afe5d46f804f221813b2bb87f24d81f60f1fcdbf7cbf4356";
 
-        account_writer
+        let tx_hash = account_writer
             .add_pending_admin(ANVIL_FIRST_ADDRESS, pending_admin)
             .await
             .unwrap();
 
+        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+        assert!(receipt.status());
+
         let admin_writer =
             new_test_writer(http_endpoint.to_string(), pending_admin_key.to_string()).await;
 
-        admin_writer
+        let tx_hash = admin_writer
             .accept_admin(ANVIL_FIRST_ADDRESS)
             .await
             .unwrap();
+
+        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+        assert!(receipt.status());
 
         let is_admin = admin_writer
             .el_chain_reader
@@ -919,14 +927,19 @@ mod tests {
             "0xdbda1821b80551c9d65939329250298aa3472ba22feea921c0cf5d620ea67b97";
 
         // Adding two admins and removing one. Cannot remove the last admin, so one must remain
-        el_chain_writer
+        let tx_hash = el_chain_writer
             .add_pending_admin(ANVIL_FIRST_ADDRESS, pending_admin_1)
             .await
             .unwrap();
-        el_chain_writer
+        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+        assert!(receipt.status());
+
+        let tx_hash = el_chain_writer
             .add_pending_admin(ANVIL_FIRST_ADDRESS, pending_admin_2)
             .await
             .unwrap();
+        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+        assert!(receipt.status());
 
         let admin_1_writer =
             new_test_writer(http_endpoint.to_string(), pending_admin_1_key.to_string()).await;
@@ -941,10 +954,13 @@ mod tests {
             .await
             .unwrap();
 
-        admin_1_writer
+        let tx_hash = admin_1_writer
             .remove_admin(ANVIL_FIRST_ADDRESS, pending_admin_2)
             .await
             .unwrap();
+
+        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+        assert!(receipt.status());
 
         let is_admin = el_chain_writer
             .el_chain_reader
