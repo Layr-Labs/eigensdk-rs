@@ -699,7 +699,7 @@ mod tests {
         anvil::{mine_anvil_blocks, set_account_balance, start_anvil_container},
         anvil_constants::{
             get_allocation_manager_address, get_erc20_mock_strategy,
-            get_registry_coordinator_address,
+            get_registry_coordinator_address, get_service_manager_address,
         },
         transaction::wait_transaction,
     };
@@ -1197,5 +1197,76 @@ mod tests {
             allocation_info[0].current_magnitude,
             U256::from(new_allocation)
         );
+    }
+
+    #[tokio::test]
+    async fn test_set_operator_avs_split() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let el_chain_writer = new_test_writer(
+            http_endpoint.to_string(),
+            ANVIL_FIRST_PRIVATE_KEY.to_string(),
+        )
+        .await;
+        let new_split = 5;
+        let avs_address = get_service_manager_address(http_endpoint.clone()).await;
+
+        let split = el_chain_writer
+            .el_chain_reader
+            .get_operator_avs_split(ANVIL_FIRST_ADDRESS, avs_address)
+            .await
+            .unwrap();
+
+        assert_eq!(split, 0);
+
+        let tx_hash = el_chain_writer
+            .set_operator_avs_split(ANVIL_FIRST_ADDRESS, avs_address, new_split)
+            .await
+            .unwrap();
+
+        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+        assert!(receipt.status());
+
+        let split = el_chain_writer
+            .el_chain_reader
+            .get_operator_avs_split(ANVIL_FIRST_ADDRESS, avs_address)
+            .await
+            .unwrap();
+
+        assert_eq!(split, new_split);
+    }
+
+    #[tokio::test]
+    async fn test_set_operator_pi_split() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let el_chain_writer = new_test_writer(
+            http_endpoint.to_string(),
+            ANVIL_FIRST_PRIVATE_KEY.to_string(),
+        )
+        .await;
+        let new_split = 5;
+
+        let split = el_chain_writer
+            .el_chain_reader
+            .get_operator_pi_split(ANVIL_FIRST_ADDRESS)
+            .await
+            .unwrap();
+
+        assert_eq!(split, 0);
+
+        let tx_hash = el_chain_writer
+            .set_operator_pi_split(ANVIL_FIRST_ADDRESS, new_split)
+            .await
+            .unwrap();
+
+        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+        assert!(receipt.status());
+
+        let split = el_chain_writer
+            .el_chain_reader
+            .get_operator_pi_split(ANVIL_FIRST_ADDRESS)
+            .await
+            .unwrap();
+
+        assert_eq!(split, new_split);
     }
 }
