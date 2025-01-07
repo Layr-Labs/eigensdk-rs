@@ -12,8 +12,7 @@ pub mod writer;
 
 #[cfg(test)]
 pub(crate) mod test_utils {
-    use alloy::hex::FromHex;
-    use alloy_primitives::{address, keccak256, Address, Bytes, FixedBytes, U256};
+    use alloy_primitives::{address, keccak256, Address, FixedBytes, U256, U8};
     use alloy_sol_types::SolValue;
     use eigen_logging::get_test_logger;
     use eigen_testing_utils::anvil_constants::{
@@ -102,19 +101,37 @@ pub(crate) mod test_utils {
             token: token_address,
             cumulativeEarnings: U256::from_str("3000000000000000000").unwrap(),
         }];
-        let earner_token_root = keccak256(token_leaves.abi_encode());
+        let encoded_token_leaf = [
+            // uint8 internal constant TOKEN_LEAF_SALT = 1;
+            U8::from(1).to_be_bytes_vec(),
+            token_leaves[0].token.abi_encode_packed(),
+            token_leaves[0].cumulativeEarnings.abi_encode_packed(),
+        ]
+        .concat();
+        let earner_token_root = dbg!(keccak256(encoded_token_leaf));
         let earner_leaf = EarnerTreeMerkleLeaf {
             earner: earner_address,
             earnerTokenRoot: earner_token_root,
         };
-        let earner_tree_root = keccak256(earner_leaf.abi_encode());
+        let encoded_earner_leaf = [
+            // uint8 internal constant EARNER_LEAF_SALT = 0;
+            U8::from(0).to_be_bytes_vec(),
+            earner_leaf.earner.abi_encode_packed(),
+            earner_leaf.earnerTokenRoot.abi_encode_packed(),
+        ]
+        .concat();
+        let earner_tree_root = dbg!(keccak256(encoded_earner_leaf));
         let claim = RewardsMerkleClaim {
             rootIndex: 0,
             earnerIndex: 0,
-            earnerTreeProof: earner_tree_root.into(),
+            // Empty because leaf == root
+            earnerTreeProof: vec![].into(),
             earnerLeaf: earner_leaf,
             tokenIndices: vec![0],
-            tokenTreeProofs: vec![earner_token_root.into()],
+            tokenTreeProofs: vec![
+                // Empty because leaf == root
+                vec![].into(),
+            ],
             tokenLeaves: token_leaves,
         };
 
