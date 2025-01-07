@@ -235,8 +235,8 @@ impl ELChainWriter {
     ///
     /// # Arguments
     ///
-    /// * `earnerAddress` - The address of the earner for whom to process the claim.
     /// * `claim` - The RewardsMerkleClaim object containing the claim.
+    /// * `earnerAddress` - The address of the earner for whom to process the claim.
     ///
     /// # Returns
     ///
@@ -247,8 +247,8 @@ impl ELChainWriter {
     /// * `ElContractsError` - if the call to the contract fails. Also fails if no root has been submitted yet.
     pub async fn process_claim(
         &self,
-        earner_address: Address,
         claim: RewardsMerkleClaim,
+        earner_address: Address,
     ) -> Result<FixedBytes<32>, ElContractsError> {
         let provider = get_signer(&self.signer, &self.provider);
 
