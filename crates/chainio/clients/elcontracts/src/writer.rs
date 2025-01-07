@@ -261,6 +261,41 @@ impl ELChainWriter {
         Ok(*tx.tx_hash())
     }
 
+    /// Process multiple claim for rewards for a given earner address. Checks the claim against a given root
+    /// (determined by the root_index on the claim). Earnings are cumulative so earners can claim to
+    /// the latest distribution root and the contract will compute the difference between their earning
+    /// and claimed amounts. The difference is transferred to the earner address.
+    /// If a claimer has not been set (see [`set_claimer_for`]), only the earner can claim. Otherwise, only
+    /// the claimer can claim.
+    ///
+    /// # Arguments
+    ///
+    /// * `claims` - A [`Vec`] of RewardsMerkleClaim objects containing the claims.
+    /// * `earnerAddress` - The address of the earner for whom to process the claims.
+    ///
+    /// # Returns
+    ///
+    /// * `Result<FixedBytes<32>, ElContractsError>` - The transaction hash if the claim is sent, otherwise an error.
+    ///
+    /// # Errors
+    ///
+    /// * `ElContractsError` - if the call to the contract fails. Also fails if no root has been submitted yet.
+    pub async fn process_claims(
+        &self,
+        claims: Vec<RewardsMerkleClaim>,
+        earner_address: Address,
+    ) -> Result<FixedBytes<32>, ElContractsError> {
+        let provider = get_signer(&self.signer, &self.provider);
+
+        let contract_rewards_coordinator =
+            IRewardsCoordinator::new(self.rewards_coordinator, &provider);
+
+        let process_claim_call = contract_rewards_coordinator.processClaims(claims, earner_address);
+
+        let tx = process_claim_call.send().await?;
+        Ok(*tx.tx_hash())
+    }
+
     /// Sets the split of a specific `operator` for a specific `avs`
     ///
     /// # Arguments
