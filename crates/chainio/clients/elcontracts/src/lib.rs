@@ -12,7 +12,8 @@ pub mod writer;
 
 #[cfg(test)]
 pub(crate) mod test_utils {
-    use alloy_primitives::{address, keccak256, Address, FixedBytes, U256, U8};
+    use alloy::hex::FromHex;
+    use alloy_primitives::{address, keccak256, Address, Bytes, FixedBytes, U256, U8};
     use alloy_sol_types::SolValue;
     use eigen_logging::get_test_logger;
     use eigen_testing_utils::anvil_constants::{
@@ -29,6 +30,7 @@ pub(crate) mod test_utils {
                 EarnerTreeMerkleLeaf, RewardsMerkleClaim, TokenTreeMerkleLeaf,
             },
         },
+        mockerc20::MockERC20,
     };
     use std::str::FromStr;
 
@@ -88,7 +90,67 @@ pub(crate) mod test_utils {
         )
     }
 
-    pub async fn new_claim(http_endpoint: &str) -> (FixedBytes<32>, RewardsMerkleClaim) {
+    pub async fn new_simple_claim(http_endpoint: &str) -> (FixedBytes<32>, RewardsMerkleClaim) {
+        let el_chain_reader = build_el_chain_reader(http_endpoint.to_string()).await;
+
+        let earner_address = address!("25a1b7322f9796b26a4bec125913b34c292b28d6");
+        let claim = RewardsMerkleClaim {
+            rootIndex: 0,
+            earnerIndex: 7,
+            earnerTreeProof: Bytes::from_hex("4bf5e16eaabbc36964f1e1639808669420f55d60e51adb7e9695b77145c479fd6777be59643947bb24d78e69d6605bf369c515b479f3a8967dd68a97c5bb4a4a262b28002eeb6cbbffb7e79e5741bf2be189a6073440a62fabcd8af4dbda94e3").unwrap(),
+            earnerLeaf: EarnerTreeMerkleLeaf {
+                earner: earner_address,
+                earnerTokenRoot: FixedBytes::from_hex(
+                    "f8e7e20b32aae1d818dcb593b98982841e9a0ed12c161ad603e3ee3948746cba",
+                )
+                .unwrap(),
+            },
+            tokenIndices: vec![7],
+            tokenTreeProofs: vec![
+                Bytes::from_hex("3cd04e8fc6f23812c570fe12292a30bb9e105e00f5913ac4b4938f23e65d8d10e6b1403d58c9d5450952e7d96c81305dad9fb966e8a27d3a42058e3958a0d30033148e91b455542d05deb81b8305b672e742cd3145f7022a0089bad2e6af9173").unwrap(),
+            ],
+            tokenLeaves: vec![TokenTreeMerkleLeaf {
+                token: address!("7fbfdd1dfd80730385aee232cc9f79b8ae12a654"),
+                cumulativeEarnings: U256::from_str("3000000000000000000").unwrap(),
+            }],
+        };
+
+        // Using test data taken from
+        // https://github.com/Layr-Labs/eigenlayer-contracts/blob/a888a1cd1479438dda4b138245a69177b125a973/src/test/test-data/rewardsCoordinator/processClaimProofs_MaxEarnerAndLeafIndices.json
+        let root = FixedBytes::from_hex(
+            "37550707c80f3d8907c467999730e52127ab89be3f17a5017a3f1ffb73a1445f",
+        )
+        .unwrap();
+
+        let key = "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
+        let rewards_coordinator = IRewardsCoordinator::new(
+            get_rewards_coordinator_address(http_endpoint.to_string()).await,
+            get_signer(key, http_endpoint),
+        );
+        let curr_rewards_calculation_end_timestamp = el_chain_reader
+            .curr_rewards_calculation_end_timestamp()
+            .await
+            .unwrap();
+        let submit_tx = rewards_coordinator
+            .submitRoot(root, curr_rewards_calculation_end_timestamp + 1)
+            .send()
+            .await
+            .unwrap();
+        let submit_status = submit_tx.get_receipt().await.unwrap().status();
+        assert!(submit_status);
+
+        (root, claim)
+    }
+
+    /// The claim can be submitted from [`ANVIL_FIRST_PRIVATE_KEY`]
+    pub async fn new_claim(
+        http_endpoint: &str,
+        cumulative_earnings: U256,
+    ) -> (FixedBytes<32>, RewardsMerkleClaim) {
+        let signer = get_signer(ANVIL_FIRST_PRIVATE_KEY, http_endpoint);
+        let rewards_coordinator_address =
+            get_rewards_coordinator_address(http_endpoint.to_string()).await;
+
         let el_chain_reader = build_el_chain_reader(http_endpoint.to_string()).await;
         let mock_strategy = get_erc20_mock_strategy(http_endpoint.to_string()).await;
         let (_, token_address) = el_chain_reader
@@ -96,10 +158,21 @@ pub(crate) mod test_utils {
             .await
             .unwrap();
 
+        let token = MockERC20::new(token_address, &signer);
+        let receipt = token
+            .mint(rewards_coordinator_address, cumulative_earnings)
+            .send()
+            .await
+            .unwrap()
+            .get_receipt()
+            .await
+            .unwrap();
+        assert!(receipt.status());
+
         let earner_address = ANVIL_FIRST_ADDRESS;
         let token_leaves = vec![TokenTreeMerkleLeaf {
             token: token_address,
-            cumulativeEarnings: U256::from_str("3000000000000000000").unwrap(),
+            cumulativeEarnings: cumulative_earnings,
         }];
         let encoded_token_leaf = [
             // uint8 internal constant TOKEN_LEAF_SALT = 1;
@@ -137,10 +210,7 @@ pub(crate) mod test_utils {
 
         let root = earner_tree_root;
 
-        let rewards_coordinator = IRewardsCoordinator::new(
-            get_rewards_coordinator_address(http_endpoint.to_string()).await,
-            get_signer(ANVIL_FIRST_PRIVATE_KEY, http_endpoint),
-        );
+        let rewards_coordinator = IRewardsCoordinator::new(rewards_coordinator_address, signer);
         let curr_rewards_calculation_end_timestamp = el_chain_reader
             .curr_rewards_calculation_end_timestamp()
             .await

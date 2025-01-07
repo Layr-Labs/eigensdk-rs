@@ -875,7 +875,7 @@ mod tests {
         )
         .await;
 
-        let (_root, claim) = new_claim(&http_endpoint).await;
+        let (_root, claim) = new_claim(&http_endpoint, U256::from(42)).await;
 
         let tx_hash = el_chain_writer
             .process_claim(claim, ANVIL_FIRST_ADDRESS)
