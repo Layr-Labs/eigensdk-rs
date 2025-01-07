@@ -261,6 +261,72 @@ impl ELChainWriter {
         Ok(*tx.tx_hash())
     }
 
+    /// Sets the split of a specific `operator` for a specific `avs`
+    ///
+    /// # Arguments
+    ///
+    /// * `operator` - The operator address
+    /// * `avs` - The AVS address
+    /// * `split` - The new split of the operator for the AVS
+    ///
+    /// # Returns
+    ///
+    /// * `Result<FixedBytes<32>, ElContractsError>` - The transaction hash if the transaction is sent, otherwise an error.
+    ///
+    /// # Errors
+    ///
+    /// * `ElContractsError` - if the call to the contract fails.
+    pub async fn set_operator_avs_split(
+        &self,
+        operator: Address,
+        avs: Address,
+        split: u16,
+    ) -> Result<FixedBytes<32>, ElContractsError> {
+        let signer = get_signer(&self.signer, &self.provider);
+
+        let rewards_coordinator = IRewardsCoordinator::new(self.rewards_coordinator, signer);
+
+        let tx = rewards_coordinator
+            .setOperatorAVSSplit(operator, avs, split)
+            .send()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        Ok(*tx.tx_hash())
+    }
+
+    /// sets the split of a specific `operator` for Programmatic Incentives
+    ///
+    /// # Arguments
+    ///
+    /// * `operator` - The operator address
+    /// * `split` - The new split of the operator for PI
+    ///
+    /// # Returns
+    ///
+    /// * `Result<FixedBytes<32>, ElContractsError>` - The transaction hash if the transaction is sent, otherwise an error.
+    ///
+    /// # Errors
+    ///
+    /// * `ElContractsError` - if the call to the contract fails.
+    pub async fn set_operator_pi_split(
+        &self,
+        operator: Address,
+        split: u16,
+    ) -> Result<FixedBytes<32>, ElContractsError> {
+        let signer = get_signer(&self.signer, &self.provider);
+
+        let rewards_coordinator = IRewardsCoordinator::new(self.rewards_coordinator, signer);
+
+        let tx = rewards_coordinator
+            .setOperatorPISplit(operator, split)
+            .send()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        Ok(*tx.tx_hash())
+    }
+
     /// Removes permission of an appointee on a target contract, given an account address.
     ///
     /// # Arguments
@@ -633,7 +699,7 @@ mod tests {
         anvil::{mine_anvil_blocks, set_account_balance, start_anvil_container},
         anvil_constants::{
             get_allocation_manager_address, get_erc20_mock_strategy,
-            get_registry_coordinator_address,
+            get_registry_coordinator_address, get_service_manager_address,
         },
         transaction::wait_transaction,
     };
@@ -778,7 +844,8 @@ mod tests {
             .add_pending_admin(ANVIL_FIRST_ADDRESS, pending_admin)
             .await
             .unwrap();
-        wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+        assert!(receipt.status());
 
         let is_pending_admin = el_chain_writer
             .el_chain_reader
@@ -791,7 +858,8 @@ mod tests {
             .remove_pending_admin(ANVIL_FIRST_ADDRESS, pending_admin)
             .await
             .unwrap();
-        wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+        assert!(receipt.status());
 
         let is_admin = el_chain_writer
             .el_chain_reader
@@ -814,18 +882,24 @@ mod tests {
         let pending_admin_key =
             "0x4bbbf85ce3377467afe5d46f804f221813b2bb87f24d81f60f1fcdbf7cbf4356";
 
-        account_writer
+        let tx_hash = account_writer
             .add_pending_admin(ANVIL_FIRST_ADDRESS, pending_admin)
             .await
             .unwrap();
 
+        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+        assert!(receipt.status());
+
         let admin_writer =
             new_test_writer(http_endpoint.to_string(), pending_admin_key.to_string()).await;
 
-        admin_writer
+        let tx_hash = admin_writer
             .accept_admin(ANVIL_FIRST_ADDRESS)
             .await
             .unwrap();
+
+        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+        assert!(receipt.status());
 
         let is_admin = admin_writer
             .el_chain_reader
@@ -853,14 +927,19 @@ mod tests {
             "0xdbda1821b80551c9d65939329250298aa3472ba22feea921c0cf5d620ea67b97";
 
         // Adding two admins and removing one. Cannot remove the last admin, so one must remain
-        el_chain_writer
+        let tx_hash = el_chain_writer
             .add_pending_admin(ANVIL_FIRST_ADDRESS, pending_admin_1)
             .await
             .unwrap();
-        el_chain_writer
+        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+        assert!(receipt.status());
+
+        let tx_hash = el_chain_writer
             .add_pending_admin(ANVIL_FIRST_ADDRESS, pending_admin_2)
             .await
             .unwrap();
+        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+        assert!(receipt.status());
 
         let admin_1_writer =
             new_test_writer(http_endpoint.to_string(), pending_admin_1_key.to_string()).await;
@@ -875,10 +954,13 @@ mod tests {
             .await
             .unwrap();
 
-        admin_1_writer
+        let tx_hash = admin_1_writer
             .remove_admin(ANVIL_FIRST_ADDRESS, pending_admin_2)
             .await
             .unwrap();
+
+        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+        assert!(receipt.status());
 
         let is_admin = el_chain_writer
             .el_chain_reader
@@ -1131,5 +1213,76 @@ mod tests {
             allocation_info[0].current_magnitude,
             U256::from(new_allocation)
         );
+    }
+
+    #[tokio::test]
+    async fn test_set_operator_avs_split() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let el_chain_writer = new_test_writer(
+            http_endpoint.to_string(),
+            ANVIL_FIRST_PRIVATE_KEY.to_string(),
+        )
+        .await;
+        let new_split = 5;
+        let avs_address = get_service_manager_address(http_endpoint.clone()).await;
+
+        let split = el_chain_writer
+            .el_chain_reader
+            .get_operator_avs_split(ANVIL_FIRST_ADDRESS, avs_address)
+            .await
+            .unwrap();
+
+        assert_eq!(split, 0);
+
+        let tx_hash = el_chain_writer
+            .set_operator_avs_split(ANVIL_FIRST_ADDRESS, avs_address, new_split)
+            .await
+            .unwrap();
+
+        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+        assert!(receipt.status());
+
+        let split = el_chain_writer
+            .el_chain_reader
+            .get_operator_avs_split(ANVIL_FIRST_ADDRESS, avs_address)
+            .await
+            .unwrap();
+
+        assert_eq!(split, new_split);
+    }
+
+    #[tokio::test]
+    async fn test_set_operator_pi_split() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let el_chain_writer = new_test_writer(
+            http_endpoint.to_string(),
+            ANVIL_FIRST_PRIVATE_KEY.to_string(),
+        )
+        .await;
+        let new_split = 5;
+
+        let split = el_chain_writer
+            .el_chain_reader
+            .get_operator_pi_split(ANVIL_FIRST_ADDRESS)
+            .await
+            .unwrap();
+
+        assert_eq!(split, 0);
+
+        let tx_hash = el_chain_writer
+            .set_operator_pi_split(ANVIL_FIRST_ADDRESS, new_split)
+            .await
+            .unwrap();
+
+        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+        assert!(receipt.status());
+
+        let split = el_chain_writer
+            .el_chain_reader
+            .get_operator_pi_split(ANVIL_FIRST_ADDRESS)
+            .await
+            .unwrap();
+
+        assert_eq!(split, new_split);
     }
 }
