@@ -161,6 +161,7 @@ pub(crate) mod test_utils {
         // Initialize the rewards coordinator bindings
         let rewards_coordinator = IRewardsCoordinator::new(rewards_coordinator_address, &signer);
 
+        // Mint tokens for the rewards coordinator
         let token = MockERC20::new(token_address, &signer);
         let receipt = token
             .mint(rewards_coordinator_address, cumulative_earnings)
@@ -172,11 +173,14 @@ pub(crate) mod test_utils {
             .unwrap();
         assert!(receipt.status());
 
+        // Generate token tree leaf
+        // For the tree structure, see https://github.com/Layr-Labs/eigenlayer-contracts/blob/a888a1cd1479438dda4b138245a69177b125a973/docs/core/RewardsCoordinator.md#rewards-merkle-tree-structure
         let earner_address = ANVIL_FIRST_ADDRESS;
         let token_leaves = vec![TokenTreeMerkleLeaf {
             token: token_address,
             cumulativeEarnings: cumulative_earnings,
         }];
+        // Hash token tree leaf to get root
         let encoded_token_leaf = [
             // uint8 internal constant TOKEN_LEAF_SALT = 1;
             U8::from(1).to_be_bytes_vec(),
@@ -184,11 +188,14 @@ pub(crate) mod test_utils {
             token_leaves[0].cumulativeEarnings.abi_encode_packed(),
         ]
         .concat();
-        let earner_token_root = dbg!(keccak256(encoded_token_leaf));
+        let earner_token_root = keccak256(encoded_token_leaf);
+
+        // Generate earner tree leaf
         let earner_leaf = EarnerTreeMerkleLeaf {
             earner: earner_address,
             earnerTokenRoot: earner_token_root,
         };
+        // Hash earner tree leaf to get root
         let encoded_earner_leaf = [
             // uint8 internal constant EARNER_LEAF_SALT = 0;
             U8::from(0).to_be_bytes_vec(),
@@ -196,7 +203,7 @@ pub(crate) mod test_utils {
             earner_leaf.earnerTokenRoot.abi_encode_packed(),
         ]
         .concat();
-        let earner_tree_root = dbg!(keccak256(encoded_earner_leaf));
+        let earner_tree_root = keccak256(encoded_earner_leaf);
 
         // Fetch the next root index from contract
         let next_root_index = el_chain_reader
@@ -207,12 +214,12 @@ pub(crate) mod test_utils {
         let claim = RewardsMerkleClaim {
             rootIndex: next_root_index.try_into().unwrap(),
             earnerIndex: 0,
-            // Empty because leaf == root
+            // Empty proof because leaf == root
             earnerTreeProof: vec![].into(),
             earnerLeaf: earner_leaf,
             tokenIndices: vec![0],
             tokenTreeProofs: vec![
-                // Empty because leaf == root
+                // Empty proof because leaf == root
                 vec![].into(),
             ],
             tokenLeaves: token_leaves,
