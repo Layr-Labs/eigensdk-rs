@@ -90,7 +90,9 @@ pub(crate) mod test_utils {
         )
     }
 
-    pub async fn new_simple_claim(http_endpoint: &str) -> (FixedBytes<32>, RewardsMerkleClaim) {
+    // Using test data taken from
+    // https://github.com/Layr-Labs/eigenlayer-contracts/blob/a888a1cd1479438dda4b138245a69177b125a973/src/test/test-data/rewardsCoordinator/processClaimProofs_MaxEarnerAndLeafIndices.json
+    pub async fn new_test_claim(http_endpoint: &str) -> (FixedBytes<32>, RewardsMerkleClaim) {
         let el_chain_reader = build_el_chain_reader(http_endpoint.to_string()).await;
 
         let earner_address = address!("25a1b7322f9796b26a4bec125913b34c292b28d6");
@@ -115,8 +117,6 @@ pub(crate) mod test_utils {
             }],
         };
 
-        // Using test data taken from
-        // https://github.com/Layr-Labs/eigenlayer-contracts/blob/a888a1cd1479438dda4b138245a69177b125a973/src/test/test-data/rewardsCoordinator/processClaimProofs_MaxEarnerAndLeafIndices.json
         let root = FixedBytes::from_hex(
             "37550707c80f3d8907c467999730e52127ab89be3f17a5017a3f1ffb73a1445f",
         )
