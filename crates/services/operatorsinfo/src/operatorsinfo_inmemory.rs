@@ -123,7 +123,7 @@ impl OperatorInfoServiceInMemory {
     /// # Returns
     ///
     /// A tuple of 2 elements
-    /// [`Self`] and [`UnboundedReceiver<OperatorInfoServiceError>`] if successfull , else [`OperatorInfoServiceError`]
+    /// [`Self`] and [`UnboundedReceiver<OperatorInfoServiceError>`] if successful , else [`OperatorInfoServiceError`]
     pub async fn new(
         logger: SharedLogger,
         avs_registry_chain_reader: AvsRegistryChainReader,
@@ -662,6 +662,7 @@ mod tests {
             get_test_logger(),
             Address::ZERO,
             delegation_manager_address,
+            rewards_coordinator_address,
             avs_directory_address,
             permission_controller,
             http_endpoint.to_string(),

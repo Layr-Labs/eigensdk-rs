@@ -11,10 +11,7 @@ use eigen_utils::{
     delegationmanager::DelegationManager,
     erc20::ERC20,
     get_signer,
-    irewardscoordinator::{
-        IRewardsCoordinator,
-        IRewardsCoordinatorTypes::{self, RewardsMerkleClaim},
-    },
+    irewardscoordinator::{IRewardsCoordinator, IRewardsCoordinatorTypes::RewardsMerkleClaim},
     permissioncontroller::PermissionController,
     registrycoordinator::{IBLSApkRegistry::PubkeyRegistrationParams, RegistryCoordinator},
     strategymanager::StrategyManager,
@@ -262,196 +259,6 @@ impl ELChainWriter {
 
         let tx = process_claim_call.send().await?;
         Ok(*tx.tx_hash())
-    }
-
-    /// Get the latest claimable distribution root.
-    ///
-    /// # Returns
-    /// * `Result<DistributionRoot, ElContractsError>` - The latest claimable distribution root if the call is successful.
-    ///
-    /// # Errors
-    /// * `ElContractsError` - if the call to the contract fails.
-    pub async fn get_current_claimable_distribution_root(
-        &self,
-    ) -> Result<IRewardsCoordinatorTypes::DistributionRoot, ElContractsError> {
-        let provider = get_signer(&self.signer, &self.provider);
-
-        let contract_rewards_coordinator =
-            IRewardsCoordinator::new(self.rewards_coordinator, &provider);
-
-        let cumulative_claimed_for_root_call = contract_rewards_coordinator
-            .getCurrentClaimableDistributionRoot()
-            .call()
-            .await
-            .map_err(ElContractsError::AlloyContractError)?;
-
-        let IRewardsCoordinator::getCurrentClaimableDistributionRootReturn {
-            _0: cumulative_claimed_for_root_ret,
-        } = cumulative_claimed_for_root_call;
-
-        Ok(cumulative_claimed_for_root_ret)
-    }
-
-    /// Get the length of the distribution roots.
-    ///
-    /// # Returns
-    ///
-    /// * `Result<U256, ElContractsError>` - The length of the distribution roots if the call is successful,
-    ///   otherwise an error.
-    ///
-    /// # Errors
-    ///
-    /// * `ElContractsError` - if the call to the contract fails.
-    pub async fn get_distribution_roots_length(&self) -> Result<U256, ElContractsError> {
-        let provider = get_signer(&self.signer, &self.provider);
-
-        let contract_rewards_coordinator =
-            IRewardsCoordinator::new(self.rewards_coordinator, &provider);
-
-        let distribution_roots_lenght_call = contract_rewards_coordinator
-            .getDistributionRootsLength()
-            .call()
-            .await
-            .map_err(ElContractsError::AlloyContractError)?;
-
-        let IRewardsCoordinator::getDistributionRootsLengthReturn {
-            _0: distribution_roots_length,
-        } = distribution_roots_lenght_call;
-
-        Ok(distribution_roots_length)
-    }
-
-    /// Get the current rewards calculation end timestamp (the timestamp until which rewards have been calculated).
-    ///
-    /// # Returns
-    ///
-    /// * `Result<u32, ElContractsError>` - The current rewards calculation
-    ///   end timestamp if the call is successful.
-    ///
-    /// # Errors
-    ///
-    /// * `ElContractsError` - if the call to the contract fails.
-    pub async fn get_curr_rewards_calculation_end_timestamp(
-        &self,
-    ) -> Result<u32, ElContractsError> {
-        let provider = get_signer(&self.signer, &self.provider);
-
-        let contract_rewards_coordinator =
-            IRewardsCoordinator::new(self.rewards_coordinator, &provider);
-
-        let distribution_roots_lenght_call = contract_rewards_coordinator
-            .currRewardsCalculationEndTimestamp()
-            .call()
-            .await
-            .map_err(ElContractsError::AlloyContractError)?;
-
-        let IRewardsCoordinator::currRewardsCalculationEndTimestampReturn {
-            _0: timestamp_return,
-        } = distribution_roots_lenght_call;
-
-        Ok(timestamp_return)
-    }
-
-    /// Get the root index from a given hash.
-    ///
-    /// # Arguments
-    ///
-    /// * `hash` - The hash to get the root index from.
-    ///
-    /// # Returns
-    ///
-    /// * `Result<u32, ElContractsError>` - The root index if the
-    ///   call is successful.
-    ///
-    /// # Errors
-    ///
-    /// * `ElContractsError` - if the call to the contract fails.
-    pub async fn get_root_index_from_hash(
-        &self,
-        hash: FixedBytes<32>,
-    ) -> Result<u32, ElContractsError> {
-        let provider = get_signer(&self.signer, &self.provider);
-
-        let contract_rewards_coordinator =
-            IRewardsCoordinator::new(self.rewards_coordinator, &provider);
-
-        let get_root_index_from_hash_call = contract_rewards_coordinator
-            .getRootIndexFromHash(hash)
-            .call()
-            .await
-            .map_err(ElContractsError::AlloyContractError)?;
-
-        let IRewardsCoordinator::getRootIndexFromHashReturn { _0: root_index } =
-            get_root_index_from_hash_call;
-
-        Ok(root_index)
-    }
-
-    /// Check if a claim would currently pass the validations in `process_claim`
-    ///
-    /// # Arguments
-    ///
-    /// * `claim` - The claim to check
-    ///
-    /// # Returns
-    ///
-    /// * `Result<bool, ElContractsError>` - True if the claim would pass the validations, false otherwise
-    ///
-    /// # Errors
-    ///
-    /// * `ElContractsError` - if the call to the contract fails. Also fails if no root has been submitted yet.
-    pub async fn check_claim(&self, claim: RewardsMerkleClaim) -> Result<bool, ElContractsError> {
-        let provider = get_signer(&self.signer, &self.provider);
-
-        let contract_rewards_coordinator =
-            IRewardsCoordinator::new(self.rewards_coordinator, &provider);
-
-        let check_claim_call = contract_rewards_coordinator
-            .checkClaim(claim)
-            .call()
-            .await
-            .map_err(ElContractsError::AlloyContractError)?;
-
-        let IRewardsCoordinator::checkClaimReturn { _0: claim_ret } = check_claim_call;
-
-        Ok(claim_ret)
-    }
-
-    /// Get the cumulative claimed amount for a given earner address and token.
-    ///
-    /// # Arguments
-    ///
-    /// * `earner_address` - The address of the earner.
-    /// * `token` - The address of the token.
-    ///
-    /// # Returns
-    ///
-    /// * `Result<U256, ElContractsError>` - The cumulative claimed amount if the call is successful.
-    ///
-    /// # Errors
-    ///
-    /// * `ElContractsError` - if the call to the contract fails.
-    pub async fn get_cumulative_claimed(
-        &self,
-        earner_address: Address,
-        token: Address,
-    ) -> Result<U256, ElContractsError> {
-        let provider = get_signer(&self.signer, &self.provider);
-
-        let contract_rewards_coordinator =
-            IRewardsCoordinator::new(self.rewards_coordinator, &provider);
-
-        let cumulative_claimed_call = contract_rewards_coordinator
-            .cumulativeClaimed(earner_address, token)
-            .call()
-            .await
-            .map_err(ElContractsError::AlloyContractError)?;
-
-        let IRewardsCoordinator::cumulativeClaimedReturn {
-            _0: cumulative_claim_ret,
-        } = cumulative_claimed_call;
-
-        Ok(cumulative_claim_ret)
     }
 
     /// Removes permission of an appointee on a target contract, given an account address.
@@ -812,20 +619,21 @@ impl ELChainWriter {
 }
 
 #[cfg(test)]
+mod test_utils {}
+
+#[cfg(test)]
 mod tests {
-    use super::ELChainWriter;
-    use crate::reader::ELChainReader;
-    use alloy::{hex::FromHex, providers::Provider};
-    use alloy_primitives::{address, aliases::U96, Address, Bytes, FixedBytes, U256};
+    use crate::test_utils::{
+        build_el_chain_reader, new_test_writer, ANVIL_FIRST_ADDRESS, ANVIL_FIRST_PRIVATE_KEY,
+    };
+    use alloy::providers::Provider;
+    use alloy_primitives::{address, aliases::U96, Address, U256};
     use eigen_crypto_bls::BlsKeyPair;
-    use eigen_logging::get_test_logger;
     use eigen_testing_utils::{
         anvil::{mine_anvil_blocks, set_account_balance, start_anvil_container},
         anvil_constants::{
-            get_allocation_manager_address, get_avs_directory_address,
-            get_delegation_manager_address, get_erc20_mock_strategy,
-            get_registry_coordinator_address, get_rewards_coordinator_address,
-            get_strategy_manager_address,
+            get_allocation_manager_address, get_erc20_mock_strategy,
+            get_registry_coordinator_address,
         },
         transaction::wait_transaction,
     };
@@ -835,14 +643,7 @@ mod tests {
             AllocationManager::{self, OperatorSet},
             IAllocationManagerTypes,
         },
-        delegationmanager::DelegationManager,
         get_provider, get_signer,
-        irewardscoordinator::{
-            IRewardsCoordinator,
-            IRewardsCoordinatorTypes::{
-                EarnerTreeMerkleLeaf, RewardsMerkleClaim, TokenTreeMerkleLeaf,
-            },
-        },
         registrycoordinator::{
             IRegistryCoordinator::OperatorSetParam, IStakeRegistry::StrategyParams,
             RegistryCoordinator,
@@ -850,119 +651,20 @@ mod tests {
     };
     use std::str::FromStr;
 
-    const OPERATOR_ADDRESS: Address = address!("f39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
-    const OPERATOR_PRIVATE_KEY: &str =
-        "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
-
-    /// Returns a new instance of ELChainWriter
-    async fn setup_el_chain_reader(http_endpoint: String) -> ELChainReader {
-        let delegation_manager_address =
-            get_delegation_manager_address(http_endpoint.clone()).await;
-        let avs_directory_address = get_avs_directory_address(http_endpoint.clone()).await;
-
-        ELChainReader::build(
-            get_test_logger().clone(),
-            delegation_manager_address,
-            avs_directory_address,
-            &http_endpoint,
-        )
-        .await
-        .unwrap()
-    }
-
-    async fn new_test_writer(http_endpoint: String, private_key: String) -> ELChainWriter {
-        let el_chain_reader = setup_el_chain_reader(http_endpoint.clone()).await;
-        let strategy_manager = get_strategy_manager_address(http_endpoint.clone()).await;
-        let rewards_coordinator = get_rewards_coordinator_address(http_endpoint.clone()).await;
-        let delegation_manager = get_delegation_manager_address(http_endpoint.clone()).await;
-        let allocation_manager = get_allocation_manager_address(http_endpoint.clone()).await;
-        let contract_delegation_manager =
-            DelegationManager::new(delegation_manager, get_provider(&http_endpoint));
-        let permission_controller = contract_delegation_manager
-            .permissionController()
-            .call()
-            .await
-            .unwrap()
-            ._0;
-        let registry_coordinator = get_registry_coordinator_address(http_endpoint.clone()).await;
-
-        ELChainWriter::new(
-            delegation_manager,
-            strategy_manager,
-            rewards_coordinator,
-            permission_controller,
-            allocation_manager,
-            registry_coordinator,
-            el_chain_reader,
-            http_endpoint.clone(),
-            private_key,
-        )
-    }
-
-    async fn new_claim(http_endpoint: &str) -> (FixedBytes<32>, RewardsMerkleClaim) {
-        let el_chain_writer =
-            new_test_writer(http_endpoint.to_string(), OPERATOR_PRIVATE_KEY.to_string()).await;
-
-        let earner_address = address!("25a1b7322f9796b26a4bec125913b34c292b28d6");
-        let claim = RewardsMerkleClaim {
-            rootIndex: 0,
-            earnerIndex: 7,
-            earnerTreeProof: Bytes::from_hex("4bf5e16eaabbc36964f1e1639808669420f55d60e51adb7e9695b77145c479fd6777be59643947bb24d78e69d6605bf369c515b479f3a8967dd68a97c5bb4a4a262b28002eeb6cbbffb7e79e5741bf2be189a6073440a62fabcd8af4dbda94e3").unwrap(),
-            earnerLeaf: EarnerTreeMerkleLeaf {
-                earner: earner_address,
-                earnerTokenRoot: FixedBytes::from_hex(
-                    "f8e7e20b32aae1d818dcb593b98982841e9a0ed12c161ad603e3ee3948746cba",
-                )
-                .unwrap(),
-            },
-            tokenIndices: vec![7],
-            tokenTreeProofs: vec![
-                Bytes::from_hex("3cd04e8fc6f23812c570fe12292a30bb9e105e00f5913ac4b4938f23e65d8d10e6b1403d58c9d5450952e7d96c81305dad9fb966e8a27d3a42058e3958a0d30033148e91b455542d05deb81b8305b672e742cd3145f7022a0089bad2e6af9173").unwrap(),
-            ],
-            tokenLeaves: vec![TokenTreeMerkleLeaf {
-                token: address!("7fbfdd1dfd80730385aee232cc9f79b8ae12a654"),
-                cumulativeEarnings: U256::from_str("3000000000000000000").unwrap(),
-            }],
-        };
-
-        // Using test data taken from
-        // https://github.com/Layr-Labs/eigenlayer-contracts/blob/a888a1cd1479438dda4b138245a69177b125a973/src/test/test-data/rewardsCoordinator/processClaimProofs_MaxEarnerAndLeafIndices.json
-        let root = FixedBytes::from_hex(
-            "37550707c80f3d8907c467999730e52127ab89be3f17a5017a3f1ffb73a1445f",
-        )
-        .unwrap();
-
-        let key = "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
-        let rewards_coordinator = IRewardsCoordinator::new(
-            get_rewards_coordinator_address(http_endpoint.to_string()).await,
-            get_signer(key, http_endpoint),
-        );
-        let curr_rewards_calculation_end_timestamp = el_chain_writer
-            .get_curr_rewards_calculation_end_timestamp()
-            .await
-            .unwrap();
-        let submit_tx = rewards_coordinator
-            .submitRoot(root, curr_rewards_calculation_end_timestamp + 1)
-            .send()
-            .await
-            .unwrap();
-        let submit_status = submit_tx.get_receipt().await.unwrap().status();
-        assert!(submit_status);
-
-        (root, claim)
-    }
-
     #[tokio::test]
     async fn test_register_operator() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let el_chain_reader = setup_el_chain_reader(http_endpoint.clone()).await;
-        let el_chain_writer =
-            new_test_writer(http_endpoint.to_string(), OPERATOR_PRIVATE_KEY.to_string()).await;
+        let el_chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
+        let el_chain_writer = new_test_writer(
+            http_endpoint.to_string(),
+            ANVIL_FIRST_PRIVATE_KEY.to_string(),
+        )
+        .await;
 
         let operator = Operator {
-            address: OPERATOR_ADDRESS, // can only register the address corresponding to the signer used in the writer
+            address: ANVIL_FIRST_ADDRESS, // can only register the address corresponding to the signer used in the writer
             staker_opt_out_window_blocks: 3,
-            delegation_approver_address: OPERATOR_ADDRESS,
+            delegation_approver_address: ANVIL_FIRST_ADDRESS,
             metadata_url: Some("metadata_uri".to_string()),
             allocation_delay: 1,
         };
@@ -972,7 +674,7 @@ mod tests {
             .unwrap();
 
         let is_registered = el_chain_reader
-            .is_operator_registered(OPERATOR_ADDRESS)
+            .is_operator_registered(ANVIL_FIRST_ADDRESS)
             .await
             .unwrap();
         assert!(is_registered);
@@ -1028,8 +730,11 @@ mod tests {
     #[tokio::test]
     async fn test_deposit_erc20_into_strategy() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let el_chain_writer =
-            new_test_writer(http_endpoint.to_string(), OPERATOR_PRIVATE_KEY.to_string()).await;
+        let el_chain_writer = new_test_writer(
+            http_endpoint.to_string(),
+            ANVIL_FIRST_PRIVATE_KEY.to_string(),
+        )
+        .await;
 
         let amount = U256::from_str("100").unwrap();
         let strategy_addr = get_erc20_mock_strategy(http_endpoint.clone()).await;
@@ -1045,8 +750,11 @@ mod tests {
     #[tokio::test]
     async fn test_set_claimer_for() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let el_chain_writer =
-            new_test_writer(http_endpoint.to_string(), OPERATOR_PRIVATE_KEY.to_string()).await;
+        let el_chain_writer = new_test_writer(
+            http_endpoint.to_string(),
+            ANVIL_FIRST_PRIVATE_KEY.to_string(),
+        )
+        .await;
 
         let claimer = address!("5eb15C0992734B5e77c888D713b4FC67b3D679A2");
 
@@ -1057,121 +765,37 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn test_check_claim() {
-        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let el_chain_writer =
-            new_test_writer(http_endpoint.to_string(), OPERATOR_PRIVATE_KEY.to_string()).await;
-
-        let (_, claim) = new_claim(&http_endpoint).await;
-
-        let distribution_roots_length = el_chain_writer
-            .get_distribution_roots_length()
-            .await
-            .unwrap();
-        assert_eq!(distribution_roots_length, U256::from(1));
-
-        let valid_claim = el_chain_writer.check_claim(claim.clone()).await.unwrap();
-        assert!(valid_claim);
-    }
-
-    #[tokio::test]
-    async fn test_get_distribution_roots_length() {
-        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let el_chain_writer =
-            new_test_writer(http_endpoint.to_string(), OPERATOR_PRIVATE_KEY.to_string()).await;
-        new_claim(&http_endpoint).await;
-
-        let distribution_roots_length_ret = el_chain_writer
-            .get_distribution_roots_length()
-            .await
-            .unwrap();
-
-        assert_eq!(distribution_roots_length_ret, U256::from(1));
-    }
-
-    #[tokio::test]
-    async fn test_get_root_index_from_hash() {
-        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let el_chain_writer =
-            new_test_writer(http_endpoint.to_string(), OPERATOR_PRIVATE_KEY.to_string()).await;
-        let (root, _) = new_claim(&http_endpoint).await;
-
-        let index = el_chain_writer
-            .get_root_index_from_hash(root)
-            .await
-            .unwrap();
-
-        assert_eq!(index, 0);
-    }
-
-    #[tokio::test]
-    async fn test_get_cumulative_claimed() {
-        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let el_chain_writer =
-            new_test_writer(http_endpoint.to_string(), OPERATOR_PRIVATE_KEY.to_string()).await;
-
-        let earner_address = address!("F2288D736d27C1584Ebf7be5f52f9E4d47251AeE");
-        let (_, _, token_address) = el_chain_writer
-            .el_chain_reader
-            .get_strategy_and_underlying_erc20_token(
-                get_erc20_mock_strategy(http_endpoint.clone()).await,
-            )
-            .await
-            .unwrap();
-
-        let cumulative_claimed_ret = el_chain_writer
-            .get_cumulative_claimed(earner_address, token_address)
-            .await
-            .unwrap();
-
-        // No claims so cumulative claimed should be zero
-        assert_eq!(cumulative_claimed_ret, U256::from(0));
-    }
-
-    #[tokio::test]
-    async fn test_get_cumulative_claimed_for_root() {
-        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let el_chain_writer =
-            new_test_writer(http_endpoint.to_string(), OPERATOR_PRIVATE_KEY.to_string()).await;
-        let (root, _) = new_claim(&http_endpoint).await;
-
-        let distribution_root = el_chain_writer
-            .get_current_claimable_distribution_root()
-            .await
-            .unwrap();
-
-        assert_eq!(distribution_root.root, root);
-    }
-
-    #[tokio::test]
     async fn test_add_and_remove_pending_admin() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let el_chain_writer =
-            new_test_writer(http_endpoint.to_string(), OPERATOR_PRIVATE_KEY.to_string()).await;
+        let el_chain_writer = new_test_writer(
+            http_endpoint.to_string(),
+            ANVIL_FIRST_PRIVATE_KEY.to_string(),
+        )
+        .await;
 
         let pending_admin = address!("009440d62dc85c73dbf889b7ad1f4da8b231d2ef");
         let tx_hash = el_chain_writer
-            .add_pending_admin(OPERATOR_ADDRESS, pending_admin)
+            .add_pending_admin(ANVIL_FIRST_ADDRESS, pending_admin)
             .await
             .unwrap();
         wait_transaction(&http_endpoint, tx_hash).await.unwrap();
 
         let is_pending_admin = el_chain_writer
             .el_chain_reader
-            .is_pending_admin(OPERATOR_ADDRESS, pending_admin)
+            .is_pending_admin(ANVIL_FIRST_ADDRESS, pending_admin)
             .await
             .unwrap();
         assert!(is_pending_admin);
 
         let tx_hash = el_chain_writer
-            .remove_pending_admin(OPERATOR_ADDRESS, pending_admin)
+            .remove_pending_admin(ANVIL_FIRST_ADDRESS, pending_admin)
             .await
             .unwrap();
         wait_transaction(&http_endpoint, tx_hash).await.unwrap();
 
         let is_admin = el_chain_writer
             .el_chain_reader
-            .is_pending_admin(OPERATOR_ADDRESS, pending_admin)
+            .is_pending_admin(ANVIL_FIRST_ADDRESS, pending_admin)
             .await
             .unwrap();
         assert!(!is_admin);
@@ -1180,26 +804,32 @@ mod tests {
     #[tokio::test]
     async fn test_accept_admin() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let account_writer =
-            new_test_writer(http_endpoint.to_string(), OPERATOR_PRIVATE_KEY.to_string()).await;
+        let account_writer = new_test_writer(
+            http_endpoint.to_string(),
+            ANVIL_FIRST_PRIVATE_KEY.to_string(),
+        )
+        .await;
 
         let pending_admin = address!("14dC79964da2C08b23698B3D3cc7Ca32193d9955");
         let pending_admin_key =
             "0x4bbbf85ce3377467afe5d46f804f221813b2bb87f24d81f60f1fcdbf7cbf4356";
 
         account_writer
-            .add_pending_admin(OPERATOR_ADDRESS, pending_admin)
+            .add_pending_admin(ANVIL_FIRST_ADDRESS, pending_admin)
             .await
             .unwrap();
 
         let admin_writer =
             new_test_writer(http_endpoint.to_string(), pending_admin_key.to_string()).await;
 
-        admin_writer.accept_admin(OPERATOR_ADDRESS).await.unwrap();
+        admin_writer
+            .accept_admin(ANVIL_FIRST_ADDRESS)
+            .await
+            .unwrap();
 
         let is_admin = admin_writer
             .el_chain_reader
-            .is_admin(OPERATOR_ADDRESS, pending_admin)
+            .is_admin(ANVIL_FIRST_ADDRESS, pending_admin)
             .await
             .unwrap();
         assert!(is_admin);
@@ -1208,8 +838,11 @@ mod tests {
     #[tokio::test]
     async fn test_remove_admin() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let el_chain_writer =
-            new_test_writer(http_endpoint.to_string(), OPERATOR_PRIVATE_KEY.to_string()).await;
+        let el_chain_writer = new_test_writer(
+            http_endpoint.to_string(),
+            ANVIL_FIRST_PRIVATE_KEY.to_string(),
+        )
+        .await;
 
         let pending_admin_1 = address!("14dC79964da2C08b23698B3D3cc7Ca32193d9955");
         let pending_admin_1_key =
@@ -1221,29 +854,35 @@ mod tests {
 
         // Adding two admins and removing one. Cannot remove the last admin, so one must remain
         el_chain_writer
-            .add_pending_admin(OPERATOR_ADDRESS, pending_admin_1)
+            .add_pending_admin(ANVIL_FIRST_ADDRESS, pending_admin_1)
             .await
             .unwrap();
         el_chain_writer
-            .add_pending_admin(OPERATOR_ADDRESS, pending_admin_2)
+            .add_pending_admin(ANVIL_FIRST_ADDRESS, pending_admin_2)
             .await
             .unwrap();
 
         let admin_1_writer =
             new_test_writer(http_endpoint.to_string(), pending_admin_1_key.to_string()).await;
-        admin_1_writer.accept_admin(OPERATOR_ADDRESS).await.unwrap();
+        admin_1_writer
+            .accept_admin(ANVIL_FIRST_ADDRESS)
+            .await
+            .unwrap();
         let admin_2_writer =
             new_test_writer(http_endpoint.to_string(), pending_admin_2_key.to_string()).await;
-        admin_2_writer.accept_admin(OPERATOR_ADDRESS).await.unwrap();
+        admin_2_writer
+            .accept_admin(ANVIL_FIRST_ADDRESS)
+            .await
+            .unwrap();
 
         admin_1_writer
-            .remove_admin(OPERATOR_ADDRESS, pending_admin_2)
+            .remove_admin(ANVIL_FIRST_ADDRESS, pending_admin_2)
             .await
             .unwrap();
 
         let is_admin = el_chain_writer
             .el_chain_reader
-            .is_admin(OPERATOR_ADDRESS, pending_admin_2)
+            .is_admin(ANVIL_FIRST_ADDRESS, pending_admin_2)
             .await
             .unwrap();
         assert!(!is_admin);
@@ -1252,15 +891,18 @@ mod tests {
     #[tokio::test]
     async fn test_set_and_remove_permission() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let account_address = OPERATOR_ADDRESS;
+        let account_address = ANVIL_FIRST_ADDRESS;
         let appointee_address = address!("009440d62dc85c73dbf889b7ad1f4da8b231d2ef");
         let appointee_key = "6b35c6d8110c888de06575b45181bf3f9e6c73451fa5cde812c95a6b31e66ddf";
         let target = address!("14dC79964da2C08b23698B3D3cc7Ca32193d9955");
         let selector = [0, 1, 2, 3].into();
 
         // add an admin
-        let account_writer =
-            new_test_writer(http_endpoint.to_string(), OPERATOR_PRIVATE_KEY.to_string()).await;
+        let account_writer = new_test_writer(
+            http_endpoint.to_string(),
+            ANVIL_FIRST_PRIVATE_KEY.to_string(),
+        )
+        .await;
 
         // set permission
         let tx_hash = account_writer
@@ -1281,8 +923,11 @@ mod tests {
         assert!(can_call);
 
         // test remove permission
-        let el_chain_writer =
-            new_test_writer(http_endpoint.to_string(), OPERATOR_PRIVATE_KEY.to_string()).await;
+        let el_chain_writer = new_test_writer(
+            http_endpoint.to_string(),
+            ANVIL_FIRST_PRIVATE_KEY.to_string(),
+        )
+        .await;
 
         let tx_hash = el_chain_writer
             .remove_permission(account_address, appointee_address, target, selector)
@@ -1296,7 +941,7 @@ mod tests {
     async fn create_operator_set(http_endpoint: &str, avs_address: Address, operator_set_id: u32) {
         let allocation_manager_addr =
             get_allocation_manager_address(http_endpoint.to_string()).await;
-        let signer = get_signer(OPERATOR_PRIVATE_KEY, http_endpoint);
+        let signer = get_signer(ANVIL_FIRST_PRIVATE_KEY, http_endpoint);
         let allocation_manager = AllocationManager::new(allocation_manager_addr, signer.clone());
         let registry_coordinator_addr =
             get_registry_coordinator_address(http_endpoint.to_string()).await;
@@ -1363,7 +1008,7 @@ mod tests {
     async fn test_register_for_operator_sets() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
 
-        let avs_address = OPERATOR_ADDRESS;
+        let avs_address = ANVIL_FIRST_ADDRESS;
         let operator_set_id = 1;
         create_operator_set(http_endpoint.as_str(), avs_address, operator_set_id).await;
 
@@ -1403,13 +1048,16 @@ mod tests {
     #[tokio::test]
     async fn test_set_allocation_delay() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let el_chain_writer =
-            new_test_writer(http_endpoint.to_string(), OPERATOR_PRIVATE_KEY.to_string()).await;
+        let el_chain_writer = new_test_writer(
+            http_endpoint.to_string(),
+            ANVIL_FIRST_PRIVATE_KEY.to_string(),
+        )
+        .await;
 
         let delay = 10;
 
         let tx_hash = el_chain_writer
-            .set_allocation_delay(OPERATOR_ADDRESS, delay)
+            .set_allocation_delay(ANVIL_FIRST_ADDRESS, delay)
             .await
             .unwrap();
         let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
@@ -1417,7 +1065,7 @@ mod tests {
 
         let allocation_delay = el_chain_writer
             .el_chain_reader
-            .get_allocation_delay(OPERATOR_ADDRESS)
+            .get_allocation_delay(ANVIL_FIRST_ADDRESS)
             .await
             .unwrap();
 
@@ -1427,13 +1075,16 @@ mod tests {
     #[tokio::test]
     async fn test_modify_allocations() {
         let (container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let el_chain_writer =
-            new_test_writer(http_endpoint.to_string(), OPERATOR_PRIVATE_KEY.to_string()).await;
+        let el_chain_writer = new_test_writer(
+            http_endpoint.to_string(),
+            ANVIL_FIRST_PRIVATE_KEY.to_string(),
+        )
+        .await;
 
-        let operator_address = OPERATOR_ADDRESS;
+        let operator_address = ANVIL_FIRST_ADDRESS;
         let strategy_addr = get_erc20_mock_strategy(http_endpoint.clone()).await;
 
-        let avs_address = OPERATOR_ADDRESS;
+        let avs_address = ANVIL_FIRST_ADDRESS;
         let operator_set_id = 1;
         create_operator_set(http_endpoint.as_str(), avs_address, operator_set_id).await;
 
@@ -1464,7 +1115,7 @@ mod tests {
 
         let allocation_delay = el_chain_writer
             .el_chain_reader
-            .get_allocation_delay(OPERATOR_ADDRESS)
+            .get_allocation_delay(ANVIL_FIRST_ADDRESS)
             .await
             .unwrap();
         mine_anvil_blocks(&container, allocation_delay).await;

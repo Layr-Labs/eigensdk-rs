@@ -95,6 +95,7 @@ pub async fn register_operator(pvt_key: &str, bls_key: &str, http_endpoint: &str
         get_test_logger(),
         Address::ZERO,
         delegation_manager_address,
+        rewards_coordinator_address,
         avs_directory_address,
         permission_controller,
         http_endpoint.to_owned(),

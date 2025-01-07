@@ -11,6 +11,10 @@ use eigen_utils::{
     delegationmanager::DelegationManager,
     erc20::ERC20::{self, ERC20Instance},
     get_provider,
+    irewardscoordinator::{
+        IRewardsCoordinator,
+        IRewardsCoordinatorTypes::{DistributionRoot, RewardsMerkleClaim},
+    },
     istrategy::IStrategy::{self, IStrategyInstance},
     permissioncontroller::PermissionController,
     SdkProvider,
@@ -23,6 +27,8 @@ pub struct ELChainReader {
     delegation_manager: Address,
     avs_directory: Address,
     permission_controller: Address,
+    rewards_coordinator: Address,
+    // TODO: we should make this private
     pub provider: String,
 }
 
@@ -34,6 +40,7 @@ impl ELChainReader {
     /// * `_logger` - The logger to use for logging.
     /// * `allocation_manager` - The address of the allocation manager contract.
     /// * `delegation_manager` - The address of the delegation manager contract.
+    /// * `rewards_coordinator` - The address of the rewards coordinator contract.
     /// * `avs_directory` - The address of the avs directory contract.
     /// * `permission_controller` - The address of the permission controller contract.
     /// * `provider` - The provider to use for the RPC client.
@@ -45,6 +52,7 @@ impl ELChainReader {
         _logger: SharedLogger,
         allocation_manager: Address,
         delegation_manager: Address,
+        rewards_coordinator: Address,
         avs_directory: Address,
         permission_controller: Address,
         provider: String,
@@ -53,6 +61,7 @@ impl ELChainReader {
             _logger,
             allocation_manager,
             delegation_manager,
+            rewards_coordinator,
             avs_directory,
             permission_controller,
             provider,
@@ -67,6 +76,7 @@ impl ELChainReader {
     /// * `_logger` - The logger to use for logging.
     /// * `delegation_manager` - The address of the delegation manager contract.
     /// * `avs_directory` - The address of the avs directory contract.
+    /// * `rewards_coordinator` - The address of the rewards coordinator contract.
     /// * `client` - The provider to use for the RPC client to call the contracts.
     ///
     /// # Returns
@@ -78,6 +88,7 @@ impl ELChainReader {
         _logger: SharedLogger,
         delegation_manager: Address,
         avs_directory: Address,
+        rewards_coordinator: Address,
         client: &String,
     ) -> Result<Self, ElContractsError> {
         let provider = get_provider(client);
@@ -103,6 +114,7 @@ impl ELChainReader {
             avs_directory,
             allocation_manager,
             delegation_manager,
+            rewards_coordinator,
             permission_controller,
             provider: client.to_string(),
         })
@@ -190,6 +202,191 @@ impl ELChainReader {
             operator_avs_registration_digest_hash;
 
         Ok(avs_hash)
+    }
+
+    /// Get the length of the distribution roots.
+    ///
+    /// # Returns
+    ///
+    /// * `Result<U256, ElContractsError>` - The length of the distribution roots if the call is successful,
+    ///   otherwise an error.
+    ///
+    /// # Errors
+    ///
+    /// * `ElContractsError` - if the call to the contract fails.
+    pub async fn get_distribution_roots_length(&self) -> Result<U256, ElContractsError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_rewards_coordinator =
+            IRewardsCoordinator::new(self.rewards_coordinator, &provider);
+
+        let distribution_roots_lenght_call = contract_rewards_coordinator
+            .getDistributionRootsLength()
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        let IRewardsCoordinator::getDistributionRootsLengthReturn {
+            _0: distribution_roots_length,
+        } = distribution_roots_lenght_call;
+
+        Ok(distribution_roots_length)
+    }
+
+    /// Get the current rewards calculation end timestamp (the timestamp until which rewards have been calculated).
+    ///
+    /// # Returns
+    ///
+    /// * `Result<u32, ElContractsError>` - The current rewards calculation
+    ///   end timestamp if the call is successful.
+    ///
+    /// # Errors
+    ///
+    /// * `ElContractsError` - if the call to the contract fails.
+    pub async fn curr_rewards_calculation_end_timestamp(&self) -> Result<u32, ElContractsError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_rewards_coordinator =
+            IRewardsCoordinator::new(self.rewards_coordinator, &provider);
+
+        let end_timestamp = contract_rewards_coordinator
+            .currRewardsCalculationEndTimestamp()
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?
+            ._0;
+
+        Ok(end_timestamp)
+    }
+
+    /// Get the latest claimable distribution root.
+    ///
+    /// # Returns
+    /// * `Result<DistributionRoot, ElContractsError>` - The latest claimable distribution root if the call is successful.
+    ///
+    /// # Errors
+    /// * `ElContractsError` - if the call to the contract fails.
+    pub async fn get_current_claimable_distribution_root(
+        &self,
+    ) -> Result<DistributionRoot, ElContractsError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_rewards_coordinator =
+            IRewardsCoordinator::new(self.rewards_coordinator, &provider);
+
+        let cumulative_claimed_for_root_call = contract_rewards_coordinator
+            .getCurrentClaimableDistributionRoot()
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        let IRewardsCoordinator::getCurrentClaimableDistributionRootReturn {
+            _0: cumulative_claimed_for_root_ret,
+        } = cumulative_claimed_for_root_call;
+
+        Ok(cumulative_claimed_for_root_ret)
+    }
+
+    /// Get the root index from a given hash.
+    ///
+    /// # Arguments
+    ///
+    /// * `hash` - The hash to get the root index from.
+    ///
+    /// # Returns
+    ///
+    /// * `Result<u32, ElContractsError>` - The root index if the
+    ///   call is successful.
+    ///
+    /// # Errors
+    ///
+    /// * `ElContractsError` - if the call to the contract fails.
+    pub async fn get_root_index_from_hash(
+        &self,
+        hash: FixedBytes<32>,
+    ) -> Result<u32, ElContractsError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_rewards_coordinator =
+            IRewardsCoordinator::new(self.rewards_coordinator, &provider);
+
+        let get_root_index_from_hash_call = contract_rewards_coordinator
+            .getRootIndexFromHash(hash)
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        let IRewardsCoordinator::getRootIndexFromHashReturn { _0: root_index } =
+            get_root_index_from_hash_call;
+
+        Ok(root_index)
+    }
+
+    /// Get the cumulative claimed amount for a given earner address and token.
+    ///
+    /// # Arguments
+    ///
+    /// * `earner_address` - The address of the earner.
+    /// * `token` - The address of the token.
+    ///
+    /// # Returns
+    ///
+    /// * `Result<U256, ElContractsError>` - The cumulative claimed amount if the call is successful.
+    ///
+    /// # Errors
+    ///
+    /// * `ElContractsError` - if the call to the contract fails.
+    pub async fn get_cumulative_claimed(
+        &self,
+        earner_address: Address,
+        token: Address,
+    ) -> Result<U256, ElContractsError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_rewards_coordinator =
+            IRewardsCoordinator::new(self.rewards_coordinator, &provider);
+
+        let cumulative_claimed_call = contract_rewards_coordinator
+            .cumulativeClaimed(earner_address, token)
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        let IRewardsCoordinator::cumulativeClaimedReturn {
+            _0: cumulative_claim_ret,
+        } = cumulative_claimed_call;
+
+        Ok(cumulative_claim_ret)
+    }
+
+    /// Check if a claim would currently pass the validations in `process_claim`
+    ///
+    /// # Arguments
+    ///
+    /// * `claim` - The claim to check
+    ///
+    /// # Returns
+    ///
+    /// * `Result<bool, ElContractsError>` - True if the claim would pass the validations, false otherwise
+    ///
+    /// # Errors
+    ///
+    /// * `ElContractsError` - if the call to the contract fails. Also fails if no root has been submitted yet.
+    pub async fn check_claim(&self, claim: RewardsMerkleClaim) -> Result<bool, ElContractsError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_rewards_coordinator =
+            IRewardsCoordinator::new(self.rewards_coordinator, &provider);
+
+        let check_claim_call = contract_rewards_coordinator
+            .checkClaim(claim)
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        let IRewardsCoordinator::checkClaimReturn { _0: claim_ret } = check_claim_call;
+
+        Ok(claim_ret)
     }
 
     /// Get the operator's shares in a strategy
@@ -1115,13 +1312,11 @@ pub struct AllocationInfo {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::test_utils::{build_el_chain_reader, new_claim, OPERATOR_ADDRESS};
     use alloy::providers::Provider;
     use alloy::{eips::eip1898::BlockNumberOrTag::Number, rpc::types::BlockTransactionsKind};
     use alloy_primitives::{address, keccak256, Address, FixedBytes, U256};
-    use eigen_logging::get_test_logger;
-    use eigen_testing_utils::anvil_constants::{
-        get_allocation_manager_address, get_avs_directory_address, get_erc20_mock_strategy,
-    };
+    use eigen_testing_utils::anvil_constants::get_erc20_mock_strategy;
     use eigen_testing_utils::{
         anvil::start_anvil_container, anvil_constants::get_delegation_manager_address,
     };
@@ -1131,34 +1326,6 @@ mod tests {
         delegationmanager::DelegationManager,
         delegationmanager::DelegationManager::calculateDelegationApprovalDigestHashReturn,
     };
-
-    const OPERATOR_ADDRESS: Address = address!("70997970C51812dc3A010C7d01b50e0d17dc79C8");
-
-    async fn build_el_chain_reader(http_endpoint: String) -> ELChainReader {
-        let delegation_manager_address =
-            get_delegation_manager_address(http_endpoint.clone()).await;
-        let allocation_manager_address =
-            get_allocation_manager_address(http_endpoint.clone()).await;
-        let avs_directory_address = get_avs_directory_address(http_endpoint.clone()).await;
-
-        let delegation_manager_contract =
-            DelegationManager::new(delegation_manager_address, get_provider(&http_endpoint));
-        let permission_controller_address = delegation_manager_contract
-            .permissionController()
-            .call()
-            .await
-            .unwrap()
-            ._0;
-
-        ELChainReader::new(
-            get_test_logger(),
-            allocation_manager_address,
-            delegation_manager_address,
-            avs_directory_address,
-            permission_controller_address,
-            http_endpoint,
-        )
-    }
 
     #[tokio::test]
     async fn test_calculate_delegation_approval_digest_hash() {
@@ -1249,6 +1416,119 @@ mod tests {
             operator_hash_from_bindings;
 
         assert_eq!(hash, operator_hash);
+    }
+
+    #[tokio::test]
+    async fn test_get_distribution_roots_length() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let el_chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
+
+        let distribution_roots_length_ret = el_chain_reader
+            .get_distribution_roots_length()
+            .await
+            .unwrap();
+
+        assert_eq!(distribution_roots_length_ret, U256::from(0));
+
+        _ = new_claim(&http_endpoint).await;
+
+        let distribution_roots_length_ret = el_chain_reader
+            .get_distribution_roots_length()
+            .await
+            .unwrap();
+
+        assert_eq!(distribution_roots_length_ret, U256::from(1));
+    }
+
+    #[tokio::test]
+    async fn test_curr_rewards_calculation_end_timestamp() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let el_chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
+
+        let end_timestamp = el_chain_reader
+            .curr_rewards_calculation_end_timestamp()
+            .await
+            .unwrap();
+
+        assert_eq!(end_timestamp, 0);
+
+        _ = new_claim(&http_endpoint).await;
+
+        let end_timestamp = el_chain_reader
+            .curr_rewards_calculation_end_timestamp()
+            .await
+            .unwrap();
+
+        assert_eq!(end_timestamp, 1);
+    }
+
+    #[tokio::test]
+    async fn test_get_current_claimable_distribution_root() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let el_chain_reader = build_el_chain_reader(http_endpoint.to_string()).await;
+
+        let distribution_root = el_chain_reader
+            .get_current_claimable_distribution_root()
+            .await
+            .unwrap();
+        // The root starts being zero
+        assert_eq!(distribution_root.root, FixedBytes::ZERO);
+
+        let (root, _) = new_claim(&http_endpoint).await;
+
+        let distribution_root = el_chain_reader
+            .get_current_claimable_distribution_root()
+            .await
+            .unwrap();
+
+        assert_eq!(distribution_root.root, root);
+    }
+
+    #[tokio::test]
+    async fn test_get_root_index_from_hash() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let el_chain_reader = build_el_chain_reader(http_endpoint.to_string()).await;
+        let (root, _) = new_claim(&http_endpoint).await;
+
+        let index = el_chain_reader
+            .get_root_index_from_hash(root)
+            .await
+            .unwrap();
+
+        assert_eq!(index, 0);
+    }
+
+    #[tokio::test]
+    async fn test_get_cumulative_claimed() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let el_chain_reader = build_el_chain_reader(http_endpoint.to_string()).await;
+
+        let earner_address = address!("F2288D736d27C1584Ebf7be5f52f9E4d47251AeE");
+        let (_, _, token_address) = el_chain_reader
+            .get_strategy_and_underlying_erc20_token(
+                get_erc20_mock_strategy(http_endpoint.clone()).await,
+            )
+            .await
+            .unwrap();
+
+        let cumulative_claimed_ret = el_chain_reader
+            .get_cumulative_claimed(earner_address, token_address)
+            .await
+            .unwrap();
+
+        // No claims so cumulative claimed should be zero
+        assert_eq!(cumulative_claimed_ret, U256::from(0));
+    }
+
+    #[tokio::test]
+    async fn test_check_claim() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let el_chain_reader = build_el_chain_reader(http_endpoint.to_string()).await;
+
+        let (_, claim) = new_claim(&http_endpoint).await;
+
+        let valid_claim = el_chain_reader.check_claim(claim.clone()).await.unwrap();
+        assert!(valid_claim);
     }
 
     #[tokio::test]
