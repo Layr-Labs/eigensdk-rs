@@ -277,7 +277,7 @@ impl AvsRegistryChainWriter {
             .await
             .map_err(AvsRegistryError::AlloyContractError)?;
 
-        info!(tx_hash = ?tx,"succesfully updated stakes of operator subset for all quorums" );
+        info!(tx_hash = ?tx,"successfully updated stakes of operator subset for all quorums" );
         Ok(*tx.tx_hash())
     }
 
@@ -308,7 +308,7 @@ impl AvsRegistryChainWriter {
             .send()
             .await
             .map_err(AvsRegistryError::AlloyContractError)?;
-        info!(tx_hash = ?tx,"succesfully deregistered operator with the AVS's registry coordinator" );
+        info!(tx_hash = ?tx,"successfully deregistered operator with the AVS's registry coordinator" );
         Ok(*tx.tx_hash())
     }
 }

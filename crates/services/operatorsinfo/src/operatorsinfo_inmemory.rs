@@ -123,7 +123,7 @@ impl OperatorInfoServiceInMemory {
     /// # Returns
     ///
     /// A tuple of 2 elements
-    /// [`Self`] and [`UnboundedReceiver<OperatorInfoServiceError>`] if successfull , else [`OperatorInfoServiceError`]
+    /// [`Self`] and [`UnboundedReceiver<OperatorInfoServiceError>`] if successful , else [`OperatorInfoServiceError`]
     pub async fn new(
         logger: SharedLogger,
         avs_registry_chain_reader: AvsRegistryChainReader,
