@@ -887,6 +887,27 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn test_process_claims() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let el_chain_writer = new_test_writer(
+            http_endpoint.to_string(),
+            ANVIL_FIRST_PRIVATE_KEY.to_string(),
+        )
+        .await;
+
+        let (_root, claim0) = new_claim(&http_endpoint, U256::from(42)).await;
+        let (_root, claim1) = new_claim(&http_endpoint, U256::from(4256)).await;
+
+        let tx_hash = el_chain_writer
+            .process_claims(vec![claim0, claim1], ANVIL_FIRST_ADDRESS)
+            .await
+            .unwrap();
+
+        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+        assert!(receipt.status());
+    }
+
+    #[tokio::test]
     async fn test_add_and_remove_pending_admin() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
         let el_chain_writer = new_test_writer(

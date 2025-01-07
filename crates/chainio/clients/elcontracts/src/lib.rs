@@ -158,6 +158,9 @@ pub(crate) mod test_utils {
             .await
             .unwrap();
 
+        // Initialize the rewards coordinator bindings
+        let rewards_coordinator = IRewardsCoordinator::new(rewards_coordinator_address, &signer);
+
         let token = MockERC20::new(token_address, &signer);
         let receipt = token
             .mint(rewards_coordinator_address, cumulative_earnings)
@@ -194,8 +197,15 @@ pub(crate) mod test_utils {
         ]
         .concat();
         let earner_tree_root = dbg!(keccak256(encoded_earner_leaf));
+
+        // Fetch the next root index from contract
+        let next_root_index = el_chain_reader
+            .get_distribution_roots_length()
+            .await
+            .unwrap();
+        // Construct the claim
         let claim = RewardsMerkleClaim {
-            rootIndex: 0,
+            rootIndex: next_root_index.try_into().unwrap(),
             earnerIndex: 0,
             // Empty because leaf == root
             earnerTreeProof: vec![].into(),
@@ -210,11 +220,12 @@ pub(crate) mod test_utils {
 
         let root = earner_tree_root;
 
-        let rewards_coordinator = IRewardsCoordinator::new(rewards_coordinator_address, signer);
+        // Fetch the current timestamp to increase it
         let curr_rewards_calculation_end_timestamp = el_chain_reader
             .curr_rewards_calculation_end_timestamp()
             .await
             .unwrap();
+
         let submit_tx = rewards_coordinator
             .submitRoot(root, curr_rewards_calculation_end_timestamp + 1)
             .send()
