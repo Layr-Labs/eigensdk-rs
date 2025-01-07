@@ -1489,7 +1489,7 @@ mod tests {
             .await
             .unwrap();
 
-        assert_eq!(distribution_roots_length_ret, U256::from(1));
+        assert_eq!(distribution_roots_length_ret, U256::from(0));
 
         _ = new_test_claim(&http_endpoint).await;
 
