@@ -69,8 +69,8 @@ mod test {
     use alloy::consensus::{SignableTransaction, TxLegacy};
     use alloy::network::{TxSigner, TxSignerSync};
     use alloy::signers::local::PrivateKeySigner;
+    use alloy_primitives::PrimitiveSignature;
     use alloy_primitives::{address, bytes, hex_literal::hex, keccak256, Address, U256};
-    use alloy_primitives::{Parity, Signature};
     use aws_config::{BehaviorVersion, Region, SdkConfig};
     use aws_sdk_kms::{
         self,
@@ -120,13 +120,12 @@ mod test {
             .sign_transaction_sync(&mut tx)
             .unwrap()
             .into();
-        let sig = Signature::try_from(&signature[..]).unwrap();
-        let expected_signature = Signature::from_rs_and_parity(
+        let sig = PrimitiveSignature::try_from(&signature[..]).unwrap();
+        let expected_signature = PrimitiveSignature::new(
             U256::from_str(SIGNATURE_R).unwrap(),
             U256::from_str(SIGNATURE_S).unwrap(),
-            Parity::NonEip155(false),
-        )
-        .unwrap();
+            false,
+        );
         assert_eq!(sig, expected_signature);
     }
 

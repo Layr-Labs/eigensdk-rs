@@ -13,6 +13,7 @@ alloy.workspace = true
 async-trait.workspace = true
 alloy-primitives.workspace = true
 eigen-client-avsregistry.workspace = true
+eigen-common.workspace = true
 eigen-crypto-bls.workspace = true
 eigen-logging.workspace = true
 eigen-types.workspace = true
@@ -29,6 +30,6 @@ alloy-signer-local.workspace = true
 eigen-logging.workspace = true
 eigen-client-elcontracts.workspace = true
 ark-bn254.workspace = true
-ark-std = {version = "0.4.0", default-features = false}
+ark-std = { version = "0.4.0", default-features = false }
 ark-ff.workspace = true
 serial_test.workspace = true
