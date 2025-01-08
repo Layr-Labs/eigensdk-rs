@@ -207,13 +207,13 @@ library MockAvsDeploymentLib {
 
     function readDeploymentJson(
         uint256 chainId
-    ) internal returns (DeploymentData memory) {
+    ) view internal returns (DeploymentData memory) {
         return readDeploymentJson("script/deployments/mock-avs/", chainId);
     }
 
     function readMockAvsConfigJson(
         string memory directoryPath
-    ) internal returns (MockAvsSetupConfig memory) {
+    ) view internal returns (MockAvsSetupConfig memory) {
         string memory fileName = string.concat(directoryPath, ".json");
         require(VM.exists(fileName), "Deployment file does not exist");
         string memory json = VM.readFile(fileName);
@@ -231,7 +231,7 @@ library MockAvsDeploymentLib {
     function readDeploymentJson(
         string memory directoryPath,
         uint256 chainId
-    ) internal returns (DeploymentData memory) {
+    ) view internal returns (DeploymentData memory) {
         string memory fileName = string.concat(
             directoryPath,
             VM.toString(chainId),
@@ -345,7 +345,7 @@ library MockAvsDeploymentLib {
     function readCoreDeploymentJson(
         string memory directoryPath,
         uint256 chainId
-    ) internal returns (CoreDeploymentLib.DeploymentData memory) {
+    ) view internal returns (CoreDeploymentLib.DeploymentData memory) {
         return
             readCoreDeploymentJson(
                 directoryPath,
@@ -356,7 +356,7 @@ library MockAvsDeploymentLib {
     function readCoreDeploymentJson(
         string memory path,
         string memory fileName
-    ) internal returns (CoreDeploymentLib.DeploymentData memory) {
+    ) view internal returns (CoreDeploymentLib.DeploymentData memory) {
         string memory pathToFile = string.concat(path, fileName);
 
         require(VM.exists(pathToFile), "Deployment file does not exist");
