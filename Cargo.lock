@@ -2675,7 +2675,7 @@ dependencies = [
  "eigen-testing-utils",
  "metrics",
  "metrics-exporter-prometheus",
- "metrics-util 0.18.0",
+ "metrics-util",
  "num-bigint 0.4.6",
  "reqwest 0.12.12",
  "tokio",
@@ -4641,7 +4641,7 @@ dependencies = [
  "indexmap 2.7.0",
  "ipnet",
  "metrics",
- "metrics-util 0.19.0",
+ "metrics-util",
  "quanta",
  "thiserror 1.0.69",
  "tokio",
@@ -4663,22 +4663,6 @@ dependencies = [
  "ordered-float",
  "quanta",
  "radix_trie",
- "rand",
- "rand_xoshiro",
- "sketches-ddsketch",
-]
-
-[[package]]
-name = "metrics-util"
-version = "0.19.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "dbd4884b1dd24f7d6628274a2f5ae22465c337c5ba065ec9b6edccddf8acc673"
-dependencies = [
- "crossbeam-epoch",
- "crossbeam-utils",
- "hashbrown 0.15.2",
- "metrics",
- "quanta",
  "rand",
  "rand_xoshiro",
  "sketches-ddsketch",
