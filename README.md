@@ -68,10 +68,23 @@ We are actively looking for contributors. Thank you for your interest. We have s
 
 To test locally :-
 
-You need `foundry`to successfully to run it.
+You need `foundry` to successfully to run it.
 
 ```bash
 cargo test
+```
+
+On Mac, you might need to pull the foundry image manually specifying the platform with:
+
+```bash
+docker pull --platform amd64 foundry-rs/foundry
+```
+
+Sometimes the bindings fail due to containing botched doctests.
+You can exclude them from the test run with:
+
+```bash
+cargo test --workspace --exclude eigen-utils
 ```
 
 At least 1 `approving` review is required to merge the PR.
