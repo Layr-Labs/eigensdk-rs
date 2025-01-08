@@ -64,7 +64,7 @@ pub const BEIGEN: Address = address!("275cCf9Be51f4a6C94aBa6114cdf2a4c45B9cb27")
 /// https://holesky.etherscan.io/address/0x43252609bff8a13dFe5e057097f2f45A24387a84
 pub const EIGEN_STRATEGY: Address = address!("43252609bff8a13dFe5e057097f2f45A24387a84");
 
-/// Middlware contracts
+// Middlware contracts
 
 /// https://holesky.etherscan.io/address/0x53012C69A189cfA2D9d29eb6F19B32e0A2EA3490
 pub const REGISTRY_COORDINATOR: Address = address!("53012C69A189cfA2D9d29eb6F19B32e0A2EA3490");

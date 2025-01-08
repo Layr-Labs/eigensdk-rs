@@ -427,7 +427,7 @@ mod tests {
     use eigen_client_elcontracts::{reader::ELChainReader, writer::ELChainWriter};
     use eigen_common::get_provider;
     use eigen_crypto_bls::BlsKeyPair;
-    use eigen_logging::{get_logger, get_test_logger, init_logger};
+    use eigen_logging::get_test_logger;
     use eigen_testing_utils::anvil::start_anvil_container;
     use eigen_testing_utils::anvil_constants::{
         get_avs_directory_address, get_delegation_manager_address,
@@ -443,8 +443,7 @@ mod tests {
     #[tokio::test]
     async fn test_query_past_registered_operator_events_and_fill_db() {
         let (_container, http_endpoint, ws_endpoint) = start_anvil_container().await;
-        init_logger(eigen_logging::log_level::LogLevel::Debug);
-        let test_logger = get_logger();
+        let test_logger = get_test_logger();
         register_operator(
             http_endpoint.clone(),
             "0x7c852118294e51e653712a81e05800f419141751be58f605c371e15141b007a6",

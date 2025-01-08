@@ -9,3 +9,5 @@
 
 pub mod bls_agg;
 mod bls_agg_test;
+pub mod bls_aggregation_service_error;
+pub mod bls_aggregation_service_response;

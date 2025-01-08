@@ -304,7 +304,6 @@ impl AvsRegistryChainReader {
     /// - a vector of the quorum numbers the operator was registered for at `block_number`.
     /// - for each of the quorums mentioned above, a vector of the operators registered for
     ///   that quorum at `block_number`, containing each operator's `operatorId` and `stake`.
-
     pub async fn get_operators_stake_in_quorums_of_operator_at_block(
         &self,
         operator_id: B256,
@@ -430,8 +429,9 @@ impl AvsRegistryChainReader {
         let inner_value = quorum_bitmap._0.into_limbs()[0];
         let mut quorums: [bool; 64] = [false; 64];
         for i in 0..64_u64 {
-            let other = inner_value & (1 << i) != 0;
-            quorums[i as usize] = other;
+            if let Some(value) = quorums.get_mut(i as usize) {
+                *value = inner_value & (1 << i) != 0;
+            }
         }
         Ok(quorums)
     }

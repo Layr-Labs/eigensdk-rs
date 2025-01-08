@@ -17,6 +17,7 @@ eigen-client-avsregistry.workspace = true
 eigen-common.workspace = true
 eigen-crypto-bls.workspace = true
 eigen-crypto-bn254.workspace = true
+eigen-logging.workspace = true
 eigen-services-avsregistry.workspace = true
 eigen-types.workspace = true
 parking_lot.workspace = true
