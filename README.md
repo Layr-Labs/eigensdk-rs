@@ -1,6 +1,6 @@
-# eigensdk-rs
+# EigenSDK-rs
 
-eigensdk-rs is an initiative for rust developers to build AVSs on eigenlayer.
+EigenSDK-rs is an initiative for rust developers to build AVSs on eigenlayer.
 
 ## Installation
 
@@ -58,6 +58,11 @@ This command will generate the bindings files in the folder: `<path-eigensdk-rs>
 ## Contributor Guidelines
 
 We are actively looking for contributors. Thank you for your interest. We have strict ci checks in place. In case of any questions and support, feel free to raise an issue.
+
+## Branches
+- `main` - Points to the  latest **mainnet** release of contracts. 
+- `testnet` - Points to the latest **testnet** release of contracts. 
+- `dev` - Points to the latest **dev** branch of the contracts.
 
 ### PR
 
@@ -122,7 +127,7 @@ Rolling `MSRV` policy of 6 months. The current `MSRV` is 1.79
 
 ## Disclaimer
 
-🚧 Eigensdk-rs is under active development and has not been audited. Eigensdk-rs is rapidly being upgraded, features may be added, removed or otherwise improved or modified and interfaces will have breaking changes. Eigensdk-rs should be used only for testing purposes and not in production. Eigensdk-rs is provided "as is" and Eigen Labs, Inc. does not guarantee its functionality or provide support for its use in production. 🚧
+🚧 EigenSDK-rs is under active development and has not been audited. EigenSDK-rs is rapidly being upgraded, features may be added, removed or otherwise improved or modified and interfaces will have breaking changes. EigenSDK-rs should be used only for testing purposes and not in production. EigenSDK-rs is provided "as is" and Eigen Labs, Inc. does not guarantee its functionality or provide support for its use in production. 🚧
 
 ## Credits
 
