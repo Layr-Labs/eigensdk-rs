@@ -21,7 +21,6 @@ cargo add eigensdk --features full
 - [eigen-types](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/types) - Common types
 - [eigen-utils](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/utils) - Publicly exportable `mainnet rewards v0.4.3` compatible alloy bindings.
 - [eigen-testing-utils](https://github.com/Layr-Labs/eigensdk-rs/tree/main/testing/testing-utils) - Contains publicly exportable anvil, holesky, mainnet addresses for eigen contracts.
-- [eigen-chainio-txmanager](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/chainio/txmanager) - Simple transaction manager.
 - [eigen-cli](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/eigen-cli) - ECDSA, BLS keystore cli
 - [eigen-nodeapi](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/nodeapi) - NodeApi implementation for EigenLayer.
 - [eigen-logging](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/logging) - Logging utilities

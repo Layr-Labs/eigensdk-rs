@@ -5,7 +5,6 @@ members = [
     "crates/chainio/clients/elcontracts/",
     "crates/chainio/clients/eth/",
     "crates/chainio/clients/fireblocks/",
-    "crates/chainio/txmanager/",
     "crates/crypto/bls/",
     "crates/crypto/bn254/",
     "crates/eigen-cli/",
@@ -57,6 +56,7 @@ clippy.question_mark = "warn"
 clippy.implicit_return = "allow"
 
 [workspace.dependencies]
+eigen-client-avsregistry = { path = "crates/chainio/clients/avsregistry" }
 ark-bn254 = "0.5.0"
 ark-ec = "0.5.0"
 ark-ff = "0.5.0"
@@ -68,7 +68,6 @@ backoff = { version = "0.4.0", features = ["futures", "tokio"] }
 clap = { version = "4.5.20", features = ["derive"] }
 eigen-common = { path = "crates/common/" }
 eigen-chainio-txmanager = { path = "crates/chainio/txmanager/" }
-eigen-client-avsregistry = { path = "crates/chainio/clients/avsregistry" }
 eigen-client-elcontracts = { path = "crates/chainio/clients/elcontracts" }
 eigen-client-eth = { path = "crates/chainio/clients/eth" }
 eigen-client-fireblocks = { path = "crates/chainio/clients/fireblocks" }
@@ -98,7 +97,7 @@ hyper = "0.5"
 info-operator-service = { path = "examples/info-operator-service" }
 k256 = "0.13"
 metrics = "0.24"
-metrics-exporter-prometheus = "0.16"
+metrics-exporter-prometheus = "0.16.1"
 num-bigint = "0.4"
 once_cell = "1.20"
 prometheus-client = "0.22"
