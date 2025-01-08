@@ -112,7 +112,7 @@ serial_test = "3.1"
 syn = "2.0"
 tempfile = "3.13"
 testcontainers = "0.23"
-thiserror = "1.0"
+thiserror = "2.0"
 tokio = { version = "1.41", features = ["test-util", "full", "sync"] }
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["json"] }
