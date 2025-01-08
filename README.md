@@ -60,6 +60,10 @@ This command will generate the bindings files in the folder: `<path-eigensdk-rs>
 
 We are actively looking for contributors. Thank you for your interest. We have strict ci checks in place. In case of any questions and support, feel free to raise an issue.
 
+## Branches
+- `main` - Points to the  latest **mainnet** release of contracts. 
+- `dev` - Points to the latest **testnet** release of contracts. 
+
 ### PR
 
 To test locally :-
