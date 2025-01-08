@@ -1373,7 +1373,7 @@ pub struct AllocationInfo {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::test_utils::{build_el_chain_reader, new_claim, OPERATOR_ADDRESS};
+    use crate::test_utils::{build_el_chain_reader, new_test_claim, OPERATOR_ADDRESS};
     use alloy::providers::Provider;
     use alloy::{eips::eip1898::BlockNumberOrTag::Number, rpc::types::BlockTransactionsKind};
     use alloy_primitives::{address, keccak256, Address, FixedBytes, U256};
@@ -1491,7 +1491,7 @@ mod tests {
 
         assert_eq!(distribution_roots_length_ret, U256::from(0));
 
-        _ = new_claim(&http_endpoint).await;
+        _ = new_test_claim(&http_endpoint).await;
 
         let distribution_roots_length_ret = el_chain_reader
             .get_distribution_roots_length()
@@ -1513,7 +1513,7 @@ mod tests {
 
         assert_eq!(end_timestamp, 0);
 
-        _ = new_claim(&http_endpoint).await;
+        _ = new_test_claim(&http_endpoint).await;
 
         let end_timestamp = el_chain_reader
             .curr_rewards_calculation_end_timestamp()
@@ -1535,7 +1535,7 @@ mod tests {
         // The root starts being zero
         assert_eq!(distribution_root.root, FixedBytes::ZERO);
 
-        let (root, _) = new_claim(&http_endpoint).await;
+        let (root, _) = new_test_claim(&http_endpoint).await;
 
         let distribution_root = el_chain_reader
             .get_current_claimable_distribution_root()
@@ -1549,7 +1549,7 @@ mod tests {
     async fn test_get_root_index_from_hash() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
         let el_chain_reader = build_el_chain_reader(http_endpoint.to_string()).await;
-        let (root, _) = new_claim(&http_endpoint).await;
+        let (root, _) = new_test_claim(&http_endpoint).await;
 
         let index = el_chain_reader
             .get_root_index_from_hash(root)
@@ -1586,7 +1586,7 @@ mod tests {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
         let el_chain_reader = build_el_chain_reader(http_endpoint.to_string()).await;
 
-        let (_, claim) = new_claim(&http_endpoint).await;
+        let (_, claim) = new_test_claim(&http_endpoint).await;
 
         let valid_claim = el_chain_reader.check_claim(claim.clone()).await.unwrap();
         assert!(valid_claim);

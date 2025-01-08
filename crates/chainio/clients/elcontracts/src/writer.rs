@@ -235,8 +235,8 @@ impl ELChainWriter {
     ///
     /// # Arguments
     ///
-    /// * `earnerAddress` - The address of the earner for whom to process the claim.
     /// * `claim` - The RewardsMerkleClaim object containing the claim.
+    /// * `earnerAddress` - The address of the earner for whom to process the claim.
     ///
     /// # Returns
     ///
@@ -247,8 +247,8 @@ impl ELChainWriter {
     /// * `ElContractsError` - if the call to the contract fails. Also fails if no root has been submitted yet.
     pub async fn process_claim(
         &self,
-        earner_address: Address,
         claim: RewardsMerkleClaim,
+        earner_address: Address,
     ) -> Result<FixedBytes<32>, ElContractsError> {
         let provider = get_signer(&self.signer, &self.provider);
 
@@ -256,6 +256,41 @@ impl ELChainWriter {
             IRewardsCoordinator::new(self.rewards_coordinator, &provider);
 
         let process_claim_call = contract_rewards_coordinator.processClaim(claim, earner_address);
+
+        let tx = process_claim_call.send().await?;
+        Ok(*tx.tx_hash())
+    }
+
+    /// Process multiple claim for rewards for a given earner address. Checks the claim against a given root
+    /// (determined by the root_index on the claim). Earnings are cumulative so earners can claim to
+    /// the latest distribution root and the contract will compute the difference between their earning
+    /// and claimed amounts. The difference is transferred to the earner address.
+    /// If a claimer has not been set (see [`set_claimer_for`]), only the earner can claim. Otherwise, only
+    /// the claimer can claim.
+    ///
+    /// # Arguments
+    ///
+    /// * `claims` - A [`Vec`] of RewardsMerkleClaim objects containing the claims.
+    /// * `earnerAddress` - The address of the earner for whom to process the claims.
+    ///
+    /// # Returns
+    ///
+    /// * `Result<FixedBytes<32>, ElContractsError>` - The transaction hash if the claim is sent, otherwise an error.
+    ///
+    /// # Errors
+    ///
+    /// * `ElContractsError` - if the call to the contract fails. Also fails if no root has been submitted yet.
+    pub async fn process_claims(
+        &self,
+        claims: Vec<RewardsMerkleClaim>,
+        earner_address: Address,
+    ) -> Result<FixedBytes<32>, ElContractsError> {
+        let provider = get_signer(&self.signer, &self.provider);
+
+        let contract_rewards_coordinator =
+            IRewardsCoordinator::new(self.rewards_coordinator, &provider);
+
+        let process_claim_call = contract_rewards_coordinator.processClaims(claims, earner_address);
 
         let tx = process_claim_call.send().await?;
         Ok(*tx.tx_hash())
@@ -690,7 +725,8 @@ mod test_utils {}
 #[cfg(test)]
 mod tests {
     use crate::test_utils::{
-        build_el_chain_reader, new_test_writer, ANVIL_FIRST_ADDRESS, ANVIL_FIRST_PRIVATE_KEY,
+        build_el_chain_reader, new_claim, new_test_writer, ANVIL_FIRST_ADDRESS,
+        ANVIL_FIRST_PRIVATE_KEY, OPERATOR_ADDRESS, OPERATOR_PRIVATE_KEY,
     };
     use alloy::providers::Provider;
     use alloy_primitives::{address, aliases::U96, Address, U256};
@@ -825,6 +861,47 @@ mod tests {
         let claimer = address!("5eb15C0992734B5e77c888D713b4FC67b3D679A2");
 
         let tx_hash = el_chain_writer.set_claimer_for(claimer).await.unwrap();
+
+        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+        assert!(receipt.status());
+    }
+
+    #[tokio::test]
+    async fn test_process_claim() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let el_chain_writer = new_test_writer(
+            http_endpoint.to_string(),
+            ANVIL_FIRST_PRIVATE_KEY.to_string(),
+        )
+        .await;
+
+        let (_root, claim) = new_claim(&http_endpoint, U256::from(42)).await;
+
+        let tx_hash = el_chain_writer
+            .process_claim(claim, ANVIL_FIRST_ADDRESS)
+            .await
+            .unwrap();
+
+        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+        assert!(receipt.status());
+    }
+
+    #[tokio::test]
+    async fn test_process_claims() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let el_chain_writer = new_test_writer(
+            http_endpoint.to_string(),
+            ANVIL_FIRST_PRIVATE_KEY.to_string(),
+        )
+        .await;
+
+        let (_root, claim0) = new_claim(&http_endpoint, U256::from(42)).await;
+        let (_root, claim1) = new_claim(&http_endpoint, U256::from(4256)).await;
+
+        let tx_hash = el_chain_writer
+            .process_claims(vec![claim0, claim1], ANVIL_FIRST_ADDRESS)
+            .await
+            .unwrap();
 
         let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
         assert!(receipt.status());
@@ -1094,9 +1171,8 @@ mod tests {
         let operator_set_id = 1;
         create_operator_set(http_endpoint.as_str(), avs_address, operator_set_id).await;
 
-        let operator_addr = address!("70997970C51812dc3A010C7d01b50e0d17dc79C8");
-        let operator_private_key =
-            "0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d";
+        let operator_addr = OPERATOR_ADDRESS;
+        let operator_private_key = OPERATOR_PRIVATE_KEY;
         let el_chain_writer =
             new_test_writer(http_endpoint.clone(), operator_private_key.to_string()).await;
         let bls_key = BlsKeyPair::new("1".to_string()).unwrap();
