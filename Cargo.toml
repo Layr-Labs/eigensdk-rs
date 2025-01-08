@@ -1,5 +1,6 @@
 [workspace]
 members = [
+    "crates/common/",
     "crates/chainio/clients/avsregistry/",
     "crates/chainio/clients/elcontracts/",
     "crates/chainio/clients/eth/",
@@ -65,6 +66,7 @@ aws-config = "1.5.9"
 aws-sdk-kms = "1.49.0"
 backoff = { version = "0.4.0", features = ["futures", "tokio"] }
 clap = { version = "4.5.20", features = ["derive"] }
+eigen-common = { path = "crates/common/" }
 eigen-chainio-txmanager = { path = "crates/chainio/txmanager/" }
 eigen-client-elcontracts = { path = "crates/chainio/clients/elcontracts" }
 eigen-client-eth = { path = "crates/chainio/clients/eth" }
@@ -128,36 +130,37 @@ parking_lot = "0.12"
 anvil-utils = { path = "examples/anvil-utils" }
 
 #alloy
-alloy = { version = "0.7.0", features = [
+alloy = { version = "0.9", features = [
     "sol-types",
     "contract",
     "full",
     "signer-aws",
 ] }
-alloy-json-rpc = { version = "0.7", default-features = false }
-alloy-network = { version = "0.7", default-features = false }
-alloy-node-bindings = { version = "0.7", default-features = false }
-alloy-primitives = "0.8.14"
-alloy-provider = { version = "0.7", default-features = false, features = [
+alloy-json-rpc = { version = "0.9", default-features = false }
+alloy-network = { version = "0.9", default-features = false }
+alloy-node-bindings = { version = "0.9", default-features = false }
+alloy-primitives = "0.8"
+alloy-provider = { version = "0.9", default-features = false, features = [
     "reqwest",
     "ws",
 ] }
-alloy-pubsub = { version = "0.7", default-features = false }
-alloy-rlp = "0.3.9"
-alloy-rpc-client = "0.7"
-alloy-rpc-types = { version = "0.7", default-features = false, features = [
+alloy-pubsub = { version = "0.9", default-features = false }
+alloy-rlp = "0.3"
+alloy-rpc-client = "0.9"
+alloy-rpc-types = { version = "0.9", default-features = false, features = [
     "eth",
 ] }
-alloy-serde = { version = "0.7", default-features = false }
-alloy-signer = { version = "0.7", default-features = false }
-alloy-signer-aws = "0.7"
-alloy-signer-local = { version = "0.7", default-features = false }
+alloy-serde = { version = "0.9", default-features = false }
+alloy-signer = { version = "0.9", default-features = false }
+alloy-signer-aws = "0.9"
+alloy-signer-local = { version = "0.9", default-features = false }
 alloy-sol-types = "0.8"
-alloy-transport = { version = "0.7" }
-alloy-transport-http = { version = "0.7", features = [
+alloy-transport = { version = "0.9" }
+alloy-transport-http = { version = "0.9", features = [
     "reqwest-rustls-tls",
 ], default-features = false }
-alloy-transport-ipc = { version = "0.7.0", default-features = false }
-alloy-transport-ws = { version = "0.7.0", default-features = false }
+alloy-transport-ipc = { version = "0.9", default-features = false }
+alloy-transport-ws = { version = "0.9", default-features = false }
+
 avsregistry-read = { path = "examples/avsregistry-read" }
 avsregistry-write = { path = "examples/avsregistry-write" }

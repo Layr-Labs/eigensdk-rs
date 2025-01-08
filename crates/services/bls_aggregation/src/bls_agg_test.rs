@@ -7,6 +7,7 @@ pub mod integration_test {
     use eigen_client_avsregistry::{
         reader::AvsRegistryChainReader, writer::AvsRegistryChainWriter,
     };
+    use eigen_common::{get_provider, get_signer};
     use eigen_crypto_bls::{
         convert_to_bls_checker_g1_point, convert_to_bls_checker_g2_point, BlsKeyPair,
     };
@@ -27,16 +28,13 @@ pub mod integration_test {
         operator::{QuorumNum, QuorumThresholdPercentages},
     };
     use eigen_utils::{
-        get_provider, get_signer,
-        {
-            iblssignaturechecker::{
-                IBLSSignatureChecker::{self, NonSignerStakesAndSignature},
-                BN254::G1Point,
-            },
-            registrycoordinator::{
-                IRegistryCoordinator::OperatorSetParam, IStakeRegistry::StrategyParams,
-                RegistryCoordinator,
-            },
+        middleware::iblssignaturechecker::{
+            IBLSSignatureChecker::{self, NonSignerStakesAndSignature},
+            BN254::G1Point,
+        },
+        middleware::registrycoordinator::{
+            IRegistryCoordinator::OperatorSetParam, IStakeRegistry::StrategyParams,
+            RegistryCoordinator,
         },
     };
     use serde::Deserialize;

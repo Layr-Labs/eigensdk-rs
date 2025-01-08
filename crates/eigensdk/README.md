@@ -19,7 +19,7 @@ cargo add eigensdk --features full
 - [eigen-metrics](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/metrics) - performance, rpc and economic metrics
 - [eigen-services](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/services) - Spawn tokio services for operators info, bls aggregation
 - [eigen-types](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/types) - Common types
-- [eigen-utils](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/utils) - Publicly exportable `m2-mainnet` compatible alloy bindings.
+- [eigen-utils](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/utils) - Publicly exportable `mainnet rewards v0.4.3` compatible alloy bindings.
 - [eigen-testing-utils](https://github.com/Layr-Labs/eigensdk-rs/tree/main/testing/testing-utils) - Contains publicly exportable anvil, holesky, mainnet addresses for eigen contracts.
 - [eigen-cli](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/eigen-cli) - ECDSA, BLS keystore cli
 - [eigen-nodeapi](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/nodeapi) - NodeApi implementation for EigenLayer.
@@ -34,6 +34,26 @@ Example :
 ```bash
 cargo run --example get_quorum_count
 ```
+
+## Contract Bindings
+
+The main branch of this repo is intended to be syncronized with mainnet version of core contracts.
+
+To update the bindings of this repo:
+
+- Inside the `crates/contracts` folder, run:
+
+```bash
+forge bind --alloy --bindings-path <path-eigensdk-rs>/crates/utils --overwrite -C src/contracts
+```
+
+where `path-eigensdk-rs` is the full path to the eigensdk-rs (this) repo.
+
+This command will generate the bindings files in the folder: `<path-eigensdk-rs>/crates/utils`.
+
+⚠️ It rewrites Cargo.toml file, this file must be restored to the current version.
+
+- Fix all compilation warnings.
 
 ## Contributor Guidelines
 

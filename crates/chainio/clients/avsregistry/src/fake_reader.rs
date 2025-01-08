@@ -3,7 +3,7 @@ use alloy_primitives::{aliases::U96, Address, Bytes, FixedBytes};
 use async_trait::async_trait;
 use eigen_crypto_bls::BlsKeyPair;
 use eigen_types::test::TestOperator;
-use eigen_utils::operatorstateretriever::OperatorStateRetriever;
+use eigen_utils::middleware::operatorstateretriever::OperatorStateRetriever;
 
 /// This struct is used to test AvsRegistryServiceChainCaller methods.
 #[derive(Debug)]
