@@ -1,6 +1,6 @@
-# eigensdk-rs
+# EigenSDK-rs
 
-eigensdk-rs is an initiative for rust developers to build AVSs on eigenlayer.
+EigenSDK-rs is an initiative for rust developers to build AVSs on eigenlayer.
 
 ## Installation
 
@@ -62,7 +62,8 @@ We are actively looking for contributors. Thank you for your interest. We have s
 
 ## Branches
 - `main` - Points to the  latest **mainnet** release of contracts. 
-- `dev` - Points to the latest **testnet** release of contracts. 
+- `testnet` - Points to the latest **testnet** release of contracts. 
+- `dev` - Points to the latest **dev** branch of the contracts.
 
 ### PR
 
