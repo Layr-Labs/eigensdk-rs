@@ -1,5 +1,7 @@
 PHONY: reset-anvil
 
+REPO_ROOT:=$(shell pwd)
+
 __CONTRACTS__: ##
 
 start-anvil-chain-with-contracts-deployed: ##
@@ -29,6 +31,14 @@ fireblocks-tests:
 lint:
 	cargo fmt --all -- --check \
 		&& cargo clippy --workspace --all-features --benches --examples --tests -- -D warnings
+
+bindings:
+	@echo "Generating bindings..."
+	cd crates/contracts && \
+		forge bind --alloy --bindings-path $(REPO_ROOT)/crates/utils --overwrite -C src/contracts
+	# Restore the Cargo.toml file
+	git restore crates/utils/Cargo.toml
+	@echo "Bindings generated"
 
 start-anvil: reset-anvil ##
 	$(MAKE) start-anvil-chain-with-contracts-deployed
