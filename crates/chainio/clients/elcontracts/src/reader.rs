@@ -3,7 +3,7 @@ use alloy_primitives::{Address, FixedBytes, U256};
 use eigen_common::get_provider;
 use eigen_logging::logger::SharedLogger;
 use eigen_types::operator::Operator;
-use eigen_utils::middleware::{
+use eigen_utils::{
     avsdirectory::AVSDirectory, delegationmanager::DelegationManager, erc20::ERC20,
     islasher::ISlasher, istrategy::IStrategy,
 };
@@ -399,13 +399,9 @@ mod tests {
         },
     };
     use eigen_utils::{
-        deploy::mockavsservicemanager::MockAvsServiceManager,
-        middleware::{
-            avsdirectory::AVSDirectory::{self, calculateOperatorAVSRegistrationDigestHashReturn},
-            delegationmanager::DelegationManager::{
-                self, calculateDelegationApprovalDigestHashReturn,
-            },
-        },
+        avsdirectory::AVSDirectory::{self, calculateOperatorAVSRegistrationDigestHashReturn},
+        delegationmanager::DelegationManager::{self, calculateDelegationApprovalDigestHashReturn},
+        mockavsservicemanager::MockAvsServiceManager,
     };
     use std::str::FromStr;
 
