@@ -24,6 +24,7 @@ cargo add eigensdk --features full
 - [eigen-cli](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/eigen-cli) - ECDSA, BLS keystore cli
 - [eigen-nodeapi](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/nodeapi) - NodeApi implementation for EigenLayer.
 - [eigen-logging](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/logging) - Logging utilities
+- [eigen-common](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/common) - Common utilities like provider and signer getters.
 
 ## Examples
 

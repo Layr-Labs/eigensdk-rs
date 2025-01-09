@@ -2863,6 +2863,7 @@ dependencies = [
  "eigen-client-elcontracts",
  "eigen-client-eth",
  "eigen-client-fireblocks",
+ "eigen-common",
  "eigen-crypto-bls",
  "eigen-crypto-bn254",
  "eigen-logging",
