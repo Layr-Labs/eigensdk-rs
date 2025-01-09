@@ -32,6 +32,9 @@ lint:
 
 bindings:
 	@echo "Generating bindings..."
+	cd crates/contracts
+	forge build
+	cd ../..
 	forge bind --alloy --bindings-path crates/utils --overwrite --root crates/contracts
 	# Restore the Cargo.toml file
 	git restore crates/utils/Cargo.toml
