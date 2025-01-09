@@ -60,15 +60,16 @@ This command will generate the bindings files in the folder: `<path-eigensdk-rs>
 We are actively looking for contributors. Thank you for your interest. We have strict ci checks in place. In case of any questions and support, feel free to raise an issue.
 
 ## Branches
-- `main` - Points to the  latest **mainnet** release of contracts. 
-- `testnet` - Points to the latest **testnet** release of contracts. 
+
+- `main` - Points to the  latest **mainnet** release of contracts.
+- `testnet` - Points to the latest **testnet** release of contracts.
 - `dev` - Points to the latest **dev** branch of the contracts.
 
 ### PR
 
 To test locally :-
 
-You need `foundry` to successfully to run it.
+You need `foundry` to successfully run it.
 
 ```bash
 cargo test

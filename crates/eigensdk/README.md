@@ -1,6 +1,6 @@
-# eigensdk-rs
+# EigenSDK-rs
 
-eigensdk-rs is an initiative for rust developers to build AVSs on eigenlayer.
+EigenSDK-rs is an initiative for rust developers to build AVSs on eigenlayer.
 
 ## Installation
 
@@ -60,17 +60,32 @@ This command will generate the bindings files in the folder: `<path-eigensdk-rs>
 We are actively looking for contributors. Thank you for your interest. We have strict ci checks in place. In case of any questions and support, feel free to raise an issue.
 
 ## Branches
-- `main` - Points to the  latest **mainnet** release of contracts. 
-- `dev` - Points to the latest **testnet** release of contracts. 
+
+- `main` - Points to the  latest **mainnet** release of contracts.
+- `testnet` - Points to the latest **testnet** release of contracts.
+- `dev` - Points to the latest **dev** branch of the contracts.
 
 ### PR
 
 To test locally :-
 
-You need `foundry`to successfully to run it.
+You need `foundry` to successfully run it.
 
 ```bash
 cargo test
+```
+
+On Mac, you might need to pull the foundry image manually specifying the platform with:
+
+```bash
+docker pull --platform amd64 foundry-rs/foundry
+```
+
+Sometimes the bindings fail due to containing botched doctests.
+You can exclude them from the test run with:
+
+```bash
+cargo test --workspace --exclude eigen-utils
 ```
 
 At least 1 `approving` review is required to merge the PR.
