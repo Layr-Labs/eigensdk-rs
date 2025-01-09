@@ -42,14 +42,12 @@ The main branch of this repo is intended to be syncronized with mainnet version 
 To update the bindings of this repo, run:
 
 ```bash
-forge bind --alloy --bindings-path crates/utils --overwrite --root crates/contracts
+make bindings
 ```
 
 This command will generate the bindings files in the folder: `crates/utils`.
 
-⚠️ It rewrites Cargo.toml file, this file must be restored to the current version.
-
-- Fix all compilation warnings.
+⚠️ Remember to fix all compilation warnings.
 
 ## Contributor Guidelines
 
