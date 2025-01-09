@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.9;
+pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
@@ -12,10 +12,14 @@ import {ContractsRegistry} from "../src/ContractsRegistry.sol";
 // This script registers a bunch of operators with eigenlayer
 // We don't register with eigencert/eigenda because events are not registered in saved anvil state, so we need to register
 // them at runtime whenver we start anvil for a test or localnet.
-contract RegisterOperators is ConfigsReadWriter, EigenlayerContractsParser, TokenAndStrategyContractsParser {
+contract RegisterOperators is
+    ConfigsReadWriter,
+    EigenlayerContractsParser,
+    TokenAndStrategyContractsParser
+{
     string internal mnemonic;
     uint256 internal numberOfOperators;
-    ContractsRegistry contractsRegistry ;
+    ContractsRegistry contractsRegistry;
     function setUp() public {
         numberOfOperators = 10;
         if (block.chainid == 31337 || block.chainid == 1337) {
@@ -26,19 +30,28 @@ contract RegisterOperators is ConfigsReadWriter, EigenlayerContractsParser, Toke
     }
 
     function run() external {
-     contractsRegistry = ContractsRegistry(0x5FbDB2315678afecb367f032d93F642f64180aa3);
-        EigenlayerContracts memory eigenlayerContracts = _loadEigenlayerDeployedContracts();
-        TokenAndStrategyContracts memory tokenAndStrategy = _loadTokenAndStrategyContracts();
-
+        contractsRegistry = ContractsRegistry(
+            0x5FbDB2315678afecb367f032d93F642f64180aa3
+        );
+        EigenlayerContracts
+            memory eigenlayerContracts = _loadEigenlayerDeployedContracts();
+        TokenAndStrategyContracts
+            memory tokenAndStrategy = _loadTokenAndStrategyContracts();
 
         address[] memory operators = new address[](numberOfOperators);
         uint256[] memory operatorsETHAmount = new uint256[](numberOfOperators);
-        uint256[] memory operatorTokenAmounts = new uint256[](numberOfOperators);
+        uint256[] memory operatorTokenAmounts = new uint256[](
+            numberOfOperators
+        );
         for (uint256 i; i < numberOfOperators; i++) {
-            (address operator,) = deriveRememberKey(mnemonic, uint32(i));
+            (address operator, ) = deriveRememberKey(mnemonic, uint32(i));
             operators[i] = operator;
             operatorsETHAmount[i] = 5 ether;
-            operatorTokenAmounts[i] = bound(uint256(keccak256(bytes.concat(bytes32(uint256(i))))), 1 ether, 10 ether);
+            operatorTokenAmounts[i] = bound(
+                uint256(keccak256(bytes.concat(bytes32(uint256(i))))),
+                1 ether,
+                10 ether
+            );
         }
         vm.startBroadcast();
 
@@ -46,7 +59,11 @@ contract RegisterOperators is ConfigsReadWriter, EigenlayerContractsParser, Toke
         _allocateEthOrErc20(address(0), operators, operatorsETHAmount);
 
         // Allocate tokens to operators
-        _allocateEthOrErc20(address(tokenAndStrategy.token), operators, operatorTokenAmounts);
+        _allocateEthOrErc20(
+            address(tokenAndStrategy.token),
+            operators,
+            operatorTokenAmounts
+        );
 
         vm.stopBroadcast();
 
@@ -54,25 +71,43 @@ contract RegisterOperators is ConfigsReadWriter, EigenlayerContractsParser, Toke
         for (uint256 i = 0; i < numberOfOperators; i++) {
             address delegationApprover = address(0); // anyone can delegate to this operator
             uint32 stakerOptOutWindowBlocks = 100;
-            string memory metadataURI = string.concat("https://coolstuff.com/operator/", vm.toString(i));
+            string memory metadataURI = string.concat(
+                "https://coolstuff.com/operator/",
+                vm.toString(i)
+            );
             (, uint256 privateKey) = deriveRememberKey(mnemonic, uint32(i));
             vm.startBroadcast(privateKey);
-                    if (block.chainid == 31337 || block.chainid == 1337) {
-            contractsRegistry.store_test("test_register_operator",int(i),block.number,block.timestamp);
-                    }
+            if (block.chainid == 31337 || block.chainid == 1337) {
+                contractsRegistry.store_test(
+                    "test_register_operator",
+                    int(i),
+                    block.number,
+                    block.timestamp
+                );
+            }
             eigenlayerContracts.delegationManager.registerAsOperator(
-                IDelegationManager.OperatorDetails(operators[i], delegationApprover, stakerOptOutWindowBlocks),
+                IDelegationManager.OperatorDetails(
+                    operators[i],
+                    delegationApprover,
+                    stakerOptOutWindowBlocks
+                ),
                 metadataURI
             );
             eigenlayerContracts.strategyManager.depositIntoStrategy(
-                tokenAndStrategy.strategy, IERC20(tokenAndStrategy.token), operatorTokenAmounts[i]
+                tokenAndStrategy.strategy,
+                IERC20(tokenAndStrategy.token),
+                operatorTokenAmounts[i]
             );
             vm.stopBroadcast();
         }
     }
 
     // setting token=address(0) will allocate eth
-    function _allocateEthOrErc20(address token, address[] memory tos, uint256[] memory amounts) internal {
+    function _allocateEthOrErc20(
+        address token,
+        address[] memory tos,
+        uint256[] memory amounts
+    ) internal {
         for (uint256 i = 0; i < tos.length; i++) {
             if (token == address(0)) {
                 payable(tos[i]).transfer(amounts[i]);
