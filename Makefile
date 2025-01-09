@@ -1,7 +1,5 @@
 PHONY: reset-anvil
 
-REPO_ROOT:=$(shell pwd)
-
 __CONTRACTS__: ##
 
 start-anvil-chain-with-contracts-deployed: ##
@@ -34,8 +32,7 @@ lint:
 
 bindings:
 	@echo "Generating bindings..."
-	cd crates/contracts && \
-		forge bind --alloy --bindings-path $(REPO_ROOT)/crates/utils --overwrite -C src/contracts
+	forge bind --alloy --bindings-path crates/utils --overwrite --root crates/contracts
 	# Restore the Cargo.toml file
 	git restore crates/utils/Cargo.toml
 	@echo "Bindings generated"
