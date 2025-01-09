@@ -69,7 +69,7 @@ We are actively looking for contributors. Thank you for your interest. We have s
 
 To test locally :-
 
-You need `foundry` to successfully to run it.
+You need `foundry` to successfully run it.
 
 ```bash
 cargo test
