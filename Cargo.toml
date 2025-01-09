@@ -67,7 +67,6 @@ aws-sdk-kms = "1.49.0"
 backoff = { version = "0.4.0", features = ["futures", "tokio"] }
 clap = { version = "4.5.20", features = ["derive"] }
 eigen-common = { path = "crates/common/" }
-eigen-chainio-txmanager = { path = "crates/chainio/txmanager/" }
 eigen-client-elcontracts = { path = "crates/chainio/clients/elcontracts" }
 eigen-client-eth = { path = "crates/chainio/clients/eth" }
 eigen-client-fireblocks = { path = "crates/chainio/clients/fireblocks" }
