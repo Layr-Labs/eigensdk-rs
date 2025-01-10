@@ -40,21 +40,15 @@ cargo run --example get_quorum_count
 
 The main branch of this repo is intended to be syncronized with mainnet version of core contracts.
 
-To update the bindings of this repo:
-
-- Inside the `crates/contracts` folder, run:
+To update the bindings of this repo, run:
 
 ```bash
-forge bind --alloy --bindings-path <path-eigensdk-rs>/crates/utils --overwrite -C src/contracts
+make bindings
 ```
 
-where `path-eigensdk-rs` is the full path to the eigensdk-rs (this) repo.
+This command will generate the bindings files in the folder: `crates/utils`.
 
-This command will generate the bindings files in the folder: `<path-eigensdk-rs>/crates/utils`.
-
-⚠️ It rewrites Cargo.toml file, this file must be restored to the current version.
-
-- Fix all compilation warnings.
+⚠️ Remember to fix all compilation warnings.
 
 ## Contributor Guidelines
 
@@ -123,7 +117,7 @@ Rolling `MSRV` policy of 6 months. The current `MSRV` is 1.79
 
 ## Disclaimer
 
-This software is `unaudited`.This is experimental software and is provided on an "as is" and "as available" basis and may not work at all. It should not be used in production.
+🚧 Eigensdk-rs is under active development and has not been audited. Eigensdk-rs is rapidly being upgraded, features may be added, removed or otherwise improved or modified and interfaces will have breaking changes. Eigensdk-rs should be used only for testing purposes and not in production. Eigensdk-rs is provided "as is" and Eigen Labs, Inc. does not guarantee its functionality or provide support for its use in production. 🚧
 
 ## Credits
 
