@@ -1,15 +1,15 @@
 use crate::error::ElContractsError;
 use crate::reader::ELChainReader;
 use alloy_primitives::{Address, FixedBytes, TxHash, U256};
+use eigen_common::get_signer;
 pub use eigen_types::operator::Operator;
-use eigen_utils::{
+use eigen_utils::deploy::irewardscoordinator::IRewardsCoordinator::{self, RewardsMerkleClaim};
+use eigen_utils::middleware::{
     delegationmanager::{
         DelegationManager::{self},
         IDelegationManager::OperatorDetails,
     },
     erc20::ERC20,
-    get_signer,
-    irewardscoordinator::IRewardsCoordinator::{self, RewardsMerkleClaim},
     strategymanager::StrategyManager,
 };
 
@@ -325,6 +325,7 @@ mod tests {
     use alloy_primitives::{address, Address, FixedBytes, U256};
     use alloy_signer_local::PrivateKeySigner;
     use anvil_constants::CONTRACTS_REGISTRY;
+    use eigen_common::get_provider;
     use eigen_logging::get_test_logger;
     use eigen_testing_utils::{
         anvil::start_anvil_container,
@@ -337,11 +338,12 @@ mod tests {
     };
     use eigen_types::operator::Operator;
     use eigen_utils::{
-        contractsregistry::ContractsRegistry::{self, get_test_valuesReturn},
-        delegationmanager::DelegationManager,
-        get_provider,
-        irewardscoordinator::IRewardsCoordinator::{EarnerTreeMerkleLeaf, RewardsMerkleClaim},
-        mockavsservicemanager::MockAvsServiceManager,
+        deploy::{
+            contractsregistry::ContractsRegistry::{self, get_test_valuesReturn},
+            irewardscoordinator::IRewardsCoordinator::{EarnerTreeMerkleLeaf, RewardsMerkleClaim},
+            mockavsservicemanager::MockAvsServiceManager,
+        },
+        middleware::delegationmanager::DelegationManager,
     };
     use serial_test::serial;
     use std::str::FromStr;

@@ -19,13 +19,13 @@ eigen-types.workspace = true
 eigen-crypto-bls.workspace = true
 eigen-telemetry = { workspace = true, optional = true }
 eigen-client-elcontracts.workspace = true
+eigen-common.workspace = true
 eigen-utils.workspace = true
 eigen-logging.workspace = true
 num-bigint = "0.4.4"
 thiserror.workspace = true
 tokio = { workspace = true, optional = true }
 tracing.workspace = true
-
 
 [lints]
 workspace = true
