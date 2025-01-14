@@ -85,7 +85,7 @@ Error starting anvil container: Client(PullImage { descriptor: "ghcr.io/foundry-
 In that case, you'll need to pull the foundry image for the `amd64` platform with:
 
 ```bash
-docker pull --platform amd64 foundry-rs/foundry
+docker pull --platform linux/amd64/v8 ghcr.io/foundry-rs/foundry:latest
 ```
 
 Sometimes the bindings fail due to containing botched doctests.
