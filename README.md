@@ -79,7 +79,7 @@ cargo test
 On Mac, you might need to pull the foundry image manually specifying the platform with:
 
 ```bash
-docker pull --platform amd64 foundry-rs/foundry
+docker pull --platform linux/amd64/v8 ghcr.io/foundry-rs/foundry:latest
 ```
 
 Sometimes the bindings fail due to containing botched doctests.
