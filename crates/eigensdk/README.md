@@ -73,7 +73,7 @@ To test locally :-
 You need `foundry` to successfully run it.
 
 ```bash
-cargo test
+cargo test --workspace --exclude eigen-utils
 ```
 
 On Mac, you might get an error similar to:
@@ -86,13 +86,6 @@ In that case, you'll need to pull the foundry image for the `amd64` platform wit
 
 ```bash
 docker pull --platform linux/amd64/v8 ghcr.io/foundry-rs/foundry:latest
-```
-
-Sometimes the bindings fail due to containing botched doctests.
-You can exclude them from the test run with:
-
-```bash
-cargo test --workspace --exclude eigen-utils
 ```
 
 At least 1 `approving` review is required to merge the PR.
