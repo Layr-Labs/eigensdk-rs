@@ -76,12 +76,6 @@ pub use eigen_nodeapi as nodeapi;
 #[doc(inline)]
 pub use eigen_testing_utils as testing_utils;
 
-/* ------------------------------------ Chain IO Re-exports ------------------------------------ */
-
-#[cfg(feature = "chainio-txmanager")]
-#[doc(inline)]
-pub use eigen_chainio_txmanager as chainio_txmanager;
-
 /* ------------------------------------ Metrics Collectors Re-exports -------------------------- */
 
 #[cfg(feature = "metrics-collectors-economic")]
@@ -91,3 +85,9 @@ pub use eigen_metrics_collectors_economic as metrics_collectors_economic;
 #[cfg(feature = "metrics-collectors-rpc-calls")]
 #[doc(inline)]
 pub use eigen_metrics_collectors_rpc_calls as metrics_collectors_rpc_calls;
+
+/* ------------------------------------ Common Utilities Re-exports -------------------------- */
+
+#[doc(inline)]
+#[cfg(feature = "common")]
+pub use eigen_common as common;
