@@ -69,6 +69,7 @@ async fn main() -> Result<()> {
     );
     // A new ElChainWriter instance
     let el_writer = ELChainWriter::new(
+        DELEGATION_MANAGER_ADDRESS,
         STRATEGY_MANAGER_ADDRESS,
         REWARDS_COORDINATOR,
         el_chain_reader,

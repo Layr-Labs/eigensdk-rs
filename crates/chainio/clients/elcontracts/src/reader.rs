@@ -12,7 +12,7 @@ use eigen_utils::middleware::{
 pub struct ELChainReader {
     _logger: SharedLogger,
     slasher: Address,
-    pub(crate) delegation_manager: Address,
+    delegation_manager: Address,
     avs_directory: Address,
     pub provider: String,
 }

@@ -652,6 +652,7 @@ mod tests {
         let signer = PrivateKeySigner::from_str(pvt_key).unwrap();
 
         let el_chain_writer = ELChainWriter::new(
+            delegation_manager_address,
             strategy_manager_address,
             rewards_coordinator_address,
             el_chain_reader,
