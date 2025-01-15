@@ -341,7 +341,6 @@ pub mod integration_test {
             http_endpoint.clone(),
         );
         let el_chain_writer = ELChainWriter::new(
-            delegation_manager_address,
             Address::ZERO,
             rewards_coordinator_address,
             Address::ZERO,

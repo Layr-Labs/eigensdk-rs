@@ -105,7 +105,6 @@ pub async fn register_operator(pvt_key: &str, bls_key: &str, http_endpoint: &str
     let registry_coordinator = get_registry_coordinator_address(http_endpoint.to_string()).await;
 
     let el_chain_writer = ELChainWriter::new(
-        delegation_manager_address,
         strategy_manager_address,
         rewards_coordinator_address,
         permission_controller,

@@ -28,7 +28,6 @@ pub const GAS_LIMIT_REGISTER_AS_OPERATOR_DELEGATION_MANAGER: u128 = 300000;
 /// Chain Writer to interact with EigenLayer contracts onchain
 #[derive(Debug, Clone)]
 pub struct ELChainWriter {
-    delegation_manager: Address,
     strategy_manager: Address,
     rewards_coordinator: Address,
     permission_controller: Address,
@@ -42,7 +41,6 @@ pub struct ELChainWriter {
 impl ELChainWriter {
     #[allow(clippy::too_many_arguments)]
     pub fn new(
-        delegation_manager: Address,
         strategy_manager: Address,
         rewards_coordinator: Address,
         permission_controller: Address,
@@ -53,7 +51,6 @@ impl ELChainWriter {
         signer: String,
     ) -> Self {
         Self {
-            delegation_manager,
             strategy_manager,
             rewards_coordinator,
             permission_controller,
@@ -85,7 +82,8 @@ impl ELChainWriter {
         info!("registering operator {:?} to EigenLayer", operator.address);
         let provider = get_signer(&self.signer.clone(), &self.provider);
 
-        let contract_delegation_manager = DelegationManager::new(self.delegation_manager, provider);
+        let contract_delegation_manager =
+            DelegationManager::new(self.el_chain_reader.delegation_manager, provider);
 
         let binding = {
             let contract_call = contract_delegation_manager.registerAsOperator(
@@ -140,7 +138,8 @@ impl ELChainWriter {
 
         let provider = get_signer(&self.signer.clone(), &self.provider);
 
-        let contract_delegation_manager = DelegationManager::new(self.delegation_manager, provider);
+        let contract_delegation_manager =
+            DelegationManager::new(self.el_chain_reader.delegation_manager, provider);
 
         let contract_call_modify_operator_details = contract_delegation_manager
             .modifyOperatorDetails(operator.address, operator.delegation_approver_address);

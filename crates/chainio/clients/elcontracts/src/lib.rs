@@ -80,7 +80,6 @@ pub(crate) mod test_utils {
         let registry_coordinator = get_registry_coordinator_address(http_endpoint.clone()).await;
 
         ELChainWriter::new(
-            delegation_manager,
             strategy_manager,
             rewards_coordinator,
             permission_controller,

@@ -25,7 +25,7 @@ use eigen_utils::{
 pub struct ELChainReader {
     _logger: SharedLogger,
     allocation_manager: Address,
-    delegation_manager: Address,
+    pub(crate) delegation_manager: Address,
     avs_directory: Address,
     permission_controller: Address,
     rewards_coordinator: Address,

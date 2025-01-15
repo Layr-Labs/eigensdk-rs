@@ -671,7 +671,6 @@ mod tests {
         let allocation_manager = get_allocation_manager_address(http_endpoint.clone()).await;
 
         let el_chain_writer = ELChainWriter::new(
-            delegation_manager_address,
             strategy_manager_address,
             rewards_coordinator_address,
             permission_controller,
