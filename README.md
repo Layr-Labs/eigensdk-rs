@@ -67,20 +67,19 @@ To test locally :-
 You need `foundry` to successfully run it.
 
 ```bash
-cargo test
-```
-
-On Mac, you might need to pull the foundry image manually specifying the platform with:
-
-```bash
-docker pull --platform amd64 foundry-rs/foundry
-```
-
-Sometimes the bindings fail due to containing botched doctests.
-You can exclude them from the test run with:
-
-```bash
 cargo test --workspace --exclude eigen-utils
+```
+
+On Mac, you might get an error similar to:
+
+```bash
+Error starting anvil container: Client(PullImage { descriptor: "ghcr.io/foundry-rs/foundry:latest", err: DockerStreamError { error: "no matching manifest for linux/arm64/v8 in the manifest list entries" } })
+```
+
+In that case, you'll need to pull the foundry image for the `amd64` platform with:
+
+```bash
+docker pull --platform linux/amd64/v8 ghcr.io/foundry-rs/foundry:latest
 ```
 
 At least 1 `approving` review is required to merge the PR.

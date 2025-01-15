@@ -21,7 +21,6 @@ pub const GAS_LIMIT_REGISTER_AS_OPERATOR_DELEGATION_MANAGER: u128 = 300000;
 /// Chain Writer to interact with EigenLayer contracts onchain
 #[derive(Debug, Clone)]
 pub struct ELChainWriter {
-    delegation_manager: Address,
     strategy_manager: Address,
     rewards_coordinator: Address,
     el_chain_reader: ELChainReader,
@@ -31,7 +30,6 @@ pub struct ELChainWriter {
 
 impl ELChainWriter {
     pub fn new(
-        delegation_manager: Address,
         strategy_manager: Address,
         rewards_coordinator: Address,
         el_chain_reader: ELChainReader,
@@ -39,7 +37,6 @@ impl ELChainWriter {
         signer: String,
     ) -> Self {
         Self {
-            delegation_manager,
             strategy_manager,
             rewards_coordinator,
             el_chain_reader,
@@ -73,7 +70,8 @@ impl ELChainWriter {
         };
         let provider = get_signer(&self.signer.clone(), &self.provider);
 
-        let contract_delegation_manager = DelegationManager::new(self.delegation_manager, provider);
+        let contract_delegation_manager =
+            DelegationManager::new(self.el_chain_reader.delegation_manager, provider);
 
         let binding = {
             let contract_call = contract_delegation_manager
@@ -129,7 +127,8 @@ impl ELChainWriter {
         };
         let provider = get_signer(&self.signer.clone(), &self.provider);
 
-        let contract_delegation_manager = DelegationManager::new(self.delegation_manager, provider);
+        let contract_delegation_manager =
+            DelegationManager::new(self.el_chain_reader.delegation_manager, provider);
 
         let contract_call_modify_operator_details =
             contract_delegation_manager.modifyOperatorDetails(operator_details);
@@ -330,14 +329,12 @@ mod tests {
 
     async fn new_test_writer(http_endpoint: String) -> ELChainWriter {
         let (el_chain_reader, _) = setup_el_chain_reader(http_endpoint.clone()).await;
-        let operator_addr = Address::from_str("90F79bf6EB2c4f870365E785982E1f101E93b906").unwrap();
         let operator_private_key =
             "7c852118294e51e653712a81e05800f419141751be58f605c371e15141b007a6".to_string();
         let strategy_manager = get_strategy_manager_address(http_endpoint.clone()).await;
         let rewards_coordinator = get_rewards_coordinator_address(http_endpoint.clone()).await;
 
         ELChainWriter::new(
-            operator_addr,
             strategy_manager,
             rewards_coordinator,
             el_chain_reader,
