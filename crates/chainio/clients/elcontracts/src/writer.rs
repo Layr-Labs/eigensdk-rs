@@ -338,8 +338,7 @@ mod tests {
     /// # Arguments
     ///
     /// * `http_endpoint` - The HTTP endpoint used to send transactions.
-    /// * `private_key` - The private key used to sign transactions. If `private_key` is `None`,
-    /// then a default private key is used.
+    /// * `private_key` - The private key used to sign transactions.
     ///
     /// # Returns
     ///
