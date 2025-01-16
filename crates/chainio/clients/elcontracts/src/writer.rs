@@ -255,12 +255,12 @@ impl ELChainWriter {
 #[cfg(test)]
 mod tests {
     use super::ELChainWriter;
-    use crate::reader::ELChainReader;
-    use alloy::providers::Provider;
-    use alloy_primitives::{address, Address, FixedBytes, U256};
+    use crate::{reader::ELChainReader, ANVIL_FIRST_ADDRESS, ANVIL_FIRST_PRIVATE_KEY};
+    use alloy::{providers::Provider, sol_types::SolValue};
+    use alloy_primitives::{address, keccak256, Address, FixedBytes, U256, U8};
     use alloy_signer_local::PrivateKeySigner;
     use anvil_constants::CONTRACTS_REGISTRY;
-    use eigen_common::get_provider;
+    use eigen_common::{get_provider, get_signer};
     use eigen_logging::get_test_logger;
     use eigen_testing_utils::{
         anvil::{set_account_balance, start_anvil_container},
@@ -275,8 +275,12 @@ mod tests {
     use eigen_utils::{
         deploy::{
             contractsregistry::ContractsRegistry::{self, get_test_valuesReturn},
-            irewardscoordinator::IRewardsCoordinator::{EarnerTreeMerkleLeaf, RewardsMerkleClaim},
+            irewardscoordinator::IRewardsCoordinator::{
+                self, getDistributionRootsLengthReturn, EarnerTreeMerkleLeaf, RewardsMerkleClaim,
+                TokenTreeMerkleLeaf,
+            },
             mockavsservicemanager::MockAvsServiceManager,
+            mockerc20::MockERC20,
         },
         middleware::delegationmanager::DelegationManager,
     };
@@ -493,30 +497,145 @@ mod tests {
         assert!(receipt.status());
     }
 
-    #[tokio::test]
-    #[serial]
-    async fn test_process_claim() {
-        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let el_chain_writer = new_test_writer(http_endpoint.clone()).await;
+    /// The claim can be submitted from [`ANVIL_FIRST_PRIVATE_KEY`]
+    pub async fn new_claim(
+        http_endpoint: &str,
+        cumulative_earnings: U256,
+    ) -> (FixedBytes<32>, RewardsMerkleClaim) {
+        let signer = get_signer(ANVIL_FIRST_PRIVATE_KEY, http_endpoint);
+        let rewards_coordinator_address =
+            get_rewards_coordinator_address(http_endpoint.to_string()).await;
 
-        let earner_address = address!("5eb15C0992734B5e77c888D713b4FC67b3D679A2");
-        let claim = RewardsMerkleClaim {
-            rootIndex: 0,
-            earnerIndex: 0,
-            earnerTreeProof: vec![].into(),
-            earnerLeaf: EarnerTreeMerkleLeaf {
-                earner: address!("5eb15C0992734B5e77c888D713b4FC67b3D679A2"),
-                earnerTokenRoot: FixedBytes::from([0; 32]),
-            },
-            tokenIndices: vec![],
-            tokenTreeProofs: vec![],
-            tokenLeaves: vec![],
-        };
-
-        let tx_hash = el_chain_writer
-            .process_claim(earner_address, claim)
+        let (el_chain_reader, _) = setup_el_chain_reader(http_endpoint.to_string()).await;
+        let mock_strategy = get_erc20_mock_strategy(http_endpoint.to_string()).await;
+        let (_, token_address, _) = el_chain_reader
+            .get_strategy_and_underlying_erc20_token(mock_strategy)
             .await
             .unwrap();
+
+        // Initialize the rewards coordinator bindings
+        let rewards_coordinator = IRewardsCoordinator::new(rewards_coordinator_address, &signer);
+
+        // Mint tokens for the rewards coordinator
+        let token = MockERC20::new(token_address, &signer);
+        let receipt = token
+            .mint(rewards_coordinator_address, cumulative_earnings)
+            .send()
+            .await
+            .unwrap()
+            .get_receipt()
+            .await
+            .unwrap();
+        assert!(receipt.status());
+
+        // Generate token tree leaf
+        // For the tree structure, see https://github.com/Layr-Labs/eigenlayer-contracts/blob/a888a1cd1479438dda4b138245a69177b125a973/docs/core/RewardsCoordinator.md#rewards-merkle-tree-structure
+        let earner_address = ANVIL_FIRST_ADDRESS;
+        let token_leaves = vec![TokenTreeMerkleLeaf {
+            token: token_address,
+            cumulativeEarnings: cumulative_earnings,
+        }];
+        // Hash token tree leaf to get root
+        let encoded_token_leaf = [
+            // uint8 internal constant TOKEN_LEAF_SALT = 1;
+            U8::from(1).to_be_bytes_vec(),
+            token_leaves[0].token.abi_encode_packed(),
+            token_leaves[0].cumulativeEarnings.abi_encode_packed(),
+        ]
+        .concat();
+        let earner_token_root = keccak256(encoded_token_leaf);
+
+        // Generate earner tree leaf
+        let earner_leaf = EarnerTreeMerkleLeaf {
+            earner: earner_address,
+            earnerTokenRoot: earner_token_root,
+        };
+        // Hash earner tree leaf to get root
+        let encoded_earner_leaf = [
+            // uint8 internal constant EARNER_LEAF_SALT = 0;
+            U8::from(0).to_be_bytes_vec(),
+            earner_leaf.earner.abi_encode_packed(),
+            earner_leaf.earnerTokenRoot.abi_encode_packed(),
+        ]
+        .concat();
+        let earner_tree_root = keccak256(encoded_earner_leaf);
+
+        // Fetch the next root index from contract
+        let distribution_roots_length_return = rewards_coordinator
+            .getDistributionRootsLength()
+            .call()
+            .await
+            .unwrap();
+        let getDistributionRootsLengthReturn {
+            _0: next_root_index,
+        } = distribution_roots_length_return;
+        // Construct the claim
+        let claim = RewardsMerkleClaim {
+            rootIndex: next_root_index.try_into().unwrap(),
+            earnerIndex: 0,
+            // Empty proof because leaf == root
+            earnerTreeProof: vec![].into(),
+            earnerLeaf: earner_leaf,
+            tokenIndices: vec![0],
+            tokenTreeProofs: vec![
+                // Empty proof because leaf == root
+                vec![].into(),
+            ],
+            tokenLeaves: token_leaves,
+        };
+
+        let root = earner_tree_root;
+
+        let activation_delay = 0;
+        let set_activation_delay = rewards_coordinator
+            .setActivationDelay(activation_delay)
+            .send()
+            .await
+            .unwrap();
+
+        let receipt = set_activation_delay.get_receipt().await.unwrap();
+        assert!(receipt.status());
+
+        let rewards_updater = ANVIL_FIRST_ADDRESS;
+        let set_rewards_updater_tx = rewards_coordinator
+            .setRewardsUpdater(rewards_updater)
+            .send()
+            .await
+            .unwrap();
+        let receipt = set_rewards_updater_tx.get_receipt().await.unwrap();
+        assert!(receipt.status());
+
+        // Fetch the current timestamp to increase it
+        let curr_rewards_calculation_end_timestamp_return = rewards_coordinator
+            .currRewardsCalculationEndTimestamp()
+            .call()
+            .await
+            .unwrap();
+        let IRewardsCoordinator::currRewardsCalculationEndTimestampReturn {
+            _0: curr_rewards_calculation_end_timestamp,
+        } = curr_rewards_calculation_end_timestamp_return;
+
+        let submit_tx = rewards_coordinator
+            .submitRoot(root, curr_rewards_calculation_end_timestamp + 1)
+            .send()
+            .await
+            .unwrap();
+        let submit_status = submit_tx.get_receipt().await.unwrap().status();
+        assert!(submit_status);
+
+        (root, claim)
+    }
+
+    #[tokio::test]
+    async fn test_process_claim() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let private_key = ANVIL_FIRST_PRIVATE_KEY.to_string();
+        let el_chain_writer =
+            new_test_writer_with_private_key(http_endpoint.to_string(), private_key).await;
+        let earnings = U256::from(42);
+        let (_root, claim) = new_claim(&http_endpoint, earnings).await;
+        let earner = ANVIL_FIRST_ADDRESS;
+        let tx_hash = el_chain_writer.process_claim(earner, claim).await.unwrap();
 
         let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
         assert!(receipt.status());
