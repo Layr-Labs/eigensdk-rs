@@ -250,6 +250,78 @@ impl ELChainWriter {
         let tx = process_claim_call.send().await?;
         Ok(*tx.tx_hash())
     }
+
+    /// Set Operator Avs Split
+    /// Sets the split for a specific operator for a specific avs
+    /// Only callable by the operator
+    /// Split has to be between 0 and 10000 bips (inclusive)
+    /// The split will be activated after the activation delay
+    ///
+    /// # Arguments
+    ///
+    /// * `operator` - The operator who is setting the split
+    /// * `avs` - The avs for which the split is being set by the operator.
+    /// * `split` - The split for the operator for the specific avs in bips.
+    ///
+    /// # Returns
+    ///
+    /// * `Result<FixedBytes<32>, ElContractsError>` - The transaction hash if the claim is sent, otherwise an error.
+    ///
+    /// # Errors
+    ///
+    /// * `ElContractsError` - if the call to the contract fails.
+    pub async fn set_operator_avs_split(
+        &self,
+        operator: Address,
+        avs: Address,
+        split: u16,
+    ) -> Result<FixedBytes<32>, ElContractsError> {
+        let provider = get_signer(&self.signer, &self.provider);
+
+        let contract_rewards_coordinator =
+            IRewardsCoordinator::new(self.rewards_coordinator, &provider);
+
+        let set_operator_avs_split_call =
+            contract_rewards_coordinator.setOperatorAVSSplit(operator, avs, split);
+
+        let tx = set_operator_avs_split_call.send().await?;
+        Ok(*tx.tx_hash())
+    }
+
+    /// Set Operator PI Split
+    /// Sets the split for a specific operator for Programmatic Incentives.
+    /// Only callable by the operator
+    /// Split has to be between 0 and 10000 bips (inclusive)
+    /// The split will be activated after the activation delay
+    ///
+    /// # Arguments
+    ///
+    /// * `operator` - The operator on behalf of which the split is being set.
+    /// * `split` - The split for the operator for Programmatic Incentives in bips.
+    ///
+    /// # Returns
+    ///
+    /// * `Result<FixedBytes<32>, ElContractsError>` - The transaction hash if the claim is sent, otherwise an error.
+    ///
+    /// # Errors
+    ///
+    /// * `ElContractsError` - if the call to the contract fails.
+    pub async fn set_operator_pi_split(
+        &self,
+        operator: Address,
+        split: u16,
+    ) -> Result<FixedBytes<32>, ElContractsError> {
+        let provider = get_signer(&self.signer, &self.provider);
+
+        let contract_rewards_coordinator =
+            IRewardsCoordinator::new(self.rewards_coordinator, &provider);
+
+        let set_operator_pi_split_call =
+            contract_rewards_coordinator.setOperatorPISplit(operator, split);
+
+        let tx = set_operator_pi_split_call.send().await?;
+        Ok(*tx.tx_hash())
+    }
 }
 
 #[cfg(test)]
@@ -520,6 +592,38 @@ mod tests {
             .await
             .unwrap();
 
+        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+        assert!(receipt.status());
+    }
+
+    #[tokio::test]
+    #[serial]
+    async fn test_set_operator_avs_split() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let http_endpoint = "http://localhost:8545".to_string();
+        let el_chain_writer = new_test_writer(http_endpoint.clone()).await;
+        let operator = address!("90f79bf6eb2c4f870365e785982e1f101e93b906"); // derived from  test private key in new_test_writer
+        let avs = get_service_manager_address(http_endpoint.clone()).await;
+        let split = 1000;
+        let tx_hash = el_chain_writer
+            .set_operator_avs_split(operator, avs, split)
+            .await
+            .unwrap();
+        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+        assert!(receipt.status());
+    }
+
+    #[tokio::test]
+    #[serial]
+    async fn test_set_operator_pi_split() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let el_chain_writer = new_test_writer(http_endpoint.clone()).await;
+        let operator = address!("90f79bf6eb2c4f870365e785982e1f101e93b906"); // derived from  test private key in new_test_writer
+        let split = 1000;
+        let tx_hash = el_chain_writer
+            .set_operator_pi_split(operator, split)
+            .await
+            .unwrap();
         let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
         assert!(receipt.status());
     }

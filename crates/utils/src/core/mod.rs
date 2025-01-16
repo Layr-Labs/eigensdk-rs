@@ -13,5 +13,6 @@ pub mod ieigenpodmanager;
 pub mod irewardscoordinator;
 pub mod islasher;
 pub mod istrategy;
+pub mod rewardscoordinator;
 pub mod slasher;
 pub mod strategymanager;
