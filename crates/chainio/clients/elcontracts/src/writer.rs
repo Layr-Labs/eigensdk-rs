@@ -263,7 +263,7 @@ mod tests {
     use eigen_common::get_provider;
     use eigen_logging::get_test_logger;
     use eigen_testing_utils::{
-        anvil::start_anvil_container,
+        anvil::{set_account_balance, start_anvil_container},
         anvil_constants::{
             self, get_delegation_manager_address, get_erc20_mock_strategy,
             get_rewards_coordinator_address, get_service_manager_address,
@@ -282,6 +282,12 @@ mod tests {
     };
     use serial_test::serial;
     use std::str::FromStr;
+
+    /// Address of an unregistered account in EigenLayer. Used for testing the operator registration.
+    pub const UNREGISTERED_ACCOUNT_ADDRESS: &str = "0x480EbE61a1881D1732ec47A8f6778fCC4Ee820dF";
+    /// Private key of an unregistered account in EigenLayer. Used for testing the operator registration.
+    pub const UNREGISTERED_ACCOUNT_PRIVATE_KEY: &str =
+        "98540e7b77adc6201562c7591cb3b9c203b8e270bbd3b8a49f96c54042c44c3b";
 
     /// Returns a new instance of ELChainWriter and the address of the delegation manager contract
     ///
@@ -327,10 +333,11 @@ mod tests {
         )
     }
 
-    async fn new_test_writer(http_endpoint: String) -> ELChainWriter {
+    async fn new_test_writer(http_endpoint: String, private_key: Option<String>) -> ELChainWriter {
         let (el_chain_reader, _) = setup_el_chain_reader(http_endpoint.clone()).await;
-        let operator_private_key =
-            "7c852118294e51e653712a81e05800f419141751be58f605c371e15141b007a6".to_string();
+        let operator_private_key = private_key.unwrap_or(
+            "7c852118294e51e653712a81e05800f419141751be58f605c371e15141b007a6".to_string(),
+        );
         let strategy_manager = get_strategy_manager_address(http_endpoint.clone()).await;
         let rewards_coordinator = get_rewards_coordinator_address(http_endpoint.clone()).await;
 
@@ -384,8 +391,12 @@ mod tests {
     async fn test_register_and_update_operator() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
         let provider = get_provider(&http_endpoint);
+        // Use a different account since all funded accounts are already registered as operators
+        let private_key = Some(UNREGISTERED_ACCOUNT_PRIVATE_KEY.to_string());
+        let el_chain_writer = new_test_writer(http_endpoint.clone(), private_key).await;
 
-        let el_chain_writer = new_test_writer(http_endpoint.clone()).await;
+        // Fund the unregistered account
+        set_account_balance(&_container, UNREGISTERED_ACCOUNT_ADDRESS).await;
 
         // define an operator
         let wallet = PrivateKeySigner::from_str(
@@ -437,7 +448,9 @@ mod tests {
     #[serial]
     async fn test_deposit_erc20_into_strategy() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let el_chain_writer = new_test_writer(http_endpoint.clone()).await;
+        // Use default wallet
+        let private_key = None;
+        let el_chain_writer = new_test_writer(http_endpoint.clone(), private_key).await;
 
         let amount = U256::from_str("100").unwrap();
         let strategy_addr = get_erc20_mock_strategy(http_endpoint.clone()).await;
@@ -454,7 +467,9 @@ mod tests {
     #[serial]
     async fn test_set_claimer_for() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let el_chain_writer = new_test_writer(http_endpoint.clone()).await;
+        // Use default wallet
+        let private_key = None;
+        let el_chain_writer = new_test_writer(http_endpoint.clone(), private_key).await;
 
         let claimer = address!("5eb15C0992734B5e77c888D713b4FC67b3D679A2");
 
@@ -468,7 +483,9 @@ mod tests {
     #[serial]
     async fn test_process_claim() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let el_chain_writer = new_test_writer(http_endpoint.clone()).await;
+        // Use default wallet
+        let private_key = None;
+        let el_chain_writer = new_test_writer(http_endpoint.clone(), private_key).await;
 
         let earner_address = address!("5eb15C0992734B5e77c888D713b4FC67b3D679A2");
         let claim = RewardsMerkleClaim {
