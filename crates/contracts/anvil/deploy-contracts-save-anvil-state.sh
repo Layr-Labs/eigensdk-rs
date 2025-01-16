@@ -40,30 +40,33 @@ CHAIN_ID=$(cast chain-id)
 
 # DEPLOY CONTRACT REGISTRY
 cd $root_dir/contracts
-forge create src/ContractsRegistry.sol:ContractsRegistry --rpc-url $ETH_HTTP_URL --private-key $DEPLOYER_PRIVATE_KEY
+forge create src/ContractsRegistry.sol:ContractsRegistry --rpc-url $ETH_HTTP_URL --private-key $DEPLOYER_PRIVATE_KEY --broadcast
+
 
 # DEPLOY EIGENLAYER
 EIGEN_CONTRACTS_DIR=$root_dir/contracts/lib/eigenlayer-middleware/lib/eigenlayer-contracts
 DEVNET_OUTPUT_DIR=$EIGEN_CONTRACTS_DIR/script/output/devnet
 # deployment overwrites this file, so we save it as backup, because we want that output in our local files, and not in the eigenlayer-contracts submodule files
-mv $DEVNET_OUTPUT_DIR/M2_from_scratch_deployment_data.json $DEVNET_OUTPUT_DIR/M2_from_scratch_deployment_data.json.bak
+# mv $DEVNET_OUTPUT_DIR/M2_from_scratch_deployment_data.json $DEVNET_OUTPUT_DIR/M2_from_scratch_deployment_data.json.bak
 cd $EIGEN_CONTRACTS_DIR
-forge script script/deploy/devnet/M2_Deploy_From_Scratch.s.sol --rpc-url $ETH_HTTP_URL \
+
+forge script script/deploy/local/Deploy_From_Scratch.s.sol:DeployFromScratch --rpc-url $ETH_HTTP_URL \
     --private-key $DEPLOYER_PRIVATE_KEY --broadcast \
-    --sig "run(string memory configFileName)" -- M2_deploy_from_scratch.anvil.config.json
-mv $DEVNET_OUTPUT_DIR/M2_from_scratch_deployment_data.json $root_dir/contracts/script/output/${CHAIN_ID:?}/eigenlayer_deployment_output.json
-mv $DEVNET_OUTPUT_DIR/M2_from_scratch_deployment_data.json.bak $DEVNET_OUTPUT_DIR/M2_from_scratch_deployment_data.json
+    --sig "run(string memory configFileName)" -- local/deploy_from_scratch.anvil.config.json
+mv $DEVNET_OUTPUT_DIR/local_from_scratch_deployment_data.json $root_dir/contracts/script/output/${CHAIN_ID:?}/eigenlayer_deployment_output.json
+# mv $DEVNET_OUTPUT_DIR/M2_from_scratch_deployment_data.json.bak $DEVNET_OUTPUT_DIR/M2_from_scratch_deployment_data.json
+
 
 # DEPLOY MOCKAVS
 cd $root_dir/contracts
-forge script script/DeployMockAvs.s.sol --rpc-url $ETH_HTTP_URL --private-key $DEPLOYER_PRIVATE_KEY --broadcast
+forge script script/DeployMockAvs.s.sol --rpc-url $ETH_HTTP_URL --private-key $DEPLOYER_PRIVATE_KEY --broadcast --slow
 
 # DEPLOY TOKENS AND STRATEGIES
 cd $root_dir/contracts
 # DO NOT REMOVE THE SLOW DIRECTIVE FROM THIS SCRIPT INVOCATION
 # slow ensures that the transaction reciept is successful and recieved before sending the next transaction
 # this should prevent the strategies deploying/registering in a flakey manner,
-forge script script/DeployTokensStrategiesCreateQuorums.s.sol --rpc-url $ETH_HTTP_URL --private-key $DEPLOYER_PRIVATE_KEY --broadcast --slow
+forge script script/DeployTokensStrategiesCreateQuorums.s.sol --rpc-url $ETH_HTTP_URL --private-key $DEPLOYER_PRIVATE_KEY --broadcast --slow -vvvvv
 
 # REGISTER OPERATORS WITH EIGENLAYER
 cd $root_dir/contracts
