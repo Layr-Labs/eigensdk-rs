@@ -339,7 +339,7 @@ mod tests {
         anvil_constants::{
             self, get_delegation_manager_address, get_erc20_mock_strategy,
             get_rewards_coordinator_address, get_service_manager_address,
-            get_strategy_manager_address, ANVIL_FIRST_ADDRESS,
+            get_strategy_manager_address, ANVIL_FIRST_ADDRESS, ANVIL_FIRST_PRIVATE_KEY,
         },
         transaction::wait_transaction,
     };
@@ -347,7 +347,10 @@ mod tests {
     use eigen_utils::{
         core::{
             delegationmanager::DelegationManager,
-            irewardscoordinator::IRewardsCoordinator::{EarnerTreeMerkleLeaf, RewardsMerkleClaim},
+            irewardscoordinator::IRewardsCoordinator::{
+                self, getDistributionRootsLengthReturn, EarnerTreeMerkleLeaf, RewardsMerkleClaim,
+                TokenTreeMerkleLeaf,
+            },
         },
         sdk::{
             contractsregistry::ContractsRegistry::{self, get_test_valuesReturn},
