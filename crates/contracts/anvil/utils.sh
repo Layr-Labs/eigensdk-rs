@@ -21,6 +21,7 @@ clean_up() {
 trap 'clean_up $LINENO "$BASH_COMMAND"' ERR
 
 # start_anvil_docker $LOAD_STATE_FILE $DUMP_STATE_FILE
+# this function will also take care of stopping the anvil container when the script exits
 start_anvil_docker() {
     LOAD_STATE_FILE=$1
     DUMP_STATE_FILE=$2
