@@ -9,8 +9,9 @@ import {IDelegationManager} from "eigenlayer-contracts/src/contracts/interfaces/
 import {IStrategyManager, IStrategy} from "eigenlayer-contracts/src/contracts/interfaces/IStrategyManager.sol";
 import {ISlasher} from "eigenlayer-contracts/src/contracts/interfaces/ISlasher.sol";
 import "eigenlayer-contracts/src/test/mocks/EmptyContract.sol";
-
+import {SocketRegistry} from "eigenlayer-middleware/src/SocketRegistry.sol";
 import "eigenlayer-middleware/src/RegistryCoordinator.sol" as blsregcoord;
+// import {ISocketRegistry} from "eigenlayer-middleware/src/interfaces/ISocketRegistry.sol";
 import {IServiceManager} from "eigenlayer-middleware/src/interfaces/IServiceManager.sol";
 import {IBLSApkRegistry, IIndexRegistry, IStakeRegistry} from "eigenlayer-middleware/src/RegistryCoordinator.sol";
 import {BLSApkRegistry} from "eigenlayer-middleware/src/BLSApkRegistry.sol";
@@ -153,12 +154,14 @@ contract DeployMockAvsRegistries is
                 address(stakeRegistryImplementation)
             );
         }
+        address socketRegistry  = address(new SocketRegistry(registryCoordinator));
 
         registryCoordinatorImplementation = new blsregcoord.RegistryCoordinator(
             blsregcoord.IServiceManager(address(mockAvsServiceManager)),
             blsregcoord.IStakeRegistry(address(stakeRegistry)),
             blsregcoord.IBLSApkRegistry(address(blsApkRegistry)),
-            blsregcoord.IIndexRegistry(address(indexRegistry))
+            blsregcoord.IIndexRegistry(address(indexRegistry)),
+            blsregcoord.ISocketRegistry(socketRegistry)
         );
 
         {
