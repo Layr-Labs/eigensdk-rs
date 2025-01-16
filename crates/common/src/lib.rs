@@ -12,11 +12,17 @@ use alloy_transport_http::{Client, Http};
 use std::str::FromStr;
 use url::Url;
 
-#[allow(clippy::type_complexity)]
-pub fn get_signer(
-    key: &str,
-    rpc_url: &str,
-) -> alloy_provider::fillers::FillProvider<
+pub type SdkProvider = FillProvider<
+    JoinFill<
+        Identity,
+        JoinFill<GasFiller, JoinFill<BlobGasFiller, JoinFill<NonceFiller, ChainIdFiller>>>,
+    >,
+    RootProvider<Http<Client>>,
+    Http<Client>,
+    Ethereum,
+>;
+
+pub type SdkSigner = alloy_provider::fillers::FillProvider<
     JoinFill<
         JoinFill<
             Identity,
@@ -27,7 +33,9 @@ pub fn get_signer(
     RootProvider<Http<Client>>,
     Http<Client>,
     Ethereum,
-> {
+>;
+
+pub fn get_signer(key: &str, rpc_url: &str) -> SdkSigner {
     let signer = PrivateKeySigner::from_str(key).expect("wrong key ");
     let wallet = EthereumWallet::from(signer);
     let url = Url::parse(rpc_url).expect("Wrong rpc url");
@@ -37,18 +45,7 @@ pub fn get_signer(
         .on_http(url)
 }
 
-#[allow(clippy::type_complexity)]
-pub fn get_provider(
-    rpc_url: &str,
-) -> FillProvider<
-    JoinFill<
-        Identity,
-        JoinFill<GasFiller, JoinFill<BlobGasFiller, JoinFill<NonceFiller, ChainIdFiller>>>,
-    >,
-    RootProvider<Http<Client>>,
-    Http<Client>,
-    Ethereum,
-> {
+pub fn get_provider(rpc_url: &str) -> SdkProvider {
     let url = Url::parse(rpc_url).expect("Wrong rpc url");
     ProviderBuilder::new()
         .with_recommended_fillers()

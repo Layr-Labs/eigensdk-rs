@@ -1,10 +1,24 @@
 use crate::error::ElContractsError;
+use alloy::{
+    providers::Provider,
+    transports::http::{Client, Http},
+};
 use alloy_primitives::{Address, FixedBytes, U256};
-use eigen_common::get_provider;
+use eigen_common::{get_provider, SdkProvider};
 use eigen_logging::logger::SharedLogger;
-use eigen_utils::middleware::{
-    avsdirectory::AVSDirectory, delegationmanager::DelegationManager, erc20::ERC20,
-    islasher::ISlasher, istrategy::IStrategy,
+use eigen_utils::{
+    core::{
+        allocationmanager::AllocationManager::{self, OperatorSet},
+        avsdirectory::AVSDirectory,
+        delegationmanager::DelegationManager,
+        irewardscoordinator::{
+            IRewardsCoordinator,
+            IRewardsCoordinatorTypes::{DistributionRoot, RewardsMerkleClaim},
+        },
+        istrategy::IStrategy::{self, IStrategyInstance},
+        permissioncontroller::PermissionController,
+    },
+    middleware::ierc20::IERC20::{self, IERC20Instance},
 };
 
 #[derive(Debug, Clone)]
@@ -491,7 +505,7 @@ impl ELChainReader {
     ) -> Result<
         (
             IStrategyInstance<Http<Client>, SdkProvider>,
-            ERC20Instance<Http<Client>, SdkProvider>,
+            IERC20Instance<Http<Client>, SdkProvider>,
             Address,
         ),
         ElContractsError,
@@ -500,7 +514,7 @@ impl ELChainReader {
             .get_strategy_and_underlying_token(strategy_addr)
             .await?;
 
-        let token_contract = ERC20::new(underlying_token, contract_strategy.provider().to_owned());
+        let token_contract = IERC20::new(underlying_token, contract_strategy.provider().to_owned());
 
         Ok((contract_strategy, token_contract, underlying_token))
     }
@@ -1341,7 +1355,7 @@ impl ELChainReader {
 
 // TODO: move to types.rs?
 
-#[derive(Debug, Clone)]
+#[derive(Clone)]
 pub struct OperatorSetStakes {
     pub operator_set: OperatorSet,
     pub strategies: Vec<Address>,
@@ -1349,7 +1363,7 @@ pub struct OperatorSetStakes {
     pub slashable_stakes: Vec<Vec<U256>>,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Clone)]
 pub struct AllocationInfo {
     pub current_magnitude: U256,
     pub pending_diff: U256,

@@ -2568,7 +2568,6 @@ dependencies = [
  "alloy-primitives",
  "alloy-provider",
  "alloy-signer-local",
- "alloy-sol-types",
  "eigen-common",
  "eigen-crypto-bls",
  "eigen-logging",

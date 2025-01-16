@@ -436,6 +436,7 @@ mod tests {
     };
     use eigen_testing_utils::transaction::wait_transaction;
     use eigen_types::operator::Operator;
+    use eigen_utils::core::delegationmanager::DelegationManager;
     use std::str::FromStr;
     use std::time::{Duration, SystemTime, UNIX_EPOCH};
     use tokio::time::sleep;

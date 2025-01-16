@@ -10,6 +10,7 @@ pub mod integration_test {
     use eigen_client_avsregistry::{
         reader::AvsRegistryChainReader, writer::AvsRegistryChainWriter,
     };
+    use eigen_client_elcontracts::{reader::ELChainReader, writer::ELChainWriter};
     use eigen_common::{get_provider, get_signer};
     use eigen_crypto_bls::{
         convert_to_bls_checker_g1_point, convert_to_bls_checker_g2_point, BlsKeyPair,
@@ -32,12 +33,13 @@ pub mod integration_test {
         avs::TaskIndex,
         operator::{QuorumNum, QuorumThresholdPercentages},
     };
-    use eigen_utils::{
-        middleware::iblssignaturechecker::{
+    use eigen_utils::middleware::{
+        blsapkregistry::BLSApkRegistry,
+        iblssignaturechecker::{
             IBLSSignatureChecker::{self, NonSignerStakesAndSignature},
             BN254::G1Point,
         },
-        middleware::registrycoordinator::{
+        registrycoordinator::{
             IRegistryCoordinator::OperatorSetParam, IStakeRegistry::StrategyParams,
             RegistryCoordinator,
         },
