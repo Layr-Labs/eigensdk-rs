@@ -305,5 +305,9 @@ contract DeployMockAvsRegistries is
             "avsDirectory",
             address(eigenlayerContracts.avsDirectory)
         );
+        contractsRegistry.registerContract(
+            "rewardsCoordinator",
+            address(eigenlayerContracts.rewardsCoordinator)
+        );
     }
 }
