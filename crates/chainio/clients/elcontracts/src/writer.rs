@@ -344,11 +344,11 @@ mod tests {
     /// # Returns
     ///
     /// A new instance of ELChainWriter.
-    async fn new_test_writer(http_endpoint: String, private_key: Option<String>) -> ELChainWriter {
+    async fn new_test_writer_with_private_key(
+        http_endpoint: String,
+        private_key: String,
+    ) -> ELChainWriter {
         let (el_chain_reader, _) = setup_el_chain_reader(http_endpoint.clone()).await;
-        let operator_private_key = private_key.unwrap_or(
-            "7c852118294e51e653712a81e05800f419141751be58f605c371e15141b007a6".to_string(),
-        );
         let strategy_manager = get_strategy_manager_address(http_endpoint.clone()).await;
         let rewards_coordinator = get_rewards_coordinator_address(http_endpoint.clone()).await;
 
@@ -357,8 +357,14 @@ mod tests {
             rewards_coordinator,
             el_chain_reader,
             http_endpoint.clone(),
-            operator_private_key,
+            private_key,
         )
+    }
+
+    async fn new_test_writer(http_endpoint: String) -> ELChainWriter {
+        let private_key =
+            "7c852118294e51e653712a81e05800f419141751be58f605c371e15141b007a6".to_string();
+        new_test_writer_with_private_key(http_endpoint, private_key).await
     }
 
     #[tokio::test]
@@ -402,9 +408,11 @@ mod tests {
     async fn test_register_and_update_operator() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
         let provider = get_provider(&http_endpoint);
+
         // Use a different account since all funded accounts are already registered as operators
-        let private_key = Some(UNREGISTERED_ACCOUNT_PRIVATE_KEY.to_string());
-        let el_chain_writer = new_test_writer(http_endpoint.clone(), private_key).await;
+        let private_key = UNREGISTERED_ACCOUNT_PRIVATE_KEY.to_string();
+        let el_chain_writer =
+            new_test_writer_with_private_key(http_endpoint.clone(), private_key).await;
 
         // Fund the unregistered account
         set_account_balance(&_container, UNREGISTERED_ACCOUNT_ADDRESS).await;
@@ -459,9 +467,7 @@ mod tests {
     #[serial]
     async fn test_deposit_erc20_into_strategy() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        // Use default wallet
-        let private_key = None;
-        let el_chain_writer = new_test_writer(http_endpoint.clone(), private_key).await;
+        let el_chain_writer = new_test_writer(http_endpoint.clone()).await;
 
         let amount = U256::from_str("100").unwrap();
         let strategy_addr = get_erc20_mock_strategy(http_endpoint.clone()).await;
@@ -478,9 +484,7 @@ mod tests {
     #[serial]
     async fn test_set_claimer_for() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        // Use default wallet
-        let private_key = None;
-        let el_chain_writer = new_test_writer(http_endpoint.clone(), private_key).await;
+        let el_chain_writer = new_test_writer(http_endpoint.clone()).await;
 
         let claimer = address!("5eb15C0992734B5e77c888D713b4FC67b3D679A2");
 
@@ -494,9 +498,7 @@ mod tests {
     #[serial]
     async fn test_process_claim() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        // Use default wallet
-        let private_key = None;
-        let el_chain_writer = new_test_writer(http_endpoint.clone(), private_key).await;
+        let el_chain_writer = new_test_writer(http_endpoint.clone()).await;
 
         let earner_address = address!("5eb15C0992734B5e77c888D713b4FC67b3D679A2");
         let claim = RewardsMerkleClaim {
