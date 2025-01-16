@@ -3,11 +3,11 @@ use alloy_primitives::{Address, FixedBytes, U256};
 use eigen_common::get_provider;
 use eigen_logging::logger::SharedLogger;
 use eigen_types::operator::Operator;
-use eigen_utils::middleware::{
+use eigen_utils::core::islasher::ISlasher;
+use eigen_utils::core::{
     avsdirectory::AVSDirectory, delegationmanager::DelegationManager, erc20::ERC20,
-    islasher::ISlasher, istrategy::IStrategy,
+    istrategy::IStrategy, rewardscoordinator::RewardsCoordinator,
 };
-
 #[derive(Debug, Clone)]
 pub struct ELChainReader {
     _logger: SharedLogger,
@@ -383,6 +383,65 @@ impl ELChainReader {
         let DelegationManager::isOperatorReturn { _0: is_operator_is } = is_operator;
         Ok(is_operator_is)
     }
+
+    /// Get Operator Avs Split
+    ///
+    /// # Arguments
+    ///
+    /// * `operator` - The operator's address
+    /// * `avs` - The Avs 's address
+    ///
+    /// # Returns
+    ///
+    /// * `u16` - the split for the specific operator for the specific avs
+    ///
+    /// # Errors
+    ///
+    /// * `ElContractsError` - if the call to the contract fails
+    pub async fn get_operator_avs_split(
+        &self,
+        operator: Address,
+        avs: Address,
+    ) -> Result<u16, ElContractsError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_rewards_coordinator =
+            RewardsCoordinator::new(self.delegation_manager, provider);
+
+        Ok(contract_rewards_coordinator
+            .getOperatorAVSSplit(operator, avs)
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?
+            ._0)
+    }
+
+    /// Get Operator PI Split
+    ///
+    /// # Arguments
+    ///
+    /// * `operator` - The operator's address
+    ///
+    /// # Returns
+    ///
+    /// * `u16` - The split for a specific `operator` for Programmatic Incentives
+    ///
+    /// # Errors
+    ///
+    /// * `ElContractsError` - if the call to the contract fails
+    pub async fn get_operator_pi_split(&self, operator: Address) -> Result<u16, ElContractsError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_rewards_coordinator =
+            RewardsCoordinator::new(self.delegation_manager, provider);
+
+        Ok(contract_rewards_coordinator
+            .getOperatorPISplit(operator)
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?
+            ._0)
+    }
 }
 
 #[cfg(test)]
@@ -399,13 +458,13 @@ mod tests {
         },
     };
     use eigen_utils::{
-        deploy::mockavsservicemanager::MockAvsServiceManager,
-        middleware::{
+        core::{
             avsdirectory::AVSDirectory::{self, calculateOperatorAVSRegistrationDigestHashReturn},
             delegationmanager::DelegationManager::{
                 self, calculateDelegationApprovalDigestHashReturn,
             },
         },
+        sdk::mockavsservicemanager::MockAvsServiceManager,
     };
     use std::str::FromStr;
 
