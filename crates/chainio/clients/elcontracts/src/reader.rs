@@ -3,21 +3,22 @@ use alloy::{
     providers::Provider,
     transports::http::{Client, Http},
 };
-use alloy_primitives::{ruint::aliases::U256, Address, FixedBytes};
+use alloy_primitives::{Address, FixedBytes, U256};
+use eigen_common::{get_provider, SdkProvider};
 use eigen_logging::logger::SharedLogger;
 use eigen_utils::{
-    allocationmanager::AllocationManager::{self, OperatorSet},
-    avsdirectory::AVSDirectory,
-    delegationmanager::DelegationManager,
-    erc20::ERC20::{self, ERC20Instance},
-    get_provider,
-    irewardscoordinator::{
-        IRewardsCoordinator,
-        IRewardsCoordinatorTypes::{DistributionRoot, RewardsMerkleClaim},
+    core::{
+        allocationmanager::AllocationManager::{self, OperatorSet},
+        avsdirectory::AVSDirectory,
+        delegationmanager::DelegationManager,
+        irewardscoordinator::{
+            IRewardsCoordinator,
+            IRewardsCoordinatorTypes::{DistributionRoot, RewardsMerkleClaim},
+        },
+        istrategy::IStrategy::{self, IStrategyInstance},
+        permissioncontroller::PermissionController,
     },
-    istrategy::IStrategy::{self, IStrategyInstance},
-    permissioncontroller::PermissionController,
-    SdkProvider,
+    middleware::ierc20::IERC20::{self, IERC20Instance},
 };
 
 #[derive(Debug, Clone)]
@@ -504,7 +505,7 @@ impl ELChainReader {
     ) -> Result<
         (
             IStrategyInstance<Http<Client>, SdkProvider>,
-            ERC20Instance<Http<Client>, SdkProvider>,
+            IERC20Instance<Http<Client>, SdkProvider>,
             Address,
         ),
         ElContractsError,
@@ -513,7 +514,7 @@ impl ELChainReader {
             .get_strategy_and_underlying_token(strategy_addr)
             .await?;
 
-        let token_contract = ERC20::new(underlying_token, contract_strategy.provider().to_owned());
+        let token_contract = IERC20::new(underlying_token, contract_strategy.provider().to_owned());
 
         Ok((contract_strategy, token_contract, underlying_token))
     }
@@ -1354,7 +1355,7 @@ impl ELChainReader {
 
 // TODO: move to types.rs?
 
-#[derive(Debug, Clone)]
+#[derive(Clone)]
 pub struct OperatorSetStakes {
     pub operator_set: OperatorSet,
     pub strategies: Vec<Address>,
@@ -1362,7 +1363,7 @@ pub struct OperatorSetStakes {
     pub slashable_stakes: Vec<Vec<U256>>,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Clone)]
 pub struct AllocationInfo {
     pub current_magnitude: U256,
     pub pending_diff: U256,
@@ -1381,11 +1382,9 @@ mod tests {
     use eigen_testing_utils::{
         anvil::start_anvil_container, anvil_constants::get_delegation_manager_address,
     };
-    use eigen_utils::{
-        avsdirectory::AVSDirectory,
-        avsdirectory::AVSDirectory::calculateOperatorAVSRegistrationDigestHashReturn,
-        delegationmanager::DelegationManager,
-        delegationmanager::DelegationManager::calculateDelegationApprovalDigestHashReturn,
+    use eigen_utils::core::{
+        avsdirectory::AVSDirectory::{self, calculateOperatorAVSRegistrationDigestHashReturn},
+        delegationmanager::DelegationManager::{self, calculateDelegationApprovalDigestHashReturn},
     };
 
     #[tokio::test]

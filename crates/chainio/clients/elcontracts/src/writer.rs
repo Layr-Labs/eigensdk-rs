@@ -1,20 +1,24 @@
 use crate::error::ElContractsError;
 use crate::reader::ELChainReader;
-use alloy_primitives::{ruint::aliases::U256, Address, Bytes, FixedBytes, TxHash};
-use alloy_sol_types::SolValue;
+use alloy::primitives::{Address, Bytes, FixedBytes, TxHash, U256};
+use alloy::sol_types::SolValue;
+use eigen_common::get_signer;
 use eigen_crypto_bls::{
     alloy_g1_point_to_g1_affine, convert_to_g1_point, convert_to_g2_point, BlsKeyPair,
 };
 pub use eigen_types::operator::Operator;
 use eigen_utils::{
-    allocationmanager::{AllocationManager, IAllocationManagerTypes},
-    delegationmanager::DelegationManager,
-    erc20::ERC20,
-    get_signer,
-    irewardscoordinator::{IRewardsCoordinator, IRewardsCoordinatorTypes::RewardsMerkleClaim},
-    permissioncontroller::PermissionController,
-    registrycoordinator::{IBLSApkRegistry::PubkeyRegistrationParams, RegistryCoordinator},
-    strategymanager::StrategyManager,
+    core::{
+        allocationmanager::{AllocationManager, IAllocationManagerTypes},
+        delegationmanager::DelegationManager,
+        irewardscoordinator::{IRewardsCoordinator, IRewardsCoordinatorTypes::RewardsMerkleClaim},
+        permissioncontroller::PermissionController,
+        strategymanager::StrategyManager,
+    },
+    middleware::{
+        ierc20::IERC20,
+        registrycoordinator::{IBLSApkRegistry::PubkeyRegistrationParams, RegistryCoordinator},
+    },
 };
 use tracing::info;
 
@@ -181,7 +185,7 @@ impl ELChainWriter {
             .get_strategy_and_underlying_token(strategy_addr)
             .await?;
         let provider = get_signer(&self.signer.clone(), &self.provider);
-        let token_contract = ERC20::new(token_address, &provider);
+        let token_contract = IERC20::new(token_address, &provider);
 
         let contract_call = token_contract.approve(self.strategy_manager, amount);
 
@@ -730,6 +734,7 @@ mod tests {
     };
     use alloy::providers::Provider;
     use alloy_primitives::{address, aliases::U96, Address, U256};
+    use eigen_common::{get_provider, get_signer};
     use eigen_crypto_bls::BlsKeyPair;
     use eigen_testing_utils::{
         anvil::{mine_anvil_blocks, set_account_balance, start_anvil_container},
@@ -741,12 +746,11 @@ mod tests {
     };
     use eigen_types::operator::Operator;
     use eigen_utils::{
-        allocationmanager::{
+        core::allocationmanager::{
             AllocationManager::{self, OperatorSet},
             IAllocationManagerTypes,
         },
-        get_provider, get_signer,
-        registrycoordinator::{
+        middleware::registrycoordinator::{
             IRegistryCoordinator::OperatorSetParam, IStakeRegistry::StrategyParams,
             RegistryCoordinator,
         },

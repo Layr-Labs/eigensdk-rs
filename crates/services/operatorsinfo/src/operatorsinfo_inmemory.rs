@@ -3,6 +3,7 @@ use alloy::rpc::types::Filter;
 use alloy_primitives::{Address, FixedBytes};
 use async_trait::async_trait;
 use eigen_client_avsregistry::reader::AvsRegistryChainReader;
+use eigen_common::{get_ws_provider, NEW_PUBKEY_REGISTRATION_EVENT, OPERATOR_SOCKET_UPDATE};
 use eigen_crypto_bls::{
     alloy_registry_g1_point_to_g1_affine, alloy_registry_g2_point_to_g2_affine, BlsG1Point,
     BlsG2Point,
@@ -12,13 +13,11 @@ use eigen_types::operator::{
     operator_id_from_g1_pub_key, OperatorId, OperatorPubKeys, OperatorTypesError,
 };
 use eigen_utils::{
-    blsapkregistry::{
+    middleware::blsapkregistry::{
         BLSApkRegistry,
         BN254::{G1Point, G2Point},
     },
-    get_ws_provider,
-    registrycoordinator::RegistryCoordinator,
-    NEW_PUBKEY_REGISTRATION_EVENT, OPERATOR_SOCKET_UPDATE,
+    middleware::registrycoordinator::RegistryCoordinator,
 };
 use eyre::Result;
 use futures_util::StreamExt;
@@ -426,6 +425,7 @@ mod tests {
     use alloy_signer_local::PrivateKeySigner;
     use eigen_client_avsregistry::writer::AvsRegistryChainWriter;
     use eigen_client_elcontracts::{reader::ELChainReader, writer::ELChainWriter};
+    use eigen_common::get_provider;
     use eigen_crypto_bls::BlsKeyPair;
     use eigen_logging::get_test_logger;
     use eigen_testing_utils::anvil::start_anvil_container;
@@ -436,8 +436,7 @@ mod tests {
     };
     use eigen_testing_utils::transaction::wait_transaction;
     use eigen_types::operator::Operator;
-    use eigen_utils::delegationmanager::DelegationManager;
-    use eigen_utils::get_provider;
+    use eigen_utils::core::delegationmanager::DelegationManager;
     use std::str::FromStr;
     use std::time::{Duration, SystemTime, UNIX_EPOCH};
     use tokio::time::sleep;

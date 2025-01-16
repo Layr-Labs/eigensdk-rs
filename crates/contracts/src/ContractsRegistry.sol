@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.27;
+pragma solidity ^0.8.20;
 
 // ContractsRegistry store the address of all the contracts deployed for eigenlayer and avss
 // It is used for testing purpose only, so that we can retrieve the addresses without having to store them in a json file
@@ -20,5 +20,4 @@ contract ContractsRegistry {
         contractNames[contractCount] = name;
         contractCount++;
     }
-
 }

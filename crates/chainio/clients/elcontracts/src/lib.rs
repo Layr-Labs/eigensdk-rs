@@ -13,8 +13,9 @@ pub mod writer;
 #[cfg(test)]
 pub(crate) mod test_utils {
     use alloy::hex::FromHex;
+    use alloy::sol_types::SolValue;
     use alloy_primitives::{address, keccak256, Address, Bytes, FixedBytes, U256, U8};
-    use alloy_sol_types::SolValue;
+    use eigen_common::{get_provider, get_signer};
     use eigen_logging::get_test_logger;
     use eigen_testing_utils::anvil_constants::{
         get_allocation_manager_address, get_avs_directory_address, get_delegation_manager_address,
@@ -22,15 +23,16 @@ pub(crate) mod test_utils {
         get_strategy_manager_address,
     };
     use eigen_utils::{
-        delegationmanager::DelegationManager,
-        get_provider, get_signer,
-        irewardscoordinator::{
-            IRewardsCoordinator,
-            IRewardsCoordinatorTypes::{
-                EarnerTreeMerkleLeaf, RewardsMerkleClaim, TokenTreeMerkleLeaf,
+        core::{
+            delegationmanager::DelegationManager,
+            irewardscoordinator::{
+                IRewardsCoordinator,
+                IRewardsCoordinatorTypes::{
+                    EarnerTreeMerkleLeaf, RewardsMerkleClaim, TokenTreeMerkleLeaf,
+                },
             },
         },
-        mockerc20::MockERC20,
+        sdk::mockerc20::MockERC20,
     };
     use std::str::FromStr;
 
