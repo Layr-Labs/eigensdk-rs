@@ -1515,6 +1515,7 @@ struct SlashingParams { address operator; uint32 operatorSetId; address[] strate
         }
     };
     use alloy::contract as alloy_contract;
+    use AllocationManager::OperatorSet;
     /**Creates a new wrapper around an on-chain [`IAllocationManagerTypes`](self) contract instance.
 
 See the [wrapper's documentation](`IAllocationManagerTypesInstance`) for more details.*/
