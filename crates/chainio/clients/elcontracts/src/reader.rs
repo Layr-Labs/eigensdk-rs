@@ -2,7 +2,6 @@ use crate::error::ElContractsError;
 use alloy_primitives::{Address, FixedBytes, U256};
 use eigen_common::get_provider;
 use eigen_logging::logger::SharedLogger;
-use eigen_types::operator::Operator;
 use eigen_utils::middleware::{
     avsdirectory::AVSDirectory, delegationmanager::DelegationManager, erc20::ERC20,
     islasher::ISlasher, istrategy::IStrategy,
