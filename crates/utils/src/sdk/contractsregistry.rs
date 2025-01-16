@@ -209,9 +209,9 @@ pub mod ContractsRegistry {
         b"`\x80\x80`@R`\x046\x10\x15a\0\x12W_\x80\xFD[_5`\xE0\x1C\x90\x81c<\xA6\xBB\x92\x14a\x04\xE7WP\x80chB\x10\x9E\x14a\x04FW\x80c\x7F<,(\x14a\x02\x18W\x80c\x7F\xAF\xBB\xDD\x14a\x01\xC9W\x80c\x8768\x1A\x14a\x01\xACW\x80c\x8C[\x83\x85\x14a\x01KWc\xAC\xD5\xBA\xA2\x14a\0iW_\x80\xFD[4a\x01GW`\x806`\x03\x19\x01\x12a\x01GW`\x045g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x81\x11a\x01GWa\0\x9A\x906\x90`\x04\x01a\x06@V[`$5`@Q` \x81\x01\x90a\0\xC2\x81a\0\xB4\x85\x87\x86a\x06\x96V[\x03`\x1F\x19\x81\x01\x83R\x82a\x06\x1EV[Q\x90 _R`\x03` R`@_ Ta\x01GW`\x02\x90`@Q\x92a\0\xE5\x84a\x06\x02V[`D5\x84R` \x84\x01\x90`d5\x82R`@\x85\x01\x92\x83R`@Qa\x01'` \x82\x81\x80\x82\x01\x95\x80Q\x91\x82\x91\x01\x87^\x81\x01_\x83\x82\x01R\x03\x01`\x1F\x19\x81\x01\x83R\x82a\x06\x1EV[Q\x90 _R`\x03` R`@_ \x93Q\x84UQ`\x01\x84\x01UQ\x91\x01U_\x80\xF3[_\x80\xFD[4a\x01GW` 6`\x03\x19\x01\x12a\x01GW`\x045g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x81\x11a\x01GWa\x01~` \x916\x90`\x04\x01a\x06@V[\x81`@Q\x91\x80Q\x91\x82\x91\x01\x83^_\x90\x82\x01\x90\x81R\x81\x90\x03\x82\x01\x90 T`@Q`\x01`\x01`\xA0\x1B\x03\x90\x91\x16\x81R\xF3[4a\x01GW_6`\x03\x19\x01\x12a\x01GW` `\x02T`@Q\x90\x81R\xF3[4a\x01GW` 6`\x03\x19\x01\x12a\x01GW`\x045_R`\x03` R`@_ \x80Ta\x02\x14`\x02`\x01\x84\x01T\x93\x01T`@Q\x93\x84\x93\x84`@\x91\x94\x93\x92``\x82\x01\x95\x82R` \x82\x01R\x01RV[\x03\x90\xF3[4a\x01GW`@6`\x03\x19\x01\x12a\x01GW`\x045g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x81\x11a\x01GWa\x02I\x906\x90`\x04\x01a\x06@V[`$5`\x01`\x01`\xA0\x1B\x03\x81\x16\x90\x81\x90\x03a\x01GW`@Q\x82Q\x90` \x84\x01\x91\x80\x83\x83^_\x90\x82\x01\x90\x81R\x81\x90\x03` \x01\x90 T`\x01`\x01`\xA0\x1B\x03\x16a\x04\x01W` `@Q\x80\x92\x85Q\x80\x91\x83^\x81\x01_\x81R\x03\x01\x90 \x90k\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF`\xA0\x1B\x82T\x16\x17\x90U`\x02T_R`\x01` R`@_ \x81Qg\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x81\x11a\x03\xEDWa\x02\xE0\x82Ta\x05\xCAV[`\x1F\x81\x11a\x03\xA8W[P` \x92`\x1F\x82\x11`\x01\x14a\x03IW\x92\x81\x92\x93_\x92a\x03>W[PP\x81`\x01\x1B\x91_\x19\x90`\x03\x1B\x1C\x19\x16\x17\x90U[`\x02T_\x19\x81\x14a\x03*W`\x01\x01`\x02U\0[cNH{q`\xE0\x1B_R`\x11`\x04R`$_\xFD[\x01Q\x90P\x83\x80a\x03\x03V[`\x1F\x19\x82\x16\x93\x83_R\x80_ \x91_[\x86\x81\x10a\x03\x90WP\x83`\x01\x95\x96\x10a\x03xW[PPP\x81\x1B\x01\x90Ua\x03\x17V[\x01Q_\x19`\xF8\x84`\x03\x1B\x16\x1C\x19\x16\x90U\x83\x80\x80a\x03kV[\x91\x92` `\x01\x81\x92\x86\x85\x01Q\x81U\x01\x94\x01\x92\x01a\x03XV[\x82_R` _ `\x1F\x83\x01`\x05\x1C\x81\x01\x91` \x84\x10a\x03\xE3W[`\x1F\x01`\x05\x1C\x01\x90[\x81\x81\x10a\x03\xD8WPa\x02\xE9V[_\x81U`\x01\x01a\x03\xCBV[\x90\x91P\x81\x90a\x03\xC2V[cNH{q`\xE0\x1B_R`A`\x04R`$_\xFD[`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`\x1B`$\x82\x01R\x7Fcontract already registered\0\0\0\0\0`D\x82\x01R`d\x90\xFD[4a\x01GW`@6`\x03\x19\x01\x12a\x01GW`\x045g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x81\x11a\x01GWa\x04w\x906\x90`\x04\x01a\x06@V[`@Qa\x04\x90\x81a\0\xB4` \x82\x01\x94`$5\x90\x86a\x06\x96V[Q\x90 _R`\x03` R`@_ `@Qa\x04\xAA\x81a\x06\x02V[a\x02\x14`@\x83T\x92\x83\x81R`\x02`\x01\x86\x01T\x95\x86` \x84\x01R\x01T\x91\x82\x91\x01R`@Q\x93\x84\x93\x84`@\x91\x94\x93\x92``\x82\x01\x95\x82R` \x82\x01R\x01RV[4a\x01GW` 6`\x03\x19\x01\x12a\x01GW`\x045_R`\x01` R`@_ \x90_\x82T\x92a\x05\x14\x84a\x05\xCAV[\x90\x81\x84R` \x84\x01\x94`\x01\x81\x16\x90\x81_\x14a\x05\xADWP`\x01\x14a\x05mW[\x84`@\x85a\x05B\x81\x87\x03\x82a\x06\x1EV[\x81Q\x92\x83\x91` \x83RQ\x80\x91\x81` \x85\x01R\x84\x84\x01^_\x82\x82\x01\x84\x01R`\x1F\x01`\x1F\x19\x16\x81\x01\x03\x01\x90\xF3[_\x90\x81R` \x81 \x93\x92P\x90[\x80\x82\x10a\x05\x93WP\x90\x91P\x81\x01` \x01a\x05B\x82a\x052V[\x91\x92`\x01\x81` \x92T\x83\x85\x88\x01\x01R\x01\x91\x01\x90\x92\x91a\x05zV[`\xFF\x19\x16\x86RPP\x15\x15`\x05\x1B\x82\x01` \x01\x90Pa\x05B\x82a\x052V[\x90`\x01\x82\x81\x1C\x92\x16\x80\x15a\x05\xF8W[` \x83\x10\x14a\x05\xE4WV[cNH{q`\xE0\x1B_R`\"`\x04R`$_\xFD[\x91`\x7F\x16\x91a\x05\xD9V[``\x81\x01\x90\x81\x10g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x82\x11\x17a\x03\xEDW`@RV[\x90`\x1F\x80\x19\x91\x01\x16\x81\x01\x90\x81\x10g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x82\x11\x17a\x03\xEDW`@RV[\x81`\x1F\x82\x01\x12\x15a\x01GW\x805\x90g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x82\x11a\x03\xEDW`@Q\x92a\x06u`\x1F\x84\x01`\x1F\x19\x16` \x01\x85a\x06\x1EV[\x82\x84R` \x83\x83\x01\x01\x11a\x01GW\x81_\x92` \x80\x93\x01\x83\x86\x017\x83\x01\x01R\x90V[` \x92\x91\x90\x83\x91\x80Q\x92\x83\x91\x01\x82^\x01\x90\x81R\x01\x90V\xFE\xA2dipfsX\"\x12 \xC2\x0B.S[\x1B\xA4G\x1C~\x9E-\xF3\xEF\xEA\xBB\xFE\x17Zy\xD4\x85\xDCS{CL\xB4\xF8ia\xC2dsolcC\0\x08\x1B\x003",
     );
     /**Function with signature `anvil_test(bytes32)` and selector `0x7fafbbdd`.
-    ```solidity
-    function anvil_test(bytes32) external view returns (uint256 timestamp, uint256 block_number, int256 index);
-    ```*/
+```solidity
+function anvil_test(bytes32) external view returns (uint256 timestamp, uint256 block_number, int256 index);
+```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct anvil_testCall {
@@ -240,7 +240,9 @@ pub mod ContractsRegistry {
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::FixedBytes<32>,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -277,7 +279,9 @@ pub mod ContractsRegistry {
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -306,14 +310,18 @@ pub mod ContractsRegistry {
         #[automatically_derived]
         impl alloy_sol_types::SolCall for anvil_testCall {
             type Parameters<'a> = (alloy::sol_types::sol_data::FixedBytes<32>,);
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type Return = anvil_testReturn;
             type ReturnTuple<'a> = (
                 alloy::sol_types::sol_data::Uint<256>,
                 alloy::sol_types::sol_data::Uint<256>,
                 alloy::sol_types::sol_data::Int<256>,
             );
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "anvil_test(bytes32)";
             const SELECTOR: [u8; 4] = [127u8, 175u8, 187u8, 221u8];
             #[inline]
@@ -335,17 +343,17 @@ pub mod ContractsRegistry {
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
+                <Self::ReturnTuple<
+                    '_,
+                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
+                    .map(Into::into)
             }
         }
     };
     /**Function with signature `contractCount()` and selector `0x8736381a`.
-    ```solidity
-    function contractCount() external view returns (uint256);
-    ```*/
+```solidity
+function contractCount() external view returns (uint256);
+```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct contractCountCall {}
@@ -370,7 +378,9 @@ pub mod ContractsRegistry {
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -396,10 +406,14 @@ pub mod ContractsRegistry {
             #[doc(hidden)]
             type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (alloy::sol_types::private::primitives::aliases::U256,);
+            type UnderlyingRustTuple<'a> = (
+                alloy::sol_types::private::primitives::aliases::U256,
+            );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -424,10 +438,14 @@ pub mod ContractsRegistry {
         #[automatically_derived]
         impl alloy_sol_types::SolCall for contractCountCall {
             type Parameters<'a> = ();
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type Return = contractCountReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "contractCount()";
             const SELECTOR: [u8; 4] = [135u8, 54u8, 56u8, 26u8];
             #[inline]
@@ -445,17 +463,17 @@ pub mod ContractsRegistry {
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
+                <Self::ReturnTuple<
+                    '_,
+                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
+                    .map(Into::into)
             }
         }
     };
     /**Function with signature `contractNames(uint256)` and selector `0x3ca6bb92`.
-    ```solidity
-    function contractNames(uint256) external view returns (string memory);
-    ```*/
+```solidity
+function contractNames(uint256) external view returns (string memory);
+```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct contractNamesCall {
@@ -479,10 +497,14 @@ pub mod ContractsRegistry {
             #[doc(hidden)]
             type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (alloy::sol_types::private::primitives::aliases::U256,);
+            type UnderlyingRustTuple<'a> = (
+                alloy::sol_types::private::primitives::aliases::U256,
+            );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -511,7 +533,9 @@ pub mod ContractsRegistry {
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::String,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -536,10 +560,14 @@ pub mod ContractsRegistry {
         #[automatically_derived]
         impl alloy_sol_types::SolCall for contractNamesCall {
             type Parameters<'a> = (alloy::sol_types::sol_data::Uint<256>,);
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type Return = contractNamesReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::String,);
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "contractNames(uint256)";
             const SELECTOR: [u8; 4] = [60u8, 166u8, 187u8, 146u8];
             #[inline]
@@ -551,9 +579,9 @@ pub mod ContractsRegistry {
             #[inline]
             fn tokenize(&self) -> Self::Token<'_> {
                 (
-                    <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
-                        &self._0,
-                    ),
+                    <alloy::sol_types::sol_data::Uint<
+                        256,
+                    > as alloy_sol_types::SolType>::tokenize(&self._0),
                 )
             }
             #[inline]
@@ -561,17 +589,17 @@ pub mod ContractsRegistry {
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
+                <Self::ReturnTuple<
+                    '_,
+                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
+                    .map(Into::into)
             }
         }
     };
     /**Function with signature `contracts(string)` and selector `0x8c5b8385`.
-    ```solidity
-    function contracts(string memory) external view returns (address);
-    ```*/
+```solidity
+function contracts(string memory) external view returns (address);
+```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct contractsCall {
@@ -598,7 +626,9 @@ pub mod ContractsRegistry {
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::String,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -627,7 +657,9 @@ pub mod ContractsRegistry {
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -652,10 +684,14 @@ pub mod ContractsRegistry {
         #[automatically_derived]
         impl alloy_sol_types::SolCall for contractsCall {
             type Parameters<'a> = (alloy::sol_types::sol_data::String,);
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type Return = contractsReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Address,);
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "contracts(string)";
             const SELECTOR: [u8; 4] = [140u8, 91u8, 131u8, 133u8];
             #[inline]
@@ -677,17 +713,17 @@ pub mod ContractsRegistry {
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
+                <Self::ReturnTuple<
+                    '_,
+                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
+                    .map(Into::into)
             }
         }
     };
     /**Function with signature `get_test_values(string,int256)` and selector `0x6842109e`.
-    ```solidity
-    function get_test_values(string memory test_name, int256 index) external view returns (uint256, uint256, int256);
-    ```*/
+```solidity
+function get_test_values(string memory test_name, int256 index) external view returns (uint256, uint256, int256);
+```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct get_test_valuesCall {
@@ -723,7 +759,9 @@ pub mod ContractsRegistry {
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -763,7 +801,9 @@ pub mod ContractsRegistry {
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -772,14 +812,16 @@ pub mod ContractsRegistry {
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<get_test_valuesReturn> for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<get_test_valuesReturn>
+            for UnderlyingRustTuple<'_> {
                 fn from(value: get_test_valuesReturn) -> Self {
                     (value._0, value._1, value._2)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for get_test_valuesReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>>
+            for get_test_valuesReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {
                         _0: tuple.0,
@@ -795,14 +837,18 @@ pub mod ContractsRegistry {
                 alloy::sol_types::sol_data::String,
                 alloy::sol_types::sol_data::Int<256>,
             );
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type Return = get_test_valuesReturn;
             type ReturnTuple<'a> = (
                 alloy::sol_types::sol_data::Uint<256>,
                 alloy::sol_types::sol_data::Uint<256>,
                 alloy::sol_types::sol_data::Int<256>,
             );
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "get_test_values(string,int256)";
             const SELECTOR: [u8; 4] = [104u8, 66u8, 16u8, 158u8];
             #[inline]
@@ -817,9 +863,9 @@ pub mod ContractsRegistry {
                     <alloy::sol_types::sol_data::String as alloy_sol_types::SolType>::tokenize(
                         &self.test_name,
                     ),
-                    <alloy::sol_types::sol_data::Int<256> as alloy_sol_types::SolType>::tokenize(
-                        &self.index,
-                    ),
+                    <alloy::sol_types::sol_data::Int<
+                        256,
+                    > as alloy_sol_types::SolType>::tokenize(&self.index),
                 )
             }
             #[inline]
@@ -827,17 +873,17 @@ pub mod ContractsRegistry {
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
+                <Self::ReturnTuple<
+                    '_,
+                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
+                    .map(Into::into)
             }
         }
     };
     /**Function with signature `registerContract(string,address)` and selector `0x7f3c2c28`.
-    ```solidity
-    function registerContract(string memory name, address _contract) external;
-    ```*/
+```solidity
+function registerContract(string memory name, address _contract) external;
+```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct registerContractCall {
@@ -869,7 +915,9 @@ pub mod ContractsRegistry {
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -878,14 +926,16 @@ pub mod ContractsRegistry {
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<registerContractCall> for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<registerContractCall>
+            for UnderlyingRustTuple<'_> {
                 fn from(value: registerContractCall) -> Self {
                     (value.name, value._contract)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for registerContractCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>>
+            for registerContractCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {
                         name: tuple.0,
@@ -901,7 +951,9 @@ pub mod ContractsRegistry {
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -910,14 +962,16 @@ pub mod ContractsRegistry {
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<registerContractReturn> for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<registerContractReturn>
+            for UnderlyingRustTuple<'_> {
                 fn from(value: registerContractReturn) -> Self {
                     ()
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for registerContractReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>>
+            for registerContractReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
@@ -929,10 +983,14 @@ pub mod ContractsRegistry {
                 alloy::sol_types::sol_data::String,
                 alloy::sol_types::sol_data::Address,
             );
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type Return = registerContractReturn;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "registerContract(string,address)";
             const SELECTOR: [u8; 4] = [127u8, 60u8, 44u8, 40u8];
             #[inline]
@@ -957,17 +1015,17 @@ pub mod ContractsRegistry {
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
+                <Self::ReturnTuple<
+                    '_,
+                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
+                    .map(Into::into)
             }
         }
     };
     /**Function with signature `store_test(string,int256,uint256,uint256)` and selector `0xacd5baa2`.
-    ```solidity
-    function store_test(string memory test_name, int256 index, uint256 timestamp, uint256 block_number) external;
-    ```*/
+```solidity
+function store_test(string memory test_name, int256 index, uint256 timestamp, uint256 block_number) external;
+```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct store_testCall {
@@ -1005,7 +1063,9 @@ pub mod ContractsRegistry {
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1016,12 +1076,7 @@ pub mod ContractsRegistry {
             #[doc(hidden)]
             impl ::core::convert::From<store_testCall> for UnderlyingRustTuple<'_> {
                 fn from(value: store_testCall) -> Self {
-                    (
-                        value.test_name,
-                        value.index,
-                        value.timestamp,
-                        value.block_number,
-                    )
+                    (value.test_name, value.index, value.timestamp, value.block_number)
                 }
             }
             #[automatically_derived]
@@ -1044,7 +1099,9 @@ pub mod ContractsRegistry {
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1074,10 +1131,14 @@ pub mod ContractsRegistry {
                 alloy::sol_types::sol_data::Uint<256>,
                 alloy::sol_types::sol_data::Uint<256>,
             );
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type Return = store_testReturn;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "store_test(string,int256,uint256,uint256)";
             const SELECTOR: [u8; 4] = [172u8, 213u8, 186u8, 162u8];
             #[inline]
@@ -1092,15 +1153,15 @@ pub mod ContractsRegistry {
                     <alloy::sol_types::sol_data::String as alloy_sol_types::SolType>::tokenize(
                         &self.test_name,
                     ),
-                    <alloy::sol_types::sol_data::Int<256> as alloy_sol_types::SolType>::tokenize(
-                        &self.index,
-                    ),
-                    <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
-                        &self.timestamp,
-                    ),
-                    <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
-                        &self.block_number,
-                    ),
+                    <alloy::sol_types::sol_data::Int<
+                        256,
+                    > as alloy_sol_types::SolType>::tokenize(&self.index),
+                    <alloy::sol_types::sol_data::Uint<
+                        256,
+                    > as alloy_sol_types::SolType>::tokenize(&self.timestamp),
+                    <alloy::sol_types::sol_data::Uint<
+                        256,
+                    > as alloy_sol_types::SolType>::tokenize(&self.block_number),
                 )
             }
             #[inline]
@@ -1108,10 +1169,10 @@ pub mod ContractsRegistry {
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
+                <Self::ReturnTuple<
+                    '_,
+                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
+                    .map(Into::into)
             }
         }
     };
@@ -1151,17 +1212,27 @@ pub mod ContractsRegistry {
         #[inline]
         fn selector(&self) -> [u8; 4] {
             match self {
-                Self::anvil_test(_) => <anvil_testCall as alloy_sol_types::SolCall>::SELECTOR,
-                Self::contractCount(_) => <contractCountCall as alloy_sol_types::SolCall>::SELECTOR,
-                Self::contractNames(_) => <contractNamesCall as alloy_sol_types::SolCall>::SELECTOR,
-                Self::contracts(_) => <contractsCall as alloy_sol_types::SolCall>::SELECTOR,
+                Self::anvil_test(_) => {
+                    <anvil_testCall as alloy_sol_types::SolCall>::SELECTOR
+                }
+                Self::contractCount(_) => {
+                    <contractCountCall as alloy_sol_types::SolCall>::SELECTOR
+                }
+                Self::contractNames(_) => {
+                    <contractNamesCall as alloy_sol_types::SolCall>::SELECTOR
+                }
+                Self::contracts(_) => {
+                    <contractsCall as alloy_sol_types::SolCall>::SELECTOR
+                }
                 Self::get_test_values(_) => {
                     <get_test_valuesCall as alloy_sol_types::SolCall>::SELECTOR
                 }
                 Self::registerContract(_) => {
                     <registerContractCall as alloy_sol_types::SolCall>::SELECTOR
                 }
-                Self::store_test(_) => <store_testCall as alloy_sol_types::SolCall>::SELECTOR,
+                Self::store_test(_) => {
+                    <store_testCall as alloy_sol_types::SolCall>::SELECTOR
+                }
             }
         }
         #[inline]
@@ -1182,17 +1253,17 @@ pub mod ContractsRegistry {
             static DECODE_SHIMS: &[fn(
                 &[u8],
                 bool,
-            )
-                -> alloy_sol_types::Result<ContractsRegistryCalls>] = &[
+            ) -> alloy_sol_types::Result<ContractsRegistryCalls>] = &[
                 {
                     fn contractNames(
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<ContractsRegistryCalls> {
                         <contractNamesCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                            data, validate,
-                        )
-                        .map(ContractsRegistryCalls::contractNames)
+                                data,
+                                validate,
+                            )
+                            .map(ContractsRegistryCalls::contractNames)
                     }
                     contractNames
                 },
@@ -1202,9 +1273,10 @@ pub mod ContractsRegistry {
                         validate: bool,
                     ) -> alloy_sol_types::Result<ContractsRegistryCalls> {
                         <get_test_valuesCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                            data, validate,
-                        )
-                        .map(ContractsRegistryCalls::get_test_values)
+                                data,
+                                validate,
+                            )
+                            .map(ContractsRegistryCalls::get_test_values)
                     }
                     get_test_values
                 },
@@ -1214,9 +1286,10 @@ pub mod ContractsRegistry {
                         validate: bool,
                     ) -> alloy_sol_types::Result<ContractsRegistryCalls> {
                         <registerContractCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                            data, validate,
-                        )
-                        .map(ContractsRegistryCalls::registerContract)
+                                data,
+                                validate,
+                            )
+                            .map(ContractsRegistryCalls::registerContract)
                     }
                     registerContract
                 },
@@ -1225,7 +1298,10 @@ pub mod ContractsRegistry {
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<ContractsRegistryCalls> {
-                        <anvil_testCall as alloy_sol_types::SolCall>::abi_decode_raw(data, validate)
+                        <anvil_testCall as alloy_sol_types::SolCall>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
                             .map(ContractsRegistryCalls::anvil_test)
                     }
                     anvil_test
@@ -1236,9 +1312,10 @@ pub mod ContractsRegistry {
                         validate: bool,
                     ) -> alloy_sol_types::Result<ContractsRegistryCalls> {
                         <contractCountCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                            data, validate,
-                        )
-                        .map(ContractsRegistryCalls::contractCount)
+                                data,
+                                validate,
+                            )
+                            .map(ContractsRegistryCalls::contractCount)
                     }
                     contractCount
                 },
@@ -1247,7 +1324,10 @@ pub mod ContractsRegistry {
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<ContractsRegistryCalls> {
-                        <contractsCall as alloy_sol_types::SolCall>::abi_decode_raw(data, validate)
+                        <contractsCall as alloy_sol_types::SolCall>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
                             .map(ContractsRegistryCalls::contracts)
                     }
                     contracts
@@ -1257,17 +1337,22 @@ pub mod ContractsRegistry {
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<ContractsRegistryCalls> {
-                        <store_testCall as alloy_sol_types::SolCall>::abi_decode_raw(data, validate)
+                        <store_testCall as alloy_sol_types::SolCall>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
                             .map(ContractsRegistryCalls::store_test)
                     }
                     store_test
                 },
             ];
             let Ok(idx) = Self::SELECTORS.binary_search(&selector) else {
-                return Err(alloy_sol_types::Error::unknown_selector(
-                    <Self as alloy_sol_types::SolInterface>::NAME,
-                    selector,
-                ));
+                return Err(
+                    alloy_sol_types::Error::unknown_selector(
+                        <Self as alloy_sol_types::SolInterface>::NAME,
+                        selector,
+                    ),
+                );
             };
             DECODE_SHIMS[idx](data, validate)
         }
@@ -1278,19 +1363,27 @@ pub mod ContractsRegistry {
                     <anvil_testCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
                 }
                 Self::contractCount(inner) => {
-                    <contractCountCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
+                    <contractCountCall as alloy_sol_types::SolCall>::abi_encoded_size(
+                        inner,
+                    )
                 }
                 Self::contractNames(inner) => {
-                    <contractNamesCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
+                    <contractNamesCall as alloy_sol_types::SolCall>::abi_encoded_size(
+                        inner,
+                    )
                 }
                 Self::contracts(inner) => {
                     <contractsCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
                 }
                 Self::get_test_values(inner) => {
-                    <get_test_valuesCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
+                    <get_test_valuesCall as alloy_sol_types::SolCall>::abi_encoded_size(
+                        inner,
+                    )
                 }
                 Self::registerContract(inner) => {
-                    <registerContractCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
+                    <registerContractCall as alloy_sol_types::SolCall>::abi_encoded_size(
+                        inner,
+                    )
                 }
                 Self::store_test(inner) => {
                     <store_testCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
@@ -1301,25 +1394,46 @@ pub mod ContractsRegistry {
         fn abi_encode_raw(&self, out: &mut alloy_sol_types::private::Vec<u8>) {
             match self {
                 Self::anvil_test(inner) => {
-                    <anvil_testCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
+                    <anvil_testCall as alloy_sol_types::SolCall>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
                 }
                 Self::contractCount(inner) => {
-                    <contractCountCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
+                    <contractCountCall as alloy_sol_types::SolCall>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
                 }
                 Self::contractNames(inner) => {
-                    <contractNamesCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
+                    <contractNamesCall as alloy_sol_types::SolCall>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
                 }
                 Self::contracts(inner) => {
-                    <contractsCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
+                    <contractsCall as alloy_sol_types::SolCall>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
                 }
                 Self::get_test_values(inner) => {
-                    <get_test_valuesCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
+                    <get_test_valuesCall as alloy_sol_types::SolCall>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
                 }
                 Self::registerContract(inner) => {
-                    <registerContractCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
+                    <registerContractCall as alloy_sol_types::SolCall>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
                 }
                 Self::store_test(inner) => {
-                    <store_testCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
+                    <store_testCall as alloy_sol_types::SolCall>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
                 }
             }
         }
@@ -1327,7 +1441,7 @@ pub mod ContractsRegistry {
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`ContractsRegistry`](self) contract instance.
 
-    See the [wrapper's documentation](`ContractsRegistryInstance`) for more details.*/
+See the [wrapper's documentation](`ContractsRegistryInstance`) for more details.*/
     #[inline]
     pub const fn new<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -1341,9 +1455,9 @@ pub mod ContractsRegistry {
     }
     /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-    Returns a new instance of the contract, if the deployment was successful.
+Returns a new instance of the contract, if the deployment was successful.
 
-    For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
     #[inline]
     pub fn deploy<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -1351,36 +1465,35 @@ pub mod ContractsRegistry {
         N: alloy_contract::private::Network,
     >(
         provider: P,
-    ) -> impl ::core::future::Future<Output = alloy_contract::Result<ContractsRegistryInstance<T, P, N>>>
-    {
+    ) -> impl ::core::future::Future<
+        Output = alloy_contract::Result<ContractsRegistryInstance<T, P, N>>,
+    > {
         ContractsRegistryInstance::<T, P, N>::deploy(provider)
     }
     /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-    and constructor arguments, if any.
+and constructor arguments, if any.
 
-    This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-    the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     #[inline]
     pub fn deploy_builder<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
         P: alloy_contract::private::Provider<T, N>,
         N: alloy_contract::private::Network,
-    >(
-        provider: P,
-    ) -> alloy_contract::RawCallBuilder<T, P, N> {
+    >(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
         ContractsRegistryInstance::<T, P, N>::deploy_builder(provider)
     }
     /**A [`ContractsRegistry`](self) instance.
 
-    Contains type-safe methods for interacting with an on-chain instance of the
-    [`ContractsRegistry`](self) contract located at a given `address`, using a given
-    provider `P`.
+Contains type-safe methods for interacting with an on-chain instance of the
+[`ContractsRegistry`](self) contract located at a given `address`, using a given
+provider `P`.
 
-    If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
-    documentation on how to provide it), the `deploy` and `deploy_builder` methods can
-    be used to deploy a new instance of the contract.
+If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
+documentation on how to provide it), the `deploy` and `deploy_builder` methods can
+be used to deploy a new instance of the contract.
 
-    See the [module-level documentation](self) for all the available methods.*/
+See the [module-level documentation](self) for all the available methods.*/
     #[derive(Clone)]
     pub struct ContractsRegistryInstance<T, P, N = alloy_contract::private::Ethereum> {
         address: alloy_sol_types::private::Address,
@@ -1391,24 +1504,24 @@ pub mod ContractsRegistry {
     impl<T, P, N> ::core::fmt::Debug for ContractsRegistryInstance<T, P, N> {
         #[inline]
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-            f.debug_tuple("ContractsRegistryInstance")
-                .field(&self.address)
-                .finish()
+            f.debug_tuple("ContractsRegistryInstance").field(&self.address).finish()
         }
     }
     /// Instantiation and getters/setters.
     #[automatically_derived]
     impl<
-            T: alloy_contract::private::Transport + ::core::clone::Clone,
-            P: alloy_contract::private::Provider<T, N>,
-            N: alloy_contract::private::Network,
-        > ContractsRegistryInstance<T, P, N>
-    {
+        T: alloy_contract::private::Transport + ::core::clone::Clone,
+        P: alloy_contract::private::Provider<T, N>,
+        N: alloy_contract::private::Network,
+    > ContractsRegistryInstance<T, P, N> {
         /**Creates a new wrapper around an on-chain [`ContractsRegistry`](self) contract instance.
 
-        See the [wrapper's documentation](`ContractsRegistryInstance`) for more details.*/
+See the [wrapper's documentation](`ContractsRegistryInstance`) for more details.*/
         #[inline]
-        pub const fn new(address: alloy_sol_types::private::Address, provider: P) -> Self {
+        pub const fn new(
+            address: alloy_sol_types::private::Address,
+            provider: P,
+        ) -> Self {
             Self {
                 address,
                 provider,
@@ -1417,9 +1530,9 @@ pub mod ContractsRegistry {
         }
         /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-        Returns a new instance of the contract, if the deployment was successful.
+Returns a new instance of the contract, if the deployment was successful.
 
-        For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
         #[inline]
         pub async fn deploy(
             provider: P,
@@ -1429,10 +1542,10 @@ pub mod ContractsRegistry {
             Ok(Self::new(contract_address, call_builder.provider))
         }
         /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-        and constructor arguments, if any.
+and constructor arguments, if any.
 
-        This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-        the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         #[inline]
         pub fn deploy_builder(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
             alloy_contract::RawCallBuilder::new_raw_deploy(
@@ -1475,11 +1588,10 @@ pub mod ContractsRegistry {
     /// Function calls.
     #[automatically_derived]
     impl<
-            T: alloy_contract::private::Transport + ::core::clone::Clone,
-            P: alloy_contract::private::Provider<T, N>,
-            N: alloy_contract::private::Network,
-        > ContractsRegistryInstance<T, P, N>
-    {
+        T: alloy_contract::private::Transport + ::core::clone::Clone,
+        P: alloy_contract::private::Provider<T, N>,
+        N: alloy_contract::private::Network,
+    > ContractsRegistryInstance<T, P, N> {
         /// Creates a new call builder using this contract instance's provider and address.
         ///
         /// Note that the call can be any function call, not just those defined in this
@@ -1498,7 +1610,9 @@ pub mod ContractsRegistry {
             self.call_builder(&anvil_testCall { _0 })
         }
         ///Creates a new call builder for the [`contractCount`] function.
-        pub fn contractCount(&self) -> alloy_contract::SolCallBuilder<T, &P, contractCountCall, N> {
+        pub fn contractCount(
+            &self,
+        ) -> alloy_contract::SolCallBuilder<T, &P, contractCountCall, N> {
             self.call_builder(&contractCountCall {})
         }
         ///Creates a new call builder for the [`contractNames`] function.
@@ -1521,7 +1635,12 @@ pub mod ContractsRegistry {
             test_name: alloy::sol_types::private::String,
             index: alloy::sol_types::private::primitives::aliases::I256,
         ) -> alloy_contract::SolCallBuilder<T, &P, get_test_valuesCall, N> {
-            self.call_builder(&get_test_valuesCall { test_name, index })
+            self.call_builder(
+                &get_test_valuesCall {
+                    test_name,
+                    index,
+                },
+            )
         }
         ///Creates a new call builder for the [`registerContract`] function.
         pub fn registerContract(
@@ -1529,7 +1648,12 @@ pub mod ContractsRegistry {
             name: alloy::sol_types::private::String,
             _contract: alloy::sol_types::private::Address,
         ) -> alloy_contract::SolCallBuilder<T, &P, registerContractCall, N> {
-            self.call_builder(&registerContractCall { name, _contract })
+            self.call_builder(
+                &registerContractCall {
+                    name,
+                    _contract,
+                },
+            )
         }
         ///Creates a new call builder for the [`store_test`] function.
         pub fn store_test(
@@ -1539,22 +1663,23 @@ pub mod ContractsRegistry {
             timestamp: alloy::sol_types::private::primitives::aliases::U256,
             block_number: alloy::sol_types::private::primitives::aliases::U256,
         ) -> alloy_contract::SolCallBuilder<T, &P, store_testCall, N> {
-            self.call_builder(&store_testCall {
-                test_name,
-                index,
-                timestamp,
-                block_number,
-            })
+            self.call_builder(
+                &store_testCall {
+                    test_name,
+                    index,
+                    timestamp,
+                    block_number,
+                },
+            )
         }
     }
     /// Event filters.
     #[automatically_derived]
     impl<
-            T: alloy_contract::private::Transport + ::core::clone::Clone,
-            P: alloy_contract::private::Provider<T, N>,
-            N: alloy_contract::private::Network,
-        > ContractsRegistryInstance<T, P, N>
-    {
+        T: alloy_contract::private::Transport + ::core::clone::Clone,
+        P: alloy_contract::private::Provider<T, N>,
+        N: alloy_contract::private::Network,
+    > ContractsRegistryInstance<T, P, N> {
         /// Creates a new event filter using this contract instance's provider and address.
         ///
         /// Note that the type can be any event, not just those defined in this contract.

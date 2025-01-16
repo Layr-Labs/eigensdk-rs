@@ -52,7 +52,7 @@ MIDDLEWARE_CONTRACTS_ARGS:=$(patsubst %, --select '^%$$', $(shell echo $(MIDDLEW
 
 
 ### Core bindings ###
-CORE_CONTRACTS:="DelegationManager IRewardsCoordinator StrategyManager IEigenPod EigenPod IEigenPodManager EigenPodManager IStrategy AVSDirectory AllocationManager PermissionController"
+CORE_CONTRACTS:="DelegationManager IRewardsCoordinator StrategyManager IEigenPod EigenPod IEigenPodManager EigenPodManager IStrategy AVSDirectory AllocationManager PermissionController ERC20 Slasher ISlasher"
 CORE_CONTRACTS_LOCATION:=$(MIDDLEWARE_CONTRACTS_LOCATION)/lib/eigenlayer-contracts
 CORE_BINDINGS_PATH:=crates/utils/src/core
 # The echo is to remove quotes, and the patsubst to make the regex match the full text only

@@ -4,36 +4,10 @@
 //! Do not manually edit these files.
 //! These files may be overwritten by the codegen system at any time.
 pub mod blsapkregistry;
-pub mod blsapkregistryharness;
-pub mod blsapkregistrystorage;
-pub mod ecdsaservicemanagerbase;
-pub mod ecdsastakeregistry;
-pub mod ecdsastakeregistryequalweight;
-pub mod ecdsastakeregistryeventsanderrors;
-pub mod ecdsastakeregistrymock;
-pub mod ecdsastakeregistrypermissioned;
-pub mod ecdsastakeregistrystorage;
-pub mod iblsapkregistry;
-pub mod iblsapkregistryevents;
-pub mod iblssignaturechecker;
 pub mod ierc20;
-pub mod ierc20metadata;
-pub mod ierc20permit;
-pub mod iindexregistry;
-pub mod iindexregistryevents;
+pub mod iblssignaturechecker;
 pub mod indexregistry;
-pub mod indexregistrystorage;
-pub mod iregistrycoordinator;
-pub mod iservicemanagerbaseevents;
-pub mod istakeregistry;
-pub mod istakeregistryevents;
 pub mod operatorstateretriever;
 pub mod registrycoordinator;
-pub mod registrycoordinatormock;
-pub mod registrycoordinatorstorage;
 pub mod servicemanagerbase;
-pub mod servicemanagerbasestorage;
 pub mod stakeregistry;
-pub mod stakeregistryharness;
-pub mod stakeregistrymock;
-pub mod stakeregistrystorage;
