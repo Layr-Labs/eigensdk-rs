@@ -498,6 +498,8 @@ mod tests {
     }
 
     /// The claim can be submitted from [`ANVIL_FIRST_PRIVATE_KEY`]
+    /// This is taken from the slashing PR, it is slightly changed since
+    /// some chain reader functions are not available in this branch yet.
     pub async fn new_claim(
         http_endpoint: &str,
         cumulative_earnings: U256,
@@ -587,6 +589,8 @@ mod tests {
         let root = earner_tree_root;
 
         let activation_delay = 0;
+        // Set the activation delay to zero so that the claim can be processed
+        // right after setting the root
         let set_activation_delay = rewards_coordinator
             .setActivationDelay(activation_delay)
             .send()
@@ -596,6 +600,7 @@ mod tests {
         let receipt = set_activation_delay.get_receipt().await.unwrap();
         assert!(receipt.status());
 
+        // Set the rewards updater so that we can submit the root
         let rewards_updater = ANVIL_FIRST_ADDRESS;
         let set_rewards_updater_tx = rewards_coordinator
             .setRewardsUpdater(rewards_updater)
@@ -615,6 +620,7 @@ mod tests {
             _0: curr_rewards_calculation_end_timestamp,
         } = curr_rewards_calculation_end_timestamp_return;
 
+        // Submit the root
         let submit_tx = rewards_coordinator
             .submitRoot(root, curr_rewards_calculation_end_timestamp + 1)
             .send()
