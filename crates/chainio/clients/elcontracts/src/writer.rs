@@ -333,6 +333,17 @@ mod tests {
         )
     }
 
+    /// Creates an instance of ELChainWriter.
+    ///
+    /// # Arguments
+    ///
+    /// * `http_endpoint` - The HTTP endpoint used to send transactions.
+    /// * `private_key` - The private key used to sign transactions. If `private_key` is `None`,
+    /// then a default private key is used.
+    ///
+    /// # Returns
+    ///
+    /// A new instance of ELChainWriter.
     async fn new_test_writer(http_endpoint: String, private_key: Option<String>) -> ELChainWriter {
         let (el_chain_reader, _) = setup_el_chain_reader(http_endpoint.clone()).await;
         let operator_private_key = private_key.unwrap_or(
