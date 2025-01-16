@@ -2,12 +2,11 @@ use crate::EigenAddressCliError;
 use alloy::contract::Error as ContractError;
 use alloy::primitives::Address;
 use alloy::providers::Provider;
+use eigen_common::get_provider;
 use eigen_utils::{
-    get_provider,
-    {
-        delegationmanager::DelegationManager, iblssignaturechecker::IBLSSignatureChecker,
-        registrycoordinator::RegistryCoordinator,
-    },
+    middleware::delegationmanager::DelegationManager,
+    middleware::iblssignaturechecker::IBLSSignatureChecker,
+    middleware::registrycoordinator::RegistryCoordinator,
 };
 use serde::{Deserialize, Serialize};
 

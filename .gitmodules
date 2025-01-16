@@ -4,3 +4,4 @@
 [submodule "crates/contracts/lib/eigenlayer-middleware"]
 	path = crates/contracts/lib/eigenlayer-middleware
 	url = https://github.com/Layr-labs/eigenlayer-middleware
+    commit = 512ce7326f35e8060b9d46e23f9c159c0000b546

@@ -1,23 +1,11 @@
 use crate::error::ElContractsError;
-use alloy::{
-    providers::Provider,
-    transports::http::{Client, Http},
-};
-use alloy_primitives::{ruint::aliases::U256, Address, FixedBytes};
+use alloy_primitives::{Address, FixedBytes, U256};
+use eigen_common::get_provider;
 use eigen_logging::logger::SharedLogger;
-use eigen_utils::{
-    allocationmanager::AllocationManager::{self, OperatorSet},
-    avsdirectory::AVSDirectory,
-    delegationmanager::DelegationManager,
-    erc20::ERC20::{self, ERC20Instance},
-    get_provider,
-    irewardscoordinator::{
-        IRewardsCoordinator,
-        IRewardsCoordinatorTypes::{DistributionRoot, RewardsMerkleClaim},
-    },
-    istrategy::IStrategy::{self, IStrategyInstance},
-    permissioncontroller::PermissionController,
-    SdkProvider,
+use eigen_types::operator::Operator;
+use eigen_utils::middleware::{
+    avsdirectory::AVSDirectory, delegationmanager::DelegationManager, erc20::ERC20,
+    islasher::ISlasher, istrategy::IStrategy,
 };
 
 #[derive(Debug, Clone)]
@@ -1382,10 +1370,13 @@ mod tests {
         anvil::start_anvil_container, anvil_constants::get_delegation_manager_address,
     };
     use eigen_utils::{
-        avsdirectory::AVSDirectory,
-        avsdirectory::AVSDirectory::calculateOperatorAVSRegistrationDigestHashReturn,
-        delegationmanager::DelegationManager,
-        delegationmanager::DelegationManager::calculateDelegationApprovalDigestHashReturn,
+        deploy::mockavsservicemanager::MockAvsServiceManager,
+        middleware::{
+            avsdirectory::AVSDirectory::{self, calculateOperatorAVSRegistrationDigestHashReturn},
+            delegationmanager::DelegationManager::{
+                self, calculateDelegationApprovalDigestHashReturn,
+            },
+        },
     };
 
     #[tokio::test]

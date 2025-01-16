@@ -1,19 +1,15 @@
 use crate::error::ElContractsError;
 use crate::reader::ELChainReader;
-use alloy_primitives::{ruint::aliases::U256, Address, Bytes, FixedBytes, TxHash};
-use alloy_sol_types::SolValue;
-use eigen_crypto_bls::{
-    alloy_g1_point_to_g1_affine, convert_to_g1_point, convert_to_g2_point, BlsKeyPair,
-};
+use alloy_primitives::{Address, FixedBytes, TxHash, U256};
+use eigen_common::get_signer;
 pub use eigen_types::operator::Operator;
-use eigen_utils::{
-    allocationmanager::{AllocationManager, IAllocationManagerTypes},
-    delegationmanager::DelegationManager,
+use eigen_utils::deploy::irewardscoordinator::IRewardsCoordinator::{self, RewardsMerkleClaim};
+use eigen_utils::middleware::{
+    delegationmanager::{
+        DelegationManager::{self},
+        IDelegationManager::OperatorDetails,
+    },
     erc20::ERC20,
-    get_signer,
-    irewardscoordinator::{IRewardsCoordinator, IRewardsCoordinatorTypes::RewardsMerkleClaim},
-    permissioncontroller::PermissionController,
-    registrycoordinator::{IBLSApkRegistry::PubkeyRegistrationParams, RegistryCoordinator},
     strategymanager::StrategyManager,
 };
 use tracing::info;
@@ -729,8 +725,11 @@ mod tests {
         ANVIL_FIRST_PRIVATE_KEY, OPERATOR_ADDRESS, OPERATOR_PRIVATE_KEY,
     };
     use alloy::providers::Provider;
-    use alloy_primitives::{address, aliases::U96, Address, U256};
-    use eigen_crypto_bls::BlsKeyPair;
+    use alloy_primitives::{address, Address, FixedBytes, U256};
+    use alloy_signer_local::PrivateKeySigner;
+    use anvil_constants::CONTRACTS_REGISTRY;
+    use eigen_common::get_provider;
+    use eigen_logging::get_test_logger;
     use eigen_testing_utils::{
         anvil::{mine_anvil_blocks, set_account_balance, start_anvil_container},
         anvil_constants::{
@@ -741,15 +740,12 @@ mod tests {
     };
     use eigen_types::operator::Operator;
     use eigen_utils::{
-        allocationmanager::{
-            AllocationManager::{self, OperatorSet},
-            IAllocationManagerTypes,
+        deploy::{
+            contractsregistry::ContractsRegistry::{self, get_test_valuesReturn},
+            irewardscoordinator::IRewardsCoordinator::{EarnerTreeMerkleLeaf, RewardsMerkleClaim},
+            mockavsservicemanager::MockAvsServiceManager,
         },
-        get_provider, get_signer,
-        registrycoordinator::{
-            IRegistryCoordinator::OperatorSetParam, IStakeRegistry::StrategyParams,
-            RegistryCoordinator,
-        },
+        middleware::delegationmanager::DelegationManager,
     };
     use std::str::FromStr;
 
