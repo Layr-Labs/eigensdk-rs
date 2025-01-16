@@ -46,9 +46,7 @@ forge create src/ContractsRegistry.sol:ContractsRegistry --rpc-url $ETH_HTTP_URL
 # DEPLOY EIGENLAYER
 EIGEN_CONTRACTS_DIR=$root_dir/contracts/lib/eigenlayer-middleware/lib/eigenlayer-contracts
 DEVNET_OUTPUT_DIR=$EIGEN_CONTRACTS_DIR/script/output/devnet
-
 cd $EIGEN_CONTRACTS_DIR
-
 forge script script/deploy/local/Deploy_From_Scratch.s.sol:DeployFromScratch --rpc-url $ETH_HTTP_URL \
     --private-key $DEPLOYER_PRIVATE_KEY --broadcast \
     --sig "run(string memory configFileName)" -- local/deploy_from_scratch.anvil.config.json
@@ -56,14 +54,14 @@ mv $DEVNET_OUTPUT_DIR/local_from_scratch_deployment_data.json $root_dir/contract
 
 # DEPLOY MOCKAVS
 cd $root_dir/contracts
-forge script script/DeployMockAvs.s.sol --rpc-url $ETH_HTTP_URL --private-key $DEPLOYER_PRIVATE_KEY --broadcast --slow
+forge script script/DeployMockAvs.s.sol --rpc-url $ETH_HTTP_URL --private-key $DEPLOYER_PRIVATE_KEY --broadcast
 
 # DEPLOY TOKENS AND STRATEGIES
 cd $root_dir/contracts
 # DO NOT REMOVE THE SLOW DIRECTIVE FROM THIS SCRIPT INVOCATION
 # slow ensures that the transaction reciept is successful and recieved before sending the next transaction
 # this should prevent the strategies deploying/registering in a flakey manner,
-forge script script/DeployTokensStrategiesCreateQuorums.s.sol --rpc-url $ETH_HTTP_URL --private-key $DEPLOYER_PRIVATE_KEY --broadcast --slow -vvvvv
+forge script script/DeployTokensStrategiesCreateQuorums.s.sol --rpc-url $ETH_HTTP_URL --private-key $DEPLOYER_PRIVATE_KEY --broadcast --slow
 
 # REGISTER OPERATORS WITH EIGENLAYER
 cd $root_dir/contracts
