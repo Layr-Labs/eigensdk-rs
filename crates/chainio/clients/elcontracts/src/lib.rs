@@ -22,14 +22,17 @@ pub(crate) mod test_utils {
         get_erc20_mock_strategy, get_registry_coordinator_address, get_rewards_coordinator_address,
         get_strategy_manager_address,
     };
-    use eigen_utils::core::{
-        delegationmanager::DelegationManager,
-        irewardscoordinator::{
-            IRewardsCoordinator,
-            IRewardsCoordinatorTypes::{
-                EarnerTreeMerkleLeaf, RewardsMerkleClaim, TokenTreeMerkleLeaf,
+    use eigen_utils::{
+        core::{
+            delegationmanager::DelegationManager,
+            irewardscoordinator::{
+                IRewardsCoordinator,
+                IRewardsCoordinatorTypes::{
+                    EarnerTreeMerkleLeaf, RewardsMerkleClaim, TokenTreeMerkleLeaf,
+                },
             },
         },
+        sdk::mockerc20::MockERC20,
     };
     use std::str::FromStr;
 

@@ -5,6 +5,7 @@ use eigen_client_elcontracts::{
     reader::ELChainReader,
     writer::{ELChainWriter, Operator},
 };
+use eigen_common::get_provider;
 use eigen_crypto_bls::BlsKeyPair;
 use eigen_logging::get_test_logger;
 use eigen_services_operatorsinfo::{
@@ -21,7 +22,7 @@ use eigen_testing_utils::{
     },
     transaction::wait_transaction,
 };
-use eigen_utils::{delegationmanager::DelegationManager, get_provider};
+use eigen_utils::core::delegationmanager::DelegationManager;
 use std::{
     str::FromStr,
     time::{Duration, SystemTime, UNIX_EPOCH},

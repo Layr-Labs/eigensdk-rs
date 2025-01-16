@@ -5,6 +5,7 @@ use alloy_signer_local::PrivateKeySigner;
 use eigen_client_avsregistry::writer::AvsRegistryChainWriter;
 use eigen_client_elcontracts::reader::ELChainReader;
 use eigen_client_elcontracts::writer::ELChainWriter;
+use eigen_common::get_provider;
 use eigen_crypto_bls::BlsKeyPair;
 use eigen_logging::get_test_logger;
 use eigen_testing_utils::anvil_constants::get_registry_coordinator_address;
@@ -16,7 +17,7 @@ use eigen_testing_utils::{
     },
 };
 use eigen_types::operator::Operator;
-use eigen_utils::{delegationmanager::DelegationManager, get_provider};
+use eigen_utils::core::delegationmanager::DelegationManager;
 use eyre::Result;
 use lazy_static::lazy_static;
 use std::str::FromStr;

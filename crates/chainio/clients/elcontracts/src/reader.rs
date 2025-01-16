@@ -1382,14 +1382,9 @@ mod tests {
     use eigen_testing_utils::{
         anvil::start_anvil_container, anvil_constants::get_delegation_manager_address,
     };
-    use eigen_utils::{
-        deploy::mockavsservicemanager::MockAvsServiceManager,
-        middleware::{
-            avsdirectory::AVSDirectory::{self, calculateOperatorAVSRegistrationDigestHashReturn},
-            delegationmanager::DelegationManager::{
-                self, calculateDelegationApprovalDigestHashReturn,
-            },
-        },
+    use eigen_utils::core::{
+        avsdirectory::AVSDirectory::{self, calculateOperatorAVSRegistrationDigestHashReturn},
+        delegationmanager::DelegationManager::{self, calculateDelegationApprovalDigestHashReturn},
     };
 
     #[tokio::test]
