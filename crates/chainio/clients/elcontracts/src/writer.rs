@@ -3,8 +3,8 @@ use crate::reader::ELChainReader;
 use alloy_primitives::{Address, FixedBytes, TxHash, U256};
 use eigen_common::get_signer;
 pub use eigen_types::operator::Operator;
-use eigen_utils::deploy::irewardscoordinator::IRewardsCoordinator::{self, RewardsMerkleClaim};
-use eigen_utils::middleware::{
+use eigen_utils::core::irewardscoordinator::IRewardsCoordinator::{self, RewardsMerkleClaim};
+use eigen_utils::core::{
     delegationmanager::{
         DelegationManager::{self},
         IDelegationManager::OperatorDetails,
@@ -273,12 +273,14 @@ mod tests {
     };
     use eigen_types::operator::Operator;
     use eigen_utils::{
-        deploy::{
-            contractsregistry::ContractsRegistry::{self, get_test_valuesReturn},
+        core::{
+            delegationmanager::DelegationManager,
             irewardscoordinator::IRewardsCoordinator::{EarnerTreeMerkleLeaf, RewardsMerkleClaim},
+        },
+        sdk::{
+            contractsregistry::ContractsRegistry::{self, get_test_valuesReturn},
             mockavsservicemanager::MockAvsServiceManager,
         },
-        middleware::delegationmanager::DelegationManager,
     };
     use serial_test::serial;
     use std::str::FromStr;

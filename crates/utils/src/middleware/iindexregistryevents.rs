@@ -41,7 +41,8 @@ interface IIndexRegistryEvents {
     non_camel_case_types,
     non_snake_case,
     clippy::pub_underscore_fields,
-    clippy::style
+    clippy::style,
+    clippy::empty_structs_with_brackets
 )]
 pub mod IIndexRegistryEvents {
     use super::*;

@@ -15,6 +15,7 @@ interface ECDSAStakeRegistryEventsAndErrors {
     error InsufficientWeight();
     error InvalidLength();
     error InvalidQuorum();
+    error InvalidReferenceBlock();
     error InvalidSignature();
     error InvalidSignedWeight();
     error InvalidThreshold();
@@ -29,6 +30,7 @@ interface ECDSAStakeRegistryEventsAndErrors {
     event OperatorRegistered(address indexed _operator, address indexed _avs);
     event OperatorWeightUpdated(address indexed _operator, uint256 oldWeight, uint256 newWeight);
     event QuorumUpdated(Quorum _old, Quorum _new);
+    event SigningKeyUpdate(address indexed operator, uint256 indexed updateBlock, address indexed newSigningKey, address oldSigningKey);
     event ThresholdWeightUpdated(uint256 _thresholdWeight);
     event TotalWeightUpdated(uint256 oldTotalWeight, uint256 newTotalWeight);
     event UpdateMinimumWeight(uint256 oldMinimumWeight, uint256 newMinimumWeight);
@@ -179,6 +181,37 @@ interface ECDSAStakeRegistryEventsAndErrors {
   },
   {
     "type": "event",
+    "name": "SigningKeyUpdate",
+    "inputs": [
+      {
+        "name": "operator",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "updateBlock",
+        "type": "uint256",
+        "indexed": true,
+        "internalType": "uint256"
+      },
+      {
+        "name": "newSigningKey",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "oldSigningKey",
+        "type": "address",
+        "indexed": false,
+        "internalType": "address"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
     "name": "ThresholdWeightUpdated",
     "inputs": [
       {
@@ -250,6 +283,11 @@ interface ECDSAStakeRegistryEventsAndErrors {
   },
   {
     "type": "error",
+    "name": "InvalidReferenceBlock",
+    "inputs": []
+  },
+  {
+    "type": "error",
     "name": "InvalidSignature",
     "inputs": []
   },
@@ -294,7 +332,8 @@ interface ECDSAStakeRegistryEventsAndErrors {
     non_camel_case_types,
     non_snake_case,
     clippy::pub_underscore_fields,
-    clippy::style
+    clippy::style,
+    clippy::empty_structs_with_brackets
 )]
 pub mod ECDSAStakeRegistryEventsAndErrors {
     use super::*;
@@ -914,6 +953,66 @@ pub mod ECDSAStakeRegistryEventsAndErrors {
             type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "InvalidQuorum()";
             const SELECTOR: [u8; 4] = [209u8, 115u8, 87u8, 121u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+        }
+    };
+    /**Custom error with signature `InvalidReferenceBlock()` and selector `0xe64f180f`.
+    ```solidity
+    error InvalidReferenceBlock();
+    ```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct InvalidReferenceBlock {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<InvalidReferenceBlock> for UnderlyingRustTuple<'_> {
+            fn from(value: InvalidReferenceBlock) -> Self {
+                ()
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for InvalidReferenceBlock {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolError for InvalidReferenceBlock {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "InvalidReferenceBlock()";
+            const SELECTOR: [u8; 4] = [230u8, 79u8, 24u8, 15u8];
             #[inline]
             fn new<'a>(
                 tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
@@ -1962,6 +2061,134 @@ pub mod ECDSAStakeRegistryEventsAndErrors {
             }
         }
     };
+    /**Event with signature `SigningKeyUpdate(address,uint256,address,address)` and selector `0xd061168252f441733658f09e4d8f5b2d998ed4ef24a2bbfd6ceca52ea1315002`.
+    ```solidity
+    event SigningKeyUpdate(address indexed operator, uint256 indexed updateBlock, address indexed newSigningKey, address oldSigningKey);
+    ```*/
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    #[derive(Clone)]
+    pub struct SigningKeyUpdate {
+        #[allow(missing_docs)]
+        pub operator: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
+        pub updateBlock: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
+        pub newSigningKey: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
+        pub oldSigningKey: alloy::sol_types::private::Address,
+    }
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[automatically_derived]
+        impl alloy_sol_types::SolEvent for SigningKeyUpdate {
+            type DataTuple<'a> = (alloy::sol_types::sol_data::Address,);
+            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type TopicList = (
+                alloy_sol_types::sol_data::FixedBytes<32>,
+                alloy::sol_types::sol_data::Address,
+                alloy::sol_types::sol_data::Uint<256>,
+                alloy::sol_types::sol_data::Address,
+            );
+            const SIGNATURE: &'static str = "SigningKeyUpdate(address,uint256,address,address)";
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
+                alloy_sol_types::private::B256::new([
+                    208u8, 97u8, 22u8, 130u8, 82u8, 244u8, 65u8, 115u8, 54u8, 88u8, 240u8, 158u8,
+                    77u8, 143u8, 91u8, 45u8, 153u8, 142u8, 212u8, 239u8, 36u8, 162u8, 187u8, 253u8,
+                    108u8, 236u8, 165u8, 46u8, 161u8, 49u8, 80u8, 2u8,
+                ]);
+            const ANONYMOUS: bool = false;
+            #[allow(unused_variables)]
+            #[inline]
+            fn new(
+                topics: <Self::TopicList as alloy_sol_types::SolType>::RustType,
+                data: <Self::DataTuple<'_> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                Self {
+                    operator: topics.1,
+                    updateBlock: topics.2,
+                    newSigningKey: topics.3,
+                    oldSigningKey: data.0,
+                }
+            }
+            #[inline]
+            fn check_signature(
+                topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
+            ) -> alloy_sol_types::Result<()> {
+                if topics.0 != Self::SIGNATURE_HASH {
+                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
+                        Self::SIGNATURE,
+                        topics.0,
+                        Self::SIGNATURE_HASH,
+                    ));
+                }
+                Ok(())
+            }
+            #[inline]
+            fn tokenize_body(&self) -> Self::DataToken<'_> {
+                (
+                    <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
+                        &self.oldSigningKey,
+                    ),
+                )
+            }
+            #[inline]
+            fn topics(&self) -> <Self::TopicList as alloy_sol_types::SolType>::RustType {
+                (
+                    Self::SIGNATURE_HASH.into(),
+                    self.operator.clone(),
+                    self.updateBlock.clone(),
+                    self.newSigningKey.clone(),
+                )
+            }
+            #[inline]
+            fn encode_topics_raw(
+                &self,
+                out: &mut [alloy_sol_types::abi::token::WordToken],
+            ) -> alloy_sol_types::Result<()> {
+                if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
+                    return Err(alloy_sol_types::Error::Overrun);
+                }
+                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
+                out[1usize] = <alloy::sol_types::sol_data::Address as alloy_sol_types::EventTopic>::encode_topic(
+                    &self.operator,
+                );
+                out[2usize] = <alloy::sol_types::sol_data::Uint<
+                    256,
+                > as alloy_sol_types::EventTopic>::encode_topic(&self.updateBlock);
+                out[3usize] = <alloy::sol_types::sol_data::Address as alloy_sol_types::EventTopic>::encode_topic(
+                    &self.newSigningKey,
+                );
+                Ok(())
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::private::IntoLogData for SigningKeyUpdate {
+            fn to_log_data(&self) -> alloy_sol_types::private::LogData {
+                From::from(self)
+            }
+            fn into_log_data(self) -> alloy_sol_types::private::LogData {
+                From::from(&self)
+            }
+        }
+        #[automatically_derived]
+        impl From<&SigningKeyUpdate> for alloy_sol_types::private::LogData {
+            #[inline]
+            fn from(this: &SigningKeyUpdate) -> alloy_sol_types::private::LogData {
+                alloy_sol_types::SolEvent::encode_log_data(this)
+            }
+        }
+    };
     /**Event with signature `ThresholdWeightUpdated(uint256)` and selector `0x9324f7e5a7c0288808a634ccde44b8e979676474b22e29ee9dd569b55e791a4b`.
     ```solidity
     event ThresholdWeightUpdated(uint256 _thresholdWeight);
@@ -2286,6 +2513,7 @@ pub mod ECDSAStakeRegistryEventsAndErrors {
         InsufficientWeight(InsufficientWeight),
         InvalidLength(InvalidLength),
         InvalidQuorum(InvalidQuorum),
+        InvalidReferenceBlock(InvalidReferenceBlock),
         InvalidSignature(InvalidSignature),
         InvalidSignedWeight(InvalidSignedWeight),
         InvalidThreshold(InvalidThreshold),
@@ -2315,6 +2543,7 @@ pub mod ECDSAStakeRegistryEventsAndErrors {
             [186u8, 80u8, 249u8, 17u8],
             [209u8, 115u8, 87u8, 121u8],
             [225u8, 33u8, 99u8, 47u8],
+            [230u8, 79u8, 24u8, 15u8],
             [255u8, 99u8, 58u8, 56u8],
         ];
     }
@@ -2322,7 +2551,7 @@ pub mod ECDSAStakeRegistryEventsAndErrors {
     impl alloy_sol_types::SolInterface for ECDSAStakeRegistryEventsAndErrorsErrors {
         const NAME: &'static str = "ECDSAStakeRegistryEventsAndErrorsErrors";
         const MIN_DATA_LENGTH: usize = 0usize;
-        const COUNT: usize = 12usize;
+        const COUNT: usize = 13usize;
         #[inline]
         fn selector(&self) -> [u8; 4] {
             match self {
@@ -2334,6 +2563,9 @@ pub mod ECDSAStakeRegistryEventsAndErrors {
                 }
                 Self::InvalidLength(_) => <InvalidLength as alloy_sol_types::SolError>::SELECTOR,
                 Self::InvalidQuorum(_) => <InvalidQuorum as alloy_sol_types::SolError>::SELECTOR,
+                Self::InvalidReferenceBlock(_) => {
+                    <InvalidReferenceBlock as alloy_sol_types::SolError>::SELECTOR
+                }
                 Self::InvalidSignature(_) => {
                     <InvalidSignature as alloy_sol_types::SolError>::SELECTOR
                 }
@@ -2365,7 +2597,7 @@ pub mod ECDSAStakeRegistryEventsAndErrors {
             Self::SELECTORS.binary_search(&selector).is_ok()
         }
         #[inline]
-        #[allow(unsafe_code, non_snake_case)]
+        #[allow(non_snake_case)]
         fn abi_decode_raw(
             selector: [u8; 4],
             data: &[u8],
@@ -2515,6 +2747,19 @@ pub mod ECDSAStakeRegistryEventsAndErrors {
                     InsufficientSignedStake
                 },
                 {
+                    fn InvalidReferenceBlock(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<ECDSAStakeRegistryEventsAndErrorsErrors>
+                    {
+                        <InvalidReferenceBlock as alloy_sol_types::SolError>::abi_decode_raw(
+                            data, validate,
+                        )
+                        .map(ECDSAStakeRegistryEventsAndErrorsErrors::InvalidReferenceBlock)
+                    }
+                    InvalidReferenceBlock
+                },
+                {
                     fn LengthMismatch(
                         data: &[u8],
                         validate: bool,
@@ -2534,7 +2779,7 @@ pub mod ECDSAStakeRegistryEventsAndErrors {
                     selector,
                 ));
             };
-            (unsafe { DECODE_SHIMS.get_unchecked(idx) })(data, validate)
+            DECODE_SHIMS[idx](data, validate)
         }
         #[inline]
         fn abi_encoded_size(&self) -> usize {
@@ -2550,6 +2795,9 @@ pub mod ECDSAStakeRegistryEventsAndErrors {
                 }
                 Self::InvalidQuorum(inner) => {
                     <InvalidQuorum as alloy_sol_types::SolError>::abi_encoded_size(inner)
+                }
+                Self::InvalidReferenceBlock(inner) => {
+                    <InvalidReferenceBlock as alloy_sol_types::SolError>::abi_encoded_size(inner)
                 }
                 Self::InvalidSignature(inner) => {
                     <InvalidSignature as alloy_sol_types::SolError>::abi_encoded_size(inner)
@@ -2596,6 +2844,9 @@ pub mod ECDSAStakeRegistryEventsAndErrors {
                 Self::InvalidQuorum(inner) => {
                     <InvalidQuorum as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
                 }
+                Self::InvalidReferenceBlock(inner) => {
+                    <InvalidReferenceBlock as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
+                }
                 Self::InvalidSignature(inner) => {
                     <InvalidSignature as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
                 }
@@ -2634,6 +2885,7 @@ pub mod ECDSAStakeRegistryEventsAndErrors {
         OperatorRegistered(OperatorRegistered),
         OperatorWeightUpdated(OperatorWeightUpdated),
         QuorumUpdated(QuorumUpdated),
+        SigningKeyUpdate(SigningKeyUpdate),
         ThresholdWeightUpdated(ThresholdWeightUpdated),
         TotalWeightUpdated(TotalWeightUpdated),
         UpdateMinimumWeight(UpdateMinimumWeight),
@@ -2687,12 +2939,17 @@ pub mod ECDSAStakeRegistryEventsAndErrors {
                 132u8, 220u8, 62u8, 45u8, 6u8, 175u8, 40u8, 110u8, 177u8, 177u8, 183u8, 183u8,
                 113u8, 252u8, 228u8, 113u8, 108u8, 25u8, 242u8, 193u8,
             ],
+            [
+                208u8, 97u8, 22u8, 130u8, 82u8, 244u8, 65u8, 115u8, 54u8, 88u8, 240u8, 158u8, 77u8,
+                143u8, 91u8, 45u8, 153u8, 142u8, 212u8, 239u8, 36u8, 162u8, 187u8, 253u8, 108u8,
+                236u8, 165u8, 46u8, 161u8, 49u8, 80u8, 2u8,
+            ],
         ];
     }
     #[automatically_derived]
     impl alloy_sol_types::SolEventInterface for ECDSAStakeRegistryEventsAndErrorsEvents {
         const NAME: &'static str = "ECDSAStakeRegistryEventsAndErrorsEvents";
-        const COUNT: usize = 8usize;
+        const COUNT: usize = 9usize;
         fn decode_raw_log(
             topics: &[alloy_sol_types::Word],
             data: &[u8],
@@ -2728,6 +2985,12 @@ pub mod ECDSAStakeRegistryEventsAndErrors {
                         topics, data, validate,
                     )
                     .map(Self::QuorumUpdated)
+                }
+                Some(<SigningKeyUpdate as alloy_sol_types::SolEvent>::SIGNATURE_HASH) => {
+                    <SigningKeyUpdate as alloy_sol_types::SolEvent>::decode_raw_log(
+                        topics, data, validate,
+                    )
+                    .map(Self::SigningKeyUpdate)
                 }
                 Some(<ThresholdWeightUpdated as alloy_sol_types::SolEvent>::SIGNATURE_HASH) => {
                     <ThresholdWeightUpdated as alloy_sol_types::SolEvent>::decode_raw_log(
@@ -2778,6 +3041,9 @@ pub mod ECDSAStakeRegistryEventsAndErrors {
                 Self::QuorumUpdated(inner) => {
                     alloy_sol_types::private::IntoLogData::to_log_data(inner)
                 }
+                Self::SigningKeyUpdate(inner) => {
+                    alloy_sol_types::private::IntoLogData::to_log_data(inner)
+                }
                 Self::ThresholdWeightUpdated(inner) => {
                     alloy_sol_types::private::IntoLogData::to_log_data(inner)
                 }
@@ -2804,6 +3070,9 @@ pub mod ECDSAStakeRegistryEventsAndErrors {
                     alloy_sol_types::private::IntoLogData::into_log_data(inner)
                 }
                 Self::QuorumUpdated(inner) => {
+                    alloy_sol_types::private::IntoLogData::into_log_data(inner)
+                }
+                Self::SigningKeyUpdate(inner) => {
                     alloy_sol_types::private::IntoLogData::into_log_data(inner)
                 }
                 Self::ThresholdWeightUpdated(inner) => {
@@ -3034,6 +3303,10 @@ pub mod ECDSAStakeRegistryEventsAndErrors {
         ///Creates a new event filter for the [`QuorumUpdated`] event.
         pub fn QuorumUpdated_filter(&self) -> alloy_contract::Event<T, &P, QuorumUpdated, N> {
             self.event_filter::<QuorumUpdated>()
+        }
+        ///Creates a new event filter for the [`SigningKeyUpdate`] event.
+        pub fn SigningKeyUpdate_filter(&self) -> alloy_contract::Event<T, &P, SigningKeyUpdate, N> {
+            self.event_filter::<SigningKeyUpdate>()
         }
         ///Creates a new event filter for the [`ThresholdWeightUpdated`] event.
         pub fn ThresholdWeightUpdated_filter(

@@ -11,7 +11,8 @@ library BN254 {
     non_camel_case_types,
     non_snake_case,
     clippy::pub_underscore_fields,
-    clippy::style
+    clippy::style,
+    clippy::empty_structs_with_brackets
 )]
 pub mod BN254 {
     use super::*;
@@ -664,7 +665,8 @@ interface IBLSApkRegistryEvents {
     non_camel_case_types,
     non_snake_case,
     clippy::pub_underscore_fields,
-    clippy::style
+    clippy::style,
+    clippy::empty_structs_with_brackets
 )]
 pub mod IBLSApkRegistryEvents {
     use super::*;

@@ -10,7 +10,8 @@ library BN254 {
     non_camel_case_types,
     non_snake_case,
     clippy::pub_underscore_fields,
-    clippy::style
+    clippy::style,
+    clippy::empty_structs_with_brackets
 )]
 pub mod BN254 {
     use super::*;
@@ -363,6 +364,7 @@ interface IRegistryCoordinator {
     event OperatorDeregistered(address indexed operator, bytes32 indexed operatorId);
     event OperatorRegistered(address indexed operator, bytes32 indexed operatorId);
     event OperatorSetParamsUpdated(uint8 indexed quorumNumber, OperatorSetParam operatorSetParams);
+    event OperatorSocketUpdate(bytes32 indexed operatorId, string socket);
     event QuorumBlockNumberUpdated(uint8 indexed quorumNumber, uint256 blocknumber);
 
     function blsApkRegistry() external view returns (address);
@@ -385,6 +387,7 @@ interface IRegistryCoordinator {
     function quorumUpdateBlockNumber(uint8 quorumNumber) external view returns (uint256);
     function registries(uint256) external view returns (address);
     function stakeRegistry() external view returns (address);
+    function updateSocket(string memory socket) external;
 }
 ```
 
@@ -813,6 +816,19 @@ interface IRegistryCoordinator {
     "stateMutability": "view"
   },
   {
+    "type": "function",
+    "name": "updateSocket",
+    "inputs": [
+      {
+        "name": "socket",
+        "type": "string",
+        "internalType": "string"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
     "type": "event",
     "name": "ChurnApproverUpdated",
     "inputs": [
@@ -926,6 +942,25 @@ interface IRegistryCoordinator {
   },
   {
     "type": "event",
+    "name": "OperatorSocketUpdate",
+    "inputs": [
+      {
+        "name": "operatorId",
+        "type": "bytes32",
+        "indexed": true,
+        "internalType": "bytes32"
+      },
+      {
+        "name": "socket",
+        "type": "string",
+        "indexed": false,
+        "internalType": "string"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
     "name": "QuorumBlockNumberUpdated",
     "inputs": [
       {
@@ -949,7 +984,8 @@ interface IRegistryCoordinator {
     non_camel_case_types,
     non_snake_case,
     clippy::pub_underscore_fields,
-    clippy::style
+    clippy::style,
+    clippy::empty_structs_with_brackets
 )]
 pub mod IRegistryCoordinator {
     use super::*;
@@ -2277,6 +2313,115 @@ pub mod IRegistryCoordinator {
         impl From<&OperatorSetParamsUpdated> for alloy_sol_types::private::LogData {
             #[inline]
             fn from(this: &OperatorSetParamsUpdated) -> alloy_sol_types::private::LogData {
+                alloy_sol_types::SolEvent::encode_log_data(this)
+            }
+        }
+    };
+    /**Event with signature `OperatorSocketUpdate(bytes32,string)` and selector `0xec2963ab21c1e50e1e582aa542af2e4bf7bf38e6e1403c27b42e1c5d6e621eaa`.
+    ```solidity
+    event OperatorSocketUpdate(bytes32 indexed operatorId, string socket);
+    ```*/
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    #[derive(Clone)]
+    pub struct OperatorSocketUpdate {
+        #[allow(missing_docs)]
+        pub operatorId: alloy::sol_types::private::FixedBytes<32>,
+        #[allow(missing_docs)]
+        pub socket: alloy::sol_types::private::String,
+    }
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[automatically_derived]
+        impl alloy_sol_types::SolEvent for OperatorSocketUpdate {
+            type DataTuple<'a> = (alloy::sol_types::sol_data::String,);
+            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type TopicList = (
+                alloy_sol_types::sol_data::FixedBytes<32>,
+                alloy::sol_types::sol_data::FixedBytes<32>,
+            );
+            const SIGNATURE: &'static str = "OperatorSocketUpdate(bytes32,string)";
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
+                alloy_sol_types::private::B256::new([
+                    236u8, 41u8, 99u8, 171u8, 33u8, 193u8, 229u8, 14u8, 30u8, 88u8, 42u8, 165u8,
+                    66u8, 175u8, 46u8, 75u8, 247u8, 191u8, 56u8, 230u8, 225u8, 64u8, 60u8, 39u8,
+                    180u8, 46u8, 28u8, 93u8, 110u8, 98u8, 30u8, 170u8,
+                ]);
+            const ANONYMOUS: bool = false;
+            #[allow(unused_variables)]
+            #[inline]
+            fn new(
+                topics: <Self::TopicList as alloy_sol_types::SolType>::RustType,
+                data: <Self::DataTuple<'_> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                Self {
+                    operatorId: topics.1,
+                    socket: data.0,
+                }
+            }
+            #[inline]
+            fn check_signature(
+                topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
+            ) -> alloy_sol_types::Result<()> {
+                if topics.0 != Self::SIGNATURE_HASH {
+                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
+                        Self::SIGNATURE,
+                        topics.0,
+                        Self::SIGNATURE_HASH,
+                    ));
+                }
+                Ok(())
+            }
+            #[inline]
+            fn tokenize_body(&self) -> Self::DataToken<'_> {
+                (
+                    <alloy::sol_types::sol_data::String as alloy_sol_types::SolType>::tokenize(
+                        &self.socket,
+                    ),
+                )
+            }
+            #[inline]
+            fn topics(&self) -> <Self::TopicList as alloy_sol_types::SolType>::RustType {
+                (Self::SIGNATURE_HASH.into(), self.operatorId.clone())
+            }
+            #[inline]
+            fn encode_topics_raw(
+                &self,
+                out: &mut [alloy_sol_types::abi::token::WordToken],
+            ) -> alloy_sol_types::Result<()> {
+                if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
+                    return Err(alloy_sol_types::Error::Overrun);
+                }
+                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
+                out[1usize] = <alloy::sol_types::sol_data::FixedBytes<
+                    32,
+                > as alloy_sol_types::EventTopic>::encode_topic(&self.operatorId);
+                Ok(())
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::private::IntoLogData for OperatorSocketUpdate {
+            fn to_log_data(&self) -> alloy_sol_types::private::LogData {
+                From::from(self)
+            }
+            fn into_log_data(self) -> alloy_sol_types::private::LogData {
+                From::from(&self)
+            }
+        }
+        #[automatically_derived]
+        impl From<&OperatorSocketUpdate> for alloy_sol_types::private::LogData {
+            #[inline]
+            fn from(this: &OperatorSocketUpdate) -> alloy_sol_types::private::LogData {
                 alloy_sol_types::SolEvent::encode_log_data(this)
             }
         }
@@ -4761,6 +4906,120 @@ pub mod IRegistryCoordinator {
             }
         }
     };
+    /**Function with signature `updateSocket(string)` and selector `0x0cf4b767`.
+    ```solidity
+    function updateSocket(string memory socket) external;
+    ```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct updateSocketCall {
+        pub socket: alloy::sol_types::private::String,
+    }
+    ///Container type for the return parameters of the [`updateSocket(string)`](updateSocketCall) function.
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct updateSocketReturn {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        {
+            #[doc(hidden)]
+            type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::String,);
+            #[doc(hidden)]
+            type UnderlyingRustTuple<'a> = (alloy::sol_types::private::String,);
+            #[cfg(test)]
+            #[allow(dead_code, unreachable_patterns)]
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+                match _t {
+                    alloy_sol_types::private::AssertTypeEq::<
+                        <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                    >(_) => {}
+                }
+            }
+            #[automatically_derived]
+            #[doc(hidden)]
+            impl ::core::convert::From<updateSocketCall> for UnderlyingRustTuple<'_> {
+                fn from(value: updateSocketCall) -> Self {
+                    (value.socket,)
+                }
+            }
+            #[automatically_derived]
+            #[doc(hidden)]
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for updateSocketCall {
+                fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                    Self { socket: tuple.0 }
+                }
+            }
+        }
+        {
+            #[doc(hidden)]
+            type UnderlyingSolTuple<'a> = ();
+            #[doc(hidden)]
+            type UnderlyingRustTuple<'a> = ();
+            #[cfg(test)]
+            #[allow(dead_code, unreachable_patterns)]
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+                match _t {
+                    alloy_sol_types::private::AssertTypeEq::<
+                        <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                    >(_) => {}
+                }
+            }
+            #[automatically_derived]
+            #[doc(hidden)]
+            impl ::core::convert::From<updateSocketReturn> for UnderlyingRustTuple<'_> {
+                fn from(value: updateSocketReturn) -> Self {
+                    ()
+                }
+            }
+            #[automatically_derived]
+            #[doc(hidden)]
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for updateSocketReturn {
+                fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                    Self {}
+                }
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolCall for updateSocketCall {
+            type Parameters<'a> = (alloy::sol_types::sol_data::String,);
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Return = updateSocketReturn;
+            type ReturnTuple<'a> = ();
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "updateSocket(string)";
+            const SELECTOR: [u8; 4] = [12u8, 244u8, 183u8, 103u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                (
+                    <alloy::sol_types::sol_data::String as alloy_sol_types::SolType>::tokenize(
+                        &self.socket,
+                    ),
+                )
+            }
+            #[inline]
+            fn abi_decode_returns(
+                data: &[u8],
+                validate: bool,
+            ) -> alloy_sol_types::Result<Self::Return> {
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
+            }
+        }
+    };
     ///Container for all the [`IRegistryCoordinator`](self) function calls.
     pub enum IRegistryCoordinatorCalls {
         blsApkRegistry(blsApkRegistryCall),
@@ -4783,6 +5042,7 @@ pub mod IRegistryCoordinator {
         quorumUpdateBlockNumber(quorumUpdateBlockNumberCall),
         registries(registriesCall),
         stakeRegistry(stakeRegistryCall),
+        updateSocket(updateSocketCall),
     }
     #[automatically_derived]
     impl IRegistryCoordinatorCalls {
@@ -4795,6 +5055,7 @@ pub mod IRegistryCoordinator {
         pub const SELECTORS: &'static [[u8; 4usize]] = &[
             [3u8, 253u8, 52u8, 146u8],
             [4u8, 236u8, 99u8, 81u8],
+            [12u8, 244u8, 183u8, 103u8],
             [19u8, 84u8, 42u8, 78u8],
             [30u8, 184u8, 18u8, 218u8],
             [36u8, 154u8, 12u8, 66u8],
@@ -4819,7 +5080,7 @@ pub mod IRegistryCoordinator {
     impl alloy_sol_types::SolInterface for IRegistryCoordinatorCalls {
         const NAME: &'static str = "IRegistryCoordinatorCalls";
         const MIN_DATA_LENGTH: usize = 0usize;
-        const COUNT: usize = 20usize;
+        const COUNT: usize = 21usize;
         #[inline]
         fn selector(&self) -> [u8; 4] {
             match self {
@@ -4865,6 +5126,7 @@ pub mod IRegistryCoordinator {
                 }
                 Self::registries(_) => <registriesCall as alloy_sol_types::SolCall>::SELECTOR,
                 Self::stakeRegistry(_) => <stakeRegistryCall as alloy_sol_types::SolCall>::SELECTOR,
+                Self::updateSocket(_) => <updateSocketCall as alloy_sol_types::SolCall>::SELECTOR,
             }
         }
         #[inline]
@@ -4876,7 +5138,7 @@ pub mod IRegistryCoordinator {
             Self::SELECTORS.binary_search(&selector).is_ok()
         }
         #[inline]
-        #[allow(unsafe_code, non_snake_case)]
+        #[allow(non_snake_case)]
         fn abi_decode_raw(
             selector: [u8; 4],
             data: &[u8],
@@ -4914,6 +5176,18 @@ pub mod IRegistryCoordinator {
                             )
                     }
                     getQuorumBitmapAtBlockNumberByIndex
+                },
+                {
+                    fn updateSocket(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<IRegistryCoordinatorCalls> {
+                        <updateSocketCall as alloy_sol_types::SolCall>::abi_decode_raw(
+                            data, validate,
+                        )
+                        .map(IRegistryCoordinatorCalls::updateSocket)
+                    }
+                    updateSocket
                 },
                 {
                     fn getOperatorId(
@@ -5141,7 +5415,7 @@ pub mod IRegistryCoordinator {
                     selector,
                 ));
             };
-            (unsafe { DECODE_SHIMS.get_unchecked(idx) })(data, validate)
+            DECODE_SHIMS[idx](data, validate)
         }
         #[inline]
         fn abi_encoded_size(&self) -> usize {
@@ -5239,6 +5513,11 @@ pub mod IRegistryCoordinator {
                 }
                 Self::stakeRegistry(inner) => {
                     <stakeRegistryCall as alloy_sol_types::SolCall>::abi_encoded_size(
+                        inner,
+                    )
+                }
+                Self::updateSocket(inner) => {
+                    <updateSocketCall as alloy_sol_types::SolCall>::abi_encoded_size(
                         inner,
                     )
                 }
@@ -5364,6 +5643,12 @@ pub mod IRegistryCoordinator {
                         out,
                     )
                 }
+                Self::updateSocket(inner) => {
+                    <updateSocketCall as alloy_sol_types::SolCall>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
             }
         }
     }
@@ -5374,6 +5659,7 @@ pub mod IRegistryCoordinator {
         OperatorDeregistered(OperatorDeregistered),
         OperatorRegistered(OperatorRegistered),
         OperatorSetParamsUpdated(OperatorSetParamsUpdated),
+        OperatorSocketUpdate(OperatorSocketUpdate),
         QuorumBlockNumberUpdated(QuorumBlockNumberUpdated),
     }
     #[automatically_derived]
@@ -5415,12 +5701,17 @@ pub mod IRegistryCoordinator {
                 99u8, 163u8, 117u8, 242u8, 127u8, 123u8, 195u8, 53u8, 229u8, 24u8, 36u8, 34u8,
                 60u8, 172u8, 206u8, 99u8, 110u8, 197u8, 195u8, 254u8,
             ],
+            [
+                236u8, 41u8, 99u8, 171u8, 33u8, 193u8, 229u8, 14u8, 30u8, 88u8, 42u8, 165u8, 66u8,
+                175u8, 46u8, 75u8, 247u8, 191u8, 56u8, 230u8, 225u8, 64u8, 60u8, 39u8, 180u8, 46u8,
+                28u8, 93u8, 110u8, 98u8, 30u8, 170u8,
+            ],
         ];
     }
     #[automatically_derived]
     impl alloy_sol_types::SolEventInterface for IRegistryCoordinatorEvents {
         const NAME: &'static str = "IRegistryCoordinatorEvents";
-        const COUNT: usize = 6usize;
+        const COUNT: usize = 7usize;
         fn decode_raw_log(
             topics: &[alloy_sol_types::Word],
             data: &[u8],
@@ -5456,6 +5747,12 @@ pub mod IRegistryCoordinator {
                         topics, data, validate,
                     )
                     .map(Self::OperatorSetParamsUpdated)
+                }
+                Some(<OperatorSocketUpdate as alloy_sol_types::SolEvent>::SIGNATURE_HASH) => {
+                    <OperatorSocketUpdate as alloy_sol_types::SolEvent>::decode_raw_log(
+                        topics, data, validate,
+                    )
+                    .map(Self::OperatorSocketUpdate)
                 }
                 Some(<QuorumBlockNumberUpdated as alloy_sol_types::SolEvent>::SIGNATURE_HASH) => {
                     <QuorumBlockNumberUpdated as alloy_sol_types::SolEvent>::decode_raw_log(
@@ -5494,6 +5791,9 @@ pub mod IRegistryCoordinator {
                 Self::OperatorSetParamsUpdated(inner) => {
                     alloy_sol_types::private::IntoLogData::to_log_data(inner)
                 }
+                Self::OperatorSocketUpdate(inner) => {
+                    alloy_sol_types::private::IntoLogData::to_log_data(inner)
+                }
                 Self::QuorumBlockNumberUpdated(inner) => {
                     alloy_sol_types::private::IntoLogData::to_log_data(inner)
                 }
@@ -5514,6 +5814,9 @@ pub mod IRegistryCoordinator {
                     alloy_sol_types::private::IntoLogData::into_log_data(inner)
                 }
                 Self::OperatorSetParamsUpdated(inner) => {
+                    alloy_sol_types::private::IntoLogData::into_log_data(inner)
+                }
+                Self::OperatorSocketUpdate(inner) => {
                     alloy_sol_types::private::IntoLogData::into_log_data(inner)
                 }
                 Self::QuorumBlockNumberUpdated(inner) => {
@@ -5830,6 +6133,13 @@ pub mod IRegistryCoordinator {
         pub fn stakeRegistry(&self) -> alloy_contract::SolCallBuilder<T, &P, stakeRegistryCall, N> {
             self.call_builder(&stakeRegistryCall {})
         }
+        ///Creates a new call builder for the [`updateSocket`] function.
+        pub fn updateSocket(
+            &self,
+            socket: alloy::sol_types::private::String,
+        ) -> alloy_contract::SolCallBuilder<T, &P, updateSocketCall, N> {
+            self.call_builder(&updateSocketCall { socket })
+        }
     }
     /// Event filters.
     #[automatically_derived]
@@ -5875,6 +6185,12 @@ pub mod IRegistryCoordinator {
             &self,
         ) -> alloy_contract::Event<T, &P, OperatorSetParamsUpdated, N> {
             self.event_filter::<OperatorSetParamsUpdated>()
+        }
+        ///Creates a new event filter for the [`OperatorSocketUpdate`] event.
+        pub fn OperatorSocketUpdate_filter(
+            &self,
+        ) -> alloy_contract::Event<T, &P, OperatorSocketUpdate, N> {
+            self.event_filter::<OperatorSocketUpdate>()
         }
         ///Creates a new event filter for the [`QuorumBlockNumberUpdated`] event.
         pub fn QuorumBlockNumberUpdated_filter(
