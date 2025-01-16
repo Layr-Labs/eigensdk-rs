@@ -600,7 +600,6 @@ mod tests {
     #[serial]
     async fn test_set_operator_avs_split() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let http_endpoint = "http://localhost:8545".to_string();
         let el_chain_writer = new_test_writer(http_endpoint.clone()).await;
         let operator = address!("90f79bf6eb2c4f870365e785982e1f101e93b906"); // derived from  test private key in new_test_writer
         let avs = get_service_manager_address(http_endpoint.clone()).await;
