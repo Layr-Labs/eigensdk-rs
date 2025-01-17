@@ -55,9 +55,9 @@ contract DeployMockAvs is DeployMockAvsRegistries {
                 payable(address(mockAvsServiceManager))
             ),
             address(mockAvsServiceManagerImplementation),
-            abi.encodeWithSelector(
-                mockAvsServiceManager.initialize.selector,
-                addressConfig.communityMultisig
+            abi.encodeCall(
+                mockAvsServiceManager.initialize,
+                (addressConfig.communityMultisig, addressConfig.communityMultisig)
             )
         );
         require(
