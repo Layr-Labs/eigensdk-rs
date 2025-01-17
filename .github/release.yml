@@ -3,12 +3,31 @@ changelog:
     labels:
       - ignore-for-release
   categories:
-    - title: Breaking Changes 🛠
+    # vulnerabilities
+    - title: Security
       labels:
-        - breaking-change
-    - title: Exciting New Features 🎉
+        - changelog-security
+    # new features
+    - title: Added
       labels:
-        - new-feature
+        - changelog-added
+    # changes in existing functionality
+    - title: Changed
+      labels:
+        - changelog-changed
+    # soon-to-be removed features
+    - title: Deprecated
+      labels:
+        - changelog-deprecated
+    # now removed features
+    - title: Removed
+      labels:
+        - changelog-removed
+    # documentation was added or changed
+    - title: Documentation
+      labels:
+        - changelog-documentation
+
     - title: Other Changes
       labels:
         - "*"
