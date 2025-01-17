@@ -66,3 +66,8 @@ Each version will have a separate `Breaking Changes` section as well. To describ
 * Added notes for running tests in [#194](https://github.com/Layr-Labs/eigensdk-rs/pull/194)
 * Added "Contract Bindings" section to the README in [#178](https://github.com/Layr-Labs/eigensdk-rs/pull/178)
 * Added "Branches" section to the README in [#200](https://github.com/Layr-Labs/eigensdk-rs/pull/200)
+
+## Previous versions
+
+This changelog was introduced in-between v0.1.2 and v0.1.3.
+For changes from previous releases, you can check on our GitHub repo's releases page: [github.com/Layr-Labs/eigensdk-rs/releases](https://github.com/Layr-Labs/eigensdk-rs/releases)
