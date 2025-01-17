@@ -67,7 +67,7 @@ To test locally :-
 You need `foundry` to successfully run it.
 
 ```bash
-cargo test --workspace --exclude eigen-utils
+cargo test --workspace
 ```
 
 On Mac, you might get an error similar to:
