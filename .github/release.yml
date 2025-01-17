@@ -12,9 +12,9 @@ changelog:
       labels:
         - changelog-added
     # changes in existing functionality
-    - title: Changed 🛠
+    - title: Breaking Changes 🛠
       labels:
-        - changelog-changed
+        - changelog-breaking
     # soon-to-be removed features
     - title: Deprecated ⚠️
       labels:
