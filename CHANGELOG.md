@@ -24,6 +24,7 @@ Each version will have a separate `Breaking Changes` section as well. To describ
   * New methods in `ELChainWriter`:
     * `set_operator_avs_split`
     * `set_operator_pi_split`
+  * Bindings updated for rewards-v2 core contracts release
 
 ### Breaking Changes 🛠
 * feat!: remove delegation manager from `ELChainWriter` by @supernovahs in https://github.com/Layr-Labs/eigensdk-rs/pull/214
