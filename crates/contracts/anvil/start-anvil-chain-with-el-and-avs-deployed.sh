@@ -13,21 +13,9 @@ set -a
 source ./utils.sh
 set +a
 
-cleanup() {
-    echo "Executing cleanup function..."
-    set +e
-    docker rm -f anvil
-    exit_status=$?
-    if [ $exit_status -ne 0 ]; then
-        echo "Script exited due to set -e on line $1 with command '$2'. Exit status: $exit_status"
-    fi
-}
-trap 'cleanup $LINENO "$BASH_COMMAND"' EXIT
-
 # start an anvil instance in the background that has eigenlayer contracts deployed
 # we start anvil in the background so that we can run the below script
 # anvil --load-state avs-and-eigenlayer-deployed-anvil-state.json &
-# FIXME: bug in latest foundry version, so we use this pinned version instead of latest
 start_anvil_docker $parent_path/contracts_deployed_anvil_state.json ""
 
 cd ../../contracts
