@@ -5,3 +5,4 @@
 //! These files may be overwritten by the codegen system at any time.
 pub mod contractsregistry;
 pub mod mockavsservicemanager;
+pub mod mockerc20;

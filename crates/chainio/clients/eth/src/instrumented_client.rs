@@ -1011,11 +1011,18 @@ mod tests {
 
         // build the transaction
         let to = address!("a0Ee7A142d267C1f36714E4a8F75612F20a79720");
+        let from = address!("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+        // retrieve the nonce to then plug it in the transaction
+        let nonce = instrumented_client
+            .nonce_at(from, BlockNumberOrTag::Latest)
+            .await
+            .unwrap();
+
         let mut tx = TxLegacy {
             to: Call(to),
             value: U256::from(0),
             gas_limit: 2_000_000,
-            nonce: 0x69, // nonce queried from the sender account
+            nonce,
             gas_price: 21_000_000_000,
             input: bytes!(),
             chain_id: Some(31337),
@@ -1116,7 +1123,7 @@ mod tests {
         // test call_contract
         let expected_bytes = anvil.call(&tx_request).await.unwrap();
         let bytes = instrumented_client
-            .call_contract(tx_request.clone(), BlockNumberOrTag::Earliest)
+            .call_contract(tx_request.clone(), BlockNumberOrTag::Latest)
             .await
             .unwrap();
         assert_eq!(expected_bytes, bytes);
@@ -1155,8 +1162,9 @@ mod tests {
             .await
             .unwrap();
 
+        let block_number = instrumented_client.block_number().await.unwrap();
         let storage = instrumented_client
-            .storage_at(account, U256::ZERO, U256::ZERO)
+            .storage_at(account, U256::ZERO, U256::from(block_number))
             .await
             .unwrap();
 
