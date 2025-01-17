@@ -3,21 +3,6 @@
 # Enable the script to exit immediately if a command exits with a non-zero status
 set -o errexit -o nounset -o pipefail
 
-# Define your cleanup function
-clean_up() {
-    echo "Executing cleanup function..."
-    set +e
-    pkill -f anvil
-
-    # Check if the exit status is non-zero
-    exit_status=$?
-    if [ $exit_status -ne 0 ]; then
-        echo "Script exited due to set -e on line $1 with command '$2'. Exit status: $exit_status"
-    fi
-}
-# Use trap to call the clean_up function when the script exits
-trap 'clean_up $LINENO "$BASH_COMMAND"' EXIT
-
 # cd to the directory of this script so that this can be run from anywhere
 anvil_dir=$(
     cd "$(dirname "${BASH_SOURCE[0]}")"
@@ -59,14 +44,14 @@ forge script script/DeployMockAvs.s.sol --rpc-url $ETH_HTTP_URL --private-key $D
 # DEPLOY TOKENS AND STRATEGIES
 cd $root_dir/contracts
 # DO NOT REMOVE THE SLOW DIRECTIVE FROM THIS SCRIPT INVOCATION
-# slow ensures that the transaction reciept is successful and recieved before sending the next transaction
+# slow ensures that the transaction reciept is successful and received before sending the next transaction
 # this should prevent the strategies deploying/registering in a flakey manner,
 forge script script/DeployTokensStrategiesCreateQuorums.s.sol --rpc-url $ETH_HTTP_URL --private-key $DEPLOYER_PRIVATE_KEY --broadcast --slow
 
 # REGISTER OPERATORS WITH EIGENLAYER
 cd $root_dir/contracts
 # DO NOT REMOVE THE SLOW DIRECTIVE FROM THIS SCRIPT INVOCATION
-# slow ensures that the transaction receipt is successful and recieved before sending the next transaction
+# slow ensures that the transaction reciept is successful and received before sending the next transaction
 # this should prevent the operators registering in a flakey manner, the operators registered will change from run to run without this
 forge script script/RegisterOperatorsWithEigenlayer.s.sol --rpc-url $ETH_HTTP_URL --private-key $DEPLOYER_PRIVATE_KEY --broadcast --slow
 
