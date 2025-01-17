@@ -15,16 +15,11 @@ contract MockAvsServiceManager is ServiceManagerBase, BLSSignatureChecker {
         IAVSDirectory _avsDirectory,
         IRewardsCoordinator _rewardsCoordinator
     )
-        ServiceManagerBase(
-            _avsDirectory,
-            _rewardsCoordinator,
-            _registryCoordinator,
-            _registryCoordinator.stakeRegistry()
-        )
+        ServiceManagerBase(_avsDirectory, _rewardsCoordinator, _registryCoordinator, _registryCoordinator.stakeRegistry())
         BLSSignatureChecker(_registryCoordinator)
     {}
 
-    function initialize(address _initialOwner,address _rewardsInitiator) external initializer {
-        __ServiceManagerBase_init(_initialOwner,_rewardsInitiator);
+    function initialize(address _initialOwner, address _rewardsInitiator) external initializer {
+        __ServiceManagerBase_init(_initialOwner, _rewardsInitiator);
     }
 }
