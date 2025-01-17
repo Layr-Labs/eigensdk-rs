@@ -44,7 +44,7 @@ Each version will have a separate `Breaking Changes` section as well. To describ
 * chore: bump version by @MegaRedHand in https://github.com/Layr-Labs/eigensdk-rs/pull/228
 * docs: add GitHub release changelog configuration by @MegaRedHand in https://github.com/Layr-Labs/eigensdk-rs/pull/229
 
-## [0.1.2] - 2024-11-19
+## [0.1.2] - 2025-01-09
 ### Added
 * Added retries with exponential backoff to send transactions in [#158](https://github.com/Layr-Labs/eigensdk-rs/pull/158)
 * Added `query_registration_detail` method in [#162](https://github.com/Layr-Labs/eigensdk-rs/pull/162)
