@@ -208,16 +208,16 @@ contract DeployMockAvsRegistries is
                     payable(address(registryCoordinator))
                 ),
                 address(registryCoordinatorImplementation),
-                abi.encodeWithSelector(
-                    blsregcoord.RegistryCoordinator.initialize.selector,
-                    addressConfig.communityMultisig,
+                abi.encodeCall(
+                    blsregcoord.RegistryCoordinator.initialize,
+                    (addressConfig.communityMultisig,
                     addressConfig.churner,
                     addressConfig.ejector,
-                    addressConfig.pauser,
+                    IPauserRegistry(addressConfig.pauser),
                     0, // 0 initialPausedStatus means everything unpaused
                     quorumsOperatorSetParams,
                     quorumsMinimumStake,
-                    quorumsStrategyParams
+                    quorumsStrategyParams)
                 )
             );
         }

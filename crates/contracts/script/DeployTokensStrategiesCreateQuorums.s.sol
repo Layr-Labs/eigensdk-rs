@@ -79,12 +79,12 @@ contract DeployTokensStrategiesCreateQuorums is
                 new TransparentUpgradeableProxy(
                     address(baseStrategyImplementation),
                     address(eigenLayerProxyAdmin),
-                    abi.encodeWithSelector(
-                        StrategyBaseTVLLimits.initialize.selector,
-                        1_000 ether, // maxPerDeposit
+                    abi.encodeCall(
+                        StrategyBaseTVLLimits.initialize,
+                        (1_000 ether, // maxPerDeposit
                         1_000 ether, // maxDeposits
                         IERC20(mockERC20),
-                        eigenLayerPauserReg
+                        eigenLayerPauserReg)
                     )
                 )
             )
