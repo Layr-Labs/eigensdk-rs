@@ -34,7 +34,7 @@ start_anvil_docker() {
         --entrypoint anvil \
         $FOUNDRY_IMAGE \
         $LOAD_STATE_ANVIL_ARG $DUMP_STATE_ANVIL_ARG --host 0.0.0.0 -v \
-        --base-fee 0
+        --timestamp 0 --base-fee 0
     sleep 2
     docker attach anvil
 }
