@@ -1,11 +1,17 @@
 //! Anvil utilities
 use alloy_primitives::{address, Address};
-use eigen_utils::deploy::contractsregistry::ContractsRegistry::{self, contractsReturn};
+use eigen_utils::sdk::contractsregistry::ContractsRegistry::{self, contractsReturn};
 
 use eigen_common::get_provider;
 
 /// Local anvil ContractsRegistry which contains a mapping of all locally deployed EL contracts.
 pub const CONTRACTS_REGISTRY: Address = address!("5FbDB2315678afecb367f032d93F642f64180aa3");
+
+/// Address of the first account in the local anvil network
+pub const ANVIL_FIRST_ADDRESS: Address = address!("f39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+/// Private key of the first account in the local anvil network
+pub const ANVIL_FIRST_PRIVATE_KEY: &str =
+    "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
 
 /// Local anvil rpc http url
 pub const ANVIL_HTTP_URL: &str = "http://localhost:8545";

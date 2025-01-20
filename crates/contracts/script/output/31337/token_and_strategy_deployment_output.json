@@ -1,6 +1,6 @@
 {
   "addresses": {
-    "erc20mock": "0x82e01223d51Eb87e16A03E24687EDF0F294da6f1",
-    "erc20mockstrategy": "0x7969c5eD335650692Bc04293B07F5BF2e7A673C0"
+    "erc20mock": "0xFD471836031dc5108809D173A067e8486B9047A3",
+    "erc20mockstrategy": "0x1429859428C0aBc9C2C47C8Ee9FBaf82cFA0F20f"
   }
 }

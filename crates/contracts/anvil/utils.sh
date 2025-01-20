@@ -1,8 +1,6 @@
 #!/bin/bash
 
-
-# pinning at old foundry commit because of https://github.com/foundry-rs/foundry/issues/7502
-FOUNDRY_IMAGE=ghcr.io/foundry-rs/foundry:nightly-5b7e4cb3c882b28f3c32ba580de27ce7381f415a
+FOUNDRY_IMAGE=ghcr.io/foundry-rs/foundry:stable@sha256:daeeaaf4383ee0cbfc9f31f079a04ffb0123e49e5f67f2a20b5ce1ac1959a4d6
 
 set -e -o nounset
 
@@ -10,6 +8,7 @@ parent_path=$(
     cd "$(dirname "${BASH_SOURCE[0]}")"
     pwd -P
 )
+
 
 clean_up() {
     # Check if the exit status is non-zero
@@ -32,18 +31,9 @@ start_anvil_docker() {
     DUMP_STATE_ANVIL_ARG=$([[ -z $DUMP_STATE_FILE ]] && echo "" || echo "--dump-state /dump-state.json")
 
     trap 'docker stop anvil 2>/dev/null || true' EXIT
-    docker run -d --name anvil -p 8545:8545 $LOAD_STATE_VOLUME_DOCKER_ARG $DUMP_STATE_VOLUME_DOCKER_ARG \
+    docker run --rm -d --name anvil -p 8545:8545 $LOAD_STATE_VOLUME_DOCKER_ARG $DUMP_STATE_VOLUME_DOCKER_ARG \
         --entrypoint anvil \
         $FOUNDRY_IMAGE \
         $LOAD_STATE_ANVIL_ARG $DUMP_STATE_ANVIL_ARG --host 0.0.0.0
     sleep 2
 }
-
-
-
-
-
-
-
-
-

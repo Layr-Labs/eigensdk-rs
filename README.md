@@ -40,21 +40,15 @@ cargo run --example get_quorum_count
 
 The main branch of this repo is intended to be syncronized with mainnet version of core contracts.
 
-To update the bindings of this repo:
-
-- Inside the `crates/contracts` folder, run:
+To update the bindings of this repo, run:
 
 ```bash
-forge bind --alloy --bindings-path <path-eigensdk-rs>/crates/utils --overwrite -C src/contracts
+make bindings
 ```
 
-where `path-eigensdk-rs` is the full path to the eigensdk-rs (this) repo.
+This command will generate the bindings files in the folder: `crates/utils`.
 
-This command will generate the bindings files in the folder: `<path-eigensdk-rs>/crates/utils`.
-
-⚠️ It rewrites Cargo.toml file, this file must be restored to the current version.
-
-- Fix all compilation warnings.
+⚠️ Remember to fix all compilation warnings.
 
 ## Contributor Guidelines
 
@@ -73,20 +67,19 @@ To test locally :-
 You need `foundry` to successfully run it.
 
 ```bash
-cargo test
+cargo test --workspace
 ```
 
-On Mac, you might need to pull the foundry image manually specifying the platform with:
+On Mac, you might get an error similar to:
 
 ```bash
-docker pull --platform amd64 foundry-rs/foundry
+Error starting anvil container: Client(PullImage { descriptor: "ghcr.io/foundry-rs/foundry:latest", err: DockerStreamError { error: "no matching manifest for linux/arm64/v8 in the manifest list entries" } })
 ```
 
-Sometimes the bindings fail due to containing botched doctests.
-You can exclude them from the test run with:
+In that case, you'll need to pull the foundry image for the `amd64` platform with:
 
 ```bash
-cargo test --workspace --exclude eigen-utils
+docker pull --platform linux/amd64/v8 ghcr.io/foundry-rs/foundry:latest
 ```
 
 At least 1 `approving` review is required to merge the PR.

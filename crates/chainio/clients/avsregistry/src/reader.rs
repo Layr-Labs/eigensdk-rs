@@ -14,9 +14,9 @@ use eigen_types::operator::{
     bitmap_to_quorum_ids, bitmap_to_quorum_ids_from_u192, OperatorPubKeys,
 };
 use eigen_utils::{
-    deploy::stakeregistry::StakeRegistry, middleware::blsapkregistry::BLSApkRegistry,
+    middleware::blsapkregistry::BLSApkRegistry,
     middleware::operatorstateretriever::OperatorStateRetriever,
-    middleware::registrycoordinator::RegistryCoordinator,
+    middleware::registrycoordinator::RegistryCoordinator, middleware::stakeregistry::StakeRegistry,
 };
 
 use num_bigint::BigInt;
