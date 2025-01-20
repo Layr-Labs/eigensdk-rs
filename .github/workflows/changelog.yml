@@ -15,11 +15,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-  
+
     - uses: dangoslen/changelog-enforcer@v3
       with:
-        skipLabels: pipelines,tests,documentation
+        skipLabels: changelog-ignore
 
     - name: Enforce PR URL in CHANGELOG.md
-      if: contains(github.event.pull_request.labels.*.name, 'changelog-')
+      if: contains(github.event.pull_request.labels.*.name, 'changelog-ignore') == false
       run: grep $PR_URL CHANGELOG.md
