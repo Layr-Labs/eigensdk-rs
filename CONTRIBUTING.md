@@ -139,6 +139,16 @@ include Setup of env, IDE and typical getting started instructions?
 
 -->
 
+#### Changelog
+
+All the notable changes in this project are documented in the [CHANGELOG.md](./CHANGELOG.md) file.
+For every pull request, a brief summary of the changes must be added to the changelog, including the pull request URL.
+
+This is required since there is a CI workflow that enforces the changelog to be updated on every pull request.
+However, in case the given PR is not so relevant to be included in the CHANGELOG.md file, this workflow can be skipped by adding the `changelog-ignore` label to the pull request (e.g. CI pipelines).
+
+For more information and examples, refer to the [CHANGELOG.md](./CHANGELOG.md) file.
+
 ### Improving The Documentation
 <!-- TODO
 Updating, improving and correcting the documentation
