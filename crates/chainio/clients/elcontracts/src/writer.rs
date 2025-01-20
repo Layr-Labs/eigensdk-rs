@@ -41,8 +41,7 @@ impl ELChainWriter {
             let _ = tokio::task::spawn_blocking(move || {
                 let _ = eigen_telemetry::telemetry::Telemetry::capture_event("elchainwriter.new")
                     .map_err(|e| ElContractsError::TelemetryError(e.to_string()));
-            })
-            .await;
+            });
         }
 
         Self {
