@@ -16,8 +16,10 @@ jobs:
     steps:
     - uses: actions/checkout@v4
   
-    - name: Enforce PR URL in CHANGELOG.md
-      uses: dangoslen/changelog-enforcer@v3
+    - uses: dangoslen/changelog-enforcer@v3
       with:
         skipLabels: pipelines,tests,documentation
+
+    - name: Enforce PR URL in CHANGELOG.md
+      if: contains(github.event.pull_request.labels.*.name, 'changelog-')
       run: grep $PR_URL CHANGELOG.md
