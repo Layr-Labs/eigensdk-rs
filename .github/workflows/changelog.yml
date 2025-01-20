@@ -9,8 +9,7 @@ env:
 
 jobs:
   # Enforces the update of a changelog file on every pull request 
-  # We only want this for user-visible changes, so we add a few labels
-  # for which the check is skipped
+  # The update can be skipped if the pull request includes the changelog-ignore label.
   changelog:
     runs-on: ubuntu-latest
     steps:
