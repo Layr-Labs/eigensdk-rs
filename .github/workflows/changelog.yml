@@ -20,5 +20,5 @@ jobs:
         skipLabels: pipelines,tests,documentation
 
     - name: Enforce PR URL in CHANGELOG.md
-    - run: grep $PR_URL CHANGELOG.md
-  
+      run: grep $PR_URL CHANGELOG.md
+
