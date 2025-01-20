@@ -38,4 +38,4 @@ jobs:
         run: ./deploy-contracts-save-anvil-state.sh
 
       - name: Check whether the anvil dump state has changed
-        run: diff existing_state.json state.json
+        run: diff previous_state.json state.json
