@@ -658,8 +658,7 @@ mod tests {
             el_chain_reader,
             http_endpoint.to_string(),
             pvt_key.to_string(),
-        )
-        .await;
+        );
 
         let operator_details = Operator {
             address: signer.address(),
