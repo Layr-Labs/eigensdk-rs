@@ -94,8 +94,7 @@ pub async fn register_operator(pvt_key: &str, bls_key: &str, http_endpoint: &str
         el_chain_reader,
         http_endpoint.to_string(),
         pvt_key.to_string(),
-    )
-    .await;
+    );
 
     let operator_details = Operator {
         address: signer.address(),
