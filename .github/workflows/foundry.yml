@@ -30,8 +30,7 @@ jobs:
           version: stable
 
       - name: Show Forge version
-        run: |
-          forge --version
+        run: forge --version
 
       - name: Run Forge fmt
         run: |
