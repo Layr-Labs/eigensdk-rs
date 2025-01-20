@@ -5,8 +5,7 @@ on:
     types: [opened, synchronize, reopened, ready_for_review, labeled, unlabeled]
 
 env:
-  PR_NUMBER: ${{ github.event.number }}
-  PR_URL: https://github.com/Layr-Labs/eigensdk-rs/pull/$PR_NUMBER
+  PR_URL: https://github.com/Layr-Labs/eigensdk-rs/pull/${{ github.event.number }}
 
 jobs:
   # Enforces the update of a changelog file on every pull request 
@@ -21,4 +20,3 @@ jobs:
 
     - name: Enforce PR URL in CHANGELOG.md
       run: grep $PR_URL CHANGELOG.md
-
