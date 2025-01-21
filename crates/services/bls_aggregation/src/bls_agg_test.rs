@@ -4,9 +4,9 @@ pub mod integration_test {
         bls_agg::BlsAggregatorService,
         bls_aggregation_service_response::BlsAggregationServiceResponse,
     };
+    use alloy::primitives::{aliases::U96, Address, Bytes, FixedBytes, B256, U256};
+    use alloy::providers::WalletProvider;
     use alloy::{providers::Provider, signers::local::PrivateKeySigner};
-    use alloy_primitives::{aliases::U96, Address, Bytes, FixedBytes, B256, U256};
-    use alloy_provider::WalletProvider;
     use eigen_client_avsregistry::{
         reader::AvsRegistryChainReader, writer::AvsRegistryChainWriter,
     };

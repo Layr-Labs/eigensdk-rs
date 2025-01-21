@@ -731,8 +731,8 @@ mod tests {
         build_el_chain_reader, new_claim, new_test_writer, ANVIL_FIRST_ADDRESS,
         ANVIL_FIRST_PRIVATE_KEY, OPERATOR_ADDRESS, OPERATOR_PRIVATE_KEY,
     };
+    use alloy::primitives::{address, aliases::U96, Address, U256};
     use alloy::providers::Provider;
-    use alloy_primitives::{address, aliases::U96, Address, U256};
     use eigen_common::{get_provider, get_signer};
     use eigen_crypto_bls::BlsKeyPair;
     use eigen_testing_utils::{

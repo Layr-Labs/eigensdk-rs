@@ -13,8 +13,8 @@ pub mod writer;
 #[cfg(test)]
 pub(crate) mod test_utils {
     use alloy::hex::FromHex;
+    use alloy::primitives::{address, keccak256, Address, Bytes, FixedBytes, U256, U8};
     use alloy::sol_types::SolValue;
-    use alloy_primitives::{address, keccak256, Address, Bytes, FixedBytes, U256, U8};
     use eigen_common::{get_provider, get_signer};
     use eigen_logging::get_test_logger;
     use eigen_testing_utils::anvil_constants::{

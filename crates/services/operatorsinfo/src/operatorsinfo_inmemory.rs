@@ -1,6 +1,6 @@
+use alloy::primitives::{Address, FixedBytes};
 use alloy::providers::Provider;
 use alloy::rpc::types::Filter;
-use alloy_primitives::{Address, FixedBytes};
 use async_trait::async_trait;
 use eigen_client_avsregistry::reader::AvsRegistryChainReader;
 use eigen_common::{get_ws_provider, NEW_PUBKEY_REGISTRATION_EVENT, OPERATOR_SOCKET_UPDATE};
@@ -155,7 +155,7 @@ impl OperatorInfoServiceInMemory {
 
                                     let mut id_map =
                                         operator_state.operator_addr_to_id.write().await;
-                                    id_map.insert(addr, alloy_primitives::FixedBytes(operator_id));
+                                    id_map.insert(addr, alloy::primitives::FixedBytes(operator_id));
                                 }
                                 let mut socket_data = operator_state.socket_dict.write().await;
                                 if let Some(socket) = socket_info {
@@ -421,8 +421,8 @@ impl OperatorInfoServiceInMemory {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use alloy_primitives::{address, Bytes, U256};
-    use alloy_signer_local::PrivateKeySigner;
+    use alloy::primitives::{address, Bytes, U256};
+    use alloy::signers::local::PrivateKeySigner;
     use eigen_client_avsregistry::writer::AvsRegistryChainWriter;
     use eigen_client_elcontracts::{reader::ELChainReader, writer::ELChainWriter};
     use eigen_common::get_provider;

@@ -1,4 +1,4 @@
-use alloy_primitives::ruint;
+use alloy::primitives::ruint;
 use thiserror::Error;
 
 #[derive(Debug, Error)]

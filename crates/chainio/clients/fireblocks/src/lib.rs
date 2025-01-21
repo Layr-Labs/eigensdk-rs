@@ -14,10 +14,9 @@ pub mod list_external_accounts;
 mod list_vault_accounts;
 pub mod status;
 pub mod transaction;
+use alloy::primitives::{Address, U64};
 use alloy::providers::Provider;
 use alloy::rpc::types::transaction::TransactionReceipt;
-use alloy_primitives::Address;
-use alloy_primitives::U64;
 use client::{Client, ASSET_ID_BY_CHAIN};
 use eigen_common::get_provider;
 use error::FireBlockError;
@@ -198,7 +197,7 @@ impl FireblocksWallet {
         match fireblocks_tx.status() {
             Status::Completed => {
                 let provider = get_provider(&self.provider);
-                let hash = alloy_primitives::FixedBytes::<32>::from_str(&fireblocks_tx.tx_hash())
+                let hash = alloy::primitives::FixedBytes::<32>::from_str(&fireblocks_tx.tx_hash())
                     .map_err(|e| FireBlockError::OtherError(e.to_string()))?;
 
                 let tx_hash = provider.get_transaction_receipt(hash).await.map_err(|e| {
@@ -246,7 +245,7 @@ mod tests {
     #[cfg(feature = "fireblock-tests")]
     use crate::FireblocksWallet;
     #[cfg(feature = "fireblock-tests")]
-    use alloy_primitives::address;
+    use alloy::primitives::address;
     #[cfg(feature = "fireblock-tests")]
     use std::env;
 

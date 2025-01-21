@@ -1,7 +1,7 @@
-use alloy_primitives::FixedBytes;
-use alloy_provider::{PendingTransactionBuilder, PendingTransactionError, ProviderBuilder};
-use alloy_rpc_types::eth::TransactionReceipt;
-use alloy_transport::TransportErrorKind;
+use alloy::primitives::FixedBytes;
+use alloy::providers::{PendingTransactionBuilder, PendingTransactionError, ProviderBuilder};
+use alloy::rpc::types::eth::TransactionReceipt;
+use alloy::transports::TransportErrorKind;
 use url::Url;
 
 /// Wait for a transaction to finish and return its receipt.
