@@ -65,7 +65,6 @@ bindings_host:
 	@echo "Generating bindings..."
 	# Fetch submoduless
 	cd $(SDK_CONTRACTS_LOCATION) && forge install
-	cd ../../
 
 	# Empty the directories before generating the bindings
 	rm $(SDK_BINDINGS_PATH)/*
