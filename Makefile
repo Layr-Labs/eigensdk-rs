@@ -73,6 +73,11 @@ bindings:
 	# Fetch submoduless
 	cd $(SDK_CONTRACTS_LOCATION) && forge install
 
+	# Empty the directories before generating the bindings
+	rm $(SDK_BINDINGS_PATH)/*
+	rm $(MIDDLEWARE_BINDINGS_PATH)/*
+	rm $(CORE_BINDINGS_PATH)/*
+
 	# Generate SDK bindings
 	cd $(SDK_CONTRACTS_LOCATION) && forge build --force --skip test --skip script
 	forge bind --alloy --skip-build --bindings-path $(SDK_BINDINGS_PATH) --overwrite \
