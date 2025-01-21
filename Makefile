@@ -68,7 +68,8 @@ CORE_CONTRACTS_ARGS:=$(patsubst %, --select '^%$$', $(shell echo $(CORE_CONTRACT
 
 
 .PHONY: bindings
-bindings:
+
+bindings_host:
 	@echo "Generating bindings..."
 	# Fetch submoduless
 	cd $(SDK_CONTRACTS_LOCATION) && forge install
@@ -97,3 +98,9 @@ bindings:
 		$(CORE_CONTRACTS_ARGS)
 
 	@echo "Bindings generated"
+
+bindings:
+	@echo "Starting Docker container..."
+	@docker run --rm -v "$(PWD):$(PWD)" -w "$(PWD)" \
+		ghcr.io/foundry-rs/foundry:v0.3.0 \
+		-c 'apk add g++ && apk add make && make bindings_host'
