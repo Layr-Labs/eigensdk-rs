@@ -11,7 +11,6 @@ license-file.workspace = true
 [dependencies]
 alloy.workspace = true
 async-trait.workspace = true
-alloy-primitives.workspace = true
 eigen-client-avsregistry.workspace = true
 eigen-common.workspace = true
 eigen-crypto-bls.workspace = true
@@ -24,9 +23,9 @@ thiserror.workspace = true
 tokio-util = "0.7.11"
 futures.workspace = true
 eyre.workspace = true
+
 [dev-dependencies]
 eigen-testing-utils.workspace = true
-alloy-signer-local.workspace = true
 eigen-logging.workspace = true
 eigen-client-elcontracts.workspace = true
 ark-bn254.workspace = true
