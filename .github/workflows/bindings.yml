@@ -39,7 +39,7 @@ jobs:
       
       - name: Generate new bindings
         run: |
-          make bindings
+          make bindings_host
           cargo fmt
 
       - name: Compare existing and new bindings
