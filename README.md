@@ -50,7 +50,7 @@ This command will generate the bindings files in the folder: `crates/utils`.
 
 **Important:** this command requires Docker installed and running since it uses a container to generate the bindings. On Mac, you may get an error similar to:
 
-```bash
+```text
 v0.3.0: Pulling from foundry-rs/foundry
 docker: no matching manifest for linux/arm64/v8 in the manifest list entries.
 ```
