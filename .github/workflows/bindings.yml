@@ -27,6 +27,9 @@ jobs:
         with:
           version: v0.3.0
 
+      - name: Show Forge version
+        run: forge --version
+
       - name: Backup existing bindings
         working-directory: crates/utils/src/
         run: |
