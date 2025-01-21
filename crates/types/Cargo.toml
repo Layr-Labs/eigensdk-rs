@@ -9,7 +9,7 @@ repository.workspace = true
 license-file.workspace = true
 
 [dependencies]
-alloy-primitives.workspace = true
+alloy.workspace = true
 eigen-crypto-bls.workspace = true
 ethers.workspace = true
 num-bigint = "0.4.4"

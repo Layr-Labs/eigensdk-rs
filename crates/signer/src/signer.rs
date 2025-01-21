@@ -69,8 +69,8 @@ mod test {
     use alloy::consensus::{SignableTransaction, TxLegacy};
     use alloy::network::{TxSigner, TxSignerSync};
     use alloy::signers::local::PrivateKeySigner;
-    use alloy_primitives::PrimitiveSignature;
-    use alloy_primitives::{address, bytes, hex_literal::hex, keccak256, Address, U256};
+    use alloy::primitives::PrimitiveSignature;
+    use alloy::primitives::{address, bytes, hex_literal::hex, keccak256, Address, U256};
     use aws_config::{BehaviorVersion, Region, SdkConfig};
     use aws_sdk_kms::{
         self,

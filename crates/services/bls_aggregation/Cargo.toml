@@ -10,7 +10,6 @@ license-file.workspace = true
 
 [dependencies]
 alloy.workspace = true
-alloy-primitives.workspace = true
 ark-bn254.workspace = true
 ark-ec.workspace = true
 eigen-client-avsregistry.workspace = true
@@ -27,8 +26,6 @@ serde_json.workspace = true
 serde.workspace = true
 
 [dev-dependencies]
-alloy-node-bindings.workspace = true
-alloy-provider.workspace = true
 eigen-logging.workspace = true
 eigen-testing-utils.workspace = true
 eigen-utils.workspace = true
