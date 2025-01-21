@@ -48,7 +48,20 @@ make bindings
 
 This command will generate the bindings files in the folder: `crates/utils`.
 
-⚠️ Remember to fix all compilation warnings.
+**Important:** this command requires Docker installed and running since it uses a container to generate the bindings. On Mac, you may get an error similar to:
+
+```text
+v0.3.0: Pulling from foundry-rs/foundry
+docker: no matching manifest for linux/arm64/v8 in the manifest list entries.
+```
+
+In that case, you'll need to pull the foundry image for the `amd64` platform with:
+
+```bash
+docker pull --platform linux/amd64/v8 ghcr.io/foundry-rs/foundry:v0.3.0
+```
+
+And then run `make bindings` again.
 
 ## Contributor Guidelines
 
