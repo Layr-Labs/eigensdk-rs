@@ -12,6 +12,9 @@ Each version will have a separate `Breaking Changes` section as well. To describ
 ## [Unreleased]
 ### Added
 ### Changed
+* Changed the `bindings` target to generate the bindings using Docker with Foundry v0.3.0 in [#245](https://github.com/Layr-Labs/eigensdk-rs/pull/243)
+ 
+
 ### Breaking changes
 ### Removed
 
