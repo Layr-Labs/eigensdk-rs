@@ -1,0 +1,22 @@
+name: Docs
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [ '**' ]
+
+jobs:
+  check:
+    strategy:
+      fail-fast: true
+
+    name: Check READMEs are synced
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Check README.md and eigensdk/README.md are synced
+        run: diff README.md eigensdk/README.md
