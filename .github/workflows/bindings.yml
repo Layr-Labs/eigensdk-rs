@@ -1,0 +1,47 @@
+name: Check bindings
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [ '**' ]
+
+env:
+  FOUNDRY_PROFILE: ci
+
+jobs:
+  check:
+    strategy:
+      fail-fast: true
+
+    name: Check bindings
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: stable
+
+      - name: Backup existing bindings
+        working-directory: crates/utils/src/
+        run: |
+          cp -r core/ existing_core/
+          cp -r middleware/ existing_middleware/
+          cp -r sdk/ existing_sdk/
+      
+      - name: Generate new bindings
+        run: |
+          make bindings
+          cargo fmt
+
+      - name: Compare existing and new bindings
+        working-directory: crates/utils/src/
+        run: |
+          diff existing_core/ core/
+          diff existing_middleware/ middleware/
+          diff existing_sdk/ sdk/
