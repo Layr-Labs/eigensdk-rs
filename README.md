@@ -63,8 +63,6 @@ docker pull --platform linux/amd64/v8 ghcr.io/foundry-rs/foundry:v0.3.0
 
 And then run `make bindings` again.
 
-⚠️ Remember to fix all compilation warnings.
-
 ## Contributor Guidelines
 
 We are actively looking for contributors. Thank you for your interest. We have strict ci checks in place. In case of any questions and support, feel free to raise an issue.
