@@ -19,4 +19,4 @@ jobs:
           submodules: recursive
 
       - name: Check README.md and eigensdk/README.md are synced
-        run: diff README.md eigensdk/README.md
+        run: diff README.md crates/eigensdk/README.md
