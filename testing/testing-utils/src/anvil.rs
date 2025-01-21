@@ -6,7 +6,7 @@ use testcontainers::{
 };
 const ANVIL_IMAGE: &str = "ghcr.io/foundry-rs/foundry";
 const ANVIL_TAG: &str = "latest";
-const ANVIL_STATE_PATH: &str = "./crates/contracts/anvil/dump_state.json"; // Correct file path // relative path from the project root
+const ANVIL_STATE_PATH: &str = "./crates/contracts/anvil/dump_state.json"; // relative path from the project root
 
 fn workspace_dir() -> PathBuf {
     let output = std::process::Command::new(env!("CARGO"))
