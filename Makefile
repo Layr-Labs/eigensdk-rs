@@ -93,7 +93,7 @@ bindings_host:
 	@echo "Bindings generated"
 
 bindings:
-	@echo "Generating bindings..."
-	docker run --rm -v "$(PWD):$(PWD)" -w "$(PWD)" \
+	@echo "Starting Docker container..."
+	@docker run --rm -v "$(PWD):$(PWD)" -w "$(PWD)" \
 		ghcr.io/foundry-rs/foundry:v0.3.0 \
 		-c 'apk add g++ && apk add make && make bindings_host'
