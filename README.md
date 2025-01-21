@@ -48,7 +48,7 @@ make bindings
 
 This command will generate the bindings files in the folder: `crates/utils`.
 
-**Important:** this command requires Docker installed and running since it uses a container to generate the binding. On Mac, you may get an error similar to:
+**Important:** this command requires Docker installed and running since it uses a container to generate the bindings. On Mac, you may get an error similar to:
 
 ```bash
 v0.3.0: Pulling from foundry-rs/foundry
