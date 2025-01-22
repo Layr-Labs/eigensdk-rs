@@ -60,10 +60,13 @@ impl From<BlsKeyPair> for OperatorPubKeys {
 
 pub struct Operator {
     pub address: Address,
-    pub earnings_receiver_address: Address,
-    pub delegation_approver_address: Address,
     pub staker_opt_out_window_blocks: u32,
+    pub delegation_approver_address: Address,
     pub metadata_url: Option<String>,
+
+    /// `allocation_delay` is the delay in seconds where an operator is allowed to change allocation
+    /// This can only be set once by the operator. Once set this can't be changed
+    pub allocation_delay: u32,
 }
 
 pub type Socket = String;

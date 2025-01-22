@@ -13,12 +13,11 @@ use eigen_logging::logger::SharedLogger;
 use eigen_types::operator::{
     bitmap_to_quorum_ids, bitmap_to_quorum_ids_from_u192, OperatorPubKeys,
 };
-use eigen_utils::{
-    deploy::stakeregistry::StakeRegistry, middleware::blsapkregistry::BLSApkRegistry,
-    middleware::operatorstateretriever::OperatorStateRetriever,
-    middleware::registrycoordinator::RegistryCoordinator,
-};
 
+use eigen_utils::middleware::blsapkregistry::BLSApkRegistry;
+use eigen_utils::middleware::operatorstateretriever::OperatorStateRetriever;
+use eigen_utils::middleware::registrycoordinator::RegistryCoordinator;
+use eigen_utils::middleware::stakeregistry::StakeRegistry;
 use num_bigint::BigInt;
 use std::fmt::Debug;
 use std::{collections::HashMap, str::FromStr};

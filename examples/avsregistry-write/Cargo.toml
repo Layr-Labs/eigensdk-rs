@@ -28,6 +28,7 @@ eigen-logging.workspace = true
 eigen-testing-utils.workspace = true
 eigen-types.workspace = true
 eigen-utils.workspace = true
+eigen-common.workspace = true
 eyre.workspace = true
 lazy_static = "1.5.0"
 tokio = { workspace = true, features = ["macros", "rt-multi-thread"] }

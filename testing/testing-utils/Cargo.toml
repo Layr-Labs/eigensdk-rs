@@ -18,6 +18,7 @@ alloy-transport.workspace = true
 alloy-provider.workspace = true
 eigen-common.workspace = true
 eigen-utils.workspace = true
+alloy.workspace = true
 serde.workspace = true
 serde_json.workspace = true
 testcontainers.workspace = true

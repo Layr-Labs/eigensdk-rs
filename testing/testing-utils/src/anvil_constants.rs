@@ -1,8 +1,7 @@
 //! Anvil utilities
-use alloy_primitives::{address, Address};
-use eigen_utils::deploy::contractsregistry::ContractsRegistry::{self, contractsReturn};
-
+use alloy::primitives::{address, Address};
 use eigen_common::get_provider;
+use eigen_utils::sdk::contractsregistry::ContractsRegistry::{self, contractsReturn};
 
 /// Local anvil ContractsRegistry which contains a mapping of all locally deployed EL contracts.
 pub const CONTRACTS_REGISTRY: Address = address!("5FbDB2315678afecb367f032d93F642f64180aa3");
@@ -133,12 +132,42 @@ pub async fn get_proxy_admin(rpc_url: String) -> Address {
     address
 }
 
-/// Avs Directory contract address
+/// Rewards contract address
 pub async fn get_rewards_coordinator_address(rpc_url: String) -> Address {
     let contracts_registry = ContractsRegistry::new(CONTRACTS_REGISTRY, get_provider(&rpc_url));
 
     let val = contracts_registry
         .contracts("rewardsCoordinator".to_string())
+        .call()
+        .await
+        .unwrap();
+
+    let contractsReturn { _0: address } = val;
+
+    address
+}
+
+/// Allocation Manager contract address
+pub async fn get_allocation_manager_address(rpc_url: String) -> Address {
+    let contracts_registry = ContractsRegistry::new(CONTRACTS_REGISTRY, get_provider(&rpc_url));
+
+    let val = contracts_registry
+        .contracts("allocationManager".to_string())
+        .call()
+        .await
+        .unwrap();
+
+    let contractsReturn { _0: address } = val;
+
+    address
+}
+
+/// Permission Controller contract address
+pub async fn get_permission_controller_address(rpc_url: String) -> Address {
+    let contracts_registry = ContractsRegistry::new(CONTRACTS_REGISTRY, get_provider(&rpc_url));
+
+    let val = contracts_registry
+        .contracts("permissionController".to_string())
         .call()
         .await
         .unwrap();

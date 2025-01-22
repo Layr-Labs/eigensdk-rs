@@ -11,7 +11,8 @@ library BN254 {
     non_camel_case_types,
     non_snake_case,
     clippy::pub_underscore_fields,
-    clippy::style
+    clippy::style,
+    clippy::empty_structs_with_brackets
 )]
 pub mod BN254 {
     use super::*;
@@ -790,7 +791,8 @@ interface IBLSSignatureChecker {
     non_camel_case_types,
     non_snake_case,
     clippy::pub_underscore_fields,
-    clippy::style
+    clippy::style,
+    clippy::empty_structs_with_brackets
 )]
 pub mod IBLSSignatureChecker {
     use super::*;
@@ -2139,7 +2141,7 @@ pub mod IBLSSignatureChecker {
             Self::SELECTORS.binary_search(&selector).is_ok()
         }
         #[inline]
-        #[allow(unsafe_code, non_snake_case)]
+        #[allow(non_snake_case)]
         fn abi_decode_raw(
             selector: [u8; 4],
             data: &[u8],
@@ -2215,7 +2217,7 @@ pub mod IBLSSignatureChecker {
                     selector,
                 ));
             };
-            (unsafe { DECODE_SHIMS.get_unchecked(idx) })(data, validate)
+            DECODE_SHIMS[idx](data, validate)
         }
         #[inline]
         fn abi_encoded_size(&self) -> usize {

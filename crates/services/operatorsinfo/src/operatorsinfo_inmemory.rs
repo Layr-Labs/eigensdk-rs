@@ -122,7 +122,7 @@ impl OperatorInfoServiceInMemory {
     /// # Returns
     ///
     /// A tuple of 2 elements
-    /// [`Self`] and [`UnboundedReceiver<OperatorInfoServiceError>`] if successfull , else [`OperatorInfoServiceError`]
+    /// [`Self`] and [`UnboundedReceiver<OperatorInfoServiceError>`] if successful , else [`OperatorInfoServiceError`]
     pub async fn new(
         logger: SharedLogger,
         avs_registry_chain_reader: AvsRegistryChainReader,
@@ -430,12 +430,13 @@ mod tests {
     use eigen_logging::get_test_logger;
     use eigen_testing_utils::anvil::start_anvil_container;
     use eigen_testing_utils::anvil_constants::{
-        get_avs_directory_address, get_delegation_manager_address,
+        get_allocation_manager_address, get_avs_directory_address, get_delegation_manager_address,
         get_operator_state_retriever_address, get_registry_coordinator_address,
         get_rewards_coordinator_address, get_strategy_manager_address,
     };
     use eigen_testing_utils::transaction::wait_transaction;
     use eigen_types::operator::Operator;
+    use eigen_utils::core::delegationmanager::DelegationManager;
     use std::str::FromStr;
     use std::time::{Duration, SystemTime, UNIX_EPOCH};
     use tokio::time::sleep;
@@ -640,21 +641,42 @@ mod tests {
             get_delegation_manager_address(http_endpoint.clone()).await;
         let avs_directory_address = get_avs_directory_address(http_endpoint.clone()).await;
         let strategy_manager_address = get_strategy_manager_address(http_endpoint.clone()).await;
+        let registry_coordinator_address =
+            get_registry_coordinator_address(http_endpoint.clone()).await;
+        let contract_delegation_manager =
+            DelegationManager::new(delegation_manager_address, get_provider(&http_endpoint));
+
         let rewards_coordinator_address =
             get_rewards_coordinator_address(http_endpoint.clone()).await;
+
+        let DelegationManager::permissionControllerReturn {
+            _0: permission_controller,
+        } = contract_delegation_manager
+            .permissionController()
+            .call()
+            .await
+            .unwrap();
+
         let el_chain_reader = ELChainReader::new(
             get_test_logger(),
             Address::ZERO,
             delegation_manager_address,
+            rewards_coordinator_address,
             avs_directory_address,
+            permission_controller,
             http_endpoint.to_string(),
         );
         let signer = PrivateKeySigner::from_str(pvt_key).unwrap();
+
+        let allocation_manager = get_allocation_manager_address(http_endpoint.clone()).await;
 
         let el_chain_writer = ELChainWriter::new(
             delegation_manager_address,
             strategy_manager_address,
             rewards_coordinator_address,
+            permission_controller,
+            allocation_manager,
+            registry_coordinator_address,
             el_chain_reader,
             http_endpoint.to_string(),
             pvt_key.to_string(),
@@ -662,10 +684,10 @@ mod tests {
 
         let operator_details = Operator {
             address: signer.address(),
-            earnings_receiver_address: signer.address(),
             delegation_approver_address: signer.address(),
             staker_opt_out_window_blocks: 3,
             metadata_url: Some("eigensdk-rs".to_string()),
+            allocation_delay: 0,
         };
 
         el_chain_writer
