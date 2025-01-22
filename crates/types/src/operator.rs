@@ -1,4 +1,4 @@
-use alloy_primitives::{aliases::U192, Address, FixedBytes, U256};
+use alloy::primitives::{aliases::U192, Address, FixedBytes, U256};
 use eigen_crypto_bls::{convert_to_g1_point, error::BlsError, BlsG1Point, BlsG2Point, BlsKeyPair};
 use ethers::{types::U64, utils::keccak256};
 use num_bigint::BigUint;

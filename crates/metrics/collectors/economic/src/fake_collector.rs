@@ -2,7 +2,7 @@ use std::{collections::HashMap, str::FromStr};
 
 use crate::error::CollectorMetricError;
 
-use alloy_primitives::{Address, FixedBytes, U256};
+use alloy::primitives::{Address, FixedBytes, U256};
 use eigen_client_avsregistry::reader::AvsRegistryChainReader;
 use eigen_logging::logger::SharedLogger;
 use eigen_types::operator::OperatorId;

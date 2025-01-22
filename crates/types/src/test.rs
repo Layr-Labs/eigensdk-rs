@@ -1,5 +1,5 @@
 use crate::operator::QuorumNum;
-use alloy_primitives::{B256, U256};
+use alloy::primitives::{B256, U256};
 use eigen_crypto_bls::BlsKeyPair;
 use std::collections::HashMap;
 
