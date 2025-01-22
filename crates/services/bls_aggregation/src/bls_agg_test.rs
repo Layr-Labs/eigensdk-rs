@@ -2,8 +2,8 @@
 pub mod integration_test {
     use crate::bls_agg::BlsAggregatorService;
     use crate::bls_aggregation_service_response::BlsAggregationServiceResponse;
+    use alloy::primitives::{aliases::U96, hex, Bytes, FixedBytes, B256, U256};
     use alloy::providers::Provider;
-    use alloy_primitives::{aliases::U96, hex, Bytes, FixedBytes, B256, U256};
     use eigen_client_avsregistry::{
         reader::AvsRegistryChainReader, writer::AvsRegistryChainWriter,
     };

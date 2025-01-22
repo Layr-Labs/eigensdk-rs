@@ -1,7 +1,7 @@
 //! register operator in quorum with avs registry coordinator
-use alloy_primitives::U256;
-use alloy_primitives::{Bytes, FixedBytes};
-use alloy_signer_local::PrivateKeySigner;
+use alloy::primitives::U256;
+use alloy::primitives::{Bytes, FixedBytes};
+use alloy::signers::local::PrivateKeySigner;
 use eigen_client_avsregistry::writer::AvsRegistryChainWriter;
 use eigen_client_elcontracts::reader::ELChainReader;
 use eigen_client_elcontracts::writer::ELChainWriter;

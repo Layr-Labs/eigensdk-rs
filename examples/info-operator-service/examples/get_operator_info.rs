@@ -1,5 +1,5 @@
-use alloy_primitives::{Address, Bytes, FixedBytes, U256};
-use alloy_signer_local::PrivateKeySigner;
+use alloy::primitives::{Address, Bytes, FixedBytes, U256};
+use alloy::signers::local::PrivateKeySigner;
 use eigen_client_avsregistry::{reader::AvsRegistryChainReader, writer::AvsRegistryChainWriter};
 use eigen_client_elcontracts::{
     reader::ELChainReader,

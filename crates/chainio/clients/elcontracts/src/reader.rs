@@ -1,5 +1,5 @@
 use crate::error::ElContractsError;
-use alloy_primitives::{Address, FixedBytes, U256};
+use alloy::primitives::{Address, FixedBytes, U256};
 use eigen_common::get_provider;
 use eigen_logging::logger::SharedLogger;
 use eigen_types::operator::Operator;
@@ -553,9 +553,9 @@ impl ELChainReader {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use alloy::primitives::{address, keccak256, Address, FixedBytes, U256};
     use alloy::providers::Provider;
     use alloy::{eips::eip1898::BlockNumberOrTag::Number, rpc::types::BlockTransactionsKind};
-    use alloy_primitives::{address, keccak256, Address, FixedBytes, U256};
     use eigen_logging::get_test_logger;
     use eigen_testing_utils::{
         anvil::start_anvil_container,

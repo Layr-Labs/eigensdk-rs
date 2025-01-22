@@ -125,38 +125,15 @@ parking_lot = "0.12"
 
 anvil-utils = { path = "examples/anvil-utils" }
 
-#alloy
+# alloy
 alloy = { version = "0.9", features = [
     "sol-types",
     "contract",
     "full",
     "signer-aws",
+    "rlp",
+    "json-rpc",
 ] }
-alloy-json-rpc = { version = "0.9", default-features = false }
-alloy-network = { version = "0.9", default-features = false }
-alloy-node-bindings = { version = "0.9", default-features = false }
-alloy-primitives = "0.8"
-alloy-provider = { version = "0.9", default-features = false, features = [
-    "reqwest",
-    "ws",
-] }
-alloy-pubsub = { version = "0.9", default-features = false }
-alloy-rlp = "0.3"
-alloy-rpc-client = "0.9"
-alloy-rpc-types = { version = "0.9", default-features = false, features = [
-    "eth",
-] }
-alloy-serde = { version = "0.9", default-features = false }
-alloy-signer = { version = "0.9", default-features = false }
-alloy-signer-aws = "0.9"
-alloy-signer-local = { version = "0.9", default-features = false }
-alloy-sol-types = "0.8"
-alloy-transport = { version = "0.9" }
-alloy-transport-http = { version = "0.9", features = [
-    "reqwest-rustls-tls",
-], default-features = false }
-alloy-transport-ipc = { version = "0.9", default-features = false }
-alloy-transport-ws = { version = "0.9", default-features = false }
 
 avsregistry-read = { path = "examples/avsregistry-read" }
 avsregistry-write = { path = "examples/avsregistry-write" }

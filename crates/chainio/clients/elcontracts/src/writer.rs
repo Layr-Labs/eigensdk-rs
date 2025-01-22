@@ -1,6 +1,6 @@
 use crate::error::ElContractsError;
 use crate::reader::ELChainReader;
-use alloy_primitives::{Address, FixedBytes, TxHash, U256};
+use alloy::primitives::{Address, FixedBytes, TxHash, U256};
 use eigen_common::get_signer;
 pub use eigen_types::operator::Operator;
 use eigen_utils::core::irewardscoordinator::IRewardsCoordinator::{self, RewardsMerkleClaim};
@@ -391,9 +391,9 @@ impl ELChainWriter {
 mod tests {
     use super::ELChainWriter;
     use crate::reader::ELChainReader;
+    use alloy::primitives::{address, keccak256, Address, FixedBytes, U256, U8};
+    use alloy::signers::local::PrivateKeySigner;
     use alloy::{providers::Provider, sol_types::SolValue};
-    use alloy_primitives::{address, keccak256, Address, FixedBytes, U256, U8};
-    use alloy_signer_local::PrivateKeySigner;
     use anvil_constants::CONTRACTS_REGISTRY;
     use eigen_common::{get_provider, get_signer};
     use eigen_logging::get_test_logger;

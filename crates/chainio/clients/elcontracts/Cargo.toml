@@ -10,7 +10,6 @@ license-file.workspace = true
 
 [dependencies]
 alloy.workspace = true
-alloy-primitives.workspace = true
 eigen-common.workspace = true
 eigen-logging.workspace = true
 eigen-telemetry = { workspace = true, optional = true }
@@ -21,9 +20,6 @@ tokio = { workspace = true, optional = true }
 tracing.workspace = true
 
 [dev-dependencies]
-alloy.workspace = true
-alloy-provider.workspace = true
-alloy-signer-local.workspace = true
 eigen-testing-utils.workspace = true
 once_cell.workspace = true
 serial_test.workspace = true
