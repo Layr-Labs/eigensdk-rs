@@ -754,4 +754,108 @@ mod tests {
         let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
         assert!(receipt.status());
     }
+        #[tokio::test]
+    async fn test_set_operator_avs_split_modified() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let el_chain_writer = new_test_writer_with_private_key(
+            http_endpoint.to_string(),
+            ANVIL_FIRST_PRIVATE_KEY.to_string(),
+        )
+        .await;
+        let new_split = 5;
+        let avs_address = get_service_manager_address(http_endpoint.clone()).await;
+
+        let split = el_chain_writer
+            .el_chain_reader
+            .get_operator_avs_split(ANVIL_FIRST_ADDRESS, avs_address)
+            .await
+            .unwrap();
+
+        assert_eq!(split, 1000);
+
+
+        // Set the activation delay to zero so that the split change can be
+        // processed right after setting it
+        let signer = get_signer(ANVIL_FIRST_PRIVATE_KEY, &http_endpoint);
+        let rewards_coordinator_address =
+            get_rewards_coordinator_address(http_endpoint.to_string()).await;
+
+        let rewards_coordinator = IRewardsCoordinator::new(rewards_coordinator_address, &signer);
+        let activation_delay = 0;
+        let set_activation_delay = rewards_coordinator
+            .setActivationDelay(activation_delay)
+            .send()
+            .await
+            .unwrap();
+        let receipt = set_activation_delay.get_receipt().await.unwrap();
+        assert!(receipt.status());
+        
+        let tx_hash = el_chain_writer
+            .set_operator_avs_split(ANVIL_FIRST_ADDRESS, avs_address, new_split)
+            .await
+            .unwrap();
+
+        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+        assert!(receipt.status());
+
+        let split = el_chain_writer
+            .el_chain_reader
+            .get_operator_avs_split(ANVIL_FIRST_ADDRESS, avs_address)
+            .await
+            .unwrap();
+
+        assert_eq!(split, new_split);
+    }
+
+    #[tokio::test]
+    async fn test_set_operator_pi_split_modified() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let el_chain_writer = new_test_writer_with_private_key(
+            http_endpoint.to_string(),
+            ANVIL_FIRST_PRIVATE_KEY.to_string(),
+        )
+        .await;
+        let new_split = 5;
+
+        let split = el_chain_writer
+            .el_chain_reader
+            .get_operator_pi_split(ANVIL_FIRST_ADDRESS)
+            .await
+            .unwrap();
+
+        assert_eq!(split, 1000);
+
+
+        // Set the activation delay to zero so that the split change can be
+        // processed right after setting it
+        let signer = get_signer(ANVIL_FIRST_PRIVATE_KEY, &http_endpoint);
+        let rewards_coordinator_address =
+            get_rewards_coordinator_address(http_endpoint.to_string()).await;
+
+        let rewards_coordinator = IRewardsCoordinator::new(rewards_coordinator_address, &signer);
+        let activation_delay = 0;
+        let set_activation_delay = rewards_coordinator
+            .setActivationDelay(activation_delay)
+            .send()
+            .await
+            .unwrap();
+        let receipt = set_activation_delay.get_receipt().await.unwrap();
+        assert!(receipt.status());
+        
+        let tx_hash = el_chain_writer
+            .set_operator_pi_split(ANVIL_FIRST_ADDRESS, new_split)
+            .await
+            .unwrap();
+
+        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+        assert!(receipt.status());
+
+        let split = el_chain_writer
+            .el_chain_reader
+            .get_operator_pi_split(ANVIL_FIRST_ADDRESS)
+            .await
+            .unwrap();
+
+        assert_eq!(split, new_split);
+    }
 }
