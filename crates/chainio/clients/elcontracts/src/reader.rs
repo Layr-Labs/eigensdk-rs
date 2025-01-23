@@ -6,7 +6,7 @@ use eigen_types::operator::Operator;
 use eigen_utils::core::islasher::ISlasher;
 use eigen_utils::core::{
     avsdirectory::AVSDirectory, delegationmanager::DelegationManager, erc20::ERC20,
-    istrategy::IStrategy, rewardscoordinator::RewardsCoordinator,
+    irewardscoordinator::IRewardsCoordinator ,istrategy::IStrategy,
 };
 #[derive(Debug, Clone)]
 pub struct ELChainReader {
@@ -389,20 +389,20 @@ impl ELChainReader {
         Ok(is_operator_is)
     }
 
-    /// Get Operator Avs Split
+    /// Gets the split of a specific `operator` for a specific `avs`
     ///
     /// # Arguments
     ///
-    /// * `operator` - The operator's address
-    /// * `avs` - The Avs 's address
+    /// * `operator` - The operator address
+    /// * `avs` - The AVS address
     ///
     /// # Returns
     ///
-    /// * `u16` - the split for the specific operator for the specific avs
+    /// * `Result<u16, ElContractsError>` - The split of the operator for the AVS, if the call is successful
     ///
     /// # Errors
     ///
-    /// * `ElContractsError` - if the call to the contract fails
+    /// * `ElContractsError` - if the call to the contract fails.
     pub async fn get_operator_avs_split(
         &self,
         operator: Address,
@@ -410,42 +410,44 @@ impl ELChainReader {
     ) -> Result<u16, ElContractsError> {
         let provider = get_provider(&self.provider);
 
-        let contract_rewards_coordinator =
-            RewardsCoordinator::new(self.delegation_manager, provider);
+        let rewards_coordinator = IRewardsCoordinator::new(self.rewards_coordinator, provider);
 
-        Ok(contract_rewards_coordinator
+        let operator_avs_split = rewards_coordinator
             .getOperatorAVSSplit(operator, avs)
             .call()
             .await
             .map_err(ElContractsError::AlloyContractError)?
-            ._0)
+            ._0;
+
+        Ok(operator_avs_split)
     }
 
-    /// Get Operator PI Split
+    /// Gets the split of a specific `operator` for Programmatic Incentives
     ///
     /// # Arguments
     ///
-    /// * `operator` - The operator's address
+    /// * `operator` - The operator address
     ///
     /// # Returns
     ///
-    /// * `u16` - The split for a specific `operator` for Programmatic Incentives
+    /// * `Result<u16, ElContractsError>` - The split of the operator for PI, if the call is successful
     ///
     /// # Errors
     ///
-    /// * `ElContractsError` - if the call to the contract fails
+    /// * `ElContractsError` - if the call to the contract fails.
     pub async fn get_operator_pi_split(&self, operator: Address) -> Result<u16, ElContractsError> {
         let provider = get_provider(&self.provider);
 
-        let contract_rewards_coordinator =
-            RewardsCoordinator::new(self.delegation_manager, provider);
+        let rewards_coordinator = IRewardsCoordinator::new(self.rewards_coordinator, provider);
 
-        Ok(contract_rewards_coordinator
+        let operator_pi_split = rewards_coordinator
             .getOperatorPISplit(operator)
             .call()
             .await
             .map_err(ElContractsError::AlloyContractError)?
-            ._0)
+            ._0;
+
+        Ok(operator_pi_split)
     }
 }
 
