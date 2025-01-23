@@ -614,9 +614,9 @@ pub mod IEigenPodManager {
         b"",
     );
     /**Event with signature `BeaconChainETHDeposited(address,uint256)` and selector `0x35a85cabc603f48abb2b71d9fbd8adea7c449d7f0be900ae7a2986ea369c3d0d`.
-    ```solidity
-    event BeaconChainETHDeposited(address indexed podOwner, uint256 amount);
-    ```*/
+```solidity
+event BeaconChainETHDeposited(address indexed podOwner, uint256 amount);
+```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -641,18 +641,48 @@ pub mod IEigenPodManager {
         #[automatically_derived]
         impl alloy_sol_types::SolEvent for BeaconChainETHDeposited {
             type DataTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
-            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (
                 alloy_sol_types::sol_data::FixedBytes<32>,
                 alloy::sol_types::sol_data::Address,
             );
             const SIGNATURE: &'static str = "BeaconChainETHDeposited(address,uint256)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
-                alloy_sol_types::private::B256::new([
-                    53u8, 168u8, 92u8, 171u8, 198u8, 3u8, 244u8, 138u8, 187u8, 43u8, 113u8, 217u8,
-                    251u8, 216u8, 173u8, 234u8, 124u8, 68u8, 157u8, 127u8, 11u8, 233u8, 0u8, 174u8,
-                    122u8, 41u8, 134u8, 234u8, 54u8, 156u8, 61u8, 13u8,
-                ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
+                53u8,
+                168u8,
+                92u8,
+                171u8,
+                198u8,
+                3u8,
+                244u8,
+                138u8,
+                187u8,
+                43u8,
+                113u8,
+                217u8,
+                251u8,
+                216u8,
+                173u8,
+                234u8,
+                124u8,
+                68u8,
+                157u8,
+                127u8,
+                11u8,
+                233u8,
+                0u8,
+                174u8,
+                122u8,
+                41u8,
+                134u8,
+                234u8,
+                54u8,
+                156u8,
+                61u8,
+                13u8,
+            ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -670,20 +700,22 @@ pub mod IEigenPodManager {
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
-                        Self::SIGNATURE,
-                        topics.0,
-                        Self::SIGNATURE_HASH,
-                    ));
+                    return Err(
+                        alloy_sol_types::Error::invalid_event_signature_hash(
+                            Self::SIGNATURE,
+                            topics.0,
+                            Self::SIGNATURE_HASH,
+                        ),
+                    );
                 }
                 Ok(())
             }
             #[inline]
             fn tokenize_body(&self) -> Self::DataToken<'_> {
                 (
-                    <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
-                        &self.amount,
-                    ),
+                    <alloy::sol_types::sol_data::Uint<
+                        256,
+                    > as alloy_sol_types::SolType>::tokenize(&self.amount),
                 )
             }
             #[inline]
@@ -698,7 +730,9 @@ pub mod IEigenPodManager {
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
+                out[0usize] = alloy_sol_types::abi::token::WordToken(
+                    Self::SIGNATURE_HASH,
+                );
                 out[1usize] = <alloy::sol_types::sol_data::Address as alloy_sol_types::EventTopic>::encode_topic(
                     &self.podOwner,
                 );
@@ -717,15 +751,17 @@ pub mod IEigenPodManager {
         #[automatically_derived]
         impl From<&BeaconChainETHDeposited> for alloy_sol_types::private::LogData {
             #[inline]
-            fn from(this: &BeaconChainETHDeposited) -> alloy_sol_types::private::LogData {
+            fn from(
+                this: &BeaconChainETHDeposited,
+            ) -> alloy_sol_types::private::LogData {
                 alloy_sol_types::SolEvent::encode_log_data(this)
             }
         }
     };
     /**Event with signature `BeaconChainETHWithdrawalCompleted(address,uint256,uint96,address,address,bytes32)` and selector `0xa6bab1d55a361fcea2eee2bc9491e4f01e6cf333df03c9c4f2c144466429f7d6`.
-    ```solidity
-    event BeaconChainETHWithdrawalCompleted(address indexed podOwner, uint256 shares, uint96 nonce, address delegatedAddress, address withdrawer, bytes32 withdrawalRoot);
-    ```*/
+```solidity
+event BeaconChainETHWithdrawalCompleted(address indexed podOwner, uint256 shares, uint96 nonce, address delegatedAddress, address withdrawer, bytes32 withdrawalRoot);
+```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -764,19 +800,48 @@ pub mod IEigenPodManager {
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::FixedBytes<32>,
             );
-            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (
                 alloy_sol_types::sol_data::FixedBytes<32>,
                 alloy::sol_types::sol_data::Address,
             );
-            const SIGNATURE: &'static str =
-                "BeaconChainETHWithdrawalCompleted(address,uint256,uint96,address,address,bytes32)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
-                alloy_sol_types::private::B256::new([
-                    166u8, 186u8, 177u8, 213u8, 90u8, 54u8, 31u8, 206u8, 162u8, 238u8, 226u8,
-                    188u8, 148u8, 145u8, 228u8, 240u8, 30u8, 108u8, 243u8, 51u8, 223u8, 3u8, 201u8,
-                    196u8, 242u8, 193u8, 68u8, 70u8, 100u8, 41u8, 247u8, 214u8,
-                ]);
+            const SIGNATURE: &'static str = "BeaconChainETHWithdrawalCompleted(address,uint256,uint96,address,address,bytes32)";
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
+                166u8,
+                186u8,
+                177u8,
+                213u8,
+                90u8,
+                54u8,
+                31u8,
+                206u8,
+                162u8,
+                238u8,
+                226u8,
+                188u8,
+                148u8,
+                145u8,
+                228u8,
+                240u8,
+                30u8,
+                108u8,
+                243u8,
+                51u8,
+                223u8,
+                3u8,
+                201u8,
+                196u8,
+                242u8,
+                193u8,
+                68u8,
+                70u8,
+                100u8,
+                41u8,
+                247u8,
+                214u8,
+            ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -798,11 +863,13 @@ pub mod IEigenPodManager {
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
-                        Self::SIGNATURE,
-                        topics.0,
-                        Self::SIGNATURE_HASH,
-                    ));
+                    return Err(
+                        alloy_sol_types::Error::invalid_event_signature_hash(
+                            Self::SIGNATURE,
+                            topics.0,
+                            Self::SIGNATURE_HASH,
+                        ),
+                    );
                 }
                 Ok(())
             }
@@ -838,7 +905,9 @@ pub mod IEigenPodManager {
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
+                out[0usize] = alloy_sol_types::abi::token::WordToken(
+                    Self::SIGNATURE_HASH,
+                );
                 out[1usize] = <alloy::sol_types::sol_data::Address as alloy_sol_types::EventTopic>::encode_topic(
                     &self.podOwner,
                 );
@@ -846,7 +915,8 @@ pub mod IEigenPodManager {
             }
         }
         #[automatically_derived]
-        impl alloy_sol_types::private::IntoLogData for BeaconChainETHWithdrawalCompleted {
+        impl alloy_sol_types::private::IntoLogData
+        for BeaconChainETHWithdrawalCompleted {
             fn to_log_data(&self) -> alloy_sol_types::private::LogData {
                 From::from(self)
             }
@@ -855,17 +925,20 @@ pub mod IEigenPodManager {
             }
         }
         #[automatically_derived]
-        impl From<&BeaconChainETHWithdrawalCompleted> for alloy_sol_types::private::LogData {
+        impl From<&BeaconChainETHWithdrawalCompleted>
+        for alloy_sol_types::private::LogData {
             #[inline]
-            fn from(this: &BeaconChainETHWithdrawalCompleted) -> alloy_sol_types::private::LogData {
+            fn from(
+                this: &BeaconChainETHWithdrawalCompleted,
+            ) -> alloy_sol_types::private::LogData {
                 alloy_sol_types::SolEvent::encode_log_data(this)
             }
         }
     };
     /**Event with signature `NewTotalShares(address,int256)` and selector `0xd4def76d6d2bed6f14d5cd9af73cc2913d618d00edde42432e81c09bfe077098`.
-    ```solidity
-    event NewTotalShares(address indexed podOwner, int256 newTotalShares);
-    ```*/
+```solidity
+event NewTotalShares(address indexed podOwner, int256 newTotalShares);
+```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -890,18 +963,48 @@ pub mod IEigenPodManager {
         #[automatically_derived]
         impl alloy_sol_types::SolEvent for NewTotalShares {
             type DataTuple<'a> = (alloy::sol_types::sol_data::Int<256>,);
-            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (
                 alloy_sol_types::sol_data::FixedBytes<32>,
                 alloy::sol_types::sol_data::Address,
             );
             const SIGNATURE: &'static str = "NewTotalShares(address,int256)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
-                alloy_sol_types::private::B256::new([
-                    212u8, 222u8, 247u8, 109u8, 109u8, 43u8, 237u8, 111u8, 20u8, 213u8, 205u8,
-                    154u8, 247u8, 60u8, 194u8, 145u8, 61u8, 97u8, 141u8, 0u8, 237u8, 222u8, 66u8,
-                    67u8, 46u8, 129u8, 192u8, 155u8, 254u8, 7u8, 112u8, 152u8,
-                ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
+                212u8,
+                222u8,
+                247u8,
+                109u8,
+                109u8,
+                43u8,
+                237u8,
+                111u8,
+                20u8,
+                213u8,
+                205u8,
+                154u8,
+                247u8,
+                60u8,
+                194u8,
+                145u8,
+                61u8,
+                97u8,
+                141u8,
+                0u8,
+                237u8,
+                222u8,
+                66u8,
+                67u8,
+                46u8,
+                129u8,
+                192u8,
+                155u8,
+                254u8,
+                7u8,
+                112u8,
+                152u8,
+            ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -919,20 +1022,22 @@ pub mod IEigenPodManager {
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
-                        Self::SIGNATURE,
-                        topics.0,
-                        Self::SIGNATURE_HASH,
-                    ));
+                    return Err(
+                        alloy_sol_types::Error::invalid_event_signature_hash(
+                            Self::SIGNATURE,
+                            topics.0,
+                            Self::SIGNATURE_HASH,
+                        ),
+                    );
                 }
                 Ok(())
             }
             #[inline]
             fn tokenize_body(&self) -> Self::DataToken<'_> {
                 (
-                    <alloy::sol_types::sol_data::Int<256> as alloy_sol_types::SolType>::tokenize(
-                        &self.newTotalShares,
-                    ),
+                    <alloy::sol_types::sol_data::Int<
+                        256,
+                    > as alloy_sol_types::SolType>::tokenize(&self.newTotalShares),
                 )
             }
             #[inline]
@@ -947,7 +1052,9 @@ pub mod IEigenPodManager {
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
+                out[0usize] = alloy_sol_types::abi::token::WordToken(
+                    Self::SIGNATURE_HASH,
+                );
                 out[1usize] = <alloy::sol_types::sol_data::Address as alloy_sol_types::EventTopic>::encode_topic(
                     &self.podOwner,
                 );
@@ -972,9 +1079,9 @@ pub mod IEigenPodManager {
         }
     };
     /**Event with signature `Paused(address,uint256)` and selector `0xab40a374bc51de372200a8bc981af8c9ecdc08dfdaef0bb6e09f88f3c616ef3d`.
-    ```solidity
-    event Paused(address indexed account, uint256 newPausedStatus);
-    ```*/
+```solidity
+event Paused(address indexed account, uint256 newPausedStatus);
+```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -999,18 +1106,48 @@ pub mod IEigenPodManager {
         #[automatically_derived]
         impl alloy_sol_types::SolEvent for Paused {
             type DataTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
-            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (
                 alloy_sol_types::sol_data::FixedBytes<32>,
                 alloy::sol_types::sol_data::Address,
             );
             const SIGNATURE: &'static str = "Paused(address,uint256)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
-                alloy_sol_types::private::B256::new([
-                    171u8, 64u8, 163u8, 116u8, 188u8, 81u8, 222u8, 55u8, 34u8, 0u8, 168u8, 188u8,
-                    152u8, 26u8, 248u8, 201u8, 236u8, 220u8, 8u8, 223u8, 218u8, 239u8, 11u8, 182u8,
-                    224u8, 159u8, 136u8, 243u8, 198u8, 22u8, 239u8, 61u8,
-                ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
+                171u8,
+                64u8,
+                163u8,
+                116u8,
+                188u8,
+                81u8,
+                222u8,
+                55u8,
+                34u8,
+                0u8,
+                168u8,
+                188u8,
+                152u8,
+                26u8,
+                248u8,
+                201u8,
+                236u8,
+                220u8,
+                8u8,
+                223u8,
+                218u8,
+                239u8,
+                11u8,
+                182u8,
+                224u8,
+                159u8,
+                136u8,
+                243u8,
+                198u8,
+                22u8,
+                239u8,
+                61u8,
+            ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -1028,20 +1165,22 @@ pub mod IEigenPodManager {
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
-                        Self::SIGNATURE,
-                        topics.0,
-                        Self::SIGNATURE_HASH,
-                    ));
+                    return Err(
+                        alloy_sol_types::Error::invalid_event_signature_hash(
+                            Self::SIGNATURE,
+                            topics.0,
+                            Self::SIGNATURE_HASH,
+                        ),
+                    );
                 }
                 Ok(())
             }
             #[inline]
             fn tokenize_body(&self) -> Self::DataToken<'_> {
                 (
-                    <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
-                        &self.newPausedStatus,
-                    ),
+                    <alloy::sol_types::sol_data::Uint<
+                        256,
+                    > as alloy_sol_types::SolType>::tokenize(&self.newPausedStatus),
                 )
             }
             #[inline]
@@ -1056,7 +1195,9 @@ pub mod IEigenPodManager {
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
+                out[0usize] = alloy_sol_types::abi::token::WordToken(
+                    Self::SIGNATURE_HASH,
+                );
                 out[1usize] = <alloy::sol_types::sol_data::Address as alloy_sol_types::EventTopic>::encode_topic(
                     &self.account,
                 );
@@ -1081,9 +1222,9 @@ pub mod IEigenPodManager {
         }
     };
     /**Event with signature `PauserRegistrySet(address,address)` and selector `0x6e9fcd539896fca60e8b0f01dd580233e48a6b0f7df013b89ba7f565869acdb6`.
-    ```solidity
-    event PauserRegistrySet(address pauserRegistry, address newPauserRegistry);
-    ```*/
+```solidity
+event PauserRegistrySet(address pauserRegistry, address newPauserRegistry);
+```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -1111,15 +1252,45 @@ pub mod IEigenPodManager {
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Address,
             );
-            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (alloy_sol_types::sol_data::FixedBytes<32>,);
             const SIGNATURE: &'static str = "PauserRegistrySet(address,address)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
-                alloy_sol_types::private::B256::new([
-                    110u8, 159u8, 205u8, 83u8, 152u8, 150u8, 252u8, 166u8, 14u8, 139u8, 15u8, 1u8,
-                    221u8, 88u8, 2u8, 51u8, 228u8, 138u8, 107u8, 15u8, 125u8, 240u8, 19u8, 184u8,
-                    155u8, 167u8, 245u8, 101u8, 134u8, 154u8, 205u8, 182u8,
-                ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
+                110u8,
+                159u8,
+                205u8,
+                83u8,
+                152u8,
+                150u8,
+                252u8,
+                166u8,
+                14u8,
+                139u8,
+                15u8,
+                1u8,
+                221u8,
+                88u8,
+                2u8,
+                51u8,
+                228u8,
+                138u8,
+                107u8,
+                15u8,
+                125u8,
+                240u8,
+                19u8,
+                184u8,
+                155u8,
+                167u8,
+                245u8,
+                101u8,
+                134u8,
+                154u8,
+                205u8,
+                182u8,
+            ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -1137,11 +1308,13 @@ pub mod IEigenPodManager {
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
-                        Self::SIGNATURE,
-                        topics.0,
-                        Self::SIGNATURE_HASH,
-                    ));
+                    return Err(
+                        alloy_sol_types::Error::invalid_event_signature_hash(
+                            Self::SIGNATURE,
+                            topics.0,
+                            Self::SIGNATURE_HASH,
+                        ),
+                    );
                 }
                 Ok(())
             }
@@ -1168,7 +1341,9 @@ pub mod IEigenPodManager {
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
+                out[0usize] = alloy_sol_types::abi::token::WordToken(
+                    Self::SIGNATURE_HASH,
+                );
                 Ok(())
             }
         }
@@ -1190,9 +1365,9 @@ pub mod IEigenPodManager {
         }
     };
     /**Event with signature `PodDeployed(address,address)` and selector `0x21c99d0db02213c32fff5b05cf0a718ab5f858802b91498f80d82270289d856a`.
-    ```solidity
-    event PodDeployed(address indexed eigenPod, address indexed podOwner);
-    ```*/
+```solidity
+event PodDeployed(address indexed eigenPod, address indexed podOwner);
+```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -1217,19 +1392,49 @@ pub mod IEigenPodManager {
         #[automatically_derived]
         impl alloy_sol_types::SolEvent for PodDeployed {
             type DataTuple<'a> = ();
-            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (
                 alloy_sol_types::sol_data::FixedBytes<32>,
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Address,
             );
             const SIGNATURE: &'static str = "PodDeployed(address,address)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
-                alloy_sol_types::private::B256::new([
-                    33u8, 201u8, 157u8, 13u8, 176u8, 34u8, 19u8, 195u8, 47u8, 255u8, 91u8, 5u8,
-                    207u8, 10u8, 113u8, 138u8, 181u8, 248u8, 88u8, 128u8, 43u8, 145u8, 73u8, 143u8,
-                    128u8, 216u8, 34u8, 112u8, 40u8, 157u8, 133u8, 106u8,
-                ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
+                33u8,
+                201u8,
+                157u8,
+                13u8,
+                176u8,
+                34u8,
+                19u8,
+                195u8,
+                47u8,
+                255u8,
+                91u8,
+                5u8,
+                207u8,
+                10u8,
+                113u8,
+                138u8,
+                181u8,
+                248u8,
+                88u8,
+                128u8,
+                43u8,
+                145u8,
+                73u8,
+                143u8,
+                128u8,
+                216u8,
+                34u8,
+                112u8,
+                40u8,
+                157u8,
+                133u8,
+                106u8,
+            ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -1247,11 +1452,13 @@ pub mod IEigenPodManager {
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
-                        Self::SIGNATURE,
-                        topics.0,
-                        Self::SIGNATURE_HASH,
-                    ));
+                    return Err(
+                        alloy_sol_types::Error::invalid_event_signature_hash(
+                            Self::SIGNATURE,
+                            topics.0,
+                            Self::SIGNATURE_HASH,
+                        ),
+                    );
                 }
                 Ok(())
             }
@@ -1275,7 +1482,9 @@ pub mod IEigenPodManager {
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
+                out[0usize] = alloy_sol_types::abi::token::WordToken(
+                    Self::SIGNATURE_HASH,
+                );
                 out[1usize] = <alloy::sol_types::sol_data::Address as alloy_sol_types::EventTopic>::encode_topic(
                     &self.eigenPod,
                 );
@@ -1303,9 +1512,9 @@ pub mod IEigenPodManager {
         }
     };
     /**Event with signature `PodSharesUpdated(address,int256)` and selector `0x4e2b791dedccd9fb30141b088cabf5c14a8912b52f59375c95c010700b8c6193`.
-    ```solidity
-    event PodSharesUpdated(address indexed podOwner, int256 sharesDelta);
-    ```*/
+```solidity
+event PodSharesUpdated(address indexed podOwner, int256 sharesDelta);
+```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -1330,18 +1539,48 @@ pub mod IEigenPodManager {
         #[automatically_derived]
         impl alloy_sol_types::SolEvent for PodSharesUpdated {
             type DataTuple<'a> = (alloy::sol_types::sol_data::Int<256>,);
-            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (
                 alloy_sol_types::sol_data::FixedBytes<32>,
                 alloy::sol_types::sol_data::Address,
             );
             const SIGNATURE: &'static str = "PodSharesUpdated(address,int256)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
-                alloy_sol_types::private::B256::new([
-                    78u8, 43u8, 121u8, 29u8, 237u8, 204u8, 217u8, 251u8, 48u8, 20u8, 27u8, 8u8,
-                    140u8, 171u8, 245u8, 193u8, 74u8, 137u8, 18u8, 181u8, 47u8, 89u8, 55u8, 92u8,
-                    149u8, 192u8, 16u8, 112u8, 11u8, 140u8, 97u8, 147u8,
-                ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
+                78u8,
+                43u8,
+                121u8,
+                29u8,
+                237u8,
+                204u8,
+                217u8,
+                251u8,
+                48u8,
+                20u8,
+                27u8,
+                8u8,
+                140u8,
+                171u8,
+                245u8,
+                193u8,
+                74u8,
+                137u8,
+                18u8,
+                181u8,
+                47u8,
+                89u8,
+                55u8,
+                92u8,
+                149u8,
+                192u8,
+                16u8,
+                112u8,
+                11u8,
+                140u8,
+                97u8,
+                147u8,
+            ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -1359,20 +1598,22 @@ pub mod IEigenPodManager {
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
-                        Self::SIGNATURE,
-                        topics.0,
-                        Self::SIGNATURE_HASH,
-                    ));
+                    return Err(
+                        alloy_sol_types::Error::invalid_event_signature_hash(
+                            Self::SIGNATURE,
+                            topics.0,
+                            Self::SIGNATURE_HASH,
+                        ),
+                    );
                 }
                 Ok(())
             }
             #[inline]
             fn tokenize_body(&self) -> Self::DataToken<'_> {
                 (
-                    <alloy::sol_types::sol_data::Int<256> as alloy_sol_types::SolType>::tokenize(
-                        &self.sharesDelta,
-                    ),
+                    <alloy::sol_types::sol_data::Int<
+                        256,
+                    > as alloy_sol_types::SolType>::tokenize(&self.sharesDelta),
                 )
             }
             #[inline]
@@ -1387,7 +1628,9 @@ pub mod IEigenPodManager {
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
+                out[0usize] = alloy_sol_types::abi::token::WordToken(
+                    Self::SIGNATURE_HASH,
+                );
                 out[1usize] = <alloy::sol_types::sol_data::Address as alloy_sol_types::EventTopic>::encode_topic(
                     &self.podOwner,
                 );
@@ -1412,9 +1655,9 @@ pub mod IEigenPodManager {
         }
     };
     /**Event with signature `Unpaused(address,uint256)` and selector `0x3582d1828e26bf56bd801502bc021ac0bc8afb57c826e4986b45593c8fad389c`.
-    ```solidity
-    event Unpaused(address indexed account, uint256 newPausedStatus);
-    ```*/
+```solidity
+event Unpaused(address indexed account, uint256 newPausedStatus);
+```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -1439,18 +1682,48 @@ pub mod IEigenPodManager {
         #[automatically_derived]
         impl alloy_sol_types::SolEvent for Unpaused {
             type DataTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
-            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (
                 alloy_sol_types::sol_data::FixedBytes<32>,
                 alloy::sol_types::sol_data::Address,
             );
             const SIGNATURE: &'static str = "Unpaused(address,uint256)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
-                alloy_sol_types::private::B256::new([
-                    53u8, 130u8, 209u8, 130u8, 142u8, 38u8, 191u8, 86u8, 189u8, 128u8, 21u8, 2u8,
-                    188u8, 2u8, 26u8, 192u8, 188u8, 138u8, 251u8, 87u8, 200u8, 38u8, 228u8, 152u8,
-                    107u8, 69u8, 89u8, 60u8, 143u8, 173u8, 56u8, 156u8,
-                ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
+                53u8,
+                130u8,
+                209u8,
+                130u8,
+                142u8,
+                38u8,
+                191u8,
+                86u8,
+                189u8,
+                128u8,
+                21u8,
+                2u8,
+                188u8,
+                2u8,
+                26u8,
+                192u8,
+                188u8,
+                138u8,
+                251u8,
+                87u8,
+                200u8,
+                38u8,
+                228u8,
+                152u8,
+                107u8,
+                69u8,
+                89u8,
+                60u8,
+                143u8,
+                173u8,
+                56u8,
+                156u8,
+            ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -1468,20 +1741,22 @@ pub mod IEigenPodManager {
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
-                        Self::SIGNATURE,
-                        topics.0,
-                        Self::SIGNATURE_HASH,
-                    ));
+                    return Err(
+                        alloy_sol_types::Error::invalid_event_signature_hash(
+                            Self::SIGNATURE,
+                            topics.0,
+                            Self::SIGNATURE_HASH,
+                        ),
+                    );
                 }
                 Ok(())
             }
             #[inline]
             fn tokenize_body(&self) -> Self::DataToken<'_> {
                 (
-                    <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
-                        &self.newPausedStatus,
-                    ),
+                    <alloy::sol_types::sol_data::Uint<
+                        256,
+                    > as alloy_sol_types::SolType>::tokenize(&self.newPausedStatus),
                 )
             }
             #[inline]
@@ -1496,7 +1771,9 @@ pub mod IEigenPodManager {
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
+                out[0usize] = alloy_sol_types::abi::token::WordToken(
+                    Self::SIGNATURE_HASH,
+                );
                 out[1usize] = <alloy::sol_types::sol_data::Address as alloy_sol_types::EventTopic>::encode_topic(
                     &self.account,
                 );
@@ -1521,9 +1798,9 @@ pub mod IEigenPodManager {
         }
     };
     /**Function with signature `addShares(address,uint256)` and selector `0x0e81073c`.
-    ```solidity
-    function addShares(address podOwner, uint256 shares) external returns (uint256);
-    ```*/
+```solidity
+function addShares(address podOwner, uint256 shares) external returns (uint256);
+```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct addSharesCall {
@@ -1557,7 +1834,9 @@ pub mod IEigenPodManager {
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1586,10 +1865,14 @@ pub mod IEigenPodManager {
             #[doc(hidden)]
             type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (alloy::sol_types::private::primitives::aliases::U256,);
+            type UnderlyingRustTuple<'a> = (
+                alloy::sol_types::private::primitives::aliases::U256,
+            );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1617,10 +1900,14 @@ pub mod IEigenPodManager {
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Uint<256>,
             );
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type Return = addSharesReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "addShares(address,uint256)";
             const SELECTOR: [u8; 4] = [14u8, 129u8, 7u8, 60u8];
             #[inline]
@@ -1635,9 +1922,9 @@ pub mod IEigenPodManager {
                     <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
                         &self.podOwner,
                     ),
-                    <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
-                        &self.shares,
-                    ),
+                    <alloy::sol_types::sol_data::Uint<
+                        256,
+                    > as alloy_sol_types::SolType>::tokenize(&self.shares),
                 )
             }
             #[inline]
@@ -1645,17 +1932,17 @@ pub mod IEigenPodManager {
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
+                <Self::ReturnTuple<
+                    '_,
+                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
+                    .map(Into::into)
             }
         }
     };
     /**Function with signature `beaconChainETHStrategy()` and selector `0x9104c319`.
-    ```solidity
-    function beaconChainETHStrategy() external view returns (address);
-    ```*/
+```solidity
+function beaconChainETHStrategy() external view returns (address);
+```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct beaconChainETHStrategyCall {}
@@ -1680,7 +1967,9 @@ pub mod IEigenPodManager {
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1689,14 +1978,16 @@ pub mod IEigenPodManager {
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<beaconChainETHStrategyCall> for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<beaconChainETHStrategyCall>
+            for UnderlyingRustTuple<'_> {
                 fn from(value: beaconChainETHStrategyCall) -> Self {
                     ()
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for beaconChainETHStrategyCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>>
+            for beaconChainETHStrategyCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
@@ -1709,7 +2000,9 @@ pub mod IEigenPodManager {
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1718,14 +2011,16 @@ pub mod IEigenPodManager {
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<beaconChainETHStrategyReturn> for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<beaconChainETHStrategyReturn>
+            for UnderlyingRustTuple<'_> {
                 fn from(value: beaconChainETHStrategyReturn) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for beaconChainETHStrategyReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>>
+            for beaconChainETHStrategyReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -1734,10 +2029,14 @@ pub mod IEigenPodManager {
         #[automatically_derived]
         impl alloy_sol_types::SolCall for beaconChainETHStrategyCall {
             type Parameters<'a> = ();
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type Return = beaconChainETHStrategyReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Address,);
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "beaconChainETHStrategy()";
             const SELECTOR: [u8; 4] = [145u8, 4u8, 195u8, 25u8];
             #[inline]
@@ -1755,17 +2054,17 @@ pub mod IEigenPodManager {
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
+                <Self::ReturnTuple<
+                    '_,
+                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
+                    .map(Into::into)
             }
         }
     };
     /**Function with signature `createPod()` and selector `0x84d81062`.
-    ```solidity
-    function createPod() external returns (address);
-    ```*/
+```solidity
+function createPod() external returns (address);
+```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct createPodCall {}
@@ -1790,7 +2089,9 @@ pub mod IEigenPodManager {
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1819,7 +2120,9 @@ pub mod IEigenPodManager {
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1844,10 +2147,14 @@ pub mod IEigenPodManager {
         #[automatically_derived]
         impl alloy_sol_types::SolCall for createPodCall {
             type Parameters<'a> = ();
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type Return = createPodReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Address,);
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "createPod()";
             const SELECTOR: [u8; 4] = [132u8, 216u8, 16u8, 98u8];
             #[inline]
@@ -1865,17 +2172,17 @@ pub mod IEigenPodManager {
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
+                <Self::ReturnTuple<
+                    '_,
+                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
+                    .map(Into::into)
             }
         }
     };
     /**Function with signature `eigenPodBeacon()` and selector `0x292b7b2b`.
-    ```solidity
-    function eigenPodBeacon() external view returns (address);
-    ```*/
+```solidity
+function eigenPodBeacon() external view returns (address);
+```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct eigenPodBeaconCall {}
@@ -1900,7 +2207,9 @@ pub mod IEigenPodManager {
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1929,7 +2238,9 @@ pub mod IEigenPodManager {
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1938,14 +2249,16 @@ pub mod IEigenPodManager {
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<eigenPodBeaconReturn> for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<eigenPodBeaconReturn>
+            for UnderlyingRustTuple<'_> {
                 fn from(value: eigenPodBeaconReturn) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for eigenPodBeaconReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>>
+            for eigenPodBeaconReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -1954,10 +2267,14 @@ pub mod IEigenPodManager {
         #[automatically_derived]
         impl alloy_sol_types::SolCall for eigenPodBeaconCall {
             type Parameters<'a> = ();
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type Return = eigenPodBeaconReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Address,);
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "eigenPodBeacon()";
             const SELECTOR: [u8; 4] = [41u8, 43u8, 123u8, 43u8];
             #[inline]
@@ -1975,17 +2292,17 @@ pub mod IEigenPodManager {
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
+                <Self::ReturnTuple<
+                    '_,
+                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
+                    .map(Into::into)
             }
         }
     };
     /**Function with signature `ethPOS()` and selector `0x74cdd798`.
-    ```solidity
-    function ethPOS() external view returns (address);
-    ```*/
+```solidity
+function ethPOS() external view returns (address);
+```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct ethPOSCall {}
@@ -2010,7 +2327,9 @@ pub mod IEigenPodManager {
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -2039,7 +2358,9 @@ pub mod IEigenPodManager {
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -2064,10 +2385,14 @@ pub mod IEigenPodManager {
         #[automatically_derived]
         impl alloy_sol_types::SolCall for ethPOSCall {
             type Parameters<'a> = ();
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type Return = ethPOSReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Address,);
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "ethPOS()";
             const SELECTOR: [u8; 4] = [116u8, 205u8, 215u8, 152u8];
             #[inline]
@@ -2085,17 +2410,17 @@ pub mod IEigenPodManager {
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
+                <Self::ReturnTuple<
+                    '_,
+                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
+                    .map(Into::into)
             }
         }
     };
     /**Function with signature `getPod(address)` and selector `0xa38406a3`.
-    ```solidity
-    function getPod(address podOwner) external view returns (address);
-    ```*/
+```solidity
+function getPod(address podOwner) external view returns (address);
+```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getPodCall {
@@ -2122,7 +2447,9 @@ pub mod IEigenPodManager {
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -2151,7 +2478,9 @@ pub mod IEigenPodManager {
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -2176,10 +2505,14 @@ pub mod IEigenPodManager {
         #[automatically_derived]
         impl alloy_sol_types::SolCall for getPodCall {
             type Parameters<'a> = (alloy::sol_types::sol_data::Address,);
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type Return = getPodReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Address,);
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "getPod(address)";
             const SELECTOR: [u8; 4] = [163u8, 132u8, 6u8, 163u8];
             #[inline]
@@ -2201,17 +2534,17 @@ pub mod IEigenPodManager {
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
+                <Self::ReturnTuple<
+                    '_,
+                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
+                    .map(Into::into)
             }
         }
     };
     /**Function with signature `hasPod(address)` and selector `0xf6848d24`.
-    ```solidity
-    function hasPod(address podOwner) external view returns (bool);
-    ```*/
+```solidity
+function hasPod(address podOwner) external view returns (bool);
+```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct hasPodCall {
@@ -2238,7 +2571,9 @@ pub mod IEigenPodManager {
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -2267,7 +2602,9 @@ pub mod IEigenPodManager {
             type UnderlyingRustTuple<'a> = (bool,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -2292,10 +2629,14 @@ pub mod IEigenPodManager {
         #[automatically_derived]
         impl alloy_sol_types::SolCall for hasPodCall {
             type Parameters<'a> = (alloy::sol_types::sol_data::Address,);
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type Return = hasPodReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Bool,);
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "hasPod(address)";
             const SELECTOR: [u8; 4] = [246u8, 132u8, 141u8, 36u8];
             #[inline]
@@ -2317,17 +2658,17 @@ pub mod IEigenPodManager {
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
+                <Self::ReturnTuple<
+                    '_,
+                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
+                    .map(Into::into)
             }
         }
     };
     /**Function with signature `numPods()` and selector `0xa6a509be`.
-    ```solidity
-    function numPods() external view returns (uint256);
-    ```*/
+```solidity
+function numPods() external view returns (uint256);
+```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct numPodsCall {}
@@ -2352,7 +2693,9 @@ pub mod IEigenPodManager {
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -2378,10 +2721,14 @@ pub mod IEigenPodManager {
             #[doc(hidden)]
             type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (alloy::sol_types::private::primitives::aliases::U256,);
+            type UnderlyingRustTuple<'a> = (
+                alloy::sol_types::private::primitives::aliases::U256,
+            );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -2406,10 +2753,14 @@ pub mod IEigenPodManager {
         #[automatically_derived]
         impl alloy_sol_types::SolCall for numPodsCall {
             type Parameters<'a> = ();
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type Return = numPodsReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "numPods()";
             const SELECTOR: [u8; 4] = [166u8, 165u8, 9u8, 190u8];
             #[inline]
@@ -2427,17 +2778,17 @@ pub mod IEigenPodManager {
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
+                <Self::ReturnTuple<
+                    '_,
+                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
+                    .map(Into::into)
             }
         }
     };
     /**Function with signature `ownerToPod(address)` and selector `0x9ba06275`.
-    ```solidity
-    function ownerToPod(address podOwner) external view returns (address);
-    ```*/
+```solidity
+function ownerToPod(address podOwner) external view returns (address);
+```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct ownerToPodCall {
@@ -2464,7 +2815,9 @@ pub mod IEigenPodManager {
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -2493,7 +2846,9 @@ pub mod IEigenPodManager {
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -2518,10 +2873,14 @@ pub mod IEigenPodManager {
         #[automatically_derived]
         impl alloy_sol_types::SolCall for ownerToPodCall {
             type Parameters<'a> = (alloy::sol_types::sol_data::Address,);
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type Return = ownerToPodReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Address,);
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "ownerToPod(address)";
             const SELECTOR: [u8; 4] = [155u8, 160u8, 98u8, 117u8];
             #[inline]
@@ -2543,17 +2902,17 @@ pub mod IEigenPodManager {
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
+                <Self::ReturnTuple<
+                    '_,
+                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
+                    .map(Into::into)
             }
         }
     };
     /**Function with signature `pause(uint256)` and selector `0x136439dd`.
-    ```solidity
-    function pause(uint256 newPausedStatus) external;
-    ```*/
+```solidity
+function pause(uint256 newPausedStatus) external;
+```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct pauseCall {
@@ -2575,10 +2934,14 @@ pub mod IEigenPodManager {
             #[doc(hidden)]
             type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (alloy::sol_types::private::primitives::aliases::U256,);
+            type UnderlyingRustTuple<'a> = (
+                alloy::sol_types::private::primitives::aliases::U256,
+            );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -2596,9 +2959,7 @@ pub mod IEigenPodManager {
             #[doc(hidden)]
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for pauseCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self {
-                        newPausedStatus: tuple.0,
-                    }
+                    Self { newPausedStatus: tuple.0 }
                 }
             }
         }
@@ -2609,7 +2970,9 @@ pub mod IEigenPodManager {
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -2634,10 +2997,14 @@ pub mod IEigenPodManager {
         #[automatically_derived]
         impl alloy_sol_types::SolCall for pauseCall {
             type Parameters<'a> = (alloy::sol_types::sol_data::Uint<256>,);
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type Return = pauseReturn;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "pause(uint256)";
             const SELECTOR: [u8; 4] = [19u8, 100u8, 57u8, 221u8];
             #[inline]
@@ -2649,9 +3016,9 @@ pub mod IEigenPodManager {
             #[inline]
             fn tokenize(&self) -> Self::Token<'_> {
                 (
-                    <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
-                        &self.newPausedStatus,
-                    ),
+                    <alloy::sol_types::sol_data::Uint<
+                        256,
+                    > as alloy_sol_types::SolType>::tokenize(&self.newPausedStatus),
                 )
             }
             #[inline]
@@ -2659,17 +3026,17 @@ pub mod IEigenPodManager {
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
+                <Self::ReturnTuple<
+                    '_,
+                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
+                    .map(Into::into)
             }
         }
     };
     /**Function with signature `pauseAll()` and selector `0x595c6a67`.
-    ```solidity
-    function pauseAll() external;
-    ```*/
+```solidity
+function pauseAll() external;
+```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct pauseAllCall {}
@@ -2692,7 +3059,9 @@ pub mod IEigenPodManager {
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -2721,7 +3090,9 @@ pub mod IEigenPodManager {
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -2746,10 +3117,14 @@ pub mod IEigenPodManager {
         #[automatically_derived]
         impl alloy_sol_types::SolCall for pauseAllCall {
             type Parameters<'a> = ();
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type Return = pauseAllReturn;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "pauseAll()";
             const SELECTOR: [u8; 4] = [89u8, 92u8, 106u8, 103u8];
             #[inline]
@@ -2767,17 +3142,17 @@ pub mod IEigenPodManager {
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
+                <Self::ReturnTuple<
+                    '_,
+                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
+                    .map(Into::into)
             }
         }
     };
     /**Function with signature `paused(uint8)` and selector `0x5ac86ab7`.
-    ```solidity
-    function paused(uint8 index) external view returns (bool);
-    ```*/
+```solidity
+function paused(uint8 index) external view returns (bool);
+```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct paused_0Call {
@@ -2804,7 +3179,9 @@ pub mod IEigenPodManager {
             type UnderlyingRustTuple<'a> = (u8,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -2833,7 +3210,9 @@ pub mod IEigenPodManager {
             type UnderlyingRustTuple<'a> = (bool,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -2858,10 +3237,14 @@ pub mod IEigenPodManager {
         #[automatically_derived]
         impl alloy_sol_types::SolCall for paused_0Call {
             type Parameters<'a> = (alloy::sol_types::sol_data::Uint<8>,);
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type Return = paused_0Return;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Bool,);
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "paused(uint8)";
             const SELECTOR: [u8; 4] = [90u8, 200u8, 106u8, 183u8];
             #[inline]
@@ -2873,9 +3256,9 @@ pub mod IEigenPodManager {
             #[inline]
             fn tokenize(&self) -> Self::Token<'_> {
                 (
-                    <alloy::sol_types::sol_data::Uint<8> as alloy_sol_types::SolType>::tokenize(
-                        &self.index,
-                    ),
+                    <alloy::sol_types::sol_data::Uint<
+                        8,
+                    > as alloy_sol_types::SolType>::tokenize(&self.index),
                 )
             }
             #[inline]
@@ -2883,17 +3266,17 @@ pub mod IEigenPodManager {
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
+                <Self::ReturnTuple<
+                    '_,
+                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
+                    .map(Into::into)
             }
         }
     };
     /**Function with signature `paused()` and selector `0x5c975abb`.
-    ```solidity
-    function paused() external view returns (uint256);
-    ```*/
+```solidity
+function paused() external view returns (uint256);
+```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct paused_1Call {}
@@ -2918,7 +3301,9 @@ pub mod IEigenPodManager {
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -2944,10 +3329,14 @@ pub mod IEigenPodManager {
             #[doc(hidden)]
             type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (alloy::sol_types::private::primitives::aliases::U256,);
+            type UnderlyingRustTuple<'a> = (
+                alloy::sol_types::private::primitives::aliases::U256,
+            );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -2972,10 +3361,14 @@ pub mod IEigenPodManager {
         #[automatically_derived]
         impl alloy_sol_types::SolCall for paused_1Call {
             type Parameters<'a> = ();
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type Return = paused_1Return;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "paused()";
             const SELECTOR: [u8; 4] = [92u8, 151u8, 90u8, 187u8];
             #[inline]
@@ -2993,17 +3386,17 @@ pub mod IEigenPodManager {
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
+                <Self::ReturnTuple<
+                    '_,
+                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
+                    .map(Into::into)
             }
         }
     };
     /**Function with signature `pauserRegistry()` and selector `0x886f1195`.
-    ```solidity
-    function pauserRegistry() external view returns (address);
-    ```*/
+```solidity
+function pauserRegistry() external view returns (address);
+```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct pauserRegistryCall {}
@@ -3028,7 +3421,9 @@ pub mod IEigenPodManager {
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -3057,7 +3452,9 @@ pub mod IEigenPodManager {
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -3066,14 +3463,16 @@ pub mod IEigenPodManager {
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<pauserRegistryReturn> for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<pauserRegistryReturn>
+            for UnderlyingRustTuple<'_> {
                 fn from(value: pauserRegistryReturn) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for pauserRegistryReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>>
+            for pauserRegistryReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -3082,10 +3481,14 @@ pub mod IEigenPodManager {
         #[automatically_derived]
         impl alloy_sol_types::SolCall for pauserRegistryCall {
             type Parameters<'a> = ();
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type Return = pauserRegistryReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Address,);
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "pauserRegistry()";
             const SELECTOR: [u8; 4] = [136u8, 111u8, 17u8, 149u8];
             #[inline]
@@ -3103,17 +3506,17 @@ pub mod IEigenPodManager {
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
+                <Self::ReturnTuple<
+                    '_,
+                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
+                    .map(Into::into)
             }
         }
     };
     /**Function with signature `podOwnerShares(address)` and selector `0x60f4062b`.
-    ```solidity
-    function podOwnerShares(address podOwner) external view returns (int256);
-    ```*/
+```solidity
+function podOwnerShares(address podOwner) external view returns (int256);
+```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct podOwnerSharesCall {
@@ -3140,7 +3543,9 @@ pub mod IEigenPodManager {
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -3166,10 +3571,14 @@ pub mod IEigenPodManager {
             #[doc(hidden)]
             type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Int<256>,);
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (alloy::sol_types::private::primitives::aliases::I256,);
+            type UnderlyingRustTuple<'a> = (
+                alloy::sol_types::private::primitives::aliases::I256,
+            );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -3178,14 +3587,16 @@ pub mod IEigenPodManager {
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<podOwnerSharesReturn> for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<podOwnerSharesReturn>
+            for UnderlyingRustTuple<'_> {
                 fn from(value: podOwnerSharesReturn) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for podOwnerSharesReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>>
+            for podOwnerSharesReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -3194,10 +3605,14 @@ pub mod IEigenPodManager {
         #[automatically_derived]
         impl alloy_sol_types::SolCall for podOwnerSharesCall {
             type Parameters<'a> = (alloy::sol_types::sol_data::Address,);
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type Return = podOwnerSharesReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Int<256>,);
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "podOwnerShares(address)";
             const SELECTOR: [u8; 4] = [96u8, 244u8, 6u8, 43u8];
             #[inline]
@@ -3219,17 +3634,17 @@ pub mod IEigenPodManager {
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
+                <Self::ReturnTuple<
+                    '_,
+                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
+                    .map(Into::into)
             }
         }
     };
     /**Function with signature `recordBeaconChainETHBalanceUpdate(address,int256)` and selector `0xc2c51c40`.
-    ```solidity
-    function recordBeaconChainETHBalanceUpdate(address podOwner, int256 sharesDelta) external;
-    ```*/
+```solidity
+function recordBeaconChainETHBalanceUpdate(address podOwner, int256 sharesDelta) external;
+```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct recordBeaconChainETHBalanceUpdateCall {
@@ -3261,7 +3676,9 @@ pub mod IEigenPodManager {
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -3270,14 +3687,16 @@ pub mod IEigenPodManager {
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<recordBeaconChainETHBalanceUpdateCall> for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<recordBeaconChainETHBalanceUpdateCall>
+            for UnderlyingRustTuple<'_> {
                 fn from(value: recordBeaconChainETHBalanceUpdateCall) -> Self {
                     (value.podOwner, value.sharesDelta)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for recordBeaconChainETHBalanceUpdateCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>>
+            for recordBeaconChainETHBalanceUpdateCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {
                         podOwner: tuple.0,
@@ -3293,7 +3712,9 @@ pub mod IEigenPodManager {
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -3302,14 +3723,16 @@ pub mod IEigenPodManager {
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<recordBeaconChainETHBalanceUpdateReturn> for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<recordBeaconChainETHBalanceUpdateReturn>
+            for UnderlyingRustTuple<'_> {
                 fn from(value: recordBeaconChainETHBalanceUpdateReturn) -> Self {
                     ()
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for recordBeaconChainETHBalanceUpdateReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>>
+            for recordBeaconChainETHBalanceUpdateReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
@@ -3321,10 +3744,14 @@ pub mod IEigenPodManager {
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Int<256>,
             );
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type Return = recordBeaconChainETHBalanceUpdateReturn;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "recordBeaconChainETHBalanceUpdate(address,int256)";
             const SELECTOR: [u8; 4] = [194u8, 197u8, 28u8, 64u8];
             #[inline]
@@ -3339,9 +3766,9 @@ pub mod IEigenPodManager {
                     <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
                         &self.podOwner,
                     ),
-                    <alloy::sol_types::sol_data::Int<256> as alloy_sol_types::SolType>::tokenize(
-                        &self.sharesDelta,
-                    ),
+                    <alloy::sol_types::sol_data::Int<
+                        256,
+                    > as alloy_sol_types::SolType>::tokenize(&self.sharesDelta),
                 )
             }
             #[inline]
@@ -3349,17 +3776,17 @@ pub mod IEigenPodManager {
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
+                <Self::ReturnTuple<
+                    '_,
+                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
+                    .map(Into::into)
             }
         }
     };
     /**Function with signature `removeShares(address,uint256)` and selector `0xbeffbb89`.
-    ```solidity
-    function removeShares(address podOwner, uint256 shares) external;
-    ```*/
+```solidity
+function removeShares(address podOwner, uint256 shares) external;
+```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct removeSharesCall {
@@ -3391,7 +3818,9 @@ pub mod IEigenPodManager {
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -3423,7 +3852,9 @@ pub mod IEigenPodManager {
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -3451,10 +3882,14 @@ pub mod IEigenPodManager {
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Uint<256>,
             );
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type Return = removeSharesReturn;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "removeShares(address,uint256)";
             const SELECTOR: [u8; 4] = [190u8, 255u8, 187u8, 137u8];
             #[inline]
@@ -3469,9 +3904,9 @@ pub mod IEigenPodManager {
                     <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
                         &self.podOwner,
                     ),
-                    <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
-                        &self.shares,
-                    ),
+                    <alloy::sol_types::sol_data::Uint<
+                        256,
+                    > as alloy_sol_types::SolType>::tokenize(&self.shares),
                 )
             }
             #[inline]
@@ -3479,17 +3914,17 @@ pub mod IEigenPodManager {
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
+                <Self::ReturnTuple<
+                    '_,
+                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
+                    .map(Into::into)
             }
         }
     };
     /**Function with signature `setPauserRegistry(address)` and selector `0x10d67a2f`.
-    ```solidity
-    function setPauserRegistry(address newPauserRegistry) external;
-    ```*/
+```solidity
+function setPauserRegistry(address newPauserRegistry) external;
+```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setPauserRegistryCall {
@@ -3514,7 +3949,9 @@ pub mod IEigenPodManager {
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -3523,18 +3960,18 @@ pub mod IEigenPodManager {
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<setPauserRegistryCall> for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<setPauserRegistryCall>
+            for UnderlyingRustTuple<'_> {
                 fn from(value: setPauserRegistryCall) -> Self {
                     (value.newPauserRegistry,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for setPauserRegistryCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>>
+            for setPauserRegistryCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self {
-                        newPauserRegistry: tuple.0,
-                    }
+                    Self { newPauserRegistry: tuple.0 }
                 }
             }
         }
@@ -3545,7 +3982,9 @@ pub mod IEigenPodManager {
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -3554,14 +3993,16 @@ pub mod IEigenPodManager {
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<setPauserRegistryReturn> for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<setPauserRegistryReturn>
+            for UnderlyingRustTuple<'_> {
                 fn from(value: setPauserRegistryReturn) -> Self {
                     ()
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for setPauserRegistryReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>>
+            for setPauserRegistryReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
@@ -3570,10 +4011,14 @@ pub mod IEigenPodManager {
         #[automatically_derived]
         impl alloy_sol_types::SolCall for setPauserRegistryCall {
             type Parameters<'a> = (alloy::sol_types::sol_data::Address,);
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type Return = setPauserRegistryReturn;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "setPauserRegistry(address)";
             const SELECTOR: [u8; 4] = [16u8, 214u8, 122u8, 47u8];
             #[inline]
@@ -3595,17 +4040,17 @@ pub mod IEigenPodManager {
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
+                <Self::ReturnTuple<
+                    '_,
+                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
+                    .map(Into::into)
             }
         }
     };
     /**Function with signature `slasher()` and selector `0xb1344271`.
-    ```solidity
-    function slasher() external view returns (address);
-    ```*/
+```solidity
+function slasher() external view returns (address);
+```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct slasherCall {}
@@ -3630,7 +4075,9 @@ pub mod IEigenPodManager {
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -3659,7 +4106,9 @@ pub mod IEigenPodManager {
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -3684,10 +4133,14 @@ pub mod IEigenPodManager {
         #[automatically_derived]
         impl alloy_sol_types::SolCall for slasherCall {
             type Parameters<'a> = ();
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type Return = slasherReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Address,);
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "slasher()";
             const SELECTOR: [u8; 4] = [177u8, 52u8, 66u8, 113u8];
             #[inline]
@@ -3705,17 +4158,17 @@ pub mod IEigenPodManager {
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
+                <Self::ReturnTuple<
+                    '_,
+                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
+                    .map(Into::into)
             }
         }
     };
     /**Function with signature `stake(bytes,bytes,bytes32)` and selector `0x9b4e4634`.
-    ```solidity
-    function stake(bytes memory pubkey, bytes memory signature, bytes32 depositDataRoot) external payable;
-    ```*/
+```solidity
+function stake(bytes memory pubkey, bytes memory signature, bytes32 depositDataRoot) external payable;
+```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct stakeCall {
@@ -3750,7 +4203,9 @@ pub mod IEigenPodManager {
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -3783,7 +4238,9 @@ pub mod IEigenPodManager {
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -3812,10 +4269,14 @@ pub mod IEigenPodManager {
                 alloy::sol_types::sol_data::Bytes,
                 alloy::sol_types::sol_data::FixedBytes<32>,
             );
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type Return = stakeReturn;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "stake(bytes,bytes,bytes32)";
             const SELECTOR: [u8; 4] = [155u8, 78u8, 70u8, 52u8];
             #[inline]
@@ -3843,17 +4304,17 @@ pub mod IEigenPodManager {
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
+                <Self::ReturnTuple<
+                    '_,
+                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
+                    .map(Into::into)
             }
         }
     };
     /**Function with signature `strategyManager()` and selector `0x39b70e38`.
-    ```solidity
-    function strategyManager() external view returns (address);
-    ```*/
+```solidity
+function strategyManager() external view returns (address);
+```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct strategyManagerCall {}
@@ -3878,7 +4339,9 @@ pub mod IEigenPodManager {
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -3907,7 +4370,9 @@ pub mod IEigenPodManager {
             type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -3916,14 +4381,16 @@ pub mod IEigenPodManager {
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<strategyManagerReturn> for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<strategyManagerReturn>
+            for UnderlyingRustTuple<'_> {
                 fn from(value: strategyManagerReturn) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for strategyManagerReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>>
+            for strategyManagerReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -3932,10 +4399,14 @@ pub mod IEigenPodManager {
         #[automatically_derived]
         impl alloy_sol_types::SolCall for strategyManagerCall {
             type Parameters<'a> = ();
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type Return = strategyManagerReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Address,);
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "strategyManager()";
             const SELECTOR: [u8; 4] = [57u8, 183u8, 14u8, 56u8];
             #[inline]
@@ -3953,17 +4424,17 @@ pub mod IEigenPodManager {
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
+                <Self::ReturnTuple<
+                    '_,
+                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
+                    .map(Into::into)
             }
         }
     };
     /**Function with signature `unpause(uint256)` and selector `0xfabc1cbc`.
-    ```solidity
-    function unpause(uint256 newPausedStatus) external;
-    ```*/
+```solidity
+function unpause(uint256 newPausedStatus) external;
+```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct unpauseCall {
@@ -3985,10 +4456,14 @@ pub mod IEigenPodManager {
             #[doc(hidden)]
             type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (alloy::sol_types::private::primitives::aliases::U256,);
+            type UnderlyingRustTuple<'a> = (
+                alloy::sol_types::private::primitives::aliases::U256,
+            );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -4006,9 +4481,7 @@ pub mod IEigenPodManager {
             #[doc(hidden)]
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for unpauseCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self {
-                        newPausedStatus: tuple.0,
-                    }
+                    Self { newPausedStatus: tuple.0 }
                 }
             }
         }
@@ -4019,7 +4492,9 @@ pub mod IEigenPodManager {
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -4044,10 +4519,14 @@ pub mod IEigenPodManager {
         #[automatically_derived]
         impl alloy_sol_types::SolCall for unpauseCall {
             type Parameters<'a> = (alloy::sol_types::sol_data::Uint<256>,);
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type Return = unpauseReturn;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "unpause(uint256)";
             const SELECTOR: [u8; 4] = [250u8, 188u8, 28u8, 188u8];
             #[inline]
@@ -4059,9 +4538,9 @@ pub mod IEigenPodManager {
             #[inline]
             fn tokenize(&self) -> Self::Token<'_> {
                 (
-                    <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
-                        &self.newPausedStatus,
-                    ),
+                    <alloy::sol_types::sol_data::Uint<
+                        256,
+                    > as alloy_sol_types::SolType>::tokenize(&self.newPausedStatus),
                 )
             }
             #[inline]
@@ -4069,17 +4548,17 @@ pub mod IEigenPodManager {
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
+                <Self::ReturnTuple<
+                    '_,
+                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
+                    .map(Into::into)
             }
         }
     };
     /**Function with signature `withdrawSharesAsTokens(address,address,uint256)` and selector `0x387b1300`.
-    ```solidity
-    function withdrawSharesAsTokens(address podOwner, address destination, uint256 shares) external;
-    ```*/
+```solidity
+function withdrawSharesAsTokens(address podOwner, address destination, uint256 shares) external;
+```*/
     #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct withdrawSharesAsTokensCall {
@@ -4114,7 +4593,9 @@ pub mod IEigenPodManager {
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -4123,14 +4604,16 @@ pub mod IEigenPodManager {
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<withdrawSharesAsTokensCall> for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<withdrawSharesAsTokensCall>
+            for UnderlyingRustTuple<'_> {
                 fn from(value: withdrawSharesAsTokensCall) -> Self {
                     (value.podOwner, value.destination, value.shares)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for withdrawSharesAsTokensCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>>
+            for withdrawSharesAsTokensCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {
                         podOwner: tuple.0,
@@ -4147,7 +4630,9 @@ pub mod IEigenPodManager {
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            fn _type_assertion(
+                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
+            ) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -4156,14 +4641,16 @@ pub mod IEigenPodManager {
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<withdrawSharesAsTokensReturn> for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<withdrawSharesAsTokensReturn>
+            for UnderlyingRustTuple<'_> {
                 fn from(value: withdrawSharesAsTokensReturn) -> Self {
                     ()
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>> for withdrawSharesAsTokensReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>>
+            for withdrawSharesAsTokensReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self {}
                 }
@@ -4176,10 +4663,14 @@ pub mod IEigenPodManager {
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Uint<256>,
             );
-            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             type Return = withdrawSharesAsTokensReturn;
             type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type ReturnToken<'a> = <Self::ReturnTuple<
+                'a,
+            > as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "withdrawSharesAsTokens(address,address,uint256)";
             const SELECTOR: [u8; 4] = [56u8, 123u8, 19u8, 0u8];
             #[inline]
@@ -4197,9 +4688,9 @@ pub mod IEigenPodManager {
                     <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
                         &self.destination,
                     ),
-                    <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
-                        &self.shares,
-                    ),
+                    <alloy::sol_types::sol_data::Uint<
+                        256,
+                    > as alloy_sol_types::SolType>::tokenize(&self.shares),
                 )
             }
             #[inline]
@@ -4207,10 +4698,10 @@ pub mod IEigenPodManager {
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
-                    data, validate,
-                )
-                .map(Into::into)
+                <Self::ReturnTuple<
+                    '_,
+                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
+                    .map(Into::into)
             }
         }
     };
@@ -4282,11 +4773,15 @@ pub mod IEigenPodManager {
         #[inline]
         fn selector(&self) -> [u8; 4] {
             match self {
-                Self::addShares(_) => <addSharesCall as alloy_sol_types::SolCall>::SELECTOR,
+                Self::addShares(_) => {
+                    <addSharesCall as alloy_sol_types::SolCall>::SELECTOR
+                }
                 Self::beaconChainETHStrategy(_) => {
                     <beaconChainETHStrategyCall as alloy_sol_types::SolCall>::SELECTOR
                 }
-                Self::createPod(_) => <createPodCall as alloy_sol_types::SolCall>::SELECTOR,
+                Self::createPod(_) => {
+                    <createPodCall as alloy_sol_types::SolCall>::SELECTOR
+                }
                 Self::eigenPodBeacon(_) => {
                     <eigenPodBeaconCall as alloy_sol_types::SolCall>::SELECTOR
                 }
@@ -4294,7 +4789,9 @@ pub mod IEigenPodManager {
                 Self::getPod(_) => <getPodCall as alloy_sol_types::SolCall>::SELECTOR,
                 Self::hasPod(_) => <hasPodCall as alloy_sol_types::SolCall>::SELECTOR,
                 Self::numPods(_) => <numPodsCall as alloy_sol_types::SolCall>::SELECTOR,
-                Self::ownerToPod(_) => <ownerToPodCall as alloy_sol_types::SolCall>::SELECTOR,
+                Self::ownerToPod(_) => {
+                    <ownerToPodCall as alloy_sol_types::SolCall>::SELECTOR
+                }
                 Self::pause(_) => <pauseCall as alloy_sol_types::SolCall>::SELECTOR,
                 Self::pauseAll(_) => <pauseAllCall as alloy_sol_types::SolCall>::SELECTOR,
                 Self::paused_0(_) => <paused_0Call as alloy_sol_types::SolCall>::SELECTOR,
@@ -4308,7 +4805,9 @@ pub mod IEigenPodManager {
                 Self::recordBeaconChainETHBalanceUpdate(_) => {
                     <recordBeaconChainETHBalanceUpdateCall as alloy_sol_types::SolCall>::SELECTOR
                 }
-                Self::removeShares(_) => <removeSharesCall as alloy_sol_types::SolCall>::SELECTOR,
+                Self::removeShares(_) => {
+                    <removeSharesCall as alloy_sol_types::SolCall>::SELECTOR
+                }
                 Self::setPauserRegistry(_) => {
                     <setPauserRegistryCall as alloy_sol_types::SolCall>::SELECTOR
                 }
@@ -4341,14 +4840,16 @@ pub mod IEigenPodManager {
             static DECODE_SHIMS: &[fn(
                 &[u8],
                 bool,
-            )
-                -> alloy_sol_types::Result<IEigenPodManagerCalls>] = &[
+            ) -> alloy_sol_types::Result<IEigenPodManagerCalls>] = &[
                 {
                     fn addShares(
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<IEigenPodManagerCalls> {
-                        <addSharesCall as alloy_sol_types::SolCall>::abi_decode_raw(data, validate)
+                        <addSharesCall as alloy_sol_types::SolCall>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
                             .map(IEigenPodManagerCalls::addShares)
                     }
                     addShares
@@ -4359,9 +4860,10 @@ pub mod IEigenPodManager {
                         validate: bool,
                     ) -> alloy_sol_types::Result<IEigenPodManagerCalls> {
                         <setPauserRegistryCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                            data, validate,
-                        )
-                        .map(IEigenPodManagerCalls::setPauserRegistry)
+                                data,
+                                validate,
+                            )
+                            .map(IEigenPodManagerCalls::setPauserRegistry)
                     }
                     setPauserRegistry
                 },
@@ -4370,7 +4872,10 @@ pub mod IEigenPodManager {
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<IEigenPodManagerCalls> {
-                        <pauseCall as alloy_sol_types::SolCall>::abi_decode_raw(data, validate)
+                        <pauseCall as alloy_sol_types::SolCall>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
                             .map(IEigenPodManagerCalls::pause)
                     }
                     pause
@@ -4381,9 +4886,10 @@ pub mod IEigenPodManager {
                         validate: bool,
                     ) -> alloy_sol_types::Result<IEigenPodManagerCalls> {
                         <eigenPodBeaconCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                            data, validate,
-                        )
-                        .map(IEigenPodManagerCalls::eigenPodBeacon)
+                                data,
+                                validate,
+                            )
+                            .map(IEigenPodManagerCalls::eigenPodBeacon)
                     }
                     eigenPodBeacon
                 },
@@ -4393,9 +4899,10 @@ pub mod IEigenPodManager {
                         validate: bool,
                     ) -> alloy_sol_types::Result<IEigenPodManagerCalls> {
                         <withdrawSharesAsTokensCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                            data, validate,
-                        )
-                        .map(IEigenPodManagerCalls::withdrawSharesAsTokens)
+                                data,
+                                validate,
+                            )
+                            .map(IEigenPodManagerCalls::withdrawSharesAsTokens)
                     }
                     withdrawSharesAsTokens
                 },
@@ -4405,9 +4912,10 @@ pub mod IEigenPodManager {
                         validate: bool,
                     ) -> alloy_sol_types::Result<IEigenPodManagerCalls> {
                         <strategyManagerCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                            data, validate,
-                        )
-                        .map(IEigenPodManagerCalls::strategyManager)
+                                data,
+                                validate,
+                            )
+                            .map(IEigenPodManagerCalls::strategyManager)
                     }
                     strategyManager
                 },
@@ -4416,7 +4924,10 @@ pub mod IEigenPodManager {
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<IEigenPodManagerCalls> {
-                        <pauseAllCall as alloy_sol_types::SolCall>::abi_decode_raw(data, validate)
+                        <pauseAllCall as alloy_sol_types::SolCall>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
                             .map(IEigenPodManagerCalls::pauseAll)
                     }
                     pauseAll
@@ -4426,7 +4937,10 @@ pub mod IEigenPodManager {
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<IEigenPodManagerCalls> {
-                        <paused_0Call as alloy_sol_types::SolCall>::abi_decode_raw(data, validate)
+                        <paused_0Call as alloy_sol_types::SolCall>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
                             .map(IEigenPodManagerCalls::paused_0)
                     }
                     paused_0
@@ -4436,7 +4950,10 @@ pub mod IEigenPodManager {
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<IEigenPodManagerCalls> {
-                        <paused_1Call as alloy_sol_types::SolCall>::abi_decode_raw(data, validate)
+                        <paused_1Call as alloy_sol_types::SolCall>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
                             .map(IEigenPodManagerCalls::paused_1)
                     }
                     paused_1
@@ -4447,9 +4964,10 @@ pub mod IEigenPodManager {
                         validate: bool,
                     ) -> alloy_sol_types::Result<IEigenPodManagerCalls> {
                         <podOwnerSharesCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                            data, validate,
-                        )
-                        .map(IEigenPodManagerCalls::podOwnerShares)
+                                data,
+                                validate,
+                            )
+                            .map(IEigenPodManagerCalls::podOwnerShares)
                     }
                     podOwnerShares
                 },
@@ -4458,7 +4976,10 @@ pub mod IEigenPodManager {
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<IEigenPodManagerCalls> {
-                        <ethPOSCall as alloy_sol_types::SolCall>::abi_decode_raw(data, validate)
+                        <ethPOSCall as alloy_sol_types::SolCall>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
                             .map(IEigenPodManagerCalls::ethPOS)
                     }
                     ethPOS
@@ -4468,7 +4989,10 @@ pub mod IEigenPodManager {
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<IEigenPodManagerCalls> {
-                        <createPodCall as alloy_sol_types::SolCall>::abi_decode_raw(data, validate)
+                        <createPodCall as alloy_sol_types::SolCall>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
                             .map(IEigenPodManagerCalls::createPod)
                     }
                     createPod
@@ -4479,9 +5003,10 @@ pub mod IEigenPodManager {
                         validate: bool,
                     ) -> alloy_sol_types::Result<IEigenPodManagerCalls> {
                         <pauserRegistryCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                            data, validate,
-                        )
-                        .map(IEigenPodManagerCalls::pauserRegistry)
+                                data,
+                                validate,
+                            )
+                            .map(IEigenPodManagerCalls::pauserRegistry)
                     }
                     pauserRegistry
                 },
@@ -4491,9 +5016,10 @@ pub mod IEigenPodManager {
                         validate: bool,
                     ) -> alloy_sol_types::Result<IEigenPodManagerCalls> {
                         <beaconChainETHStrategyCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                            data, validate,
-                        )
-                        .map(IEigenPodManagerCalls::beaconChainETHStrategy)
+                                data,
+                                validate,
+                            )
+                            .map(IEigenPodManagerCalls::beaconChainETHStrategy)
                     }
                     beaconChainETHStrategy
                 },
@@ -4502,7 +5028,10 @@ pub mod IEigenPodManager {
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<IEigenPodManagerCalls> {
-                        <stakeCall as alloy_sol_types::SolCall>::abi_decode_raw(data, validate)
+                        <stakeCall as alloy_sol_types::SolCall>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
                             .map(IEigenPodManagerCalls::stake)
                     }
                     stake
@@ -4512,7 +5041,10 @@ pub mod IEigenPodManager {
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<IEigenPodManagerCalls> {
-                        <ownerToPodCall as alloy_sol_types::SolCall>::abi_decode_raw(data, validate)
+                        <ownerToPodCall as alloy_sol_types::SolCall>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
                             .map(IEigenPodManagerCalls::ownerToPod)
                     }
                     ownerToPod
@@ -4522,7 +5054,10 @@ pub mod IEigenPodManager {
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<IEigenPodManagerCalls> {
-                        <getPodCall as alloy_sol_types::SolCall>::abi_decode_raw(data, validate)
+                        <getPodCall as alloy_sol_types::SolCall>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
                             .map(IEigenPodManagerCalls::getPod)
                     }
                     getPod
@@ -4532,7 +5067,10 @@ pub mod IEigenPodManager {
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<IEigenPodManagerCalls> {
-                        <numPodsCall as alloy_sol_types::SolCall>::abi_decode_raw(data, validate)
+                        <numPodsCall as alloy_sol_types::SolCall>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
                             .map(IEigenPodManagerCalls::numPods)
                     }
                     numPods
@@ -4542,7 +5080,10 @@ pub mod IEigenPodManager {
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<IEigenPodManagerCalls> {
-                        <slasherCall as alloy_sol_types::SolCall>::abi_decode_raw(data, validate)
+                        <slasherCall as alloy_sol_types::SolCall>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
                             .map(IEigenPodManagerCalls::slasher)
                     }
                     slasher
@@ -4553,9 +5094,10 @@ pub mod IEigenPodManager {
                         validate: bool,
                     ) -> alloy_sol_types::Result<IEigenPodManagerCalls> {
                         <removeSharesCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                            data, validate,
-                        )
-                        .map(IEigenPodManagerCalls::removeShares)
+                                data,
+                                validate,
+                            )
+                            .map(IEigenPodManagerCalls::removeShares)
                     }
                     removeShares
                 },
@@ -4579,7 +5121,10 @@ pub mod IEigenPodManager {
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<IEigenPodManagerCalls> {
-                        <hasPodCall as alloy_sol_types::SolCall>::abi_decode_raw(data, validate)
+                        <hasPodCall as alloy_sol_types::SolCall>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
                             .map(IEigenPodManagerCalls::hasPod)
                     }
                     hasPod
@@ -4589,17 +5134,22 @@ pub mod IEigenPodManager {
                         data: &[u8],
                         validate: bool,
                     ) -> alloy_sol_types::Result<IEigenPodManagerCalls> {
-                        <unpauseCall as alloy_sol_types::SolCall>::abi_decode_raw(data, validate)
+                        <unpauseCall as alloy_sol_types::SolCall>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
                             .map(IEigenPodManagerCalls::unpause)
                     }
                     unpause
                 },
             ];
             let Ok(idx) = Self::SELECTORS.binary_search(&selector) else {
-                return Err(alloy_sol_types::Error::unknown_selector(
-                    <Self as alloy_sol_types::SolInterface>::NAME,
-                    selector,
-                ));
+                return Err(
+                    alloy_sol_types::Error::unknown_selector(
+                        <Self as alloy_sol_types::SolInterface>::NAME,
+                        selector,
+                    ),
+                );
             };
             DECODE_SHIMS[idx](data, validate)
         }
@@ -4836,44 +5386,276 @@ pub mod IEigenPodManager {
         /// Prefer using `SolInterface` methods instead.
         pub const SELECTORS: &'static [[u8; 32usize]] = &[
             [
-                33u8, 201u8, 157u8, 13u8, 176u8, 34u8, 19u8, 195u8, 47u8, 255u8, 91u8, 5u8, 207u8,
-                10u8, 113u8, 138u8, 181u8, 248u8, 88u8, 128u8, 43u8, 145u8, 73u8, 143u8, 128u8,
-                216u8, 34u8, 112u8, 40u8, 157u8, 133u8, 106u8,
+                33u8,
+                201u8,
+                157u8,
+                13u8,
+                176u8,
+                34u8,
+                19u8,
+                195u8,
+                47u8,
+                255u8,
+                91u8,
+                5u8,
+                207u8,
+                10u8,
+                113u8,
+                138u8,
+                181u8,
+                248u8,
+                88u8,
+                128u8,
+                43u8,
+                145u8,
+                73u8,
+                143u8,
+                128u8,
+                216u8,
+                34u8,
+                112u8,
+                40u8,
+                157u8,
+                133u8,
+                106u8,
             ],
             [
-                53u8, 130u8, 209u8, 130u8, 142u8, 38u8, 191u8, 86u8, 189u8, 128u8, 21u8, 2u8,
-                188u8, 2u8, 26u8, 192u8, 188u8, 138u8, 251u8, 87u8, 200u8, 38u8, 228u8, 152u8,
-                107u8, 69u8, 89u8, 60u8, 143u8, 173u8, 56u8, 156u8,
+                53u8,
+                130u8,
+                209u8,
+                130u8,
+                142u8,
+                38u8,
+                191u8,
+                86u8,
+                189u8,
+                128u8,
+                21u8,
+                2u8,
+                188u8,
+                2u8,
+                26u8,
+                192u8,
+                188u8,
+                138u8,
+                251u8,
+                87u8,
+                200u8,
+                38u8,
+                228u8,
+                152u8,
+                107u8,
+                69u8,
+                89u8,
+                60u8,
+                143u8,
+                173u8,
+                56u8,
+                156u8,
             ],
             [
-                53u8, 168u8, 92u8, 171u8, 198u8, 3u8, 244u8, 138u8, 187u8, 43u8, 113u8, 217u8,
-                251u8, 216u8, 173u8, 234u8, 124u8, 68u8, 157u8, 127u8, 11u8, 233u8, 0u8, 174u8,
-                122u8, 41u8, 134u8, 234u8, 54u8, 156u8, 61u8, 13u8,
+                53u8,
+                168u8,
+                92u8,
+                171u8,
+                198u8,
+                3u8,
+                244u8,
+                138u8,
+                187u8,
+                43u8,
+                113u8,
+                217u8,
+                251u8,
+                216u8,
+                173u8,
+                234u8,
+                124u8,
+                68u8,
+                157u8,
+                127u8,
+                11u8,
+                233u8,
+                0u8,
+                174u8,
+                122u8,
+                41u8,
+                134u8,
+                234u8,
+                54u8,
+                156u8,
+                61u8,
+                13u8,
             ],
             [
-                78u8, 43u8, 121u8, 29u8, 237u8, 204u8, 217u8, 251u8, 48u8, 20u8, 27u8, 8u8, 140u8,
-                171u8, 245u8, 193u8, 74u8, 137u8, 18u8, 181u8, 47u8, 89u8, 55u8, 92u8, 149u8,
-                192u8, 16u8, 112u8, 11u8, 140u8, 97u8, 147u8,
+                78u8,
+                43u8,
+                121u8,
+                29u8,
+                237u8,
+                204u8,
+                217u8,
+                251u8,
+                48u8,
+                20u8,
+                27u8,
+                8u8,
+                140u8,
+                171u8,
+                245u8,
+                193u8,
+                74u8,
+                137u8,
+                18u8,
+                181u8,
+                47u8,
+                89u8,
+                55u8,
+                92u8,
+                149u8,
+                192u8,
+                16u8,
+                112u8,
+                11u8,
+                140u8,
+                97u8,
+                147u8,
             ],
             [
-                110u8, 159u8, 205u8, 83u8, 152u8, 150u8, 252u8, 166u8, 14u8, 139u8, 15u8, 1u8,
-                221u8, 88u8, 2u8, 51u8, 228u8, 138u8, 107u8, 15u8, 125u8, 240u8, 19u8, 184u8,
-                155u8, 167u8, 245u8, 101u8, 134u8, 154u8, 205u8, 182u8,
+                110u8,
+                159u8,
+                205u8,
+                83u8,
+                152u8,
+                150u8,
+                252u8,
+                166u8,
+                14u8,
+                139u8,
+                15u8,
+                1u8,
+                221u8,
+                88u8,
+                2u8,
+                51u8,
+                228u8,
+                138u8,
+                107u8,
+                15u8,
+                125u8,
+                240u8,
+                19u8,
+                184u8,
+                155u8,
+                167u8,
+                245u8,
+                101u8,
+                134u8,
+                154u8,
+                205u8,
+                182u8,
             ],
             [
-                166u8, 186u8, 177u8, 213u8, 90u8, 54u8, 31u8, 206u8, 162u8, 238u8, 226u8, 188u8,
-                148u8, 145u8, 228u8, 240u8, 30u8, 108u8, 243u8, 51u8, 223u8, 3u8, 201u8, 196u8,
-                242u8, 193u8, 68u8, 70u8, 100u8, 41u8, 247u8, 214u8,
+                166u8,
+                186u8,
+                177u8,
+                213u8,
+                90u8,
+                54u8,
+                31u8,
+                206u8,
+                162u8,
+                238u8,
+                226u8,
+                188u8,
+                148u8,
+                145u8,
+                228u8,
+                240u8,
+                30u8,
+                108u8,
+                243u8,
+                51u8,
+                223u8,
+                3u8,
+                201u8,
+                196u8,
+                242u8,
+                193u8,
+                68u8,
+                70u8,
+                100u8,
+                41u8,
+                247u8,
+                214u8,
             ],
             [
-                171u8, 64u8, 163u8, 116u8, 188u8, 81u8, 222u8, 55u8, 34u8, 0u8, 168u8, 188u8,
-                152u8, 26u8, 248u8, 201u8, 236u8, 220u8, 8u8, 223u8, 218u8, 239u8, 11u8, 182u8,
-                224u8, 159u8, 136u8, 243u8, 198u8, 22u8, 239u8, 61u8,
+                171u8,
+                64u8,
+                163u8,
+                116u8,
+                188u8,
+                81u8,
+                222u8,
+                55u8,
+                34u8,
+                0u8,
+                168u8,
+                188u8,
+                152u8,
+                26u8,
+                248u8,
+                201u8,
+                236u8,
+                220u8,
+                8u8,
+                223u8,
+                218u8,
+                239u8,
+                11u8,
+                182u8,
+                224u8,
+                159u8,
+                136u8,
+                243u8,
+                198u8,
+                22u8,
+                239u8,
+                61u8,
             ],
             [
-                212u8, 222u8, 247u8, 109u8, 109u8, 43u8, 237u8, 111u8, 20u8, 213u8, 205u8, 154u8,
-                247u8, 60u8, 194u8, 145u8, 61u8, 97u8, 141u8, 0u8, 237u8, 222u8, 66u8, 67u8, 46u8,
-                129u8, 192u8, 155u8, 254u8, 7u8, 112u8, 152u8,
+                212u8,
+                222u8,
+                247u8,
+                109u8,
+                109u8,
+                43u8,
+                237u8,
+                111u8,
+                20u8,
+                213u8,
+                205u8,
+                154u8,
+                247u8,
+                60u8,
+                194u8,
+                145u8,
+                61u8,
+                97u8,
+                141u8,
+                0u8,
+                237u8,
+                222u8,
+                66u8,
+                67u8,
+                46u8,
+                129u8,
+                192u8,
+                155u8,
+                254u8,
+                7u8,
+                112u8,
+                152u8,
             ],
         ];
     }
@@ -4984,7 +5766,9 @@ pub mod IEigenPodManager {
                 Self::NewTotalShares(inner) => {
                     alloy_sol_types::private::IntoLogData::to_log_data(inner)
                 }
-                Self::Paused(inner) => alloy_sol_types::private::IntoLogData::to_log_data(inner),
+                Self::Paused(inner) => {
+                    alloy_sol_types::private::IntoLogData::to_log_data(inner)
+                }
                 Self::PauserRegistrySet(inner) => {
                     alloy_sol_types::private::IntoLogData::to_log_data(inner)
                 }
@@ -4994,7 +5778,9 @@ pub mod IEigenPodManager {
                 Self::PodSharesUpdated(inner) => {
                     alloy_sol_types::private::IntoLogData::to_log_data(inner)
                 }
-                Self::Unpaused(inner) => alloy_sol_types::private::IntoLogData::to_log_data(inner),
+                Self::Unpaused(inner) => {
+                    alloy_sol_types::private::IntoLogData::to_log_data(inner)
+                }
             }
         }
         fn into_log_data(self) -> alloy_sol_types::private::LogData {
@@ -5008,7 +5794,9 @@ pub mod IEigenPodManager {
                 Self::NewTotalShares(inner) => {
                     alloy_sol_types::private::IntoLogData::into_log_data(inner)
                 }
-                Self::Paused(inner) => alloy_sol_types::private::IntoLogData::into_log_data(inner),
+                Self::Paused(inner) => {
+                    alloy_sol_types::private::IntoLogData::into_log_data(inner)
+                }
                 Self::PauserRegistrySet(inner) => {
                     alloy_sol_types::private::IntoLogData::into_log_data(inner)
                 }
@@ -5027,7 +5815,7 @@ pub mod IEigenPodManager {
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`IEigenPodManager`](self) contract instance.
 
-    See the [wrapper's documentation](`IEigenPodManagerInstance`) for more details.*/
+See the [wrapper's documentation](`IEigenPodManagerInstance`) for more details.*/
     #[inline]
     pub const fn new<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -5041,9 +5829,9 @@ pub mod IEigenPodManager {
     }
     /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-    Returns a new instance of the contract, if the deployment was successful.
+Returns a new instance of the contract, if the deployment was successful.
 
-    For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
     #[inline]
     pub fn deploy<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -5051,36 +5839,35 @@ pub mod IEigenPodManager {
         N: alloy_contract::private::Network,
     >(
         provider: P,
-    ) -> impl ::core::future::Future<Output = alloy_contract::Result<IEigenPodManagerInstance<T, P, N>>>
-    {
+    ) -> impl ::core::future::Future<
+        Output = alloy_contract::Result<IEigenPodManagerInstance<T, P, N>>,
+    > {
         IEigenPodManagerInstance::<T, P, N>::deploy(provider)
     }
     /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-    and constructor arguments, if any.
+and constructor arguments, if any.
 
-    This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-    the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     #[inline]
     pub fn deploy_builder<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
         P: alloy_contract::private::Provider<T, N>,
         N: alloy_contract::private::Network,
-    >(
-        provider: P,
-    ) -> alloy_contract::RawCallBuilder<T, P, N> {
+    >(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
         IEigenPodManagerInstance::<T, P, N>::deploy_builder(provider)
     }
     /**A [`IEigenPodManager`](self) instance.
 
-    Contains type-safe methods for interacting with an on-chain instance of the
-    [`IEigenPodManager`](self) contract located at a given `address`, using a given
-    provider `P`.
+Contains type-safe methods for interacting with an on-chain instance of the
+[`IEigenPodManager`](self) contract located at a given `address`, using a given
+provider `P`.
 
-    If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
-    documentation on how to provide it), the `deploy` and `deploy_builder` methods can
-    be used to deploy a new instance of the contract.
+If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
+documentation on how to provide it), the `deploy` and `deploy_builder` methods can
+be used to deploy a new instance of the contract.
 
-    See the [module-level documentation](self) for all the available methods.*/
+See the [module-level documentation](self) for all the available methods.*/
     #[derive(Clone)]
     pub struct IEigenPodManagerInstance<T, P, N = alloy_contract::private::Ethereum> {
         address: alloy_sol_types::private::Address,
@@ -5091,24 +5878,24 @@ pub mod IEigenPodManager {
     impl<T, P, N> ::core::fmt::Debug for IEigenPodManagerInstance<T, P, N> {
         #[inline]
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-            f.debug_tuple("IEigenPodManagerInstance")
-                .field(&self.address)
-                .finish()
+            f.debug_tuple("IEigenPodManagerInstance").field(&self.address).finish()
         }
     }
     /// Instantiation and getters/setters.
     #[automatically_derived]
     impl<
-            T: alloy_contract::private::Transport + ::core::clone::Clone,
-            P: alloy_contract::private::Provider<T, N>,
-            N: alloy_contract::private::Network,
-        > IEigenPodManagerInstance<T, P, N>
-    {
+        T: alloy_contract::private::Transport + ::core::clone::Clone,
+        P: alloy_contract::private::Provider<T, N>,
+        N: alloy_contract::private::Network,
+    > IEigenPodManagerInstance<T, P, N> {
         /**Creates a new wrapper around an on-chain [`IEigenPodManager`](self) contract instance.
 
-        See the [wrapper's documentation](`IEigenPodManagerInstance`) for more details.*/
+See the [wrapper's documentation](`IEigenPodManagerInstance`) for more details.*/
         #[inline]
-        pub const fn new(address: alloy_sol_types::private::Address, provider: P) -> Self {
+        pub const fn new(
+            address: alloy_sol_types::private::Address,
+            provider: P,
+        ) -> Self {
             Self {
                 address,
                 provider,
@@ -5117,9 +5904,9 @@ pub mod IEigenPodManager {
         }
         /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-        Returns a new instance of the contract, if the deployment was successful.
+Returns a new instance of the contract, if the deployment was successful.
 
-        For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
         #[inline]
         pub async fn deploy(
             provider: P,
@@ -5129,10 +5916,10 @@ pub mod IEigenPodManager {
             Ok(Self::new(contract_address, call_builder.provider))
         }
         /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-        and constructor arguments, if any.
+and constructor arguments, if any.
 
-        This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-        the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         #[inline]
         pub fn deploy_builder(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
             alloy_contract::RawCallBuilder::new_raw_deploy(
@@ -5175,11 +5962,10 @@ pub mod IEigenPodManager {
     /// Function calls.
     #[automatically_derived]
     impl<
-            T: alloy_contract::private::Transport + ::core::clone::Clone,
-            P: alloy_contract::private::Provider<T, N>,
-            N: alloy_contract::private::Network,
-        > IEigenPodManagerInstance<T, P, N>
-    {
+        T: alloy_contract::private::Transport + ::core::clone::Clone,
+        P: alloy_contract::private::Provider<T, N>,
+        N: alloy_contract::private::Network,
+    > IEigenPodManagerInstance<T, P, N> {
         /// Creates a new call builder using this contract instance's provider and address.
         ///
         /// Note that the call can be any function call, not just those defined in this
@@ -5205,7 +5991,9 @@ pub mod IEigenPodManager {
             self.call_builder(&beaconChainETHStrategyCall {})
         }
         ///Creates a new call builder for the [`createPod`] function.
-        pub fn createPod(&self) -> alloy_contract::SolCallBuilder<T, &P, createPodCall, N> {
+        pub fn createPod(
+            &self,
+        ) -> alloy_contract::SolCallBuilder<T, &P, createPodCall, N> {
             self.call_builder(&createPodCall {})
         }
         ///Creates a new call builder for the [`eigenPodBeacon`] function.
@@ -5251,7 +6039,9 @@ pub mod IEigenPodManager {
             self.call_builder(&pauseCall { newPausedStatus })
         }
         ///Creates a new call builder for the [`pauseAll`] function.
-        pub fn pauseAll(&self) -> alloy_contract::SolCallBuilder<T, &P, pauseAllCall, N> {
+        pub fn pauseAll(
+            &self,
+        ) -> alloy_contract::SolCallBuilder<T, &P, pauseAllCall, N> {
             self.call_builder(&pauseAllCall {})
         }
         ///Creates a new call builder for the [`paused_0`] function.
@@ -5262,7 +6052,9 @@ pub mod IEigenPodManager {
             self.call_builder(&paused_0Call { index })
         }
         ///Creates a new call builder for the [`paused_1`] function.
-        pub fn paused_1(&self) -> alloy_contract::SolCallBuilder<T, &P, paused_1Call, N> {
+        pub fn paused_1(
+            &self,
+        ) -> alloy_contract::SolCallBuilder<T, &P, paused_1Call, N> {
             self.call_builder(&paused_1Call {})
         }
         ///Creates a new call builder for the [`pauserRegistry`] function.
@@ -5283,12 +6075,18 @@ pub mod IEigenPodManager {
             &self,
             podOwner: alloy::sol_types::private::Address,
             sharesDelta: alloy::sol_types::private::primitives::aliases::I256,
-        ) -> alloy_contract::SolCallBuilder<T, &P, recordBeaconChainETHBalanceUpdateCall, N>
-        {
-            self.call_builder(&recordBeaconChainETHBalanceUpdateCall {
-                podOwner,
-                sharesDelta,
-            })
+        ) -> alloy_contract::SolCallBuilder<
+            T,
+            &P,
+            recordBeaconChainETHBalanceUpdateCall,
+            N,
+        > {
+            self.call_builder(
+                &recordBeaconChainETHBalanceUpdateCall {
+                    podOwner,
+                    sharesDelta,
+                },
+            )
         }
         ///Creates a new call builder for the [`removeShares`] function.
         pub fn removeShares(
@@ -5296,14 +6094,23 @@ pub mod IEigenPodManager {
             podOwner: alloy::sol_types::private::Address,
             shares: alloy::sol_types::private::primitives::aliases::U256,
         ) -> alloy_contract::SolCallBuilder<T, &P, removeSharesCall, N> {
-            self.call_builder(&removeSharesCall { podOwner, shares })
+            self.call_builder(
+                &removeSharesCall {
+                    podOwner,
+                    shares,
+                },
+            )
         }
         ///Creates a new call builder for the [`setPauserRegistry`] function.
         pub fn setPauserRegistry(
             &self,
             newPauserRegistry: alloy::sol_types::private::Address,
         ) -> alloy_contract::SolCallBuilder<T, &P, setPauserRegistryCall, N> {
-            self.call_builder(&setPauserRegistryCall { newPauserRegistry })
+            self.call_builder(
+                &setPauserRegistryCall {
+                    newPauserRegistry,
+                },
+            )
         }
         ///Creates a new call builder for the [`slasher`] function.
         pub fn slasher(&self) -> alloy_contract::SolCallBuilder<T, &P, slasherCall, N> {
@@ -5316,11 +6123,13 @@ pub mod IEigenPodManager {
             signature: alloy::sol_types::private::Bytes,
             depositDataRoot: alloy::sol_types::private::FixedBytes<32>,
         ) -> alloy_contract::SolCallBuilder<T, &P, stakeCall, N> {
-            self.call_builder(&stakeCall {
-                pubkey,
-                signature,
-                depositDataRoot,
-            })
+            self.call_builder(
+                &stakeCall {
+                    pubkey,
+                    signature,
+                    depositDataRoot,
+                },
+            )
         }
         ///Creates a new call builder for the [`strategyManager`] function.
         pub fn strategyManager(
@@ -5342,21 +6151,22 @@ pub mod IEigenPodManager {
             destination: alloy::sol_types::private::Address,
             shares: alloy::sol_types::private::primitives::aliases::U256,
         ) -> alloy_contract::SolCallBuilder<T, &P, withdrawSharesAsTokensCall, N> {
-            self.call_builder(&withdrawSharesAsTokensCall {
-                podOwner,
-                destination,
-                shares,
-            })
+            self.call_builder(
+                &withdrawSharesAsTokensCall {
+                    podOwner,
+                    destination,
+                    shares,
+                },
+            )
         }
     }
     /// Event filters.
     #[automatically_derived]
     impl<
-            T: alloy_contract::private::Transport + ::core::clone::Clone,
-            P: alloy_contract::private::Provider<T, N>,
-            N: alloy_contract::private::Network,
-        > IEigenPodManagerInstance<T, P, N>
-    {
+        T: alloy_contract::private::Transport + ::core::clone::Clone,
+        P: alloy_contract::private::Provider<T, N>,
+        N: alloy_contract::private::Network,
+    > IEigenPodManagerInstance<T, P, N> {
         /// Creates a new event filter using this contract instance's provider and address.
         ///
         /// Note that the type can be any event, not just those defined in this contract.
@@ -5379,7 +6189,9 @@ pub mod IEigenPodManager {
             self.event_filter::<BeaconChainETHWithdrawalCompleted>()
         }
         ///Creates a new event filter for the [`NewTotalShares`] event.
-        pub fn NewTotalShares_filter(&self) -> alloy_contract::Event<T, &P, NewTotalShares, N> {
+        pub fn NewTotalShares_filter(
+            &self,
+        ) -> alloy_contract::Event<T, &P, NewTotalShares, N> {
             self.event_filter::<NewTotalShares>()
         }
         ///Creates a new event filter for the [`Paused`] event.
@@ -5393,11 +6205,15 @@ pub mod IEigenPodManager {
             self.event_filter::<PauserRegistrySet>()
         }
         ///Creates a new event filter for the [`PodDeployed`] event.
-        pub fn PodDeployed_filter(&self) -> alloy_contract::Event<T, &P, PodDeployed, N> {
+        pub fn PodDeployed_filter(
+            &self,
+        ) -> alloy_contract::Event<T, &P, PodDeployed, N> {
             self.event_filter::<PodDeployed>()
         }
         ///Creates a new event filter for the [`PodSharesUpdated`] event.
-        pub fn PodSharesUpdated_filter(&self) -> alloy_contract::Event<T, &P, PodSharesUpdated, N> {
+        pub fn PodSharesUpdated_filter(
+            &self,
+        ) -> alloy_contract::Event<T, &P, PodSharesUpdated, N> {
             self.event_filter::<PodSharesUpdated>()
         }
         ///Creates a new event filter for the [`Unpaused`] event.
