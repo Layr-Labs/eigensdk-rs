@@ -398,7 +398,8 @@ mod tests {
         let MockAvsServiceManager::avsDirectoryReturn {
             _0: avs_directory_address,
         } = avs_directory_address_return;
-        let rewards_coordinator_address = get_rewards_coordinator_address(http_endpoint.clone()).await;
+        let rewards_coordinator_address =
+            get_rewards_coordinator_address(http_endpoint.clone()).await;
 
         (
             ELChainReader::new(

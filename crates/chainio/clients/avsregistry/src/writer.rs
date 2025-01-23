@@ -338,7 +338,8 @@ mod tests {
     use eigen_logging::get_test_logger;
     use eigen_testing_utils::anvil::start_anvil_container;
     use eigen_testing_utils::anvil_constants::{
-        get_operator_state_retriever_address, get_registry_coordinator_address, get_rewards_coordinator_address,
+        get_operator_state_retriever_address, get_registry_coordinator_address,
+        get_rewards_coordinator_address,
     };
     use eigen_testing_utils::transaction::wait_transaction;
     use std::str::FromStr;

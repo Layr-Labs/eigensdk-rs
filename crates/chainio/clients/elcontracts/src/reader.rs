@@ -6,7 +6,7 @@ use eigen_types::operator::Operator;
 use eigen_utils::core::islasher::ISlasher;
 use eigen_utils::core::{
     avsdirectory::AVSDirectory, delegationmanager::DelegationManager, erc20::ERC20,
-    irewardscoordinator::IRewardsCoordinator ,istrategy::IStrategy,
+    irewardscoordinator::IRewardsCoordinator, istrategy::IStrategy,
 };
 #[derive(Debug, Clone)]
 pub struct ELChainReader {
@@ -498,7 +498,8 @@ mod tests {
         let MockAvsServiceManager::avsDirectoryReturn {
             _0: avs_directory_address,
         } = avs_directory_address_return;
-        let rewards_coordinator_address = get_rewards_coordinator_address(http_endpoint.clone()).await;
+        let rewards_coordinator_address =
+            get_rewards_coordinator_address(http_endpoint.clone()).await;
 
         ELChainReader::new(
             get_test_logger(),

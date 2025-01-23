@@ -128,8 +128,9 @@ pub mod integration_test {
         )
         .await
         .unwrap();
-        let rewards_coordinator_address = get_rewards_coordinator_address(http_endpoint.clone()).await;
-        
+        let rewards_coordinator_address =
+            get_rewards_coordinator_address(http_endpoint.clone()).await;
+
         let avs_writer = AvsRegistryChainWriter::build_avs_registry_chain_writer(
             get_test_logger(),
             http_endpoint.clone(),
@@ -310,7 +311,8 @@ pub mod integration_test {
         .await
         .unwrap();
 
-        let rewards_coordinator_address = get_rewards_coordinator_address(http_endpoint.clone()).await;
+        let rewards_coordinator_address =
+            get_rewards_coordinator_address(http_endpoint.clone()).await;
         let avs_writer = AvsRegistryChainWriter::build_avs_registry_chain_writer(
             get_test_logger(),
             http_endpoint.clone(),
@@ -355,7 +357,8 @@ pub mod integration_test {
             .unwrap();
         wait_transaction(&http_endpoint, tx_hash).await.unwrap();
 
-        let rewards_coordinator_address = get_rewards_coordinator_address(http_endpoint.clone()).await;
+        let rewards_coordinator_address =
+            get_rewards_coordinator_address(http_endpoint.clone()).await;
 
         let avs_writer = AvsRegistryChainWriter::build_avs_registry_chain_writer(
             get_test_logger(),
@@ -538,7 +541,8 @@ pub mod integration_test {
         .await
         .unwrap();
 
-        let rewards_coordinator_address = get_rewards_coordinator_address(http_endpoint.clone()).await;
+        let rewards_coordinator_address =
+            get_rewards_coordinator_address(http_endpoint.clone()).await;
 
         let avs_writer = AvsRegistryChainWriter::build_avs_registry_chain_writer(
             get_test_logger(),
@@ -751,7 +755,8 @@ pub mod integration_test {
         .await
         .unwrap();
 
-        let rewards_coordinator_address = get_rewards_coordinator_address(http_endpoint.clone()).await;
+        let rewards_coordinator_address =
+            get_rewards_coordinator_address(http_endpoint.clone()).await;
 
         let avs_writer = AvsRegistryChainWriter::build_avs_registry_chain_writer(
             get_test_logger(),
@@ -957,8 +962,8 @@ pub mod integration_test {
         )
         .await
         .unwrap();
-        let rewards_coordinator_address = get_rewards_coordinator_address(http_endpoint.clone()).await;
-
+        let rewards_coordinator_address =
+            get_rewards_coordinator_address(http_endpoint.clone()).await;
 
         let avs_writer = AvsRegistryChainWriter::build_avs_registry_chain_writer(
             get_test_logger(),
