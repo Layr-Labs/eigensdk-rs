@@ -26,7 +26,7 @@ eigen-testing-utils = { workspace = true, optional = true }
 eigen-types = { workspace = true, optional = true }
 eigen-utils = { workspace = true, optional = true }
 eigen-nodeapi = { workspace = true, optional = true }
-eigen-common = {workspace = true, optional = true}
+eigen-common = { workspace = true, optional = true }
 
 
 # Feature configurations
@@ -40,6 +40,7 @@ full = [
     "client-elcontracts",
     "client-eth",
     "client-fireblocks",
+    "common",
     "crypto-bls",
     "crypto-bn254",
     "logging",
