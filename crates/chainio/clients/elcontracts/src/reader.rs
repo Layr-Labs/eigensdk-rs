@@ -14,6 +14,7 @@ pub struct ELChainReader {
     slasher: Address,
     pub(crate) delegation_manager: Address,
     avs_directory: Address,
+    rewards_coordinator: Address,
     pub provider: String,
 }
 
@@ -35,6 +36,7 @@ impl ELChainReader {
         _logger: SharedLogger,
         slasher: Address,
         delegation_manager: Address,
+        rewards_coordinator: Address,
         avs_directory: Address,
         provider: String,
     ) -> Self {
@@ -42,6 +44,7 @@ impl ELChainReader {
             _logger,
             slasher,
             delegation_manager,
+            rewards_coordinator,
             avs_directory,
             provider,
         }
@@ -66,6 +69,7 @@ impl ELChainReader {
         _logger: SharedLogger,
         delegation_manager: Address,
         avs_directory: Address,
+        rewards_coordinator: Address,
         client: &String,
     ) -> Result<Self, ElContractsError> {
         let provider = get_provider(client);
@@ -85,6 +89,7 @@ impl ELChainReader {
             avs_directory,
             slasher: slasher_addr,
             delegation_manager,
+            rewards_coordinator,
             provider: client.to_string(),
         })
     }
@@ -451,6 +456,7 @@ mod tests {
     use alloy::providers::Provider;
     use alloy::{eips::eip1898::BlockNumberOrTag::Number, rpc::types::BlockTransactionsKind};
     use eigen_logging::get_test_logger;
+    use eigen_testing_utils::anvil_constants::get_rewards_coordinator_address;
     use eigen_testing_utils::{
         anvil::start_anvil_container,
         anvil_constants::{
@@ -490,11 +496,13 @@ mod tests {
         let MockAvsServiceManager::avsDirectoryReturn {
             _0: avs_directory_address,
         } = avs_directory_address_return;
+        let rewards_coordinator_address = get_rewards_coordinator_address(http_endpoint.clone()).await;
 
         ELChainReader::new(
             get_test_logger(),
             slasher_address,
             delegation_manager_address,
+            rewards_coordinator_address,
             avs_directory_address,
             http_endpoint,
         )

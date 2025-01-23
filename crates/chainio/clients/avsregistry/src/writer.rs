@@ -59,6 +59,7 @@ impl AvsRegistryChainWriter {
         provider: String,
         signer: String,
         registry_coordinator_addr: Address,
+        rewards_coordinator_addr: Address,
         operator_state_retriever_addr: Address,
     ) -> Result<Self, AvsRegistryError> {
         let fill_provider = get_provider(&provider);
@@ -104,6 +105,7 @@ impl AvsRegistryChainWriter {
             logger.clone(),
             delegation_manager_addr,
             avs_directory,
+            rewards_coordinator_addr,
             &provider,
         )
         .await
@@ -336,7 +338,7 @@ mod tests {
     use eigen_logging::get_test_logger;
     use eigen_testing_utils::anvil::start_anvil_container;
     use eigen_testing_utils::anvil_constants::{
-        get_operator_state_retriever_address, get_registry_coordinator_address,
+        get_operator_state_retriever_address, get_registry_coordinator_address, get_rewards_coordinator_address,
     };
     use eigen_testing_utils::transaction::wait_transaction;
     use std::str::FromStr;
@@ -349,12 +351,14 @@ mod tests {
             get_registry_coordinator_address(http_endpoint.clone()).await;
         let operator_state_retriever_address =
             get_operator_state_retriever_address(http_endpoint.clone()).await;
+        let rewards_coordinator_addr = get_rewards_coordinator_address(http_endpoint.clone()).await;
 
         AvsRegistryChainWriter::build_avs_registry_chain_writer(
             get_test_logger(),
             http_endpoint,
             private_key,
             registry_coordinator_address,
+            rewards_coordinator_addr,
             operator_state_retriever_address,
         )
         .await
