@@ -754,7 +754,7 @@ mod tests {
         let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
         assert!(receipt.status());
     }
-        #[tokio::test]
+    #[tokio::test]
     async fn test_set_operator_avs_split_modified() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
         let el_chain_writer = new_test_writer_with_private_key(
@@ -773,7 +773,6 @@ mod tests {
 
         assert_eq!(split, 1000);
 
-
         // Set the activation delay to zero so that the split change can be
         // processed right after setting it
         let signer = get_signer(ANVIL_FIRST_PRIVATE_KEY, &http_endpoint);
@@ -789,7 +788,7 @@ mod tests {
             .unwrap();
         let receipt = set_activation_delay.get_receipt().await.unwrap();
         assert!(receipt.status());
-        
+
         let tx_hash = el_chain_writer
             .set_operator_avs_split(ANVIL_FIRST_ADDRESS, avs_address, new_split)
             .await
@@ -825,7 +824,6 @@ mod tests {
 
         assert_eq!(split, 1000);
 
-
         // Set the activation delay to zero so that the split change can be
         // processed right after setting it
         let signer = get_signer(ANVIL_FIRST_PRIVATE_KEY, &http_endpoint);
@@ -841,7 +839,7 @@ mod tests {
             .unwrap();
         let receipt = set_activation_delay.get_receipt().await.unwrap();
         assert!(receipt.status());
-        
+
         let tx_hash = el_chain_writer
             .set_operator_pi_split(ANVIL_FIRST_ADDRESS, new_split)
             .await
