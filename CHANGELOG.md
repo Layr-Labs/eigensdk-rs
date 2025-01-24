@@ -100,6 +100,8 @@ Each version will have a separate `Breaking Changes` section as well. To describ
   * `eigen_utils::core` contains bindings related to core contracts
   * `eigen_utils::middleware` contains bindings related to middleware contracts
   * `eigen_utils::sdk` contains bindings related to the SDK (should only be used for testing)
+  
+  Now, to update the bindings, run `make bindings`. This command will generate the bindings files in the folder: `crates/utils`.
 
 ### Documentation 📚
 * docs: add CHANGELOG.md by @lferrigno in https://github.com/Layr-Labs/eigensdk-rs/pull/220
