@@ -7,7 +7,9 @@ Changelog is present since v0.1.2
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-Each version will have a separate `Breaking Changes` section as well. To describe in how to upgrade from one version to another if needed
+Each version will have a separate `Breaking Changes` section as well. To describe in how to upgrade from one version to another if needed.
+
+Those changes in added, changed or breaking changes, should include usage examples to add clarity to the sdk user.
 
 ## [Unreleased]
 ### Added
