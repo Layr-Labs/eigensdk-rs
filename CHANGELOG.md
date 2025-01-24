@@ -19,6 +19,8 @@ Each version will have a separate `Breaking Changes` section as well. To describ
 
 ### Breaking changes
 ### Removed
+### Other Changes
+- fix: use rewards coordinator on get operator avs/pi split methods by @maximopalopoli in https://github.com/Layr-Labs/eigensdk-rs/pull/250
 
 ## [0.1.3] - 2024-01-17
 ### Added 🎉
