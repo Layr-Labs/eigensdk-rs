@@ -45,8 +45,9 @@ jobs:
       - name: Generate new bindings
         run: |
           # Give root write permissions
-          setfacl -m u:root:rwx crates/utils/src/
-
+          sudo chown -R root: crates/utils/src
+          sudo chmod u+w crates/utils/src
+          ls -l crates/utils/src
           make bindings
           cargo fmt
 
