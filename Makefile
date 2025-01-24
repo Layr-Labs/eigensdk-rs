@@ -102,4 +102,4 @@ bindings:
 	@docker run --rm -v "$(PWD):$(PWD)" -w "$(PWD)" \
 		--user $(id -u):$(id -g) \
 		ghcr.io/foundry-rs/foundry:v0.3.0 \
-		-c 'apk add g++ && apk add make && whoami && ls -l crates/utils/src/core && make bindings_host'
+		-c 'whoami'
