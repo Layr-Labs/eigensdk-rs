@@ -44,10 +44,10 @@ jobs:
       
       - name: Generate new bindings
         run: |
-          docker run --rm -v "$(PWD):$(PWD)" -w "$(PWD)" \
-            ghcr.io/foundry-rs/foundry:v0.3.0 \
-            -c 'git config --global --add safe.directory /home/runner/work/eigensdk-rs/eigensdk-rs && \
-              apk add g++ && apk add make && whoami && ls -l crates/utils/src/core && make bindings_host'
+          # Give root write permissions
+          setfacl -m u:root:rwx crates/utils/src/
+
+          make bindings
           cargo fmt
 
       - name: Compare existing and new bindings
