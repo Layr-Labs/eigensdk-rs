@@ -22,8 +22,10 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Show runner user
-        run: whoami
+      - name: Show runner user and id
+        run: |
+          whoami
+          id -u
 
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@v1
