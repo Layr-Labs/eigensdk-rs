@@ -28,7 +28,7 @@ Those changes in added, changed or breaking changes, should include usage exampl
   * New methods in `ELChainReader`:
     * `get_operator_avs_split`
     ```rust
-    Given a chain_reader, an operator_address and an avs_address:
+    // Given a chain_reader, an operator_address and an avs_address:
 
     let split = el_chain_reader
         .get_operator_avs_split(operator_address, avs_address)
@@ -38,7 +38,7 @@ Those changes in added, changed or breaking changes, should include usage exampl
     
     * `get_operator_pi_split`
     ```rust
-    Given a chain_reader and an operator_address:
+    // Given a chain_reader and an operator_address:
 
     let split = el_chain_writer
         .el_chain_reader
@@ -50,7 +50,7 @@ Those changes in added, changed or breaking changes, should include usage exampl
   * New methods in `ELChainWriter`:
     * `set_operator_avs_split`
     ```rust
-    Given a chain_writer, an operator_address, an avs_address and a split:
+    // Given a chain_writer, an operator_address, an avs_address and a split:
 
     let tx_hash = el_chain_writer
         .set_operator_avs_split(operator_address, avs_address, split)
@@ -60,7 +60,7 @@ Those changes in added, changed or breaking changes, should include usage exampl
     ```
     * `set_operator_pi_split`
     ```rust
-    Given a chain_writer, an operator_address and a split:
+    // Given a chain_writer, an operator_address and a split:
 
     let tx_hash = el_chain_writer
         .set_operator_pi_split(operator, split)
