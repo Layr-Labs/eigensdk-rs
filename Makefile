@@ -76,18 +76,24 @@ bindings_host:
 	forge bind --alloy --skip-build --bindings-path $(SDK_BINDINGS_PATH) --overwrite \
 		--root $(SDK_CONTRACTS_LOCATION) --module \
 		$(SDK_CONTRACTS_ARGS)
+	
+	ls -l $(SDK_BINDINGS_PATH)
 
 	# Generate middleware bindings
 	cd $(MIDDLEWARE_CONTRACTS_LOCATION) && forge build --force --skip test --skip script
 	forge bind --alloy --skip-build --bindings-path $(MIDDLEWARE_BINDINGS_PATH) --overwrite \
 		--root $(MIDDLEWARE_CONTRACTS_LOCATION) --module \
 		$(MIDDLEWARE_CONTRACTS_ARGS)
+	
+	ls -l $(MIDDLEWARE_BINDINGS_PATH)
 
 	# Generate core bindings
 	cd $(CORE_CONTRACTS_LOCATION) && forge build --force --skip test --skip script
 	forge bind --alloy --skip-build --bindings-path $(CORE_BINDINGS_PATH) --overwrite \
 		--root $(CORE_CONTRACTS_LOCATION) --module \
 		$(CORE_CONTRACTS_ARGS)
+
+	ls -l $(CORE_BINDINGS_PATH)
 
 	@echo "Bindings generated"
 
