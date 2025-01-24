@@ -25,10 +25,47 @@ Each version will have a separate `Breaking Changes` section as well. To describ
 * feat: add rewards-v2 related functionality by @supernovahs in https://github.com/Layr-Labs/eigensdk-rs/pull/221
   * New methods in `ELChainReader`:
     * `get_operator_avs_split`
+    ```rust
+    Given a chain_reader, an operator_address and an avs_address:
+
+    let split = el_chain_reader
+        .get_operator_avs_split(operator_address, avs_address)
+        .await
+        .unwrap();
+    ```
+    
     * `get_operator_pi_split`
+    ```rust
+    Given a chain_reader and an operator_address:
+
+    let split = el_chain_writer
+        .el_chain_reader
+        .get_operator_pi_split(operator_address)
+        .await
+        .unwrap();
+    ```
+
   * New methods in `ELChainWriter`:
     * `set_operator_avs_split`
+    ```rust
+    Given a chain_writer, an operator_address, an avs_address and a split:
+
+    let tx_hash = el_chain_writer
+        .set_operator_avs_split(operator_address, avs_address, split)
+        .await
+        .unwrap();
+    let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+    ```
     * `set_operator_pi_split`
+    ```rust
+    Given a chain_writer, an operator_address and a split:
+
+    let tx_hash = el_chain_writer
+        .set_operator_pi_split(operator, split)
+        .await
+        .unwrap();
+    let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+    ```
   * Bindings updated for rewards-v2 core contracts release
 
 ### Breaking Changes 🛠
