@@ -76,16 +76,12 @@ bindings_host:
 	forge bind --alloy --skip-build --bindings-path $(SDK_BINDINGS_PATH) --overwrite \
 		--root $(SDK_CONTRACTS_LOCATION) --module \
 		$(SDK_CONTRACTS_ARGS)
-	
-	ls -l $(SDK_BINDINGS_PATH)
 
 	# Generate middleware bindings
 	cd $(MIDDLEWARE_CONTRACTS_LOCATION) && forge build --force --skip test --skip script
 	forge bind --alloy --skip-build --bindings-path $(MIDDLEWARE_BINDINGS_PATH) --overwrite \
 		--root $(MIDDLEWARE_CONTRACTS_LOCATION) --module \
 		$(MIDDLEWARE_CONTRACTS_ARGS)
-	
-	ls -l $(MIDDLEWARE_BINDINGS_PATH)
 
 	# Generate core bindings
 	cd $(CORE_CONTRACTS_LOCATION) && forge build --force --skip test --skip script
@@ -93,13 +89,11 @@ bindings_host:
 		--root $(CORE_CONTRACTS_LOCATION) --module \
 		$(CORE_CONTRACTS_ARGS)
 
-	ls -l $(CORE_BINDINGS_PATH)
-
 	@echo "Bindings generated"
 
 bindings:
 	@echo "Starting Docker container..."
 	@docker run --rm -v "$(PWD):$(PWD)" -w "$(PWD)" \
-		--user $(id -u):$(id -g) \
 		ghcr.io/foundry-rs/foundry:v0.3.0 \
-		-c 'whoami'
+		-c 'git config --global --add safe.directory /home/runner/work/eigensdk-rs/eigensdk-rs && \
+			apk add g++ && apk add make && whoami && ls -l crates/utils/src/core && make bindings_host'
