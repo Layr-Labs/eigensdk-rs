@@ -91,12 +91,10 @@ bindings_host:
 
 	@echo "Bindings generated"
 
-username=$(shell whoami)
-
 bindings:
 	@echo "Starting Docker container..."
 	@docker run --rm -v "$(PWD):$(PWD)" -w "$(PWD)" \
 		ghcr.io/foundry-rs/foundry:v0.3.0 \
-		-c 'git config --global --add safe.directory /home/runner/work/eigensdk-rs/eigensdk-rs \
+		-c 'git config --global --add safe.directory /home/runner/work/eigensdk-rs/eigensdk-rs && \
 		apk add g++ && apk add make && make bindings_host'
 
