@@ -377,7 +377,8 @@ library CoreDeploymentLib {
         data.allocationManager = json.readAddress(".addresses.allocationManager");
         data.pauserRegistry = json.readAddress(".addresses.pauserRegistry");
         data.permissionController = json.readAddress(".addresses.permissionController");
-
+        console2.log("prrrc");
+        console2.log(data.permissionController);
         return data;
     }
 
@@ -439,8 +440,6 @@ library CoreDeploymentLib {
             data.strategyManager.getImplementation().toHexString(),
             '","eigenPodManager":"',
             data.eigenPodManager.toHexString(),
-            '","eigenPodManagerImpl":"',
-            data.eigenPodManager.getImplementation().toHexString(),
             '","strategyFactory":"',
             data.strategyFactory.toHexString(),
             '","rewardsCoordinator":"',

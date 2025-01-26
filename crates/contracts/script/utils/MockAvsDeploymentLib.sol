@@ -6,6 +6,7 @@ import {TransparentUpgradeableProxy} from "@openzeppelin/contracts/proxy/transpa
 import {Script} from "forge-std/Script.sol";
 import {Vm} from "forge-std/Vm.sol";
 import {stdJson} from "forge-std/StdJson.sol";
+import {console2} from "forge-std/console2.sol";
 import {IAVSDirectory} from "@eigenlayer/contracts/interfaces/IAVSDirectory.sol";
 import {MockAvsServiceManager} from "../../src/MockAvsServiceManager.sol";
 import {IDelegationManager} from "@eigenlayer/contracts/interfaces/IDelegationManager.sol";
@@ -170,7 +171,7 @@ library MockAvsDeploymentLib {
             IAVSDirectory(coredata.avsDirectory),
             IRewardsCoordinator(coredata.rewardsCoordinator),
             IAllocationManager(coredata.allocationManager),
-            IPermissionController(coredata.permissionController)
+            IPermissionController(core.permissionController)
         );
         bytes memory mockavsmanagerupgradecall = abi.encodeCall(MockAvsServiceManager.initialize, admin);
         UpgradeableProxyLib.upgradeAndCall(

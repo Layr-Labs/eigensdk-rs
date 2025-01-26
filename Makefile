@@ -52,7 +52,7 @@ SDK_CONTRACTS_ARGS:=$(patsubst %, --select '^%$$', $(shell echo $(SDK_CONTRACTS)
 
 
 ### Middleware bindings ###
-MIDDLEWARE_CONTRACTS:="RegistryCoordinator IndexRegistry OperatorStateRetriever StakeRegistry BLSApkRegistry IBLSSignatureChecker ServiceManagerBase IERC20"
+MIDDLEWARE_CONTRACTS:="RegistryCoordinator IndexRegistry OperatorStateRetriever StakeRegistry BLSApkRegistry IBLSSignatureChecker ServiceManagerBase IERC20 SlashingRegistryCoordinator"
 MIDDLEWARE_CONTRACTS_LOCATION:=$(SDK_CONTRACTS_LOCATION)/lib/eigenlayer-middleware
 MIDDLEWARE_BINDINGS_PATH:=crates/utils/src/middleware
 # The echo is to remove quotes, and the patsubst to make the regex match the full text only
