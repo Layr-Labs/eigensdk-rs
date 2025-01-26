@@ -19,12 +19,13 @@ import {BLSApkRegistry} from "@eigenlayer-middleware/src/BLSApkRegistry.sol";
 import {IndexRegistry} from "@eigenlayer-middleware/src/IndexRegistry.sol";
 import {StakeRegistry} from "@eigenlayer-middleware/src/StakeRegistry.sol";
 import {IRegistryCoordinator} from "@eigenlayer-middleware/src/interfaces/IRegistryCoordinator.sol";
+import {ISlashingRegistryCoordinator} from "@eigenlayer-middleware/src/interfaces/ISlashingRegistryCoordinator.sol";
 import {IServiceManager} from "@eigenlayer-middleware/src/interfaces/IServiceManager.sol";
 import {IStrategy} from "@eigenlayer/contracts/interfaces/IStrategyManager.sol";
 import {IAllocationManager} from "@eigenlayer/contracts/interfaces/IAllocationManager.sol";
 
 import {
-    RegistryCoordinator, IBLSApkRegistry, IIndexRegistry
+    RegistryCoordinator, IBLSApkRegistry, IIndexRegistry,SlashingRegistryCoordinator
 } from "@eigenlayer-middleware/src/RegistryCoordinator.sol";
 import {IStakeRegistry, StakeType} from "@eigenlayer-middleware/src/interfaces/IStakeRegistry.sol";
 import {IAVSDirectory} from "@eigenlayer/contracts/interfaces/IAVSDirectory.sol";
@@ -85,19 +86,17 @@ library MockAvsDeploymentLib {
         // Deploy the implementation contracts, using the proxy contracts as inputs
         address stakeRegistryImpl = address(
             new StakeRegistry(
-                IRegistryCoordinator(result.registryCoordinator),
+                ISlashingRegistryCoordinator(result.registryCoordinator),
                 IDelegationManager(core.delegationManager),
                 IAVSDirectory(core.avsDirectory),
-                IAllocationManager(core.allocationManager),
-                MockAvsServiceManager(result.mockAvsServiceManager)
+                IAllocationManager(core.allocationManager)
             )
         );
 
-        address blsApkRegistryImpl = address(new BLSApkRegistry(IRegistryCoordinator(result.registryCoordinator)));
-        address indexRegistryimpl = address(new IndexRegistry(IRegistryCoordinator(result.registryCoordinator)));
-        address registryCoordinatorImpl = address(
-            new RegistryCoordinator(
-                MockAvsServiceManager(result.mockAvsServiceManager),
+        address blsApkRegistryImpl = address(new BLSApkRegistry(ISlashingRegistryCoordinator(result.registryCoordinator)));
+        address indexRegistryimpl = address(new IndexRegistry(ISlashingRegistryCoordinator(result.registryCoordinator)));
+        address slashingregistryCoordinatorImpl = address(
+            new SlashingRegistryCoordinator(
                 IStakeRegistry(result.stakeRegistry),
                 IBLSApkRegistry(result.blsapkRegistry),
                 IIndexRegistry(result.indexRegistry),
@@ -114,12 +113,12 @@ library MockAvsDeploymentLib {
         uint256 numStrategies = deployedStrategyArray.length;
 
         uint256 numQuorums = isConfig.numQuorums;
-        IRegistryCoordinator.OperatorSetParam[] memory quorumsOperatorSetParams =
-            new IRegistryCoordinator.OperatorSetParam[](numQuorums);
+        ISlashingRegistryCoordinator.OperatorSetParam[] memory quorumsOperatorSetParams =
+            new ISlashingRegistryCoordinator.OperatorSetParam[](numQuorums);
         uint256[] memory operatorParams = isConfig.operatorParams;
 
         for (uint256 i = 0; i < numQuorums; i++) {
-            quorumsOperatorSetParams[i] = IRegistryCoordinator.OperatorSetParam({
+            quorumsOperatorSetParams[i] = ISlashingRegistryCoordinator.OperatorSetParam({
                 maxOperatorCount: uint32(operatorParams[i]),
                 kickBIPsOfOperatorStake: uint16(operatorParams[i + 1]),
                 kickBIPsOfTotalStake: uint16(operatorParams[i + 2])
@@ -148,26 +147,22 @@ library MockAvsDeploymentLib {
         }
 
         bytes memory upgradeCall = abi.encodeCall(
-            RegistryCoordinator.initialize,
+            SlashingRegistryCoordinator.initialize,
             (
                 admin,
                 admin,
                 admin,
                 0,
-                quorumsOperatorSetParams,
-                quorumsMinimumStake,
-                quorumsStrategyParams,
-                stakeTypes,
-                lookAheadPeriods
+                admin
             )
         );
 
         UpgradeableProxyLib.upgrade(result.stakeRegistry, stakeRegistryImpl);
         UpgradeableProxyLib.upgrade(result.blsapkRegistry, blsApkRegistryImpl);
         UpgradeableProxyLib.upgrade(result.indexRegistry, indexRegistryimpl);
-        UpgradeableProxyLib.upgradeAndCall(result.registryCoordinator, registryCoordinatorImpl, upgradeCall);
+        UpgradeableProxyLib.upgradeAndCall(result.registryCoordinator, slashingregistryCoordinatorImpl, upgradeCall);
         MockAvsServiceManager mockAvsServiceManagerImpl = new MockAvsServiceManager(
-            IRegistryCoordinator(result.registryCoordinator),
+            ISlashingRegistryCoordinator(result.registryCoordinator),
             IAVSDirectory(coredata.avsDirectory),
             IRewardsCoordinator(coredata.rewardsCoordinator),
             IAllocationManager(coredata.allocationManager),
@@ -319,9 +314,9 @@ library MockAvsDeploymentLib {
     }
 
     function verify_deployment(DeploymentData memory result) internal view {
-        IBLSApkRegistry blsapkregistry = IRegistryCoordinator(result.registryCoordinator).blsApkRegistry();
+        IBLSApkRegistry blsapkregistry = ISlashingRegistryCoordinator(result.registryCoordinator).blsApkRegistry();
         require(address(blsapkregistry) != address(0));
-        IStakeRegistry stakeregistry = IRegistryCoordinator(result.registryCoordinator).stakeRegistry();
+        IStakeRegistry stakeregistry = ISlashingRegistryCoordinator(result.registryCoordinator).stakeRegistry();
         require(address(stakeregistry) != address(0));
         IDelegationManager delegationmanager = IStakeRegistry(address(stakeregistry)).delegation();
         require(address(delegationmanager) != address(0));

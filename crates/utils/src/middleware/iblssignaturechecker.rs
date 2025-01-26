@@ -813,7 +813,7 @@ interface IBLSSignatureChecker {
       {
         "name": "",
         "type": "address",
-        "internalType": "contract IRegistryCoordinator"
+        "internalType": "contract ISlashingRegistryCoordinator"
       }
     ],
     "stateMutability": "view"

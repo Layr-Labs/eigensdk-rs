@@ -10,4 +10,5 @@ pub mod indexregistry;
 pub mod operatorstateretriever;
 pub mod registrycoordinator;
 pub mod servicemanagerbase;
+pub mod slashingregistrycoordinator;
 pub mod stakeregistry;
