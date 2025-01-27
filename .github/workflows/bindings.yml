@@ -38,7 +38,6 @@ jobs:
               apk add g++ && apk add make
               git config --global --add safe.directory /home/runner/work/eigensdk-rs/eigensdk-rs
               make bindings_host
-              cargo fmt
 
       - name: Install Rust
         uses: dtolnay/rust-toolchain@1.81
