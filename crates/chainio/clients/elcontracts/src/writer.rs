@@ -1141,11 +1141,10 @@ mod tests {
             AllocationManager::new(allocation_manager_addr, operator_signer.clone());
         let registry_coordinator_addr =
             get_registry_coordinator_address(http_endpoint.to_string()).await;
-        dbg!(registry_coordinator_addr);
         let service_manager_address = get_service_manager_address(http_endpoint.to_string()).await;
         let service_manager =
             MockAvsServiceManager::new(service_manager_address, default_signer.clone());
-        let e = service_manager
+        service_manager
             .setAppointee(
                 OPERATOR_ADDRESS,
                 allocation_manager_addr,
@@ -1156,9 +1155,7 @@ mod tests {
             .unwrap()
             .get_receipt()
             .await
-            .unwrap()
-            .transaction_hash;
-        dbg!(e);
+            .unwrap();
         allocation_manager
             .setAVSRegistrar(avs_address, registry_coordinator_addr)
             .send()
@@ -1189,18 +1186,12 @@ mod tests {
             .unwrap()
             .get_receipt()
             .await
-            .unwrap()
-            .transaction_hash;
+            .unwrap();
         let strategy_params = StrategyParams {
             strategy,
             multiplier: U96::from(1),
         };
-        contract_registry_coordinator
-            .quorumCount()
-            .call()
-            .await
-            .unwrap()
-            ._0;
+
         contract_registry_coordinator
             .createSlashableStakeQuorum(operator_set_params, U96::from(0), vec![strategy_params], 0)
             .send()
@@ -1208,8 +1199,7 @@ mod tests {
             .unwrap()
             .get_receipt()
             .await
-            .unwrap()
-            .transaction_hash;
+            .unwrap();
     }
 
     #[tokio::test]
