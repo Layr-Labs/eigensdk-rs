@@ -41,6 +41,7 @@ jobs:
             options: -v ${{ github.workspace }}:${{ github.workspace }} -w ${{ github.workspace }}
             run: |
               apk add g++ && apk add make
+              git config --global --add safe.directory /home/runner/work/eigensdk-rs/eigensdk-rs
               make bindings_host
 
       - name: Compare existing and new bindings
