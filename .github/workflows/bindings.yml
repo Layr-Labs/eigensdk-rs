@@ -38,7 +38,7 @@ jobs:
         uses: addnab/docker-run-action@v3
         with:
             image: ghcr.io/foundry-rs/foundry:v0.3.0
-            options: -v ${{ github.workspace }}:${{ github.workspace }}
+            options: -v ${{ github.workspace }}:${{ github.workspace }} -w ${{ github.workspace }}
             run: |
               apk add g++ && apk add make
               make bindings_host
