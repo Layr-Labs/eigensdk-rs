@@ -15,7 +15,7 @@ jobs:
       fail-fast: true
 
     name: Check bindings are up to date
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     
     steps:
       - uses: actions/checkout@v4
