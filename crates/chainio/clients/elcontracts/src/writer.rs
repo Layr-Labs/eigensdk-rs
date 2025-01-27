@@ -1,5 +1,3 @@
-use std::usize;
-
 use crate::error::ElContractsError;
 use crate::reader::ELChainReader;
 use alloy::dyn_abi::DynSolValue;
