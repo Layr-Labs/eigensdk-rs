@@ -22,11 +22,6 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Install Rust
-        uses: dtolnay/rust-toolchain@1.81
-        with:
-            components: rustfmt, clippy
-
       - name: Backup existing bindings
         working-directory: crates/utils/src/
         run: |
@@ -44,11 +39,15 @@ jobs:
               git config --global --add safe.directory /home/runner/work/eigensdk-rs/eigensdk-rs
               make bindings_host
 
+      - name: Install Rust and run cargo fmt
+        uses: dtolnay/rust-toolchain@1.81
+        with:
+            components: rustfmt
+        run: cargo fmt
+
       - name: Compare existing and new bindings
-        working-directory: crates/utils/
+        working-directory: crates/utils/src/
         run: |
-          sudo cargo fmt 
-          cd src/
           diff existing_core/ core/
           diff existing_middleware/ middleware/
           diff existing_sdk/ sdk/
