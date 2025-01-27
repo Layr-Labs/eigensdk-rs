@@ -46,7 +46,6 @@ jobs:
 
       - name: Compare existing and new bindings
         working-directory: crates/utils/
-        uses: 
         run: |
           sudo cargo fmt 
           cd src/
