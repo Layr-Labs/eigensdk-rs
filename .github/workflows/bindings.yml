@@ -22,10 +22,10 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Show runner user and id
-        run: |
-          whoami
-          id -u
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@1.81
+        with:
+            components: rustfmt, clippy
 
       - name: Backup existing bindings
         working-directory: crates/utils/src/
@@ -46,6 +46,7 @@ jobs:
 
       - name: Compare existing and new bindings
         working-directory: crates/utils/
+        uses: 
         run: |
           sudo cargo fmt 
           cd src/
