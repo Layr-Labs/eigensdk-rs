@@ -44,11 +44,16 @@ jobs:
         with:
             components: rustfmt
 
-      - name: Compare existing and new bindings
-        working-directory: crates/utils/
+      - name: Change bindings permissions
+        working-directory: crates/utils/src
         run: |
-          cargo fmt
-          cd src/
+          ls -l
+          sudo chown -R runner: .
+          ls -l
+
+      - name: Compare existing and new bindings
+        working-directory: crates/utils/src
+        run: |
           diff existing_core/ core/
           diff existing_middleware/ middleware/
           diff existing_sdk/ sdk/
