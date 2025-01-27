@@ -52,8 +52,10 @@ jobs:
           ls -l
 
       - name: Compare existing and new bindings
-        working-directory: crates/utils/src
+        working-directory: crates/utils/
         run: |
+          cargo fmt
+          cd src/
           diff existing_core/ core/
           diff existing_middleware/ middleware/
           diff existing_sdk/ sdk/
