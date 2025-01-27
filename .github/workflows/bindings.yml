@@ -27,33 +27,24 @@ jobs:
           whoami
           id -u
 
-      - name: Install Foundry
-        uses: foundry-rs/foundry-toolchain@v1
-        with:
-          version: v0.3.0
-
-      - name: Show Forge version
-        run: forge --version
-
       - name: Backup existing bindings
         working-directory: crates/utils/src/
         run: |
           cp -r core/ existing_core/
           cp -r middleware/ existing_middleware/
           cp -r sdk/ existing_sdk/
-      
-      - name: Generate new bindings
-        run: |
-          # Give root write permissions
-          sudo chown -R root: crates/utils/src
-          sudo chmod u+w crates/utils/src
-          ls -l crates/utils/src
-          make bindings
-          cargo fmt
+
+      - name: Generate new bindings with Docker
+        uses: addnab/docker-run-action@v3
+        with:
+            image: ghcr.io/foundry-rs/foundry:v0.3.0
+            options: -v ${{ github.workspace }}:${{ github.workspace }}
+            run: make bindings_host
 
       - name: Compare existing and new bindings
         working-directory: crates/utils/src/
         run: |
+          cargo fmt 
           diff existing_core/ core/
           diff existing_middleware/ middleware/
           diff existing_sdk/ sdk/
