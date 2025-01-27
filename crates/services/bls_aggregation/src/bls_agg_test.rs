@@ -40,7 +40,7 @@ pub mod integration_test {
             BN254::G1Point,
         },
         registrycoordinator::{
-            IRegistryCoordinator::OperatorSetParam, IStakeRegistry::StrategyParams,
+            ISlashingRegistryCoordinator::OperatorSetParam, IStakeRegistry::StrategyParams,
             RegistryCoordinator,
         },
     };
