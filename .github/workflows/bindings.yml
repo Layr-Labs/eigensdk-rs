@@ -47,7 +47,7 @@ jobs:
       - name: Compare existing and new bindings
         working-directory: crates/utils/
         run: |
-          cargo fmt 
+          sudo cargo fmt 
           cd src/
           diff existing_core/ core/
           diff existing_middleware/ middleware/
