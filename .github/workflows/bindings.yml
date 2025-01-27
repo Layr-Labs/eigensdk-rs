@@ -39,7 +39,9 @@ jobs:
         with:
             image: ghcr.io/foundry-rs/foundry:v0.3.0
             options: -v ${{ github.workspace }}:${{ github.workspace }}
-            run: make bindings_host
+            run: |
+              apk add g++ && apk add make
+              make bindings_host
 
       - name: Compare existing and new bindings
         working-directory: crates/utils/src/
