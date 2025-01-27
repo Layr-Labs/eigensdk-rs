@@ -860,37 +860,20 @@ impl ELChainReader {
     ) -> Result<bool, ElContractsError> {
         let provider = get_provider(&self.provider);
 
-        if operator_set.id == 0 {
-            // this is an M2 AVS
-            let contract_avs_directory = AVSDirectory::new(self.avs_directory, provider);
+        let contract_allocation_manager = AllocationManager::new(self.allocation_manager, provider);
+        let registered_operator_sets = contract_allocation_manager
+            .getRegisteredSets(operator_address)
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+        let AllocationManager::getRegisteredSetsReturn { _0: operator_sets } =
+            registered_operator_sets;
 
-            let operator_avs_registration_status = contract_avs_directory
-                .avsOperatorStatus(operator_set.avs, operator_address)
-                .call()
-                .await
-                .map_err(ElContractsError::AlloyContractError)?;
-
-            let AVSDirectory::avsOperatorStatusReturn { _0: status } =
-                operator_avs_registration_status;
-
-            Ok(status == 1)
-        } else {
-            let contract_allocation_manager =
-                AllocationManager::new(self.allocation_manager, provider);
-            let registered_operator_sets = contract_allocation_manager
-                .getRegisteredSets(operator_address)
-                .call()
-                .await
-                .map_err(ElContractsError::AlloyContractError)?;
-            let AllocationManager::getRegisteredSetsReturn { _0: operator_sets } =
-                registered_operator_sets;
-
-            let is_registered = operator_sets.iter().any(|registered_operator_set| {
-                registered_operator_set.id == operator_set.id
-                    && registered_operator_set.avs == operator_set.avs
-            });
-            Ok(is_registered)
-        }
+        let is_registered = operator_sets.iter().any(|registered_operator_set| {
+            registered_operator_set.id == operator_set.id
+                && registered_operator_set.avs == operator_set.avs
+        });
+        Ok(is_registered)
     }
 
     /// Get the operators in a specific operator set. Not supported for M2 AVSs

@@ -1143,13 +1143,30 @@ mod tests {
     async fn create_operator_set(http_endpoint: &str, avs_address: Address, operator_set_id: u32) {
         let allocation_manager_addr =
             get_allocation_manager_address(http_endpoint.to_string()).await;
-        let signer = get_signer(ANVIL_FIRST_PRIVATE_KEY, http_endpoint);
-        let allocation_manager = AllocationManager::new(allocation_manager_addr, signer.clone());
+        let default_signer = get_signer(ANVIL_FIRST_PRIVATE_KEY, http_endpoint);
+        let operator_signer = get_signer(OPERATOR_PRIVATE_KEY, http_endpoint);
+        let allocation_manager =
+            AllocationManager::new(allocation_manager_addr, operator_signer.clone());
         let registry_coordinator_addr =
             get_registry_coordinator_address(http_endpoint.to_string()).await;
-            dbg!(registry_coordinator_addr);
+        dbg!(registry_coordinator_addr);
         let service_manager_address = get_service_manager_address(http_endpoint.to_string()).await;
-        dbg!(service_manager_address);
+        let service_manager =
+            MockAvsServiceManager::new(service_manager_address, default_signer.clone());
+        let e = service_manager
+            .setAppointee(
+                OPERATOR_ADDRESS,
+                allocation_manager_addr,
+                alloy_primitives::FixedBytes(AllocationManager::setAVSRegistrarCall::SELECTOR),
+            )
+            .send()
+            .await
+            .unwrap()
+            .get_receipt()
+            .await
+            .unwrap()
+            .transaction_hash;
+        dbg!(e);
         allocation_manager
             .setAVSRegistrar(avs_address, registry_coordinator_addr)
             .send()
@@ -1159,11 +1176,9 @@ mod tests {
             .await
             .unwrap();
 
-        
-
         // Create slashable quorum
         let contract_registry_coordinator =
-            RegistryCoordinator::new(registry_coordinator_addr, signer.clone());
+            RegistryCoordinator::new(registry_coordinator_addr, default_signer.clone());
         let operator_set_params = OperatorSetParam {
             maxOperatorCount: 10,
             kickBIPsOfOperatorStake: 100,
@@ -1171,28 +1186,13 @@ mod tests {
         };
         let strategy = get_erc20_mock_strategy(http_endpoint.to_string()).await;
 
-        let service_manager = MockAvsServiceManager::new(service_manager_address, signer.clone());
         let owner = service_manager.owner().call().await.unwrap()._0;
         dbg!(owner);
-        let s = service_manager
+        let i = service_manager
             .setAppointee(
                 registry_coordinator_addr,
                 allocation_manager_addr,
                 alloy_primitives::FixedBytes(AllocationManager::createOperatorSetsCall::SELECTOR),
-            )
-            .send()
-            .await
-            .unwrap()
-            .get_receipt()
-            .await
-            .unwrap()
-            .transaction_hash;
-        dbg!(s);
-        let i =service_manager
-            .setAppointee(
-                registry_coordinator_addr,
-                allocation_manager_addr,
-                alloy_primitives::FixedBytes(RegistryCoordinator::createSlashableStakeQuorumCall::SELECTOR),
             )
             .send()
             .await
@@ -1206,7 +1206,12 @@ mod tests {
             strategy,
             multiplier: U96::from(1),
         };
-        let s_count = contract_registry_coordinator.quorumCount().call().await.unwrap()._0;
+        let s_count = contract_registry_coordinator
+            .quorumCount()
+            .call()
+            .await
+            .unwrap()
+            ._0;
         dbg!(s_count);
         let u = contract_registry_coordinator
             .createSlashableStakeQuorum(operator_set_params, U96::from(0), vec![strategy_params], 0)
@@ -1215,32 +1220,29 @@ mod tests {
             .unwrap()
             .get_receipt()
             .await
-            .unwrap().transaction_hash;
+            .unwrap()
+            .transaction_hash;
         dbg!(u);
-        let q_count = contract_registry_coordinator.quorumCount().call().await.unwrap()._0;
+        let q_count = contract_registry_coordinator
+            .quorumCount()
+            .call()
+            .await
+            .unwrap()
+            ._0;
         dbg!(q_count);
         // // Create operator set
         let params = IAllocationManagerTypes::CreateSetParams {
             operatorSetId: operator_set_id,
             strategies: vec![strategy],
         };
-        let y =allocation_manager
-            .createOperatorSets(avs_address, vec![params])
-            .send()
-            .await
-            .unwrap()
-            .get_receipt()
-            .await
-            .unwrap().transaction_hash;
-        dbg!(y);
     }
 
     #[tokio::test]
     async fn test_register_for_operator_sets() {
         // let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
         let http_endpoint = "http://localhost:8545".to_string();
-        let avs_address = ANVIL_FIRST_ADDRESS;
-        let operator_set_id = 1;
+        let avs_address = get_service_manager_address(http_endpoint.clone()).await;
+        let operator_set_id = 0;
         create_operator_set(http_endpoint.as_str(), avs_address, operator_set_id).await;
 
         let operator_addr = OPERATOR_ADDRESS;
@@ -1260,20 +1262,21 @@ mod tests {
             )
             .await
             .unwrap();
-        
-        // let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
-        // assert!(receipt.status());
 
-        // let operator_set = OperatorSet {
-        //     avs: avs_address,
-        //     id: operator_set_id,
-        // };
-        // let is_registered = el_chain_writer
-        //     .el_chain_reader
-        //     .is_operator_registered_with_operator_set(operator_addr, operator_set.clone())
-        //     .await
-        //     .unwrap();
-        // assert!(is_registered);
+        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+        assert!(receipt.status());
+
+        let operator_set = OperatorSet {
+            avs: avs_address,
+            id: operator_set_id,
+        };
+        let is_registered = el_chain_writer
+            .el_chain_reader
+            .is_operator_registered_with_operator_set(operator_addr, operator_set.clone())
+            .await
+            .unwrap();
+        dbg!(is_registered);
+        assert!(is_registered);
     }
 
     #[tokio::test]
