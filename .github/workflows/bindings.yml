@@ -22,40 +22,29 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: v0.3.0
+
+      - name: Show Forge version
+        run: forge --version
+
       - name: Backup existing bindings
         working-directory: crates/utils/src/
         run: |
           cp -r core/ existing_core/
           cp -r middleware/ existing_middleware/
           cp -r sdk/ existing_sdk/
-
-      - name: Generate new bindings with Docker
-        uses: addnab/docker-run-action@v3
-        with:
-            image: ghcr.io/foundry-rs/foundry:v0.3.0
-            options: -v ${{ github.workspace }}:${{ github.workspace }} -w ${{ github.workspace }}
-            run: |
-              apk add g++ && apk add make
-              git config --global --add safe.directory /home/runner/work/eigensdk-rs/eigensdk-rs
-              make bindings_host
-
-      - name: Install Rust
-        uses: dtolnay/rust-toolchain@1.81
-        with:
-            components: rustfmt
-
-      - name: Change bindings permissions
-        working-directory: crates/utils/src
+      
+      - name: Generate new bindings
         run: |
-          ls -l
-          sudo chown -R runner: .
-          ls -l
+          make bindings_host
+          cargo fmt
 
       - name: Compare existing and new bindings
-        working-directory: crates/utils/
+        working-directory: crates/utils/src/
         run: |
-          cargo fmt
-          cd src/
           diff existing_core/ core/
           diff existing_middleware/ middleware/
           diff existing_sdk/ sdk/
