@@ -4,9 +4,10 @@
 //! Do not manually edit these files.
 //! These files may be overwritten by the codegen system at any time.
 pub mod blsapkregistry;
-pub mod ierc20;
 pub mod iblssignaturechecker;
+pub mod ierc20;
 pub mod indexregistry;
+pub mod islashingregistrycoordinator;
 pub mod operatorstateretriever;
 pub mod registrycoordinator;
 pub mod servicemanagerbase;

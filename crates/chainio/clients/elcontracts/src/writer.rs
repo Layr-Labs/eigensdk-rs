@@ -2,15 +2,20 @@ use std::usize;
 
 use crate::error::ElContractsError;
 use crate::reader::ELChainReader;
+use alloy::dyn_abi::DynSolValue;
 use alloy::primitives::{Address, Bytes, FixedBytes, TxHash, U256};
+use alloy::sol;
 use alloy::sol_types::SolValue;
-use alloy_primitives::U8;
+use alloy_primitives::ruint::aliases::U8;
 use eigen_common::get_signer;
 use eigen_crypto_bls::{
     alloy_g1_point_to_g1_affine, convert_to_g1_point, convert_to_g2_point, BlsKeyPair,
 };
 pub use eigen_types::operator::Operator;
-use eigen_utils::middleware::registrycoordinator::IRegistryCoordinator;
+use eigen_utils::middleware::islashingregistrycoordinator::ISlashingRegistryCoordinator;
+use eigen_utils::middleware::slashingregistrycoordinator::SlashingRegistryCoordinator::{
+    self, SlashingRegistryCoordinatorInstance,
+};
 use eigen_utils::{
     core::{
         allocationmanager::{AllocationManager, IAllocationManagerTypes},
@@ -29,6 +34,15 @@ use tracing::info;
 /// Gas limit for registerAsOperator in [`DelegationManager`]
 pub const GAS_LIMIT_REGISTER_AS_OPERATOR_DELEGATION_MANAGER: u128 = 300000;
 
+sol! {
+    #[allow(missing_docs)]
+    #[derive(Debug)]
+    /// Bar
+    enum RegistrationType {
+        NORMAL,
+        CHURN,
+    }
+}
 /// Chain Writer to interact with EigenLayer contracts onchain
 #[derive(Debug, Clone)]
 pub struct ELChainWriter {
@@ -575,7 +589,7 @@ impl ELChainWriter {
     /// # Errors
     ///
     /// * `ElContractsError` - if the call to the contract fails.
-    pub async fn register_for_operator_sets_normal(
+    pub async fn register_for_operator_sets(
         &self,
         operator_address: Address,
         avs_address: Address,
@@ -605,11 +619,25 @@ impl ELChainWriter {
         let g2_pub_key_bn254 = convert_to_g2_point(bls_key_pair.public_key_g2().g2())
             .map_err(|_| ElContractsError::BLSKeyPairInvalid)?;
 
-        let pub_key_reg_params = PubkeyRegistrationParams {
-            pubkeyRegistrationSignature: alloy_g1_point_signed_msg,
-            pubkeyG1: g1_pub_key_bn254,
-            pubkeyG2: g2_pub_key_bn254,
-        };
+        let g2_point_x: Vec<DynSolValue> = vec![
+            DynSolValue::Uint(g2_pub_key_bn254.X[0], 256),
+            DynSolValue::Uint(g2_pub_key_bn254.X[1], 256),
+        ];
+        let g2_point_y: Vec<DynSolValue> = vec![
+            DynSolValue::Uint(g2_pub_key_bn254.Y[0], 256),
+            DynSolValue::Uint(g2_pub_key_bn254.Y[1], 256),
+        ];
+        let encoded_params_with_socket = DynSolValue::Tuple(vec![
+            DynSolValue::Uint(U256::from(0), 256),
+            DynSolValue::String(socket.to_string()),
+            DynSolValue::Uint(alloy_g1_point_signed_msg.X, 256),
+            DynSolValue::Uint(alloy_g1_point_signed_msg.Y, 256),
+            DynSolValue::Uint(g1_pub_key_bn254.X, 256),
+            DynSolValue::Uint(g1_pub_key_bn254.Y, 256),
+            DynSolValue::FixedArray(g2_point_x),
+            DynSolValue::FixedArray(g2_point_y),
+        ])
+        .abi_encode_params();
         // let mut operator_kick_params  = Vec::with_capacity(operator_set_ids.len());
         // for (_i,operator_set_id) in operator_set_ids.iter().enumerate(){
         //     operator_kick_params[0] = OperatorKickParam{
@@ -617,17 +645,16 @@ impl ELChainWriter {
         //         quorumNumber: u8::from_be_bytes(U8::from(*operator_set_id).to_be_bytes())
         //     }
         // }
-        // let registration_type ;
-        let mut data: Bytes = (socket, pub_key_reg_params).abi_encode().into();
+        // let mut data: Bytes = (RegistrationType::NORMAL,socket, pub_key_reg_params).abi_encode().into();
 
         // The encoder is prepending 32 bytes to the data as if it was used in a dynamic function parameter.
         // This is not used when decoding the bytes directly, so we need to remove it.
-        data = data.slice(32..);
+        // data = data.slice(32..);
 
         let params = IAllocationManagerTypes::RegisterParams {
             avs: avs_address,
             operatorSetIds: operator_set_ids,
-            data,
+            data: encoded_params_with_socket.into(),
         };
         let tx = allocation_manager_contract
             .registerForOperatorSets(operator_address, params)
@@ -762,9 +789,10 @@ mod tests {
             IAllocationManagerTypes,
         },
         middleware::registrycoordinator::{
-            IRegistryCoordinator::OperatorSetParam, IStakeRegistry::StrategyParams,
+            ISlashingRegistryCoordinator::OperatorSetParam, IStakeRegistry::StrategyParams,
             RegistryCoordinator,
-        }, sdk::mockavsservicemanager::MockAvsServiceManager,
+        },
+        sdk::mockavsservicemanager::MockAvsServiceManager,
     };
     use std::str::FromStr;
 
@@ -1119,6 +1147,7 @@ mod tests {
         let allocation_manager = AllocationManager::new(allocation_manager_addr, signer.clone());
         let registry_coordinator_addr =
             get_registry_coordinator_address(http_endpoint.to_string()).await;
+            dbg!(registry_coordinator_addr);
         let service_manager_address = get_service_manager_address(http_endpoint.to_string()).await;
         dbg!(service_manager_address);
         allocation_manager
@@ -1130,18 +1159,7 @@ mod tests {
             .await
             .unwrap();
 
-        // Enable operator sets in Registry Coordinator
-        let registry_coordinator =
-            RegistryCoordinator::new(registry_coordinator_addr, signer.clone());
-        let a = registry_coordinator
-            .enableOperatorSets()
-            .send()
-            .await
-            .unwrap()
-            .get_receipt()
-            .await
-            .unwrap().transaction_hash;
-        dbg!(a);
+        
 
         // Create slashable quorum
         let contract_registry_coordinator =
@@ -1156,34 +1174,65 @@ mod tests {
         let service_manager = MockAvsServiceManager::new(service_manager_address, signer.clone());
         let owner = service_manager.owner().call().await.unwrap()._0;
         dbg!(owner);
-        let s = service_manager.setAppointee(registry_coordinator_addr, allocation_manager_addr, alloy_primitives::FixedBytes(AllocationManager::createOperatorSetsCall::SELECTOR)).send().await.unwrap().get_receipt().await.unwrap().transaction_hash;
+        let s = service_manager
+            .setAppointee(
+                registry_coordinator_addr,
+                allocation_manager_addr,
+                alloy_primitives::FixedBytes(AllocationManager::createOperatorSetsCall::SELECTOR),
+            )
+            .send()
+            .await
+            .unwrap()
+            .get_receipt()
+            .await
+            .unwrap()
+            .transaction_hash;
         dbg!(s);
+        let i =service_manager
+            .setAppointee(
+                registry_coordinator_addr,
+                allocation_manager_addr,
+                alloy_primitives::FixedBytes(RegistryCoordinator::createSlashableStakeQuorumCall::SELECTOR),
+            )
+            .send()
+            .await
+            .unwrap()
+            .get_receipt()
+            .await
+            .unwrap()
+            .transaction_hash;
+        dbg!(i);
         let strategy_params = StrategyParams {
             strategy,
             multiplier: U96::from(1),
         };
-        contract_registry_coordinator
+        let s_count = contract_registry_coordinator.quorumCount().call().await.unwrap()._0;
+        dbg!(s_count);
+        let u = contract_registry_coordinator
             .createSlashableStakeQuorum(operator_set_params, U96::from(0), vec![strategy_params], 0)
             .send()
             .await
             .unwrap()
             .get_receipt()
             .await
-            .unwrap();
-
+            .unwrap().transaction_hash;
+        dbg!(u);
+        let q_count = contract_registry_coordinator.quorumCount().call().await.unwrap()._0;
+        dbg!(q_count);
         // // Create operator set
         let params = IAllocationManagerTypes::CreateSetParams {
             operatorSetId: operator_set_id,
             strategies: vec![strategy],
         };
-        allocation_manager
+        let y =allocation_manager
             .createOperatorSets(avs_address, vec![params])
             .send()
             .await
             .unwrap()
             .get_receipt()
             .await
-            .unwrap();
+            .unwrap().transaction_hash;
+        dbg!(y);
     }
 
     #[tokio::test]
@@ -1199,6 +1248,7 @@ mod tests {
         let el_chain_writer =
             new_test_writer(http_endpoint.clone(), operator_private_key.to_string()).await;
         let bls_key = BlsKeyPair::new("1".to_string()).unwrap();
+        dbg!(operator_set_id);
 
         let tx_hash = el_chain_writer
             .register_for_operator_sets(
@@ -1210,7 +1260,7 @@ mod tests {
             )
             .await
             .unwrap();
-
+        
         // let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
         // assert!(receipt.status());
 

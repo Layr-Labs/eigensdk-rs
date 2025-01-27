@@ -95,8 +95,9 @@ library MockAvsDeploymentLib {
 
         address blsApkRegistryImpl = address(new BLSApkRegistry(ISlashingRegistryCoordinator(result.registryCoordinator)));
         address indexRegistryimpl = address(new IndexRegistry(ISlashingRegistryCoordinator(result.registryCoordinator)));
-        address slashingregistryCoordinatorImpl = address(
-            new SlashingRegistryCoordinator(
+        address registryCoordinatorImpl = address(
+            new RegistryCoordinator(
+                IServiceManager(result.mockAvsServiceManager),
                 IStakeRegistry(result.stakeRegistry),
                 IBLSApkRegistry(result.blsapkRegistry),
                 IIndexRegistry(result.indexRegistry),
@@ -148,19 +149,19 @@ library MockAvsDeploymentLib {
 
         bytes memory upgradeCall = abi.encodeCall(
             SlashingRegistryCoordinator.initialize,
-            (
+            ( 
                 admin,
                 admin,
                 admin,
                 0,
-                admin
+                result.mockAvsServiceManager
             )
         );
 
         UpgradeableProxyLib.upgrade(result.stakeRegistry, stakeRegistryImpl);
         UpgradeableProxyLib.upgrade(result.blsapkRegistry, blsApkRegistryImpl);
         UpgradeableProxyLib.upgrade(result.indexRegistry, indexRegistryimpl);
-        UpgradeableProxyLib.upgradeAndCall(result.registryCoordinator, slashingregistryCoordinatorImpl, upgradeCall);
+        UpgradeableProxyLib.upgradeAndCall(result.registryCoordinator,registryCoordinatorImpl, upgradeCall);
         MockAvsServiceManager mockAvsServiceManagerImpl = new MockAvsServiceManager(
             ISlashingRegistryCoordinator(result.registryCoordinator),
             IAVSDirectory(coredata.avsDirectory),
