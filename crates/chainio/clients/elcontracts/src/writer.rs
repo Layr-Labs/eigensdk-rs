@@ -3,19 +3,14 @@ use std::usize;
 use crate::error::ElContractsError;
 use crate::reader::ELChainReader;
 use alloy::dyn_abi::DynSolValue;
-use alloy::primitives::{Address, Bytes, FixedBytes, TxHash, U256};
+use alloy::primitives::{Address, FixedBytes, TxHash, U256};
 use alloy::sol;
-use alloy::sol_types::SolValue;
-use alloy_primitives::ruint::aliases::U8;
 use eigen_common::get_signer;
 use eigen_crypto_bls::{
     alloy_g1_point_to_g1_affine, convert_to_g1_point, convert_to_g2_point, BlsKeyPair,
 };
 pub use eigen_types::operator::Operator;
-use eigen_utils::middleware::islashingregistrycoordinator::ISlashingRegistryCoordinator;
-use eigen_utils::middleware::slashingregistrycoordinator::SlashingRegistryCoordinator::{
-    self, SlashingRegistryCoordinatorInstance,
-};
+
 use eigen_utils::{
     core::{
         allocationmanager::{AllocationManager, IAllocationManagerTypes},
@@ -24,10 +19,7 @@ use eigen_utils::{
         permissioncontroller::PermissionController,
         strategymanager::StrategyManager,
     },
-    middleware::{
-        ierc20::IERC20,
-        registrycoordinator::{IBLSApkRegistry::PubkeyRegistrationParams, RegistryCoordinator},
-    },
+    middleware::{ierc20::IERC20, registrycoordinator::RegistryCoordinator},
 };
 use tracing::info;
 
@@ -1186,9 +1178,7 @@ mod tests {
         };
         let strategy = get_erc20_mock_strategy(http_endpoint.to_string()).await;
 
-        let owner = service_manager.owner().call().await.unwrap()._0;
-        dbg!(owner);
-        let i = service_manager
+        service_manager
             .setAppointee(
                 registry_coordinator_addr,
                 allocation_manager_addr,
@@ -1201,19 +1191,17 @@ mod tests {
             .await
             .unwrap()
             .transaction_hash;
-        dbg!(i);
         let strategy_params = StrategyParams {
             strategy,
             multiplier: U96::from(1),
         };
-        let s_count = contract_registry_coordinator
+        contract_registry_coordinator
             .quorumCount()
             .call()
             .await
             .unwrap()
             ._0;
-        dbg!(s_count);
-        let u = contract_registry_coordinator
+        contract_registry_coordinator
             .createSlashableStakeQuorum(operator_set_params, U96::from(0), vec![strategy_params], 0)
             .send()
             .await
@@ -1222,19 +1210,6 @@ mod tests {
             .await
             .unwrap()
             .transaction_hash;
-        dbg!(u);
-        let q_count = contract_registry_coordinator
-            .quorumCount()
-            .call()
-            .await
-            .unwrap()
-            ._0;
-        dbg!(q_count);
-        // // Create operator set
-        let params = IAllocationManagerTypes::CreateSetParams {
-            operatorSetId: operator_set_id,
-            strategies: vec![strategy],
-        };
     }
 
     #[tokio::test]
