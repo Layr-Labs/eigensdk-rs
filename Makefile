@@ -58,6 +58,7 @@ CORE_BINDINGS_PATH:=crates/utils/src/core
 # The echo is to remove quotes, and the patsubst to make the regex match the full text only
 CORE_CONTRACTS_ARGS:=$(patsubst %, --select '^%$$', $(shell echo $(CORE_CONTRACTS)))
 
+SOLC_VERSION:="0.8.28"
 
 .PHONY: bindings
 
@@ -73,19 +74,19 @@ bindings_host:
 
 	# Generate SDK bindings
 	cd $(SDK_CONTRACTS_LOCATION) && forge build --force --skip test --skip script
-	forge bind --alloy --skip-build --bindings-path $(SDK_BINDINGS_PATH) --overwrite \
+	forge bind --alloy --skip-build --bindings-path $(SDK_BINDINGS_PATH) --overwrite --use $(SOLC_VERSION) \
 		--root $(SDK_CONTRACTS_LOCATION) --module \
 		$(SDK_CONTRACTS_ARGS)
 
 	# Generate middleware bindings
 	cd $(MIDDLEWARE_CONTRACTS_LOCATION) && forge build --force --skip test --skip script
-	forge bind --alloy --skip-build --bindings-path $(MIDDLEWARE_BINDINGS_PATH) --overwrite \
+	forge bind --alloy --skip-build --bindings-path $(MIDDLEWARE_BINDINGS_PATH) --overwrite --use $(SOLC_VERSION) \
 		--root $(MIDDLEWARE_CONTRACTS_LOCATION) --module \
 		$(MIDDLEWARE_CONTRACTS_ARGS)
 
 	# Generate core bindings
 	cd $(CORE_CONTRACTS_LOCATION) && forge build --force --skip test --skip script
-	forge bind --alloy --skip-build --bindings-path $(CORE_BINDINGS_PATH) --overwrite \
+	forge bind --alloy --skip-build --bindings-path $(CORE_BINDINGS_PATH) --overwrite --use $(SOLC_VERSION) \
 		--root $(CORE_CONTRACTS_LOCATION) --module \
 		$(CORE_CONTRACTS_ARGS)
 
