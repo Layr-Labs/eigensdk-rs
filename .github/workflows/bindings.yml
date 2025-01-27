@@ -37,4 +37,4 @@ jobs:
 
       - name: Compare existing and new bindings
         working-directory: crates/utils/src/
-        run: git diff
+        run: git diff --check
