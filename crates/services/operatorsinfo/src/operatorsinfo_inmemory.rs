@@ -648,7 +648,8 @@ mod tests {
             delegation_manager_address,
             avs_directory_address,
             http_endpoint.to_string(),
-        );
+        )
+        .await;
         let signer = PrivateKeySigner::from_str(pvt_key).unwrap();
 
         let el_chain_writer = ELChainWriter::new(

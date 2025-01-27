@@ -105,6 +105,17 @@ impl AvsRegistryReader for AvsRegistryChainReader {
             .map_err(|_| AvsRegistryError::GetOperatorState)?;
 
         let OperatorStateRetriever::getOperatorState_0Return { _0: quorum } = operator_state;
+
+        #[cfg(feature = "telemetry")]
+        {
+            let _ = tokio::task::spawn_blocking(move || {
+                let _ = eigen_telemetry::telemetry::Telemetry::capture_event(
+                    "get_operators_stake_in_quorums_at_block",
+                )
+                .map_err(|e| AvsRegistryError::TelemetryError(e.to_string()));
+            })
+            .await;
+        }
         Ok(quorum)
     }
 
@@ -114,6 +125,17 @@ impl AvsRegistryReader for AvsRegistryChainReader {
         quorum_numbers: Vec<u8>,
         non_signer_operator_ids: Vec<FixedBytes<32>>,
     ) -> Result<OperatorStateRetriever::CheckSignaturesIndices, AvsRegistryError> {
+        #[cfg(feature = "telemetry")]
+        {
+            let _ = tokio::task::spawn_blocking(move || {
+                let _ = eigen_telemetry::telemetry::Telemetry::capture_event(
+                    "avsregistryreader.get_check_signatures_indices",
+                )
+                .map_err(|e| AvsRegistryError::TelemetryError(e.to_string()));
+            })
+            .await;
+        }
+
         let provider = get_provider(&self.provider);
 
         let contract_operator_state_retriever =
@@ -137,6 +159,17 @@ impl AvsRegistryReader for AvsRegistryChainReader {
         &self,
         operator_id: [u8; 32],
     ) -> Result<Address, AvsRegistryError> {
+        #[cfg(feature = "telemetry")]
+        {
+            let _ = tokio::task::spawn_blocking(move || {
+                let _ = eigen_telemetry::telemetry::Telemetry::capture_event(
+                    "avsregistryreader.get_operator_from_id",
+                )
+                .map_err(|e| AvsRegistryError::TelemetryError(e.to_string()));
+            })
+            .await;
+        }
+
         let provider = get_provider(&self.provider);
 
         let contract_registry_coordinator =
@@ -169,6 +202,16 @@ impl AvsRegistryChainReader {
         operator_state_retriever_addr: Address,
         http_provider_url: String,
     ) -> Result<AvsRegistryChainReader, AvsRegistryError> {
+        #[cfg(feature = "telemetry")]
+        {
+            let _ = tokio::task::spawn_blocking(move || {
+                let _ =
+                    eigen_telemetry::telemetry::Telemetry::capture_event("avsregistryreader.new")
+                        .map_err(|e| AvsRegistryError::TelemetryError(e.to_string()));
+            })
+            .await;
+        }
+
         let provider = get_provider(&http_provider_url);
 
         let contract_registry_coordinator =
@@ -209,6 +252,17 @@ impl AvsRegistryChainReader {
     ///
     /// The total quorum count read from the RegistryCoordinator.
     pub async fn get_quorum_count(&self) -> Result<u8, AvsRegistryError> {
+        #[cfg(feature = "telemetry")]
+        {
+            let _ = tokio::task::spawn_blocking(move || {
+                let _ = eigen_telemetry::telemetry::Telemetry::capture_event(
+                    "avsregistryreader.get_quorum_count",
+                )
+                .map_err(|e| AvsRegistryError::TelemetryError(e.to_string()));
+            })
+            .await;
+        }
+
         let provider = get_provider(&self.provider);
 
         let contract_registry_coordinator =
@@ -241,6 +295,17 @@ impl AvsRegistryChainReader {
         block_number: u32,
         operator_id: B256,
     ) -> Result<(U256, Vec<Vec<OperatorStateRetriever::Operator>>), AvsRegistryError> {
+        #[cfg(feature = "telemetry")]
+        {
+            let _ = tokio::task::spawn_blocking(move || {
+                let _ = eigen_telemetry::telemetry::Telemetry::capture_event(
+                    "avsregistryreader.get_operators_stake_in_quorums_at_block_operator_id",
+                )
+                .map_err(|e| AvsRegistryError::TelemetryError(e.to_string()));
+            })
+            .await;
+        }
+
         let provider = get_provider(&self.provider);
 
         let contract_operator_state_retriever =
@@ -276,6 +341,17 @@ impl AvsRegistryChainReader {
         &self,
         quorum_numbers: Bytes,
     ) -> Result<Vec<Vec<OperatorStateRetriever::Operator>>, AvsRegistryError> {
+        #[cfg(feature = "telemetry")]
+        {
+            let _ = tokio::task::spawn_blocking(move || {
+                let _ = eigen_telemetry::telemetry::Telemetry::capture_event(
+                    "avsregistryreader.get_operators_stake_in_quorums_at_current_block",
+                )
+                .map_err(|e| AvsRegistryError::TelemetryError(e.to_string()));
+            })
+            .await;
+        }
+
         let provider = get_provider(&self.provider);
 
         let current_block_number = provider
@@ -309,6 +385,17 @@ impl AvsRegistryChainReader {
         operator_id: B256,
         block_number: u32,
     ) -> Result<(Vec<u8>, Vec<Vec<OperatorStateRetriever::Operator>>), AvsRegistryError> {
+        #[cfg(feature = "telemetry")]
+        {
+            let _ = tokio::task::spawn_blocking(move || {
+                let _ = eigen_telemetry::telemetry::Telemetry::capture_event(
+                    "avsregistryreader.get_operators_stake_in_quorums_of_operator_at_block",
+                )
+                .map_err(|e| AvsRegistryError::TelemetryError(e.to_string()));
+            })
+            .await;
+        }
+
         let (quorum_bitmaps, operator_stakes) = self
             .get_operators_stake_in_quorums_at_block_operator_id(block_number, operator_id)
             .await
@@ -334,6 +421,17 @@ impl AvsRegistryChainReader {
         &self,
         operator_id: B256,
     ) -> Result<(Vec<u8>, Vec<Vec<OperatorStateRetriever::Operator>>), AvsRegistryError> {
+        #[cfg(feature = "telemetry")]
+        {
+            let _ = tokio::task::spawn_blocking(move || {
+                let _ = eigen_telemetry::telemetry::Telemetry::capture_event(
+                    "avsregistryreader.get_operators_stake_in_quorums_of_operator_at_current_block",
+                )
+                .map_err(|e| AvsRegistryError::TelemetryError(e.to_string()));
+            })
+            .await;
+        }
+
         let provider = get_provider(&self.provider);
 
         let current_block_number = provider.get_block_number().await.map_err(|e| {
@@ -365,6 +463,17 @@ impl AvsRegistryChainReader {
         &self,
         operator_id: B256,
     ) -> Result<HashMap<u8, BigInt>, AvsRegistryError> {
+        #[cfg(feature = "telemetry")]
+        {
+            let _ = tokio::task::spawn_blocking(move || {
+                let _ = eigen_telemetry::telemetry::Telemetry::capture_event(
+                    "avsregistryreader.get_operator_stake_in_quorums_of_operator_at_current_block",
+                )
+                .map_err(|e| AvsRegistryError::TelemetryError(e.to_string()));
+            })
+            .await;
+        }
+
         let provider = get_provider(&self.provider);
 
         let registry_coordinator =
@@ -449,6 +558,17 @@ impl AvsRegistryChainReader {
         &self,
         operator_address: Address,
     ) -> Result<FixedBytes<32>, AvsRegistryError> {
+        #[cfg(feature = "telemetry")]
+        {
+            let _ = tokio::task::spawn_blocking(move || {
+                let _ = eigen_telemetry::telemetry::Telemetry::capture_event(
+                    "avsregistryreader.get_operator_id",
+                )
+                .map_err(|e| AvsRegistryError::TelemetryError(e.to_string()));
+            })
+            .await;
+        }
+
         let provider = get_provider(&self.provider);
 
         let contract_registry_coordinator =
@@ -475,6 +595,17 @@ impl AvsRegistryChainReader {
         &self,
         operator_address: Address,
     ) -> Result<bool, AvsRegistryError> {
+        #[cfg(feature = "telemetry")]
+        {
+            let _ = tokio::task::spawn_blocking(move || {
+                let _ = eigen_telemetry::telemetry::Telemetry::capture_event(
+                    "avsregistryreader.is_operator_registered",
+                )
+                .map_err(|e| AvsRegistryError::TelemetryError(e.to_string()));
+            })
+            .await;
+        }
+
         let provider = get_provider(&self.provider);
 
         let contract_registry_coordinator =
@@ -510,6 +641,17 @@ impl AvsRegistryChainReader {
         mut stop_block: u64,
         ws_url: String,
     ) -> Result<(Vec<Address>, Vec<OperatorPubKeys>), AvsRegistryError> {
+        #[cfg(feature = "telemetry")]
+        {
+            let _ = tokio::task::spawn_blocking(move || {
+                let _ = eigen_telemetry::telemetry::Telemetry::capture_event(
+                    "avsregistryreader.query_existing_registered_operator_pub_keys",
+                )
+                .map_err(|e| AvsRegistryError::TelemetryError(e.to_string()));
+            })
+            .await;
+        }
+
         let provider = get_ws_provider(&ws_url).await.map_err(|e| {
             AvsRegistryError::AlloyContractError(alloy::contract::Error::TransportError(e))
         })?;
@@ -582,6 +724,17 @@ impl AvsRegistryChainReader {
         start_block: u64,
         stop_block: u64,
     ) -> Result<HashMap<FixedBytes<32>, String>, AvsRegistryError> {
+        #[cfg(feature = "telemetry")]
+        {
+            let _ = tokio::task::spawn_blocking(move || {
+                let _ = eigen_telemetry::telemetry::Telemetry::capture_event(
+                    "avsregistryreader.query_existing_registered_operator_sockets",
+                )
+                .map_err(|e| AvsRegistryError::TelemetryError(e.to_string()));
+            })
+            .await;
+        }
+
         let provider = get_provider(&self.provider);
 
         let mut operator_id_to_socket = HashMap::new();

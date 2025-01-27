@@ -85,7 +85,8 @@ pub async fn register_operator(pvt_key: &str, bls_key: &str, http_endpoint: &str
         delegation_manager_address,
         avs_directory_address,
         http_endpoint.to_owned(),
-    );
+    )
+    .await;
 
     let el_chain_writer = ELChainWriter::new(
         strategy_manager_address,

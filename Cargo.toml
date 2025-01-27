@@ -56,6 +56,7 @@ clippy.question_mark = "warn"
 clippy.implicit_return = "allow"
 
 [workspace.dependencies]
+#misc
 eigen-client-avsregistry = { path = "crates/chainio/clients/avsregistry" }
 ark-bn254 = "0.5.0"
 ark-ec = "0.5.0"
@@ -81,6 +82,7 @@ eigen-services-blsaggregation = { path = "crates/services/bls_aggregation" }
 eigen-services-operatorsinfo = { path = "crates/services/operatorsinfo" }
 eigen-signer = { path = "crates/signer/" }
 eigen-testing-utils = { path = "testing/testing-utils" }
+eigen-telemetry = { path = "crates/telemetry/" }
 eigen-types = { path = "crates/types/" }
 eigen-utils = { path = "crates/utils/" }
 eigen-nodeapi = { path = "crates/nodeapi/" }
@@ -116,13 +118,8 @@ tokio = { version = "1.41", features = ["test-util", "full", "sync"] }
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["json"] }
 url = "2.5"
-
-#misc
 rust-bls-bn254 = { version = "0.2.1", features = ["std"] }
 uuid = { version = "1.11", features = ["v4"] }
-
-
-#misc
 parking_lot = "0.12"
 
 
@@ -140,3 +137,5 @@ alloy = { version = "0.9", features = [
 
 avsregistry-read = { path = "examples/avsregistry-read" }
 avsregistry-write = { path = "examples/avsregistry-write" }
+
+posthog-rs = "0.2.0"

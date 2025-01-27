@@ -31,13 +31,22 @@ impl ELChainReader {
     /// # Returns
     ///
     /// A new `ELChainReader` instance.
-    pub fn new(
+    pub async fn new(
         _logger: SharedLogger,
         slasher: Address,
         delegation_manager: Address,
         avs_directory: Address,
         provider: String,
     ) -> Self {
+        #[cfg(feature = "telemetry")]
+        {
+            let _ = tokio::task::spawn_blocking(move || {
+                let _ = eigen_telemetry::telemetry::Telemetry::capture_event("elchainreader.new")
+                    .map_err(|e| ElContractsError::TelemetryError(e.to_string()));
+            })
+            .await;
+        }
+
         ELChainReader {
             _logger,
             slasher,
@@ -68,6 +77,15 @@ impl ELChainReader {
         avs_directory: Address,
         client: &String,
     ) -> Result<Self, ElContractsError> {
+        #[cfg(feature = "telemetry")]
+        {
+            let _ = tokio::task::spawn_blocking(move || {
+                let _ = eigen_telemetry::telemetry::Telemetry::capture_event("elchainreader.build")
+                    .map_err(|e| ElContractsError::TelemetryError(e.to_string()));
+            })
+            .await;
+        }
+
         let provider = get_provider(client);
 
         let contract_delegation_manager = DelegationManager::new(delegation_manager, provider);
@@ -114,6 +132,17 @@ impl ELChainReader {
         approve_salt: FixedBytes<32>,
         expiry: U256,
     ) -> Result<FixedBytes<32>, ElContractsError> {
+        #[cfg(feature = "telemetry")]
+        {
+            let _ = tokio::task::spawn_blocking(move || {
+                let _ = eigen_telemetry::telemetry::Telemetry::capture_event(
+                    "elchainreader.calculate_delegation_approval_digest_hash",
+                )
+                .map_err(|e| ElContractsError::TelemetryError(e.to_string()));
+            })
+            .await;
+        }
+
         let provider = get_provider(&self.provider);
         let contract_delegation_manager = DelegationManager::new(self.delegation_manager, provider);
         let delegation_approval_digest_hash = contract_delegation_manager
@@ -157,6 +186,17 @@ impl ELChainReader {
         salt: FixedBytes<32>,
         expiry: U256,
     ) -> Result<FixedBytes<32>, ElContractsError> {
+        #[cfg(feature = "telemetry")]
+        {
+            let _ = tokio::task::spawn_blocking(move || {
+                let _ = eigen_telemetry::telemetry::Telemetry::capture_event(
+                    "elchainreader.calculate_operator_avs_registration_digest_hash",
+                )
+                .map_err(|e| ElContractsError::TelemetryError(e.to_string()));
+            })
+            .await;
+        }
+
         let provider = get_provider(&self.provider);
 
         let contract_avs_directory = AVSDirectory::new(self.avs_directory, provider);
@@ -192,6 +232,17 @@ impl ELChainReader {
         operator_addr: Address,
         strategy_addr: Address,
     ) -> Result<U256, ElContractsError> {
+        #[cfg(feature = "telemetry")]
+        {
+            let _ = tokio::task::spawn_blocking(move || {
+                let _ = eigen_telemetry::telemetry::Telemetry::capture_event(
+                    "elchainreader.get_operator_shares_in_strategy",
+                )
+                .map_err(|e| ElContractsError::TelemetryError(e.to_string()));
+            })
+            .await;
+        }
+
         let provider = get_provider(&self.provider);
 
         let contract_delegation_manager = DelegationManager::new(self.delegation_manager, provider);
@@ -221,6 +272,17 @@ impl ELChainReader {
         &self,
         operator_addr: Address,
     ) -> Result<bool, ElContractsError> {
+        #[cfg(feature = "telemetry")]
+        {
+            let _ = tokio::task::spawn_blocking(move || {
+                let _ = eigen_telemetry::telemetry::Telemetry::capture_event(
+                    "elchainreader.operator_is_frozen",
+                )
+                .map_err(|e| ElContractsError::TelemetryError(e.to_string()));
+            })
+            .await;
+        }
+
         let provider = get_provider(&self.provider);
 
         let contract_slasher = ISlasher::new(self.slasher, provider);
@@ -254,6 +316,17 @@ impl ELChainReader {
         operator_addr: Address,
         service_manager_addr: Address,
     ) -> Result<u32, ElContractsError> {
+        #[cfg(feature = "telemetry")]
+        {
+            let _ = tokio::task::spawn_blocking(move || {
+                let _ = eigen_telemetry::telemetry::Telemetry::capture_event(
+                    "elchainreader.service_manager_can_slash_operator_until_block",
+                )
+                .map_err(|e| ElContractsError::TelemetryError(e.to_string()));
+            })
+            .await;
+        }
+
         let provider = get_provider(&self.provider);
 
         let contract_slasher = ISlasher::new(self.slasher, provider);
@@ -289,6 +362,17 @@ impl ELChainReader {
         &self,
         strategy_addr: Address,
     ) -> Result<(Address, Address, Address), ElContractsError> {
+        #[cfg(feature = "telemetry")]
+        {
+            let _ = tokio::task::spawn_blocking(move || {
+                let _ = eigen_telemetry::telemetry::Telemetry::capture_event(
+                    "elchainreader.get_strategy_and_underlying_erc20_token",
+                )
+                .map_err(|e| ElContractsError::TelemetryError(e.to_string()));
+            })
+            .await;
+        }
+
         let provider = get_provider(&self.provider);
 
         let contract_strategy = IStrategy::new(strategy_addr, &provider);
@@ -329,6 +413,17 @@ impl ELChainReader {
         &self,
         operator: Address,
     ) -> Result<Operator, ElContractsError> {
+        #[cfg(feature = "telemetry")]
+        {
+            let _ = tokio::task::spawn_blocking(move || {
+                let _ = eigen_telemetry::telemetry::Telemetry::capture_event(
+                    "elchainreader.get_operator_details",
+                )
+                .map_err(|e| ElContractsError::TelemetryError(e.to_string()));
+            })
+            .await;
+        }
+
         let provider = get_provider(&self.provider);
 
         let contract_delegation_manager =
@@ -370,6 +465,17 @@ impl ELChainReader {
         &self,
         operator: Address,
     ) -> Result<bool, ElContractsError> {
+        #[cfg(feature = "telemetry")]
+        {
+            let _ = tokio::task::spawn_blocking(move || {
+                let _ = eigen_telemetry::telemetry::Telemetry::capture_event(
+                    "elchainreader.is_operator_registered",
+                )
+                .map_err(|e| ElContractsError::TelemetryError(e.to_string()));
+            })
+            .await;
+        }
+
         let provider = get_provider(&self.provider);
 
         let contract_delegation_manager = DelegationManager::new(self.delegation_manager, provider);
@@ -498,6 +604,7 @@ mod tests {
             avs_directory_address,
             http_endpoint,
         )
+        .await
     }
 
     #[tokio::test]

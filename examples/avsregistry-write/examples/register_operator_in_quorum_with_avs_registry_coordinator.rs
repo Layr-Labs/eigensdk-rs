@@ -66,7 +66,8 @@ async fn main() -> Result<()> {
         DELEGATION_MANAGER_ADDRESS,
         AVS_DIRECTORY_ADDRESS,
         "https://ethereum-holesky.blockpi.network/v1/rpc/public".to_string(),
-    );
+    )
+    .await;
     // A new ElChainWriter instance
     let el_writer = ELChainWriter::new(
         STRATEGY_MANAGER_ADDRESS,

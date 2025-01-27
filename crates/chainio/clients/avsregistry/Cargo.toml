@@ -10,16 +10,18 @@ license-file.workspace = true
 
 [dependencies]
 alloy.workspace = true
+ark-ff.workspace = true
 async-trait.workspace = true
-num-bigint = "0.4.4"
 eigen-types.workspace = true
 eigen-crypto-bls.workspace = true
-ark-ff.workspace = true
+eigen-telemetry = { workspace = true, optional = true }
 eigen-client-elcontracts.workspace = true
 eigen-common.workspace = true
 eigen-utils.workspace = true
 eigen-logging.workspace = true
+num-bigint = "0.4.4"
 thiserror.workspace = true
+tokio = { workspace = true, optional = true }
 tracing.workspace = true
 
 [lints]
@@ -30,3 +32,6 @@ eigen-testing-utils.workspace = true
 hex = "0.4.3"
 once_cell.workspace = true
 tokio = { version = "1.37.0", features = ["test-util", "full", "sync"] }
+
+[features]
+telemetry = ["dep:eigen-telemetry", "dep:tokio"]
