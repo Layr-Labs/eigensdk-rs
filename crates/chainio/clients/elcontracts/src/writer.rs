@@ -1239,8 +1239,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_register_for_operator_sets() {
-        // let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let http_endpoint = "http://localhost:8545".to_string();
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
         let avs_address = get_service_manager_address(http_endpoint.clone()).await;
         let operator_set_id = 0;
         create_operator_set(http_endpoint.as_str(), avs_address, operator_set_id).await;
