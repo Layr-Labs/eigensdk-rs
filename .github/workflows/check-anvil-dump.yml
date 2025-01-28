@@ -25,7 +25,7 @@ jobs:
         run: |
           git diff state.json
           if [ $? -eq 0 ]; then
-            echo "The anvil dump is not outdated";
+            echo "The anvil dump is outdated";
             exit 1
           fi
           
