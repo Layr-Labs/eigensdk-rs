@@ -1,0 +1,30 @@
+name: Check anvil dump up-to-date
+
+on:
+  push:
+    branches: [main]
+    # paths:
+    #   - crates/contracts/lib/**
+    #   - crates/contracts/script/**
+    #   - crates/contracts/src/**
+  pull_request:
+    branches: [ '**' ]
+
+jobs:
+  check:
+    name: Check anvil dump is up-to-date
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Check the diff in the anvil dump
+        working-directory: crates/contracts/anvil/contracts_deployed_anvil_state.json
+        run: |
+          git diff state.json
+          if [ $? -ne 0 ]; then
+            echo "The anvil dump is not outdated";
+          fi
+          
