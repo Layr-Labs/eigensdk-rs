@@ -11,6 +11,12 @@ deploy-eigenlayer:
 deploy-avs:
 	./crates/contracts/anvil/deploy-avs.sh
 
+deploy-m2-eigenlayer:
+	./crates/contracts/anvil/deploy-m2-eigenlayer.sh
+
+deploy-m2-avs:
+	./crates/contracts/anvil/deploy-m2-avs.sh
+
 deploy: deploy-eigenlayer deploy-avs ##
 
 dump-state:

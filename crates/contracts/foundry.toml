@@ -9,10 +9,10 @@ optimizer = true
 remappings = [
     "@eigenlayer/=lib/eigenlayer-middleware/lib/eigenlayer-contracts/src/",
     "@eigenlayer-scripts/=lib/eigenlayer-middleware/lib/eigenlayer-contracts/script/",
-    "@eigenlayer-middleware/=lib/eigenlayer-middleware/",
-    "@openzeppelin/=lib/eigenlayer-middleware/lib/openzeppelin-contracts/",
-    "@openzeppelin-upgrades/=lib/eigenlayer-middleware/lib/openzeppelin-contracts-upgradeable/",
     "forge-std/=lib/forge-std/src/",
+    "@m2-eigenlayer/=lib/eigenlayer-middleware-m2/lib/eigenlayer-contracts/src/",
+    "@m2-eigenlayer-scripts/=lib/eigenlayer-middleware-m2/lib/eigenlayer-contracts/script/",
+
 ]
 
 # See more config options https://github.com/foundry-rs/foundry/tree/master/config

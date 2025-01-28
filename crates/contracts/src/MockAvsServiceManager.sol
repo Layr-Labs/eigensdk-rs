@@ -1,15 +1,12 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.12;
 
-import {IAVSDirectory} from "eigenlayer-contracts/src/contracts/interfaces/IAVSDirectory.sol";
-import {IRewardsCoordinator} from "eigenlayer-contracts/src/contracts/interfaces/IRewardsCoordinator.sol";
-import {IAllocationManager} from "eigenlayer-contracts/src/contracts/interfaces/IAllocationManager.sol";
-import {IPermissionController} from "eigenlayer-contracts/src/contracts/interfaces/IPermissionController.sol";
-import {ISlashingRegistryCoordinator} from "eigenlayer-middleware/src/interfaces/ISlashingRegistryCoordinator.sol";
-import {IBLSSignatureChecker} from "eigenlayer-middleware/src/interfaces/IBLSSignatureChecker.sol";
+import {IAVSDirectory} from "@m2-eigenlayer/contracts/interfaces/IAVSDirectory.sol";
+import {IRewardsCoordinator} from "@m2-eigenlayer/contracts/interfaces/IRewardsCoordinator.sol";
+import {IBLSSignatureChecker} from "@eigenlayer-middleware/src/interfaces/IBLSSignatureChecker.sol";
 
-import {ServiceManagerBase} from "eigenlayer-middleware/src/ServiceManagerBase.sol";
-import {BLSSignatureChecker} from "eigenlayer-middleware/src/BLSSignatureChecker.sol";
+import {ServiceManagerBase} from "@eigenlayer-middleware/src/ServiceManagerBase.sol";
+import {BLSSignatureChecker} from "@eigenlayer-middleware/src/BLSSignatureChecker.sol";
 
 contract MockAvsServiceManager is ServiceManagerBase, BLSSignatureChecker {
     constructor(
