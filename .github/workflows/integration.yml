@@ -127,6 +127,6 @@ jobs:
         run: |
           cd contracts_deployed_anvil_state.json
           # Remove the fields that depend on the timestamp
-          ../filter_anvil_state previous_state.json
-          ../filter_anvil_state state.json
+          ../filter_anvil_state.sh previous_state.json
+          ../filter_anvil_state.sh state.json
           diff previous_state.json state.json
