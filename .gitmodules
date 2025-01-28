@@ -4,3 +4,6 @@
 [submodule "crates/contracts/lib/eigenlayer-middleware"]
 	path = crates/contracts/lib/eigenlayer-middleware
 	url = https://github.com/Layr-labs/eigenlayer-middleware
+[submodule "crates/contracts/lib/eigenlayer-middleware-m2"]
+	path = crates/contracts/lib/eigenlayer-middleware-m2
+	url = https://github.com/Layr-labs/eigenlayer-middleware
