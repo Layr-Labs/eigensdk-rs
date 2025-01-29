@@ -28,6 +28,8 @@ jobs:
         run: |
           git diff --exit-code state.json
           echo $?
+          git diff --exit-code ../../src/ContractsRegistry.sol
+          echo $?
           if [ $? -eq 0 ]; then
             echo "The anvil dump is outdated";
             exit 1
