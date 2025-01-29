@@ -77,3 +77,4 @@ Each version will have a separate `Breaking Changes` section as well. To describ
 
 This changelog was introduced in-between v0.1.2 and v0.1.3.
 For changes from previous releases, you can check on our GitHub repo's releases page: [github.com/Layr-Labs/eigensdk-rs/releases](https://github.com/Layr-Labs/eigensdk-rs/releases)
+
