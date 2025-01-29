@@ -27,6 +27,7 @@ jobs:
         working-directory: crates/contracts/anvil/contracts_deployed_anvil_state.json
         run: |
           git diff --exit-code state.json
+          echo $?
           if [ $? -eq 0 ]; then
             echo "The anvil dump is outdated";
             exit 1
