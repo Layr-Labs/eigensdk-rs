@@ -26,9 +26,6 @@ jobs:
         working-directory: crates/contracts/anvil/contracts_deployed_anvil_state.json
         run: |
           git diff --exit-code origin/${{ github.event.pull_request.base.ref }} -- state.json
-          echo $?
-          git diff --exit-code ../../src/ContractsRegistry.sol
-          echo $?
           if [ $? -eq 0 ]; then
             echo "The anvil dump is outdated";
             exit 1
