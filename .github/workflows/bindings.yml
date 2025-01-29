@@ -15,7 +15,7 @@ jobs:
       fail-fast: true
 
     name: Check bindings are up to date
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     
     steps:
       - uses: actions/checkout@v4
@@ -29,13 +29,6 @@ jobs:
 
       - name: Show Forge version
         run: forge --version
-
-      - name: Backup existing bindings
-        working-directory: crates/utils/src/
-        run: |
-          cp -r core/ existing_core/
-          cp -r middleware/ existing_middleware/
-          cp -r sdk/ existing_sdk/
       
       - name: Generate new bindings
         run: |
@@ -44,7 +37,4 @@ jobs:
 
       - name: Compare existing and new bindings
         working-directory: crates/utils/src/
-        run: |
-          diff existing_core/ core/
-          diff existing_middleware/ middleware/
-          diff existing_sdk/ sdk/
+        run: git diff --exit-code
