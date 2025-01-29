@@ -40,3 +40,4 @@ contract ContractsRegistry {
         return (test_details.timestamp, test_details.block_number, test_details.index);
     }
 }
+
