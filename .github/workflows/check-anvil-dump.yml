@@ -1,4 +1,4 @@
-name: Check anvil dump up-to-date
+name: Check anvil dump is up-to-date
 
 on:
   push:

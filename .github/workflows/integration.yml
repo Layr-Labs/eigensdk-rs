@@ -100,7 +100,7 @@ jobs:
     strategy:
       fail-fast: true
 
-    name: Check the script that generates anvil state works
+    name: Generate anvil state
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -112,5 +112,5 @@ jobs:
         with:
           version: stable
       
-      - name: Generate new anvil state
+      - name: Generate anvil state
         run: make deploy-contracts-to-anvil-and-save-state
