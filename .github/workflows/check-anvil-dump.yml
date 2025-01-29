@@ -19,14 +19,13 @@ jobs:
           fetch-depth: 0
 
       - name: Check if the contracts changed
-        working-directory: crates/contracts/
         id: contracts-changed
         uses: tj-actions/changed-files@v34
         with:
           files: 
-            - lib/**
-            - script/**
-            - src/**
+            - crates/contracts/lib/**
+            - crates/contracts/script/**
+            - crates/contracts/src/**
 
       # This step runs only when the contracts are changed
       - name: Check if the anvil dump is updated
