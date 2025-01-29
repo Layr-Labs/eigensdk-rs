@@ -3,10 +3,6 @@ name: Check anvil dump up-to-date
 on:
   push:
     branches: [main]
-    paths:
-      - 'crates/contracts/lib/**'
-      - 'crates/contracts/script/**'
-      - 'crates/contracts/src/**'
 
   pull_request:
     branches: [ '**' ]
@@ -20,8 +16,21 @@ jobs:
       - uses: actions/checkout@v4
         with:
           submodules: recursive
+          fetch-depth: 0
 
-      - name: Check the diff in the anvil dump
+      - name: Check if the contracts changed
+        working-directory: crates/contracts/
+        id: contracts-changed
+        uses: tj-actions/changed-files@v34
+        with:
+          files: 
+            - lib/**
+            - script/**
+            - src/**
+
+      # This step runs only when the contracts are changed
+      - name: Check if the anvil dump is updated
+        if: steps.contracts-changed.outputs.any_changed == 'true'
         working-directory: crates/contracts/anvil/contracts_deployed_anvil_state.json
         run: |
           git diff state.json
