@@ -25,7 +25,7 @@ jobs:
       - name: Check the anvil dump has changed
         working-directory: crates/contracts/anvil/contracts_deployed_anvil_state.json
         run: |
-          git diff --exit-code state.json
+          git diff --exit-code origin/${{ github.event.pull_request.base.ref }} -- state.json
           echo $?
           git diff --exit-code ../../src/ContractsRegistry.sol
           echo $?
