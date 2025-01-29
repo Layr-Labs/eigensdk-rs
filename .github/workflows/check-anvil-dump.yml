@@ -22,7 +22,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      # This step fails if there are no changes in the anvil state
+      # This step checks the diff in the anvil state file.
+      # If the diff is null, that means the anvil state has not changed,
+      # i.e. the anvil state outdated and therefore this step will fail.
+      # Note: if the git diff fails to fetch the changes, then the step will also fail.
       - name: Check the anvil dump has changed
         working-directory: crates/contracts/anvil/contracts_deployed_anvil_state.json
         run: |
