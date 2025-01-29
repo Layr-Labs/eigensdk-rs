@@ -26,9 +26,10 @@ jobs:
       - name: Check the anvil dump has changed
         working-directory: crates/contracts/anvil/contracts_deployed_anvil_state.json
         run: |
+          # Run git diff to check all changes
+          git diff
           git diff state.json
           if [ $? -eq 0 ]; then
             echo "The anvil dump is outdated";
             exit 1
           fi
-          
