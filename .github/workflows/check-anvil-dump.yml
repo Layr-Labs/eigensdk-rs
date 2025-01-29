@@ -6,6 +6,11 @@ on:
 
   pull_request:
     branches: [ '**' ]
+    # This makes the job run only when any of these files has been changed
+    paths:
+      - 'crates/contracts/lib/**'
+      - 'crates/contracts/script/**'
+      - 'crates/contracts/src/**'
 
 jobs:
   check:
@@ -18,15 +23,7 @@ jobs:
           submodules: recursive
           fetch-depth: 0
 
-      - name: Check if the contracts changed
-        id: contracts-changed
-        uses: tj-actions/changed-files@v34
-        with:
-          files: [crates/contracts/lib/**, crates/contracts/script/**, crates/contracts/src/**]
-
-      # This step runs only when the contracts are changed
-      - name: Check if the anvil dump is updated
-        if: steps.contracts-changed.outputs.any_changed == 'true'
+      - name: Check the anvil dump has changed
         working-directory: crates/contracts/anvil/contracts_deployed_anvil_state.json
         run: |
           git diff state.json
