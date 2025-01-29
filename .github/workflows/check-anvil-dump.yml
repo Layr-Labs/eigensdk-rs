@@ -4,9 +4,10 @@ on:
   push:
     branches: [main]
     paths:
-      - crates/contracts/lib/**
-      - crates/contracts/script/**
-      - crates/contracts/src/**
+      - 'crates/contracts/lib/**'
+      - 'crates/contracts/script/**'
+      - 'crates/contracts/src/**'
+
   pull_request:
     branches: [ '**' ]
 
