@@ -13,19 +13,20 @@ import {IDelegationManager} from "@m2-eigenlayer/contracts/interfaces/IDelegatio
 import {IRewardsCoordinator} from "@m2-eigenlayer/contracts/interfaces/IRewardsCoordinator.sol";
 import {Quorum} from "@m2-eigenlayer-middleware/src/interfaces/IECDSAStakeRegistryEventsAndErrors.sol";
 import {UpgradeableProxyLib} from "./UpgradeableProxyLib.sol";
-import {CoreDeploymentLib} from "./CoreDeploymentLib.sol";
+import {M2CoreDeploymentLib} from "./M2CoreDeploymentLib.sol";
 import {Strings} from "@m2-openzeppelin/contracts/utils/Strings.sol";
 import {BLSApkRegistry} from "@m2-eigenlayer-middleware/src/BLSApkRegistry.sol";
 import {IndexRegistry} from "@m2-eigenlayer-middleware/src/IndexRegistry.sol";
+import {SocketRegistry,ISocketRegistry} from "@m2-eigenlayer-middleware/src/SocketRegistry.sol";
 import {StakeRegistry} from "@m2-eigenlayer-middleware/src/StakeRegistry.sol";
 import {IRegistryCoordinator} from "@m2-eigenlayer-middleware/src/interfaces/IRegistryCoordinator.sol";
 import {IServiceManager} from "@m2-eigenlayer-middleware/src/interfaces/IServiceManager.sol";
 import {IStrategy} from "@m2-eigenlayer/contracts/interfaces/IStrategyManager.sol";
 
 import {
-    RegistryCoordinator, IBLSApkRegistry, IIndexRegistry,SlashingRegistryCoordinator
+    RegistryCoordinator, IBLSApkRegistry, IIndexRegistry
 } from "@m2-eigenlayer-middleware/src/RegistryCoordinator.sol";
-import {IStakeRegistry, StakeType} from "@m2-eigenlayer-middleware/src/interfaces/IStakeRegistry.sol";
+import {IStakeRegistry} from "@m2-eigenlayer-middleware/src/interfaces/IStakeRegistry.sol";
 import {IAVSDirectory} from "@m2-eigenlayer/contracts/interfaces/IAVSDirectory.sol";
 import {PauserRegistry, IPauserRegistry} from "@m2-eigenlayer/contracts/permissions/PauserRegistry.sol";
 import {OperatorStateRetriever} from "@m2-eigenlayer-middleware/src/OperatorStateRetriever.sol";
@@ -33,11 +34,11 @@ import {Vm} from "forge-std/Vm.sol";
 import {IPauserRegistry} from "@m2-eigenlayer/contracts/interfaces/IPauserRegistry.sol";
 
 library M2MockAvsDeploymentLib {
-    using stdJson for *;
+   using stdJson for *;
     using Strings for *;
     using UpgradeableProxyLib for address;
 
-    Vm internal constant VM = Vm(address(uint160(uint256(keccak256("hevm cheat code")))));
+    Vm internal constant vm = Vm(address(uint160(uint256(keccak256("hevm cheat code")))));
 
     struct DeploymentData {
         address mockAvsServiceManager;
@@ -46,28 +47,29 @@ library M2MockAvsDeploymentLib {
         address blsapkRegistry;
         address indexRegistry;
         address stakeRegistry;
+        address socketRegistry;
         address strategy;
         address token;
-        address tokenRewards;
     }
 
     struct MockAvsSetupConfig {
         uint256 numQuorums;
         uint256[] operatorParams;
-        address operatorAddr;
-        address contractsRegistryAddr;
+        address operator_addr;
+        address contracts_registry_addr;
     }
 
     function deployContracts(
         address proxyAdmin,
-        CoreDeploymentLib.DeploymentData memory core,
+        M2CoreDeploymentLib.DeploymentData memory core,
         address strategy,
         MockAvsSetupConfig memory isConfig,
         address admin
     ) internal returns (DeploymentData memory) {
         /// read EL deployment address
-        CoreDeploymentLib.DeploymentData memory coredata =
+        M2CoreDeploymentLib.DeploymentData memory coredata =
             readCoreDeploymentJson("script/deployments/core/", block.chainid);
+        address avsdirectory = coredata.avsDirectory;
 
         DeploymentData memory result;
 
@@ -77,57 +79,47 @@ library M2MockAvsDeploymentLib {
         result.registryCoordinator = UpgradeableProxyLib.setUpEmptyProxy(proxyAdmin);
         result.blsapkRegistry = UpgradeableProxyLib.setUpEmptyProxy(proxyAdmin);
         result.indexRegistry = UpgradeableProxyLib.setUpEmptyProxy(proxyAdmin);
-        OperatorStateRetriever operatorStateRetriever = new OperatorStateRetriever();
         result.strategy = strategy;
-        result.operatorStateRetriever = address(operatorStateRetriever);
+        result.socketRegistry = UpgradeableProxyLib.setUpEmptyProxy(proxyAdmin);
+        result.operatorStateRetriever = address(new OperatorStateRetriever());
         // Deploy the implementation contracts, using the proxy contracts as inputs
         address stakeRegistryImpl = address(
             new StakeRegistry(
-                ISlashingRegistryCoordinator(result.registryCoordinator),
-                IDelegationManager(core.delegationManager),
-                IAVSDirectory(core.avsDirectory),
-                IAllocationManager(core.allocationManager)
+                IRegistryCoordinator(result.registryCoordinator), IDelegationManager(core.delegationManager)
             )
         );
+        UpgradeableProxyLib.upgrade(result.stakeRegistry, stakeRegistryImpl);
 
-        address blsApkRegistryImpl = address(new BLSApkRegistry(ISlashingRegistryCoordinator(result.registryCoordinator)));
-        address indexRegistryimpl = address(new IndexRegistry(ISlashingRegistryCoordinator(result.registryCoordinator)));
-        address registryCoordinatorImpl = address(
-            new RegistryCoordinator(
-                IServiceManager(result.mockAvsServiceManager),
-                IStakeRegistry(result.stakeRegistry),
-                IBLSApkRegistry(result.blsapkRegistry),
-                IIndexRegistry(result.indexRegistry),
-                IAllocationManager(core.allocationManager),
-                IPauserRegistry(core.pauserRegistry)
-            )
-        );
+        address blsApkRegistryImpl = address(new BLSApkRegistry(IRegistryCoordinator(result.registryCoordinator)));
+        UpgradeableProxyLib.upgrade(result.blsapkRegistry, blsApkRegistryImpl);
+
+        address indexRegistryimpl = address(new IndexRegistry(IRegistryCoordinator(result.registryCoordinator)));
+        UpgradeableProxyLib.upgrade(result.indexRegistry, indexRegistryimpl);
 
         address[] memory pausers = new address[](2);
         pausers[0] = admin;
         pausers[1] = admin;
+        PauserRegistry pausercontract = new PauserRegistry(pausers, admin);
 
         IStrategy[1] memory deployedStrategyArray = [IStrategy(strategy)];
         uint256 numStrategies = deployedStrategyArray.length;
 
         uint256 numQuorums = isConfig.numQuorums;
-        ISlashingRegistryCoordinator.OperatorSetParam[] memory quorumsOperatorSetParams =
-            new ISlashingRegistryCoordinator.OperatorSetParam[](numQuorums);
-        uint256[] memory operatorParams = isConfig.operatorParams;
+        IRegistryCoordinator.OperatorSetParam[] memory quorumsOperatorSetParams =
+            new IRegistryCoordinator.OperatorSetParam[](numQuorums);
+        uint256[] memory operator_params = isConfig.operatorParams;
 
         for (uint256 i = 0; i < numQuorums; i++) {
-            quorumsOperatorSetParams[i] = ISlashingRegistryCoordinator.OperatorSetParam({
-                maxOperatorCount: uint32(operatorParams[i]),
-                kickBIPsOfOperatorStake: uint16(operatorParams[i + 1]),
-                kickBIPsOfTotalStake: uint16(operatorParams[i + 2])
+            quorumsOperatorSetParams[i] = IRegistryCoordinator.OperatorSetParam({
+                maxOperatorCount: uint32(operator_params[i]),
+                kickBIPsOfOperatorStake: uint16(operator_params[i + 1]),
+                kickBIPsOfTotalStake: uint16(operator_params[i + 2])
             });
         }
         // set to 0 for every quorum
         uint96[] memory quorumsMinimumStake = new uint96[](numQuorums);
         IStakeRegistry.StrategyParams[][] memory quorumsStrategyParams =
             new IStakeRegistry.StrategyParams[][](numQuorums);
-        StakeType[] memory stakeTypes = new StakeType[](numQuorums);
-        uint32[] memory lookAheadPeriods = new uint32[](numQuorums);
         for (uint256 i = 0; i < numQuorums; i++) {
             quorumsStrategyParams[i] = new IStakeRegistry.StrategyParams[](numStrategies);
             for (uint256 j = 0; j < numStrategies; j++) {
@@ -139,73 +131,92 @@ library M2MockAvsDeploymentLib {
                     //    weight += uint96(sharesAmount * strategyAndMultiplier.multiplier / WEIGHTING_DIVISOR);
                     multiplier: 1 ether
                 });
-                stakeTypes[i] = StakeType.TOTAL_SLASHABLE;
-                lookAheadPeriods[i] = 1;
             }
         }
 
         bytes memory upgradeCall = abi.encodeCall(
-            SlashingRegistryCoordinator.initialize,
-            ( 
+            RegistryCoordinator.initialize,
+            (
                 admin,
                 admin,
                 admin,
+                pausercontract,
                 0,
-                result.mockAvsServiceManager
+                quorumsOperatorSetParams,
+                quorumsMinimumStake,
+                quorumsStrategyParams
+            )
+        );
+        console2.log("servvv");
+        console2.log(result.mockAvsServiceManager);
+        console2.log("stakerrr");
+        console2.log(result.stakeRegistry);
+        console2.log("blspapp");
+        console2.log(result.blsapkRegistry);
+        console2.log("indexreg");
+        console2.log(result.indexRegistry);
+        console2.log("socckk");
+        console2.log(result.socketRegistry);
+        address registryCoordinatorImpl = address(
+            new RegistryCoordinator(
+                IServiceManager(result.mockAvsServiceManager),
+                IStakeRegistry(result.stakeRegistry),
+                IBLSApkRegistry(result.blsapkRegistry),
+                IIndexRegistry(result.indexRegistry),
+                ISocketRegistry(result.socketRegistry)
             )
         );
 
-        UpgradeableProxyLib.upgrade(result.stakeRegistry, stakeRegistryImpl);
-        UpgradeableProxyLib.upgrade(result.blsapkRegistry, blsApkRegistryImpl);
-        UpgradeableProxyLib.upgrade(result.indexRegistry, indexRegistryimpl);
-        UpgradeableProxyLib.upgradeAndCall(result.registryCoordinator,registryCoordinatorImpl, upgradeCall);
+        address socketRegistryImpl = address(new SocketRegistry(IRegistryCoordinator(result.registryCoordinator)));
+        UpgradeableProxyLib.upgrade(result.socketRegistry, socketRegistryImpl);
+        UpgradeableProxyLib.upgradeAndCall(result.registryCoordinator, registryCoordinatorImpl, upgradeCall);
         MockAvsServiceManager mockAvsServiceManagerImpl = new MockAvsServiceManager(
-            ISlashingRegistryCoordinator(result.registryCoordinator),
-            IAVSDirectory(coredata.avsDirectory),
-            IRewardsCoordinator(coredata.rewardsCoordinator),
-            IAllocationManager(coredata.allocationManager),
-            IPermissionController(core.permissionController)
+            (IAVSDirectory(avsdirectory)),
+            IRegistryCoordinator(result.registryCoordinator),
+            IStakeRegistry(result.stakeRegistry),
+            core.rewardsCoordinator
         );
-        bytes memory mockavsmanagerupgradecall = abi.encodeCall(MockAvsServiceManager.initialize, admin);
-        UpgradeableProxyLib.upgradeAndCall(
-            result.mockAvsServiceManager, address(mockAvsServiceManagerImpl), mockavsmanagerupgradecall
+        UpgradeableProxyLib.upgrade(
+            result.mockAvsServiceManager, address(mockAvsServiceManagerImpl)
         );
-
+        MockAvsServiceManager(result.mockAvsServiceManager).initialize(admin);
         verify_deployment(result);
 
         return result;
     }
 
-    function readDeploymentJson(uint256 chainId) internal view returns (DeploymentData memory) {
+    function readDeploymentJson(uint256 chainId) internal returns (DeploymentData memory) {
         return readDeploymentJson("script/deployments/mock-avs/", chainId);
     }
 
-    function readMockAvsConfigJson(string memory directoryPath) internal view returns (MockAvsSetupConfig memory) {
+    function readMockAvsConfigJson(string memory directoryPath)
+        internal
+        returns (MockAvsSetupConfig memory)
+    {
         string memory fileName = string.concat(directoryPath, ".json");
-        require(VM.exists(fileName), "Deployment file does not exist");
-        string memory json = VM.readFile(fileName);
+        require(vm.exists(fileName), "Deployment file does not exist");
+        string memory json = vm.readFile(fileName);
 
         MockAvsSetupConfig memory data;
-        data.contractsRegistryAddr = json.readAddress(".contracts_registry_addr");
-        data.operatorAddr = json.readAddress(".operator_addr");
         data.numQuorums = json.readUint(".num_quorums");
         data.operatorParams = json.readUintArray(".operator_params");
+        data.contracts_registry_addr = json.readAddress(".contracts_registry_addr");
+        data.operator_addr = json.readAddress(".operator_addr");
         return data;
     }
 
     function readDeploymentJson(string memory directoryPath, uint256 chainId)
         internal
-        view
         returns (DeploymentData memory)
     {
-        string memory fileName = string.concat(directoryPath, VM.toString(chainId), ".json");
+        string memory fileName = string.concat(directoryPath, vm.toString(chainId), ".json");
 
-        require(VM.exists(fileName), "Deployment file does not exist");
+        require(vm.exists(fileName), "Deployment file does not exist");
 
-        string memory json = VM.readFile(fileName);
+        string memory json = vm.readFile(fileName);
 
         DeploymentData memory data;
-        data.mockAvsServiceManager = json.readAddress(".addresses.MockAvsServiceManager");
+        data.mockAvsServiceManager = json.readAddress(".addresses.mockAvsServiceManager");
         data.registryCoordinator = json.readAddress(".addresses.registryCoordinator");
         data.operatorStateRetriever = json.readAddress(".addresses.operatorStateRetriever");
         data.stakeRegistry = json.readAddress(".addresses.stakeRegistry");
@@ -225,12 +236,13 @@ library M2MockAvsDeploymentLib {
 
         string memory deploymentData = _generateDeploymentJson(data, proxyAdmin);
 
-        string memory fileName = string.concat(outputPath, VM.toString(chainId), ".json");
-        if (!VM.exists(outputPath)) {
-            VM.createDir(outputPath, true);
+        string memory fileName = string.concat(outputPath, vm.toString(chainId), ".json");
+        if (!vm.exists(outputPath)) {
+            vm.createDir(outputPath, true);
         }
 
-        VM.writeFile(fileName, deploymentData);
+        vm.writeFile(fileName, deploymentData);
+        console2.log("Deployment artifacts written to:", fileName);
     }
 
     function _generateDeploymentJson(DeploymentData memory data, address proxyAdmin)
@@ -240,9 +252,9 @@ library M2MockAvsDeploymentLib {
     {
         return string.concat(
             '{"lastUpdate":{"timestamp":"',
-            VM.toString(block.timestamp),
+            vm.toString(block.timestamp),
             '","block_number":"',
-            VM.toString(block.number),
+            vm.toString(block.number),
             '"},"addresses":',
             _generateContractsJson(data, proxyAdmin),
             "}"
@@ -257,9 +269,9 @@ library M2MockAvsDeploymentLib {
         return string.concat(
             '{"proxyAdmin":"',
             proxyAdmin.toHexString(),
-            '","MockAvsServiceManager":"',
+            '","mockAvsServiceManager":"',
             data.mockAvsServiceManager.toHexString(),
-            '","MockAvsServiceManagerImpl":"',
+            '","mockAvsServiceManagerImpl":"',
             data.mockAvsServiceManager.getImplementation().toHexString(),
             '","registryCoordinator":"',
             data.registryCoordinator.toHexString(),
@@ -275,46 +287,41 @@ library M2MockAvsDeploymentLib {
             data.strategy.toHexString(),
             '","token":"',
             data.token.toHexString(),
-            '","tokenRewards":"',
-            data.tokenRewards.toHexString(),
             '"}'
         );
     }
 
     function readCoreDeploymentJson(string memory directoryPath, uint256 chainId)
         internal
-        view
-        returns (CoreDeploymentLib.DeploymentData memory)
+        returns (M2CoreDeploymentLib.DeploymentData memory)
     {
-        return readCoreDeploymentJson(directoryPath, string.concat(VM.toString(chainId), ".json"));
+        return readCoreDeploymentJson(directoryPath, string.concat(vm.toString(chainId), ".json"));
     }
 
     function readCoreDeploymentJson(string memory path, string memory fileName)
         internal
-        view
-        returns (CoreDeploymentLib.DeploymentData memory)
+        returns (M2CoreDeploymentLib.DeploymentData memory)
     {
         string memory pathToFile = string.concat(path, fileName);
 
-        require(VM.exists(pathToFile), "Deployment file does not exist");
+        require(vm.exists(pathToFile), "Deployment file does not exist");
 
-        string memory json = VM.readFile(pathToFile);
+        string memory json = vm.readFile(pathToFile);
 
-        CoreDeploymentLib.DeploymentData memory data;
+        M2CoreDeploymentLib.DeploymentData memory data;
         data.strategyFactory = json.readAddress(".addresses.strategyFactory");
         data.strategyManager = json.readAddress(".addresses.strategyManager");
         data.eigenPodManager = json.readAddress(".addresses.eigenPodManager");
         data.delegationManager = json.readAddress(".addresses.delegation");
         data.avsDirectory = json.readAddress(".addresses.avsDirectory");
-        data.allocationManager = json.readAddress(".addresses.allocationManager");
 
         return data;
     }
 
     function verify_deployment(DeploymentData memory result) internal view {
-        IBLSApkRegistry blsapkregistry = ISlashingRegistryCoordinator(result.registryCoordinator).blsApkRegistry();
+        IBLSApkRegistry blsapkregistry = IRegistryCoordinator(result.registryCoordinator).blsApkRegistry();
         require(address(blsapkregistry) != address(0));
-        IStakeRegistry stakeregistry = ISlashingRegistryCoordinator(result.registryCoordinator).stakeRegistry();
+        IStakeRegistry stakeregistry = IRegistryCoordinator(result.registryCoordinator).stakeRegistry();
         require(address(stakeregistry) != address(0));
         IDelegationManager delegationmanager = IStakeRegistry(address(stakeregistry)).delegation();
         require(address(delegationmanager) != address(0));
