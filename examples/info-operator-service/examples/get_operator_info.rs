@@ -114,7 +114,6 @@ pub async fn register_operator(pvt_key: &str, bls_key: &str, http_endpoint: &str
         http_endpoint.to_string(),
         pvt_key.to_string(),
         get_registry_coordinator_address(http_endpoint.to_owned()).await,
-        rewards_coordinator_address,
         get_operator_state_retriever_address(http_endpoint.to_owned()).await,
     )
     .await

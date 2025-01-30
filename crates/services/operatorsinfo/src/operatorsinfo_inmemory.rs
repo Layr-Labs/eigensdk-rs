@@ -678,7 +678,6 @@ mod tests {
             http_endpoint.to_string(),
             pvt_key.to_string(),
             get_registry_coordinator_address(http_endpoint.clone()).await,
-            rewards_coordinator_address,
             get_operator_state_retriever_address(http_endpoint.clone()).await,
         )
         .await

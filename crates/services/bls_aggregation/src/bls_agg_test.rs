@@ -14,7 +14,6 @@ pub mod integration_test {
     use eigen_logging::get_test_logger;
     use eigen_services_avsregistry::chaincaller::AvsRegistryServiceChainCaller;
     use eigen_services_operatorsinfo::operatorsinfo_inmemory::OperatorInfoServiceInMemory;
-    use eigen_testing_utils::anvil_constants::get_rewards_coordinator_address;
     use eigen_testing_utils::{
         anvil::{mine_anvil_blocks, start_anvil_container},
         anvil_constants::{
@@ -128,15 +127,12 @@ pub mod integration_test {
         )
         .await
         .unwrap();
-        let rewards_coordinator_address =
-            get_rewards_coordinator_address(http_endpoint.clone()).await;
 
         let avs_writer = AvsRegistryChainWriter::build_avs_registry_chain_writer(
             get_test_logger(),
             http_endpoint.clone(),
             PRIVATE_KEY_1.to_string(),
             registry_coordinator_address,
-            rewards_coordinator_address,
             operator_state_retriever_address,
         )
         .await
@@ -311,14 +307,11 @@ pub mod integration_test {
         .await
         .unwrap();
 
-        let rewards_coordinator_address =
-            get_rewards_coordinator_address(http_endpoint.clone()).await;
         let avs_writer = AvsRegistryChainWriter::build_avs_registry_chain_writer(
             get_test_logger(),
             http_endpoint.clone(),
             PRIVATE_KEY_1.to_string(),
             registry_coordinator_address,
-            rewards_coordinator_address,
             operator_state_retriever_address,
         )
         .await
@@ -357,15 +350,11 @@ pub mod integration_test {
             .unwrap();
         wait_transaction(&http_endpoint, tx_hash).await.unwrap();
 
-        let rewards_coordinator_address =
-            get_rewards_coordinator_address(http_endpoint.clone()).await;
-
         let avs_writer = AvsRegistryChainWriter::build_avs_registry_chain_writer(
             get_test_logger(),
             http_endpoint.clone(),
             PRIVATE_KEY_2.to_string(),
             registry_coordinator_address,
-            rewards_coordinator_address,
             operator_state_retriever_address,
         )
         .await
@@ -541,15 +530,11 @@ pub mod integration_test {
         .await
         .unwrap();
 
-        let rewards_coordinator_address =
-            get_rewards_coordinator_address(http_endpoint.clone()).await;
-
         let avs_writer = AvsRegistryChainWriter::build_avs_registry_chain_writer(
             get_test_logger(),
             http_endpoint.clone(),
             PRIVATE_KEY_1.to_string(),
             registry_coordinator_address,
-            rewards_coordinator_address,
             operator_state_retriever_address,
         )
         .await
@@ -589,7 +574,6 @@ pub mod integration_test {
             http_endpoint.clone(),
             PRIVATE_KEY_2.to_string(),
             registry_coordinator_address,
-            rewards_coordinator_address,
             operator_state_retriever_address,
         )
         .await
@@ -755,15 +739,11 @@ pub mod integration_test {
         .await
         .unwrap();
 
-        let rewards_coordinator_address =
-            get_rewards_coordinator_address(http_endpoint.clone()).await;
-
         let avs_writer = AvsRegistryChainWriter::build_avs_registry_chain_writer(
             get_test_logger(),
             http_endpoint.to_string(),
             PRIVATE_KEY_1.to_string(),
             registry_coordinator_address,
-            rewards_coordinator_address,
             operator_state_retriever_address,
         )
         .await
@@ -803,7 +783,6 @@ pub mod integration_test {
             http_endpoint.to_string(),
             PRIVATE_KEY_2.to_string(),
             registry_coordinator_address,
-            rewards_coordinator_address,
             operator_state_retriever_address,
         )
         .await
@@ -962,15 +941,12 @@ pub mod integration_test {
         )
         .await
         .unwrap();
-        let rewards_coordinator_address =
-            get_rewards_coordinator_address(http_endpoint.clone()).await;
 
         let avs_writer = AvsRegistryChainWriter::build_avs_registry_chain_writer(
             get_test_logger(),
             http_endpoint.to_string(),
             PRIVATE_KEY_1.to_string(),
             registry_coordinator_address,
-            rewards_coordinator_address,
             operator_state_retriever_address,
         )
         .await
