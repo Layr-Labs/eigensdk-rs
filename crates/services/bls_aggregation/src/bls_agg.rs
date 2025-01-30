@@ -58,7 +58,7 @@ impl TaskMetadata {
     /// * `time_to_expiry` - The time until the task expires
     ///
     /// Use [`with_window_duration`](Self::with_window_duration) to set the window duration.
-    /// If the window duration is not set, it will default Duration::ZERO.
+    /// If the window duration is not set, it will default to [`Duration::ZERO`].
     ///
     /// # Returns a new instance of the TaskMetadata
     pub fn new(
