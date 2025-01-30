@@ -1,0 +1,42 @@
+[package]
+name = "eigen-operator"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+repository.workspace = true
+description = "eigen layer operator"
+
+[lints]
+workspace = true
+
+[dependencies]
+alloy.workspace = true
+alloy-provider.workspace = true
+thiserror.workspace = true
+futures-util.workspace = true
+serde.workspace = true
+
+# eigen-rs
+eigen-aggregator.workspace = true
+eigen-client-avsregistry.workspace = true
+eigen-config.workspace = true
+eigen-crypto-bls.workspace = true
+eigen-types.workspace = true
+
+rust-bls-bn254.workspace = true
+
+reqwest.workspace = true
+
+hex = { version = "0.4.3", features = ["alloc"] }
+tokio.workspace = true
+serde_json.workspace = true
+tracing.workspace = true
+rand_core.workspace = true
+eigen-logging.workspace = true
+eigen-crypto-bn254.workspace = true
+eigen-utils.workspace = true
+url.workspace = true
+
+[features]
+default = []
+integration_tests = []

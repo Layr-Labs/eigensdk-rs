@@ -2676,6 +2676,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "eigen-config"
+version = "0.1.2"
+dependencies = [
+ "hex",
+ "ruint",
+ "serde",
+ "tempfile",
+ "thiserror 1.0.69",
+]
+
+[[package]]
 name = "eigen-crypto-bls"
 version = "0.1.2"
 dependencies = [
@@ -2771,6 +2782,33 @@ dependencies = [
  "thiserror 1.0.69",
  "tokio",
  "tracing",
+]
+
+[[package]]
+name = "eigen-operator"
+version = "0.1.2"
+dependencies = [
+ "alloy",
+ "alloy-provider",
+ "eigen-aggregator",
+ "eigen-client-avsregistry",
+ "eigen-config",
+ "eigen-crypto-bls",
+ "eigen-crypto-bn254",
+ "eigen-logging",
+ "eigen-types",
+ "eigen-utils",
+ "futures-util",
+ "hex",
+ "rand_core",
+ "reqwest 0.12.12",
+ "rust-bls-bn254",
+ "serde",
+ "serde_json",
+ "thiserror 1.0.69",
+ "tokio",
+ "tracing",
+ "url",
 ]
 
 [[package]]

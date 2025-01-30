@@ -6,6 +6,7 @@ members = [
     "crates/chainio/clients/elcontracts/",
     "crates/chainio/clients/eth/",
     "crates/chainio/clients/fireblocks/",
+    "crates/config/",
     "crates/crypto/bls/",
     "crates/crypto/bn254/",
     "crates/eigen-cli/",
@@ -13,6 +14,7 @@ members = [
     "crates/metrics/",
     "crates/metrics/collectors/economic/",
     "crates/metrics/collectors/rpc_calls/",
+    "crates/operator/",
     "crates/services/avsregistry/",
     "crates/services/bls_aggregation/",
     "crates/services/operatorsinfo/",
@@ -67,16 +69,19 @@ aws-config = "1.5.9"
 aws-sdk-kms = "1.49.0"
 backoff = { version = "0.4.0", features = ["futures", "tokio"] }
 clap = { version = "4.5.20", features = ["derive"] }
+eigen-aggregator = { path = "crates/aggregator/" }
 eigen-common = { path = "crates/common/" }
 eigen-client-elcontracts = { path = "crates/chainio/clients/elcontracts" }
 eigen-client-eth = { path = "crates/chainio/clients/eth" }
 eigen-client-fireblocks = { path = "crates/chainio/clients/fireblocks" }
+eigen-config = { path = "crates/config/" }
 eigen-crypto-bls = { path = "crates/crypto/bls/" }
 eigen-crypto-bn254 = { path = "crates/crypto/bn254/" }
 eigen-logging = { path = "crates/logging/" }
 eigen-metrics = { path = "crates/metrics/" }
 eigen-metrics-collectors-economic = { path = "crates/metrics/collectors/economic" }
 eigen-metrics-collectors-rpc-calls = { path = "crates/metrics/collectors/rpc_calls" }
+eigen-operator = { path = "crates/operator/" }
 eigen-services-avsregistry = { path = "crates/services/avsregistry" }
 eigen-services-blsaggregation = { path = "crates/services/bls_aggregation" }
 eigen-services-operatorsinfo = { path = "crates/services/operatorsinfo" }
