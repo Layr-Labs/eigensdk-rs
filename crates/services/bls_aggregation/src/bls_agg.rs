@@ -31,29 +31,30 @@ pub struct AggregatedOperators {
     pub signers_operator_ids_set: HashMap<FixedBytes<32>, bool>,
 }
 
+/// Contains the signature of the task response
 #[derive(Clone)]
 pub struct TaskSignature {
-    // The index of the task
+    // Index of the task
     task_index: TaskIndex,
-    // The digest of the task response
+    // Digest of the task response
     task_response_digest: TaskResponseDigest,
-    // The BLS signature of the task response
+    // BLS signature of the task response
     bls_signature: Signature,
-    // The operator ID of the operator that signed the task response
+    // Operator ID of the operator that signed the task response
     operator_id: FixedBytes<32>,
 }
 
 impl TaskSignature {
-    /// Creates a new instance of the TaskSignature
+    /// Creates a new instance of [`TaskSignature``]
     ///
     /// # Arguments
-    /// * `task_index` - The index of the task
-    /// * `task_response_digest` - The digest of the task response
-    /// * `bls_signature` - The BLS signature of the task response
-    /// * `operator_id` - The operator ID of the operator that signed the task response
+    /// * `task_index` - index of the task
+    /// * `task_response_digest` - digest of the task response
+    /// * `bls_signature` - bls signature of the task response
+    /// * `operator_id` - operator ID of the operator that signed the task response
     ///
     /// # Returns
-    /// The TaskSignature instance
+    /// [`TaskSignature`] instance
     pub fn new(
         task_index: TaskIndex,
         task_response_digest: TaskResponseDigest,
