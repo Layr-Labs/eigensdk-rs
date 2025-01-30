@@ -53,10 +53,10 @@ impl TaskMetadata {
     ///
     /// # Arguments
     /// * `task_index` - index of the task
-    /// * `task_created_block` - The block number at which the task was created
-    /// * `quorum_numbers` - The quorum numbers which should respond to the task
-    /// * `quorum_threshold_percentages` - The threshold percentages for each quorum
-    /// * `time_to_expiry` - The time until the task expires
+    /// * `task_created_block` - block number at which the task was created
+    /// * `quorum_numbers` - quorum numbers which should respond to the task
+    /// * `quorum_threshold_percentages` - threshold percentages for each quorum
+    /// * `time_to_expiry` - time until the task expires
     ///
     /// Use [`with_window_duration`](Self::with_window_duration) to set the window duration.
     /// If the window duration is not set, it will default to [`Duration::ZERO`].
