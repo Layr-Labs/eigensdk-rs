@@ -1,6 +1,5 @@
 use alloy::transports::{RpcError, TransportErrorKind};
 use eigen_client_avsregistry::error::AvsRegistryError;
-use eigen_crypto_bls::error::BlsError;
 use eigen_services_blsaggregation::bls_aggregation_service_error::BlsAggregationServiceError;
 use eigen_services_operatorsinfo::operatorsinfo_inmemory::OperatorInfoServiceError;
 use thiserror::Error;
@@ -13,10 +12,6 @@ pub enum AggregatorError {
     BlsAggregationServiceError(#[from] BlsAggregationServiceError),
 
     /// Task Response not found
-    #[error("Task Response not found")]
-    TaskResponseNotFound,
-
-    /// Task Response not found
     #[error("Task panicked or got cancelled")]
     JoinError,
 
@@ -27,10 +22,6 @@ pub enum AggregatorError {
     /// Build avs registry chain reader
     #[error("Failed to build avs registry chain reader ")]
     BuildAvsRegistryChainReader(#[from] AvsRegistryError),
-
-    /// Bls crate error
-    #[error("Bls Crate Error SDK")]
-    Bls(#[from] BlsError),
 
     /// alloy rpc error
     #[error("Alloy rpc error")]
