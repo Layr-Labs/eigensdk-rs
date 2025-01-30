@@ -5,19 +5,14 @@ use alloy_signer_local::PrivateKeySigner;
 use eigen_client_avsregistry::writer::AvsRegistryChainWriter;
 use eigen_client_elcontracts::reader::ELChainReader;
 use eigen_client_elcontracts::writer::ELChainWriter;
-use eigen_common::get_provider;
 use eigen_crypto_bls::BlsKeyPair;
 use eigen_logging::get_test_logger;
 use eigen_testing_utils::anvil_constants::get_registry_coordinator_address;
-use eigen_testing_utils::{
-    anvil_constants::get_allocation_manager_address,
-    m2_holesky_constants::{
-        AVS_DIRECTORY_ADDRESS, DELEGATION_MANAGER_ADDRESS, OPERATOR_STATE_RETRIEVER,
-        REGISTRY_COORDINATOR, REWARDS_COORDINATOR, SLASHER_ADDRESS, STRATEGY_MANAGER_ADDRESS,
-    },
+use eigen_testing_utils::m2_holesky_constants::{
+    AVS_DIRECTORY_ADDRESS, DELEGATION_MANAGER_ADDRESS, OPERATOR_STATE_RETRIEVER,
+    REGISTRY_COORDINATOR, REWARDS_COORDINATOR, STRATEGY_MANAGER_ADDRESS,
 };
 use eigen_types::operator::Operator;
-use eigen_utils::core::delegationmanager::DelegationManager;
 use eyre::Result;
 use lazy_static::lazy_static;
 use std::str::FromStr;
@@ -65,9 +60,6 @@ async fn main() -> Result<()> {
     }
     let quorum_nums = Bytes::from([0x01]);
 
-    let delegation_manager_contract =
-        DelegationManager::new(DELEGATION_MANAGER_ADDRESS, get_provider(holesky_provider));
-
     // A new ElChainReader instance
     let el_chain_reader = ELChainReader::new(
         get_test_logger().clone(),
@@ -79,7 +71,6 @@ async fn main() -> Result<()> {
         holesky_provider.to_string(),
     );
 
-    let allocation_manager = get_allocation_manager_address(holesky_provider.to_string()).await;
     let registry_coordinator = get_registry_coordinator_address(holesky_provider.to_string()).await;
 
     // A new ElChainWriter instance
