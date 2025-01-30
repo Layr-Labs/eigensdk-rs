@@ -3,7 +3,6 @@ use eigen_client_avsregistry::error::AvsRegistryError;
 use eigen_crypto_bls::error::BlsError;
 use eigen_services_blsaggregation::bls_aggregation_service_error::BlsAggregationServiceError;
 use eigen_services_operatorsinfo::operatorsinfo_inmemory::OperatorInfoServiceError;
-use jsonrpc_core::serde_json::Error;
 use thiserror::Error;
 
 /// Error returned by chainio
@@ -36,10 +35,6 @@ pub enum AggregatorError {
     /// alloy rpc error
     #[error("Alloy rpc error")]
     AlloyRpc(#[from] RpcError<TransportErrorKind>),
-
-    /// serde json error
-    #[error("Serde json error")]
-    SerdeError(#[from] Error),
 
     /// IO error
     #[error("IO error")]
