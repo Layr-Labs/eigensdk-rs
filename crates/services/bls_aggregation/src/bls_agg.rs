@@ -51,7 +51,7 @@ impl TaskMetadata {
     /// Creates a new instance of [`TaskMetadata`]
     ///
     /// # Arguments
-    /// * `task_index` - The index of the task
+    /// * `task_index` - index of the task
     /// * `task_created_block` - The block number at which the task was created
     /// * `quorum_numbers` - The quorum numbers which should respond to the task
     /// * `quorum_threshold_percentages` - The threshold percentages for each quorum
