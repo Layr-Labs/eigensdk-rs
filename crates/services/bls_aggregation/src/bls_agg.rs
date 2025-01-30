@@ -33,13 +33,27 @@ pub struct AggregatedOperators {
 
 #[derive(Clone)]
 pub struct TaskSignature {
+    // The index of the task
     task_index: TaskIndex,
+    // The digest of the task response
     task_response_digest: TaskResponseDigest,
+    // The BLS signature of the task response
     bls_signature: Signature,
+    // The operator ID of the operator that signed the task response
     operator_id: FixedBytes<32>,
 }
 
 impl TaskSignature {
+    /// Creates a new instance of the TaskSignature
+    ///
+    /// # Arguments
+    /// * `task_index` - The index of the task
+    /// * `task_response_digest` - The digest of the task response
+    /// * `bls_signature` - The BLS signature of the task response
+    /// * `operator_id` - The operator ID of the operator that signed the task response
+    ///
+    /// # Returns
+    /// The TaskSignature instance
     pub fn new(
         task_index: TaskIndex,
         task_response_digest: TaskResponseDigest,
@@ -197,10 +211,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
     ///
     /// # Arguments
     ///
-    /// * `task_index` - The index of the task
-    /// * `task_response_digest` - The digest of the task response
-    /// * `bls_signature` - The BLS signature of the task response
-    /// * `operator_id` - The operator ID of the operator that signed the task response
+    /// * `task_signature` - The signed task response
     ///
     /// # Errors
     ///
@@ -210,10 +221,6 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
     /// * `SignatureVerificationError` - If the signature verification fails.
     pub async fn process_new_signature(
         &self,
-        // task_index: TaskIndex,
-        // task_response_digest: TaskResponseDigest,
-        // bls_signature: Signature,
-        // operator_id: FixedBytes<32>,
         task_signature: TaskSignature,
     ) -> Result<(), BlsAggregationServiceError> {
         let (tx, rx) = mpsc::channel(1);
