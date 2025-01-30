@@ -51,7 +51,7 @@ pub async fn start_m2_anvil_container() -> (ContainerAsync<GenericImage>, String
         .with_exposed_port(8545.tcp())
         .with_mount(testcontainers::core::Mount::bind_mount(
             absolute_path_str,
-            "//dump_state.json",
+            "/dump_state.json",
         ))
         .with_cmd([
             "--host",
@@ -89,7 +89,7 @@ pub async fn start_anvil_container() -> (ContainerAsync<GenericImage>, String, S
     let container = GenericImage::new(ANVIL_IMAGE, ANVIL_TAG)
         .with_entrypoint("anvil")
         .with_wait_for(WaitFor::message_on_stdout("Listening on"))
-        .with_exposed_port(8545.tcp())
+        .with_exposed_port(8546.tcp())
         .with_mount(testcontainers::core::Mount::bind_mount(
             absolute_path_str,
             "/dump_state.json",
