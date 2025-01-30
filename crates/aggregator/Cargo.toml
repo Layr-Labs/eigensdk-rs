@@ -1,0 +1,32 @@
+[package]
+name = "eigen-aggregator"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+repository.workspace = true
+license-file.workspace = true
+description = "eigen layer aggregator"
+
+[lints]
+workspace = true
+
+[dependencies]
+alloy.workspace = true
+eigen-types.workspace = true
+serde.workspace = true
+eigen-crypto-bls.workspace = true
+eigen-common.workspace = true
+eigen-services-operatorsinfo.workspace = true
+eigen-logging.workspace = true
+eigen-client-avsregistry.workspace = true
+eigen-services-avsregistry.workspace = true
+eigen-services-blsaggregation.workspace = true
+eigen-utils.workspace = true
+tracing.workspace = true
+tokio.workspace = true
+thiserror.workspace = true
+futures-util.workspace = true
+
+jsonrpc-core = "18.0.0"
+jsonrpc-http-server = "18.0.0"
+tokio-util = "0.7.11"
