@@ -1,5 +1,6 @@
 [workspace]
 members = [
+    "crates/aggregator/",
     "crates/common/",
     "crates/chainio/clients/avsregistry/",
     "crates/chainio/clients/elcontracts/",
