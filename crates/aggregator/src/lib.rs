@@ -159,10 +159,12 @@ impl<TP: TaskProcessor + Send + 'static> Aggregator<TP> {
                     let Params::Map(map) = params else {
                         return Err(Error::invalid_params("Expected a map"));
                     };
+                    let params = map
+                        .get("params")
+                        .ok_or(Error::invalid_params("Expected params"))?;
                     let signed_task_response: SignedTaskResponse<TP::TaskResponse> =
-                        serde_json::from_value(map["params"].clone()).expect(
-                            "Error in adding method in io handler for start_server function",
-                        );
+                        serde_json::from_value(params.clone())
+                            .map_err(|err| Error::invalid_params(err.to_string()))?;
                     // Call the process_signed_task_response function
                     let result = aggregator
                         .lock()
@@ -171,7 +173,7 @@ impl<TP: TaskProcessor + Send + 'static> Aggregator<TP> {
                         .await;
                     match result {
                         Ok(_) => Ok(Value::Bool(true)),
-                        Err(_) => Err(Error::invalid_params("invalid")),
+                        Err(_) => Err(Error::invalid_params("Invalid task response")),
                     }
                 }
             }
