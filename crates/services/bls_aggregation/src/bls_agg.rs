@@ -132,7 +132,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
     ///
     /// # Arguments
     ///
-    /// * `TaskMetadata` - The metadata of the task
+    /// * `metadata` - task metadata
     ///
     /// # Error
     ///
