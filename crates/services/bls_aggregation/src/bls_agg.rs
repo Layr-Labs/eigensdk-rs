@@ -312,7 +312,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
     ///
     /// # Arguments
     ///
-    /// * `TaskMetadata` - The metadata of the task
+    /// * `metadata` - task metadata
     /// * `aggregated_response_sender` - The sender channel for the aggregated responses
     /// * `signatures_rx` - The receiver channel for the signed task responses
     /// * `logger` - The logger to log messages.
