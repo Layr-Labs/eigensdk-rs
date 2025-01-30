@@ -31,6 +31,7 @@ pub struct AggregatedOperators {
     pub signers_operator_ids_set: HashMap<FixedBytes<32>, bool>,
 }
 
+/// Contains the metadata required to initialize a new task.
 #[derive(Clone)]
 pub struct TaskMetadata {
     /// Index of the task
