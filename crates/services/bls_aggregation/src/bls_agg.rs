@@ -51,8 +51,8 @@ impl TaskMetadata {
     /// * `quorum_threshold_percentages` - The quorum threshold percentages for the task
     /// * `time_to_expiry` - The timeout for the task reader to expire
     ///
-    /// If the window duration is not set, it will default to None and the default value will be Duration::ZERO.
     /// Use the `with_window_duration` method to set the window duration.
+    /// If the window duration is not set, it will default to None and the value will be Duration::ZERO.
     ///
     /// # Returns a new instance of the TaskMetadata
     pub fn new(
