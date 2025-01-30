@@ -51,7 +51,7 @@ pub async fn start_m2_anvil_container() -> (ContainerAsync<GenericImage>, String
         .with_exposed_port(8545.tcp())
         .with_mount(testcontainers::core::Mount::bind_mount(
             absolute_path_str,
-            "/dump_state.json",
+            "/m2_contracts_deployed_anvil_state.json",
         ))
         .with_cmd([
             "--host",
@@ -98,7 +98,7 @@ pub async fn start_anvil_container() -> (ContainerAsync<GenericImage>, String, S
             "--host",
             "0.0.0.0",
             "--load-state",
-            "/dump_state.json",
+            "/operatorset_contracts_deployed_anvil_state.json",
             "--base-fee",
             "0",
             "--gas-price",
