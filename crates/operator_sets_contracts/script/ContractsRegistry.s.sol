@@ -3,8 +3,8 @@ pragma solidity ^0.8.12;
 
 import {Script} from "forge-std/Script.sol";
 
-import {M2CoreDeploymentLib} from "./utils/M2CoreDeploymentLib.sol";
-import {M2MockAvsDeploymentLib} from "./utils/M2MockAvsDeploymentLib.sol";
+import {CoreDeploymentLib} from "./utils/CoreDeploymentLib.sol";
+import {MockAvsDeploymentLib} from "./utils/MockAvsDeploymentLib.sol";
 import {WriteToContractsRegistryLib} from "./utils/WriteToContractsRegistryLib.sol";
 
 contract ContractsRegistry is Script {
