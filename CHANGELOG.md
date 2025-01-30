@@ -18,7 +18,31 @@ Each version will have a separate `Breaking Changes` section as well. To describ
 * Fixed the rewardsv2 bindings version in readme to 0.5.4 in [#246](https://github.com/Layr-Labs/eigensdk-rs/pull/246).
 
 ### Breaking changes
-- fix: use rewards coordinator on get operator avs/pi split methods by @maximopalopoli in https://github.com/Layr-Labs/eigensdk-rs/pull/250
+* fix: use rewards coordinator on get operator avs/pi split methods by @maximopalopoli in https://github.com/Layr-Labs/eigensdk-rs/pull/250
+  * This PR changes `ChainReader::new` parameters, since now receives the address of the rewards coordinator. 
+    
+    Previously was generated this way:
+    ``` Rust
+    let el_chain_reader = ELChainReader::new(
+        logger,
+        SLASHER_ADDRESS,
+        DELEGATION_MANAGER_ADDRESS,
+        AVS_DIRECTORY_ADDRESS,
+        provider_url,
+    );
+    ```
+    Now, is generated this way:
+    ``` Rust
+    let el_chain_reader = ELChainReader::new(
+        logger,
+        SLASHER_ADDRESS,
+        DELEGATION_MANAGER_ADDRESS,
+        REWARDS_COORDINATOR,
+        AVS_DIRECTORY_ADDRESS,
+        provider_url,
+    );
+    ```
+
 ### Removed
 ### Other Changes
 
