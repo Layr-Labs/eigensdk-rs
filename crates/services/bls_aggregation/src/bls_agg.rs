@@ -162,14 +162,9 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
             // Process each signed response here
             let _ = BlsAggregatorService::<A>::single_task_aggregator(
                 avs_registry_service,
-                metadata.task_index,
-                metadata.task_created_block,
-                metadata.quorum_numbers,
-                metadata.quorum_threshold_percentages,
-                metadata.time_to_expiry,
+                metadata,
                 aggregated_response_sender,
                 signatures_rx,
-                metadata.window_duration.unwrap_or(Duration::ZERO),
                 logger,
             )
             .await
@@ -324,31 +319,27 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
     #[allow(clippy::too_many_arguments)]
     pub async fn single_task_aggregator(
         avs_registry_service: A,
-        task_index: TaskIndex,
-        task_created_block: u32,
-        quorum_nums: Vec<u8>,
-        quorum_threshold_percentages: QuorumThresholdPercentages,
-        time_to_expiry: Duration,
+        metadata: TaskMetadata,
         aggregated_response_sender: UnboundedSender<
             Result<BlsAggregationServiceResponse, BlsAggregationServiceError>,
         >,
         signatures_rx: UnboundedReceiver<SignedTaskResponseDigest>,
-        window_duration: Duration,
         logger: SharedLogger,
     ) -> Result<(), BlsAggregationServiceError> {
-        let quorum_threshold_percentage_map: HashMap<u8, u8> = quorum_nums
+        let quorum_threshold_percentage_map: HashMap<u8, u8> = metadata
+            .quorum_numbers
             .iter()
             .enumerate()
-            .map(|(i, quorum_number)| (*quorum_number, quorum_threshold_percentages[i]))
+            .map(|(i, quorum_number)| (*quorum_number, metadata.quorum_threshold_percentages[i]))
             .collect();
 
         let operator_state_avs = avs_registry_service
-            .get_operators_avs_state_at_block(task_created_block, &quorum_nums)
+            .get_operators_avs_state_at_block(metadata.task_created_block, &metadata.quorum_numbers)
             .await
             .map_err(|_| BlsAggregationServiceError::RegistryError)?;
 
         let quorums_avs_state = avs_registry_service
-            .get_quorums_avs_state_at_block(&quorum_nums, task_created_block)
+            .get_quorums_avs_state_at_block(&metadata.quorum_numbers, metadata.task_created_block)
             .await
             .map_err(|_| BlsAggregationServiceError::RegistryError)?;
         let total_stake_per_quorum: HashMap<_, _> = quorums_avs_state
@@ -356,7 +347,8 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
             .map(|(k, v)| (*k, v.total_stake))
             .collect();
 
-        let quorum_apks_g1: Vec<BlsG1Point> = quorum_nums
+        let quorum_apks_g1: Vec<BlsG1Point> = metadata
+            .quorum_numbers
             .iter()
             .filter_map(|quorum_num| quorums_avs_state.get(quorum_num))
             .map(|avs_state| avs_state.agg_pub_key_g1.clone())
@@ -364,17 +356,17 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
 
         Self::loop_task_aggregator(
             avs_registry_service,
-            task_index,
-            task_created_block,
-            time_to_expiry,
+            metadata.task_index,
+            metadata.task_created_block,
+            metadata.time_to_expiry,
             aggregated_response_sender,
             signatures_rx,
             operator_state_avs,
             total_stake_per_quorum,
             quorum_threshold_percentage_map,
             quorum_apks_g1,
-            quorum_nums,
-            window_duration,
+            metadata.quorum_numbers,
+            metadata.window_duration.unwrap_or(Duration::ZERO),
             logger,
         )
         .await
