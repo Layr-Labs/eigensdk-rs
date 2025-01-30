@@ -145,7 +145,8 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         let signatures_rx = {
             let mut task_channel = self.signed_task_response.write();
 
-            if task_channel.contains_key(&metadata.task_index) {
+            let task_index = &metadata.task_index;
+            if task_channel.contains_key(task_index) {
                 return Err(BlsAggregationServiceError::DuplicateTaskIndex);
             }
 
