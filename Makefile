@@ -6,16 +6,16 @@ start-anvil-chain-with-contracts-deployed: ##
 	./crates/contracts/anvil/start-anvil-chain-with-el-and-avs-deployed.sh
 
 deploy-eigenlayer:
-	./crates/contracts/anvil/deploy-eigenlayer.sh
+	./crates/operator_sets_contracts/anvil/deploy-eigenlayer.sh
 
 deploy-avs:
-	./crates/contracts/anvil/deploy-avs.sh
+	./crates/operator_sets_contracts/anvil/deploy-avs.sh
 
 deploy-m2-eigenlayer:
-	./crates/contracts/anvil/deploy-m2-eigenlayer.sh
+	./crates/m2_contracts/anvil/deploy-m2-eigenlayer.sh
 
 deploy-m2-avs:
-	./crates/contracts/anvil/deploy-m2-avs.sh
+	./crates/m2_contracts/anvil/deploy-m2-avs.sh
 
 deploy: deploy-eigenlayer deploy-avs ##
 
