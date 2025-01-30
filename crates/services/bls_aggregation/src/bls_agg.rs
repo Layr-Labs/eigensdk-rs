@@ -57,7 +57,7 @@ impl TaskMetadata {
     /// * `quorum_threshold_percentages` - The threshold percentages for each quorum
     /// * `time_to_expiry` - The time until the task expires
     ///
-    /// Use the `with_window_duration` method to set the window duration.
+    /// Use [`with_window_duration`](Self::with_window_duration) to set the window duration.
     /// If the window duration is not set, it will default Duration::ZERO.
     ///
     /// # Returns a new instance of the TaskMetadata
