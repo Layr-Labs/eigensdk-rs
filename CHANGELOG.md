@@ -11,7 +11,7 @@ Each version will have a separate `Breaking Changes` section as well. To describ
 
 ## [Unreleased]
 ### Added
-* Added "common" feature to the "full" feature in `eigensdk` crate in [#249](https://github.com/Layr-Labs/eigensdk-rs/pull/249).
+* Added `eigen_common` dependency to the `eigensdk` crate when "full" feature is enabled in [#249](https://github.com/Layr-Labs/eigensdk-rs/pull/249).
 ### Changed
 * Changes in the way bindings are generated in [#243](https://github.com/Layr-Labs/eigensdk-rs/pull/243).
   * The `bindings` target now generates the bindings using Docker with Foundry v0.3.0.
