@@ -10,16 +10,16 @@ import {WriteToContractsRegistryLib} from "./utils/WriteToContractsRegistryLib.s
 contract ContractsRegistry is Script {
     address private deployer;
     address public CONTRACT_REGISTRY;
-    M2CoreDeploymentLib.DeploymentData coreConfigData;
-    M2MockAvsDeploymentLib.DeploymentData avsConfigData;
+    CoreDeploymentLib.DeploymentData coreConfigData;
+    MockAvsDeploymentLib.DeploymentData avsConfigData;
 
     function setUp() public {
         deployer = vm.rememberKey(vm.envUint("PRIVATE_KEY"));
         vm.label(deployer, "Deployer");
         CONTRACT_REGISTRY = vm.envAddress("CONTRACTS_REGISTRY_ADDR");
 
-        coreConfigData = M2CoreDeploymentLib.readDeploymentJson("script/deployments/core/", "31337.json");
-        avsConfigData = M2MockAvsDeploymentLib.readDeploymentJson("script/deployments/mock-avs/", block.chainid);
+        coreConfigData = CoreDeploymentLib.readDeploymentJson("script/deployments/core/", "31337.json");
+        avsConfigData = MockAvsDeploymentLib.readDeploymentJson("script/deployments/mock-avs/", block.chainid);
     }
 
     function run() external {

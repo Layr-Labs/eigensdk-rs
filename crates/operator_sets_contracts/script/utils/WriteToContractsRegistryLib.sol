@@ -3,13 +3,13 @@ pragma solidity ^0.8.12;
 
 import {Vm} from "forge-std/Vm.sol";
 import {ContractsRegistry} from "../../src/ContractsRegistry.sol";
-import {M2CoreDeploymentLib} from "./M2CoreDeploymentLib.sol";
-import {M2MockAvsDeploymentLib} from "./M2MockAvsDeploymentLib.sol";
+import {CoreDeploymentLib} from "./CoreDeploymentLib.sol";
+import {MockAvsDeploymentLib} from "./MockAvsDeploymentLib.sol";
 
 library WriteToContractsRegistryLib {
     function writeCoreContractsToRegistry(
         address contractsRegistryAddr,
-        M2CoreDeploymentLib.DeploymentData memory deploymentdata
+        CoreDeploymentLib.DeploymentData memory deploymentdata
     ) internal {
         ContractsRegistry contractsRegistry = ContractsRegistry(contractsRegistryAddr);
         contractsRegistry.registerContract("delegationManager", address(deploymentdata.delegationManager));
@@ -21,7 +21,7 @@ library WriteToContractsRegistryLib {
 
     function writeMockAvsContractsToRegistry(
         address contractsRegistryAddr,
-        M2MockAvsDeploymentLib.DeploymentData memory deploymentdata
+        MockAvsDeploymentLib.DeploymentData memory deploymentdata
     ) internal {
         ContractsRegistry contractsRegistry = ContractsRegistry(contractsRegistryAddr);
 
