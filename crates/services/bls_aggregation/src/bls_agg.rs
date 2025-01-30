@@ -48,7 +48,7 @@ pub struct TaskMetadata {
 }
 
 impl TaskMetadata {
-    /// Creates a new instance of the TaskMetadata
+    /// Creates a new instance of [`TaskMetadata`]
     ///
     /// # Arguments
     /// * `task_index` - The index of the task
