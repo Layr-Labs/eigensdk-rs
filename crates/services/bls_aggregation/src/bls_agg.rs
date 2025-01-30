@@ -142,16 +142,16 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         &self,
         metadata: TaskMetadata,
     ) -> Result<(), BlsAggregationServiceError> {
+        let task_index = metadata.task_index;
         let signatures_rx = {
             let mut task_channel = self.signed_task_response.write();
 
-            let task_index = &metadata.task_index;
-            if task_channel.contains_key(task_index) {
+            if task_channel.contains_key(&task_index) {
                 return Err(BlsAggregationServiceError::DuplicateTaskIndex);
             }
 
             let (signatures_tx, signatures_rx) = mpsc::unbounded_channel();
-            task_channel.insert(metadata.task_index, signatures_tx);
+            task_channel.insert(task_index, signatures_tx);
             signatures_rx
         };
 
@@ -160,7 +160,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         self.logger.debug(
             &format!(
                 "Create task to process new signed task responses for task index: {}",
-                metadata.task_index
+                task_index
             ),
             "eigen-services-blsaggregation.bls_agg.initialize_new_task_with_window",
         );
