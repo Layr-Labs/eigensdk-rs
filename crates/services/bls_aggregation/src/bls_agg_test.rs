@@ -333,19 +333,19 @@ pub mod integration_test {
         assert!(enable_operator_sets_status);
         let el_chain_reader = ELChainReader::new(
             get_test_logger(),
-            allocation_manager_address,
+            Some(allocation_manager_address),
             delegation_manager_address,
             rewards_coordinator_address,
             avs_directory_address,
-            Address::ZERO,
+            Some(Address::ZERO),
             http_endpoint.clone(),
         );
         let el_chain_writer = ELChainWriter::new(
             delegation_manager_address,
             Address::ZERO,
             rewards_coordinator_address,
-            Address::ZERO,
-            allocation_manager_address,
+            Some(Address::ZERO),
+            Some(allocation_manager_address),
             registry_coordinator_address,
             el_chain_reader,
             http_endpoint.clone(),
