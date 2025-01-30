@@ -12,10 +12,10 @@ deploy-avs:
 	./crates/operator_sets_contracts/anvil/deploy-avs.sh
 
 deploy-m2-eigenlayer:
-	./crates/m2_contracts/anvil/deploy-m2-eigenlayer.sh
+	./crates/m2_contracts/anvil/deploy-eigenlayer.sh
 
 deploy-m2-avs:
-	./crates/m2_contracts/anvil/deploy-m2-avs.sh
+	./crates/m2_contracts/anvil/deploy-avs.sh
 
 deploy: deploy-eigenlayer deploy-avs ##
 

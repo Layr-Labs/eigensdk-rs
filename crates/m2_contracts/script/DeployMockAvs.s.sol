@@ -1,27 +1,27 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.20;
 
-import {IStrategy} from "@m2-eigenlayer/contracts/interfaces/IStrategy.sol";
-import {M2MockAvsDeploymentLib} from "./utils/M2MockAvsDeploymentLib.sol";
-import {M2CoreDeploymentLib} from "./utils/M2CoreDeploymentLib.sol";
+import {IStrategy} from "@eigenlayer/contracts/interfaces/IStrategy.sol";
+import {MockAvsDeploymentLib} from "./utils/MockAvsDeploymentLib.sol";
+import {CoreDeploymentLib} from "./utils/CoreDeploymentLib.sol";
 import {FundOperator} from "./utils/FundOperator.sol";
-import {StrategyFactory} from "@m2-eigenlayer/contracts/strategies/StrategyFactory.sol";
+import {StrategyFactory} from "@eigenlayer/contracts/strategies/StrategyFactory.sol";
 import {MockERC20} from "../src/MockERC20.sol";
 import {Vm} from "forge-std/Vm.sol";
 import {UpgradeableProxyLib} from "./utils/UpgradeableProxyLib.sol";
-import {StrategyManager} from "@m2-eigenlayer/contracts/core/StrategyManager.sol";
-import {IDelegationManager} from "@m2-eigenlayer/contracts/interfaces/IDelegationManager.sol";
-import {DelegationManager} from "@m2-eigenlayer/contracts/core/DelegationManager.sol";
+import {StrategyManager} from "@eigenlayer/contracts/core/StrategyManager.sol";
+import {IDelegationManager} from "@eigenlayer/contracts/interfaces/IDelegationManager.sol";
+import {DelegationManager} from "@eigenlayer/contracts/core/DelegationManager.sol";
 
 import "forge-std/StdCheats.sol";
 
 // forge script script/DeployMockAvs.s.sol --rpc-url $RPC_URL --private-key $PRIVATE_KEY --etherscan-api-key $ETHERSCAN_API_KEY --broadcast --verify
-contract M2DeployMockAvs {
+contract DeployMockAvs {
     Vm internal constant _VM = Vm(address(uint160(uint256(keccak256("hevm cheat code")))));
 
     address internal _deployer;
     address internal _proxyAdmin;
-    M2CoreDeploymentLib.DeploymentData internal _configData;
+    CoreDeploymentLib.DeploymentData internal _configData;
     MockERC20 public erc20Mock;
     MockERC20 public erc20MockRewards;
     IStrategy _mockAvsStrategy;
@@ -34,13 +34,13 @@ contract M2DeployMockAvs {
     function run() public virtual {
         _VM.startBroadcast(_deployer);
         _proxyAdmin = UpgradeableProxyLib.deployProxyAdmin();
-        _configData = M2CoreDeploymentLib.readDeploymentJson("script/deployments/core/", block.chainid);
+        _configData = CoreDeploymentLib.readDeploymentJson("script/deployments/core/", block.chainid);
         erc20Mock = new MockERC20();
-        M2MockAvsDeploymentLib.MockAvsSetupConfig memory avsconfig =
-            M2MockAvsDeploymentLib.readMockAvsConfigJson("mock_avs_config");
+        MockAvsDeploymentLib.MockAvsSetupConfig memory avsconfig =
+            MockAvsDeploymentLib.readMockAvsConfigJson("mock_avs_config");
         FundOperator.fundOperator(address(erc20Mock), avsconfig.operator_addr, 10e18);
         _mockAvsStrategy = IStrategy(StrategyFactory(_configData.strategyFactory).deployNewStrategy(erc20Mock));
-        M2MockAvsDeploymentLib.DeploymentData memory depData = M2MockAvsDeploymentLib.deployContracts(
+        MockAvsDeploymentLib.DeploymentData memory depData = MockAvsDeploymentLib.deployContracts(
             _proxyAdmin, _configData, address(_mockAvsStrategy), avsconfig, msg.sender
         );
 
@@ -82,6 +82,6 @@ contract M2DeployMockAvs {
         depData.token = address(erc20Mock);
         depData.strategy = address(_mockAvsStrategy);
 
-        M2MockAvsDeploymentLib.writeDeploymentJson(depData);
+        MockAvsDeploymentLib.writeDeploymentJson(depData);
     }
 }
