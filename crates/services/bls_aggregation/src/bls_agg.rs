@@ -60,7 +60,7 @@ impl TaskMetadata {
     /// Use [`with_window_duration`](Self::with_window_duration) to set the window duration.
     /// If the window duration is not set, it will default to [`Duration::ZERO`].
     ///
-    /// # Returns a new instance of the TaskMetadata
+    /// # Returns a new instance of [`TaskMetadata`]
     pub fn new(
         task_index: TaskIndex,
         task_created_block: u64,
