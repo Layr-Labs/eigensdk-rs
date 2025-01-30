@@ -1603,7 +1603,7 @@ mod tests {
             .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
-                bls_sig_op_1.clone(),
+                bls_sig_op_1,
                 test_operator_1.operator_id,
             ))
             .await
@@ -1890,7 +1890,7 @@ mod tests {
             .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
-                bls_sig_op_1.clone(),
+                bls_sig_op_1,
                 test_operator_1.operator_id,
             ))
             .await
@@ -1904,7 +1904,7 @@ mod tests {
             .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
-                bls_sig_op_2.clone(),
+                bls_sig_op_2,
                 test_operator_2.operator_id,
             ))
             .await
@@ -1964,7 +1964,7 @@ mod tests {
             .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
-                bls_sig_op_1.clone(),
+                bls_sig_op_1,
                 test_operator_1.operator_id,
             ))
             .await
@@ -2029,7 +2029,7 @@ mod tests {
             .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
-                bls_sig_op_1.clone(),
+                bls_sig_op_1,
                 test_operator_1.operator_id,
             ))
             .await
@@ -2075,7 +2075,7 @@ mod tests {
             .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
-                bls_sig_op_1.clone(),
+                bls_sig_op_1,
                 test_operator_1.operator_id,
             ))
             .await;
@@ -2125,7 +2125,7 @@ mod tests {
             .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_1_digest,
-                bls_sig_op_1.clone(),
+                bls_sig_op_1,
                 test_operator_1.operator_id,
             ))
             .await
@@ -2140,7 +2140,7 @@ mod tests {
             .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_2_digest,
-                bls_sig_op_2.clone(),
+                bls_sig_op_2,
                 test_operator_1.operator_id,
             ))
             .await
@@ -2527,7 +2527,7 @@ mod tests {
             .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_2_digest,
-                bls_sig_op_2.clone(),
+                bls_sig_op_2,
                 test_operator_2.operator_id,
             ))
             .await;
@@ -2635,7 +2635,7 @@ mod tests {
             .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_2_digest,
-                bls_sig_op_2.clone(),
+                bls_sig_op_2,
                 test_operator_2.operator_id,
             ))
             .await;
