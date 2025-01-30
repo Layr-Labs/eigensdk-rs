@@ -21,7 +21,7 @@ Each version will have a separate `Breaking Changes` section as well. To describ
 * refactor: update interface on `bls aggregation` in [#254](https://github.com/Layr-Labs/eigensdk-rs/pull/254)
   * Introduces a new struct `TaskMetadata` with a constructor `TaskMetadata::new` to initialize a new task and a method `with_window_duration` to set the window duration.
   * Refactors `initialize_new_task` and `single_task_aggregator` to accept a `TaskMetadata` struct instead of multiple parameters.
-  * Removes `initialize_new_task_with_window` since `window_duration` is now included in `TaskMetadata`.
+  * Removes `initialize_new_task_with_window` since `window_duration` can now be set in `TaskMetadata`.
 
   ```rust
     let metadata = TaskMetadata::new(
