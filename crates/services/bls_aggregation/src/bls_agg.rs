@@ -33,22 +33,28 @@ pub struct AggregatedOperators {
 
 #[derive(Clone)]
 pub struct TaskMetadata {
-    /// `task_index` - The index of the task
     task_index: TaskIndex,
-    /// `task_created_block` - The block number at which the task was created
     task_created_block: u32, // TODO: Should this be a u64?
-    /// `quorum_nums` - The quorum numbers for the task
     quorum_numbers: Vec<u8>,
-    /// `quorum_threshold_percentages` - The quorum threshold percentages for the task
     quorum_threshold_percentages: QuorumThresholdPercentages,
-    /// `time_to_expiry` - The timeout for the task reader to expire
     time_to_expiry: Duration,
-    /// `window_duration` - The duration of the window to wait for signatures after quorum is reached.
-    /// If None, the default value is Duration::ZERO
     window_duration: Option<Duration>,
 }
 
 impl TaskMetadata {
+    /// Creates a new instance of the TaskMetadata
+    ///
+    /// # Arguments
+    /// * `task_index` - The index of the task
+    /// * `task_created_block` - The block number at which the task was created
+    /// * `quorum_numbers` - The quorum numbers for the task
+    /// * `quorum_threshold_percentages` - The quorum threshold percentages for the task
+    /// * `time_to_expiry` - The timeout for the task reader to expire
+    ///
+    /// If the window duration is not set, it will default to None and the default value will be Duration::ZERO.
+    /// Use the `with_window_duration` method to set the window duration.
+    ///
+    /// # Returns a new instance of the TaskMetadata
     pub fn new(
         task_index: TaskIndex,
         task_created_block: u64,
@@ -66,6 +72,12 @@ impl TaskMetadata {
         }
     }
 
+    /// Sets the window duration for the task
+    ///
+    /// # Arguments
+    /// * `window_duration` - The duration of the window to wait for signatures after quorum is reached
+    ///
+    /// # Returns the TaskMetadata with the window duration set
     pub fn with_window_duration(mut self, window_duration: Duration) -> Self {
         self.window_duration = Some(window_duration);
         self
@@ -115,6 +127,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
     /// # Arguments
     ///
     /// * `TaskMetadata` - The metadata of the task
+    ///
     ///
     /// # Error
     ///
