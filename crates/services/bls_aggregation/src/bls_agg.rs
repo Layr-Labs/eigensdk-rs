@@ -38,7 +38,7 @@ pub struct TaskMetadata {
     quorum_numbers: Vec<u8>,
     quorum_threshold_percentages: QuorumThresholdPercentages,
     time_to_expiry: Duration,
-    window_duration: Option<Duration>,
+    window_duration: Duration,
 }
 
 impl TaskMetadata {
@@ -52,7 +52,7 @@ impl TaskMetadata {
     /// * `time_to_expiry` - The timeout for the task reader to expire
     ///
     /// Use the `with_window_duration` method to set the window duration.
-    /// If the window duration is not set, it will default to None and the value will be Duration::ZERO.
+    /// If the window duration is not set, it will default Duration::ZERO.
     ///
     /// # Returns a new instance of the TaskMetadata
     pub fn new(
@@ -68,7 +68,7 @@ impl TaskMetadata {
             quorum_numbers,
             quorum_threshold_percentages,
             time_to_expiry,
-            window_duration: None,
+            window_duration: Duration::ZERO,
         }
     }
 
@@ -79,7 +79,7 @@ impl TaskMetadata {
     ///
     /// # Returns the TaskMetadata with the window duration set
     pub fn with_window_duration(mut self, window_duration: Duration) -> Self {
-        self.window_duration = Some(window_duration);
+        self.window_duration = window_duration;
         self
     }
 }
@@ -127,7 +127,6 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
     /// # Arguments
     ///
     /// * `TaskMetadata` - The metadata of the task
-    ///
     ///
     /// # Error
     ///
@@ -307,14 +306,9 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
     ///
     /// # Arguments
     ///
-    /// * `task_index` - The index of the task
-    /// * `task_created_block` - The block number at which the task was created
-    /// * `quorum_nums` - The quorum numbers for the task
-    /// * `quorum_threshold_percentages` - The quorum threshold percentages for the task
-    /// * `time_to_expiry` - The timeout for the task reader to expire
+    /// * `TaskMetadata` - The metadata of the task
     /// * `aggregated_response_sender` - The sender channel for the aggregated responses
     /// * `signatures_rx` - The receiver channel for the signed task responses
-    /// * `window_duration` - The duration of the window to wait for signatures after quorum is reached
     /// * `logger` - The logger to log messages.
     #[allow(clippy::too_many_arguments)]
     pub async fn single_task_aggregator(
@@ -366,7 +360,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
             quorum_threshold_percentage_map,
             quorum_apks_g1,
             metadata.quorum_numbers,
-            metadata.window_duration.unwrap_or(Duration::ZERO),
+            metadata.window_duration,
             logger,
         )
         .await
