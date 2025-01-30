@@ -1359,14 +1359,13 @@ mod tests {
         let bls_sig_task_2_op_2 = test_operator_2
             .bls_keypair
             .sign_message(task_2_response_digest.as_ref());
-        let task_signature_2_op_2 = TaskSignature::new(
-            task_2_index,
-            task_2_response_digest,
-            bls_sig_task_2_op_2.clone(),
-            test_operator_2.operator_id,
-        );
         bls_agg_service
-            .process_new_signature(task_signature_2_op_2)
+            .process_new_signature(TaskSignature::new(
+                task_2_index,
+                task_2_response_digest,
+                bls_sig_task_2_op_2.clone(),
+                test_operator_2.operator_id,
+            ))
             .await
             .unwrap();
 
@@ -2417,14 +2416,13 @@ mod tests {
         let bls_sig_op_2 = test_operator_2
             .bls_keypair
             .sign_message(task_response_2_digest.as_ref());
-        let task_signature_2 = TaskSignature::new(
-            task_index,
-            task_response_2_digest,
-            bls_sig_op_2.clone(),
-            test_operator_2.operator_id,
-        );
         bls_agg_service
-            .process_new_signature(task_signature_2)
+            .process_new_signature(TaskSignature::new(
+                task_index,
+                task_response_2_digest,
+                bls_sig_op_2.clone(),
+                test_operator_2.operator_id,
+            ))
             .await
             .unwrap();
 
@@ -2508,14 +2506,13 @@ mod tests {
         let bls_sig_op_1 = test_operator_1
             .bls_keypair
             .sign_message(task_response_1_digest.as_ref());
-        let task_signature_1 = TaskSignature::new(
-            task_index,
-            task_response_1_digest,
-            bls_sig_op_1.clone(),
-            test_operator_1.operator_id,
-        );
         bls_agg_service
-            .process_new_signature(task_signature_1)
+            .process_new_signature(TaskSignature::new(
+                task_index,
+                task_response_1_digest,
+                bls_sig_op_1.clone(),
+                test_operator_1.operator_id,
+            ))
             .await
             .unwrap();
 
@@ -2617,14 +2614,13 @@ mod tests {
         let bls_sig_op_1 = test_operator_1
             .bls_keypair
             .sign_message(task_response_1_digest.as_ref());
-        let task_signature_1 = TaskSignature::new(
-            task_index,
-            task_response_1_digest,
-            bls_sig_op_1.clone(),
-            test_operator_1.operator_id,
-        );
         bls_agg_service
-            .process_new_signature(task_signature_1)
+            .process_new_signature(TaskSignature::new(
+                task_index,
+                task_response_1_digest,
+                bls_sig_op_1.clone(),
+                test_operator_1.operator_id,
+            ))
             .await
             .unwrap();
 
