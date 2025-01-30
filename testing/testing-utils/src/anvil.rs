@@ -7,9 +7,9 @@ use testcontainers::{
 const ANVIL_IMAGE: &str = "ghcr.io/foundry-rs/foundry";
 const ANVIL_TAG: &str = "latest";
 const M2_ANVIL_STATE_PATH: &str =
-    "./crates/contracts/anvil/state/m2_contracts_deployed_anvil_state.json"; // relative path from the project root
+    "./crates/m2_contracts/anvil/state/m2_contracts_deployed_anvil_state.json"; // relative path from the project root
 const OPERATOR_SET_ANVIL_STATE_PATH: &str =
-    "./crates/contracts/anvil/state/operatorset_contracts_deployed_anvil_state.json";
+    "./crates/operator_sets_contracts/anvil/state/operatorset_contracts_deployed_anvil_state.json";
 fn workspace_dir() -> PathBuf {
     let output = std::process::Command::new(env!("CARGO"))
         .arg("locate-project")
