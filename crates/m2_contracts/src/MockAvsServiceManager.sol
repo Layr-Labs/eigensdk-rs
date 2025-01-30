@@ -8,8 +8,8 @@ import {
     IRegistryCoordinator,
     IStakeRegistry
 } from "@eigenlayer-middleware/src/ServiceManagerBase.sol";
-
-contract MockAvsServiceManager is ServiceManagerBase {
+import {BLSSignatureChecker} from "@eigenlayer-middleware/src/BLSSignatureChecker.sol";
+contract MockAvsServiceManager is ServiceManagerBase,BLSSignatureChecker {
     constructor(
         IAVSDirectory _avsDirectory,
         IRegistryCoordinator _registryCoordinator,
@@ -17,6 +17,7 @@ contract MockAvsServiceManager is ServiceManagerBase {
         address rewards_coordinator
     )
         ServiceManagerBase(_avsDirectory, IRewardsCoordinator(rewards_coordinator), _registryCoordinator, _stakeRegistry)
+        BLSSignatureChecker(_registryCoordinator)
     {}
 
     function initialize(address _initialOwner) external initializer {

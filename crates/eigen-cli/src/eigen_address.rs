@@ -8,6 +8,7 @@ use eigen_utils::{
     middleware::{
         iblssignaturechecker::IBLSSignatureChecker, registrycoordinator::RegistryCoordinator,
     },
+    sdk::mockavsservicemanager::MockAvsServiceManager,
 };
 use serde::{Deserialize, Serialize};
 
@@ -78,7 +79,6 @@ impl ContractAddresses {
                 client.clone(),
             )
             .await?;
-
         let avs =
             ContractAddresses::get_avs_contract_addresses(registry_coord_addr, client.clone())
                 .await
@@ -171,6 +171,7 @@ impl ContractAddresses {
             .call()
             .await?
             ._0;
+
         let strategy_manager = delegation_manager_client.strategyManager().call().await?._0;
 
         Ok(EigenLayerAddresses {
@@ -220,7 +221,6 @@ impl ContractAddresses {
             .call()
             .await?
             ._0;
-
         Ok(AvsAddresses {
             service_manager,
             registry_coordinator,
