@@ -55,7 +55,7 @@ impl TaskMetadata {
     /// * `task_created_block` - The block number at which the task was created
     /// * `quorum_numbers` - The quorum numbers which should respond to the task
     /// * `quorum_threshold_percentages` - The threshold percentages for each quorum
-    /// * `time_to_expiry` - The time before expiry of the task response aggregation
+    /// * `time_to_expiry` - The time until the task expires
     ///
     /// Use the `with_window_duration` method to set the window duration.
     /// If the window duration is not set, it will default Duration::ZERO.
