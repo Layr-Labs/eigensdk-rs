@@ -21,7 +21,6 @@ colored = "2.1.0"
 eigen-common.workspace = true
 eigen-crypto-bls.workspace = true
 eigen-testing-utils.workspace = true
-eigen-types.workspace = true
 eigen-utils.workspace = true
 eth-keystore.workspace = true
 hex.workspace = true
