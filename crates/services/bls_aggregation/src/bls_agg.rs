@@ -33,11 +33,18 @@ pub struct AggregatedOperators {
 
 #[derive(Clone)]
 pub struct TaskMetadata {
+    /// `task_index` - The index of the task
     task_index: TaskIndex,
+    /// `task_created_block` - The block number at which the task was created
     task_created_block: u32, // TODO: Should this be a u64?
+    /// `quorum_nums` - The quorum numbers for the task
     quorum_numbers: Vec<u8>,
+    /// `quorum_threshold_percentages` - The quorum threshold percentages for the task
     quorum_threshold_percentages: QuorumThresholdPercentages,
+    /// `time_to_expiry` - The timeout for the task reader to expire
     time_to_expiry: Duration,
+    /// `window_duration` - The duration of the window to wait for signatures after quorum is reached.
+    /// If None, the default value is Duration::ZERO
     window_duration: Option<Duration>,
 }
 
@@ -107,44 +114,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
     ///
     /// # Arguments
     ///
-    /// * `task_index` - The index of the task
-    /// * `task_created_block` - The block number at which the task was created
-    /// * `quorum_nums` - The quorum numbers for the task
-    /// * `quorum_threshold_percentages` - The quorum threshold percentages for the task
-    /// * `time_to_expiry` - The timeout for the task reader to expire
-    ///
-    /// # Error
-    ///
-    /// Returns error if the task index already exists
-    // pub async fn initialize_new_task(
-    //     &self,
-    //     task_index: TaskIndex,
-    //     task_created_block: u32,
-    //     quorum_nums: Vec<u8>,
-    //     quorum_threshold_percentages: QuorumThresholdPercentages,
-    //     time_to_expiry: Duration,
-    // ) -> Result<(), BlsAggregationServiceError> {
-    //     self.initialize_new_task_with_window(
-    //         task_index,
-    //         task_created_block,
-    //         quorum_nums,
-    //         quorum_threshold_percentages,
-    //         time_to_expiry,
-    //         Duration::ZERO,
-    //     )
-    //     .await
-    // }
-
-    ///   Creates a new task meant to process new signed task responses for a task tokio channel.
-    ///
-    /// # Arguments
-    ///
-    /// * `task_index` - The index of the task
-    /// * `task_created_block` - The block number at which the task was created
-    /// * `quorum_nums` - The quorum numbers for the task
-    /// * `quorum_threshold_percentages` - The quorum threshold percentages for the task
-    /// * `time_to_expiry` - The timeout for the task reader to expire
-    /// * `window_duration` - The duration of the window to wait for signatures after quorum is reached
+    /// * `TaskMetadata` - The metadata of the task
     ///
     /// # Error
     ///
