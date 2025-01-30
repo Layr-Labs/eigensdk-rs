@@ -33,11 +33,17 @@ pub struct AggregatedOperators {
 
 #[derive(Clone)]
 pub struct TaskMetadata {
+    /// Index of the task
     task_index: TaskIndex,
+    /// Block the task was created
     task_created_block: u32, // TODO: Should this be a u64?
+    /// Quorum numbers which should respond to the task
     quorum_numbers: Vec<u8>,
+    /// Thresholds for each quorum
     quorum_threshold_percentages: QuorumThresholdPercentages,
+    /// Time before expiry of the task response aggregation
     time_to_expiry: Duration,
+    // Duration of the window to wait for signatures after quorum is reached
     window_duration: Duration,
 }
 
@@ -47,9 +53,9 @@ impl TaskMetadata {
     /// # Arguments
     /// * `task_index` - The index of the task
     /// * `task_created_block` - The block number at which the task was created
-    /// * `quorum_numbers` - The quorum numbers for the task
-    /// * `quorum_threshold_percentages` - The quorum threshold percentages for the task
-    /// * `time_to_expiry` - The timeout for the task reader to expire
+    /// * `quorum_numbers` - The quorum numbers which should respond to the task
+    /// * `quorum_threshold_percentages` - The threshold percentages for each quorum
+    /// * `time_to_expiry` - The time before expiry of the task response aggregation
     ///
     /// Use the `with_window_duration` method to set the window duration.
     /// If the window duration is not set, it will default Duration::ZERO.
