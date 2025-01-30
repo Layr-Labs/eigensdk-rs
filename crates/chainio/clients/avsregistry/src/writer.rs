@@ -59,7 +59,6 @@ impl AvsRegistryChainWriter {
         provider: String,
         signer: String,
         registry_coordinator_addr: Address,
-        rewards_coordinator_addr: Address,
         operator_state_retriever_addr: Address,
     ) -> Result<Self, AvsRegistryError> {
         let fill_provider = get_provider(&provider);
@@ -100,6 +99,9 @@ impl AvsRegistryChainWriter {
         let avs_directory_addr = contract_service_manager_base.avsDirectory().call().await?;
 
         let ServiceManagerBase::avsDirectoryReturn { _0: avs_directory } = avs_directory_addr;
+
+        // We set rewards coordinator address as zero because we are not going to use it on any writer operation
+        let rewards_coordinator_addr = Address::ZERO;
 
         let el_reader = ELChainReader::build(
             logger.clone(),
