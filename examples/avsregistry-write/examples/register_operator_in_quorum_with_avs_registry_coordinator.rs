@@ -32,7 +32,6 @@ async fn main() -> Result<()> {
         holesky_provider.to_string(),
         pvt_key.to_string(),
         REGISTRY_COORDINATOR,
-        REWARDS_COORDINATOR,
         OPERATOR_STATE_RETRIEVER,
     )
     .await
