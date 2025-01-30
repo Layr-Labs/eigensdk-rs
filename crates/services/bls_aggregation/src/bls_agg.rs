@@ -31,6 +31,15 @@ pub struct AggregatedOperators {
     pub signers_operator_ids_set: HashMap<FixedBytes<32>, bool>,
 }
 
+pub struct TaskMetadata {
+    task_index: TaskIndex,
+    task_created_block: u32,
+    quorum_nums: Vec<u8>,
+    quorum_threshold_percentages: QuorumThresholdPercentages,
+    time_to_expiry: Duration,
+    window_duration: Option<Duration>,
+}
+
 /// The BLS Aggregator Service main struct
 #[derive(Debug)]
 pub struct BlsAggregatorService<A: AvsRegistryService>
@@ -82,24 +91,24 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
     /// # Error
     ///
     /// Returns error if the task index already exists
-    pub async fn initialize_new_task(
-        &self,
-        task_index: TaskIndex,
-        task_created_block: u32,
-        quorum_nums: Vec<u8>,
-        quorum_threshold_percentages: QuorumThresholdPercentages,
-        time_to_expiry: Duration,
-    ) -> Result<(), BlsAggregationServiceError> {
-        self.initialize_new_task_with_window(
-            task_index,
-            task_created_block,
-            quorum_nums,
-            quorum_threshold_percentages,
-            time_to_expiry,
-            Duration::ZERO,
-        )
-        .await
-    }
+    // pub async fn initialize_new_task(
+    //     &self,
+    //     task_index: TaskIndex,
+    //     task_created_block: u32,
+    //     quorum_nums: Vec<u8>,
+    //     quorum_threshold_percentages: QuorumThresholdPercentages,
+    //     time_to_expiry: Duration,
+    // ) -> Result<(), BlsAggregationServiceError> {
+    //     self.initialize_new_task_with_window(
+    //         task_index,
+    //         task_created_block,
+    //         quorum_nums,
+    //         quorum_threshold_percentages,
+    //         time_to_expiry,
+    //         Duration::ZERO,
+    //     )
+    //     .await
+    // }
 
     ///   Creates a new task meant to process new signed task responses for a task tokio channel.
     ///
@@ -117,22 +126,17 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
     /// Returns error if the task index already exists
     pub async fn initialize_new_task_with_window(
         &self,
-        task_index: TaskIndex,
-        task_created_block: u32,
-        quorum_nums: Vec<u8>,
-        quorum_threshold_percentages: QuorumThresholdPercentages,
-        time_to_expiry: Duration,
-        window_duration: Duration,
+        metadata: TaskMetadata,
     ) -> Result<(), BlsAggregationServiceError> {
         let signatures_rx = {
             let mut task_channel = self.signed_task_response.write();
 
-            if task_channel.contains_key(&task_index) {
+            if task_channel.contains_key(&metadata.task_index) {
                 return Err(BlsAggregationServiceError::DuplicateTaskIndex);
             }
 
             let (signatures_tx, signatures_rx) = mpsc::unbounded_channel();
-            task_channel.insert(task_index, signatures_tx);
+            task_channel.insert(metadata.task_index, signatures_tx);
             signatures_rx
         };
 
@@ -141,7 +145,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         self.logger.debug(
             &format!(
                 "Create task to process new signed task responses for task index: {}",
-                task_index
+                metadata.task_index
             ),
             "eigen-services-blsaggregation.bls_agg.initialize_new_task_with_window",
         );
@@ -150,14 +154,14 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
             // Process each signed response here
             let _ = BlsAggregatorService::<A>::single_task_aggregator(
                 avs_registry_service,
-                task_index,
-                task_created_block,
-                quorum_nums.clone(),
-                quorum_threshold_percentages.clone(),
-                time_to_expiry,
+                metadata.task_index,
+                metadata.task_created_block,
+                metadata.quorum_nums,
+                metadata.quorum_threshold_percentages,
+                metadata.time_to_expiry,
                 aggregated_response_sender,
                 signatures_rx,
-                window_duration,
+                metadata.window_duration.unwrap_or(Duration::ZERO),
                 logger,
             )
             .await
