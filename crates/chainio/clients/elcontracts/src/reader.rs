@@ -398,7 +398,7 @@ impl ELChainReader {
     ///
     /// # Returns
     ///
-    /// * `Result<u16, ElContractsError>` - The split of the operator for the AVS, if the call is successful
+    /// * u16 - The split of the operator for the AVS, if the call is successful
     ///
     /// # Errors
     ///
@@ -430,7 +430,7 @@ impl ELChainReader {
     ///
     /// # Returns
     ///
-    /// * `Result<u16, ElContractsError>` - The split of the operator for PI, if the call is successful
+    /// * u16 - The split of the operator for PI, if the call is successful
     ///
     /// # Errors
     ///
