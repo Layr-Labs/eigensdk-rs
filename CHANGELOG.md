@@ -18,7 +18,7 @@ Each version will have a separate `Breaking Changes` section as well. To describ
 * Fixed the rewardsv2 bindings version in readme to 0.5.4 in [#246](https://github.com/Layr-Labs/eigensdk-rs/pull/246).
 
 ### Breaking changes
-* refactor: encapsulate parameters into `TaskSignature` in 
+* refactor: encapsulate parameters into `TaskSignature` in [#260](https://github.com/Layr-Labs/eigensdk-rs/pull/260) 
   * Introduced `TaskSignature` struct to encapsulate parameters related to task signatures:
   * Updated `process_new_signature` to accept a `TaskSignature` struct instead of multiple parameters.
 ```rust
