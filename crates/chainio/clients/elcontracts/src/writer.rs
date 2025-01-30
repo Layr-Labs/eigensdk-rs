@@ -39,8 +39,8 @@ pub struct ELChainWriter {
     delegation_manager: Address,
     strategy_manager: Address,
     rewards_coordinator: Address,
-    permission_controller: Address,
-    allocation_manager: Address,
+    permission_controller: Option<Address>,
+    allocation_manager: Option<Address>,
     registry_coordinator: Address,
     el_chain_reader: ELChainReader,
     provider: String,
@@ -53,8 +53,8 @@ impl ELChainWriter {
         delegation_manager: Address,
         strategy_manager: Address,
         rewards_coordinator: Address,
-        permission_controller: Address,
-        allocation_manager: Address,
+        permission_controller: Option<Address>,
+        allocation_manager: Option<Address>,
         registry_coordinator: Address,
         el_chain_reader: ELChainReader,
         provider: String,
@@ -398,9 +398,11 @@ impl ELChainWriter {
         selector: FixedBytes<4>,
     ) -> Result<TxHash, ElContractsError> {
         let provider = get_signer(&self.signer, &self.provider);
-
+        let Some(permission_controller_address) = self.permission_controller else {
+            return Err(ElContractsError::MissingParamater);
+        };
         let permission_controller_contract =
-            PermissionController::new(self.permission_controller, provider);
+            PermissionController::new(permission_controller_address, provider);
 
         let tx = permission_controller_contract
             .removeAppointee(account_address, appointee_address, target, selector)
@@ -430,9 +432,11 @@ impl ELChainWriter {
         selector: FixedBytes<4>,
     ) -> Result<TxHash, ElContractsError> {
         let provider = get_signer(&self.signer, &self.provider);
-
+        let Some(permission_controller_address) = self.permission_controller else {
+            return Err(ElContractsError::MissingParamater);
+        };
         let permission_controller_contract =
-            PermissionController::new(self.permission_controller, provider);
+            PermissionController::new(permission_controller_address, provider);
 
         let tx = permission_controller_contract
             .setAppointee(account_address, appointee_address, target, selector)
@@ -459,9 +463,11 @@ impl ELChainWriter {
         admin_address: Address,
     ) -> Result<TxHash, ElContractsError> {
         let provider = get_signer(&self.signer, &self.provider);
-
+        let Some(permission_controller_address) = self.permission_controller else {
+            return Err(ElContractsError::MissingParamater);
+        };
         let permission_controller_contract =
-            PermissionController::new(self.permission_controller, provider);
+            PermissionController::new(permission_controller_address, provider);
 
         let tx = permission_controller_contract
             .removePendingAdmin(account_address, admin_address)
@@ -489,9 +495,11 @@ impl ELChainWriter {
         admin_address: Address,
     ) -> Result<TxHash, ElContractsError> {
         let provider = get_signer(&self.signer, &self.provider);
-
+        let Some(permission_controller_address) = self.permission_controller else {
+            return Err(ElContractsError::MissingParamater);
+        };
         let permission_controller_contract =
-            PermissionController::new(self.permission_controller, provider);
+            PermissionController::new(permission_controller_address, provider);
 
         let tx = permission_controller_contract
             .addPendingAdmin(account_address, admin_address)
@@ -517,9 +525,11 @@ impl ELChainWriter {
     /// * `ElContractsError` - if the call to the contract fails.
     pub async fn accept_admin(&self, account: Address) -> Result<TxHash, ElContractsError> {
         let provider = get_signer(&self.signer, &self.provider);
-
+        let Some(permission_controller_address) = self.permission_controller else {
+            return Err(ElContractsError::MissingParamater);
+        };
         let permission_controller_contract =
-            PermissionController::new(self.permission_controller, provider);
+            PermissionController::new(permission_controller_address, provider);
 
         let tx = permission_controller_contract
             .acceptAdmin(account)
@@ -550,9 +560,11 @@ impl ELChainWriter {
         admin: Address,
     ) -> Result<TxHash, ElContractsError> {
         let provider = get_signer(&self.signer, &self.provider);
-
+        let Some(permission_controller_address) = self.permission_controller else {
+            return Err(ElContractsError::MissingParamater);
+        };
         let permission_controller_contract =
-            PermissionController::new(self.permission_controller, provider);
+            PermissionController::new(permission_controller_address, provider);
 
         let tx = permission_controller_contract
             .removeAdmin(account, admin)
@@ -588,8 +600,11 @@ impl ELChainWriter {
         socket: &str,
     ) -> Result<TxHash, ElContractsError> {
         let provider = get_signer(&self.signer, &self.provider);
+        let Some(allocation_manager_address) = self.allocation_manager else {
+            return Err(ElContractsError::MissingParamater);
+        };
         let allocation_manager_contract =
-            AllocationManager::new(self.allocation_manager, provider.clone());
+            AllocationManager::new(allocation_manager_address, provider.clone());
         let contract_registry_coordinator =
             RegistryCoordinator::new(self.registry_coordinator, provider);
 
@@ -665,7 +680,11 @@ impl ELChainWriter {
         operator_set_ids: Vec<u32>,
     ) -> Result<TxHash, ElContractsError> {
         let provider = get_signer(&self.signer, &self.provider);
-        let allocation_manager_contract = AllocationManager::new(self.allocation_manager, provider);
+        let Some(allocation_manager_address) = self.allocation_manager else {
+            return Err(ElContractsError::MissingParamater);
+        };
+        let allocation_manager_contract =
+            AllocationManager::new(allocation_manager_address, provider);
 
         let params = IAllocationManagerTypes::DeregisterParams {
             operator: operator_address,
@@ -702,7 +721,11 @@ impl ELChainWriter {
         delay: u32,
     ) -> Result<TxHash, ElContractsError> {
         let provider = get_signer(&self.signer, &self.provider);
-        let allocation_manager_contract = AllocationManager::new(self.allocation_manager, provider);
+        let Some(allocation_manager_address) = self.allocation_manager else {
+            return Err(ElContractsError::MissingParamater);
+        };
+        let allocation_manager_contract =
+            AllocationManager::new(allocation_manager_address, provider);
 
         let tx = allocation_manager_contract
             .setAllocationDelay(operator_address, delay)
@@ -727,7 +750,11 @@ impl ELChainWriter {
         allocations: Vec<IAllocationManagerTypes::AllocateParams>,
     ) -> Result<TxHash, ElContractsError> {
         let provider = get_signer(&self.signer, &self.provider);
-        let allocation_manager_contract = AllocationManager::new(self.allocation_manager, provider);
+        let Some(allocation_manager_address) = self.allocation_manager else {
+            return Err(ElContractsError::MissingParamater);
+        };
+        let allocation_manager_contract =
+            AllocationManager::new(allocation_manager_address, provider);
 
         let tx = allocation_manager_contract
             .modifyAllocations(operator_address, allocations)

@@ -94,11 +94,11 @@ pub async fn register_operator(pvt_key: &str, bls_key: &str, http_endpoint: &str
 
     let el_chain_reader = ELChainReader::new(
         get_test_logger(),
-        Address::ZERO,
+        Some(Address::ZERO),
         delegation_manager_address,
         rewards_coordinator_address,
         avs_directory_address,
-        permission_controller,
+        Some(permission_controller),
         http_endpoint.to_owned(),
     );
     let allocation_manager = get_allocation_manager_address(http_endpoint.to_string()).await;
@@ -108,8 +108,8 @@ pub async fn register_operator(pvt_key: &str, bls_key: &str, http_endpoint: &str
         delegation_manager_address,
         strategy_manager_address,
         rewards_coordinator_address,
-        permission_controller,
-        allocation_manager,
+        Some(permission_controller),
+        Some(allocation_manager),
         registry_coordinator,
         el_chain_reader,
         http_endpoint.to_string(),

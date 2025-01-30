@@ -659,11 +659,11 @@ mod tests {
 
         let el_chain_reader = ELChainReader::new(
             get_test_logger(),
-            Address::ZERO,
+            Some(Address::ZERO),
             delegation_manager_address,
             rewards_coordinator_address,
             avs_directory_address,
-            permission_controller,
+            Some(permission_controller),
             http_endpoint.to_string(),
         );
         let signer = PrivateKeySigner::from_str(pvt_key).unwrap();

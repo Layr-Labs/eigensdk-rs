@@ -67,21 +67,15 @@ async fn main() -> Result<()> {
 
     let delegation_manager_contract =
         DelegationManager::new(DELEGATION_MANAGER_ADDRESS, get_provider(holesky_provider));
-    let permission_controller = delegation_manager_contract
-        .permissionController()
-        .call()
-        .await
-        .expect("DelegationManager contract failed when accessing PermissionController")
-        ._0;
 
     // A new ElChainReader instance
     let el_chain_reader = ELChainReader::new(
         get_test_logger().clone(),
-        SLASHER_ADDRESS,
+        None,
         DELEGATION_MANAGER_ADDRESS,
         REWARDS_COORDINATOR,
         AVS_DIRECTORY_ADDRESS,
-        permission_controller,
+        None,
         holesky_provider.to_string(),
     );
 
@@ -93,8 +87,8 @@ async fn main() -> Result<()> {
         DELEGATION_MANAGER_ADDRESS,
         STRATEGY_MANAGER_ADDRESS,
         REWARDS_COORDINATOR,
-        permission_controller,
-        allocation_manager,
+        None,
+        None,
         registry_coordinator,
         el_chain_reader,
         holesky_provider.to_string(),
