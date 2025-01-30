@@ -7,3 +7,8 @@
 [submodule "crates/operator_sets_contracts/lib/forge-std"]
 	path = crates/operator_sets_contracts/lib/forge-std
 	url = https://github.com/foundry-rs/forge-std
+[submodule "crates/operator_sets_contracts/lib/eigenlayer-middleware"]
+	path = crates/operator_sets_contracts/lib/eigenlayer-middleware
+	url = https://github.com/layr-labs/eigenlayer-middleware
+[submodule "lib/eigenlayer-middleware"]
+	branch = dev
