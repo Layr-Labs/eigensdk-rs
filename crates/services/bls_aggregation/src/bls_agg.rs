@@ -31,7 +31,7 @@ pub struct AggregatedOperators {
     pub signers_operator_ids_set: HashMap<FixedBytes<32>, bool>,
 }
 
-/// Contains the signature of the task response
+/// Contains the information of a signed task response
 #[derive(Clone)]
 pub struct TaskSignature {
     // Index of the task
