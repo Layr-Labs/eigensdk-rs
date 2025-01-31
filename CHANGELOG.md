@@ -21,7 +21,7 @@ Each version will have a separate `Breaking Changes` section as well. To describ
 * fix: use rewards coordinator on get operator avs/pi split methods by @maximopalopoli in https://github.com/Layr-Labs/eigensdk-rs/pull/250
   * The parameters of `ChainReader::new` changed, and it now receives the address of the rewards coordinator. 
     
-    Previously was generated this way:
+    It was previously called this way:
     ``` Rust
     let el_chain_reader = ELChainReader::new(
         logger,
