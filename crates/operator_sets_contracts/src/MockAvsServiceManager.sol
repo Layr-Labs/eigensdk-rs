@@ -11,8 +11,9 @@ import {IStakeRegistry} from "@eigenlayer-middleware/src/StakeRegistry.sol";
 import {ISlashingRegistryCoordinator} from "@eigenlayer-middleware/src/interfaces/ISlashingRegistryCoordinator.sol";
 import {IPermissionController} from "@eigenlayer/contracts/permissions/PermissionController.sol";
 import {IAllocationManager} from "@eigenlayer/contracts/interfaces/IAllocationManager.sol";
+import {BLSSignatureChecker} from "@eigenlayer-middleware/src/BLSSignatureChecker.sol";
 
-contract MockAvsServiceManager is ServiceManagerBase {
+contract MockAvsServiceManager is ServiceManagerBase,BLSSignatureChecker {
     constructor(
         IAVSDirectory _avsDirectory,
         ISlashingRegistryCoordinator _slashingRegCoordinator,
@@ -29,6 +30,8 @@ contract MockAvsServiceManager is ServiceManagerBase {
             _permissionController,
             _allocationManager
         )
+        BLSSignatureChecker(_slashingRegCoordinator)
+
     {}
 
     function initialize(address _initialOwner) external initializer {

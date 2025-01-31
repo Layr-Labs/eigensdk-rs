@@ -162,8 +162,11 @@ impl ContractAddresses {
         T: alloy::contract::private::Transport + ::core::clone::Clone,
         N: alloy::contract::private::Network,
     {
+        dbg!(2);
+        dbg!(service_manager_addr);
         let service_manager = IBLSSignatureChecker::new(service_manager_addr, &client);
         let delegation_manager = service_manager.delegation().call().await?._0;
+        dbg!(3);
         let delegation_manager_client = DelegationManager::new(delegation_manager, &client);
         let allocation_manager = delegation_manager_client
             .allocationManager()
