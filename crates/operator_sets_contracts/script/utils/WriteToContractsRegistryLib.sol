@@ -17,6 +17,7 @@ library WriteToContractsRegistryLib {
         contractsRegistry.registerContract("avsDirectory", address(deploymentdata.avsDirectory));
         contractsRegistry.registerContract("rewardsCoordinator", address(deploymentdata.rewardsCoordinator));
         contractsRegistry.registerContract("pauserRegistry", address(deploymentdata.pauserRegistry));
+        contractsRegistry.registerContract("allocationManager", deploymentdata.allocationManager);
     }
 
     function writeMockAvsContractsToRegistry(

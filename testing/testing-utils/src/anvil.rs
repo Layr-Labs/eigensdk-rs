@@ -104,7 +104,7 @@ pub async fn start_anvil_container() -> (ContainerAsync<GenericImage>, String, S
             "--gas-price",
             "0",
             "--port",
-            "8546"
+            "8546",
         ])
         .start()
         .await

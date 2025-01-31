@@ -1157,7 +1157,7 @@ mod tests {
         let service_manager_address = get_service_manager_address(http_endpoint.to_string()).await;
         let service_manager =
             MockAvsServiceManager::new(service_manager_address, default_signer.clone());
-        service_manager
+        let i = service_manager
             .setAppointee(
                 OPERATOR_ADDRESS,
                 allocation_manager_addr,
@@ -1169,7 +1169,7 @@ mod tests {
             .get_receipt()
             .await
             .unwrap();
-        allocation_manager
+        let y = allocation_manager
             .setAVSRegistrar(avs_address, registry_coordinator_addr)
             .send()
             .await
@@ -1187,8 +1187,7 @@ mod tests {
             kickBIPsOfTotalStake: 1000,
         };
         let strategy = get_erc20_mock_strategy(http_endpoint.to_string()).await;
-
-        service_manager
+        let s = service_manager
             .setAppointee(
                 registry_coordinator_addr,
                 allocation_manager_addr,
@@ -1294,8 +1293,8 @@ mod tests {
         let operator_address = ANVIL_FIRST_ADDRESS;
         let strategy_addr = get_erc20_mock_strategy(http_endpoint.clone()).await;
 
-        let avs_address = ANVIL_FIRST_ADDRESS;
-        let operator_set_id = 1;
+        let avs_address = get_service_manager_address(http_endpoint.clone()).await;
+        let operator_set_id = 0;
         create_operator_set(http_endpoint.as_str(), avs_address).await;
 
         let new_allocation = 100;
