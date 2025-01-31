@@ -27,7 +27,7 @@ pub trait Operator {
         key_pair: &BlsKeyPair,
         operator_id: &OperatorId,
         operator_address: Address,
-        operator_name: String,
+        operator_name: &str,
         client_aggregator: &ClientAggregator,
         ws_rpc_url: &str,
     ) -> impl std::future::Future<Output = Result<(), OperatorError>> + Send {
