@@ -19,7 +19,7 @@ Each version will have a separate `Breaking Changes` section as well. To describ
 
 ### Breaking changes
 * fix: use rewards coordinator on get operator avs/pi split methods by @maximopalopoli in https://github.com/Layr-Labs/eigensdk-rs/pull/250
-  * This PR changes `ChainReader::new` parameters, since now receives the address of the rewards coordinator. 
+  * The parameters of `ChainReader::new` changed, and it now receives the address of the rewards coordinator. 
     
     Previously was generated this way:
     ``` Rust
