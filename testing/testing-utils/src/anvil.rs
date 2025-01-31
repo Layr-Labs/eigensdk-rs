@@ -39,6 +39,25 @@ pub async fn mine_anvil_blocks(container: &ContainerAsync<GenericImage>, n: u32)
     assert_eq!(output.exit_code().await.unwrap().unwrap(), 0);
 }
 
+/// Mine anvil block for 8546
+pub async fn mine_anvil_blocks_operator_set(container: &ContainerAsync<GenericImage>, n: u32) {
+    let mut output = container
+        .exec(ExecCommand::new([
+            "cast",
+            "rpc",
+            "--rpc-url",
+            "http://localhost:8546",
+            "anvil_mine",
+            n.to_string().as_str(),
+        ]))
+        .await
+        .expect("Failed to mine anvil blocks");
+
+    // blocking operation until the mining execution finishes
+    output.stdout_to_vec().await.unwrap();
+    assert_eq!(output.exit_code().await.unwrap().unwrap(), 0);
+}
+
 /// Start an anvil container for testing, using the dump state file `ANVIL_STATE_PATH`
 pub async fn start_m2_anvil_container() -> (ContainerAsync<GenericImage>, String, String) {
     let relative_path = PathBuf::from(M2_ANVIL_STATE_PATH);

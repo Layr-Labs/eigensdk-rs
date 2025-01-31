@@ -780,7 +780,10 @@ mod tests {
     use eigen_common::{get_provider, get_signer};
     use eigen_crypto_bls::BlsKeyPair;
     use eigen_testing_utils::{
-        anvil::{mine_anvil_blocks, set_account_balance, start_anvil_container},
+        anvil::{
+            mine_anvil_blocks, mine_anvil_blocks_operator_set, set_account_balance,
+            start_anvil_container,
+        },
         anvil_constants::{
             get_allocation_manager_address, get_erc20_mock_strategy,
             get_registry_coordinator_address, get_service_manager_address,
@@ -1327,7 +1330,7 @@ mod tests {
             .get_allocation_delay(ANVIL_FIRST_ADDRESS)
             .await
             .unwrap();
-        mine_anvil_blocks(&container, allocation_delay).await;
+        mine_anvil_blocks_operator_set(&container, allocation_delay).await;
 
         let allocation_info = el_chain_writer
             .el_chain_reader
