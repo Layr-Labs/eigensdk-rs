@@ -843,7 +843,7 @@ mod tests {
         let el_chain_writer =
             new_test_writer(http_endpoint.to_string(), private_key.to_string()).await;
 
-        set_account_balance(&container, address_str).await;
+        set_account_balance(&container, address_str, "http://localhost:8546").await;
         let address = Address::from_str(address_str).unwrap();
 
         let operator = Operator {

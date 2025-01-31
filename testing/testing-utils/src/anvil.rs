@@ -143,11 +143,17 @@ pub async fn start_anvil_container() -> (ContainerAsync<GenericImage>, String, S
 }
 
 /// Deposit 1 eth to the account in anvil
-pub async fn set_account_balance(container: &ContainerAsync<GenericImage>, address: &str) {
+pub async fn set_account_balance(
+    container: &ContainerAsync<GenericImage>,
+    address: &str,
+    port: &str,
+) {
     let mut output = container
         .exec(ExecCommand::new([
             "cast",
             "rpc",
+            "--rpc-url",
+            port,
             "anvil_setBalance",
             address,
             "0xDE0B6B3A7640000", // 1 ETH in WEI
