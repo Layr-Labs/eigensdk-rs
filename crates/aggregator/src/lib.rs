@@ -24,6 +24,7 @@ use jsonrpc_core::{Error, IoHandler, Params, Value};
 use jsonrpc_http_server::{AccessControlAllowOrigin, DomainsValidation, ServerBuilder};
 use serde::{Deserialize, Serialize};
 use std::{collections::HashMap, net::SocketAddr, sync::Arc};
+use tokio::sync::Mutex;
 use tracing::info;
 use traits::{TaskProcessor, TaskResponse};
 
@@ -115,20 +116,24 @@ impl<TP: TaskProcessor + Send + 'static> Aggregator<TP> {
     pub async fn start(self, ws_rpc_url: String) -> Result<(), AggregatorError> {
         info!("Starting aggregator");
 
-        let aggregator = Arc::new(tokio::sync::Mutex::new(self));
+        let aggregator = Arc::new(Mutex::new(self));
 
-        // Spawn two tasks: one for the server and one for processing tasks
+        // Spawn three tasks: one for the server that receives signature, one for processing tasks, and another to process aggregated signatures
+        // TODO: split state into three here, instead of sharing
         let server_handle = tokio::spawn(Self::start_server(Arc::clone(&aggregator)));
         let process_handle = tokio::spawn(Self::process_tasks(
             ws_rpc_url.clone(),
             Arc::clone(&aggregator),
         ));
+        let aggregate_handle =
+            tokio::spawn(Self::process_aggregated_signatures(Arc::clone(&aggregator)));
 
         // Wait for both tasks to complete and handle potential errors
-        match tokio::try_join!(server_handle, process_handle) {
-            Ok((server_result, process_result)) => {
+        match tokio::try_join!(server_handle, process_handle, aggregate_handle) {
+            Ok((server_result, process_result, aggregate_result)) => {
                 server_result?;
                 process_result?;
+                aggregate_result?;
             }
             Err(_e) => {
                 return Err(AggregatorError::JoinError);
@@ -147,9 +152,7 @@ impl<TP: TaskProcessor + Send + 'static> Aggregator<TP> {
     /// # Returns
     ///
     /// * `Result<(), AggregatorError>` - The result of the operation
-    pub async fn start_server(
-        aggregator: Arc<tokio::sync::Mutex<Self>>,
-    ) -> Result<(), AggregatorError> {
+    async fn start_server(aggregator: Arc<Mutex<Self>>) -> Result<(), AggregatorError> {
         let mut io = IoHandler::new();
         io.add_method("process_signed_task_response", {
             let aggregator = Arc::clone(&aggregator);
@@ -187,9 +190,10 @@ impl<TP: TaskProcessor + Send + 'static> Aggregator<TP> {
             ]))
             .start_http(&socket)?;
 
-        info!("Server running at {}", socket);
+        // TODO: move to an async library
+        tokio::task::spawn_blocking(move || server.wait());
 
-        server.wait();
+        info!("Server running at {socket}");
 
         Ok(())
     }
@@ -204,9 +208,9 @@ impl<TP: TaskProcessor + Send + 'static> Aggregator<TP> {
     /// # Returns
     ///
     /// * `Result<(), AggregatorError>` - The result of the operation
-    pub async fn process_tasks(
+    async fn process_tasks(
         ws_rpc_url: String,
-        aggregator: Arc<tokio::sync::Mutex<Self>>,
+        aggregator: Arc<Mutex<Self>>,
     ) -> Result<(), AggregatorError> {
         let ws = WsConnect::new(ws_rpc_url.clone());
         let provider = ProviderBuilder::new().on_ws(ws).await?;
@@ -246,7 +250,7 @@ impl<TP: TaskProcessor + Send + 'static> Aggregator<TP> {
     /// # Returns
     ///
     /// * `Result<(), AggregatorError>` - The result of the operation
-    pub async fn process_signed_task_response(
+    async fn process_signed_task_response(
         &mut self,
         signed_task_response: SignedTaskResponse<TP::TaskResponse>,
     ) -> Result<(), AggregatorError> {
@@ -290,6 +294,19 @@ impl<TP: TaskProcessor + Send + 'static> Aggregator<TP> {
                 task_index
             );
         }
+        Ok(())
+    }
+
+    async fn process_aggregated_signatures(
+        _aggregator: Arc<Mutex<Self>>,
+    ) -> Result<(), AggregatorError> {
+        // aggregator
+        //     .lock()
+        //     .await
+        //     .bls_aggregation_service
+        //     .aggregated_response_receiver
+        //     .lock()
+        //     .await;
         Ok(())
     }
 }
