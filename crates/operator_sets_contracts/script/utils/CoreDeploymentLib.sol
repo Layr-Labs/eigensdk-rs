@@ -132,7 +132,7 @@ library CoreDeploymentLib {
                 IDelegationManager(result.delegationManager),
                 IPauserRegistry(result.pauserRegistry),
                 IPermissionController(result.permissionController),
-                uint32(0), // _DEALLOCATION_DELAY
+                uint32(1), // _DEALLOCATION_DELAY
                 uint32(0) // _ALLOCATION_CONFIGURATION_DELAY
             )
         );

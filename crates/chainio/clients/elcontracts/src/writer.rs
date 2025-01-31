@@ -722,12 +722,16 @@ impl ELChainWriter {
     ) -> Result<TxHash, ElContractsError> {
         let provider = get_signer(&self.signer, &self.provider);
         let Some(allocation_manager_address) = self.allocation_manager else {
+            dbg!("no_alloo");
             return Err(ElContractsError::MissingParamater);
         };
         let allocation_manager_contract =
             AllocationManager::new(allocation_manager_address, provider);
 
-        let tx = allocation_manager_contract
+        let tx: alloy_provider::PendingTransactionBuilder<
+            alloy::transports::http::Http<alloy::transports::http::Client>,
+            alloy::network::Ethereum,
+        > = allocation_manager_contract
             .setAllocationDelay(operator_address, delay)
             .send()
             .await
@@ -1274,7 +1278,11 @@ mod tests {
             .unwrap();
         let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
         assert!(receipt.status());
-
+        let current_block = get_provider(&http_endpoint)
+            .get_block_number()
+            .await
+            .unwrap();
+        mine_anvil_blocks_operator_set(&_container, (current_block as u32) + 2).await;
         let allocation_delay = el_chain_writer
             .el_chain_reader
             .get_allocation_delay(ANVIL_FIRST_ADDRESS)
