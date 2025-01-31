@@ -728,7 +728,7 @@ impl ELChainWriter {
         let allocation_manager_contract =
             AllocationManager::new(allocation_manager_address, provider);
 
-        let tx: alloy_provider::PendingTransactionBuilder<
+        let tx: alloy::providers::PendingTransactionBuilder<
             alloy::transports::http::Http<alloy::transports::http::Client>,
             alloy::network::Ethereum,
         > = allocation_manager_contract
@@ -784,10 +784,7 @@ mod tests {
     use eigen_common::{get_provider, get_signer};
     use eigen_crypto_bls::BlsKeyPair;
     use eigen_testing_utils::{
-        anvil::{
-            mine_anvil_blocks, mine_anvil_blocks_operator_set, set_account_balance,
-            start_anvil_container,
-        },
+        anvil::{mine_anvil_blocks_operator_set, set_account_balance, start_anvil_container},
         anvil_constants::{
             get_allocation_manager_address, get_erc20_mock_strategy,
             get_registry_coordinator_address, get_service_manager_address,
