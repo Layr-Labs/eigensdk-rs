@@ -31,7 +31,7 @@ Each version will have a separate `Breaking Changes` section as well. To describ
         provider_url,
     );
     ```
-    Now, is generated this way:
+    Now, it's called this way:
     ``` Rust
     let el_chain_reader = ELChainReader::new(
         logger,
