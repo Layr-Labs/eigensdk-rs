@@ -8,7 +8,6 @@ use eigen_utils::{
     middleware::{
         iblssignaturechecker::IBLSSignatureChecker, registrycoordinator::RegistryCoordinator,
     },
-    sdk::mockavsservicemanager::MockAvsServiceManager,
 };
 use serde::{Deserialize, Serialize};
 
