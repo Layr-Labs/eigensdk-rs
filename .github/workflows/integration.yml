@@ -104,7 +104,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./crates/contracts/anvil
+        working-directory: ./contracts/anvil
     steps:
       - uses: actions/checkout@v4
         with:

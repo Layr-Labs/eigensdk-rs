@@ -1,6 +1,6 @@
-[submodule "crates/contracts/lib/forge-std"]
-	path = crates/contracts/lib/forge-std
+[submodule "contracts/lib/forge-std"]
+	path = contracts/lib/forge-std
 	url = https://github.com/foundry-rs/forge-std
-[submodule "crates/contracts/lib/eigenlayer-middleware"]
-	path = crates/contracts/lib/eigenlayer-middleware
+[submodule "contracts/lib/eigenlayer-middleware"]
+	path = contracts/lib/eigenlayer-middleware
 	url = https://github.com/Layr-labs/eigenlayer-middleware

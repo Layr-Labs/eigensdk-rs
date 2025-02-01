@@ -3,10 +3,10 @@ PHONY: reset-anvil
 __CONTRACTS__: ##
 
 start-anvil-chain-with-contracts-deployed: ##
-	./crates/contracts/anvil/start-anvil-chain-with-el-and-avs-deployed.sh
+	./contracts/anvil/start-anvil-chain-with-el-and-avs-deployed.sh
 
 deploy-contracts-to-anvil-and-save-state: ##
-	./crates/contracts/anvil/deploy-contracts-save-anvil-state.sh
+	./contracts/anvil/deploy-contracts-save-anvil-state.sh
 
 __TESTING__: ##
 
@@ -37,7 +37,7 @@ __BINDINGS__: ##
 
 ### SDK bindings ###
 SDK_CONTRACTS:="MockAvsServiceManager ContractsRegistry MockERC20"
-SDK_CONTRACTS_LOCATION:=crates/contracts
+SDK_CONTRACTS_LOCATION:=contracts
 SDK_BINDINGS_PATH:=crates/utils/src/sdk
 # The echo is to remove quotes, and the patsubst to make the regex match the full text only
 SDK_CONTRACTS_ARGS:=$(patsubst %, --select '^%$$', $(shell echo $(SDK_CONTRACTS)))

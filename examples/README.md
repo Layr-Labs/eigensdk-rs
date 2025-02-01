@@ -20,7 +20,7 @@ cargo run --example get_operator_from_id
 
 ## Anvil utils(This requires a local anvil instance running using docker )
 
-Get EigenLayer contract addresses for local anvil testing . These are predetermined addresses that are stored in a mapping using these [scripts](https://github.com/Layr-Labs/eigensdk-rs/blob/d9b40d806b4939c64bb7d3df0f6f2a542499bd27/crates/contracts/script/DeployMockAvsRegistries.s.sol#L202).
+Get EigenLayer contract addresses for local anvil testing . These are predetermined addresses that are stored in a mapping using these [scripts](https://github.com/Layr-Labs/eigensdk-rs/blob/d9b40d806b4939c64bb7d3df0f6f2a542499bd27/contracts/script/DeployMockAvsRegistries.s.sol#L202).
 
 ```sh
 make start-anvil-chain-with-contracts-deployed
