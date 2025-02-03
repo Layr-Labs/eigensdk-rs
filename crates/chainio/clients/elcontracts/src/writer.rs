@@ -649,6 +649,8 @@ impl ELChainWriter {
             operatorSetIds: operator_set_ids,
             data: encoded_params_with_socket.into(),
         };
+        dbg!();
+        dbg!(allocation_manager_address);
         let tx = allocation_manager_contract
             .registerForOperatorSets(operator_address, params)
             .send()
@@ -781,6 +783,7 @@ mod tests {
     };
     use alloy::{providers::Provider, sol_types::SolCall};
     use alloy_primitives::{address, aliases::U96, Address, U256};
+    use alloy_provider::WalletProvider;
     use eigen_common::{get_provider, get_signer};
     use eigen_crypto_bls::BlsKeyPair;
     use eigen_testing_utils::{
@@ -1155,7 +1158,7 @@ mod tests {
         let default_signer = get_signer(ANVIL_FIRST_PRIVATE_KEY, http_endpoint);
         let operator_signer = get_signer(OPERATOR_PRIVATE_KEY, http_endpoint);
         let allocation_manager =
-            AllocationManager::new(allocation_manager_addr, operator_signer.clone());
+            AllocationManager::new(allocation_manager_addr, default_signer.clone());
         let registry_coordinator_addr =
             get_registry_coordinator_address(http_endpoint.to_string()).await;
         let service_manager_address = get_service_manager_address(http_endpoint.to_string()).await;
@@ -1163,7 +1166,7 @@ mod tests {
             MockAvsServiceManager::new(service_manager_address, default_signer.clone());
         service_manager
             .setAppointee(
-                OPERATOR_ADDRESS,
+                default_signer.default_signer_address(),
                 allocation_manager_addr,
                 alloy_primitives::FixedBytes(AllocationManager::setAVSRegistrarCall::SELECTOR),
             )
@@ -1220,7 +1223,8 @@ mod tests {
 
     #[tokio::test]
     async fn test_register_for_operator_sets() {
-        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        // let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let http_endpoint = "http://localhost:8545".to_string();
         let avs_address = get_service_manager_address(http_endpoint.clone()).await;
         let operator_set_id = 0;
         create_operator_set(http_endpoint.as_str(), avs_address).await;
