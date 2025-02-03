@@ -4,10 +4,10 @@ use alloy::primitives::Address;
 use alloy::providers::Provider;
 use eigen_common::get_provider;
 use eigen_utils::{
-    slashing::core::delegationmanager::DelegationManager,
     rewardsv2::middleware::{
         iblssignaturechecker::IBLSSignatureChecker, registrycoordinator::RegistryCoordinator,
     },
+    slashing::core::delegationmanager::DelegationManager,
 };
 use serde::{Deserialize, Serialize};
 

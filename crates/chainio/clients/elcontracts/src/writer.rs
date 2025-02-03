@@ -801,8 +801,8 @@ mod tests {
             IAllocationManagerTypes,
         },
         slashing::middleware::registrycoordinator::{
-            ISlashingRegistryCoordinatorTypes::OperatorSetParam, IStakeRegistryTypes::StrategyParams,
-            RegistryCoordinator,
+            ISlashingRegistryCoordinatorTypes::OperatorSetParam,
+            IStakeRegistryTypes::StrategyParams, RegistryCoordinator,
         },
         slashing::sdk::mockavsservicemanager::MockAvsServiceManager,
     };
