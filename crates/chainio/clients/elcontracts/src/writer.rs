@@ -721,6 +721,24 @@ impl ELChainWriter {
 
         Ok(*tx.tx_hash())
     }
+
+    pub async fn clear_deallocation_queue(
+        &self,
+        operator_address: Address,
+        strategy_addresses: Vec<Address>,
+        num_to_clear: Vec<u16>,
+    ) -> Result<TxHash, ElContractsError> {
+        let provider = get_signer(&self.signer, &self.provider);
+        let allocation_manager_contract = AllocationManager::new(self.allocation_manager, provider);
+
+        let tx = allocation_manager_contract
+            .clearDeallocationQueue(operator_address, strategy_addresses, num_to_clear)
+            .send()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        Ok(*tx.tx_hash())
+    }
 }
 
 #[cfg(test)]
