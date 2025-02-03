@@ -19,7 +19,7 @@ pub mod integration_test {
     use eigen_services_avsregistry::chaincaller::AvsRegistryServiceChainCaller;
     use eigen_services_operatorsinfo::operatorsinfo_inmemory::OperatorInfoServiceInMemory;
     use eigen_testing_utils::{
-        anvil::{mine_anvil_blocks, start_anvil_container},
+        anvil::{mine_anvil_blocks, mine_anvil_blocks_operator_set, start_anvil_container},
         anvil_constants::{
             get_allocation_manager_address, get_avs_directory_address,
             get_delegation_manager_address, get_erc20_mock_strategy,
@@ -409,7 +409,7 @@ pub mod integration_test {
         //     .args(["rpc", "anvil_mine", &1.to_string()])
         //     .output()
         //     .expect("Failed to execute command");
-        mine_anvil_blocks(&container, 1).await;
+        mine_anvil_blocks_operator_set(&container, 1).await;
 
         // // Create the task related parameters
         let task_index: TaskIndex = 0;
