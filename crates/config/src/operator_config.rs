@@ -5,6 +5,4 @@ use serde::{Deserialize, Serialize};
 pub struct OperatorConfig {
     pub operator_address: String,
     pub operator_id: String,
-    pub operator_2_address: String,
-    pub operator_2_id: String,
 }

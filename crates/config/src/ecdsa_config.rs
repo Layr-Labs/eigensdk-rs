@@ -5,6 +5,4 @@ use serde::{Deserialize, Serialize};
 pub struct EcdsaConfig {
     pub keystore_path: String,
     pub keystore_password: String,
-    pub keystore_2_path: String,
-    pub keystore_2_password: String,
 }
