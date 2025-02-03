@@ -7,7 +7,7 @@ use alloy_primitives::{Address, FixedBytes, U256};
 use eigen_common::{get_provider, SdkProvider};
 use eigen_logging::logger::SharedLogger;
 use eigen_utils::{
-    core::{
+    slashing::core::{
         allocationmanager::AllocationManager::{self, OperatorSet},
         avsdirectory::AVSDirectory,
         delegationmanager::DelegationManager,
@@ -18,7 +18,7 @@ use eigen_utils::{
         istrategy::IStrategy::{self, IStrategyInstance},
         permissioncontroller::PermissionController,
     },
-    middleware::ierc20::IERC20::{self, IERC20Instance},
+    slashing::middleware::ierc20::IERC20::{self, IERC20Instance},
 };
 
 #[derive(Debug, Clone)]
@@ -1389,7 +1389,7 @@ mod tests {
     use eigen_testing_utils::{
         anvil::start_anvil_container, anvil_constants::get_delegation_manager_address,
     };
-    use eigen_utils::core::{
+    use eigen_utils::slashing::core::{
         avsdirectory::AVSDirectory::{self, calculateOperatorAVSRegistrationDigestHashReturn},
         delegationmanager::DelegationManager::{self, calculateDelegationApprovalDigestHashReturn},
     };

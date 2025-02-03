@@ -22,7 +22,7 @@ use eigen_testing_utils::{
     },
     transaction::wait_transaction,
 };
-use eigen_utils::core::delegationmanager::DelegationManager;
+use eigen_utils::slashing::core::delegationmanager::DelegationManager;
 use std::{
     str::FromStr,
     time::{Duration, SystemTime, UNIX_EPOCH},

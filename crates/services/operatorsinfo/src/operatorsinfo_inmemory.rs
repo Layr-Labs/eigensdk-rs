@@ -13,11 +13,11 @@ use eigen_types::operator::{
     operator_id_from_g1_pub_key, OperatorId, OperatorPubKeys, OperatorTypesError,
 };
 use eigen_utils::{
-    middleware::blsapkregistry::{
+    slashing::middleware::blsapkregistry::{
         BLSApkRegistry,
         BN254::{G1Point, G2Point},
     },
-    middleware::registrycoordinator::RegistryCoordinator,
+    slashing::middleware::registrycoordinator::RegistryCoordinator,
 };
 use eyre::Result;
 use futures_util::StreamExt;
@@ -436,7 +436,7 @@ mod tests {
     };
     use eigen_testing_utils::transaction::wait_transaction;
     use eigen_types::operator::Operator;
-    use eigen_utils::core::delegationmanager::DelegationManager;
+    use eigen_utils::slashing::core::delegationmanager::DelegationManager;
     use std::str::FromStr;
     use std::time::{Duration, SystemTime, UNIX_EPOCH};
     use tokio::time::sleep;

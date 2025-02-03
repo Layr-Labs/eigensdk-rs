@@ -23,7 +23,7 @@ pub(crate) mod test_utils {
         get_strategy_manager_address,
     };
     use eigen_utils::{
-        core::{
+        slashing::core::{
             delegationmanager::DelegationManager,
             irewardscoordinator::{
                 IRewardsCoordinator,
@@ -32,7 +32,7 @@ pub(crate) mod test_utils {
                 },
             },
         },
-        sdk::mockerc20::MockERC20,
+        slashing::sdk::mockerc20::MockERC20,
     };
     use std::str::FromStr;
 

@@ -10,14 +10,14 @@ use eigen_crypto_bls::{
 pub use eigen_types::operator::Operator;
 
 use eigen_utils::{
-    core::{
+    slashing::core::{
         allocationmanager::{AllocationManager, IAllocationManagerTypes},
         delegationmanager::DelegationManager,
         irewardscoordinator::{IRewardsCoordinator, IRewardsCoordinatorTypes::RewardsMerkleClaim},
         permissioncontroller::PermissionController,
         strategymanager::StrategyManager,
     },
-    middleware::{ierc20::IERC20, registrycoordinator::RegistryCoordinator},
+    slashing::middleware::{ierc20::IERC20, registrycoordinator::RegistryCoordinator},
 };
 use tracing::info;
 
@@ -796,15 +796,15 @@ mod tests {
     };
     use eigen_types::operator::Operator;
     use eigen_utils::{
-        core::allocationmanager::{
+        slashing::core::allocationmanager::{
             AllocationManager::{self, OperatorSet},
             IAllocationManagerTypes,
         },
-        middleware::registrycoordinator::{
-            ISlashingRegistryCoordinator::OperatorSetParam, IStakeRegistry::StrategyParams,
+        slashing::middleware::registrycoordinator::{
+            ISlashingRegistryCoordinatorTypes::OperatorSetParam, IStakeRegistryTypes::StrategyParams,
             RegistryCoordinator,
         },
-        sdk::mockavsservicemanager::MockAvsServiceManager,
+        slashing::sdk::mockavsservicemanager::MockAvsServiceManager,
     };
     use std::str::FromStr;
 

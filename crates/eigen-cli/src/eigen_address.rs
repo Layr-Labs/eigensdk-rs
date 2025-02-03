@@ -4,8 +4,8 @@ use alloy::primitives::Address;
 use alloy::providers::Provider;
 use eigen_common::get_provider;
 use eigen_utils::{
-    core::delegationmanager::DelegationManager,
-    middleware::{
+    slashing::core::delegationmanager::DelegationManager,
+    rewardsv2::middleware::{
         iblssignaturechecker::IBLSSignatureChecker, registrycoordinator::RegistryCoordinator,
     },
 };

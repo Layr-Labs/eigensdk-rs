@@ -1,4 +1,3 @@
 //! This module exports generated bindings.
-pub mod core;
-pub mod middleware;
-pub mod sdk;
+pub mod rewardsv2;
+pub mod slashing;
