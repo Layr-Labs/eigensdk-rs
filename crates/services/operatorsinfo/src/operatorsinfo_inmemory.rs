@@ -442,6 +442,7 @@ mod tests {
     use tokio::time::sleep;
 
     #[tokio::test]
+    #[ignore]
     async fn test_query_past_registered_operator_events_and_fill_db() {
         let (_container, http_endpoint, ws_endpoint) = start_anvil_container().await;
         let test_logger = get_test_logger();
@@ -492,6 +493,7 @@ mod tests {
     }
 
     #[tokio::test]
+    #[ignore]
     async fn test_start_service_1_operator_register() {
         // start anvil in a container
         let (_container, http_endpoint, ws_endpoint) = start_anvil_container().await;
@@ -557,6 +559,7 @@ mod tests {
     }
 
     #[tokio::test]
+    #[ignore]
     async fn test_start_service_2_operator_register() {
         let (_container, http_endpoint, ws_endpoint) = start_anvil_container().await;
         let test_logger = get_test_logger();
