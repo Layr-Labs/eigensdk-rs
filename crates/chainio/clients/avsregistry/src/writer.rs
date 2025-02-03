@@ -312,6 +312,37 @@ impl AvsRegistryChainWriter {
         info!(tx_hash = ?tx,"successfully deregistered operator with the AVS's registry coordinator" );
         Ok(*tx.tx_hash())
     }
+
+    /// Update socket
+    ///
+    /// This function is used to update the socket of the sender (if it is a registered operator).
+    ///
+    /// # Arguments
+    ///
+    /// * `socket` - The address of the socket to be assigned to the operator.
+    ///
+    /// # Returns
+    ///
+    /// * `TxHash` - The transaction hash of the deregister operator transaction.
+    pub async fn update_socket(
+        &self,
+        socket: String,
+    ) -> Result<TxHash, AvsRegistryError> {
+        info!("updating socket with the AVS's registry coordinator");
+        let provider = get_signer(&self.signer.clone(), &self.provider);
+
+        let contract_registry_coordinator =
+            RegistryCoordinator::new(self.registry_coordinator_addr, provider);
+
+        let contract_call = contract_registry_coordinator.updateSocket(socket);
+
+        let tx = contract_call
+            .send()
+            .await
+            .map_err(AvsRegistryError::AlloyContractError)?;
+        info!(tx_hash = ?tx,"successfully updated the socket with the AVS's registry coordinator" );
+        Ok(*tx.tx_hash())
+    }
 }
 
 #[cfg(test)]
