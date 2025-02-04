@@ -61,6 +61,8 @@ bindings_host:
 	@echo "Generating bindings..."
 	./scripts/generate_bindings.sh
 	cargo fmt --all
+	# Apply a fix for any compile issues
+	git apply --allow-empty scripts/bindings.patch
 	@echo "Bindings generated"
 
 .PHONY: bindings
@@ -70,3 +72,5 @@ bindings:
 		ghcr.io/foundry-rs/foundry:v0.3.0 \
 		-c scripts/generate_bindings.sh
 	cargo fmt --all
+	# Apply a fix for any compile issues
+	git apply --allow-empty scripts/bindings.patch
