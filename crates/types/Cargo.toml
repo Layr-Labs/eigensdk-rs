@@ -11,6 +11,7 @@ license-file.workspace = true
 [dependencies]
 alloy-primitives.workspace = true
 eigen-crypto-bls.workspace = true
+eigen-utils.workspace = true
 ethers.workspace = true
 num-bigint = "0.4.4"
 thiserror.workspace = true

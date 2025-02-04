@@ -1,5 +1,6 @@
 use alloy_primitives::{aliases::U192, Address, FixedBytes, U256};
 use eigen_crypto_bls::{convert_to_g1_point, error::BlsError, BlsG1Point, BlsG2Point, BlsKeyPair};
+use eigen_utils::common::get_url_content;
 use ethers::{types::U64, utils::keccak256};
 use num_bigint::BigUint;
 use std::collections::HashMap;
@@ -67,6 +68,62 @@ pub struct Operator {
     /// `allocation_delay` is the delay in seconds where an operator is allowed to change allocation
     /// This can only be set once by the operator. Once set this can't be changed
     pub allocation_delay: u32,
+}
+
+impl Operator {
+    pub fn validate(&self) -> Result<(), OperatorTypesError> {
+        if !self.address.is_zero() {
+            return Err(OperatorTypesError::OperatorIdFromPubKey(
+                BlsError::InvalidPublicKey,
+            ));
+        }
+
+        if !self.delegation_approver_address.is_zero() {
+            return Err(OperatorTypesError::OperatorIdFromPubKey(
+                BlsError::InvalidPublicKey,
+            ));
+        }
+
+        // Validate metadata
+        if let Some(metadata_url) = &self.metadata_url {
+            let body = get_url_content(metadata_url)?;
+            let operator_metadata: OperatorMetadata = serde_json::from_str(&body)?;
+            operator_metadata.validate()?;
+        }
+
+        Ok(())
+    }
+    /*
+    From Go SDK:
+
+    func (o Operator) Validate() error {
+        if !utils.IsValidEthereumAddress(o.Address) {
+            return ErrInvalidOperatorAddress
+        }
+
+        if o.DelegationApproverAddress != ZeroAddress && !utils.IsValidEthereumAddress(o.DelegationApproverAddress) {
+            return ErrInvalidDelegationApproverAddress
+        }
+
+        err := utils.CheckIfUrlIsValid(o.MetadataUrl)
+        if err != nil {
+            return utils.WrapError(ErrInvalidMetadataUrl, err)
+        }
+
+        body, err := utils.ReadPublicURL(o.MetadataUrl)
+        if err != nil {
+            return utils.WrapError(ErrReadingMetadataUrlResponse, err)
+        }
+
+        operatorMetadata := OperatorMetadata{}
+        err = json.Unmarshal(body, &operatorMetadata)
+        if err != nil {
+            return ErrUnmarshalOperatorMetadata
+        }
+
+        return operatorMetadata.Validate()
+    }
+    */
 }
 
 pub type Socket = String;

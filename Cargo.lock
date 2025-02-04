@@ -2859,6 +2859,7 @@ version = "0.1.2"
 dependencies = [
  "alloy-primitives",
  "eigen-crypto-bls",
+ "eigen-utils",
  "ethers",
  "num-bigint 0.4.6",
  "thiserror 1.0.69",
