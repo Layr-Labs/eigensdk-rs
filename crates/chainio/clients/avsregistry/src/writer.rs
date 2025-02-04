@@ -506,7 +506,10 @@ mod tests {
         let new_socket_addr = "not a socket";
 
         // Update the socket for operator
-        let tx_hash = avs_writer.update_socket(new_socket_addr.into()).await.unwrap();
+        let tx_hash = avs_writer
+            .update_socket(new_socket_addr.into())
+            .await
+            .unwrap();
 
         let tx_status = wait_transaction(&http_endpoint, tx_hash)
             .await
