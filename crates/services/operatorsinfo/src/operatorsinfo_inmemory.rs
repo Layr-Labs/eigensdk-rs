@@ -428,7 +428,7 @@ mod tests {
     use eigen_common::get_provider;
     use eigen_crypto_bls::BlsKeyPair;
     use eigen_logging::get_test_logger;
-    use eigen_testing_utils::anvil::{start_anvil_container, start_m2_anvil_container};
+    use eigen_testing_utils::anvil::start_m2_anvil_container;
     use eigen_testing_utils::anvil_constants::{
         get_allocation_manager_address, get_avs_directory_address, get_delegation_manager_address,
         get_operator_state_retriever_address, get_registry_coordinator_address,
@@ -442,7 +442,6 @@ mod tests {
     use tokio::time::sleep;
 
     #[tokio::test]
-    #[ignore]
     async fn test_query_past_registered_operator_events_and_fill_db() {
         let (_container, http_endpoint, ws_endpoint) = start_m2_anvil_container().await;
         let test_logger = get_test_logger();
