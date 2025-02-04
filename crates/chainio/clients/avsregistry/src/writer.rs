@@ -401,6 +401,26 @@ mod tests {
         test_deregister_operator(&avs_writer, quorum_nums, http_endpoint).await;
     }
 
+    #[tokio::test]
+    async fn test_set_slashable_stake_lookahead() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let private_key =
+            "8b3a350cf5c34c9194ca85829a2df0ec3153be0318b5e2d3348e872092edffba".to_string();
+        let avs_writer =
+            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
+
+        let tx_hash = avs_writer
+            .set_slashable_stake_lookahead(0, 10)
+            .await
+            .unwrap();
+
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
+        assert!(tx_status);
+    }
+
     // this function is caller from test_avs_writer_methods
     async fn test_update_stake_of_operator_subset(
         avs_writer: &AvsRegistryChainWriter,
