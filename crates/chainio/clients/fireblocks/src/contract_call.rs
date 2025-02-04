@@ -130,7 +130,7 @@ impl ContractCall for Client {
         serde_json::from_str(&contract_call).map_err(FireBlockError::SerdeError)
     }
 }
-
+s
 #[cfg(test)]
 mod tests {
 

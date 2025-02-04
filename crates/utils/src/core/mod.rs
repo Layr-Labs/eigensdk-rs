@@ -5,9 +5,9 @@
 //! These files may be overwritten by the codegen system at any time.
 pub mod avsdirectory;
 pub mod delegationmanager;
+pub mod erc20;
 pub mod eigenpod;
 pub mod eigenpodmanager;
-pub mod erc20;
 pub mod ieigenpod;
 pub mod ieigenpodmanager;
 pub mod irewardscoordinator;
