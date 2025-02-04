@@ -46,18 +46,13 @@ impl<R: AvsRegistryReader + Sync, S: OperatorInfoService + Sync> AvsRegistryServ
             .avs_registry
             .get_operators_stake_in_quorums_at_block(block_num, Bytes::from(Vec::from(quorum_nums)))
             .await?;
-        dbg!("my1");
         if operators_stakes_in_quorums.len() != quorum_nums.len() {
             // the list of quorum nums and the list of operators stakes in quorums should have the same length
             return Err(AvsRegistryError::InvalidQuorumNums);
         }
-        dbg!(quorum_nums);
-        dbg!("my2");
         for (quorum_id, quorum_num) in quorum_nums.iter().enumerate() {
             for operator in &operators_stakes_in_quorums[quorum_id] {
-                dbg!("beforeinfo");
                 let info = self.get_operator_info(*operator.operatorId).await?;
-                dbg!("after info");
                 let stake_per_quorum = HashMap::new();
                 let avs_state = operators_avs_state
                     .entry(FixedBytes(*operator.operatorId))
@@ -157,19 +152,12 @@ impl<R: AvsRegistryReader, S: OperatorInfoService> AvsRegistryServiceChainCaller
         &self,
         operator_id: [u8; 32],
     ) -> Result<OperatorPubKeys, AvsRegistryError> {
-        dbg!("enterr");
         let operator_addr = self.avs_registry.get_operator_from_id(operator_id).await?;
-        dbg!(operator_addr);
-        dbg!("enter1");
-        dbg!(FixedBytes::from(operator_id));
         self.operators_info_service
             .get_operator_info(operator_addr)
             .await
             .unwrap_or(None)
-            .ok_or({
-                dbg!();
-                AvsRegistryError::GetOperatorInfo
-            })
+            .ok_or({ AvsRegistryError::GetOperatorInfo })
     }
 }
 

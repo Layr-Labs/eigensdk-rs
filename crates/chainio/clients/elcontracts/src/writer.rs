@@ -649,8 +649,6 @@ impl ELChainWriter {
             operatorSetIds: operator_set_ids,
             data: encoded_params_with_socket.into(),
         };
-        dbg!();
-        dbg!(allocation_manager_address);
         let tx = allocation_manager_contract
             .registerForOperatorSets(operator_address, params)
             .send()
@@ -724,7 +722,6 @@ impl ELChainWriter {
     ) -> Result<TxHash, ElContractsError> {
         let provider = get_signer(&self.signer, &self.provider);
         let Some(allocation_manager_address) = self.allocation_manager else {
-            dbg!("no_alloo");
             return Err(ElContractsError::MissingParamater);
         };
         let allocation_manager_contract =
@@ -1257,7 +1254,6 @@ mod tests {
             .is_operator_registered_with_operator_set(operator_addr, operator_set.clone())
             .await
             .unwrap();
-        dbg!(is_registered);
         assert!(is_registered);
     }
 

@@ -95,7 +95,6 @@ impl ELChainReader {
         let provider = get_provider(client);
 
         let contract_delegation_manager = DelegationManager::new(delegation_manager, provider);
-        dbg!("777");
         let is_operator_set = contract_delegation_manager.allocationManager().call().await;
         if is_operator_set.is_err() {
             Ok(Self {

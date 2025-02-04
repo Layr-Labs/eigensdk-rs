@@ -64,19 +64,16 @@ impl AvsRegistryChainWriter {
         let fill_provider = get_provider(&provider);
         let contract_registry_coordinator =
             RegistryCoordinator::new(registry_coordinator_addr, &fill_provider);
-        dbg!("22");
         let service_manager_addr = contract_registry_coordinator
             .serviceManager()
             .call()
             .await
             .map_err(AvsRegistryError::AlloyContractError)?;
-        dbg!("33");
         let RegistryCoordinator::serviceManagerReturn {
             _0: service_manager,
         } = service_manager_addr;
         let contract_service_manager_base =
             ServiceManagerBase::new(service_manager, &fill_provider);
-        dbg!("44");
         let bls_apk_registry_addr_result = contract_registry_coordinator
             .blsApkRegistry()
             .call()
@@ -85,13 +82,10 @@ impl AvsRegistryChainWriter {
         let RegistryCoordinator::blsApkRegistryReturn {
             _0: bls_apk_registry,
         } = bls_apk_registry_addr_result;
-        dbg!("55");
         let stake_registry_addr = contract_registry_coordinator.stakeRegistry().call().await?;
         let RegistryCoordinator::stakeRegistryReturn { _0: stake_registry } = stake_registry_addr;
-        dbg!("55");
         let contract_stake_registry = StakeRegistry::new(stake_registry, &fill_provider);
         let delegation_manager_return = contract_stake_registry.delegation().call().await?;
-        dbg!("66");
         let StakeRegistry::delegationReturn {
             _0: delegation_manager_addr,
         } = delegation_manager_return;
