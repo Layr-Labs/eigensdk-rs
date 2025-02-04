@@ -722,17 +722,31 @@ impl ELChainWriter {
         Ok(*tx.tx_hash())
     }
 
+    /// Removes from the deallocationQueue all clearable deallocations up to max `num_to_clear` number of deallocations.
+    ///
+    /// `len(strategies)` must be equal to `len(num_to_clear)`
+    ///
+    /// # Arguments
+    /// * `operator` - operator address to clear deallocations for
+    /// * `strategies` - list of strategies to clear deallocations for
+    /// * `num_to_clear` - list of number of pending deallocations to clear for each strategy
+    ///
+    /// # Returns
+    /// * `TxHash` - The transaction hash of the generated transaction.
+    ///
+    /// # Errors
+    /// * `ElContractsError` - if the call to the contract fails.
     pub async fn clear_deallocation_queue(
         &self,
-        operator_address: Address,
-        strategy_addresses: Vec<Address>,
+        operator: Address,
+        strategies: Vec<Address>,
         num_to_clear: Vec<u16>,
     ) -> Result<TxHash, ElContractsError> {
         let provider = get_signer(&self.signer, &self.provider);
         let allocation_manager_contract = AllocationManager::new(self.allocation_manager, provider);
 
         let tx = allocation_manager_contract
-            .clearDeallocationQueue(operator_address, strategy_addresses, num_to_clear)
+            .clearDeallocationQueue(operator, strategies, num_to_clear)
             .send()
             .await
             .map_err(ElContractsError::AlloyContractError)?;
