@@ -6,7 +6,7 @@ set +e
 # Print each command executed (useful for debugging)
 # set -o xtrace
 
-function generate_flags() {
+generate_flags() {
     for contract in $@; do
         echo "$acc --select ^$contract\$"
     done
