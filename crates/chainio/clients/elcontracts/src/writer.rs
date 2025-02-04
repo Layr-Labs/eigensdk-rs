@@ -1153,7 +1153,6 @@ mod tests {
         let allocation_manager_addr =
             get_allocation_manager_address(http_endpoint.to_string()).await;
         let default_signer = get_signer(ANVIL_FIRST_PRIVATE_KEY, http_endpoint);
-        let operator_signer = get_signer(OPERATOR_PRIVATE_KEY, http_endpoint);
         let allocation_manager =
             AllocationManager::new(allocation_manager_addr, default_signer.clone());
         let registry_coordinator_addr =
