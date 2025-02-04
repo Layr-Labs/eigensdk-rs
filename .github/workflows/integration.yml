@@ -96,15 +96,12 @@ jobs:
           name: coverage-summary
           path: coverage.zip
 
-  check_anvil_dump:
+  generate_anvil_dump:
     strategy:
       fail-fast: true
 
-    name: Check anvil dump state is up to date
+    name: Generate anvil state
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./crates/contracts/anvil
     steps:
       - uses: actions/checkout@v4
         with:
@@ -114,18 +111,6 @@ jobs:
         uses: foundry-rs/foundry-toolchain@v1
         with:
           version: stable
-
-      - name: Backup existing anvil dump state
-        run: |
-          cd contracts_deployed_anvil_state.json
-          cp state.json previous_state.json
       
-      - name: Generate new anvil dump state
-        run: ./deploy-contracts-save-anvil-state.sh
-
-      - name: Check whether the anvil dump state has changed
-        run: |
-          cd contracts_deployed_anvil_state.json
-          jq --sort-keys . previous_state.json > previous_state.json
-          jq --sort-keys . state.json > state.json
-          diff previous_state.json state.json
+      - name: Generate anvil state
+        run: make deploy-contracts-to-anvil-and-save-state
