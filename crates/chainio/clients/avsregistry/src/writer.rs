@@ -313,16 +313,22 @@ impl AvsRegistryChainWriter {
         Ok(*tx.tx_hash())
     }
 
-    /// TODO!
+    /// Set a new address as the rewards initiator
+    ///
+    /// # Arguments
+    /// * `rewards_initiator` - The new address to set as the rewards initiator
+    ///
+    /// # Returns
+    /// * `TxHash` - The transaction hash of the set rewards initiator transaction
     pub async fn set_rewards_initiator(
         &self,
         rewards_initiator: Address,
     ) -> Result<TxHash, AvsRegistryError> {
+        info!("setting a new address as the rewards initiator");
         let provider = get_signer(&self.signer.clone(), &self.provider);
 
         let service_manager_base_instance =
             ServiceManagerBase::new(self.service_manager_addr, provider);
-        dbg!(&service_manager_base_instance);
         let contract_call = service_manager_base_instance.setRewardsInitiator(rewards_initiator);
 
         let tx = contract_call
@@ -331,7 +337,6 @@ impl AvsRegistryChainWriter {
             .map_err(AvsRegistryError::AlloyContractError)?;
 
         info!(tx_hash = ?tx,"successfully set rewards initiator" );
-        dbg!(&service_manager_base_instance);
         Ok(*tx.tx_hash())
     }
 }
@@ -416,12 +421,9 @@ mod tests {
             .await
             .unwrap();
 
-        let tx_status = wait_transaction(&http_endpoint, tx_hash)
-            .await
-            .unwrap()
-            .status();
+        let tx_status = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
 
-        assert!(tx_status);
+        assert!(tx_status.status());
     }
 
     // this function is caller from test_avs_writer_methods
