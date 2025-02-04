@@ -340,6 +340,7 @@ impl AvsRegistryChainWriter {
 #[cfg(test)]
 mod tests {
     use super::AvsRegistryChainWriter;
+    use crate::test_utils::ANVIL_FIRST_PRIVATE_KEY;
     use alloy_primitives::{Address, Bytes, FixedBytes, U256};
     use eigen_common::get_signer;
     use eigen_crypto_bls::BlsKeyPair;
@@ -349,10 +350,7 @@ mod tests {
         get_operator_state_retriever_address, get_registry_coordinator_address,
     };
     use eigen_testing_utils::transaction::wait_transaction;
-    use eigen_utils::middleware::servicemanagerbase::ServiceManagerBase;
-    use eigen_utils::middleware::stakeregistry::StakeRegistry::{
-        StakeRegistryEvents, StakeRegistryInstance,
-    };
+    use eigen_utils::middleware::stakeregistry::StakeRegistry::StakeRegistryInstance;
     use futures_util::StreamExt;
     use std::str::FromStr;
 
@@ -411,8 +409,7 @@ mod tests {
     async fn test_set_slashable_stake_lookahead() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
 
-        let private_key =
-            "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80".to_string();
+        let private_key = ANVIL_FIRST_PRIVATE_KEY.to_string();
         let avs_writer =
             build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
 

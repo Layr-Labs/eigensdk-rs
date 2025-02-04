@@ -19,3 +19,10 @@ pub mod error;
 #[allow(dead_code)]
 /// Fake avs registry module
 pub mod fake_reader;
+
+#[cfg(test)]
+pub(crate) mod test_utils {
+
+    pub(crate) const ANVIL_FIRST_PRIVATE_KEY: &str =
+        "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
+}
