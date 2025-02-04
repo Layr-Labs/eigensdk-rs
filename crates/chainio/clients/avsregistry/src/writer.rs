@@ -343,7 +343,9 @@ impl AvsRegistryChainWriter {
 
 #[cfg(test)]
 mod tests {
+
     use super::AvsRegistryChainWriter;
+    use crate::test_utils::{ANVIL_FIRST_PRIVATE_KEY, ANVIL_SECOND_ADDRESS};
     use alloy_primitives::{Address, Bytes, FixedBytes, U256};
     use eigen_common::get_signer;
     use eigen_crypto_bls::BlsKeyPair;
@@ -411,8 +413,7 @@ mod tests {
     #[tokio::test]
     async fn test_set_rewards_initiator() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let private_key =
-            "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80".to_string();
+        let private_key = ANVIL_FIRST_PRIVATE_KEY.to_string();
         let avs_writer =
             build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
 
@@ -423,8 +424,7 @@ mod tests {
         let event = contract_registry_coordinator.RewardsInitiatorUpdated_filter();
         let poller = event.watch().await.unwrap();
 
-        let new_rewards_init_address =
-            Address::from_str("a0Ee7A142d267C1f36714E4a8F75612F20a7972a").unwrap();
+        let new_rewards_init_address = ANVIL_SECOND_ADDRESS;
 
         let tx_hash = avs_writer
             .set_rewards_initiator(new_rewards_init_address)
