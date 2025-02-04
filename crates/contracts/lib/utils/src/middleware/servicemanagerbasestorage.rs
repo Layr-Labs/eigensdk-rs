@@ -1664,7 +1664,7 @@ library ISignatureUtils {
     }
 }
 
-interface ServiceManagerBase {
+interface ServiceManagerBaseStorage {
     event Initialized(uint8 version);
     event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
     event RewardsInitiatorUpdated(address prevRewardsInitiator, address newRewardsInitiator);
@@ -1680,7 +1680,6 @@ interface ServiceManagerBase {
     function renounceOwnership() external;
     function rewardsInitiator() external view returns (address);
     function setClaimerFor(address claimer) external;
-    function setRewardsInitiator(address newRewardsInitiator) external;
     function transferOwnership(address newOwner) external;
     function updateAVSMetadataURI(string memory _metadataURI) external;
 }
@@ -1951,19 +1950,6 @@ interface ServiceManagerBase {
   },
   {
     "type": "function",
-    "name": "setRewardsInitiator",
-    "inputs": [
-      {
-        "name": "newRewardsInitiator",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
     "name": "transferOwnership",
     "inputs": [
       {
@@ -2048,7 +2034,7 @@ interface ServiceManagerBase {
     clippy::style,
     clippy::empty_structs_with_brackets
 )]
-pub mod ServiceManagerBase {
+pub mod ServiceManagerBaseStorage {
     use super::*;
     use alloy::sol_types as alloy_sol_types;
     /// The creation / init bytecode of the contract.
@@ -3914,134 +3900,6 @@ function setClaimerFor(address claimer) external;
             }
         }
     };
-    /**Function with signature `setRewardsInitiator(address)` and selector `0x3bc28c8c`.
-```solidity
-function setRewardsInitiator(address newRewardsInitiator) external;
-```*/
-    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
-    #[derive(Clone)]
-    pub struct setRewardsInitiatorCall {
-        pub newRewardsInitiator: alloy::sol_types::private::Address,
-    }
-    ///Container type for the return parameters of the [`setRewardsInitiator(address)`](setRewardsInitiatorCall) function.
-    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
-    #[derive(Clone)]
-    pub struct setRewardsInitiatorReturn {}
-    #[allow(
-        non_camel_case_types,
-        non_snake_case,
-        clippy::pub_underscore_fields,
-        clippy::style
-    )]
-    const _: () = {
-        use alloy::sol_types as alloy_sol_types;
-        {
-            #[doc(hidden)]
-            type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Address,);
-            #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address,);
-            #[cfg(test)]
-            #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
-                match _t {
-                    alloy_sol_types::private::AssertTypeEq::<
-                        <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
-                    >(_) => {}
-                }
-            }
-            #[automatically_derived]
-            #[doc(hidden)]
-            impl ::core::convert::From<setRewardsInitiatorCall>
-            for UnderlyingRustTuple<'_> {
-                fn from(value: setRewardsInitiatorCall) -> Self {
-                    (value.newRewardsInitiator,)
-                }
-            }
-            #[automatically_derived]
-            #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for setRewardsInitiatorCall {
-                fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self {
-                        newRewardsInitiator: tuple.0,
-                    }
-                }
-            }
-        }
-        {
-            #[doc(hidden)]
-            type UnderlyingSolTuple<'a> = ();
-            #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = ();
-            #[cfg(test)]
-            #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
-                match _t {
-                    alloy_sol_types::private::AssertTypeEq::<
-                        <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
-                    >(_) => {}
-                }
-            }
-            #[automatically_derived]
-            #[doc(hidden)]
-            impl ::core::convert::From<setRewardsInitiatorReturn>
-            for UnderlyingRustTuple<'_> {
-                fn from(value: setRewardsInitiatorReturn) -> Self {
-                    ()
-                }
-            }
-            #[automatically_derived]
-            #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for setRewardsInitiatorReturn {
-                fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self {}
-                }
-            }
-        }
-        #[automatically_derived]
-        impl alloy_sol_types::SolCall for setRewardsInitiatorCall {
-            type Parameters<'a> = (alloy::sol_types::sol_data::Address,);
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
-            type Return = setRewardsInitiatorReturn;
-            type ReturnTuple<'a> = ();
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
-            const SIGNATURE: &'static str = "setRewardsInitiator(address)";
-            const SELECTOR: [u8; 4] = [59u8, 194u8, 140u8, 140u8];
-            #[inline]
-            fn new<'a>(
-                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
-            ) -> Self {
-                tuple.into()
-            }
-            #[inline]
-            fn tokenize(&self) -> Self::Token<'_> {
-                (
-                    <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
-                        &self.newRewardsInitiator,
-                    ),
-                )
-            }
-            #[inline]
-            fn abi_decode_returns(
-                data: &[u8],
-                validate: bool,
-            ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
-            }
-        }
-    };
     /**Function with signature `transferOwnership(address)` and selector `0xf2fde38b`.
 ```solidity
 function transferOwnership(address newOwner) external;
@@ -4294,8 +4152,8 @@ function updateAVSMetadataURI(string memory _metadataURI) external;
             }
         }
     };
-    ///Container for all the [`ServiceManagerBase`](self) function calls.
-    pub enum ServiceManagerBaseCalls {
+    ///Container for all the [`ServiceManagerBaseStorage`](self) function calls.
+    pub enum ServiceManagerBaseStorageCalls {
         avsDirectory(avsDirectoryCall),
         createAVSRewardsSubmission(createAVSRewardsSubmissionCall),
         createOperatorDirectedAVSRewardsSubmission(
@@ -4309,12 +4167,11 @@ function updateAVSMetadataURI(string memory _metadataURI) external;
         renounceOwnership(renounceOwnershipCall),
         rewardsInitiator(rewardsInitiatorCall),
         setClaimerFor(setClaimerForCall),
-        setRewardsInitiator(setRewardsInitiatorCall),
         transferOwnership(transferOwnershipCall),
         updateAVSMetadataURI(updateAVSMetadataURICall),
     }
     #[automatically_derived]
-    impl ServiceManagerBaseCalls {
+    impl ServiceManagerBaseStorageCalls {
         /// All the selectors of this enum.
         ///
         /// Note that the selectors might not be in the same order as the variants.
@@ -4323,7 +4180,6 @@ function updateAVSMetadataURI(string memory _metadataURI) external;
         /// Prefer using `SolInterface` methods instead.
         pub const SELECTORS: &'static [[u8; 4usize]] = &[
             [51u8, 207u8, 183u8, 183u8],
-            [59u8, 194u8, 140u8, 140u8],
             [107u8, 58u8, 167u8, 46u8],
             [113u8, 80u8, 24u8, 166u8],
             [141u8, 165u8, 203u8, 91u8],
@@ -4339,10 +4195,10 @@ function updateAVSMetadataURI(string memory _metadataURI) external;
         ];
     }
     #[automatically_derived]
-    impl alloy_sol_types::SolInterface for ServiceManagerBaseCalls {
-        const NAME: &'static str = "ServiceManagerBaseCalls";
+    impl alloy_sol_types::SolInterface for ServiceManagerBaseStorageCalls {
+        const NAME: &'static str = "ServiceManagerBaseStorageCalls";
         const MIN_DATA_LENGTH: usize = 0usize;
-        const COUNT: usize = 14usize;
+        const COUNT: usize = 13usize;
         #[inline]
         fn selector(&self) -> [u8; 4] {
             match self {
@@ -4377,9 +4233,6 @@ function updateAVSMetadataURI(string memory _metadataURI) external;
                 Self::setClaimerFor(_) => {
                     <setClaimerForCall as alloy_sol_types::SolCall>::SELECTOR
                 }
-                Self::setRewardsInitiator(_) => {
-                    <setRewardsInitiatorCall as alloy_sol_types::SolCall>::SELECTOR
-                }
                 Self::transferOwnership(_) => {
                     <transferOwnershipCall as alloy_sol_types::SolCall>::SELECTOR
                 }
@@ -4406,43 +4259,32 @@ function updateAVSMetadataURI(string memory _metadataURI) external;
             static DECODE_SHIMS: &[fn(
                 &[u8],
                 bool,
-            ) -> alloy_sol_types::Result<ServiceManagerBaseCalls>] = &[
+            ) -> alloy_sol_types::Result<ServiceManagerBaseStorageCalls>] = &[
                 {
                     fn getOperatorRestakedStrategies(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<ServiceManagerBaseCalls> {
+                    ) -> alloy_sol_types::Result<ServiceManagerBaseStorageCalls> {
                         <getOperatorRestakedStrategiesCall as alloy_sol_types::SolCall>::abi_decode_raw(
                                 data,
                                 validate,
                             )
-                            .map(ServiceManagerBaseCalls::getOperatorRestakedStrategies)
+                            .map(
+                                ServiceManagerBaseStorageCalls::getOperatorRestakedStrategies,
+                            )
                     }
                     getOperatorRestakedStrategies
-                },
-                {
-                    fn setRewardsInitiator(
-                        data: &[u8],
-                        validate: bool,
-                    ) -> alloy_sol_types::Result<ServiceManagerBaseCalls> {
-                        <setRewardsInitiatorCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
-                            )
-                            .map(ServiceManagerBaseCalls::setRewardsInitiator)
-                    }
-                    setRewardsInitiator
                 },
                 {
                     fn avsDirectory(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<ServiceManagerBaseCalls> {
+                    ) -> alloy_sol_types::Result<ServiceManagerBaseStorageCalls> {
                         <avsDirectoryCall as alloy_sol_types::SolCall>::abi_decode_raw(
                                 data,
                                 validate,
                             )
-                            .map(ServiceManagerBaseCalls::avsDirectory)
+                            .map(ServiceManagerBaseStorageCalls::avsDirectory)
                     }
                     avsDirectory
                 },
@@ -4450,12 +4292,12 @@ function updateAVSMetadataURI(string memory _metadataURI) external;
                     fn renounceOwnership(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<ServiceManagerBaseCalls> {
+                    ) -> alloy_sol_types::Result<ServiceManagerBaseStorageCalls> {
                         <renounceOwnershipCall as alloy_sol_types::SolCall>::abi_decode_raw(
                                 data,
                                 validate,
                             )
-                            .map(ServiceManagerBaseCalls::renounceOwnership)
+                            .map(ServiceManagerBaseStorageCalls::renounceOwnership)
                     }
                     renounceOwnership
                 },
@@ -4463,12 +4305,12 @@ function updateAVSMetadataURI(string memory _metadataURI) external;
                     fn owner(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<ServiceManagerBaseCalls> {
+                    ) -> alloy_sol_types::Result<ServiceManagerBaseStorageCalls> {
                         <ownerCall as alloy_sol_types::SolCall>::abi_decode_raw(
                                 data,
                                 validate,
                             )
-                            .map(ServiceManagerBaseCalls::owner)
+                            .map(ServiceManagerBaseStorageCalls::owner)
                     }
                     owner
                 },
@@ -4476,12 +4318,12 @@ function updateAVSMetadataURI(string memory _metadataURI) external;
                     fn registerOperatorToAVS(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<ServiceManagerBaseCalls> {
+                    ) -> alloy_sol_types::Result<ServiceManagerBaseStorageCalls> {
                         <registerOperatorToAVSCall as alloy_sol_types::SolCall>::abi_decode_raw(
                                 data,
                                 validate,
                             )
-                            .map(ServiceManagerBaseCalls::registerOperatorToAVS)
+                            .map(ServiceManagerBaseStorageCalls::registerOperatorToAVS)
                     }
                     registerOperatorToAVS
                 },
@@ -4489,12 +4331,12 @@ function updateAVSMetadataURI(string memory _metadataURI) external;
                     fn setClaimerFor(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<ServiceManagerBaseCalls> {
+                    ) -> alloy_sol_types::Result<ServiceManagerBaseStorageCalls> {
                         <setClaimerForCall as alloy_sol_types::SolCall>::abi_decode_raw(
                                 data,
                                 validate,
                             )
-                            .map(ServiceManagerBaseCalls::setClaimerFor)
+                            .map(ServiceManagerBaseStorageCalls::setClaimerFor)
                     }
                     setClaimerFor
                 },
@@ -4502,13 +4344,13 @@ function updateAVSMetadataURI(string memory _metadataURI) external;
                     fn createOperatorDirectedAVSRewardsSubmission(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<ServiceManagerBaseCalls> {
+                    ) -> alloy_sol_types::Result<ServiceManagerBaseStorageCalls> {
                         <createOperatorDirectedAVSRewardsSubmissionCall as alloy_sol_types::SolCall>::abi_decode_raw(
                                 data,
                                 validate,
                             )
                             .map(
-                                ServiceManagerBaseCalls::createOperatorDirectedAVSRewardsSubmission,
+                                ServiceManagerBaseStorageCalls::createOperatorDirectedAVSRewardsSubmission,
                             )
                     }
                     createOperatorDirectedAVSRewardsSubmission
@@ -4517,12 +4359,14 @@ function updateAVSMetadataURI(string memory _metadataURI) external;
                     fn deregisterOperatorFromAVS(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<ServiceManagerBaseCalls> {
+                    ) -> alloy_sol_types::Result<ServiceManagerBaseStorageCalls> {
                         <deregisterOperatorFromAVSCall as alloy_sol_types::SolCall>::abi_decode_raw(
                                 data,
                                 validate,
                             )
-                            .map(ServiceManagerBaseCalls::deregisterOperatorFromAVS)
+                            .map(
+                                ServiceManagerBaseStorageCalls::deregisterOperatorFromAVS,
+                            )
                     }
                     deregisterOperatorFromAVS
                 },
@@ -4530,12 +4374,12 @@ function updateAVSMetadataURI(string memory _metadataURI) external;
                     fn updateAVSMetadataURI(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<ServiceManagerBaseCalls> {
+                    ) -> alloy_sol_types::Result<ServiceManagerBaseStorageCalls> {
                         <updateAVSMetadataURICall as alloy_sol_types::SolCall>::abi_decode_raw(
                                 data,
                                 validate,
                             )
-                            .map(ServiceManagerBaseCalls::updateAVSMetadataURI)
+                            .map(ServiceManagerBaseStorageCalls::updateAVSMetadataURI)
                     }
                     updateAVSMetadataURI
                 },
@@ -4543,12 +4387,14 @@ function updateAVSMetadataURI(string memory _metadataURI) external;
                     fn getRestakeableStrategies(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<ServiceManagerBaseCalls> {
+                    ) -> alloy_sol_types::Result<ServiceManagerBaseStorageCalls> {
                         <getRestakeableStrategiesCall as alloy_sol_types::SolCall>::abi_decode_raw(
                                 data,
                                 validate,
                             )
-                            .map(ServiceManagerBaseCalls::getRestakeableStrategies)
+                            .map(
+                                ServiceManagerBaseStorageCalls::getRestakeableStrategies,
+                            )
                     }
                     getRestakeableStrategies
                 },
@@ -4556,12 +4402,12 @@ function updateAVSMetadataURI(string memory _metadataURI) external;
                     fn transferOwnership(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<ServiceManagerBaseCalls> {
+                    ) -> alloy_sol_types::Result<ServiceManagerBaseStorageCalls> {
                         <transferOwnershipCall as alloy_sol_types::SolCall>::abi_decode_raw(
                                 data,
                                 validate,
                             )
-                            .map(ServiceManagerBaseCalls::transferOwnership)
+                            .map(ServiceManagerBaseStorageCalls::transferOwnership)
                     }
                     transferOwnership
                 },
@@ -4569,12 +4415,12 @@ function updateAVSMetadataURI(string memory _metadataURI) external;
                     fn rewardsInitiator(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<ServiceManagerBaseCalls> {
+                    ) -> alloy_sol_types::Result<ServiceManagerBaseStorageCalls> {
                         <rewardsInitiatorCall as alloy_sol_types::SolCall>::abi_decode_raw(
                                 data,
                                 validate,
                             )
-                            .map(ServiceManagerBaseCalls::rewardsInitiator)
+                            .map(ServiceManagerBaseStorageCalls::rewardsInitiator)
                     }
                     rewardsInitiator
                 },
@@ -4582,12 +4428,14 @@ function updateAVSMetadataURI(string memory _metadataURI) external;
                     fn createAVSRewardsSubmission(
                         data: &[u8],
                         validate: bool,
-                    ) -> alloy_sol_types::Result<ServiceManagerBaseCalls> {
+                    ) -> alloy_sol_types::Result<ServiceManagerBaseStorageCalls> {
                         <createAVSRewardsSubmissionCall as alloy_sol_types::SolCall>::abi_decode_raw(
                                 data,
                                 validate,
                             )
-                            .map(ServiceManagerBaseCalls::createAVSRewardsSubmission)
+                            .map(
+                                ServiceManagerBaseStorageCalls::createAVSRewardsSubmission,
+                            )
                     }
                     createAVSRewardsSubmission
                 },
@@ -4655,11 +4503,6 @@ function updateAVSMetadataURI(string memory _metadataURI) external;
                 }
                 Self::setClaimerFor(inner) => {
                     <setClaimerForCall as alloy_sol_types::SolCall>::abi_encoded_size(
-                        inner,
-                    )
-                }
-                Self::setRewardsInitiator(inner) => {
-                    <setRewardsInitiatorCall as alloy_sol_types::SolCall>::abi_encoded_size(
                         inner,
                     )
                 }
@@ -4741,12 +4584,6 @@ function updateAVSMetadataURI(string memory _metadataURI) external;
                         out,
                     )
                 }
-                Self::setRewardsInitiator(inner) => {
-                    <setRewardsInitiatorCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
-                }
                 Self::transferOwnership(inner) => {
                     <transferOwnershipCall as alloy_sol_types::SolCall>::abi_encode_raw(
                         inner,
@@ -4762,14 +4599,14 @@ function updateAVSMetadataURI(string memory _metadataURI) external;
             }
         }
     }
-    ///Container for all the [`ServiceManagerBase`](self) events.
-    pub enum ServiceManagerBaseEvents {
+    ///Container for all the [`ServiceManagerBaseStorage`](self) events.
+    pub enum ServiceManagerBaseStorageEvents {
         Initialized(Initialized),
         OwnershipTransferred(OwnershipTransferred),
         RewardsInitiatorUpdated(RewardsInitiatorUpdated),
     }
     #[automatically_derived]
-    impl ServiceManagerBaseEvents {
+    impl ServiceManagerBaseStorageEvents {
         /// All the selectors of this enum.
         ///
         /// Note that the selectors might not be in the same order as the variants.
@@ -4882,8 +4719,8 @@ function updateAVSMetadataURI(string memory _metadataURI) external;
         ];
     }
     #[automatically_derived]
-    impl alloy_sol_types::SolEventInterface for ServiceManagerBaseEvents {
-        const NAME: &'static str = "ServiceManagerBaseEvents";
+    impl alloy_sol_types::SolEventInterface for ServiceManagerBaseStorageEvents {
+        const NAME: &'static str = "ServiceManagerBaseStorageEvents";
         const COUNT: usize = 3usize;
         fn decode_raw_log(
             topics: &[alloy_sol_types::Word],
@@ -4934,7 +4771,7 @@ function updateAVSMetadataURI(string memory _metadataURI) external;
         }
     }
     #[automatically_derived]
-    impl alloy_sol_types::private::IntoLogData for ServiceManagerBaseEvents {
+    impl alloy_sol_types::private::IntoLogData for ServiceManagerBaseStorageEvents {
         fn to_log_data(&self) -> alloy_sol_types::private::LogData {
             match self {
                 Self::Initialized(inner) => {
@@ -4963,9 +4800,9 @@ function updateAVSMetadataURI(string memory _metadataURI) external;
         }
     }
     use alloy::contract as alloy_contract;
-    /**Creates a new wrapper around an on-chain [`ServiceManagerBase`](self) contract instance.
+    /**Creates a new wrapper around an on-chain [`ServiceManagerBaseStorage`](self) contract instance.
 
-See the [wrapper's documentation](`ServiceManagerBaseInstance`) for more details.*/
+See the [wrapper's documentation](`ServiceManagerBaseStorageInstance`) for more details.*/
     #[inline]
     pub const fn new<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -4974,8 +4811,8 @@ See the [wrapper's documentation](`ServiceManagerBaseInstance`) for more details
     >(
         address: alloy_sol_types::private::Address,
         provider: P,
-    ) -> ServiceManagerBaseInstance<T, P, N> {
-        ServiceManagerBaseInstance::<T, P, N>::new(address, provider)
+    ) -> ServiceManagerBaseStorageInstance<T, P, N> {
+        ServiceManagerBaseStorageInstance::<T, P, N>::new(address, provider)
     }
     /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
@@ -4990,9 +4827,9 @@ For more fine-grained control over the deployment process, use [`deploy_builder`
     >(
         provider: P,
     ) -> impl ::core::future::Future<
-        Output = alloy_contract::Result<ServiceManagerBaseInstance<T, P, N>>,
+        Output = alloy_contract::Result<ServiceManagerBaseStorageInstance<T, P, N>>,
     > {
-        ServiceManagerBaseInstance::<T, P, N>::deploy(provider)
+        ServiceManagerBaseStorageInstance::<T, P, N>::deploy(provider)
     }
     /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
 and constructor arguments, if any.
@@ -5005,12 +4842,12 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         P: alloy_contract::private::Provider<T, N>,
         N: alloy_contract::private::Network,
     >(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
-        ServiceManagerBaseInstance::<T, P, N>::deploy_builder(provider)
+        ServiceManagerBaseStorageInstance::<T, P, N>::deploy_builder(provider)
     }
-    /**A [`ServiceManagerBase`](self) instance.
+    /**A [`ServiceManagerBaseStorage`](self) instance.
 
 Contains type-safe methods for interacting with an on-chain instance of the
-[`ServiceManagerBase`](self) contract located at a given `address`, using a given
+[`ServiceManagerBaseStorage`](self) contract located at a given `address`, using a given
 provider `P`.
 
 If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
@@ -5019,16 +4856,22 @@ be used to deploy a new instance of the contract.
 
 See the [module-level documentation](self) for all the available methods.*/
     #[derive(Clone)]
-    pub struct ServiceManagerBaseInstance<T, P, N = alloy_contract::private::Ethereum> {
+    pub struct ServiceManagerBaseStorageInstance<
+        T,
+        P,
+        N = alloy_contract::private::Ethereum,
+    > {
         address: alloy_sol_types::private::Address,
         provider: P,
         _network_transport: ::core::marker::PhantomData<(N, T)>,
     }
     #[automatically_derived]
-    impl<T, P, N> ::core::fmt::Debug for ServiceManagerBaseInstance<T, P, N> {
+    impl<T, P, N> ::core::fmt::Debug for ServiceManagerBaseStorageInstance<T, P, N> {
         #[inline]
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-            f.debug_tuple("ServiceManagerBaseInstance").field(&self.address).finish()
+            f.debug_tuple("ServiceManagerBaseStorageInstance")
+                .field(&self.address)
+                .finish()
         }
     }
     /// Instantiation and getters/setters.
@@ -5037,10 +4880,10 @@ See the [module-level documentation](self) for all the available methods.*/
         T: alloy_contract::private::Transport + ::core::clone::Clone,
         P: alloy_contract::private::Provider<T, N>,
         N: alloy_contract::private::Network,
-    > ServiceManagerBaseInstance<T, P, N> {
-        /**Creates a new wrapper around an on-chain [`ServiceManagerBase`](self) contract instance.
+    > ServiceManagerBaseStorageInstance<T, P, N> {
+        /**Creates a new wrapper around an on-chain [`ServiceManagerBaseStorage`](self) contract instance.
 
-See the [wrapper's documentation](`ServiceManagerBaseInstance`) for more details.*/
+See the [wrapper's documentation](`ServiceManagerBaseStorageInstance`) for more details.*/
         #[inline]
         pub const fn new(
             address: alloy_sol_types::private::Address,
@@ -5060,7 +4903,7 @@ For more fine-grained control over the deployment process, use [`deploy_builder`
         #[inline]
         pub async fn deploy(
             provider: P,
-        ) -> alloy_contract::Result<ServiceManagerBaseInstance<T, P, N>> {
+        ) -> alloy_contract::Result<ServiceManagerBaseStorageInstance<T, P, N>> {
             let call_builder = Self::deploy_builder(provider);
             let contract_address = call_builder.deploy().await?;
             Ok(Self::new(contract_address, call_builder.provider))
@@ -5098,11 +4941,11 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
             &self.provider
         }
     }
-    impl<T, P: ::core::clone::Clone, N> ServiceManagerBaseInstance<T, &P, N> {
+    impl<T, P: ::core::clone::Clone, N> ServiceManagerBaseStorageInstance<T, &P, N> {
         /// Clones the provider and returns a new instance with the cloned provider.
         #[inline]
-        pub fn with_cloned_provider(self) -> ServiceManagerBaseInstance<T, P, N> {
-            ServiceManagerBaseInstance {
+        pub fn with_cloned_provider(self) -> ServiceManagerBaseStorageInstance<T, P, N> {
+            ServiceManagerBaseStorageInstance {
                 address: self.address,
                 provider: ::core::clone::Clone::clone(&self.provider),
                 _network_transport: ::core::marker::PhantomData,
@@ -5115,7 +4958,7 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         T: alloy_contract::private::Transport + ::core::clone::Clone,
         P: alloy_contract::private::Provider<T, N>,
         N: alloy_contract::private::Network,
-    > ServiceManagerBaseInstance<T, P, N> {
+    > ServiceManagerBaseStorageInstance<T, P, N> {
         /// Creates a new call builder using this contract instance's provider and address.
         ///
         /// Note that the call can be any function call, not just those defined in this
@@ -5232,17 +5075,6 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         ) -> alloy_contract::SolCallBuilder<T, &P, setClaimerForCall, N> {
             self.call_builder(&setClaimerForCall { claimer })
         }
-        ///Creates a new call builder for the [`setRewardsInitiator`] function.
-        pub fn setRewardsInitiator(
-            &self,
-            newRewardsInitiator: alloy::sol_types::private::Address,
-        ) -> alloy_contract::SolCallBuilder<T, &P, setRewardsInitiatorCall, N> {
-            self.call_builder(
-                &setRewardsInitiatorCall {
-                    newRewardsInitiator,
-                },
-            )
-        }
         ///Creates a new call builder for the [`transferOwnership`] function.
         pub fn transferOwnership(
             &self,
@@ -5268,7 +5100,7 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         T: alloy_contract::private::Transport + ::core::clone::Clone,
         P: alloy_contract::private::Provider<T, N>,
         N: alloy_contract::private::Network,
-    > ServiceManagerBaseInstance<T, P, N> {
+    > ServiceManagerBaseStorageInstance<T, P, N> {
         /// Creates a new event filter using this contract instance's provider and address.
         ///
         /// Note that the type can be any event, not just those defined in this contract.
