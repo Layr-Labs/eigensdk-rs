@@ -6,8 +6,8 @@
 pub mod blsapkregistry;
 pub mod ecdsaservicemanagerbase;
 pub mod ecdsastakeregistry;
-pub mod ierc20;
 pub mod iblssignaturechecker;
+pub mod ierc20;
 pub mod indexregistry;
 pub mod operatorstateretriever;
 pub mod registrycoordinator;
