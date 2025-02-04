@@ -11,7 +11,7 @@ Each version will have a separate `Breaking Changes` section as well. To describ
 
 ## [Unreleased]
 ### Added
-* Added ECDSA Bindings in [#269](https://github.com/Layr-Labs/eigensdk-rs/pull/269).
+* Added bindings for `ECDSAStakeRegistry` and `ECDSAServiceManagerBase` in [#269](https://github.com/Layr-Labs/eigensdk-rs/pull/269).
 
 ### Changed
 * Changes in the way bindings are generated in [#245](https://github.com/Layr-Labs/eigensdk-rs/pull/243).
