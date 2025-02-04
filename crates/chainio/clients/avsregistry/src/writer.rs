@@ -405,7 +405,7 @@ mod tests {
     async fn test_set_slashable_stake_lookahead() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
         let private_key =
-            "8b3a350cf5c34c9194ca85829a2df0ec3153be0318b5e2d3348e872092edffba".to_string();
+            "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80".to_string();
         let avs_writer =
             build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
 
