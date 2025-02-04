@@ -2,6 +2,7 @@ use crate::error::AvsRegistryError;
 use alloy::primitives::{Address, Bytes, FixedBytes, B256, U256};
 use alloy::providers::Provider;
 use alloy::rpc::types::Filter;
+use alloy_primitives::TxHash;
 use ark_ff::Zero;
 use async_trait::async_trait;
 use eigen_common::{get_provider, get_ws_provider, NEW_PUBKEY_REGISTRATION_EVENT};
@@ -627,6 +628,25 @@ impl AvsRegistryChainReader {
         }
         Ok(operator_id_to_socket)
     }
+
+    /// TODO!
+    pub async fn is_operator_set_quorum(
+        &self,
+        quorum_number: u8,
+    ) -> Result<bool, AvsRegistryError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, &provider);
+
+        let quorum_status = contract_stake_registry
+            .isOperatorSetQuorum(quorum_number)
+            .call()
+            .await?;
+
+        let StakeRegistry::isOperatorSetQuorumReturn { _0: quorum_status } = quorum_status;
+
+        Ok(quorum_status)
+    }
 }
 
 #[cfg(test)]
@@ -795,5 +815,13 @@ mod tests {
             .await
             .unwrap();
         assert!(!is_registered);
+    }
+
+    #[tokio::test]
+    async fn test_is_operator_set_quorum() {
+        let avs_reader = build_avs_registry_chain_reader().await;
+
+        let response = avs_reader.is_operator_set_quorum(0).await.unwrap();
+        dbg!(response);
     }
 }
