@@ -4,7 +4,7 @@ pub mod integration_test {
         bls_agg::BlsAggregatorService,
         bls_aggregation_service_response::BlsAggregationServiceResponse,
     };
-    use alloy::{hex, providers::Provider, signers::local::PrivateKeySigner, sol_types::SolCall};
+    use alloy::{providers::Provider, signers::local::PrivateKeySigner, sol_types::SolCall};
     use alloy_primitives::{aliases::U96, Address, Bytes, FixedBytes, B256, U256};
     use alloy_provider::WalletProvider;
     use eigen_client_avsregistry::{
@@ -287,9 +287,9 @@ pub mod integration_test {
     #[tokio::test]
     async fn test_bls_agg_operator_sets_enabled() {
         // test 1 quorum, 1 operator
-        // let (container, http_endpoint, ws_endpoint) = start_anvil_container().await;
-        let http_endpoint = "http://localhost:8546".to_string();
-        let ws_endpoint = "ws://localhost:8546".to_string();
+        let (container, http_endpoint, ws_endpoint) = start_anvil_container().await;
+        // let http_endpoint = "http://localhost:8546".to_string();
+        // let ws_endpoint = "ws://localhost:8546".to_string();
         // if TEST_DATA_PATH is set, load the test data from the json file
         let default_input = Input {
             bls_key: BLS_KEY_1.to_string(),
@@ -380,16 +380,17 @@ pub mod integration_test {
 
         let bls_agg_service = BlsAggregatorService::new(avs_registry_service, get_test_logger());
         let current_block_num = provider.get_block_number().await.unwrap();
-        let output = Command::new("cast")
-            .args([
-                "rpc",
-                "anvil_mine",
-                &1.to_string(),
-                "--rpc-url",
-                "http://localhost:8546",
-            ])
-            .output()
-            .expect("Failed to execute command");
+        // let output = Command::new("cast")
+        //     .args([
+        //         "rpc",
+        //         "anvil_mine",
+        //         &1.to_string(),
+        //         "--rpc-url",
+        //         "http://localhost:8546",
+        //     ])
+        //     .output()
+        //     .expect("Failed to execute command");
+        mine_anvil_blocks_operator_set(&container, 1).await;
         // mine_anvil_blocks_operator_set(&container, 1).await;
 
         // // Create the task related parameters
@@ -449,9 +450,9 @@ pub mod integration_test {
     #[tokio::test]
     #[ignore] // TODO : RegistryError  Get operator info is returning None
     async fn test_bls_agg_m2() {
-        // let (container, http_endpoint, ws_endpoint) = start_anvil_container().await;
-        let http_endpoint = "http://localhost:8545".to_string();
-        let ws_endpoint = "ws://localhost:8545".to_string();
+        let (container, http_endpoint, ws_endpoint) = start_anvil_container().await;
+        // let http_endpoint = "http://localhost:8545".to_string();
+        // let ws_endpoint = "ws://localhost:8545".to_string();
 
         let default_input = Input {
             bls_key: BLS_KEY_1.to_string(),
@@ -614,9 +615,9 @@ pub mod integration_test {
 
     #[tokio::test]
     async fn test_1_quorum_2_operators() {
-        // let (container, http_endpoint, ws_endpoint) = start_anvil_container().await;
-        let http_endpoint = "http://localhost:8546".to_string();
-        let ws_endpoint = "ws://localhost:8546".to_string();
+        let (container, http_endpoint, ws_endpoint) = start_anvil_container().await;
+        // let http_endpoint = "http://localhost:8546".to_string();
+        // let ws_endpoint = "ws://localhost:8546".to_string();
         let allocation_manager_address =
             get_allocation_manager_address(http_endpoint.clone()).await;
         let registry_coordinator_address =
@@ -690,17 +691,17 @@ pub mod integration_test {
             .unwrap();
         dbg!(s);
 
-        let output = Command::new("cast")
-            .args([
-                "rpc",
-                "anvil_mine",
-                &1.to_string(),
-                "--rpc-url",
-                "http://localhost:8546",
-            ])
-            .output()
-            .expect("Failed to execute command");
-
+        // let output = Command::new("cast")
+        //     .args([
+        //         "rpc",
+        //         "anvil_mine",
+        //         &1.to_string(),
+        //         "--rpc-url",
+        //         "http://localhost:8546",
+        //     ])
+        //     .output()
+        //     .expect("Failed to execute command");
+        mine_anvil_blocks_operator_set(&container, 1).await;
         let current_block_num = provider.get_block_number().await.unwrap();
         // Create avs clients to interact with contracts deployed on anvil
         let avs_registry_reader = AvsRegistryChainReader::new(
@@ -813,9 +814,9 @@ pub mod integration_test {
     async fn test_2_quorums_2_operators_separated() {
         // operator 1 stakes on quorum 1
         // operator 2 stakes on quorum 2
-        // let (container, http_endpoint, ws_endpoint) = start_anvil_container().await;
-        let http_endpoint = "http://localhost:8546".to_string();
-        let ws_endpoint = "ws://localhost:8546".to_string();
+        let (container, http_endpoint, ws_endpoint) = start_anvil_container().await;
+        // let http_endpoint = "http://localhost:8546".to_string();
+        // let ws_endpoint = "ws://localhost:8546".to_string();
         let allocation_manager_address =
             get_allocation_manager_address(http_endpoint.clone()).await;
         let registry_coordinator_address =
@@ -910,17 +911,17 @@ pub mod integration_test {
             .unwrap();
         dbg!(s);
 
-        let output = Command::new("cast")
-            .args([
-                "rpc",
-                "anvil_mine",
-                &1.to_string(),
-                "--rpc-url",
-                "http://localhost:8546",
-            ])
-            .output()
-            .expect("Failed to execute command");
-
+        // let output = Command::new("cast")
+        //     .args([
+        //         "rpc",
+        //         "anvil_mine",
+        //         &1.to_string(),
+        //         "--rpc-url",
+        //         "http://localhost:8546",
+        //     ])
+        //     .output()
+        //     .expect("Failed to execute command");
+        mine_anvil_blocks_operator_set(&container, 1).await;
         let current_block_num = provider.get_block_number().await.unwrap();
         // Create avs clients to interact with contracts deployed on anvil
         let avs_registry_reader = AvsRegistryChainReader::new(
@@ -1027,9 +1028,9 @@ pub mod integration_test {
     async fn test_2_quorums_2_operators_shared() {
         // operator 1 stakes on quorums [1, 2]
         // operator 2 stakes on quorums [2]
-        // let (container, http_endpoint, ws_endpoint) = start_anvil_container().await;
-        let http_endpoint = "http://localhost:8546".to_string();
-        let ws_endpoint = "ws://localhost:8546".to_string();
+        let (container, http_endpoint, ws_endpoint) = start_anvil_container().await;
+        // let http_endpoint = "http://localhost:8546".to_string();
+        // let ws_endpoint = "ws://localhost:8546".to_string();
         let allocation_manager_address =
             get_allocation_manager_address(http_endpoint.clone()).await;
         let registry_coordinator_address =
@@ -1110,17 +1111,17 @@ pub mod integration_test {
             .unwrap();
         dbg!(s);
 
-        let output = Command::new("cast")
-            .args([
-                "rpc",
-                "anvil_mine",
-                &1.to_string(),
-                "--rpc-url",
-                "http://localhost:8546",
-            ])
-            .output()
-            .expect("Failed to execute command");
-
+        // let output = Command::new("cast")
+        //     .args([
+        //         "rpc",
+        //         "anvil_mine",
+        //         &1.to_string(),
+        //         "--rpc-url",
+        //         "http://localhost:8546",
+        //     ])
+        //     .output()
+        //     .expect("Failed to execute command");
+        mine_anvil_blocks_operator_set(&container, 1).await;
         let current_block_num = provider.get_block_number().await.unwrap();
         // Create avs clients to interact with contracts deployed on anvil
         let avs_registry_reader = AvsRegistryChainReader::new(
@@ -1245,9 +1246,7 @@ pub mod integration_test {
 
     #[tokio::test]
     async fn test_2_quorums_1_operator() {
-        // let (container, http_endpoint, ws_endpoint) = start_anvil_container().await;
-        let http_endpoint = "http://localhost:8546".to_string();
-        let ws_endpoint = "ws://localhost:8546".to_string();
+        let (container, http_endpoint, ws_endpoint) = start_anvil_container().await;
 
         let registry_coordinator_address =
             get_registry_coordinator_address(http_endpoint.clone()).await;
@@ -1336,17 +1335,17 @@ pub mod integration_test {
             .unwrap();
         dbg!(s);
 
-        let output = Command::new("cast")
-            .args([
-                "rpc",
-                "anvil_mine",
-                &1.to_string(),
-                "--rpc-url",
-                "http://localhost:8546",
-            ])
-            .output()
-            .expect("Failed to execute command");
-
+        // let output = Command::new("cast")
+        //     .args([
+        //         "rpc",
+        //         "anvil_mine",
+        //         &1.to_string(),
+        //         "--rpc-url",
+        //         "http://localhost:8546",
+        //     ])
+        //     .output()
+        //     .expect("Failed to execute command");
+        mine_anvil_blocks_operator_set(&container, 1).await;
         let current_block_num = provider.get_block_number().await.unwrap();
 
         // Create aggregation service
