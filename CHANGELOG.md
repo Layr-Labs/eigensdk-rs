@@ -13,6 +13,9 @@ Those changes in added, changed or breaking changes, should include usage exampl
 
 ## [Unreleased]
 ### Added
+* Added bindings for `ECDSAStakeRegistry` and `ECDSAServiceManagerBase` in [#269](https://github.com/Layr-Labs/eigensdk-rs/pull/269).
+* Added release-plz in ci in [#275](https://github.com/Layr-Labs/eigensdk-rs/pull/275).
+
 ### Changed
 * Changes in the way bindings are generated in [#245](https://github.com/Layr-Labs/eigensdk-rs/pull/243).
   * The `bindings` target now generates the bindings using Docker with Foundry v0.3.0.
