@@ -1,13 +1,15 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 
+# Exit if any command fails
 set +e
 
+# Print each command executed (useful for debugging)
+# set -o xtrace
+
 function generate_flags() {
-    acc=""
     for contract in $@; do
-        acc="$acc --select '^$contract\$'"
+        echo "$acc --select ^$contract\$"
     done
-    echo $acc
 }
 
 # cd to the directory of this script so that this can be run from anywhere
