@@ -224,7 +224,7 @@ pub mod integration_test {
             multiplier: U96::from(1),
         };
 
-        let s = contract_registry_coordinator
+        contract_registry_coordinator
             .createTotalDelegatedStakeQuorum(
                 operator_set_params,
                 U96::from(0),
@@ -288,7 +288,7 @@ pub mod integration_test {
             PRIVATE_KEY_2.to_string(),
         );
 
-        let s = el_chain_writer
+        el_chain_writer
             .register_for_operator_sets(
                 get_signer(PRIVATE_KEY_2, &http_endpoint).default_signer_address(),
                 avs_address,
@@ -589,7 +589,7 @@ pub mod integration_test {
 
         let bls_key_pair_1 = BlsKeyPair::new(BLS_KEY_1.to_string()).unwrap();
 
-        let s = el_chain_writer_key_1
+        el_chain_writer_key_1
             .register_for_operator_sets(
                 get_signer(PRIVATE_KEY_1, &http_endpoint).default_signer_address(),
                 avs_address,
@@ -777,7 +777,7 @@ pub mod integration_test {
             PRIVATE_KEY_2.to_string(),
         );
 
-        let s = el_chain_writer_key_2
+        el_chain_writer_key_2
             .register_for_operator_sets(
                 get_signer(PRIVATE_KEY_2, &http_endpoint).default_signer_address(),
                 avs_address,
@@ -788,7 +788,7 @@ pub mod integration_test {
             .await
             .unwrap();
 
-        let s = el_chain_writer_key_1
+        el_chain_writer_key_1
             .register_for_operator_sets(
                 get_signer(PRIVATE_KEY_1, &http_endpoint).default_signer_address(),
                 avs_address,
