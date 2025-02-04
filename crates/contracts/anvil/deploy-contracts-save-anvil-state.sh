@@ -11,7 +11,7 @@ anvil_dir=$(
 cd $anvil_dir
 
 # Start anvil
-./dump-state.sh &
+./dump-state.sh >/dev/null &
 anvil_pid=$!
 sleep 3
 
