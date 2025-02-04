@@ -157,7 +157,7 @@ impl<R: AvsRegistryReader, S: OperatorInfoService> AvsRegistryServiceChainCaller
             .get_operator_info(operator_addr)
             .await
             .unwrap_or(None)
-            .ok_or({ AvsRegistryError::GetOperatorInfo })
+            .ok_or(AvsRegistryError::GetOperatorInfo)
     }
 }
 
