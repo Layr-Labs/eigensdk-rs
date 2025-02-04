@@ -312,6 +312,28 @@ impl AvsRegistryChainWriter {
         info!(tx_hash = ?tx,"successfully deregistered operator with the AVS's registry coordinator" );
         Ok(*tx.tx_hash())
     }
+
+    /// TODO!
+    pub async fn set_rewards_initiator(
+        &self,
+        rewards_initiator: Address,
+    ) -> Result<TxHash, AvsRegistryError> {
+        let provider = get_signer(&self.signer.clone(), &self.provider);
+
+        let service_manager_base_instance =
+            ServiceManagerBase::new(self.service_manager_addr, provider);
+        dbg!(&service_manager_base_instance);
+        let contract_call = service_manager_base_instance.setRewardsInitiator(rewards_initiator);
+
+        let tx = contract_call
+            .send()
+            .await
+            .map_err(AvsRegistryError::AlloyContractError)?;
+
+        info!(tx_hash = ?tx,"successfully set rewards initiator" );
+        dbg!(&service_manager_base_instance);
+        Ok(*tx.tx_hash())
+    }
 }
 
 #[cfg(test)]
@@ -375,7 +397,7 @@ mod tests {
             http_endpoint.clone(),
         )
         .await;
-        test_deregister_operator(&avs_writer, quorum_nums, http_endpoint).await;
+        test_deregister_operator(&avs_writer, quorum_nums, http_endpoint.clone()).await;
     }
 
     // this function is caller from test_avs_writer_methods
