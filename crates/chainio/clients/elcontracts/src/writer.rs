@@ -1400,7 +1400,6 @@ mod tests {
 
     #[tokio::test]
     async fn test_clear_deallocation_queue() {
-        // Arrange: Inicia el contenedor Anvil y crea la instancia de ChainWriter para pruebas.
         let (_contianer, http_endpoint, _ws_endpoint) = start_anvil_container().await;
         let el_chain_writer = new_test_writer(
             http_endpoint.to_string(),
@@ -1408,7 +1407,6 @@ mod tests {
         )
         .await;
 
-        // Define las direcciones y IDs necesarias.
         let operator_address = ANVIL_FIRST_ADDRESS;
         let strategy_addr = get_erc20_mock_strategy(http_endpoint.clone()).await;
         let avs_address = ANVIL_FIRST_ADDRESS;
