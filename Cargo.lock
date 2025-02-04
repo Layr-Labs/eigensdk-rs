@@ -2552,6 +2552,7 @@ dependencies = [
  "eigen-testing-utils",
  "eigen-types",
  "eigen-utils",
+ "futures-util",
  "hex",
  "num-bigint 0.4.6",
  "once_cell",

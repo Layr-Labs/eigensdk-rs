@@ -345,6 +345,7 @@ impl AvsRegistryChainWriter {
 mod tests {
     use super::AvsRegistryChainWriter;
     use alloy_primitives::{Address, Bytes, FixedBytes, U256};
+    use eigen_common::get_signer;
     use eigen_crypto_bls::BlsKeyPair;
     use eigen_logging::get_test_logger;
     use eigen_testing_utils::anvil::start_anvil_container;
@@ -352,6 +353,8 @@ mod tests {
         get_operator_state_retriever_address, get_registry_coordinator_address,
     };
     use eigen_testing_utils::transaction::wait_transaction;
+    use eigen_utils::middleware::servicemanagerbase::ServiceManagerBase;
+    use futures_util::StreamExt;
     use std::str::FromStr;
 
     async fn build_avs_registry_chain_writer(
@@ -408,22 +411,33 @@ mod tests {
     #[tokio::test]
     async fn test_set_rewards_initiator() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-
         let private_key =
             "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80".to_string();
         let avs_writer =
             build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
 
+        // Set up event poller to listen to update socket events
+        let provider = get_signer(&avs_writer.signer.clone(), &avs_writer.provider);
+        let contract_registry_coordinator =
+            ServiceManagerBase::new(avs_writer.service_manager_addr, provider);
+        let event = contract_registry_coordinator.RewardsInitiatorUpdated_filter();
+        let poller = event.watch().await.unwrap();
+
+        let new_rewards_init_address =
+            Address::from_str("a0Ee7A142d267C1f36714E4a8F75612F20a7972a").unwrap();
+
         let tx_hash = avs_writer
-            .set_rewards_initiator(
-                Address::from_str("a0Ee7A142d267C1f36714E4a8F75612F20a7972a").unwrap(),
-            )
+            .set_rewards_initiator(new_rewards_init_address)
             .await
             .unwrap();
 
         let tx_status = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
-
         assert!(tx_status.status());
+
+        // Assert that event `RewardsInitiatorUpdated` is the same as `new_rewards_init_address`
+        let mut stream = poller.into_stream();
+        let (stream_event, _) = stream.next().await.unwrap().unwrap();
+        assert_eq!(stream_event.newRewardsInitiator, new_rewards_init_address);
     }
 
     // this function is caller from test_avs_writer_methods
