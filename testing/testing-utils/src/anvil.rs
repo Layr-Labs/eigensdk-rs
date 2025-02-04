@@ -7,7 +7,7 @@ use testcontainers::{
 
 const ANVIL_IMAGE: &str = "ghcr.io/foundry-rs/foundry";
 const ANVIL_TAG: &str = "latest";
-const ANVIL_STATE_PATH: &str = "./crates/contracts/anvil/contracts_deployed_anvil_state.json"; // relative path from the project root
+const ANVIL_STATE_PATH: &str = "./crates/contracts/anvil/dump_state.json"; // relative path from the project root
 
 fn workspace_dir() -> PathBuf {
     let output = std::process::Command::new(env!("CARGO"))
@@ -33,13 +33,13 @@ pub async fn start_anvil_container() -> (ContainerAsync<GenericImage>, String, S
         .with_entrypoint("anvil")
         .with_mount(testcontainers::core::Mount::bind_mount(
             absolute_path_str,
-            "/contracts_deployed_anvil_state.json",
+            "/dump_state.json",
         ))
         .with_cmd([
             "--host",
             "0.0.0.0",
             "--load-state",
-            "/contracts_deployed_anvil_state.json",
+            "/dump_state.json",
             "--base-fee",
             "0",
             "--gas-price",
