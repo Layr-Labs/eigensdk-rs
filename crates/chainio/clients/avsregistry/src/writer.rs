@@ -416,7 +416,7 @@ mod tests {
         let avs_writer =
             build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
 
-        // Set up event poller to listen to update socket events
+        // Set up event poller to listen to `RewardsInitiatorUpdated` events
         let provider = get_signer(&avs_writer.signer.clone(), &avs_writer.provider);
         let contract_registry_coordinator =
             ServiceManagerBase::new(avs_writer.service_manager_addr, provider);
