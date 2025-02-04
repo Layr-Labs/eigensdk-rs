@@ -312,6 +312,29 @@ impl AvsRegistryChainWriter {
         info!(tx_hash = ?tx,"successfully deregistered operator with the AVS's registry coordinator" );
         Ok(*tx.tx_hash())
     }
+
+    ///setSlashableStakeLookahead
+    pub async fn set_slashable_stake_lookahead(
+        &self,
+        quorum_number: u8,
+        lookahead: u32,
+    ) -> Result<TxHash, AvsRegistryError> {
+        info!("setting slashable stake lookahead");
+        let provider = get_signer(&self.signer.clone(), &self.provider);
+
+        let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, provider);
+
+        let contract_call =
+            contract_stake_registry.setSlashableStakeLookahead(quorum_number, lookahead);
+
+        let tx = contract_call
+            .send()
+            .await
+            .map_err(AvsRegistryError::AlloyContractError)?;
+
+        info!(tx_hash = ?tx,"successfully set slashable stake lookahead" );
+        Ok(*tx.tx_hash())
+    }
 }
 
 #[cfg(test)]
