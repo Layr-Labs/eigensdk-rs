@@ -393,7 +393,7 @@ pub mod integration_test {
 
         let default_input = Input {
             bls_key: BLS_KEY_1.to_string(),
-            quorum_numbers: vec![1],
+            quorum_numbers: vec![0],
             quorum_threshold_percentages: vec![100_u8],
         };
         let test_data: TestData<Input> = TestData::new(default_input);
