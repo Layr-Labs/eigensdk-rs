@@ -2,7 +2,6 @@ use crate::error::AvsRegistryError;
 use alloy::primitives::{Address, Bytes, FixedBytes, B256, U256};
 use alloy::providers::Provider;
 use alloy::rpc::types::Filter;
-use alloy_primitives::TxHash;
 use ark_ff::Zero;
 use async_trait::async_trait;
 use eigen_common::{get_provider, get_ws_provider, NEW_PUBKEY_REGISTRATION_EVENT};
@@ -652,10 +651,15 @@ impl AvsRegistryChainReader {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use alloy_primitives::address;
     use eigen_logging::get_test_logger;
-    use eigen_testing_utils::m2_holesky_constants::{
-        HOLESKY_RPC_PROVIDER, OPERATOR_STATE_RETRIEVER, REGISTRY_COORDINATOR,
+    use eigen_testing_utils::{
+        anvil::start_anvil_container,
+        m2_holesky_constants::{
+            HOLESKY_RPC_PROVIDER, OPERATOR_STATE_RETRIEVER, REGISTRY_COORDINATOR,
+        },
     };
+    use eigen_utils::middleware::registrycoordinator::RegistryCoordinator::RegistryCoordinatorCalls;
     use hex::FromHex;
     use std::str::FromStr;
 
@@ -819,7 +823,28 @@ mod tests {
 
     #[tokio::test]
     async fn test_is_operator_set_quorum() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
         let avs_reader = build_avs_registry_chain_reader().await;
+
+        let provider = get_provider(&http_endpoint);
+        let registry_contract =
+            RegistryCoordinator::new(avs_reader.registry_coordinator_addr, provider);
+
+        dbg!("Se creo el contrato RegistryCoordinator");
+        dbg!(&registry_contract);
+
+        let asd = registry_contract
+            .getOperator(address!("f39Fd6e51aad88F6F4ce6aB8827279cffFb92266"))
+            .call()
+            .await
+            .unwrap();
+        dbg!(asd._0.operatorId);
+
+        let is_avs = registry_contract.isOperatorSetAVS().call().await.unwrap();
+        dbg!(is_avs._0);
+
+        let is_m2 = registry_contract.isM2Quorum(1).call().await.unwrap();
+        dbg!(is_m2._0);
 
         let response = avs_reader.is_operator_set_quorum(0).await.unwrap();
         dbg!(response);
