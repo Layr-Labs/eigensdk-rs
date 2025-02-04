@@ -327,9 +327,9 @@ impl AvsRegistryChainWriter {
         info!("setting a new address as the rewards initiator");
         let provider = get_signer(&self.signer.clone(), &self.provider);
 
-        let service_manager_base_instance =
+        let contract_service_manager_base =
             ServiceManagerBase::new(self.service_manager_addr, provider);
-        let contract_call = service_manager_base_instance.setRewardsInitiator(rewards_initiator);
+        let contract_call = contract_service_manager_base.setRewardsInitiator(rewards_initiator);
 
         let tx = contract_call
             .send()
