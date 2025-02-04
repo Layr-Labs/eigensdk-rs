@@ -341,6 +341,7 @@ impl AvsRegistryChainWriter {
 mod tests {
     use super::AvsRegistryChainWriter;
     use alloy_primitives::{Address, Bytes, FixedBytes, U256};
+    use eigen_common::get_signer;
     use eigen_crypto_bls::BlsKeyPair;
     use eigen_logging::get_test_logger;
     use eigen_testing_utils::anvil::start_anvil_container;
@@ -348,6 +349,11 @@ mod tests {
         get_operator_state_retriever_address, get_registry_coordinator_address,
     };
     use eigen_testing_utils::transaction::wait_transaction;
+    use eigen_utils::middleware::servicemanagerbase::ServiceManagerBase;
+    use eigen_utils::middleware::stakeregistry::StakeRegistry::{
+        StakeRegistryEvents, StakeRegistryInstance,
+    };
+    use futures_util::StreamExt;
     use std::str::FromStr;
 
     async fn build_avs_registry_chain_writer(
@@ -404,13 +410,23 @@ mod tests {
     #[tokio::test]
     async fn test_set_slashable_stake_lookahead() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+
         let private_key =
             "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80".to_string();
         let avs_writer =
             build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
 
+        // Set up event poller to listen to `LookAheadPeriodChanged` events
+        let provider = get_signer(&avs_writer.signer.clone(), &avs_writer.provider);
+        let contract_stake_registry =
+            StakeRegistryInstance::new(avs_writer.stake_registry_addr, provider);
+        let event = contract_stake_registry.LookAheadPeriodChanged_filter();
+        let poller = event.watch().await.unwrap();
+
+        let quorum_number = 0_u8;
+        let lookahead = 10_u32;
         let tx_hash = avs_writer
-            .set_slashable_stake_lookahead(0, 10)
+            .set_slashable_stake_lookahead(quorum_number, lookahead)
             .await
             .unwrap();
 
@@ -419,6 +435,12 @@ mod tests {
             .unwrap()
             .status();
         assert!(tx_status);
+
+        // Assert that event `LookAheadPeriodChanged` is the same as `new_rewards_init_address`
+        let mut stream = poller.into_stream();
+        let (stream_event, _) = stream.next().await.unwrap().unwrap();
+        dbg!(stream_event.oldLookAheadDays, stream_event.newLookAheadDays);
+        assert_eq!(stream_event.newLookAheadDays, lookahead);
     }
 
     // this function is caller from test_avs_writer_methods
