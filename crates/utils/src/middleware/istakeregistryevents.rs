@@ -168,9 +168,9 @@ pub mod IStakeRegistryEvents {
         b"",
     );
     /**Event with signature `MinimumStakeForQuorumUpdated(uint8,uint96)` and selector `0x26eecff2b70b0a71104ff4d940ba7162d23a95c248771fc487a7be17a596b3cf`.
-```solidity
-event MinimumStakeForQuorumUpdated(uint8 indexed quorumNumber, uint96 minimumStake);
-```*/
+    ```solidity
+    event MinimumStakeForQuorumUpdated(uint8 indexed quorumNumber, uint96 minimumStake);
+    ```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -195,48 +195,18 @@ event MinimumStakeForQuorumUpdated(uint8 indexed quorumNumber, uint96 minimumSta
         #[automatically_derived]
         impl alloy_sol_types::SolEvent for MinimumStakeForQuorumUpdated {
             type DataTuple<'a> = (alloy::sol_types::sol_data::Uint<96>,);
-            type DataToken<'a> = <Self::DataTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (
                 alloy_sol_types::sol_data::FixedBytes<32>,
                 alloy::sol_types::sol_data::Uint<8>,
             );
             const SIGNATURE: &'static str = "MinimumStakeForQuorumUpdated(uint8,uint96)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
-                38u8,
-                238u8,
-                207u8,
-                242u8,
-                183u8,
-                11u8,
-                10u8,
-                113u8,
-                16u8,
-                79u8,
-                244u8,
-                217u8,
-                64u8,
-                186u8,
-                113u8,
-                98u8,
-                210u8,
-                58u8,
-                149u8,
-                194u8,
-                72u8,
-                119u8,
-                31u8,
-                196u8,
-                135u8,
-                167u8,
-                190u8,
-                23u8,
-                165u8,
-                150u8,
-                179u8,
-                207u8,
-            ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
+                alloy_sol_types::private::B256::new([
+                    38u8, 238u8, 207u8, 242u8, 183u8, 11u8, 10u8, 113u8, 16u8, 79u8, 244u8, 217u8,
+                    64u8, 186u8, 113u8, 98u8, 210u8, 58u8, 149u8, 194u8, 72u8, 119u8, 31u8, 196u8,
+                    135u8, 167u8, 190u8, 23u8, 165u8, 150u8, 179u8, 207u8,
+                ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -254,22 +224,20 @@ event MinimumStakeForQuorumUpdated(uint8 indexed quorumNumber, uint96 minimumSta
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(
-                        alloy_sol_types::Error::invalid_event_signature_hash(
-                            Self::SIGNATURE,
-                            topics.0,
-                            Self::SIGNATURE_HASH,
-                        ),
-                    );
+                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
+                        Self::SIGNATURE,
+                        topics.0,
+                        Self::SIGNATURE_HASH,
+                    ));
                 }
                 Ok(())
             }
             #[inline]
             fn tokenize_body(&self) -> Self::DataToken<'_> {
                 (
-                    <alloy::sol_types::sol_data::Uint<
-                        96,
-                    > as alloy_sol_types::SolType>::tokenize(&self.minimumStake),
+                    <alloy::sol_types::sol_data::Uint<96> as alloy_sol_types::SolType>::tokenize(
+                        &self.minimumStake,
+                    ),
                 )
             }
             #[inline]
@@ -284,9 +252,7 @@ event MinimumStakeForQuorumUpdated(uint8 indexed quorumNumber, uint96 minimumSta
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(
-                    Self::SIGNATURE_HASH,
-                );
+                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
                 out[1usize] = <alloy::sol_types::sol_data::Uint<
                     8,
                 > as alloy_sol_types::EventTopic>::encode_topic(&self.quorumNumber);
@@ -305,17 +271,15 @@ event MinimumStakeForQuorumUpdated(uint8 indexed quorumNumber, uint96 minimumSta
         #[automatically_derived]
         impl From<&MinimumStakeForQuorumUpdated> for alloy_sol_types::private::LogData {
             #[inline]
-            fn from(
-                this: &MinimumStakeForQuorumUpdated,
-            ) -> alloy_sol_types::private::LogData {
+            fn from(this: &MinimumStakeForQuorumUpdated) -> alloy_sol_types::private::LogData {
                 alloy_sol_types::SolEvent::encode_log_data(this)
             }
         }
     };
     /**Event with signature `OperatorStakeUpdate(bytes32,uint8,uint96)` and selector `0x2f527d527e95d8fe40aec55377743bb779087da3f6d0d08f12e36444da62327d`.
-```solidity
-event OperatorStakeUpdate(bytes32 indexed operatorId, uint8 quorumNumber, uint96 stake);
-```*/
+    ```solidity
+    event OperatorStakeUpdate(bytes32 indexed operatorId, uint8 quorumNumber, uint96 stake);
+    ```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -345,48 +309,18 @@ event OperatorStakeUpdate(bytes32 indexed operatorId, uint8 quorumNumber, uint96
                 alloy::sol_types::sol_data::Uint<8>,
                 alloy::sol_types::sol_data::Uint<96>,
             );
-            type DataToken<'a> = <Self::DataTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (
                 alloy_sol_types::sol_data::FixedBytes<32>,
                 alloy::sol_types::sol_data::FixedBytes<32>,
             );
             const SIGNATURE: &'static str = "OperatorStakeUpdate(bytes32,uint8,uint96)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
-                47u8,
-                82u8,
-                125u8,
-                82u8,
-                126u8,
-                149u8,
-                216u8,
-                254u8,
-                64u8,
-                174u8,
-                197u8,
-                83u8,
-                119u8,
-                116u8,
-                59u8,
-                183u8,
-                121u8,
-                8u8,
-                125u8,
-                163u8,
-                246u8,
-                208u8,
-                208u8,
-                143u8,
-                18u8,
-                227u8,
-                100u8,
-                68u8,
-                218u8,
-                98u8,
-                50u8,
-                125u8,
-            ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
+                alloy_sol_types::private::B256::new([
+                    47u8, 82u8, 125u8, 82u8, 126u8, 149u8, 216u8, 254u8, 64u8, 174u8, 197u8, 83u8,
+                    119u8, 116u8, 59u8, 183u8, 121u8, 8u8, 125u8, 163u8, 246u8, 208u8, 208u8,
+                    143u8, 18u8, 227u8, 100u8, 68u8, 218u8, 98u8, 50u8, 125u8,
+                ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -405,25 +339,23 @@ event OperatorStakeUpdate(bytes32 indexed operatorId, uint8 quorumNumber, uint96
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(
-                        alloy_sol_types::Error::invalid_event_signature_hash(
-                            Self::SIGNATURE,
-                            topics.0,
-                            Self::SIGNATURE_HASH,
-                        ),
-                    );
+                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
+                        Self::SIGNATURE,
+                        topics.0,
+                        Self::SIGNATURE_HASH,
+                    ));
                 }
                 Ok(())
             }
             #[inline]
             fn tokenize_body(&self) -> Self::DataToken<'_> {
                 (
-                    <alloy::sol_types::sol_data::Uint<
-                        8,
-                    > as alloy_sol_types::SolType>::tokenize(&self.quorumNumber),
-                    <alloy::sol_types::sol_data::Uint<
-                        96,
-                    > as alloy_sol_types::SolType>::tokenize(&self.stake),
+                    <alloy::sol_types::sol_data::Uint<8> as alloy_sol_types::SolType>::tokenize(
+                        &self.quorumNumber,
+                    ),
+                    <alloy::sol_types::sol_data::Uint<96> as alloy_sol_types::SolType>::tokenize(
+                        &self.stake,
+                    ),
                 )
             }
             #[inline]
@@ -438,9 +370,7 @@ event OperatorStakeUpdate(bytes32 indexed operatorId, uint8 quorumNumber, uint96
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(
-                    Self::SIGNATURE_HASH,
-                );
+                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
                 out[1usize] = <alloy::sol_types::sol_data::FixedBytes<
                     32,
                 > as alloy_sol_types::EventTopic>::encode_topic(&self.operatorId);
@@ -465,9 +395,9 @@ event OperatorStakeUpdate(bytes32 indexed operatorId, uint8 quorumNumber, uint96
         }
     };
     /**Event with signature `QuorumCreated(uint8)` and selector `0x831a9c86c45bb303caf3f064be2bc2b9fd4ecf19e47c4ac02a61e75dabfe55b4`.
-```solidity
-event QuorumCreated(uint8 indexed quorumNumber);
-```*/
+    ```solidity
+    event QuorumCreated(uint8 indexed quorumNumber);
+    ```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -490,48 +420,18 @@ event QuorumCreated(uint8 indexed quorumNumber);
         #[automatically_derived]
         impl alloy_sol_types::SolEvent for QuorumCreated {
             type DataTuple<'a> = ();
-            type DataToken<'a> = <Self::DataTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (
                 alloy_sol_types::sol_data::FixedBytes<32>,
                 alloy::sol_types::sol_data::Uint<8>,
             );
             const SIGNATURE: &'static str = "QuorumCreated(uint8)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
-                131u8,
-                26u8,
-                156u8,
-                134u8,
-                196u8,
-                91u8,
-                179u8,
-                3u8,
-                202u8,
-                243u8,
-                240u8,
-                100u8,
-                190u8,
-                43u8,
-                194u8,
-                185u8,
-                253u8,
-                78u8,
-                207u8,
-                25u8,
-                228u8,
-                124u8,
-                74u8,
-                192u8,
-                42u8,
-                97u8,
-                231u8,
-                93u8,
-                171u8,
-                254u8,
-                85u8,
-                180u8,
-            ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
+                alloy_sol_types::private::B256::new([
+                    131u8, 26u8, 156u8, 134u8, 196u8, 91u8, 179u8, 3u8, 202u8, 243u8, 240u8, 100u8,
+                    190u8, 43u8, 194u8, 185u8, 253u8, 78u8, 207u8, 25u8, 228u8, 124u8, 74u8, 192u8,
+                    42u8, 97u8, 231u8, 93u8, 171u8, 254u8, 85u8, 180u8,
+                ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -539,20 +439,20 @@ event QuorumCreated(uint8 indexed quorumNumber);
                 topics: <Self::TopicList as alloy_sol_types::SolType>::RustType,
                 data: <Self::DataTuple<'_> as alloy_sol_types::SolType>::RustType,
             ) -> Self {
-                Self { quorumNumber: topics.1 }
+                Self {
+                    quorumNumber: topics.1,
+                }
             }
             #[inline]
             fn check_signature(
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(
-                        alloy_sol_types::Error::invalid_event_signature_hash(
-                            Self::SIGNATURE,
-                            topics.0,
-                            Self::SIGNATURE_HASH,
-                        ),
-                    );
+                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
+                        Self::SIGNATURE,
+                        topics.0,
+                        Self::SIGNATURE_HASH,
+                    ));
                 }
                 Ok(())
             }
@@ -572,9 +472,7 @@ event QuorumCreated(uint8 indexed quorumNumber);
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(
-                    Self::SIGNATURE_HASH,
-                );
+                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
                 out[1usize] = <alloy::sol_types::sol_data::Uint<
                     8,
                 > as alloy_sol_types::EventTopic>::encode_topic(&self.quorumNumber);
@@ -599,9 +497,9 @@ event QuorumCreated(uint8 indexed quorumNumber);
         }
     };
     /**Event with signature `StrategyAddedToQuorum(uint8,address)` and selector `0x10565e56cacbf32eca267945f054fec02e59750032d113d3302182ad967f5404`.
-```solidity
-event StrategyAddedToQuorum(uint8 indexed quorumNumber, address strategy);
-```*/
+    ```solidity
+    event StrategyAddedToQuorum(uint8 indexed quorumNumber, address strategy);
+    ```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -626,48 +524,18 @@ event StrategyAddedToQuorum(uint8 indexed quorumNumber, address strategy);
         #[automatically_derived]
         impl alloy_sol_types::SolEvent for StrategyAddedToQuorum {
             type DataTuple<'a> = (alloy::sol_types::sol_data::Address,);
-            type DataToken<'a> = <Self::DataTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (
                 alloy_sol_types::sol_data::FixedBytes<32>,
                 alloy::sol_types::sol_data::Uint<8>,
             );
             const SIGNATURE: &'static str = "StrategyAddedToQuorum(uint8,address)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
-                16u8,
-                86u8,
-                94u8,
-                86u8,
-                202u8,
-                203u8,
-                243u8,
-                46u8,
-                202u8,
-                38u8,
-                121u8,
-                69u8,
-                240u8,
-                84u8,
-                254u8,
-                192u8,
-                46u8,
-                89u8,
-                117u8,
-                0u8,
-                50u8,
-                209u8,
-                19u8,
-                211u8,
-                48u8,
-                33u8,
-                130u8,
-                173u8,
-                150u8,
-                127u8,
-                84u8,
-                4u8,
-            ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
+                alloy_sol_types::private::B256::new([
+                    16u8, 86u8, 94u8, 86u8, 202u8, 203u8, 243u8, 46u8, 202u8, 38u8, 121u8, 69u8,
+                    240u8, 84u8, 254u8, 192u8, 46u8, 89u8, 117u8, 0u8, 50u8, 209u8, 19u8, 211u8,
+                    48u8, 33u8, 130u8, 173u8, 150u8, 127u8, 84u8, 4u8,
+                ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -685,13 +553,11 @@ event StrategyAddedToQuorum(uint8 indexed quorumNumber, address strategy);
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(
-                        alloy_sol_types::Error::invalid_event_signature_hash(
-                            Self::SIGNATURE,
-                            topics.0,
-                            Self::SIGNATURE_HASH,
-                        ),
-                    );
+                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
+                        Self::SIGNATURE,
+                        topics.0,
+                        Self::SIGNATURE_HASH,
+                    ));
                 }
                 Ok(())
             }
@@ -715,9 +581,7 @@ event StrategyAddedToQuorum(uint8 indexed quorumNumber, address strategy);
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(
-                    Self::SIGNATURE_HASH,
-                );
+                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
                 out[1usize] = <alloy::sol_types::sol_data::Uint<
                     8,
                 > as alloy_sol_types::EventTopic>::encode_topic(&self.quorumNumber);
@@ -742,9 +606,9 @@ event StrategyAddedToQuorum(uint8 indexed quorumNumber, address strategy);
         }
     };
     /**Event with signature `StrategyMultiplierUpdated(uint8,address,uint256)` and selector `0x11a5641322da1dff56a4b66eaac31ffa465295ece907cd163437793b4d009a75`.
-```solidity
-event StrategyMultiplierUpdated(uint8 indexed quorumNumber, address strategy, uint256 multiplier);
-```*/
+    ```solidity
+    event StrategyMultiplierUpdated(uint8 indexed quorumNumber, address strategy, uint256 multiplier);
+    ```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -774,48 +638,18 @@ event StrategyMultiplierUpdated(uint8 indexed quorumNumber, address strategy, ui
                 alloy::sol_types::sol_data::Address,
                 alloy::sol_types::sol_data::Uint<256>,
             );
-            type DataToken<'a> = <Self::DataTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (
                 alloy_sol_types::sol_data::FixedBytes<32>,
                 alloy::sol_types::sol_data::Uint<8>,
             );
             const SIGNATURE: &'static str = "StrategyMultiplierUpdated(uint8,address,uint256)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
-                17u8,
-                165u8,
-                100u8,
-                19u8,
-                34u8,
-                218u8,
-                29u8,
-                255u8,
-                86u8,
-                164u8,
-                182u8,
-                110u8,
-                170u8,
-                195u8,
-                31u8,
-                250u8,
-                70u8,
-                82u8,
-                149u8,
-                236u8,
-                233u8,
-                7u8,
-                205u8,
-                22u8,
-                52u8,
-                55u8,
-                121u8,
-                59u8,
-                77u8,
-                0u8,
-                154u8,
-                117u8,
-            ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
+                alloy_sol_types::private::B256::new([
+                    17u8, 165u8, 100u8, 19u8, 34u8, 218u8, 29u8, 255u8, 86u8, 164u8, 182u8, 110u8,
+                    170u8, 195u8, 31u8, 250u8, 70u8, 82u8, 149u8, 236u8, 233u8, 7u8, 205u8, 22u8,
+                    52u8, 55u8, 121u8, 59u8, 77u8, 0u8, 154u8, 117u8,
+                ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -834,13 +668,11 @@ event StrategyMultiplierUpdated(uint8 indexed quorumNumber, address strategy, ui
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(
-                        alloy_sol_types::Error::invalid_event_signature_hash(
-                            Self::SIGNATURE,
-                            topics.0,
-                            Self::SIGNATURE_HASH,
-                        ),
-                    );
+                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
+                        Self::SIGNATURE,
+                        topics.0,
+                        Self::SIGNATURE_HASH,
+                    ));
                 }
                 Ok(())
             }
@@ -850,9 +682,9 @@ event StrategyMultiplierUpdated(uint8 indexed quorumNumber, address strategy, ui
                     <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
                         &self.strategy,
                     ),
-                    <alloy::sol_types::sol_data::Uint<
-                        256,
-                    > as alloy_sol_types::SolType>::tokenize(&self.multiplier),
+                    <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
+                        &self.multiplier,
+                    ),
                 )
             }
             #[inline]
@@ -867,9 +699,7 @@ event StrategyMultiplierUpdated(uint8 indexed quorumNumber, address strategy, ui
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(
-                    Self::SIGNATURE_HASH,
-                );
+                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
                 out[1usize] = <alloy::sol_types::sol_data::Uint<
                     8,
                 > as alloy_sol_types::EventTopic>::encode_topic(&self.quorumNumber);
@@ -888,17 +718,15 @@ event StrategyMultiplierUpdated(uint8 indexed quorumNumber, address strategy, ui
         #[automatically_derived]
         impl From<&StrategyMultiplierUpdated> for alloy_sol_types::private::LogData {
             #[inline]
-            fn from(
-                this: &StrategyMultiplierUpdated,
-            ) -> alloy_sol_types::private::LogData {
+            fn from(this: &StrategyMultiplierUpdated) -> alloy_sol_types::private::LogData {
                 alloy_sol_types::SolEvent::encode_log_data(this)
             }
         }
     };
     /**Event with signature `StrategyRemovedFromQuorum(uint8,address)` and selector `0x31fa2e2cd280c9375e13ffcf3d81e2378100186e4058f8d3ddb690b82dcd31f7`.
-```solidity
-event StrategyRemovedFromQuorum(uint8 indexed quorumNumber, address strategy);
-```*/
+    ```solidity
+    event StrategyRemovedFromQuorum(uint8 indexed quorumNumber, address strategy);
+    ```*/
     #[allow(
         non_camel_case_types,
         non_snake_case,
@@ -923,48 +751,18 @@ event StrategyRemovedFromQuorum(uint8 indexed quorumNumber, address strategy);
         #[automatically_derived]
         impl alloy_sol_types::SolEvent for StrategyRemovedFromQuorum {
             type DataTuple<'a> = (alloy::sol_types::sol_data::Address,);
-            type DataToken<'a> = <Self::DataTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             type TopicList = (
                 alloy_sol_types::sol_data::FixedBytes<32>,
                 alloy::sol_types::sol_data::Uint<8>,
             );
             const SIGNATURE: &'static str = "StrategyRemovedFromQuorum(uint8,address)";
-            const SIGNATURE_HASH: alloy_sol_types::private::B256 = alloy_sol_types::private::B256::new([
-                49u8,
-                250u8,
-                46u8,
-                44u8,
-                210u8,
-                128u8,
-                201u8,
-                55u8,
-                94u8,
-                19u8,
-                255u8,
-                207u8,
-                61u8,
-                129u8,
-                226u8,
-                55u8,
-                129u8,
-                0u8,
-                24u8,
-                110u8,
-                64u8,
-                88u8,
-                248u8,
-                211u8,
-                221u8,
-                182u8,
-                144u8,
-                184u8,
-                45u8,
-                205u8,
-                49u8,
-                247u8,
-            ]);
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
+                alloy_sol_types::private::B256::new([
+                    49u8, 250u8, 46u8, 44u8, 210u8, 128u8, 201u8, 55u8, 94u8, 19u8, 255u8, 207u8,
+                    61u8, 129u8, 226u8, 55u8, 129u8, 0u8, 24u8, 110u8, 64u8, 88u8, 248u8, 211u8,
+                    221u8, 182u8, 144u8, 184u8, 45u8, 205u8, 49u8, 247u8,
+                ]);
             const ANONYMOUS: bool = false;
             #[allow(unused_variables)]
             #[inline]
@@ -982,13 +780,11 @@ event StrategyRemovedFromQuorum(uint8 indexed quorumNumber, address strategy);
                 topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
             ) -> alloy_sol_types::Result<()> {
                 if topics.0 != Self::SIGNATURE_HASH {
-                    return Err(
-                        alloy_sol_types::Error::invalid_event_signature_hash(
-                            Self::SIGNATURE,
-                            topics.0,
-                            Self::SIGNATURE_HASH,
-                        ),
-                    );
+                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
+                        Self::SIGNATURE,
+                        topics.0,
+                        Self::SIGNATURE_HASH,
+                    ));
                 }
                 Ok(())
             }
@@ -1012,9 +808,7 @@ event StrategyRemovedFromQuorum(uint8 indexed quorumNumber, address strategy);
                 if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
                     return Err(alloy_sol_types::Error::Overrun);
                 }
-                out[0usize] = alloy_sol_types::abi::token::WordToken(
-                    Self::SIGNATURE_HASH,
-                );
+                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
                 out[1usize] = <alloy::sol_types::sol_data::Uint<
                     8,
                 > as alloy_sol_types::EventTopic>::encode_topic(&self.quorumNumber);
@@ -1033,9 +827,7 @@ event StrategyRemovedFromQuorum(uint8 indexed quorumNumber, address strategy);
         #[automatically_derived]
         impl From<&StrategyRemovedFromQuorum> for alloy_sol_types::private::LogData {
             #[inline]
-            fn from(
-                this: &StrategyRemovedFromQuorum,
-            ) -> alloy_sol_types::private::LogData {
+            fn from(this: &StrategyRemovedFromQuorum) -> alloy_sol_types::private::LogData {
                 alloy_sol_types::SolEvent::encode_log_data(this)
             }
         }
@@ -1059,208 +851,34 @@ event StrategyRemovedFromQuorum(uint8 indexed quorumNumber, address strategy);
         /// Prefer using `SolInterface` methods instead.
         pub const SELECTORS: &'static [[u8; 32usize]] = &[
             [
-                16u8,
-                86u8,
-                94u8,
-                86u8,
-                202u8,
-                203u8,
-                243u8,
-                46u8,
-                202u8,
-                38u8,
-                121u8,
-                69u8,
-                240u8,
-                84u8,
-                254u8,
-                192u8,
-                46u8,
-                89u8,
-                117u8,
-                0u8,
-                50u8,
-                209u8,
-                19u8,
-                211u8,
-                48u8,
-                33u8,
-                130u8,
-                173u8,
-                150u8,
-                127u8,
-                84u8,
-                4u8,
+                16u8, 86u8, 94u8, 86u8, 202u8, 203u8, 243u8, 46u8, 202u8, 38u8, 121u8, 69u8, 240u8,
+                84u8, 254u8, 192u8, 46u8, 89u8, 117u8, 0u8, 50u8, 209u8, 19u8, 211u8, 48u8, 33u8,
+                130u8, 173u8, 150u8, 127u8, 84u8, 4u8,
             ],
             [
-                17u8,
-                165u8,
-                100u8,
-                19u8,
-                34u8,
-                218u8,
-                29u8,
-                255u8,
-                86u8,
-                164u8,
-                182u8,
-                110u8,
-                170u8,
-                195u8,
-                31u8,
-                250u8,
-                70u8,
-                82u8,
-                149u8,
-                236u8,
-                233u8,
-                7u8,
-                205u8,
-                22u8,
-                52u8,
-                55u8,
-                121u8,
-                59u8,
-                77u8,
-                0u8,
-                154u8,
-                117u8,
+                17u8, 165u8, 100u8, 19u8, 34u8, 218u8, 29u8, 255u8, 86u8, 164u8, 182u8, 110u8,
+                170u8, 195u8, 31u8, 250u8, 70u8, 82u8, 149u8, 236u8, 233u8, 7u8, 205u8, 22u8, 52u8,
+                55u8, 121u8, 59u8, 77u8, 0u8, 154u8, 117u8,
             ],
             [
-                38u8,
-                238u8,
-                207u8,
-                242u8,
-                183u8,
-                11u8,
-                10u8,
-                113u8,
-                16u8,
-                79u8,
-                244u8,
-                217u8,
-                64u8,
-                186u8,
-                113u8,
-                98u8,
-                210u8,
-                58u8,
-                149u8,
-                194u8,
-                72u8,
-                119u8,
-                31u8,
-                196u8,
-                135u8,
-                167u8,
-                190u8,
-                23u8,
-                165u8,
-                150u8,
-                179u8,
-                207u8,
+                38u8, 238u8, 207u8, 242u8, 183u8, 11u8, 10u8, 113u8, 16u8, 79u8, 244u8, 217u8,
+                64u8, 186u8, 113u8, 98u8, 210u8, 58u8, 149u8, 194u8, 72u8, 119u8, 31u8, 196u8,
+                135u8, 167u8, 190u8, 23u8, 165u8, 150u8, 179u8, 207u8,
             ],
             [
-                47u8,
-                82u8,
-                125u8,
-                82u8,
-                126u8,
-                149u8,
-                216u8,
-                254u8,
-                64u8,
-                174u8,
-                197u8,
-                83u8,
-                119u8,
-                116u8,
-                59u8,
-                183u8,
-                121u8,
-                8u8,
-                125u8,
-                163u8,
-                246u8,
-                208u8,
-                208u8,
-                143u8,
-                18u8,
-                227u8,
-                100u8,
-                68u8,
-                218u8,
-                98u8,
-                50u8,
-                125u8,
+                47u8, 82u8, 125u8, 82u8, 126u8, 149u8, 216u8, 254u8, 64u8, 174u8, 197u8, 83u8,
+                119u8, 116u8, 59u8, 183u8, 121u8, 8u8, 125u8, 163u8, 246u8, 208u8, 208u8, 143u8,
+                18u8, 227u8, 100u8, 68u8, 218u8, 98u8, 50u8, 125u8,
             ],
             [
-                49u8,
-                250u8,
-                46u8,
-                44u8,
-                210u8,
-                128u8,
-                201u8,
-                55u8,
-                94u8,
-                19u8,
-                255u8,
-                207u8,
-                61u8,
-                129u8,
-                226u8,
-                55u8,
-                129u8,
-                0u8,
-                24u8,
-                110u8,
-                64u8,
-                88u8,
-                248u8,
-                211u8,
-                221u8,
-                182u8,
-                144u8,
-                184u8,
-                45u8,
-                205u8,
-                49u8,
-                247u8,
+                49u8, 250u8, 46u8, 44u8, 210u8, 128u8, 201u8, 55u8, 94u8, 19u8, 255u8, 207u8, 61u8,
+                129u8, 226u8, 55u8, 129u8, 0u8, 24u8, 110u8, 64u8, 88u8, 248u8, 211u8, 221u8,
+                182u8, 144u8, 184u8, 45u8, 205u8, 49u8, 247u8,
             ],
             [
-                131u8,
-                26u8,
-                156u8,
-                134u8,
-                196u8,
-                91u8,
-                179u8,
-                3u8,
-                202u8,
-                243u8,
-                240u8,
-                100u8,
-                190u8,
-                43u8,
-                194u8,
-                185u8,
-                253u8,
-                78u8,
-                207u8,
-                25u8,
-                228u8,
-                124u8,
-                74u8,
-                192u8,
-                42u8,
-                97u8,
-                231u8,
-                93u8,
-                171u8,
-                254u8,
-                85u8,
-                180u8,
+                131u8, 26u8, 156u8, 134u8, 196u8, 91u8, 179u8, 3u8, 202u8, 243u8, 240u8, 100u8,
+                190u8, 43u8, 194u8, 185u8, 253u8, 78u8, 207u8, 25u8, 228u8, 124u8, 74u8, 192u8,
+                42u8, 97u8, 231u8, 93u8, 171u8, 254u8, 85u8, 180u8,
             ],
         ];
     }
@@ -1276,73 +894,49 @@ event StrategyRemovedFromQuorum(uint8 indexed quorumNumber, address strategy);
             match topics.first().copied() {
                 Some(
                     <MinimumStakeForQuorumUpdated as alloy_sol_types::SolEvent>::SIGNATURE_HASH,
-                ) => {
-                    <MinimumStakeForQuorumUpdated as alloy_sol_types::SolEvent>::decode_raw_log(
-                            topics,
-                            data,
-                            validate,
-                        )
-                        .map(Self::MinimumStakeForQuorumUpdated)
-                }
-                Some(
-                    <OperatorStakeUpdate as alloy_sol_types::SolEvent>::SIGNATURE_HASH,
-                ) => {
+                ) => <MinimumStakeForQuorumUpdated as alloy_sol_types::SolEvent>::decode_raw_log(
+                    topics, data, validate,
+                )
+                .map(Self::MinimumStakeForQuorumUpdated),
+                Some(<OperatorStakeUpdate as alloy_sol_types::SolEvent>::SIGNATURE_HASH) => {
                     <OperatorStakeUpdate as alloy_sol_types::SolEvent>::decode_raw_log(
-                            topics,
-                            data,
-                            validate,
-                        )
-                        .map(Self::OperatorStakeUpdate)
+                        topics, data, validate,
+                    )
+                    .map(Self::OperatorStakeUpdate)
                 }
                 Some(<QuorumCreated as alloy_sol_types::SolEvent>::SIGNATURE_HASH) => {
                     <QuorumCreated as alloy_sol_types::SolEvent>::decode_raw_log(
-                            topics,
-                            data,
-                            validate,
-                        )
-                        .map(Self::QuorumCreated)
+                        topics, data, validate,
+                    )
+                    .map(Self::QuorumCreated)
                 }
-                Some(
-                    <StrategyAddedToQuorum as alloy_sol_types::SolEvent>::SIGNATURE_HASH,
-                ) => {
+                Some(<StrategyAddedToQuorum as alloy_sol_types::SolEvent>::SIGNATURE_HASH) => {
                     <StrategyAddedToQuorum as alloy_sol_types::SolEvent>::decode_raw_log(
-                            topics,
-                            data,
-                            validate,
-                        )
-                        .map(Self::StrategyAddedToQuorum)
+                        topics, data, validate,
+                    )
+                    .map(Self::StrategyAddedToQuorum)
                 }
-                Some(
-                    <StrategyMultiplierUpdated as alloy_sol_types::SolEvent>::SIGNATURE_HASH,
-                ) => {
+                Some(<StrategyMultiplierUpdated as alloy_sol_types::SolEvent>::SIGNATURE_HASH) => {
                     <StrategyMultiplierUpdated as alloy_sol_types::SolEvent>::decode_raw_log(
-                            topics,
-                            data,
-                            validate,
-                        )
-                        .map(Self::StrategyMultiplierUpdated)
+                        topics, data, validate,
+                    )
+                    .map(Self::StrategyMultiplierUpdated)
                 }
-                Some(
-                    <StrategyRemovedFromQuorum as alloy_sol_types::SolEvent>::SIGNATURE_HASH,
-                ) => {
+                Some(<StrategyRemovedFromQuorum as alloy_sol_types::SolEvent>::SIGNATURE_HASH) => {
                     <StrategyRemovedFromQuorum as alloy_sol_types::SolEvent>::decode_raw_log(
-                            topics,
-                            data,
-                            validate,
-                        )
-                        .map(Self::StrategyRemovedFromQuorum)
+                        topics, data, validate,
+                    )
+                    .map(Self::StrategyRemovedFromQuorum)
                 }
-                _ => {
-                    alloy_sol_types::private::Err(alloy_sol_types::Error::InvalidLog {
-                        name: <Self as alloy_sol_types::SolEventInterface>::NAME,
-                        log: alloy_sol_types::private::Box::new(
-                            alloy_sol_types::private::LogData::new_unchecked(
-                                topics.to_vec(),
-                                data.to_vec().into(),
-                            ),
+                _ => alloy_sol_types::private::Err(alloy_sol_types::Error::InvalidLog {
+                    name: <Self as alloy_sol_types::SolEventInterface>::NAME,
+                    log: alloy_sol_types::private::Box::new(
+                        alloy_sol_types::private::LogData::new_unchecked(
+                            topics.to_vec(),
+                            data.to_vec().into(),
                         ),
-                    })
-                }
+                    ),
+                }),
             }
         }
     }
@@ -1396,7 +990,7 @@ event StrategyRemovedFromQuorum(uint8 indexed quorumNumber, address strategy);
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`IStakeRegistryEvents`](self) contract instance.
 
-See the [wrapper's documentation](`IStakeRegistryEventsInstance`) for more details.*/
+    See the [wrapper's documentation](`IStakeRegistryEventsInstance`) for more details.*/
     #[inline]
     pub const fn new<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -1410,9 +1004,9 @@ See the [wrapper's documentation](`IStakeRegistryEventsInstance`) for more detai
     }
     /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+    Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+    For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
     #[inline]
     pub fn deploy<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -1426,35 +1020,33 @@ For more fine-grained control over the deployment process, use [`deploy_builder`
         IStakeRegistryEventsInstance::<T, P, N>::deploy(provider)
     }
     /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+    and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+    This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+    the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     #[inline]
     pub fn deploy_builder<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
         P: alloy_contract::private::Provider<T, N>,
         N: alloy_contract::private::Network,
-    >(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
+    >(
+        provider: P,
+    ) -> alloy_contract::RawCallBuilder<T, P, N> {
         IStakeRegistryEventsInstance::<T, P, N>::deploy_builder(provider)
     }
     /**A [`IStakeRegistryEvents`](self) instance.
 
-Contains type-safe methods for interacting with an on-chain instance of the
-[`IStakeRegistryEvents`](self) contract located at a given `address`, using a given
-provider `P`.
+    Contains type-safe methods for interacting with an on-chain instance of the
+    [`IStakeRegistryEvents`](self) contract located at a given `address`, using a given
+    provider `P`.
 
-If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
-documentation on how to provide it), the `deploy` and `deploy_builder` methods can
-be used to deploy a new instance of the contract.
+    If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
+    documentation on how to provide it), the `deploy` and `deploy_builder` methods can
+    be used to deploy a new instance of the contract.
 
-See the [module-level documentation](self) for all the available methods.*/
+    See the [module-level documentation](self) for all the available methods.*/
     #[derive(Clone)]
-    pub struct IStakeRegistryEventsInstance<
-        T,
-        P,
-        N = alloy_contract::private::Ethereum,
-    > {
+    pub struct IStakeRegistryEventsInstance<T, P, N = alloy_contract::private::Ethereum> {
         address: alloy_sol_types::private::Address,
         provider: P,
         _network_transport: ::core::marker::PhantomData<(N, T)>,
@@ -1463,24 +1055,24 @@ See the [module-level documentation](self) for all the available methods.*/
     impl<T, P, N> ::core::fmt::Debug for IStakeRegistryEventsInstance<T, P, N> {
         #[inline]
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-            f.debug_tuple("IStakeRegistryEventsInstance").field(&self.address).finish()
+            f.debug_tuple("IStakeRegistryEventsInstance")
+                .field(&self.address)
+                .finish()
         }
     }
     /// Instantiation and getters/setters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > IStakeRegistryEventsInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > IStakeRegistryEventsInstance<T, P, N>
+    {
         /**Creates a new wrapper around an on-chain [`IStakeRegistryEvents`](self) contract instance.
 
-See the [wrapper's documentation](`IStakeRegistryEventsInstance`) for more details.*/
+        See the [wrapper's documentation](`IStakeRegistryEventsInstance`) for more details.*/
         #[inline]
-        pub const fn new(
-            address: alloy_sol_types::private::Address,
-            provider: P,
-        ) -> Self {
+        pub const fn new(address: alloy_sol_types::private::Address, provider: P) -> Self {
             Self {
                 address,
                 provider,
@@ -1489,9 +1081,9 @@ See the [wrapper's documentation](`IStakeRegistryEventsInstance`) for more detai
         }
         /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+        Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+        For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
         #[inline]
         pub async fn deploy(
             provider: P,
@@ -1501,10 +1093,10 @@ For more fine-grained control over the deployment process, use [`deploy_builder`
             Ok(Self::new(contract_address, call_builder.provider))
         }
         /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+        and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+        This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+        the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         #[inline]
         pub fn deploy_builder(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
             alloy_contract::RawCallBuilder::new_raw_deploy(
@@ -1547,10 +1139,11 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     /// Function calls.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > IStakeRegistryEventsInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > IStakeRegistryEventsInstance<T, P, N>
+    {
         /// Creates a new call builder using this contract instance's provider and address.
         ///
         /// Note that the call can be any function call, not just those defined in this
@@ -1565,10 +1158,11 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     /// Event filters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > IStakeRegistryEventsInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > IStakeRegistryEventsInstance<T, P, N>
+    {
         /// Creates a new event filter using this contract instance's provider and address.
         ///
         /// Note that the type can be any event, not just those defined in this contract.
@@ -1591,9 +1185,7 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
             self.event_filter::<OperatorStakeUpdate>()
         }
         ///Creates a new event filter for the [`QuorumCreated`] event.
-        pub fn QuorumCreated_filter(
-            &self,
-        ) -> alloy_contract::Event<T, &P, QuorumCreated, N> {
+        pub fn QuorumCreated_filter(&self) -> alloy_contract::Event<T, &P, QuorumCreated, N> {
             self.event_filter::<QuorumCreated>()
         }
         ///Creates a new event filter for the [`StrategyAddedToQuorum`] event.
