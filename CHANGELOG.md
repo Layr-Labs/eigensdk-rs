@@ -22,6 +22,7 @@ Each version will have a separate `Breaking Changes` section as well. To describ
 
 ### Breaking changes
 ### Removed
+* Removed homepage from testing-utils crate in [#266](https://github.com/Layr-Labs/eigensdk-rs/pull/266).
 
 ## [0.1.3] - 2024-01-17
 ### Added 🎉
