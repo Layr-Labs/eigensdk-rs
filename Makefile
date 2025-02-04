@@ -45,11 +45,13 @@ __BINDINGS__: ##
 bindings_host:
 	@echo "Generating bindings..."
 	./scripts/generate_bindings.sh
+	cargo fmt --all
 	@echo "Bindings generated"
 
 .PHONY: bindings
 bindings:
 	@echo "Starting Docker container..."
-	@docker run --rm -v "$(PWD):$(PWD)" -w "$(PWD)" \
+	@docker run --rm -v "$(PWD):/sdk" -w "/sdk" \
 		ghcr.io/foundry-rs/foundry:v0.3.0 \
-		-c './scripts/generate_bindings.sh'
+		-c scripts/generate_bindings.sh
+	cargo fmt --all
