@@ -820,7 +820,8 @@ mod tests {
     async fn test_is_operator_set_quorum() {
         let avs_reader = build_avs_registry_chain_reader().await;
 
-        let response = avs_reader.is_operator_set_quorum(0).await.unwrap();
-        dbg!(response);
+        let operator_set_quourm = avs_reader.is_operator_set_quorum(0).await.unwrap();
+
+        assert!(!operator_set_quourm);
     }
 }
