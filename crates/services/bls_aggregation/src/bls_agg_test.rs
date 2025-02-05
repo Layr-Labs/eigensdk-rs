@@ -434,10 +434,13 @@ pub mod integration_test {
             .await
             .unwrap()
             ._0;
-        let task_signature =
-            TaskSignature::new(task_index, task_response_digest, bls_signature, operator_id);
         bls_agg_service
-            .process_new_signature(task_signature)
+            .process_new_signature(TaskSignature::new(
+                task_index,
+                task_response_digest,
+                bls_signature,
+                operator_id,
+            ))
             .await
             .unwrap();
 
