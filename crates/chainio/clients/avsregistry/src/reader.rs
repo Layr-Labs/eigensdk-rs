@@ -633,18 +633,23 @@ impl AvsRegistryChainReader {
 mod tests {
     use super::*;
     use eigen_logging::get_test_logger;
-    use eigen_testing_utils::m2_holesky_constants::{
-        HOLESKY_RPC_PROVIDER, OPERATOR_STATE_RETRIEVER, REGISTRY_COORDINATOR,
+    use eigen_testing_utils::{
+        anvil::start_anvil_container,
+        anvil_constants::{get_operator_state_retriever_address, get_registry_coordinator_address},
     };
     use hex::FromHex;
     use std::str::FromStr;
 
-    async fn build_avs_registry_chain_reader() -> AvsRegistryChainReader {
+    async fn build_avs_registry_chain_reader(http_endpoint: String) -> AvsRegistryChainReader {
+        let registry_coordinator = get_registry_coordinator_address(http_endpoint.clone()).await;
+        let operator_state_retriever =
+            get_operator_state_retriever_address(http_endpoint.clone()).await;
+
         AvsRegistryChainReader::new(
             get_test_logger(),
-            REGISTRY_COORDINATOR,
-            OPERATOR_STATE_RETRIEVER,
-            HOLESKY_RPC_PROVIDER.to_string(),
+            registry_coordinator,
+            operator_state_retriever,
+            http_endpoint,
         )
         .await
         .unwrap()
@@ -652,14 +657,16 @@ mod tests {
 
     #[tokio::test]
     async fn test_get_quorum_count() {
-        let avs_reader = build_avs_registry_chain_reader().await;
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
 
         let _ = avs_reader.get_quorum_count().await.unwrap();
     }
 
     #[tokio::test]
     async fn test_get_operators_stake_in_quorums_at_block() {
-        let avs_reader = build_avs_registry_chain_reader().await;
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
 
         let quorum_number = Bytes::from_hex("0x00").expect("bytes parse");
         let _ = avs_reader
@@ -670,7 +677,8 @@ mod tests {
 
     #[tokio::test]
     async fn test_get_operators_stake_in_quorums_at_block_operator_id() {
-        let avs_reader = build_avs_registry_chain_reader().await;
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
 
         let operator_id = U256::from_str(
             "35344093966194310405039483339636912150346494903629410125452342281826147822033",
@@ -685,7 +693,8 @@ mod tests {
 
     #[tokio::test]
     async fn test_get_operators_stake_in_quorums_at_current_block() {
-        let avs_reader = build_avs_registry_chain_reader().await;
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
         let quorum_number = Bytes::from_hex("0x00").expect("bytes parse");
 
         let _ = avs_reader
@@ -696,7 +705,8 @@ mod tests {
 
     #[tokio::test]
     async fn test_get_operators_stake_in_quorums_of_operator_at_current_block() {
-        let avs_reader = build_avs_registry_chain_reader().await;
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
         let operator_id = U256::from_str(
             "35344093966194310405039483339636912150346494903629410125452342281826147822033",
         )
@@ -712,7 +722,8 @@ mod tests {
 
     #[tokio::test]
     async fn test_get_operator_stake_in_quorums_of_operator_at_current_block() {
-        let avs_reader = build_avs_registry_chain_reader().await;
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
         let operator_id = U256::from_str(
             "35344093966194310405039483339636912150346494903629410125452342281826147822033",
         )
@@ -727,10 +738,11 @@ mod tests {
 
     #[tokio::test]
     async fn test_is_operator_registered() {
-        let avs_reader = build_avs_registry_chain_reader().await;
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
 
         let is_registered = avs_reader
-            .is_operator_registered(REGISTRY_COORDINATOR)
+            .is_operator_registered(avs_reader.registry_coordinator_addr)
             .await
             .unwrap();
         assert!(!is_registered);
@@ -738,7 +750,8 @@ mod tests {
 
     #[tokio::test]
     async fn test_get_operators_stake_in_quorums_of_operator_at_block() {
-        let avs_reader = build_avs_registry_chain_reader().await;
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
 
         let operator_id = U256::from_str(
             "35344093966194310405039483339636912150346494903629410125452342281826147822033",
@@ -753,7 +766,8 @@ mod tests {
 
     #[tokio::test]
     async fn test_query_existing_registered_operator_sockets() {
-        let avs_reader = build_avs_registry_chain_reader().await;
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
 
         let _ = avs_reader
             .query_existing_registered_operator_sockets(0, 1000)
@@ -763,7 +777,8 @@ mod tests {
 
     #[tokio::test]
     async fn test_query_registration_detail() {
-        let avs_reader = build_avs_registry_chain_reader().await;
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
 
         let operator_id = U256::from_str(
             "35344093966194310405039483339636912150346494903629410125452342281826147822033",
