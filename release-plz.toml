@@ -13,7 +13,7 @@ name = "info-operator-service"
 release = false # don't process this package
 
 [[package]]
-name = examples-avsregistry-read"
+name = "examples-avsregistry-read"
 release = false # don't process this package
 
 [[package]]
