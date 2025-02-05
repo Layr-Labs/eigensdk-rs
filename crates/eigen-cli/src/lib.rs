@@ -194,7 +194,7 @@ mod test {
         generate::{KeyGenerator, DEFAULT_KEY_FOLDER, PASSWORD_FILE, PRIVATE_KEY_HEX_FILE},
         operator_id::derive_operator_id,
     };
-    use alloy_primitives::Address;
+    use alloy::primitives::Address;
     use eigen_testing_utils::anvil::start_anvil_container;
     use eigen_testing_utils::anvil_constants::{
         get_registry_coordinator_address, get_service_manager_address,

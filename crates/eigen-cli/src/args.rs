@@ -1,4 +1,4 @@
-use alloy_primitives::Address;
+use alloy::primitives::Address;
 use clap::{ArgGroup, Parser, Subcommand};
 use eigen_testing_utils::anvil_constants::ANVIL_HTTP_URL;
 use rust_bls_bn254::{

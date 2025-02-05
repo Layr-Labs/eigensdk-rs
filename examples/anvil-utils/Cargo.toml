@@ -12,7 +12,7 @@ description = "anvil utilities examples"
 workspace = true
 
 [dependencies]
-alloy-primitives.workspace = true
+alloy.workspace = true
 
 eigen-client-avsregistry.workspace = true
 eigen-testing-utils.workspace = true
