@@ -20,6 +20,7 @@ Each version will have a separate `Breaking Changes` section as well. To describ
   * The `bindings` target now generates the bindings using Docker with Foundry v0.3.0.
   * The previous `bindings` target was renamed to `bindings_host`, as it runs without Docker. However the `bindings_host` target is for CI use only. To generate the bindings, please use the `bindings` target.
 * Fixed the rewardsv2 bindings version in readme to 0.5.4 in [#246](https://github.com/Layr-Labs/eigensdk-rs/pull/246).
+* Fixed typo in release-plz toml file in [#284](https://github.com/Layr-Labs/eigensdk-rs/pull/284).
 
 ### Breaking changes
 ### Removed
