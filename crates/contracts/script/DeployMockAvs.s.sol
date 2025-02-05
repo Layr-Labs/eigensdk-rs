@@ -15,8 +15,7 @@ import "forge-std/StdCheats.sol";
 
 // forge script script/DeployMockAvs.s.sol --rpc-url $RPC_URL --private-key $PRIVATE_KEY --etherscan-api-key $ETHERSCAN_API_KEY --broadcast --verify
 contract DeployMockAvs {
-    Vm internal constant _VM =
-        Vm(address(uint160(uint256(keccak256("hevm cheat code")))));
+    Vm internal constant _VM = Vm(address(uint160(uint256(keccak256("hevm cheat code")))));
 
     address internal _deployer;
     address internal _proxyAdmin;
@@ -33,48 +32,23 @@ contract DeployMockAvs {
     function run() public virtual {
         _VM.startBroadcast(_deployer);
         _proxyAdmin = UpgradeableProxyLib.deployProxyAdmin();
-        _configData = CoreDeploymentLib.readDeploymentJson(
-            "script/deployments/core/",
-            block.chainid
-        );
+        _configData = CoreDeploymentLib.readDeploymentJson("script/deployments/core/", block.chainid);
         erc20Mock = new MockERC20();
         erc20MockRewards = new MockERC20();
-        MockAvsDeploymentLib.MockAvsSetupConfig
-            memory avsconfig = MockAvsDeploymentLib.readMockAvsConfigJson(
-                "mock_avs_config"
-            );
-        FundOperator.fundOperator(
-            address(erc20Mock),
-            avsconfig.operatorAddr,
-            10e18
+        MockAvsDeploymentLib.MockAvsSetupConfig memory avsconfig =
+            MockAvsDeploymentLib.readMockAvsConfigJson("mock_avs_config");
+        FundOperator.fundOperator(address(erc20Mock), avsconfig.operatorAddr, 10e18);
+        _mockAvsStrategy = IStrategy(StrategyFactory(_configData.strategyFactory).deployNewStrategy(erc20Mock));
+        MockAvsDeploymentLib.DeploymentData memory depData = MockAvsDeploymentLib.deployContracts(
+            _proxyAdmin, _configData, address(_mockAvsStrategy), avsconfig, msg.sender
         );
-        _mockAvsStrategy = IStrategy(
-            StrategyFactory(_configData.strategyFactory).deployNewStrategy(
-                erc20Mock
-            )
-        );
-        MockAvsDeploymentLib.DeploymentData
-            memory depData = MockAvsDeploymentLib.deployContracts(
-                _proxyAdmin,
-                _configData,
-                address(_mockAvsStrategy),
-                avsconfig,
-                msg.sender
-            );
-        IStrategy(
-            StrategyFactory(_configData.strategyFactory).deployNewStrategy(
-                erc20MockRewards
-            )
-        );
+        IStrategy(StrategyFactory(_configData.strategyFactory).deployNewStrategy(erc20MockRewards));
 
         // Register operators with EigenLayer
         uint256 numberOfOperators = 10;
-        string
-            memory mnemonic = "test test test test test test test test test test test junk";
+        string memory mnemonic = "test test test test test test test test test test test junk";
         address[] memory operators = new address[](numberOfOperators);
-        uint256[] memory operatorTokenAmounts = new uint256[](
-            numberOfOperators
-        );
+        uint256[] memory operatorTokenAmounts = new uint256[](numberOfOperators);
         for (uint256 i; i < numberOfOperators; i++) {
             uint256 privateKey = _VM.deriveKey(mnemonic, uint32(i));
             address operator = _VM.rememberKey(privateKey);
@@ -88,21 +62,14 @@ contract DeployMockAvs {
         for (uint256 i = 0; i < numberOfOperators; i++) {
             address delegationApprover = address(0); // anyone can delegate to this operator
             uint32 allocationDelayBlocks = 1;
-            string memory metadataURI = string.concat(
-                "https://coolstuff.com/operator/",
-                _VM.toString(i)
-            );
+            string memory metadataURI = string.concat("https://coolstuff.com/operator/", _VM.toString(i));
             uint256 privateKey = _VM.deriveKey(mnemonic, uint32(i));
             _VM.startBroadcast(privateKey);
             DelegationManager(_configData.delegationManager).registerAsOperator(
-                delegationApprover,
-                allocationDelayBlocks,
-                metadataURI
+                delegationApprover, allocationDelayBlocks, metadataURI
             );
             StrategyManager(_configData.strategyManager).depositIntoStrategy(
-                _mockAvsStrategy,
-                erc20Mock,
-                operatorTokenAmounts[i]
+                _mockAvsStrategy, erc20Mock, operatorTokenAmounts[i]
             );
             _VM.stopBroadcast();
         }

@@ -9,9 +9,6 @@ license-file.workspace = true
 
 [dependencies]
 alloy.workspace = true
-alloy-json-rpc.workspace = true
-alloy-primitives.workspace = true
-alloy-rlp.workspace = true
 async-trait.workspace = true
 eigen-logging.workspace = true
 eigen-metrics-collectors-rpc-calls.workspace = true

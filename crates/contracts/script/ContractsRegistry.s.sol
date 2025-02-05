@@ -18,27 +18,15 @@ contract ContractsRegistry is Script {
         vm.label(deployer, "Deployer");
         CONTRACT_REGISTRY = vm.envAddress("CONTRACTS_REGISTRY_ADDR");
 
-        coreConfigData = CoreDeploymentLib.readDeploymentJson(
-            "script/deployments/core/",
-            "31337.json"
-        );
-        avsConfigData = MockAvsDeploymentLib.readDeploymentJson(
-            "script/deployments/mock-avs/",
-            block.chainid
-        );
+        coreConfigData = CoreDeploymentLib.readDeploymentJson("script/deployments/core/", "31337.json");
+        avsConfigData = MockAvsDeploymentLib.readDeploymentJson("script/deployments/mock-avs/", block.chainid);
     }
 
     function run() external {
         vm.startBroadcast(deployer);
         if (block.chainid == 31337 || block.chainid == 1337) {
-            WriteToContractsRegistryLib.writeCoreContractsToRegistry(
-                CONTRACT_REGISTRY,
-                coreConfigData
-            );
-            WriteToContractsRegistryLib.writeMockAvsContractsToRegistry(
-                CONTRACT_REGISTRY,
-                avsConfigData
-            );
+            WriteToContractsRegistryLib.writeCoreContractsToRegistry(CONTRACT_REGISTRY, coreConfigData);
+            WriteToContractsRegistryLib.writeMockAvsContractsToRegistry(CONTRACT_REGISTRY, avsConfigData);
         }
         vm.stopBroadcast();
     }

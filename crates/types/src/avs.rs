@@ -1,4 +1,4 @@
-use alloy_primitives::FixedBytes;
+use alloy::primitives::FixedBytes;
 use eigen_crypto_bls::Signature;
 use thiserror::Error;
 use tokio::sync::mpsc::Sender;

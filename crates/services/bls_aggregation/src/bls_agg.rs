@@ -1,6 +1,6 @@
 use super::bls_aggregation_service_error::BlsAggregationServiceError;
 use super::bls_aggregation_service_response::BlsAggregationServiceResponse;
-use alloy_primitives::{FixedBytes, Uint, U256};
+use alloy::primitives::{FixedBytes, Uint, U256};
 use ark_bn254::{G1Affine, G2Affine};
 use ark_ec::AffineRepr;
 use eigen_crypto_bls::{BlsG1Point, BlsG2Point, Signature};
@@ -786,7 +786,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
 #[cfg(test)]
 mod tests {
     use super::{BlsAggregationServiceError, BlsAggregationServiceResponse, BlsAggregatorService};
-    use alloy_primitives::{B256, U256};
+    use alloy::primitives::{B256, U256};
     use eigen_crypto_bls::{BlsG1Point, BlsG2Point, BlsKeyPair, Signature};
     use eigen_logging::get_test_logger;
     use eigen_services_avsregistry::fake_avs_registry_service::FakeAvsRegistryService;

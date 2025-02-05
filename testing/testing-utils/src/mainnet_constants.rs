@@ -1,4 +1,4 @@
-use alloy_primitives::{address, Address};
+use alloy::primitives::{address, Address};
 /// https://etherscan.io/address/0x39053D51B77DC0d36036Fc1fCc8Cb819df8Ef37A
 pub const DELEGATION_MANAGER_ADDRESS: Address =
     address!("39053D51B77DC0d36036Fc1fCc8Cb819df8Ef37A");
