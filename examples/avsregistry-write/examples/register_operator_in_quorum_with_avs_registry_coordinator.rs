@@ -64,6 +64,7 @@ async fn main() -> Result<()> {
         get_test_logger().clone(),
         SLASHER_ADDRESS,
         DELEGATION_MANAGER_ADDRESS,
+        REWARDS_COORDINATOR,
         AVS_DIRECTORY_ADDRESS,
         "https://ethereum-holesky.blockpi.network/v1/rpc/public".to_string(),
     );
