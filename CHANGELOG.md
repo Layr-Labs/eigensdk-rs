@@ -15,7 +15,7 @@ Each version will have a separate `Breaking Changes` section as well. To describ
 ### Breaking changes
 ### Removed
 
-## [0.1.4] - 2025-02-05
+## [0.2.0] - 2025-02-05
 ### Added
 * Added `eigen_common` dependency to the `eigensdk` crate when "full" feature is enabled in [#249](https://github.com/Layr-Labs/eigensdk-rs/pull/249).
 * Added bindings for `ECDSAStakeRegistry` and `ECDSAServiceManagerBase` in [#269](https://github.com/Layr-Labs/eigensdk-rs/pull/269).
