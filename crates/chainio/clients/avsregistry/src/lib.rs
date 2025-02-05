@@ -22,7 +22,7 @@ pub mod fake_reader;
 
 #[cfg(test)]
 pub(crate) mod test_utils {
-    use alloy_primitives::{address, Address};
+    use alloy::primitives::{address, Address};
 
     pub(crate) const ANVIL_FIRST_PRIVATE_KEY: &str =
         "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";

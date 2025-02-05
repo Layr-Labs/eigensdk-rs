@@ -1,7 +1,7 @@
 use crate::error::AvsRegistryError;
-use alloy_primitives::{Address, Bytes, FixedBytes, TxHash, U256};
-use alloy_signer::Signer;
-use alloy_signer_local::PrivateKeySigner;
+use alloy::primitives::{Address, Bytes, FixedBytes, TxHash, U256};
+use alloy::signers::local::PrivateKeySigner;
+use alloy::signers::Signer;
 use eigen_client_elcontracts::reader::ELChainReader;
 use eigen_crypto_bls::{
     alloy_g1_point_to_g1_affine, convert_to_g1_point, convert_to_g2_point, BlsKeyPair,
@@ -346,7 +346,7 @@ mod tests {
 
     use super::AvsRegistryChainWriter;
     use crate::test_utils::{ANVIL_FIRST_PRIVATE_KEY, ANVIL_SECOND_ADDRESS};
-    use alloy_primitives::{Address, Bytes, FixedBytes, U256};
+    use alloy::primitives::{Address, Bytes, FixedBytes, U256};
     use eigen_common::get_signer;
     use eigen_crypto_bls::BlsKeyPair;
     use eigen_logging::get_test_logger;
