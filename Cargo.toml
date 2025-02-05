@@ -32,6 +32,7 @@ rust-version = "1.79"
 repository = "https://github.com/Layr-Labs/eigensdk-rs"
 homepage = ""
 license-file = "LICENSE"
+license = "BSL"
 
 [workspace.lints]
 rust.missing_debug_implementations = "warn"
