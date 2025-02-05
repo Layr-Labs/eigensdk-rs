@@ -20,9 +20,9 @@ members = [
     "crates/utils/",
     "crates/nodeapi/",
     "crates/eigensdk/",
-    "examples/anvil-utils",
-    "examples/avsregistry-read",
-    "examples/avsregistry-write",
+    "examples/anvil-utils/",
+    "examples/avsregistry-read/",
+    "examples/avsregistry-write/",
     "examples/info-operator-service/",
     "testing/testing-utils/",
 ]
