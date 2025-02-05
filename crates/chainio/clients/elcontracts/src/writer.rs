@@ -777,8 +777,11 @@ mod tests {
         build_el_chain_reader, new_claim, new_test_writer, ANVIL_FIRST_ADDRESS,
         ANVIL_FIRST_PRIVATE_KEY, OPERATOR_ADDRESS, OPERATOR_PRIVATE_KEY,
     };
-    use alloy::{providers::Provider, sol_types::SolCall};
-    use alloy_provider::WalletProvider;
+    use alloy::{
+        primitives::{address, aliases::U96, Address, U256},
+        providers::{Provider, WalletProvider},
+        sol_types::SolCall,
+    };
     use eigen_common::{get_provider, get_signer};
     use eigen_crypto_bls::BlsKeyPair;
     use eigen_testing_utils::{
@@ -1162,7 +1165,7 @@ mod tests {
             .setAppointee(
                 default_signer.default_signer_address(),
                 allocation_manager_addr,
-                alloy_primitives::FixedBytes(AllocationManager::setAVSRegistrarCall::SELECTOR),
+                alloy::primitives::FixedBytes(AllocationManager::setAVSRegistrarCall::SELECTOR),
             )
             .send()
             .await
@@ -1192,7 +1195,7 @@ mod tests {
             .setAppointee(
                 registry_coordinator_addr,
                 allocation_manager_addr,
-                alloy_primitives::FixedBytes(AllocationManager::createOperatorSetsCall::SELECTOR),
+                alloy::primitives::FixedBytes(AllocationManager::createOperatorSetsCall::SELECTOR),
             )
             .send()
             .await
