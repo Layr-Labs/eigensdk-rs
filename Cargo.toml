@@ -126,7 +126,7 @@ uuid = { version = "1.11", features = ["v4"] }
 parking_lot = "0.12"
 
 
-anvil-utils = { path = "examples/anvil-utils" }
+examples-anvil-utils = { path = "examples/anvil-utils" }
 
 # alloy
 alloy = { version = "0.9", features = [
@@ -138,5 +138,5 @@ alloy = { version = "0.9", features = [
     "json-rpc",
 ] }
 
-avsregistry-read = { path = "examples/avsregistry-read" }
-avsregistry-write = { path = "examples/avsregistry-write" }
+examples-avsregistry-read = { path = "examples/avsregistry-read" }
+examples-avsregistry-write = { path = "examples/avsregistry-write" }
