@@ -1,14 +1,14 @@
-use alloy_provider::{
+use alloy::providers::{
     fillers::{
         BlobGasFiller, ChainIdFiller, FillProvider, GasFiller, JoinFill, NonceFiller, WalletFiller,
     },
     network::{Ethereum, EthereumWallet},
     Identity, ProviderBuilder, RootProvider, WsConnect,
 };
-use alloy_pubsub::PubSubFrontend;
-use alloy_signer_local::PrivateKeySigner;
-use alloy_transport::{RpcError, TransportErrorKind};
-use alloy_transport_http::{Client, Http};
+use alloy::pubsub::PubSubFrontend;
+use alloy::signers::local::PrivateKeySigner;
+use alloy::transports::http::{Client, Http};
+use alloy::transports::{RpcError, TransportErrorKind};
 use std::str::FromStr;
 use url::Url;
 
@@ -22,7 +22,7 @@ pub type SdkProvider = FillProvider<
     Ethereum,
 >;
 
-pub type SdkSigner = alloy_provider::fillers::FillProvider<
+pub type SdkSigner = FillProvider<
     JoinFill<
         JoinFill<
             Identity,

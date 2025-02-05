@@ -8,7 +8,7 @@ description = "eigenlayer economic metrics"
 license-file.workspace = true
 
 [dependencies]
-alloy-primitives.workspace = true
+alloy.workspace = true
 eigen-logging.workspace = true
 eigen-types.workspace = true
 eigen-client-elcontracts.workspace = true

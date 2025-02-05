@@ -19,6 +19,8 @@ library IAllocationManagerTypes {
     clippy::empty_structs_with_brackets
 )]
 pub mod IAllocationManagerTypes {
+    use crate::core::allocationmanager::AllocationManager::OperatorSet;
+
     use super::*;
     use alloy::sol_types as alloy_sol_types;
     /**```solidity
@@ -1350,7 +1352,6 @@ pub mod IAllocationManagerTypes {
         }
     };
     use alloy::contract as alloy_contract;
-    use AllocationManager::OperatorSet;
     /**Creates a new wrapper around an on-chain [`IAllocationManagerTypes`](self) contract instance.
 
     See the [wrapper's documentation](`IAllocationManagerTypesInstance`) for more details.*/
