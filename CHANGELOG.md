@@ -11,12 +11,13 @@ Each version will have a separate `Breaking Changes` section as well. To describ
 
 ## [Unreleased]
 ### Added
+* Added `eigen_common` dependency to the `eigensdk` crate when "full" feature is enabled in [#249](https://github.com/Layr-Labs/eigensdk-rs/pull/249).
 * Added bindings for `ECDSAStakeRegistry` and `ECDSAServiceManagerBase` in [#269](https://github.com/Layr-Labs/eigensdk-rs/pull/269).
 * Added release-plz in ci in [#275](https://github.com/Layr-Labs/eigensdk-rs/pull/275).
 * Added custom configuration for release-plz in [#281](https://github.com/Layr-Labs/eigensdk-rs/pull/281).
 
 ### Changed
-* Changes in the way bindings are generated in [#245](https://github.com/Layr-Labs/eigensdk-rs/pull/243).
+* Changes in the way bindings are generated in [#243](https://github.com/Layr-Labs/eigensdk-rs/pull/243).
   * The `bindings` target now generates the bindings using Docker with Foundry v0.3.0.
   * The previous `bindings` target was renamed to `bindings_host`, as it runs without Docker. However the `bindings_host` target is for CI use only. To generate the bindings, please use the `bindings` target.
 * Fixed the rewardsv2 bindings version in readme to 0.5.4 in [#246](https://github.com/Layr-Labs/eigensdk-rs/pull/246).
