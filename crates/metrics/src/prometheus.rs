@@ -20,8 +20,8 @@ mod tests {
 
     use super::*;
     use crate::eigenmetrics::EigenPerformanceMetrics;
-    use alloy_primitives::Address;
-    use alloy_primitives::FixedBytes;
+    use alloy::primitives::Address;
+    use alloy::primitives::FixedBytes;
     use eigen_client_avsregistry::reader::AvsRegistryChainReader;
     use eigen_metrics_collectors_economic::fake_collector::FakeCollector;
     use eigen_metrics_collectors_rpc_calls::RpcCallsMetrics;

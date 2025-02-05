@@ -9,7 +9,7 @@ repository.workspace = true
 license-file.workspace = true
 
 [dependencies]
-alloy-primitives.workspace = true
+alloy.workspace = true
 ark-bn254.workspace = true
 ark-ec.workspace = true
 async-trait.workspace = true

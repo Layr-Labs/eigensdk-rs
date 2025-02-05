@@ -19,7 +19,7 @@ cargo add eigensdk --features full
 - [eigen-metrics](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/metrics) - performance, rpc and economic metrics
 - [eigen-services](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/services) - Spawn tokio services for operators info, bls aggregation
 - [eigen-types](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/types) - Common types
-- [eigen-utils](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/utils) - Publicly exportable `mainnet rewards v0.4.3` compatible alloy bindings.
+- [eigen-utils](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/utils) - Publicly exportable `mainnet rewards-v2 v0.5.4` compatible alloy bindings.
 - [eigen-testing-utils](https://github.com/Layr-Labs/eigensdk-rs/tree/main/testing/testing-utils) - Contains publicly exportable anvil, holesky, mainnet addresses for eigen contracts.
 - [eigen-cli](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/eigen-cli) - ECDSA, BLS keystore cli
 - [eigen-nodeapi](https://github.com/Layr-Labs/eigensdk-rs/tree/main/crates/nodeapi) - NodeApi implementation for EigenLayer.
@@ -48,7 +48,20 @@ make bindings
 
 This command will generate the bindings files in the folder: `crates/utils`.
 
-⚠️ Remember to fix all compilation warnings.
+**Important:** this command requires Docker installed and running since it uses a container to generate the bindings. On Mac, you may get an error similar to:
+
+```text
+v0.3.0: Pulling from foundry-rs/foundry
+docker: no matching manifest for linux/arm64/v8 in the manifest list entries.
+```
+
+In that case, you'll need to pull the foundry image for the `amd64` platform with:
+
+```bash
+docker pull --platform linux/amd64/v8 ghcr.io/foundry-rs/foundry:v0.3.0
+```
+
+And then run `make bindings` again.
 
 ## Contributor Guidelines
 
@@ -67,7 +80,7 @@ To test locally :-
 You need `foundry` to successfully run it.
 
 ```bash
-cargo test --workspace --exclude eigen-utils
+cargo test --workspace
 ```
 
 On Mac, you might get an error similar to:

@@ -7,7 +7,7 @@ use std::{collections::HashMap, str::FromStr};
 
 pub mod error;
 pub mod fake_collector;
-use alloy_primitives::{Address, FixedBytes, U256};
+use alloy::primitives::{Address, FixedBytes, U256};
 use eigen_client_avsregistry::reader::AvsRegistryChainReader;
 use eigen_client_elcontracts::reader::ELChainReader;
 use eigen_logging::logger::SharedLogger;
@@ -140,7 +140,7 @@ impl Collector {
 mod tests {
     use std::collections::HashMap;
 
-    use alloy_primitives::{Address, FixedBytes};
+    use alloy::primitives::{Address, FixedBytes};
     use eigen_client_avsregistry::reader::AvsRegistryChainReader;
     use eigen_logging::get_test_logger;
     use eigen_testing_utils::{
