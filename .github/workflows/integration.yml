@@ -47,6 +47,34 @@ jobs:
   test:
     name: Run Tests
     runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+
+      - name: Cache Rust dependencies
+        uses: Swatinem/rust-cache@v2
+        with:
+          cache-on-failure: true
+
+      - name: Install testing tools
+        uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-nextest
+
+      - name: docker
+        uses: docker/setup-docker-action@v4
+
+      - name: Run tests and generate code coverage
+        run: cargo nextest run --workspace
+
+  coverage:
+    name: Generate coverage report
+    runs-on: ubuntu-latest
     env:
       HOLESKY_WS_URL: ${{ secrets.HOLESKY_WS_URL }}
       HOLESKY_HTTP_URL: ${{ secrets.HOLESKY_HTTP_URL }}
@@ -61,7 +89,7 @@ jobs:
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
-      
+
       - name: Create private key file
         run: printf "%b" "$FIREBLOCKS_PRIVATE_KEY" > fireblocks_secret.key
 
