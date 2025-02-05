@@ -27,6 +27,31 @@ Those changes in added, changed or breaking changes, should include usage exampl
 * Fixed incorrect package name in Cargo.toml for examples in [#285](https://github.com/Layr-Labs/eigensdk-rs/pull/285).
 
 ### Breaking changes
+* fix: use rewards coordinator on get operator avs/pi split methods by @maximopalopoli in https://github.com/Layr-Labs/eigensdk-rs/pull/250
+  * The parameters of `ChainReader::new` changed, and it now receives the address of the rewards coordinator. 
+    
+    It was previously called this way:
+    ``` Rust
+    let el_chain_reader = ELChainReader::new(
+        logger,
+        SLASHER_ADDRESS,
+        DELEGATION_MANAGER_ADDRESS,
+        AVS_DIRECTORY_ADDRESS,
+        provider_url,
+    );
+    ```
+    Now, it's called this way:
+    ``` Rust
+    let el_chain_reader = ELChainReader::new(
+        logger,
+        SLASHER_ADDRESS,
+        DELEGATION_MANAGER_ADDRESS,
+        REWARDS_COORDINATOR,
+        AVS_DIRECTORY_ADDRESS,
+        provider_url,
+    );
+    ```
+
 ### Removed
 * Removed homepage from testing-utils crate in [#266](https://github.com/Layr-Labs/eigensdk-rs/pull/266).
 * Removed changelog generation by release-plz in [#281](https://github.com/Layr-Labs/eigensdk-rs/pull/281).

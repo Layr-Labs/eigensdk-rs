@@ -646,6 +646,7 @@ mod tests {
             get_test_logger(),
             Address::ZERO,
             delegation_manager_address,
+            rewards_coordinator_address,
             avs_directory_address,
             http_endpoint.to_string(),
         );
