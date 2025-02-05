@@ -23,6 +23,7 @@ Each version will have a separate `Breaking Changes` section as well. To describ
 * Fixed typo in release-plz toml file in [#284](https://github.com/Layr-Labs/eigensdk-rs/pull/284).
 * Fixed incorrect package name in Cargo.toml for examples in [#285](https://github.com/Layr-Labs/eigensdk-rs/pull/285).
 * Removed examples packages from workspace.dependencies in Cargo.toml in [#287](https://github.com/Layr-Labs/eigensdk-rs/pull/287).
+* Removed release-plz-pr workflow in release-plz in [].
 
 ### Breaking changes
 ### Removed
