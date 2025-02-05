@@ -100,11 +100,14 @@ impl AvsRegistryChainWriter {
 
         let ServiceManagerBase::avsDirectoryReturn { _0: avs_directory } = avs_directory_addr;
 
+        // We set rewards coordinator address as zero because we are not going to use it on any writer operation
+        let rewards_coordinator_addr = Address::ZERO;
+
         let el_reader = ELChainReader::build(
             logger.clone(),
             delegation_manager_addr,
             avs_directory,
-            Address::ZERO,
+            rewards_coordinator_addr,
             &provider,
         )
         .await
