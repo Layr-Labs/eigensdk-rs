@@ -1,4 +1,4 @@
-use alloy_primitives::{Bytes, FixedBytes, U256};
+use alloy::primitives::{Bytes, FixedBytes, U256};
 use ark_bn254::G1Projective;
 use ark_ec::{short_weierstrass::Affine, AffineRepr, CurveGroup};
 use async_trait::async_trait;
@@ -168,7 +168,7 @@ mod tests {
 
     use super::AvsRegistryServiceChainCaller;
     use crate::AvsRegistryService;
-    use alloy_primitives::{Address, FixedBytes, U256};
+    use alloy::primitives::{Address, FixedBytes, U256};
     use eigen_client_avsregistry::fake_reader::FakeAvsRegistryReader;
     use eigen_crypto_bls::BlsKeyPair;
     use eigen_services_operatorsinfo::fake_operator_info::FakeOperatorInfoService;

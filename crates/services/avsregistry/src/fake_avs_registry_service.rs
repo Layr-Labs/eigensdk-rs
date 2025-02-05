@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use alloy_primitives::{BlockNumber, FixedBytes, U256};
+use alloy::primitives::{BlockNumber, FixedBytes, U256};
 use ark_bn254::G1Projective;
 use ark_ec::{short_weierstrass::Affine, AffineRepr, CurveGroup};
 use async_trait::async_trait;

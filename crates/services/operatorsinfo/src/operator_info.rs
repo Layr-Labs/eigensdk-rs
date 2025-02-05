@@ -1,4 +1,4 @@
-use alloy_primitives::Address;
+use alloy::primitives::Address;
 use async_trait::async_trait;
 use eigen_types::operator::OperatorPubKeys;
 

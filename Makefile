@@ -1,13 +1,14 @@
-PHONY: reset-anvil
-
 __CONTRACTS__: ##
 
+.PHONY: start-anvil-chain-with-contracts-deployed
 start-anvil-chain-with-contracts-deployed: ##
 	./crates/contracts/anvil/start-anvil-chain-with-el-and-avs-deployed.sh
 
+.PHONY: deploy-eigenlayer
 deploy-eigenlayer:
 	./crates/operator_sets_contracts/anvil/deploy-eigenlayer.sh
 
+.PHONY: deploy-avs
 deploy-avs:
 	./crates/operator_sets_contracts/anvil/deploy-avs.sh
 
@@ -17,132 +18,64 @@ deploy-m2-eigenlayer:
 deploy-m2-avs:
 	./crates/m2_contracts/anvil/deploy-avs.sh
 
+.PHONY: deploy
 deploy: deploy-eigenlayer deploy-avs ##
 
+.PHONY: dump-state
 dump-state:
 	./crates/contracts/anvil/dump-state.sh
 
+.PHONY: deploy-contracts-to-anvil-and-save-state
+deploy-contracts-to-anvil-and-save-state: ##
+	./crates/contracts/anvil/deploy-contracts-save-anvil-state.sh
+
 __TESTING__: ##
 
+.PHONY: start-anvil
 start-anvil: reset-anvil ##
 	$(MAKE) start-anvil-chain-with-contracts-deployed
 
+.PHONY: reset-anvil
 reset-anvil:
 	-docker stop anvil
 	-docker rm anvil
 
+.PHONY: coverage
 coverage:
 	cargo llvm-cov --lcov --output-path lcov.info --workspace --features fireblock-tests
 	cargo llvm-cov report --html
 
+.PHONY: deps
 deps:
 	@if ! command -v cargo-llvm-cov &> /dev/null; then \
 		cargo install cargo-llvm-cov; \
 	fi
 
+.PHONY: fireblocks-tests
 fireblocks-tests:
 	cargo test --package eigen-client-fireblocks --features fireblock-tests
 
+.PHONY: lint
 lint:
 	cargo fmt --all -- --check \
 		&& cargo clippy --workspace --all-features --benches --examples --tests -- -D warnings
 
-__BINDINGS__: ##
 
-### SDK bindings ###
-SDK_CONTRACTS:="MockAvsServiceManager ContractsRegistry MockERC20"
-SDK_CONTRACTS_LOCATION:=crates/operator_sets_contracts/
-SDK_BINDINGS_PATH:=crates/utils/src/slashing/sdk
-# The echo is to remove quotes, and the patsubst to make the regex match the full text only
-SDK_CONTRACTS_ARGS:=$(patsubst %, --select '^%$$', $(shell echo $(SDK_CONTRACTS)))
-
-
-### Middleware bindings ###
-MIDDLEWARE_CONTRACTS:="IndexRegistry OperatorStateRetriever StakeRegistry BLSApkRegistry IBLSSignatureChecker ServiceManagerBase IERC20 SlashingRegistryCoordinator ISlashingRegistryCoordinator RegistryCoordinator"
-MIDDLEWARE_CONTRACTS_LOCATION:=$(SDK_CONTRACTS_LOCATION)/lib/eigenlayer-middleware
-MIDDLEWARE_BINDINGS_PATH:=crates/utils/src/slashing/middleware
-# The echo is to remove quotes, and the patsubst to make the regex match the full text only
-MIDDLEWARE_CONTRACTS_ARGS:=$(patsubst %, --select '^%$$', $(shell echo $(MIDDLEWARE_CONTRACTS)))
-
-
-### Core bindings ###
-CORE_CONTRACTS:="DelegationManager IRewardsCoordinator StrategyManager IEigenPod EigenPod IEigenPodManager EigenPodManager IStrategy AVSDirectory AllocationManager PermissionController"
-CORE_CONTRACTS_LOCATION:=$(MIDDLEWARE_CONTRACTS_LOCATION)/lib/eigenlayer-contracts
-CORE_BINDINGS_PATH:=crates/utils/src/slashing/core
-# The echo is to remove quotes, and the patsubst to make the regex match the full text only
-CORE_CONTRACTS_ARGS:=$(patsubst %, --select '^%$$', $(shell echo $(CORE_CONTRACTS)))
-
-
-### RewardsV2 Core bindings ###
-REWARDS_V2_SDK_CONTRACTS:="MockAvsServiceManager ContractsRegistry MockERC20"
-REWARDS_V2_SDK_CONTRACTS_LOCATION:=crates/m2_contracts/
-REWARDS_V2_SDK_BINDINGS_PATH:=crates/utils/src/rewardsv2/sdk
-REWARDS_V2_SDK_CONTRACTS_ARGS:=$(patsubst %, --select '^%$$', $(shell echo $(REWARDS_V2_SDK_CONTRACTS)))
-
-### RewardsV2 Middleware bindings ###
-REWARDS_V2_MIDDLEWARE_CONTRACTS:="RegistryCoordinator IndexRegistry OperatorStateRetriever StakeRegistry BLSApkRegistry IBLSSignatureChecker ServiceManagerBase IERC20"
-REWARDS_V2_MIDDLEWARE_CONTRACTS_LOCATION:=$(REWARDS_V2_SDK_CONTRACTS_LOCATION)/lib/eigenlayer-middleware
-REWARDS_V2_MIDDLEWARE_BINDINGS_PATH:=crates/utils/src/rewardsv2/middleware
-# The echo is to remove quotes, and the patsubst to make the regex match the full text only
-REWARDS_V2_MIDDLEWARE_CONTRACTS_ARGS:=$(patsubst %, --select '^%$$', $(shell echo $(REWARDS_V2_MIDDLEWARE_CONTRACTS)))
-
-# The echo is to remove quotes, and the patsubst to make the regex match the full text only
-REWARDS_V2_CORE_CONTRACTS:="DelegationManager IRewardsCoordinator RewardsCoordinator  StrategyManager IEigenPod EigenPod IEigenPodManager EigenPodManager IStrategy AVSDirectory AllocationManager PermissionController ERC20 Slasher ISlasher"
-REWARDS_V2_CORE_CONTRACTS_LOCATION:=$(REWARDS_V2_MIDDLEWARE_CONTRACTS_LOCATION)/lib/eigenlayer-contracts
-REWARDS_V2_CORE_BINDINGS_PATH:=crates/utils/src/rewardsv2/core
-# The echo is to remove quotes, and the patsubst to make the regex match the full text only
-REWARDS_V2_CORE_CONTRACTS_ARGS:=$(patsubst %, --select '^%$$', $(shell echo $(REWARDS_V2_CORE_CONTRACTS)))
-
-
-
-.PHONY: slashing-bindings
-slashing-bindings:
+.PHONY: bindings_host
+bindings_host:
 	@echo "Generating bindings..."
-	# Fetch submoduless
-	cd $(SDK_CONTRACTS_LOCATION) && forge install
-
-	# Generate SDK bindings
-	cd $(SDK_CONTRACTS_LOCATION) && forge build --force --skip test --skip script
-	forge bind --alloy --skip-build --bindings-path $(SDK_BINDINGS_PATH) --overwrite \
-		--root $(SDK_CONTRACTS_LOCATION) --module \
-		$(SDK_CONTRACTS_ARGS)
-
-	# Generate middleware bindings
-	cd $(MIDDLEWARE_CONTRACTS_LOCATION) && forge build --force --skip test --skip script
-	forge bind --alloy --skip-build --bindings-path $(MIDDLEWARE_BINDINGS_PATH) --overwrite \
-		--root $(MIDDLEWARE_CONTRACTS_LOCATION) --module \
-		$(MIDDLEWARE_CONTRACTS_ARGS)
-
-	# Generate core bindings
-	cd $(CORE_CONTRACTS_LOCATION) && forge build --force --skip test --skip script
-	forge bind --alloy --skip-build --bindings-path $(CORE_BINDINGS_PATH) --overwrite \
-		--root $(CORE_CONTRACTS_LOCATION) --module \
-		$(CORE_CONTRACTS_ARGS)
-
+	./scripts/generate_bindings.sh
+	cargo fmt --all
+	# Apply a fix for any compile issues
+	git apply --allow-empty scripts/bindings.patch
 	@echo "Bindings generated"
 
-.PHONY: rewardsv2-bindings
-rewardsv2-bindings:
-	@echo "Generating bindings..."
-	# Fetch submoduless
-	cd $(REWARDS_V2_SDK_CONTRACTS_LOCATION) && forge install
-
-	# Generate SDK bindings
-	cd $(REWARDS_V2_SDK_CONTRACTS_LOCATION) && forge build --force --skip test --skip script
-	forge bind --alloy --skip-build --bindings-path $(REWARDS_V2_SDK_BINDINGS_PATH) --overwrite \
-		--root $(REWARDS_V2_SDK_CONTRACTS_LOCATION) --module \
-		$(REWARDS_V2_SDK_CONTRACTS_ARGS)
-
-	# Generate middleware bindings
-	cd $(REWARDS_V2_MIDDLEWARE_CONTRACTS_LOCATION) && forge build --force --skip test --skip script
-	forge bind --alloy --skip-build --bindings-path $(REWARDS_V2_MIDDLEWARE_BINDINGS_PATH) --overwrite \
-		--root $(REWARDS_V2_MIDDLEWARE_CONTRACTS_LOCATION) --module \
-		$(REWARDS_V2_MIDDLEWARE_CONTRACTS_ARGS)
-
-	# Generate core bindings
-	cd $(REWARDS_V2_CORE_CONTRACTS_LOCATION) && forge build --force --skip test --skip script
-	forge bind --alloy --skip-build --bindings-path $(REWARDS_V2_CORE_BINDINGS_PATH) --overwrite \
-		--root $(REWARDS_V2_CORE_CONTRACTS_LOCATION) --module \
-		$(REWARDS_V2_CORE_CONTRACTS_ARGS)
-
-	@echo "Bindings generated"
+.PHONY: bindings
+bindings:
+	@echo "Starting Docker container..."
+	@docker run --rm -v "$(PWD):/sdk" -w "/sdk" \
+		ghcr.io/foundry-rs/foundry:v0.3.0 \
+		-c scripts/generate_bindings.sh
+	cargo fmt --all
+	# Apply a fix for any compile issues
+	git apply --allow-empty scripts/bindings.patch

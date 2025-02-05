@@ -36,7 +36,6 @@ sol! {
 /// Chain Writer to interact with EigenLayer contracts onchain
 #[derive(Debug, Clone)]
 pub struct ELChainWriter {
-    delegation_manager: Address,
     strategy_manager: Address,
     rewards_coordinator: Address,
     permission_controller: Option<Address>,
@@ -50,7 +49,6 @@ pub struct ELChainWriter {
 impl ELChainWriter {
     #[allow(clippy::too_many_arguments)]
     pub fn new(
-        delegation_manager: Address,
         strategy_manager: Address,
         rewards_coordinator: Address,
         permission_controller: Option<Address>,
@@ -61,7 +59,6 @@ impl ELChainWriter {
         signer: String,
     ) -> Self {
         Self {
-            delegation_manager,
             strategy_manager,
             rewards_coordinator,
             permission_controller,
@@ -93,7 +90,8 @@ impl ELChainWriter {
         info!("registering operator {:?} to EigenLayer", operator.address);
         let provider = get_signer(&self.signer.clone(), &self.provider);
 
-        let contract_delegation_manager = DelegationManager::new(self.delegation_manager, provider);
+        let contract_delegation_manager =
+            DelegationManager::new(self.el_chain_reader.delegation_manager, provider);
 
         let binding = {
             let contract_call = contract_delegation_manager.registerAsOperator(
@@ -148,7 +146,8 @@ impl ELChainWriter {
 
         let provider = get_signer(&self.signer.clone(), &self.provider);
 
-        let contract_delegation_manager = DelegationManager::new(self.delegation_manager, provider);
+        let contract_delegation_manager =
+            DelegationManager::new(self.el_chain_reader.delegation_manager, provider);
 
         let contract_call_modify_operator_details = contract_delegation_manager
             .modifyOperatorDetails(operator.address, operator.delegation_approver_address);
@@ -779,7 +778,6 @@ mod tests {
         ANVIL_FIRST_PRIVATE_KEY, OPERATOR_ADDRESS, OPERATOR_PRIVATE_KEY,
     };
     use alloy::{providers::Provider, sol_types::SolCall};
-    use alloy_primitives::{address, aliases::U96, Address, U256};
     use alloy_provider::WalletProvider;
     use eigen_common::{get_provider, get_signer};
     use eigen_crypto_bls::BlsKeyPair;

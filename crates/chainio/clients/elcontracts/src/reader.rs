@@ -1,9 +1,9 @@
 use crate::error::ElContractsError;
 use alloy::{
+    primitives::{Address, FixedBytes, U256},
     providers::Provider,
     transports::http::{Client, Http},
 };
-use alloy_primitives::{Address, FixedBytes, U256};
 use eigen_common::{get_provider, SdkProvider};
 use eigen_logging::logger::SharedLogger;
 use eigen_utils::{
@@ -25,7 +25,7 @@ use eigen_utils::{
 pub struct ELChainReader {
     _logger: SharedLogger,
     allocation_manager: Option<Address>,
-    delegation_manager: Address,
+    pub(crate) delegation_manager: Address,
     avs_directory: Address,
     permission_controller: Option<Address>,
     rewards_coordinator: Address,
@@ -1381,9 +1381,9 @@ pub struct AllocationInfo {
 mod tests {
     use super::*;
     use crate::test_utils::{build_el_chain_reader, new_test_claim, OPERATOR_ADDRESS};
+    use alloy::primitives::{address, keccak256, Address, FixedBytes, U256};
     use alloy::providers::Provider;
     use alloy::{eips::eip1898::BlockNumberOrTag::Number, rpc::types::BlockTransactionsKind};
-    use alloy_primitives::{address, keccak256, Address, FixedBytes, U256};
     use eigen_testing_utils::anvil_constants::get_erc20_mock_strategy;
     use eigen_testing_utils::{
         anvil::start_anvil_container, anvil_constants::get_delegation_manager_address,

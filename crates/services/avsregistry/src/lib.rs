@@ -6,7 +6,7 @@
 
 use std::collections::HashMap;
 
-use alloy_primitives::FixedBytes;
+use alloy::primitives::FixedBytes;
 use async_trait::async_trait;
 use eigen_client_avsregistry::error::AvsRegistryError;
 use eigen_types::operator::{OperatorAvsState, QuorumAvsState};
