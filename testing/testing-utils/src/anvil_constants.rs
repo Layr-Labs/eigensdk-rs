@@ -1,17 +1,10 @@
 //! Anvil utilities
 use alloy::primitives::{address, Address};
-use eigen_utils::sdk::contractsregistry::ContractsRegistry::{self, contractsReturn};
-
 use eigen_common::get_provider;
+use eigen_utils::sdk::contractsregistry::ContractsRegistry::{self, contractsReturn};
 
 /// Local anvil ContractsRegistry which contains a mapping of all locally deployed EL contracts.
 pub const CONTRACTS_REGISTRY: Address = address!("5FbDB2315678afecb367f032d93F642f64180aa3");
-
-/// Address of the first account in the local anvil network
-pub const ANVIL_FIRST_ADDRESS: Address = address!("f39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
-/// Private key of the first account in the local anvil network
-pub const ANVIL_FIRST_PRIVATE_KEY: &str =
-    "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
 
 /// Local anvil rpc http url
 pub const ANVIL_HTTP_URL: &str = "http://localhost:8545";
@@ -139,12 +132,42 @@ pub async fn get_proxy_admin(rpc_url: String) -> Address {
     address
 }
 
-/// Avs Directory contract address
+/// Rewards contract address
 pub async fn get_rewards_coordinator_address(rpc_url: String) -> Address {
     let contracts_registry = ContractsRegistry::new(CONTRACTS_REGISTRY, get_provider(&rpc_url));
 
     let val = contracts_registry
         .contracts("rewardsCoordinator".to_string())
+        .call()
+        .await
+        .unwrap();
+
+    let contractsReturn { _0: address } = val;
+
+    address
+}
+
+/// Allocation Manager contract address
+pub async fn get_allocation_manager_address(rpc_url: String) -> Address {
+    let contracts_registry = ContractsRegistry::new(CONTRACTS_REGISTRY, get_provider(&rpc_url));
+
+    let val = contracts_registry
+        .contracts("allocationManager".to_string())
+        .call()
+        .await
+        .unwrap();
+
+    let contractsReturn { _0: address } = val;
+
+    address
+}
+
+/// Permission Controller contract address
+pub async fn get_permission_controller_address(rpc_url: String) -> Address {
+    let contracts_registry = ContractsRegistry::new(CONTRACTS_REGISTRY, get_provider(&rpc_url));
+
+    let val = contracts_registry
+        .contracts("permissionController".to_string())
         .call()
         .await
         .unwrap();

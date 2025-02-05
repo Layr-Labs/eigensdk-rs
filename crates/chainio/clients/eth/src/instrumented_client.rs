@@ -837,7 +837,7 @@ mod tests {
     };
     use eigen_common::get_provider;
     use eigen_signer::signer::Config;
-    use eigen_testing_utils::anvil::start_anvil_container;
+    use eigen_testing_utils::anvil::{set_account_balance, start_anvil_container};
     use eigen_testing_utils::transaction::wait_transaction;
     use tokio;
 
@@ -1006,30 +1006,27 @@ mod tests {
     /// * `transaction_in_block`
     #[tokio::test]
     async fn test_transaction_methods() {
-        let (_container, rpc_url, _ws_endpoint) = start_anvil_container().await;
+        let (container, rpc_url, _ws_endpoint) = start_anvil_container().await;
         let instrumented_client = InstrumentedClient::new(&rpc_url).await.unwrap();
+
+        // Set balance on a random address to use as sender
+        let private_key_hex =
+            "6b35c6d8110c888de06575b45181bf3f9e6c73451fa5cde812c95a6b31e66ddf".to_string();
+        let address = "009440d62dc85c73dbf889b7ad1f4da8b231d2ef";
+        set_account_balance(&container, address).await;
 
         // build the transaction
         let to = address!("a0Ee7A142d267C1f36714E4a8F75612F20a79720");
-        let from = address!("0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
-        // retrieve the nonce to then plug it in the transaction
-        let nonce = instrumented_client
-            .nonce_at(from, BlockNumberOrTag::Latest)
-            .await
-            .unwrap();
-
         let mut tx = TxLegacy {
             to: Call(to),
             value: U256::from(0),
             gas_limit: 2_000_000,
-            nonce,
+            nonce: 0,
             gas_price: 21_000_000_000,
             input: bytes!(),
             chain_id: Some(31337),
         };
 
-        let private_key_hex =
-            "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80".to_string();
         let config = Config::PrivateKey(private_key_hex);
         let signer = Config::signer_from_config(config).unwrap();
         let signature = signer.sign_transaction_sync(&mut tx).unwrap();

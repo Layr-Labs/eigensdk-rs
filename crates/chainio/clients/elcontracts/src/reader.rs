@@ -1,19 +1,35 @@
 use crate::error::ElContractsError;
-use alloy::primitives::{Address, FixedBytes, U256};
-use eigen_common::get_provider;
-use eigen_logging::logger::SharedLogger;
-use eigen_types::operator::Operator;
-use eigen_utils::core::islasher::ISlasher;
-use eigen_utils::core::{
-    avsdirectory::AVSDirectory, delegationmanager::DelegationManager, erc20::ERC20,
-    istrategy::IStrategy, rewardscoordinator::RewardsCoordinator,
+use alloy::{
+    primitives::{Address, FixedBytes, U256},
+    providers::Provider,
+    transports::http::{Client, Http},
 };
+use eigen_common::{get_provider, SdkProvider};
+use eigen_logging::logger::SharedLogger;
+use eigen_utils::{
+    core::{
+        allocationmanager::AllocationManager::{self, OperatorSet},
+        avsdirectory::AVSDirectory,
+        delegationmanager::DelegationManager,
+        irewardscoordinator::{
+            IRewardsCoordinator,
+            IRewardsCoordinatorTypes::{DistributionRoot, RewardsMerkleClaim},
+        },
+        istrategy::IStrategy::{self, IStrategyInstance},
+        permissioncontroller::PermissionController,
+    },
+    middleware::ierc20::IERC20::{self, IERC20Instance},
+};
+
 #[derive(Debug, Clone)]
 pub struct ELChainReader {
     _logger: SharedLogger,
-    slasher: Address,
+    allocation_manager: Address,
     pub(crate) delegation_manager: Address,
     avs_directory: Address,
+    permission_controller: Address,
+    rewards_coordinator: Address,
+    // TODO: we should make this private
     pub provider: String,
 }
 
@@ -23,9 +39,11 @@ impl ELChainReader {
     /// # Arguments
     ///
     /// * `_logger` - The logger to use for logging.
-    /// * `slasher` - The address of the slasher contract.
+    /// * `allocation_manager` - The address of the allocation manager contract.
     /// * `delegation_manager` - The address of the delegation manager contract.
+    /// * `rewards_coordinator` - The address of the rewards coordinator contract.
     /// * `avs_directory` - The address of the avs directory contract.
+    /// * `permission_controller` - The address of the permission controller contract.
     /// * `provider` - The provider to use for the RPC client.
     ///
     /// # Returns
@@ -33,28 +51,33 @@ impl ELChainReader {
     /// A new `ELChainReader` instance.
     pub fn new(
         _logger: SharedLogger,
-        slasher: Address,
+        allocation_manager: Address,
         delegation_manager: Address,
+        rewards_coordinator: Address,
         avs_directory: Address,
+        permission_controller: Address,
         provider: String,
     ) -> Self {
         ELChainReader {
             _logger,
-            slasher,
+            allocation_manager,
             delegation_manager,
+            rewards_coordinator,
             avs_directory,
+            permission_controller,
             provider,
         }
     }
 
-    /// Builds a new `ELChainReader` instance, getting the slasher address from the delegation manager
-    /// by calling the `slasher()` function and the corresponding Contract function.
+    /// Builds a new `ELChainReader` instance, getting the AllocationManager and PermissionController addresses
+    /// from the delegation manager.
     ///
     /// # Arguments
     ///
     /// * `_logger` - The logger to use for logging.
     /// * `delegation_manager` - The address of the delegation manager contract.
     /// * `avs_directory` - The address of the avs directory contract.
+    /// * `rewards_coordinator` - The address of the rewards coordinator contract.
     /// * `client` - The provider to use for the RPC client to call the contracts.
     ///
     /// # Returns
@@ -66,25 +89,34 @@ impl ELChainReader {
         _logger: SharedLogger,
         delegation_manager: Address,
         avs_directory: Address,
+        rewards_coordinator: Address,
         client: &String,
     ) -> Result<Self, ElContractsError> {
         let provider = get_provider(client);
 
         let contract_delegation_manager = DelegationManager::new(delegation_manager, provider);
 
-        let slasher = contract_delegation_manager
-            .slasher()
+        let allocation_manager = contract_delegation_manager
+            .allocationManager()
             .call()
             .await
-            .map_err(ElContractsError::AlloyContractError)?;
+            .map_err(ElContractsError::AlloyContractError)?
+            ._0;
 
-        let DelegationManager::slasherReturn { _0: slasher_addr } = slasher;
+        let permission_controller = contract_delegation_manager
+            .permissionController()
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?
+            ._0;
 
         Ok(Self {
             _logger,
             avs_directory,
-            slasher: slasher_addr,
+            allocation_manager,
             delegation_manager,
+            rewards_coordinator,
+            permission_controller,
             provider: client.to_string(),
         })
     }
@@ -173,6 +205,252 @@ impl ELChainReader {
         Ok(avs_hash)
     }
 
+    /// Get the length of the distribution roots.
+    ///
+    /// # Returns
+    ///
+    /// * `Result<U256, ElContractsError>` - The length of the distribution roots if the call is successful,
+    ///   otherwise an error.
+    ///
+    /// # Errors
+    ///
+    /// * `ElContractsError` - if the call to the contract fails.
+    pub async fn get_distribution_roots_length(&self) -> Result<U256, ElContractsError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_rewards_coordinator =
+            IRewardsCoordinator::new(self.rewards_coordinator, &provider);
+
+        let distribution_roots_lenght_call = contract_rewards_coordinator
+            .getDistributionRootsLength()
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        let IRewardsCoordinator::getDistributionRootsLengthReturn {
+            _0: distribution_roots_length,
+        } = distribution_roots_lenght_call;
+
+        Ok(distribution_roots_length)
+    }
+
+    /// Get the current rewards calculation end timestamp (the timestamp until which rewards have been calculated).
+    ///
+    /// # Returns
+    ///
+    /// * `Result<u32, ElContractsError>` - The current rewards calculation
+    ///   end timestamp if the call is successful.
+    ///
+    /// # Errors
+    ///
+    /// * `ElContractsError` - if the call to the contract fails.
+    pub async fn curr_rewards_calculation_end_timestamp(&self) -> Result<u32, ElContractsError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_rewards_coordinator =
+            IRewardsCoordinator::new(self.rewards_coordinator, &provider);
+
+        let end_timestamp = contract_rewards_coordinator
+            .currRewardsCalculationEndTimestamp()
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?
+            ._0;
+
+        Ok(end_timestamp)
+    }
+
+    /// Get the latest claimable distribution root.
+    ///
+    /// # Returns
+    /// * `Result<DistributionRoot, ElContractsError>` - The latest claimable distribution root if the call is successful.
+    ///
+    /// # Errors
+    /// * `ElContractsError` - if the call to the contract fails.
+    pub async fn get_current_claimable_distribution_root(
+        &self,
+    ) -> Result<DistributionRoot, ElContractsError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_rewards_coordinator =
+            IRewardsCoordinator::new(self.rewards_coordinator, &provider);
+
+        let cumulative_claimed_for_root_call = contract_rewards_coordinator
+            .getCurrentClaimableDistributionRoot()
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        let IRewardsCoordinator::getCurrentClaimableDistributionRootReturn {
+            _0: cumulative_claimed_for_root_ret,
+        } = cumulative_claimed_for_root_call;
+
+        Ok(cumulative_claimed_for_root_ret)
+    }
+
+    /// Get the root index from a given hash.
+    ///
+    /// # Arguments
+    ///
+    /// * `hash` - The hash to get the root index from.
+    ///
+    /// # Returns
+    ///
+    /// * `Result<u32, ElContractsError>` - The root index if the
+    ///   call is successful.
+    ///
+    /// # Errors
+    ///
+    /// * `ElContractsError` - if the call to the contract fails.
+    pub async fn get_root_index_from_hash(
+        &self,
+        hash: FixedBytes<32>,
+    ) -> Result<u32, ElContractsError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_rewards_coordinator =
+            IRewardsCoordinator::new(self.rewards_coordinator, &provider);
+
+        let get_root_index_from_hash_call = contract_rewards_coordinator
+            .getRootIndexFromHash(hash)
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        let IRewardsCoordinator::getRootIndexFromHashReturn { _0: root_index } =
+            get_root_index_from_hash_call;
+
+        Ok(root_index)
+    }
+
+    /// Get the cumulative claimed amount for a given earner address and token.
+    ///
+    /// # Arguments
+    ///
+    /// * `earner_address` - The address of the earner.
+    /// * `token` - The address of the token.
+    ///
+    /// # Returns
+    ///
+    /// * `Result<U256, ElContractsError>` - The cumulative claimed amount if the call is successful.
+    ///
+    /// # Errors
+    ///
+    /// * `ElContractsError` - if the call to the contract fails.
+    pub async fn get_cumulative_claimed(
+        &self,
+        earner_address: Address,
+        token: Address,
+    ) -> Result<U256, ElContractsError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_rewards_coordinator =
+            IRewardsCoordinator::new(self.rewards_coordinator, &provider);
+
+        let cumulative_claimed_call = contract_rewards_coordinator
+            .cumulativeClaimed(earner_address, token)
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        let IRewardsCoordinator::cumulativeClaimedReturn {
+            _0: cumulative_claim_ret,
+        } = cumulative_claimed_call;
+
+        Ok(cumulative_claim_ret)
+    }
+
+    /// Check if a claim would currently pass the validations in `process_claim`
+    ///
+    /// # Arguments
+    ///
+    /// * `claim` - The claim to check
+    ///
+    /// # Returns
+    ///
+    /// * `Result<bool, ElContractsError>` - True if the claim would pass the validations, false otherwise
+    ///
+    /// # Errors
+    ///
+    /// * `ElContractsError` - if the call to the contract fails. Also fails if no root has been submitted yet.
+    pub async fn check_claim(&self, claim: RewardsMerkleClaim) -> Result<bool, ElContractsError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_rewards_coordinator =
+            IRewardsCoordinator::new(self.rewards_coordinator, &provider);
+
+        let check_claim_call = contract_rewards_coordinator
+            .checkClaim(claim)
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        let IRewardsCoordinator::checkClaimReturn { _0: claim_ret } = check_claim_call;
+
+        Ok(claim_ret)
+    }
+
+    /// Gets the split of a specific `operator` for a specific `avs`
+    ///
+    /// # Arguments
+    ///
+    /// * `operator` - The operator address
+    /// * `avs` - The AVS address
+    ///
+    /// # Returns
+    ///
+    /// * `Result<u16, ElContractsError>` - The split of the operator for the AVS, if the call is successful
+    ///
+    /// # Errors
+    ///
+    /// * `ElContractsError` - if the call to the contract fails.
+    pub async fn get_operator_avs_split(
+        &self,
+        operator: Address,
+        avs: Address,
+    ) -> Result<u16, ElContractsError> {
+        let provider = get_provider(&self.provider);
+
+        let rewards_coordinator = IRewardsCoordinator::new(self.rewards_coordinator, provider);
+
+        let operator_avs_split = rewards_coordinator
+            .getOperatorAVSSplit(operator, avs)
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?
+            ._0;
+
+        Ok(operator_avs_split)
+    }
+
+    /// Gets the split of a specific `operator` for Programmatic Incentives
+    ///
+    /// # Arguments
+    ///
+    /// * `operator` - The operator address
+    ///
+    /// # Returns
+    ///
+    /// * `Result<u16, ElContractsError>` - The split of the operator for PI, if the call is successful
+    ///
+    /// # Errors
+    ///
+    /// * `ElContractsError` - if the call to the contract fails.
+    pub async fn get_operator_pi_split(&self, operator: Address) -> Result<u16, ElContractsError> {
+        let provider = get_provider(&self.provider);
+
+        let rewards_coordinator = IRewardsCoordinator::new(self.rewards_coordinator, provider);
+
+        let operator_pi_split = rewards_coordinator
+            .getOperatorPISplit(operator)
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?
+            ._0;
+
+        Ok(operator_pi_split)
+    }
+
     /// Get the operator's shares in a strategy
     ///
     /// # Arguments
@@ -202,72 +480,8 @@ impl ELChainReader {
             .await
             .map_err(ElContractsError::AlloyContractError)?;
 
-        let DelegationManager::operatorSharesReturn { _0: shares } = operator_shares_in_strategy;
+        let DelegationManager::operatorSharesReturn { shares } = operator_shares_in_strategy;
         Ok(shares)
-    }
-
-    /// Check if the operator is frozen
-    ///
-    /// # Arguments
-    ///
-    /// * `operator_addr` - The operator's address
-    ///
-    /// # Returns
-    ///
-    /// * `bool` - True if the operator is frozen, false otherwise
-    ///
-    /// # Errors
-    pub async fn operator_is_frozen(
-        &self,
-        operator_addr: Address,
-    ) -> Result<bool, ElContractsError> {
-        let provider = get_provider(&self.provider);
-
-        let contract_slasher = ISlasher::new(self.slasher, provider);
-
-        let operator_is_frozen = contract_slasher
-            .isFrozen(operator_addr)
-            .call()
-            .await
-            .map_err(ElContractsError::AlloyContractError)?;
-
-        let ISlasher::isFrozenReturn { _0: is_froze } = operator_is_frozen;
-        Ok(is_froze)
-    }
-
-    /// Check if the service manager can slash the operator
-    ///
-    /// # Arguments
-    ///
-    /// * `operator_addr` - The operator's address
-    /// * `service_manager_addr` - The service manager's address
-    ///
-    /// # Returns
-    ///
-    /// * `u32` - The block number until the operator can be slashed
-    ///
-    /// # Errors
-    ///
-    /// * `ElContractsError` - if the call to the contract fails    
-    pub async fn service_manager_can_slash_operator_until_block(
-        &self,
-        operator_addr: Address,
-        service_manager_addr: Address,
-    ) -> Result<u32, ElContractsError> {
-        let provider = get_provider(&self.provider);
-
-        let contract_slasher = ISlasher::new(self.slasher, provider);
-
-        let service_manager_can_slash_operator_until_block = contract_slasher
-            .contractCanSlashOperatorUntilBlock(operator_addr, service_manager_addr)
-            .call()
-            .await
-            .map_err(ElContractsError::AlloyContractError)?;
-
-        let ISlasher::contractCanSlashOperatorUntilBlockReturn { _0: can_slash } =
-            service_manager_can_slash_operator_until_block;
-
-        Ok(can_slash)
     }
 
     /// Get strategy and underlying ERC-20 token
@@ -288,69 +502,21 @@ impl ELChainReader {
     pub async fn get_strategy_and_underlying_erc20_token(
         &self,
         strategy_addr: Address,
-    ) -> Result<(Address, Address, Address), ElContractsError> {
-        let provider = get_provider(&self.provider);
+    ) -> Result<
+        (
+            IStrategyInstance<Http<Client>, SdkProvider>,
+            IERC20Instance<Http<Client>, SdkProvider>,
+            Address,
+        ),
+        ElContractsError,
+    > {
+        let (contract_strategy, underlying_token) = self
+            .get_strategy_and_underlying_token(strategy_addr)
+            .await?;
 
-        let contract_strategy = IStrategy::new(strategy_addr, &provider);
+        let token_contract = IERC20::new(underlying_token, contract_strategy.provider().to_owned());
 
-        let underlying_token = contract_strategy
-            .underlyingToken()
-            .call()
-            .await
-            .map_err(ElContractsError::AlloyContractError)?;
-
-        let IStrategy::underlyingTokenReturn {
-            _0: underlying_token_addr,
-        } = underlying_token;
-
-        let contract_ierc20 = ERC20::new(underlying_token_addr, &provider);
-
-        Ok((
-            strategy_addr,
-            underlying_token_addr,
-            *contract_ierc20.address(),
-        ))
-    }
-
-    /// Get the operator's details
-    ///
-    /// # Arguments
-    ///
-    /// * `operator` - The operator's address
-    ///
-    /// # Returns
-    ///
-    /// * `Operator` - The operator's details
-    ///
-    /// # Errors
-    ///
-    /// * `ElContractsError` - if the call to the contract fails
-    pub async fn get_operator_details(
-        &self,
-        operator: Address,
-    ) -> Result<Operator, ElContractsError> {
-        let provider = get_provider(&self.provider);
-
-        let contract_delegation_manager =
-            DelegationManager::new(self.delegation_manager, &provider);
-
-        let operator_det = contract_delegation_manager
-            .operatorDetails(operator)
-            .call()
-            .await
-            .map_err(ElContractsError::AlloyContractError)?;
-
-        let DelegationManager::operatorDetailsReturn {
-            _0: operator_details,
-        } = operator_det;
-
-        Ok(Operator {
-            address: operator,
-            earnings_receiver_address: operator_details.__deprecated_earningsReceiver,
-            delegation_approver_address: operator_details.delegationApprover,
-            staker_opt_out_window_blocks: operator_details.stakerOptOutWindowBlocks,
-            metadata_url: None,
-        })
+        Ok((contract_strategy, token_contract, underlying_token))
     }
 
     /// Check if the operator is registered
@@ -378,127 +544,848 @@ impl ELChainReader {
             .isOperator(operator)
             .call()
             .await
+            .map_err(ElContractsError::AlloyContractError)?
+            ._0;
+
+        Ok(is_operator)
+    }
+
+    /// Get the staker's shares in all of the strategies in which they have nonzero shares
+    /// # Arguments
+    /// * `staker_address` - The staker's address
+    /// * `block_number` - The block number
+    ///
+    /// # Returns
+    /// * `Vec<Address>` - An array of strategy addresses
+    /// * `Vec<U256>` - An array with the amount of shares the staker has in each strategy
+    ///
+    /// # Errors
+    /// * `ElContractsError` - if the call to the contract fails
+    pub async fn get_staker_shares(
+        &self,
+        staker_address: Address,
+    ) -> Result<(Vec<Address>, Vec<U256>), ElContractsError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_delegation_manager = DelegationManager::new(self.delegation_manager, provider);
+
+        let deposited_shares = contract_delegation_manager
+            .getDepositedShares(staker_address)
+            .call()
+            .await
             .map_err(ElContractsError::AlloyContractError)?;
 
-        let DelegationManager::isOperatorReturn { _0: is_operator_is } = is_operator;
-        Ok(is_operator_is)
+        let DelegationManager::getDepositedSharesReturn {
+            _0: addresses,
+            _1: shares,
+        } = deposited_shares;
+
+        Ok((addresses, shares))
     }
 
-    /// Get Operator Avs Split
-    ///
+    /// Get the delegated operator
     /// # Arguments
-    ///
-    /// * `operator` - The operator's address
-    /// * `avs` - The Avs 's address
+    /// * `staker_address` - The staker's address
+    /// * `block_number` - The block number
     ///
     /// # Returns
-    ///
-    /// * `u16` - the split for the specific operator for the specific avs
+    /// * `Address` - The address of the operator to whom the staker has delegated their shares
     ///
     /// # Errors
-    ///
     /// * `ElContractsError` - if the call to the contract fails
-    pub async fn get_operator_avs_split(
+    pub async fn get_delegated_operator(
         &self,
-        operator: Address,
-        avs: Address,
-    ) -> Result<u16, ElContractsError> {
+        staker_address: Address,
+    ) -> Result<Address, ElContractsError> {
         let provider = get_provider(&self.provider);
 
-        let contract_rewards_coordinator =
-            RewardsCoordinator::new(self.delegation_manager, provider);
+        let contract_delegation_manager = DelegationManager::new(self.delegation_manager, provider);
 
-        Ok(contract_rewards_coordinator
-            .getOperatorAVSSplit(operator, avs)
+        let delegated = contract_delegation_manager
+            .delegatedTo(staker_address)
             .call()
             .await
-            .map_err(ElContractsError::AlloyContractError)?
-            ._0)
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        let DelegationManager::delegatedToReturn { operator } = delegated;
+
+        Ok(operator)
     }
 
-    /// Get Operator PI Split
+    /// # Returns the strategy contract and the underlying token address.
     ///
     /// # Arguments
     ///
-    /// * `operator` - The operator's address
+    /// * `strategy_addr` - The strategy's address
     ///
     /// # Returns
     ///
-    /// * `u16` - The split for a specific `operator` for Programmatic Incentives
+    /// - the strategy contract address,
+    /// - and the underlying token address
     ///
     /// # Errors
     ///
     /// * `ElContractsError` - if the call to the contract fails
-    pub async fn get_operator_pi_split(&self, operator: Address) -> Result<u16, ElContractsError> {
+    pub async fn get_strategy_and_underlying_token(
+        &self,
+        strategy_addr: Address,
+    ) -> Result<(IStrategyInstance<Http<Client>, SdkProvider>, Address), ElContractsError> {
         let provider = get_provider(&self.provider);
 
-        let contract_rewards_coordinator =
-            RewardsCoordinator::new(self.delegation_manager, provider);
+        let contract_strategy = IStrategy::new(strategy_addr, provider);
 
-        Ok(contract_rewards_coordinator
-            .getOperatorPISplit(operator)
+        let underlying_token = contract_strategy
+            .underlyingToken()
             .call()
             .await
             .map_err(ElContractsError::AlloyContractError)?
-            ._0)
+            ._0;
+
+        Ok((contract_strategy, underlying_token))
     }
+
+    /// For a strategy, get the amount of magnitude not currently allocated to any operator set
+    /// # Arguments
+    /// * `operator_address` - The operator's address to query
+    /// * `strategy_address` - The strategy's address to get allocatable magnitude for
+    /// # Returns
+    /// * `u64` - The magnitude available to be allocated to an operator set
+    /// # Errors
+    /// * `ElContractsError` - if the call to the contract fails
+    pub async fn get_allocatable_magnitude(
+        &self,
+        operator_address: Address,
+        strategy_address: Address,
+    ) -> Result<u64, ElContractsError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_allocation_manager = AllocationManager::new(self.allocation_manager, provider);
+
+        let allocatable_magnitude = contract_allocation_manager
+            .getAllocatableMagnitude(operator_address, strategy_address)
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        let AllocationManager::getAllocatableMagnitudeReturn {
+            _0: allocatable_magnitude,
+        } = allocatable_magnitude;
+
+        Ok(allocatable_magnitude)
+    }
+
+    /// Get the maximum magnitude an operator can allocate for the given strategies
+    /// # Arguments
+    /// * `operator_address` - The operator's address to query
+    /// * `strategy_addresses` - The strategy's addresses to get max magnitudes for
+    /// # Returns
+    /// * `Vec<u64>` - The maximum magnitudes for the strategies
+    /// # Errors
+    /// * `ElContractsError` - if the call to the contract fails
+    pub async fn get_max_magnitudes(
+        &self,
+        operator_address: Address,
+        strategy_addresses: Vec<Address>,
+    ) -> Result<Vec<u64>, ElContractsError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_allocation_manager = AllocationManager::new(self.allocation_manager, provider);
+
+        let max_magnitudes = contract_allocation_manager
+            .getMaxMagnitudes_1(operator_address, strategy_addresses)
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        let AllocationManager::getMaxMagnitudes_1Return { _0: max_magnitudes } = max_magnitudes;
+
+        Ok(max_magnitudes)
+    }
+
+    /// Get the allocation info given a strategy and an operator. Returns the info for each operator set where an operator has allocation.
+    /// # Arguments
+    /// * `operator_address` - The operator's address to query
+    /// * `strategy_address` - The strategy's address to get allocation info for
+    /// # Returns
+    /// * `Vec<AllocationInfo>` - The allocation info for each operator set
+    /// # Errors
+    /// * `ElContractsError` - if the call to the contract fails
+    pub async fn get_allocation_info(
+        &self,
+        operator_address: Address,
+        strategy_address: Address,
+    ) -> Result<Vec<AllocationInfo>, ElContractsError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_allocation_manager = AllocationManager::new(self.allocation_manager, provider);
+
+        let allocations = contract_allocation_manager
+            .getStrategyAllocations(operator_address, strategy_address)
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        let AllocationManager::getStrategyAllocationsReturn {
+            _0: operator_sets,
+            _1: allocation_info,
+        } = allocations;
+
+        let mut allocations_info = vec![];
+        for (i, operator_set) in operator_sets.iter().enumerate() {
+            allocations_info.push(AllocationInfo {
+                operator_set: operator_set.clone(),
+                current_magnitude: U256::from(allocation_info[i].currentMagnitude),
+                pending_diff: U256::from(allocation_info[i].pendingDiff),
+                effect_block: allocation_info[i].effectBlock,
+            });
+        }
+
+        Ok(allocations_info)
+    }
+
+    /// Get the shares that an operator owns in a set of strategies
+    /// # Arguments
+    /// * `operator_address` - The operator's address to get shares for
+    /// * `strategy_addresses` - The strategy's addresses to get shares for
+    /// # Returns
+    /// * `Vec<U256>` - The list of shares for each strategy
+    /// # Errors
+    /// * `ElContractsError` - if the call to the contract fails
+    pub async fn get_operator_shares(
+        &self,
+        operator_address: Address,
+        strategy_addresses: Vec<Address>,
+    ) -> Result<Vec<U256>, ElContractsError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_delegation_manager = DelegationManager::new(self.delegation_manager, provider);
+
+        let operator_shares = contract_delegation_manager
+            .getOperatorShares(operator_address, strategy_addresses)
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        let DelegationManager::getOperatorSharesReturn {
+            _0: operator_shares,
+        } = operator_shares;
+
+        Ok(operator_shares)
+    }
+
+    /// Get the shares that a list of operators own in a set of strategies
+    /// # Arguments
+    /// * `operator_addresses` - The list of operators' addresses to get shares for
+    /// * `strategy_addresses` - The strategy's addresses to get shares for
+    /// # Returns
+    /// * `Vec<Vec<U256>>` - The list of shares for each operator
+    /// # Errors
+    /// * `ElContractsError` - if the call to the contract fails
+    pub async fn get_operators_shares(
+        &self,
+        operator_addresses: Vec<Address>,
+        strategy_addresses: Vec<Address>,
+    ) -> Result<Vec<Vec<U256>>, ElContractsError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_delegation_manager = DelegationManager::new(self.delegation_manager, provider);
+
+        let operators_shares = contract_delegation_manager
+            .getOperatorsShares(operator_addresses, strategy_addresses)
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        let DelegationManager::getOperatorsSharesReturn {
+            _0: operators_shares,
+        } = operators_shares;
+
+        Ok(operators_shares)
+    }
+
+    /// Get the number of operator sets that an operator is part of. Doesn't include M2 AVSs
+    /// # Arguments
+    /// * `operator_addr` - The operator's address to query
+    /// # Returns
+    /// * `U256` - The number of operator sets the operator is part of
+    /// # Errors
+    /// * `ElContractsError` - if the call to the contract fails
+    pub async fn get_num_operator_sets_for_operator(
+        &self,
+        operator_addr: Address,
+    ) -> Result<U256, ElContractsError> {
+        self.get_operator_sets_for_operator(operator_addr)
+            .await
+            .map(|operator_sets| U256::from(operator_sets.len() as u64))
+    }
+
+    /// Get the operator sets that an operator is part of. Doesn't include M2 AVSs
+    /// # Arguments
+    /// * `operator_addr` - The operator's address to query
+    /// # Returns
+    /// * `Vec<OperatorSet>` - The operator sets the operator is part of
+    /// # Errors
+    /// * `ElContractsError` - if the call to the contract fails
+    pub async fn get_operator_sets_for_operator(
+        &self,
+        operator_addr: Address,
+    ) -> Result<Vec<OperatorSet>, ElContractsError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_allocation_manager = AllocationManager::new(self.allocation_manager, provider);
+
+        let allocated_sets = contract_allocation_manager
+            .getAllocatedSets(operator_addr)
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        let AllocationManager::getAllocatedSetsReturn { _0: operator_sets } = allocated_sets;
+
+        Ok(operator_sets)
+    }
+
+    /// Check if an operator is registered with a specific operator set
+    /// # Arguments
+    /// * `operator_address` - The operator's address to query
+    /// * `operator_set` - The operator set to check if the operator is registered with
+    /// # Returns
+    /// * `bool` - true if the operator is registered with the operator set, false otherwise
+    /// # Errors
+    /// * `ElContractsError` - if the call to the contract fails
+    pub async fn is_operator_registered_with_operator_set(
+        &self,
+        operator_address: Address,
+        operator_set: OperatorSet,
+    ) -> Result<bool, ElContractsError> {
+        let provider = get_provider(&self.provider);
+
+        if operator_set.id == 0 {
+            // this is an M2 AVS
+            let contract_avs_directory = AVSDirectory::new(self.avs_directory, provider);
+
+            let operator_avs_registration_status = contract_avs_directory
+                .avsOperatorStatus(operator_set.avs, operator_address)
+                .call()
+                .await
+                .map_err(ElContractsError::AlloyContractError)?;
+
+            let AVSDirectory::avsOperatorStatusReturn { _0: status } =
+                operator_avs_registration_status;
+
+            Ok(status == 1)
+        } else {
+            let contract_allocation_manager =
+                AllocationManager::new(self.allocation_manager, provider);
+            let registered_operator_sets = contract_allocation_manager
+                .getRegisteredSets(operator_address)
+                .call()
+                .await
+                .map_err(ElContractsError::AlloyContractError)?;
+            let AllocationManager::getRegisteredSetsReturn { _0: operator_sets } =
+                registered_operator_sets;
+
+            let is_registered = operator_sets.iter().any(|registered_operator_set| {
+                registered_operator_set.id == operator_set.id
+                    && registered_operator_set.avs == operator_set.avs
+            });
+            Ok(is_registered)
+        }
+    }
+
+    /// Get the operators in a specific operator set. Not supported for M2 AVSs
+    /// # Arguments
+    /// * `operator_set` - The operator set to query
+    /// # Returns
+    /// * `Vec<Address>` - The list of operator's addresses in the operator set
+    /// # Errors
+    /// * `ElContractsError` - if the call to the contract fails
+    pub async fn get_operators_for_operator_set(
+        &self,
+        operator_set: OperatorSet,
+    ) -> Result<Vec<Address>, ElContractsError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_allocation_manager = AllocationManager::new(self.allocation_manager, provider);
+
+        let operators = contract_allocation_manager
+            .getMembers(operator_set)
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        let AllocationManager::getMembersReturn { _0: addresses } = operators;
+        Ok(addresses)
+    }
+
+    /// Get the number of operators in a specific operator set. Not supported for M2 AVSs
+    /// # Arguments
+    /// * `operator_set` - The operator set to query
+    /// # Returns
+    /// * `U256` - The number of operators in the operator set
+    /// # Errors
+    /// * `ElContractsError` - if the call to the contract fails
+    pub async fn get_num_operators_for_operator_set(
+        &self,
+        operator_set: OperatorSet,
+    ) -> Result<U256, ElContractsError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_allocation_manager = AllocationManager::new(self.allocation_manager, provider);
+
+        let num_operators = contract_allocation_manager
+            .getMemberCount(operator_set)
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        let AllocationManager::getMemberCountReturn { _0: num_operators } = num_operators;
+
+        Ok(num_operators)
+    }
+
+    /// Get the strategies in a specific operator set. Not supported for M2 AVSs
+    /// # Arguments
+    /// * `operator_set` - The operator set to query
+    /// # Returns
+    /// * `Vec<Address>` - The list of strategy's addresses in the operator set
+    /// # Errors
+    pub async fn get_strategies_for_operator_set(
+        &self,
+        operator_set: OperatorSet,
+    ) -> Result<Vec<Address>, ElContractsError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_allocation_manager = AllocationManager::new(self.allocation_manager, provider);
+
+        let strategies = contract_allocation_manager
+            .getStrategiesInOperatorSet(operator_set)
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        let AllocationManager::getStrategiesInOperatorSetReturn { _0: strategies } = strategies;
+
+        Ok(strategies)
+    }
+
+    /// Get the slashable shares for an operator.
+    /// # Arguments
+    /// * `operator_address` - The operator's address to query
+    /// * `operator_set` - The operator set to query
+    /// * `strategies` - The strategies to query
+    /// # Returns
+    /// * `Vec<U256>` - The amount of slashable shares for each strategy
+    /// # Errors
+    /// * `ElContractsError` - if the call to the contract fails
+    pub async fn get_slashable_shares(
+        &self,
+        operator_address: Address,
+        operator_set: OperatorSet,
+        strategies: Vec<Address>,
+    ) -> Result<Vec<U256>, ElContractsError> {
+        let provider = get_provider(&self.provider);
+        let current_block_number = provider.get_block_number().await.map_err(|e| {
+            ElContractsError::AlloyContractError(alloy::contract::Error::TransportError(e))
+        })?;
+
+        let contract_allocation_manager = AllocationManager::new(self.allocation_manager, provider);
+
+        let slashable_stake = contract_allocation_manager
+            .getMinimumSlashableStake(
+                operator_set,
+                vec![operator_address],
+                strategies.clone(),
+                current_block_number as u32,
+            )
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?
+            .slashableStake;
+
+        let Some(slashable_operator_stake) = slashable_stake.first() else {
+            return Err(ElContractsError::NoSlashableSharesFound);
+        };
+
+        Ok(slashable_operator_stake.clone())
+    }
+
+    /// Get the minimum amount of shares that are slashable by the operator sets. Not supported for M2 AVSs.
+    /// # Arguments
+    /// * `operator_sets` - The operator sets to query
+    /// # Returns
+    /// * `Vec<OperatorSetStakes>` - The operator sets, their strategies, operators, and slashable stakes
+    /// # Errors
+    /// * `ElContractsError` - if the call to the contract fails
+    pub async fn get_slashable_shares_for_operator_sets(
+        &self,
+        operator_sets: Vec<OperatorSet>,
+    ) -> Result<Vec<OperatorSetStakes>, ElContractsError> {
+        let provider = get_provider(&self.provider);
+        let current_block_number = provider.get_block_number().await.map_err(|e| {
+            ElContractsError::AlloyContractError(alloy::contract::Error::TransportError(e))
+        })?;
+        self.get_slashable_shares_for_operator_sets_before(
+            operator_sets,
+            current_block_number as u32,
+        )
+        .await
+    }
+
+    /// Given a list of operator sets, for each one get:
+    /// - the operators,
+    /// - the strategies,
+    /// - the minimum amount of shares that are slashable before a given block.
+    ///   Not supported for M2 AVSs.
+    /// # Arguments
+    /// * `operator_sets` - The operator sets to query
+    /// * `future_block` - The block at which to get allocation information. It must be greater that the current block number.
+    /// # Returns
+    /// * `Vec<OperatorSetStakes>` - The operator sets, their strategies, operators, and slashable stakes
+    /// # Errors
+    /// * `ElContractsError` - if the call to the contract fails
+    pub async fn get_slashable_shares_for_operator_sets_before(
+        &self,
+        operator_sets: Vec<OperatorSet>,
+        future_block: u32,
+    ) -> Result<Vec<OperatorSetStakes>, ElContractsError> {
+        let provider = get_provider(&self.provider);
+        let mut operator_set_stakes = vec![];
+        let allocation_manager_contract = AllocationManager::new(self.allocation_manager, provider);
+
+        for operator_set in operator_sets {
+            let operators = self
+                .get_operators_for_operator_set(operator_set.clone())
+                .await?;
+            let strategies = self
+                .get_strategies_for_operator_set(operator_set.clone())
+                .await?;
+
+            let slashable_stakes = allocation_manager_contract
+                .getMinimumSlashableStake(
+                    operator_set.clone(),
+                    operators.clone(),
+                    strategies.clone(),
+                    future_block,
+                )
+                .call()
+                .await?
+                .slashableStake;
+            operator_set_stakes.push(OperatorSetStakes {
+                operator_set,
+                strategies,
+                operators,
+                slashable_stakes,
+            });
+        }
+        Ok(operator_set_stakes)
+    }
+
+    /// Get the allocation delay for an operator. Is the number of blocks between an operator allocating slashable magnitude and the magnitude becoming slashable.
+    /// # Arguments
+    /// * `operator_address` - The operator's address to query
+    /// # Returns
+    /// * `u32` - The allocation delay
+    /// # Errors
+    /// * `ElContractsError` - if the call to the contract fails
+    /// * `AllocationDelayNotSet` - if the allocation delay is not set
+    pub async fn get_allocation_delay(
+        &self,
+        operator_address: Address,
+    ) -> Result<u32, ElContractsError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_allocation_manager = AllocationManager::new(self.allocation_manager, provider);
+
+        let allocation_delay = contract_allocation_manager
+            .getAllocationDelay(operator_address)
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        let AllocationManager::getAllocationDelayReturn {
+            _0: is_set,
+            _1: delay,
+        } = allocation_delay;
+
+        if !is_set {
+            return Err(ElContractsError::AllocationDelayNotSet);
+        }
+
+        Ok(delay)
+    }
+
+    /// Get the operator sets that the operator is registered for
+    /// # Arguments
+    /// * `operator_address` - The operator's address to query
+    /// # Returns
+    /// * `Vec<OperatorSet>` - The operator sets the operator is registered for
+    /// # Errors
+    /// * `ElContractsError` - if the call to the contract fails
+    pub async fn get_registered_sets(
+        &self,
+        operator_address: Address,
+    ) -> Result<Vec<OperatorSet>, ElContractsError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_allocation_manager = AllocationManager::new(self.allocation_manager, provider);
+
+        let registered_sets = contract_allocation_manager
+            .getRegisteredSets(operator_address)
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        let AllocationManager::getRegisteredSetsReturn {
+            _0: registered_sets,
+        } = registered_sets;
+
+        Ok(registered_sets)
+    }
+
+    /// Check if the given caller has permissions to call the function
+    ///
+    /// # Arguments
+    ///
+    /// * `account_address` - The account address to check
+    /// * `appointee_address` - The caller address to check permissions for
+    /// * `target` - The target address to check permissions for
+    /// * `selector` - The selector of the function to check permissions for
+    ///
+    /// # Returns
+    ///
+    /// * `bool` - true if the account has permissions to call the function, false otherwise
+    ///
+    /// # Errors
+    ///
+    /// * `ElContractsError` - if the call to the contract fails
+    pub async fn can_call(
+        &self,
+        account_address: Address,
+        appointee_address: Address,
+        target: Address,
+        selector: FixedBytes<4>,
+    ) -> Result<bool, ElContractsError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_permission_controller =
+            PermissionController::new(self.permission_controller, provider);
+
+        let can_call = contract_permission_controller
+            .canCall(account_address, appointee_address, target, selector)
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?
+            ._0;
+
+        Ok(can_call)
+    }
+
+    /// Get the list of appointees for a given account and function
+    /// # Arguments
+    /// * `account_address` - The account address to get appointees for
+    /// * `target` - The target address to get appointees for
+    /// * `selector` - The selector of the function to get appointees for
+    /// # Returns
+    /// * `Vec<Address>` - The list of appointees
+    /// # Errors
+    /// * `ElContractsError` - if the call to the contract fails
+    pub async fn list_appointees(
+        &self,
+        account_address: Address,
+        target: Address,
+        selector: FixedBytes<4>,
+    ) -> Result<Vec<Address>, ElContractsError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_permission_controller =
+            PermissionController::new(self.permission_controller, provider);
+
+        let appointees = contract_permission_controller
+            .getAppointees(account_address, target, selector)
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?
+            ._0;
+
+        Ok(appointees)
+    }
+
+    /// Get the list of permissions of an appointee for a given account
+    /// # Arguments
+    /// * `account_address` - The account address to get appointee permissions for
+    /// * `appointee_address` - The appointee address to get permissions
+    /// # Returns
+    /// * `Vec<Address>` - The list of targets
+    /// * `Vec<FixedBytes<4>>` - The list of selectors
+    /// # Errors
+    /// * `ElContractsError` - if the call to the contract fails
+    pub async fn list_appointee_permissions(
+        &self,
+        account_address: Address,
+        appointee_address: Address,
+    ) -> Result<(Vec<Address>, Vec<FixedBytes<4>>), ElContractsError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_permission_controller =
+            PermissionController::new(self.permission_controller, provider);
+
+        let appointee_permissions = contract_permission_controller
+            .getAppointeePermissions(account_address, appointee_address)
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        let PermissionController::getAppointeePermissionsReturn {
+            _0: targets,
+            _1: selectors,
+        } = appointee_permissions;
+
+        Ok((targets, selectors))
+    }
+
+    /// Get the list of pending admins of a given account
+    /// # Arguments
+    /// * `account_address` - The account address to get pending admins of
+    /// # Returns
+    /// * `Vec<Address>` - The list of pending admins
+    /// # Errors
+    /// * `ElContractsError` - if the call to the contract fails
+    pub async fn list_pending_admins(
+        &self,
+        account_address: Address,
+    ) -> Result<Vec<Address>, ElContractsError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_permission_controller =
+            PermissionController::new(self.permission_controller, provider);
+
+        let pending_admins = contract_permission_controller
+            .getPendingAdmins(account_address)
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?
+            ._0;
+
+        Ok(pending_admins)
+    }
+
+    /// Get the list of admins of a given account
+    /// # Arguments
+    /// * `account_address` - The account address
+    /// # Returns
+    /// * `Vec<Address>` - The list of admins
+    /// # Errors
+    /// * `ElContractsError` - if the call to the contract fails
+    pub async fn list_admins(
+        &self,
+        account_address: Address,
+    ) -> Result<Vec<Address>, ElContractsError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_permission_controller =
+            PermissionController::new(self.permission_controller, provider);
+
+        let admins = contract_permission_controller
+            .getAdmins(account_address)
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?
+            ._0;
+
+        Ok(admins)
+    }
+
+    /// Check if an address is a pending admin of another account
+    /// # Arguments
+    /// * `account_address` - The account address
+    /// * `pending_admin_address` - The pending admin address to check
+    /// # Returns
+    /// * `bool` - true if the pending_admin_address is a pending admin, false otherwise
+    /// # Errors
+    /// * `ElContractsError` - if the call to the contract fails
+    pub async fn is_pending_admin(
+        &self,
+        account_address: Address,
+        pending_admin_address: Address,
+    ) -> Result<bool, ElContractsError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_permission_controller =
+            PermissionController::new(self.permission_controller, provider);
+
+        let is_pending_admin = contract_permission_controller
+            .isPendingAdmin(account_address, pending_admin_address)
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?
+            ._0;
+
+        Ok(is_pending_admin)
+    }
+
+    /// Check if an address is an admin of another account
+    /// # Arguments
+    /// * `account_address` - The account address
+    /// * `admin_address` - The admin address to check
+    /// # Returns
+    /// * `bool` - true if the admin_address is an admin, false otherwise
+    /// # Errors
+    /// * `ElContractsError` - if the call to the contract fails
+    pub async fn is_admin(
+        &self,
+        account_address: Address,
+        admin_address: Address,
+    ) -> Result<bool, ElContractsError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_permission_controller =
+            PermissionController::new(self.permission_controller, provider);
+
+        let is_admin = contract_permission_controller
+            .isAdmin(account_address, admin_address)
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?
+            ._0;
+
+        Ok(is_admin)
+    }
+}
+
+// TODO: move to types.rs?
+
+#[derive(Clone)]
+pub struct OperatorSetStakes {
+    pub operator_set: OperatorSet,
+    pub strategies: Vec<Address>,
+    pub operators: Vec<Address>,
+    pub slashable_stakes: Vec<Vec<U256>>,
+}
+
+#[derive(Clone)]
+pub struct AllocationInfo {
+    pub current_magnitude: U256,
+    pub pending_diff: U256,
+    pub effect_block: u32,
+    pub operator_set: OperatorSet,
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::test_utils::{build_el_chain_reader, new_test_claim, OPERATOR_ADDRESS};
     use alloy::primitives::{address, keccak256, Address, FixedBytes, U256};
     use alloy::providers::Provider;
     use alloy::{eips::eip1898::BlockNumberOrTag::Number, rpc::types::BlockTransactionsKind};
-    use eigen_logging::get_test_logger;
+    use eigen_testing_utils::anvil_constants::get_erc20_mock_strategy;
     use eigen_testing_utils::{
-        anvil::start_anvil_container,
-        anvil_constants::{
-            get_delegation_manager_address, get_erc20_mock_strategy, get_service_manager_address,
-        },
+        anvil::start_anvil_container, anvil_constants::get_delegation_manager_address,
     };
-    use eigen_utils::{
-        core::{
-            avsdirectory::AVSDirectory::{self, calculateOperatorAVSRegistrationDigestHashReturn},
-            delegationmanager::DelegationManager::{
-                self, calculateDelegationApprovalDigestHashReturn,
-            },
-        },
-        sdk::mockavsservicemanager::MockAvsServiceManager,
+    use eigen_utils::core::{
+        avsdirectory::AVSDirectory::{self, calculateOperatorAVSRegistrationDigestHashReturn},
+        delegationmanager::DelegationManager::{self, calculateDelegationApprovalDigestHashReturn},
     };
-    use std::str::FromStr;
-
-    const OPERATOR_ADDRESS: &str = "0xa0Ee7A142d267C1f36714E4a8F75612F20a79720";
-
-    async fn build_el_chain_reader(http_endpoint: String) -> ELChainReader {
-        let delegation_manager_address =
-            get_delegation_manager_address(http_endpoint.clone()).await;
-        let delegation_manager_contract =
-            DelegationManager::new(delegation_manager_address, get_provider(&http_endpoint));
-        let slasher_address_return = delegation_manager_contract.slasher().call().await.unwrap();
-        let DelegationManager::slasherReturn {
-            _0: slasher_address,
-        } = slasher_address_return;
-        let service_manager_address = get_service_manager_address(http_endpoint.clone()).await;
-        let service_manager_contract =
-            MockAvsServiceManager::new(service_manager_address, get_provider(&http_endpoint));
-        let avs_directory_address_return = service_manager_contract
-            .avsDirectory()
-            .call()
-            .await
-            .unwrap();
-        let MockAvsServiceManager::avsDirectoryReturn {
-            _0: avs_directory_address,
-        } = avs_directory_address_return;
-
-        ELChainReader::new(
-            get_test_logger(),
-            slasher_address,
-            delegation_manager_address,
-            avs_directory_address,
-            http_endpoint,
-        )
-    }
 
     #[tokio::test]
     async fn test_calculate_delegation_approval_digest_hash() {
@@ -592,49 +1479,521 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn check_strategy_shares_and_operator_frozen() {
+    async fn test_get_distribution_roots_length() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let operator_addr = Address::from_str(OPERATOR_ADDRESS).unwrap();
-        let strategy_addr = get_erc20_mock_strategy(http_endpoint.clone()).await;
+        let el_chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
 
-        let chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
-        let shares = chain_reader
-            .get_operator_shares_in_strategy(operator_addr, strategy_addr)
+        let distribution_roots_length_ret = el_chain_reader
+            .get_distribution_roots_length()
             .await
             .unwrap();
 
-        let zero = U256::ZERO;
-        assert!(shares > zero);
+        assert_eq!(distribution_roots_length_ret, U256::from(0));
 
-        // test if operator is frozen
-        let frozen = chain_reader
-            .operator_is_frozen(operator_addr)
-            .await
-            .unwrap();
-        assert!(!frozen);
+        _ = new_test_claim(&http_endpoint).await;
 
-        let service_manager_address = get_service_manager_address(http_endpoint).await;
-        let ret_can_slash = chain_reader
-            .service_manager_can_slash_operator_until_block(operator_addr, service_manager_address)
+        let distribution_roots_length_ret = el_chain_reader
+            .get_distribution_roots_length()
             .await
             .unwrap();
 
-        println!("ret_can_slash: {ret_can_slash}");
-        assert!(ret_can_slash == 0);
+        assert_eq!(distribution_roots_length_ret, U256::from(1));
     }
 
     #[tokio::test]
-    async fn test_get_operator_details() {
+    async fn test_curr_rewards_calculation_end_timestamp() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let operator_addr = Address::from_str(OPERATOR_ADDRESS).unwrap();
-        let chain_reader = build_el_chain_reader(http_endpoint).await;
+        let el_chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
 
-        let operator = chain_reader
-            .get_operator_details(operator_addr)
+        let end_timestamp = el_chain_reader
+            .curr_rewards_calculation_end_timestamp()
             .await
             .unwrap();
 
-        assert!(operator.metadata_url.is_none());
-        println!("{:?}", operator.metadata_url);
+        assert_eq!(end_timestamp, 0);
+
+        _ = new_test_claim(&http_endpoint).await;
+
+        let end_timestamp = el_chain_reader
+            .curr_rewards_calculation_end_timestamp()
+            .await
+            .unwrap();
+
+        assert_eq!(end_timestamp, 1);
+    }
+
+    #[tokio::test]
+    async fn test_get_current_claimable_distribution_root() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let el_chain_reader = build_el_chain_reader(http_endpoint.to_string()).await;
+
+        let distribution_root = el_chain_reader
+            .get_current_claimable_distribution_root()
+            .await
+            .unwrap();
+        // The root starts being zero
+        assert_eq!(distribution_root.root, FixedBytes::ZERO);
+
+        let (root, _) = new_test_claim(&http_endpoint).await;
+
+        let distribution_root = el_chain_reader
+            .get_current_claimable_distribution_root()
+            .await
+            .unwrap();
+
+        assert_eq!(distribution_root.root, root);
+    }
+
+    #[tokio::test]
+    async fn test_get_root_index_from_hash() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let el_chain_reader = build_el_chain_reader(http_endpoint.to_string()).await;
+        let (root, _) = new_test_claim(&http_endpoint).await;
+
+        let index = el_chain_reader
+            .get_root_index_from_hash(root)
+            .await
+            .unwrap();
+
+        assert_eq!(index, 0);
+    }
+
+    #[tokio::test]
+    async fn test_get_cumulative_claimed() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let el_chain_reader = build_el_chain_reader(http_endpoint.to_string()).await;
+
+        let earner_address = address!("F2288D736d27C1584Ebf7be5f52f9E4d47251AeE");
+        let (_, _, token_address) = el_chain_reader
+            .get_strategy_and_underlying_erc20_token(
+                get_erc20_mock_strategy(http_endpoint.clone()).await,
+            )
+            .await
+            .unwrap();
+
+        let cumulative_claimed_ret = el_chain_reader
+            .get_cumulative_claimed(earner_address, token_address)
+            .await
+            .unwrap();
+
+        // No claims so cumulative claimed should be zero
+        assert_eq!(cumulative_claimed_ret, U256::from(0));
+    }
+
+    #[tokio::test]
+    async fn test_check_claim() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let el_chain_reader = build_el_chain_reader(http_endpoint.to_string()).await;
+
+        let (_, claim) = new_test_claim(&http_endpoint).await;
+
+        let valid_claim = el_chain_reader.check_claim(claim.clone()).await.unwrap();
+        assert!(valid_claim);
+    }
+
+    #[tokio::test]
+    async fn test_is_operator_registered() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let chain_reader = build_el_chain_reader(http_endpoint).await;
+
+        let is_registered = chain_reader
+            .is_operator_registered(OPERATOR_ADDRESS)
+            .await
+            .unwrap();
+
+        assert!(is_registered);
+    }
+
+    #[tokio::test]
+    async fn test_get_staker_shares() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
+
+        let (strategies, shares) = chain_reader
+            .get_staker_shares(OPERATOR_ADDRESS)
+            .await
+            .unwrap();
+
+        let expected_strategies: Vec<Address> = vec![get_erc20_mock_strategy(http_endpoint).await];
+
+        assert!(strategies.len() == shares.len());
+        assert_eq!(strategies, expected_strategies);
+    }
+
+    #[tokio::test]
+    async fn test_get_delegated_operator() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
+
+        let operator_addr = chain_reader
+            .get_delegated_operator(OPERATOR_ADDRESS)
+            .await
+            .unwrap();
+
+        assert_eq!(operator_addr, OPERATOR_ADDRESS); // operator is delegated to himself
+    }
+
+    #[tokio::test]
+    async fn test_get_strategy_and_underlying_token() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let strategy_addr = get_erc20_mock_strategy(http_endpoint.clone()).await;
+        let chain_reader = build_el_chain_reader(http_endpoint).await;
+
+        let (strategy_contract_addr, underlying_token_addr) = chain_reader
+            .get_strategy_and_underlying_token(strategy_addr)
+            .await
+            .unwrap();
+
+        let underlying_token_addr_str = underlying_token_addr.to_string();
+        assert_eq!(
+            underlying_token_addr_str,
+            "0x36C02dA8a0983159322a80FFE9F24b1acfF8B570"
+        );
+
+        let strategy_contract_addr_str = strategy_contract_addr.address().to_string();
+        assert_eq!(
+            strategy_contract_addr_str,
+            "0xeC4cFde48EAdca2bC63E94BB437BbeAcE1371bF3"
+        );
+    }
+
+    #[tokio::test]
+    async fn test_get_allocatable_magnitude_and_max_magnitude() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let strategy_addr = get_erc20_mock_strategy(http_endpoint.clone()).await;
+        let chain_reader = build_el_chain_reader(http_endpoint).await;
+
+        let allocatable_magnitude = chain_reader
+            .get_allocatable_magnitude(OPERATOR_ADDRESS, strategy_addr)
+            .await
+            .unwrap();
+
+        assert!(allocatable_magnitude > 0);
+
+        // Since the operator has no encumbered magnitude, the max magnitude should be the same as the allocatable magnitude
+        let max_magnitude = chain_reader
+            .get_max_magnitudes(OPERATOR_ADDRESS, vec![strategy_addr])
+            .await
+            .unwrap()[0];
+
+        assert_eq!(allocatable_magnitude, max_magnitude);
+    }
+
+    #[tokio::test]
+    async fn test_get_allocation_info() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let strategy_addr = get_erc20_mock_strategy(http_endpoint.clone()).await;
+        let chain_reader = build_el_chain_reader(http_endpoint).await;
+
+        let allocations_info = chain_reader
+            .get_allocation_info(OPERATOR_ADDRESS, strategy_addr)
+            .await
+            .unwrap();
+
+        assert!(allocations_info.is_empty());
+    }
+
+    #[tokio::test]
+    async fn test_get_operator_shares() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let strategy_addr = get_erc20_mock_strategy(http_endpoint.clone()).await;
+        let chain_reader = build_el_chain_reader(http_endpoint).await;
+
+        let operator_shares = chain_reader
+            .get_operator_shares(OPERATOR_ADDRESS, vec![strategy_addr])
+            .await
+            .unwrap();
+
+        assert_eq!(operator_shares.len(), 1);
+        assert_eq!(operator_shares[0], U256::from(10e18));
+    }
+
+    #[tokio::test]
+    async fn test_get_operators_shares() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let strategy_addr = get_erc20_mock_strategy(http_endpoint.clone()).await;
+        let chain_reader = build_el_chain_reader(http_endpoint).await;
+
+        let operator_shares = chain_reader
+            .get_operators_shares(vec![OPERATOR_ADDRESS], vec![strategy_addr])
+            .await
+            .unwrap();
+
+        assert_eq!(operator_shares.len(), 1);
+        assert_eq!(operator_shares[0].len(), 1);
+        assert_eq!(operator_shares[0][0], U256::from(10e18));
+    }
+
+    #[tokio::test]
+    async fn test_get_num_operator_sets_for_operator() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let chain_reader = build_el_chain_reader(http_endpoint).await;
+
+        let num_operator_sets = chain_reader
+            .get_num_operator_sets_for_operator(OPERATOR_ADDRESS)
+            .await
+            .unwrap();
+
+        assert_eq!(num_operator_sets, U256::from(0));
+    }
+
+    #[tokio::test]
+    async fn test_get_operator_sets_for_operator() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let chain_reader = build_el_chain_reader(http_endpoint).await;
+
+        let operator_sets = chain_reader
+            .get_operator_sets_for_operator(OPERATOR_ADDRESS)
+            .await
+            .unwrap();
+
+        assert_eq!(operator_sets.len(), 0);
+    }
+
+    #[tokio::test]
+    async fn test_is_operator_registered_with_operator_set() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let chain_reader = build_el_chain_reader(http_endpoint).await;
+
+        let operator_set = OperatorSet {
+            id: 1,
+            avs: Address::ZERO,
+        };
+
+        let is_registered = chain_reader
+            .is_operator_registered_with_operator_set(OPERATOR_ADDRESS, operator_set)
+            .await
+            .unwrap();
+
+        assert!(!is_registered);
+    }
+
+    #[tokio::test]
+    async fn test_get_operators_for_operator_set() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let chain_reader = build_el_chain_reader(http_endpoint).await;
+
+        let operator_set = OperatorSet {
+            id: 1,
+            avs: Address::ZERO,
+        };
+
+        let operators = chain_reader
+            .get_operators_for_operator_set(operator_set)
+            .await
+            .unwrap();
+
+        assert_eq!(operators.len(), 0);
+    }
+
+    #[tokio::test]
+    async fn test_get_num_operators_for_operator_set() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let chain_reader = build_el_chain_reader(http_endpoint).await;
+
+        let operator_set = OperatorSet {
+            id: 1,
+            avs: Address::ZERO,
+        };
+
+        let num_operators = chain_reader
+            .get_num_operators_for_operator_set(operator_set)
+            .await
+            .unwrap();
+
+        assert_eq!(num_operators, U256::from(0));
+    }
+
+    #[tokio::test]
+    async fn test_get_strategies_for_operator_set() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
+
+        let operator_set = OperatorSet {
+            id: 1,
+            avs: Address::ZERO,
+        };
+
+        let strategies = chain_reader
+            .get_strategies_for_operator_set(operator_set)
+            .await
+            .unwrap();
+
+        assert_eq!(strategies.len(), 0);
+    }
+
+    #[tokio::test]
+    async fn test_get_slashable_shares() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
+
+        let operator_set = OperatorSet {
+            id: 1,
+            avs: Address::ZERO,
+        };
+
+        let strategies = vec![get_erc20_mock_strategy(http_endpoint).await];
+        let slashable_shares = chain_reader
+            .get_slashable_shares(OPERATOR_ADDRESS, operator_set, strategies)
+            .await
+            .unwrap();
+
+        assert_eq!(slashable_shares.len(), 1);
+        assert_eq!(slashable_shares[0], U256::ZERO);
+    }
+
+    #[tokio::test]
+    async fn test_get_slashable_shares_for_operator_sets() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let chain_reader = build_el_chain_reader(http_endpoint).await;
+
+        let operator_set = OperatorSet {
+            id: 1,
+            avs: Address::ZERO,
+        };
+
+        let slashable_shares = chain_reader
+            .get_slashable_shares_for_operator_sets(vec![operator_set])
+            .await
+            .unwrap();
+
+        assert_eq!(slashable_shares.len(), 1);
+        assert_eq!(slashable_shares[0].operator_set.id, 1);
+        assert_eq!(slashable_shares[0].operators.len(), 0);
+        assert_eq!(slashable_shares[0].slashable_stakes.len(), 0);
+    }
+
+    #[tokio::test]
+    async fn test_get_delegated_and_slashable_shares_for_operator_sets_before() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
+
+        let operator_set = OperatorSet {
+            id: 1,
+            avs: Address::ZERO,
+        };
+
+        let current_block_number = get_provider(&http_endpoint)
+            .get_block_number()
+            .await
+            .unwrap() as u32;
+        let slashable_shares = chain_reader
+            .get_slashable_shares_for_operator_sets_before(
+                vec![operator_set],
+                current_block_number + 1,
+            )
+            .await
+            .unwrap();
+
+        assert_eq!(slashable_shares.len(), 1);
+        assert_eq!(slashable_shares[0].operator_set.id, 1);
+        assert_eq!(slashable_shares[0].operators.len(), 0);
+        assert_eq!(slashable_shares[0].slashable_stakes.len(), 0);
+    }
+
+    #[tokio::test]
+    async fn test_get_allocation_delay() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let chain_reader = build_el_chain_reader(http_endpoint).await;
+
+        let allocation_delay = chain_reader
+            .get_allocation_delay(OPERATOR_ADDRESS)
+            .await
+            .unwrap();
+
+        assert_eq!(allocation_delay, 1);
+    }
+
+    #[tokio::test]
+    async fn test_get_registered_sets() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
+
+        let ret = chain_reader
+            .get_registered_sets(OPERATOR_ADDRESS)
+            .await
+            .unwrap();
+
+        assert_eq!(ret.len(), 0);
+    }
+
+    #[tokio::test]
+    async fn test_list_appointee() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
+
+        let target = Address::ZERO;
+        let selector = FixedBytes::from([0x00; 4]);
+        let appointees = chain_reader
+            .list_appointees(OPERATOR_ADDRESS, target, selector)
+            .await
+            .unwrap();
+
+        assert!(appointees.is_empty());
+    }
+
+    #[tokio::test]
+    async fn test_list_appointee_permissions() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
+
+        let account_address = OPERATOR_ADDRESS;
+        let appointee_address = OPERATOR_ADDRESS;
+        let (targets, selectors) = chain_reader
+            .list_appointee_permissions(account_address, appointee_address)
+            .await
+            .unwrap();
+
+        assert!(targets.is_empty());
+        assert!(selectors.is_empty());
+    }
+
+    #[tokio::test]
+    async fn test_list_pending_admins() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
+
+        let pending_admins = chain_reader
+            .list_pending_admins(OPERATOR_ADDRESS)
+            .await
+            .unwrap();
+
+        assert!(pending_admins.is_empty());
+    }
+
+    #[tokio::test]
+    async fn test_list_admins() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
+
+        let admins = chain_reader.list_admins(OPERATOR_ADDRESS).await.unwrap();
+
+        assert_eq!(admins, vec![OPERATOR_ADDRESS]);
+    }
+
+    #[tokio::test]
+    async fn test_is_pending_admin() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
+
+        let is_pending_admin = chain_reader
+            .is_pending_admin(OPERATOR_ADDRESS, OPERATOR_ADDRESS)
+            .await
+            .unwrap();
+
+        assert!(!is_pending_admin);
+    }
+
+    #[tokio::test]
+    async fn test_is_admin() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
+
+        let is_admin = chain_reader
+            .is_admin(OPERATOR_ADDRESS, OPERATOR_ADDRESS)
+            .await
+            .unwrap();
+
+        assert!(is_admin);
     }
 }

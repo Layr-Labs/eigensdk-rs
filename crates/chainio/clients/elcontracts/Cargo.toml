@@ -10,6 +10,7 @@ license-file.workspace = true
 
 [dependencies]
 alloy.workspace = true
+eigen-crypto-bls.workspace = true
 eigen-common.workspace = true
 eigen-logging.workspace = true
 eigen-types.workspace = true
@@ -20,5 +21,4 @@ tracing.workspace = true
 [dev-dependencies]
 eigen-testing-utils.workspace = true
 once_cell.workspace = true
-serial_test.workspace = true
 tokio.workspace = true

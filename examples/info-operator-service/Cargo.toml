@@ -9,6 +9,8 @@ license-file.workspace = true
 
 [dependencies]
 alloy.workspace = true
+
+eigen-common.workspace = true
 eigen-client-avsregistry.workspace = true
 eigen-client-elcontracts.workspace = true
 eigen-crypto-bls.workspace = true
@@ -16,7 +18,6 @@ eigen-logging.workspace = true
 eigen-testing-utils.workspace = true
 eigen-services-operatorsinfo.workspace = true
 eigen-utils.workspace = true
-tokio = {workspace = true, features =["full"]}
+tokio = { workspace = true, features = ["full"] }
 tracing.workspace = true
 tokio-util = "0.7.11"
-
