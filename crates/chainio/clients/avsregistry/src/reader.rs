@@ -680,10 +680,12 @@ mod tests {
         )
         .unwrap();
 
-        let _ = avs_reader
+        // revert: RegistryCoordinator.getQuorumBitmapIndexAtBlockNumber: no bitmap update found for operatorId
+        let operators_stake = avs_reader
             .get_operators_stake_in_quorums_at_block_operator_id(1245842, operator_id.into())
-            .await
-            .unwrap();
+            .await;
+
+        assert!(operators_stake.is_err());
     }
 
     #[tokio::test]
@@ -707,12 +709,12 @@ mod tests {
         )
         .unwrap();
 
-        let (quorums, operators) = avs_reader
+        // revert: RegistryCoordinator.getQuorumBitmapIndexAtBlockNumber: no bitmap update found for operatorId
+        let operators_stake = avs_reader
             .get_operators_stake_in_quorums_of_operator_at_current_block(operator_id.into())
-            .await
-            .unwrap();
-        assert_eq!(quorums.len(), 0);
-        assert_eq!(operators.len(), 0);
+            .await;
+
+        assert!(operators_stake.is_err());
     }
 
     #[tokio::test]
@@ -753,12 +755,12 @@ mod tests {
         )
         .unwrap();
 
+        // revert: RegistryCoordinator.getQuorumBitmapIndexAtBlockNumber: no bitmap update found for operatorId
         let operators_stake = avs_reader
             .get_operators_stake_in_quorums_of_operator_at_block((operator_id).into(), 1246078)
-            .await
-            .unwrap();
+            .await;
 
-        // assert!(operators_stake.is_err());
+        assert!(operators_stake.is_err());
     }
 
     #[tokio::test]
