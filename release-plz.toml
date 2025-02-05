@@ -1,0 +1,25 @@
+[workspace]
+changelog_update = false # disable changelog updates
+dependencies_update = true # update dependencies with `cargo update`
+git_release_enable = true # enable GitHub/Gitea releases
+pr_branch_prefix = "release-plz-" # PR branch prefix
+pr_name = "Release {{ package }} v{{ version }}" # template for the PR name
+pr_labels = ["release"] # add the `release` label to the release Pull Request
+release_always = false
+git_release_draft = true
+
+[[package]]
+name = "info-operator-service"
+release = false # don't process this package
+
+[[package]]
+name = "examples-avsregistry-read"
+release = false # don't process this package
+
+[[package]]
+name = "examples-avsregistry-write"
+release = false # don't process this package
+
+[[package]]
+name = "examples-anvil-utils"
+release = false # don't process this package
