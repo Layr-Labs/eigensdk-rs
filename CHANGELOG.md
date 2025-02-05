@@ -11,6 +11,12 @@ Each version will have a separate `Breaking Changes` section as well. To describ
 
 ## [Unreleased]
 ### Added
+### Changed
+### Breaking changes
+### Removed
+
+## [0.1.4] - 2025-02-05
+### Added
 * Added `eigen_common` dependency to the `eigensdk` crate when "full" feature is enabled in [#249](https://github.com/Layr-Labs/eigensdk-rs/pull/249).
 * Added bindings for `ECDSAStakeRegistry` and `ECDSAServiceManagerBase` in [#269](https://github.com/Layr-Labs/eigensdk-rs/pull/269).
 * Added release-plz in ci in [#275](https://github.com/Layr-Labs/eigensdk-rs/pull/275).
@@ -31,7 +37,7 @@ Each version will have a separate `Breaking Changes` section as well. To describ
 * Removed examples packages from workspace.dependencies in Cargo.toml in [#287](https://github.com/Layr-Labs/eigensdk-rs/pull/287).
 * Removed release-plz-pr workflow in release-plz in [#292](https://github.com/Layr-Labs/eigensdk-rs/pull/292).
 
-## [0.1.3] - 2024-01-17
+## [0.1.3] - 2025-01-17
 ### Added 🎉
 * feat: add rewards-v2 related functionality by @supernovahs in https://github.com/Layr-Labs/eigensdk-rs/pull/221
   * New methods in `ELChainReader`:
