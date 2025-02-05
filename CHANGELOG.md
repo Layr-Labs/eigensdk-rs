@@ -13,6 +13,13 @@ Each version will have a separate `Breaking Changes` section as well. To describ
 ### Added
 * Added bindings for `ECDSAStakeRegistry` and `ECDSAServiceManagerBase` in [#269](https://github.com/Layr-Labs/eigensdk-rs/pull/269).
 * Added release-plz in ci in [#275](https://github.com/Layr-Labs/eigensdk-rs/pull/275).
+* Added `set_rewards_initiator` in `avsregistry/writer` in [#273](https://github.com/Layr-Labs/eigensdk-rs/pull/273).
+  ```rust
+    let tx_hash = avs_writer
+      .set_rewards_initiator(new_rewards_init_address)
+      .await
+      .unwrap();
+  ```
 
 ### Changed
 * Changes in the way bindings are generated in [#245](https://github.com/Layr-Labs/eigensdk-rs/pull/243).
