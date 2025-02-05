@@ -5,13 +5,19 @@ use alloy::signers::local::PrivateKeySigner;
 use eigen_client_avsregistry::writer::AvsRegistryChainWriter;
 use eigen_client_elcontracts::reader::ELChainReader;
 use eigen_client_elcontracts::writer::ELChainWriter;
+use eigen_common::get_provider;
 use eigen_crypto_bls::BlsKeyPair;
 use eigen_logging::get_test_logger;
-use eigen_testing_utils::m2_holesky_constants::{
-    AVS_DIRECTORY_ADDRESS, DELEGATION_MANAGER_ADDRESS, OPERATOR_STATE_RETRIEVER,
-    REGISTRY_COORDINATOR, REWARDS_COORDINATOR, SLASHER_ADDRESS, STRATEGY_MANAGER_ADDRESS,
+use eigen_testing_utils::anvil_constants::get_registry_coordinator_address;
+use eigen_testing_utils::{
+    anvil_constants::get_allocation_manager_address,
+    m2_holesky_constants::{
+        AVS_DIRECTORY_ADDRESS, DELEGATION_MANAGER_ADDRESS, OPERATOR_STATE_RETRIEVER,
+        REGISTRY_COORDINATOR, REWARDS_COORDINATOR, SLASHER_ADDRESS, STRATEGY_MANAGER_ADDRESS,
+    },
 };
 use eigen_types::operator::Operator;
+use eigen_utils::core::delegationmanager::DelegationManager;
 use eyre::Result;
 use lazy_static::lazy_static;
 use std::str::FromStr;
@@ -59,20 +65,38 @@ async fn main() -> Result<()> {
     }
     let quorum_nums = Bytes::from([0x01]);
 
+    let delegation_manager_contract =
+        DelegationManager::new(DELEGATION_MANAGER_ADDRESS, get_provider(holesky_provider));
+    let permission_controller = delegation_manager_contract
+        .permissionController()
+        .call()
+        .await
+        .expect("DelegationManager contract failed when accessing PermissionController")
+        ._0;
+
     // A new ElChainReader instance
     let el_chain_reader = ELChainReader::new(
         get_test_logger().clone(),
         SLASHER_ADDRESS,
         DELEGATION_MANAGER_ADDRESS,
+        REWARDS_COORDINATOR,
         AVS_DIRECTORY_ADDRESS,
-        "https://ethereum-holesky.blockpi.network/v1/rpc/public".to_string(),
+        permission_controller,
+        holesky_provider.to_string(),
     );
+
+    let allocation_manager = get_allocation_manager_address(holesky_provider.to_string()).await;
+    let registry_coordinator = get_registry_coordinator_address(holesky_provider.to_string()).await;
+
     // A new ElChainWriter instance
     let el_writer = ELChainWriter::new(
         STRATEGY_MANAGER_ADDRESS,
         REWARDS_COORDINATOR,
+        permission_controller,
+        allocation_manager,
+        registry_coordinator,
         el_chain_reader,
-        "https://ethereum-holesky.blockpi.network/v1/rpc/public".to_string(),
+        holesky_provider.to_string(),
         "bead471191bea97fc3aeac36c9d74c895e8a6242602e144e43152f96219e96e8".to_string(),
     );
 
@@ -83,10 +107,10 @@ async fn main() -> Result<()> {
 
     let operator_details = Operator {
         address: wallet.address(),
-        earnings_receiver_address: wallet.address(),
         delegation_approver_address: wallet.address(),
         staker_opt_out_window_blocks: 3,
         metadata_url: Some("eigensdk-rs".to_string()),
+        allocation_delay: 1,
     };
     // Register the address as operator in delegation manager
     let _s = el_writer.register_as_operator(operator_details).await;

@@ -35,10 +35,6 @@ pub enum ElContractsError {
     #[error("Failed to get underlying token")]
     GetUnderlyingToken,
 
-    /// Get operator details
-    #[error("Failed to get oeprator details")]
-    GetOperatorDetails,
-
     /// is operator or not
     #[error("Is operator or not ")]
     IsOperator,
@@ -72,4 +68,13 @@ pub enum ElContractsError {
 
     #[error("Alloy pending Transaction error {0}")]
     AlloyPendingTransactionError(#[from] PendingTransactionError),
+
+    #[error("Allocation delay not set for operator")]
+    AllocationDelayNotSet,
+
+    #[error("No slashable shares found for operator")]
+    NoSlashableSharesFound,
+
+    #[error("BLS key pair invalid")]
+    BLSKeyPairInvalid,
 }

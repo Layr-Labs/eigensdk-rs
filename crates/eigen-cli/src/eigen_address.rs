@@ -5,8 +5,9 @@ use alloy::providers::Provider;
 use eigen_common::get_provider;
 use eigen_utils::{
     core::delegationmanager::DelegationManager,
-    middleware::iblssignaturechecker::IBLSSignatureChecker,
-    middleware::registrycoordinator::RegistryCoordinator,
+    middleware::{
+        iblssignaturechecker::IBLSSignatureChecker, registrycoordinator::RegistryCoordinator,
+    },
 };
 use serde::{Deserialize, Serialize};
 
@@ -22,7 +23,7 @@ pub struct ContractAddresses {
 #[serde(rename_all(deserialize = "kebab-case"))]
 pub struct EigenLayerAddresses {
     delegation_manager: Address,
-    slasher: Address,
+    allocation_manager: Address,
     strategy_manager: Address,
 }
 
@@ -165,11 +166,15 @@ impl ContractAddresses {
         let service_manager = IBLSSignatureChecker::new(service_manager_addr, &client);
         let delegation_manager = service_manager.delegation().call().await?._0;
         let delegation_manager_client = DelegationManager::new(delegation_manager, &client);
-        let slasher = delegation_manager_client.slasher().call().await?._0;
+        let allocation_manager = delegation_manager_client
+            .allocationManager()
+            .call()
+            .await?
+            ._0;
         let strategy_manager = delegation_manager_client.strategyManager().call().await?._0;
 
         Ok(EigenLayerAddresses {
-            slasher,
+            allocation_manager,
             delegation_manager,
             strategy_manager,
         })

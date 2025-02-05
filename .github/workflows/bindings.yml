@@ -31,9 +31,7 @@ jobs:
         run: forge --version
       
       - name: Generate new bindings
-        run: |
-          make bindings_host
-          cargo fmt
+        run: make bindings_host
 
       - name: Compare existing and new bindings
         working-directory: crates/utils/src/
