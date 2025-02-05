@@ -335,13 +335,12 @@ impl AvsRegistryChainWriter {
         let contract_call =
             contract_stake_registry.setSlashableStakeLookahead(quorum_number, lookahead);
 
-        let tx = contract_call
+        contract_call
             .send()
             .await
-            .map_err(AvsRegistryError::AlloyContractError)?;
-
-        info!(tx_hash = ?tx,"successfully set slashable stake lookahead" );
-        Ok(*tx.tx_hash())
+            .map_err(AvsRegistryError::AlloyContractError)
+            .inspect(|tx| info!(tx_hash = ?tx,"successfully set slashable stake lookahead" ))
+            .map(|tx_hash| *tx_hash.tx_hash())
     }
 }
 
@@ -444,7 +443,6 @@ mod tests {
         // Assert that event `LookAheadPeriodChanged` is the same as `new_rewards_init_address`
         let mut stream = poller.into_stream();
         let (stream_event, _) = stream.next().await.unwrap().unwrap();
-        dbg!(stream_event.oldLookAheadDays, stream_event.newLookAheadDays);
         assert_eq!(stream_event.newLookAheadDays, lookahead);
     }
 
