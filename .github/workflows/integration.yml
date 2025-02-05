@@ -61,16 +61,11 @@ jobs:
         with:
           cache-on-failure: true
 
-      - name: Install nextest
-        uses: taiki-e/install-action@v2
-        with:
-          tool: cargo-nextest
-
       - name: docker
         uses: docker/setup-docker-action@v4
 
       - name: Run tests
-        run: cargo nextest run --workspace
+        run: cargo test --workspace
 
   coverage:
     name: Generate Coverage
