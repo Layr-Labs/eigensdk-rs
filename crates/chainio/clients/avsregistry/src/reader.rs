@@ -249,10 +249,7 @@ impl AvsRegistryChainReader {
             contract_operator_state_retriever
                 .getOperatorState_1(self.registry_coordinator_addr, operator_id, block_number)
                 .call()
-                .await
-                .map_err(|_| {
-                    AvsRegistryError::GetOperatorStateWithRegistryCoordinatorAndOperatorId
-                })?;
+                .await?;
 
         let OperatorStateRetriever::getOperatorState_1Return {
             _0: stake,
@@ -310,9 +307,7 @@ impl AvsRegistryChainReader {
     ) -> Result<(Vec<u8>, Vec<Vec<OperatorStateRetriever::Operator>>), AvsRegistryError> {
         let (quorum_bitmaps, operator_stakes) = self
             .get_operators_stake_in_quorums_at_block_operator_id(block_number, operator_id)
-            .await
-            .map_err(|_| AvsRegistryError::GetOperatorStakeInQuorumAtBlockOperatorId)?;
-
+            .await?;
         let quorums = bitmap_to_quorum_ids(quorum_bitmaps);
         let s = (quorums, operator_stakes);
         Ok(s)
@@ -758,10 +753,12 @@ mod tests {
         )
         .unwrap();
 
-        let _ = avs_reader
+        let operators_stake = avs_reader
             .get_operators_stake_in_quorums_of_operator_at_block((operator_id).into(), 1246078)
             .await
             .unwrap();
+
+        // assert!(operators_stake.is_err());
     }
 
     #[tokio::test]
