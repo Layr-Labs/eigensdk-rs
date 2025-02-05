@@ -13,6 +13,17 @@ Each version will have a separate `Breaking Changes` section as well. To describ
 ### Added
 * Added bindings for `ECDSAStakeRegistry` and `ECDSAServiceManagerBase` in [#269](https://github.com/Layr-Labs/eigensdk-rs/pull/269).
 * Added release-plz in ci in [#275](https://github.com/Layr-Labs/eigensdk-rs/pull/275).
+* Added new method `clear_deallocation_queue` in `elcontracts/writer` in [#270](https://github.com/Layr-Labs/eigensdk-rs/pull/270)
+  ```rust
+  let tx_hash_clear = el_chain_writer
+      .clear_deallocation_queue(
+          operator_address,
+          vec![strategy_addr],
+          vec![num_to_clear],
+      )
+      .await
+      .unwrap();
+  ```
 
 ### Changed
 * Changes in the way bindings are generated in [#245](https://github.com/Layr-Labs/eigensdk-rs/pull/243).
