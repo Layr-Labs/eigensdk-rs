@@ -7,40 +7,113 @@ Changelog is present since v0.1.2
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-Each version will have a separate `Breaking Changes` section as well. To describe in how to upgrade from one version to another if needed
+Each version will have a separate `Breaking Changes` section as well. To describe in how to upgrade from one version to another if needed.
+
+Those changes in added, changed or breaking changes, should include usage examples to add clarity to the sdk user.
 
 ## [Unreleased]
 ### Added
+* Added `eigen_common` dependency to the `eigensdk` crate when "full" feature is enabled in [#249](https://github.com/Layr-Labs/eigensdk-rs/pull/249).
 * Added bindings for `ECDSAStakeRegistry` and `ECDSAServiceManagerBase` in [#269](https://github.com/Layr-Labs/eigensdk-rs/pull/269).
 * Added release-plz in ci in [#275](https://github.com/Layr-Labs/eigensdk-rs/pull/275).
+* Added custom configuration for release-plz in [#281](https://github.com/Layr-Labs/eigensdk-rs/pull/281).
 
 ### Changed
-* Changes in the way bindings are generated in [#245](https://github.com/Layr-Labs/eigensdk-rs/pull/243).
+* Changes in the way bindings are generated in [#243](https://github.com/Layr-Labs/eigensdk-rs/pull/243).
   * The `bindings` target now generates the bindings using Docker with Foundry v0.3.0.
   * The previous `bindings` target was renamed to `bindings_host`, as it runs without Docker. However the `bindings_host` target is for CI use only. To generate the bindings, please use the `bindings` target.
 * Fixed the rewardsv2 bindings version in readme to 0.5.4 in [#246](https://github.com/Layr-Labs/eigensdk-rs/pull/246).
+* Fixed typo in release-plz toml file in [#284](https://github.com/Layr-Labs/eigensdk-rs/pull/284).
+* Fixed incorrect package name in Cargo.toml for examples in [#285](https://github.com/Layr-Labs/eigensdk-rs/pull/285).
 
 ### Breaking changes
 ### Removed
+* Removed homepage from testing-utils crate in [#266](https://github.com/Layr-Labs/eigensdk-rs/pull/266).
+* Removed changelog generation by release-plz in [#281](https://github.com/Layr-Labs/eigensdk-rs/pull/281).
+* Removed examples packages from workspace.dependencies in Cargo.toml in [#287](https://github.com/Layr-Labs/eigensdk-rs/pull/287).
+* Removed release-plz-pr workflow in release-plz in [#292](https://github.com/Layr-Labs/eigensdk-rs/pull/292).
 
 ## [0.1.3] - 2024-01-17
 ### Added 🎉
 * feat: add rewards-v2 related functionality by @supernovahs in https://github.com/Layr-Labs/eigensdk-rs/pull/221
   * New methods in `ELChainReader`:
     * `get_operator_avs_split`
+    ```rust
+    // Given a chain_reader, an operator_address and an avs_address:
+
+    let split = el_chain_reader
+        .get_operator_avs_split(operator_address, avs_address)
+        .await
+        .unwrap();
+    ```
+    
     * `get_operator_pi_split`
+    ```rust
+    // Given a chain_reader and an operator_address:
+
+    let split = el_chain_writer
+        .el_chain_reader
+        .get_operator_pi_split(operator_address)
+        .await
+        .unwrap();
+    ```
+
   * New methods in `ELChainWriter`:
     * `set_operator_avs_split`
+    ```rust
+    // Given a chain_writer, an operator_address, an avs_address and a split:
+
+    let tx_hash = el_chain_writer
+        .set_operator_avs_split(operator_address, avs_address, split)
+        .await
+        .unwrap();
+    let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+    ```
     * `set_operator_pi_split`
+    ```rust
+    // Given a chain_writer, an operator_address and a split:
+
+    let tx_hash = el_chain_writer
+        .set_operator_pi_split(operator, split)
+        .await
+        .unwrap();
+    let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+    ```
   * Bindings updated for rewards-v2 core contracts release
 
 ### Breaking Changes 🛠
 * feat!: remove delegation manager from `ELChainWriter` by @supernovahs in https://github.com/Layr-Labs/eigensdk-rs/pull/214
   * `ELChainWriter::new` no longer receives the delegation manager address as first parameter.
+    Before, a chainWriter was created this way:
+
+    ```rust
+        let el_writer = ELChainWriter::new(
+            DELEGATION_MANAGER_ADDRESS,
+            STRATEGY_MANAGER_ADDRESS,
+            REWARDS_COORDINATOR,
+            el_chain_reader,
+            "https://ethereum-holesky.blockpi.network/v1/rpc/public".to_string(),
+            "bead471191bea97fc3aeac36c9d74c895e8a6242602e144e43152f96219e96e8".to_string(),
+        );
+    ```
+
+    Now, the creation is done without the delegation manager address:
+
+    ```rust
+        let el_writer = ELChainWriter::new(
+            STRATEGY_MANAGER_ADDRESS,
+            REWARDS_COORDINATOR,
+            el_chain_reader,
+            "<https://ethereum-holesky.blockpi.network/v1/rpc/public>".to_string(),
+            "bead471191bea97fc3aeac36c9d74c895e8a6242602e144e43152f96219e96e8".to_string(),
+        );
+    ```
 * feat!: change way bindings are generated by @MegaRedHand in https://github.com/Layr-Labs/eigensdk-rs/pull/204
   * `eigen_utils::core` contains bindings related to core contracts
   * `eigen_utils::middleware` contains bindings related to middleware contracts
   * `eigen_utils::sdk` contains bindings related to the SDK (should only be used for testing)
+  
+  Now, to update the bindings, run `make bindings`. This command will generate the bindings files in the folder: `crates/utils`.
 
 ### Documentation 📚
 * docs: add CHANGELOG.md by @lferrigno in https://github.com/Layr-Labs/eigensdk-rs/pull/220
