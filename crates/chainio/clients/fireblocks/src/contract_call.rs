@@ -144,7 +144,6 @@ mod tests {
     #[tokio::test]
     #[ignore]
     #[cfg(feature = "fireblock-tests")]
-    #[ignore]
     async fn test_contract_call() {
         let api_key = env::var("FIREBLOCKS_API_KEY").expect("FIREBLOCKS_API_KEY not set");
         let private_key_path =
