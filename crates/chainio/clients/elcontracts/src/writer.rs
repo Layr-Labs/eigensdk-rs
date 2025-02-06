@@ -432,7 +432,7 @@ impl ELChainWriter {
     ) -> Result<TxHash, ElContractsError> {
         let provider = get_signer(&self.signer, &self.provider);
         let Some(permission_controller_address) = self.permission_controller else {
-            return Err(ElContractsError::MissingParamater);
+            return Err(ElContractsError::MissingParameter);
         };
         let permission_controller_contract =
             PermissionController::new(permission_controller_address, provider);
@@ -600,7 +600,7 @@ impl ELChainWriter {
     ) -> Result<TxHash, ElContractsError> {
         let provider = get_signer(&self.signer, &self.provider);
         let Some(allocation_manager_address) = self.allocation_manager else {
-            return Err(ElContractsError::MissingParamater);
+            return Err(ElContractsError::MissingParameter);
         };
         let allocation_manager_contract =
             AllocationManager::new(allocation_manager_address, provider.clone());
@@ -721,7 +721,7 @@ impl ELChainWriter {
     ) -> Result<TxHash, ElContractsError> {
         let provider = get_signer(&self.signer, &self.provider);
         let Some(allocation_manager_address) = self.allocation_manager else {
-            return Err(ElContractsError::MissingParamater);
+            return Err(ElContractsError::MissingParameter);
         };
         let allocation_manager_contract =
             AllocationManager::new(allocation_manager_address, provider);

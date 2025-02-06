@@ -6,7 +6,7 @@ pub mod integration_test {
     };
     use alloy::primitives::{aliases::U96, Address, Bytes, FixedBytes, B256, U256};
     use alloy::providers::WalletProvider;
-    use alloy::{providers::Provider,sol_types::SolCall};
+    use alloy::{providers::Provider, sol_types::SolCall};
     use eigen_client_avsregistry::{
         reader::AvsRegistryChainReader, writer::AvsRegistryChainWriter,
     };
