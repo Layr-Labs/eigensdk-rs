@@ -726,10 +726,7 @@ impl ELChainWriter {
             provider,
         );
 
-        let tx: alloy::providers::PendingTransactionBuilder<
-            alloy::transports::http::Http<alloy::transports::http::Client>,
-            alloy::network::Ethereum,
-        > = contract_allocation_manager
+        let tx = contract_allocation_manager
             .setAllocationDelay(operator_address, delay)
             .send()
             .await
