@@ -22,7 +22,7 @@ use eigen_testing_utils::{
     },
     transaction::wait_transaction,
 };
-use eigen_utils::core::delegationmanager::DelegationManager;
+use eigen_utils::slashing::core::delegationmanager::DelegationManager;
 use std::{
     str::FromStr,
     time::{Duration, SystemTime, UNIX_EPOCH},
@@ -37,7 +37,7 @@ async fn main() {
     let operator_address = "009440d62dc85c73dbf889b7ad1f4da8b231d2ef";
     let operator_bls_key =
         "12248929636257230549931416853095037629726205319386239410403476017439825112537";
-    set_account_balance(&container, operator_address).await;
+    set_account_balance(&container, operator_address, "http://localhost:8546").await;
 
     let avs_registry_chain_reader = AvsRegistryChainReader::new(
         get_test_logger().clone(),
@@ -94,11 +94,11 @@ pub async fn register_operator(pvt_key: &str, bls_key: &str, http_endpoint: &str
 
     let el_chain_reader = ELChainReader::new(
         get_test_logger(),
-        Address::ZERO,
+        None,
         delegation_manager_address,
         rewards_coordinator_address,
         avs_directory_address,
-        permission_controller,
+        Some(permission_controller),
         http_endpoint.to_owned(),
     );
     let allocation_manager = get_allocation_manager_address(http_endpoint.to_string()).await;
@@ -107,8 +107,8 @@ pub async fn register_operator(pvt_key: &str, bls_key: &str, http_endpoint: &str
     let el_chain_writer = ELChainWriter::new(
         strategy_manager_address,
         rewards_coordinator_address,
-        permission_controller,
-        allocation_manager,
+        Some(permission_controller),
+        Some(allocation_manager),
         registry_coordinator,
         el_chain_reader,
         http_endpoint.to_string(),

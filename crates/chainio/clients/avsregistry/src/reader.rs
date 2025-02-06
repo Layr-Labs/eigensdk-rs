@@ -14,10 +14,10 @@ use eigen_types::operator::{
     bitmap_to_quorum_ids, bitmap_to_quorum_ids_from_u192, OperatorPubKeys,
 };
 
-use eigen_utils::middleware::blsapkregistry::BLSApkRegistry;
-use eigen_utils::middleware::operatorstateretriever::OperatorStateRetriever;
-use eigen_utils::middleware::registrycoordinator::RegistryCoordinator;
-use eigen_utils::middleware::stakeregistry::StakeRegistry;
+use eigen_utils::slashing::middleware::blsapkregistry::BLSApkRegistry;
+use eigen_utils::slashing::middleware::operatorstateretriever::OperatorStateRetriever;
+use eigen_utils::slashing::middleware::registrycoordinator::RegistryCoordinator;
+use eigen_utils::slashing::middleware::stakeregistry::StakeRegistry;
 use num_bigint::BigInt;
 use std::fmt::Debug;
 use std::{collections::HashMap, str::FromStr};

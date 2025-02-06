@@ -7,11 +7,11 @@ use eigen_crypto_bls::{
     alloy_g1_point_to_g1_affine, convert_to_g1_point, convert_to_g2_point, BlsKeyPair,
 };
 use eigen_logging::logger::SharedLogger;
-use eigen_utils::middleware::registrycoordinator::{
-    IBLSApkRegistry::PubkeyRegistrationParams, ISignatureUtils::SignatureWithSaltAndExpiry,
+use eigen_utils::slashing::middleware::registrycoordinator::{
+    IBLSApkRegistryTypes::PubkeyRegistrationParams, ISignatureUtils::SignatureWithSaltAndExpiry,
     RegistryCoordinator,
 };
-use eigen_utils::middleware::{
+use eigen_utils::slashing::middleware::{
     servicemanagerbase::ServiceManagerBase, stakeregistry::StakeRegistry,
 };
 
@@ -62,49 +62,44 @@ impl AvsRegistryChainWriter {
         operator_state_retriever_addr: Address,
     ) -> Result<Self, AvsRegistryError> {
         let fill_provider = get_provider(&provider);
-
         let contract_registry_coordinator =
             RegistryCoordinator::new(registry_coordinator_addr, &fill_provider);
-
         let service_manager_addr = contract_registry_coordinator
             .serviceManager()
             .call()
             .await
             .map_err(AvsRegistryError::AlloyContractError)?;
-
         let RegistryCoordinator::serviceManagerReturn {
             _0: service_manager,
         } = service_manager_addr;
         let contract_service_manager_base =
             ServiceManagerBase::new(service_manager, &fill_provider);
-
         let bls_apk_registry_addr_result = contract_registry_coordinator
             .blsApkRegistry()
             .call()
             .await
             .map_err(AvsRegistryError::AlloyContractError)?;
-
         let RegistryCoordinator::blsApkRegistryReturn {
             _0: bls_apk_registry,
         } = bls_apk_registry_addr_result;
         let stake_registry_addr = contract_registry_coordinator.stakeRegistry().call().await?;
         let RegistryCoordinator::stakeRegistryReturn { _0: stake_registry } = stake_registry_addr;
         let contract_stake_registry = StakeRegistry::new(stake_registry, &fill_provider);
-
         let delegation_manager_return = contract_stake_registry.delegation().call().await?;
-
         let StakeRegistry::delegationReturn {
             _0: delegation_manager_addr,
         } = delegation_manager_return;
         let avs_directory_addr = contract_service_manager_base.avsDirectory().call().await?;
-
         let ServiceManagerBase::avsDirectoryReturn { _0: avs_directory } = avs_directory_addr;
+
+        // We set rewards coordinator address as zero because we are not going to use it on any writer operation
+        let rewards_coordinator_addr = Address::ZERO;
 
         let el_reader = ELChainReader::build(
             logger.clone(),
             delegation_manager_addr,
             avs_directory,
-            Address::ZERO,
+            rewards_coordinator_addr,
             &provider,
         )
         .await
@@ -147,7 +142,6 @@ impl AvsRegistryChainWriter {
         let provider = get_signer(&self.signer.clone(), &self.provider);
         let wallet = PrivateKeySigner::from_str(&self.signer)
             .map_err(|_| AvsRegistryError::InvalidPrivateKey)?;
-
         // tracing info
         info!(avs_service_manager = %self.service_manager_addr, operator= %wallet.address(),quorum_numbers = ?quorum_numbers,"quorum_numbers,registering operator with the AVS's registry coordinator");
         let contract_registry_coordinator =
@@ -159,7 +153,6 @@ impl AvsRegistryChainWriter {
             .await
             .map_err(|_| AvsRegistryError::PubKeyRegistrationMessageHash)?
             ._0;
-
         let sig = bls_key_pair
             .sign_hashed_to_curve_message(alloy_g1_point_to_g1_affine(g1_hashed_msg_to_sign))
             .g1_point();
@@ -342,6 +335,34 @@ impl AvsRegistryChainWriter {
             .inspect(|tx| info!(tx_hash = ?tx,"successfully set slashable stake lookahead" ))
             .map(|tx_hash| *tx_hash.tx_hash())
     }
+
+    /// Update socket
+    ///
+    /// This function is used to update the socket of the sender (if it is a registered operator).
+    ///
+    /// # Arguments
+    ///
+    /// * `socket` - The address of the socket to be assigned to the operator.
+    ///
+    /// # Returns
+    ///
+    /// * `TxHash` - The transaction hash of the deregister operator transaction.
+    pub async fn update_socket(&self, socket: String) -> Result<TxHash, AvsRegistryError> {
+        info!("updating socket with the AVS's registry coordinator");
+        let provider = get_signer(&self.signer.clone(), &self.provider);
+
+        let contract_registry_coordinator =
+            RegistryCoordinator::new(self.registry_coordinator_addr, provider);
+
+        let contract_call = contract_registry_coordinator.updateSocket(socket);
+
+        let tx = contract_call
+            .send()
+            .await
+            .map_err(AvsRegistryError::AlloyContractError)?;
+        info!(tx_hash = ?tx,"successfully updated the socket with the AVS's registry coordinator" );
+        Ok(*tx.tx_hash())
+    }
 }
 
 #[cfg(test)]
@@ -352,12 +373,13 @@ mod tests {
     use eigen_common::get_signer;
     use eigen_crypto_bls::BlsKeyPair;
     use eigen_logging::get_test_logger;
-    use eigen_testing_utils::anvil::start_anvil_container;
+    use eigen_testing_utils::anvil::{start_anvil_container, start_m2_anvil_container};
     use eigen_testing_utils::anvil_constants::{
         get_operator_state_retriever_address, get_registry_coordinator_address,
     };
     use eigen_testing_utils::transaction::wait_transaction;
-    use eigen_utils::middleware::stakeregistry::StakeRegistry::StakeRegistryInstance;
+    use eigen_utils::slashing::middleware::registrycoordinator::RegistryCoordinator;
+    use eigen_utils::slashing::middleware::stakeregistry::StakeRegistry;
     use futures_util::StreamExt;
     use std::str::FromStr;
 
@@ -382,7 +404,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_avs_writer_methods() {
-        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
         let bls_key =
             "1371012690269088913462269866874713266643928125698382731338806296762673180359922"
                 .to_string();
@@ -422,13 +444,12 @@ mod tests {
 
         // Set up event poller to listen to `LookAheadPeriodChanged` events
         let provider = get_signer(&avs_writer.signer.clone(), &avs_writer.provider);
-        let contract_stake_registry =
-            StakeRegistryInstance::new(avs_writer.stake_registry_addr, provider);
+        let contract_stake_registry = StakeRegistry::new(avs_writer.stake_registry_addr, provider);
         let event = contract_stake_registry.LookAheadPeriodChanged_filter();
         let poller = event.watch().await.unwrap();
 
         let quorum_number = 0_u8;
-        let lookahead = 10_u32;
+        let lookahead = 1_u32;
         let tx_hash = avs_writer
             .set_slashable_stake_lookahead(quorum_number, lookahead)
             .await
@@ -443,7 +464,7 @@ mod tests {
         // Assert that event `LookAheadPeriodChanged` is the same as `new_rewards_init_address`
         let mut stream = poller.into_stream();
         let (stream_event, _) = stream.next().await.unwrap().unwrap();
-        assert_eq!(stream_event.newLookAheadDays, lookahead);
+        assert_eq!(stream_event.newLookAheadBlocks, lookahead);
     }
 
     // this function is caller from test_avs_writer_methods
@@ -514,5 +535,50 @@ mod tests {
 
         let tx_status = wait_transaction(&http_url, tx_hash).await.unwrap().status();
         assert!(tx_status);
+    }
+
+    #[tokio::test]
+    async fn test_update_socket() {
+        let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
+        let bls_key =
+            "1371012690269088913462269866874713266643928125698382731338806296762673180359922"
+                .to_string();
+        let private_key =
+            "8b3a350cf5c34c9194ca85829a2df0ec3153be0318b5e2d3348e872092edffba".to_string();
+        let avs_writer =
+            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
+        let quorum_nums = Bytes::from([0]);
+
+        test_register_operator(&avs_writer, bls_key, quorum_nums, http_endpoint.clone()).await;
+
+        // Set up event poller to listen to update socket events
+        let provider = get_signer(&avs_writer.signer.clone(), &avs_writer.provider);
+
+        let contract_registry_coordinator =
+            RegistryCoordinator::new(avs_writer.registry_coordinator_addr, provider);
+
+        let event = contract_registry_coordinator.OperatorSocketUpdate_filter();
+
+        let poller = event.watch().await.unwrap();
+
+        let new_socket_addr = "not a socket";
+
+        // Update the socket for operator
+        let tx_hash = avs_writer
+            .update_socket(new_socket_addr.into())
+            .await
+            .unwrap();
+
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
+        assert!(tx_status);
+
+        // Assert that event socket is the same as passed in the update socket function
+        let mut stream = poller.into_stream();
+        let (stream_event, _) = stream.next().await.unwrap().unwrap();
+
+        assert_eq!(stream_event.socket, new_socket_addr)
     }
 }
