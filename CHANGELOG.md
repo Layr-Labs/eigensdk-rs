@@ -13,12 +13,6 @@ Those changes in added, changed or breaking changes, should include usage exampl
 
 ## [Unreleased]
 ### Added
-### Changed
-### Breaking changes
-### Removed
-
-## [0.2.0] - 2025-02-06
-### Added 🎉
 * Added `eigen_common` dependency to the `eigensdk` crate when "full" feature is enabled in [#249](https://github.com/Layr-Labs/eigensdk-rs/pull/249).
 * Added bindings for `ECDSAStakeRegistry` and `ECDSAServiceManagerBase` in [#269](https://github.com/Layr-Labs/eigensdk-rs/pull/269).
 * Added release-plz in ci in [#275](https://github.com/Layr-Labs/eigensdk-rs/pull/275).
@@ -32,7 +26,7 @@ Those changes in added, changed or breaking changes, should include usage exampl
 * Fixed typo in release-plz toml file in [#284](https://github.com/Layr-Labs/eigensdk-rs/pull/284).
 * Fixed incorrect package name in Cargo.toml for examples in [#285](https://github.com/Layr-Labs/eigensdk-rs/pull/285).
 
-### Breaking changes🛠
+### Breaking changes
 * fix: use rewards coordinator on get operator avs/pi split methods by @maximopalopoli in https://github.com/Layr-Labs/eigensdk-rs/pull/250
   * The parameters of `ChainReader::new` changed, and it now receives the address of the rewards coordinator. 
     
@@ -64,7 +58,7 @@ Those changes in added, changed or breaking changes, should include usage exampl
 * Removed examples packages from workspace.dependencies in Cargo.toml in [#287](https://github.com/Layr-Labs/eigensdk-rs/pull/287).
 * Removed release-plz-pr workflow in release-plz in [#292](https://github.com/Layr-Labs/eigensdk-rs/pull/292).
 
-## [0.1.3] - 2025-01-17
+## [0.1.3] - 2024-01-17
 ### Added 🎉
 * feat: add rewards-v2 related functionality by @supernovahs in https://github.com/Layr-Labs/eigensdk-rs/pull/221
   * New methods in `ELChainReader`:
