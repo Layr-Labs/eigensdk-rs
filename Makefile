@@ -1,9 +1,5 @@
 __CONTRACTS__: ##
 
-.PHONY: start-anvil-chain-with-contracts-deployed
-start-anvil-chain-with-contracts-deployed: ##
-	./crates/contracts/anvil/start-anvil-chain-with-el-and-avs-deployed.sh
-
 .PHONY: deploy-eigenlayer
 deploy-eigenlayer:
 	./crates/operator_sets_contracts/anvil/deploy-eigenlayer.sh
@@ -18,16 +14,16 @@ deploy-m2-eigenlayer:
 deploy-m2-avs:
 	./crates/m2_contracts/anvil/deploy-avs.sh
 
-.PHONY: deploy
-deploy: deploy-eigenlayer deploy-avs ##
+.PHONY: dump-m2-state
+dump-m2-state:
+	./crates/m2_contracts/anvil/dump-state.sh
+
+.PHONY: dump-slashing-state
+dump-slashing-state:
+	./crates/operator_sets_contracts/anvil/dump-state.sh
 
 .PHONY: dump-state
-dump-state:
-	./crates/contracts/anvil/dump-state.sh
-
-.PHONY: deploy-contracts-to-anvil-and-save-state
-deploy-contracts-to-anvil-and-save-state: ##
-	./crates/contracts/anvil/deploy-contracts-save-anvil-state.sh
+dump-state: dump-m2-state dump-slashing-state
 
 __TESTING__: ##
 
