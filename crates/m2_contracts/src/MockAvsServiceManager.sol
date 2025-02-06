@@ -9,7 +9,8 @@ import {
     IStakeRegistry
 } from "@eigenlayer-middleware/src/ServiceManagerBase.sol";
 import {BLSSignatureChecker} from "@eigenlayer-middleware/src/BLSSignatureChecker.sol";
-contract MockAvsServiceManager is ServiceManagerBase,BLSSignatureChecker {
+
+contract MockAvsServiceManager is ServiceManagerBase, BLSSignatureChecker {
     constructor(
         IAVSDirectory _avsDirectory,
         IRegistryCoordinator _registryCoordinator,
