@@ -763,6 +763,41 @@ impl ELChainWriter {
 
         Ok(*tx.tx_hash())
     }
+
+    /// Removes from the deallocationQueue all clearable deallocations up to max `num_to_clear` number of deallocations.
+    ///
+    /// `len(strategies)` must be equal to `len(num_to_clear)`
+    ///
+    /// # Arguments
+    /// * `operator` - operator address to clear deallocations for
+    /// * `strategies` - list of strategies to clear deallocations for
+    /// * `num_to_clear` - list of number of pending deallocations to clear for each strategy
+    ///
+    /// # Returns
+    /// * `TxHash` - The transaction hash of the generated transaction.
+    ///
+    /// # Errors
+    /// * `ElContractsError` - if the call to the contract fails.
+    pub async fn clear_deallocation_queue(
+        &self,
+        operator: Address,
+        strategies: Vec<Address>,
+        num_to_clear: Vec<u16>,
+    ) -> Result<TxHash, ElContractsError> {
+        let provider = get_signer(&self.signer, &self.provider);
+        let allocation_manager_contract = AllocationManager::new(
+            self.allocation_manager
+                .ok_or(ElContractsError::MissingParameter)?,
+            provider,
+        );
+
+        allocation_manager_contract
+            .clearDeallocationQueue(operator, strategies, num_to_clear)
+            .send()
+            .await
+            .map_err(ElContractsError::AlloyContractError)
+            .map(|tx| *tx.tx_hash())
+    }
 }
 
 #[cfg(test)]
@@ -1415,5 +1450,75 @@ mod tests {
             .unwrap();
 
         assert_eq!(split, new_split);
+    }
+
+    #[tokio::test]
+    async fn test_clear_deallocation_queue() {
+        let (_contianer, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let el_chain_writer = new_test_writer(
+            http_endpoint.to_string(),
+            ANVIL_FIRST_PRIVATE_KEY.to_string(),
+        )
+        .await;
+        let avs_address = get_service_manager_address(http_endpoint.clone()).await;
+        create_operator_set(http_endpoint.as_str(), avs_address).await;
+
+        let operator_address = ANVIL_FIRST_ADDRESS;
+        let strategy_addr = get_erc20_mock_strategy(http_endpoint.clone()).await;
+        let operator_set_id = 0;
+
+        let new_allocation = 100;
+        let allocate_params = IAllocationManagerTypes::AllocateParams {
+            strategies: vec![strategy_addr],
+            operatorSet: OperatorSet {
+                avs: avs_address,
+                id: operator_set_id,
+            },
+            newMagnitudes: vec![new_allocation],
+        };
+        let tx_hash_alloc = el_chain_writer
+            .modify_allocations(operator_address, vec![allocate_params.clone()])
+            .await
+            .unwrap();
+        let receipt_alloc = wait_transaction(&http_endpoint, tx_hash_alloc)
+            .await
+            .unwrap();
+        assert!(receipt_alloc.status());
+
+        let allocation_info_before = el_chain_writer
+            .el_chain_reader
+            .get_allocation_info(operator_address, strategy_addr)
+            .await
+            .unwrap();
+
+        assert_eq!(
+            allocation_info_before[0].pending_diff,
+            U256::from(new_allocation)
+        );
+
+        let tx_hash_clear = el_chain_writer
+            .clear_deallocation_queue(
+                operator_address,
+                vec![strategy_addr],
+                vec![new_allocation as u16],
+            )
+            .await
+            .unwrap();
+        let receipt_clear = wait_transaction(&http_endpoint, tx_hash_clear)
+            .await
+            .unwrap();
+        assert!(receipt_clear.status(),);
+
+        let allocation_info_after = el_chain_writer
+            .el_chain_reader
+            .get_allocation_info(operator_address, strategy_addr)
+            .await
+            .unwrap();
+
+        assert_eq!(allocation_info_after[0].pending_diff, U256::ZERO);
+        assert_eq!(
+            allocation_info_after[0].current_magnitude,
+            U256::from(new_allocation)
+        );
     }
 }
