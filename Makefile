@@ -23,7 +23,7 @@ dump-slashing-state:
 	./crates/operator_sets_contracts/anvil/dump-state.sh
 
 .PHONY: dump-state
-dump-state: dump-m2-state dump-slashing-state
+dump-state: copy-env dump-m2-state dump-slashing-state
 
 __TESTING__: ##
 
@@ -56,6 +56,11 @@ lint:
 	cargo fmt --all -- --check \
 		&& cargo clippy --workspace --all-features --benches --examples --tests -- -D warnings
 
+.PHONY: copy-env
+copy-env:
+	@echo "Copying .env.example to .env..."
+	cp ./crates/m2_contracts/.env.example ./crates/m2_contracts/.env
+	cp ./crates/operator_sets_contracts/.env.example ./crates/operator_sets_contracts/.env
 
 __BINDINGS__: ##
 
