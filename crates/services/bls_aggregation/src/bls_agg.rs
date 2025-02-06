@@ -69,9 +69,13 @@ impl TaskMetadata {
         quorum_threshold_percentages: QuorumThresholdPercentages,
         time_to_expiry: Duration,
     ) -> Self {
+        let task_created_block: u32 = task_created_block
+            .try_into()
+            .expect("block number should fit into a u32");
+
         Self {
             task_index,
-            task_created_block: task_created_block as u32, // TODO: Review this possible panic
+            task_created_block,
             quorum_numbers,
             quorum_threshold_percentages,
             time_to_expiry,
