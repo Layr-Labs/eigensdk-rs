@@ -1,0 +1,12 @@
+diff --git a/crates/utils/src/slashing/core/allocationmanager.rs b/crates/utils/src/slashing/core/allocationmanager.rs
+index 3a9e39e..e167408 100644
+--- a/crates/utils/src/slashing/core/allocationmanager.rs
++++ b/crates/utils/src/slashing/core/allocationmanager.rs
+@@ -21,6 +21,7 @@ library IAllocationManagerTypes {
+ pub mod IAllocationManagerTypes {
+     use super::*;
+     use alloy::sol_types as alloy_sol_types;
++    use crate::slashing::core::allocationmanager::AllocationManager::OperatorSet;
+     /**```solidity
+     struct AllocateParams { OperatorSet operatorSet; address[] strategies; uint64[] newMagnitudes; }
+     ```*/
