@@ -50,6 +50,22 @@ Those changes in added, changed or breaking changes, should include usage exampl
 * Fixed incorrect package name in Cargo.toml for examples in [#285](https://github.com/Layr-Labs/eigensdk-rs/pull/285).
 
 ### Breaking changes
+* refactor: encapsulate parameters into `TaskSignature` in [#260](https://github.com/Layr-Labs/eigensdk-rs/pull/260) 
+  * Introduced `TaskSignature` struct to encapsulate parameters related to task signatures:
+  * Updated `process_new_signature` to accept a `TaskSignature` struct instead of multiple parameters.
+    ```rust
+    // BEFORE
+    bls_agg_service.process_new_signature(task_index, task_response_digest, bls_signature, operator_id).await.unwrap();
+
+    // AFTER
+    let task_signature = TaskSignature::new(
+          task_index,
+          task_response_digest,
+          bls_signature,
+          operator_id,
+    );
+    bls_agg_service.process_new_signature(task_signature).await.unwrap();
+    ```
 * Slashing UAM changes in [#248](https://github.com/Layr-Labs/eigensdk-rs/pull/248).
 
 ### Removed
