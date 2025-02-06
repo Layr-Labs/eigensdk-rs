@@ -669,11 +669,12 @@ impl ELChainReader {
         strategy_address: Address,
     ) -> Result<u64, ElContractsError> {
         let provider = get_provider(&self.provider);
-        let Some(allocation_manager_address) = self.allocation_manager else {
-            return Err(ElContractsError::MissingParameter);
-        };
-        let contract_allocation_manager =
-            AllocationManager::new(allocation_manager_address, provider);
+
+        let contract_allocation_manager = AllocationManager::new(
+            self.allocation_manager
+                .ok_or(ElContractsError::MissingParameter)?,
+            provider,
+        );
 
         let allocatable_magnitude = contract_allocation_manager
             .getAllocatableMagnitude(operator_address, strategy_address)
@@ -703,11 +704,11 @@ impl ELChainReader {
     ) -> Result<Vec<u64>, ElContractsError> {
         let provider = get_provider(&self.provider);
 
-        let Some(allocation_manager_address) = self.allocation_manager else {
-            return Err(ElContractsError::MissingParameter);
-        };
-        let contract_allocation_manager =
-            AllocationManager::new(allocation_manager_address, provider);
+        let contract_allocation_manager = AllocationManager::new(
+            self.allocation_manager
+                .ok_or(ElContractsError::MissingParameter)?,
+            provider,
+        );
 
         let max_magnitudes = contract_allocation_manager
             .getMaxMagnitudes_1(operator_address, strategy_addresses)
@@ -735,11 +736,11 @@ impl ELChainReader {
     ) -> Result<Vec<AllocationInfo>, ElContractsError> {
         let provider = get_provider(&self.provider);
 
-        let Some(allocation_manager_address) = self.allocation_manager else {
-            return Err(ElContractsError::MissingParameter);
-        };
-        let contract_allocation_manager =
-            AllocationManager::new(allocation_manager_address, provider);
+        let contract_allocation_manager = AllocationManager::new(
+            self.allocation_manager
+                .ok_or(ElContractsError::MissingParameter)?,
+            provider,
+        );
 
         let allocations = contract_allocation_manager
             .getStrategyAllocations(operator_address, strategy_address)
@@ -854,11 +855,11 @@ impl ELChainReader {
     ) -> Result<Vec<OperatorSet>, ElContractsError> {
         let provider = get_provider(&self.provider);
 
-        let Some(allocation_manager_address) = self.allocation_manager else {
-            return Err(ElContractsError::MissingParameter);
-        };
-        let contract_allocation_manager =
-            AllocationManager::new(allocation_manager_address, provider);
+        let contract_allocation_manager = AllocationManager::new(
+            self.allocation_manager
+                .ok_or(ElContractsError::MissingParameter)?,
+            provider,
+        );
 
         let allocated_sets = contract_allocation_manager
             .getAllocatedSets(operator_addr)
@@ -886,11 +887,11 @@ impl ELChainReader {
     ) -> Result<bool, ElContractsError> {
         let provider = get_provider(&self.provider);
 
-        let Some(allocation_manager_address) = self.allocation_manager else {
-            return Err(ElContractsError::MissingParameter);
-        };
-        let contract_allocation_manager =
-            AllocationManager::new(allocation_manager_address, provider);
+        let contract_allocation_manager = AllocationManager::new(
+            self.allocation_manager
+                .ok_or(ElContractsError::MissingParameter)?,
+            provider,
+        );
         let registered_operator_sets = contract_allocation_manager
             .getRegisteredSets(operator_address)
             .call()
@@ -919,11 +920,11 @@ impl ELChainReader {
     ) -> Result<Vec<Address>, ElContractsError> {
         let provider = get_provider(&self.provider);
 
-        let Some(allocation_manager_address) = self.allocation_manager else {
-            return Err(ElContractsError::MissingParameter);
-        };
-        let contract_allocation_manager =
-            AllocationManager::new(allocation_manager_address, provider);
+        let contract_allocation_manager = AllocationManager::new(
+            self.allocation_manager
+                .ok_or(ElContractsError::MissingParameter)?,
+            provider,
+        );
 
         let operators = contract_allocation_manager
             .getMembers(operator_set)
@@ -948,11 +949,11 @@ impl ELChainReader {
     ) -> Result<U256, ElContractsError> {
         let provider = get_provider(&self.provider);
 
-        let Some(allocation_manager_address) = self.allocation_manager else {
-            return Err(ElContractsError::MissingParameter);
-        };
-        let contract_allocation_manager =
-            AllocationManager::new(allocation_manager_address, provider);
+        let contract_allocation_manager = AllocationManager::new(
+            self.allocation_manager
+                .ok_or(ElContractsError::MissingParameter)?,
+            provider,
+        );
 
         let num_operators = contract_allocation_manager
             .getMemberCount(operator_set)
@@ -977,11 +978,11 @@ impl ELChainReader {
     ) -> Result<Vec<Address>, ElContractsError> {
         let provider = get_provider(&self.provider);
 
-        let Some(allocation_manager_address) = self.allocation_manager else {
-            return Err(ElContractsError::MissingParameter);
-        };
-        let contract_allocation_manager =
-            AllocationManager::new(allocation_manager_address, provider);
+        let contract_allocation_manager = AllocationManager::new(
+            self.allocation_manager
+                .ok_or(ElContractsError::MissingParameter)?,
+            provider,
+        );
 
         let strategies = contract_allocation_manager
             .getStrategiesInOperatorSet(operator_set)
@@ -1014,12 +1015,11 @@ impl ELChainReader {
             ElContractsError::AlloyContractError(alloy::contract::Error::TransportError(e))
         })?;
 
-        let Some(allocation_manager_address) = self.allocation_manager else {
-            return Err(ElContractsError::MissingParameter);
-        };
-        let contract_allocation_manager =
-            AllocationManager::new(allocation_manager_address, provider);
-
+        let contract_allocation_manager = AllocationManager::new(
+            self.allocation_manager
+                .ok_or(ElContractsError::MissingParameter)?,
+            provider,
+        );
         let slashable_stake = contract_allocation_manager
             .getMinimumSlashableStake(
                 operator_set,
@@ -1080,11 +1080,11 @@ impl ELChainReader {
     ) -> Result<Vec<OperatorSetStakes>, ElContractsError> {
         let provider = get_provider(&self.provider);
         let mut operator_set_stakes = vec![];
-        let Some(allocation_manager_address) = self.allocation_manager else {
-            return Err(ElContractsError::MissingParameter);
-        };
-        let contract_allocation_manager =
-            AllocationManager::new(allocation_manager_address, provider);
+        let contract_allocation_manager = AllocationManager::new(
+            self.allocation_manager
+                .ok_or(ElContractsError::MissingParameter)?,
+            provider,
+        );
 
         for operator_set in operator_sets {
             let operators = self
@@ -1128,11 +1128,11 @@ impl ELChainReader {
     ) -> Result<u32, ElContractsError> {
         let provider = get_provider(&self.provider);
 
-        let Some(allocation_manager_address) = self.allocation_manager else {
-            return Err(ElContractsError::MissingParameter);
-        };
-        let contract_allocation_manager =
-            AllocationManager::new(allocation_manager_address, provider);
+        let contract_allocation_manager = AllocationManager::new(
+            self.allocation_manager
+                .ok_or(ElContractsError::MissingParameter)?,
+            provider,
+        );
 
         let allocation_delay = contract_allocation_manager
             .getAllocationDelay(operator_address)
@@ -1165,11 +1165,11 @@ impl ELChainReader {
     ) -> Result<Vec<OperatorSet>, ElContractsError> {
         let provider = get_provider(&self.provider);
 
-        let Some(allocation_manager_address) = self.allocation_manager else {
-            return Err(ElContractsError::MissingParameter);
-        };
-        let contract_allocation_manager =
-            AllocationManager::new(allocation_manager_address, provider);
+        let contract_allocation_manager = AllocationManager::new(
+            self.allocation_manager
+                .ok_or(ElContractsError::MissingParameter)?,
+            provider,
+        );
 
         let registered_sets = contract_allocation_manager
             .getRegisteredSets(operator_address)
