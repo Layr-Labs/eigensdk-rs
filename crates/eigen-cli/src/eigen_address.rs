@@ -4,10 +4,10 @@ use alloy::primitives::Address;
 use alloy::providers::Provider;
 use eigen_common::get_provider;
 use eigen_utils::{
-    core::delegationmanager::DelegationManager,
-    middleware::{
+    rewardsv2::middleware::{
         iblssignaturechecker::IBLSSignatureChecker, registrycoordinator::RegistryCoordinator,
     },
+    slashing::core::delegationmanager::DelegationManager,
 };
 use serde::{Deserialize, Serialize};
 
@@ -78,7 +78,6 @@ impl ContractAddresses {
                 client.clone(),
             )
             .await?;
-
         let avs =
             ContractAddresses::get_avs_contract_addresses(registry_coord_addr, client.clone())
                 .await
@@ -171,6 +170,7 @@ impl ContractAddresses {
             .call()
             .await?
             ._0;
+
         let strategy_manager = delegation_manager_client.strategyManager().call().await?._0;
 
         Ok(EigenLayerAddresses {
@@ -220,7 +220,6 @@ impl ContractAddresses {
             .call()
             .await?
             ._0;
-
         Ok(AvsAddresses {
             service_manager,
             registry_coordinator,

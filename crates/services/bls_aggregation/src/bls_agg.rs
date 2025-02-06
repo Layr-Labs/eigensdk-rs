@@ -333,12 +333,10 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
             .enumerate()
             .map(|(i, quorum_number)| (*quorum_number, metadata.quorum_threshold_percentages[i]))
             .collect();
-
         let operator_state_avs = avs_registry_service
             .get_operators_avs_state_at_block(metadata.task_created_block, &metadata.quorum_numbers)
             .await
             .map_err(|_| BlsAggregationServiceError::RegistryError)?;
-
         let quorums_avs_state = avs_registry_service
             .get_quorums_avs_state_at_block(&metadata.quorum_numbers, metadata.task_created_block)
             .await
