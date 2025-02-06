@@ -347,7 +347,7 @@ mod tests {
         get_operator_state_retriever_address, get_registry_coordinator_address,
     };
     use eigen_testing_utils::transaction::wait_transaction;
-    use eigen_utils::middleware::registrycoordinator::RegistryCoordinator;
+    use eigen_utils::slashing::middleware::registrycoordinator::RegistryCoordinator;
     use futures_util::StreamExt;
     use std::str::FromStr;
 
@@ -474,7 +474,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_update_socket() {
-        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
         let bls_key =
             "1371012690269088913462269866874713266643928125698382731338806296762673180359922"
                 .to_string();
