@@ -1,7 +1,7 @@
 #[cfg(test)]
 pub mod integration_test {
     use crate::{
-        bls_agg::{BlsAggregatorService, TaskMetadata},
+        bls_agg::{BlsAggregatorService, TaskMetadata, TaskSignature},
         bls_aggregation_service_response::BlsAggregationServiceResponse,
     };
     use alloy::primitives::{aliases::U96, Address, Bytes, FixedBytes, B256, U256};
@@ -353,7 +353,12 @@ pub mod integration_test {
         let task_response_digest = hash(task_response);
         let bls_signature = bls_key_pair.sign_message(task_response_digest.as_ref());
         bls_agg_service
-            .process_new_signature(task_index, task_response_digest, bls_signature, operator_id)
+            .process_new_signature(TaskSignature::new(
+                task_index,
+                task_response_digest,
+                bls_signature,
+                operator_id,
+            ))
             .await
             .unwrap();
 
@@ -503,7 +508,12 @@ pub mod integration_test {
             FixedBytes::from(operator_id_from_g1_pub_key(bls_key_pair.public_key()).unwrap());
         assert_eq!(s, operator_id);
         bls_agg_service
-            .process_new_signature(task_index, task_response_digest, bls_signature, operator_id)
+            .process_new_signature(TaskSignature::new(
+                task_index,
+                task_response_digest,
+                bls_signature,
+                operator_id,
+            ))
             .await
             .unwrap();
 
@@ -661,24 +671,25 @@ pub mod integration_test {
         let operator_id_2 =
             FixedBytes::from(operator_id_from_g1_pub_key(bls_key_pair_2.public_key()).unwrap());
         let bls_signature_1 = bls_key_pair_1.sign_message(task_response_digest.as_ref());
+
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_signature_1,
                 operator_id_1,
-            )
+            ))
             .await
             .unwrap();
 
         let bls_signature_2 = bls_key_pair_2.sign_message(task_response_digest.as_ref());
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_signature_2,
                 operator_id_2,
-            )
+            ))
             .await
             .unwrap();
 
@@ -842,23 +853,23 @@ pub mod integration_test {
 
         let bls_signature_1 = bls_key_pair_1.sign_message(task_response_digest.as_ref());
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_signature_1,
                 operator_id_1,
-            )
+            ))
             .await
             .unwrap();
 
         let bls_signature_2 = bls_key_pair_2.sign_message(task_response_digest.as_ref());
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_signature_2,
                 operator_id_2,
-            )
+            ))
             .await
             .unwrap();
 
@@ -1021,23 +1032,23 @@ pub mod integration_test {
 
         let bls_signature_1 = bls_key_pair_1.sign_message(task_response_digest.as_ref());
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_signature_1,
                 operator_id_1,
-            )
+            ))
             .await
             .unwrap();
 
         let bls_signature_2 = bls_key_pair_2.sign_message(task_response_digest.as_ref());
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_signature_2,
                 operator_id_2,
-            )
+            ))
             .await
             .unwrap();
 
@@ -1186,12 +1197,12 @@ pub mod integration_test {
 
         let bls_signature_1 = bls_key_pair_1.sign_message(task_response_digest.as_ref());
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
-                bls_signature_1.clone(),
+                bls_signature_1,
                 operator_id_1,
-            )
+            ))
             .await
             .unwrap();
 

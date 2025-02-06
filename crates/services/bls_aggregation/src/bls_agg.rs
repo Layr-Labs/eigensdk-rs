@@ -91,6 +91,45 @@ impl TaskMetadata {
     }
 }
 
+/// Contains the information of a signed task response
+#[derive(Clone)]
+pub struct TaskSignature {
+    // Index of the task
+    task_index: TaskIndex,
+    // Digest of the task response
+    task_response_digest: TaskResponseDigest,
+    // BLS signature of the task response
+    bls_signature: Signature,
+    // Operator ID of the operator that signed the task response
+    operator_id: FixedBytes<32>,
+}
+
+impl TaskSignature {
+    /// Creates a new instance of [`TaskSignature``]
+    ///
+    /// # Arguments
+    /// * `task_index` - index of the task
+    /// * `task_response_digest` - digest of the task response
+    /// * `bls_signature` - bls signature of the task response
+    /// * `operator_id` - operator ID of the operator that signed the task response
+    ///
+    /// # Returns
+    /// [`TaskSignature`] instance
+    pub fn new(
+        task_index: TaskIndex,
+        task_response_digest: TaskResponseDigest,
+        bls_signature: Signature,
+        operator_id: FixedBytes<32>,
+    ) -> Self {
+        Self {
+            task_index,
+            task_response_digest,
+            bls_signature,
+            operator_id,
+        }
+    }
+}
+
 /// The BLS Aggregator Service main struct
 #[derive(Debug)]
 pub struct BlsAggregatorService<A: AvsRegistryService>
@@ -187,10 +226,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
     ///
     /// # Arguments
     ///
-    /// * `task_index` - The index of the task
-    /// * `task_response_digest` - The digest of the task response
-    /// * `bls_signature` - The BLS signature of the task response
-    /// * `operator_id` - The operator ID of the operator that signed the task response
+    /// * `task_signature` - The signed task response
     ///
     /// # Errors
     ///
@@ -200,16 +236,13 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
     /// * `SignatureVerificationError` - If the signature verification fails.
     pub async fn process_new_signature(
         &self,
-        task_index: TaskIndex,
-        task_response_digest: TaskResponseDigest,
-        bls_signature: Signature,
-        operator_id: FixedBytes<32>,
+        task_signature: TaskSignature,
     ) -> Result<(), BlsAggregationServiceError> {
         let (tx, rx) = mpsc::channel(1);
         let task = SignedTaskResponseDigest {
-            task_response_digest,
-            bls_signature,
-            operator_id,
+            task_response_digest: task_signature.task_response_digest,
+            bls_signature: task_signature.bls_signature,
+            operator_id: task_signature.operator_id,
             signature_verification_channel: tx,
         };
 
@@ -217,13 +250,13 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
             let task_channel = self.signed_task_response.read();
 
             let sender = task_channel
-                .get(&task_index)
+                .get(&task_signature.task_index)
                 .ok_or(BlsAggregationServiceError::TaskNotFound)?;
 
             self.logger.debug(
                 &format!(
                     "send the task to the aggregator thread for task index: {}",
-                    task_index
+                    task_signature.task_index
                 ),
                 "eigen-services-blsaggregation.bls_agg.process_new_signature",
             );
@@ -238,7 +271,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         self.logger.debug(
             &format!(
                 "receive the signature verification result for task index: {}",
-                task_index
+                task_signature.task_index
             ),
             "eigen-services-blsaggregation.bls_agg.process_new_signature",
         );
@@ -790,6 +823,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
 mod tests {
     use super::{BlsAggregationServiceError, BlsAggregationServiceResponse, BlsAggregatorService};
     use crate::bls_agg::TaskMetadata;
+    use crate::bls_agg::TaskSignature;
     use alloy::primitives::{B256, U256};
     use eigen_crypto_bls::{BlsG1Point, BlsG2Point, BlsKeyPair, Signature};
     use eigen_logging::get_test_logger;
@@ -876,12 +910,12 @@ mod tests {
         bls_agg_service.initialize_new_task(metadata).await.unwrap();
 
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_signature,
                 test_operator_1.operator_id,
-            )
+            ))
             .await
             .unwrap();
 
@@ -952,22 +986,22 @@ mod tests {
             .bls_keypair
             .sign_message(task_response_digest.as_ref());
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_signature_1.clone(),
                 test_operator_1.operator_id,
-            )
+            ))
             .await
             .unwrap();
 
         let second_signature_processing_result = bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_signature_1.clone(),
                 test_operator_1.operator_id,
-            )
+            ))
             .await;
 
         assert_eq!(
@@ -981,12 +1015,12 @@ mod tests {
             .bls_keypair
             .sign_message(task_response_digest.as_ref());
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_signature_2.clone(),
                 test_operator_2.operator_id,
-            )
+            ))
             .await
             .unwrap();
 
@@ -1068,12 +1102,12 @@ mod tests {
             .bls_keypair
             .sign_message(task_response_digest.as_ref());
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_sig_op_1.clone(),
                 test_operator_1.operator_id,
-            )
+            ))
             .await
             .unwrap();
 
@@ -1081,12 +1115,12 @@ mod tests {
             .bls_keypair
             .sign_message(task_response_digest.as_ref());
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_sig_op_2.clone(),
                 test_operator_2.operator_id,
-            )
+            ))
             .await
             .unwrap();
 
@@ -1094,12 +1128,12 @@ mod tests {
             .bls_keypair
             .sign_message(task_response_digest.as_ref());
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_sig_op_3.clone(),
                 test_operator_3.operator_id,
-            )
+            ))
             .await
             .unwrap();
 
@@ -1173,12 +1207,12 @@ mod tests {
             .bls_keypair
             .sign_message(task_response_digest.as_ref());
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_sig_op_1.clone(),
                 test_operator_1.operator_id,
-            )
+            ))
             .await
             .unwrap();
 
@@ -1186,12 +1220,12 @@ mod tests {
             .bls_keypair
             .sign_message(task_response_digest.as_ref());
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_sig_op_2.clone(),
                 test_operator_2.operator_id,
-            )
+            ))
             .await
             .unwrap();
 
@@ -1286,12 +1320,12 @@ mod tests {
             .bls_keypair
             .sign_message(task_1_response_digest.as_ref());
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_1_index,
                 task_1_response_digest,
                 bls_sig_task_1_op_1.clone(),
                 test_operator_1.operator_id,
-            )
+            ))
             .await
             .unwrap();
 
@@ -1299,12 +1333,12 @@ mod tests {
             .bls_keypair
             .sign_message(task_1_response_digest.as_ref());
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_1_index,
                 task_1_response_digest,
                 bls_sig_task_1_op_2.clone(),
                 test_operator_2.operator_id,
-            )
+            ))
             .await
             .unwrap();
 
@@ -1312,12 +1346,12 @@ mod tests {
             .bls_keypair
             .sign_message(task_2_response_digest.as_ref());
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_2_index,
                 task_2_response_digest,
                 bls_sig_task_2_op_1.clone(),
                 test_operator_1.operator_id,
-            )
+            ))
             .await
             .unwrap();
 
@@ -1325,12 +1359,12 @@ mod tests {
             .bls_keypair
             .sign_message(task_2_response_digest.as_ref());
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_2_index,
                 task_2_response_digest,
                 bls_sig_task_2_op_2.clone(),
                 test_operator_2.operator_id,
-            )
+            ))
             .await
             .unwrap();
 
@@ -1482,12 +1516,12 @@ mod tests {
         );
         bls_agg_service.initialize_new_task(metadata).await.unwrap();
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_sig_op_1.clone(),
                 test_operator_1.operator_id,
-            )
+            ))
             .await
             .unwrap();
 
@@ -1559,12 +1593,12 @@ mod tests {
         );
         bls_agg_service.initialize_new_task(metadata).await.unwrap();
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_sig_op_1,
                 test_operator_1.operator_id,
-            )
+            ))
             .await
             .unwrap();
 
@@ -1623,12 +1657,12 @@ mod tests {
             .bls_keypair
             .sign_message(task_response_digest.as_ref());
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_sig_op_1.clone(),
                 test_operator_1.operator_id,
-            )
+            ))
             .await
             .unwrap();
 
@@ -1636,12 +1670,12 @@ mod tests {
             .bls_keypair
             .sign_message(task_response_digest.as_ref());
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_sig_op_2.clone(),
                 test_operator_2.operator_id,
-            )
+            ))
             .await
             .unwrap();
 
@@ -1731,12 +1765,12 @@ mod tests {
             .bls_keypair
             .sign_message(task_response_digest.as_ref());
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_sig_op_1.clone(),
                 test_operator_1.operator_id,
-            )
+            ))
             .await
             .unwrap();
 
@@ -1744,12 +1778,12 @@ mod tests {
             .bls_keypair
             .sign_message(task_response_digest.as_ref());
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_sig_op_2.clone(),
                 test_operator_2.operator_id,
-            )
+            ))
             .await
             .unwrap();
         let signers_apk_g2 =
@@ -1840,12 +1874,12 @@ mod tests {
             .bls_keypair
             .sign_message(task_response_digest.as_ref());
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
-                bls_sig_op_1.clone(),
+                bls_sig_op_1,
                 test_operator_1.operator_id,
-            )
+            ))
             .await
             .unwrap();
 
@@ -1854,12 +1888,12 @@ mod tests {
             .sign_message(task_response_digest.as_ref());
 
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
-                bls_sig_op_2.clone(),
+                bls_sig_op_2,
                 test_operator_2.operator_id,
-            )
+            ))
             .await
             .unwrap();
 
@@ -1912,12 +1946,12 @@ mod tests {
             .sign_message(task_response_digest.as_ref());
 
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
-                bls_sig_op_1.clone(),
+                bls_sig_op_1,
                 test_operator_1.operator_id,
-            )
+            ))
             .await
             .unwrap();
 
@@ -1975,12 +2009,12 @@ mod tests {
             .bls_keypair
             .sign_message(task_response_digest.as_ref());
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_sig_op_1,
                 test_operator_1.operator_id,
-            )
+            ))
             .await
             .unwrap();
 
@@ -2021,12 +2055,12 @@ mod tests {
             .sign_message(task_response_digest.as_ref());
 
         let result = bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
-                bls_sig_op_1.clone(),
+                bls_sig_op_1,
                 test_operator_1.operator_id,
-            )
+            ))
             .await;
 
         assert_eq!(Err(BlsAggregationServiceError::TaskNotFound), result);
@@ -2069,12 +2103,12 @@ mod tests {
             .bls_keypair
             .sign_message(task_response_1_digest.as_ref());
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_1_digest,
-                bls_sig_op_1.clone(),
+                bls_sig_op_1,
                 test_operator_1.operator_id,
-            )
+            ))
             .await
             .unwrap();
 
@@ -2084,12 +2118,12 @@ mod tests {
             .bls_keypair
             .sign_message(task_response_2_digest.as_ref());
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_2_digest,
-                bls_sig_op_2.clone(),
+                bls_sig_op_2,
                 test_operator_1.operator_id,
-            )
+            ))
             .await
             .unwrap();
 
@@ -2139,12 +2173,12 @@ mod tests {
         bls_agg_service.initialize_new_task(metadata).await.unwrap();
 
         let result = bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 wrong_task_response_digest,
-                bls_signature,
+                bls_signature.clone(),
                 test_operator_1.operator_id,
-            )
+            ))
             .await;
 
         assert_eq!(
@@ -2218,12 +2252,12 @@ mod tests {
             .bls_keypair
             .sign_message(task_response_1_digest.as_ref());
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_1_digest,
                 bls_sig_op_1.clone(),
                 test_operator_1.operator_id,
-            )
+            ))
             .await
             .unwrap();
 
@@ -2232,12 +2266,12 @@ mod tests {
             .bls_keypair
             .sign_message(task_response_2_digest.as_ref());
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_2_digest,
                 bls_sig_op_2.clone(),
                 test_operator_2.operator_id,
-            )
+            ))
             .await
             .unwrap();
 
@@ -2248,12 +2282,12 @@ mod tests {
             .bls_keypair
             .sign_message(task_response_3_digest.as_ref());
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_3_digest,
                 bls_sig_op_3.clone(),
                 test_operator_3.operator_id,
-            )
+            ))
             .await
             .unwrap();
 
@@ -2342,12 +2376,12 @@ mod tests {
             .bls_keypair
             .sign_message(task_response_1_digest.as_ref());
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_1_digest,
                 bls_sig_op_1.clone(),
                 test_operator_1.operator_id,
-            )
+            ))
             .await
             .unwrap();
 
@@ -2358,12 +2392,12 @@ mod tests {
             .bls_keypair
             .sign_message(task_response_2_digest.as_ref());
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_2_digest,
                 bls_sig_op_2.clone(),
                 test_operator_2.operator_id,
-            )
+            ))
             .await
             .unwrap();
 
@@ -2446,12 +2480,12 @@ mod tests {
             .bls_keypair
             .sign_message(task_response_1_digest.as_ref());
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_1_digest,
                 bls_sig_op_1.clone(),
                 test_operator_1.operator_id,
-            )
+            ))
             .await
             .unwrap();
 
@@ -2463,12 +2497,12 @@ mod tests {
             .bls_keypair
             .sign_message(task_response_2_digest.as_ref());
         let process_signature_result = bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_2_digest,
-                bls_sig_op_2.clone(),
+                bls_sig_op_2,
                 test_operator_2.operator_id,
-            )
+            ))
             .await;
         assert_eq!(
             Err(BlsAggregationServiceError::ChannelError), // TODO: change this error to be more representative
@@ -2552,12 +2586,12 @@ mod tests {
             .bls_keypair
             .sign_message(task_response_1_digest.as_ref());
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_1_digest,
                 bls_sig_op_1.clone(),
                 test_operator_1.operator_id,
-            )
+            ))
             .await
             .unwrap();
 
@@ -2569,12 +2603,12 @@ mod tests {
             .bls_keypair
             .sign_message(task_response_2_digest.as_ref());
         let process_signature_result = bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_2_digest,
-                bls_sig_op_2.clone(),
+                bls_sig_op_2,
                 test_operator_2.operator_id,
-            )
+            ))
             .await;
         assert_eq!(
             Err(BlsAggregationServiceError::ChannelError), // TODO: change this error to be more representative

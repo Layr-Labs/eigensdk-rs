@@ -16,6 +16,23 @@ Those changes in added, changed or breaking changes, should include usage exampl
 * Added `eigen_common` dependency to the `eigensdk` crate when "full" feature is enabled in [#249](https://github.com/Layr-Labs/eigensdk-rs/pull/249).
 * Added bindings for `ECDSAStakeRegistry` and `ECDSAServiceManagerBase` in [#269](https://github.com/Layr-Labs/eigensdk-rs/pull/269).
 * Added release-plz in ci in [#275](https://github.com/Layr-Labs/eigensdk-rs/pull/275).
+* Added update_socket function for avs registry writer in [#268](https://github.com/Layr-Labs/eigensdk-rs/pull/268)
+  An example of use is the following:
+  ```rust
+  // Given an avs writer and a new socket address:
+
+  let tx_hash = avs_writer
+    .update_socket(new_socket_addr.into())
+    .await
+    .unwrap();
+
+  let tx_status = wait_transaction(&http_endpoint, tx_hash)
+    .await
+    .unwrap()
+    .status(); 
+  // tx_status should be true
+  ```
+
 * Added custom configuration for release-plz in [#281](https://github.com/Layr-Labs/eigensdk-rs/pull/281).
 
 ### Changed
@@ -78,6 +95,21 @@ Those changes in added, changed or breaking changes, should include usage exampl
             time_to_expiry,
         ).with_window_duration(window_duration);
     bls_agg_service.initialize_new_task(metadata).await.unwrap();
+* refactor: encapsulate parameters into `TaskSignature` in [#260](https://github.com/Layr-Labs/eigensdk-rs/pull/260) 
+  * Introduced `TaskSignature` struct to encapsulate parameters related to task signatures:
+  * Updated `process_new_signature` to accept a `TaskSignature` struct instead of multiple parameters.
+    ```rust
+    // BEFORE
+    bls_agg_service.process_new_signature(task_index, task_response_digest, bls_signature, operator_id).await.unwrap();
+
+    // AFTER
+    let task_signature = TaskSignature::new(
+          task_index,
+          task_response_digest,
+          bls_signature,
+          operator_id,
+    );
+    bls_agg_service.process_new_signature(task_signature).await.unwrap();
     ```
 * Slashing UAM changes in [#248](https://github.com/Layr-Labs/eigensdk-rs/pull/248).
 
