@@ -59,13 +59,24 @@ lint:
 
 __BINDINGS__: ##
 
-.PHONY: bindings_host
-bindings_host:
+.PHONY: bindings_rewardsv2_host
+bindings_rewardsv2_host:
 	@echo "Generating bindings..."
-	./scripts/generate_bindings.sh
+	./scripts/generate_rewardsv2_bindings.sh
 	cargo fmt --all
 	@echo "Bindings generated"
 
+.PHONY: bindings_slashing_host
+bindings_slashing_host:
+	@echo "Generating bindings..."
+	./scripts/generate_slashing_bindings.sh
+	cargo fmt --all
+	# Apply a fix for any compile issues
+	git apply --allow-empty scripts/bindings.patch
+	@echo "Bindings generated"
+
+.PHONY: bindings_host
+bindings_host: bindings_rewardsv2_host bindings_slashing_host
 .PHONY: rewardsv2-bindings
 rewardsv2-bindings:
 	@echo "Starting Docker container..."
@@ -81,6 +92,8 @@ slashing-bindings:
 		ghcr.io/foundry-rs/foundry:v0.3.0 \
 		-c scripts/generate_slashing_bindings.sh
 	cargo fmt --all
+	# Apply a fix for any compile issues
+	git apply --allow-empty scripts/bindings.patch
 
 .PHONY: bindings
 bindings: rewardsv2-bindings slashing-bindings
