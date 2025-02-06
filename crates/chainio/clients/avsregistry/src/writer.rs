@@ -327,7 +327,6 @@ impl AvsRegistryChainWriter {
 
         let contract_call =
             contract_stake_registry.setSlashableStakeLookahead(quorum_number, lookahead);
-
         contract_call
             .send()
             .await
@@ -378,6 +377,7 @@ mod tests {
         get_operator_state_retriever_address, get_registry_coordinator_address,
     };
     use eigen_testing_utils::transaction::wait_transaction;
+    use eigen_types::avs;
     use eigen_utils::slashing::middleware::registrycoordinator::RegistryCoordinator;
     use eigen_utils::slashing::middleware::stakeregistry::StakeRegistry;
     use futures_util::StreamExt;
@@ -449,7 +449,7 @@ mod tests {
         let poller = event.watch().await.unwrap();
 
         let quorum_number = 0_u8;
-        let lookahead = 1_u32;
+        let lookahead = 32_u32;
         let tx_hash = avs_writer
             .set_slashable_stake_lookahead(quorum_number, lookahead)
             .await
