@@ -20,7 +20,7 @@ set +a
 # CHAIN_ID=$(cast chain-id --rpc-url $RPC_URL)
 
 # # start an empty anvil chain in the background and dump its state to a json file upon exit
-start_anvil_docker "" $parent_path/state/operatorset_contracts_deployed_anvil_state.json
+start_anvil_docker "" $parent_path/operatorset_contracts_deployed_anvil_state
 
 # Deploy Contracts
 cd "$root_dir/operator_sets_contracts"

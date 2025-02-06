@@ -7,9 +7,9 @@ use testcontainers::{
 const ANVIL_IMAGE: &str = "ghcr.io/foundry-rs/foundry";
 const ANVIL_TAG: &str = "latest";
 const M2_ANVIL_STATE_PATH: &str =
-    "./crates/m2_contracts/anvil/state/m2_contracts_deployed_anvil_state.json"; // relative path from the project root
+    "./crates/m2_contracts/anvil/m2_contracts_deployed_anvil_state/state.json"; // relative path from the project root
 const OPERATOR_SET_ANVIL_STATE_PATH: &str =
-    "./crates/operator_sets_contracts/anvil/state/operatorset_contracts_deployed_anvil_state.json";
+    "./crates/operator_sets_contracts/anvil/operatorset_contracts_deployed_anvil_state/state.json";
 fn workspace_dir() -> PathBuf {
     let output = std::process::Command::new(env!("CARGO"))
         .arg("locate-project")
@@ -70,13 +70,13 @@ pub async fn start_m2_anvil_container() -> (ContainerAsync<GenericImage>, String
         .with_exposed_port(8545.tcp())
         .with_mount(testcontainers::core::Mount::bind_mount(
             absolute_path_str,
-            "/m2_contracts_deployed_anvil_state.json",
+            "/state.json",
         ))
         .with_cmd([
             "--host",
             "0.0.0.0",
             "--load-state",
-            "/m2_contracts_deployed_anvil_state.json",
+            "/state.json",
             "--base-fee",
             "0",
             "--gas-price",
@@ -111,13 +111,13 @@ pub async fn start_anvil_container() -> (ContainerAsync<GenericImage>, String, S
         .with_exposed_port(8546.tcp())
         .with_mount(testcontainers::core::Mount::bind_mount(
             absolute_path_str,
-            "/operatorset_contracts_deployed_anvil_state.json",
+            "/state.json",
         ))
         .with_cmd([
             "--host",
             "0.0.0.0",
             "--load-state",
-            "/operatorset_contracts_deployed_anvil_state.json",
+            "/state.json",
             "--base-fee",
             "0",
             "--gas-price",
