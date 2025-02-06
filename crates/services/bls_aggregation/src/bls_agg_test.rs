@@ -677,24 +677,25 @@ pub mod integration_test {
         let operator_id_2 =
             FixedBytes::from(operator_id_from_g1_pub_key(bls_key_pair_2.public_key()).unwrap());
         let bls_signature_1 = bls_key_pair_1.sign_message(task_response_digest.as_ref());
+
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_signature_1,
                 operator_id_1,
-            )
+            ))
             .await
             .unwrap();
 
         let bls_signature_2 = bls_key_pair_2.sign_message(task_response_digest.as_ref());
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_signature_2,
                 operator_id_2,
-            )
+            ))
             .await
             .unwrap();
 
