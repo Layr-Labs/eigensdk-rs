@@ -21,6 +21,8 @@ Each version will have a separate `Breaking Changes` section as well. To describ
 * Fixed the rewardsv2 bindings version in readme to 0.5.4 in [#246](https://github.com/Layr-Labs/eigensdk-rs/pull/246).
 
 ### Breaking changes
+* Slashing UAM changes in [#248](https://github.com/Layr-Labs/eigensdk-rs/pull/248).
+
 ### Removed
 
 ## [0.1.3] - 2024-01-17
