@@ -23,7 +23,7 @@ pub(crate) mod test_utils {
         get_strategy_manager_address,
     };
     use eigen_utils::{
-        core::{
+        slashing::core::{
             delegationmanager::DelegationManager,
             irewardscoordinator::{
                 IRewardsCoordinator,
@@ -32,7 +32,7 @@ pub(crate) mod test_utils {
                 },
             },
         },
-        sdk::mockerc20::MockERC20,
+        slashing::sdk::mockerc20::MockERC20,
     };
     use std::str::FromStr;
 
@@ -45,7 +45,6 @@ pub(crate) mod test_utils {
     pub const ANVIL_FIRST_ADDRESS: Address = address!("f39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
     pub const ANVIL_FIRST_PRIVATE_KEY: &str =
         "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
-
     pub async fn build_el_chain_reader(http_endpoint: String) -> ELChainReader {
         let delegation_manager_address =
             get_delegation_manager_address(http_endpoint.clone()).await;
@@ -82,8 +81,8 @@ pub(crate) mod test_utils {
         ELChainWriter::new(
             strategy_manager,
             rewards_coordinator,
-            permission_controller,
-            allocation_manager,
+            Some(permission_controller),
+            Some(allocation_manager),
             registry_coordinator,
             el_chain_reader,
             http_endpoint.clone(),

@@ -7,11 +7,11 @@ use eigen_crypto_bls::{
     alloy_g1_point_to_g1_affine, convert_to_g1_point, convert_to_g2_point, BlsKeyPair,
 };
 use eigen_logging::logger::SharedLogger;
-use eigen_utils::middleware::registrycoordinator::{
-    IBLSApkRegistry::PubkeyRegistrationParams, ISignatureUtils::SignatureWithSaltAndExpiry,
+use eigen_utils::slashing::middleware::registrycoordinator::{
+    IBLSApkRegistryTypes::PubkeyRegistrationParams, ISignatureUtils::SignatureWithSaltAndExpiry,
     RegistryCoordinator,
 };
-use eigen_utils::middleware::{
+use eigen_utils::slashing::middleware::{
     servicemanagerbase::ServiceManagerBase, stakeregistry::StakeRegistry,
 };
 
@@ -62,49 +62,44 @@ impl AvsRegistryChainWriter {
         operator_state_retriever_addr: Address,
     ) -> Result<Self, AvsRegistryError> {
         let fill_provider = get_provider(&provider);
-
         let contract_registry_coordinator =
             RegistryCoordinator::new(registry_coordinator_addr, &fill_provider);
-
         let service_manager_addr = contract_registry_coordinator
             .serviceManager()
             .call()
             .await
             .map_err(AvsRegistryError::AlloyContractError)?;
-
         let RegistryCoordinator::serviceManagerReturn {
             _0: service_manager,
         } = service_manager_addr;
         let contract_service_manager_base =
             ServiceManagerBase::new(service_manager, &fill_provider);
-
         let bls_apk_registry_addr_result = contract_registry_coordinator
             .blsApkRegistry()
             .call()
             .await
             .map_err(AvsRegistryError::AlloyContractError)?;
-
         let RegistryCoordinator::blsApkRegistryReturn {
             _0: bls_apk_registry,
         } = bls_apk_registry_addr_result;
         let stake_registry_addr = contract_registry_coordinator.stakeRegistry().call().await?;
         let RegistryCoordinator::stakeRegistryReturn { _0: stake_registry } = stake_registry_addr;
         let contract_stake_registry = StakeRegistry::new(stake_registry, &fill_provider);
-
         let delegation_manager_return = contract_stake_registry.delegation().call().await?;
-
         let StakeRegistry::delegationReturn {
             _0: delegation_manager_addr,
         } = delegation_manager_return;
         let avs_directory_addr = contract_service_manager_base.avsDirectory().call().await?;
-
         let ServiceManagerBase::avsDirectoryReturn { _0: avs_directory } = avs_directory_addr;
+
+        // We set rewards coordinator address as zero because we are not going to use it on any writer operation
+        let rewards_coordinator_addr = Address::ZERO;
 
         let el_reader = ELChainReader::build(
             logger.clone(),
             delegation_manager_addr,
             avs_directory,
-            Address::ZERO,
+            rewards_coordinator_addr,
             &provider,
         )
         .await
@@ -147,7 +142,6 @@ impl AvsRegistryChainWriter {
         let provider = get_signer(&self.signer.clone(), &self.provider);
         let wallet = PrivateKeySigner::from_str(&self.signer)
             .map_err(|_| AvsRegistryError::InvalidPrivateKey)?;
-
         // tracing info
         info!(avs_service_manager = %self.service_manager_addr, operator= %wallet.address(),quorum_numbers = ?quorum_numbers,"quorum_numbers,registering operator with the AVS's registry coordinator");
         let contract_registry_coordinator =
@@ -159,7 +153,6 @@ impl AvsRegistryChainWriter {
             .await
             .map_err(|_| AvsRegistryError::PubKeyRegistrationMessageHash)?
             ._0;
-
         let sig = bls_key_pair
             .sign_hashed_to_curve_message(alloy_g1_point_to_g1_affine(g1_hashed_msg_to_sign))
             .g1_point();
@@ -320,7 +313,7 @@ mod tests {
     use alloy::primitives::{Address, Bytes, FixedBytes, U256};
     use eigen_crypto_bls::BlsKeyPair;
     use eigen_logging::get_test_logger;
-    use eigen_testing_utils::anvil::start_anvil_container;
+    use eigen_testing_utils::anvil::start_m2_anvil_container;
     use eigen_testing_utils::anvil_constants::{
         get_operator_state_retriever_address, get_registry_coordinator_address,
     };
@@ -348,7 +341,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_avs_writer_methods() {
-        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
         let bls_key =
             "1371012690269088913462269866874713266643928125698382731338806296762673180359922"
                 .to_string();
