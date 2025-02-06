@@ -6,7 +6,7 @@ pub mod integration_test {
     };
     use alloy::primitives::{aliases::U96, Address, Bytes, FixedBytes, B256, U256};
     use alloy::providers::WalletProvider;
-    use alloy::{providers::Provider, signers::local::PrivateKeySigner, sol_types::SolCall};
+    use alloy::{providers::Provider,sol_types::SolCall};
     use eigen_client_avsregistry::{
         reader::AvsRegistryChainReader, writer::AvsRegistryChainWriter,
     };
@@ -152,7 +152,7 @@ pub mod integration_test {
                 avs_address,
                 default_signer.default_signer_address(),
                 allocation_manager_addr,
-                alloy::primitives::FixedBytes(AllocationManager::setAVSRegistrarCall::SELECTOR),
+                FixedBytes(AllocationManager::setAVSRegistrarCall::SELECTOR),
             )
             .call()
             .await

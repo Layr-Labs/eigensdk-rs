@@ -79,5 +79,5 @@ pub enum ElContractsError {
     BLSKeyPairInvalid,
 
     #[error("Permission Controller is not set")]
-    MissingParamater,
+    MissingParameter,
 }
