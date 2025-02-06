@@ -305,12 +305,41 @@ impl AvsRegistryChainWriter {
         info!(tx_hash = ?tx,"successfully deregistered operator with the AVS's registry coordinator" );
         Ok(*tx.tx_hash())
     }
+
+    /// Update socket
+    ///
+    /// This function is used to update the socket of the sender (if it is a registered operator).
+    ///
+    /// # Arguments
+    ///
+    /// * `socket` - The address of the socket to be assigned to the operator.
+    ///
+    /// # Returns
+    ///
+    /// * `TxHash` - The transaction hash of the deregister operator transaction.
+    pub async fn update_socket(&self, socket: String) -> Result<TxHash, AvsRegistryError> {
+        info!("updating socket with the AVS's registry coordinator");
+        let provider = get_signer(&self.signer.clone(), &self.provider);
+
+        let contract_registry_coordinator =
+            RegistryCoordinator::new(self.registry_coordinator_addr, provider);
+
+        let contract_call = contract_registry_coordinator.updateSocket(socket);
+
+        let tx = contract_call
+            .send()
+            .await
+            .map_err(AvsRegistryError::AlloyContractError)?;
+        info!(tx_hash = ?tx,"successfully updated the socket with the AVS's registry coordinator" );
+        Ok(*tx.tx_hash())
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::AvsRegistryChainWriter;
     use alloy::primitives::{Address, Bytes, FixedBytes, U256};
+    use eigen_common::get_signer;
     use eigen_crypto_bls::BlsKeyPair;
     use eigen_logging::get_test_logger;
     use eigen_testing_utils::anvil::start_m2_anvil_container;
@@ -318,6 +347,8 @@ mod tests {
         get_operator_state_retriever_address, get_registry_coordinator_address,
     };
     use eigen_testing_utils::transaction::wait_transaction;
+    use eigen_utils::slashing::middleware::registrycoordinator::RegistryCoordinator;
+    use futures_util::StreamExt;
     use std::str::FromStr;
 
     async fn build_avs_registry_chain_writer(
@@ -439,5 +470,50 @@ mod tests {
 
         let tx_status = wait_transaction(&http_url, tx_hash).await.unwrap().status();
         assert!(tx_status);
+    }
+
+    #[tokio::test]
+    async fn test_update_socket() {
+        let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
+        let bls_key =
+            "1371012690269088913462269866874713266643928125698382731338806296762673180359922"
+                .to_string();
+        let private_key =
+            "8b3a350cf5c34c9194ca85829a2df0ec3153be0318b5e2d3348e872092edffba".to_string();
+        let avs_writer =
+            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
+        let quorum_nums = Bytes::from([0]);
+
+        test_register_operator(&avs_writer, bls_key, quorum_nums, http_endpoint.clone()).await;
+
+        // Set up event poller to listen to update socket events
+        let provider = get_signer(&avs_writer.signer.clone(), &avs_writer.provider);
+
+        let contract_registry_coordinator =
+            RegistryCoordinator::new(avs_writer.registry_coordinator_addr, provider);
+
+        let event = contract_registry_coordinator.OperatorSocketUpdate_filter();
+
+        let poller = event.watch().await.unwrap();
+
+        let new_socket_addr = "not a socket";
+
+        // Update the socket for operator
+        let tx_hash = avs_writer
+            .update_socket(new_socket_addr.into())
+            .await
+            .unwrap();
+
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
+        assert!(tx_status);
+
+        // Assert that event socket is the same as passed in the update socket function
+        let mut stream = poller.into_stream();
+        let (stream_event, _) = stream.next().await.unwrap().unwrap();
+
+        assert_eq!(stream_event.socket, new_socket_addr)
     }
 }
