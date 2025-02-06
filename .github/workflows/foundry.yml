@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./crates/contracts
+        working-directory: ./crates/operator_sets_contracts
     steps:
       - uses: actions/checkout@v4
         with:
