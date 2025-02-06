@@ -13,13 +13,19 @@ Those changes in added, changed or breaking changes, should include usage exampl
 
 ## [Unreleased]
 
-### Added
+### Security 🔒
 
-### Changed
+### Added 🎉
 
-### Breaking changes
+### Breaking Changes 🛠
 
-### Removed
+### Deprecated ⚠️
+
+### Removed 🗑
+
+### Documentation 📚
+
+### Other Changes
 
 ## [0.2.0] - 2025-02-06
 
