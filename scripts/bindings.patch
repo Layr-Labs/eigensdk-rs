@@ -1,4 +1,4 @@
-diff --git a/crates/utils/src/core/allocationmanager.rs b/crates/utils/src/core/allocationmanager.rs
+diff --git a/crates/utils/src/slashing/core/allocationmanager.rs b/crates/utils/src/slashing/core/allocationmanager.rs
 index 08f06c3..f46d377 100644
 --- a/crates/utils/src/core/allocationmanager.rs
 +++ b/crates/utils/src/core/allocationmanager.rs
