@@ -16,6 +16,17 @@ Those changes in added, changed or breaking changes, should include usage exampl
 * Added `eigen_common` dependency to the `eigensdk` crate when "full" feature is enabled in [#249](https://github.com/Layr-Labs/eigensdk-rs/pull/249).
 * Added bindings for `ECDSAStakeRegistry` and `ECDSAServiceManagerBase` in [#269](https://github.com/Layr-Labs/eigensdk-rs/pull/269).
 * Added release-plz in ci in [#275](https://github.com/Layr-Labs/eigensdk-rs/pull/275).
+* Added new method `clear_deallocation_queue` in `elcontracts/writer` in [#270](https://github.com/Layr-Labs/eigensdk-rs/pull/270)
+  ```rust
+  let tx_hash_clear = el_chain_writer
+      .clear_deallocation_queue(
+          operator_address,
+          vec![strategy_addr],
+          vec![num_to_clear],
+      )
+      .await
+      .unwrap();
+  ```
 * Added update_socket function for avs registry writer in [#268](https://github.com/Layr-Labs/eigensdk-rs/pull/268)
   An example of use is the following:
   ```rust
@@ -32,7 +43,6 @@ Those changes in added, changed or breaking changes, should include usage exampl
     .status(); 
   // tx_status should be true
   ```
-
 * Added custom configuration for release-plz in [#281](https://github.com/Layr-Labs/eigensdk-rs/pull/281).
 
 ### Changed
