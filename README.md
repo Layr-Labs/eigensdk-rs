@@ -36,6 +36,19 @@ Example :
 cargo run --example get_quorum_count
 ```
 
+## Generating and saving anvil state
+
+- Copy env
+```bash
+cp ./crates/m2_contracts/.env.example ./crates/m2_contracts/.env 
+cp ./crates/operator_sets_contracts/.env.example ./crates/operator_sets_contracts/.env
+```
+
+- Run the command
+```bash
+make dump-state
+``` 
+
 ## Contract Bindings
 
 The main branch of this repo is intended to be syncronized with mainnet version of core contracts.
