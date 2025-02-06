@@ -1,7 +1,7 @@
 #[cfg(test)]
 pub mod integration_test {
     use crate::{
-        bls_agg::{BlsAggregatorService, TaskSignature},
+        bls_agg::{BlsAggregatorService, TaskMetadata, TaskSignature},
         bls_aggregation_service_response::BlsAggregationServiceResponse,
     };
     use alloy::primitives::{aliases::U96, Address, Bytes, FixedBytes, B256, U256};
@@ -339,16 +339,14 @@ pub mod integration_test {
         let quorum_threshold_percentages: QuorumThresholdPercentages =
             test_data.input.quorum_threshold_percentages;
         // Initialize the task
-        bls_agg_service
-            .initialize_new_task(
-                task_index,
-                current_block_num as u32,
-                quorum_nums.to_vec(),
-                quorum_threshold_percentages,
-                time_to_expiry,
-            )
-            .await
-            .unwrap();
+        let metadata = TaskMetadata::new(
+            task_index,
+            current_block_num,
+            quorum_nums.to_vec(),
+            quorum_threshold_percentages,
+            time_to_expiry,
+        );
+        bls_agg_service.initialize_new_task(metadata).await.unwrap();
 
         // Compute the signature and send it to the aggregation service
         let task_response = 123;
@@ -483,16 +481,14 @@ pub mod integration_test {
         let time_to_expiry = Duration::from_secs(10);
 
         // Initialize the task
-        bls_agg_service
-            .initialize_new_task(
-                task_index,
-                current_block_num as u32,
-                quorum_nums.to_vec(),
-                quorum_threshold_percentages,
-                time_to_expiry,
-            )
-            .await
-            .unwrap();
+        let metadata = TaskMetadata::new(
+            task_index,
+            current_block_num,
+            quorum_nums.to_vec(),
+            quorum_threshold_percentages,
+            time_to_expiry,
+        );
+        bls_agg_service.initialize_new_task(metadata).await.unwrap();
 
         // Compute the signature and send it to the aggregation service
         let task_response = 123;
@@ -658,16 +654,14 @@ pub mod integration_test {
         let time_to_expiry = Duration::from_secs(10);
 
         // Initialize the task
-        bls_agg_service
-            .initialize_new_task(
-                task_index,
-                current_block_num as u32,
-                quorum_nums.to_vec(),
-                quorum_threshold_percentages,
-                time_to_expiry,
-            )
-            .await
-            .unwrap();
+        let metadata = TaskMetadata::new(
+            task_index,
+            current_block_num,
+            quorum_nums.to_vec(),
+            quorum_threshold_percentages,
+            time_to_expiry,
+        );
+        bls_agg_service.initialize_new_task(metadata).await.unwrap();
 
         // Compute the signature and send it to the aggregation service
         let task_response = 123;
@@ -844,16 +838,14 @@ pub mod integration_test {
         let time_to_expiry = Duration::from_secs(10);
 
         // Initialize the task
-        bls_agg_service
-            .initialize_new_task(
-                task_index,
-                current_block_num as u32,
-                quorum_nums.to_vec(),
-                quorum_threshold_percentages,
-                time_to_expiry,
-            )
-            .await
-            .unwrap();
+        let metadata = TaskMetadata::new(
+            task_index,
+            current_block_num,
+            quorum_nums.to_vec(),
+            quorum_threshold_percentages,
+            time_to_expiry,
+        );
+        bls_agg_service.initialize_new_task(metadata).await.unwrap();
 
         // Compute the signature and send it to the aggregation service
         let task_response = 123;
@@ -1025,16 +1017,14 @@ pub mod integration_test {
         let time_to_expiry = Duration::from_secs(1);
 
         // Initialize the task
-        bls_agg_service
-            .initialize_new_task(
-                task_index,
-                current_block_num as u32,
-                quorum_nums.to_vec(),
-                quorum_threshold_percentages,
-                time_to_expiry,
-            )
-            .await
-            .unwrap();
+        let metadata = TaskMetadata::new(
+            task_index,
+            current_block_num,
+            quorum_nums.to_vec(),
+            quorum_threshold_percentages,
+            time_to_expiry,
+        );
+        bls_agg_service.initialize_new_task(metadata).await.unwrap();
 
         // Compute the signature and send it to the aggregation service
         let task_response = 123;
@@ -1192,16 +1182,14 @@ pub mod integration_test {
         let time_to_expiry = Duration::from_secs(1);
 
         // Initialize the task
-        bls_agg_service
-            .initialize_new_task(
-                task_index,
-                current_block_num as u32,
-                quorum_nums.to_vec(),
-                quorum_threshold_percentages,
-                time_to_expiry,
-            )
-            .await
-            .unwrap();
+        let metadata = TaskMetadata::new(
+            task_index,
+            current_block_num,
+            quorum_nums.to_vec(),
+            quorum_threshold_percentages,
+            time_to_expiry,
+        );
+        bls_agg_service.initialize_new_task(metadata).await.unwrap();
 
         // Compute the signature and send it to the aggregation service
         let task_response = 123;
