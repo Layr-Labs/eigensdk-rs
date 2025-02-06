@@ -66,10 +66,21 @@ bindings_host:
 	cargo fmt --all
 	@echo "Bindings generated"
 
-.PHONY: bindings
-bindings:
+.PHONY: rewardsv2-bindings
+rewardsv2-bindings:
 	@echo "Starting Docker container..."
 	@docker run --rm -v "$(PWD):/sdk" -w "/sdk" \
 		ghcr.io/foundry-rs/foundry:v0.3.0 \
-		-c scripts/generate_bindings.sh
+		-c scripts/generate_rewardsv2_bindings.sh
 	cargo fmt --all
+
+.PHONY: slashing-bindings
+slashing-bindings:
+	@echo "Starting Docker container..."
+	@docker run --rm -v "$(PWD):/sdk" -w "/sdk" \
+		ghcr.io/foundry-rs/foundry:v0.3.0 \
+		-c scripts/generate_slashing_bindings.sh
+	cargo fmt --all
+
+.PHONY: bindings
+bindings: rewardsv2-bindings slashing-bindings
