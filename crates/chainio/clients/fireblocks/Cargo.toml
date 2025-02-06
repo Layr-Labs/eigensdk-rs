@@ -10,7 +10,6 @@ license-file.workspace = true
 [dependencies]
 #alloy
 alloy.workspace = true
-alloy-primitives.workspace = true
 chrono = "0.4"
 
 #eigen

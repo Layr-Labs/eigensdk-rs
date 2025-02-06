@@ -1,38 +1,45 @@
 use crate::error::ElContractsError;
 use crate::reader::ELChainReader;
-use alloy::primitives::{Address, Bytes, FixedBytes, TxHash, U256};
-use alloy::sol_types::SolValue;
+use alloy::dyn_abi::DynSolValue;
+use alloy::primitives::{Address, FixedBytes, TxHash, U256};
+use alloy::sol;
 use eigen_common::get_signer;
 use eigen_crypto_bls::{
     alloy_g1_point_to_g1_affine, convert_to_g1_point, convert_to_g2_point, BlsKeyPair,
 };
 pub use eigen_types::operator::Operator;
+
 use eigen_utils::{
-    core::{
+    slashing::core::{
         allocationmanager::{AllocationManager, IAllocationManagerTypes},
         delegationmanager::DelegationManager,
         irewardscoordinator::{IRewardsCoordinator, IRewardsCoordinatorTypes::RewardsMerkleClaim},
         permissioncontroller::PermissionController,
         strategymanager::StrategyManager,
     },
-    middleware::{
-        ierc20::IERC20,
-        registrycoordinator::{IBLSApkRegistry::PubkeyRegistrationParams, RegistryCoordinator},
-    },
+    slashing::middleware::{ierc20::IERC20, registrycoordinator::RegistryCoordinator},
 };
 use tracing::info;
 
 /// Gas limit for registerAsOperator in [`DelegationManager`]
 pub const GAS_LIMIT_REGISTER_AS_OPERATOR_DELEGATION_MANAGER: u128 = 300000;
 
+sol! {
+    #[allow(missing_docs)]
+    #[derive(Debug)]
+    /// Bar
+    enum RegistrationType {
+        NORMAL,
+        CHURN,
+    }
+}
 /// Chain Writer to interact with EigenLayer contracts onchain
 #[derive(Debug, Clone)]
 pub struct ELChainWriter {
-    delegation_manager: Address,
     strategy_manager: Address,
     rewards_coordinator: Address,
-    permission_controller: Address,
-    allocation_manager: Address,
+    permission_controller: Option<Address>,
+    allocation_manager: Option<Address>,
     registry_coordinator: Address,
     el_chain_reader: ELChainReader,
     provider: String,
@@ -42,18 +49,16 @@ pub struct ELChainWriter {
 impl ELChainWriter {
     #[allow(clippy::too_many_arguments)]
     pub fn new(
-        delegation_manager: Address,
         strategy_manager: Address,
         rewards_coordinator: Address,
-        permission_controller: Address,
-        allocation_manager: Address,
+        permission_controller: Option<Address>,
+        allocation_manager: Option<Address>,
         registry_coordinator: Address,
         el_chain_reader: ELChainReader,
         provider: String,
         signer: String,
     ) -> Self {
         Self {
-            delegation_manager,
             strategy_manager,
             rewards_coordinator,
             permission_controller,
@@ -85,7 +90,8 @@ impl ELChainWriter {
         info!("registering operator {:?} to EigenLayer", operator.address);
         let provider = get_signer(&self.signer.clone(), &self.provider);
 
-        let contract_delegation_manager = DelegationManager::new(self.delegation_manager, provider);
+        let contract_delegation_manager =
+            DelegationManager::new(self.el_chain_reader.delegation_manager, provider);
 
         let binding = {
             let contract_call = contract_delegation_manager.registerAsOperator(
@@ -140,7 +146,8 @@ impl ELChainWriter {
 
         let provider = get_signer(&self.signer.clone(), &self.provider);
 
-        let contract_delegation_manager = DelegationManager::new(self.delegation_manager, provider);
+        let contract_delegation_manager =
+            DelegationManager::new(self.el_chain_reader.delegation_manager, provider);
 
         let contract_call_modify_operator_details = contract_delegation_manager
             .modifyOperatorDetails(operator.address, operator.delegation_approver_address);
@@ -390,9 +397,11 @@ impl ELChainWriter {
         selector: FixedBytes<4>,
     ) -> Result<TxHash, ElContractsError> {
         let provider = get_signer(&self.signer, &self.provider);
-
-        let permission_controller_contract =
-            PermissionController::new(self.permission_controller, provider);
+        let permission_controller_contract = PermissionController::new(
+            self.permission_controller
+                .ok_or(ElContractsError::MissingParameter)?,
+            provider,
+        );
 
         let tx = permission_controller_contract
             .removeAppointee(account_address, appointee_address, target, selector)
@@ -422,9 +431,11 @@ impl ELChainWriter {
         selector: FixedBytes<4>,
     ) -> Result<TxHash, ElContractsError> {
         let provider = get_signer(&self.signer, &self.provider);
-
-        let permission_controller_contract =
-            PermissionController::new(self.permission_controller, provider);
+        let permission_controller_contract = PermissionController::new(
+            self.permission_controller
+                .ok_or(ElContractsError::MissingParameter)?,
+            provider,
+        );
 
         let tx = permission_controller_contract
             .setAppointee(account_address, appointee_address, target, selector)
@@ -451,9 +462,11 @@ impl ELChainWriter {
         admin_address: Address,
     ) -> Result<TxHash, ElContractsError> {
         let provider = get_signer(&self.signer, &self.provider);
-
-        let permission_controller_contract =
-            PermissionController::new(self.permission_controller, provider);
+        let permission_controller_contract = PermissionController::new(
+            self.permission_controller
+                .ok_or(ElContractsError::MissingParameter)?,
+            provider,
+        );
 
         let tx = permission_controller_contract
             .removePendingAdmin(account_address, admin_address)
@@ -481,9 +494,11 @@ impl ELChainWriter {
         admin_address: Address,
     ) -> Result<TxHash, ElContractsError> {
         let provider = get_signer(&self.signer, &self.provider);
-
-        let permission_controller_contract =
-            PermissionController::new(self.permission_controller, provider);
+        let permission_controller_contract = PermissionController::new(
+            self.permission_controller
+                .ok_or(ElContractsError::MissingParameter)?,
+            provider,
+        );
 
         let tx = permission_controller_contract
             .addPendingAdmin(account_address, admin_address)
@@ -509,9 +524,11 @@ impl ELChainWriter {
     /// * `ElContractsError` - if the call to the contract fails.
     pub async fn accept_admin(&self, account: Address) -> Result<TxHash, ElContractsError> {
         let provider = get_signer(&self.signer, &self.provider);
-
-        let permission_controller_contract =
-            PermissionController::new(self.permission_controller, provider);
+        let permission_controller_contract = PermissionController::new(
+            self.permission_controller
+                .ok_or(ElContractsError::MissingParameter)?,
+            provider,
+        );
 
         let tx = permission_controller_contract
             .acceptAdmin(account)
@@ -542,9 +559,11 @@ impl ELChainWriter {
         admin: Address,
     ) -> Result<TxHash, ElContractsError> {
         let provider = get_signer(&self.signer, &self.provider);
-
-        let permission_controller_contract =
-            PermissionController::new(self.permission_controller, provider);
+        let permission_controller_contract = PermissionController::new(
+            self.permission_controller
+                .ok_or(ElContractsError::MissingParameter)?,
+            provider,
+        );
 
         let tx = permission_controller_contract
             .removeAdmin(account, admin)
@@ -580,8 +599,11 @@ impl ELChainWriter {
         socket: &str,
     ) -> Result<TxHash, ElContractsError> {
         let provider = get_signer(&self.signer, &self.provider);
-        let allocation_manager_contract =
-            AllocationManager::new(self.allocation_manager, provider.clone());
+        let contract_allocation_manager = AllocationManager::new(
+            self.allocation_manager
+                .ok_or(ElContractsError::MissingParameter)?,
+            provider.clone(),
+        );
         let contract_registry_coordinator =
             RegistryCoordinator::new(self.registry_coordinator, provider);
 
@@ -601,24 +623,32 @@ impl ELChainWriter {
         let g2_pub_key_bn254 = convert_to_g2_point(bls_key_pair.public_key_g2().g2())
             .map_err(|_| ElContractsError::BLSKeyPairInvalid)?;
 
-        let params = PubkeyRegistrationParams {
-            pubkeyRegistrationSignature: alloy_g1_point_signed_msg,
-            pubkeyG1: g1_pub_key_bn254,
-            pubkeyG2: g2_pub_key_bn254,
-        };
-
-        let mut data: Bytes = (socket, params).abi_encode().into();
-
-        // The encoder is prepending 32 bytes to the data as if it was used in a dynamic function parameter.
-        // This is not used when decoding the bytes directly, so we need to remove it.
-        data = data.slice(32..);
+        let g2_point_x: Vec<DynSolValue> = vec![
+            DynSolValue::Uint(g2_pub_key_bn254.X[0], 256),
+            DynSolValue::Uint(g2_pub_key_bn254.X[1], 256),
+        ];
+        let g2_point_y: Vec<DynSolValue> = vec![
+            DynSolValue::Uint(g2_pub_key_bn254.Y[0], 256),
+            DynSolValue::Uint(g2_pub_key_bn254.Y[1], 256),
+        ];
+        let encoded_params_with_socket = DynSolValue::Tuple(vec![
+            DynSolValue::Uint(U256::from(0), 256),
+            DynSolValue::String(socket.to_string()),
+            DynSolValue::Uint(alloy_g1_point_signed_msg.X, 256),
+            DynSolValue::Uint(alloy_g1_point_signed_msg.Y, 256),
+            DynSolValue::Uint(g1_pub_key_bn254.X, 256),
+            DynSolValue::Uint(g1_pub_key_bn254.Y, 256),
+            DynSolValue::FixedArray(g2_point_x),
+            DynSolValue::FixedArray(g2_point_y),
+        ])
+        .abi_encode_params();
 
         let params = IAllocationManagerTypes::RegisterParams {
             avs: avs_address,
             operatorSetIds: operator_set_ids,
-            data,
+            data: encoded_params_with_socket.into(),
         };
-        let tx = allocation_manager_contract
+        let tx = contract_allocation_manager
             .registerForOperatorSets(operator_address, params)
             .send()
             .await?;
@@ -649,14 +679,18 @@ impl ELChainWriter {
         operator_set_ids: Vec<u32>,
     ) -> Result<TxHash, ElContractsError> {
         let provider = get_signer(&self.signer, &self.provider);
-        let allocation_manager_contract = AllocationManager::new(self.allocation_manager, provider);
+        let contract_allocation_manager = AllocationManager::new(
+            self.allocation_manager
+                .ok_or(ElContractsError::MissingParameter)?,
+            provider,
+        );
 
         let params = IAllocationManagerTypes::DeregisterParams {
             operator: operator_address,
             avs: avs_address,
             operatorSetIds: operator_set_ids,
         };
-        let tx = allocation_manager_contract
+        let tx = contract_allocation_manager
             .deregisterFromOperatorSets(params)
             .send()
             .await
@@ -686,9 +720,13 @@ impl ELChainWriter {
         delay: u32,
     ) -> Result<TxHash, ElContractsError> {
         let provider = get_signer(&self.signer, &self.provider);
-        let allocation_manager_contract = AllocationManager::new(self.allocation_manager, provider);
+        let contract_allocation_manager = AllocationManager::new(
+            self.allocation_manager
+                .ok_or(ElContractsError::MissingParameter)?,
+            provider,
+        );
 
-        let tx = allocation_manager_contract
+        let tx = contract_allocation_manager
             .setAllocationDelay(operator_address, delay)
             .send()
             .await
@@ -711,9 +749,13 @@ impl ELChainWriter {
         allocations: Vec<IAllocationManagerTypes::AllocateParams>,
     ) -> Result<TxHash, ElContractsError> {
         let provider = get_signer(&self.signer, &self.provider);
-        let allocation_manager_contract = AllocationManager::new(self.allocation_manager, provider);
+        let contract_allocation_manager = AllocationManager::new(
+            self.allocation_manager
+                .ok_or(ElContractsError::MissingParameter)?,
+            provider,
+        );
 
-        let tx = allocation_manager_contract
+        let tx = contract_allocation_manager
             .modifyAllocations(operator_address, allocations)
             .send()
             .await
@@ -732,12 +774,15 @@ mod tests {
         build_el_chain_reader, new_claim, new_test_writer, ANVIL_FIRST_ADDRESS,
         ANVIL_FIRST_PRIVATE_KEY, OPERATOR_ADDRESS, OPERATOR_PRIVATE_KEY,
     };
-    use alloy::providers::Provider;
-    use alloy_primitives::{address, aliases::U96, Address, U256};
+    use alloy::{
+        primitives::{address, aliases::U96, Address, U256},
+        providers::{Provider, WalletProvider},
+        sol_types::SolCall,
+    };
     use eigen_common::{get_provider, get_signer};
     use eigen_crypto_bls::BlsKeyPair;
     use eigen_testing_utils::{
-        anvil::{mine_anvil_blocks, set_account_balance, start_anvil_container},
+        anvil::{mine_anvil_blocks_operator_set, set_account_balance, start_anvil_container},
         anvil_constants::{
             get_allocation_manager_address, get_erc20_mock_strategy,
             get_registry_coordinator_address, get_service_manager_address,
@@ -746,14 +791,15 @@ mod tests {
     };
     use eigen_types::operator::Operator;
     use eigen_utils::{
-        core::allocationmanager::{
+        slashing::core::allocationmanager::{
             AllocationManager::{self, OperatorSet},
             IAllocationManagerTypes,
         },
-        middleware::registrycoordinator::{
-            IRegistryCoordinator::OperatorSetParam, IStakeRegistry::StrategyParams,
-            RegistryCoordinator,
+        slashing::middleware::registrycoordinator::{
+            ISlashingRegistryCoordinatorTypes::OperatorSetParam,
+            IStakeRegistryTypes::StrategyParams, RegistryCoordinator,
         },
+        slashing::sdk::mockavsservicemanager::MockAvsServiceManager,
     };
     use std::str::FromStr;
 
@@ -796,7 +842,7 @@ mod tests {
         let el_chain_writer =
             new_test_writer(http_endpoint.to_string(), private_key.to_string()).await;
 
-        set_account_balance(&container, address_str).await;
+        set_account_balance(&container, address_str, "http://localhost:8546").await;
         let address = Address::from_str(address_str).unwrap();
 
         let operator = Operator {
@@ -1101,14 +1147,29 @@ mod tests {
         assert!(receipt.status());
     }
 
-    async fn create_operator_set(http_endpoint: &str, avs_address: Address, operator_set_id: u32) {
+    async fn create_operator_set(http_endpoint: &str, avs_address: Address) {
         let allocation_manager_addr =
             get_allocation_manager_address(http_endpoint.to_string()).await;
-        let signer = get_signer(ANVIL_FIRST_PRIVATE_KEY, http_endpoint);
-        let allocation_manager = AllocationManager::new(allocation_manager_addr, signer.clone());
+        let default_signer = get_signer(ANVIL_FIRST_PRIVATE_KEY, http_endpoint);
+        let allocation_manager =
+            AllocationManager::new(allocation_manager_addr, default_signer.clone());
         let registry_coordinator_addr =
             get_registry_coordinator_address(http_endpoint.to_string()).await;
-
+        let service_manager_address = get_service_manager_address(http_endpoint.to_string()).await;
+        let service_manager =
+            MockAvsServiceManager::new(service_manager_address, default_signer.clone());
+        service_manager
+            .setAppointee(
+                default_signer.default_signer_address(),
+                allocation_manager_addr,
+                alloy::primitives::FixedBytes(AllocationManager::setAVSRegistrarCall::SELECTOR),
+            )
+            .send()
+            .await
+            .unwrap()
+            .get_receipt()
+            .await
+            .unwrap();
         allocation_manager
             .setAVSRegistrar(avs_address, registry_coordinator_addr)
             .send()
@@ -1118,47 +1179,34 @@ mod tests {
             .await
             .unwrap();
 
-        // Enable operator sets in Registry Coordinator
-        let registry_coordinator =
-            RegistryCoordinator::new(registry_coordinator_addr, signer.clone());
-        registry_coordinator
-            .enableOperatorSets()
-            .send()
-            .await
-            .unwrap()
-            .get_receipt()
-            .await
-            .unwrap();
-
         // Create slashable quorum
         let contract_registry_coordinator =
-            RegistryCoordinator::new(registry_coordinator_addr, signer.clone());
+            RegistryCoordinator::new(registry_coordinator_addr, default_signer.clone());
         let operator_set_params = OperatorSetParam {
             maxOperatorCount: 10,
             kickBIPsOfOperatorStake: 100,
             kickBIPsOfTotalStake: 1000,
         };
         let strategy = get_erc20_mock_strategy(http_endpoint.to_string()).await;
-        let strategy_params = StrategyParams {
-            strategy,
-            multiplier: U96::from(1),
-        };
-        contract_registry_coordinator
-            .createSlashableStakeQuorum(operator_set_params, U96::from(0), vec![strategy_params], 0)
+        service_manager
+            .setAppointee(
+                registry_coordinator_addr,
+                allocation_manager_addr,
+                alloy::primitives::FixedBytes(AllocationManager::createOperatorSetsCall::SELECTOR),
+            )
             .send()
             .await
             .unwrap()
             .get_receipt()
             .await
             .unwrap();
-
-        // Create operator set
-        let params = IAllocationManagerTypes::CreateSetParams {
-            operatorSetId: operator_set_id,
-            strategies: vec![strategy],
+        let strategy_params = StrategyParams {
+            strategy,
+            multiplier: U96::from(1),
         };
-        allocation_manager
-            .createOperatorSets(avs_address, vec![params])
+
+        contract_registry_coordinator
+            .createSlashableStakeQuorum(operator_set_params, U96::from(0), vec![strategy_params], 0)
             .send()
             .await
             .unwrap()
@@ -1170,10 +1218,9 @@ mod tests {
     #[tokio::test]
     async fn test_register_for_operator_sets() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-
-        let avs_address = ANVIL_FIRST_ADDRESS;
-        let operator_set_id = 1;
-        create_operator_set(http_endpoint.as_str(), avs_address, operator_set_id).await;
+        let avs_address = get_service_manager_address(http_endpoint.clone()).await;
+        let operator_set_id = 0;
+        create_operator_set(http_endpoint.as_str(), avs_address).await;
 
         let operator_addr = OPERATOR_ADDRESS;
         let operator_private_key = OPERATOR_PRIVATE_KEY;
@@ -1224,7 +1271,11 @@ mod tests {
             .unwrap();
         let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
         assert!(receipt.status());
-
+        let current_block = get_provider(&http_endpoint)
+            .get_block_number()
+            .await
+            .unwrap();
+        mine_anvil_blocks_operator_set(&_container, (current_block as u32) + 2).await;
         let allocation_delay = el_chain_writer
             .el_chain_reader
             .get_allocation_delay(ANVIL_FIRST_ADDRESS)
@@ -1246,9 +1297,9 @@ mod tests {
         let operator_address = ANVIL_FIRST_ADDRESS;
         let strategy_addr = get_erc20_mock_strategy(http_endpoint.clone()).await;
 
-        let avs_address = ANVIL_FIRST_ADDRESS;
-        let operator_set_id = 1;
-        create_operator_set(http_endpoint.as_str(), avs_address, operator_set_id).await;
+        let avs_address = get_service_manager_address(http_endpoint.clone()).await;
+        let operator_set_id = 0;
+        create_operator_set(http_endpoint.as_str(), avs_address).await;
 
         let new_allocation = 100;
         let allocate_params = IAllocationManagerTypes::AllocateParams {
@@ -1280,7 +1331,7 @@ mod tests {
             .get_allocation_delay(ANVIL_FIRST_ADDRESS)
             .await
             .unwrap();
-        mine_anvil_blocks(&container, allocation_delay).await;
+        mine_anvil_blocks_operator_set(&container, allocation_delay).await;
 
         let allocation_info = el_chain_writer
             .el_chain_reader

@@ -6,11 +6,11 @@
 
 use std::collections::HashMap;
 
-use alloy_primitives::FixedBytes;
+use alloy::primitives::FixedBytes;
 use async_trait::async_trait;
 use eigen_client_avsregistry::error::AvsRegistryError;
 use eigen_types::operator::{OperatorAvsState, QuorumAvsState};
-use eigen_utils::middleware::operatorstateretriever::OperatorStateRetriever::CheckSignaturesIndices;
+use eigen_utils::slashing::middleware::operatorstateretriever::OperatorStateRetriever::CheckSignaturesIndices;
 
 pub mod chaincaller;
 pub mod fake_avs_registry_service;

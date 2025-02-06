@@ -1,7 +1,10 @@
 use crate::client::BackendClient;
 use alloy::consensus::TxEnvelope;
+use alloy::primitives::{Address, BlockHash, BlockNumber, Bytes, ChainId, B256, U256, U64};
 use alloy::providers::{Provider, ProviderBuilder, RootProvider};
 use alloy::pubsub::{PubSubFrontend, Subscription};
+use alloy::rlp::Encodable;
+use alloy::rpc::json_rpc::{RpcParam, RpcReturn};
 use alloy::rpc::types::eth::{
     Block, BlockNumberOrTag, FeeHistory, Filter, Header, Log, SyncStatus, Transaction,
     TransactionReceipt, TransactionRequest,
@@ -9,9 +12,6 @@ use alloy::rpc::types::eth::{
 use alloy::transports::http::{Client, Http};
 use alloy::transports::ws::WsConnect;
 use alloy::transports::{TransportError, TransportResult};
-use alloy_json_rpc::{RpcParam, RpcReturn};
-use alloy_primitives::{Address, BlockHash, BlockNumber, Bytes, ChainId, B256, U256, U64};
-use alloy_rlp::Encodable;
 use eigen_logging::get_test_logger;
 use eigen_metrics_collectors_rpc_calls::RpcCallsMetrics as RpcCallsCollector;
 use hex;
@@ -830,11 +830,11 @@ mod tests {
     use super::*;
     use alloy::consensus::{SignableTransaction, TxLegacy};
     use alloy::network::TxSignerSync;
+    use alloy::primitives::address;
     use alloy::primitives::{bytes, TxKind::Call, U256};
     use alloy::rpc::types::eth::{
         pubsub::SubscriptionResult, BlockId, BlockNumberOrTag, BlockTransactionsKind,
     };
-    use alloy_primitives::address;
     use eigen_common::get_provider;
     use eigen_signer::signer::Config;
     use eigen_testing_utils::anvil::{set_account_balance, start_anvil_container};
@@ -1013,7 +1013,7 @@ mod tests {
         let private_key_hex =
             "6b35c6d8110c888de06575b45181bf3f9e6c73451fa5cde812c95a6b31e66ddf".to_string();
         let address = "009440d62dc85c73dbf889b7ad1f4da8b231d2ef";
-        set_account_balance(&container, address).await;
+        set_account_balance(&container, address, "http://localhost:8546").await;
 
         // build the transaction
         let to = address!("a0Ee7A142d267C1f36714E4a8F75612F20a79720");

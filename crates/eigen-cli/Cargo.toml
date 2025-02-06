@@ -9,10 +9,6 @@ license-file.workspace = true
 
 [dependencies]
 alloy.workspace = true
-alloy-json-rpc.workspace = true
-alloy-primitives.workspace = true
-alloy-provider.workspace = true
-alloy-transport.workspace = true
 ark-ec.workspace = true
 ark-ff.workspace = true
 ark-serialize.workspace = true

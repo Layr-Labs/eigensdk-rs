@@ -1,13 +1,13 @@
 use crate::error::ElContractsError;
 use alloy::{
+    primitives::{Address, FixedBytes, U256},
     providers::Provider,
     transports::http::{Client, Http},
 };
-use alloy_primitives::{Address, FixedBytes, U256};
 use eigen_common::{get_provider, SdkProvider};
 use eigen_logging::logger::SharedLogger;
 use eigen_utils::{
-    core::{
+    slashing::core::{
         allocationmanager::AllocationManager::{self, OperatorSet},
         avsdirectory::AVSDirectory,
         delegationmanager::DelegationManager,
@@ -18,16 +18,16 @@ use eigen_utils::{
         istrategy::IStrategy::{self, IStrategyInstance},
         permissioncontroller::PermissionController,
     },
-    middleware::ierc20::IERC20::{self, IERC20Instance},
+    slashing::middleware::ierc20::IERC20::{self, IERC20Instance},
 };
 
 #[derive(Debug, Clone)]
 pub struct ELChainReader {
     _logger: SharedLogger,
-    allocation_manager: Address,
-    delegation_manager: Address,
+    allocation_manager: Option<Address>,
+    pub(crate) delegation_manager: Address,
     avs_directory: Address,
-    permission_controller: Address,
+    permission_controller: Option<Address>,
     rewards_coordinator: Address,
     // TODO: we should make this private
     pub provider: String,
@@ -51,11 +51,11 @@ impl ELChainReader {
     /// A new `ELChainReader` instance.
     pub fn new(
         _logger: SharedLogger,
-        allocation_manager: Address,
+        allocation_manager: Option<Address>,
         delegation_manager: Address,
         rewards_coordinator: Address,
         avs_directory: Address,
-        permission_controller: Address,
+        permission_controller: Option<Address>,
         provider: String,
     ) -> Self {
         ELChainReader {
@@ -95,30 +95,41 @@ impl ELChainReader {
         let provider = get_provider(client);
 
         let contract_delegation_manager = DelegationManager::new(delegation_manager, provider);
+        let is_operator_set = contract_delegation_manager.allocationManager().call().await;
+        if is_operator_set.is_err() {
+            Ok(Self {
+                _logger,
+                allocation_manager: None,
+                delegation_manager,
+                avs_directory,
+                permission_controller: None,
+                rewards_coordinator,
+                provider: client.to_string(),
+            })
+        } else {
+            let allocation_manager = contract_delegation_manager
+                .allocationManager()
+                .call()
+                .await
+                .map_err(ElContractsError::AlloyContractError)?
+                ._0;
+            let permission_controller = contract_delegation_manager
+                .permissionController()
+                .call()
+                .await
+                .map_err(ElContractsError::AlloyContractError)?
+                ._0;
 
-        let allocation_manager = contract_delegation_manager
-            .allocationManager()
-            .call()
-            .await
-            .map_err(ElContractsError::AlloyContractError)?
-            ._0;
-
-        let permission_controller = contract_delegation_manager
-            .permissionController()
-            .call()
-            .await
-            .map_err(ElContractsError::AlloyContractError)?
-            ._0;
-
-        Ok(Self {
-            _logger,
-            avs_directory,
-            allocation_manager,
-            delegation_manager,
-            rewards_coordinator,
-            permission_controller,
-            provider: client.to_string(),
-        })
+            Ok(Self {
+                _logger,
+                avs_directory,
+                allocation_manager: Some(allocation_manager),
+                delegation_manager,
+                rewards_coordinator,
+                permission_controller: Some(permission_controller),
+                provider: client.to_string(),
+            })
+        }
     }
 
     /// Calculate the delegation approval digest hash
@@ -399,7 +410,7 @@ impl ELChainReader {
     ///
     /// # Returns
     ///
-    /// * `Result<u16, ElContractsError>` - The split of the operator for the AVS, if the call is successful
+    /// * u16 - The split of the operator for the AVS, if the call is successful
     ///
     /// # Errors
     ///
@@ -431,7 +442,7 @@ impl ELChainReader {
     ///
     /// # Returns
     ///
-    /// * `Result<u16, ElContractsError>` - The split of the operator for PI, if the call is successful
+    /// * u16 - The split of the operator for PI, if the call is successful
     ///
     /// # Errors
     ///
@@ -659,7 +670,11 @@ impl ELChainReader {
     ) -> Result<u64, ElContractsError> {
         let provider = get_provider(&self.provider);
 
-        let contract_allocation_manager = AllocationManager::new(self.allocation_manager, provider);
+        let contract_allocation_manager = AllocationManager::new(
+            self.allocation_manager
+                .ok_or(ElContractsError::MissingParameter)?,
+            provider,
+        );
 
         let allocatable_magnitude = contract_allocation_manager
             .getAllocatableMagnitude(operator_address, strategy_address)
@@ -689,7 +704,11 @@ impl ELChainReader {
     ) -> Result<Vec<u64>, ElContractsError> {
         let provider = get_provider(&self.provider);
 
-        let contract_allocation_manager = AllocationManager::new(self.allocation_manager, provider);
+        let contract_allocation_manager = AllocationManager::new(
+            self.allocation_manager
+                .ok_or(ElContractsError::MissingParameter)?,
+            provider,
+        );
 
         let max_magnitudes = contract_allocation_manager
             .getMaxMagnitudes_1(operator_address, strategy_addresses)
@@ -717,7 +736,11 @@ impl ELChainReader {
     ) -> Result<Vec<AllocationInfo>, ElContractsError> {
         let provider = get_provider(&self.provider);
 
-        let contract_allocation_manager = AllocationManager::new(self.allocation_manager, provider);
+        let contract_allocation_manager = AllocationManager::new(
+            self.allocation_manager
+                .ok_or(ElContractsError::MissingParameter)?,
+            provider,
+        );
 
         let allocations = contract_allocation_manager
             .getStrategyAllocations(operator_address, strategy_address)
@@ -832,7 +855,11 @@ impl ELChainReader {
     ) -> Result<Vec<OperatorSet>, ElContractsError> {
         let provider = get_provider(&self.provider);
 
-        let contract_allocation_manager = AllocationManager::new(self.allocation_manager, provider);
+        let contract_allocation_manager = AllocationManager::new(
+            self.allocation_manager
+                .ok_or(ElContractsError::MissingParameter)?,
+            provider,
+        );
 
         let allocated_sets = contract_allocation_manager
             .getAllocatedSets(operator_addr)
@@ -860,37 +887,24 @@ impl ELChainReader {
     ) -> Result<bool, ElContractsError> {
         let provider = get_provider(&self.provider);
 
-        if operator_set.id == 0 {
-            // this is an M2 AVS
-            let contract_avs_directory = AVSDirectory::new(self.avs_directory, provider);
+        let contract_allocation_manager = AllocationManager::new(
+            self.allocation_manager
+                .ok_or(ElContractsError::MissingParameter)?,
+            provider,
+        );
+        let registered_operator_sets = contract_allocation_manager
+            .getRegisteredSets(operator_address)
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+        let AllocationManager::getRegisteredSetsReturn { _0: operator_sets } =
+            registered_operator_sets;
 
-            let operator_avs_registration_status = contract_avs_directory
-                .avsOperatorStatus(operator_set.avs, operator_address)
-                .call()
-                .await
-                .map_err(ElContractsError::AlloyContractError)?;
-
-            let AVSDirectory::avsOperatorStatusReturn { _0: status } =
-                operator_avs_registration_status;
-
-            Ok(status == 1)
-        } else {
-            let contract_allocation_manager =
-                AllocationManager::new(self.allocation_manager, provider);
-            let registered_operator_sets = contract_allocation_manager
-                .getRegisteredSets(operator_address)
-                .call()
-                .await
-                .map_err(ElContractsError::AlloyContractError)?;
-            let AllocationManager::getRegisteredSetsReturn { _0: operator_sets } =
-                registered_operator_sets;
-
-            let is_registered = operator_sets.iter().any(|registered_operator_set| {
-                registered_operator_set.id == operator_set.id
-                    && registered_operator_set.avs == operator_set.avs
-            });
-            Ok(is_registered)
-        }
+        let is_registered = operator_sets.iter().any(|registered_operator_set| {
+            registered_operator_set.id == operator_set.id
+                && registered_operator_set.avs == operator_set.avs
+        });
+        Ok(is_registered)
     }
 
     /// Get the operators in a specific operator set. Not supported for M2 AVSs
@@ -906,7 +920,11 @@ impl ELChainReader {
     ) -> Result<Vec<Address>, ElContractsError> {
         let provider = get_provider(&self.provider);
 
-        let contract_allocation_manager = AllocationManager::new(self.allocation_manager, provider);
+        let contract_allocation_manager = AllocationManager::new(
+            self.allocation_manager
+                .ok_or(ElContractsError::MissingParameter)?,
+            provider,
+        );
 
         let operators = contract_allocation_manager
             .getMembers(operator_set)
@@ -931,7 +949,11 @@ impl ELChainReader {
     ) -> Result<U256, ElContractsError> {
         let provider = get_provider(&self.provider);
 
-        let contract_allocation_manager = AllocationManager::new(self.allocation_manager, provider);
+        let contract_allocation_manager = AllocationManager::new(
+            self.allocation_manager
+                .ok_or(ElContractsError::MissingParameter)?,
+            provider,
+        );
 
         let num_operators = contract_allocation_manager
             .getMemberCount(operator_set)
@@ -956,7 +978,11 @@ impl ELChainReader {
     ) -> Result<Vec<Address>, ElContractsError> {
         let provider = get_provider(&self.provider);
 
-        let contract_allocation_manager = AllocationManager::new(self.allocation_manager, provider);
+        let contract_allocation_manager = AllocationManager::new(
+            self.allocation_manager
+                .ok_or(ElContractsError::MissingParameter)?,
+            provider,
+        );
 
         let strategies = contract_allocation_manager
             .getStrategiesInOperatorSet(operator_set)
@@ -989,8 +1015,11 @@ impl ELChainReader {
             ElContractsError::AlloyContractError(alloy::contract::Error::TransportError(e))
         })?;
 
-        let contract_allocation_manager = AllocationManager::new(self.allocation_manager, provider);
-
+        let contract_allocation_manager = AllocationManager::new(
+            self.allocation_manager
+                .ok_or(ElContractsError::MissingParameter)?,
+            provider,
+        );
         let slashable_stake = contract_allocation_manager
             .getMinimumSlashableStake(
                 operator_set,
@@ -1051,7 +1080,11 @@ impl ELChainReader {
     ) -> Result<Vec<OperatorSetStakes>, ElContractsError> {
         let provider = get_provider(&self.provider);
         let mut operator_set_stakes = vec![];
-        let allocation_manager_contract = AllocationManager::new(self.allocation_manager, provider);
+        let contract_allocation_manager = AllocationManager::new(
+            self.allocation_manager
+                .ok_or(ElContractsError::MissingParameter)?,
+            provider,
+        );
 
         for operator_set in operator_sets {
             let operators = self
@@ -1061,7 +1094,7 @@ impl ELChainReader {
                 .get_strategies_for_operator_set(operator_set.clone())
                 .await?;
 
-            let slashable_stakes = allocation_manager_contract
+            let slashable_stakes = contract_allocation_manager
                 .getMinimumSlashableStake(
                     operator_set.clone(),
                     operators.clone(),
@@ -1095,7 +1128,11 @@ impl ELChainReader {
     ) -> Result<u32, ElContractsError> {
         let provider = get_provider(&self.provider);
 
-        let contract_allocation_manager = AllocationManager::new(self.allocation_manager, provider);
+        let contract_allocation_manager = AllocationManager::new(
+            self.allocation_manager
+                .ok_or(ElContractsError::MissingParameter)?,
+            provider,
+        );
 
         let allocation_delay = contract_allocation_manager
             .getAllocationDelay(operator_address)
@@ -1128,7 +1165,11 @@ impl ELChainReader {
     ) -> Result<Vec<OperatorSet>, ElContractsError> {
         let provider = get_provider(&self.provider);
 
-        let contract_allocation_manager = AllocationManager::new(self.allocation_manager, provider);
+        let contract_allocation_manager = AllocationManager::new(
+            self.allocation_manager
+                .ok_or(ElContractsError::MissingParameter)?,
+            provider,
+        );
 
         let registered_sets = contract_allocation_manager
             .getRegisteredSets(operator_address)
@@ -1169,7 +1210,7 @@ impl ELChainReader {
         let provider = get_provider(&self.provider);
 
         let contract_permission_controller =
-            PermissionController::new(self.permission_controller, provider);
+            PermissionController::new(self.permission_controller.unwrap(), provider);
 
         let can_call = contract_permission_controller
             .canCall(account_address, appointee_address, target, selector)
@@ -1199,7 +1240,7 @@ impl ELChainReader {
         let provider = get_provider(&self.provider);
 
         let contract_permission_controller =
-            PermissionController::new(self.permission_controller, provider);
+            PermissionController::new(self.permission_controller.unwrap(), provider);
 
         let appointees = contract_permission_controller
             .getAppointees(account_address, target, selector)
@@ -1228,7 +1269,7 @@ impl ELChainReader {
         let provider = get_provider(&self.provider);
 
         let contract_permission_controller =
-            PermissionController::new(self.permission_controller, provider);
+            PermissionController::new(self.permission_controller.unwrap(), provider);
 
         let appointee_permissions = contract_permission_controller
             .getAppointeePermissions(account_address, appointee_address)
@@ -1258,7 +1299,7 @@ impl ELChainReader {
         let provider = get_provider(&self.provider);
 
         let contract_permission_controller =
-            PermissionController::new(self.permission_controller, provider);
+            PermissionController::new(self.permission_controller.unwrap(), provider);
 
         let pending_admins = contract_permission_controller
             .getPendingAdmins(account_address)
@@ -1284,7 +1325,7 @@ impl ELChainReader {
         let provider = get_provider(&self.provider);
 
         let contract_permission_controller =
-            PermissionController::new(self.permission_controller, provider);
+            PermissionController::new(self.permission_controller.unwrap(), provider);
 
         let admins = contract_permission_controller
             .getAdmins(account_address)
@@ -1312,7 +1353,7 @@ impl ELChainReader {
         let provider = get_provider(&self.provider);
 
         let contract_permission_controller =
-            PermissionController::new(self.permission_controller, provider);
+            PermissionController::new(self.permission_controller.unwrap(), provider);
 
         let is_pending_admin = contract_permission_controller
             .isPendingAdmin(account_address, pending_admin_address)
@@ -1340,7 +1381,7 @@ impl ELChainReader {
         let provider = get_provider(&self.provider);
 
         let contract_permission_controller =
-            PermissionController::new(self.permission_controller, provider);
+            PermissionController::new(self.permission_controller.unwrap(), provider);
 
         let is_admin = contract_permission_controller
             .isAdmin(account_address, admin_address)
@@ -1375,14 +1416,14 @@ pub struct AllocationInfo {
 mod tests {
     use super::*;
     use crate::test_utils::{build_el_chain_reader, new_test_claim, OPERATOR_ADDRESS};
+    use alloy::primitives::{address, keccak256, Address, FixedBytes, U256};
     use alloy::providers::Provider;
     use alloy::{eips::eip1898::BlockNumberOrTag::Number, rpc::types::BlockTransactionsKind};
-    use alloy_primitives::{address, keccak256, Address, FixedBytes, U256};
     use eigen_testing_utils::anvil_constants::get_erc20_mock_strategy;
     use eigen_testing_utils::{
         anvil::start_anvil_container, anvil_constants::get_delegation_manager_address,
     };
-    use eigen_utils::core::{
+    use eigen_utils::slashing::core::{
         avsdirectory::AVSDirectory::{self, calculateOperatorAVSRegistrationDigestHashReturn},
         delegationmanager::DelegationManager::{self, calculateDelegationApprovalDigestHashReturn},
     };

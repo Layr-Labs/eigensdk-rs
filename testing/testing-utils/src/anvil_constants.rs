@@ -1,7 +1,7 @@
 //! Anvil utilities
 use alloy::primitives::{address, Address};
 use eigen_common::get_provider;
-use eigen_utils::sdk::contractsregistry::ContractsRegistry::{self, contractsReturn};
+use eigen_utils::rewardsv2::sdk::contractsregistry::ContractsRegistry::{self, contractsReturn};
 
 /// Local anvil ContractsRegistry which contains a mapping of all locally deployed EL contracts.
 pub const CONTRACTS_REGISTRY: Address = address!("5FbDB2315678afecb367f032d93F642f64180aa3");

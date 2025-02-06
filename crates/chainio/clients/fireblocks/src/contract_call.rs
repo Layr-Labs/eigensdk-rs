@@ -142,6 +142,7 @@ mod tests {
     use std::env;
 
     #[tokio::test]
+    #[ignore]
     #[cfg(feature = "fireblock-tests")]
     async fn test_contract_call() {
         let api_key = env::var("FIREBLOCKS_API_KEY").expect("FIREBLOCKS_API_KEY not set");

@@ -1,6 +1,6 @@
+use alloy::primitives::{Address, FixedBytes};
 use alloy::providers::Provider;
 use alloy::rpc::types::Filter;
-use alloy_primitives::{Address, FixedBytes};
 use async_trait::async_trait;
 use eigen_client_avsregistry::reader::AvsRegistryChainReader;
 use eigen_common::{get_ws_provider, NEW_PUBKEY_REGISTRATION_EVENT, OPERATOR_SOCKET_UPDATE};
@@ -13,11 +13,11 @@ use eigen_types::operator::{
     operator_id_from_g1_pub_key, OperatorId, OperatorPubKeys, OperatorTypesError,
 };
 use eigen_utils::{
-    middleware::blsapkregistry::{
+    slashing::middleware::blsapkregistry::{
         BLSApkRegistry,
         BN254::{G1Point, G2Point},
     },
-    middleware::registrycoordinator::RegistryCoordinator,
+    slashing::middleware::registrycoordinator::RegistryCoordinator,
 };
 use eyre::Result;
 use futures_util::StreamExt;
@@ -155,7 +155,7 @@ impl OperatorInfoServiceInMemory {
 
                                     let mut id_map =
                                         operator_state.operator_addr_to_id.write().await;
-                                    id_map.insert(addr, alloy_primitives::FixedBytes(operator_id));
+                                    id_map.insert(addr, alloy::primitives::FixedBytes(operator_id));
                                 }
                                 let mut socket_data = operator_state.socket_dict.write().await;
                                 if let Some(socket) = socket_info {
@@ -421,29 +421,28 @@ impl OperatorInfoServiceInMemory {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use alloy_primitives::{address, Bytes, U256};
-    use alloy_signer_local::PrivateKeySigner;
+    use alloy::primitives::{address, Bytes, U256};
+    use alloy::signers::local::PrivateKeySigner;
     use eigen_client_avsregistry::writer::AvsRegistryChainWriter;
     use eigen_client_elcontracts::{reader::ELChainReader, writer::ELChainWriter};
     use eigen_common::get_provider;
     use eigen_crypto_bls::BlsKeyPair;
     use eigen_logging::get_test_logger;
-    use eigen_testing_utils::anvil::start_anvil_container;
+    use eigen_testing_utils::anvil::start_m2_anvil_container;
     use eigen_testing_utils::anvil_constants::{
-        get_allocation_manager_address, get_avs_directory_address, get_delegation_manager_address,
+        get_avs_directory_address, get_delegation_manager_address,
         get_operator_state_retriever_address, get_registry_coordinator_address,
         get_rewards_coordinator_address, get_strategy_manager_address,
     };
     use eigen_testing_utils::transaction::wait_transaction;
     use eigen_types::operator::Operator;
-    use eigen_utils::core::delegationmanager::DelegationManager;
     use std::str::FromStr;
     use std::time::{Duration, SystemTime, UNIX_EPOCH};
     use tokio::time::sleep;
 
     #[tokio::test]
     async fn test_query_past_registered_operator_events_and_fill_db() {
-        let (_container, http_endpoint, ws_endpoint) = start_anvil_container().await;
+        let (_container, http_endpoint, ws_endpoint) = start_m2_anvil_container().await;
         let test_logger = get_test_logger();
         register_operator(
             http_endpoint.clone(),
@@ -494,7 +493,7 @@ mod tests {
     #[tokio::test]
     async fn test_start_service_1_operator_register() {
         // start anvil in a container
-        let (_container, http_endpoint, ws_endpoint) = start_anvil_container().await;
+        let (_container, http_endpoint, ws_endpoint) = start_m2_anvil_container().await;
         let test_logger = get_test_logger();
         let avs_registry_chain_reader = AvsRegistryChainReader::new(
             test_logger.clone(),
@@ -558,7 +557,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_start_service_2_operator_register() {
-        let (_container, http_endpoint, ws_endpoint) = start_anvil_container().await;
+        let (_container, http_endpoint, ws_endpoint) = start_m2_anvil_container().await;
         let test_logger = get_test_logger();
         let avs_registry_chain_reader = AvsRegistryChainReader::new(
             test_logger.clone(),
@@ -643,39 +642,26 @@ mod tests {
         let strategy_manager_address = get_strategy_manager_address(http_endpoint.clone()).await;
         let registry_coordinator_address =
             get_registry_coordinator_address(http_endpoint.clone()).await;
-        let contract_delegation_manager =
-            DelegationManager::new(delegation_manager_address, get_provider(&http_endpoint));
 
         let rewards_coordinator_address =
             get_rewards_coordinator_address(http_endpoint.clone()).await;
 
-        let DelegationManager::permissionControllerReturn {
-            _0: permission_controller,
-        } = contract_delegation_manager
-            .permissionController()
-            .call()
-            .await
-            .unwrap();
-
         let el_chain_reader = ELChainReader::new(
             get_test_logger(),
-            Address::ZERO,
+            None,
             delegation_manager_address,
             rewards_coordinator_address,
             avs_directory_address,
-            permission_controller,
+            None,
             http_endpoint.to_string(),
         );
         let signer = PrivateKeySigner::from_str(pvt_key).unwrap();
 
-        let allocation_manager = get_allocation_manager_address(http_endpoint.clone()).await;
-
         let el_chain_writer = ELChainWriter::new(
-            delegation_manager_address,
             strategy_manager_address,
             rewards_coordinator_address,
-            permission_controller,
-            allocation_manager,
+            None,
+            None,
             registry_coordinator_address,
             el_chain_reader,
             http_endpoint.to_string(),
@@ -733,6 +719,7 @@ mod tests {
             )
             .await
             .unwrap();
-        wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+        let y = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+        dbg!(y.transaction_hash);
     }
 }

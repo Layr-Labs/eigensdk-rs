@@ -1,4 +1,4 @@
-use alloy_primitives::{Bytes, FixedBytes, U256};
+use alloy::primitives::{Bytes, FixedBytes, U256};
 use ark_bn254::G1Projective;
 use ark_ec::{short_weierstrass::Affine, AffineRepr, CurveGroup};
 use async_trait::async_trait;
@@ -6,7 +6,7 @@ use eigen_client_avsregistry::{error::AvsRegistryError, reader::AvsRegistryReade
 use eigen_crypto_bls::{BlsG1Point, PublicKey};
 use eigen_services_operatorsinfo::operator_info::OperatorInfoService;
 use eigen_types::operator::{OperatorAvsState, OperatorInfo, OperatorPubKeys, QuorumAvsState};
-use eigen_utils::middleware::operatorstateretriever::OperatorStateRetriever::CheckSignaturesIndices;
+use eigen_utils::slashing::middleware::operatorstateretriever::OperatorStateRetriever::CheckSignaturesIndices;
 use std::collections::HashMap;
 
 use crate::AvsRegistryService;
@@ -46,12 +46,10 @@ impl<R: AvsRegistryReader + Sync, S: OperatorInfoService + Sync> AvsRegistryServ
             .avs_registry
             .get_operators_stake_in_quorums_at_block(block_num, Bytes::from(Vec::from(quorum_nums)))
             .await?;
-
         if operators_stakes_in_quorums.len() != quorum_nums.len() {
             // the list of quorum nums and the list of operators stakes in quorums should have the same length
             return Err(AvsRegistryError::InvalidQuorumNums);
         }
-
         for (quorum_id, quorum_num) in quorum_nums.iter().enumerate() {
             for operator in &operators_stakes_in_quorums[quorum_id] {
                 let info = self.get_operator_info(*operator.operatorId).await?;
@@ -155,7 +153,6 @@ impl<R: AvsRegistryReader, S: OperatorInfoService> AvsRegistryServiceChainCaller
         operator_id: [u8; 32],
     ) -> Result<OperatorPubKeys, AvsRegistryError> {
         let operator_addr = self.avs_registry.get_operator_from_id(operator_id).await?;
-
         self.operators_info_service
             .get_operator_info(operator_addr)
             .await
@@ -171,7 +168,7 @@ mod tests {
 
     use super::AvsRegistryServiceChainCaller;
     use crate::AvsRegistryService;
-    use alloy_primitives::{Address, FixedBytes, U256};
+    use alloy::primitives::{Address, FixedBytes, U256};
     use eigen_client_avsregistry::fake_reader::FakeAvsRegistryReader;
     use eigen_crypto_bls::BlsKeyPair;
     use eigen_services_operatorsinfo::fake_operator_info::FakeOperatorInfoService;
