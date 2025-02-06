@@ -2,6 +2,10 @@ use thiserror::Error;
 
 #[derive(Debug, Error)]
 pub enum BlsError {
+    /// Invalid Bls Public Key
+    #[error("Invalid bls public key")]
+    InvalidPublicKey,
+
     /// Invalid Bls Private Key
     #[error("Invalid bls private key   ")]
     InvalidBlsPrivateKey,

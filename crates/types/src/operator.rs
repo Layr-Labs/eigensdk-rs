@@ -72,12 +72,19 @@ pub struct Operator {
 
 impl Operator {
     pub fn validate(&self) -> Result<(), OperatorTypesError> {
+        //if !utils.IsValidEthereumAddress(o.Address) {
+        //    return ErrInvalidOperatorAddress
+        //}
+
         if !self.address.is_zero() {
             return Err(OperatorTypesError::OperatorIdFromPubKey(
                 BlsError::InvalidPublicKey,
             ));
         }
 
+        //if o.DelegationApproverAddress != ZeroAddress && !utils.IsValidEthereumAddress(o.DelegationApproverAddress) {
+        //    return ErrInvalidDelegationApproverAddress
+        //}
         if !self.delegation_approver_address.is_zero() {
             return Err(OperatorTypesError::OperatorIdFromPubKey(
                 BlsError::InvalidPublicKey,
@@ -85,31 +92,7 @@ impl Operator {
         }
 
         // Validate metadata
-        if let Some(metadata_url) = &self.metadata_url {
-            let body = get_url_content(metadata_url)?;
-            let operator_metadata: OperatorMetadata = serde_json::from_str(&body)?;
-            operator_metadata.validate()?;
-        }
-
-        Ok(())
-    }
-    /*
-    From Go SDK:
-
-    func (o Operator) Validate() error {
-        if !utils.IsValidEthereumAddress(o.Address) {
-            return ErrInvalidOperatorAddress
-        }
-
-        if o.DelegationApproverAddress != ZeroAddress && !utils.IsValidEthereumAddress(o.DelegationApproverAddress) {
-            return ErrInvalidDelegationApproverAddress
-        }
-
-        err := utils.CheckIfUrlIsValid(o.MetadataUrl)
-        if err != nil {
-            return utils.WrapError(ErrInvalidMetadataUrl, err)
-        }
-
+        /*
         body, err := utils.ReadPublicURL(o.MetadataUrl)
         if err != nil {
             return utils.WrapError(ErrReadingMetadataUrlResponse, err)
@@ -122,8 +105,65 @@ impl Operator {
         }
 
         return operatorMetadata.Validate()
+        */
+
+        if let Some(metadata_url) = &self.metadata_url {
+            // Check for valid URL
+            /*
+            err := utils.CheckIfUrlIsValid(o.MetadataUrl)
+            if err != nil {
+                return utils.WrapError(ErrInvalidMetadataUrl, err)
+            }
+            */
+
+            let body = get_url_content(metadata_url)?;
+            let operator_metadata: OperatorMetadata = serde_json::from_str(&body)?;
+            operator_metadata.validate()?;
+        }
+
+        Ok(())
     }
-    */
+
+    //OperatorPubkeys.ToContractPubkeys
+    pub fn to_contract_public_keys(&self) -> (BlsG1Point, BlsG2Point) {
+        // from Go code:
+        /*
+        func (op OperatorPubkeys) ToContractPubkeys() (apkreg.BN254G1Point, apkreg.BN254G2Point) {
+            return apkreg.BN254G1Point{
+                    X: op.G1Pubkey.X.BigInt(new(big.Int)),
+                    Y: op.G1Pubkey.Y.BigInt(new(big.Int)),
+                }, apkreg.BN254G2Point{
+                    X: [2]*big.Int{op.G2Pubkey.X.A0.BigInt(new(big.Int)), op.G2Pubkey.X.A1.BigInt(new(big.Int))},
+                    Y: [2]*big.Int{op.G2Pubkey.Y.A0.BigInt(new(big.Int)), op.G2Pubkey.Y.A1.BigInt(new(big.Int))},
+                }
+        }
+        */
+        todo!()
+    }
+
+    pub fn operator_id_from_contract_g1_pubkey(pubkey: BlsG1Point) -> OperatorId {
+        //func OperatorIdFromContractG1Pubkey(pubkey apkreg.BN254G1Point) OperatorId {
+        //    return OperatorIdFromG1Pubkey(G1PubkeyFromContractG1Pubkey(pubkey))
+        //}
+        //OperatorId::from(G1PubkeyFromContractG1Pubkey(pubkey))
+        todo!()
+    }
+
+    pub fn operator_id_from_key_pair(keypair: BlsKeyPair) -> OperatorId {
+        //func OperatorIdFromKeyPair(keyPair *bls.KeyPair) OperatorId {
+        //    return OperatorIdFromG1Pubkey(keyPair.GetPubKeyG1())
+        //}
+        //OperatorId::from(G1PubkeyFromContractG1Pubkey(keypair.get_pub_key_g1()))
+        todo!()
+    }
+
+    pub fn g1_pubkey_from_contract_g1_pubkey(pubkey: BlsG1Point) -> BlsG1Point {
+        //func G1PubkeyFromContractG1Pubkey(pubkey apkreg.BN254G1Point) *bls.G1Point {
+        //    return bls.NewG1Point(pubkey.X, pubkey.Y)
+        //}
+        //bls.NewG1Point(pubkey.X, pubkey.Y)
+        todo!()
+    }
 }
 
 pub type Socket = String;
