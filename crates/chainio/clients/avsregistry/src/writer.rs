@@ -438,9 +438,49 @@ mod tests {
     async fn test_set_slashable_stake_lookahead() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
 
-        let private_key = ANVIL_FIRST_PRIVATE_KEY.to_string();
+        let private_key =
+            "8b3a350cf5c34c9194ca85829a2df0ec3153be0318b5e2d3348e872092edffba".to_string();
         let avs_writer =
             build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
+
+        let registry_add = get_registry_coordinator_address(http_endpoint.clone()).await;
+        let provider = get_signer(&avs_writer.signer.clone(), &avs_writer.provider);
+        let contract_registry_coordinator = RegistryCoordinator::new(registry_add, provider);
+
+        let bls_key_pair = BlsKeyPair::new(
+            "1371012690269088913462269866874713266643928125698382731338806296762673180359922"
+                .to_string(),
+        )
+        .unwrap();
+        let digest_hash: FixedBytes<32> = FixedBytes::from([0x02; 32]);
+        let quorum_nums = Bytes::from([0]);
+        let signature_expiry = U256::MAX;
+
+        let tx_hash = avs_writer
+            .register_operator_in_quorum_with_avs_registry_coordinator(
+                bls_key_pair,
+                digest_hash,
+                signature_expiry,
+                quorum_nums.clone(),
+                "".into(),
+            )
+            .await
+            .unwrap();
+
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
+
+        dbg!(tx_status);
+
+        let quorum_count = contract_registry_coordinator
+            .quorumCount()
+            .call()
+            .await
+            .unwrap();
+
+        dbg!(quorum_count._0);
 
         // Set up event poller to listen to `LookAheadPeriodChanged` events
         let provider = get_signer(&avs_writer.signer.clone(), &avs_writer.provider);
