@@ -785,15 +785,18 @@ impl ELChainWriter {
         num_to_clear: Vec<u16>,
     ) -> Result<TxHash, ElContractsError> {
         let provider = get_signer(&self.signer, &self.provider);
-        let allocation_manager_contract = AllocationManager::new(self.allocation_manager, provider);
+        let allocation_manager_contract = AllocationManager::new(
+            self.allocation_manager
+                .ok_or(ElContractsError::MissingParameter)?,
+            provider,
+        );
 
-        let tx = allocation_manager_contract
+        allocation_manager_contract
             .clearDeallocationQueue(operator, strategies, num_to_clear)
             .send()
             .await
-            .map_err(ElContractsError::AlloyContractError)?;
-
-        Ok(*tx.tx_hash())
+            .map_err(ElContractsError::AlloyContractError)
+            .map(|tx| *tx.tx_hash())
     }
 }
 
@@ -1457,13 +1460,12 @@ mod tests {
             ANVIL_FIRST_PRIVATE_KEY.to_string(),
         )
         .await;
+        let avs_address = get_service_manager_address(http_endpoint.clone()).await;
+        create_operator_set(http_endpoint.as_str(), avs_address).await;
 
         let operator_address = ANVIL_FIRST_ADDRESS;
         let strategy_addr = get_erc20_mock_strategy(http_endpoint.clone()).await;
-        let avs_address = ANVIL_FIRST_ADDRESS;
-        let operator_set_id = 1;
-
-        create_operator_set(http_endpoint.as_str(), avs_address, operator_set_id).await;
+        let operator_set_id = 0;
 
         let new_allocation = 100;
         let allocate_params = IAllocationManagerTypes::AllocateParams {
