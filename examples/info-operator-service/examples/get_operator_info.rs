@@ -94,7 +94,7 @@ pub async fn register_operator(pvt_key: &str, bls_key: &str, http_endpoint: &str
 
     let el_chain_reader = ELChainReader::new(
         get_test_logger(),
-        Some(Address::ZERO),
+        None,
         delegation_manager_address,
         rewards_coordinator_address,
         avs_directory_address,
