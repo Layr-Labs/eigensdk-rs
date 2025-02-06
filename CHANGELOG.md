@@ -20,6 +20,9 @@ Those changes in added, changed or breaking changes, should include usage exampl
   ```rust
     let tx_hash = avs_writer
       .set_rewards_initiator(new_rewards_init_address)
+      .await
+      .unwrap();
+  ```
 * Added new method `clear_deallocation_queue` in `elcontracts/writer` in [#270](https://github.com/Layr-Labs/eigensdk-rs/pull/270)
   ```rust
   let tx_hash_clear = el_chain_writer
