@@ -131,4 +131,4 @@ jobs:
           version: stable
       
       - name: Generate anvil state
-        run: make deploy-contracts-to-anvil-and-save-state
+        run: make dump-state

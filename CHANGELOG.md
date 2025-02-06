@@ -27,6 +27,8 @@ Those changes in added, changed or breaking changes, should include usage exampl
 * Fixed incorrect package name in Cargo.toml for examples in [#285](https://github.com/Layr-Labs/eigensdk-rs/pull/285).
 
 ### Breaking changes
+* Slashing UAM changes in [#248](https://github.com/Layr-Labs/eigensdk-rs/pull/248).
+
 ### Removed
 * Removed homepage from testing-utils crate in [#266](https://github.com/Layr-Labs/eigensdk-rs/pull/266).
 * Removed changelog generation by release-plz in [#281](https://github.com/Layr-Labs/eigensdk-rs/pull/281).
