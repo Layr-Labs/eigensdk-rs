@@ -361,7 +361,7 @@ impl AvsRegistryChainWriter {
         Ok(*tx.tx_hash())
     }
 
-    /// Update an existing quorum configuration
+    /// Update the configuration of an existing quorum.
     ///
     /// # Arguments
     /// * `quorum_number` - the quorum number to update
