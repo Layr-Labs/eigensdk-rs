@@ -367,19 +367,29 @@ impl AvsRegistryChainWriter {
 
 #[cfg(test)]
 mod tests {
-    use crate::test_utils::ANVIL_FIRST_PRIVATE_KEY;
-
     use super::AvsRegistryChainWriter;
+    use crate::test_utils::ANVIL_FIRST_PRIVATE_KEY;
+    use alloy::primitives::aliases::U96;
     use alloy::primitives::{Address, Bytes, FixedBytes, U256};
+    use alloy::providers::WalletProvider;
+    use alloy::sol_types::SolCall;
     use eigen_common::get_signer;
     use eigen_crypto_bls::BlsKeyPair;
     use eigen_logging::get_test_logger;
     use eigen_testing_utils::anvil::{start_anvil_container, start_m2_anvil_container};
     use eigen_testing_utils::anvil_constants::{
+        get_allocation_manager_address, get_erc20_mock_strategy,
         get_operator_state_retriever_address, get_registry_coordinator_address,
+        get_service_manager_address,
     };
     use eigen_testing_utils::transaction::wait_transaction;
-    use eigen_utils::slashing::middleware::registrycoordinator::RegistryCoordinator;
+    use eigen_utils::slashing::core::allocationmanager::AllocationManager;
+    use eigen_utils::slashing::middleware::registrycoordinator::{
+        ISlashingRegistryCoordinatorTypes::OperatorSetParam, IStakeRegistryTypes::StrategyParams,
+        RegistryCoordinator,
+    };
+    use eigen_utils::slashing::middleware::stakeregistry::StakeRegistry::StakeRegistryInstance;
+    use eigen_utils::slashing::sdk::mockavsservicemanager::MockAvsServiceManager;
     use futures_util::StreamExt;
     use std::str::FromStr;
 
@@ -431,7 +441,7 @@ mod tests {
             http_endpoint.clone(),
         )
         .await;
-        test_deregister_operator(&avs_writer, quorum_nums, http_endpoint).await;
+        test_deregister_operator(&avs_writer, quorum_nums, http_endpoint.clone()).await;
     }
 
     #[tokio::test]
@@ -441,8 +451,17 @@ mod tests {
         let avs_writer =
             build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
 
+        let avs_address = get_service_manager_address(http_endpoint.clone()).await;
+        create_operator_set(http_endpoint.as_str(), avs_address).await;
+
+        let provider = get_signer(&avs_writer.signer.clone(), &avs_writer.provider);
+        let contract_stake_registry =
+            StakeRegistryInstance::new(avs_writer.stake_registry_addr, provider);
+        let event = contract_stake_registry.LookAheadPeriodChanged_filter();
+        let poller = event.watch().await.unwrap();
+
         let quorum_number = 0_u8;
-        let lookahead = 32_u32;
+        let lookahead = 10_u32;
         let tx_hash = avs_writer
             .set_slashable_stake_lookahead(quorum_number, lookahead)
             .await
@@ -453,6 +472,11 @@ mod tests {
             .unwrap()
             .status();
         assert!(tx_status);
+
+        // Assert that event `LookAheadPeriodChanged` is the same as `new_rewards_init_address`
+        let mut stream = poller.into_stream();
+        let (stream_event, _) = stream.next().await.unwrap().unwrap();
+        assert_eq!(stream_event.newLookAheadBlocks, lookahead);
     }
 
     // this function is caller from test_avs_writer_methods
@@ -568,5 +592,73 @@ mod tests {
         let (stream_event, _) = stream.next().await.unwrap().unwrap();
 
         assert_eq!(stream_event.socket, new_socket_addr)
+    }
+
+    async fn create_operator_set(http_endpoint: &str, avs_address: Address) {
+        let allocation_manager_addr =
+            get_allocation_manager_address(http_endpoint.to_string()).await;
+        let default_signer = get_signer(ANVIL_FIRST_PRIVATE_KEY, http_endpoint);
+        let allocation_manager =
+            AllocationManager::new(allocation_manager_addr, default_signer.clone());
+        let registry_coordinator_addr =
+            get_registry_coordinator_address(http_endpoint.to_string()).await;
+        let service_manager_address = get_service_manager_address(http_endpoint.to_string()).await;
+        let service_manager =
+            MockAvsServiceManager::new(service_manager_address, default_signer.clone());
+        service_manager
+            .setAppointee(
+                default_signer.default_signer_address(),
+                allocation_manager_addr,
+                alloy::primitives::FixedBytes(AllocationManager::setAVSRegistrarCall::SELECTOR),
+            )
+            .send()
+            .await
+            .unwrap()
+            .get_receipt()
+            .await
+            .unwrap();
+        allocation_manager
+            .setAVSRegistrar(avs_address, registry_coordinator_addr)
+            .send()
+            .await
+            .unwrap()
+            .get_receipt()
+            .await
+            .unwrap();
+
+        // Create slashable quorum
+        let contract_registry_coordinator =
+            RegistryCoordinator::new(registry_coordinator_addr, default_signer.clone());
+        let operator_set_params = OperatorSetParam {
+            maxOperatorCount: 10,
+            kickBIPsOfOperatorStake: 100,
+            kickBIPsOfTotalStake: 1000,
+        };
+        let strategy = get_erc20_mock_strategy(http_endpoint.to_string()).await;
+        service_manager
+            .setAppointee(
+                registry_coordinator_addr,
+                allocation_manager_addr,
+                alloy::primitives::FixedBytes(AllocationManager::createOperatorSetsCall::SELECTOR),
+            )
+            .send()
+            .await
+            .unwrap()
+            .get_receipt()
+            .await
+            .unwrap();
+        let strategy_params = StrategyParams {
+            strategy,
+            multiplier: U96::from(1),
+        };
+
+        contract_registry_coordinator
+            .createSlashableStakeQuorum(operator_set_params, U96::from(0), vec![strategy_params], 0)
+            .send()
+            .await
+            .unwrap()
+            .get_receipt()
+            .await
+            .unwrap();
     }
 }
