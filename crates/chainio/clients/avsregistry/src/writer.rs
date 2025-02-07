@@ -306,12 +306,12 @@ impl AvsRegistryChainWriter {
         Ok(*tx.tx_hash())
     }
 
-    /// Sets the look ahead time for checking operator shares for a specific quorum
+    /// Sets the look-ahead time for checking operator shares for a specific quorum
     ///
     /// # Arguments
     ///
-    /// * `quorum_number` - The quorum number to set the look ahead period for
-    /// * `lookahead` - The number of days to look ahead when checking shares
+    /// * `quorum_number` - The quorum number to set the look-ahead period for
+    /// * `lookahead` - The number of blocks to look ahead when checking shares
     ///
     /// # Returns
     /// * `TxHash` - The transaction hash of the set slashable stake lookahead transaction
