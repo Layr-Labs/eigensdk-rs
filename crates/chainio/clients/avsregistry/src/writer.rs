@@ -11,7 +11,6 @@ use eigen_utils::slashing::middleware::registrycoordinator::{
     IBLSApkRegistryTypes::PubkeyRegistrationParams, ISignatureUtils::SignatureWithSaltAndExpiry,
     RegistryCoordinator,
 };
-use eigen_utils::slashing::middleware::stakeregistry::StakeRegistry::StakeRegistryInstance;
 use eigen_utils::slashing::middleware::{
     servicemanagerbase::ServiceManagerBase, stakeregistry::StakeRegistry,
 };
