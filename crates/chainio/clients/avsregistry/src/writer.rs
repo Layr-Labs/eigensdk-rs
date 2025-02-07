@@ -421,7 +421,7 @@ mod tests {
 
     use super::AvsRegistryChainWriter;
     use crate::test_utils::{ANVIL_FIRST_PRIVATE_KEY, ANVIL_SECOND_ADDRESS};
-    use alloy::primitives::{address, Address, Bytes, FixedBytes, U256};
+    use alloy::primitives::{Address, Bytes, FixedBytes, U256};
     use eigen_common::get_signer;
     use eigen_crypto_bls::BlsKeyPair;
     use eigen_logging::get_test_logger;
