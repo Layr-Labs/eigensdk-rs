@@ -1,37 +1,47 @@
 use crate::error::ElContractsError;
 use crate::reader::ELChainReader;
-use alloy::primitives::{Address, Bytes, FixedBytes, TxHash, U256};
-use alloy::sol_types::SolValue;
+use alloy::dyn_abi::DynSolValue;
+use alloy::primitives::{Address, FixedBytes, TxHash, U256};
+use alloy::sol;
 use eigen_common::get_signer;
 use eigen_crypto_bls::{
     alloy_g1_point_to_g1_affine, convert_to_g1_point, convert_to_g2_point, BlsKeyPair,
 };
 pub use eigen_types::operator::Operator;
+
+use eigen_utils::convert_allocation_operator_set_to_rewards_operator_set;
+use eigen_utils::slashing::core::allocationmanager::AllocationManager::OperatorSet;
 use eigen_utils::{
-    core::{
+    slashing::core::{
         allocationmanager::{AllocationManager, IAllocationManagerTypes},
         delegationmanager::DelegationManager,
         irewardscoordinator::{IRewardsCoordinator, IRewardsCoordinatorTypes::RewardsMerkleClaim},
         permissioncontroller::PermissionController,
         strategymanager::StrategyManager,
     },
-    middleware::{
-        ierc20::IERC20,
-        registrycoordinator::{IBLSApkRegistry::PubkeyRegistrationParams, RegistryCoordinator},
-    },
+    slashing::middleware::{ierc20::IERC20, registrycoordinator::RegistryCoordinator},
 };
 use tracing::info;
 
 /// Gas limit for registerAsOperator in [`DelegationManager`]
 pub const GAS_LIMIT_REGISTER_AS_OPERATOR_DELEGATION_MANAGER: u128 = 300000;
 
+sol! {
+    #[allow(missing_docs)]
+    #[derive(Debug)]
+    /// Bar
+    enum RegistrationType {
+        NORMAL,
+        CHURN,
+    }
+}
 /// Chain Writer to interact with EigenLayer contracts onchain
 #[derive(Debug, Clone)]
 pub struct ELChainWriter {
     strategy_manager: Address,
     rewards_coordinator: Address,
-    permission_controller: Address,
-    allocation_manager: Address,
+    permission_controller: Option<Address>,
+    allocation_manager: Option<Address>,
     registry_coordinator: Address,
     el_chain_reader: ELChainReader,
     provider: String,
@@ -43,8 +53,8 @@ impl ELChainWriter {
     pub fn new(
         strategy_manager: Address,
         rewards_coordinator: Address,
-        permission_controller: Address,
-        allocation_manager: Address,
+        permission_controller: Option<Address>,
+        allocation_manager: Option<Address>,
         registry_coordinator: Address,
         el_chain_reader: ELChainReader,
         provider: String,
@@ -333,6 +343,41 @@ impl ELChainWriter {
         Ok(*tx.tx_hash())
     }
 
+    /// Sets the split for a specific `operator` for a specific `operatorSet`
+    ///
+    /// # Arguments
+    ///
+    /// * `operator` - The operator address
+    /// * `OperatorSet` - The operator set which consists of avs address and id.
+    /// * `split` - The split for the operator for the specific operatorSet in bips.
+    ///
+    /// # Returns
+    ///
+    /// * `Result<FixedBytes<32>, ElContractsError>` - The transaction hash if the transaction is sent, otherwise an error.
+    ///
+    /// # Errors
+    ///
+    /// * `ElContractsError` - if the call to the contract fails.
+    pub async fn set_operator_set_split(
+        &self,
+        operator: Address,
+        operator_set: OperatorSet,
+        split: u16,
+    ) -> Result<FixedBytes<32>, ElContractsError> {
+        let signer = get_signer(&self.signer, &self.provider);
+
+        let rewards_coordinator = IRewardsCoordinator::new(self.rewards_coordinator, signer);
+        let operator_set_rewards =
+            convert_allocation_operator_set_to_rewards_operator_set(operator_set);
+        let tx = rewards_coordinator
+            .setOperatorSetSplit(operator, operator_set_rewards, split)
+            .send()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        Ok(*tx.tx_hash())
+    }
+
     /// sets the split of a specific `operator` for Programmatic Incentives
     ///
     /// # Arguments
@@ -389,9 +434,11 @@ impl ELChainWriter {
         selector: FixedBytes<4>,
     ) -> Result<TxHash, ElContractsError> {
         let provider = get_signer(&self.signer, &self.provider);
-
-        let permission_controller_contract =
-            PermissionController::new(self.permission_controller, provider);
+        let permission_controller_contract = PermissionController::new(
+            self.permission_controller
+                .ok_or(ElContractsError::MissingParameter)?,
+            provider,
+        );
 
         let tx = permission_controller_contract
             .removeAppointee(account_address, appointee_address, target, selector)
@@ -421,9 +468,11 @@ impl ELChainWriter {
         selector: FixedBytes<4>,
     ) -> Result<TxHash, ElContractsError> {
         let provider = get_signer(&self.signer, &self.provider);
-
-        let permission_controller_contract =
-            PermissionController::new(self.permission_controller, provider);
+        let permission_controller_contract = PermissionController::new(
+            self.permission_controller
+                .ok_or(ElContractsError::MissingParameter)?,
+            provider,
+        );
 
         let tx = permission_controller_contract
             .setAppointee(account_address, appointee_address, target, selector)
@@ -450,9 +499,11 @@ impl ELChainWriter {
         admin_address: Address,
     ) -> Result<TxHash, ElContractsError> {
         let provider = get_signer(&self.signer, &self.provider);
-
-        let permission_controller_contract =
-            PermissionController::new(self.permission_controller, provider);
+        let permission_controller_contract = PermissionController::new(
+            self.permission_controller
+                .ok_or(ElContractsError::MissingParameter)?,
+            provider,
+        );
 
         let tx = permission_controller_contract
             .removePendingAdmin(account_address, admin_address)
@@ -480,9 +531,11 @@ impl ELChainWriter {
         admin_address: Address,
     ) -> Result<TxHash, ElContractsError> {
         let provider = get_signer(&self.signer, &self.provider);
-
-        let permission_controller_contract =
-            PermissionController::new(self.permission_controller, provider);
+        let permission_controller_contract = PermissionController::new(
+            self.permission_controller
+                .ok_or(ElContractsError::MissingParameter)?,
+            provider,
+        );
 
         let tx = permission_controller_contract
             .addPendingAdmin(account_address, admin_address)
@@ -508,9 +561,11 @@ impl ELChainWriter {
     /// * `ElContractsError` - if the call to the contract fails.
     pub async fn accept_admin(&self, account: Address) -> Result<TxHash, ElContractsError> {
         let provider = get_signer(&self.signer, &self.provider);
-
-        let permission_controller_contract =
-            PermissionController::new(self.permission_controller, provider);
+        let permission_controller_contract = PermissionController::new(
+            self.permission_controller
+                .ok_or(ElContractsError::MissingParameter)?,
+            provider,
+        );
 
         let tx = permission_controller_contract
             .acceptAdmin(account)
@@ -541,9 +596,11 @@ impl ELChainWriter {
         admin: Address,
     ) -> Result<TxHash, ElContractsError> {
         let provider = get_signer(&self.signer, &self.provider);
-
-        let permission_controller_contract =
-            PermissionController::new(self.permission_controller, provider);
+        let permission_controller_contract = PermissionController::new(
+            self.permission_controller
+                .ok_or(ElContractsError::MissingParameter)?,
+            provider,
+        );
 
         let tx = permission_controller_contract
             .removeAdmin(account, admin)
@@ -579,8 +636,11 @@ impl ELChainWriter {
         socket: &str,
     ) -> Result<TxHash, ElContractsError> {
         let provider = get_signer(&self.signer, &self.provider);
-        let allocation_manager_contract =
-            AllocationManager::new(self.allocation_manager, provider.clone());
+        let contract_allocation_manager = AllocationManager::new(
+            self.allocation_manager
+                .ok_or(ElContractsError::MissingParameter)?,
+            provider.clone(),
+        );
         let contract_registry_coordinator =
             RegistryCoordinator::new(self.registry_coordinator, provider);
 
@@ -600,24 +660,32 @@ impl ELChainWriter {
         let g2_pub_key_bn254 = convert_to_g2_point(bls_key_pair.public_key_g2().g2())
             .map_err(|_| ElContractsError::BLSKeyPairInvalid)?;
 
-        let params = PubkeyRegistrationParams {
-            pubkeyRegistrationSignature: alloy_g1_point_signed_msg,
-            pubkeyG1: g1_pub_key_bn254,
-            pubkeyG2: g2_pub_key_bn254,
-        };
-
-        let mut data: Bytes = (socket, params).abi_encode().into();
-
-        // The encoder is prepending 32 bytes to the data as if it was used in a dynamic function parameter.
-        // This is not used when decoding the bytes directly, so we need to remove it.
-        data = data.slice(32..);
+        let g2_point_x: Vec<DynSolValue> = vec![
+            DynSolValue::Uint(g2_pub_key_bn254.X[0], 256),
+            DynSolValue::Uint(g2_pub_key_bn254.X[1], 256),
+        ];
+        let g2_point_y: Vec<DynSolValue> = vec![
+            DynSolValue::Uint(g2_pub_key_bn254.Y[0], 256),
+            DynSolValue::Uint(g2_pub_key_bn254.Y[1], 256),
+        ];
+        let encoded_params_with_socket = DynSolValue::Tuple(vec![
+            DynSolValue::Uint(U256::from(0), 256),
+            DynSolValue::String(socket.to_string()),
+            DynSolValue::Uint(alloy_g1_point_signed_msg.X, 256),
+            DynSolValue::Uint(alloy_g1_point_signed_msg.Y, 256),
+            DynSolValue::Uint(g1_pub_key_bn254.X, 256),
+            DynSolValue::Uint(g1_pub_key_bn254.Y, 256),
+            DynSolValue::FixedArray(g2_point_x),
+            DynSolValue::FixedArray(g2_point_y),
+        ])
+        .abi_encode_params();
 
         let params = IAllocationManagerTypes::RegisterParams {
             avs: avs_address,
             operatorSetIds: operator_set_ids,
-            data,
+            data: encoded_params_with_socket.into(),
         };
-        let tx = allocation_manager_contract
+        let tx = contract_allocation_manager
             .registerForOperatorSets(operator_address, params)
             .send()
             .await?;
@@ -648,14 +716,18 @@ impl ELChainWriter {
         operator_set_ids: Vec<u32>,
     ) -> Result<TxHash, ElContractsError> {
         let provider = get_signer(&self.signer, &self.provider);
-        let allocation_manager_contract = AllocationManager::new(self.allocation_manager, provider);
+        let contract_allocation_manager = AllocationManager::new(
+            self.allocation_manager
+                .ok_or(ElContractsError::MissingParameter)?,
+            provider,
+        );
 
         let params = IAllocationManagerTypes::DeregisterParams {
             operator: operator_address,
             avs: avs_address,
             operatorSetIds: operator_set_ids,
         };
-        let tx = allocation_manager_contract
+        let tx = contract_allocation_manager
             .deregisterFromOperatorSets(params)
             .send()
             .await
@@ -685,9 +757,13 @@ impl ELChainWriter {
         delay: u32,
     ) -> Result<TxHash, ElContractsError> {
         let provider = get_signer(&self.signer, &self.provider);
-        let allocation_manager_contract = AllocationManager::new(self.allocation_manager, provider);
+        let contract_allocation_manager = AllocationManager::new(
+            self.allocation_manager
+                .ok_or(ElContractsError::MissingParameter)?,
+            provider,
+        );
 
-        let tx = allocation_manager_contract
+        let tx = contract_allocation_manager
             .setAllocationDelay(operator_address, delay)
             .send()
             .await
@@ -710,15 +786,54 @@ impl ELChainWriter {
         allocations: Vec<IAllocationManagerTypes::AllocateParams>,
     ) -> Result<TxHash, ElContractsError> {
         let provider = get_signer(&self.signer, &self.provider);
-        let allocation_manager_contract = AllocationManager::new(self.allocation_manager, provider);
+        let contract_allocation_manager = AllocationManager::new(
+            self.allocation_manager
+                .ok_or(ElContractsError::MissingParameter)?,
+            provider,
+        );
 
-        let tx = allocation_manager_contract
+        let tx = contract_allocation_manager
             .modifyAllocations(operator_address, allocations)
             .send()
             .await
             .map_err(ElContractsError::AlloyContractError)?;
 
         Ok(*tx.tx_hash())
+    }
+
+    /// Removes from the deallocationQueue all clearable deallocations up to max `num_to_clear` number of deallocations.
+    ///
+    /// `len(strategies)` must be equal to `len(num_to_clear)`
+    ///
+    /// # Arguments
+    /// * `operator` - operator address to clear deallocations for
+    /// * `strategies` - list of strategies to clear deallocations for
+    /// * `num_to_clear` - list of number of pending deallocations to clear for each strategy
+    ///
+    /// # Returns
+    /// * `TxHash` - The transaction hash of the generated transaction.
+    ///
+    /// # Errors
+    /// * `ElContractsError` - if the call to the contract fails.
+    pub async fn clear_deallocation_queue(
+        &self,
+        operator: Address,
+        strategies: Vec<Address>,
+        num_to_clear: Vec<u16>,
+    ) -> Result<TxHash, ElContractsError> {
+        let provider = get_signer(&self.signer, &self.provider);
+        let allocation_manager_contract = AllocationManager::new(
+            self.allocation_manager
+                .ok_or(ElContractsError::MissingParameter)?,
+            provider,
+        );
+
+        allocation_manager_contract
+            .clearDeallocationQueue(operator, strategies, num_to_clear)
+            .send()
+            .await
+            .map_err(ElContractsError::AlloyContractError)
+            .map(|tx| *tx.tx_hash())
     }
 }
 
@@ -731,12 +846,15 @@ mod tests {
         build_el_chain_reader, new_claim, new_test_writer, ANVIL_FIRST_ADDRESS,
         ANVIL_FIRST_PRIVATE_KEY, OPERATOR_ADDRESS, OPERATOR_PRIVATE_KEY,
     };
-    use alloy::primitives::{address, aliases::U96, Address, U256};
-    use alloy::providers::Provider;
+    use alloy::{
+        primitives::{address, aliases::U96, Address, U256},
+        providers::{Provider, WalletProvider},
+        sol_types::SolCall,
+    };
     use eigen_common::{get_provider, get_signer};
     use eigen_crypto_bls::BlsKeyPair;
     use eigen_testing_utils::{
-        anvil::{mine_anvil_blocks, set_account_balance, start_anvil_container},
+        anvil::{mine_anvil_blocks_operator_set, set_account_balance, start_anvil_container},
         anvil_constants::{
             get_allocation_manager_address, get_erc20_mock_strategy,
             get_registry_coordinator_address, get_service_manager_address,
@@ -745,13 +863,17 @@ mod tests {
     };
     use eigen_types::operator::Operator;
     use eigen_utils::{
-        core::allocationmanager::{
-            AllocationManager::{self, OperatorSet},
-            IAllocationManagerTypes,
-        },
-        middleware::registrycoordinator::{
-            IRegistryCoordinator::OperatorSetParam, IStakeRegistry::StrategyParams,
-            RegistryCoordinator,
+        convert_allocation_operator_set_to_rewards_operator_set,
+        slashing::{
+            core::allocationmanager::{
+                AllocationManager::{self, OperatorSet},
+                IAllocationManagerTypes,
+            },
+            middleware::registrycoordinator::{
+                ISlashingRegistryCoordinatorTypes::OperatorSetParam,
+                IStakeRegistryTypes::StrategyParams, RegistryCoordinator,
+            },
+            sdk::mockavsservicemanager::MockAvsServiceManager,
         },
     };
     use std::str::FromStr;
@@ -795,7 +917,7 @@ mod tests {
         let el_chain_writer =
             new_test_writer(http_endpoint.to_string(), private_key.to_string()).await;
 
-        set_account_balance(&container, address_str).await;
+        set_account_balance(&container, address_str, "http://localhost:8546").await;
         let address = Address::from_str(address_str).unwrap();
 
         let operator = Operator {
@@ -1100,14 +1222,29 @@ mod tests {
         assert!(receipt.status());
     }
 
-    async fn create_operator_set(http_endpoint: &str, avs_address: Address, operator_set_id: u32) {
+    async fn create_operator_set(http_endpoint: &str, avs_address: Address) {
         let allocation_manager_addr =
             get_allocation_manager_address(http_endpoint.to_string()).await;
-        let signer = get_signer(ANVIL_FIRST_PRIVATE_KEY, http_endpoint);
-        let allocation_manager = AllocationManager::new(allocation_manager_addr, signer.clone());
+        let default_signer = get_signer(ANVIL_FIRST_PRIVATE_KEY, http_endpoint);
+        let allocation_manager =
+            AllocationManager::new(allocation_manager_addr, default_signer.clone());
         let registry_coordinator_addr =
             get_registry_coordinator_address(http_endpoint.to_string()).await;
-
+        let service_manager_address = get_service_manager_address(http_endpoint.to_string()).await;
+        let service_manager =
+            MockAvsServiceManager::new(service_manager_address, default_signer.clone());
+        service_manager
+            .setAppointee(
+                default_signer.default_signer_address(),
+                allocation_manager_addr,
+                alloy::primitives::FixedBytes(AllocationManager::setAVSRegistrarCall::SELECTOR),
+            )
+            .send()
+            .await
+            .unwrap()
+            .get_receipt()
+            .await
+            .unwrap();
         allocation_manager
             .setAVSRegistrar(avs_address, registry_coordinator_addr)
             .send()
@@ -1117,47 +1254,34 @@ mod tests {
             .await
             .unwrap();
 
-        // Enable operator sets in Registry Coordinator
-        let registry_coordinator =
-            RegistryCoordinator::new(registry_coordinator_addr, signer.clone());
-        registry_coordinator
-            .enableOperatorSets()
-            .send()
-            .await
-            .unwrap()
-            .get_receipt()
-            .await
-            .unwrap();
-
         // Create slashable quorum
         let contract_registry_coordinator =
-            RegistryCoordinator::new(registry_coordinator_addr, signer.clone());
+            RegistryCoordinator::new(registry_coordinator_addr, default_signer.clone());
         let operator_set_params = OperatorSetParam {
             maxOperatorCount: 10,
             kickBIPsOfOperatorStake: 100,
             kickBIPsOfTotalStake: 1000,
         };
         let strategy = get_erc20_mock_strategy(http_endpoint.to_string()).await;
-        let strategy_params = StrategyParams {
-            strategy,
-            multiplier: U96::from(1),
-        };
-        contract_registry_coordinator
-            .createSlashableStakeQuorum(operator_set_params, U96::from(0), vec![strategy_params], 0)
+        service_manager
+            .setAppointee(
+                registry_coordinator_addr,
+                allocation_manager_addr,
+                alloy::primitives::FixedBytes(AllocationManager::createOperatorSetsCall::SELECTOR),
+            )
             .send()
             .await
             .unwrap()
             .get_receipt()
             .await
             .unwrap();
-
-        // Create operator set
-        let params = IAllocationManagerTypes::CreateSetParams {
-            operatorSetId: operator_set_id,
-            strategies: vec![strategy],
+        let strategy_params = StrategyParams {
+            strategy,
+            multiplier: U96::from(1),
         };
-        allocation_manager
-            .createOperatorSets(avs_address, vec![params])
+
+        contract_registry_coordinator
+            .createSlashableStakeQuorum(operator_set_params, U96::from(0), vec![strategy_params], 0)
             .send()
             .await
             .unwrap()
@@ -1169,10 +1293,9 @@ mod tests {
     #[tokio::test]
     async fn test_register_for_operator_sets() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-
-        let avs_address = ANVIL_FIRST_ADDRESS;
-        let operator_set_id = 1;
-        create_operator_set(http_endpoint.as_str(), avs_address, operator_set_id).await;
+        let avs_address = get_service_manager_address(http_endpoint.clone()).await;
+        let operator_set_id = 0;
+        create_operator_set(http_endpoint.as_str(), avs_address).await;
 
         let operator_addr = OPERATOR_ADDRESS;
         let operator_private_key = OPERATOR_PRIVATE_KEY;
@@ -1223,7 +1346,11 @@ mod tests {
             .unwrap();
         let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
         assert!(receipt.status());
-
+        let current_block = get_provider(&http_endpoint)
+            .get_block_number()
+            .await
+            .unwrap();
+        mine_anvil_blocks_operator_set(&_container, (current_block as u32) + 2).await;
         let allocation_delay = el_chain_writer
             .el_chain_reader
             .get_allocation_delay(ANVIL_FIRST_ADDRESS)
@@ -1245,17 +1372,18 @@ mod tests {
         let operator_address = ANVIL_FIRST_ADDRESS;
         let strategy_addr = get_erc20_mock_strategy(http_endpoint.clone()).await;
 
-        let avs_address = ANVIL_FIRST_ADDRESS;
-        let operator_set_id = 1;
-        create_operator_set(http_endpoint.as_str(), avs_address, operator_set_id).await;
+        let avs_address = get_service_manager_address(http_endpoint.clone()).await;
+        let operator_set_id = 0;
+        create_operator_set(http_endpoint.as_str(), avs_address).await;
 
         let new_allocation = 100;
         let allocate_params = IAllocationManagerTypes::AllocateParams {
             strategies: vec![strategy_addr],
-            operatorSet: OperatorSet {
-                avs: avs_address,
-                id: operator_set_id,
-            },
+            operatorSet:
+                eigen_utils::slashing::core::allocationmanager::AllocationManager::OperatorSet {
+                    avs: avs_address,
+                    id: operator_set_id,
+                },
             newMagnitudes: vec![new_allocation],
         };
         let tx_hash = el_chain_writer
@@ -1279,7 +1407,7 @@ mod tests {
             .get_allocation_delay(ANVIL_FIRST_ADDRESS)
             .await
             .unwrap();
-        mine_anvil_blocks(&container, allocation_delay).await;
+        mine_anvil_blocks_operator_set(&container, allocation_delay).await;
 
         let allocation_info = el_chain_writer
             .el_chain_reader
@@ -1311,23 +1439,67 @@ mod tests {
             .await
             .unwrap();
 
-        assert_eq!(split, 0);
+        assert_eq!(split, 1); // not initialized case
 
-        let tx_hash = el_chain_writer
+        el_chain_writer
             .set_operator_avs_split(ANVIL_FIRST_ADDRESS, avs_address, new_split)
             .await
             .unwrap();
-
-        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
-        assert!(receipt.status());
-
         let split = el_chain_writer
             .el_chain_reader
             .get_operator_avs_split(ANVIL_FIRST_ADDRESS, avs_address)
             .await
             .unwrap();
+        assert_eq!(split, 5); // initialized && activated
+    }
 
-        assert_eq!(split, new_split);
+    #[tokio::test]
+    async fn test_set_operator_set_split() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let avs_address = get_service_manager_address(http_endpoint.clone()).await;
+        let operator_set_id = 0;
+        create_operator_set(http_endpoint.as_str(), avs_address).await;
+
+        let operator_addr = OPERATOR_ADDRESS;
+        let operator_private_key = OPERATOR_PRIVATE_KEY;
+        let el_chain_writer =
+            new_test_writer(http_endpoint.clone(), operator_private_key.to_string()).await;
+        let bls_key = BlsKeyPair::new("1".to_string()).unwrap();
+
+        let tx_hash = el_chain_writer
+            .register_for_operator_sets(
+                operator_addr,
+                avs_address,
+                vec![operator_set_id],
+                bls_key,
+                "socket",
+            )
+            .await
+            .unwrap();
+
+        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+        assert!(receipt.status());
+        let operator_set = OperatorSet {
+            avs: avs_address,
+            id: 0,
+        };
+
+        let new_split = 5;
+        let tx_hash = el_chain_writer
+            .set_operator_set_split(OPERATOR_ADDRESS, operator_set.clone(), new_split)
+            .await
+            .unwrap();
+        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+        assert!(receipt.status());
+        let rewards_operator_set =
+            convert_allocation_operator_set_to_rewards_operator_set(operator_set.clone());
+        let split = el_chain_writer
+            .el_chain_reader
+            .get_operator_set_split(OPERATOR_ADDRESS, rewards_operator_set.clone())
+            .await
+            .unwrap();
+
+        assert_eq!(split, new_split); // initialized && activated
     }
 
     #[tokio::test]
@@ -1346,7 +1518,7 @@ mod tests {
             .await
             .unwrap();
 
-        assert_eq!(split, 0);
+        assert_eq!(split, 1); // not initialized case
 
         let tx_hash = el_chain_writer
             .set_operator_pi_split(ANVIL_FIRST_ADDRESS, new_split)
@@ -1363,5 +1535,75 @@ mod tests {
             .unwrap();
 
         assert_eq!(split, new_split);
+    }
+
+    #[tokio::test]
+    async fn test_clear_deallocation_queue() {
+        let (_contianer, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let el_chain_writer = new_test_writer(
+            http_endpoint.to_string(),
+            ANVIL_FIRST_PRIVATE_KEY.to_string(),
+        )
+        .await;
+        let avs_address = get_service_manager_address(http_endpoint.clone()).await;
+        create_operator_set(http_endpoint.as_str(), avs_address).await;
+
+        let operator_address = ANVIL_FIRST_ADDRESS;
+        let strategy_addr = get_erc20_mock_strategy(http_endpoint.clone()).await;
+        let operator_set_id = 0;
+
+        let new_allocation = 100;
+        let allocate_params = IAllocationManagerTypes::AllocateParams {
+            strategies: vec![strategy_addr],
+            operatorSet: OperatorSet {
+                avs: avs_address,
+                id: operator_set_id,
+            },
+            newMagnitudes: vec![new_allocation],
+        };
+        let tx_hash_alloc = el_chain_writer
+            .modify_allocations(operator_address, vec![allocate_params.clone()])
+            .await
+            .unwrap();
+        let receipt_alloc = wait_transaction(&http_endpoint, tx_hash_alloc)
+            .await
+            .unwrap();
+        assert!(receipt_alloc.status());
+
+        let allocation_info_before = el_chain_writer
+            .el_chain_reader
+            .get_allocation_info(operator_address, strategy_addr)
+            .await
+            .unwrap();
+
+        assert_eq!(
+            allocation_info_before[0].pending_diff,
+            U256::from(new_allocation)
+        );
+
+        let tx_hash_clear = el_chain_writer
+            .clear_deallocation_queue(
+                operator_address,
+                vec![strategy_addr],
+                vec![new_allocation as u16],
+            )
+            .await
+            .unwrap();
+        let receipt_clear = wait_transaction(&http_endpoint, tx_hash_clear)
+            .await
+            .unwrap();
+        assert!(receipt_clear.status(),);
+
+        let allocation_info_after = el_chain_writer
+            .el_chain_reader
+            .get_allocation_info(operator_address, strategy_addr)
+            .await
+            .unwrap();
+
+        assert_eq!(allocation_info_after[0].pending_diff, U256::ZERO);
+        assert_eq!(
+            allocation_info_after[0].current_magnitude,
+            U256::from(new_allocation)
+        );
     }
 }
