@@ -391,7 +391,13 @@ impl AvsRegistryChainWriter {
         Ok(*tx.tx_hash())
     }
 
-    /// TODO!
+    /// Sets an address as the ejector, which can force-deregister operators from quorums.
+    ///
+    /// # Arguments
+    /// * `address` - The address to set as the ejector
+    ///
+    /// # Returns
+    /// * `TxHash` - The transaction hash of the set ejector transaction
     pub async fn set_ejector(&self, address: Address) -> Result<TxHash, AvsRegistryError> {
         info!("setting ejector");
         let provider = get_signer(&self.signer.clone(), &self.provider);
