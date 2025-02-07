@@ -454,12 +454,14 @@ mod tests {
         let avs_address = get_service_manager_address(http_endpoint.clone()).await;
         create_operator_set(http_endpoint.as_str(), avs_address).await;
 
+        // Set up event poller to listen to `LookAheadPeriodChanged` events
         let provider = get_signer(&avs_writer.signer.clone(), &avs_writer.provider);
         let contract_stake_registry =
             StakeRegistryInstance::new(avs_writer.stake_registry_addr, provider);
         let event = contract_stake_registry.LookAheadPeriodChanged_filter();
         let poller = event.watch().await.unwrap();
 
+        // Set the slashable stake lookahead period. Old period is 0.
         let quorum_number = 0_u8;
         let lookahead = 10_u32;
         let tx_hash = avs_writer
