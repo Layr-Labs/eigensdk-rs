@@ -390,6 +390,24 @@ impl AvsRegistryChainWriter {
         info!(tx_hash = ?tx,"successfully set operator set param with the AVS's registry coordinator" );
         Ok(*tx.tx_hash())
     }
+
+    /// TODO!
+    pub async fn set_ejector(&self, address: Address) -> Result<TxHash, AvsRegistryError> {
+        info!("setting ejector");
+        let provider = get_signer(&self.signer.clone(), &self.provider);
+
+        let contract_registry_coordinator =
+            RegistryCoordinator::new(self.registry_coordinator_addr, provider);
+
+        let contract_call = contract_registry_coordinator.setEjector(address);
+
+        let tx = contract_call
+            .send()
+            .await
+            .map_err(AvsRegistryError::AlloyContractError)?;
+        info!(tx_hash = ?tx,"successfully set ejector" );
+        Ok(*tx.tx_hash())
+    }
 }
 
 #[cfg(test)]
@@ -397,7 +415,7 @@ mod tests {
 
     use super::AvsRegistryChainWriter;
     use crate::test_utils::{ANVIL_FIRST_PRIVATE_KEY, ANVIL_SECOND_ADDRESS};
-    use alloy::primitives::{Address, Bytes, FixedBytes, U256};
+    use alloy::primitives::{address, Address, Bytes, FixedBytes, U256};
     use eigen_common::get_signer;
     use eigen_crypto_bls::BlsKeyPair;
     use eigen_logging::get_test_logger;
@@ -662,5 +680,34 @@ mod tests {
             op_params._0.kickBIPsOfTotalStake,
             operator_set_params.kickBIPsOfTotalStake
         );
+    }
+
+    #[tokio::test]
+    async fn test_eject_operator() {
+        let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
+        let private_key = ANVIL_FIRST_PRIVATE_KEY.to_string();
+        let new_ejector_address = ANVIL_SECOND_ADDRESS;
+
+        let avs_writer =
+            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
+
+        let registry_contract = RegistryCoordinator::new(
+            avs_writer.registry_coordinator_addr,
+            get_signer(&avs_writer.signer.clone(), &avs_writer.provider),
+        );
+        let ejecutor = registry_contract.ejector().call().await.unwrap();
+        assert_ne!(ejecutor._0, new_ejector_address);
+
+        let tx_hash = avs_writer.set_ejector(new_ejector_address).await.unwrap();
+
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
+
+        assert!(tx_status);
+
+        let ejecutor = registry_contract.ejector().call().await.unwrap();
+        assert_eq!(ejecutor._0, new_ejector_address);
     }
 }
