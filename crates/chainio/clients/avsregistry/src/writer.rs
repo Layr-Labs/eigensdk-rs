@@ -597,5 +597,63 @@ mod tests {
         // Assert that event socket is the same as passed in the update socket function
         let mut stream = poller.into_stream();
         let (stream_event, _) = stream.next().await.unwrap().unwrap();
+
+        assert_eq!(stream_event.socket, new_socket_addr);
+    }
+
+    #[tokio::test]
+    async fn test_set_operator_set_param() {
+        let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
+        let bls_key =
+            "1371012690269088913462269866874713266643928125698382731338806296762673180359922"
+                .to_string();
+        let private_key = ANVIL_FIRST_PRIVATE_KEY.to_string();
+        let avs_writer =
+            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
+        let quorum_nums = Bytes::from([0]);
+
+        test_register_operator(&avs_writer, bls_key, quorum_nums, http_endpoint.clone()).await;
+
+        let registry_coordinator_contract = RegistryCoordinator::new(
+            avs_writer.registry_coordinator_addr,
+            get_signer(&avs_writer.signer.clone(), &avs_writer.provider),
+        );
+
+        let operator_set_params = OperatorSetParam {
+            maxOperatorCount: 10,
+            kickBIPsOfOperatorStake: 50,
+            kickBIPsOfTotalStake: 50,
+        };
+
+        let tx_hash = avs_writer
+            .set_operator_set_param(0, operator_set_params.clone())
+            .await
+            .unwrap();
+
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
+
+        assert!(tx_status);
+
+        let op_params = registry_coordinator_contract
+            .getOperatorSetParams(0)
+            .call()
+            .await
+            .unwrap();
+
+        assert_eq!(
+            op_params._0.maxOperatorCount,
+            operator_set_params.maxOperatorCount
+        );
+        assert_eq!(
+            op_params._0.kickBIPsOfOperatorStake,
+            operator_set_params.kickBIPsOfOperatorStake
+        );
+        assert_eq!(
+            op_params._0.kickBIPsOfTotalStake,
+            operator_set_params.kickBIPsOfTotalStake
+        );
     }
 }
