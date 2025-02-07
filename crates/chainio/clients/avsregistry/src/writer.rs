@@ -166,8 +166,6 @@ impl AvsRegistryChainWriter {
             pubkeyG2: g2_pub_key_bn254,
         };
 
-        dbg!(&wallet.address());
-
         let msg_to_sign = self
             .el_reader
             .calculate_operator_avs_registration_digest_hash(
@@ -609,9 +607,8 @@ mod tests {
         let bls_key =
             "1371012690269088913462269866874713266643928125698382731338806296762673180359922"
                 .to_string();
-        let register_operator_address = address!("9965507d1a55bcc2695c58ba16fb37d819b0a4dc");
-        let private_key =
-            "8b3a350cf5c34c9194ca85829a2df0ec3153be0318b5e2d3348e872092edffba".to_string();
+        let register_operator_address = address!("f39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+        let private_key = ANVIL_FIRST_PRIVATE_KEY.to_string();
         let quorum_nums = Bytes::from([0]);
 
         let avs_writer =
@@ -632,7 +629,6 @@ mod tests {
             .unwrap();
         assert!(is_registered);
 
-        // TENGO QUE PRIMERO SETEARLO COMO EJECTOR
         let tx_hash = avs_writer
             .eject_operator(register_operator_address, quorum_nums)
             .await
