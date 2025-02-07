@@ -1446,26 +1446,20 @@ pub struct AllocationInfo {
 
 #[cfg(test)]
 mod tests {
-    use std::process::Command;
-    use std::time::{Duration, SystemTime};
 
     use super::*;
     use crate::test_utils::{build_el_chain_reader, new_test_claim, OPERATOR_ADDRESS};
     use alloy::primitives::{address, keccak256, Address, FixedBytes, U256};
     use alloy::providers::Provider;
     use alloy::{eips::eip1898::BlockNumberOrTag::Number, rpc::types::BlockTransactionsKind};
-    use eigen_testing_utils::anvil_constants::{
-        get_erc20_mock_strategy, get_rewards_coordinator_address,
-    };
+    use eigen_testing_utils::anvil_constants::get_erc20_mock_strategy;
     use eigen_testing_utils::{
         anvil::start_anvil_container, anvil_constants::get_delegation_manager_address,
     };
-    use eigen_utils::rewardsv2::core::rewardscoordinator::RewardsCoordinator;
     use eigen_utils::slashing::core::{
         avsdirectory::AVSDirectory::{self, calculateOperatorAVSRegistrationDigestHashReturn},
         delegationmanager::DelegationManager::{self, calculateDelegationApprovalDigestHashReturn},
     };
-    use tokio::time::sleep;
 
     #[tokio::test]
     async fn test_calculate_delegation_approval_digest_hash() {

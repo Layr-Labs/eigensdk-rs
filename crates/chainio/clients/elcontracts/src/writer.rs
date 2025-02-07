@@ -862,7 +862,7 @@ mod tests {
         },
         transaction::wait_transaction,
     };
-    use eigen_types::{avs, operator::Operator};
+    use eigen_types::operator::Operator;
     use eigen_utils::{
         convert_allocation_operator_set_to_rewards_operator_set,
         slashing::{
@@ -877,8 +877,7 @@ mod tests {
             sdk::mockavsservicemanager::MockAvsServiceManager,
         },
     };
-    use std::{str::FromStr, time::Duration};
-    use tokio::time::sleep;
+    use std::str::FromStr;
 
     #[tokio::test]
     async fn test_register_operator() {
@@ -1487,7 +1486,6 @@ mod tests {
         };
 
         let new_split = 5;
-        let initial_split = 1; // This is set in rewards coordinator's initialize function in _defaultSplitBips
         let tx_hash = el_chain_writer
             .set_operator_set_split(OPERATOR_ADDRESS, operator_set.clone(), new_split)
             .await
