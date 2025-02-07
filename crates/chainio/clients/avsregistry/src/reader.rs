@@ -668,11 +668,13 @@ mod tests {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
         let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
 
+        // revert: RegistryCoordinator.getQuorumBitmapIndexAtBlockNumber: no bitmap update found for operatorId
         let quorum_number = Bytes::from_hex("0x00").expect("bytes parse");
         let operators_stake = avs_reader
             .get_operators_stake_in_quorums_at_block(1245063, quorum_number)
             .await;
 
+        // TODO: This is a temporary fix. Will be fixed in the next PR Issue https://github.com/Layr-Labs/eigensdk-rs/issues/307.
         assert!(operators_stake.is_err());
     }
 
@@ -691,6 +693,7 @@ mod tests {
             .get_operators_stake_in_quorums_at_block_operator_id(1245842, operator_id.into())
             .await;
 
+        // TODO: This is a temporary fix. Will be fixed in the next PR Issue https://github.com/Layr-Labs/eigensdk-rs/issues/307.
         assert!(operators_stake.is_err());
     }
 
@@ -700,10 +703,12 @@ mod tests {
         let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
         let quorum_number = Bytes::from_hex("0x00").expect("bytes parse");
 
+        // revert: RegistryCoordinator.getQuorumBitmapIndexAtBlockNumber: no bitmap update found for operatorId
         let operators_stake = avs_reader
             .get_operators_stake_in_quorums_at_current_block(quorum_number)
             .await;
 
+        // TODO: This is a temporary fix. Will be fixed in the next PR Issue https://github.com/Layr-Labs/eigensdk-rs/issues/307.
         assert!(operators_stake.is_err());
     }
 
@@ -721,6 +726,7 @@ mod tests {
             .get_operators_stake_in_quorums_of_operator_at_current_block(operator_id.into())
             .await;
 
+        // TODO: This is a temporary fix. Will be fixed in the next PR Issue https://github.com/Layr-Labs/eigensdk-rs/issues/307.
         assert!(operators_stake.is_err());
     }
 
@@ -767,6 +773,7 @@ mod tests {
             .get_operators_stake_in_quorums_of_operator_at_block((operator_id).into(), 1246078)
             .await;
 
+        // TODO: This is a temporary fix. Will be fixed in the next PR Issue https://github.com/Layr-Labs/eigensdk-rs/issues/307.
         assert!(operators_stake.is_err());
     }
 
