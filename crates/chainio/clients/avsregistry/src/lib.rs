@@ -19,3 +19,13 @@ pub mod error;
 #[allow(dead_code)]
 /// Fake avs registry module
 pub mod fake_reader;
+
+#[cfg(test)]
+pub(crate) mod test_utils {
+    use alloy::primitives::{address, Address};
+
+    pub(crate) const ANVIL_FIRST_PRIVATE_KEY: &str =
+        "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
+    pub(crate) const ANVIL_SECOND_ADDRESS: Address =
+        address!("70997970C51812dc3A010C7d01b50e0d17dc79C8");
+}

@@ -306,6 +306,32 @@ impl AvsRegistryChainWriter {
         Ok(*tx.tx_hash())
     }
 
+    /// Set a new address as the rewards initiator
+    ///
+    /// # Arguments
+    /// * `rewards_initiator` - The new address to set as the rewards initiator
+    ///
+    /// # Returns
+    /// * `TxHash` - The transaction hash of the set rewards initiator transaction
+    pub async fn set_rewards_initiator(
+        &self,
+        rewards_initiator: Address,
+    ) -> Result<TxHash, AvsRegistryError> {
+        info!("setting a new address as the rewards initiator");
+        let provider = get_signer(&self.signer.clone(), &self.provider);
+
+        let contract_service_manager_base =
+            ServiceManagerBase::new(self.service_manager_addr, provider);
+        let contract_call = contract_service_manager_base.setRewardsInitiator(rewards_initiator);
+
+        contract_call
+            .send()
+            .await
+            .map_err(AvsRegistryError::AlloyContractError)
+            .inspect(|tx| info!(tx_hash = ?tx, "successfully set a new address as the rewards initiator"))
+            .map(|tx| *tx.tx_hash())
+    }
+
     /// Update socket
     ///
     /// This function is used to update the socket of the sender (if it is a registered operator).
@@ -337,16 +363,19 @@ impl AvsRegistryChainWriter {
 
 #[cfg(test)]
 mod tests {
+
     use super::AvsRegistryChainWriter;
+    use crate::test_utils::{ANVIL_FIRST_PRIVATE_KEY, ANVIL_SECOND_ADDRESS};
     use alloy::primitives::{Address, Bytes, FixedBytes, U256};
     use eigen_common::get_signer;
     use eigen_crypto_bls::BlsKeyPair;
     use eigen_logging::get_test_logger;
-    use eigen_testing_utils::anvil::start_m2_anvil_container;
+    use eigen_testing_utils::anvil::{start_anvil_container, start_m2_anvil_container};
     use eigen_testing_utils::anvil_constants::{
         get_operator_state_retriever_address, get_registry_coordinator_address,
     };
     use eigen_testing_utils::transaction::wait_transaction;
+    use eigen_utils::rewardsv2::middleware::servicemanagerbase::ServiceManagerBase;
     use eigen_utils::slashing::middleware::registrycoordinator::RegistryCoordinator;
     use futures_util::StreamExt;
     use std::str::FromStr;
@@ -399,7 +428,37 @@ mod tests {
             http_endpoint.clone(),
         )
         .await;
-        test_deregister_operator(&avs_writer, quorum_nums, http_endpoint).await;
+        test_deregister_operator(&avs_writer, quorum_nums, http_endpoint.clone()).await;
+    }
+
+    #[tokio::test]
+    async fn test_set_rewards_initiator() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let private_key = ANVIL_FIRST_PRIVATE_KEY.to_string();
+        let avs_writer =
+            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
+
+        // Set up event poller to listen to `RewardsInitiatorUpdated` events
+        let provider = get_signer(&avs_writer.signer.clone(), &avs_writer.provider);
+        let contract_registry_coordinator =
+            ServiceManagerBase::new(avs_writer.service_manager_addr, provider);
+        let event = contract_registry_coordinator.RewardsInitiatorUpdated_filter();
+        let poller = event.watch().await.unwrap();
+
+        let new_rewards_init_address = ANVIL_SECOND_ADDRESS;
+
+        let tx_hash = avs_writer
+            .set_rewards_initiator(new_rewards_init_address)
+            .await
+            .unwrap();
+
+        let tx_status = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+        assert!(tx_status.status());
+
+        // Assert that event `RewardsInitiatorUpdated` is the same as `new_rewards_init_address`
+        let mut stream = poller.into_stream();
+        let (stream_event, _) = stream.next().await.unwrap().unwrap();
+        assert_eq!(stream_event.newRewardsInitiator, new_rewards_init_address);
     }
 
     // this function is caller from test_avs_writer_methods
