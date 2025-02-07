@@ -65,6 +65,11 @@ Those changes in added, changed or breaking changes, should include usage exampl
         .await
         .unwrap();
   ```
+* Added new method `set_ejector` in `avsregistry/writer` in [#330](https://github.com/Layr-Labs/eigensdk-rs/pull/330).
+  ```rust
+    let new_ejector_address = address!("70997970C51812dc3A010C7d01b50e0d17dc79C8");
+    let tx_hash = avs_writer.set_ejector(new_ejector_address).await.unwrap();
+  ```
 
 ### Changed
 * Changes in the way bindings are generated in [#243](https://github.com/Layr-Labs/eigensdk-rs/pull/243).
