@@ -1519,7 +1519,7 @@ mod tests {
             .await
             .unwrap();
 
-        assert_eq!(split, 0);
+        assert_eq!(split, 1); // not initialized case
 
         let tx_hash = el_chain_writer
             .set_operator_pi_split(ANVIL_FIRST_ADDRESS, new_split)
