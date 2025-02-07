@@ -396,7 +396,6 @@ impl AvsRegistryChainWriter {
 mod tests {
 
     use super::AvsRegistryChainWriter;
-    use crate::test_utils::{ANVIL_FIRST_PRIVATE_KEY, ANVIL_SECOND_ADDRESS};
     use alloy::primitives::{Address, Bytes, FixedBytes, U256};
     use eigen_common::get_signer;
     use eigen_crypto_bls::BlsKeyPair;
@@ -405,6 +404,7 @@ mod tests {
     use eigen_testing_utils::anvil_constants::{
         get_operator_state_retriever_address, get_registry_coordinator_address,
     };
+    use eigen_testing_utils::anvil_constants::{FIRST_PRIVATE_KEY, SECOND_ADDRESS};
     use eigen_testing_utils::transaction::wait_transaction;
     use eigen_utils::rewardsv2::middleware::servicemanagerbase::ServiceManagerBase;
     use eigen_utils::slashing::middleware::registrycoordinator::ISlashingRegistryCoordinatorTypes::OperatorSetParam;
@@ -466,7 +466,7 @@ mod tests {
     #[tokio::test]
     async fn test_set_rewards_initiator() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let private_key = ANVIL_FIRST_PRIVATE_KEY.to_string();
+        let private_key = FIRST_PRIVATE_KEY.to_string();
         let avs_writer =
             build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
 
@@ -477,7 +477,7 @@ mod tests {
         let event = contract_registry_coordinator.RewardsInitiatorUpdated_filter();
         let poller = event.watch().await.unwrap();
 
-        let new_rewards_init_address = ANVIL_SECOND_ADDRESS;
+        let new_rewards_init_address = SECOND_ADDRESS;
 
         let tx_hash = avs_writer
             .set_rewards_initiator(new_rewards_init_address)
@@ -614,7 +614,7 @@ mod tests {
         let bls_key =
             "1371012690269088913462269866874713266643928125698382731338806296762673180359922"
                 .to_string();
-        let private_key = ANVIL_FIRST_PRIVATE_KEY.to_string();
+        let private_key = FIRST_PRIVATE_KEY.to_string();
         let avs_writer =
             build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
         let quorum_nums = Bytes::from([0]);
