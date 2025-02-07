@@ -5,6 +5,7 @@ pub mod slashing;
 use crate::slashing::core::allocationmanager::AllocationManager::OperatorSet;
 use crate::slashing::core::irewardscoordinator::IRewardsCoordinator::OperatorSet as RewardsOperatorSet;
 
+/// Converts [`OperatorSet`] to [`RewardsOperatorSet`]
 pub fn convert_allocation_operator_set_to_rewards_operator_set(
     operator_set: OperatorSet,
 ) -> RewardsOperatorSet {

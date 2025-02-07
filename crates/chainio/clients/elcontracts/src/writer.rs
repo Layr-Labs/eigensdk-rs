@@ -10,7 +10,6 @@ use eigen_crypto_bls::{
 pub use eigen_types::operator::Operator;
 
 use eigen_utils::convert_allocation_operator_set_to_rewards_operator_set;
-// use eigen_utils::slashing::core::irewardscoordinator::IRewardsCoordinator::OperatorSet;
 use eigen_utils::slashing::core::allocationmanager::AllocationManager::OperatorSet;
 use eigen_utils::{
     slashing::core::{
@@ -1556,11 +1555,10 @@ mod tests {
         let new_allocation = 100;
         let allocate_params = IAllocationManagerTypes::AllocateParams {
             strategies: vec![strategy_addr],
-            operatorSet:
-                eigen_utils::slashing::core::allocationmanager::AllocationManager::OperatorSet {
-                    avs: avs_address,
-                    id: operator_set_id,
-                },
+            operatorSet: OperatorSet {
+                avs: avs_address,
+                id: operator_set_id,
+            },
             newMagnitudes: vec![new_allocation],
         };
         let tx_hash_alloc = el_chain_writer
