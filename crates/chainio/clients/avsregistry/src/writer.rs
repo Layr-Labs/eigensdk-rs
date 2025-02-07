@@ -26,11 +26,17 @@ pub const GAS_LIMIT_REGISTER_OPERATOR_REGISTRY_COORDINATOR: u64 = 2000000;
 /// AvsRegistry Writer
 #[derive(Debug)]
 pub struct AvsRegistryChainWriter {
+    // TODO: use logger
+    #[expect(dead_code)]
     logger: SharedLogger,
     service_manager_addr: Address,
     registry_coordinator_addr: Address,
+    // TODO: remove these?
+    #[expect(dead_code)]
     operator_state_retriever_addr: Address,
+    #[expect(dead_code)]
     stake_registry_addr: Address,
+    #[expect(dead_code)]
     bls_apk_registry_addr: Address,
     el_reader: ELChainReader,
     provider: String,

@@ -9,6 +9,7 @@ use eigen_utils::slashing::middleware::operatorstateretriever::OperatorStateRetr
 #[derive(Debug)]
 pub struct FakeAvsRegistryReader {
     operator_address: Address,
+    #[expect(dead_code)]
     operator_pubkeys: BlsKeyPair,
     operator_id: FixedBytes<32>,
 }
