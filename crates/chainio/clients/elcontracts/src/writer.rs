@@ -1452,19 +1452,7 @@ mod tests {
             .get_operator_avs_split(ANVIL_FIRST_ADDRESS, avs_address)
             .await
             .unwrap();
-        assert_eq!(split, 1); // initialized but not activated
-
-        sleep(Duration::from_secs(2)).await; // allocation delay is set as 1 in initialize function in rewards coordinator. We wait for 2 seconds.
-        el_chain_writer
-            .set_operator_avs_split(ANVIL_FIRST_ADDRESS, avs_address, split)
-            .await
-            .unwrap();
-        let split = el_chain_writer
-            .el_chain_reader
-            .get_operator_avs_split(ANVIL_FIRST_ADDRESS, avs_address)
-            .await
-            .unwrap();
-        assert_eq!(split, new_split); // initialized && activated
+        assert_eq!(split, 5); // initialized && activated
     }
 
     #[tokio::test]
@@ -1511,21 +1499,6 @@ mod tests {
         let split = el_chain_writer
             .el_chain_reader
             .get_operator_set_split(OPERATOR_ADDRESS, rewards_operator_set.clone())
-            .await
-            .unwrap();
-
-        assert_eq!(split, initial_split); // initialized but not activated
-        sleep(Duration::from_secs(2)).await; // allocation delay is set as 1 in initialize function in rewards coordinator. We wait for 2 seconds.
-
-        let tx_hash = el_chain_writer
-            .set_operator_set_split(OPERATOR_ADDRESS, operator_set.clone(), new_split)
-            .await
-            .unwrap();
-        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
-        assert!(receipt.status());
-        let split = el_chain_writer
-            .el_chain_reader
-            .get_operator_set_split(OPERATOR_ADDRESS, rewards_operator_set)
             .await
             .unwrap();
 

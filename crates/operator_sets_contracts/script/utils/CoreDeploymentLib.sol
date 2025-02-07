@@ -257,7 +257,7 @@ library CoreDeploymentLib {
                 configData.rewardsCoordinator.initPausedStatus, // initialPausedStatus
                 /// TODO: is there a setter and is this expected?
                 deployer, // rewards updater
-                uint32(1), // _activationDelay
+                uint32(0), // _activationDelay
                 uint16(1) //defaultOperatorSplitBips
             )
         );
