@@ -9,6 +9,8 @@ use eigen_crypto_bls::{
 };
 pub use eigen_types::operator::Operator;
 
+use eigen_utils::convert_allocation_operator_set_to_rewards_operator_set;
+use eigen_utils::slashing::core::allocationmanager::AllocationManager::OperatorSet;
 use eigen_utils::{
     slashing::core::{
         allocationmanager::{AllocationManager, IAllocationManagerTypes},
@@ -334,6 +336,41 @@ impl ELChainWriter {
 
         let tx = rewards_coordinator
             .setOperatorAVSSplit(operator, avs, split)
+            .send()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?;
+
+        Ok(*tx.tx_hash())
+    }
+
+    /// Sets the split for a specific `operator` for a specific `operatorSet`
+    ///
+    /// # Arguments
+    ///
+    /// * `operator` - The operator address
+    /// * `OperatorSet` - The operator set which consists of avs address and id.
+    /// * `split` - The split for the operator for the specific operatorSet in bips.
+    ///
+    /// # Returns
+    ///
+    /// * `Result<FixedBytes<32>, ElContractsError>` - The transaction hash if the transaction is sent, otherwise an error.
+    ///
+    /// # Errors
+    ///
+    /// * `ElContractsError` - if the call to the contract fails.
+    pub async fn set_operator_set_split(
+        &self,
+        operator: Address,
+        operator_set: OperatorSet,
+        split: u16,
+    ) -> Result<FixedBytes<32>, ElContractsError> {
+        let signer = get_signer(&self.signer, &self.provider);
+
+        let rewards_coordinator = IRewardsCoordinator::new(self.rewards_coordinator, signer);
+        let operator_set_rewards =
+            convert_allocation_operator_set_to_rewards_operator_set(operator_set);
+        let tx = rewards_coordinator
+            .setOperatorSetSplit(operator, operator_set_rewards, split)
             .send()
             .await
             .map_err(ElContractsError::AlloyContractError)?;
@@ -826,15 +863,18 @@ mod tests {
     };
     use eigen_types::operator::Operator;
     use eigen_utils::{
-        slashing::core::allocationmanager::{
-            AllocationManager::{self, OperatorSet},
-            IAllocationManagerTypes,
+        convert_allocation_operator_set_to_rewards_operator_set,
+        slashing::{
+            core::allocationmanager::{
+                AllocationManager::{self, OperatorSet},
+                IAllocationManagerTypes,
+            },
+            middleware::registrycoordinator::{
+                ISlashingRegistryCoordinatorTypes::OperatorSetParam,
+                IStakeRegistryTypes::StrategyParams, RegistryCoordinator,
+            },
+            sdk::mockavsservicemanager::MockAvsServiceManager,
         },
-        slashing::middleware::registrycoordinator::{
-            ISlashingRegistryCoordinatorTypes::OperatorSetParam,
-            IStakeRegistryTypes::StrategyParams, RegistryCoordinator,
-        },
-        slashing::sdk::mockavsservicemanager::MockAvsServiceManager,
     };
     use std::str::FromStr;
 
@@ -1339,10 +1379,11 @@ mod tests {
         let new_allocation = 100;
         let allocate_params = IAllocationManagerTypes::AllocateParams {
             strategies: vec![strategy_addr],
-            operatorSet: OperatorSet {
-                avs: avs_address,
-                id: operator_set_id,
-            },
+            operatorSet:
+                eigen_utils::slashing::core::allocationmanager::AllocationManager::OperatorSet {
+                    avs: avs_address,
+                    id: operator_set_id,
+                },
             newMagnitudes: vec![new_allocation],
         };
         let tx_hash = el_chain_writer
@@ -1398,23 +1439,67 @@ mod tests {
             .await
             .unwrap();
 
-        assert_eq!(split, 0);
+        assert_eq!(split, 1); // not initialized case
 
-        let tx_hash = el_chain_writer
+        el_chain_writer
             .set_operator_avs_split(ANVIL_FIRST_ADDRESS, avs_address, new_split)
             .await
             .unwrap();
-
-        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
-        assert!(receipt.status());
-
         let split = el_chain_writer
             .el_chain_reader
             .get_operator_avs_split(ANVIL_FIRST_ADDRESS, avs_address)
             .await
             .unwrap();
+        assert_eq!(split, 5); // initialized && activated
+    }
 
-        assert_eq!(split, new_split);
+    #[tokio::test]
+    async fn test_set_operator_set_split() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let avs_address = get_service_manager_address(http_endpoint.clone()).await;
+        let operator_set_id = 0;
+        create_operator_set(http_endpoint.as_str(), avs_address).await;
+
+        let operator_addr = OPERATOR_ADDRESS;
+        let operator_private_key = OPERATOR_PRIVATE_KEY;
+        let el_chain_writer =
+            new_test_writer(http_endpoint.clone(), operator_private_key.to_string()).await;
+        let bls_key = BlsKeyPair::new("1".to_string()).unwrap();
+
+        let tx_hash = el_chain_writer
+            .register_for_operator_sets(
+                operator_addr,
+                avs_address,
+                vec![operator_set_id],
+                bls_key,
+                "socket",
+            )
+            .await
+            .unwrap();
+
+        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+        assert!(receipt.status());
+        let operator_set = OperatorSet {
+            avs: avs_address,
+            id: 0,
+        };
+
+        let new_split = 5;
+        let tx_hash = el_chain_writer
+            .set_operator_set_split(OPERATOR_ADDRESS, operator_set.clone(), new_split)
+            .await
+            .unwrap();
+        let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
+        assert!(receipt.status());
+        let rewards_operator_set =
+            convert_allocation_operator_set_to_rewards_operator_set(operator_set.clone());
+        let split = el_chain_writer
+            .el_chain_reader
+            .get_operator_set_split(OPERATOR_ADDRESS, rewards_operator_set.clone())
+            .await
+            .unwrap();
+
+        assert_eq!(split, new_split); // initialized && activated
     }
 
     #[tokio::test]
@@ -1433,7 +1518,7 @@ mod tests {
             .await
             .unwrap();
 
-        assert_eq!(split, 0);
+        assert_eq!(split, 1); // not initialized case
 
         let tx_hash = el_chain_writer
             .set_operator_pi_split(ANVIL_FIRST_ADDRESS, new_split)
