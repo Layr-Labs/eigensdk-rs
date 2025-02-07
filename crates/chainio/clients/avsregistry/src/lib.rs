@@ -41,8 +41,12 @@ pub(crate) mod test_utils {
         sdk::mockavsservicemanager::MockAvsServiceManager,
     };
 
+    use alloy::primitives::{address, Address};
+
     pub(crate) const ANVIL_FIRST_PRIVATE_KEY: &str =
         "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
+    pub(crate) const ANVIL_SECOND_ADDRESS: Address =
+        address!("70997970C51812dc3A010C7d01b50e0d17dc79C8");
 
     pub(crate) async fn create_operator_set(http_endpoint: &str, avs_address: Address) {
         let allocation_manager_addr =

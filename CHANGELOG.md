@@ -25,6 +25,24 @@ Those changes in added, changed or breaking changes, should include usage exampl
         .await
         .unwrap();
   ```
+* Added new method `set_rewards_initiator` in `avsregistry/writer` in [#273](https://github.com/Layr-Labs/eigensdk-rs/pull/273).
+  ```rust
+    let tx_hash = avs_writer
+      .set_rewards_initiator(new_rewards_init_address)
+      .await
+      .unwrap();
+  ```
+* Added new method `clear_deallocation_queue` in `elcontracts/writer` in [#270](https://github.com/Layr-Labs/eigensdk-rs/pull/270)
+  ```rust
+  let tx_hash_clear = el_chain_writer
+      .clear_deallocation_queue(
+          operator_address,
+          vec![strategy_addr],
+          vec![num_to_clear],
+      )
+      .await
+      .unwrap();
+  ```
 * Added update_socket function for avs registry writer in [#268](https://github.com/Layr-Labs/eigensdk-rs/pull/268)
   An example of use is the following:
   ```rust
@@ -41,7 +59,6 @@ Those changes in added, changed or breaking changes, should include usage exampl
     .status(); 
   // tx_status should be true
   ```
-
 * Added custom configuration for release-plz in [#281](https://github.com/Layr-Labs/eigensdk-rs/pull/281).
 
 ### Changed
@@ -53,6 +70,57 @@ Those changes in added, changed or breaking changes, should include usage exampl
 * Fixed incorrect package name in Cargo.toml for examples in [#285](https://github.com/Layr-Labs/eigensdk-rs/pull/285).
 
 ### Breaking changes
+* refactor: update interface on `bls aggregation` in [#254](https://github.com/Layr-Labs/eigensdk-rs/pull/254)
+  * Introduces a new struct `TaskMetadata` with a constructor `TaskMetadata::new` to initialize a new task and a method `with_window_duration` to set the window duration.
+  * Refactors `initialize_new_task` and `single_task_aggregator` to accept a `TaskMetadata` struct instead of multiple parameters.
+    ```rust
+    // BEFORE
+    bls_agg_service
+          .initialize_new_task(
+              task_index,
+              block_number as u32,
+              quorum_numbers,
+              quorum_threshold_percentages,
+              time_to_expiry,
+          )
+          .await
+          .unwrap();
+    
+    // AFTER
+    let metadata = TaskMetadata::new(
+            task_index,
+            block_number,
+            quorum_numbers,
+            quorum_threshold_percentages,
+            time_to_expiry,
+      )
+    bls_agg_service.initialize_new_task(metadata).await.unwrap();
+    ```
+    
+  * Removes `initialize_new_task_with_window` since `window_duration` can now be set in `TaskMetadata`.
+    ```rust
+    // BEFORE
+    bls_agg_service
+          .initialize_new_task_with_window(
+              task_index,
+              block_number as u32,
+              quorum_numbers,
+              quorum_threshold_percentages,
+              time_to_expiry,
+              window_duration,
+          )
+          .await
+          .unwrap();
+
+    // AFTER
+    let metadata = TaskMetadata::new(
+            task_index,
+            block_number,
+            quorum_numbers,
+            quorum_threshold_percentages,
+            time_to_expiry,
+        ).with_window_duration(window_duration);
+    bls_agg_service.initialize_new_task(metadata).await.unwrap();
 * refactor: encapsulate parameters into `TaskSignature` in [#260](https://github.com/Layr-Labs/eigensdk-rs/pull/260) 
   * Introduced `TaskSignature` struct to encapsulate parameters related to task signatures:
   * Updated `process_new_signature` to accept a `TaskSignature` struct instead of multiple parameters.
