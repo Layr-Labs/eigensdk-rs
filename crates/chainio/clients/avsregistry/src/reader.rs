@@ -632,13 +632,15 @@ impl AvsRegistryChainReader {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::test_utils::build_avs_registry_chain_writer;
+    use alloy::primitives::address;
+    use eigen_crypto_bls::BlsKeyPair;
     use eigen_logging::get_test_logger;
     use eigen_testing_utils::{
-        anvil::start_anvil_container,
+        anvil::{start_anvil_container, start_m2_anvil_container},
         anvil_constants::{get_operator_state_retriever_address, get_registry_coordinator_address},
+        transaction::wait_transaction,
     };
-    use hex::FromHex;
-    use std::str::FromStr;
 
     async fn build_avs_registry_chain_reader(http_endpoint: String) -> AvsRegistryChainReader {
         let registry_coordinator = get_registry_coordinator_address(http_endpoint.clone()).await;
@@ -665,69 +667,171 @@ mod tests {
 
     #[tokio::test]
     async fn test_get_operators_stake_in_quorums_at_block() {
-        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
+
+        let private_key =
+            "8b3a350cf5c34c9194ca85829a2df0ec3153be0318b5e2d3348e872092edffba".to_string();
+        let avs_writer = build_avs_registry_chain_writer(http_endpoint.clone(), private_key).await;
         let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
 
-        // revert: RegistryCoordinator.getQuorumBitmapIndexAtBlockNumber: no bitmap update found for operatorId
-        let quorum_number = Bytes::from_hex("0x00").expect("bytes parse");
-        let operators_stake = avs_reader
-            .get_operators_stake_in_quorums_at_block(1245063, quorum_number)
-            .await;
+        let bls_key_pair = BlsKeyPair::new(
+            "1371012690269088913462269866874713266643928125698382731338806296762673180359922"
+                .to_string(),
+        )
+        .unwrap();
+        let digest_hash: FixedBytes<32> = FixedBytes::from([0x02; 32]);
+        let quorum_nums = Bytes::from([0]);
+        let signature_expiry = U256::MAX;
 
-        // TODO: This is a temporary fix. Will be fixed in the next PR Issue https://github.com/Layr-Labs/eigensdk-rs/issues/307.
-        assert!(operators_stake.is_err());
+        let tx_hash = avs_writer
+            .register_operator_in_quorum_with_avs_registry_coordinator(
+                bls_key_pair,
+                digest_hash,
+                signature_expiry,
+                quorum_nums.clone(),
+                "".into(),
+            )
+            .await
+            .unwrap();
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
+        assert!(tx_status);
+
+        let quorum_number = Bytes::from([0]);
+
+        avs_reader
+            .get_operators_stake_in_quorums_at_block(1245063, quorum_number)
+            .await
+            .unwrap();
     }
 
     #[tokio::test]
     async fn test_get_operators_stake_in_quorums_at_block_operator_id() {
-        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
+
+        let private_key =
+            "8b3a350cf5c34c9194ca85829a2df0ec3153be0318b5e2d3348e872092edffba".to_string();
+        let avs_writer = build_avs_registry_chain_writer(http_endpoint.clone(), private_key).await;
         let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
 
-        let operator_id = U256::from_str(
-            "35344093966194310405039483339636912150346494903629410125452342281826147822033",
+        let bls_key_pair = BlsKeyPair::new(
+            "1371012690269088913462269866874713266643928125698382731338806296762673180359922"
+                .to_string(),
         )
         .unwrap();
+        let digest_hash: FixedBytes<32> = FixedBytes::from([0x02; 32]);
+        let quorum_nums = Bytes::from([0]);
+        let signature_expiry = U256::MAX;
 
-        // revert: RegistryCoordinator.getQuorumBitmapIndexAtBlockNumber: no bitmap update found for operatorId
-        let operators_stake = avs_reader
-            .get_operators_stake_in_quorums_at_block_operator_id(1245842, operator_id.into())
-            .await;
+        let tx_hash = avs_writer
+            .register_operator_in_quorum_with_avs_registry_coordinator(
+                bls_key_pair,
+                digest_hash,
+                signature_expiry,
+                quorum_nums.clone(),
+                "".into(),
+            )
+            .await
+            .unwrap();
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
+        assert!(tx_status);
 
-        // TODO: This is a temporary fix. Will be fixed in the next PR Issue https://github.com/Layr-Labs/eigensdk-rs/issues/307.
-        assert!(operators_stake.is_err());
+        let operator_address = address!("0x9965507D1a55bcC2695C58ba16FB37d819B0A4dc");
+        let operator_id = avs_reader.get_operator_id(operator_address).await.unwrap();
+
+        avs_reader
+            .get_operators_stake_in_quorums_at_block_operator_id(1245842, operator_id)
+            .await
+            .unwrap();
     }
 
     #[tokio::test]
     async fn test_get_operators_stake_in_quorums_at_current_block() {
-        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
+
+        let private_key =
+            "8b3a350cf5c34c9194ca85829a2df0ec3153be0318b5e2d3348e872092edffba".to_string();
+        let avs_writer = build_avs_registry_chain_writer(http_endpoint.clone(), private_key).await;
         let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
-        let quorum_number = Bytes::from_hex("0x00").expect("bytes parse");
 
-        // revert: RegistryCoordinator.getQuorumBitmapIndexAtBlockNumber: no bitmap update found for operatorId
-        let operators_stake = avs_reader
+        let bls_key_pair = BlsKeyPair::new(
+            "1371012690269088913462269866874713266643928125698382731338806296762673180359922"
+                .to_string(),
+        )
+        .unwrap();
+        let digest_hash: FixedBytes<32> = FixedBytes::from([0x02; 32]);
+        let quorum_nums = Bytes::from([0]);
+        let signature_expiry = U256::MAX;
+
+        let tx_hash = avs_writer
+            .register_operator_in_quorum_with_avs_registry_coordinator(
+                bls_key_pair,
+                digest_hash,
+                signature_expiry,
+                quorum_nums.clone(),
+                "".into(),
+            )
+            .await
+            .unwrap();
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
+        assert!(tx_status);
+
+        let quorum_number = Bytes::from([0]);
+        avs_reader
             .get_operators_stake_in_quorums_at_current_block(quorum_number)
-            .await;
-
-        // TODO: This is a temporary fix. Will be fixed in the next PR Issue https://github.com/Layr-Labs/eigensdk-rs/issues/307.
-        assert!(operators_stake.is_err());
+            .await
+            .unwrap();
     }
 
     #[tokio::test]
     async fn test_get_operators_stake_in_quorums_of_operator_at_current_block() {
-        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
+
+        let private_key =
+            "8b3a350cf5c34c9194ca85829a2df0ec3153be0318b5e2d3348e872092edffba".to_string();
+        let avs_writer = build_avs_registry_chain_writer(http_endpoint.clone(), private_key).await;
         let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
-        let operator_id = U256::from_str(
-            "35344093966194310405039483339636912150346494903629410125452342281826147822033",
+
+        let bls_key_pair = BlsKeyPair::new(
+            "1371012690269088913462269866874713266643928125698382731338806296762673180359922"
+                .to_string(),
         )
         .unwrap();
+        let digest_hash: FixedBytes<32> = FixedBytes::from([0x02; 32]);
+        let quorum_nums = Bytes::from([0]);
+        let signature_expiry = U256::MAX;
 
-        // revert: RegistryCoordinator.getQuorumBitmapIndexAtBlockNumber: no bitmap update found for operatorId
-        let operators_stake = avs_reader
-            .get_operators_stake_in_quorums_of_operator_at_current_block(operator_id.into())
-            .await;
+        let tx_hash = avs_writer
+            .register_operator_in_quorum_with_avs_registry_coordinator(
+                bls_key_pair,
+                digest_hash,
+                signature_expiry,
+                quorum_nums.clone(),
+                "".into(),
+            )
+            .await
+            .unwrap();
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
+        assert!(tx_status);
 
-        // TODO: This is a temporary fix. Will be fixed in the next PR Issue https://github.com/Layr-Labs/eigensdk-rs/issues/307.
-        assert!(operators_stake.is_err());
+        let operator_address = address!("0x9965507D1a55bcC2695C58ba16FB37d819B0A4dc");
+        let operator_id = avs_reader.get_operator_id(operator_address).await.unwrap();
+
+        avs_reader
+            .get_operators_stake_in_quorums_of_operator_at_current_block(operator_id)
+            .await
+            .unwrap();
     }
 
     #[tokio::test]
@@ -760,21 +864,45 @@ mod tests {
 
     #[tokio::test]
     async fn test_get_operators_stake_in_quorums_of_operator_at_block() {
-        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
+
+        let private_key =
+            "8b3a350cf5c34c9194ca85829a2df0ec3153be0318b5e2d3348e872092edffba".to_string();
+        let avs_writer = build_avs_registry_chain_writer(http_endpoint.clone(), private_key).await;
         let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
 
-        let operator_id = U256::from_str(
-            "35344093966194310405039483339636912150346494903629410125452342281826147822033",
+        let bls_key_pair = BlsKeyPair::new(
+            "1371012690269088913462269866874713266643928125698382731338806296762673180359922"
+                .to_string(),
         )
         .unwrap();
+        let digest_hash: FixedBytes<32> = FixedBytes::from([0x02; 32]);
+        let quorum_nums = Bytes::from([0]);
+        let signature_expiry = U256::MAX;
 
-        // revert: RegistryCoordinator.getQuorumBitmapIndexAtBlockNumber: no bitmap update found for operatorId
-        let operators_stake = avs_reader
-            .get_operators_stake_in_quorums_of_operator_at_block((operator_id).into(), 1246078)
-            .await;
+        let tx_hash = avs_writer
+            .register_operator_in_quorum_with_avs_registry_coordinator(
+                bls_key_pair,
+                digest_hash,
+                signature_expiry,
+                quorum_nums.clone(),
+                "".into(),
+            )
+            .await
+            .unwrap();
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
+        assert!(tx_status);
 
-        // TODO: This is a temporary fix. Will be fixed in the next PR Issue https://github.com/Layr-Labs/eigensdk-rs/issues/307.
-        assert!(operators_stake.is_err());
+        let operator_address = address!("0x9965507D1a55bcC2695C58ba16FB37d819B0A4dc");
+        let operator_id = avs_reader.get_operator_id(operator_address).await.unwrap();
+
+        avs_reader
+            .get_operators_stake_in_quorums_of_operator_at_block(operator_id, 1246078)
+            .await
+            .unwrap();
     }
 
     #[tokio::test]
