@@ -26,18 +26,8 @@ pub const GAS_LIMIT_REGISTER_OPERATOR_REGISTRY_COORDINATOR: u64 = 2000000;
 /// AvsRegistry Writer
 #[derive(Debug)]
 pub struct AvsRegistryChainWriter {
-    // TODO: use logger
-    #[expect(dead_code)]
-    logger: SharedLogger,
     service_manager_addr: Address,
     registry_coordinator_addr: Address,
-    // TODO: remove these?
-    #[expect(dead_code)]
-    operator_state_retriever_addr: Address,
-    #[expect(dead_code)]
-    stake_registry_addr: Address,
-    #[expect(dead_code)]
-    bls_apk_registry_addr: Address,
     el_reader: ELChainReader,
     provider: String,
     signer: String,
@@ -66,7 +56,7 @@ impl AvsRegistryChainWriter {
         provider: String,
         signer: String,
         registry_coordinator_addr: Address,
-        operator_state_retriever_addr: Address,
+        _operator_state_retriever_addr: Address,
     ) -> Result<Self, AvsRegistryError> {
         let fill_provider = get_provider(&provider);
         let contract_registry_coordinator =
@@ -81,14 +71,6 @@ impl AvsRegistryChainWriter {
         } = service_manager_addr;
         let contract_service_manager_base =
             ServiceManagerBase::new(service_manager, &fill_provider);
-        let bls_apk_registry_addr_result = contract_registry_coordinator
-            .blsApkRegistry()
-            .call()
-            .await
-            .map_err(AvsRegistryError::AlloyContractError)?;
-        let RegistryCoordinator::blsApkRegistryReturn {
-            _0: bls_apk_registry,
-        } = bls_apk_registry_addr_result;
         let stake_registry_addr = contract_registry_coordinator.stakeRegistry().call().await?;
         let RegistryCoordinator::stakeRegistryReturn { _0: stake_registry } = stake_registry_addr;
         let contract_stake_registry = StakeRegistry::new(stake_registry, &fill_provider);
@@ -113,12 +95,8 @@ impl AvsRegistryChainWriter {
         .map_err(|e| AvsRegistryError::ElContractsError(e.to_string()))?;
 
         Ok(AvsRegistryChainWriter {
-            logger,
             service_manager_addr: service_manager,
             registry_coordinator_addr,
-            operator_state_retriever_addr,
-            stake_registry_addr: stake_registry,
-            bls_apk_registry_addr: bls_apk_registry,
             el_reader,
             provider: provider.clone(),
             signer: signer.clone(),
