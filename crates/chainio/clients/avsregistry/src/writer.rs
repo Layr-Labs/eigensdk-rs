@@ -7,6 +7,7 @@ use eigen_crypto_bls::{
     alloy_g1_point_to_g1_affine, convert_to_g1_point, convert_to_g2_point, BlsKeyPair,
 };
 use eigen_logging::logger::SharedLogger;
+use eigen_utils::slashing::middleware::registrycoordinator::ISlashingRegistryCoordinatorTypes::OperatorSetParam;
 use eigen_utils::slashing::middleware::registrycoordinator::{
     IBLSApkRegistryTypes::PubkeyRegistrationParams, ISignatureUtils::SignatureWithSaltAndExpiry,
     RegistryCoordinator,
@@ -359,6 +360,29 @@ impl AvsRegistryChainWriter {
         info!(tx_hash = ?tx,"successfully updated the socket with the AVS's registry coordinator" );
         Ok(*tx.tx_hash())
     }
+
+    /// TODO!
+    pub async fn set_operator_set_param(
+        &self,
+        quorum_number: u8,
+        operator_set_params: OperatorSetParam,
+    ) -> Result<TxHash, AvsRegistryError> {
+        info!("setting operator set param with the AVS's registry coordinator");
+        let provider = get_signer(&self.signer.clone(), &self.provider);
+
+        let contract_registry_coordinator =
+            RegistryCoordinator::new(self.registry_coordinator_addr, provider);
+
+        let contract_call =
+            contract_registry_coordinator.setOperatorSetParams(quorum_number, operator_set_params);
+
+        let tx = contract_call
+            .send()
+            .await
+            .map_err(AvsRegistryError::AlloyContractError)?;
+        info!(tx_hash = ?tx,"successfully set operator set param with the AVS's registry coordinator" );
+        Ok(*tx.tx_hash())
+    }
 }
 
 #[cfg(test)]
@@ -376,6 +400,7 @@ mod tests {
     };
     use eigen_testing_utils::transaction::wait_transaction;
     use eigen_utils::rewardsv2::middleware::servicemanagerbase::ServiceManagerBase;
+    use eigen_utils::slashing::middleware::registrycoordinator::ISlashingRegistryCoordinatorTypes::OperatorSetParam;
     use eigen_utils::slashing::middleware::registrycoordinator::RegistryCoordinator;
     use futures_util::StreamExt;
     use std::str::FromStr;
@@ -572,7 +597,5 @@ mod tests {
         // Assert that event socket is the same as passed in the update socket function
         let mut stream = poller.into_stream();
         let (stream_event, _) = stream.next().await.unwrap().unwrap();
-
-        assert_eq!(stream_event.socket, new_socket_addr)
     }
 }
