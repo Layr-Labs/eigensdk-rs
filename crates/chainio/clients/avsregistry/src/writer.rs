@@ -361,7 +361,14 @@ impl AvsRegistryChainWriter {
         Ok(*tx.tx_hash())
     }
 
-    /// TODO!
+    /// Update an existing quorum configuration
+    ///
+    /// # Arguments
+    /// * `quorum_number` - the quorum number to update
+    /// * `operator_set_params` - the new config with [`OperatorSetParam`]
+    ///
+    /// # Returns
+    /// * `TxHash` - The transaction hash of the set operator set param transaction
     pub async fn set_operator_set_param(
         &self,
         quorum_number: u8,
