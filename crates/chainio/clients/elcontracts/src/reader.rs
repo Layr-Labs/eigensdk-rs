@@ -6,21 +6,20 @@ use alloy::{
 };
 use eigen_common::{get_provider, SdkProvider};
 use eigen_logging::logger::SharedLogger;
-use eigen_utils::{
-    slashing::core::{
-        allocationmanager::AllocationManager::{self, OperatorSet},
+use eigen_utils::slashing::core::allocationmanager::AllocationManager::{self, OperatorSet};
+use eigen_utils::slashing::{
+    core::{
         avsdirectory::AVSDirectory,
         delegationmanager::DelegationManager,
         irewardscoordinator::{
-            IRewardsCoordinator,
+            IRewardsCoordinator::{self},
             IRewardsCoordinatorTypes::{DistributionRoot, RewardsMerkleClaim},
         },
         istrategy::IStrategy::{self, IStrategyInstance},
         permissioncontroller::PermissionController,
     },
-    slashing::middleware::ierc20::IERC20::{self, IERC20Instance},
+    middleware::ierc20::IERC20::{self, IERC20Instance},
 };
-
 #[derive(Debug, Clone)]
 pub struct ELChainReader {
     _logger: SharedLogger,
@@ -460,6 +459,39 @@ impl ELChainReader {
             ._0;
 
         Ok(operator_pi_split)
+    }
+
+    /// Gets the split for a specific `operator` for a given `OperatorSet`
+    ///
+    /// # Arguments
+    ///
+    /// * `operator` - The operator address
+    /// * `OperatorSet` - The operator set which consists of avs address and id.
+    ///
+    /// # Returns
+    ///
+    /// * u16 - The split for a specific `operator` for a given `OperatorSet`, if the call is successful
+    ///
+    /// # Errors
+    ///
+    /// * `ElContractsError` - if the call to the contract fails.
+    pub async fn get_operator_set_split(
+        &self,
+        operator: Address,
+        operator_set: eigen_utils::slashing::core::irewardscoordinator::IRewardsCoordinator::OperatorSet,
+    ) -> Result<u16, ElContractsError> {
+        let provider = get_provider(&self.provider);
+
+        let rewards_coordinator = IRewardsCoordinator::new(self.rewards_coordinator, provider);
+
+        let operator_set_split = rewards_coordinator
+            .getOperatorSetSplit(operator, operator_set)
+            .call()
+            .await
+            .map_err(ElContractsError::AlloyContractError)?
+            ._0;
+
+        Ok(operator_set_split)
     }
 
     /// Get the operator's shares in a strategy

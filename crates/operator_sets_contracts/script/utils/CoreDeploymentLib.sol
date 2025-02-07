@@ -257,8 +257,8 @@ library CoreDeploymentLib {
                 configData.rewardsCoordinator.initPausedStatus, // initialPausedStatus
                 /// TODO: is there a setter and is this expected?
                 deployer, // rewards updater
-                uint32(configData.rewardsCoordinator.activationDelay), // _activationDelay
-                uint16(configData.rewardsCoordinator.globalOperatorCommissionBips) // _globalCommissionBips
+                uint32(1), // _activationDelay
+                uint16(1) //defaultOperatorSplitBips
             )
         );
         UpgradeableProxyLib.upgradeAndCall(result.rewardsCoordinator, rewardsCoordinatorImpl, upgradeCall);
