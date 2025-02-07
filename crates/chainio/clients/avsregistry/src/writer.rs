@@ -286,7 +286,7 @@ impl AvsRegistryChainWriter {
     ///
     /// # Returns
     ///
-    /// * `TxHash` - The transaction hash of the deregister operator transaction.
+    /// * `TxHash` - hash of the sent transaction.
     pub async fn deregister_operator(
         &self,
         quorum_numbers: Bytes,
@@ -333,8 +333,6 @@ impl AvsRegistryChainWriter {
             .map(|tx| *tx.tx_hash())
     }
 
-    /// Update socket
-    ///
     /// This function is used to update the socket of the sender (if it is a registered operator).
     ///
     /// # Arguments
@@ -357,7 +355,37 @@ impl AvsRegistryChainWriter {
             .send()
             .await
             .map_err(AvsRegistryError::AlloyContractError)?;
-        info!(tx_hash = ?tx,"successfully updated the socket with the AVS's registry coordinator" );
+        info!(tx_hash = ?tx, "successfully updated the socket with the AVS's registry coordinator");
+        Ok(*tx.tx_hash())
+    }
+
+    /// This function is used to update the account identifier of the AVS's RegistryCoordinator.
+    ///
+    /// # Arguments
+    ///
+    /// * `new_account_identifier` - address of the new account identifier.
+    ///
+    /// # Returns
+    ///
+    /// * `TxHash` - hash of the sent transaction.
+    pub async fn set_account_identifier(
+        &self,
+        new_account_identifier: Address,
+    ) -> Result<TxHash, AvsRegistryError> {
+        info!("updating the account identifier of the AVS's registry coordinator");
+        let provider = get_signer(&self.signer.clone(), &self.provider);
+
+        let contract_registry_coordinator =
+            RegistryCoordinator::new(self.registry_coordinator_addr, provider);
+
+        let contract_call =
+            contract_registry_coordinator.setAccountIdentifier(new_account_identifier);
+
+        let tx = contract_call
+            .send()
+            .await
+            .map_err(AvsRegistryError::AlloyContractError)?;
+        info!(tx_hash = ?tx, "successfully updated the account identifier of the AVS's registry coordinator");
         Ok(*tx.tx_hash())
     }
 
@@ -387,7 +415,7 @@ impl AvsRegistryChainWriter {
             .send()
             .await
             .map_err(AvsRegistryError::AlloyContractError)?;
-        info!(tx_hash = ?tx,"successfully set operator set param with the AVS's registry coordinator" );
+        info!(tx_hash = ?tx, "successfully set operator set param with the AVS's registry coordinator");
         Ok(*tx.tx_hash())
     }
 }
