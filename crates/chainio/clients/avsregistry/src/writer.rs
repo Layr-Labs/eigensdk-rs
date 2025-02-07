@@ -357,7 +357,38 @@ impl AvsRegistryChainWriter {
             .send()
             .await
             .map_err(AvsRegistryError::AlloyContractError)?;
-        info!(tx_hash = ?tx,"successfully updated the socket with the AVS's registry coordinator" );
+        info!(tx_hash = ?tx,"successfully updated the socket with the AVS's registry coordinator");
+        Ok(*tx.tx_hash())
+    }
+
+    /// set Churn Approver
+    ///
+    /// This function is used to set the new churn approver for the AVS's registry coordinator.
+    ///
+    /// # Arguments
+    ///
+    /// * `new_churn_approver` - The address of the new churn approver.
+    ///
+    /// # Returns
+    ///
+    /// * `TxHash` - The transaction hash of the deregister operator transaction.
+    pub async fn set_churn_approver(
+        &self,
+        new_churn_approver: Address,
+    ) -> Result<TxHash, AvsRegistryError> {
+        info!("set new churn approver with the AVS's registry coordinator");
+        let provider = get_signer(&self.signer.clone(), &self.provider);
+
+        let contract_registry_coordinator =
+            RegistryCoordinator::new(self.registry_coordinator_addr, provider);
+
+        let contract_call = contract_registry_coordinator.setChurnApprover(new_churn_approver);
+
+        let tx = contract_call
+            .send()
+            .await
+            .map_err(AvsRegistryError::AlloyContractError)?;
+        info!(tx_hash = ?tx,"successfully updated the new churn approver with the AVS's registry coordinator");
         Ok(*tx.tx_hash())
     }
 
@@ -606,6 +637,30 @@ mod tests {
         let (stream_event, _) = stream.next().await.unwrap().unwrap();
 
         assert_eq!(stream_event.socket, new_socket_addr);
+    }
+
+    #[tokio::test]
+    async fn test_set_churn_approver() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let private_key = ANVIL_FIRST_PRIVATE_KEY.to_string();
+        let avs_writer =
+            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
+
+        // Set up event poller to listen to `RewardsInitiatorUpdated` events
+        let provider = get_signer(&avs_writer.signer.clone(), &avs_writer.provider);
+        let contract_registry_coordinator =
+            ServiceManagerBase::new(avs_writer.service_manager_addr, provider);
+
+        /* from Go SDK:
+            function test_setChurnApprover() public {
+            address newChurnApprover = address(uint160(uint256(keccak256("newChurnApprover"))));
+            cheats.prank(registryCoordinatorOwner);
+            cheats.expectEmit(true, true, true, true, address(registryCoordinator));
+            emit ChurnApproverUpdated(churnApprover, newChurnApprover);
+            registryCoordinator.setChurnApprover(newChurnApprover);
+            assertEq(registryCoordinator.churnApprover(), newChurnApprover);
+        }
+        */
     }
 
     #[tokio::test]
