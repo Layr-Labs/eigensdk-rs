@@ -44,7 +44,7 @@ pub(crate) mod test_utils {
     pub(crate) const ANVIL_FIRST_PRIVATE_KEY: &str =
         "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
 
-    pub async fn create_operator_set(http_endpoint: &str, avs_address: Address) {
+    pub(crate) async fn create_operator_set(http_endpoint: &str, avs_address: Address) {
         let allocation_manager_addr =
             get_allocation_manager_address(http_endpoint.to_string()).await;
         let default_signer = get_signer(ANVIL_FIRST_PRIVATE_KEY, http_endpoint);

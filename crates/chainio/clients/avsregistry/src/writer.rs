@@ -379,7 +379,7 @@ mod tests {
     };
     use eigen_testing_utils::transaction::wait_transaction;
     use eigen_utils::slashing::middleware::registrycoordinator::RegistryCoordinator;
-    use eigen_utils::slashing::middleware::stakeregistry::StakeRegistry::StakeRegistryInstance;
+    use eigen_utils::slashing::middleware::stakeregistry::StakeRegistry;
     use futures_util::StreamExt;
     use std::str::FromStr;
 
@@ -446,8 +446,7 @@ mod tests {
 
         // Set up event poller to listen to `LookAheadPeriodChanged` events
         let provider = get_signer(&avs_writer.signer.clone(), &avs_writer.provider);
-        let contract_stake_registry =
-            StakeRegistryInstance::new(avs_writer.stake_registry_addr, provider);
+        let contract_stake_registry = StakeRegistry::new(avs_writer.stake_registry_addr, provider);
         let event = contract_stake_registry.LookAheadPeriodChanged_filter();
         let poller = event.watch().await.unwrap();
 
