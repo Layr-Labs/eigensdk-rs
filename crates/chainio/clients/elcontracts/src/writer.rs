@@ -848,7 +848,7 @@ mod tests {
         ANVIL_FIRST_PRIVATE_KEY, OPERATOR_ADDRESS, OPERATOR_PRIVATE_KEY,
     };
     use alloy::{
-        primitives::{address, aliases::U96, Address, FixedBytes, U256},
+        primitives::{address, aliases::U96, Address, U256},
         providers::{Provider, WalletProvider},
         sol_types::SolCall,
     };
@@ -858,23 +858,17 @@ mod tests {
         anvil::{mine_anvil_blocks_operator_set, set_account_balance, start_anvil_container},
         anvil_constants::{
             get_allocation_manager_address, get_erc20_mock_strategy,
-            get_registry_coordinator_address, get_rewards_coordinator_address,
-            get_service_manager_address,
+            get_registry_coordinator_address, get_service_manager_address,
         },
         transaction::wait_transaction,
     };
-    use eigen_types::{avs, operator::Operator};
+    use eigen_types::operator::Operator;
     use eigen_utils::{
         convert_allocation_operator_set_to_rewards_operator_set,
-        rewardsv2::core::rewardscoordinator::RewardsCoordinator,
         slashing::{
-            core::{
-                allocationmanager::{
-                    AllocationManager::{self, OperatorSet},
-                    IAllocationManagerTypes,
-                },
-                irewardscoordinator::IRewardsCoordinator,
-                permissioncontroller::PermissionController,
+            core::allocationmanager::{
+                AllocationManager::{self, OperatorSet},
+                IAllocationManagerTypes,
             },
             middleware::registrycoordinator::{
                 ISlashingRegistryCoordinatorTypes::OperatorSetParam,
@@ -1496,13 +1490,9 @@ mod tests {
             avs: avs_address,
             id: 0,
         };
-        // let rewards_coordinator_address = get_rewards_coordinator_address(http_endpoint.clone()).await;
-        // let allocation_manager_address = get_allocation_manager_address(http_endpoint.clone()).await;
-        // let permission_controller = PermissionController::new(allocation_manager_address, get_signer(ANVIL_FIRST_PRIVATE_KEY, &http_endpoint));
+
         let new_split = 5;
-        let initial_split = 1;
-        // let s = permission_controller.setAppointee(avs_address,rewards_coordinator_address , allocation_manager_address, FixedBytes::from(IRewardsCoordinator::setOperatorSetSplitCall::SELECTOR)).send().await.unwrap().get_receipt().await.unwrap();
-        // dbg!(s.transaction_hash);
+        let initial_split = 1; // This is set in rewards coordinator's initialize function in _defaultSplitBips
         let tx_hash = el_chain_writer
             .set_operator_set_split(OPERATOR_ADDRESS, operator_set.clone(), new_split)
             .await
@@ -1518,8 +1508,7 @@ mod tests {
             .unwrap();
 
         assert_eq!(split, initial_split);
-        sleep(Duration::from_secs(2)).await;
-        // mine_anvil_blocks_operator_set(&_container, 2).await;
+        sleep(Duration::from_secs(2)).await; // allocation delay is set as 1 in initialize function in rewards coordinator. We wait for 2 seconds.
 
         let tx_hash = el_chain_writer
             .set_operator_set_split(OPERATOR_ADDRESS, operator_set.clone(), new_split)
