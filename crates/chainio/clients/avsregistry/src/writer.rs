@@ -166,6 +166,8 @@ impl AvsRegistryChainWriter {
             pubkeyG2: g2_pub_key_bn254,
         };
 
+        dbg!(&wallet.address());
+
         let msg_to_sign = self
             .el_reader
             .calculate_operator_avs_registration_digest_hash(
@@ -359,14 +361,39 @@ impl AvsRegistryChainWriter {
         info!(tx_hash = ?tx,"successfully updated the socket with the AVS's registry coordinator" );
         Ok(*tx.tx_hash())
     }
+
+    /// function ejectOperator(address operator, bytes memory quorumNumbers) external onlyEjector {
+    pub async fn eject_operator(
+        &self,
+        operator_address: Address,
+        quorum_numbers: Bytes,
+    ) -> Result<TxHash, AvsRegistryError> {
+        info!("ejecting operator from AVS");
+        let provider = get_signer(&self.signer.clone(), &self.provider);
+
+        let contract_registry_coordinator =
+            RegistryCoordinator::new(self.registry_coordinator_addr, provider);
+
+        let contract_call =
+            contract_registry_coordinator.ejectOperator(operator_address, quorum_numbers);
+
+        contract_call
+            .send()
+            .await
+            .map_err(AvsRegistryError::AlloyContractError)
+            .inspect(|tx| info!(tx_hash = ?tx, "successfully ejected operator from AVS"))
+            .map(|tx| *tx.tx_hash())
+    }
 }
 
 #[cfg(test)]
 mod tests {
 
     use super::AvsRegistryChainWriter;
-    use crate::test_utils::{ANVIL_FIRST_PRIVATE_KEY, ANVIL_SECOND_ADDRESS};
-    use alloy::primitives::{Address, Bytes, FixedBytes, U256};
+    use crate::test_utils::{
+        build_avs_registry_chain_reader, ANVIL_FIRST_PRIVATE_KEY, ANVIL_SECOND_ADDRESS,
+    };
+    use alloy::primitives::{address, Address, Bytes, FixedBytes, U256};
     use eigen_common::get_signer;
     use eigen_crypto_bls::BlsKeyPair;
     use eigen_logging::get_test_logger;
@@ -574,5 +601,54 @@ mod tests {
         let (stream_event, _) = stream.next().await.unwrap().unwrap();
 
         assert_eq!(stream_event.socket, new_socket_addr)
+    }
+
+    #[tokio::test]
+    async fn test_eject_operator() {
+        let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
+        let bls_key =
+            "1371012690269088913462269866874713266643928125698382731338806296762673180359922"
+                .to_string();
+        let register_operator_address = address!("9965507d1a55bcc2695c58ba16fb37d819b0a4dc");
+        let private_key =
+            "8b3a350cf5c34c9194ca85829a2df0ec3153be0318b5e2d3348e872092edffba".to_string();
+        let quorum_nums = Bytes::from([0]);
+
+        let avs_writer =
+            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
+
+        test_register_operator(
+            &avs_writer,
+            bls_key,
+            quorum_nums.clone(),
+            http_endpoint.clone(),
+        )
+        .await;
+
+        let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
+        let is_registered = avs_reader
+            .is_operator_registered(register_operator_address)
+            .await
+            .unwrap();
+        assert!(is_registered);
+
+        // TENGO QUE PRIMERO SETEARLO COMO EJECTOR
+        let tx_hash = avs_writer
+            .eject_operator(register_operator_address, quorum_nums)
+            .await
+            .unwrap();
+
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
+
+        assert!(tx_status);
+
+        let is_registered = avs_reader
+            .is_operator_registered(register_operator_address)
+            .await
+            .unwrap();
+        assert!(!is_registered);
     }
 }

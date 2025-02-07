@@ -23,9 +23,33 @@ pub mod fake_reader;
 #[cfg(test)]
 pub(crate) mod test_utils {
     use alloy::primitives::{address, Address};
+    use eigen_logging::get_test_logger;
+    use eigen_testing_utils::anvil_constants::{
+        get_operator_state_retriever_address, get_registry_coordinator_address,
+    };
+
+    use crate::reader::AvsRegistryChainReader;
 
     pub(crate) const ANVIL_FIRST_PRIVATE_KEY: &str =
         "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
     pub(crate) const ANVIL_SECOND_ADDRESS: Address =
         address!("70997970C51812dc3A010C7d01b50e0d17dc79C8");
+
+    pub(crate) async fn build_avs_registry_chain_reader(
+        http_endpoint: String,
+    ) -> AvsRegistryChainReader {
+        let registry_coordinator_addr =
+            get_registry_coordinator_address(http_endpoint.clone()).await;
+        let operator_state_retriever_address =
+            get_operator_state_retriever_address(http_endpoint.clone()).await;
+
+        AvsRegistryChainReader::new(
+            get_test_logger(),
+            registry_coordinator_addr,
+            operator_state_retriever_address,
+            http_endpoint.to_string(),
+        )
+        .await
+        .unwrap()
+    }
 }
