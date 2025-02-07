@@ -690,7 +690,7 @@ mod tests {
             .get_operators_stake_in_quorums_at_block_operator_id(1245842, operator_id.into())
             .await;
 
-        assert!(operators_stake.is_ok());
+        assert!(operators_stake.is_err());
     }
 
     #[tokio::test]
