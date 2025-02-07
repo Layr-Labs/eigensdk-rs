@@ -6,7 +6,7 @@ use eigen_types::operator::Operator;
 use eigen_utils::core::islasher::ISlasher;
 use eigen_utils::core::{
     avsdirectory::AVSDirectory, delegationmanager::DelegationManager, erc20::ERC20,
-    istrategy::IStrategy, rewardscoordinator::RewardsCoordinator,
+    irewardscoordinator::IRewardsCoordinator, istrategy::IStrategy,
 };
 #[derive(Debug, Clone)]
 pub struct ELChainReader {
@@ -14,6 +14,7 @@ pub struct ELChainReader {
     slasher: Address,
     pub(crate) delegation_manager: Address,
     avs_directory: Address,
+    rewards_coordinator: Address,
     pub provider: String,
 }
 
@@ -35,6 +36,7 @@ impl ELChainReader {
         _logger: SharedLogger,
         slasher: Address,
         delegation_manager: Address,
+        rewards_coordinator: Address,
         avs_directory: Address,
         provider: String,
     ) -> Self {
@@ -42,6 +44,7 @@ impl ELChainReader {
             _logger,
             slasher,
             delegation_manager,
+            rewards_coordinator,
             avs_directory,
             provider,
         }
@@ -66,6 +69,7 @@ impl ELChainReader {
         _logger: SharedLogger,
         delegation_manager: Address,
         avs_directory: Address,
+        rewards_coordinator: Address,
         client: &String,
     ) -> Result<Self, ElContractsError> {
         let provider = get_provider(client);
@@ -85,6 +89,7 @@ impl ELChainReader {
             avs_directory,
             slasher: slasher_addr,
             delegation_manager,
+            rewards_coordinator,
             provider: client.to_string(),
         })
     }
@@ -384,20 +389,20 @@ impl ELChainReader {
         Ok(is_operator_is)
     }
 
-    /// Get Operator Avs Split
+    /// Gets the split of a specific `operator` for a specific `avs`
     ///
     /// # Arguments
     ///
-    /// * `operator` - The operator's address
-    /// * `avs` - The Avs 's address
+    /// * `operator` - The operator address
+    /// * `avs` - The AVS address
     ///
     /// # Returns
     ///
-    /// * `u16` - the split for the specific operator for the specific avs
+    /// * u16 - The split of the operator for the AVS, if the call is successful
     ///
     /// # Errors
     ///
-    /// * `ElContractsError` - if the call to the contract fails
+    /// * `ElContractsError` - if the call to the contract fails.
     pub async fn get_operator_avs_split(
         &self,
         operator: Address,
@@ -405,42 +410,44 @@ impl ELChainReader {
     ) -> Result<u16, ElContractsError> {
         let provider = get_provider(&self.provider);
 
-        let contract_rewards_coordinator =
-            RewardsCoordinator::new(self.delegation_manager, provider);
+        let rewards_coordinator = IRewardsCoordinator::new(self.rewards_coordinator, provider);
 
-        Ok(contract_rewards_coordinator
+        let operator_avs_split = rewards_coordinator
             .getOperatorAVSSplit(operator, avs)
             .call()
             .await
             .map_err(ElContractsError::AlloyContractError)?
-            ._0)
+            ._0;
+
+        Ok(operator_avs_split)
     }
 
-    /// Get Operator PI Split
+    /// Gets the split of a specific `operator` for Programmatic Incentives
     ///
     /// # Arguments
     ///
-    /// * `operator` - The operator's address
+    /// * `operator` - The operator address
     ///
     /// # Returns
     ///
-    /// * `u16` - The split for a specific `operator` for Programmatic Incentives
+    /// * u16 - The split of the operator for PI, if the call is successful
     ///
     /// # Errors
     ///
-    /// * `ElContractsError` - if the call to the contract fails
+    /// * `ElContractsError` - if the call to the contract fails.
     pub async fn get_operator_pi_split(&self, operator: Address) -> Result<u16, ElContractsError> {
         let provider = get_provider(&self.provider);
 
-        let contract_rewards_coordinator =
-            RewardsCoordinator::new(self.delegation_manager, provider);
+        let rewards_coordinator = IRewardsCoordinator::new(self.rewards_coordinator, provider);
 
-        Ok(contract_rewards_coordinator
+        let operator_pi_split = rewards_coordinator
             .getOperatorPISplit(operator)
             .call()
             .await
             .map_err(ElContractsError::AlloyContractError)?
-            ._0)
+            ._0;
+
+        Ok(operator_pi_split)
     }
 }
 
@@ -451,6 +458,7 @@ mod tests {
     use alloy::providers::Provider;
     use alloy::{eips::eip1898::BlockNumberOrTag::Number, rpc::types::BlockTransactionsKind};
     use eigen_logging::get_test_logger;
+    use eigen_testing_utils::anvil_constants::get_rewards_coordinator_address;
     use eigen_testing_utils::{
         anvil::start_anvil_container,
         anvil_constants::{
@@ -490,11 +498,14 @@ mod tests {
         let MockAvsServiceManager::avsDirectoryReturn {
             _0: avs_directory_address,
         } = avs_directory_address_return;
+        let rewards_coordinator_address =
+            get_rewards_coordinator_address(http_endpoint.clone()).await;
 
         ELChainReader::new(
             get_test_logger(),
             slasher_address,
             delegation_manager_address,
+            rewards_coordinator_address,
             avs_directory_address,
             http_endpoint,
         )

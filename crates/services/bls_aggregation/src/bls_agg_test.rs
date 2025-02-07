@@ -127,6 +127,7 @@ pub mod integration_test {
         )
         .await
         .unwrap();
+
         let avs_writer = AvsRegistryChainWriter::build_avs_registry_chain_writer(
             get_test_logger(),
             http_endpoint.clone(),
