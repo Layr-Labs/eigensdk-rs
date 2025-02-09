@@ -1,6 +1,7 @@
 use crate::error::ElContractsError;
 use crate::reader::ELChainReader;
 use alloy::dyn_abi::DynSolValue;
+use alloy::primitives::aliases::U96;
 use alloy::primitives::{Address, FixedBytes, TxHash, U256};
 use alloy::sol;
 use eigen_common::get_signer;
@@ -11,6 +12,8 @@ pub use eigen_types::operator::Operator;
 
 use eigen_utils::convert_allocation_operator_set_to_rewards_operator_set;
 use eigen_utils::slashing::core::allocationmanager::AllocationManager::OperatorSet;
+use eigen_utils::slashing::middleware::islashingregistrycoordinator::ISlashingRegistryCoordinator::OperatorSetParamsUpdated;
+use eigen_utils::slashing::middleware::registrycoordinator::IStakeRegistryTypes::StrategyParams;
 use eigen_utils::{
     slashing::core::{
         allocationmanager::{AllocationManager, IAllocationManagerTypes},
