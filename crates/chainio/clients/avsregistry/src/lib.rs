@@ -9,31 +9,103 @@
 /// Reader module
 pub mod reader;
 
-#[allow(dead_code)]
 /// Writer module
 pub mod writer;
 
 /// Avs registry error message
 pub mod error;
 
-#[allow(dead_code)]
 /// Fake avs registry module
 pub mod fake_reader;
 
 #[cfg(test)]
 pub(crate) mod test_utils {
-    use alloy::primitives::{address, Address};
-    use eigen_logging::get_test_logger;
+    use alloy::{
+        primitives::{aliases::U96, Address},
+        providers::WalletProvider,
+        sol_types::SolCall,
+    };
+    use eigen_common::get_signer;
     use eigen_testing_utils::anvil_constants::{
-        get_operator_state_retriever_address, get_registry_coordinator_address,
+        get_allocation_manager_address, get_erc20_mock_strategy, get_registry_coordinator_address,
+        get_service_manager_address, FIRST_PRIVATE_KEY,
+    };
+    use eigen_utils::slashing::{
+        core::allocationmanager::AllocationManager,
+        middleware::registrycoordinator::{
+            ISlashingRegistryCoordinatorTypes::OperatorSetParam,
+            IStakeRegistryTypes::StrategyParams, RegistryCoordinator,
+        },
+        sdk::mockavsservicemanager::MockAvsServiceManager,
     };
 
-    use crate::writer::AvsRegistryChainWriter;
+    pub(crate) async fn create_operator_set(http_endpoint: &str, avs_address: Address) {
+        let allocation_manager_addr =
+            get_allocation_manager_address(http_endpoint.to_string()).await;
+        let default_signer = get_signer(FIRST_PRIVATE_KEY, http_endpoint);
+        let allocation_manager =
+            AllocationManager::new(allocation_manager_addr, default_signer.clone());
+        let registry_coordinator_addr =
+            get_registry_coordinator_address(http_endpoint.to_string()).await;
+        let service_manager_address = get_service_manager_address(http_endpoint.to_string()).await;
+        let service_manager =
+            MockAvsServiceManager::new(service_manager_address, default_signer.clone());
+        service_manager
+            .setAppointee(
+                default_signer.default_signer_address(),
+                allocation_manager_addr,
+                alloy::primitives::FixedBytes(AllocationManager::setAVSRegistrarCall::SELECTOR),
+            )
+            .send()
+            .await
+            .unwrap()
+            .get_receipt()
+            .await
+            .unwrap();
+        allocation_manager
+            .setAVSRegistrar(avs_address, registry_coordinator_addr)
+            .send()
+            .await
+            .unwrap()
+            .get_receipt()
+            .await
+            .unwrap();
 
-    pub(crate) const ANVIL_FIRST_PRIVATE_KEY: &str =
-        "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
-    pub(crate) const ANVIL_SECOND_ADDRESS: Address =
-        address!("70997970C51812dc3A010C7d01b50e0d17dc79C8");
+        // Create slashable quorum
+        let contract_registry_coordinator =
+            RegistryCoordinator::new(registry_coordinator_addr, default_signer.clone());
+        let operator_set_params = OperatorSetParam {
+            maxOperatorCount: 10,
+            kickBIPsOfOperatorStake: 100,
+            kickBIPsOfTotalStake: 1000,
+        };
+        let strategy = get_erc20_mock_strategy(http_endpoint.to_string()).await;
+        service_manager
+            .setAppointee(
+                registry_coordinator_addr,
+                allocation_manager_addr,
+                alloy::primitives::FixedBytes(AllocationManager::createOperatorSetsCall::SELECTOR),
+            )
+            .send()
+            .await
+            .unwrap()
+            .get_receipt()
+            .await
+            .unwrap();
+        let strategy_params = StrategyParams {
+            strategy,
+            multiplier: U96::from(1),
+        };
+
+        contract_registry_coordinator
+            .createSlashableStakeQuorum(operator_set_params, U96::from(0), vec![strategy_params], 0)
+            .send()
+            .await
+            .unwrap()
+            .get_receipt()
+            .await
+            .unwrap();
+    }
 
     pub(crate) async fn build_avs_registry_chain_writer(
         http_endpoint: String,
