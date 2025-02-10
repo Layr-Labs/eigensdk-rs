@@ -415,6 +415,49 @@ impl AvsRegistryChainWriter {
         info!(tx_hash = ?tx.tx_hash(),"Adding strategies");
         Ok(*tx.tx_hash())
     }
+
+    /// Remove strategies and their associated weights from the quorum's considered strategies.
+    ///
+    /// Can only be caled by registry coordinator's owner.
+    /// The quorum numbers must exist, else the tx will fail.
+    /// higher indices should be *first* in the list of `indices_to_remove`, since otherwise
+    /// the removal of lower index entries will cause a shift in the indices of the other strategies to remove
+    ///  
+    /// # Arguments
+    ///
+    /// # `quorum_number` - The respective quorum numbers in [`u8`].
+    /// # `indices_to_remove` - [`Vec<U256>`].
+    ///
+    /// # Returns
+    ///
+    /// * [`TxHash`] - The transaction hash of the transaction.
+    pub async fn remove_strategies(
+        &self,
+        quorum_number: u8,
+        indices_to_remove: Vec<U256>,
+    ) -> Result<TxHash, AvsRegistryError> {
+        let provider = get_signer(&self.signer.clone(), &self.provider);
+
+        let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, provider);
+        let reg_coordinator_owner =
+            RegistryCoordinator::new(self.registry_coordinator_addr, get_provider(&self.provider))
+                .owner()
+                .call()
+                .await?
+                ._0;
+        let caller_address =
+            get_signer(&self.signer.clone(), &self.provider).default_signer_address();
+        if !reg_coordinator_owner.eq(&caller_address) {
+            info!(caller = %caller_address,registry_coordinator_owner = %reg_coordinator_owner,"Caller must be registry coordinator's owner when removing strategies");
+        }
+        let tx = contract_stake_registry
+            .removeStrategies(quorum_number, indices_to_remove)
+            .send()
+            .await
+            .map_err(AvsRegistryError::AlloyContractError)?;
+        info!(tx_hash = ?tx.tx_hash(),"Removing strategies");
+        Ok(*tx.tx_hash())
+    }
 }
 
 #[cfg(test)]
@@ -430,7 +473,6 @@ mod tests {
     };
     use eigen_testing_utils::transaction::wait_transaction;
     use eigen_utils::middleware::stakeregistry::IStakeRegistry::StrategyParams;
-    use std::ops::Add;
     use std::str::FromStr;
 
     async fn build_avs_registry_chain_writer(
@@ -591,6 +633,36 @@ mod tests {
 
         let tx_hash = avs_writer
             .add_strategies(quorum_numbers, strategy_params.to_vec())
+            .await
+            .unwrap();
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
+        assert!(tx_status);
+    }
+
+    #[tokio::test]
+    async fn test_remove_strategies() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+
+        let private_key =
+            "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80".to_string();
+        let avs_writer = build_avs_registry_chain_writer(http_endpoint.clone(), private_key).await;
+
+        let quorum_numbers = 0;
+        let strategy_params = [StrategyParams {
+            strategy: address!("54945180dB7943c0ed0FEE7EdaB2Bd24620256bc"),
+            multiplier: U96::from(1),
+        }];
+
+        avs_writer
+            .add_strategies(quorum_numbers, strategy_params.to_vec())
+            .await
+            .unwrap();
+
+        let tx_hash = avs_writer
+            .remove_strategies(quorum_numbers, [U256::from(1)].to_vec())
             .await
             .unwrap();
         let tx_status = wait_transaction(&http_endpoint, tx_hash)
