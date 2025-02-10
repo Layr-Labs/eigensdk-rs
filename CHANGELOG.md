@@ -16,6 +16,15 @@ Those changes in added, changed or breaking changes, should include usage exampl
 * Added `eigen_common` dependency to the `eigensdk` crate when "full" feature is enabled in [#249](https://github.com/Layr-Labs/eigensdk-rs/pull/249).
 * Added bindings for `ECDSAStakeRegistry` and `ECDSAServiceManagerBase` in [#269](https://github.com/Layr-Labs/eigensdk-rs/pull/269).
 * Added release-plz in ci in [#275](https://github.com/Layr-Labs/eigensdk-rs/pull/275).
+* Added new method `set_slashable_stake_lookahead` in `avsregistry/writer` in [#278](https://github.com/Layr-Labs/eigensdk-rs/pull/278).
+  ```rust
+    let quorum_number = 0_u8;
+    let lookahead = 10_u32;
+    let tx_hash = avs_writer
+        .set_slashable_stake_lookahead(quorum_number, lookahead)
+        .await
+        .unwrap();
+  ```
 * Added new method `set_rewards_initiator` in `avsregistry/writer` in [#273](https://github.com/Layr-Labs/eigensdk-rs/pull/273).
   ```rust
     let tx_hash = avs_writer
