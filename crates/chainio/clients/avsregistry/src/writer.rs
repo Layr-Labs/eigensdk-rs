@@ -397,6 +397,7 @@ impl AvsRegistryChainWriter {
     /// * `cooldown` - the new ejection cooldown in seconds
     ///
     /// # Returns
+    ///
     /// * `TxHash` - The transaction hash of the set ejection cooldown transaction
     pub async fn set_ejection_cooldown(&self, cooldown: U256) -> Result<TxHash, AvsRegistryError> {
         info!("setting ejecting cooldown with the AVS's registry coordinator");
