@@ -346,7 +346,7 @@ impl AvsRegistryChainWriter {
     ///
     /// # Returns
     ///
-    /// * [`TxHash`] - The transaction hash of the transaction.
+    /// * [`TxHash`] - hash of the transaction.
     pub async fn set_minimum_stake_for_quorum(
         &self,
         quorum_numbers: u8,
