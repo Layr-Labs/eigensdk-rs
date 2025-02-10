@@ -628,7 +628,13 @@ impl AvsRegistryChainReader {
         Ok(operator_id_to_socket)
     }
 
-    /// TODO!
+    /// Check if a quorum is an operator set quorum
+    ///
+    /// # Arguments
+    /// * `quorum_number` - The quorum number to query.
+    ///
+    /// # Returns
+    /// True if the quorum is an operator set quorum, false otherwise.
     pub async fn is_operator_set_quorum(
         &self,
         quorum_number: u8,
@@ -846,10 +852,12 @@ mod tests {
 
     #[tokio::test]
     async fn test_is_operator_set_quorum() {
-        let avs_reader = build_avs_registry_chain_reader().await;
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
 
         let operator_set_quourm = avs_reader.is_operator_set_quorum(0).await.unwrap();
+        dbg!(operator_set_quourm);
 
-        assert!(!operator_set_quourm);
+        assert!(operator_set_quourm);
     }
 }
