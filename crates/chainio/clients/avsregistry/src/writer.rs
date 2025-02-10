@@ -807,7 +807,7 @@ mod tests {
 
         let tx_hash = avs_writer
             .create_slashable_stake_quorum(
-                operator_set_param,
+                operator_set_param.clone(),
                 minimum_stake,
                 vec![strategy_param],
                 look_ahead_period,
@@ -820,5 +820,37 @@ mod tests {
             .status();
 
         assert!(tx_status);
+
+        let registry_coordinator_contract = RegistryCoordinator::new(
+            avs_writer.registry_coordinator_addr,
+            get_signer(&avs_writer.signer.clone(), &avs_writer.provider),
+        );
+
+        let params = registry_coordinator_contract
+            .getOperatorSetParams(0)
+            .call()
+            .await
+            .unwrap();
+        assert_eq!(
+            params._0.maxOperatorCount,
+            operator_set_param.maxOperatorCount,
+        );
+        assert_eq!(
+            params._0.kickBIPsOfOperatorStake,
+            operator_set_param.kickBIPsOfOperatorStake,
+        );
+        assert_eq!(
+            params._0.kickBIPsOfTotalStake,
+            operator_set_param.kickBIPsOfTotalStake
+        );
+
+        let quorum = registry_coordinator_contract
+            .quorumCount()
+            .call()
+            .await
+            .unwrap()
+            ._0;
+
+        assert_eq!(quorum, 1);
     }
 }
