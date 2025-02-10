@@ -443,7 +443,7 @@ mod tests {
     use super::AvsRegistryChainWriter;
     use crate::test_utils::build_avs_registry_chain_reader;
     use crate::test_utils::create_operator_set;
-    use alloy::primitives::{address, Address, Bytes, FixedBytes, U256};
+    use alloy::primitives::{Address, Bytes, FixedBytes, U256};
     use eigen_common::get_signer;
     use eigen_crypto_bls::BlsKeyPair;
     use eigen_logging::get_test_logger;
