@@ -516,6 +516,7 @@ mod tests {
     use eigen_testing_utils::anvil::start_anvil_container;
     use eigen_testing_utils::anvil_constants::{
         get_operator_state_retriever_address, get_registry_coordinator_address,
+        ANVIL_FIRST_PRIVATE_KEY,
     };
     use eigen_testing_utils::transaction::wait_transaction;
     use eigen_utils::middleware::stakeregistry::IStakeRegistry::StrategyParams;
@@ -646,9 +647,7 @@ mod tests {
     #[tokio::test]
     async fn test_set_minimum_stake_for_quorum() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-
-        let private_key =
-            "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80".to_string();
+        let private_key = ANVIL_FIRST_PRIVATE_KEY.to_string();
         let avs_writer = build_avs_registry_chain_writer(http_endpoint.clone(), private_key).await;
         let quorum_numbers = 0;
         let minimum_stake = U96::from(10);
