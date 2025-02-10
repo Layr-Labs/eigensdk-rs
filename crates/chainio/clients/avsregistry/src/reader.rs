@@ -437,17 +437,20 @@ impl AvsRegistryChainReader {
     }
 
     /// TODO! getOperatorRestakedStrategies
-    pub async fn get_operator_restaked_Strategies(
+    pub async fn get_operator_restaked_strategies(
         &self,
         operator_address: Address,
     ) -> Result<Vec<Address>, AvsRegistryError> {
         let provider = get_provider(&self.provider);
 
-        let service_manager_contract =
-            ServiceManagerBase::new(self.registry_coordinator_addr, provider);
+        let operator_restaked_strategies =
+            ServiceManagerBase::new(self.registry_coordinator_addr, provider)
+                .getOperatorRestakedStrategies(operator_address)
+                .call()
+                .await?
+                ._0;
 
-        service_manager_contract.getOperatorRestakedStrategies(operator_address).call().await
-        Ok(vec![])
+        Ok(operator_restaked_strategies)
     }
 
     /// Get operator id
@@ -675,7 +678,9 @@ mod tests {
     use eigen_logging::get_test_logger;
     use eigen_testing_utils::{
         anvil::start_anvil_container,
-        anvil_constants::{get_operator_state_retriever_address, get_registry_coordinator_address},
+        anvil_constants::{
+            get_operator_state_retriever_address, get_registry_coordinator_address, FIRST_ADDRESS,
+        },
     };
     use hex::FromHex;
     use std::str::FromStr;
@@ -815,6 +820,19 @@ mod tests {
 
         // TODO: This is a temporary fix. Will be fixed in the next PR Issue https://github.com/Layr-Labs/eigensdk-rs/issues/307.
         assert!(operators_stake.is_err());
+    }
+
+    #[tokio::test]
+    async fn test_get_operator_restaked_strategies() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
+
+        let strategies = avs_reader
+            .get_operator_restaked_strategies(FIRST_ADDRESS)
+            .await
+            .unwrap();
+
+        dbg!(strategies);
     }
 
     #[tokio::test]
