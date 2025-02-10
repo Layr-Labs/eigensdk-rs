@@ -726,7 +726,7 @@ mod tests {
         let regcoord = RegistryCoordinator::new(avs_writer.registry_coordinator_addr, &provider);
 
         let current_churn_approver = regcoord.churnApprover().call().await.unwrap()._0;
-        let new_churn_approver = FIRST_ADDRESS;
+        let new_churn_approver = SECOND_ADDRESS;
         assert_ne!(current_churn_approver, new_churn_approver);
 
         let tx_hash = avs_writer
