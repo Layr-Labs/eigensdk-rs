@@ -52,6 +52,19 @@ Those changes in added, changed or breaking changes, should include usage exampl
   ```
 * Added custom configuration for release-plz in [#281](https://github.com/Layr-Labs/eigensdk-rs/pull/281).
 * Added Rewards2.1 support in [#323](https://github.com/Layr-Labs/eigensdk-rs/pull/323).
+* Added new method `set_operator_set_param` in `avsregistry/writer` in [#327](https://github.com/Layr-Labs/eigensdk-rs/pull/327).
+  ```rust
+   let operator_set_params = OperatorSetParam {
+        maxOperatorCount: 10,
+        kickBIPsOfOperatorStake: 50,
+        kickBIPsOfTotalStake: 50,
+    };
+
+    let tx_hash = avs_writer
+        .set_operator_set_param(0, operator_set_params.clone())
+        .await
+        .unwrap();
+  ```
 
 ### Changed
 * Changes in the way bindings are generated in [#243](https://github.com/Layr-Labs/eigensdk-rs/pull/243).
