@@ -26,13 +26,16 @@ Those changes in added, changed or breaking changes, should include usage exampl
         .unwrap();
   ```
 * Added new method `set_rewards_initiator` in `avsregistry/writer` in [#273](https://github.com/Layr-Labs/eigensdk-rs/pull/273).
+
   ```rust
     let tx_hash = avs_writer
       .set_rewards_initiator(new_rewards_init_address)
       .await
       .unwrap();
   ```
+
 * Added new method `clear_deallocation_queue` in `elcontracts/writer` in [#270](https://github.com/Layr-Labs/eigensdk-rs/pull/270)
+
   ```rust
   let tx_hash_clear = el_chain_writer
       .clear_deallocation_queue(
@@ -43,8 +46,10 @@ Those changes in added, changed or breaking changes, should include usage exampl
       .await
       .unwrap();
   ```
+
 * Added update_socket function for avs registry writer in [#268](https://github.com/Layr-Labs/eigensdk-rs/pull/268)
   An example of use is the following:
+
   ```rust
   // Given an avs writer and a new socket address:
 
@@ -59,9 +64,11 @@ Those changes in added, changed or breaking changes, should include usage exampl
     .status(); 
   // tx_status should be true
   ```
+
 * Added custom configuration for release-plz in [#281](https://github.com/Layr-Labs/eigensdk-rs/pull/281).
 * Added Rewards2.1 support in [#323](https://github.com/Layr-Labs/eigensdk-rs/pull/323).
 * Added new method `set_operator_set_param` in `avsregistry/writer` in [#327](https://github.com/Layr-Labs/eigensdk-rs/pull/327).
+
   ```rust
    let operator_set_params = OperatorSetParam {
         maxOperatorCount: 10,
@@ -76,14 +83,25 @@ Those changes in added, changed or breaking changes, should include usage exampl
   ```
   
 * Added new method `set_ejector` in `avsregistry/writer` in [#330](https://github.com/Layr-Labs/eigensdk-rs/pull/330).
+  
   ```rust
     let new_ejector_address = address!("70997970C51812dc3A010C7d01b50e0d17dc79C8");
     let tx_hash = avs_writer.set_ejector(new_ejector_address).await.unwrap();
   ````
 
 * Added new method `is_operator_set_quorum` in `avsregistry/writer` in [#296](https://github.com/Layr-Labs/eigensdk-rs/pull/296).
+
   ```rust
     let operator_set_quourm = avs_reader.is_operator_set_quorum(0).await.unwrap();
+  ```
+
+* Added new method `set_account_identifier` in `avsregistry/writer` in [#329](https://github.com/Layr-Labs/eigensdk-rs/pull/329).
+
+  ```rust
+    let tx_hash = avs_writer
+        .set_account_identifier(new_identifier_address)
+        .await
+        .unwrap();
   ```
 
 ### Changed
