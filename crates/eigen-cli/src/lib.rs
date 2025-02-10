@@ -283,7 +283,6 @@ mod test {
     #[tokio::test]
     async fn test_egn_addrs_with_service_manager_flag() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-
         let test_data = TestData::new(Input {
             service_manager_address: get_service_manager_address(http_endpoint.clone()).await,
             rpc_url: http_endpoint.clone(),
@@ -323,7 +322,6 @@ mod test {
     #[tokio::test]
     async fn test_egn_addrs_with_registry_coordinator_flag() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-
         let registry_coordinator_address =
             get_registry_coordinator_address(http_endpoint.clone()).await;
 

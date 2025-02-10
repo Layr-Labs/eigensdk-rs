@@ -14,13 +14,13 @@ use ark_ec::{AffineRepr, CurveGroup};
 use ark_ff::{fields::PrimeField, BigInt, BigInteger256, Fp2};
 use ark_serialize::{CanonicalDeserialize, CanonicalSerialize};
 use eigen_crypto_bn254::utils::map_to_curve;
-use eigen_utils::middleware::blsapkregistry::BN254::{
+use eigen_utils::slashing::middleware::blsapkregistry::BN254::{
     G1Point as G1PointRegistry, G2Point as G2PointRegistry,
 };
-use eigen_utils::middleware::iblssignaturechecker::BN254::{
+use eigen_utils::slashing::middleware::iblssignaturechecker::BN254::{
     G1Point as G1PointChecker, G2Point as G2PointChecker,
 };
-use eigen_utils::middleware::registrycoordinator::BN254::{G1Point, G2Point};
+use eigen_utils::slashing::middleware::registrycoordinator::BN254::{G1Point, G2Point};
 use serde::de::{self, Visitor};
 use serde::{Deserialize, Serialize};
 pub type PrivateKey = Fr;
