@@ -745,7 +745,7 @@ mod tests {
     #[tokio::test]
     async fn test_set_ejector_cooldown() {
         let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
-        let private_key = ANVIL_FIRST_PRIVATE_KEY.to_string();
+        let private_key = FIRST_PRIVATE_KEY.to_string();
 
         let avs_writer =
             build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
