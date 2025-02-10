@@ -391,18 +391,13 @@ impl AvsRegistryChainWriter {
         info!("updating the account identifier of the AVS's registry coordinator");
         let provider = get_signer(&self.signer.clone(), &self.provider);
 
-        let contract_registry_coordinator =
-            RegistryCoordinator::new(self.registry_coordinator_addr, provider);
-
-        let contract_call =
-            contract_registry_coordinator.setAccountIdentifier(new_account_identifier);
-
-        let tx = contract_call
+        RegistryCoordinator::new(self.registry_coordinator_addr, provider)
+            .setAccountIdentifier(new_account_identifier)
             .send()
             .await
-            .map_err(AvsRegistryError::AlloyContractError)?;
-        info!(tx_hash = ?tx, "successfully updated the account identifier of the AVS's registry coordinator");
-        Ok(*tx.tx_hash())
+            .map_err(AvsRegistryError::AlloyContractError)
+            .inspect(|tx| info!(tx_hash = ?tx, "successfully updated the account identifier of the AVS's registry coordinator"))
+            .map(|tx| *tx.tx_hash())
     }
 
     /// Update the configuration of an existing quorum.
