@@ -458,6 +458,26 @@ impl AvsRegistryChainWriter {
         info!(tx_hash = ?tx, "successfully set operator set param with the AVS's registry coordinator");
         Ok(*tx.tx_hash())
     }
+
+    /// Create a new rewards submission
+    /// This function is used to create a new rewards submission for the AVS
+    /// 
+    /// # Arguments
+    /// 
+    /// * `rewardsSubmissions` - The rewards submissions to create
+    /// 
+    /// # Returns
+    /// 
+    /// * `TxHash` - The transaction hash of the create rewards submission transaction
+    pub async createAVSRewardsSubmission(
+        &self,
+            rewardsSubmissions: alloy::sol_types::private::Vec<
+                <IRewardsCoordinator::RewardsSubmission as alloy::sol_types::SolType>::RustType,
+            >
+    ) -> {
+        todo!()
+    }
+
 }
 
 #[cfg(test)]
