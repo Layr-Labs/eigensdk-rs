@@ -429,6 +429,32 @@ impl AvsRegistryChainWriter {
         info!(tx_hash = ?tx, "successfully set operator set param with the AVS's registry coordinator");
         Ok(*tx.tx_hash())
     }
+
+    /// Update the AVS metadata URI.
+    /// This function is used to update the AVS metadata URI of the AVS's RegistryCoordinator.
+    ///
+    /// # Arguments
+    ///
+    /// * `avs_metadata_uri` - The new AVS metadata URI.
+    ///
+    /// # Returns
+    ///
+    /// * `TxHash` - hash of the sent transaction.
+    pub async fn update_avs_metadata_uri(
+        &self,
+        avs_metadata_uri: &str,
+    ) -> Result<TxHash, AvsRegistryError> {
+        info!("updating the AVS metadata URI of the AVS's registry coordinator");
+        let provider = get_signer(&self.signer.clone(), &self.provider);
+
+        ServiceManagerBase::new(self.service_manager_addr, provider)
+            .updateAVSMetadataURI(avs_metadata_uri.to_string())
+            .send()
+            .await
+            .inspect(|tx| info!(tx_hash = ?tx, "successfully set a new address as the rewards initiator"))
+            .map_err(AvsRegistryError::AlloyContractError)
+            .map(|tx| *tx.tx_hash())
+    }
 }
 
 #[cfg(test)]
