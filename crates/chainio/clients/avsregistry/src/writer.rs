@@ -376,18 +376,19 @@ impl AvsRegistryChainWriter {
         Ok(*tx.tx_hash())
     }
 
-    /// Add strategies for the quorum number.
+    /// Add strategies for the given quorum.
     ///
-    /// Can only be caled by registry coordinator's owner.
-    /// The quorum numbers must exist, else the tx will fail.
+    /// Can only be called by the registry coordinator's owner.
+    /// The quorum numbers must exist, or else the tx will fail.
+    ///
     /// # Arguments
     ///
-    /// # `quorum_number` - The respective quorum numbers in [`u8`].
-    /// # `strategy_params` - [`Vec<StrategyParams>`].
+    /// * `quorum_number` - The respective quorum's number.
+    /// * `strategy_params` - list of parameters for the strategies to add.
     ///
     /// # Returns
     ///
-    /// * [`TxHash`] - The transaction hash of the transaction.
+    /// * [`TxHash`] - hash of the transaction.
     pub async fn add_strategies(
         &self,
         quorum_number: u8,
