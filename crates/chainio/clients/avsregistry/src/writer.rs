@@ -409,7 +409,17 @@ impl AvsRegistryChainWriter {
         Ok(*tx.tx_hash())
     }
 
-    /// todo!
+    /// Create a new quorum that tracks total delegated stake for operators.
+    ///
+    /// # Arguments
+    ///
+    /// * `operator_set_param` - Configures the quorum's max operator count and churn parameters
+    /// * `minimum_stake` - Sets the minimum stake required for an operator to register or remain registered
+    /// * `strategy_params` - A list of strategies and multipliers used by the StakeRegistry to calculate an operator's stake weight for the quorum
+    ///
+    /// # Returns
+    ///
+    /// * `TxHash` - The transaction hash of the create total delegated stake quorum transaction
     pub async fn create_total_delegated_stake_quorum(
         &self,
         operator_set_param: OperatorSetParam,
