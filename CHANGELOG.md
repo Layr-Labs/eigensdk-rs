@@ -65,6 +65,16 @@ Those changes in added, changed or breaking changes, should include usage exampl
         .await
         .unwrap();
   ```
+* Added new method `eject_operator` in `avsregistry/writer` in [#328](https://github.com/Layr-Labs/eigensdk-rs/pull/328).
+  ```rust
+    let register_operator_address = address!("f39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
+    let quorum_nums = Bytes::from([0]);
+
+    let tx_hash = avs_writer
+        .eject_operator(register_operator_address, quorum_nums)
+        .await
+        .unwrap();
+  ```
 
 ### Changed
 * Changes in the way bindings are generated in [#243](https://github.com/Layr-Labs/eigensdk-rs/pull/243).

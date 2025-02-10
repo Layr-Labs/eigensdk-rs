@@ -361,12 +361,20 @@ impl AvsRegistryChainWriter {
         Ok(*tx.tx_hash())
     }
 
+    /// Force a deregistration of an operator from one or more quorums
+    ///
+    /// # Arguments
+    /// * `operator_address` - The address of the operator to be ejected
+    /// * `quorum_numbers` - The quorum numbers to eject the operator from
+    ///
+    /// # Returns
+    /// * `TxHash` - The transaction hash of the eject operator transaction
     pub async fn eject_operator(
         &self,
         operator_address: Address,
         quorum_numbers: Bytes,
     ) -> Result<TxHash, AvsRegistryError> {
-        info!("ejecting operator from AVS");
+        info!("ejecting operator from quorum with the AVS's registry coordinator");
         let provider = get_signer(&self.signer.clone(), &self.provider);
 
         let contract_registry_coordinator =
@@ -379,7 +387,7 @@ impl AvsRegistryChainWriter {
             .send()
             .await
             .map_err(AvsRegistryError::AlloyContractError)
-            .inspect(|tx| info!(tx_hash = ?tx, "successfully ejected operator from AVS"))
+            .inspect(|tx| info!(tx_hash = ?tx, "successfully ejected operator from quorum with the AVS's registry coordinator"))
             .map(|tx| *tx.tx_hash())
     }
 
