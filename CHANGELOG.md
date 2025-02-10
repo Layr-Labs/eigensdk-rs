@@ -65,6 +65,14 @@ Those changes in added, changed or breaking changes, should include usage exampl
         .await
         .unwrap();
   ```
+* Added new method `set_ejection_cooldown` in `avsregistry/writer` in [#337](https://github.com/Layr-Labs/eigensdk-rs/pull/337).
+  ```rust
+      let new_cooldown = U256::from(120);
+      let tx_hash = avs_writer
+          .set_ejection_cooldown(new_cooldown)
+          .await
+          .unwrap();
+  ```
 
 ### Changed
 * Changes in the way bindings are generated in [#243](https://github.com/Layr-Labs/eigensdk-rs/pull/243).
