@@ -458,6 +458,50 @@ impl AvsRegistryChainWriter {
         info!(tx_hash = ?tx.tx_hash(),"Removing strategies");
         Ok(*tx.tx_hash())
     }
+
+    /// Modifies the weights of existing strategies for a specific quorum.
+    ///
+    /// Can only be caled by registry coordinator's owner.
+    /// The quorum numbers must exist, else the tx will fail.
+    ///  
+    /// # Arguments
+    ///
+    /// # `quorum_number` - The respective quorum numbers in [`u8`].
+    /// # `strategy_indices` - Indices of the strategies to change in [`Vec<U256>`].
+    /// # `new_multipliers` -  New multipliers for the strategies in [`Vec<U96>`].
+    ///
+    /// # Returns
+    ///
+    /// * [`TxHash`] - The transaction hash of the transaction.
+    pub async fn modify_strategy_params(
+        &self,
+        quorum_number: u8,
+        strategy_indices: Vec<U256>,
+        new_multipliers: Vec<U96>,
+    ) -> Result<TxHash, AvsRegistryError> {
+        let provider = get_signer(&self.signer.clone(), &self.provider);
+
+        let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, provider);
+        let reg_coordinator_owner =
+            RegistryCoordinator::new(self.registry_coordinator_addr, get_provider(&self.provider))
+                .owner()
+                .call()
+                .await?
+                ._0;
+        let caller_address =
+            get_signer(&self.signer.clone(), &self.provider).default_signer_address();
+        if !reg_coordinator_owner.eq(&caller_address) {
+            info!(caller = %caller_address,registry_coordinator_owner = %reg_coordinator_owner,"Caller must be registry coordinator's owner when modifying strategy params");
+        }
+
+        let tx = contract_stake_registry
+            .modifyStrategyParams(quorum_number, strategy_indices, new_multipliers)
+            .send()
+            .await
+            .map_err(AvsRegistryError::AlloyContractError)?;
+        info!(tx_hash = ?tx.tx_hash(),"modifying strategy params");
+        Ok(*tx.tx_hash())
+    }
 }
 
 #[cfg(test)]
@@ -663,6 +707,43 @@ mod tests {
 
         let tx_hash = avs_writer
             .remove_strategies(quorum_numbers, [U256::from(1)].to_vec())
+            .await
+            .unwrap();
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
+        assert!(tx_status);
+    }
+
+    #[tokio::test]
+    async fn test_modify_strategy_params() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+
+        let private_key =
+            "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80".to_string();
+        let avs_writer = build_avs_registry_chain_writer(http_endpoint.clone(), private_key).await;
+
+        let quorum_numbers = 0;
+        let strategy_params = [StrategyParams {
+            strategy: address!("54945180dB7943c0ed0FEE7EdaB2Bd24620256bc"),
+            multiplier: U96::from(1),
+        }];
+
+        avs_writer
+            .add_strategies(quorum_numbers, strategy_params.to_vec())
+            .await
+            .unwrap();
+
+        let strategy_indices = [U256::from(1)];
+        let new_multipliers = [U96::from(2)];
+
+        let tx_hash = avs_writer
+            .modify_strategy_params(
+                quorum_numbers,
+                strategy_indices.to_vec(),
+                new_multipliers.to_vec(),
+            )
             .await
             .unwrap();
         let tx_status = wait_transaction(&http_endpoint, tx_hash)
