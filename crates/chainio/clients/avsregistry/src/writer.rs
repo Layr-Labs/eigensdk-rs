@@ -804,13 +804,54 @@ mod tests {
         };
         let strategy_params = vec![strategy_params];
 
-        avs_writer
+        let tx_hash = avs_writer
             .create_total_delegated_stake_quorum(
-                operator_set_params,
+                operator_set_params.clone(),
                 minimum_stake,
                 strategy_params,
             )
             .await
             .unwrap();
+
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
+
+        assert!(tx_status);
+
+        let registry_coordinator_contract = RegistryCoordinator::new(
+            avs_writer.registry_coordinator_addr,
+            get_signer(&avs_writer.signer.clone(), &avs_writer.provider),
+        );
+
+        let params = registry_coordinator_contract
+            .getOperatorSetParams(0)
+            .call()
+            .await
+            .unwrap();
+
+        assert_eq!(
+            params._0.maxOperatorCount,
+            operator_set_params.maxOperatorCount,
+        );
+
+        assert_eq!(
+            params._0.kickBIPsOfOperatorStake,
+            operator_set_params.kickBIPsOfOperatorStake,
+        );
+        assert_eq!(
+            params._0.kickBIPsOfTotalStake,
+            operator_set_params.kickBIPsOfTotalStake
+        );
+
+        let quorum = registry_coordinator_contract
+            .quorumCount()
+            .call()
+            .await
+            .unwrap()
+            ._0;
+
+        assert_eq!(quorum, 1);
     }
 }
