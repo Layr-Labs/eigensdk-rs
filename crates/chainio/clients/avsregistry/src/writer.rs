@@ -799,8 +799,8 @@ mod tests {
         let minimum_stake = U96::from(100);
 
         let strategy_param = StrategyParams {
-            multiplier: U96::from(100),
             strategy: get_erc20_mock_strategy(http_endpoint.clone()).await,
+            multiplier: U96::from(1),
         };
 
         let look_ahead_period = 10;

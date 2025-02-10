@@ -74,6 +74,30 @@ Those changes in added, changed or breaking changes, should include usage exampl
         .await
         .unwrap();
   ```
+* Added new method `create_slashable_stake_quorum` in `avsregistry/writer` in [#340](https://github.com/Layr-Labs/eigensdk-rs/pull/340).
+  ```rust
+      let operator_set_param = OperatorSetParam {
+          maxOperatorCount: 10,
+          kickBIPsOfOperatorStake: 50,
+          kickBIPsOfTotalStake: 50,
+      };
+      let minimum_stake = U96::from(100);
+      let strategy_param = StrategyParams {
+          strategy: get_erc20_mock_strategy(http_endpoint.clone()).await,
+          multiplier: U96::from(1),
+      };
+      let look_ahead_period = 10;
+
+      let tx_hash = avs_writer
+          .create_slashable_stake_quorum(
+              operator_set_param,
+              minimum_stake,
+              vec![strategy_param],
+              look_ahead_period,
+          )
+          .await
+          .unwrap();
+  ```
 
 ### Changed
 * Changes in the way bindings are generated in [#243](https://github.com/Layr-Labs/eigensdk-rs/pull/243).
