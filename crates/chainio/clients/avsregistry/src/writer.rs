@@ -712,6 +712,28 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn test_update_avs_metadata_uri() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let avs_writer =
+            build_avs_registry_chain_writer(http_endpoint.clone(), FIRST_PRIVATE_KEY.to_string())
+                .await;
+
+        let new_metadata = "https://avs-metadata-uri.com";
+
+        let tx_hash = avs_writer
+            .update_avs_metadata_uri(new_metadata)
+            .await
+            .unwrap();
+
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
+
+        assert!(tx_status);
+    }
+
+    #[tokio::test]
     async fn test_set_account_identifier() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
         let avs_writer =
