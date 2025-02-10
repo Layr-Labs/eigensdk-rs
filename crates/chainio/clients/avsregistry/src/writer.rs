@@ -466,6 +466,7 @@ mod tests {
     use super::AvsRegistryChainWriter;
     use crate::test_utils::build_avs_registry_chain_reader;
     use crate::test_utils::create_operator_set;
+    use crate::test_utils::BLS_KEY;
     use alloy::primitives::{Address, Bytes, FixedBytes, U256};
     use eigen_common::{get_provider, get_signer};
     use eigen_crypto_bls::BlsKeyPair;
@@ -807,9 +808,7 @@ mod tests {
     #[tokio::test]
     async fn test_eject_operator() {
         let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
-        let bls_key =
-            "1371012690269088913462269866874713266643928125698382731338806296762673180359922"
-                .to_string();
+        let bls_key = BLS_KEY.to_string();
         let register_operator_address = FIRST_ADDRESS;
         let private_key = FIRST_PRIVATE_KEY.to_string();
         let quorum_nums = Bytes::from([0]);
