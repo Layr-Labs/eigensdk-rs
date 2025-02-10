@@ -409,7 +409,18 @@ impl AvsRegistryChainWriter {
         Ok(*tx.tx_hash())
     }
 
-    /// TODO!
+    /// Create a new quorum that tracks slashable stake for operators
+    ///
+    /// # Arguments
+    ///
+    /// * `operator_set_param` - Configures the quorum's max operator count and churn parameters
+    /// * `minimum_stake` - Sets the minimum stake required for an operator to register or remain registered
+    /// * `strategy_params` - A list of strategies and multipliers used by the StakeRegistry to calculate an operator's stake weight for the quorum
+    /// * `look_ahead_period` - The number of blocks to look ahead when calculating slashable stake
+    ///
+    /// # Returns
+    ///
+    /// * `TxHash` - The transaction hash of the create slashable stake quorum transactions
     pub async fn create_slashable_stake_quorum(
         &self,
         operator_set_param: OperatorSetParam,
