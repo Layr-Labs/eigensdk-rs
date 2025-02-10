@@ -856,7 +856,6 @@ mod tests {
         let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
 
         let operator_set_quourm = avs_reader.is_operator_set_quorum(0).await.unwrap();
-        dbg!(operator_set_quourm);
 
         assert!(operator_set_quourm);
     }
