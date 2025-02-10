@@ -391,7 +391,7 @@ impl AvsRegistryChainWriter {
         Ok(*tx.tx_hash())
     }
 
-    /// Sets the ejection cooldow that an operator must wait in seconds after ejection before registering for any quorum
+    /// Set the ejection cooldow that an operator must wait in seconds after ejection before registering for any quorum
     ///
     /// # Arguments
     /// * `cooldown` - the new ejection cooldown in seconds
