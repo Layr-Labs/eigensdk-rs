@@ -14,7 +14,7 @@ use eigen_logging::logger::SharedLogger;
 use eigen_types::operator::{
     bitmap_to_quorum_ids, bitmap_to_quorum_ids_from_u192, OperatorPubKeys,
 };
-use eigen_utils::middleware::stakeregistry::IStakeRegistry::StrategyParams;
+use eigen_utils::middleware::stakeregistry::IStakeRegistry::{StakeUpdate, StrategyParams};
 use eigen_utils::{
     middleware::blsapkregistry::BLSApkRegistry,
     middleware::operatorstateretriever::OperatorStateRetriever,
@@ -697,6 +697,208 @@ impl AvsRegistryChainReader {
             ._0;
 
         Ok(len)
+    }
+
+    pub async fn get_stake_history(
+        &self,
+        operator_id: B256,
+        quorum_number: u8,
+    ) -> Result<Vec<StakeUpdate>, AvsRegistryError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, provider);
+
+        let stake_update_vec = contract_stake_registry
+            .getStakeHistory(operator_id, quorum_number)
+            .call()
+            .await?
+            ._0;
+
+        Ok(stake_update_vec)
+    }
+
+    pub async fn get_latest_stake_update(
+        &self,
+        operator_id: B256,
+        quorum_number: u8,
+    ) -> Result<StakeUpdate, AvsRegistryError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, provider);
+
+        let stake_update = contract_stake_registry
+            .getLatestStakeUpdate(operator_id, quorum_number)
+            .call()
+            .await?
+            ._0;
+
+        Ok(stake_update)
+    }
+
+    pub async fn get_stake_update_at_index(
+        &self,
+        quorum_number: u8,
+        operator_id: B256,
+        index: U256,
+    ) -> Result<StakeUpdate, AvsRegistryError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, provider);
+
+        let stake_update = contract_stake_registry
+            .getStakeUpdateAtIndex(quorum_number, operator_id, index)
+            .call()
+            .await?
+            ._0;
+
+        Ok(stake_update)
+    }
+
+    pub async fn get_stake_update_at_block_number(
+        &self,
+        operator_id: B256,
+        quorum_number: u8,
+        block_number: u32,
+    ) -> Result<U96, AvsRegistryError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, provider);
+
+        let stake = contract_stake_registry
+            .getStakeAtBlockNumber(operator_id, quorum_number, block_number)
+            .call()
+            .await?
+            ._0;
+
+        Ok(stake)
+    }
+
+    pub async fn get_stake_update_index_at_block_number(
+        &self,
+        operator_id: B256,
+        quorum_number: u8,
+        block_number: u32,
+    ) -> Result<u32, AvsRegistryError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, provider);
+
+        let index = contract_stake_registry
+            .getStakeUpdateIndexAtBlockNumber(operator_id, quorum_number, block_number)
+            .call()
+            .await?
+            ._0;
+
+        Ok(index)
+    }
+
+    pub async fn get_stake_at_block_number_and_index(
+        &self,
+        quorum_number: u8,
+        block_number: u32,
+        operator_id: B256,
+        index: U256,
+    ) -> Result<U96, AvsRegistryError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, provider);
+
+        let stake_weight = contract_stake_registry
+            .getStakeAtBlockNumberAndIndex(quorum_number, block_number, operator_id, index)
+            .call()
+            .await?
+            ._0;
+
+        Ok(stake_weight)
+    }
+
+    pub async fn get_total_stake_history_length(
+        &self,
+        quorum_number: u8,
+    ) -> Result<U256, AvsRegistryError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, provider);
+
+        let length = contract_stake_registry
+            .getTotalStakeHistoryLength(quorum_number)
+            .call()
+            .await?
+            ._0;
+
+        Ok(length)
+    }
+
+    pub async fn get_current_total_stake(
+        &self,
+        quorum_number: u8,
+    ) -> Result<U96, AvsRegistryError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, provider);
+
+        let stake_weight = contract_stake_registry
+            .getCurrentTotalStake(quorum_number)
+            .call()
+            .await?
+            ._0;
+
+        Ok(stake_weight)
+    }
+
+    pub async fn get_total_stake_update_at_index(
+        &self,
+        quorum_number: u8,
+        index: U256,
+    ) -> Result<StakeUpdate, AvsRegistryError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, provider);
+
+        let stake_update = contract_stake_registry
+            .getTotalStakeUpdateAtIndex(quorum_number, index)
+            .call()
+            .await?
+            ._0;
+
+        Ok(stake_update)
+    }
+
+    pub async fn get_total_stake_at_block_number_from_index(
+        &self,
+        quorum_number: u8,
+        block_number: u32,
+        index: U256,
+    ) -> Result<U96, AvsRegistryError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, provider);
+
+        let total_stake = contract_stake_registry
+            .getTotalStakeAtBlockNumberFromIndex(quorum_number, block_number, index)
+            .call()
+            .await?
+            ._0;
+
+        Ok(total_stake)
+    }
+
+    pub async fn get_total_stake_indices_at_block_number(
+        &self,
+        block_number: u32,
+        quorum_number: Bytes,
+    ) -> Result<Vec<u32>, AvsRegistryError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, provider);
+
+        let total_stakes = contract_stake_registry
+            .getTotalStakeIndicesAtBlockNumber(block_number, quorum_number)
+            .call()
+            .await?
+            ._0;
+
+        Ok(total_stakes)
     }
 }
 
