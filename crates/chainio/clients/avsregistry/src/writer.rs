@@ -699,7 +699,6 @@ mod tests {
 
         let service_manager_address = get_service_manager_address(http_endpoint.clone()).await;
 
-        // Set up event poller to listen to update socket events
         let provider = get_provider(&http_endpoint);
         let regcoord = RegistryCoordinator::new(avs_writer.registry_coordinator_addr, &provider);
 
@@ -720,7 +719,6 @@ mod tests {
 
         assert!(tx_status);
 
-        let regcoord = RegistryCoordinator::new(avs_writer.registry_coordinator_addr, provider);
         let current_account_identifier = regcoord.accountIdentifier().call().await.unwrap()._0;
         assert_eq!(current_account_identifier, new_account_identifier);
     }
