@@ -28,12 +28,9 @@ pub const GAS_LIMIT_REGISTER_OPERATOR_REGISTRY_COORDINATOR: u64 = 2000000;
 /// AvsRegistry Writer
 #[derive(Debug)]
 pub struct AvsRegistryChainWriter {
-    logger: SharedLogger,
     service_manager_addr: Address,
     registry_coordinator_addr: Address,
-    operator_state_retriever_addr: Address,
     stake_registry_addr: Address,
-    bls_apk_registry_addr: Address,
     el_reader: ELChainReader,
     provider: String,
     signer: String,
@@ -62,7 +59,7 @@ impl AvsRegistryChainWriter {
         provider: String,
         signer: String,
         registry_coordinator_addr: Address,
-        operator_state_retriever_addr: Address,
+        _operator_state_retriever_addr: Address,
     ) -> Result<Self, AvsRegistryError> {
         let fill_provider = get_provider(&provider);
         let contract_registry_coordinator =
@@ -77,14 +74,6 @@ impl AvsRegistryChainWriter {
         } = service_manager_addr;
         let contract_service_manager_base =
             ServiceManagerBase::new(service_manager, &fill_provider);
-        let bls_apk_registry_addr_result = contract_registry_coordinator
-            .blsApkRegistry()
-            .call()
-            .await
-            .map_err(AvsRegistryError::AlloyContractError)?;
-        let RegistryCoordinator::blsApkRegistryReturn {
-            _0: bls_apk_registry,
-        } = bls_apk_registry_addr_result;
         let stake_registry_addr = contract_registry_coordinator.stakeRegistry().call().await?;
         let RegistryCoordinator::stakeRegistryReturn { _0: stake_registry } = stake_registry_addr;
         let contract_stake_registry = StakeRegistry::new(stake_registry, &fill_provider);
@@ -109,12 +98,9 @@ impl AvsRegistryChainWriter {
         .map_err(|e| AvsRegistryError::ElContractsError(e.to_string()))?;
 
         Ok(AvsRegistryChainWriter {
-            logger,
             service_manager_addr: service_manager,
             registry_coordinator_addr,
-            operator_state_retriever_addr,
             stake_registry_addr: stake_registry,
-            bls_apk_registry_addr: bls_apk_registry,
             el_reader,
             provider: provider.clone(),
             signer: signer.clone(),
@@ -309,6 +295,36 @@ impl AvsRegistryChainWriter {
         Ok(*tx.tx_hash())
     }
 
+    /// Sets the look-ahead time for checking operator shares for a specific quorum
+    ///
+    /// # Arguments
+    ///
+    /// * `quorum_number` - The quorum number to set the look-ahead period for
+    /// * `lookahead` - The number of blocks to look ahead when checking shares
+    ///
+    /// # Returns
+    /// * `TxHash` - The transaction hash of the set slashable stake lookahead transaction
+    pub async fn set_slashable_stake_lookahead(
+        &self,
+        quorum_number: u8,
+        lookahead: u32,
+    ) -> Result<TxHash, AvsRegistryError> {
+        info!("setting slashable stake lookahead");
+        let provider = get_signer(&self.signer.clone(), &self.provider);
+
+        let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, provider);
+
+        let contract_call =
+            contract_stake_registry.setSlashableStakeLookahead(quorum_number, lookahead);
+
+        contract_call
+            .send()
+            .await
+            .map_err(AvsRegistryError::AlloyContractError)
+            .inspect(|tx| info!(tx_hash = ?tx,"successfully set slashable stake lookahead" ))
+            .map(|tx_hash| *tx_hash.tx_hash())
+    }
+
     /// Set a new address as the rewards initiator
     ///
     /// # Arguments
@@ -427,7 +443,7 @@ impl AvsRegistryChainWriter {
 mod tests {
 
     use super::AvsRegistryChainWriter;
-    use crate::test_utils::{ANVIL_FIRST_PRIVATE_KEY, ANVIL_SECOND_ADDRESS};
+    use crate::test_utils::create_operator_set;
     use alloy::primitives::aliases::U96;
     use alloy::primitives::{Address, Bytes, FixedBytes, U256};
     use alloy::providers::WalletProvider;
@@ -441,12 +457,14 @@ mod tests {
         get_operator_state_retriever_address, get_registry_coordinator_address,
         get_service_manager_address,
     };
+    use eigen_testing_utils::anvil_constants::{FIRST_PRIVATE_KEY, SECOND_ADDRESS};
     use eigen_testing_utils::transaction::wait_transaction;
     use eigen_utils::rewardsv2::middleware::servicemanagerbase::ServiceManagerBase;
     use eigen_utils::slashing::core::allocationmanager::AllocationManager;
     use eigen_utils::slashing::middleware::registrycoordinator::ISlashingRegistryCoordinatorTypes::OperatorSetParam;
     use eigen_utils::slashing::middleware::registrycoordinator::IStakeRegistryTypes::StrategyParams;
     use eigen_utils::slashing::middleware::registrycoordinator::RegistryCoordinator;
+    use eigen_utils::slashing::middleware::stakeregistry::StakeRegistry;
     use eigen_utils::slashing::sdk::mockavsservicemanager::MockAvsServiceManager;
     use futures_util::StreamExt;
     use std::str::FromStr;
@@ -503,9 +521,44 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn test_set_slashable_stake_lookahead() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let private_key = FIRST_PRIVATE_KEY.to_string();
+        let avs_writer =
+            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
+        let avs_address = get_service_manager_address(http_endpoint.clone()).await;
+        create_operator_set(http_endpoint.as_str(), avs_address).await;
+
+        // Set up event poller to listen to `LookAheadPeriodChanged` events
+        let provider = get_signer(&avs_writer.signer.clone(), &avs_writer.provider);
+        let contract_stake_registry = StakeRegistry::new(avs_writer.stake_registry_addr, provider);
+        let event = contract_stake_registry.LookAheadPeriodChanged_filter();
+        let poller = event.watch().await.unwrap();
+
+        // Set the slashable stake lookahead period. Old period is 0.
+        let quorum_number = 0_u8;
+        let lookahead = 10_u32;
+        let tx_hash = avs_writer
+            .set_slashable_stake_lookahead(quorum_number, lookahead)
+            .await
+            .unwrap();
+
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
+        assert!(tx_status);
+
+        // Assert that event `LookAheadPeriodChanged` is the same as `new_rewards_init_address`
+        let mut stream = poller.into_stream();
+        let (stream_event, _) = stream.next().await.unwrap().unwrap();
+        assert_eq!(stream_event.newLookAheadBlocks, lookahead);
+    }
+
+    #[tokio::test]
     async fn test_set_rewards_initiator() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let private_key = ANVIL_FIRST_PRIVATE_KEY.to_string();
+        let private_key = FIRST_PRIVATE_KEY.to_string();
         let avs_writer =
             build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
 
@@ -516,7 +569,7 @@ mod tests {
         let event = contract_registry_coordinator.RewardsInitiatorUpdated_filter();
         let poller = event.watch().await.unwrap();
 
-        let new_rewards_init_address = ANVIL_SECOND_ADDRESS;
+        let new_rewards_init_address = SECOND_ADDRESS;
 
         let tx_hash = avs_writer
             .set_rewards_initiator(new_rewards_init_address)
@@ -653,7 +706,7 @@ mod tests {
         let bls_key =
             "1371012690269088913462269866874713266643928125698382731338806296762673180359922"
                 .to_string();
-        let private_key = ANVIL_FIRST_PRIVATE_KEY.to_string();
+        let private_key = FIRST_PRIVATE_KEY.to_string();
         let avs_writer =
             build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
         let quorum_nums = Bytes::from([0]);
@@ -706,7 +759,7 @@ mod tests {
     #[tokio::test]
     async fn test_create_slashable_stake_quorum() {
         let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
-        let private_key = ANVIL_FIRST_PRIVATE_KEY.to_string();
+        let private_key = FIRST_PRIVATE_KEY.to_string();
         let avs_writer =
             build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
 
