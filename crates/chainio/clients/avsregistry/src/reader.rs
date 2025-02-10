@@ -674,12 +674,15 @@ impl AvsRegistryChainReader {
 
 #[cfg(test)]
 mod tests {
+    use crate::test_utils::{build_avs_registry_chain_writer, create_operator_set};
+
     use super::*;
     use eigen_logging::get_test_logger;
     use eigen_testing_utils::{
         anvil::start_anvil_container,
         anvil_constants::{
-            get_operator_state_retriever_address, get_registry_coordinator_address, FIRST_ADDRESS,
+            get_operator_state_retriever_address, get_registry_coordinator_address,
+            get_service_manager_address, FIRST_ADDRESS, SECOND_PRIVATE_KEY,
         },
     };
     use hex::FromHex;
@@ -826,6 +829,21 @@ mod tests {
     async fn test_get_operator_restaked_strategies() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
         let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
+
+        let operator = avs_reader
+            .is_operator_registered(FIRST_ADDRESS)
+            .await
+            .unwrap();
+        dbg!(operator);
+
+        let avs_address = get_service_manager_address(http_endpoint.clone()).await;
+        create_operator_set(&http_endpoint, avs_address).await;
+
+        let operator = avs_reader
+            .is_operator_registered(FIRST_ADDRESS)
+            .await
+            .unwrap();
+        dbg!(operator);
 
         let strategies = avs_reader
             .get_operator_restaked_strategies(FIRST_ADDRESS)
