@@ -876,7 +876,7 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn test_set_eject_operator() {
+    async fn test_set_ejecttor() {
         let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
         let private_key = FIRST_PRIVATE_KEY.to_string();
         let new_ejector_address = SECOND_ADDRESS;
