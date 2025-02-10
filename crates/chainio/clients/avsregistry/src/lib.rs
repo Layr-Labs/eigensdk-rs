@@ -26,8 +26,10 @@ pub(crate) mod test_utils {
         sol_types::SolCall,
     };
     use eigen_common::get_signer;
+    use eigen_logging::get_test_logger;
     use eigen_testing_utils::anvil_constants::{
-        get_allocation_manager_address, get_erc20_mock_strategy, get_registry_coordinator_address,
+        get_allocation_manager_address, get_erc20_mock_strategy,
+        get_operator_state_retriever_address, get_registry_coordinator_address,
         get_service_manager_address, FIRST_PRIVATE_KEY,
     };
     use eigen_utils::slashing::{
@@ -38,6 +40,11 @@ pub(crate) mod test_utils {
         },
         sdk::mockavsservicemanager::MockAvsServiceManager,
     };
+
+    use crate::reader::AvsRegistryChainReader;
+
+    pub(crate) const OPERATOR_BLS_KEY: &str =
+        "1371012690269088913462269866874713266643928125698382731338806296762673180359922";
 
     pub(crate) async fn create_operator_set(http_endpoint: &str, avs_address: Address) {
         let allocation_manager_addr =
@@ -105,5 +112,23 @@ pub(crate) mod test_utils {
             .get_receipt()
             .await
             .unwrap();
+    }
+
+    pub(crate) async fn build_avs_registry_chain_reader(
+        http_endpoint: String,
+    ) -> AvsRegistryChainReader {
+        let registry_coordinator_addr =
+            get_registry_coordinator_address(http_endpoint.clone()).await;
+        let operator_state_retriever_address =
+            get_operator_state_retriever_address(http_endpoint.clone()).await;
+
+        AvsRegistryChainReader::new(
+            get_test_logger(),
+            registry_coordinator_addr,
+            operator_state_retriever_address,
+            http_endpoint.to_string(),
+        )
+        .await
+        .unwrap()
     }
 }
