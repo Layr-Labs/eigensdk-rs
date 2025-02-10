@@ -1,5 +1,7 @@
 use crate::error::AvsRegistryError;
+use alloy::primitives::aliases::U96;
 use alloy::primitives::{Address, Bytes, FixedBytes, TxHash, U256};
+use alloy::providers::WalletProvider;
 use alloy::signers::local::PrivateKeySigner;
 use alloy::signers::Signer;
 use eigen_client_elcontracts::reader::ELChainReader;
@@ -330,11 +332,53 @@ impl AvsRegistryChainWriter {
         info!(tx_hash = ?tx,"succesfully deregistered operator with the AVS's registry coordinator" );
         Ok(*tx.tx_hash())
     }
+
+    /// Sets minimum stake for the quorum
+    ///
+    /// Can only be caled by registry coordinator's owner.
+    /// The quorum numbers must exist, else the tx will fail.
+    /// # Arguments
+    ///
+    /// # `quorum_numbers` - The respective quorum numbers in [`u8`].
+    /// # `minimum_stake` - The minimum stake in [`U96`].
+    ///
+    /// # Returns
+    ///
+    /// * [`TxHash`] - The transaction hash of the transaction.
+    pub async fn set_minimum_stake_for_quorum(
+        &self,
+        quorum_numbers: u8,
+        minimum_stake: U96,
+    ) -> Result<TxHash, AvsRegistryError> {
+        let provider = get_signer(&self.signer.clone(), &self.provider);
+
+        let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, provider);
+        let reg_coordinator_owner =
+            RegistryCoordinator::new(self.registry_coordinator_addr, get_provider(&self.provider))
+                .owner()
+                .call()
+                .await?
+                ._0;
+        let caller_address =
+            get_signer(&self.signer.clone(), &self.provider).default_signer_address();
+        if !reg_coordinator_owner.eq(&caller_address) {
+            info!(caller = %caller_address,registry_coordinator_owner = %reg_coordinator_owner,"Caller must be registry coordinator's owner when calling set_minimum_stake_for_quorum");
+        }
+
+        let tx = contract_stake_registry
+            .setMinimumStakeForQuorum(quorum_numbers, minimum_stake)
+            .send()
+            .await
+            .map_err(AvsRegistryError::AlloyContractError)?;
+        info!(tx_hash = ?tx.tx_hash(),quorum_numbers = %quorum_numbers,"Setting minimum stake for quorum");
+        Ok(*tx.tx_hash())
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::AvsRegistryChainWriter;
+    use alloy::primitives::aliases::U96;
     use alloy::primitives::{Address, Bytes, FixedBytes, U256};
     use eigen_crypto_bls::BlsKeyPair;
     use eigen_logging::get_test_logger;
@@ -464,6 +508,26 @@ mod tests {
         let tx_hash = avs_writer.deregister_operator(quorum_nums).await.unwrap();
 
         let tx_status = wait_transaction(&http_url, tx_hash).await.unwrap().status();
+        assert!(tx_status);
+    }
+
+    #[tokio::test]
+    async fn test_set_minimum_stake_for_quorum() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+
+        let private_key =
+            "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80".to_string();
+        let avs_writer = build_avs_registry_chain_writer(http_endpoint.clone(), private_key).await;
+        let quorum_numbers = 0;
+        let minimum_stake = U96::from(10);
+        let tx_hash = avs_writer
+            .set_minimum_stake_for_quorum(quorum_numbers, minimum_stake)
+            .await
+            .unwrap();
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
         assert!(tx_status);
     }
 }
