@@ -634,7 +634,7 @@ impl AvsRegistryChainReader {
     /// * `quorum_number` - The quorum number to query.
     ///
     /// # Returns
-    /// True if the quorum is an operator set quorum, false otherwise.
+    /// [`true`] if the quorum is an operator set quorum, [`false`] otherwise.
     pub async fn is_operator_set_quorum(
         &self,
         quorum_number: u8,
