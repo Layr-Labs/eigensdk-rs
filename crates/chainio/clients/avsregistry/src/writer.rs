@@ -444,20 +444,23 @@ mod tests {
     use crate::test_utils::create_operator_set;
     use alloy::primitives::aliases::U96;
     use alloy::primitives::{Address, Bytes, FixedBytes, U256};
+    use alloy::sol_types::SolCall;
     use eigen_common::get_signer;
     use eigen_crypto_bls::BlsKeyPair;
     use eigen_logging::get_test_logger;
     use eigen_testing_utils::anvil::{start_anvil_container, start_m2_anvil_container};
     use eigen_testing_utils::anvil_constants::{
-        get_erc20_mock_strategy, get_operator_state_retriever_address,
-        get_registry_coordinator_address, get_service_manager_address,
+        get_allocation_manager_address, get_erc20_mock_strategy,
+        get_operator_state_retriever_address, get_registry_coordinator_address,
+        get_service_manager_address,
     };
     use eigen_testing_utils::anvil_constants::{FIRST_PRIVATE_KEY, SECOND_ADDRESS};
     use eigen_testing_utils::transaction::wait_transaction;
-    use eigen_utils::rewardsv2::middleware::servicemanagerbase::ServiceManagerBase;
+    use eigen_utils::slashing::core::allocationmanager::AllocationManager;
     use eigen_utils::slashing::middleware::registrycoordinator::ISlashingRegistryCoordinatorTypes::OperatorSetParam;
     use eigen_utils::slashing::middleware::registrycoordinator::IStakeRegistryTypes::StrategyParams;
     use eigen_utils::slashing::middleware::registrycoordinator::RegistryCoordinator;
+    use eigen_utils::slashing::middleware::servicemanagerbase::ServiceManagerBase;
     use eigen_utils::slashing::middleware::stakeregistry::StakeRegistry;
     use futures_util::StreamExt;
     use std::str::FromStr;
@@ -751,16 +754,32 @@ mod tests {
 
     #[tokio::test]
     async fn test_create_total_delegated_stake_quorum() {
-        let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
-        let bls_key =
-            "1371012690269088913462269866874713266643928125698382731338806296762673180359922"
-                .to_string();
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
         let private_key = FIRST_PRIVATE_KEY.to_string();
         let avs_writer =
             build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
-        let quorum_nums = Bytes::from([0]);
 
-        test_register_operator(&avs_writer, bls_key, quorum_nums, http_endpoint.clone()).await;
+        let service_manager_address = get_service_manager_address(http_endpoint.to_string()).await;
+
+        let service_manager = ServiceManagerBase::new(
+            service_manager_address,
+            get_signer(&avs_writer.signer.clone(), &avs_writer.provider),
+        );
+
+        let allocation_manager_addr = get_allocation_manager_address(http_endpoint.clone()).await;
+
+        service_manager
+            .setAppointee(
+                avs_writer.registry_coordinator_addr,
+                allocation_manager_addr,
+                alloy::primitives::FixedBytes(AllocationManager::createOperatorSetsCall::SELECTOR),
+            )
+            .send()
+            .await
+            .unwrap()
+            .get_receipt()
+            .await
+            .unwrap();
 
         let operator_set_params = OperatorSetParam {
             maxOperatorCount: 10,
