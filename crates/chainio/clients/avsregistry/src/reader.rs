@@ -17,6 +17,7 @@ use eigen_types::operator::{
 use eigen_utils::slashing::middleware::blsapkregistry::BLSApkRegistry;
 use eigen_utils::slashing::middleware::operatorstateretriever::OperatorStateRetriever;
 use eigen_utils::slashing::middleware::registrycoordinator::RegistryCoordinator;
+use eigen_utils::slashing::middleware::servicemanagerbase::ServiceManagerBase;
 use eigen_utils::slashing::middleware::stakeregistry::StakeRegistry;
 use num_bigint::BigInt;
 use std::fmt::Debug;
@@ -433,6 +434,20 @@ impl AvsRegistryChainReader {
             }
         }
         Ok(quorums)
+    }
+
+    /// TODO! getOperatorRestakedStrategies
+    pub async fn get_operator_restaked_Strategies(
+        &self,
+        operator_address: Address,
+    ) -> Result<Vec<Address>, AvsRegistryError> {
+        let provider = get_provider(&self.provider);
+
+        let service_manager_contract =
+            ServiceManagerBase::new(self.registry_coordinator_addr, provider);
+
+        service_manager_contract.getOperatorRestakedStrategies(operator_address).call().await
+        Ok(vec![])
     }
 
     /// Get operator id
