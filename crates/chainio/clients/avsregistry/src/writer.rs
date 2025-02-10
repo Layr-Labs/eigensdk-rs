@@ -452,7 +452,7 @@ impl AvsRegistryChainWriter {
             .updateAVSMetadataURI(avs_metadata_uri.to_string())
             .send()
             .await
-            .inspect(|tx| info!(tx_hash = ?tx, "successfully set a new address as the rewards initiator"))
+            .inspect(|tx| info!(tx_hash = ?tx, "successfully updated AVS metadata URI"))
             .map_err(AvsRegistryError::AlloyContractError)
             .map(|tx| *tx.tx_hash())
     }
