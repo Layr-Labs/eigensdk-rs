@@ -423,15 +423,12 @@ impl AvsRegistryChainWriter {
         let contract_registry_coordinator =
             RegistryCoordinator::new(self.registry_coordinator_addr, provider);
 
-        let contract_call = contract_registry_coordinator.createSlashableStakeQuorum(
+        contract_registry_coordinator.createSlashableStakeQuorum(
             operator_set_param,
             minimum_stake,
             strategy_params,
             look_ahead_period,
-        );
-
-        contract_call
-            .send()
+            ).send()
             .await
             .map_err(AvsRegistryError::AlloyContractError)
             .inspect(|tx| info!(tx_hash = ?tx,"successfully created slashable stake quorum with the AVS's registry coordinator" ))
@@ -446,7 +443,6 @@ mod tests {
     use crate::test_utils::create_operator_set;
     use alloy::primitives::aliases::U96;
     use alloy::primitives::{Address, Bytes, FixedBytes, U256};
-    use alloy::providers::WalletProvider;
     use alloy::sol_types::SolCall;
     use eigen_common::get_signer;
     use eigen_crypto_bls::BlsKeyPair;
@@ -459,13 +455,12 @@ mod tests {
     };
     use eigen_testing_utils::anvil_constants::{FIRST_PRIVATE_KEY, SECOND_ADDRESS};
     use eigen_testing_utils::transaction::wait_transaction;
-    use eigen_utils::rewardsv2::middleware::servicemanagerbase::ServiceManagerBase;
     use eigen_utils::slashing::core::allocationmanager::AllocationManager;
     use eigen_utils::slashing::middleware::registrycoordinator::ISlashingRegistryCoordinatorTypes::OperatorSetParam;
     use eigen_utils::slashing::middleware::registrycoordinator::IStakeRegistryTypes::StrategyParams;
     use eigen_utils::slashing::middleware::registrycoordinator::RegistryCoordinator;
+    use eigen_utils::slashing::middleware::servicemanagerbase::ServiceManagerBase;
     use eigen_utils::slashing::middleware::stakeregistry::StakeRegistry;
-    use eigen_utils::slashing::sdk::mockavsservicemanager::MockAvsServiceManager;
     use futures_util::StreamExt;
     use std::str::FromStr;
 
@@ -758,12 +753,32 @@ mod tests {
 
     #[tokio::test]
     async fn test_create_slashable_stake_quorum() {
-        let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
         let private_key = FIRST_PRIVATE_KEY.to_string();
         let avs_writer =
             build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
 
-        dbg!(&avs_writer);
+        let service_manager_address = get_service_manager_address(http_endpoint.to_string()).await;
+
+        let service_manager = ServiceManagerBase::new(
+            service_manager_address,
+            get_signer(&avs_writer.signer.clone(), &avs_writer.provider),
+        );
+
+        let allocation_manager_addr = get_allocation_manager_address(http_endpoint.clone()).await;
+
+        service_manager
+            .setAppointee(
+                avs_writer.registry_coordinator_addr,
+                allocation_manager_addr,
+                alloy::primitives::FixedBytes(AllocationManager::createOperatorSetsCall::SELECTOR),
+            )
+            .send()
+            .await
+            .unwrap()
+            .get_receipt()
+            .await
+            .unwrap();
 
         let operator_set_param = OperatorSetParam {
             maxOperatorCount: 10,
