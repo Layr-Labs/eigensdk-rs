@@ -26,8 +26,10 @@ pub(crate) mod test_utils {
         sol_types::SolCall,
     };
     use eigen_common::get_signer;
+    use eigen_logging::get_test_logger;
     use eigen_testing_utils::anvil_constants::{
-        get_allocation_manager_address, get_erc20_mock_strategy, get_registry_coordinator_address,
+        get_allocation_manager_address, get_erc20_mock_strategy,
+        get_operator_state_retriever_address, get_registry_coordinator_address,
         get_service_manager_address, FIRST_PRIVATE_KEY,
     };
     use eigen_utils::slashing::{
@@ -38,6 +40,8 @@ pub(crate) mod test_utils {
         },
         sdk::mockavsservicemanager::MockAvsServiceManager,
     };
+
+    use crate::writer::AvsRegistryChainWriter;
 
     pub(crate) async fn create_operator_set(http_endpoint: &str, avs_address: Address) {
         let allocation_manager_addr =
