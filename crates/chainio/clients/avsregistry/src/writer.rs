@@ -390,6 +390,30 @@ impl AvsRegistryChainWriter {
         info!(tx_hash = ?tx,"successfully set operator set param with the AVS's registry coordinator" );
         Ok(*tx.tx_hash())
     }
+
+    /// Sets the ejection cooldow that an operator must wait in seconds after ejection before registering for any quorum
+    ///
+    /// # Arguments
+    /// * `cooldown` - the new ejection cooldown in seconds
+    ///
+    /// # Returns
+    /// * `TxHash` - The transaction hash of the set ejection cooldown transaction
+    pub async fn set_ejection_cooldown(&self, cooldown: U256) -> Result<TxHash, AvsRegistryError> {
+        info!("setting ejecting cooldown with the AVS's registry coordinator");
+        let provider = get_signer(&self.signer.clone(), &self.provider);
+
+        let contract_registry_coordinator =
+            RegistryCoordinator::new(self.registry_coordinator_addr, provider);
+
+        let contract_call = contract_registry_coordinator.setEjectionCooldown(cooldown);
+
+        contract_call
+            .send()
+            .await
+            .map_err(AvsRegistryError::AlloyContractError)
+            .inspect(|tx| info!(tx_hash = ?tx, "successfully set ejection cooldown with the AVS's registry coordinator"))
+            .map(|tx| *tx.tx_hash())
+    }
 }
 
 #[cfg(test)]
@@ -662,5 +686,35 @@ mod tests {
             op_params._0.kickBIPsOfTotalStake,
             operator_set_params.kickBIPsOfTotalStake
         );
+    }
+
+    #[tokio::test]
+    async fn test_set_ejector_cooldown() {
+        let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
+        let private_key = ANVIL_FIRST_PRIVATE_KEY.to_string();
+
+        let avs_writer =
+            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
+
+        let registry_contract = RegistryCoordinator::new(
+            avs_writer.registry_coordinator_addr,
+            get_signer(&avs_writer.signer.clone(), &avs_writer.provider),
+        );
+
+        let new_cooldown = U256::from(100);
+        let tx_hash = avs_writer
+            .set_ejection_cooldown(new_cooldown)
+            .await
+            .unwrap();
+
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
+
+        assert!(tx_status);
+
+        let cooldown = registry_contract.ejectionCooldown().call().await.unwrap();
+        assert_eq!(cooldown._0, new_cooldown);
     }
 }
