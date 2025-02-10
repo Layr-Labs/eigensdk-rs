@@ -74,6 +74,7 @@ Those changes in added, changed or breaking changes, should include usage exampl
         .await
         .unwrap();
   ```
+
 * Added new method `set_ejection_cooldown` in `avsregistry/writer` in [#337](https://github.com/Layr-Labs/eigensdk-rs/pull/337).
   ```rust
       let new_cooldown = U256::from(120);
@@ -81,6 +82,11 @@ Those changes in added, changed or breaking changes, should include usage exampl
           .set_ejection_cooldown(new_cooldown)
           .await
           .unwrap();
+  ```
+  
+* Added new method `is_operator_set_quorum` in `avsregistry/writer` in [#296](https://github.com/Layr-Labs/eigensdk-rs/pull/296).
+  ```rust
+    let operator_set_quourm = avs_reader.is_operator_set_quorum(0).await.unwrap();
   ```
 
 ### Changed
