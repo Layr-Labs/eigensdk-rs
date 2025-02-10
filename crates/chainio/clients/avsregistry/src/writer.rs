@@ -423,14 +423,13 @@ impl AvsRegistryChainWriter {
         let contract_registry_coordinator =
             RegistryCoordinator::new(self.registry_coordinator_addr, provider);
 
-        let contract_call = contract_registry_coordinator.setEjector(address);
-
-        let tx = contract_call
+        contract_registry_coordinator
+            .setEjector(address)
             .send()
             .await
-            .map_err(AvsRegistryError::AlloyContractError)?;
-        info!(tx_hash = ?tx,"successfully set ejector" );
-        Ok(*tx.tx_hash())
+            .map_err(AvsRegistryError::AlloyContractError)
+            .inspect(|tx| info!(tx_hash = ?tx,"successfully set ejector with the AVS's registry coordinator" ))
+            .map(|tx| *tx.tx_hash())
     }
 }
 
