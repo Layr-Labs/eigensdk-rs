@@ -20,7 +20,7 @@ pub(crate) mod test_utils {
     use eigen_testing_utils::anvil_constants::{
         get_allocation_manager_address, get_avs_directory_address, get_delegation_manager_address,
         get_erc20_mock_strategy, get_registry_coordinator_address, get_rewards_coordinator_address,
-        get_strategy_manager_address,
+        get_strategy_manager_address, FIRST_ADDRESS, FIRST_PRIVATE_KEY,
     };
     use eigen_utils::{
         slashing::core::{
@@ -42,9 +42,6 @@ pub(crate) mod test_utils {
     pub const OPERATOR_PRIVATE_KEY: &str =
         "0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d";
 
-    pub const ANVIL_FIRST_ADDRESS: Address = address!("f39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
-    pub const ANVIL_FIRST_PRIVATE_KEY: &str =
-        "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
     pub async fn build_el_chain_reader(http_endpoint: String) -> ELChainReader {
         let delegation_manager_address =
             get_delegation_manager_address(http_endpoint.clone()).await;
@@ -142,12 +139,12 @@ pub(crate) mod test_utils {
         (root, claim)
     }
 
-    /// The claim can be submitted from [`ANVIL_FIRST_PRIVATE_KEY`]
+    /// The claim can be submitted from [`FIRST_PRIVATE_KEY`]
     pub async fn new_claim(
         http_endpoint: &str,
         cumulative_earnings: U256,
     ) -> (FixedBytes<32>, RewardsMerkleClaim) {
-        let signer = get_signer(ANVIL_FIRST_PRIVATE_KEY, http_endpoint);
+        let signer = get_signer(FIRST_PRIVATE_KEY, http_endpoint);
         let rewards_coordinator_address =
             get_rewards_coordinator_address(http_endpoint.to_string()).await;
 
@@ -175,7 +172,7 @@ pub(crate) mod test_utils {
 
         // Generate token tree leaf
         // For the tree structure, see https://github.com/Layr-Labs/eigenlayer-contracts/blob/a888a1cd1479438dda4b138245a69177b125a973/docs/core/RewardsCoordinator.md#rewards-merkle-tree-structure
-        let earner_address = ANVIL_FIRST_ADDRESS;
+        let earner_address = FIRST_ADDRESS;
         let token_leaves = vec![TokenTreeMerkleLeaf {
             token: token_address,
             cumulativeEarnings: cumulative_earnings,

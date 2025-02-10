@@ -1,7 +1,6 @@
 use crate::{error::AvsRegistryError, reader::AvsRegistryReader};
 use alloy::primitives::{aliases::U96, Address, Bytes, FixedBytes};
 use async_trait::async_trait;
-use eigen_crypto_bls::BlsKeyPair;
 use eigen_types::test::TestOperator;
 use eigen_utils::slashing::middleware::operatorstateretriever::OperatorStateRetriever;
 
@@ -9,7 +8,6 @@ use eigen_utils::slashing::middleware::operatorstateretriever::OperatorStateRetr
 #[derive(Debug)]
 pub struct FakeAvsRegistryReader {
     operator_address: Address,
-    operator_pubkeys: BlsKeyPair,
     operator_id: FixedBytes<32>,
 }
 
@@ -28,7 +26,6 @@ impl FakeAvsRegistryReader {
         Self {
             operator_address,
             operator_id: operator.operator_id,
-            operator_pubkeys: operator.bls_keypair,
         }
     }
 }
