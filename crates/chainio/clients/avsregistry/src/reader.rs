@@ -1,4 +1,5 @@
 use crate::error::AvsRegistryError;
+use alloy::primitives::aliases::U96;
 use alloy::primitives::{Address, Bytes, FixedBytes, B256, U256};
 use alloy::providers::Provider;
 use alloy::rpc::types::Filter;
@@ -13,6 +14,7 @@ use eigen_logging::logger::SharedLogger;
 use eigen_types::operator::{
     bitmap_to_quorum_ids, bitmap_to_quorum_ids_from_u192, OperatorPubKeys,
 };
+use eigen_utils::middleware::stakeregistry::IStakeRegistry::StrategyParams;
 use eigen_utils::{
     middleware::blsapkregistry::BLSApkRegistry,
     middleware::operatorstateretriever::OperatorStateRetriever,
@@ -627,6 +629,74 @@ impl AvsRegistryChainReader {
             );
         }
         Ok(operator_id_to_socket)
+    }
+
+    pub async fn weight_of_operator_for_quorum(
+        &self,
+        quorum_number: u8,
+        operator_address: Address,
+    ) -> Result<U96, AvsRegistryError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, provider);
+        let stake = contract_stake_registry
+            .weightOfOperatorForQuorum(quorum_number, operator_address)
+            .call()
+            .await?
+            ._0;
+
+        Ok(stake)
+    }
+
+    pub async fn strategy_params_length(
+        &self,
+        quorum_number: u8,
+    ) -> Result<U256, AvsRegistryError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, provider);
+        let len = contract_stake_registry
+            .strategyParamsLength(quorum_number)
+            .call()
+            .await?
+            ._0;
+
+        Ok(len)
+    }
+
+    pub async fn strategy_params_by_index(
+        &self,
+        quorum_number: u8,
+        index: U256,
+    ) -> Result<StrategyParams, AvsRegistryError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, provider);
+        let strategy_params = contract_stake_registry
+            .strategyParamsByIndex(quorum_number, index)
+            .call()
+            .await?
+            ._0;
+
+        Ok(strategy_params)
+    }
+
+    pub async fn get_stake_history_length(
+        &self,
+        operator_id: B256,
+        quorum_number: u8,
+    ) -> Result<U256, AvsRegistryError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, provider);
+
+        let len = contract_stake_registry
+            .getStakeHistoryLength(operator_id, quorum_number)
+            .call()
+            .await?
+            ._0;
+
+        Ok(len)
     }
 }
 
