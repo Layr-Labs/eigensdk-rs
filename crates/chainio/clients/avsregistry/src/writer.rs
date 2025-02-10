@@ -13,6 +13,7 @@ use eigen_utils::middleware::registrycoordinator::{
     IBLSApkRegistry::PubkeyRegistrationParams, ISignatureUtils::SignatureWithSaltAndExpiry,
     RegistryCoordinator, BN254::G1Point as RegistryG1Point, BN254::G2Point as RegistryG2Point,
 };
+use eigen_utils::middleware::stakeregistry::IStakeRegistry::StrategyParams;
 use eigen_utils::middleware::{
     servicemanagerbase::ServiceManagerBase, stakeregistry::StakeRegistry,
 };
@@ -373,13 +374,54 @@ impl AvsRegistryChainWriter {
         info!(tx_hash = ?tx.tx_hash(),quorum_numbers = %quorum_numbers,"Setting minimum stake for quorum");
         Ok(*tx.tx_hash())
     }
+
+    /// Add strategies for the quorum number.
+    ///
+    /// Can only be caled by registry coordinator's owner.
+    /// The quorum numbers must exist, else the tx will fail.
+    /// # Arguments
+    ///
+    /// # `quorum_number` - The respective quorum numbers in [`u8`].
+    /// # `strategy_params` - [`Vec<StrategyParams>`].
+    ///
+    /// # Returns
+    ///
+    /// * [`TxHash`] - The transaction hash of the transaction.
+    pub async fn add_strategies(
+        &self,
+        quorum_number: u8,
+        strategy_params: Vec<StrategyParams>,
+    ) -> Result<TxHash, AvsRegistryError> {
+        let provider = get_signer(&self.signer.clone(), &self.provider);
+
+        let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, provider);
+        let reg_coordinator_owner =
+            RegistryCoordinator::new(self.registry_coordinator_addr, get_provider(&self.provider))
+                .owner()
+                .call()
+                .await?
+                ._0;
+        let caller_address =
+            get_signer(&self.signer.clone(), &self.provider).default_signer_address();
+        if !reg_coordinator_owner.eq(&caller_address) {
+            info!(caller = %caller_address,registry_coordinator_owner = %reg_coordinator_owner,"Caller must be registry coordinator's owner when adding strategies");
+        }
+        let tx = contract_stake_registry
+            .addStrategies(quorum_number, strategy_params)
+            .send()
+            .await
+            .map_err(AvsRegistryError::AlloyContractError)?;
+
+        info!(tx_hash = ?tx.tx_hash(),"Adding strategies");
+        Ok(*tx.tx_hash())
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::AvsRegistryChainWriter;
     use alloy::primitives::aliases::U96;
-    use alloy::primitives::{Address, Bytes, FixedBytes, U256};
+    use alloy::primitives::{address, Address, Bytes, FixedBytes, U256};
     use eigen_crypto_bls::BlsKeyPair;
     use eigen_logging::get_test_logger;
     use eigen_testing_utils::anvil::start_anvil_container;
@@ -387,6 +429,8 @@ mod tests {
         get_operator_state_retriever_address, get_registry_coordinator_address,
     };
     use eigen_testing_utils::transaction::wait_transaction;
+    use eigen_utils::middleware::stakeregistry::IStakeRegistry::StrategyParams;
+    use std::ops::Add;
     use std::str::FromStr;
 
     async fn build_avs_registry_chain_writer(
@@ -522,6 +566,31 @@ mod tests {
         let minimum_stake = U96::from(10);
         let tx_hash = avs_writer
             .set_minimum_stake_for_quorum(quorum_numbers, minimum_stake)
+            .await
+            .unwrap();
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
+        assert!(tx_status);
+    }
+
+    #[tokio::test]
+    async fn test_set_add_strategies() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+
+        let private_key =
+            "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80".to_string();
+        let avs_writer = build_avs_registry_chain_writer(http_endpoint.clone(), private_key).await;
+
+        let quorum_numbers = 0;
+        let strategy_params = [StrategyParams {
+            strategy: address!("54945180dB7943c0ed0FEE7EdaB2Bd24620256bc"),
+            multiplier: U96::from(1),
+        }];
+
+        let tx_hash = avs_writer
+            .add_strategies(quorum_numbers, strategy_params.to_vec())
             .await
             .unwrap();
         let tx_status = wait_transaction(&http_endpoint, tx_hash)
