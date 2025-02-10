@@ -74,6 +74,30 @@ Those changes in added, changed or breaking changes, should include usage exampl
         .await
         .unwrap();
   ```
+* Added new method `create_total_delegated_stake_quorum` in `avsregistry/writer` in [#342](https://github.com/Layr-Labs/eigensdk-rs/pull/342).
+  ```rust
+    let operator_set_params = OperatorSetParam {
+        maxOperatorCount: 10,
+        kickBIPsOfOperatorStake: 50,
+        kickBIPsOfTotalStake: 50,
+    };
+    let minimum_stake = U96::from(10);
+    let strategy = get_erc20_mock_strategy(http_endpoint.to_string()).await;
+    let strategy_params = StrategyParams {
+        strategy,
+        multiplier: U96::from(1),
+    };
+    let strategy_params = vec![strategy_params];
+
+    avs_writer
+        .create_total_delegated_stake_quorum(
+            operator_set_params,
+            minimum_stake,
+            strategy_params,
+        )
+        .await
+        .unwrap();
+  ```
 
 ### Changed
 * Changes in the way bindings are generated in [#243](https://github.com/Layr-Labs/eigensdk-rs/pull/243).
