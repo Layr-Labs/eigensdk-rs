@@ -349,7 +349,7 @@ impl AvsRegistryChainWriter {
     /// * [`TxHash`] - hash of the transaction.
     pub async fn set_minimum_stake_for_quorum(
         &self,
-        quorum_numbers: u8,
+        quorum_number: u8,
         minimum_stake: U96,
     ) -> Result<TxHash, AvsRegistryError> {
         let provider = get_signer(&self.signer.clone(), &self.provider);
