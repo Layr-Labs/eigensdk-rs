@@ -307,6 +307,36 @@ impl AvsRegistryChainWriter {
         Ok(*tx.tx_hash())
     }
 
+    /// Sets the look-ahead time for checking operator shares for a specific quorum
+    ///
+    /// # Arguments
+    ///
+    /// * `quorum_number` - The quorum number to set the look-ahead period for
+    /// * `lookahead` - The number of blocks to look ahead when checking shares
+    ///
+    /// # Returns
+    /// * `TxHash` - The transaction hash of the set slashable stake lookahead transaction
+    pub async fn set_slashable_stake_lookahead(
+        &self,
+        quorum_number: u8,
+        lookahead: u32,
+    ) -> Result<TxHash, AvsRegistryError> {
+        info!("setting slashable stake lookahead");
+        let provider = get_signer(&self.signer.clone(), &self.provider);
+
+        let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, provider);
+
+        let contract_call =
+            contract_stake_registry.setSlashableStakeLookahead(quorum_number, lookahead);
+
+        contract_call
+            .send()
+            .await
+            .map_err(AvsRegistryError::AlloyContractError)
+            .inspect(|tx| info!(tx_hash = ?tx,"successfully set slashable stake lookahead" ))
+            .map(|tx_hash| *tx_hash.tx_hash())
+    }
+
     /// Set a new address as the rewards initiator
     ///
     /// # Arguments
@@ -396,7 +426,7 @@ impl AvsRegistryChainWriter {
 mod tests {
 
     use super::AvsRegistryChainWriter;
-    use crate::test_utils::{ANVIL_FIRST_PRIVATE_KEY, ANVIL_SECOND_ADDRESS};
+    use crate::test_utils::{create_operator_set, ANVIL_FIRST_PRIVATE_KEY, ANVIL_SECOND_ADDRESS};
     use alloy::primitives::{Address, Bytes, FixedBytes, U256};
     use eigen_common::get_signer;
     use eigen_crypto_bls::BlsKeyPair;
@@ -404,11 +434,13 @@ mod tests {
     use eigen_testing_utils::anvil::{start_anvil_container, start_m2_anvil_container};
     use eigen_testing_utils::anvil_constants::{
         get_operator_state_retriever_address, get_registry_coordinator_address,
+        get_service_manager_address,
     };
     use eigen_testing_utils::transaction::wait_transaction;
     use eigen_utils::rewardsv2::middleware::servicemanagerbase::ServiceManagerBase;
     use eigen_utils::slashing::middleware::registrycoordinator::ISlashingRegistryCoordinatorTypes::OperatorSetParam;
     use eigen_utils::slashing::middleware::registrycoordinator::RegistryCoordinator;
+    use eigen_utils::slashing::middleware::stakeregistry::StakeRegistry;
     use futures_util::StreamExt;
     use std::str::FromStr;
 
@@ -461,6 +493,41 @@ mod tests {
         )
         .await;
         test_deregister_operator(&avs_writer, quorum_nums, http_endpoint.clone()).await;
+    }
+
+    #[tokio::test]
+    async fn test_set_slashable_stake_lookahead() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let private_key = ANVIL_FIRST_PRIVATE_KEY.to_string();
+        let avs_writer =
+            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
+        let avs_address = get_service_manager_address(http_endpoint.clone()).await;
+        create_operator_set(http_endpoint.as_str(), avs_address).await;
+
+        // Set up event poller to listen to `LookAheadPeriodChanged` events
+        let provider = get_signer(&avs_writer.signer.clone(), &avs_writer.provider);
+        let contract_stake_registry = StakeRegistry::new(avs_writer.stake_registry_addr, provider);
+        let event = contract_stake_registry.LookAheadPeriodChanged_filter();
+        let poller = event.watch().await.unwrap();
+
+        // Set the slashable stake lookahead period. Old period is 0.
+        let quorum_number = 0_u8;
+        let lookahead = 10_u32;
+        let tx_hash = avs_writer
+            .set_slashable_stake_lookahead(quorum_number, lookahead)
+            .await
+            .unwrap();
+
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
+        assert!(tx_status);
+
+        // Assert that event `LookAheadPeriodChanged` is the same as `new_rewards_init_address`
+        let mut stream = poller.into_stream();
+        let (stream_event, _) = stream.next().await.unwrap().unwrap();
+        assert_eq!(stream_event.newLookAheadBlocks, lookahead);
     }
 
     #[tokio::test]
