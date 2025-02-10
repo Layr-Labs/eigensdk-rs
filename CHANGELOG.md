@@ -17,6 +17,11 @@ Those changes in added, changed or breaking changes, should include usage exampl
 
 ### Added 🎉
 * Added version explicitly in crates in [#322](https://github.com/Layr-Labs/eigensdk-rs/pull/322). 
+* Added missing StakeRegistry writer functions in [#335](https://github.com/Layr-Labs/eigensdk-rs/pull/335).
+  * set_minimum_stake_for_quorum
+  * add_strategies
+  * remove_strategies
+  * modify_strategy_params
 
 ### Breaking Changes 🛠
 
