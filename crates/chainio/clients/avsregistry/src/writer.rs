@@ -336,12 +336,13 @@ impl AvsRegistryChainWriter {
 
     /// Sets minimum stake for the quorum
     ///
-    /// Can only be caled by registry coordinator's owner.
-    /// The quorum numbers must exist, else the tx will fail.
+    /// Can only be called by the registry coordinator's owner.
+    /// The quorum number must exist, or else the tx will fail.
+    ///
     /// # Arguments
     ///
-    /// # `quorum_numbers` - The respective quorum numbers in [`u8`].
-    /// # `minimum_stake` - The minimum stake in [`U96`].
+    /// * `quorum_number` - The respective quorum number.
+    /// * `minimum_stake` - The minimum stake as a [`U96`].
     ///
     /// # Returns
     ///
