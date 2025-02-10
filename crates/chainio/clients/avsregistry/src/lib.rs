@@ -21,14 +21,14 @@ pub mod fake_reader;
 #[cfg(test)]
 pub(crate) mod test_utils {
     use alloy::{
-        primitives::{address, aliases::U96, Address},
+        primitives::{aliases::U96, Address},
         providers::WalletProvider,
         sol_types::SolCall,
     };
     use eigen_common::get_signer;
     use eigen_testing_utils::anvil_constants::{
         get_allocation_manager_address, get_erc20_mock_strategy, get_registry_coordinator_address,
-        get_service_manager_address,
+        get_service_manager_address, FIRST_PRIVATE_KEY,
     };
     use eigen_utils::slashing::{
         core::allocationmanager::AllocationManager,
@@ -39,15 +39,10 @@ pub(crate) mod test_utils {
         sdk::mockavsservicemanager::MockAvsServiceManager,
     };
 
-    pub(crate) const ANVIL_FIRST_PRIVATE_KEY: &str =
-        "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
-    pub(crate) const ANVIL_SECOND_ADDRESS: Address =
-        address!("70997970C51812dc3A010C7d01b50e0d17dc79C8");
-
     pub(crate) async fn create_operator_set(http_endpoint: &str, avs_address: Address) {
         let allocation_manager_addr =
             get_allocation_manager_address(http_endpoint.to_string()).await;
-        let default_signer = get_signer(ANVIL_FIRST_PRIVATE_KEY, http_endpoint);
+        let default_signer = get_signer(FIRST_PRIVATE_KEY, http_endpoint);
         let allocation_manager =
             AllocationManager::new(allocation_manager_addr, default_signer.clone());
         let registry_coordinator_addr =

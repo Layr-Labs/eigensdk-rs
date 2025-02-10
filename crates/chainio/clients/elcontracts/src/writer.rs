@@ -843,8 +843,7 @@ mod test_utils {}
 #[cfg(test)]
 mod tests {
     use crate::test_utils::{
-        build_el_chain_reader, new_claim, new_test_writer, ANVIL_FIRST_ADDRESS,
-        ANVIL_FIRST_PRIVATE_KEY, OPERATOR_ADDRESS, OPERATOR_PRIVATE_KEY,
+        build_el_chain_reader, new_claim, new_test_writer, OPERATOR_ADDRESS, OPERATOR_PRIVATE_KEY,
     };
     use alloy::{
         primitives::{address, aliases::U96, Address, U256},
@@ -857,7 +856,8 @@ mod tests {
         anvil::{mine_anvil_blocks_operator_set, set_account_balance, start_anvil_container},
         anvil_constants::{
             get_allocation_manager_address, get_erc20_mock_strategy,
-            get_registry_coordinator_address, get_service_manager_address,
+            get_registry_coordinator_address, get_service_manager_address, FIRST_ADDRESS,
+            FIRST_PRIVATE_KEY,
         },
         transaction::wait_transaction,
     };
@@ -882,16 +882,13 @@ mod tests {
     async fn test_register_operator() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
         let el_chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
-        let el_chain_writer = new_test_writer(
-            http_endpoint.to_string(),
-            ANVIL_FIRST_PRIVATE_KEY.to_string(),
-        )
-        .await;
+        let el_chain_writer =
+            new_test_writer(http_endpoint.to_string(), FIRST_PRIVATE_KEY.to_string()).await;
 
         let operator = Operator {
-            address: ANVIL_FIRST_ADDRESS, // can only register the address corresponding to the signer used in the writer
+            address: FIRST_ADDRESS, // can only register the address corresponding to the signer used in the writer
             staker_opt_out_window_blocks: 3,
-            delegation_approver_address: ANVIL_FIRST_ADDRESS,
+            delegation_approver_address: FIRST_ADDRESS,
             metadata_url: Some("metadata_uri".to_string()),
             allocation_delay: 1,
         };
@@ -901,7 +898,7 @@ mod tests {
             .unwrap();
 
         let is_registered = el_chain_reader
-            .is_operator_registered(ANVIL_FIRST_ADDRESS)
+            .is_operator_registered(FIRST_ADDRESS)
             .await
             .unwrap();
         assert!(is_registered);
@@ -957,11 +954,8 @@ mod tests {
     #[tokio::test]
     async fn test_deposit_erc20_into_strategy() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let el_chain_writer = new_test_writer(
-            http_endpoint.to_string(),
-            ANVIL_FIRST_PRIVATE_KEY.to_string(),
-        )
-        .await;
+        let el_chain_writer =
+            new_test_writer(http_endpoint.to_string(), FIRST_PRIVATE_KEY.to_string()).await;
 
         let amount = U256::from_str("100").unwrap();
         let strategy_addr = get_erc20_mock_strategy(http_endpoint.clone()).await;
@@ -977,11 +971,8 @@ mod tests {
     #[tokio::test]
     async fn test_set_claimer_for() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let el_chain_writer = new_test_writer(
-            http_endpoint.to_string(),
-            ANVIL_FIRST_PRIVATE_KEY.to_string(),
-        )
-        .await;
+        let el_chain_writer =
+            new_test_writer(http_endpoint.to_string(), FIRST_PRIVATE_KEY.to_string()).await;
 
         let claimer = address!("5eb15C0992734B5e77c888D713b4FC67b3D679A2");
 
@@ -994,16 +985,13 @@ mod tests {
     #[tokio::test]
     async fn test_process_claim() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let el_chain_writer = new_test_writer(
-            http_endpoint.to_string(),
-            ANVIL_FIRST_PRIVATE_KEY.to_string(),
-        )
-        .await;
+        let el_chain_writer =
+            new_test_writer(http_endpoint.to_string(), FIRST_PRIVATE_KEY.to_string()).await;
 
         let (_root, claim) = new_claim(&http_endpoint, U256::from(42)).await;
 
         let tx_hash = el_chain_writer
-            .process_claim(claim, ANVIL_FIRST_ADDRESS)
+            .process_claim(claim, FIRST_ADDRESS)
             .await
             .unwrap();
 
@@ -1014,17 +1002,14 @@ mod tests {
     #[tokio::test]
     async fn test_process_claims() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let el_chain_writer = new_test_writer(
-            http_endpoint.to_string(),
-            ANVIL_FIRST_PRIVATE_KEY.to_string(),
-        )
-        .await;
+        let el_chain_writer =
+            new_test_writer(http_endpoint.to_string(), FIRST_PRIVATE_KEY.to_string()).await;
 
         let (_root, claim0) = new_claim(&http_endpoint, U256::from(42)).await;
         let (_root, claim1) = new_claim(&http_endpoint, U256::from(4256)).await;
 
         let tx_hash = el_chain_writer
-            .process_claims(vec![claim0, claim1], ANVIL_FIRST_ADDRESS)
+            .process_claims(vec![claim0, claim1], FIRST_ADDRESS)
             .await
             .unwrap();
 
@@ -1035,15 +1020,12 @@ mod tests {
     #[tokio::test]
     async fn test_add_and_remove_pending_admin() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let el_chain_writer = new_test_writer(
-            http_endpoint.to_string(),
-            ANVIL_FIRST_PRIVATE_KEY.to_string(),
-        )
-        .await;
+        let el_chain_writer =
+            new_test_writer(http_endpoint.to_string(), FIRST_PRIVATE_KEY.to_string()).await;
 
         let pending_admin = address!("009440d62dc85c73dbf889b7ad1f4da8b231d2ef");
         let tx_hash = el_chain_writer
-            .add_pending_admin(ANVIL_FIRST_ADDRESS, pending_admin)
+            .add_pending_admin(FIRST_ADDRESS, pending_admin)
             .await
             .unwrap();
         let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
@@ -1051,13 +1033,13 @@ mod tests {
 
         let is_pending_admin = el_chain_writer
             .el_chain_reader
-            .is_pending_admin(ANVIL_FIRST_ADDRESS, pending_admin)
+            .is_pending_admin(FIRST_ADDRESS, pending_admin)
             .await
             .unwrap();
         assert!(is_pending_admin);
 
         let tx_hash = el_chain_writer
-            .remove_pending_admin(ANVIL_FIRST_ADDRESS, pending_admin)
+            .remove_pending_admin(FIRST_ADDRESS, pending_admin)
             .await
             .unwrap();
         let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
@@ -1065,7 +1047,7 @@ mod tests {
 
         let is_admin = el_chain_writer
             .el_chain_reader
-            .is_pending_admin(ANVIL_FIRST_ADDRESS, pending_admin)
+            .is_pending_admin(FIRST_ADDRESS, pending_admin)
             .await
             .unwrap();
         assert!(!is_admin);
@@ -1074,18 +1056,15 @@ mod tests {
     #[tokio::test]
     async fn test_accept_admin() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let account_writer = new_test_writer(
-            http_endpoint.to_string(),
-            ANVIL_FIRST_PRIVATE_KEY.to_string(),
-        )
-        .await;
+        let account_writer =
+            new_test_writer(http_endpoint.to_string(), FIRST_PRIVATE_KEY.to_string()).await;
 
         let pending_admin = address!("14dC79964da2C08b23698B3D3cc7Ca32193d9955");
         let pending_admin_key =
             "0x4bbbf85ce3377467afe5d46f804f221813b2bb87f24d81f60f1fcdbf7cbf4356";
 
         let tx_hash = account_writer
-            .add_pending_admin(ANVIL_FIRST_ADDRESS, pending_admin)
+            .add_pending_admin(FIRST_ADDRESS, pending_admin)
             .await
             .unwrap();
 
@@ -1095,17 +1074,14 @@ mod tests {
         let admin_writer =
             new_test_writer(http_endpoint.to_string(), pending_admin_key.to_string()).await;
 
-        let tx_hash = admin_writer
-            .accept_admin(ANVIL_FIRST_ADDRESS)
-            .await
-            .unwrap();
+        let tx_hash = admin_writer.accept_admin(FIRST_ADDRESS).await.unwrap();
 
         let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
         assert!(receipt.status());
 
         let is_admin = admin_writer
             .el_chain_reader
-            .is_admin(ANVIL_FIRST_ADDRESS, pending_admin)
+            .is_admin(FIRST_ADDRESS, pending_admin)
             .await
             .unwrap();
         assert!(is_admin);
@@ -1114,11 +1090,8 @@ mod tests {
     #[tokio::test]
     async fn test_remove_admin() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let el_chain_writer = new_test_writer(
-            http_endpoint.to_string(),
-            ANVIL_FIRST_PRIVATE_KEY.to_string(),
-        )
-        .await;
+        let el_chain_writer =
+            new_test_writer(http_endpoint.to_string(), FIRST_PRIVATE_KEY.to_string()).await;
 
         let pending_admin_1 = address!("14dC79964da2C08b23698B3D3cc7Ca32193d9955");
         let pending_admin_1_key =
@@ -1130,14 +1103,14 @@ mod tests {
 
         // Adding two admins and removing one. Cannot remove the last admin, so one must remain
         let tx_hash = el_chain_writer
-            .add_pending_admin(ANVIL_FIRST_ADDRESS, pending_admin_1)
+            .add_pending_admin(FIRST_ADDRESS, pending_admin_1)
             .await
             .unwrap();
         let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
         assert!(receipt.status());
 
         let tx_hash = el_chain_writer
-            .add_pending_admin(ANVIL_FIRST_ADDRESS, pending_admin_2)
+            .add_pending_admin(FIRST_ADDRESS, pending_admin_2)
             .await
             .unwrap();
         let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
@@ -1145,19 +1118,13 @@ mod tests {
 
         let admin_1_writer =
             new_test_writer(http_endpoint.to_string(), pending_admin_1_key.to_string()).await;
-        admin_1_writer
-            .accept_admin(ANVIL_FIRST_ADDRESS)
-            .await
-            .unwrap();
+        admin_1_writer.accept_admin(FIRST_ADDRESS).await.unwrap();
         let admin_2_writer =
             new_test_writer(http_endpoint.to_string(), pending_admin_2_key.to_string()).await;
-        admin_2_writer
-            .accept_admin(ANVIL_FIRST_ADDRESS)
-            .await
-            .unwrap();
+        admin_2_writer.accept_admin(FIRST_ADDRESS).await.unwrap();
 
         let tx_hash = admin_1_writer
-            .remove_admin(ANVIL_FIRST_ADDRESS, pending_admin_2)
+            .remove_admin(FIRST_ADDRESS, pending_admin_2)
             .await
             .unwrap();
 
@@ -1166,7 +1133,7 @@ mod tests {
 
         let is_admin = el_chain_writer
             .el_chain_reader
-            .is_admin(ANVIL_FIRST_ADDRESS, pending_admin_2)
+            .is_admin(FIRST_ADDRESS, pending_admin_2)
             .await
             .unwrap();
         assert!(!is_admin);
@@ -1175,18 +1142,15 @@ mod tests {
     #[tokio::test]
     async fn test_set_and_remove_permission() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let account_address = ANVIL_FIRST_ADDRESS;
+        let account_address = FIRST_ADDRESS;
         let appointee_address = address!("009440d62dc85c73dbf889b7ad1f4da8b231d2ef");
         let appointee_key = "6b35c6d8110c888de06575b45181bf3f9e6c73451fa5cde812c95a6b31e66ddf";
         let target = address!("14dC79964da2C08b23698B3D3cc7Ca32193d9955");
         let selector = [0, 1, 2, 3].into();
 
         // add an admin
-        let account_writer = new_test_writer(
-            http_endpoint.to_string(),
-            ANVIL_FIRST_PRIVATE_KEY.to_string(),
-        )
-        .await;
+        let account_writer =
+            new_test_writer(http_endpoint.to_string(), FIRST_PRIVATE_KEY.to_string()).await;
 
         // set permission
         let tx_hash = account_writer
@@ -1207,11 +1171,8 @@ mod tests {
         assert!(can_call);
 
         // test remove permission
-        let el_chain_writer = new_test_writer(
-            http_endpoint.to_string(),
-            ANVIL_FIRST_PRIVATE_KEY.to_string(),
-        )
-        .await;
+        let el_chain_writer =
+            new_test_writer(http_endpoint.to_string(), FIRST_PRIVATE_KEY.to_string()).await;
 
         let tx_hash = el_chain_writer
             .remove_permission(account_address, appointee_address, target, selector)
@@ -1225,7 +1186,7 @@ mod tests {
     async fn create_operator_set(http_endpoint: &str, avs_address: Address) {
         let allocation_manager_addr =
             get_allocation_manager_address(http_endpoint.to_string()).await;
-        let default_signer = get_signer(ANVIL_FIRST_PRIVATE_KEY, http_endpoint);
+        let default_signer = get_signer(FIRST_PRIVATE_KEY, http_endpoint);
         let allocation_manager =
             AllocationManager::new(allocation_manager_addr, default_signer.clone());
         let registry_coordinator_addr =
@@ -1332,16 +1293,13 @@ mod tests {
     #[tokio::test]
     async fn test_set_allocation_delay() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let el_chain_writer = new_test_writer(
-            http_endpoint.to_string(),
-            ANVIL_FIRST_PRIVATE_KEY.to_string(),
-        )
-        .await;
+        let el_chain_writer =
+            new_test_writer(http_endpoint.to_string(), FIRST_PRIVATE_KEY.to_string()).await;
 
         let delay = 10;
 
         let tx_hash = el_chain_writer
-            .set_allocation_delay(ANVIL_FIRST_ADDRESS, delay)
+            .set_allocation_delay(FIRST_ADDRESS, delay)
             .await
             .unwrap();
         let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
@@ -1353,7 +1311,7 @@ mod tests {
         mine_anvil_blocks_operator_set(&_container, (current_block as u32) + 2).await;
         let allocation_delay = el_chain_writer
             .el_chain_reader
-            .get_allocation_delay(ANVIL_FIRST_ADDRESS)
+            .get_allocation_delay(FIRST_ADDRESS)
             .await
             .unwrap();
 
@@ -1363,13 +1321,10 @@ mod tests {
     #[tokio::test]
     async fn test_modify_allocations() {
         let (container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let el_chain_writer = new_test_writer(
-            http_endpoint.to_string(),
-            ANVIL_FIRST_PRIVATE_KEY.to_string(),
-        )
-        .await;
+        let el_chain_writer =
+            new_test_writer(http_endpoint.to_string(), FIRST_PRIVATE_KEY.to_string()).await;
 
-        let operator_address = ANVIL_FIRST_ADDRESS;
+        let operator_address = FIRST_ADDRESS;
         let strategy_addr = get_erc20_mock_strategy(http_endpoint.clone()).await;
 
         let avs_address = get_service_manager_address(http_endpoint.clone()).await;
@@ -1404,7 +1359,7 @@ mod tests {
 
         let allocation_delay = el_chain_writer
             .el_chain_reader
-            .get_allocation_delay(ANVIL_FIRST_ADDRESS)
+            .get_allocation_delay(FIRST_ADDRESS)
             .await
             .unwrap();
         mine_anvil_blocks_operator_set(&container, allocation_delay).await;
@@ -1425,29 +1380,26 @@ mod tests {
     #[tokio::test]
     async fn test_set_operator_avs_split() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let el_chain_writer = new_test_writer(
-            http_endpoint.to_string(),
-            ANVIL_FIRST_PRIVATE_KEY.to_string(),
-        )
-        .await;
+        let el_chain_writer =
+            new_test_writer(http_endpoint.to_string(), FIRST_PRIVATE_KEY.to_string()).await;
         let new_split = 5;
         let avs_address = get_service_manager_address(http_endpoint.clone()).await;
 
         let split = el_chain_writer
             .el_chain_reader
-            .get_operator_avs_split(ANVIL_FIRST_ADDRESS, avs_address)
+            .get_operator_avs_split(FIRST_ADDRESS, avs_address)
             .await
             .unwrap();
 
         assert_eq!(split, 1); // not initialized case
 
         el_chain_writer
-            .set_operator_avs_split(ANVIL_FIRST_ADDRESS, avs_address, new_split)
+            .set_operator_avs_split(FIRST_ADDRESS, avs_address, new_split)
             .await
             .unwrap();
         let split = el_chain_writer
             .el_chain_reader
-            .get_operator_avs_split(ANVIL_FIRST_ADDRESS, avs_address)
+            .get_operator_avs_split(FIRST_ADDRESS, avs_address)
             .await
             .unwrap();
         assert_eq!(split, 5); // initialized && activated
@@ -1505,23 +1457,20 @@ mod tests {
     #[tokio::test]
     async fn test_set_operator_pi_split() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let el_chain_writer = new_test_writer(
-            http_endpoint.to_string(),
-            ANVIL_FIRST_PRIVATE_KEY.to_string(),
-        )
-        .await;
+        let el_chain_writer =
+            new_test_writer(http_endpoint.to_string(), FIRST_PRIVATE_KEY.to_string()).await;
         let new_split = 5;
 
         let split = el_chain_writer
             .el_chain_reader
-            .get_operator_pi_split(ANVIL_FIRST_ADDRESS)
+            .get_operator_pi_split(FIRST_ADDRESS)
             .await
             .unwrap();
 
         assert_eq!(split, 1); // not initialized case
 
         let tx_hash = el_chain_writer
-            .set_operator_pi_split(ANVIL_FIRST_ADDRESS, new_split)
+            .set_operator_pi_split(FIRST_ADDRESS, new_split)
             .await
             .unwrap();
 
@@ -1530,7 +1479,7 @@ mod tests {
 
         let split = el_chain_writer
             .el_chain_reader
-            .get_operator_pi_split(ANVIL_FIRST_ADDRESS)
+            .get_operator_pi_split(FIRST_ADDRESS)
             .await
             .unwrap();
 
@@ -1540,15 +1489,12 @@ mod tests {
     #[tokio::test]
     async fn test_clear_deallocation_queue() {
         let (_contianer, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let el_chain_writer = new_test_writer(
-            http_endpoint.to_string(),
-            ANVIL_FIRST_PRIVATE_KEY.to_string(),
-        )
-        .await;
+        let el_chain_writer =
+            new_test_writer(http_endpoint.to_string(), FIRST_PRIVATE_KEY.to_string()).await;
         let avs_address = get_service_manager_address(http_endpoint.clone()).await;
         create_operator_set(http_endpoint.as_str(), avs_address).await;
 
-        let operator_address = ANVIL_FIRST_ADDRESS;
+        let operator_address = FIRST_ADDRESS;
         let strategy_addr = get_erc20_mock_strategy(http_endpoint.clone()).await;
         let operator_set_id = 0;
 
