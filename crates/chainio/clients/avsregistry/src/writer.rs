@@ -431,7 +431,8 @@ impl AvsRegistryChainWriter {
     }
 
     /// Update the AVS metadata URI.
-    /// This function is used to update the AVS metadata URI of the AVS's RegistryCoordinator.
+    ///
+    /// This function updates the AVS metadata URI of the AVS's RegistryCoordinator.
     ///
     /// # Arguments
     ///
