@@ -638,7 +638,10 @@ mod tests {
     use eigen_logging::get_test_logger;
     use eigen_testing_utils::{
         anvil::{start_anvil_container, start_m2_anvil_container},
-        anvil_constants::{get_operator_state_retriever_address, get_registry_coordinator_address},
+        anvil_constants::{
+            get_operator_state_retriever_address, get_registry_coordinator_address,
+            FIFTH_PRIVATE_KEY,
+        },
         transaction::wait_transaction,
     };
 
@@ -669,8 +672,7 @@ mod tests {
     async fn test_get_operators_stake_in_quorums_at_block() {
         let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
 
-        let private_key =
-            "8b3a350cf5c34c9194ca85829a2df0ec3153be0318b5e2d3348e872092edffba".to_string();
+        let private_key = FIFTH_PRIVATE_KEY.to_string();
         let avs_writer = build_avs_registry_chain_writer(http_endpoint.clone(), private_key).await;
         let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
 
@@ -711,8 +713,7 @@ mod tests {
     async fn test_get_operators_stake_in_quorums_at_block_operator_id() {
         let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
 
-        let private_key =
-            "8b3a350cf5c34c9194ca85829a2df0ec3153be0318b5e2d3348e872092edffba".to_string();
+        let private_key = FIFTH_PRIVATE_KEY.to_string();
         let avs_writer = build_avs_registry_chain_writer(http_endpoint.clone(), private_key).await;
         let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
 
@@ -754,8 +755,7 @@ mod tests {
     async fn test_get_operators_stake_in_quorums_at_current_block() {
         let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
 
-        let private_key =
-            "8b3a350cf5c34c9194ca85829a2df0ec3153be0318b5e2d3348e872092edffba".to_string();
+        let private_key = FIFTH_PRIVATE_KEY.to_string();
         let avs_writer = build_avs_registry_chain_writer(http_endpoint.clone(), private_key).await;
         let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
 
@@ -795,8 +795,7 @@ mod tests {
     async fn test_get_operators_stake_in_quorums_of_operator_at_current_block() {
         let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
 
-        let private_key =
-            "8b3a350cf5c34c9194ca85829a2df0ec3153be0318b5e2d3348e872092edffba".to_string();
+        let private_key = FIFTH_PRIVATE_KEY.to_string();
         let avs_writer = build_avs_registry_chain_writer(http_endpoint.clone(), private_key).await;
         let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
 
@@ -866,8 +865,7 @@ mod tests {
     async fn test_get_operators_stake_in_quorums_of_operator_at_block() {
         let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
 
-        let private_key =
-            "8b3a350cf5c34c9194ca85829a2df0ec3153be0318b5e2d3348e872092edffba".to_string();
+        let private_key = FIFTH_PRIVATE_KEY.to_string();
         let avs_writer = build_avs_registry_chain_writer(http_endpoint.clone(), private_key).await;
         let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
 
