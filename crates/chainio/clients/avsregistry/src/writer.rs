@@ -407,9 +407,7 @@ impl AvsRegistryChainWriter {
         let contract_registry_coordinator =
             RegistryCoordinator::new(self.registry_coordinator_addr, provider);
 
-        let contract_call = contract_registry_coordinator.setEjectionCooldown(cooldown);
-
-        contract_call
+        contract_registry_coordinator.setEjectionCooldown(cooldown)
             .send()
             .await
             .map_err(AvsRegistryError::AlloyContractError)
