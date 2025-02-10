@@ -43,7 +43,7 @@ pub(crate) mod test_utils {
 
     use crate::reader::AvsRegistryChainReader;
 
-    pub(crate) const BLS_KEY: &str =
+    pub(crate) const OPERATOR_BLS_KEY: &str =
         "1371012690269088913462269866874713266643928125698382731338806296762673180359922";
 
     pub(crate) async fn create_operator_set(http_endpoint: &str, avs_address: Address) {
