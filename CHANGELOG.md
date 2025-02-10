@@ -92,6 +92,7 @@ Those changes in added, changed or breaking changes, should include usage exampl
         .eject_operator(register_operator_address, quorum_nums)
         .await
         .unwrap();
+  ```
 
 * Added new method `is_operator_set_quorum` in `avsregistry/writer` in [#296](https://github.com/Layr-Labs/eigensdk-rs/pull/296).
 
