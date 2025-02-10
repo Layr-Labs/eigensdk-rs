@@ -398,14 +398,12 @@ impl AvsRegistryChainWriter {
         let contract_registry_coordinator =
             RegistryCoordinator::new(self.registry_coordinator_addr, provider);
 
-        let contract_call = contract_registry_coordinator.setChurnApprover(new_churn_approver);
-
-        let tx = contract_call
+        contract_registry_coordinator.setChurnApprover(new_churn_approver)
             .send()
             .await
-            .map_err(AvsRegistryError::AlloyContractError)?;
-        info!(tx_hash = ?tx,"successfully updated the new churn approver with the AVS's registry coordinator");
-        Ok(*tx.tx_hash())
+            .map_err(AvsRegistryError::AlloyContractError)
+            .inspect(|tx| info!(tx_hash = ?tx,"successfully updated the new churn approver with the AVS's registry coordinator"))
+            .map(|tx| *tx.tx_hash())
     }
 
     /// Update the configuration of an existing quorum.
@@ -451,7 +449,7 @@ mod tests {
     use eigen_testing_utils::anvil::{start_anvil_container, start_m2_anvil_container};
     use eigen_testing_utils::anvil_constants::{
         get_operator_state_retriever_address, get_registry_coordinator_address,
-        get_service_manager_address,
+        get_service_manager_address, FIRST_ADDRESS,
     };
     use eigen_testing_utils::anvil_constants::{FIRST_PRIVATE_KEY, SECOND_ADDRESS};
     use eigen_testing_utils::transaction::wait_transaction;
@@ -696,25 +694,32 @@ mod tests {
     #[tokio::test]
     async fn test_set_churn_approver() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let private_key = ANVIL_FIRST_PRIVATE_KEY.to_string();
+        let private_key = FIRST_PRIVATE_KEY.to_string();
         let avs_writer =
             build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
 
-        // Set up event poller to listen to `RewardsInitiatorUpdated` events
         let provider = get_signer(&avs_writer.signer.clone(), &avs_writer.provider);
-        let contract_registry_coordinator =
-            ServiceManagerBase::new(avs_writer.service_manager_addr, provider);
 
-        /* from Go SDK:
-            function test_setChurnApprover() public {
-            address newChurnApprover = address(uint160(uint256(keccak256("newChurnApprover"))));
-            cheats.prank(registryCoordinatorOwner);
-            cheats.expectEmit(true, true, true, true, address(registryCoordinator));
-            emit ChurnApproverUpdated(churnApprover, newChurnApprover);
-            registryCoordinator.setChurnApprover(newChurnApprover);
-            assertEq(registryCoordinator.churnApprover(), newChurnApprover);
-        }
-        */
+        let regcoord = RegistryCoordinator::new(avs_writer.registry_coordinator_addr, &provider);
+
+        let current_churn_approver = regcoord.churnApprover().call().await.unwrap()._0;
+        let new_churn_approver = FIRST_ADDRESS;
+        assert_ne!(current_churn_approver, new_churn_approver);
+
+        let tx_hash = avs_writer
+            .set_churn_approver(new_churn_approver)
+            .await
+            .unwrap();
+
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
+
+        assert!(tx_status);
+
+        let current_churn_approver = regcoord.churnApprover().call().await.unwrap()._0;
+        assert_eq!(current_churn_approver, new_churn_approver);
     }
 
     #[tokio::test]
