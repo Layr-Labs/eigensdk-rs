@@ -368,11 +368,11 @@ impl AvsRegistryChainWriter {
         }
 
         let tx = contract_stake_registry
-            .setMinimumStakeForQuorum(quorum_numbers, minimum_stake)
+            .setMinimumStakeForQuorum(quorum_number, minimum_stake)
             .send()
             .await
             .map_err(AvsRegistryError::AlloyContractError)?;
-        info!(tx_hash = ?tx.tx_hash(),quorum_numbers = %quorum_numbers,"Setting minimum stake for quorum");
+        info!(tx_hash = ?tx.tx_hash(),quorum_number = %quorum_number,"Setting minimum stake for quorum");
         Ok(*tx.tx_hash())
     }
 
@@ -649,10 +649,10 @@ mod tests {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
         let private_key = ANVIL_FIRST_PRIVATE_KEY.to_string();
         let avs_writer = build_avs_registry_chain_writer(http_endpoint.clone(), private_key).await;
-        let quorum_numbers = 0;
+        let quorum_number = 0;
         let minimum_stake = U96::from(10);
         let tx_hash = avs_writer
-            .set_minimum_stake_for_quorum(quorum_numbers, minimum_stake)
+            .set_minimum_stake_for_quorum(quorum_number, minimum_stake)
             .await
             .unwrap();
         let tx_status = wait_transaction(&http_endpoint, tx_hash)
@@ -670,14 +670,14 @@ mod tests {
             "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80".to_string();
         let avs_writer = build_avs_registry_chain_writer(http_endpoint.clone(), private_key).await;
 
-        let quorum_numbers = 0;
+        let quorum_number = 0;
         let strategy_params = [StrategyParams {
             strategy: address!("54945180dB7943c0ed0FEE7EdaB2Bd24620256bc"),
             multiplier: U96::from(1),
         }];
 
         let tx_hash = avs_writer
-            .add_strategies(quorum_numbers, strategy_params.to_vec())
+            .add_strategies(quorum_number, strategy_params.to_vec())
             .await
             .unwrap();
         let tx_status = wait_transaction(&http_endpoint, tx_hash)
@@ -695,19 +695,19 @@ mod tests {
             "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80".to_string();
         let avs_writer = build_avs_registry_chain_writer(http_endpoint.clone(), private_key).await;
 
-        let quorum_numbers = 0;
+        let quorum_number = 0;
         let strategy_params = [StrategyParams {
             strategy: address!("54945180dB7943c0ed0FEE7EdaB2Bd24620256bc"),
             multiplier: U96::from(1),
         }];
 
         avs_writer
-            .add_strategies(quorum_numbers, strategy_params.to_vec())
+            .add_strategies(quorum_number, strategy_params.to_vec())
             .await
             .unwrap();
 
         let tx_hash = avs_writer
-            .remove_strategies(quorum_numbers, [U256::from(1)].to_vec())
+            .remove_strategies(quorum_number, [U256::from(1)].to_vec())
             .await
             .unwrap();
         let tx_status = wait_transaction(&http_endpoint, tx_hash)
@@ -725,14 +725,14 @@ mod tests {
             "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80".to_string();
         let avs_writer = build_avs_registry_chain_writer(http_endpoint.clone(), private_key).await;
 
-        let quorum_numbers = 0;
+        let quorum_number = 0;
         let strategy_params = [StrategyParams {
             strategy: address!("54945180dB7943c0ed0FEE7EdaB2Bd24620256bc"),
             multiplier: U96::from(1),
         }];
 
         avs_writer
-            .add_strategies(quorum_numbers, strategy_params.to_vec())
+            .add_strategies(quorum_number, strategy_params.to_vec())
             .await
             .unwrap();
 
@@ -741,7 +741,7 @@ mod tests {
 
         let tx_hash = avs_writer
             .modify_strategy_params(
-                quorum_numbers,
+                quorum_number,
                 strategy_indices.to_vec(),
                 new_multipliers.to_vec(),
             )
