@@ -78,6 +78,39 @@ Those changes in added, changed or breaking changes, should include usage exampl
   ```rust
     let operator_set_quourm = avs_reader.is_operator_set_quorum(0).await.unwrap();
   ```
+* Added missing StakeRegistry writer functions in [#335](https://github.com/Layr-Labs/eigensdk-rs/pull/335).
+  * set_minimum_stake_for_quorum
+    ```rust
+    let tx_hash = avs_writer
+      .set_minimum_stake_for_quorum(quorum_number, minimum_stake)
+      .await
+      .unwrap();
+    ```
+  * add_strategies
+  ```rust
+  let tx_hash = avs_writer
+    .add_strategies(quorum_number, vec_of_strategy_params)
+    .await
+    .unwrap();
+  ```
+  * remove_strategies
+  ```rust
+  let tx_hash = avs_writer
+    .remove_strategies(quorum_number, indices_to_remove)
+    .await
+    .unwrap();
+  ```
+  * modify_strategy_params
+  ```rust
+  let tx_hash = avs_writer
+    .modify_strategy_params(
+    quorum_numbers,
+    vec_of_strategy_indices,
+    vec_of_new_multipliers,
+    )
+    .await
+    .unwrap();
+  ```
 
 ### Changed
 * Changes in the way bindings are generated in [#243](https://github.com/Layr-Labs/eigensdk-rs/pull/243).
