@@ -17,8 +17,6 @@ pub const SECOND_ADDRESS: Address = address!("70997970C51812dc3A010C7d01b50e0d17
 pub const SECOND_PRIVATE_KEY: &str =
     "59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d";
 
-//
-
 /// Local anvil ContractsRegistry which contains a mapping of all locally deployed EL contracts.
 pub const CONTRACTS_REGISTRY: Address = address!("5FbDB2315678afecb367f032d93F642f64180aa3");
 
