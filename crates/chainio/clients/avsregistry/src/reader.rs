@@ -11,7 +11,7 @@ use eigen_crypto_bls::{
 };
 use eigen_logging::logger::SharedLogger;
 use eigen_types::operator::{
-    bitmap_to_quorum_ids, bitmap_to_quorum_ids_from_u192, OperatorPubKeys,
+    bitmap_to_quorum_ids, bitmap_to_quorum_ids_from_u192, OperatorPubKeys, QuorumNum,
 };
 
 use eigen_utils::slashing::middleware::blsapkregistry::BLSApkRegistry;
@@ -637,7 +637,7 @@ impl AvsRegistryChainReader {
     /// [`true`] if the quorum is an operator set quorum, [`false`] otherwise.
     pub async fn is_operator_set_quorum(
         &self,
-        quorum_number: u8,
+        quorum_number: QuorumNum,
     ) -> Result<bool, AvsRegistryError> {
         let provider = get_provider(&self.provider);
 
