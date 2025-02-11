@@ -78,6 +78,31 @@ Those changes in added, changed or breaking changes, should include usage exampl
   // tx_status should be true
   ```
 * Added Rewards2.1 support in [#323](https://github.com/Layr-Labs/eigensdk-rs/pull/323).
+  * set_operator_set_split
+  ```rust
+      let operator_set = OperatorSet {
+            avs: avs_address,
+            id: 0,
+        };
+
+        let new_split = 5;
+        let tx_hash = el_chain_writer
+            .set_operator_set_split(OPERATOR_ADDRESS, operator_set.clone(), new_split)
+            .await
+            .unwrap();
+  ```
+  * get_operator_set_split
+  ```rust
+     let operator_set = OperatorSet {
+            avs: avs_address,
+            id: 0,
+        };
+       let split = el_chain_writer
+            .el_chain_reader
+            .get_operator_set_split(OPERATOR_ADDRESS, operator_set)
+            .await
+            .unwrap(); 
+  ```
 * Added new method `set_operator_set_param` in `avsregistry/writer` in [#327](https://github.com/Layr-Labs/eigensdk-rs/pull/327).
 
   ```rust
