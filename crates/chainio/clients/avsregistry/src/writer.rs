@@ -1046,7 +1046,13 @@ mod tests {
             .remove_strategies(quorum_number, [U256::from(1)].to_vec())
             .await
             .unwrap();
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
+        assert!(tx_status);
     }
+
     #[tokio::test]
     async fn test_eject_operator() {
         let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
