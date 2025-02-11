@@ -46,7 +46,7 @@ Those changes in added, changed or breaking changes, should include usage exampl
       .await
       .unwrap();
   ```
-* Added new method `get_restakeable_strategies` in `avsregistry/reader` in [TODO]().
+* Added new method `get_restakeable_strategies` in `avsregistry/reader` in [#349](https://github.com/Layr-Labs/eigensdk-rs/pull/349).
 
   ```rust
     let strategies = avs_reader.get_restakeable_strategies().await.unwrap();
