@@ -1,17 +1,9 @@
 [workspace]
 changelog_update = false # disable changelog updates
 dependencies_update = true # update dependencies with `cargo update`
+git_release_enable = true # enable GitHub/Gitea releases
 pr_branch_prefix = "release-plz-" # PR branch prefix
 pr_name = "Release {{ package }} v{{ version }}" # template for the PR name
 pr_labels = ["release"] # add the `release` label to the release Pull Request
 release_always = false
-git_release_draft = false
-git_release_enable = false
-git_tag_enable = false
-
-[[package]]
-name = "eigensdk"
-git_tag_name = "v{{ version }}"
-git_tag_enable = true
-git_release_enable = true
 git_release_draft = true
