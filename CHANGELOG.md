@@ -99,7 +99,16 @@ Those changes in added, changed or breaking changes, should include usage exampl
   ```rust
     let operator_set_quourm = avs_reader.is_operator_set_quorum(0).await.unwrap();
   ```
-* Added missing StakeRegistry writer functions in [#335](https://github.com/Layr-Labs/eigensdk-rs/pull/335).
+
+* Added new method `set_account_identifier` in `avsregistry/writer` in [#329](https://github.com/Layr-Labs/eigensdk-rs/pull/329).
+
+  ```rust
+    let tx_hash = avs_writer
+        .set_account_identifier(new_identifier_address)
+        .await
+        .unwrap();
+  ```
+* Added missing StakeRegistry writer functions in [#343](https://github.com/Layr-Labs/eigensdk-rs/pull/343).
   * set_minimum_stake_for_quorum
     ```rust
     let tx_hash = avs_writer
@@ -131,15 +140,6 @@ Those changes in added, changed or breaking changes, should include usage exampl
     )
     .await
     .unwrap();
-  ```
-
-* Added new method `set_account_identifier` in `avsregistry/writer` in [#329](https://github.com/Layr-Labs/eigensdk-rs/pull/329).
-
-  ```rust
-    let tx_hash = avs_writer
-        .set_account_identifier(new_identifier_address)
-        .await
-        .unwrap();
   ```
 
 ### Changed
