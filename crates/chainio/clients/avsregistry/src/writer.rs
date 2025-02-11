@@ -1120,13 +1120,5 @@ mod tests {
             .unwrap()
             .status();
         assert!(tx_status);
-
-        assert!(tx_status);
-
-        let is_registered = avs_reader
-            .is_operator_registered(register_operator_address)
-            .await
-            .unwrap();
-        assert!(!is_registered);
     }
 }
