@@ -894,7 +894,7 @@ mod tests {
             .await
             .unwrap();
         assert_eq!(
-            stake_update_vec.get(0).unwrap().stake,
+            stake_update_vec.first().unwrap().stake,
             "10000000000000000000".parse().unwrap()
         );
 
@@ -910,7 +910,7 @@ mod tests {
             .unwrap();
 
         assert_eq!(
-            stake_update_history_vec.get(0).unwrap().stake,
+            stake_update_history_vec.first().unwrap().stake,
             "10000000000000000000".parse().unwrap()
         );
 
@@ -1003,6 +1003,6 @@ mod tests {
             .get_total_stake_indices_at_block_number(block_number as u32, quorum_nums)
             .await
             .unwrap();
-        assert_eq!(total_stake_indices_at_block_number.get(0), Some(&1u32));
+        assert_eq!(total_stake_indices_at_block_number.first(), Some(&1u32));
     }
 }
