@@ -74,7 +74,7 @@ eigen-client-eth = { version = "0.3.0", path = "crates/chainio/clients/eth" }
 eigen-client-fireblocks = { version = "0.3.0", path = "crates/chainio/clients/fireblocks" }
 eigen-crypto-bls = { version = "0.3.0", path = "crates/crypto/bls/" }
 eigen-crypto-bn254 = { version = "0.3.0", path = "crates/crypto/bn254/" }
-eigen-logging =  version = "0.3.0", path = "crates/logging/" }
+eigen-logging = { version = "0.3.0", path = "crates/logging/" }
 eigen-metrics = { version = "0.3.0", path = "crates/metrics/" }
 eigen-metrics-collectors-economic = { version = "0.3.0", path = "crates/metrics/collectors/economic" }
 eigen-metrics-collectors-rpc-calls = { version = "0.3.0", path = "crates/metrics/collectors/rpc_calls" }
