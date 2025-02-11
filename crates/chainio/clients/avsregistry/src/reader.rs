@@ -1325,5 +1325,10 @@ mod tests {
             .strategy_params_by_index(quorum_number, index)
             .await
             .unwrap();
+        assert_eq!(
+            params.multiplier,
+            "1000000000000000000".parse::<U96>().unwrap()
+        );
+        // assert_eq!(params.multiplier,)
     }
 }
