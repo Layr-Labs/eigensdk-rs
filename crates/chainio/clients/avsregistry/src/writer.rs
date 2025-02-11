@@ -7,7 +7,6 @@ use eigen_crypto_bls::{
     alloy_g1_point_to_g1_affine, convert_to_g1_point, convert_to_g2_point, BlsKeyPair,
 };
 use eigen_logging::logger::SharedLogger;
-use eigen_utils::rewardsv2::core::rewardscoordinator::RewardsCoordinator;
 use eigen_utils::slashing::middleware::registrycoordinator::ISlashingRegistryCoordinatorTypes::OperatorSetParam;
 use eigen_utils::slashing::middleware::registrycoordinator::{
     IBLSApkRegistryTypes::PubkeyRegistrationParams, ISignatureUtils::SignatureWithSaltAndExpiry,
@@ -487,12 +486,17 @@ mod tests {
     use crate::test_utils::build_avs_registry_chain_reader;
     use crate::test_utils::create_operator_set;
     use crate::test_utils::OPERATOR_BLS_KEY;
+    use alloy::consensus::BlockHeader;
     use alloy::primitives::address;
     use alloy::primitives::aliases::U96;
     use alloy::primitives::{Address, Bytes, FixedBytes, U256};
+    use alloy::providers::Provider;
+    use alloy::signers::k256::pkcs8::der::EncodeValue;
     use eigen_common::{get_provider, get_signer};
     use eigen_crypto_bls::BlsKeyPair;
     use eigen_logging::get_test_logger;
+    use eigen_testing_utils::anvil::mine_anvil_blocks;
+    use eigen_testing_utils::anvil::mine_anvil_blocks_operator_set;
     use eigen_testing_utils::anvil::{start_anvil_container, start_m2_anvil_container};
     use eigen_testing_utils::anvil_constants::get_erc20_mock_strategy;
     use eigen_testing_utils::anvil_constants::{
@@ -596,10 +600,11 @@ mod tests {
         let (stream_event, _) = stream.next().await.unwrap().unwrap();
         assert_eq!(stream_event.newLookAheadBlocks, lookahead);
     }
+    use alloy::{eips::eip1898::BlockNumberOrTag::Number, rpc::types::BlockTransactionsKind};
 
     #[tokio::test]
     async fn test_create_operator_directed_avs_rewards_submission() {
-        let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
+        let (container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
         let private_key = FIRST_PRIVATE_KEY.to_string();
         let avs_writer =
             build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
@@ -622,11 +627,16 @@ mod tests {
             multiplier: U96::from(1),
         };
 
+        // GENESIS_REWARDS_TIMESTAMP = 864000
+        // MAX_REWARDS_DURATION = 86400
+        // MAX_RETROACTIVE_LENGTH = 259200
+        // CALCULATION_INTERVAL_SECONDS = 86400
+
         let operator_rewards_submission = OperatorDirectedRewardsSubmission {
             token: token_address,
             description: "test".to_string(),
-            duration: 10800,
-            startTimestamp: 1,
+            duration: 86400,
+            startTimestamp: 1739145600,
             operatorRewards: vec![operator_rewards],
             strategiesAndMultipliers: vec![strategies],
         };
