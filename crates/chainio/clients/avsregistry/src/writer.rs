@@ -895,7 +895,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_set_minimum_stake_for_quorum() {
-        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
         let private_key = FIRST_PRIVATE_KEY.to_string();
         let avs_writer = build_avs_registry_chain_writer(http_endpoint.clone(), private_key).await;
         let quorum_number = 0;
@@ -913,7 +913,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_set_add_strategies() {
-        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
 
         let private_key = FIRST_PRIVATE_KEY.to_string();
 
@@ -938,7 +938,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_remove_strategies() {
-        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
 
         let private_key = FIRST_PRIVATE_KEY.to_string();
 
@@ -968,7 +968,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_modify_strategy_params() {
-        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
 
         let private_key = FIRST_PRIVATE_KEY.to_string();
 
