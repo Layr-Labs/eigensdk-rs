@@ -622,6 +622,7 @@ mod tests {
         };
 
         // These values are set to align with the contract's requirements for the `OperatorDirectedRewardsSubmission`.
+        // https://github.com/Layr-Labs/eigenlayer-contracts/blob/ecaff6304de6cb0f43b42024ad55d0e8a0430790/src/contracts/core/RewardsCoordinator.sol#L414
         // https://github.com/Layr-Labs/eigenlayer-contracts/blob/ecaff6304de6cb0f43b42024ad55d0e8a0430790/src/contracts/core/RewardsCoordinator.sol#L482
         let duration = 86400;
         let start_timestamp = 1739145600;
