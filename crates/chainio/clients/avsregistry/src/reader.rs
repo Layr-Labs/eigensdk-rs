@@ -319,7 +319,11 @@ impl AvsRegistryChainReader {
         Ok(s)
     }
 
-    /// Update the socket of the sender - getRestakeableStrategies
+    /// Get a list of strategies that the AVS supports for restaking
+    ///
+    /// # Returns
+    ///
+    /// A vector of addresses representing the strategies that the AVS supports for restaking
     pub async fn get_restakeable_strategies(&self) -> Result<Vec<Address>, AvsRegistryError> {
         let provider = get_provider(&self.provider);
 

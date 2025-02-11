@@ -46,6 +46,11 @@ Those changes in added, changed or breaking changes, should include usage exampl
       .await
       .unwrap();
   ```
+* Added new method `get_restakeable_strategies` in `avsregistry/reader` in [TODO]().
+
+  ```rust
+    let strategies = avs_reader.get_restakeable_strategies().await.unwrap();
+  ```
 
 * Added update_socket function for avs registry writer in [#268](https://github.com/Layr-Labs/eigensdk-rs/pull/268)
   An example of use is the following:
