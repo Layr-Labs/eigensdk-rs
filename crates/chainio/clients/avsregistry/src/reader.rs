@@ -670,7 +670,7 @@ impl AvsRegistryChainReader {
     /// * [`U96`] - The total weight.
     pub async fn weight_of_operator_for_quorum(
         &self,
-        quorum_number: u8,
+        quorum_number: QuorumNum,
         operator_address: Address,
     ) -> Result<U96, AvsRegistryError> {
         let provider = get_provider(&self.provider);
@@ -696,7 +696,7 @@ impl AvsRegistryChainReader {
     /// * [`U256`] - The length of the strategy parameters array.
     pub async fn strategy_params_length(
         &self,
-        quorum_number: u8,
+        quorum_number: QuorumNum,
     ) -> Result<U256, AvsRegistryError> {
         let provider = get_provider(&self.provider);
 
@@ -722,7 +722,7 @@ impl AvsRegistryChainReader {
     /// * [`StrategyParams`] - The strategy parameters at the specified index.
     pub async fn strategy_params_by_index(
         &self,
-        quorum_number: u8,
+        quorum_number: QuorumNum,
         index: U256,
     ) -> Result<StrategyParams, AvsRegistryError> {
         let provider = get_provider(&self.provider);
@@ -750,7 +750,7 @@ impl AvsRegistryChainReader {
     pub async fn get_stake_history_length(
         &self,
         operator_id: B256,
-        quorum_number: u8,
+        quorum_number: QuorumNum,
     ) -> Result<U256, AvsRegistryError> {
         let provider = get_provider(&self.provider);
 
@@ -778,7 +778,7 @@ impl AvsRegistryChainReader {
     pub async fn get_stake_history(
         &self,
         operator_id: B256,
-        quorum_number: u8,
+        quorum_number: QuorumNum,
     ) -> Result<Vec<StakeUpdate>, AvsRegistryError> {
         let provider = get_provider(&self.provider);
 
@@ -806,7 +806,7 @@ impl AvsRegistryChainReader {
     pub async fn get_latest_stake_update(
         &self,
         operator_id: B256,
-        quorum_number: u8,
+        quorum_number: QuorumNum,
     ) -> Result<StakeUpdate, AvsRegistryError> {
         let provider = get_provider(&self.provider);
 
@@ -834,7 +834,7 @@ impl AvsRegistryChainReader {
     /// * [`StakeUpdate`] - The stake update at the specified index.
     pub async fn get_stake_update_at_index(
         &self,
-        quorum_number: u8,
+        quorum_number: QuorumNum,
         operator_id: B256,
         index: U256,
     ) -> Result<StakeUpdate, AvsRegistryError> {
@@ -865,7 +865,7 @@ impl AvsRegistryChainReader {
     pub async fn get_stake_at_block_number(
         &self,
         operator_id: B256,
-        quorum_number: u8,
+        quorum_number: QuorumNum,
         block_number: u32,
     ) -> Result<U96, AvsRegistryError> {
         let provider = get_provider(&self.provider);
@@ -895,7 +895,7 @@ impl AvsRegistryChainReader {
     pub async fn get_stake_update_index_at_block_number(
         &self,
         operator_id: B256,
-        quorum_number: u8,
+        quorum_number: QuorumNum,
         block_number: u32,
     ) -> Result<u32, AvsRegistryError> {
         let provider = get_provider(&self.provider);
@@ -925,7 +925,7 @@ impl AvsRegistryChainReader {
     /// * [`U96`] - The stake weight at the specified block number and index.
     pub async fn get_stake_at_block_number_and_index(
         &self,
-        quorum_number: u8,
+        quorum_number: QuorumNum,
         block_number: u32,
         operator_id: B256,
         index: U256,
@@ -954,7 +954,7 @@ impl AvsRegistryChainReader {
     /// * [`U256`] - The total stake history length.
     pub async fn get_total_stake_history_length(
         &self,
-        quorum_number: u8,
+        quorum_number: QuorumNum,
     ) -> Result<U256, AvsRegistryError> {
         let provider = get_provider(&self.provider);
 
@@ -980,7 +980,7 @@ impl AvsRegistryChainReader {
     /// * [`U96`] - The current total stake weight.
     pub async fn get_current_total_stake(
         &self,
-        quorum_number: u8,
+        quorum_number: QuorumNum,
     ) -> Result<U96, AvsRegistryError> {
         let provider = get_provider(&self.provider);
 
@@ -1007,7 +1007,7 @@ impl AvsRegistryChainReader {
     /// * [`StakeUpdate`] - The stake update at the specified index.
     pub async fn get_total_stake_update_at_index(
         &self,
-        quorum_number: u8,
+        quorum_number: QuorumNum,
         index: U256,
     ) -> Result<StakeUpdate, AvsRegistryError> {
         let provider = get_provider(&self.provider);
@@ -1036,7 +1036,7 @@ impl AvsRegistryChainReader {
     /// * [`U96`] - The total stake at the specified block number and index.
     pub async fn get_total_stake_at_block_number_from_index(
         &self,
-        quorum_number: u8,
+        quorum_number: QuorumNum,
         block_number: u32,
         index: U256,
     ) -> Result<U96, AvsRegistryError> {
@@ -1085,9 +1085,7 @@ impl AvsRegistryChainReader {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::test_utils::{
-        build_avs_registry_chain_writer, test_deregister_operator, test_register_operator,
-    };
+    use crate::test_utils::{build_avs_registry_chain_writer, test_register_operator};
     use eigen_logging::get_test_logger;
     use eigen_testing_utils::{
         anvil::{start_anvil_container, start_m2_anvil_container},

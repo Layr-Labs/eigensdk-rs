@@ -470,17 +470,10 @@ mod tests {
     use crate::test_utils::{
         build_avs_registry_chain_writer, test_deregister_operator, test_register_operator,
     };
-    use alloy::primitives::aliases::U96;
-    use alloy::primitives::{Address, Bytes, FixedBytes, U256};
-    use alloy::providers::Provider;
+    use alloy::primitives::{Address, Bytes};
     use eigen_common::{get_provider, get_signer};
-    use eigen_crypto_bls::BlsKeyPair;
-    use eigen_logging::get_test_logger;
     use eigen_testing_utils::anvil::{start_anvil_container, start_m2_anvil_container};
-    use eigen_testing_utils::anvil_constants::{
-        get_operator_state_retriever_address, get_registry_coordinator_address,
-        get_service_manager_address,
-    };
+    use eigen_testing_utils::anvil_constants::get_service_manager_address;
     use eigen_testing_utils::anvil_constants::{FIRST_ADDRESS, FIRST_PRIVATE_KEY, SECOND_ADDRESS};
     use eigen_testing_utils::transaction::wait_transaction;
     use eigen_utils::rewardsv2::middleware::servicemanagerbase::ServiceManagerBase;
