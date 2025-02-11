@@ -8,6 +8,7 @@ use eigen_crypto_bls::{
 };
 use eigen_logging::logger::SharedLogger;
 use eigen_utils::slashing::middleware::registrycoordinator::ISlashingRegistryCoordinatorTypes::OperatorSetParam;
+use eigen_utils::slashing::middleware::registrycoordinator::IStakeRegistryTypes::StrategyParams;
 use eigen_utils::slashing::middleware::registrycoordinator::{
     IBLSApkRegistryTypes::PubkeyRegistrationParams, ISignatureUtils::SignatureWithSaltAndExpiry,
     RegistryCoordinator,
@@ -460,24 +461,35 @@ impl AvsRegistryChainWriter {
     }
 
     /// Create a new rewards submission
+    ///
     /// This function is used to create a new rewards submission for the AVS
-    /// 
+    ///
     /// # Arguments
-    /// 
+    ///
     /// * `rewardsSubmissions` - The rewards submissions to create
-    /// 
+    ///
     /// # Returns
-    /// 
+    ///
     /// * `TxHash` - The transaction hash of the create rewards submission transaction
-    pub async createAVSRewardsSubmission(
+    pub async fn create_avs_rewards_submission(
         &self,
-            rewardsSubmissions: alloy::sol_types::private::Vec<
-                <IRewardsCoordinator::RewardsSubmission as alloy::sol_types::SolType>::RustType,
-            >
-    ) -> {
-        todo!()
-    }
+        rewards_submissions: Vec<StrategyParams>,
+    ) -> Result<TxHash, AvsRegistryError> {
+        info!("setting a new Rewards Submission list with the AVS's registry coordinator");
+        let provider = get_signer(&self.signer.clone(), &self.provider);
 
+        let contract_service_manager_base =
+            ServiceManagerBase::new(self.service_manager_addr, provider);
+        let contract_call =
+            contract_service_manager_base.createAVSRewardsSubmission(rewards_submissions);
+
+        contract_call
+            .send()
+            .await
+            .map_err(AvsRegistryError::AlloyContractError)
+            .inspect(|tx| info!(tx_hash = ?tx, "successfully set a new rewards submission list with the AVS's registry coordinator"))
+            .map(|tx| *tx.tx_hash())
+    }
 }
 
 #[cfg(test)]
