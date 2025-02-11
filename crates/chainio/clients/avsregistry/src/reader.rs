@@ -1330,7 +1330,6 @@ mod tests {
             params.multiplier,
             "1000000000000000000".parse::<U96>().unwrap()
         );
-        // assert_eq!(params.multiplier,)
     }
 
     #[tokio::test]
