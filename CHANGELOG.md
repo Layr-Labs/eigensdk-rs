@@ -82,6 +82,34 @@ Those changes in added, changed or breaking changes, should include usage exampl
         .unwrap();
   ```
 
+* Added new method `create_operator_directed_avs_rewards_submission` in `avsregistry/writer` in [#352](https://github.com/Layr-Labs/eigensdk-rs/pull/352).
+
+  ```rust
+    let operator_rewards = OperatorReward {
+        operator: SECOND_ADDRESS,
+        amount: U256::from(100),
+    };
+
+    let strategies = StrategyAndMultiplier {
+        strategy: strategy_address,
+        multiplier: U96::from(1),
+    };
+
+    let operator_rewards_submission = OperatorDirectedRewardsSubmission {
+        token: token_address,
+        description: "test".to_string(),
+        duration,
+        startTimestamp,
+        operatorRewards: vec![operator_rewards.clone()],
+        strategiesAndMultipliers: vec![strategies],
+    };
+
+    let tx_hash = avs_writer
+        .create_operator_directed_avs_rewards_submission(vec![operator_rewards_submission])
+        .await
+        .unwrap();
+  ```
+
 * Added new method `eject_operator` in `avsregistry/writer` in [#328](https://github.com/Layr-Labs/eigensdk-rs/pull/328).
 
   ```rust
