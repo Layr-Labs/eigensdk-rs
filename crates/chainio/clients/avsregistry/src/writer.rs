@@ -7,11 +7,13 @@ use eigen_crypto_bls::{
     alloy_g1_point_to_g1_affine, convert_to_g1_point, convert_to_g2_point, BlsKeyPair,
 };
 use eigen_logging::logger::SharedLogger;
+use eigen_utils::rewardsv2::core::rewardscoordinator::RewardsCoordinator;
 use eigen_utils::slashing::middleware::registrycoordinator::ISlashingRegistryCoordinatorTypes::OperatorSetParam;
 use eigen_utils::slashing::middleware::registrycoordinator::{
     IBLSApkRegistryTypes::PubkeyRegistrationParams, ISignatureUtils::SignatureWithSaltAndExpiry,
     RegistryCoordinator,
 };
+use eigen_utils::slashing::middleware::servicemanagerbase::IRewardsCoordinatorTypes::OperatorDirectedRewardsSubmission;
 use eigen_utils::slashing::middleware::{
     servicemanagerbase::ServiceManagerBase, stakeregistry::StakeRegistry,
 };
@@ -293,6 +295,24 @@ impl AvsRegistryChainWriter {
         Ok(*tx.tx_hash())
     }
 
+    /// createOperatorDirectedAVSRewardsSubmission
+    pub async fn create_operator_directed_avs_rewards_submission(
+        &self,
+        operator_rewards_submission: Vec<OperatorDirectedRewardsSubmission>,
+    ) -> Result<TxHash, AvsRegistryError> {
+        info!("creating operator directed AVS rewards submission with ServiceManagerBase");
+        let provider = get_signer(&self.signer.clone(), &self.provider);
+
+        let service_manager = ServiceManagerBase::new(self.service_manager_addr, &provider);
+
+        service_manager.createOperatorDirectedAVSRewardsSubmission(operator_rewards_submission)
+            .send()
+            .await
+            .map_err(AvsRegistryError::AlloyContractError)
+            .inspect(|tx| info!(tx_hash = ?tx, "successfully created operator directed AVS rewards submission with ServiceManagerBase"))
+            .map(|tx| *tx.tx_hash())
+    }
+
     /// Sets the look-ahead time for checking operator shares for a specific quorum
     ///
     /// # Arguments
@@ -467,20 +487,26 @@ mod tests {
     use crate::test_utils::build_avs_registry_chain_reader;
     use crate::test_utils::create_operator_set;
     use crate::test_utils::OPERATOR_BLS_KEY;
+    use alloy::primitives::address;
+    use alloy::primitives::aliases::U96;
     use alloy::primitives::{Address, Bytes, FixedBytes, U256};
     use eigen_common::{get_provider, get_signer};
     use eigen_crypto_bls::BlsKeyPair;
     use eigen_logging::get_test_logger;
     use eigen_testing_utils::anvil::{start_anvil_container, start_m2_anvil_container};
+    use eigen_testing_utils::anvil_constants::get_erc20_mock_strategy;
     use eigen_testing_utils::anvil_constants::{
         get_operator_state_retriever_address, get_registry_coordinator_address,
         get_service_manager_address,
     };
     use eigen_testing_utils::anvil_constants::{FIRST_ADDRESS, FIRST_PRIVATE_KEY, SECOND_ADDRESS};
     use eigen_testing_utils::transaction::wait_transaction;
-    use eigen_utils::rewardsv2::middleware::servicemanagerbase::ServiceManagerBase;
     use eigen_utils::slashing::middleware::registrycoordinator::ISlashingRegistryCoordinatorTypes::OperatorSetParam;
     use eigen_utils::slashing::middleware::registrycoordinator::RegistryCoordinator;
+    use eigen_utils::slashing::middleware::servicemanagerbase::IRewardsCoordinatorTypes::OperatorDirectedRewardsSubmission;
+    use eigen_utils::slashing::middleware::servicemanagerbase::IRewardsCoordinatorTypes::OperatorReward;
+    use eigen_utils::slashing::middleware::servicemanagerbase::IRewardsCoordinatorTypes::StrategyAndMultiplier;
+    use eigen_utils::slashing::middleware::servicemanagerbase::ServiceManagerBase;
     use eigen_utils::slashing::middleware::stakeregistry::StakeRegistry;
     use futures_util::StreamExt;
     use std::str::FromStr;
@@ -569,6 +595,52 @@ mod tests {
         let mut stream = poller.into_stream();
         let (stream_event, _) = stream.next().await.unwrap().unwrap();
         assert_eq!(stream_event.newLookAheadBlocks, lookahead);
+    }
+
+    #[tokio::test]
+    async fn test_create_operator_directed_avs_rewards_submission() {
+        let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
+        let private_key = FIRST_PRIVATE_KEY.to_string();
+        let avs_writer =
+            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
+
+        let strategy_address = get_erc20_mock_strategy(http_endpoint.clone()).await;
+
+        let (_, token_address) = avs_writer
+            .el_reader
+            .get_strategy_and_underlying_token(strategy_address)
+            .await
+            .unwrap();
+
+        let operator_rewards = OperatorReward {
+            operator: address!("23618e81E3f5cdF7f54C3d65f7FBc0aBf5B21E8f"),
+            amount: U256::from(100),
+        };
+
+        let strategies = StrategyAndMultiplier {
+            strategy: strategy_address,
+            multiplier: U96::from(1),
+        };
+
+        let operator_rewards_submission = OperatorDirectedRewardsSubmission {
+            token: token_address,
+            description: "test".to_string(),
+            duration: 10800,
+            startTimestamp: 1,
+            operatorRewards: vec![operator_rewards],
+            strategiesAndMultipliers: vec![strategies],
+        };
+
+        let tx_hash = avs_writer
+            .create_operator_directed_avs_rewards_submission(vec![operator_rewards_submission])
+            .await
+            .unwrap();
+
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
+        assert!(tx_status);
     }
 
     #[tokio::test]
