@@ -294,7 +294,30 @@ impl AvsRegistryChainWriter {
         Ok(*tx.tx_hash())
     }
 
-    /// createOperatorDirectedAVSRewardsSubmission
+    /**
+     * @notice Creates a new operator-directed rewards submission, to be split amongst the operators and
+     * set of stakers delegated to operators who are registered to this `avs`.
+     * @param operatorDirectedRewardsSubmissions The operator-directed rewards submissions being created.
+     * @dev Only callable by the permissioned rewardsInitiator address
+     * @dev The duration of the `rewardsSubmission` cannot exceed `MAX_REWARDS_DURATION`
+     * @dev The tokens are sent to the `RewardsCoordinator` contract
+     * @dev This contract needs a token approval of sum of all `operatorRewards` in the `operatorDirectedRewardsSubmissions`, before calling this function.
+     * @dev Strategies must be in ascending order of addresses to check for duplicates
+     * @dev Operators must be in ascending order of addresses to check for duplicates.
+     * @dev This function will revert if the `operatorDirectedRewardsSubmissions` is malformed.
+     * @dev This function may fail to execute with a large number of submissions due to gas limits. Use a
+     * smaller array of submissions if necessary.
+     */
+
+    /// Create a new operator directed AVS rewards submission
+    ///
+    /// # Arguments
+    ///
+    /// * `operator_rewards_submission` - The operator directed rewards submission to create
+    ///
+    /// # Returns
+    ///
+    /// * `TxHash` - The transaction hash of the create operator directed AVS rewards submission transaction
     pub async fn create_operator_directed_avs_rewards_submission(
         &self,
         operator_rewards_submission: Vec<OperatorDirectedRewardsSubmission>,
