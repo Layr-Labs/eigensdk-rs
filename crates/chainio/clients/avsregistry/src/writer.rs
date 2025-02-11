@@ -272,7 +272,7 @@ impl AvsRegistryChainWriter {
     ///
     /// # Returns
     ///
-    /// * `TxHash` - The transaction hash of the deregister operator transaction.
+    /// * `TxHash` - hash of the sent transaction.
     pub async fn deregister_operator(
         &self,
         quorum_numbers: Bytes,
@@ -349,8 +349,6 @@ impl AvsRegistryChainWriter {
             .map(|tx| *tx.tx_hash())
     }
 
-    /// Update socket
-    ///
     /// This function is used to update the socket of the sender (if it is a registered operator).
     ///
     /// # Arguments
@@ -373,8 +371,62 @@ impl AvsRegistryChainWriter {
             .send()
             .await
             .map_err(AvsRegistryError::AlloyContractError)?;
-        info!(tx_hash = ?tx,"successfully updated the socket with the AVS's registry coordinator" );
+        info!(tx_hash = ?tx, "successfully updated the socket with the AVS's registry coordinator");
         Ok(*tx.tx_hash())
+    }
+
+    /// Force a deregistration of an operator from one or more quorums
+    ///
+    /// # Arguments
+    ///
+    /// * `operator_address` - The address of the operator to be ejected
+    /// * `quorum_numbers` - The quorum numbers to eject the operator from
+    ///
+    /// # Returns
+    ///
+    /// * `TxHash` - The transaction hash of the eject operator transaction
+    pub async fn eject_operator(
+        &self,
+        operator_address: Address,
+        quorum_numbers: Bytes,
+    ) -> Result<TxHash, AvsRegistryError> {
+        info!("ejecting operator from quorum with the AVS's registry coordinator");
+        let provider = get_signer(&self.signer.clone(), &self.provider);
+
+        let contract_registry_coordinator =
+            RegistryCoordinator::new(self.registry_coordinator_addr, provider);
+
+        contract_registry_coordinator.ejectOperator(operator_address, quorum_numbers)
+            .send()
+            .await
+            .map_err(AvsRegistryError::AlloyContractError)
+            .inspect(|tx| info!(tx_hash = ?tx, "successfully ejected operator from quorum with the AVS's registry coordinator"))
+            .map(|tx| *tx.tx_hash())
+    }
+
+    /// This function is used to update the account identifier of the AVS's RegistryCoordinator.
+    ///
+    /// # Arguments
+    ///
+    /// * `new_account_identifier` - address of the new account identifier.
+    ///
+    /// # Returns
+    ///
+    /// * `TxHash` - hash of the sent transaction.
+    pub async fn set_account_identifier(
+        &self,
+        new_account_identifier: Address,
+    ) -> Result<TxHash, AvsRegistryError> {
+        info!("updating the account identifier of the AVS's registry coordinator");
+        let provider = get_signer(&self.signer.clone(), &self.provider);
+
+        RegistryCoordinator::new(self.registry_coordinator_addr, provider)
+            .setAccountIdentifier(new_account_identifier)
+            .send()
+            .await
+            .map_err(AvsRegistryError::AlloyContractError)
+            .inspect(|tx| info!(tx_hash = ?tx, "successfully updated the account identifier of the AVS's registry coordinator"))
+            .map(|tx| *tx.tx_hash())
     }
 
     /// Update the configuration of an existing quorum.
@@ -403,7 +455,7 @@ impl AvsRegistryChainWriter {
             .send()
             .await
             .map_err(AvsRegistryError::AlloyContractError)?;
-        info!(tx_hash = ?tx,"successfully set operator set param with the AVS's registry coordinator" );
+        info!(tx_hash = ?tx, "successfully set operator set param with the AVS's registry coordinator");
         Ok(*tx.tx_hash())
     }
 
@@ -436,9 +488,11 @@ impl AvsRegistryChainWriter {
 mod tests {
 
     use super::AvsRegistryChainWriter;
+    use crate::test_utils::build_avs_registry_chain_reader;
     use crate::test_utils::create_operator_set;
+    use crate::test_utils::OPERATOR_BLS_KEY;
     use alloy::primitives::{Address, Bytes, FixedBytes, U256};
-    use eigen_common::get_signer;
+    use eigen_common::{get_provider, get_signer};
     use eigen_crypto_bls::BlsKeyPair;
     use eigen_logging::get_test_logger;
     use eigen_testing_utils::anvil::{start_anvil_container, start_m2_anvil_container};
@@ -446,7 +500,7 @@ mod tests {
         get_operator_state_retriever_address, get_registry_coordinator_address,
         get_service_manager_address,
     };
-    use eigen_testing_utils::anvil_constants::{FIRST_PRIVATE_KEY, SECOND_ADDRESS};
+    use eigen_testing_utils::anvil_constants::{FIRST_ADDRESS, FIRST_PRIVATE_KEY, SECOND_ADDRESS};
     use eigen_testing_utils::transaction::wait_transaction;
     use eigen_utils::rewardsv2::middleware::servicemanagerbase::ServiceManagerBase;
     use eigen_utils::slashing::middleware::registrycoordinator::ISlashingRegistryCoordinatorTypes::OperatorSetParam;
@@ -687,6 +741,39 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn test_set_account_identifier() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let avs_writer =
+            build_avs_registry_chain_writer(http_endpoint.clone(), FIRST_PRIVATE_KEY.to_string())
+                .await;
+
+        let service_manager_address = get_service_manager_address(http_endpoint.clone()).await;
+
+        let provider = get_provider(&http_endpoint);
+        let regcoord = RegistryCoordinator::new(avs_writer.registry_coordinator_addr, &provider);
+
+        let old_account_identifier = regcoord.accountIdentifier().call().await.unwrap()._0;
+        assert_eq!(old_account_identifier, service_manager_address);
+
+        let new_account_identifier = FIRST_ADDRESS;
+
+        let tx_hash = avs_writer
+            .set_account_identifier(new_account_identifier)
+            .await
+            .unwrap();
+
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
+
+        assert!(tx_status);
+
+        let current_account_identifier = regcoord.accountIdentifier().call().await.unwrap()._0;
+        assert_eq!(current_account_identifier, new_account_identifier);
+    }
+
+    #[tokio::test]
     async fn test_set_operator_set_param() {
         let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
         let bls_key =
@@ -767,8 +854,52 @@ mod tests {
             .status();
 
         assert!(tx_status);
-
         let cooldown = registry_contract.ejectionCooldown().call().await.unwrap();
         assert_eq!(cooldown._0, new_cooldown);
+    }
+
+    #[tokio::test]
+    async fn test_eject_operator() {
+        let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
+        let bls_key = OPERATOR_BLS_KEY.to_string();
+        let register_operator_address = FIRST_ADDRESS;
+        let private_key = FIRST_PRIVATE_KEY.to_string();
+        let quorum_nums = Bytes::from([0]);
+
+        let avs_writer =
+            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
+
+        test_register_operator(
+            &avs_writer,
+            bls_key,
+            quorum_nums.clone(),
+            http_endpoint.clone(),
+        )
+        .await;
+
+        let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
+        let is_registered = avs_reader
+            .is_operator_registered(register_operator_address)
+            .await
+            .unwrap();
+        assert!(is_registered);
+
+        let tx_hash = avs_writer
+            .eject_operator(register_operator_address, quorum_nums)
+            .await
+            .unwrap();
+
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
+
+        assert!(tx_status);
+
+        let is_registered = avs_reader
+            .is_operator_registered(register_operator_address)
+            .await
+            .unwrap();
+        assert!(!is_registered);
     }
 }
