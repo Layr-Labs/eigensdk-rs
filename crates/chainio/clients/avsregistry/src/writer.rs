@@ -467,7 +467,9 @@ mod tests {
     use crate::test_utils::build_avs_registry_chain_reader;
     use crate::test_utils::create_operator_set;
     use crate::test_utils::OPERATOR_BLS_KEY;
+    use alloy::primitives::aliases::U96;
     use alloy::primitives::{Address, Bytes, FixedBytes, U256};
+    use alloy::providers::Provider;
     use eigen_common::{get_provider, get_signer};
     use eigen_crypto_bls::BlsKeyPair;
     use eigen_logging::get_test_logger;
@@ -848,5 +850,159 @@ mod tests {
             .await
             .unwrap();
         assert!(!is_registered);
+    }
+
+    #[tokio::test]
+    async fn test_avs_reader_methods() {
+        let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
+        let bls_key =
+            "1371012690269088913462269866874713266643928125698382731338806296762673180359922"
+                .to_string();
+        let private_key =
+            "8b3a350cf5c34c9194ca85829a2df0ec3153be0318b5e2d3348e872092edffba".to_string();
+        let avs_writer =
+            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
+        let operator_addr = Address::from_str("9965507D1a55bcC2695C58ba16FB37d819B0A4dc").unwrap();
+        let quorum_nums = Bytes::from([0]);
+
+        test_register_operator(
+            &avs_writer,
+            bls_key,
+            quorum_nums.clone(),
+            http_endpoint.clone(),
+        )
+        .await;
+        let quorum_number = 0;
+        let index = U256::from(0);
+        let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
+        let operator_id = avs_reader.get_operator_id(operator_addr).await.unwrap();
+
+        let stake_update = avs_reader
+            .get_stake_update_at_index(quorum_number, operator_id, index)
+            .await
+            .unwrap();
+        assert_eq!(stake_update.stake, "10000000000000000000".parse().unwrap());
+
+        let stake_update = avs_reader
+            .get_latest_stake_update(operator_id, quorum_number)
+            .await
+            .unwrap();
+        assert_eq!(stake_update.stake, "10000000000000000000".parse().unwrap());
+
+        let stake_update_vec = avs_reader
+            .get_stake_history(operator_id, quorum_number)
+            .await
+            .unwrap();
+        assert_eq!(
+            stake_update_vec[0].stake,
+            "10000000000000000000".parse().unwrap()
+        );
+
+        let len = avs_reader
+            .get_stake_history_length(operator_id, quorum_number)
+            .await
+            .unwrap();
+        assert_eq!(len, "1".parse().unwrap());
+
+        let stake_update_history_vec = avs_reader
+            .get_stake_history(operator_id, quorum_number)
+            .await
+            .unwrap();
+
+        assert_eq!(
+            stake_update_history_vec[0].stake,
+            "10000000000000000000".parse().unwrap()
+        );
+
+        let latest_stake_update = avs_reader
+            .get_latest_stake_update(operator_id, quorum_number)
+            .await
+            .unwrap();
+        assert_eq!(
+            latest_stake_update.stake,
+            "10000000000000000000".parse().unwrap()
+        );
+
+        let stake_update = avs_reader
+            .get_stake_update_at_index(quorum_number, operator_id, index)
+            .await
+            .unwrap();
+        assert_eq!(stake_update.stake, "10000000000000000000".parse().unwrap());
+        let block_number = get_provider(&http_endpoint)
+            .get_block_number()
+            .await
+            .unwrap();
+        let stake_udpate_at_index = avs_reader
+            .get_stake_update_at_block_number(operator_id, quorum_number, (block_number) as u32)
+            .await
+            .unwrap();
+        assert_eq!(
+            "10000000000000000000".parse::<U96>().unwrap(),
+            stake_udpate_at_index
+        );
+
+        let stake_update_at_index_at_block_number = avs_reader
+            .get_stake_update_index_at_block_number(operator_id, quorum_number, block_number as u32)
+            .await
+            .unwrap();
+        assert_eq!(stake_update_at_index_at_block_number, 0);
+
+        let stake_at_index_at_block_number = avs_reader
+            .get_stake_at_block_number_and_index(
+                quorum_number,
+                block_number as u32,
+                operator_id,
+                index,
+            )
+            .await
+            .unwrap();
+        assert_eq!(
+            "10000000000000000000".parse::<U96>().unwrap(),
+            stake_at_index_at_block_number
+        );
+
+        let total_stake_history_length = avs_reader
+            .get_total_stake_history_length(quorum_number)
+            .await
+            .unwrap();
+        assert_eq!(total_stake_history_length, "2".parse().unwrap());
+
+        let current_total_stake = avs_reader
+            .get_current_total_stake(quorum_number)
+            .await
+            .unwrap();
+        dbg!(current_total_stake);
+        assert_eq!(
+            "10000000000000000000".parse::<U96>().unwrap(),
+            current_total_stake
+        );
+
+        let total_stake_update_at_index = avs_reader
+            .get_total_stake_update_at_index(quorum_number, index)
+            .await
+            .unwrap();
+        assert_eq!(
+            "0".parse::<U96>().unwrap(),
+            total_stake_update_at_index.stake
+        );
+
+        let total_stake_at_block_number_from_index = avs_reader
+            .get_total_stake_at_block_number_from_index(
+                quorum_number,
+                (block_number - 1) as u32,
+                index,
+            )
+            .await
+            .unwrap();
+        assert_eq!(
+            "0".parse::<U96>().unwrap(),
+            total_stake_at_block_number_from_index
+        );
+
+        let total_stake_indices_at_block_number = avs_reader
+            .get_total_stake_indices_at_block_number(block_number as u32, quorum_nums)
+            .await
+            .unwrap();
+        assert_eq!(total_stake_indices_at_block_number[0], 1);
     }
 }

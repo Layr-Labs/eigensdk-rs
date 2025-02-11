@@ -1087,8 +1087,10 @@ mod tests {
     use super::*;
     use eigen_logging::get_test_logger;
     use eigen_testing_utils::{
-        anvil::start_anvil_container,
-        anvil_constants::{get_operator_state_retriever_address, get_registry_coordinator_address},
+        anvil::{start_anvil_container, start_m2_anvil_container},
+        anvil_constants::{
+            get_operator_state_retriever_address, get_registry_coordinator_address, FIRST_ADDRESS,
+        },
     };
     use hex::FromHex;
     use std::str::FromStr;
@@ -1286,5 +1288,42 @@ mod tests {
         let operator_set_quourm = avs_reader.is_operator_set_quorum(0).await.unwrap();
 
         assert!(operator_set_quourm);
+    }
+
+    #[tokio::test]
+    async fn test_weight_of_operator_for_quorum() {
+        let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
+        let quorum_number = 0;
+        let operator_address = FIRST_ADDRESS;
+        let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
+        let weight = avs_reader
+            .weight_of_operator_for_quorum(quorum_number, operator_address)
+            .await
+            .unwrap();
+        assert_eq!(weight, "10000000000000000000".parse().unwrap());
+    }
+
+    #[tokio::test]
+    async fn test_strategy_params_length() {
+        let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
+        let quorum_number = 0;
+        let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
+        let len = avs_reader
+            .strategy_params_length(quorum_number)
+            .await
+            .unwrap();
+        assert_eq!(len, "1".parse().unwrap());
+    }
+
+    #[tokio::test]
+    async fn test_strategy_params_by_index() {
+        let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
+        let quorum_number = 0;
+        let index = U256::from(0);
+        let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
+        let params = avs_reader
+            .strategy_params_by_index(quorum_number, index)
+            .await
+            .unwrap();
     }
 }
