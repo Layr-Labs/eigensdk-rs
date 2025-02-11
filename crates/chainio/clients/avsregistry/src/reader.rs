@@ -17,6 +17,7 @@ use eigen_types::operator::{
 use eigen_utils::slashing::middleware::blsapkregistry::BLSApkRegistry;
 use eigen_utils::slashing::middleware::operatorstateretriever::OperatorStateRetriever;
 use eigen_utils::slashing::middleware::registrycoordinator::RegistryCoordinator;
+use eigen_utils::slashing::middleware::servicemanagerbase::ServiceManagerBase;
 use eigen_utils::slashing::middleware::stakeregistry::StakeRegistry;
 use num_bigint::BigInt;
 use std::fmt::Debug;
@@ -316,6 +317,28 @@ impl AvsRegistryChainReader {
         let quorums = bitmap_to_quorum_ids(quorum_bitmaps);
         let s = (quorums, operator_stakes);
         Ok(s)
+    }
+
+    /// Update the socket of the sender - getRestakeableStrategies
+    pub async fn get_restakeable_strategies(&self) -> Result<Vec<Address>, AvsRegistryError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_registry_coordinator =
+            RegistryCoordinator::new(self.registry_coordinator_addr, &provider);
+
+        let service_manager = contract_registry_coordinator
+            .serviceManager()
+            .call()
+            .await?
+            ._0;
+
+        let strategies = ServiceManagerBase::new(service_manager, &provider)
+            .getRestakeableStrategies()
+            .call()
+            .await?
+            ._0;
+
+        Ok(strategies)
     }
 
     /// Get operators stake in quorums of operator at current block
@@ -657,10 +680,14 @@ impl AvsRegistryChainReader {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::test_utils::create_operator_set;
     use eigen_logging::get_test_logger;
     use eigen_testing_utils::{
-        anvil::start_anvil_container,
-        anvil_constants::{get_operator_state_retriever_address, get_registry_coordinator_address},
+        anvil::{start_anvil_container, start_m2_anvil_container},
+        anvil_constants::{
+            get_operator_state_retriever_address, get_registry_coordinator_address,
+            get_service_manager_address,
+        },
     };
     use hex::FromHex;
     use std::str::FromStr;
@@ -811,6 +838,18 @@ mod tests {
             .query_existing_registered_operator_sockets(0, 1000)
             .await
             .unwrap();
+    }
+
+    #[tokio::test]
+    async fn test_get_restakeable_strategies() {
+        let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
+        let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
+
+        let strategies = avs_reader.get_restakeable_strategies().await.unwrap();
+        assert!(strategies.is_empty());
+
+        let strategies = avs_reader.get_restakeable_strategies().await.unwrap();
+        assert!(strategies.len() == 1);
     }
 
     #[tokio::test]
