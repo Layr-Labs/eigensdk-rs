@@ -486,17 +486,12 @@ mod tests {
     use crate::test_utils::build_avs_registry_chain_reader;
     use crate::test_utils::create_operator_set;
     use crate::test_utils::OPERATOR_BLS_KEY;
-    use alloy::consensus::BlockHeader;
-    use alloy::primitives::address;
     use alloy::primitives::aliases::U96;
     use alloy::primitives::{Address, Bytes, FixedBytes, U256};
-    use alloy::providers::Provider;
-    use alloy::signers::k256::pkcs8::der::EncodeValue;
-    use eigen_common::{get_provider, get_signer};
+    use eigen_common::get_provider;
+    use eigen_common::get_signer;
     use eigen_crypto_bls::BlsKeyPair;
     use eigen_logging::get_test_logger;
-    use eigen_testing_utils::anvil::mine_anvil_blocks;
-    use eigen_testing_utils::anvil::mine_anvil_blocks_operator_set;
     use eigen_testing_utils::anvil::{start_anvil_container, start_m2_anvil_container};
     use eigen_testing_utils::anvil_constants::get_erc20_mock_strategy;
     use eigen_testing_utils::anvil_constants::{
@@ -600,11 +595,10 @@ mod tests {
         let (stream_event, _) = stream.next().await.unwrap().unwrap();
         assert_eq!(stream_event.newLookAheadBlocks, lookahead);
     }
-    use alloy::{eips::eip1898::BlockNumberOrTag::Number, rpc::types::BlockTransactionsKind};
 
     #[tokio::test]
     async fn test_create_operator_directed_avs_rewards_submission() {
-        let (container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
+        let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
         let private_key = FIRST_PRIVATE_KEY.to_string();
         let avs_writer =
             build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
@@ -618,7 +612,7 @@ mod tests {
             .unwrap();
 
         let operator_rewards = OperatorReward {
-            operator: address!("23618e81E3f5cdF7f54C3d65f7FBc0aBf5B21E8f"),
+            operator: SECOND_ADDRESS,
             amount: U256::from(100),
         };
 
@@ -627,17 +621,17 @@ mod tests {
             multiplier: U96::from(1),
         };
 
-        // GENESIS_REWARDS_TIMESTAMP = 864000
-        // MAX_REWARDS_DURATION = 86400
-        // MAX_RETROACTIVE_LENGTH = 259200
-        // CALCULATION_INTERVAL_SECONDS = 86400
+        // These values are set to align with the contract's requirements for the `OperatorDirectedRewardsSubmission`.
+        // https://github.com/Layr-Labs/eigenlayer-contracts/blob/ecaff6304de6cb0f43b42024ad55d0e8a0430790/src/contracts/core/RewardsCoordinator.sol#L482
+        let duration = 86400;
+        let start_timestamp = 1739145600;
 
         let operator_rewards_submission = OperatorDirectedRewardsSubmission {
             token: token_address,
             description: "test".to_string(),
-            duration: 86400,
-            startTimestamp: 1739145600,
-            operatorRewards: vec![operator_rewards],
+            duration,
+            startTimestamp: start_timestamp,
+            operatorRewards: vec![operator_rewards.clone()],
             strategiesAndMultipliers: vec![strategies],
         };
 
@@ -651,6 +645,14 @@ mod tests {
             .unwrap()
             .status();
         assert!(tx_status);
+
+        let is_registered = avs_writer
+            .el_reader
+            .is_operator_registered(operator_rewards.operator)
+            .await
+            .unwrap();
+
+        assert!(is_registered,);
     }
 
     #[tokio::test]
