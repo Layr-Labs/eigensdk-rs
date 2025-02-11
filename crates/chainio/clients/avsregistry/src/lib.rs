@@ -41,7 +41,7 @@ pub(crate) mod test_utils {
         sdk::mockavsservicemanager::MockAvsServiceManager,
     };
 
-    use crate::reader::AvsRegistryChainReader;
+    use crate::{reader::AvsRegistryChainReader, writer::AvsRegistryChainWriter};
 
     pub(crate) const OPERATOR_BLS_KEY: &str =
         "1371012690269088913462269866874713266643928125698382731338806296762673180359922";
