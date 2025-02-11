@@ -932,13 +932,13 @@ mod tests {
             .get_block_number()
             .await
             .unwrap();
-        let stake_udpate_at_index = avs_reader
+        let stake_update_at_index = avs_reader
             .get_stake_at_block_number(operator_id, quorum_number, (block_number) as u32)
             .await
             .unwrap();
         assert_eq!(
             "10000000000000000000".parse::<U96>().unwrap(),
-            stake_udpate_at_index
+            stake_update_at_index
         );
 
         let stake_update_at_index_at_block_number = avs_reader

@@ -160,7 +160,7 @@ Those changes in added, changed or breaking changes, should include usage exampl
   ```
   * get_stake_update_at_block_number
   ```rust
-    let stake_udpate_at_index = avs_reader
+    let stake_update_at_index = avs_reader
             .get_stake_update_at_block_number(operator_id, quorum_number, (block_number) as u32)
             .await
             .unwrap();
