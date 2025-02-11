@@ -12,23 +12,10 @@ Each version will have a separate `Breaking Changes` section as well. To describ
 Those changes in added, changed or breaking changes, should include usage examples to add clarity to the sdk user.
 
 ## [Unreleased]
-
-### Security 🔒
-
-### Added 🎉
-
-### Breaking Changes 🛠
-
-### Deprecated ⚠️
-
-### Removed 🗑
-
-### Documentation 📚
-
-### Other Changes
-
-## [0.3.0] - 2025-02-11
 ### Added
+* Added `eigen_common` dependency to the `eigensdk` crate when "full" feature is enabled in [#249](https://github.com/Layr-Labs/eigensdk-rs/pull/249).
+* Added bindings for `ECDSAStakeRegistry` and `ECDSAServiceManagerBase` in [#269](https://github.com/Layr-Labs/eigensdk-rs/pull/269).
+* Added release-plz in ci in [#275](https://github.com/Layr-Labs/eigensdk-rs/pull/275).
 * Added new method `set_slashable_stake_lookahead` in `avsregistry/writer` in [#278](https://github.com/Layr-Labs/eigensdk-rs/pull/278).
   ```rust
     let quorum_number = 0_u8;
@@ -77,6 +64,8 @@ Those changes in added, changed or breaking changes, should include usage exampl
     .status(); 
   // tx_status should be true
   ```
+
+* Added custom configuration for release-plz in [#281](https://github.com/Layr-Labs/eigensdk-rs/pull/281).
 * Added Rewards2.1 support in [#323](https://github.com/Layr-Labs/eigensdk-rs/pull/323).
 * Added new method `set_operator_set_param` in `avsregistry/writer` in [#327](https://github.com/Layr-Labs/eigensdk-rs/pull/327).
 
@@ -110,7 +99,7 @@ Those changes in added, changed or breaking changes, should include usage exampl
   ```rust
     let operator_set_quourm = avs_reader.is_operator_set_quorum(0).await.unwrap();
   ```
-* Added version explicitly in crates in [#322](https://github.com/Layr-Labs/eigensdk-rs/pull/322). 
+
 * Added new method `set_account_identifier` in `avsregistry/writer` in [#329](https://github.com/Layr-Labs/eigensdk-rs/pull/329).
 
   ```rust
@@ -121,7 +110,12 @@ Those changes in added, changed or breaking changes, should include usage exampl
   ```
 
 ### Changed
-
+* Changes in the way bindings are generated in [#243](https://github.com/Layr-Labs/eigensdk-rs/pull/243).
+  * The `bindings` target now generates the bindings using Docker with Foundry v0.3.0.
+  * The previous `bindings` target was renamed to `bindings_host`, as it runs without Docker. However the `bindings_host` target is for CI use only. To generate the bindings, please use the `bindings` target.
+* Fixed the rewardsv2 bindings version in readme to 0.5.4 in [#246](https://github.com/Layr-Labs/eigensdk-rs/pull/246).
+* Fixed typo in release-plz toml file in [#284](https://github.com/Layr-Labs/eigensdk-rs/pull/284).
+* Fixed incorrect package name in Cargo.toml for examples in [#285](https://github.com/Layr-Labs/eigensdk-rs/pull/285).
 
 ### Breaking changes
 * refactor: update interface on `bls aggregation` in [#254](https://github.com/Layr-Labs/eigensdk-rs/pull/254)
@@ -194,108 +188,10 @@ Those changes in added, changed or breaking changes, should include usage exampl
 * Slashing UAM changes in [#248](https://github.com/Layr-Labs/eigensdk-rs/pull/248).
 
 ### Removed
-
-## [0.2.0] - 2025-02-06
-
-### Security 🔒
-
-* chore(deps): bump openssl from 0.10.68 to 0.10.70 in the cargo group across 1 directory by @dependabot in <https://github.com/Layr-Labs/eigensdk-rs/pull/291>
-
-### Added 🎉
-
-* Added `eigen_common` dependency to the `eigensdk` crate when "full" feature is enabled in [#249](https://github.com/Layr-Labs/eigensdk-rs/pull/249).
-  * Now when enabling the "full" feature:
-
-    ```toml
-    eigensdk = { version = "0.2", features = ["full"] }
-    ```
-
-    You can use access the `eigen-common` crate as a submodule of `eigensdk`:
-
-    ```rust
-    use eigensdk::common::*;
-    ```
-
-* Added bindings for `ECDSAStakeRegistry` and `ECDSAServiceManagerBase` in [#269](https://github.com/Layr-Labs/eigensdk-rs/pull/269).
-  * These bindings can be accessed from:
-
-    ```rust
-    // From `eigensdk`
-    use eigensdk::utils::middleware::ecdsaservicemanagerbase;
-    use eigensdk::utils::middleware::ecdsastakeregistry;
-    // From `eigen_utils`
-    use eigen_utils::middleware::ecdsaservicemanagerbase;
-    use eigen_utils::middleware::ecdsastakeregistry;
-    ```
-
-* Starting on this release, we're using [`release-plz`](https://github.com/release-plz/release-plz) to streamline our release process.
-  * Added release-plz in ci in [#275](https://github.com/Layr-Labs/eigensdk-rs/pull/275).
-  * Added custom configuration for release-plz in [#281](https://github.com/Layr-Labs/eigensdk-rs/pull/281).
-  * Fixed typo in release-plz toml file in [#284](https://github.com/Layr-Labs/eigensdk-rs/pull/284).
-
-### Breaking Changes 🛠
-
-* fix: use rewards coordinator on get operator avs/pi split methods by @maximopalopoli in <https://github.com/Layr-Labs/eigensdk-rs/pull/250>
-
-  * The parameters of `ChainReader::new` changed, and it now receives the address of the rewards coordinator.
-
-    It was previously called this way:
-
-    ```rust
-    let el_chain_reader = ELChainReader::new(
-        logger,
-        SLASHER_ADDRESS,
-        DELEGATION_MANAGER_ADDRESS,
-        AVS_DIRECTORY_ADDRESS,
-        provider_url,
-    );
-    ```
-
-    Now, it's called this way:
-
-    ```rust
-    let el_chain_reader = ELChainReader::new(
-        logger,
-        SLASHER_ADDRESS,
-        DELEGATION_MANAGER_ADDRESS,
-        REWARDS_COORDINATOR,
-        AVS_DIRECTORY_ADDRESS,
-        provider_url,
-    );
-    ```
-
-### Removed 🗑
-
 * Removed homepage from testing-utils crate in [#266](https://github.com/Layr-Labs/eigensdk-rs/pull/266).
 * Removed changelog generation by release-plz in [#281](https://github.com/Layr-Labs/eigensdk-rs/pull/281).
 * Removed examples packages from workspace.dependencies in Cargo.toml in [#287](https://github.com/Layr-Labs/eigensdk-rs/pull/287).
 * Removed release-plz-pr workflow in release-plz in [#292](https://github.com/Layr-Labs/eigensdk-rs/pull/292).
-
-### Documentation 📚
-
-* Fixed the rewardsv2 bindings version in readme to 0.5.4 in [#246](https://github.com/Layr-Labs/eigensdk-rs/pull/246).
-* docs: improve changelog by adding examples by @maximopalopoli in <https://github.com/Layr-Labs/eigensdk-rs/pull/251>
-
-### Other Changes
-
-* Changes in the way bindings are generated in [#243](https://github.com/Layr-Labs/eigensdk-rs/pull/243).
-  * The `bindings` target now generates the bindings using Docker with Foundry v0.3.0.
-  * The previous `bindings` target was renamed to `bindings_host`, as it runs without Docker. However the `bindings_host` target is for CI use only. To generate the bindings, please use the `bindings` target.
-* Fixed incorrect package name in Cargo.toml for examples in [#285](https://github.com/Layr-Labs/eigensdk-rs/pull/285).
-* docs: add mention of updated bindings to changelog by @MegaRedHand in <https://github.com/Layr-Labs/eigensdk-rs/pull/233>
-* chore: format contracts by @ricomateo in <https://github.com/Layr-Labs/eigensdk-rs/pull/235>
-* ci: add foundry workflow by @ricomateo in <https://github.com/Layr-Labs/eigensdk-rs/pull/236>
-* ci: add CI job to check whether anvil state is up to date by @ricomateo in <https://github.com/Layr-Labs/eigensdk-rs/pull/237>
-* chore: remove existing bindings when generating new ones by @ricomateo in <https://github.com/Layr-Labs/eigensdk-rs/pull/242>
-* chore: remove alloy reexported crates from dependencies by @ricomateo in <https://github.com/Layr-Labs/eigensdk-rs/pull/244>
-* docs: sync root and `crates/eigensdk/` READMEs by @ricomateo in <https://github.com/Layr-Labs/eigensdk-rs/pull/245>
-* ci: add workflow to enforce updates to the changelog by @ricomateo in <https://github.com/Layr-Labs/eigensdk-rs/pull/239>
-* docs: add `RELEASE.md` by @MegaRedHand in <https://github.com/Layr-Labs/eigensdk-rs/pull/231>
-* ci: fix check bindings job by @pablodeymo in <https://github.com/Layr-Labs/eigensdk-rs/pull/247>
-* ci: fix job that checks anvil state is up-to-date by @ricomateo in <https://github.com/Layr-Labs/eigensdk-rs/pull/252>
-* refactor: move bindings generation to script by @MegaRedHand in <https://github.com/Layr-Labs/eigensdk-rs/pull/271>
-* fix: simplify Cargo.toml by @MegaRedHand in <https://github.com/Layr-Labs/eigensdk-rs/pull/282>
-* ci: split tests and coverage by @MegaRedHand in <https://github.com/Layr-Labs/eigensdk-rs/pull/286>
 
 ## [0.1.3] - 2024-01-17
 ### Added 🎉
