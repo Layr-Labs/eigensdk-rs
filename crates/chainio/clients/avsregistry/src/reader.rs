@@ -436,21 +436,45 @@ impl AvsRegistryChainReader {
         Ok(quorums)
     }
 
-    /// TODO! getOperatorRestakedStrategies
+    /**
+     * @notice Returns the list of strategies that the operator has potentially restaked on the AVS
+     * @param operator The address of the operator to get restaked strategies for
+     * @dev This function is intended to be called off-chain
+     * @dev No guarantee is made on whether the operator has shares for a strategy in a quorum or uniqueness
+     *      of each element in the returned array. The off-chain service should do that validation separately
+     */
+
+    /// Get a list of strategies that an operator has potentially restaked on the AVS.
+    ///
+    /// # Arguments
+    ///
+    /// * `operator_address` - The operator address.
+    ///
+    /// # Returns
+    ///
+    /// A vector with strategies addresses
     pub async fn get_operator_restaked_strategies(
         &self,
         operator_address: Address,
     ) -> Result<Vec<Address>, AvsRegistryError> {
         let provider = get_provider(&self.provider);
 
-        let operator_restaked_strategies =
-            ServiceManagerBase::new(self.registry_coordinator_addr, provider)
-                .getOperatorRestakedStrategies(operator_address)
-                .call()
-                .await?
-                ._0;
+        let contract_registry_coordinator =
+            RegistryCoordinator::new(self.registry_coordinator_addr, &provider);
 
-        Ok(operator_restaked_strategies)
+        let service_manager = contract_registry_coordinator
+            .serviceManager()
+            .call()
+            .await?
+            ._0;
+
+        let strategies = ServiceManagerBase::new(service_manager, &provider)
+            .getOperatorRestakedStrategies(operator_address)
+            .call()
+            .await?
+            ._0;
+
+        Ok(strategies)
     }
 
     /// Get operator id
@@ -674,16 +698,20 @@ impl AvsRegistryChainReader {
 
 #[cfg(test)]
 mod tests {
-    use crate::test_utils::{build_avs_registry_chain_writer, create_operator_set};
+    use crate::test_utils::{
+        build_avs_registry_chain_writer, create_operator_set, new_test_writer,
+    };
 
     use super::*;
+    use eigen_crypto_bls::BlsKeyPair;
     use eigen_logging::get_test_logger;
     use eigen_testing_utils::{
-        anvil::start_anvil_container,
+        anvil::{start_anvil_container, start_m2_anvil_container},
         anvil_constants::{
             get_operator_state_retriever_address, get_registry_coordinator_address,
-            get_service_manager_address, FIRST_ADDRESS, SECOND_PRIVATE_KEY,
+            get_service_manager_address, FIRST_ADDRESS, FIRST_PRIVATE_KEY,
         },
+        transaction::wait_transaction,
     };
     use hex::FromHex;
     use std::str::FromStr;
@@ -827,30 +855,44 @@ mod tests {
 
     #[tokio::test]
     async fn test_get_operator_restaked_strategies() {
-        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
         let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
+        let avs_writer =
+            build_avs_registry_chain_writer(http_endpoint.clone(), FIRST_PRIVATE_KEY.to_string())
+                .await;
 
-        let operator = avs_reader
-            .is_operator_registered(FIRST_ADDRESS)
+        let bls_key =
+            "1371012690269088913462269866874713266643928125698382731338806296762673180359922"
+                .to_string();
+        let quorum_nums = Bytes::from([0]);
+        let bls_key_pair = BlsKeyPair::new(bls_key).unwrap();
+        let digest_hash: FixedBytes<32> = FixedBytes::from([0x02; 32]);
+        let signature_expiry = U256::MAX;
+
+        let tx_hash = avs_writer
+            .register_operator_in_quorum_with_avs_registry_coordinator(
+                bls_key_pair,
+                digest_hash,
+                signature_expiry,
+                quorum_nums,
+                "socket".to_string(),
+            )
             .await
             .unwrap();
-        dbg!(operator);
 
-        let avs_address = get_service_manager_address(http_endpoint.clone()).await;
-        create_operator_set(&http_endpoint, avs_address).await;
-
-        let operator = avs_reader
-            .is_operator_registered(FIRST_ADDRESS)
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
             .await
-            .unwrap();
-        dbg!(operator);
+            .unwrap()
+            .status();
+
+        assert!(tx_status);
 
         let strategies = avs_reader
             .get_operator_restaked_strategies(FIRST_ADDRESS)
             .await
             .unwrap();
 
-        dbg!(strategies);
+        assert!(!strategies.is_empty());
     }
 
     #[tokio::test]
