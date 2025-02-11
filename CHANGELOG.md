@@ -78,7 +78,9 @@ Those changes in added, changed or breaking changes, should include usage exampl
   // tx_status should be true
   ```
 * Added Rewards2.1 support in [#323](https://github.com/Layr-Labs/eigensdk-rs/pull/323).
-  * set_operator_set_split
+
+  * Set an operator's split on an operator set.
+
   ```rust
       let operator_set = OperatorSet {
             avs: avs_address,
@@ -91,7 +93,9 @@ Those changes in added, changed or breaking changes, should include usage exampl
             .await
             .unwrap();
   ```
-  * get_operator_set_split
+
+  * Get an operator's split on an operator set.
+
   ```rust
      let operator_set = OperatorSet {
             avs: avs_address,
@@ -103,6 +107,7 @@ Those changes in added, changed or breaking changes, should include usage exampl
             .await
             .unwrap(); 
   ```
+
 * Added new method `set_operator_set_param` in `avsregistry/writer` in [#327](https://github.com/Layr-Labs/eigensdk-rs/pull/327).
 
   ```rust
