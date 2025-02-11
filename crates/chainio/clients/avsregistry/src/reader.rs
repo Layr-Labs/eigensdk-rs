@@ -1,4 +1,5 @@
 use crate::error::AvsRegistryError;
+use alloy::primitives::aliases::U96;
 use alloy::primitives::{Address, Bytes, FixedBytes, B256, U256};
 use alloy::providers::Provider;
 use alloy::rpc::types::Filter;
@@ -13,10 +14,12 @@ use eigen_logging::logger::SharedLogger;
 use eigen_types::operator::{
     bitmap_to_quorum_ids, bitmap_to_quorum_ids_from_u192, OperatorPubKeys, QuorumNum,
 };
-
 use eigen_utils::slashing::middleware::blsapkregistry::BLSApkRegistry;
 use eigen_utils::slashing::middleware::operatorstateretriever::OperatorStateRetriever;
 use eigen_utils::slashing::middleware::registrycoordinator::RegistryCoordinator;
+use eigen_utils::slashing::middleware::stakeregistry::IStakeRegistryTypes::{
+    StakeUpdate, StrategyParams,
+};
 use eigen_utils::slashing::middleware::stakeregistry::StakeRegistry;
 use num_bigint::BigInt;
 use std::fmt::Debug;
@@ -651,6 +654,431 @@ impl AvsRegistryChainReader {
         let StakeRegistry::isOperatorSetQuorumReturn { _0: quorum_status } = quorum_status;
 
         Ok(quorum_status)
+    }
+
+    /// Computes the total weight of operator with the given quorum number.
+    ///
+    /// The quorum number must exist, or else the tx will fail.
+    ///
+    /// # Arguments
+    ///
+    /// * `quorum_number` - The respective quorum number.
+    /// * `operator_address` - The operaotor's address.
+    ///
+    /// # Returns
+    ///
+    /// * [`U96`] - The total weight.
+    pub async fn weight_of_operator_for_quorum(
+        &self,
+        quorum_number: u8,
+        operator_address: Address,
+    ) -> Result<U96, AvsRegistryError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, provider);
+        let stake = contract_stake_registry
+            .weightOfOperatorForQuorum(quorum_number, operator_address)
+            .call()
+            .await?
+            ._0;
+
+        Ok(stake)
+    }
+
+    /// Returns the length of the strategy parameters stored for a given quorum.
+    ///
+    /// # Arguments
+    ///
+    /// * `quorum_number` - The quorum number.
+    ///
+    /// # Returns
+    ///
+    /// * [`U256`] - The length of the strategy parameters array.
+    pub async fn strategy_params_length(
+        &self,
+        quorum_number: u8,
+    ) -> Result<U256, AvsRegistryError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, provider);
+        let len = contract_stake_registry
+            .strategyParamsLength(quorum_number)
+            .call()
+            .await?
+            ._0;
+
+        Ok(len)
+    }
+
+    /// Returns the strategy parameters by index for a given quorum.
+    ///
+    /// # Arguments
+    ///
+    /// * `quorum_number` - The quorum number.
+    /// * `index` - The index in the strategy parameter array.
+    ///
+    /// # Returns
+    ///
+    /// * [`StrategyParams`] - The strategy parameters at the specified index.
+    pub async fn strategy_params_by_index(
+        &self,
+        quorum_number: u8,
+        index: U256,
+    ) -> Result<StrategyParams, AvsRegistryError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, provider);
+        let strategy_params = contract_stake_registry
+            .strategyParamsByIndex(quorum_number, index)
+            .call()
+            .await?
+            ._0;
+
+        Ok(strategy_params)
+    }
+
+    /// Returns the stake history length for a given operator and quorum.
+    ///
+    /// # Arguments
+    ///
+    /// * `operator_id` - The operator's identifier.
+    /// * `quorum_number` - The quorum number.
+    ///
+    /// # Returns
+    ///
+    /// * [`U256`] - The length of the stake history.
+    pub async fn get_stake_history_length(
+        &self,
+        operator_id: B256,
+        quorum_number: u8,
+    ) -> Result<U256, AvsRegistryError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, provider);
+
+        let len = contract_stake_registry
+            .getStakeHistoryLength(operator_id, quorum_number)
+            .call()
+            .await?
+            ._0;
+
+        Ok(len)
+    }
+
+    /// Returns the entire stake history for a given operator and quorum.
+    ///
+    /// # Arguments
+    ///
+    /// * `operator_id` - The operator's identifier.
+    /// * `quorum_number` - The quorum number.
+    ///
+    /// # Returns
+    ///
+    /// * `Vec<StakeUpdate>` - A vector containing all stake updates.
+    pub async fn get_stake_history(
+        &self,
+        operator_id: B256,
+        quorum_number: u8,
+    ) -> Result<Vec<StakeUpdate>, AvsRegistryError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, provider);
+
+        let stake_update_vec = contract_stake_registry
+            .getStakeHistory(operator_id, quorum_number)
+            .call()
+            .await?
+            ._0;
+
+        Ok(stake_update_vec)
+    }
+
+    /// Returns the most recent stake update for a given operator and quorum.
+    ///
+    /// # Arguments
+    ///
+    /// * `operator_id` - The operator's identifier.
+    /// * `quorum_number` - The quorum number.
+    ///
+    /// # Returns
+    ///
+    /// * [`StakeUpdate`] - The latest stake update.
+    pub async fn get_latest_stake_update(
+        &self,
+        operator_id: B256,
+        quorum_number: u8,
+    ) -> Result<StakeUpdate, AvsRegistryError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, provider);
+
+        let stake_update = contract_stake_registry
+            .getLatestStakeUpdate(operator_id, quorum_number)
+            .call()
+            .await?
+            ._0;
+
+        Ok(stake_update)
+    }
+
+    /// Returns the stake update at a specific index for a given operator and quorum.
+    ///
+    /// # Arguments
+    ///
+    /// * `quorum_number` - The quorum number.
+    /// * `operator_id` - The operator's identifier.
+    /// * `index` - The index in the stake history array.
+    ///
+    /// # Returns
+    ///
+    /// * [`StakeUpdate`] - The stake update at the specified index.
+    pub async fn get_stake_update_at_index(
+        &self,
+        quorum_number: u8,
+        operator_id: B256,
+        index: U256,
+    ) -> Result<StakeUpdate, AvsRegistryError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, provider);
+
+        let stake_update = contract_stake_registry
+            .getStakeUpdateAtIndex(quorum_number, operator_id, index)
+            .call()
+            .await?
+            ._0;
+
+        Ok(stake_update)
+    }
+
+    /// Returns the stake of an operator for a given quorum at a specific block number.
+    ///
+    /// # Arguments
+    ///
+    /// * `operator_id` - The operator's identifier.
+    /// * `quorum_number` - The quorum number.
+    /// * `block_number` - The block number at which to retrieve the stake.
+    ///
+    /// # Returns
+    ///
+    /// * [`U96`] - The stake at the specified block number.
+    pub async fn get_stake_update_at_block_number(
+        &self,
+        operator_id: B256,
+        quorum_number: u8,
+        block_number: u32,
+    ) -> Result<U96, AvsRegistryError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, provider);
+
+        let stake = contract_stake_registry
+            .getStakeAtBlockNumber(operator_id, quorum_number, block_number)
+            .call()
+            .await?
+            ._0;
+
+        Ok(stake)
+    }
+
+    /// Returns the index of the stake update for an operator at a given block number.
+    ///
+    /// # Arguments
+    ///
+    /// * `operator_id` - The operator's identifier.
+    /// * `quorum_number` - The quorum number.
+    /// * `block_number` - The block number.
+    ///
+    /// # Returns
+    ///
+    /// * `u32` - The index of the stake update.
+    pub async fn get_stake_update_index_at_block_number(
+        &self,
+        operator_id: B256,
+        quorum_number: u8,
+        block_number: u32,
+    ) -> Result<u32, AvsRegistryError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, provider);
+
+        let index = contract_stake_registry
+            .getStakeUpdateIndexAtBlockNumber(operator_id, quorum_number, block_number)
+            .call()
+            .await?
+            ._0;
+
+        Ok(index)
+    }
+
+    /// Returns the stake of an operator for a given quorum at a specific block number and index.
+    ///
+    /// # Arguments
+    ///
+    /// * `quorum_number` - The quorum number.
+    /// * `block_number` - The block number at which to retrieve the stake.
+    /// * `operator_id` - The operator's identifier.
+    /// * `index` - The index in the stake history array.
+    ///
+    /// # Returns
+    ///
+    /// * [`U96`] - The stake weight at the specified block number and index.
+    pub async fn get_stake_at_block_number_and_index(
+        &self,
+        quorum_number: u8,
+        block_number: u32,
+        operator_id: B256,
+        index: U256,
+    ) -> Result<U96, AvsRegistryError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, provider);
+
+        let stake_weight = contract_stake_registry
+            .getStakeAtBlockNumberAndIndex(quorum_number, block_number, operator_id, index)
+            .call()
+            .await?
+            ._0;
+
+        Ok(stake_weight)
+    }
+
+    /// Returns the length of the total stake history for a given quorum.
+    ///
+    /// # Arguments
+    ///
+    /// * `quorum_number` - The quorum number.
+    ///
+    /// # Returns
+    ///
+    /// * [`U256`] - The total stake history length.
+    pub async fn get_total_stake_history_length(
+        &self,
+        quorum_number: u8,
+    ) -> Result<U256, AvsRegistryError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, provider);
+
+        let length = contract_stake_registry
+            .getTotalStakeHistoryLength(quorum_number)
+            .call()
+            .await?
+            ._0;
+
+        Ok(length)
+    }
+
+    /// Returns the current total stake weight for a given quorum.
+    ///
+    /// # Arguments
+    ///
+    /// * `quorum_number` - The quorum number.
+    ///
+    /// # Returns
+    ///
+    /// * [`U96`] - The current total stake weight.
+    pub async fn get_current_total_stake(
+        &self,
+        quorum_number: u8,
+    ) -> Result<U96, AvsRegistryError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, provider);
+
+        let stake_weight = contract_stake_registry
+            .getCurrentTotalStake(quorum_number)
+            .call()
+            .await?
+            ._0;
+
+        Ok(stake_weight)
+    }
+
+    /// Returns the stake update at a specific index for a given quorum.
+    ///
+    /// # Arguments
+    ///
+    /// * `quorum_number` - The quorum number.
+    /// * `index` - The index in the total stake history.
+    ///
+    /// # Returns
+    ///
+    /// * [`StakeUpdate`] - The stake update at the specified index.
+    pub async fn get_total_stake_update_at_index(
+        &self,
+        quorum_number: u8,
+        index: U256,
+    ) -> Result<StakeUpdate, AvsRegistryError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, provider);
+
+        let stake_update = contract_stake_registry
+            .getTotalStakeUpdateAtIndex(quorum_number, index)
+            .call()
+            .await?
+            ._0;
+
+        Ok(stake_update)
+    }
+
+    /// Returns the total stake at a given block number and index.
+    ///
+    /// # Arguments
+    ///
+    /// * `quorum_number` - The quorum number.
+    /// * `block_number` - The block number.
+    /// * `index` - The index in the total stake history.
+    ///
+    /// # Returns
+    ///
+    /// * [`U96`] - The total stake at the specified block number and index.
+    pub async fn get_total_stake_at_block_number_from_index(
+        &self,
+        quorum_number: u8,
+        block_number: u32,
+        index: U256,
+    ) -> Result<U96, AvsRegistryError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, provider);
+
+        let total_stake = contract_stake_registry
+            .getTotalStakeAtBlockNumberFromIndex(quorum_number, block_number, index)
+            .call()
+            .await?
+            ._0;
+
+        Ok(total_stake)
+    }
+
+    /// Returns the total stake indices for the given quorum at a specific block number.
+    ///
+    /// # Arguments
+    ///
+    /// * `block_number` - The block number.
+    /// * `quorum_number` - The quorum number in bytes format.
+    ///
+    /// # Returns
+    ///
+    /// * `Vec<u32>` - A vector of stake indices at the specified block number.
+    pub async fn get_total_stake_indices_at_block_number(
+        &self,
+        block_number: u32,
+        quorum_number: Bytes,
+    ) -> Result<Vec<u32>, AvsRegistryError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, provider);
+
+        let total_stakes = contract_stake_registry
+            .getTotalStakeIndicesAtBlockNumber(block_number, quorum_number)
+            .call()
+            .await?
+            ._0;
+
+        Ok(total_stakes)
     }
 }
 
