@@ -698,18 +698,16 @@ impl AvsRegistryChainReader {
 
 #[cfg(test)]
 mod tests {
-    use crate::test_utils::{
-        build_avs_registry_chain_writer, create_operator_set, new_test_writer,
-    };
 
     use super::*;
+    use crate::test_utils::{build_avs_registry_chain_writer, OPERATOR_BLS_KEY};
     use eigen_crypto_bls::BlsKeyPair;
     use eigen_logging::get_test_logger;
     use eigen_testing_utils::{
         anvil::{start_anvil_container, start_m2_anvil_container},
         anvil_constants::{
-            get_operator_state_retriever_address, get_registry_coordinator_address,
-            get_service_manager_address, FIRST_ADDRESS, FIRST_PRIVATE_KEY,
+            get_operator_state_retriever_address, get_registry_coordinator_address, FIRST_ADDRESS,
+            FIRST_PRIVATE_KEY,
         },
         transaction::wait_transaction,
     };
@@ -861,9 +859,14 @@ mod tests {
             build_avs_registry_chain_writer(http_endpoint.clone(), FIRST_PRIVATE_KEY.to_string())
                 .await;
 
-        let bls_key =
-            "1371012690269088913462269866874713266643928125698382731338806296762673180359922"
-                .to_string();
+        let strategies = avs_reader
+            .get_operator_restaked_strategies(FIRST_ADDRESS)
+            .await
+            .unwrap();
+
+        assert!(strategies.is_empty());
+
+        let bls_key = OPERATOR_BLS_KEY.to_string();
         let quorum_nums = Bytes::from([0]);
         let bls_key_pair = BlsKeyPair::new(bls_key).unwrap();
         let digest_hash: FixedBytes<32> = FixedBytes::from([0x02; 32]);

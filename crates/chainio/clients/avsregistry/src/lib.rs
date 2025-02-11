@@ -25,28 +25,27 @@ pub(crate) mod test_utils {
         providers::WalletProvider,
         sol_types::SolCall,
     };
-    use eigen_client_elcontracts::{reader::ELChainReader, writer::ELChainWriter};
-    use eigen_common::{get_provider, get_signer};
+    use eigen_common::get_signer;
     use eigen_logging::get_test_logger;
     use eigen_testing_utils::anvil_constants::{
-        get_allocation_manager_address, get_avs_directory_address, get_delegation_manager_address,
-        get_erc20_mock_strategy, get_operator_state_retriever_address,
-        get_registry_coordinator_address, get_rewards_coordinator_address,
-        get_service_manager_address, get_strategy_manager_address, FIRST_PRIVATE_KEY,
+        get_allocation_manager_address, get_erc20_mock_strategy,
+        get_operator_state_retriever_address, get_registry_coordinator_address,
+        get_service_manager_address, FIRST_PRIVATE_KEY,
     };
-    use eigen_utils::{
-        slashing::core::delegationmanager::DelegationManager,
-        slashing::{
-            core::allocationmanager::AllocationManager,
-            middleware::registrycoordinator::{
-                ISlashingRegistryCoordinatorTypes::OperatorSetParam,
-                IStakeRegistryTypes::StrategyParams, RegistryCoordinator,
-            },
-            sdk::mockavsservicemanager::MockAvsServiceManager,
+    use eigen_utils::slashing::{
+        core::allocationmanager::AllocationManager,
+        middleware::registrycoordinator::{
+            ISlashingRegistryCoordinatorTypes::OperatorSetParam,
+            IStakeRegistryTypes::StrategyParams, RegistryCoordinator,
         },
+        sdk::mockavsservicemanager::MockAvsServiceManager,
     };
 
+    use crate::reader::AvsRegistryChainReader;
     use crate::writer::AvsRegistryChainWriter;
+
+    pub(crate) const OPERATOR_BLS_KEY: &str =
+        "1371012690269088913462269866874713266643928125698382731338806296762673180359922";
 
     pub(crate) async fn create_operator_set(http_endpoint: &str, avs_address: Address) {
         let allocation_manager_addr =
@@ -116,52 +115,7 @@ pub(crate) mod test_utils {
             .unwrap();
     }
 
-    pub async fn build_el_chain_reader(http_endpoint: String) -> ELChainReader {
-        let delegation_manager_address =
-            get_delegation_manager_address(http_endpoint.clone()).await;
-        let avs_directory_address = get_avs_directory_address(http_endpoint.clone()).await;
-        let rewards_coordinator = get_rewards_coordinator_address(http_endpoint.clone()).await;
-
-        ELChainReader::build(
-            get_test_logger().clone(),
-            delegation_manager_address,
-            avs_directory_address,
-            rewards_coordinator,
-            &http_endpoint,
-        )
-        .await
-        .unwrap()
-    }
-
-    pub async fn new_test_writer(http_endpoint: String, private_key: String) -> ELChainWriter {
-        let el_chain_reader = build_el_chain_reader(http_endpoint.clone()).await;
-        let strategy_manager = get_strategy_manager_address(http_endpoint.clone()).await;
-        let rewards_coordinator = get_rewards_coordinator_address(http_endpoint.clone()).await;
-        let delegation_manager = get_delegation_manager_address(http_endpoint.clone()).await;
-        let allocation_manager = get_allocation_manager_address(http_endpoint.clone()).await;
-        let contract_delegation_manager =
-            DelegationManager::new(delegation_manager, get_provider(&http_endpoint));
-        let permission_controller = contract_delegation_manager
-            .permissionController()
-            .call()
-            .await
-            .unwrap()
-            ._0;
-        let registry_coordinator = get_registry_coordinator_address(http_endpoint.clone()).await;
-
-        ELChainWriter::new(
-            strategy_manager,
-            rewards_coordinator,
-            Some(permission_controller),
-            Some(allocation_manager),
-            registry_coordinator,
-            el_chain_reader,
-            http_endpoint.clone(),
-            private_key,
-        )
-    }
-
-    pub async fn build_avs_registry_chain_writer(
+    pub(crate) async fn build_avs_registry_chain_writer(
         http_endpoint: String,
         private_key: String,
     ) -> AvsRegistryChainWriter {
@@ -175,6 +129,24 @@ pub(crate) mod test_utils {
             private_key,
             registry_coordinator_address,
             operator_state_retriever_address,
+        )
+        .await
+        .unwrap()
+    }
+
+    pub(crate) async fn build_avs_registry_chain_reader(
+        http_endpoint: String,
+    ) -> AvsRegistryChainReader {
+        let registry_coordinator_addr =
+            get_registry_coordinator_address(http_endpoint.clone()).await;
+        let operator_state_retriever_address =
+            get_operator_state_retriever_address(http_endpoint.clone()).await;
+
+        AvsRegistryChainReader::new(
+            get_test_logger(),
+            registry_coordinator_addr,
+            operator_state_retriever_address,
+            http_endpoint.to_string(),
         )
         .await
         .unwrap()
