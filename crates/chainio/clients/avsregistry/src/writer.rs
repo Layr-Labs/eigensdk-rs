@@ -933,7 +933,7 @@ mod tests {
             .await
             .unwrap();
         let stake_udpate_at_index = avs_reader
-            .get_stake_update_at_block_number(operator_id, quorum_number, (block_number) as u32)
+            .get_stake_at_block_number(operator_id, quorum_number, (block_number) as u32)
             .await
             .unwrap();
         assert_eq!(

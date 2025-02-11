@@ -862,7 +862,7 @@ impl AvsRegistryChainReader {
     /// # Returns
     ///
     /// * [`U96`] - The stake at the specified block number.
-    pub async fn get_stake_update_at_block_number(
+    pub async fn get_stake_at_block_number(
         &self,
         operator_id: B256,
         quorum_number: u8,
