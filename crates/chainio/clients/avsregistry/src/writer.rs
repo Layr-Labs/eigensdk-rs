@@ -639,10 +639,10 @@ mod tests {
     use super::AvsRegistryChainWriter;
     use crate::test_utils::build_avs_registry_chain_reader;
     use crate::test_utils::create_operator_set;
+    use crate::test_utils::OPERATOR_BLS_KEY;
     use crate::writer::StrategyParams;
     use alloy::primitives::aliases::U96;
     use alloy::primitives::{address, Address, Bytes, FixedBytes, U256};
-    use crate::test_utils::OPERATOR_BLS_KEY;
     use eigen_common::{get_provider, get_signer};
     use eigen_crypto_bls::BlsKeyPair;
     use eigen_logging::get_test_logger;
@@ -1046,8 +1046,8 @@ mod tests {
             .remove_strategies(quorum_number, [U256::from(1)].to_vec())
             .await
             .unwrap();
-      
-     #[tokio::test]
+    }
+    #[tokio::test]
     async fn test_eject_operator() {
         let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
         let bls_key = OPERATOR_BLS_KEY.to_string();
