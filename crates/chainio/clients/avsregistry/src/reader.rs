@@ -663,7 +663,7 @@ impl AvsRegistryChainReader {
     /// # Arguments
     ///
     /// * `quorum_number` - The respective quorum number.
-    /// * `operator_address` - The operaotor's address.
+    /// * `operator_address` - The operator's address.
     ///
     /// # Returns
     ///
