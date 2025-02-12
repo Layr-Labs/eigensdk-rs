@@ -45,7 +45,6 @@ pub(crate) mod test_utils {
     };
 
     use crate::reader::AvsRegistryChainReader;
-    use crate::writer::AvsRegistryChainWriter;
 
     pub(crate) async fn create_operator_set(http_endpoint: &str, avs_address: Address) {
         let allocation_manager_addr =
@@ -147,25 +146,6 @@ pub(crate) mod test_utils {
             registry_coordinator_addr,
             operator_state_retriever_address,
             http_endpoint.to_string(),
-        )
-        .await
-        .unwrap()
-    }
-
-    pub(crate) async fn build_avs_registry_chain_writer(
-        http_endpoint: String,
-        private_key: String,
-    ) -> AvsRegistryChainWriter {
-        let registry_coordinator_address =
-            get_registry_coordinator_address(http_endpoint.clone()).await;
-        let operator_state_retriever_address =
-            get_operator_state_retriever_address(http_endpoint.clone()).await;
-        AvsRegistryChainWriter::build_avs_registry_chain_writer(
-            get_test_logger(),
-            http_endpoint,
-            private_key,
-            registry_coordinator_address,
-            operator_state_retriever_address,
         )
         .await
         .unwrap()
