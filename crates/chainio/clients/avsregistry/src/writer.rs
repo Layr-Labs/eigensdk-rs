@@ -629,6 +629,13 @@ mod tests {
             multiplier: U96::from(1),
         };
 
+        // Using `start_m2_anvil_container` the following values are set:
+        // - BLOCKTIMESTAMP = 1739300276
+        // - GENESIS_REWARDS_TIMESTAMP = 864000
+        // - MAX_REWARDS_DURATION = 86400
+        // - MAX_RETROACTIVE_LENGTH = 259200
+        // - CALCULATION_INTERVAL_SECONDS = 86400
+
         // These values are set to align with the contract's requirements for the `OperatorDirectedRewardsSubmission`.
         // https://github.com/Layr-Labs/eigenlayer-contracts/blob/ecaff6304de6cb0f43b42024ad55d0e8a0430790/src/contracts/core/RewardsCoordinator.sol#L414
         // https://github.com/Layr-Labs/eigenlayer-contracts/blob/ecaff6304de6cb0f43b42024ad55d0e8a0430790/src/contracts/core/RewardsCoordinator.sol#L482
