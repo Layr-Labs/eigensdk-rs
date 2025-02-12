@@ -644,7 +644,8 @@ mod tests {
         RegistryCoordinator,
     };
     use eigen_utils::slashing::middleware::servicemanagerbase::{
-        IRewardsCoordinatorTypes::RewardsSubmission, ServiceManagerBase,
+        IRewardsCoordinatorTypes::RewardsSubmission,
+        IRewardsCoordinatorTypes::StrategyAndMultiplier, ServiceManagerBase,
     };
     use eigen_utils::slashing::middleware::stakeregistry::StakeRegistry;
     use futures_util::StreamExt;
@@ -1208,8 +1209,12 @@ mod tests {
             .await
             .unwrap();
 
+        let strategies_and_multipliers = vec![StrategyAndMultiplier {
+            strategy: strategy_address,
+            multiplier: U96::from(1),
+        }];
         let rewards_submissions = vec![RewardsSubmission {
-            strategiesAndMultipliers: vec![],
+            strategiesAndMultipliers: strategies_and_multipliers,
             token,
             amount: U256::from(1_000),
             startTimestamp: last_valid_interval_start,
