@@ -2,13 +2,11 @@ use crate::error::AvsRegistryError;
 use alloy::primitives::{Address, Bytes, FixedBytes, TxHash, U256};
 use alloy::signers::local::PrivateKeySigner;
 use alloy::signers::Signer;
-use alloy::sol_types::sol_data::Bytes;
 use eigen_client_elcontracts::reader::ELChainReader;
 use eigen_crypto_bls::{
     alloy_g1_point_to_g1_affine, convert_to_g1_point, convert_to_g2_point, BlsKeyPair,
 };
 use eigen_logging::logger::SharedLogger;
-use eigen_types::operator::QuorumNum;
 use eigen_utils::slashing::middleware::registrycoordinator::ISlashingRegistryCoordinatorTypes::OperatorKickParam;
 use eigen_utils::slashing::middleware::registrycoordinator::ISlashingRegistryCoordinatorTypes::OperatorSetParam;
 use eigen_utils::slashing::middleware::registrycoordinator::{
@@ -196,6 +194,7 @@ impl AvsRegistryChainWriter {
     }
 
     /// registerOperatorWithChurn
+    #[allow(clippy::too_many_arguments)]
     pub async fn register_operator_with_churn(
         &self,
         bls_key_pair: BlsKeyPair,
@@ -203,8 +202,10 @@ impl AvsRegistryChainWriter {
         operator_to_avs_registration_sig_expiry: U256,
         quorum_numbers: Bytes,
         socket: String,
-        // CHURN
         operators_to_kick: Vec<Address>,
+        // CHURN
+        churn_sig_salt: FixedBytes<32>,
+        churn_sig_expiry: U256,
     ) -> Result<TxHash, AvsRegistryError> {
         // REGISTER OPERATOR
 
@@ -212,12 +213,16 @@ impl AvsRegistryChainWriter {
         let wallet = PrivateKeySigner::from_str(&self.signer)
             .map_err(|_| AvsRegistryError::InvalidPrivateKey)?;
         // tracing info
-        info!(avs_service_manager = %self.service_manager_addr, operator= %wallet.address(),quorum_numbers = ?quorum_numbers,"quorum_numbers,registering operator with the AVS's registry coordinator");
+
+        let operator_address = wallet.address();
+        dbg!(&operator_address);
+
+        info!(avs_service_manager = %self.service_manager_addr, operator= %operator_address,quorum_numbers = ?quorum_numbers,"quorum_numbers,registering operator with the AVS's registry coordinator");
         let contract_registry_coordinator =
             RegistryCoordinator::new(self.registry_coordinator_addr, provider);
 
         let g1_hashed_msg_to_sign = contract_registry_coordinator
-            .pubkeyRegistrationMessageHash(wallet.address())
+            .pubkeyRegistrationMessageHash(operator_address)
             .call()
             .await
             .map_err(|_| AvsRegistryError::PubKeyRegistrationMessageHash)?
@@ -238,7 +243,7 @@ impl AvsRegistryChainWriter {
         let msg_to_sign = self
             .el_reader
             .calculate_operator_avs_registration_digest_hash(
-                wallet.address(),
+                operator_address,
                 self.service_manager_addr,
                 operator_to_avs_registration_sig_salt,
                 operator_to_avs_registration_sig_expiry,
@@ -258,18 +263,8 @@ impl AvsRegistryChainWriter {
             expiry: operator_to_avs_registration_sig_expiry,
         };
 
-        // pub struct registerOperatorWithChurnCall {
-        //     pub quorumNumbers: alloy::sol_types::private::Bytes,
-        //     pub socket: alloy::sol_types::private::String,
-        //     pub params: <IBLSApkRegistryTypes::PubkeyRegistrationParams as alloy::sol_types::SolType>::RustType,
-        //     pub operatorKickParams: alloy::sol_types::private::Vec<
-        //         <ISlashingRegistryCoordinatorTypes::OperatorKickParam as alloy::sol_types::SolType>::RustType,
-        //     >,
-        //     pub churnApproverSignature: <ISignatureUtils::SignatureWithSaltAndExpiry as alloy::sol_types::SolType>::RustType,
-        //     pub operatorSignature: <ISignatureUtils::SignatureWithSaltAndExpiry as alloy::sol_types::SolType>::RustType,
-        // }
-
-        let operators_to_kick_params = operators_to_kick
+        // CHURN
+        let operators_to_kick_params: Vec<OperatorKickParam> = operators_to_kick
             .iter()
             .map(|address| OperatorKickParam {
                 operator: *address,
@@ -277,16 +272,54 @@ impl AvsRegistryChainWriter {
             })
             .collect();
 
-        contract_registry_coordinator.registerOperatorWithChurn(
-            Bytes::from(quorum_numbers),
+        let operator_id = contract_registry_coordinator
+            .getOperatorId(operator_address)
+            .call()
+            .await?
+            ._0;
+
+        let churn_msg_to_sign = contract_registry_coordinator
+            .calculateOperatorChurnApprovalDigestHash(
+                operator_address,
+                operator_id,
+                operators_to_kick_params.clone(),
+                churn_sig_salt,
+                churn_sig_expiry,
+            )
+            .call()
+            .await?
+            ._0;
+
+        let churn_signature = wallet
+            .sign_hash(&churn_msg_to_sign)
+            .await
+            .map_err(|_| AvsRegistryError::InvalidSignature)?;
+
+        let bytes = churn_signature.as_bytes().into();
+
+        let churn_signature_with_salt_and_expiry = SignatureWithSaltAndExpiry {
+            signature: bytes,
+            salt: churn_sig_salt,
+            expiry: churn_sig_expiry,
+        };
+
+        let contract_call = contract_registry_coordinator.registerOperatorWithChurn(
+            quorum_numbers,
             socket,
             pub_key_reg_params,
             operators_to_kick_params,
-            churnApproverSignature,
+            churn_signature_with_salt_and_expiry,
             operator_signature_with_salt_and_expiry,
         );
 
-        Ok(TxHash::default())
+        let tx_call = contract_call.gas(GAS_LIMIT_REGISTER_OPERATOR_REGISTRY_COORDINATOR);
+        let tx = tx_call
+            .send()
+            .await
+            .map_err(AvsRegistryError::AlloyContractError)?;
+
+        info!(tx_hash = ?tx.tx_hash(),"Sent transaction to register operator in the AVS's registry coordinator" );
+        Ok(*tx.tx_hash())
     }
 
     /// Updates the stake of their entire operator set
@@ -566,8 +599,11 @@ mod tests {
     use crate::test_utils::{
         build_avs_registry_chain_writer, test_deregister_operator, test_register_operator,
     };
+    use alloy::primitives::FixedBytes;
+    use alloy::primitives::U256;
     use alloy::primitives::{Address, Bytes};
     use eigen_common::{get_provider, get_signer};
+    use eigen_crypto_bls::BlsKeyPair;
     use eigen_testing_utils::anvil::{start_anvil_container, start_m2_anvil_container};
     use eigen_testing_utils::anvil_constants::get_service_manager_address;
     use eigen_testing_utils::anvil_constants::{
@@ -833,6 +869,44 @@ mod tests {
             op_params._0.kickBIPsOfTotalStake,
             operator_set_params.kickBIPsOfTotalStake
         );
+    }
+
+    #[tokio::test]
+    async fn test_register_operator_with_churn() {
+        let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
+        let bls_key = OPERATOR_BLS_KEY.to_string();
+        let private_key = FIFTH_PRIVATE_KEY.to_string();
+
+        let avs_writer =
+            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
+        let quorum_nums = Bytes::from([0]);
+
+        let bls_key_pair = BlsKeyPair::new(bls_key).unwrap();
+        let digest_hash: FixedBytes<32> = FixedBytes::from([0x02; 32]);
+        let churn_digest_hash = FixedBytes::from([0x03; 32]);
+
+        let signature_expiry = U256::MAX;
+
+        avs_writer
+            .register_operator_with_churn(
+                bls_key_pair,
+                digest_hash,
+                signature_expiry,
+                quorum_nums,
+                "socket".to_string(),
+                vec![SECOND_ADDRESS],
+                churn_digest_hash,
+                signature_expiry,
+            )
+            .await
+            .unwrap();
+
+        let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
+        let is_registered = avs_reader
+            .is_operator_registered(FIFTH_ADDRESS)
+            .await
+            .unwrap();
+        assert!(is_registered);
     }
 
     #[tokio::test]
