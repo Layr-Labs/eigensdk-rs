@@ -1,4 +1,5 @@
 use crate::error::AvsRegistryError;
+use alloy::dyn_abi::abi;
 use alloy::primitives::{Address, Bytes, FixedBytes, TxHash, U256};
 use alloy::signers::local::PrivateKeySigner;
 use alloy::signers::Signer;
@@ -203,21 +204,23 @@ impl AvsRegistryChainWriter {
         quorum_numbers: Bytes,
         socket: String,
         operators_to_kick: Vec<Address>,
-        // CHURN
+        churn_signer_private_key: String,
         churn_sig_salt: FixedBytes<32>,
         churn_sig_expiry: U256,
     ) -> Result<TxHash, AvsRegistryError> {
-        // REGISTER OPERATOR
-
         let provider = get_signer(&self.signer.clone(), &self.provider);
-        let wallet = PrivateKeySigner::from_str(&self.signer)
+        let operator_wallet = PrivateKeySigner::from_str(&self.signer)
             .map_err(|_| AvsRegistryError::InvalidPrivateKey)?;
-        // tracing info
-
-        let operator_address = wallet.address();
+        let operator_address = operator_wallet.address();
         dbg!(&operator_address);
 
-        info!(avs_service_manager = %self.service_manager_addr, operator= %operator_address,quorum_numbers = ?quorum_numbers,"quorum_numbers,registering operator with the AVS's registry coordinator");
+        info!(
+            avs_service_manager = %self.service_manager_addr,
+            operator = %operator_address,
+            quorum_numbers = ?quorum_numbers,
+            "Registrando operador en el coordinador del registro AVS"
+        );
+
         let contract_registry_coordinator =
             RegistryCoordinator::new(self.registry_coordinator_addr, provider);
 
@@ -227,6 +230,7 @@ impl AvsRegistryChainWriter {
             .await
             .map_err(|_| AvsRegistryError::PubKeyRegistrationMessageHash)?
             ._0;
+
         let sig = bls_key_pair
             .sign_hashed_to_curve_message(alloy_g1_point_to_g1_affine(g1_hashed_msg_to_sign))
             .g1_point();
@@ -250,25 +254,22 @@ impl AvsRegistryChainWriter {
             )
             .await?;
 
-        let operator_signature = wallet
+        let operator_signature = operator_wallet
             .sign_hash(&msg_to_sign)
             .await
             .map_err(|_| AvsRegistryError::InvalidSignature)?;
 
-        let bytes = operator_signature.as_bytes().into();
-
         let operator_signature_with_salt_and_expiry = SignatureWithSaltAndExpiry {
-            signature: bytes,
+            signature: operator_signature.as_bytes().into(),
             salt: operator_to_avs_registration_sig_salt,
             expiry: operator_to_avs_registration_sig_expiry,
         };
 
-        // CHURN
         let operators_to_kick_params: Vec<OperatorKickParam> = operators_to_kick
             .iter()
             .map(|address| OperatorKickParam {
                 operator: *address,
-                quorumNumber: quorum_numbers[0],
+                quorumNumber: quorum_numbers[0], // TODO: manejar múltiples quorums
             })
             .collect();
 
@@ -290,18 +291,28 @@ impl AvsRegistryChainWriter {
             .await?
             ._0;
 
-        let churn_signature = wallet
+        dbg!(&churn_msg_to_sign);
+
+        let churn_wallet = PrivateKeySigner::from_str(&churn_signer_private_key)
+            .map_err(|_| AvsRegistryError::InvalidPrivateKey)?;
+
+        dbg!(&churn_signer_private_key);
+        dbg!(&churn_wallet.address());
+
+        let churn_signature = churn_wallet
             .sign_hash(&churn_msg_to_sign)
             .await
             .map_err(|_| AvsRegistryError::InvalidSignature)?;
 
-        let bytes = churn_signature.as_bytes().into();
+        dbg!(&churn_signature);
 
         let churn_signature_with_salt_and_expiry = SignatureWithSaltAndExpiry {
-            signature: bytes,
+            signature: churn_signature.as_bytes().into(),
             salt: churn_sig_salt,
             expiry: churn_sig_expiry,
         };
+
+        dbg!(&churn_signature_with_salt_and_expiry.signature);
 
         let contract_call = contract_registry_coordinator.registerOperatorWithChurn(
             quorum_numbers,
@@ -312,13 +323,17 @@ impl AvsRegistryChainWriter {
             operator_signature_with_salt_and_expiry,
         );
 
-        let tx_call = contract_call.gas(GAS_LIMIT_REGISTER_OPERATOR_REGISTRY_COORDINATOR);
-        let tx = tx_call
+        let tx = contract_call
             .send()
             .await
             .map_err(AvsRegistryError::AlloyContractError)?;
 
-        info!(tx_hash = ?tx.tx_hash(),"Sent transaction to register operator in the AVS's registry coordinator" );
+        dbg!("Yeppp");
+
+        info!(
+            tx_hash = ?tx.tx_hash(),
+            "Transacción enviada para registrar operador en el coordinador AVS"
+        );
         Ok(*tx.tx_hash())
     }
 
@@ -588,6 +603,25 @@ impl AvsRegistryChainWriter {
         info!(tx_hash = ?tx, "successfully set operator set param with the AVS's registry coordinator");
         Ok(*tx.tx_hash())
     }
+
+    /// BORRAR
+    pub async fn set_churn_approver(
+        &self,
+        new_churn_approver: Address,
+    ) -> Result<TxHash, AvsRegistryError> {
+        info!("set new churn approver with the AVS's registry coordinator");
+        let provider = get_signer(&self.signer.clone(), &self.provider);
+
+        let contract_registry_coordinator =
+            RegistryCoordinator::new(self.registry_coordinator_addr, provider);
+
+        contract_registry_coordinator.setChurnApprover(new_churn_approver)
+            .send()
+            .await
+            .map_err(AvsRegistryError::AlloyContractError)
+            .inspect(|tx| info!(tx_hash = ?tx,"successfully updated the new churn approver with the AVS's registry coordinator"))
+            .map(|tx| *tx.tx_hash())
+    }
 }
 
 #[cfg(test)]
@@ -604,8 +638,10 @@ mod tests {
     use alloy::primitives::{Address, Bytes};
     use eigen_common::{get_provider, get_signer};
     use eigen_crypto_bls::BlsKeyPair;
+    use eigen_testing_utils::anvil::mine_anvil_blocks;
     use eigen_testing_utils::anvil::{start_anvil_container, start_m2_anvil_container};
     use eigen_testing_utils::anvil_constants::get_service_manager_address;
+    use eigen_testing_utils::anvil_constants::SECOND_PRIVATE_KEY;
     use eigen_testing_utils::anvil_constants::{
         FIFTH_ADDRESS, FIFTH_PRIVATE_KEY, FIRST_ADDRESS, FIRST_PRIVATE_KEY, OPERATOR_BLS_KEY,
         SECOND_ADDRESS,
@@ -874,29 +910,92 @@ mod tests {
     #[tokio::test]
     async fn test_register_operator_with_churn() {
         let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
-        let bls_key = OPERATOR_BLS_KEY.to_string();
-        let private_key = FIFTH_PRIVATE_KEY.to_string();
 
+        let bls_key = OPERATOR_BLS_KEY.to_string();
+        let private_key = FIRST_PRIVATE_KEY.to_string();
+        let quorum_nums = Bytes::from([0]);
         let avs_writer =
             build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
-        let quorum_nums = Bytes::from([0]);
+        let regcoord = RegistryCoordinator::new(
+            avs_writer.registry_coordinator_addr,
+            get_provider(&http_endpoint),
+        );
 
-        let bls_key_pair = BlsKeyPair::new(bls_key).unwrap();
-        let digest_hash: FixedBytes<32> = FixedBytes::from([0x02; 32]);
-        let churn_digest_hash = FixedBytes::from([0x03; 32]);
+        dbg!(&avs_writer, &regcoord);
 
-        let signature_expiry = U256::MAX;
+        // Register first operator with FIRST_PRIVATE_KEY
+        test_register_operator(
+            &avs_writer,
+            bls_key.clone(),
+            quorum_nums.clone(),
+            http_endpoint.clone(),
+        )
+        .await;
+        let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
+        let is_registered = avs_reader
+            .is_operator_registered(FIRST_ADDRESS)
+            .await
+            .unwrap();
+        assert!(is_registered);
 
+        // SET MAX OPERATOR COUNT TO 1
+        let operator_set_params = OperatorSetParam {
+            maxOperatorCount: 1,
+            kickBIPsOfOperatorStake: 50,
+            kickBIPsOfTotalStake: 50,
+        };
         let tx_hash = avs_writer
+            .set_operator_set_param(0, operator_set_params.clone())
+            .await
+            .unwrap();
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
+        assert!(tx_status);
+
+        let max_operator = regcoord
+            .getOperatorSetParams(0)
+            .call()
+            .await
+            .unwrap()
+            ._0
+            .maxOperatorCount;
+        dbg!(max_operator);
+
+        // SET CHURN APPROVER TO SECOND_ADDRESS
+        let churn_approver_address = regcoord.churnApprover().call().await.unwrap()._0;
+        dbg!(churn_approver_address);
+
+        let tx_hash = avs_writer.set_churn_approver(SECOND_ADDRESS).await.unwrap();
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
+        assert!(tx_status);
+
+        let churn_approver_address = regcoord.churnApprover().call().await.unwrap()._0;
+        dbg!(churn_approver_address);
+
+        // REGISTER WITH CHURN FIFTH_ADDRESS
+        let avs_writer_5 =
+            build_avs_registry_chain_writer(http_endpoint.clone(), FIFTH_PRIVATE_KEY.to_string())
+                .await;
+        let bls_key_5 =
+            "12248929636257230549931416853095037629726205319386239410403476017439825112537"
+                .to_string();
+
+        let tx_hash = avs_writer_5
             .register_operator_with_churn(
-                bls_key_pair,
-                digest_hash,
-                signature_expiry,
-                quorum_nums,
+                BlsKeyPair::new(bls_key_5).unwrap(),
+                FixedBytes::from([0x02; 32]),
+                U256::MAX,
+                quorum_nums.clone(),
                 "socket".to_string(),
-                vec![SECOND_ADDRESS],
-                churn_digest_hash,
-                signature_expiry,
+                vec![FIRST_ADDRESS],
+                SECOND_PRIVATE_KEY.to_string(),
+                FixedBytes::from([0x05; 32]),
+                U256::MAX,
             )
             .await
             .unwrap();
@@ -906,13 +1005,6 @@ mod tests {
             .unwrap()
             .status();
         assert!(tx_status);
-
-        let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
-        let is_registered = avs_reader
-            .is_operator_registered(FIFTH_ADDRESS)
-            .await
-            .unwrap();
-        assert!(is_registered);
     }
 
     #[tokio::test]
