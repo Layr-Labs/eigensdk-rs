@@ -274,7 +274,7 @@ impl AvsRegistryChainWriter {
     ///
     /// # Returns
     ///
-    /// * `TxHash` - The transaction hash of the deregister operator transaction.
+    /// * `TxHash` - hash of the sent transaction.
     pub async fn deregister_operator(
         &self,
         quorum_numbers: Bytes,
@@ -351,8 +351,6 @@ impl AvsRegistryChainWriter {
             .map(|tx| *tx.tx_hash())
     }
 
-    /// Update socket
-    ///
     /// This function is used to update the socket of the sender (if it is a registered operator).
     ///
     /// # Arguments
@@ -375,8 +373,62 @@ impl AvsRegistryChainWriter {
             .send()
             .await
             .map_err(AvsRegistryError::AlloyContractError)?;
-        info!(tx_hash = ?tx,"successfully updated the socket with the AVS's registry coordinator" );
+        info!(tx_hash = ?tx, "successfully updated the socket with the AVS's registry coordinator");
         Ok(*tx.tx_hash())
+    }
+
+    /// Force a deregistration of an operator from one or more quorums
+    ///
+    /// # Arguments
+    ///
+    /// * `operator_address` - The address of the operator to be ejected
+    /// * `quorum_numbers` - The quorum numbers to eject the operator from
+    ///
+    /// # Returns
+    ///
+    /// * `TxHash` - The transaction hash of the eject operator transaction
+    pub async fn eject_operator(
+        &self,
+        operator_address: Address,
+        quorum_numbers: Bytes,
+    ) -> Result<TxHash, AvsRegistryError> {
+        info!("ejecting operator from quorum with the AVS's registry coordinator");
+        let provider = get_signer(&self.signer.clone(), &self.provider);
+
+        let contract_registry_coordinator =
+            RegistryCoordinator::new(self.registry_coordinator_addr, provider);
+
+        contract_registry_coordinator.ejectOperator(operator_address, quorum_numbers)
+            .send()
+            .await
+            .map_err(AvsRegistryError::AlloyContractError)
+            .inspect(|tx| info!(tx_hash = ?tx, "successfully ejected operator from quorum with the AVS's registry coordinator"))
+            .map(|tx| *tx.tx_hash())
+    }
+
+    /// This function is used to update the account identifier of the AVS's RegistryCoordinator.
+    ///
+    /// # Arguments
+    ///
+    /// * `new_account_identifier` - address of the new account identifier.
+    ///
+    /// # Returns
+    ///
+    /// * `TxHash` - hash of the sent transaction.
+    pub async fn set_account_identifier(
+        &self,
+        new_account_identifier: Address,
+    ) -> Result<TxHash, AvsRegistryError> {
+        info!("updating the account identifier of the AVS's registry coordinator");
+        let provider = get_signer(&self.signer.clone(), &self.provider);
+
+        RegistryCoordinator::new(self.registry_coordinator_addr, provider)
+            .setAccountIdentifier(new_account_identifier)
+            .send()
+            .await
+            .map_err(AvsRegistryError::AlloyContractError)
+            .inspect(|tx| info!(tx_hash = ?tx, "successfully updated the account identifier of the AVS's registry coordinator"))
+            .map(|tx| *tx.tx_hash())
     }
 
     /// Update the configuration of an existing quorum.
@@ -405,7 +457,7 @@ impl AvsRegistryChainWriter {
             .send()
             .await
             .map_err(AvsRegistryError::AlloyContractError)?;
-        info!(tx_hash = ?tx,"successfully set operator set param with the AVS's registry coordinator" );
+        info!(tx_hash = ?tx, "successfully set operator set param with the AVS's registry coordinator");
         Ok(*tx.tx_hash())
     }
 
@@ -427,6 +479,7 @@ impl AvsRegistryChainWriter {
         strategy_params: Vec<StrategyParams>,
     ) -> Result<TxHash, AvsRegistryError> {
         info!("creating total delegated stake quorum with the AVS's registry coordinator");
+
         let provider = get_signer(&self.signer.clone(), &self.provider);
 
         let contract_registry_coordinator =
@@ -445,26 +498,116 @@ impl AvsRegistryChainWriter {
             .inspect(|tx| info!(tx_hash = ?tx, "successfully created total delegated stake quorum with the AVS's registry coordinator"))
             .map(|tx| *tx.tx_hash())
     }
+
+    /// Create a new quorum that tracks slashable stake for operators
+    ///
+    /// # Arguments
+    ///
+    /// * `operator_set_param` - Configures the quorum's max operator count and churn parameters
+    /// * `minimum_stake` - Sets the minimum stake required for an operator to register or remain registered
+    /// * `strategy_params` - A list of strategies and multipliers used by the StakeRegistry to calculate an operator's stake weight for the quorum
+    /// * `look_ahead_period` - The number of blocks to look ahead when calculating slashable stake
+    ///
+    /// # Returns
+    ///
+    /// * `TxHash` - The transaction hash of the create slashable stake quorum transactions
+    pub async fn create_slashable_stake_quorum(
+        &self,
+        operator_set_param: OperatorSetParam,
+        minimum_stake: U96,
+        strategy_params: Vec<StrategyParams>,
+        look_ahead_period: u32,
+    ) -> Result<TxHash, AvsRegistryError> {
+        info!("creating slashable stake quorum with the AVS's registry coordinator");
+        let provider = get_signer(&self.signer.clone(), &self.provider);
+
+        let contract_registry_coordinator =
+            RegistryCoordinator::new(self.registry_coordinator_addr, provider);
+
+        contract_registry_coordinator.createSlashableStakeQuorum(
+            operator_set_param,
+            minimum_stake,
+            strategy_params,
+            look_ahead_period,
+            ).send()
+            .await
+            .map_err(AvsRegistryError::AlloyContractError)
+            .inspect(|tx| info!(tx_hash = ?tx,"successfully created slashable stake quorum with the AVS's registry coordinator" ))
+            .map(|tx| *tx.tx_hash())
+    }
+
+    /// Set the ejection cooldow that an operator must wait in seconds after ejection before registering for any quorum
+    ///
+    /// # Arguments
+    ///
+    /// * `cooldown` - the new ejection cooldown in seconds
+    ///
+    /// # Returns
+    ///
+    /// * `TxHash` - The transaction hash of the set ejection cooldown transaction
+    pub async fn set_ejection_cooldown(&self, cooldown: U256) -> Result<TxHash, AvsRegistryError> {
+        info!("setting ejecting cooldown with the AVS's registry coordinator");
+        let provider = get_signer(&self.signer.clone(), &self.provider);
+
+        let contract_registry_coordinator =
+            RegistryCoordinator::new(self.registry_coordinator_addr, provider);
+
+        contract_registry_coordinator.setEjectionCooldown(cooldown)
+            .send()
+            .await
+            .map_err(AvsRegistryError::AlloyContractError)
+            .inspect(|tx| info!(tx_hash = ?tx, "successfully set ejection cooldown with the AVS's registry coordinator"))
+            .map(|tx| *tx.tx_hash())
+    }
+
+    /// Sets an address as the ejector, which can force-deregister operators from quorums.
+    ///
+    /// # Arguments
+    ///
+    /// * `address` - The address to set as the ejector
+    ///
+    /// # Returns
+    ///
+    /// * `TxHash` - The transaction hash of the set ejector transaction
+    pub async fn set_ejector(&self, address: Address) -> Result<TxHash, AvsRegistryError> {
+        info!("setting ejector");
+        let provider = get_signer(&self.signer.clone(), &self.provider);
+
+        let contract_registry_coordinator =
+            RegistryCoordinator::new(self.registry_coordinator_addr, provider);
+
+        contract_registry_coordinator
+            .setEjector(address)
+            .send()
+            .await
+            .map_err(AvsRegistryError::AlloyContractError)
+            .inspect(|tx| info!(tx_hash = ?tx,"successfully set ejector with the AVS's registry coordinator" ))
+            .map(|tx| *tx.tx_hash())
+    }
 }
 
 #[cfg(test)]
 mod tests {
 
     use super::AvsRegistryChainWriter;
+    use crate::test_utils::build_avs_registry_chain_reader;
     use crate::test_utils::create_operator_set;
-    use alloy::primitives::aliases::U96;
-    use alloy::primitives::{Address, Bytes, FixedBytes, U256};
-    use alloy::sol_types::SolCall;
-    use eigen_common::get_signer;
-    use eigen_crypto_bls::BlsKeyPair;
-    use eigen_logging::get_test_logger;
-    use eigen_testing_utils::anvil::{start_anvil_container, start_m2_anvil_container};
-    use eigen_testing_utils::anvil_constants::{
-        get_allocation_manager_address, get_erc20_mock_strategy,
-        get_operator_state_retriever_address, get_registry_coordinator_address,
-        get_service_manager_address,
+    use crate::test_utils::{
+        build_avs_registry_chain_writer, test_deregister_operator, test_register_operator,
     };
-    use eigen_testing_utils::anvil_constants::{FIRST_PRIVATE_KEY, SECOND_ADDRESS};
+    use alloy::primitives::aliases::U96;
+    use alloy::primitives::U256;
+    use alloy::primitives::{Address, Bytes};
+    use alloy::sol_types::SolCall;
+    use eigen_common::{get_provider, get_signer};
+    use eigen_testing_utils::anvil::{start_anvil_container, start_m2_anvil_container};
+    use eigen_testing_utils::anvil_constants::get_allocation_manager_address;
+    use eigen_testing_utils::anvil_constants::get_erc20_mock_strategy;
+    use eigen_testing_utils::anvil_constants::get_service_manager_address;
+    use eigen_testing_utils::anvil_constants::{
+        FIFTH_ADDRESS, FIFTH_PRIVATE_KEY, FIRST_ADDRESS, FIRST_PRIVATE_KEY, OPERATOR_BLS_KEY,
+        SECOND_ADDRESS,
+    };
     use eigen_testing_utils::transaction::wait_transaction;
     use eigen_utils::slashing::core::allocationmanager::AllocationManager;
     use eigen_utils::slashing::middleware::registrycoordinator::ISlashingRegistryCoordinatorTypes::OperatorSetParam;
@@ -473,38 +616,15 @@ mod tests {
     use eigen_utils::slashing::middleware::servicemanagerbase::ServiceManagerBase;
     use eigen_utils::slashing::middleware::stakeregistry::StakeRegistry;
     use futures_util::StreamExt;
-    use std::str::FromStr;
-
-    async fn build_avs_registry_chain_writer(
-        http_endpoint: String,
-        private_key: String,
-    ) -> AvsRegistryChainWriter {
-        let registry_coordinator_address =
-            get_registry_coordinator_address(http_endpoint.clone()).await;
-        let operator_state_retriever_address =
-            get_operator_state_retriever_address(http_endpoint.clone()).await;
-        AvsRegistryChainWriter::build_avs_registry_chain_writer(
-            get_test_logger(),
-            http_endpoint,
-            private_key,
-            registry_coordinator_address,
-            operator_state_retriever_address,
-        )
-        .await
-        .unwrap()
-    }
 
     #[tokio::test]
     async fn test_avs_writer_methods() {
         let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
-        let bls_key =
-            "1371012690269088913462269866874713266643928125698382731338806296762673180359922"
-                .to_string();
-        let private_key =
-            "8b3a350cf5c34c9194ca85829a2df0ec3153be0318b5e2d3348e872092edffba".to_string();
+        let bls_key = OPERATOR_BLS_KEY.to_string();
+        let private_key = FIFTH_PRIVATE_KEY.to_string();
         let avs_writer =
             build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
-        let operator_addr = Address::from_str("9965507D1a55bcC2695C58ba16FB37d819B0A4dc").unwrap();
+        let operator_addr = FIFTH_ADDRESS;
         let quorum_nums = Bytes::from([0]);
 
         test_register_operator(
@@ -622,53 +742,11 @@ mod tests {
         assert!(tx_status);
     }
 
-    // this function is called from test_avs_writer_methods
-    async fn test_register_operator(
-        avs_writer: &AvsRegistryChainWriter,
-        private_key_decimal: String,
-        quorum_nums: Bytes,
-        http_url: String,
-    ) {
-        let bls_key_pair = BlsKeyPair::new(private_key_decimal).unwrap();
-        let digest_hash: FixedBytes<32> = FixedBytes::from([0x02; 32]);
-
-        // this is set to U256::MAX so that the registry does not take the signature as expired.
-        let signature_expiry = U256::MAX;
-        let tx_hash = avs_writer
-            .register_operator_in_quorum_with_avs_registry_coordinator(
-                bls_key_pair,
-                digest_hash,
-                signature_expiry,
-                quorum_nums.clone(),
-                "".into(),
-            )
-            .await
-            .unwrap();
-
-        let tx_status = wait_transaction(&http_url, tx_hash).await.unwrap().status();
-        assert!(tx_status);
-    }
-
-    // this function is caller from test_avs_writer_methods
-    async fn test_deregister_operator(
-        avs_writer: &AvsRegistryChainWriter,
-        quorum_nums: Bytes,
-        http_url: String,
-    ) {
-        let tx_hash = avs_writer.deregister_operator(quorum_nums).await.unwrap();
-
-        let tx_status = wait_transaction(&http_url, tx_hash).await.unwrap().status();
-        assert!(tx_status);
-    }
-
     #[tokio::test]
     async fn test_update_socket() {
         let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
-        let bls_key =
-            "1371012690269088913462269866874713266643928125698382731338806296762673180359922"
-                .to_string();
-        let private_key =
-            "8b3a350cf5c34c9194ca85829a2df0ec3153be0318b5e2d3348e872092edffba".to_string();
+        let bls_key = OPERATOR_BLS_KEY.to_string();
+        let private_key = FIFTH_PRIVATE_KEY.to_string();
         let avs_writer =
             build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
         let quorum_nums = Bytes::from([0]);
@@ -707,11 +785,42 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn test_set_account_identifier() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let avs_writer =
+            build_avs_registry_chain_writer(http_endpoint.clone(), FIRST_PRIVATE_KEY.to_string())
+                .await;
+
+        let service_manager_address = get_service_manager_address(http_endpoint.clone()).await;
+
+        let provider = get_provider(&http_endpoint);
+        let regcoord = RegistryCoordinator::new(avs_writer.registry_coordinator_addr, &provider);
+
+        let old_account_identifier = regcoord.accountIdentifier().call().await.unwrap()._0;
+        assert_eq!(old_account_identifier, service_manager_address);
+
+        let new_account_identifier = FIRST_ADDRESS;
+
+        let tx_hash = avs_writer
+            .set_account_identifier(new_account_identifier)
+            .await
+            .unwrap();
+
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
+
+        assert!(tx_status);
+
+        let current_account_identifier = regcoord.accountIdentifier().call().await.unwrap()._0;
+        assert_eq!(current_account_identifier, new_account_identifier);
+    }
+
+    #[tokio::test]
     async fn test_set_operator_set_param() {
         let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
-        let bls_key =
-            "1371012690269088913462269866874713266643928125698382731338806296762673180359922"
-                .to_string();
+        let bls_key = OPERATOR_BLS_KEY.to_string();
         let private_key = FIRST_PRIVATE_KEY.to_string();
         let avs_writer =
             build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
@@ -790,7 +899,6 @@ mod tests {
             .get_receipt()
             .await
             .unwrap();
-
         let operator_set_params = OperatorSetParam {
             maxOperatorCount: 10,
             kickBIPsOfOperatorStake: 50,
@@ -853,5 +961,167 @@ mod tests {
             ._0;
 
         assert_eq!(quorum, 1);
+    }
+
+    #[tokio::test]
+    async fn test_create_slashable_stake_quorum() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let private_key = FIRST_PRIVATE_KEY.to_string();
+        let avs_writer =
+            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
+
+        let service_manager_address = get_service_manager_address(http_endpoint.to_string()).await;
+
+        let service_manager = ServiceManagerBase::new(
+            service_manager_address,
+            get_signer(&avs_writer.signer.clone(), &avs_writer.provider),
+        );
+
+        let allocation_manager_addr = get_allocation_manager_address(http_endpoint.clone()).await;
+
+        service_manager
+            .setAppointee(
+                avs_writer.registry_coordinator_addr,
+                allocation_manager_addr,
+                alloy::primitives::FixedBytes(AllocationManager::createOperatorSetsCall::SELECTOR),
+            )
+            .send()
+            .await
+            .unwrap()
+            .get_receipt()
+            .await
+            .unwrap();
+
+        let operator_set_param = OperatorSetParam {
+            maxOperatorCount: 10,
+            kickBIPsOfOperatorStake: 50,
+            kickBIPsOfTotalStake: 50,
+        };
+        let minimum_stake = U96::from(100);
+        let strategy_param = StrategyParams {
+            strategy: get_erc20_mock_strategy(http_endpoint.clone()).await,
+            multiplier: U96::from(1),
+        };
+        let look_ahead_period = 10;
+
+        let tx_hash = avs_writer
+            .create_slashable_stake_quorum(
+                operator_set_param.clone(),
+                minimum_stake,
+                vec![strategy_param],
+                look_ahead_period,
+            )
+            .await
+            .unwrap();
+
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
+
+        assert!(tx_status);
+    }
+
+    #[tokio::test]
+    async fn test_set_ejector_cooldown() {
+        let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
+        let private_key = FIRST_PRIVATE_KEY.to_string();
+
+        let avs_writer =
+            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
+
+        let registry_contract = RegistryCoordinator::new(
+            avs_writer.registry_coordinator_addr,
+            get_signer(&avs_writer.signer.clone(), &avs_writer.provider),
+        );
+
+        let new_cooldown = U256::from(100);
+        let tx_hash = avs_writer
+            .set_ejection_cooldown(new_cooldown)
+            .await
+            .unwrap();
+
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
+
+        assert!(tx_status);
+        let cooldown = registry_contract.ejectionCooldown().call().await.unwrap();
+        assert_eq!(cooldown._0, new_cooldown);
+    }
+
+    #[tokio::test]
+    async fn test_eject_operator() {
+        let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
+        let bls_key = OPERATOR_BLS_KEY.to_string();
+        let register_operator_address = FIRST_ADDRESS;
+        let private_key = FIRST_PRIVATE_KEY.to_string();
+        let quorum_nums = Bytes::from([0]);
+
+        let avs_writer =
+            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
+
+        test_register_operator(
+            &avs_writer,
+            bls_key,
+            quorum_nums.clone(),
+            http_endpoint.clone(),
+        )
+        .await;
+
+        let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
+        let is_registered = avs_reader
+            .is_operator_registered(register_operator_address)
+            .await
+            .unwrap();
+        assert!(is_registered);
+
+        let tx_hash = avs_writer
+            .eject_operator(register_operator_address, quorum_nums)
+            .await
+            .unwrap();
+
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
+
+        assert!(tx_status);
+
+        let is_registered = avs_reader
+            .is_operator_registered(register_operator_address)
+            .await
+            .unwrap();
+        assert!(!is_registered);
+    }
+
+    #[tokio::test]
+    async fn test_set_ejector() {
+        let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
+        let private_key = FIRST_PRIVATE_KEY.to_string();
+        let new_ejector_address = SECOND_ADDRESS;
+
+        let avs_writer =
+            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
+
+        let registry_contract = RegistryCoordinator::new(
+            avs_writer.registry_coordinator_addr,
+            get_signer(&avs_writer.signer.clone(), &avs_writer.provider),
+        );
+        let ejecutor = registry_contract.ejector().call().await.unwrap();
+        assert_ne!(ejecutor._0, new_ejector_address);
+
+        let tx_hash = avs_writer.set_ejector(new_ejector_address).await.unwrap();
+
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
+
+        assert!(tx_status);
+
+        let ejecutor = registry_contract.ejector().call().await.unwrap();
+        assert_eq!(ejecutor._0, new_ejector_address);
     }
 }
