@@ -1077,9 +1077,17 @@ mod tests {
             .status();
         assert!(tx_status);
 
-        let contract_stake_registry = StakeRegistry::new(avs_writer.stake_registry_addr, get_provider(&http_endpoint));
-        assert_eq!(contract_stake_registry.minimumStakeForQuorum(quorum_number).call().await.unwrap()._0,minimum_stake);
-
+        let contract_stake_registry =
+            StakeRegistry::new(avs_writer.stake_registry_addr, get_provider(&http_endpoint));
+        assert_eq!(
+            contract_stake_registry
+                .minimumStakeForQuorum(quorum_number)
+                .call()
+                .await
+                .unwrap()
+                ._0,
+            minimum_stake
+        );
     }
 
     #[tokio::test]
@@ -1258,8 +1266,17 @@ mod tests {
 
         assert!(tx_status);
 
-
-       
+        let contract_stake_registry =
+            StakeRegistry::new(avs_writer.stake_registry_addr, get_provider(&http_endpoint));
+        assert_eq!(
+            strategy_params[0].strategy,
+            contract_stake_registry
+                .strategyParams(quorum_number, "1".parse().unwrap())
+                .call()
+                .await
+                .unwrap()
+                .strategy
+        );
     }
 
     #[tokio::test]
