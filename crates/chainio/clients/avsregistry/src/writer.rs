@@ -591,14 +591,16 @@ mod tests {
     use eigen_common::{get_provider, get_signer};
     use eigen_testing_utils::anvil::{start_anvil_container, start_m2_anvil_container};
     use eigen_testing_utils::anvil_constants::{
-        get_allocation_manager_address, get_erc20_mock_strategy, get_service_manager_address,
+        get_allocation_manager_address, get_erc20_mock_strategy, get_rewards_coordinator_address,
+        get_service_manager_address,
     };
     use eigen_testing_utils::anvil_constants::{
-        FIFTH_ADDRESS, FIFTH_PRIVATE_KEY, FIRST_ADDRESS, FIRST_PRIVATE_KEY, OPERATOR_BLS_KEY,
-        SECOND_ADDRESS,
+        FIFTH_ADDRESS, FIFTH_PRIVATE_KEY, FIRST_ADDRESS, FIRST_PRIVATE_KEY, GENESIS_TIMESTAMP,
+        OPERATOR_BLS_KEY, SECOND_ADDRESS,
     };
     use eigen_testing_utils::transaction::wait_transaction;
     use eigen_utils::slashing::core::allocationmanager::AllocationManager;
+    use eigen_utils::slashing::core::irewardscoordinator::IRewardsCoordinator;
     use eigen_utils::slashing::middleware::registrycoordinator::{
         ISlashingRegistryCoordinatorTypes::OperatorSetParam, IStakeRegistryTypes::StrategyParams,
         RegistryCoordinator,
@@ -608,6 +610,30 @@ mod tests {
     };
     use eigen_utils::slashing::middleware::stakeregistry::StakeRegistry;
     use futures_util::StreamExt;
+
+    async fn get_calculation_interval_seconds_and_rewards_duration() -> (u32, u32) {
+        let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
+
+        let rewards_coordinator_address =
+            get_rewards_coordinator_address(http_endpoint.clone()).await;
+        let provider = get_provider(&http_endpoint);
+        let rewards_coordinator = IRewardsCoordinator::new(rewards_coordinator_address, &provider);
+
+        let rewards_duration = rewards_coordinator
+            .MAX_REWARDS_DURATION()
+            .call()
+            .await
+            .unwrap()
+            ._0;
+
+        let calculation_interval_seconds = rewards_coordinator
+            .CALCULATION_INTERVAL_SECONDS()
+            .call()
+            .await
+            .unwrap()
+            ._0;
+        (calculation_interval_seconds, rewards_duration)
+    }
 
     #[tokio::test]
     async fn test_avs_writer_methods() {
@@ -1034,12 +1060,32 @@ mod tests {
         let avs_writer =
             build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
 
+        // These values are set to align with the contract's requirements for the `OperatorDirectedRewardsSubmission`.
+        // https://github.com/Layr-Labs/eigenlayer-contracts/blob/ecaff6304de6cb0f43b42024ad55d0e8a0430790/src/contracts/core/RewardsCoordinator.sol#L414
+        // https://github.com/Layr-Labs/eigenlayer-contracts/blob/ecaff6304de6cb0f43b42024ad55d0e8a0430790/src/contracts/core/RewardsCoordinator.sol#L482
+
+        let (calculation_interval_seconds, rewards_duration) =
+            get_calculation_interval_seconds_and_rewards_duration().await;
+
+        // Calculate the most recent interval start time that is less than the current timestamp
+        // This ensures the reward submission aligns with the contract's time-based requirements
+        let intervals_since_genesis = GENESIS_TIMESTAMP / calculation_interval_seconds;
+        let last_valid_interval_start =
+            (intervals_since_genesis * calculation_interval_seconds) - calculation_interval_seconds;
+
+        let strategy_address = get_erc20_mock_strategy(http_endpoint.clone()).await;
+        let (_, token) = avs_writer
+            .el_reader
+            .get_strategy_and_underlying_token(strategy_address)
+            .await
+            .unwrap();
+
         let rewards_submissions = vec![RewardsSubmission {
             strategiesAndMultipliers: vec![],
-            token: Address::default(),
-            amount: U256::from(100),
-            startTimestamp: 0,
-            duration: 0,
+            token,
+            amount: U256::from(1_000),
+            startTimestamp: last_valid_interval_start,
+            duration: rewards_duration,
         }];
 
         let tx_hash = avs_writer
