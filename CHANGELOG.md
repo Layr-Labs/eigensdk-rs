@@ -26,6 +26,7 @@ Those changes in added, changed or breaking changes, should include usage exampl
 ### Documentation 📚
 
 ### Other Changes
+* fix: missing block while waiting for operator state history in [#290](https://github.com/Layr-Labs/eigensdk-rs/pull/290).
 
 ## [0.3.0] - 2025-02-11
 ### Added
