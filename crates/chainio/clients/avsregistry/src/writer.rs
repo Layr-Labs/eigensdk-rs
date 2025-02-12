@@ -8,15 +8,15 @@ use eigen_crypto_bls::{
     alloy_g1_point_to_g1_affine, convert_to_g1_point, convert_to_g2_point, BlsKeyPair,
 };
 use eigen_logging::logger::SharedLogger;
-use eigen_utils::slashing::middleware::registrycoordinator::ISlashingRegistryCoordinatorTypes::OperatorSetParam;
-use eigen_utils::slashing::middleware::registrycoordinator::IStakeRegistryTypes::StrategyParams;
 use eigen_utils::slashing::middleware::registrycoordinator::{
     IBLSApkRegistryTypes::PubkeyRegistrationParams, ISignatureUtils::SignatureWithSaltAndExpiry,
+    ISlashingRegistryCoordinatorTypes::OperatorSetParam, IStakeRegistryTypes::StrategyParams,
     RegistryCoordinator,
 };
-use eigen_utils::slashing::middleware::{
-    servicemanagerbase::ServiceManagerBase, stakeregistry::StakeRegistry,
+use eigen_utils::slashing::middleware::servicemanagerbase::{
+    IRewardsCoordinatorTypes::RewardsSubmission, ServiceManagerBase,
 };
+use eigen_utils::slashing::middleware::stakeregistry::StakeRegistry;
 
 use eigen_common::{get_provider, get_signer};
 use std::str::FromStr;
@@ -474,7 +474,7 @@ impl AvsRegistryChainWriter {
     /// * `TxHash` - The transaction hash of the create rewards submission transaction
     pub async fn create_avs_rewards_submission(
         &self,
-        rewards_submissions: Vec<StrategyParams>,
+        rewards_submissions: Vec<RewardsSubmission>,
     ) -> Result<TxHash, AvsRegistryError> {
         info!("setting a new Rewards Submission list with the AVS's registry coordinator");
         let provider = get_signer(&self.signer.clone(), &self.provider);
