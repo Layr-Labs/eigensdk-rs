@@ -10,8 +10,8 @@ use eigen_crypto_bls::{
     alloy_g1_point_to_g1_affine, convert_to_g1_point, convert_to_g2_point, BlsKeyPair,
 };
 use eigen_logging::logger::SharedLogger;
+use eigen_utils::convert_stake_registry_strategy_params_to_registry_coordinator_strategy_params;
 use eigen_utils::slashing::middleware::registrycoordinator::ISlashingRegistryCoordinatorTypes::OperatorSetParam;
-use eigen_utils::slashing::middleware::registrycoordinator::IStakeRegistryTypes::StrategyParams;
 use eigen_utils::slashing::middleware::registrycoordinator::{
     IBLSApkRegistryTypes::PubkeyRegistrationParams, ISignatureUtils::SignatureWithSaltAndExpiry,
     RegistryCoordinator,
@@ -657,10 +657,18 @@ impl AvsRegistryChainWriter {
         let contract_registry_coordinator =
             RegistryCoordinator::new(self.registry_coordinator_addr, provider);
 
+        let registry_coordinator_strategy_params = strategy_params
+            .iter()
+            .map(|param| {
+                convert_stake_registry_strategy_params_to_registry_coordinator_strategy_params(
+                    param.clone(),
+                )
+            })
+            .collect();
         contract_registry_coordinator.createSlashableStakeQuorum(
             operator_set_param,
             minimum_stake,
-            strategy_params,
+            registry_coordinator_strategy_params,
             look_ahead_period,
             ).send()
             .await
@@ -728,24 +736,27 @@ mod tests {
     use crate::test_utils::{
         build_avs_registry_chain_writer, test_deregister_operator, test_register_operator,
     };
-    use eigen_logging::get_test_logger;
-    use eigen_crypto_bls::BlsKeyPair;
     use alloy::primitives::aliases::U96;
     use alloy::primitives::U256;
     use alloy::primitives::{address, Address, Bytes, FixedBytes};
     use alloy::sol_types::SolCall;
     use eigen_common::{get_provider, get_signer};
+    use eigen_crypto_bls::BlsKeyPair;
+    use eigen_logging::get_test_logger;
     use eigen_testing_utils::anvil::{start_anvil_container, start_m2_anvil_container};
     use eigen_testing_utils::anvil_constants::get_allocation_manager_address;
     use eigen_testing_utils::anvil_constants::get_erc20_mock_strategy;
     use eigen_testing_utils::anvil_constants::get_service_manager_address;
-    use eigen_testing_utils::anvil_constants::{FIFTH_ADDRESS, FIFTH_PRIVATE_KEY, FIRST_ADDRESS, FIRST_PRIVATE_KEY, OPERATOR_BLS_KEY,SECOND_ADDRESS };
+    use eigen_testing_utils::anvil_constants::{
+        FIFTH_ADDRESS, FIFTH_PRIVATE_KEY, FIRST_ADDRESS, FIRST_PRIVATE_KEY, OPERATOR_BLS_KEY,
+        SECOND_ADDRESS,
+    };
     use eigen_testing_utils::transaction::wait_transaction;
     use eigen_utils::slashing::core::allocationmanager::AllocationManager;
     use eigen_utils::slashing::middleware::registrycoordinator::ISlashingRegistryCoordinatorTypes::OperatorSetParam;
-    use eigen_utils::slashing::middleware::stakeregistry::IStakeRegistryTypes::StrategyParams;
     use eigen_utils::slashing::middleware::registrycoordinator::RegistryCoordinator;
     use eigen_utils::slashing::middleware::servicemanagerbase::ServiceManagerBase;
+    use eigen_utils::slashing::middleware::stakeregistry::IStakeRegistryTypes::StrategyParams;
     use eigen_utils::slashing::middleware::stakeregistry::StakeRegistry;
     use futures_util::StreamExt;
 
@@ -1039,65 +1050,69 @@ mod tests {
             .add_strategies(quorum_number, strategy_params.to_vec())
             .await
             .unwrap();
-    async fn test_create_slashable_stake_quorum() {
-        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-        let private_key = FIRST_PRIVATE_KEY.to_string();
-        let avs_writer =
-            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
+        async fn test_create_slashable_stake_quorum() {
+            let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+            let private_key = FIRST_PRIVATE_KEY.to_string();
+            let avs_writer =
+                build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
 
-        let service_manager_address = get_service_manager_address(http_endpoint.to_string()).await;
+            let service_manager_address =
+                get_service_manager_address(http_endpoint.to_string()).await;
 
-        let service_manager = ServiceManagerBase::new(
-            service_manager_address,
-            get_signer(&avs_writer.signer.clone(), &avs_writer.provider),
-        );
+            let service_manager = ServiceManagerBase::new(
+                service_manager_address,
+                get_signer(&avs_writer.signer.clone(), &avs_writer.provider),
+            );
 
-        let allocation_manager_addr = get_allocation_manager_address(http_endpoint.clone()).await;
+            let allocation_manager_addr =
+                get_allocation_manager_address(http_endpoint.clone()).await;
 
-        service_manager
-            .setAppointee(
-                avs_writer.registry_coordinator_addr,
-                allocation_manager_addr,
-                alloy::primitives::FixedBytes(AllocationManager::createOperatorSetsCall::SELECTOR),
-            )
-            .send()
-            .await
-            .unwrap()
-            .get_receipt()
-            .await
-            .unwrap();
+            service_manager
+                .setAppointee(
+                    avs_writer.registry_coordinator_addr,
+                    allocation_manager_addr,
+                    alloy::primitives::FixedBytes(
+                        AllocationManager::createOperatorSetsCall::SELECTOR,
+                    ),
+                )
+                .send()
+                .await
+                .unwrap()
+                .get_receipt()
+                .await
+                .unwrap();
 
-        let operator_set_param = OperatorSetParam {
-            maxOperatorCount: 10,
-            kickBIPsOfOperatorStake: 50,
-            kickBIPsOfTotalStake: 50,
-        };
-        let minimum_stake = U96::from(100);
+            let operator_set_param = OperatorSetParam {
+                maxOperatorCount: 10,
+                kickBIPsOfOperatorStake: 50,
+                kickBIPsOfTotalStake: 50,
+            };
+            let minimum_stake = U96::from(100);
 
-        let strategy_param = StrategyParams {
-            strategy: get_erc20_mock_strategy(http_endpoint.clone()).await,
-            multiplier: U96::from(1),
-        };
+            let strategy_param = StrategyParams {
+                strategy: get_erc20_mock_strategy(http_endpoint.clone()).await,
+                multiplier: U96::from(1),
+            };
 
-        let look_ahead_period = 10;
+            let look_ahead_period = 10;
 
-        let tx_hash = avs_writer
-            .create_slashable_stake_quorum(
-                operator_set_param.clone(),
-                minimum_stake,
-                vec![strategy_param],
-                look_ahead_period,
-            )
-            .await
-            .unwrap();
+            let tx_hash = avs_writer
+                .create_slashable_stake_quorum(
+                    operator_set_param.clone(),
+                    minimum_stake,
+                    vec![strategy_param],
+                    look_ahead_period,
+                )
+                .await
+                .unwrap();
 
-        let tx_status = wait_transaction(&http_endpoint, tx_hash)
-            .await
-            .unwrap()
-            .status();
-        assert!(tx_status);
+            let tx_status = wait_transaction(&http_endpoint, tx_hash)
+                .await
+                .unwrap()
+                .status();
+            assert!(tx_status);
+        }
     }
-}
 
     #[tokio::test]
     async fn test_remove_strategies() {
@@ -1254,4 +1269,4 @@ mod tests {
         let ejecutor = registry_contract.ejector().call().await.unwrap();
         assert_eq!(ejecutor._0, new_ejector_address);
     }
-    }
+}
