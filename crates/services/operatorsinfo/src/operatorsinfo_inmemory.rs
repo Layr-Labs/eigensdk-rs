@@ -336,6 +336,7 @@ impl OperatorInfoServiceInMemory {
                 res = rx.recv() => {
                     match res {
                         Some(Err(err)) => {
+                            self.logger.error(&format!("Failed to query past registered operator events: {:?}.", err), "eigen-services-operatorsinfo.start_service");
                             return Err(err);
                         }
                         _ => continue,
