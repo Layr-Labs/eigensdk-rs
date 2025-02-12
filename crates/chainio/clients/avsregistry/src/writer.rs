@@ -547,7 +547,7 @@ impl AvsRegistryChainWriter {
 
     /// Remove strategies and their associated weights from the quorum's considered strategies.
     ///
-    /// Can only be caled by registry coordinator's owner.
+    /// Can only be called by the registry coordinator's owner.
     /// The quorum numbers must exist, else the tx will fail.
     /// higher indices should be *first* in the list of `indices_to_remove`, since otherwise
     /// the removal of lower index entries will cause a shift in the indices of the other strategies to remove
@@ -590,7 +590,7 @@ impl AvsRegistryChainWriter {
 
     /// Modifies the weights of existing strategies for a specific quorum.
     ///
-    /// Can only be caled by registry coordinator's owner.
+    /// Can only be called by the registry coordinator's owner.
     /// The quorum numbers must exist, else the tx will fail.
     ///  
     /// # Arguments
