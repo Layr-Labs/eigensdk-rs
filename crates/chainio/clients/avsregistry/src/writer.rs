@@ -887,7 +887,7 @@ mod tests {
 
         let signature_expiry = U256::MAX;
 
-        avs_writer
+        let tx_hash = avs_writer
             .register_operator_with_churn(
                 bls_key_pair,
                 digest_hash,
@@ -900,6 +900,12 @@ mod tests {
             )
             .await
             .unwrap();
+
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
+        assert!(tx_status);
 
         let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
         let is_registered = avs_reader
