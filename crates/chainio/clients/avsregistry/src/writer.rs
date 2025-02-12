@@ -1076,6 +1076,10 @@ mod tests {
             .unwrap()
             .status();
         assert!(tx_status);
+
+        let contract_stake_registry = StakeRegistry::new(avs_writer.stake_registry_addr, get_provider(&http_endpoint));
+        assert_eq!(contract_stake_registry.minimumStakeForQuorum(quorum_number).call().await.unwrap()._0,minimum_stake);
+
     }
 
     #[tokio::test]
@@ -1210,6 +1214,23 @@ mod tests {
             multiplier: U96::from(1),
         };
         let look_ahead_period = 10;
+
+        let tx_hash = avs_writer
+            .create_slashable_stake_quorum(
+                operator_set_param.clone(),
+                minimum_stake,
+                vec![strategy_param],
+                look_ahead_period,
+            )
+            .await
+            .unwrap();
+
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
+
+        assert!(tx_status);
     }
 
     #[tokio::test]
@@ -1230,68 +1251,15 @@ mod tests {
             .add_strategies(quorum_number, strategy_params.to_vec())
             .await
             .unwrap();
-        async fn test_create_slashable_stake_quorum() {
-            let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-            let private_key = FIRST_PRIVATE_KEY.to_string();
-            let avs_writer =
-                build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
 
-            let service_manager_address =
-                get_service_manager_address(http_endpoint.to_string()).await;
+        assert!(tx_status);
 
-            let service_manager = ServiceManagerBase::new(
-                service_manager_address,
-                get_signer(&avs_writer.signer.clone(), &avs_writer.provider),
-            );
 
-            let allocation_manager_addr =
-                get_allocation_manager_address(http_endpoint.clone()).await;
-
-            service_manager
-                .setAppointee(
-                    avs_writer.registry_coordinator_addr,
-                    allocation_manager_addr,
-                    alloy::primitives::FixedBytes(
-                        AllocationManager::createOperatorSetsCall::SELECTOR,
-                    ),
-                )
-                .send()
-                .await
-                .unwrap()
-                .get_receipt()
-                .await
-                .unwrap();
-
-            let operator_set_param = OperatorSetParam {
-                maxOperatorCount: 10,
-                kickBIPsOfOperatorStake: 50,
-                kickBIPsOfTotalStake: 50,
-            };
-            let minimum_stake = U96::from(100);
-
-            let strategy_param = StrategyParams {
-                strategy: get_erc20_mock_strategy(http_endpoint.clone()).await,
-                multiplier: U96::from(1),
-            };
-
-            let look_ahead_period = 10;
-
-            let tx_hash = avs_writer
-                .create_slashable_stake_quorum(
-                    operator_set_param.clone(),
-                    minimum_stake,
-                    vec![strategy_param],
-                    look_ahead_period,
-                )
-                .await
-                .unwrap();
-
-            let tx_status = wait_transaction(&http_endpoint, tx_hash)
-                .await
-                .unwrap()
-                .status();
-            assert!(tx_status);
-        }
+       
     }
 
     #[tokio::test]
