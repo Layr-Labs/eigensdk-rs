@@ -20,7 +20,7 @@ use eigen_utils::slashing::middleware::{
     servicemanagerbase::ServiceManagerBase, stakeregistry::StakeRegistry,
 };
 use std::str::FromStr;
-use tracing::info;
+use tracing::{info, warn};
 
 /// Gas limit for registerOperator in [`RegistryCoordinator`]
 pub const GAS_LIMIT_REGISTER_OPERATOR_REGISTRY_COORDINATOR: u64 = 2000000;
@@ -491,7 +491,7 @@ impl AvsRegistryChainWriter {
         let caller_address =
             get_signer(&self.signer.clone(), &self.provider).default_signer_address();
         if !reg_coordinator_owner.eq(&caller_address) {
-            info!(caller = %caller_address,registry_coordinator_owner = %reg_coordinator_owner,"Caller must be registry coordinator's owner when calling set_minimum_stake_for_quorum");
+            warn!(caller = %caller_address,registry_coordinator_owner = %reg_coordinator_owner,"Caller must be registry coordinator's owner when calling set_minimum_stake_for_quorum");
         }
 
         let tx = contract_stake_registry
@@ -533,7 +533,7 @@ impl AvsRegistryChainWriter {
         let caller_address =
             get_signer(&self.signer.clone(), &self.provider).default_signer_address();
         if !reg_coordinator_owner.eq(&caller_address) {
-            info!(caller = %caller_address,registry_coordinator_owner = %reg_coordinator_owner,"Caller must be registry coordinator's owner when adding strategies");
+            warn!(caller = %caller_address,registry_coordinator_owner = %reg_coordinator_owner,"Caller must be registry coordinator's owner when adding strategies");
         }
         let tx = contract_stake_registry
             .addStrategies(quorum_number, strategy_params)
@@ -577,7 +577,7 @@ impl AvsRegistryChainWriter {
         let caller_address =
             get_signer(&self.signer.clone(), &self.provider).default_signer_address();
         if !reg_coordinator_owner.eq(&caller_address) {
-            info!(caller = %caller_address,registry_coordinator_owner = %reg_coordinator_owner,"Caller must be registry coordinator's owner when removing strategies");
+            warn!(caller = %caller_address,registry_coordinator_owner = %reg_coordinator_owner,"Caller must be registry coordinator's owner when removing strategies");
         }
         let tx = contract_stake_registry
             .removeStrategies(quorum_number, indices_to_remove)
@@ -620,7 +620,7 @@ impl AvsRegistryChainWriter {
         let caller_address =
             get_signer(&self.signer.clone(), &self.provider).default_signer_address();
         if !reg_coordinator_owner.eq(&caller_address) {
-            info!(caller = %caller_address,registry_coordinator_owner = %reg_coordinator_owner,"Caller must be registry coordinator's owner when modifying strategy params");
+            warn!(caller = %caller_address,registry_coordinator_owner = %reg_coordinator_owner,"Caller must be registry coordinator's owner when modifying strategy params");
         }
 
         let tx = contract_stake_registry
