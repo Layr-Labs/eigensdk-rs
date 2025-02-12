@@ -1266,14 +1266,16 @@ mod tests {
 
         let contract_stake_registry =
             StakeRegistry::new(avs_writer.stake_registry_addr, get_provider(&http_endpoint));
+        let expected_strategy = contract_stake_registry
+        .strategyParams(quorum_number, "1".parse().unwrap())
+        .call()
+        .await
+        .unwrap()
+        .strategy;
+
         assert_eq!(
             strategy_params[0].strategy,
-            contract_stake_registry
-                .strategyParams(quorum_number, "1".parse().unwrap())
-                .call()
-                .await
-                .unwrap()
-                .strategy
+            expected_strategy  
         );
     }
 
