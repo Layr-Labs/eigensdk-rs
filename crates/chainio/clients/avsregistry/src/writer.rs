@@ -784,11 +784,9 @@ mod tests {
     };
     use alloy::primitives::aliases::U96;
     use alloy::primitives::U256;
-    use alloy::primitives::{address, Address, Bytes, FixedBytes};
+    use alloy::primitives::{address, Address, Bytes};
     use alloy::sol_types::SolCall;
     use eigen_common::{get_provider, get_signer};
-    use eigen_crypto_bls::BlsKeyPair;
-    use eigen_logging::get_test_logger;
     use eigen_testing_utils::anvil::{start_anvil_container, start_m2_anvil_container};
     use eigen_testing_utils::anvil_constants::get_allocation_manager_address;
     use eigen_testing_utils::anvil_constants::get_erc20_mock_strategy;
