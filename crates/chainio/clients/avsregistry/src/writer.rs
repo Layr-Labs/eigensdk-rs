@@ -10,6 +10,7 @@ use eigen_crypto_bls::{
     alloy_g1_point_to_g1_affine, convert_to_g1_point, convert_to_g2_point, BlsKeyPair,
 };
 use eigen_logging::logger::SharedLogger;
+use eigen_types::operator::QuorumNum;
 use eigen_utils::convert_stake_registry_strategy_params_to_registry_coordinator_strategy_params;
 use eigen_utils::slashing::middleware::registrycoordinator::ISlashingRegistryCoordinatorTypes::OperatorSetParam;
 use eigen_utils::slashing::middleware::registrycoordinator::{
@@ -442,7 +443,7 @@ impl AvsRegistryChainWriter {
     /// * `TxHash` - The transaction hash of the set operator set param transaction
     pub async fn set_operator_set_param(
         &self,
-        quorum_number: u8,
+        quorum_number: QuorumNum,
         operator_set_params: OperatorSetParam,
     ) -> Result<TxHash, AvsRegistryError> {
         info!("setting operator set param with the AVS's registry coordinator");
@@ -477,7 +478,7 @@ impl AvsRegistryChainWriter {
     /// * [`TxHash`] - hash of the transaction.
     pub async fn set_minimum_stake_for_quorum(
         &self,
-        quorum_number: u8,
+        quorum_number: QuorumNum,
         minimum_stake: U96,
     ) -> Result<TxHash, AvsRegistryError> {
         let provider = get_signer(&self.signer.clone(), &self.provider);
@@ -519,7 +520,7 @@ impl AvsRegistryChainWriter {
     /// * [`TxHash`] - hash of the transaction.
     pub async fn add_strategies(
         &self,
-        quorum_number: u8,
+        quorum_number: QuorumNum,
         strategy_params: Vec<StrategyParams>,
     ) -> Result<TxHash, AvsRegistryError> {
         let provider = get_signer(&self.signer.clone(), &self.provider);
@@ -555,7 +556,7 @@ impl AvsRegistryChainWriter {
     ///  
     /// # Arguments
     ///
-    /// # `quorum_number` - The respective quorum numbers in [`u8`].
+    /// # `quorum_number` - The respective quorum numbers in [`QuorumNum`].
     /// # `indices_to_remove` - [`Vec<U256>`].
     ///
     /// # Returns
@@ -563,7 +564,7 @@ impl AvsRegistryChainWriter {
     /// * [`TxHash`] - The transaction hash of the transaction.
     pub async fn remove_strategies(
         &self,
-        quorum_number: u8,
+        quorum_number: QuorumNum,
         indices_to_remove: Vec<U256>,
     ) -> Result<TxHash, AvsRegistryError> {
         let provider = get_signer(&self.signer.clone(), &self.provider);
@@ -596,7 +597,7 @@ impl AvsRegistryChainWriter {
     ///  
     /// # Arguments
     ///
-    /// # `quorum_number` - The respective quorum numbers in [`u8`].
+    /// # `quorum_number` - The respective quorum numbers in [`QuorumNum`].
     /// # `strategy_indices` - Indices of the strategies to change in [`Vec<U256>`].
     /// # `new_multipliers` -  New multipliers for the strategies in [`Vec<U96>`].
     ///
@@ -605,7 +606,7 @@ impl AvsRegistryChainWriter {
     /// * [`TxHash`] - The transaction hash of the transaction.
     pub async fn modify_strategy_params(
         &self,
-        quorum_number: u8,
+        quorum_number: QuorumNum,
         strategy_indices: Vec<U256>,
         new_multipliers: Vec<U96>,
     ) -> Result<TxHash, AvsRegistryError> {
