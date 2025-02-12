@@ -130,6 +130,15 @@ Those changes in added, changed or breaking changes, should include usage exampl
     let tx_hash = avs_writer.set_ejector(new_ejector_address).await.unwrap();
   ````
 
+* Added new method `set_ejection_cooldown` in `avsregistry/writer` in [#337](https://github.com/Layr-Labs/eigensdk-rs/pull/337).
+  ```rust
+      let new_cooldown = U256::from(120);
+      let tx_hash = avs_writer
+          .set_ejection_cooldown(new_cooldown)
+          .await
+          .unwrap();
+  ```
+
 * Added new method `eject_operator` in `avsregistry/writer` in [#328](https://github.com/Layr-Labs/eigensdk-rs/pull/328).
 
   ```rust
