@@ -149,6 +149,150 @@ Those changes in added, changed or breaking changes, should include usage exampl
         .await
         .unwrap();
   ```
+* Added missing stake registry view methods in `avsregistry/reader` in [#347](https://github.com/Layr-Labs/eigensdk-rs/pull/347).
+
+  * `weight_of_operator_for_quorum`
+
+  ```rust
+     let weight = avs_reader
+            .weight_of_operator_for_quorum(quorum_number, operator_address)
+            .await
+            .unwrap();
+  ```
+
+  * `strategy_params_length`
+
+  ```rust
+     let len = avs_reader
+            .strategy_params_length(quorum_number)
+            .await
+            .unwrap();
+  ```
+
+  * `strategy_params_by_index`
+
+  ```rust
+     let params = avs_reader
+            .strategy_params_by_index(quorum_number, index)
+            .await
+            .unwrap();
+  ```
+
+  * `get_stake_history_length`
+
+  ```rust
+     let len = avs_reader
+            .get_stake_history_length(operator_id, quorum_number)
+            .await
+            .unwrap();
+  ```
+
+  * `get_stake_history`
+
+  ```rust
+     let stake_update_vec = avs_reader
+            .get_stake_history(operator_id, quorum_number)
+            .await
+            .unwrap();
+  ```
+  * `get_latest_stake_update`
+
+  ```rust
+     let latest_stake_update = avs_reader
+            .get_latest_stake_update(operator_id, quorum_number)
+            .await
+            .unwrap();
+  ```
+  * `get_stake_update_at_index`
+
+  ```rust
+     let stake_update = avs_reader
+            .get_stake_update_at_index(quorum_number, operator_id, index)
+            .await
+            .unwrap();
+  ```
+
+  * `get_stake_update_at_block_number`
+
+  ```rust
+    let stake_update_at_index = avs_reader
+            .get_stake_update_at_block_number(operator_id, quorum_number, (block_number) as u32)
+            .await
+            .unwrap();
+  ```
+
+  * `get_stake_update_index_at_block_number`
+
+  ```rust
+      let stake_update_at_index_at_block_number = avs_reader
+            .get_stake_update_index_at_block_number(operator_id, quorum_number, block_number as u32)
+            .await
+            .unwrap();
+  ```
+
+  * `get_stake_at_block_number_and_index`
+
+  ```rust
+     let stake_at_index_at_block_number = avs_reader
+            .get_stake_at_block_number_and_index(
+                quorum_number,
+                block_number as u32,
+                operator_id,
+                index,
+            )
+            .await
+            .unwrap();
+  ```
+
+  * `get_total_stake_history_length`
+
+  ```rust
+     let total_stake_history_length = avs_reader
+            .get_total_stake_history_length(quorum_number)
+            .await
+            .unwrap();
+  ```
+
+  * `get_current_total_stake`
+
+  ```rust
+     let current_total_stake = avs_reader
+            .get_current_total_stake(quorum_number)
+            .await
+            .unwrap();
+
+  ```
+
+  * `get_total_stake_update_at_index`
+
+  ```rust
+     let total_stake_update_at_index = avs_reader
+            .get_total_stake_update_at_index(quorum_number, index)
+            .await
+            .unwrap();
+  ```
+
+  * `get_total_stake_at_block_number_from_index`
+
+  ```rust
+     let total_stake_at_block_number_from_index = avs_reader
+            .get_total_stake_at_block_number_from_index(
+                quorum_number,
+                block_number as u32,
+                index,
+            )
+            .await
+            .unwrap();
+  ```
+
+  * `get_total_stake_indices_at_block_number`
+
+  ```rust
+      let total_stake_indices_at_block_number = avs_reader
+            .get_total_stake_indices_at_block_number(block_number as u32, quorum_nums)
+            .await
+            .unwrap();
+  ```
 
 ### Changed
 

@@ -466,15 +466,16 @@ mod tests {
     use super::AvsRegistryChainWriter;
     use crate::test_utils::build_avs_registry_chain_reader;
     use crate::test_utils::create_operator_set;
-    use crate::test_utils::OPERATOR_BLS_KEY;
-    use alloy::primitives::{Address, Bytes, FixedBytes, U256};
+    use crate::test_utils::{
+        build_avs_registry_chain_writer, test_deregister_operator, test_register_operator,
+    };
+    use alloy::primitives::{Address, Bytes};
     use eigen_common::{get_provider, get_signer};
-    use eigen_crypto_bls::BlsKeyPair;
-    use eigen_logging::get_test_logger;
     use eigen_testing_utils::anvil::{start_anvil_container, start_m2_anvil_container};
+    use eigen_testing_utils::anvil_constants::get_service_manager_address;
     use eigen_testing_utils::anvil_constants::{
-        get_operator_state_retriever_address, get_registry_coordinator_address,
-        get_service_manager_address,
+        FIFTH_ADDRESS, FIFTH_PRIVATE_KEY, FIRST_ADDRESS, FIRST_PRIVATE_KEY, OPERATOR_BLS_KEY,
+        SECOND_ADDRESS,
     };
     use eigen_testing_utils::anvil_constants::{FIRST_ADDRESS, FIRST_PRIVATE_KEY, SECOND_ADDRESS};
     use eigen_testing_utils::transaction::wait_transaction;
@@ -483,38 +484,15 @@ mod tests {
     use eigen_utils::slashing::middleware::registrycoordinator::RegistryCoordinator;
     use eigen_utils::slashing::middleware::stakeregistry::StakeRegistry;
     use futures_util::StreamExt;
-    use std::str::FromStr;
-
-    async fn build_avs_registry_chain_writer(
-        http_endpoint: String,
-        private_key: String,
-    ) -> AvsRegistryChainWriter {
-        let registry_coordinator_address =
-            get_registry_coordinator_address(http_endpoint.clone()).await;
-        let operator_state_retriever_address =
-            get_operator_state_retriever_address(http_endpoint.clone()).await;
-        AvsRegistryChainWriter::build_avs_registry_chain_writer(
-            get_test_logger(),
-            http_endpoint,
-            private_key,
-            registry_coordinator_address,
-            operator_state_retriever_address,
-        )
-        .await
-        .unwrap()
-    }
 
     #[tokio::test]
     async fn test_avs_writer_methods() {
         let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
-        let bls_key =
-            "1371012690269088913462269866874713266643928125698382731338806296762673180359922"
-                .to_string();
-        let private_key =
-            "8b3a350cf5c34c9194ca85829a2df0ec3153be0318b5e2d3348e872092edffba".to_string();
+        let bls_key = OPERATOR_BLS_KEY.to_string();
+        let private_key = FIFTH_PRIVATE_KEY.to_string();
         let avs_writer =
             build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
-        let operator_addr = Address::from_str("9965507D1a55bcC2695C58ba16FB37d819B0A4dc").unwrap();
+        let operator_addr = FIFTH_ADDRESS;
         let quorum_nums = Bytes::from([0]);
 
         test_register_operator(
@@ -632,43 +610,178 @@ mod tests {
         assert!(tx_status);
     }
 
-    // this function is called from test_avs_writer_methods
-    async fn test_register_operator(
-        avs_writer: &AvsRegistryChainWriter,
-        private_key_decimal: String,
-        quorum_nums: Bytes,
-        http_url: String,
-    ) {
-        let bls_key_pair = BlsKeyPair::new(private_key_decimal).unwrap();
-        let digest_hash: FixedBytes<32> = FixedBytes::from([0x02; 32]);
+    #[tokio::test]
+    async fn test_update_socket() {
+        let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
+        let bls_key = OPERATOR_BLS_KEY.to_string();
+        let private_key = FIFTH_PRIVATE_KEY.to_string();
+        let avs_writer =
+            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
+        let quorum_nums = Bytes::from([0]);
 
-        // this is set to U256::MAX so that the registry does not take the signature as expired.
-        let signature_expiry = U256::MAX;
+        test_register_operator(&avs_writer, bls_key, quorum_nums, http_endpoint.clone()).await;
+
+        // Set up event poller to listen to update socket events
+        let provider = get_signer(&avs_writer.signer.clone(), &avs_writer.provider);
+
+        let contract_registry_coordinator =
+            RegistryCoordinator::new(avs_writer.registry_coordinator_addr, provider);
+
+        let event = contract_registry_coordinator.OperatorSocketUpdate_filter();
+
+        let poller = event.watch().await.unwrap();
+
+        let new_socket_addr = "not a socket";
+
+        // Update the socket for operator
         let tx_hash = avs_writer
-            .register_operator_in_quorum_with_avs_registry_coordinator(
-                bls_key_pair,
-                digest_hash,
-                signature_expiry,
-                quorum_nums.clone(),
-                "".into(),
-            )
+            .update_socket(new_socket_addr.into())
             .await
             .unwrap();
 
-        let tx_status = wait_transaction(&http_url, tx_hash).await.unwrap().status();
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
         assert!(tx_status);
+
+        // Assert that event socket is the same as passed in the update socket function
+        let mut stream = poller.into_stream();
+        let (stream_event, _) = stream.next().await.unwrap().unwrap();
+
+        assert_eq!(stream_event.socket, new_socket_addr);
     }
 
-    // this function is caller from test_avs_writer_methods
-    async fn test_deregister_operator(
-        avs_writer: &AvsRegistryChainWriter,
-        quorum_nums: Bytes,
-        http_url: String,
-    ) {
-        let tx_hash = avs_writer.deregister_operator(quorum_nums).await.unwrap();
+    #[tokio::test]
+    async fn test_set_account_identifier() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let avs_writer =
+            build_avs_registry_chain_writer(http_endpoint.clone(), FIRST_PRIVATE_KEY.to_string())
+                .await;
 
-        let tx_status = wait_transaction(&http_url, tx_hash).await.unwrap().status();
+        let service_manager_address = get_service_manager_address(http_endpoint.clone()).await;
+
+        let provider = get_provider(&http_endpoint);
+        let regcoord = RegistryCoordinator::new(avs_writer.registry_coordinator_addr, &provider);
+
+        let old_account_identifier = regcoord.accountIdentifier().call().await.unwrap()._0;
+        assert_eq!(old_account_identifier, service_manager_address);
+
+        let new_account_identifier = FIRST_ADDRESS;
+
+        let tx_hash = avs_writer
+            .set_account_identifier(new_account_identifier)
+            .await
+            .unwrap();
+
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
+
         assert!(tx_status);
+
+        let current_account_identifier = regcoord.accountIdentifier().call().await.unwrap()._0;
+        assert_eq!(current_account_identifier, new_account_identifier);
+    }
+
+    #[tokio::test]
+    async fn test_set_operator_set_param() {
+        let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
+        let bls_key = OPERATOR_BLS_KEY.to_string();
+        let private_key = FIRST_PRIVATE_KEY.to_string();
+        let avs_writer =
+            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
+        let quorum_nums = Bytes::from([0]);
+
+        test_register_operator(&avs_writer, bls_key, quorum_nums, http_endpoint.clone()).await;
+
+        let registry_coordinator_contract = RegistryCoordinator::new(
+            avs_writer.registry_coordinator_addr,
+            get_signer(&avs_writer.signer.clone(), &avs_writer.provider),
+        );
+
+        let operator_set_params = OperatorSetParam {
+            maxOperatorCount: 10,
+            kickBIPsOfOperatorStake: 50,
+            kickBIPsOfTotalStake: 50,
+        };
+
+        let tx_hash = avs_writer
+            .set_operator_set_param(0, operator_set_params.clone())
+            .await
+            .unwrap();
+
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
+
+        assert!(tx_status);
+
+        let op_params = registry_coordinator_contract
+            .getOperatorSetParams(0)
+            .call()
+            .await
+            .unwrap();
+
+        assert_eq!(
+            op_params._0.maxOperatorCount,
+            operator_set_params.maxOperatorCount
+        );
+        assert_eq!(
+            op_params._0.kickBIPsOfOperatorStake,
+            operator_set_params.kickBIPsOfOperatorStake
+        );
+        assert_eq!(
+            op_params._0.kickBIPsOfTotalStake,
+            operator_set_params.kickBIPsOfTotalStake
+        );
+    }
+
+    #[tokio::test]
+    async fn test_eject_operator() {
+        let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
+        let bls_key = OPERATOR_BLS_KEY.to_string();
+        let register_operator_address = FIRST_ADDRESS;
+        let private_key = FIRST_PRIVATE_KEY.to_string();
+        let quorum_nums = Bytes::from([0]);
+
+        let avs_writer =
+            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
+
+        test_register_operator(
+            &avs_writer,
+            bls_key,
+            quorum_nums.clone(),
+            http_endpoint.clone(),
+        )
+        .await;
+
+        let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
+        let is_registered = avs_reader
+            .is_operator_registered(register_operator_address)
+            .await
+            .unwrap();
+        assert!(is_registered);
+
+        let tx_hash = avs_writer
+            .eject_operator(register_operator_address, quorum_nums)
+            .await
+            .unwrap();
+
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
+
+        assert!(tx_status);
+
+        let is_registered = avs_reader
+            .is_operator_registered(register_operator_address)
+            .await
+            .unwrap();
+        assert!(!is_registered);
     }
 
     #[tokio::test]
