@@ -109,7 +109,9 @@ Those changes in added, changed or breaking changes, should include usage exampl
         .unwrap();
   ```
 * Added missing StakeRegistry writer functions in [#343](https://github.com/Layr-Labs/eigensdk-rs/pull/343).
-  * set_minimum_stake_for_quorum
+
+  * `set_minimum_stake_for_quorum`
+
     ```rust
     let tx_hash = avs_writer
       .set_minimum_stake_for_quorum(quorum_number, minimum_stake)
