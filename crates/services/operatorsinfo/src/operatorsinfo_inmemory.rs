@@ -163,6 +163,7 @@ impl OperatorInfoServiceInMemory {
                                 if let (Some(addr), Some(keys)) = (addr, keys) {
                                     let mut data = operator_state.operator_info_data.write().await;
                                     match data.get(&addr) {
+                                        // Prevent Historic data from overwriting Event data.
                                         Some((entry_src, _))
                                             if *entry_src == StateSource::Event
                                                 && state_src == StateSource::Historic => {}
@@ -176,6 +177,7 @@ impl OperatorInfoServiceInMemory {
                                     let mut id_map =
                                         operator_state.operator_addr_to_id.write().await;
                                     match id_map.get(&addr) {
+                                        // Prevent Historic data from overwriting Event data.
                                         Some((entry_src, _))
                                             if *entry_src == StateSource::Event
                                                 && state_src == StateSource::Historic => {}
@@ -192,6 +194,7 @@ impl OperatorInfoServiceInMemory {
                                 }
                                 let mut socket_data = operator_state.socket_dict.write().await;
                                 if let Some(socket) = socket_info {
+                                    // Prevent Historic data from overwriting Event data.
                                     match socket_data.get(&FixedBytes(*socket.id)) {
                                         Some((entry_src, _))
                                             if *entry_src == StateSource::Event
