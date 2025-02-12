@@ -1302,7 +1302,21 @@ mod tests {
             .remove_strategies(quorum_number, [U256::from(1)].to_vec())
             .await
             .unwrap();
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
+
+        assert!(tx_status);
+        let contract_stake_registry =
+            StakeRegistry::new(avs_writer.stake_registry_addr, get_provider(&http_endpoint));
+        assert!(contract_stake_registry
+            .strategyParams(quorum_number, "1".parse().unwrap())
+            .call()
+            .await
+            .is_err());
     }
+    #[tokio::test]
     async fn test_set_ejector_cooldown() {
         let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
         let private_key = FIRST_PRIVATE_KEY.to_string();
@@ -1404,6 +1418,18 @@ mod tests {
             .unwrap()
             .status();
         assert!(tx_status);
+
+        let contract_stake_registry =
+            StakeRegistry::new(avs_writer.stake_registry_addr, get_provider(&http_endpoint));
+        assert_eq!(
+            U96::from(2),
+            contract_stake_registry
+                .strategyParams(quorum_number, "1".parse().unwrap())
+                .call()
+                .await
+                .unwrap()
+                .multiplier
+        );
     }
 
     #[tokio::test]
