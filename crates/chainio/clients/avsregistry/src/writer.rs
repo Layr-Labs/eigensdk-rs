@@ -633,6 +633,51 @@ impl AvsRegistryChainWriter {
         info!(tx_hash = ?tx.tx_hash(),"modifying strategy params");
         Ok(*tx.tx_hash())
     }
+    /// Create a new quorum that tracks total delegated stake for operators.
+    ///
+    /// # Arguments
+    ///
+    /// * `operator_set_param` - Configures the quorum's max operator count and churn parameters
+    /// * `minimum_stake` - Sets the minimum stake required for an operator to register or remain registered
+    /// * `strategy_params` - A list of strategies and multipliers used by the StakeRegistry to calculate an operator's stake weight for the quorum
+    ///
+    /// # Returns
+    ///
+    /// * `TxHash` - The transaction hash of the create total delegated stake quorum transaction
+    pub async fn create_total_delegated_stake_quorum(
+        &self,
+        operator_set_param: OperatorSetParam,
+        minimum_stake: U96,
+        strategy_params: Vec<StrategyParams>,
+    ) -> Result<TxHash, AvsRegistryError> {
+        info!("creating total delegated stake quorum with the AVS's registry coordinator");
+
+        let provider = get_signer(&self.signer.clone(), &self.provider);
+
+        let contract_registry_coordinator =
+            RegistryCoordinator::new(self.registry_coordinator_addr, provider);
+        let registry_coordinator_strategy_params = strategy_params
+            .iter()
+            .map(|param| {
+                convert_stake_registry_strategy_params_to_registry_coordinator_strategy_params(
+                    param.clone(),
+                )
+            })
+            .collect();
+        let contract_call = contract_registry_coordinator.createTotalDelegatedStakeQuorum(
+            operator_set_param,
+            minimum_stake,
+            registry_coordinator_strategy_params,
+        );
+
+        contract_call
+            .send()
+            .await
+            .map_err(AvsRegistryError::AlloyContractError)
+            .inspect(|tx| info!(tx_hash = ?tx, "successfully created total delegated stake quorum with the AVS's registry coordinator"))
+            .map(|tx| *tx.tx_hash())
+    }
+
     /// Create a new quorum that tracks slashable stake for operators
     ///
     /// # Arguments
@@ -1031,6 +1076,140 @@ mod tests {
             .unwrap()
             .status();
         assert!(tx_status);
+    }
+
+    #[tokio::test]
+    async fn test_create_total_delegated_stake_quorum() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let private_key = FIRST_PRIVATE_KEY.to_string();
+        let avs_writer =
+            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
+
+        let service_manager_address = get_service_manager_address(http_endpoint.to_string()).await;
+
+        let service_manager = ServiceManagerBase::new(
+            service_manager_address,
+            get_signer(&avs_writer.signer.clone(), &avs_writer.provider),
+        );
+
+        let allocation_manager_addr = get_allocation_manager_address(http_endpoint.clone()).await;
+
+        service_manager
+            .setAppointee(
+                avs_writer.registry_coordinator_addr,
+                allocation_manager_addr,
+                alloy::primitives::FixedBytes(AllocationManager::createOperatorSetsCall::SELECTOR),
+            )
+            .send()
+            .await
+            .unwrap()
+            .get_receipt()
+            .await
+            .unwrap();
+        let operator_set_params = OperatorSetParam {
+            maxOperatorCount: 10,
+            kickBIPsOfOperatorStake: 50,
+            kickBIPsOfTotalStake: 50,
+        };
+        let minimum_stake = U96::from(10);
+        let strategy = get_erc20_mock_strategy(http_endpoint.to_string()).await;
+        let strategy_params = StrategyParams {
+            strategy,
+            multiplier: U96::from(1),
+        };
+        let strategy_params = vec![strategy_params];
+
+        let tx_hash = avs_writer
+            .create_total_delegated_stake_quorum(
+                operator_set_params.clone(),
+                minimum_stake,
+                strategy_params,
+            )
+            .await
+            .unwrap();
+
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
+
+        assert!(tx_status);
+
+        let registry_coordinator_contract = RegistryCoordinator::new(
+            avs_writer.registry_coordinator_addr,
+            get_signer(&avs_writer.signer.clone(), &avs_writer.provider),
+        );
+
+        let params = registry_coordinator_contract
+            .getOperatorSetParams(0)
+            .call()
+            .await
+            .unwrap();
+
+        assert_eq!(
+            params._0.maxOperatorCount,
+            operator_set_params.maxOperatorCount,
+        );
+
+        assert_eq!(
+            params._0.kickBIPsOfOperatorStake,
+            operator_set_params.kickBIPsOfOperatorStake,
+        );
+        assert_eq!(
+            params._0.kickBIPsOfTotalStake,
+            operator_set_params.kickBIPsOfTotalStake
+        );
+
+        let quorum = registry_coordinator_contract
+            .quorumCount()
+            .call()
+            .await
+            .unwrap()
+            ._0;
+
+        assert_eq!(quorum, 1);
+    }
+
+    #[tokio::test]
+    async fn test_create_slashable_stake_quorum() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let private_key = FIRST_PRIVATE_KEY.to_string();
+        let avs_writer =
+            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
+
+        let service_manager_address = get_service_manager_address(http_endpoint.to_string()).await;
+
+        let service_manager = ServiceManagerBase::new(
+            service_manager_address,
+            get_signer(&avs_writer.signer.clone(), &avs_writer.provider),
+        );
+
+        let allocation_manager_addr = get_allocation_manager_address(http_endpoint.clone()).await;
+
+        service_manager
+            .setAppointee(
+                avs_writer.registry_coordinator_addr,
+                allocation_manager_addr,
+                alloy::primitives::FixedBytes(AllocationManager::createOperatorSetsCall::SELECTOR),
+            )
+            .send()
+            .await
+            .unwrap()
+            .get_receipt()
+            .await
+            .unwrap();
+
+        let operator_set_param = OperatorSetParam {
+            maxOperatorCount: 10,
+            kickBIPsOfOperatorStake: 50,
+            kickBIPsOfTotalStake: 50,
+        };
+        let minimum_stake = U96::from(100);
+        let strategy_param = StrategyParams {
+            strategy: get_erc20_mock_strategy(http_endpoint.clone()).await,
+            multiplier: U96::from(1),
+        };
+        let look_ahead_period = 10;
     }
 
     #[tokio::test]
