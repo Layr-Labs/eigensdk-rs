@@ -501,13 +501,14 @@ mod tests {
     use eigen_crypto_bls::BlsKeyPair;
     use eigen_logging::get_test_logger;
     use eigen_testing_utils::anvil::{start_anvil_container, start_m2_anvil_container};
-    use eigen_testing_utils::anvil_constants::get_erc20_mock_strategy;
     use eigen_testing_utils::anvil_constants::{
-        get_operator_state_retriever_address, get_registry_coordinator_address,
-        get_service_manager_address,
+        get_erc20_mock_strategy, get_operator_state_retriever_address,
+        get_registry_coordinator_address, get_rewards_coordinator_address,
+        get_service_manager_address, FIRST_ADDRESS, FIRST_PRIVATE_KEY, GENESIS_TIMESTAMP,
+        SECOND_ADDRESS,
     };
-    use eigen_testing_utils::anvil_constants::{FIRST_ADDRESS, FIRST_PRIVATE_KEY, SECOND_ADDRESS};
     use eigen_testing_utils::transaction::wait_transaction;
+    use eigen_utils::slashing::core::irewardscoordinator::IRewardsCoordinator;
     use eigen_utils::slashing::middleware::registrycoordinator::ISlashingRegistryCoordinatorTypes::OperatorSetParam;
     use eigen_utils::slashing::middleware::registrycoordinator::RegistryCoordinator;
     use eigen_utils::slashing::middleware::servicemanagerbase::IRewardsCoordinatorTypes::OperatorDirectedRewardsSubmission;
@@ -629,18 +630,36 @@ mod tests {
             multiplier: U96::from(1),
         };
 
-        // Using `start_m2_anvil_container` the following values are set:
-        // - BLOCKTIMESTAMP = 1739300276
-        // - GENESIS_REWARDS_TIMESTAMP = 864000
-        // - MAX_REWARDS_DURATION = 86400
-        // - MAX_RETROACTIVE_LENGTH = 259200
-        // - CALCULATION_INTERVAL_SECONDS = 86400
+        let rewards_coordinator_address =
+            get_rewards_coordinator_address(http_endpoint.clone()).await;
+        let provider = get_provider(&http_endpoint);
+        let rewards_coordinator = IRewardsCoordinator::new(rewards_coordinator_address, &provider);
+
+        let calculation_interval_seconds = rewards_coordinator
+            .CALCULATION_INTERVAL_SECONDS()
+            .call()
+            .await
+            .unwrap()
+            ._0;
+
+        let rewards_duration = rewards_coordinator
+            .MAX_REWARDS_DURATION()
+            .call()
+            .await
+            .unwrap()
+            ._0;
+
+        // Calculate the most recent interval start time that is less than the current timestamp
+        // This ensures the reward submission aligns with the contract's time-based requirements
+        let intervals_since_genesis = GENESIS_TIMESTAMP / calculation_interval_seconds;
+        let last_valid_interval_start =
+            (intervals_since_genesis * calculation_interval_seconds) - calculation_interval_seconds;
 
         // These values are set to align with the contract's requirements for the `OperatorDirectedRewardsSubmission`.
         // https://github.com/Layr-Labs/eigenlayer-contracts/blob/ecaff6304de6cb0f43b42024ad55d0e8a0430790/src/contracts/core/RewardsCoordinator.sol#L414
         // https://github.com/Layr-Labs/eigenlayer-contracts/blob/ecaff6304de6cb0f43b42024ad55d0e8a0430790/src/contracts/core/RewardsCoordinator.sol#L482
-        let duration = 86400;
-        let start_timestamp = 1739145600;
+        let duration = rewards_duration;
+        let start_timestamp = last_valid_interval_start;
 
         let operator_rewards_submission = OperatorDirectedRewardsSubmission {
             token: token_address,

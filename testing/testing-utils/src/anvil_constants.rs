@@ -26,6 +26,9 @@ pub const ANVIL_HTTP_URL: &str = "http://localhost:8545";
 /// Local anvil rpc WS url
 pub const ANVIL_WS_URL: &str = "ws://localhost:8545";
 
+/// Local genesis timestamp
+pub const GENESIS_TIMESTAMP: u32 = 1739382671;
+
 /// Service Manager contract address
 pub async fn get_service_manager_address(rpc_url: String) -> Address {
     let provider = get_provider(&rpc_url);
