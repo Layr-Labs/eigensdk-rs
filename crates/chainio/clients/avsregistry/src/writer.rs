@@ -375,17 +375,17 @@ impl AvsRegistryChainWriter {
         Ok(*tx.tx_hash())
     }
 
-    /// set Churn Approver
+    /// Set churn approver
     ///
-    /// This function is used to set the new churn approver for the AVS's registry coordinator.
+    /// This function sets a new churn approver for the AVS's registry coordinator.
     ///
     /// # Arguments
     ///
-    /// * `new_churn_approver` - The address of the new churn approver.
+    /// * `new_churn_approver` - address of the new churn approver.
     ///
     /// # Returns
     ///
-    /// * `TxHash` - The transaction hash of the deregister operator transaction.
+    /// * `TxHash` - hash of the transaction.
     pub async fn set_churn_approver(
         &self,
         new_churn_approver: Address,
