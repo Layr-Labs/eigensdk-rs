@@ -461,7 +461,7 @@ impl AvsRegistryChainWriter {
         Ok(*tx.tx_hash())
     }
 
-    /// Sets minimum stake for the quorum
+    /// Sets the minimum stake for the quorum
     ///
     /// Can only be called by the registry coordinator's owner.
     /// The quorum number must exist, or else the tx will fail.
