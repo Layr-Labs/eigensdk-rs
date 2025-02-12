@@ -466,55 +466,32 @@ mod tests {
     use super::AvsRegistryChainWriter;
     use crate::test_utils::build_avs_registry_chain_reader;
     use crate::test_utils::create_operator_set;
-    use crate::test_utils::OPERATOR_BLS_KEY;
-    use alloy::primitives::{Address, Bytes, FixedBytes, U256};
-    use eigen_common::{get_provider, get_signer};
-    use eigen_crypto_bls::BlsKeyPair;
-    use eigen_logging::get_test_logger;
-    use eigen_testing_utils::anvil::{start_anvil_container, start_m2_anvil_container};
-    use eigen_testing_utils::anvil_constants::{
-        get_operator_state_retriever_address, get_registry_coordinator_address,
-        get_service_manager_address,
+    use crate::test_utils::{
+        build_avs_registry_chain_writer, test_deregister_operator, test_register_operator,
     };
-    use eigen_testing_utils::anvil_constants::{FIRST_ADDRESS, FIRST_PRIVATE_KEY, SECOND_ADDRESS};
+    use alloy::primitives::{Address, Bytes};
+    use eigen_common::{get_provider, get_signer};
+    use eigen_testing_utils::anvil::{start_anvil_container, start_m2_anvil_container};
+    use eigen_testing_utils::anvil_constants::get_service_manager_address;
+    use eigen_testing_utils::anvil_constants::{
+        FIFTH_ADDRESS, FIFTH_PRIVATE_KEY, FIRST_ADDRESS, FIRST_PRIVATE_KEY, OPERATOR_BLS_KEY,
+        SECOND_ADDRESS,
+    };
     use eigen_testing_utils::transaction::wait_transaction;
     use eigen_utils::rewardsv2::middleware::servicemanagerbase::ServiceManagerBase;
     use eigen_utils::slashing::middleware::registrycoordinator::ISlashingRegistryCoordinatorTypes::OperatorSetParam;
     use eigen_utils::slashing::middleware::registrycoordinator::RegistryCoordinator;
     use eigen_utils::slashing::middleware::stakeregistry::StakeRegistry;
     use futures_util::StreamExt;
-    use std::str::FromStr;
-
-    async fn build_avs_registry_chain_writer(
-        http_endpoint: String,
-        private_key: String,
-    ) -> AvsRegistryChainWriter {
-        let registry_coordinator_address =
-            get_registry_coordinator_address(http_endpoint.clone()).await;
-        let operator_state_retriever_address =
-            get_operator_state_retriever_address(http_endpoint.clone()).await;
-        AvsRegistryChainWriter::build_avs_registry_chain_writer(
-            get_test_logger(),
-            http_endpoint,
-            private_key,
-            registry_coordinator_address,
-            operator_state_retriever_address,
-        )
-        .await
-        .unwrap()
-    }
 
     #[tokio::test]
     async fn test_avs_writer_methods() {
         let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
-        let bls_key =
-            "1371012690269088913462269866874713266643928125698382731338806296762673180359922"
-                .to_string();
-        let private_key =
-            "8b3a350cf5c34c9194ca85829a2df0ec3153be0318b5e2d3348e872092edffba".to_string();
+        let bls_key = OPERATOR_BLS_KEY.to_string();
+        let private_key = FIFTH_PRIVATE_KEY.to_string();
         let avs_writer =
             build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
-        let operator_addr = Address::from_str("9965507D1a55bcC2695C58ba16FB37d819B0A4dc").unwrap();
+        let operator_addr = FIFTH_ADDRESS;
         let quorum_nums = Bytes::from([0]);
 
         test_register_operator(
@@ -632,53 +609,11 @@ mod tests {
         assert!(tx_status);
     }
 
-    // this function is called from test_avs_writer_methods
-    async fn test_register_operator(
-        avs_writer: &AvsRegistryChainWriter,
-        private_key_decimal: String,
-        quorum_nums: Bytes,
-        http_url: String,
-    ) {
-        let bls_key_pair = BlsKeyPair::new(private_key_decimal).unwrap();
-        let digest_hash: FixedBytes<32> = FixedBytes::from([0x02; 32]);
-
-        // this is set to U256::MAX so that the registry does not take the signature as expired.
-        let signature_expiry = U256::MAX;
-        let tx_hash = avs_writer
-            .register_operator_in_quorum_with_avs_registry_coordinator(
-                bls_key_pair,
-                digest_hash,
-                signature_expiry,
-                quorum_nums.clone(),
-                "".into(),
-            )
-            .await
-            .unwrap();
-
-        let tx_status = wait_transaction(&http_url, tx_hash).await.unwrap().status();
-        assert!(tx_status);
-    }
-
-    // this function is caller from test_avs_writer_methods
-    async fn test_deregister_operator(
-        avs_writer: &AvsRegistryChainWriter,
-        quorum_nums: Bytes,
-        http_url: String,
-    ) {
-        let tx_hash = avs_writer.deregister_operator(quorum_nums).await.unwrap();
-
-        let tx_status = wait_transaction(&http_url, tx_hash).await.unwrap().status();
-        assert!(tx_status);
-    }
-
     #[tokio::test]
     async fn test_update_socket() {
         let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
-        let bls_key =
-            "1371012690269088913462269866874713266643928125698382731338806296762673180359922"
-                .to_string();
-        let private_key =
-            "8b3a350cf5c34c9194ca85829a2df0ec3153be0318b5e2d3348e872092edffba".to_string();
+        let bls_key = OPERATOR_BLS_KEY.to_string();
+        let private_key = FIFTH_PRIVATE_KEY.to_string();
         let avs_writer =
             build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
         let quorum_nums = Bytes::from([0]);
@@ -752,9 +687,7 @@ mod tests {
     #[tokio::test]
     async fn test_set_operator_set_param() {
         let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
-        let bls_key =
-            "1371012690269088913462269866874713266643928125698382731338806296762673180359922"
-                .to_string();
+        let bls_key = OPERATOR_BLS_KEY.to_string();
         let private_key = FIRST_PRIVATE_KEY.to_string();
         let avs_writer =
             build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
