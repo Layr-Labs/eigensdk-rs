@@ -777,12 +777,14 @@ mod tests {
     use eigen_common::{get_provider, get_signer};
     use eigen_crypto_bls::BlsKeyPair;
     use eigen_testing_utils::anvil::{start_anvil_container, start_m2_anvil_container};
-    use eigen_testing_utils::anvil_constants::get_allocation_manager_address;
     use eigen_testing_utils::anvil_constants::get_erc20_mock_strategy;
     use eigen_testing_utils::anvil_constants::get_service_manager_address;
     use eigen_testing_utils::anvil_constants::SECOND_PRIVATE_KEY;
     use eigen_testing_utils::anvil_constants::THIRD_ADDRESS;
     use eigen_testing_utils::anvil_constants::THIRD_PRIVATE_KEY;
+    use eigen_testing_utils::anvil_constants::{
+        get_allocation_manager_address, OPERATOR_BLS_KEY_2,
+    };
     use eigen_testing_utils::anvil_constants::{
         FIFTH_ADDRESS, FIFTH_PRIVATE_KEY, FIRST_ADDRESS, FIRST_PRIVATE_KEY, OPERATOR_BLS_KEY,
         SECOND_ADDRESS,
@@ -1120,28 +1122,26 @@ mod tests {
             .status();
         assert!(tx_status);
 
-        let tx_hash = avs_writer.set_churn_approver(SECOND_ADDRESS).await.unwrap();
+        let tx_hash = avs_writer.set_churn_approver(THIRD_ADDRESS).await.unwrap();
         let tx_status = wait_transaction(&http_endpoint, tx_hash)
             .await
             .unwrap()
             .status();
         assert!(tx_status);
 
-        let avs_writer_3 =
-            build_avs_registry_chain_writer(http_endpoint.clone(), THIRD_PRIVATE_KEY.to_string())
+        let avs_writer_2 =
+            build_avs_registry_chain_writer(http_endpoint.clone(), SECOND_PRIVATE_KEY.to_string())
                 .await;
-        let bls_key_3 =
-            "15610126902690889134622698668747132666439281256983827313388062967626731803501"
-                .to_string();
+        let bls_key_2 = OPERATOR_BLS_KEY_2.to_string();
 
         let operator_sig_salt = FixedBytes::from([0x02; 32]);
         let churn_sig_salt = FixedBytes::from([0x05; 32]);
         let sig_expiry = U256::MAX;
-        let churn_private_key = SECOND_PRIVATE_KEY.to_string();
+        let churn_private_key = THIRD_PRIVATE_KEY.to_string();
 
-        let tx_hash = avs_writer_3
+        let tx_hash = avs_writer_2
             .register_operator_with_churn(
-                BlsKeyPair::new(bls_key_3).unwrap(),
+                BlsKeyPair::new(bls_key_2).unwrap(),
                 operator_sig_salt,
                 sig_expiry,
                 quorum_nums.clone(),
@@ -1169,7 +1169,7 @@ mod tests {
 
         let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
         let is_registered = avs_reader
-            .is_operator_registered(THIRD_ADDRESS)
+            .is_operator_registered(SECOND_ADDRESS)
             .await
             .unwrap();
         assert!(is_registered);
