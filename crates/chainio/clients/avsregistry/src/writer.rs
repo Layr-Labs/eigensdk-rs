@@ -193,7 +193,24 @@ impl AvsRegistryChainWriter {
         Ok(*tx.tx_hash())
     }
 
-    /// registerOperatorWithChurn
+    /// Registers an operator while replacing existing operators in full quorums. If any quorum reaches
+    /// its maximum operator capacity, `operatorKickParams` is used to replace an old operator with the new one.
+    ///
+    /// # Arguments
+    ///
+    /// * `bls_key_pair` - bls key pair of the operator
+    /// * `operator_to_avs_registration_sig_salt` - operator signature salt
+    /// * `operator_to_avs_registration_sig_expiry` - operator signature expiry
+    /// * `quorum_numbers` - quorum numbers to register the new operator
+    /// * `socket` - socket used for calling the contract with `registerOperator` function
+    /// * `operators_to_kick` - operators to kick from the quorum
+    /// * `churn_signer_private_key` - private key of the churn signer
+    /// * `churn_sig_salt` - churn signature salt
+    /// * `churn_sig_expiry` - churn signature expiry
+    ///
+    /// # Returns
+    ///
+    /// * `TxHash` - transaction hash of the register operator with churn transaction
     #[allow(clippy::too_many_arguments)]
     pub async fn register_operator_with_churn(
         &self,
@@ -276,8 +293,6 @@ impl AvsRegistryChainWriter {
                 .map_err(|_| AvsRegistryError::GetOperatorId)?, // REVIEW ERROR
         );
 
-        // CHURN SET UP
-
         let churn_wallet = PrivateKeySigner::from_str(&churn_signer_private_key)
             .map_err(|_| AvsRegistryError::InvalidPrivateKey)?;
 
@@ -312,12 +327,6 @@ impl AvsRegistryChainWriter {
             churn_signature_with_salt_and_expiry,
             operator_signature_with_salt_and_expiry,
         );
-
-        // let tx_call = contract_call.gas(GAS_LIMIT_REGISTER_OPERATOR_REGISTRY_COORDINATOR);
-        // let tx = tx_call
-        //     .send()
-        //     .await
-        //     .map_err(AvsRegistryError::AlloyContractError)?;
 
         let tx = contract_call
             .send()
@@ -902,7 +911,6 @@ mod tests {
         );
     }
 
-    /// This test
     #[tokio::test]
     async fn test_register_operator_with_churn() {
         let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
@@ -991,58 +999,6 @@ mod tests {
         let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
         let is_registered = avs_reader
             .is_operator_registered(THIRD_ADDRESS)
-            .await
-            .unwrap();
-        assert!(is_registered);
-    }
-
-    #[tokio::test]
-    async fn test_register_operator_with_churn_2() {
-        let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
-
-        let bls_key =
-            "14610126902690889134622698668747132666439281256983827313388062967626731803500"
-                .to_string();
-        let operator_private_key = SECOND_PRIVATE_KEY.to_string();
-        let quorum_nums = Bytes::from([0]);
-        let avs_writer =
-            build_avs_registry_chain_writer(http_endpoint.clone(), operator_private_key.clone())
-                .await;
-
-        let regcoor = RegistryCoordinator::new(
-            avs_writer.registry_coordinator_addr,
-            get_provider(&http_endpoint),
-        );
-
-        let churn_address = regcoor.churnApprover().call().await.unwrap()._0;
-
-        let churn_private_key = FIRST_PRIVATE_KEY.to_string();
-
-        let tx_hash = avs_writer
-            .register_operator_with_churn(
-                BlsKeyPair::new(bls_key).unwrap(),
-                FixedBytes::from([0x02; 32]),
-                U256::MAX,
-                quorum_nums.clone(),
-                "socket".to_string(),
-                vec![FIFTH_ADDRESS],
-                churn_private_key,
-                FixedBytes::from([0x05; 32]),
-                U256::MAX,
-            )
-            .await
-            .unwrap();
-
-        let tx_status = wait_transaction(&http_endpoint, tx_hash)
-            .await
-            .unwrap()
-            .status();
-        assert!(tx_status);
-
-        let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
-
-        let is_registered = avs_reader
-            .is_operator_registered(SECOND_ADDRESS)
             .await
             .unwrap();
         assert!(is_registered);
