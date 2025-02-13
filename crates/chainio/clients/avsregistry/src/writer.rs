@@ -293,7 +293,7 @@ impl AvsRegistryChainWriter {
 
         let operator_id = FixedBytes::from(
             operator_id_from_g1_pub_key(bls_key_pair.public_key())
-                .map_err(|_| AvsRegistryError::GetOperatorId)?, // REVIEW ERROR
+                .map_err(|_| AvsRegistryError::GetOperatorId)?,
         );
 
         let churn_wallet = PrivateKeySigner::from_str(&churn_signer_private_key)
