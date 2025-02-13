@@ -8,16 +8,23 @@ use eigen_crypto_bls::{
     alloy_g1_point_to_g1_affine, convert_to_g1_point, convert_to_g2_point, BlsKeyPair,
 };
 use eigen_logging::logger::SharedLogger;
-use eigen_utils::rewardsv2::middleware::ecdsaservicemanagerbase::ECDSAServiceManagerBase;
+use eigen_utils::slashing::middleware::blsapkregistry::BLSApkRegistry;
 use eigen_utils::slashing::middleware::registrycoordinator::ISlashingRegistryCoordinatorTypes::OperatorKickParam;
 use eigen_utils::slashing::middleware::registrycoordinator::ISlashingRegistryCoordinatorTypes::OperatorSetParam;
 use eigen_utils::slashing::middleware::registrycoordinator::{
-    IBLSApkRegistryTypes::PubkeyRegistrationParams, ISignatureUtils::SignatureWithSaltAndExpiry,
-    RegistryCoordinator,
+    ISignatureUtils::SignatureWithSaltAndExpiry, RegistryCoordinator,
 };
 use eigen_utils::slashing::middleware::{
     servicemanagerbase::ServiceManagerBase, stakeregistry::StakeRegistry,
 };
+
+// TESTING
+use eigen_utils::slashing::middleware::blsapkregistry::IBLSApkRegistryTypes::PubkeyRegistrationParams as BLSPubkeRegistrationParams;
+use eigen_utils::slashing::middleware::blsapkregistry::BN254::G1Point as BLSG1Point;
+use eigen_utils::slashing::middleware::blsapkregistry::BN254::G2Point as BLSG2Point;
+use eigen_utils::slashing::middleware::registrycoordinator::IBLSApkRegistryTypes::PubkeyRegistrationParams as LocalPubkeyRegParams;
+use eigen_utils::slashing::middleware::registrycoordinator::BN254::G1Point as RegistryG1Point;
+use eigen_utils::slashing::middleware::registrycoordinator::BN254::G2Point as RegistryG2Point;
 
 use eigen_common::{get_provider, get_signer};
 use std::str::FromStr;
@@ -35,6 +42,22 @@ pub struct AvsRegistryChainWriter {
     el_reader: ELChainReader,
     provider: String,
     signer: String,
+}
+
+fn convert_g1point_to_bls(point: RegistryG1Point) -> BLSG1Point {
+    // Asumiendo que ambos tienen campos 'x' y 'y'
+    BLSG1Point {
+        X: point.X,
+        Y: point.Y,
+    }
+}
+
+fn convert_g2point_to_bls(point: RegistryG2Point) -> BLSG2Point {
+    // Asumiendo que ambos tienen campos 'x' y 'y'
+    BLSG2Point {
+        X: point.X,
+        Y: point.Y,
+    }
 }
 
 impl AvsRegistryChainWriter {
@@ -150,7 +173,7 @@ impl AvsRegistryChainWriter {
         let g1_pub_key_bn254 = convert_to_g1_point(bls_key_pair.public_key().g1())?;
         let g2_pub_key_bn254 = convert_to_g2_point(bls_key_pair.public_key_g2().g2())?;
 
-        let pub_key_reg_params = PubkeyRegistrationParams {
+        let pub_key_reg_params = LocalPubkeyRegParams {
             pubkeyRegistrationSignature: alloy_g1_point_signed_msg,
             pubkeyG1: g1_pub_key_bn254,
             pubkeyG2: g2_pub_key_bn254,
@@ -213,7 +236,10 @@ impl AvsRegistryChainWriter {
         let operator_wallet = PrivateKeySigner::from_str(&self.signer)
             .map_err(|_| AvsRegistryError::InvalidPrivateKey)?;
         let operator_address = operator_wallet.address();
+
         dbg!(operator_address);
+        dbg!(&self.signer);
+
         info!(
             avs_service_manager = %self.service_manager_addr,
             operator = %operator_address,
@@ -222,7 +248,7 @@ impl AvsRegistryChainWriter {
         );
 
         let contract_registry_coordinator =
-            RegistryCoordinator::new(self.registry_coordinator_addr, provider);
+            RegistryCoordinator::new(self.registry_coordinator_addr, &provider);
 
         let g1_hashed_msg_to_sign = contract_registry_coordinator
             .pubkeyRegistrationMessageHash(operator_address)
@@ -238,10 +264,10 @@ impl AvsRegistryChainWriter {
         let g1_pub_key_bn254 = convert_to_g1_point(bls_key_pair.public_key().g1())?;
         let g2_pub_key_bn254 = convert_to_g2_point(bls_key_pair.public_key_g2().g2())?;
 
-        let pub_key_reg_params = PubkeyRegistrationParams {
-            pubkeyRegistrationSignature: alloy_g1_point_signed_msg,
-            pubkeyG1: g1_pub_key_bn254,
-            pubkeyG2: g2_pub_key_bn254,
+        let pub_key_reg_params = LocalPubkeyRegParams {
+            pubkeyRegistrationSignature: alloy_g1_point_signed_msg.clone(),
+            pubkeyG1: g1_pub_key_bn254.clone(),
+            pubkeyG2: g2_pub_key_bn254.clone(),
         };
 
         let msg_to_sign = self
@@ -269,7 +295,7 @@ impl AvsRegistryChainWriter {
             .iter()
             .map(|address| OperatorKickParam {
                 operator: *address,
-                quorumNumber: quorum_numbers[0], // TODO: manejar múltiples quorums
+                quorumNumber: 0_u8, // TODO: manejar múltiples quorums
             })
             .collect();
 
@@ -278,6 +304,35 @@ impl AvsRegistryChainWriter {
             .call()
             .await?
             ._0;
+
+        let bls_apk_registry = contract_registry_coordinator
+            .blsApkRegistry()
+            .call()
+            .await?
+            ._0;
+
+        let bls_contract = BLSApkRegistry::new(bls_apk_registry, &provider);
+
+        let pubkey_registration_message_hash = contract_registry_coordinator
+            .pubkeyRegistrationMessageHash(operator_address)
+            .call()
+            .await?
+            ._0;
+
+        let bls_reg_params = BLSPubkeRegistrationParams {
+            pubkeyG1: convert_g1point_to_bls(g1_pub_key_bn254),
+            pubkeyG2: convert_g2point_to_bls(g2_pub_key_bn254),
+            pubkeyRegistrationSignature: convert_g1point_to_bls(alloy_g1_point_signed_msg),
+        };
+
+        let bls_message_hash = convert_g1point_to_bls(pubkey_registration_message_hash);
+
+        let pubkey = bls_contract
+            .registerBLSPublicKey(operator_address, bls_reg_params, bls_message_hash)
+            .send()
+            .await?;
+
+        // CHURN SET UP
 
         let churn_wallet = PrivateKeySigner::from_str(&churn_signer_private_key)
             .map_err(|_| AvsRegistryError::InvalidPrivateKey)?;
@@ -324,6 +379,13 @@ impl AvsRegistryChainWriter {
             .send()
             .await
             .map_err(AvsRegistryError::AlloyContractError)?;
+
+        let operator_id = contract_registry_coordinator
+            .getOperatorId(operator_address)
+            .call()
+            .await?
+            ._0;
+        dbg!(operator_id);
 
         info!(
             tx_hash = ?tx.tx_hash(),
@@ -636,6 +698,7 @@ mod tests {
     use eigen_testing_utils::anvil::{start_anvil_container, start_m2_anvil_container};
     use eigen_testing_utils::anvil_constants::get_service_manager_address;
     use eigen_testing_utils::anvil_constants::SECOND_PRIVATE_KEY;
+    use eigen_testing_utils::anvil_constants::THIRD_PRIVATE_KEY;
     use eigen_testing_utils::anvil_constants::{
         FIFTH_ADDRESS, FIFTH_PRIVATE_KEY, FIRST_ADDRESS, FIRST_PRIVATE_KEY, OPERATOR_BLS_KEY,
         SECOND_ADDRESS,
@@ -910,10 +973,10 @@ mod tests {
         let quorum_nums = Bytes::from([0]);
         let avs_writer =
             build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
-        let regcoord = RegistryCoordinator::new(
-            avs_writer.registry_coordinator_addr,
-            get_provider(&http_endpoint),
-        );
+        // let regcoord = RegistryCoordinator::new(
+        //     avs_writer.registry_coordinator_addr,
+        //     get_provider(&http_endpoint),
+        // );
 
         // Register first operator with FIRST_PRIVATE_KEY
         test_register_operator(
@@ -955,16 +1018,16 @@ mod tests {
         assert!(tx_status);
 
         // REGISTER WITH CHURN FIFTH_ADDRESS
-        let avs_writer_5 =
-            build_avs_registry_chain_writer(http_endpoint.clone(), FIFTH_PRIVATE_KEY.to_string())
+        let avs_writer_3 =
+            build_avs_registry_chain_writer(http_endpoint.clone(), THIRD_PRIVATE_KEY.to_string())
                 .await;
-        let bls_key_5 =
-            "12248929636257230549931416853095037629726205319386239410403476017439825112537"
+        let bls_key_3 =
+            "15610126902690889134622698668747132666439281256983827313388062967626731803501"
                 .to_string();
 
-        let tx_hash = avs_writer_5
+        let tx_hash = avs_writer_3
             .register_operator_with_churn(
-                BlsKeyPair::new(bls_key_5).unwrap(),
+                BlsKeyPair::new(bls_key_3).unwrap(),
                 FixedBytes::from([0x02; 32]),
                 U256::MAX,
                 quorum_nums.clone(),
@@ -988,7 +1051,9 @@ mod tests {
     async fn test_register_operator_with_churn_2() {
         let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
 
-        let bls_key = OPERATOR_BLS_KEY.to_string();
+        let bls_key =
+            "14610126902690889134622698668747132666439281256983827313388062967626731803500"
+                .to_string();
         let operator_private_key = SECOND_PRIVATE_KEY.to_string();
         let quorum_nums = Bytes::from([0]);
         let avs_writer =
@@ -1000,7 +1065,6 @@ mod tests {
             get_provider(&http_endpoint),
         );
 
-        dbg!(operator_private_key);
         let churn_address = regcoor.churnApprover().call().await.unwrap()._0;
         dbg!(churn_address);
 
