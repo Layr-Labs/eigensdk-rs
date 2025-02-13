@@ -284,9 +284,10 @@ impl AvsRegistryChainWriter {
 
         let operators_to_kick_params: Vec<OperatorKickParam> = operators_to_kick
             .iter()
-            .map(|address| OperatorKickParam {
+            .zip(quorum_numbers,iter())
+            .map(|(address, quorum_number)| OperatorKickParam {
                 operator: *address,
-                quorumNumber: 0_u8, // TODO: manejar múltiples quorums
+                quorumNumber: *quorum_number,
             })
             .collect();
 
