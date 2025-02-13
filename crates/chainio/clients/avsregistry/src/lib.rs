@@ -20,18 +20,21 @@ pub mod fake_reader;
 
 #[cfg(test)]
 pub(crate) mod test_utils {
+    use crate::writer::AvsRegistryChainWriter;
     use alloy::{
-        primitives::{aliases::U96, Address},
+        primitives::{aliases::U96, Address, Bytes, FixedBytes, U256},
         providers::WalletProvider,
         sol_types::SolCall,
     };
     use eigen_common::get_signer;
+    use eigen_crypto_bls::BlsKeyPair;
     use eigen_logging::get_test_logger;
     use eigen_testing_utils::anvil_constants::{
         get_allocation_manager_address, get_erc20_mock_strategy,
         get_operator_state_retriever_address, get_registry_coordinator_address,
         get_service_manager_address, FIRST_PRIVATE_KEY,
     };
+    use eigen_testing_utils::transaction::wait_transaction;
     use eigen_utils::slashing::{
         core::allocationmanager::AllocationManager,
         middleware::registrycoordinator::{
@@ -42,9 +45,6 @@ pub(crate) mod test_utils {
     };
 
     use crate::reader::AvsRegistryChainReader;
-
-    pub(crate) const OPERATOR_BLS_KEY: &str =
-        "1371012690269088913462269866874713266643928125698382731338806296762673180359922";
 
     pub(crate) async fn create_operator_set(http_endpoint: &str, avs_address: Address) {
         let allocation_manager_addr =
@@ -114,6 +114,25 @@ pub(crate) mod test_utils {
             .unwrap();
     }
 
+    pub(crate) async fn build_avs_registry_chain_writer(
+        http_endpoint: String,
+        private_key: String,
+    ) -> AvsRegistryChainWriter {
+        let registry_coordinator_address =
+            get_registry_coordinator_address(http_endpoint.clone()).await;
+        let operator_state_retriever_address =
+            get_operator_state_retriever_address(http_endpoint.clone()).await;
+        AvsRegistryChainWriter::build_avs_registry_chain_writer(
+            get_test_logger(),
+            http_endpoint,
+            private_key,
+            registry_coordinator_address,
+            operator_state_retriever_address,
+        )
+        .await
+        .unwrap()
+    }
+
     pub(crate) async fn build_avs_registry_chain_reader(
         http_endpoint: String,
     ) -> AvsRegistryChainReader {
@@ -130,5 +149,44 @@ pub(crate) mod test_utils {
         )
         .await
         .unwrap()
+    }
+
+    // this function is called from test_avs_writer_methods
+    pub(crate) async fn test_register_operator(
+        avs_writer: &AvsRegistryChainWriter,
+        private_key_decimal: String,
+        quorum_nums: Bytes,
+        http_url: String,
+    ) {
+        let bls_key_pair = BlsKeyPair::new(private_key_decimal).unwrap();
+        let digest_hash: FixedBytes<32> = FixedBytes::from([0x02; 32]);
+
+        // this is set to U256::MAX so that the registry does not take the signature as expired.
+        let signature_expiry = U256::MAX;
+        let tx_hash = avs_writer
+            .register_operator_in_quorum_with_avs_registry_coordinator(
+                bls_key_pair,
+                digest_hash,
+                signature_expiry,
+                quorum_nums.clone(),
+                "".into(),
+            )
+            .await
+            .unwrap();
+
+        let tx_status = wait_transaction(&http_url, tx_hash).await.unwrap().status();
+        assert!(tx_status);
+    }
+
+    // this function is caller from test_avs_writer_methods
+    pub(crate) async fn test_deregister_operator(
+        avs_writer: &AvsRegistryChainWriter,
+        quorum_nums: Bytes,
+        http_url: String,
+    ) {
+        let tx_hash = avs_writer.deregister_operator(quorum_nums).await.unwrap();
+
+        let tx_status = wait_transaction(&http_url, tx_hash).await.unwrap().status();
+        assert!(tx_status);
     }
 }
