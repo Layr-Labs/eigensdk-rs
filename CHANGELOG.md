@@ -17,6 +17,15 @@ Those changes in added, changed or breaking changes, should include usage exampl
 
 ### Added 🎉
 
+* Added new method `update_avs_metadata_uri` in `avsregistry/writer` in [#344](https://github.com/Layr-Labs/eigensdk-rs/pull/344).
+
+  ```rust
+    let tx_hash = avs_writer
+        .update_avs_metadata_uri(new_metadata)
+        .await
+        .unwrap();
+  ```
+
 * Added new method `register_operator_with_churn` in `avsregistry/writer` in [#354](https://github.com/Layr-Labs/eigensdk-rs/pull/354).
 
   ```rust
@@ -69,8 +78,6 @@ Those changes in added, changed or breaking changes, should include usage exampl
 ## [0.3.0] - 2025-02-11
 
 ### Added
->>>>>>>
->>>>>>> dev
 
 * Added new method `set_slashable_stake_lookahead` in `avsregistry/writer` in [#278](https://github.com/Layr-Labs/eigensdk-rs/pull/278).
 
@@ -471,23 +478,7 @@ Those changes in added, changed or breaking changes, should include usage exampl
             .unwrap();
   ```
 
-* Added new method `update_avs_metadata_uri` in `avsregistry/writer` in [#344](https://github.com/Layr-Labs/eigensdk-rs/pull/344).
-
-  ```rust
-    let tx_hash = avs_writer
-        .update_avs_metadata_uri(new_metadata)
-        .await
-        .unwrap();
-  ```
-
 ### Changed
-
-* Changes in the way bindings are generated in [#243](https://github.com/Layr-Labs/eigensdk-rs/pull/243).
-  * The `bindings` target now generates the bindings using Docker with Foundry v0.3.0.
-  * The previous `bindings` target was renamed to `bindings_host`, as it runs without Docker. However the `bindings_host` target is for CI use only. To generate the bindings, please use the `bindings` target.
-* Fixed the rewardsv2 bindings version in readme to 0.5.4 in [#246](https://github.com/Layr-Labs/eigensdk-rs/pull/246).
-* Fixed typo in release-plz toml file in [#284](https://github.com/Layr-Labs/eigensdk-rs/pull/284).
-* Fixed incorrect package name in Cargo.toml for examples in [#285](https://github.com/Layr-Labs/eigensdk-rs/pull/285).
 
 ### Breaking changes
 
