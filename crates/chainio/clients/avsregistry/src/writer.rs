@@ -1,26 +1,28 @@
 use crate::error::AvsRegistryError;
 use alloy::primitives::aliases::U96;
 use alloy::primitives::{Address, Bytes, FixedBytes, TxHash, U256};
+use alloy::providers::WalletProvider;
 use alloy::signers::local::PrivateKeySigner;
 use alloy::signers::Signer;
 use eigen_client_elcontracts::reader::ELChainReader;
+use eigen_common::{get_provider, get_signer};
 use eigen_crypto_bls::{
     alloy_g1_point_to_g1_affine, convert_to_g1_point, convert_to_g2_point, BlsKeyPair,
 };
 use eigen_logging::logger::SharedLogger;
+use eigen_types::operator::QuorumNum;
+use eigen_utils::convert_stake_registry_strategy_params_to_registry_coordinator_strategy_params;
 use eigen_utils::slashing::middleware::registrycoordinator::ISlashingRegistryCoordinatorTypes::OperatorSetParam;
-use eigen_utils::slashing::middleware::registrycoordinator::IStakeRegistryTypes::StrategyParams;
 use eigen_utils::slashing::middleware::registrycoordinator::{
     IBLSApkRegistryTypes::PubkeyRegistrationParams, ISignatureUtils::SignatureWithSaltAndExpiry,
     RegistryCoordinator,
 };
+use eigen_utils::slashing::middleware::stakeregistry::IStakeRegistryTypes::StrategyParams;
 use eigen_utils::slashing::middleware::{
     servicemanagerbase::ServiceManagerBase, stakeregistry::StakeRegistry,
 };
-
-use eigen_common::{get_provider, get_signer};
 use std::str::FromStr;
-use tracing::info;
+use tracing::{info, warn};
 
 /// Gas limit for registerOperator in [`RegistryCoordinator`]
 pub const GAS_LIMIT_REGISTER_OPERATOR_REGISTRY_COORDINATOR: u64 = 2000000;
@@ -373,8 +375,37 @@ impl AvsRegistryChainWriter {
             .send()
             .await
             .map_err(AvsRegistryError::AlloyContractError)?;
-        info!(tx_hash = ?tx, "successfully updated the socket with the AVS's registry coordinator");
+        info!(tx_hash = ?tx,"successfully updated the socket with the AVS's registry coordinator");
         Ok(*tx.tx_hash())
+    }
+
+    /// Set churn approver
+    ///
+    /// This function sets a new churn approver for the AVS's registry coordinator.
+    ///
+    /// # Arguments
+    ///
+    /// * `new_churn_approver` - address of the new churn approver.
+    ///
+    /// # Returns
+    ///
+    /// * `TxHash` - hash of the transaction.
+    pub async fn set_churn_approver(
+        &self,
+        new_churn_approver: Address,
+    ) -> Result<TxHash, AvsRegistryError> {
+        info!("set new churn approver with the AVS's registry coordinator");
+        let provider = get_signer(&self.signer.clone(), &self.provider);
+
+        let contract_registry_coordinator =
+            RegistryCoordinator::new(self.registry_coordinator_addr, provider);
+
+        contract_registry_coordinator.setChurnApprover(new_churn_approver)
+            .send()
+            .await
+            .map_err(AvsRegistryError::AlloyContractError)
+            .inspect(|tx| info!(tx_hash = ?tx,"successfully updated the new churn approver with the AVS's registry coordinator"))
+            .map(|tx| *tx.tx_hash())
     }
 
     /// Force a deregistration of an operator from one or more quorums
@@ -441,7 +472,7 @@ impl AvsRegistryChainWriter {
     /// * `TxHash` - The transaction hash of the set operator set param transaction
     pub async fn set_operator_set_param(
         &self,
-        quorum_number: u8,
+        quorum_number: QuorumNum,
         operator_set_params: OperatorSetParam,
     ) -> Result<TxHash, AvsRegistryError> {
         info!("setting operator set param with the AVS's registry coordinator");
@@ -461,6 +492,176 @@ impl AvsRegistryChainWriter {
         Ok(*tx.tx_hash())
     }
 
+    /// Sets the minimum stake for the quorum
+    ///
+    /// Can only be called by the registry coordinator's owner.
+    /// The quorum number must exist, or else the tx will fail.
+    ///
+    /// # Arguments
+    ///
+    /// * `quorum_number` - The respective quorum number.
+    /// * `minimum_stake` - The minimum stake as a [`U96`].
+    ///
+    /// # Returns
+    ///
+    /// * [`TxHash`] - hash of the transaction.
+    pub async fn set_minimum_stake_for_quorum(
+        &self,
+        quorum_number: QuorumNum,
+        minimum_stake: U96,
+    ) -> Result<TxHash, AvsRegistryError> {
+        let provider = get_signer(&self.signer.clone(), &self.provider);
+
+        let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, provider);
+        let reg_coordinator_owner =
+            RegistryCoordinator::new(self.registry_coordinator_addr, get_provider(&self.provider))
+                .owner()
+                .call()
+                .await?
+                ._0;
+        let caller_address =
+            get_signer(&self.signer.clone(), &self.provider).default_signer_address();
+        if !reg_coordinator_owner.eq(&caller_address) {
+            warn!(caller = %caller_address,registry_coordinator_owner = %reg_coordinator_owner,"Caller must be registry coordinator's owner when calling set_minimum_stake_for_quorum");
+        }
+
+        let tx = contract_stake_registry
+            .setMinimumStakeForQuorum(quorum_number, minimum_stake)
+            .send()
+            .await
+            .map_err(AvsRegistryError::AlloyContractError)?;
+        info!(tx_hash = ?tx.tx_hash(),quorum_number = %quorum_number,"Setting minimum stake for quorum");
+        Ok(*tx.tx_hash())
+    }
+
+    /// Add strategies for the given quorum.
+    ///
+    /// Can only be called by the registry coordinator's owner.
+    /// The quorum numbers must exist, or else the tx will fail.
+    ///
+    /// # Arguments
+    ///
+    /// * `quorum_number` - The respective quorum's number.
+    /// * `strategy_params` - list of parameters for the strategies to add.
+    ///
+    /// # Returns
+    ///
+    /// * [`TxHash`] - hash of the transaction.
+    pub async fn add_strategies(
+        &self,
+        quorum_number: QuorumNum,
+        strategy_params: Vec<StrategyParams>,
+    ) -> Result<TxHash, AvsRegistryError> {
+        let provider = get_signer(&self.signer.clone(), &self.provider);
+
+        let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, provider);
+        let reg_coordinator_owner =
+            RegistryCoordinator::new(self.registry_coordinator_addr, get_provider(&self.provider))
+                .owner()
+                .call()
+                .await?
+                ._0;
+        let caller_address =
+            get_signer(&self.signer.clone(), &self.provider).default_signer_address();
+        if !reg_coordinator_owner.eq(&caller_address) {
+            warn!(caller = %caller_address,registry_coordinator_owner = %reg_coordinator_owner,"Caller must be registry coordinator's owner when adding strategies");
+        }
+        let tx = contract_stake_registry
+            .addStrategies(quorum_number, strategy_params)
+            .send()
+            .await
+            .map_err(AvsRegistryError::AlloyContractError)?;
+
+        info!(tx_hash = ?tx.tx_hash(),"Adding strategies");
+        Ok(*tx.tx_hash())
+    }
+
+    /// Remove strategies and their associated weights from the quorum's considered strategies.
+    ///
+    /// Can only be called by the registry coordinator's owner.
+    /// The quorum numbers must exist, else the tx will fail.
+    /// higher indices should be *first* in the list of `indices_to_remove`, since otherwise
+    /// the removal of lower index entries will cause a shift in the indices of the other strategies to remove
+    ///  
+    /// # Arguments
+    ///
+    /// # `quorum_number` - The respective quorum numbers in [`QuorumNum`].
+    /// # `indices_to_remove` - [`Vec<U256>`].
+    ///
+    /// # Returns
+    ///
+    /// * [`TxHash`] - The transaction hash of the transaction.
+    pub async fn remove_strategies(
+        &self,
+        quorum_number: QuorumNum,
+        indices_to_remove: Vec<U256>,
+    ) -> Result<TxHash, AvsRegistryError> {
+        let provider = get_signer(&self.signer.clone(), &self.provider);
+
+        let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, provider);
+        let reg_coordinator_owner =
+            RegistryCoordinator::new(self.registry_coordinator_addr, get_provider(&self.provider))
+                .owner()
+                .call()
+                .await?
+                ._0;
+        let caller_address =
+            get_signer(&self.signer.clone(), &self.provider).default_signer_address();
+        if !reg_coordinator_owner.eq(&caller_address) {
+            warn!(caller = %caller_address,registry_coordinator_owner = %reg_coordinator_owner,"Caller must be registry coordinator's owner when removing strategies");
+        }
+        let tx = contract_stake_registry
+            .removeStrategies(quorum_number, indices_to_remove)
+            .send()
+            .await
+            .map_err(AvsRegistryError::AlloyContractError)?;
+        info!(tx_hash = ?tx.tx_hash(),"Removing strategies");
+        Ok(*tx.tx_hash())
+    }
+
+    /// Modifies the weights of existing strategies for a specific quorum.
+    ///
+    /// Can only be called by the registry coordinator's owner.
+    /// The quorum numbers must exist, else the tx will fail.
+    ///  
+    /// # Arguments
+    ///
+    /// # `quorum_number` - The respective quorum numbers in [`QuorumNum`].
+    /// # `strategy_indices` - Indices of the strategies to change in [`Vec<U256>`].
+    /// # `new_multipliers` -  New multipliers for the strategies in [`Vec<U96>`].
+    ///
+    /// # Returns
+    ///
+    /// * [`TxHash`] - The transaction hash of the transaction.
+    pub async fn modify_strategy_params(
+        &self,
+        quorum_number: QuorumNum,
+        strategy_indices: Vec<U256>,
+        new_multipliers: Vec<U96>,
+    ) -> Result<TxHash, AvsRegistryError> {
+        let provider = get_signer(&self.signer.clone(), &self.provider);
+
+        let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, provider);
+        let reg_coordinator_owner =
+            RegistryCoordinator::new(self.registry_coordinator_addr, get_provider(&self.provider))
+                .owner()
+                .call()
+                .await?
+                ._0;
+        let caller_address =
+            get_signer(&self.signer.clone(), &self.provider).default_signer_address();
+        if !reg_coordinator_owner.eq(&caller_address) {
+            warn!(caller = %caller_address,registry_coordinator_owner = %reg_coordinator_owner,"Caller must be registry coordinator's owner when modifying strategy params");
+        }
+
+        let tx = contract_stake_registry
+            .modifyStrategyParams(quorum_number, strategy_indices, new_multipliers)
+            .send()
+            .await
+            .map_err(AvsRegistryError::AlloyContractError)?;
+        info!(tx_hash = ?tx.tx_hash(),"modifying strategy params");
+        Ok(*tx.tx_hash())
+    }
     /// Create a new quorum that tracks total delegated stake for operators.
     ///
     /// # Arguments
@@ -484,11 +685,18 @@ impl AvsRegistryChainWriter {
 
         let contract_registry_coordinator =
             RegistryCoordinator::new(self.registry_coordinator_addr, provider);
-
+        let registry_coordinator_strategy_params = strategy_params
+            .iter()
+            .map(|param| {
+                convert_stake_registry_strategy_params_to_registry_coordinator_strategy_params(
+                    param.clone(),
+                )
+            })
+            .collect();
         let contract_call = contract_registry_coordinator.createTotalDelegatedStakeQuorum(
             operator_set_param,
             minimum_stake,
-            strategy_params,
+            registry_coordinator_strategy_params,
         );
 
         contract_call
@@ -524,10 +732,18 @@ impl AvsRegistryChainWriter {
         let contract_registry_coordinator =
             RegistryCoordinator::new(self.registry_coordinator_addr, provider);
 
+        let registry_coordinator_strategy_params = strategy_params
+            .iter()
+            .map(|param| {
+                convert_stake_registry_strategy_params_to_registry_coordinator_strategy_params(
+                    param.clone(),
+                )
+            })
+            .collect();
         contract_registry_coordinator.createSlashableStakeQuorum(
             operator_set_param,
             minimum_stake,
-            strategy_params,
+            registry_coordinator_strategy_params,
             look_ahead_period,
             ).send()
             .await
@@ -590,14 +806,13 @@ impl AvsRegistryChainWriter {
 mod tests {
 
     use super::AvsRegistryChainWriter;
-    use crate::test_utils::build_avs_registry_chain_reader;
-    use crate::test_utils::create_operator_set;
     use crate::test_utils::{
-        build_avs_registry_chain_writer, test_deregister_operator, test_register_operator,
+        build_avs_registry_chain_reader, build_avs_registry_chain_writer, create_operator_set,
+        test_deregister_operator, test_register_operator,
     };
     use alloy::primitives::aliases::U96;
     use alloy::primitives::U256;
-    use alloy::primitives::{Address, Bytes};
+    use alloy::primitives::{address, Address, Bytes};
     use alloy::sol_types::SolCall;
     use eigen_common::{get_provider, get_signer};
     use eigen_testing_utils::anvil::{start_anvil_container, start_m2_anvil_container};
@@ -611,9 +826,9 @@ mod tests {
     use eigen_testing_utils::transaction::wait_transaction;
     use eigen_utils::slashing::core::allocationmanager::AllocationManager;
     use eigen_utils::slashing::middleware::registrycoordinator::ISlashingRegistryCoordinatorTypes::OperatorSetParam;
-    use eigen_utils::slashing::middleware::registrycoordinator::IStakeRegistryTypes::StrategyParams;
     use eigen_utils::slashing::middleware::registrycoordinator::RegistryCoordinator;
     use eigen_utils::slashing::middleware::servicemanagerbase::ServiceManagerBase;
+    use eigen_utils::slashing::middleware::stakeregistry::IStakeRegistryTypes::StrategyParams;
     use eigen_utils::slashing::middleware::stakeregistry::StakeRegistry;
     use futures_util::StreamExt;
 
@@ -785,6 +1000,37 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn test_set_churn_approver() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let private_key = FIRST_PRIVATE_KEY.to_string();
+        let avs_writer =
+            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
+
+        let provider = get_signer(&avs_writer.signer.clone(), &avs_writer.provider);
+
+        let regcoord = RegistryCoordinator::new(avs_writer.registry_coordinator_addr, &provider);
+
+        let current_churn_approver = regcoord.churnApprover().call().await.unwrap()._0;
+        let new_churn_approver = SECOND_ADDRESS;
+        assert_ne!(current_churn_approver, new_churn_approver);
+
+        let tx_hash = avs_writer
+            .set_churn_approver(new_churn_approver)
+            .await
+            .unwrap();
+
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
+
+        assert!(tx_status);
+
+        let current_churn_approver = regcoord.churnApprover().call().await.unwrap()._0;
+        assert_eq!(current_churn_approver, new_churn_approver);
+    }
+
+    #[tokio::test]
     async fn test_set_account_identifier() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
         let avs_writer =
@@ -868,6 +1114,36 @@ mod tests {
         assert_eq!(
             op_params._0.kickBIPsOfTotalStake,
             operator_set_params.kickBIPsOfTotalStake
+        );
+    }
+
+    #[tokio::test]
+    async fn test_set_minimum_stake_for_quorum() {
+        let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
+        let private_key = FIRST_PRIVATE_KEY.to_string();
+        let avs_writer = build_avs_registry_chain_writer(http_endpoint.clone(), private_key).await;
+        let quorum_number = 0;
+        let minimum_stake = U96::from(10);
+        let tx_hash = avs_writer
+            .set_minimum_stake_for_quorum(quorum_number, minimum_stake)
+            .await
+            .unwrap();
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
+        assert!(tx_status);
+
+        let contract_stake_registry =
+            StakeRegistry::new(avs_writer.stake_registry_addr, get_provider(&http_endpoint));
+        assert_eq!(
+            contract_stake_registry
+                .minimumStakeForQuorum(quorum_number)
+                .call()
+                .await
+                .unwrap()
+                ._0,
+            minimum_stake
         );
     }
 
@@ -1023,6 +1299,80 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn test_set_add_strategies() {
+        let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
+
+        let private_key = FIRST_PRIVATE_KEY.to_string();
+
+        let avs_writer = build_avs_registry_chain_writer(http_endpoint.clone(), private_key).await;
+
+        let quorum_number = 0;
+        let strategy_params = [StrategyParams {
+            strategy: address!("54945180dB7943c0ed0FEE7EdaB2Bd24620256bc"),
+            multiplier: U96::from(1),
+        }];
+
+        let tx_hash = avs_writer
+            .add_strategies(quorum_number, strategy_params.to_vec())
+            .await
+            .unwrap();
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
+
+        assert!(tx_status);
+
+        let contract_stake_registry =
+            StakeRegistry::new(avs_writer.stake_registry_addr, get_provider(&http_endpoint));
+        let expected_strategy = contract_stake_registry
+            .strategyParams(quorum_number, "1".parse().unwrap())
+            .call()
+            .await
+            .unwrap()
+            .strategy;
+
+        assert_eq!(strategy_params[0].strategy, expected_strategy);
+    }
+
+    #[tokio::test]
+    async fn test_remove_strategies() {
+        let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
+
+        let private_key = FIRST_PRIVATE_KEY.to_string();
+
+        let avs_writer = build_avs_registry_chain_writer(http_endpoint.clone(), private_key).await;
+
+        let quorum_number = 0;
+        let strategy_params = [StrategyParams {
+            strategy: address!("54945180dB7943c0ed0FEE7EdaB2Bd24620256bc"),
+            multiplier: U96::from(1),
+        }];
+
+        avs_writer
+            .add_strategies(quorum_number, strategy_params.to_vec())
+            .await
+            .unwrap();
+
+        let tx_hash = avs_writer
+            .remove_strategies(quorum_number, [U256::from(1)].to_vec())
+            .await
+            .unwrap();
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
+
+        assert!(tx_status);
+        let contract_stake_registry =
+            StakeRegistry::new(avs_writer.stake_registry_addr, get_provider(&http_endpoint));
+        assert!(contract_stake_registry
+            .strategyParams(quorum_number, "1".parse().unwrap())
+            .call()
+            .await
+            .is_err());
+    }
+    #[tokio::test]
     async fn test_set_ejector_cooldown() {
         let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
         let private_key = FIRST_PRIVATE_KEY.to_string();
@@ -1086,14 +1436,56 @@ mod tests {
             .await
             .unwrap()
             .status();
-
         assert!(tx_status);
+    }
 
-        let is_registered = avs_reader
-            .is_operator_registered(register_operator_address)
+    #[tokio::test]
+    async fn test_modify_strategy_params() {
+        let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
+
+        let private_key = FIRST_PRIVATE_KEY.to_string();
+
+        let avs_writer = build_avs_registry_chain_writer(http_endpoint.clone(), private_key).await;
+
+        let quorum_number = 0;
+        let strategy_params = [StrategyParams {
+            strategy: address!("54945180dB7943c0ed0FEE7EdaB2Bd24620256bc"),
+            multiplier: U96::from(1),
+        }];
+
+        avs_writer
+            .add_strategies(quorum_number, strategy_params.to_vec())
             .await
             .unwrap();
-        assert!(!is_registered);
+
+        let strategy_indices = [U256::from(1)];
+        let new_multipliers = [U96::from(2)];
+
+        let tx_hash = avs_writer
+            .modify_strategy_params(
+                quorum_number,
+                strategy_indices.to_vec(),
+                new_multipliers.to_vec(),
+            )
+            .await
+            .unwrap();
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
+        assert!(tx_status);
+
+        let contract_stake_registry =
+            StakeRegistry::new(avs_writer.stake_registry_addr, get_provider(&http_endpoint));
+        assert_eq!(
+            U96::from(2),
+            contract_stake_registry
+                .strategyParams(quorum_number, "1".parse().unwrap())
+                .call()
+                .await
+                .unwrap()
+                .multiplier
+        );
     }
 
     #[tokio::test]
