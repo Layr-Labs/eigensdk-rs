@@ -796,7 +796,7 @@ mod tests {
             .await
             .unwrap();
 
-        assert!(is_registered,);
+        assert!(is_registered);
     }
 
     #[tokio::test]
