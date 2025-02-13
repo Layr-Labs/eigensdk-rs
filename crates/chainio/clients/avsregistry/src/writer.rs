@@ -642,6 +642,33 @@ impl AvsRegistryChainWriter {
         Ok(*tx.tx_hash())
     }
 
+    /// Update the AVS metadata URI.
+    ///
+    /// This function updates the AVS metadata URI of the AVS's RegistryCoordinator.
+    ///
+    /// # Arguments
+    ///
+    /// * `avs_metadata_uri` - The new AVS metadata URI.
+    ///
+    /// # Returns
+    ///
+    /// * `TxHash` - hash of the sent transaction.
+    pub async fn update_avs_metadata_uri(
+        &self,
+        avs_metadata_uri: &str,
+    ) -> Result<TxHash, AvsRegistryError> {
+        info!("updating the AVS metadata URI of the AVS's registry coordinator");
+        let provider = get_signer(&self.signer.clone(), &self.provider);
+
+        ServiceManagerBase::new(self.service_manager_addr, provider)
+            .updateAVSMetadataURI(avs_metadata_uri.to_string())
+            .send()
+            .await
+            .inspect(|tx| info!(tx_hash = ?tx, "successfully updated AVS metadata URI"))
+            .map_err(AvsRegistryError::AlloyContractError)
+            .map(|tx| *tx.tx_hash())
+    }
+
     /// Sets the minimum stake for the quorum
     ///
     /// Can only be called by the registry coordinator's owner.
@@ -1152,6 +1179,28 @@ mod tests {
         let (stream_event, _) = stream.next().await.unwrap().unwrap();
 
         assert_eq!(stream_event.socket, new_socket_addr);
+    }
+
+    #[tokio::test]
+    async fn test_update_avs_metadata_uri() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let avs_writer =
+            build_avs_registry_chain_writer(http_endpoint.clone(), FIRST_PRIVATE_KEY.to_string())
+                .await;
+
+        let new_metadata = "https://avs-metadata-uri.com";
+
+        let tx_hash = avs_writer
+            .update_avs_metadata_uri(new_metadata)
+            .await
+            .unwrap();
+
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
+
+        assert!(tx_status);
     }
 
     #[tokio::test]
