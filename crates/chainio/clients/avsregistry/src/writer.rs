@@ -606,25 +606,6 @@ impl AvsRegistryChainWriter {
         info!(tx_hash = ?tx, "successfully set operator set param with the AVS's registry coordinator");
         Ok(*tx.tx_hash())
     }
-
-    /// BORRAR
-    pub async fn set_churn_approver(
-        &self,
-        new_churn_approver: Address,
-    ) -> Result<TxHash, AvsRegistryError> {
-        info!("set new churn approver with the AVS's registry coordinator");
-        let provider = get_signer(&self.signer.clone(), &self.provider);
-
-        let contract_registry_coordinator =
-            RegistryCoordinator::new(self.registry_coordinator_addr, provider);
-
-        contract_registry_coordinator.setChurnApprover(new_churn_approver)
-            .send()
-            .await
-            .map_err(AvsRegistryError::AlloyContractError)
-            .inspect(|tx| info!(tx_hash = ?tx,"successfully updated the new churn approver with the AVS's registry coordinator"))
-            .map(|tx| *tx.tx_hash())
-    }
 }
 
 #[cfg(test)]
