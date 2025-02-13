@@ -39,6 +39,15 @@ Those changes in added, changed or breaking changes, should include usage exampl
         .unwrap();
   ```
 
+* Added new method `set_churn_approver` in `avsregistry/writer` in [#333](https://github.com/Layr-Labs/eigensdk-rs/pull/333).
+
+  ```rust
+  let tx_hash = avs_writer
+      .set_churn_approver(new_churn_approver_address)
+      .await
+      .unwrap();
+  ```
+
 ### Breaking Changes 🛠
 
 ### Deprecated ⚠️
@@ -48,10 +57,12 @@ Those changes in added, changed or breaking changes, should include usage exampl
 ### Documentation 📚
 
 ### Other Changes
+* fix: missing block while waiting for operator state history in [#290](https://github.com/Layr-Labs/eigensdk-rs/pull/290).
 
 ## [0.3.0] - 2025-02-11
 ### Added
 * Added new method `set_slashable_stake_lookahead` in `avsregistry/writer` in [#278](https://github.com/Layr-Labs/eigensdk-rs/pull/278).
+
   ```rust
     let quorum_number = 0_u8;
     let lookahead = 10_u32;
@@ -60,6 +71,7 @@ Those changes in added, changed or breaking changes, should include usage exampl
         .await
         .unwrap();
   ```
+
 * Added new method `set_rewards_initiator` in `avsregistry/writer` in [#273](https://github.com/Layr-Labs/eigensdk-rs/pull/273).
 
   ```rust
@@ -143,6 +155,74 @@ Those changes in added, changed or breaking changes, should include usage exampl
         .set_operator_set_param(0, operator_set_params.clone())
         .await
         .unwrap();
+  ```
+
+* Added new method `create_total_delegated_stake_quorum` in `avsregistry/writer` in [#342](https://github.com/Layr-Labs/eigensdk-rs/pull/342).
+  ```rust
+    let operator_set_params = OperatorSetParam {
+        maxOperatorCount: 10,
+        kickBIPsOfOperatorStake: 50,
+        kickBIPsOfTotalStake: 50,
+    };
+    let minimum_stake = U96::from(10);
+    let strategy = get_erc20_mock_strategy(http_endpoint.to_string()).await;
+    let strategy_params = StrategyParams {
+        strategy,
+        multiplier: U96::from(1),
+    };
+    let strategy_params = vec![strategy_params];
+
+    avs_writer
+        .create_total_delegated_stake_quorum(
+            operator_set_params,
+            minimum_stake,
+            strategy_params,
+        )
+        .await
+        .unwrap();
+  ```
+
+* Added new method `create_slashable_stake_quorum` in `avsregistry/writer` in [#340](https://github.com/Layr-Labs/eigensdk-rs/pull/340).
+
+  ```rust
+      let operator_set_param = OperatorSetParam {
+          maxOperatorCount: 10,
+          kickBIPsOfOperatorStake: 50,
+          kickBIPsOfTotalStake: 50,
+      };
+      let minimum_stake = U96::from(100);
+      let strategy_param = StrategyParams {
+          strategy: get_erc20_mock_strategy(http_endpoint.clone()).await,
+          multiplier: U96::from(1),
+      };
+      let look_ahead_period = 10;
+
+      let tx_hash = avs_writer
+          .create_slashable_stake_quorum(
+              operator_set_param,
+              minimum_stake,
+              vec![strategy_param],
+              look_ahead_period,
+          )
+          .await
+          .unwrap();
+  ```
+
+* Added new method `set_ejector` in `avsregistry/writer` in [#330](https://github.com/Layr-Labs/eigensdk-rs/pull/330).
+  
+  ```rust
+    let new_ejector_address = address!("70997970C51812dc3A010C7d01b50e0d17dc79C8");
+    let tx_hash = avs_writer.set_ejector(new_ejector_address).await.unwrap();
+  ````
+
+* Added new method `set_ejection_cooldown` in `avsregistry/writer` in [#337](https://github.com/Layr-Labs/eigensdk-rs/pull/337).
+
+  ```rust
+      let new_cooldown = U256::from(120);
+      let tx_hash = avs_writer
+          .set_ejection_cooldown(new_cooldown)
+          .await
+          .unwrap();
   ```
 
 * Added new method `eject_operator` in `avsregistry/writer` in [#328](https://github.com/Layr-Labs/eigensdk-rs/pull/328).
@@ -318,11 +398,12 @@ Those changes in added, changed or breaking changes, should include usage exampl
 
 ### Changed
 
-
 ### Breaking changes
+
 * refactor: update interface on `bls aggregation` in [#254](https://github.com/Layr-Labs/eigensdk-rs/pull/254)
   * Introduces a new struct `TaskMetadata` with a constructor `TaskMetadata::new` to initialize a new task and a method `with_window_duration` to set the window duration.
   * Refactors `initialize_new_task` and `single_task_aggregator` to accept a `TaskMetadata` struct instead of multiple parameters.
+
     ```rust
     // BEFORE
     bls_agg_service
@@ -346,8 +427,9 @@ Those changes in added, changed or breaking changes, should include usage exampl
       )
     bls_agg_service.initialize_new_task(metadata).await.unwrap();
     ```
-    
+
   * Removes `initialize_new_task_with_window` since `window_duration` can now be set in `TaskMetadata`.
+
     ```rust
     // BEFORE
     bls_agg_service
@@ -371,9 +453,11 @@ Those changes in added, changed or breaking changes, should include usage exampl
             time_to_expiry,
         ).with_window_duration(window_duration);
     bls_agg_service.initialize_new_task(metadata).await.unwrap();
-* refactor: encapsulate parameters into `TaskSignature` in [#260](https://github.com/Layr-Labs/eigensdk-rs/pull/260) 
+* refactor: encapsulate parameters into `TaskSignature` in [#260](https://github.com/Layr-Labs/eigensdk-rs/pull/260)
+
   * Introduced `TaskSignature` struct to encapsulate parameters related to task signatures:
   * Updated `process_new_signature` to accept a `TaskSignature` struct instead of multiple parameters.
+
     ```rust
     // BEFORE
     bls_agg_service.process_new_signature(task_index, task_response_digest, bls_signature, operator_id).await.unwrap();
@@ -387,6 +471,7 @@ Those changes in added, changed or breaking changes, should include usage exampl
     );
     bls_agg_service.process_new_signature(task_signature).await.unwrap();
     ```
+
 * Slashing UAM changes in [#248](https://github.com/Layr-Labs/eigensdk-rs/pull/248).
 
 ### Removed
@@ -494,10 +579,13 @@ Those changes in added, changed or breaking changes, should include usage exampl
 * ci: split tests and coverage by @MegaRedHand in <https://github.com/Layr-Labs/eigensdk-rs/pull/286>
 
 ## [0.1.3] - 2024-01-17
+
 ### Added 🎉
-* feat: add rewards-v2 related functionality by @supernovahs in https://github.com/Layr-Labs/eigensdk-rs/pull/221
+
+* feat: add rewards-v2 related functionality by @supernovahs in <https://github.com/Layr-Labs/eigensdk-rs/pull/221>
   * New methods in `ELChainReader`:
     * `get_operator_avs_split`
+
     ```rust
     // Given a chain_reader, an operator_address and an avs_address:
 
@@ -506,8 +594,9 @@ Those changes in added, changed or breaking changes, should include usage exampl
         .await
         .unwrap();
     ```
-    
+
     * `get_operator_pi_split`
+
     ```rust
     // Given a chain_reader and an operator_address:
 
@@ -520,6 +609,7 @@ Those changes in added, changed or breaking changes, should include usage exampl
 
   * New methods in `ELChainWriter`:
     * `set_operator_avs_split`
+
     ```rust
     // Given a chain_writer, an operator_address, an avs_address and a split:
 
@@ -529,7 +619,9 @@ Those changes in added, changed or breaking changes, should include usage exampl
         .unwrap();
     let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
     ```
+
     * `set_operator_pi_split`
+
     ```rust
     // Given a chain_writer, an operator_address and a split:
 
@@ -539,10 +631,12 @@ Those changes in added, changed or breaking changes, should include usage exampl
         .unwrap();
     let receipt = wait_transaction(&http_endpoint, tx_hash).await.unwrap();
     ```
+
   * Bindings updated for rewards-v2 core contracts release
 
 ### Breaking Changes 🛠
-* feat!: remove delegation manager from `ELChainWriter` by @supernovahs in https://github.com/Layr-Labs/eigensdk-rs/pull/214
+
+* feat!: remove delegation manager from `ELChainWriter` by @supernovahs in <https://github.com/Layr-Labs/eigensdk-rs/pull/214>
   * `ELChainWriter::new` no longer receives the delegation manager address as first parameter.
     Before, a chainWriter was created this way:
 
@@ -568,7 +662,8 @@ Those changes in added, changed or breaking changes, should include usage exampl
             "bead471191bea97fc3aeac36c9d74c895e8a6242602e144e43152f96219e96e8".to_string(),
         );
     ```
-* feat!: change way bindings are generated by @MegaRedHand in https://github.com/Layr-Labs/eigensdk-rs/pull/204
+
+* feat!: change way bindings are generated by @MegaRedHand in <https://github.com/Layr-Labs/eigensdk-rs/pull/204>
   * `eigen_utils::core` contains bindings related to core contracts
   * `eigen_utils::middleware` contains bindings related to middleware contracts
   * `eigen_utils::sdk` contains bindings related to the SDK (should only be used for testing)
@@ -576,18 +671,23 @@ Those changes in added, changed or breaking changes, should include usage exampl
   Now, to update the bindings, run `make bindings`. This command will generate the bindings files in the folder: `crates/utils`.
 
 ### Documentation 📚
-* docs: add CHANGELOG.md by @lferrigno in https://github.com/Layr-Labs/eigensdk-rs/pull/220
+
+* docs: add CHANGELOG.md by @lferrigno in <https://github.com/Layr-Labs/eigensdk-rs/pull/220>
+
 ### Other Changes
-* ci: change docker setup action for official one by @MegaRedHand in https://github.com/Layr-Labs/eigensdk-rs/pull/219
-* docs: add error message for `cargo test` on darwin by @MegaRedHand in https://github.com/Layr-Labs/eigensdk-rs/pull/215
-* test: fix `test_register_and_update_operator` by @ricomateo in https://github.com/Layr-Labs/eigensdk-rs/pull/223
-* chore: update way anvil state dump is generated by @ricomateo in https://github.com/Layr-Labs/eigensdk-rs/pull/222
-* fix: disable doctests on `eigen-utils` by @MegaRedHand in https://github.com/Layr-Labs/eigensdk-rs/pull/227
-* chore: bump version by @MegaRedHand in https://github.com/Layr-Labs/eigensdk-rs/pull/228
-* docs: add GitHub release changelog configuration by @MegaRedHand in https://github.com/Layr-Labs/eigensdk-rs/pull/229
+
+* ci: change docker setup action for official one by @MegaRedHand in <https://github.com/Layr-Labs/eigensdk-rs/pull/219>
+* docs: add error message for `cargo test` on darwin by @MegaRedHand in <https://github.com/Layr-Labs/eigensdk-rs/pull/215>
+* test: fix `test_register_and_update_operator` by @ricomateo in <https://github.com/Layr-Labs/eigensdk-rs/pull/223>
+* chore: update way anvil state dump is generated by @ricomateo in <https://github.com/Layr-Labs/eigensdk-rs/pull/222>
+* fix: disable doctests on `eigen-utils` by @MegaRedHand in <https://github.com/Layr-Labs/eigensdk-rs/pull/227>
+* chore: bump version by @MegaRedHand in <https://github.com/Layr-Labs/eigensdk-rs/pull/228>
+* docs: add GitHub release changelog configuration by @MegaRedHand in <https://github.com/Layr-Labs/eigensdk-rs/pull/229>
 
 ## [0.1.2] - 2025-01-09
+
 ### Added
+
 * Added retries with exponential backoff to send transactions in [#158](https://github.com/Layr-Labs/eigensdk-rs/pull/158)
 * Added `query_registration_detail` method in [#162](https://github.com/Layr-Labs/eigensdk-rs/pull/162)
 * Added clippy lints in `Cargo.toml` in [#159](https://github.com/Layr-Labs/eigensdk-rs/pull/159)
@@ -595,16 +695,19 @@ Those changes in added, changed or breaking changes, should include usage exampl
 * Added `common` crate to `eigensdk` crate in [#213](https://github.com/Layr-Labs/eigensdk-rs/pull/213)
 
 ### Changed
+
 * Updated `eigenlayer-middleware` to v0.4.3 (rewards release) in [#177](https://github.com/Layr-Labs/eigensdk-rs/pull/177)
 * Fixed Holesky RPC provider URL in [#184](https://github.com/Layr-Labs/eigensdk-rs/pull/184)
 * Fixed BLS signature logic in [#174](https://github.com/Layr-Labs/eigensdk-rs/pull/174)
 
 ### Removed
+
 * Deleted `TxManager` in [#151](https://github.com/Layr-Labs/eigensdk-rs/pull/151)
 * Removed `TxManager` crate import in [#211](https://github.com/Layr-Labs/eigensdk-rs/pull/211)
 * Removed logs in `operatorsinfo` test in [#185](https://github.com/Layr-Labs/eigensdk-rs/pull/185)
 
 ### Documentation
+
 * Added notes for running tests in [#194](https://github.com/Layr-Labs/eigensdk-rs/pull/194)
 * Added "Contract Bindings" section to the README in [#178](https://github.com/Layr-Labs/eigensdk-rs/pull/178)
 * Added "Branches" section to the README in [#200](https://github.com/Layr-Labs/eigensdk-rs/pull/200)
