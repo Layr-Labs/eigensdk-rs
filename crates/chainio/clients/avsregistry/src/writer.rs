@@ -205,7 +205,7 @@ impl AvsRegistryChainWriter {
     /// * `operator_to_avs_registration_sig_expiry` - operator signature expiry
     /// * `quorum_numbers` - quorum numbers to register the new operator
     /// * `socket` - socket used for calling the contract with `registerOperator` function
-    /// * `operators_to_kick` - operators to kick from the quorum
+    /// * `operators_to_kick` - operators to kick if quorum is full
     /// * `churn_signer_private_key` - private key of the churn signer
     /// * `churn_sig_salt` - churn signature salt
     /// * `churn_sig_expiry` - churn signature expiry
