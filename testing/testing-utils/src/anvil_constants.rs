@@ -26,6 +26,10 @@ pub const FIFTH_PRIVATE_KEY: &str =
 /// Local anvil ContractsRegistry which contains a mapping of all locally deployed EL contracts.
 pub const CONTRACTS_REGISTRY: Address = address!("5FbDB2315678afecb367f032d93F642f64180aa3");
 
+/// Bls private key
+pub const OPERATOR_BLS_KEY: &str =
+    "1371012690269088913462269866874713266643928125698382731338806296762673180359922";
+
 /// Local anvil rpc http url
 pub const ANVIL_HTTP_URL: &str = "http://localhost:8545";
 
