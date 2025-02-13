@@ -69,6 +69,8 @@ Those changes in added, changed or breaking changes, should include usage exampl
 
 ### Removed 🗑
 
+* Removed `eigen-testing-utils` dependency from `eigen-cli` crate in [#353](https://github.com/Layr-Labs/eigensdk-rs/pull/353).
+
 ### Documentation 📚
 
 ### Other Changes
