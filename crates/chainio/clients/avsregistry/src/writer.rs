@@ -327,7 +327,7 @@ impl AvsRegistryChainWriter {
 
         info!(
             tx_hash = ?tx.tx_hash(),
-            "Transacción enviada para registrar operador en el coordinador AVS"
+            "Sent transaction to register operator with churn in the AVS's registry coordinator"
         );
         Ok(*tx.tx_hash())
     }
