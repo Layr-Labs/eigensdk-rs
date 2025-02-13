@@ -765,8 +765,8 @@ mod tests {
             (intervals_since_genesis * calculation_interval_seconds) - calculation_interval_seconds;
 
         // These values are set to align with the contract's requirements for the `OperatorDirectedRewardsSubmission`.
-        // https://github.com/Layr-Labs/eigenlayer-contracts/blob/ecaff6304de6cb0f43b42024ad55d0e8a0430790/src/contracts/core/RewardsCoordinator.sol#L414
-        // https://github.com/Layr-Labs/eigenlayer-contracts/blob/ecaff6304de6cb0f43b42024ad55d0e8a0430790/src/contracts/core/RewardsCoordinator.sol#L482
+        // https://github.com/Layr-Labs/eigenlayer-contracts/blob/5341ef83500476c62a4406ff00cdde7f5c2cc11f/src/contracts/core/RewardsCoordinator.sol#L438
+        // https://github.com/Layr-Labs/eigenlayer-contracts/blob/5341ef83500476c62a4406ff00cdde7f5c2cc11f/src/contracts/core/RewardsCoordinator.sol#L485
         let duration = rewards_duration;
         let start_timestamp = last_valid_interval_start;
 
