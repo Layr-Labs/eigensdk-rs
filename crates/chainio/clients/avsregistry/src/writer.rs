@@ -375,8 +375,37 @@ impl AvsRegistryChainWriter {
             .send()
             .await
             .map_err(AvsRegistryError::AlloyContractError)?;
-        info!(tx_hash = ?tx, "successfully updated the socket with the AVS's registry coordinator");
+        info!(tx_hash = ?tx,"successfully updated the socket with the AVS's registry coordinator");
         Ok(*tx.tx_hash())
+    }
+
+    /// Set churn approver
+    ///
+    /// This function sets a new churn approver for the AVS's registry coordinator.
+    ///
+    /// # Arguments
+    ///
+    /// * `new_churn_approver` - address of the new churn approver.
+    ///
+    /// # Returns
+    ///
+    /// * `TxHash` - hash of the transaction.
+    pub async fn set_churn_approver(
+        &self,
+        new_churn_approver: Address,
+    ) -> Result<TxHash, AvsRegistryError> {
+        info!("set new churn approver with the AVS's registry coordinator");
+        let provider = get_signer(&self.signer.clone(), &self.provider);
+
+        let contract_registry_coordinator =
+            RegistryCoordinator::new(self.registry_coordinator_addr, provider);
+
+        contract_registry_coordinator.setChurnApprover(new_churn_approver)
+            .send()
+            .await
+            .map_err(AvsRegistryError::AlloyContractError)
+            .inspect(|tx| info!(tx_hash = ?tx,"successfully updated the new churn approver with the AVS's registry coordinator"))
+            .map(|tx| *tx.tx_hash())
     }
 
     /// Force a deregistration of an operator from one or more quorums
@@ -777,10 +806,9 @@ impl AvsRegistryChainWriter {
 mod tests {
 
     use super::AvsRegistryChainWriter;
-    use crate::test_utils::build_avs_registry_chain_reader;
-    use crate::test_utils::create_operator_set;
     use crate::test_utils::{
-        build_avs_registry_chain_writer, test_deregister_operator, test_register_operator,
+        build_avs_registry_chain_reader, build_avs_registry_chain_writer, create_operator_set,
+        test_deregister_operator, test_register_operator,
     };
     use alloy::primitives::aliases::U96;
     use alloy::primitives::U256;
@@ -969,6 +997,37 @@ mod tests {
         let (stream_event, _) = stream.next().await.unwrap().unwrap();
 
         assert_eq!(stream_event.socket, new_socket_addr);
+    }
+
+    #[tokio::test]
+    async fn test_set_churn_approver() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let private_key = FIRST_PRIVATE_KEY.to_string();
+        let avs_writer =
+            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
+
+        let provider = get_signer(&avs_writer.signer.clone(), &avs_writer.provider);
+
+        let regcoord = RegistryCoordinator::new(avs_writer.registry_coordinator_addr, &provider);
+
+        let current_churn_approver = regcoord.churnApprover().call().await.unwrap()._0;
+        let new_churn_approver = SECOND_ADDRESS;
+        assert_ne!(current_churn_approver, new_churn_approver);
+
+        let tx_hash = avs_writer
+            .set_churn_approver(new_churn_approver)
+            .await
+            .unwrap();
+
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
+
+        assert!(tx_status);
+
+        let current_churn_approver = regcoord.churnApprover().call().await.unwrap()._0;
+        assert_eq!(current_churn_approver, new_churn_approver);
     }
 
     #[tokio::test]
