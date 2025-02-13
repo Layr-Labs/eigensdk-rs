@@ -17,6 +17,15 @@ Those changes in added, changed or breaking changes, should include usage exampl
 
 ### Added 🎉
 
+* Added new method `update_avs_metadata_uri` in `avsregistry/writer` in [#344](https://github.com/Layr-Labs/eigensdk-rs/pull/344).
+
+  ```rust
+    let tx_hash = avs_writer
+        .update_avs_metadata_uri(new_metadata)
+        .await
+        .unwrap();
+  ```
+
 * Added new method `register_operator_with_churn` in `avsregistry/writer` in [#354](https://github.com/Layr-Labs/eigensdk-rs/pull/354).
 
   ```rust
@@ -63,10 +72,13 @@ Those changes in added, changed or breaking changes, should include usage exampl
 ### Documentation 📚
 
 ### Other Changes
+
 * fix: missing block while waiting for operator state history in [#290](https://github.com/Layr-Labs/eigensdk-rs/pull/290).
 
 ## [0.3.0] - 2025-02-11
+
 ### Added
+
 * Added new method `set_slashable_stake_lookahead` in `avsregistry/writer` in [#278](https://github.com/Layr-Labs/eigensdk-rs/pull/278).
 
   ```rust
@@ -99,6 +111,7 @@ Those changes in added, changed or breaking changes, should include usage exampl
       .await
       .unwrap();
   ```
+
 * Added new method `get_restakeable_strategies` in `avsregistry/reader` in [#349](https://github.com/Layr-Labs/eigensdk-rs/pull/349).
 
   ```rust
@@ -122,7 +135,6 @@ Those changes in added, changed or breaking changes, should include usage exampl
     .status(); 
   // tx_status should be true
   ```
-<<<<<<< HEAD
 
 * Added `get_operator_restaked_strategies` in `avsregistry/reader` in [#348](https://github.com/Layr-Labs/eigensdk-rs/pull/348).
 
@@ -134,8 +146,6 @@ Those changes in added, changed or breaking changes, should include usage exampl
   ```
 
 * Added custom configuration for release-plz in [#281](https://github.com/Layr-Labs/eigensdk-rs/pull/281).
-=======
->>>>>>> dev
 * Added Rewards2.1 support in [#323](https://github.com/Layr-Labs/eigensdk-rs/pull/323).
 
   * Set an operator's split on an operator set.
@@ -183,6 +193,7 @@ Those changes in added, changed or breaking changes, should include usage exampl
   ```
 
 * Added new method `create_total_delegated_stake_quorum` in `avsregistry/writer` in [#342](https://github.com/Layr-Labs/eigensdk-rs/pull/342).
+
   ```rust
     let operator_set_params = OperatorSetParam {
         maxOperatorCount: 10,
@@ -267,7 +278,8 @@ Those changes in added, changed or breaking changes, should include usage exampl
   ```rust
     let operator_set_quourm = avs_reader.is_operator_set_quorum(0).await.unwrap();
   ```
-* Added version explicitly in crates in [#322](https://github.com/Layr-Labs/eigensdk-rs/pull/322). 
+
+* Added version explicitly in crates in [#322](https://github.com/Layr-Labs/eigensdk-rs/pull/322).
 * Added new method `set_account_identifier` in `avsregistry/writer` in [#329](https://github.com/Layr-Labs/eigensdk-rs/pull/329).
 
   ```rust
@@ -276,6 +288,7 @@ Those changes in added, changed or breaking changes, should include usage exampl
         .await
         .unwrap();
   ```
+
 * Added missing StakeRegistry writer functions in [#343](https://github.com/Layr-Labs/eigensdk-rs/pull/343).
 
   * `set_minimum_stake_for_quorum`
@@ -317,6 +330,7 @@ Those changes in added, changed or breaking changes, should include usage exampl
       .await
       .unwrap();
   ```
+
 * Added missing stake registry view methods in `avsregistry/reader` in [#347](https://github.com/Layr-Labs/eigensdk-rs/pull/347).
 
   * `weight_of_operator_for_quorum`
@@ -363,6 +377,7 @@ Those changes in added, changed or breaking changes, should include usage exampl
             .await
             .unwrap();
   ```
+
   * `get_latest_stake_update`
 
   ```rust
@@ -371,6 +386,7 @@ Those changes in added, changed or breaking changes, should include usage exampl
             .await
             .unwrap();
   ```
+
   * `get_stake_update_at_index`
 
   ```rust
