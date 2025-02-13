@@ -996,7 +996,6 @@ mod tests {
     use eigen_testing_utils::anvil_constants::get_erc20_mock_strategy;
     use eigen_testing_utils::anvil_constants::get_rewards_coordinator_address;
     use eigen_testing_utils::anvil_constants::get_service_manager_address;
-    use eigen_testing_utils::anvil_constants::GENESIS_TIMESTAMP;
     use eigen_testing_utils::anvil_constants::SECOND_PRIVATE_KEY;
     use eigen_testing_utils::anvil_constants::THIRD_ADDRESS;
     use eigen_testing_utils::anvil_constants::THIRD_PRIVATE_KEY;
@@ -1121,6 +1120,8 @@ mod tests {
             .unwrap()
             ._0;
 
+        assert_ne!(calculation_interval_seconds, 0);
+
         let rewards_duration = rewards_coordinator
             .MAX_REWARDS_DURATION()
             .call()
@@ -1130,9 +1131,15 @@ mod tests {
 
         // Calculate the most recent interval start time that is less than the current timestamp
         // This ensures the reward submission aligns with the contract's time-based requirements
-        let intervals_since_genesis = GENESIS_TIMESTAMP / calculation_interval_seconds;
+        let current_timestamp: u32 = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap()
+            .as_secs()
+            .try_into()
+            .unwrap();
+        let intervals_since_genesis = current_timestamp / calculation_interval_seconds;
         let last_valid_interval_start =
-            (intervals_since_genesis * calculation_interval_seconds) - calculation_interval_seconds;
+            (intervals_since_genesis - 2) * calculation_interval_seconds;
 
         // These values are set to align with the contract's requirements for the `OperatorDirectedRewardsSubmission`.
         // https://github.com/Layr-Labs/eigenlayer-contracts/blob/5341ef83500476c62a4406ff00cdde7f5c2cc11f/src/contracts/core/RewardsCoordinator.sol#L438
