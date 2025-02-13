@@ -967,6 +967,7 @@ mod tests {
         let operator_sig_salt = FixedBytes::from([0x02; 32]);
         let churn_sig_salt = FixedBytes::from([0x05; 32]);
         let sig_expiry = U256::MAX;
+        let churn_private_key = SECOND_PRIVATE_KEY.to_string();
 
         let tx_hash = avs_writer_3
             .register_operator_with_churn(
@@ -976,7 +977,7 @@ mod tests {
                 quorum_nums.clone(),
                 "socket".to_string(),
                 vec![FIRST_ADDRESS],
-                SECOND_PRIVATE_KEY.to_string(),
+                churn_private_key,
                 churn_sig_salt,
                 sig_expiry,
             )

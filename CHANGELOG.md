@@ -16,6 +16,28 @@ Those changes in added, changed or breaking changes, should include usage exampl
 ### Security 🔒
 
 ### Added 🎉
+* Added new method `register_operator_with_churn` in `avsregistry/writer` in [#354](https://github.com/Layr-Labs/eigensdk-rs/pull/354).
+
+  ```rust
+    let operator_sig_salt = FixedBytes::from([0x02; 32]);
+    let churn_sig_salt = FixedBytes::from([0x05; 32]);
+    let sig_expiry = U256::MAX;
+
+    let tx_hash = avs_writer
+        .register_operator_with_churn(
+            BlsKeyPair::new(BLS_KEY).unwrap(),
+            operator_sig_salt,
+            sig_expiry,
+            quorum_nums.clone(),
+            "socket".to_string(),
+            vec![REGISTERED_OPERATOR],
+            CHURN_PRIVATE_KEY.to_string(),
+            churn_sig_salt,
+            sig_expiry,
+        )
+        .await
+        .unwrap();
+  ```
 
 ### Breaking Changes 🛠
 
