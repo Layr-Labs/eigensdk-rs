@@ -1,14 +1,15 @@
 use crate::error::AvsRegistryError;
-use alloy::dyn_abi::abi;
 use alloy::primitives::{Address, Bytes, FixedBytes, TxHash, U256};
 use alloy::signers::local::PrivateKeySigner;
 use alloy::signers::Signer;
 use eigen_client_elcontracts::reader::ELChainReader;
+use eigen_common::{get_provider, get_signer};
 use eigen_crypto_bls::{
     alloy_g1_point_to_g1_affine, convert_to_g1_point, convert_to_g2_point, BlsKeyPair,
 };
 use eigen_logging::logger::SharedLogger;
-use eigen_utils::slashing::middleware::blsapkregistry::BLSApkRegistry;
+use eigen_types::operator::operator_id_from_g1_pub_key;
+use eigen_utils::slashing::middleware::registrycoordinator::IBLSApkRegistryTypes::PubkeyRegistrationParams;
 use eigen_utils::slashing::middleware::registrycoordinator::ISlashingRegistryCoordinatorTypes::OperatorKickParam;
 use eigen_utils::slashing::middleware::registrycoordinator::ISlashingRegistryCoordinatorTypes::OperatorSetParam;
 use eigen_utils::slashing::middleware::registrycoordinator::{
@@ -17,16 +18,6 @@ use eigen_utils::slashing::middleware::registrycoordinator::{
 use eigen_utils::slashing::middleware::{
     servicemanagerbase::ServiceManagerBase, stakeregistry::StakeRegistry,
 };
-
-// TESTING
-use eigen_utils::slashing::middleware::blsapkregistry::IBLSApkRegistryTypes::PubkeyRegistrationParams as BLSPubkeRegistrationParams;
-use eigen_utils::slashing::middleware::blsapkregistry::BN254::G1Point as BLSG1Point;
-use eigen_utils::slashing::middleware::blsapkregistry::BN254::G2Point as BLSG2Point;
-use eigen_utils::slashing::middleware::registrycoordinator::IBLSApkRegistryTypes::PubkeyRegistrationParams as LocalPubkeyRegParams;
-use eigen_utils::slashing::middleware::registrycoordinator::BN254::G1Point as RegistryG1Point;
-use eigen_utils::slashing::middleware::registrycoordinator::BN254::G2Point as RegistryG2Point;
-
-use eigen_common::{get_provider, get_signer};
 use std::str::FromStr;
 use tracing::info;
 
@@ -42,22 +33,6 @@ pub struct AvsRegistryChainWriter {
     el_reader: ELChainReader,
     provider: String,
     signer: String,
-}
-
-fn convert_g1point_to_bls(point: RegistryG1Point) -> BLSG1Point {
-    // Asumiendo que ambos tienen campos 'x' y 'y'
-    BLSG1Point {
-        X: point.X,
-        Y: point.Y,
-    }
-}
-
-fn convert_g2point_to_bls(point: RegistryG2Point) -> BLSG2Point {
-    // Asumiendo que ambos tienen campos 'x' y 'y'
-    BLSG2Point {
-        X: point.X,
-        Y: point.Y,
-    }
 }
 
 impl AvsRegistryChainWriter {
@@ -173,7 +148,7 @@ impl AvsRegistryChainWriter {
         let g1_pub_key_bn254 = convert_to_g1_point(bls_key_pair.public_key().g1())?;
         let g2_pub_key_bn254 = convert_to_g2_point(bls_key_pair.public_key_g2().g2())?;
 
-        let pub_key_reg_params = LocalPubkeyRegParams {
+        let pub_key_reg_params = PubkeyRegistrationParams {
             pubkeyRegistrationSignature: alloy_g1_point_signed_msg,
             pubkeyG1: g1_pub_key_bn254,
             pubkeyG2: g2_pub_key_bn254,
@@ -264,7 +239,7 @@ impl AvsRegistryChainWriter {
         let g1_pub_key_bn254 = convert_to_g1_point(bls_key_pair.public_key().g1())?;
         let g2_pub_key_bn254 = convert_to_g2_point(bls_key_pair.public_key_g2().g2())?;
 
-        let pub_key_reg_params = LocalPubkeyRegParams {
+        let pub_key_reg_params = PubkeyRegistrationParams {
             pubkeyRegistrationSignature: alloy_g1_point_signed_msg.clone(),
             pubkeyG1: g1_pub_key_bn254.clone(),
             pubkeyG2: g2_pub_key_bn254.clone(),
@@ -299,38 +274,10 @@ impl AvsRegistryChainWriter {
             })
             .collect();
 
-        let operator_id = contract_registry_coordinator
-            .getOperatorId(operator_address)
-            .call()
-            .await?
-            ._0;
-
-        let bls_apk_registry = contract_registry_coordinator
-            .blsApkRegistry()
-            .call()
-            .await?
-            ._0;
-
-        let bls_contract = BLSApkRegistry::new(bls_apk_registry, &provider);
-
-        let pubkey_registration_message_hash = contract_registry_coordinator
-            .pubkeyRegistrationMessageHash(operator_address)
-            .call()
-            .await?
-            ._0;
-
-        let bls_reg_params = BLSPubkeRegistrationParams {
-            pubkeyG1: convert_g1point_to_bls(g1_pub_key_bn254),
-            pubkeyG2: convert_g2point_to_bls(g2_pub_key_bn254),
-            pubkeyRegistrationSignature: convert_g1point_to_bls(alloy_g1_point_signed_msg),
-        };
-
-        let bls_message_hash = convert_g1point_to_bls(pubkey_registration_message_hash);
-
-        let pubkey = bls_contract
-            .registerBLSPublicKey(operator_address, bls_reg_params, bls_message_hash)
-            .send()
-            .await?;
+        let operator_id = FixedBytes::from(
+            operator_id_from_g1_pub_key(bls_key_pair.public_key())
+                .map_err(|_| AvsRegistryError::GetOperatorId)?, // REVIEW ERROR
+        );
 
         // CHURN SET UP
 
@@ -379,13 +326,6 @@ impl AvsRegistryChainWriter {
             .send()
             .await
             .map_err(AvsRegistryError::AlloyContractError)?;
-
-        let operator_id = contract_registry_coordinator
-            .getOperatorId(operator_address)
-            .call()
-            .await?
-            ._0;
-        dbg!(operator_id);
 
         info!(
             tx_hash = ?tx.tx_hash(),
@@ -1091,6 +1031,14 @@ mod tests {
             .unwrap()
             .status();
         assert!(tx_status);
+
+        let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
+
+        let is_registered = avs_reader
+            .is_operator_registered(SECOND_ADDRESS)
+            .await
+            .unwrap();
+        assert!(is_registered);
     }
 
     #[tokio::test]
