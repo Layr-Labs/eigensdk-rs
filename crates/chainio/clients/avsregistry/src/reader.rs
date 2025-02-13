@@ -322,6 +322,32 @@ impl AvsRegistryChainReader {
         Ok(s)
     }
 
+    /// Get a list of strategies that the AVS supports for restaking
+    ///
+    /// # Returns
+    ///
+    /// A vector of addresses representing the strategies that the AVS supports for restaking
+    pub async fn get_restakeable_strategies(&self) -> Result<Vec<Address>, AvsRegistryError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_registry_coordinator =
+            RegistryCoordinator::new(self.registry_coordinator_addr, &provider);
+
+        let service_manager = contract_registry_coordinator
+            .serviceManager()
+            .call()
+            .await?
+            ._0;
+
+        let strategies = ServiceManagerBase::new(service_manager, &provider)
+            .getRestakeableStrategies()
+            .call()
+            .await?
+            ._0;
+
+        Ok(strategies)
+    }
+
     /// Get operators stake in quorums of operator at current block
     ///
     /// # Arguments
@@ -1120,34 +1146,18 @@ impl AvsRegistryChainReader {
 mod tests {
 
     use super::*;
-    use crate::test_utils::build_avs_registry_chain_writer;
-    use crate::test_utils::test_register_operator;
+    use crate::test_utils::{
+        build_avs_registry_chain_reader, build_avs_registry_chain_writer, test_register_operator,
+    };
     use eigen_crypto_bls::BlsKeyPair;
-    use eigen_logging::get_test_logger;
     use eigen_testing_utils::{
         anvil::{start_anvil_container, start_m2_anvil_container},
         anvil_constants::{
-            get_operator_state_retriever_address, get_registry_coordinator_address, FIFTH_ADDRESS,
-            FIFTH_PRIVATE_KEY, FIRST_ADDRESS, FIRST_PRIVATE_KEY, OPERATOR_BLS_KEY,
+            FIFTH_ADDRESS, FIFTH_PRIVATE_KEY, FIRST_ADDRESS, FIRST_PRIVATE_KEY, OPERATOR_BLS_KEY,
         },
         transaction::wait_transaction,
     };
     use hex::FromHex;
-
-    async fn build_avs_registry_chain_reader(http_endpoint: String) -> AvsRegistryChainReader {
-        let registry_coordinator = get_registry_coordinator_address(http_endpoint.clone()).await;
-        let operator_state_retriever =
-            get_operator_state_retriever_address(http_endpoint.clone()).await;
-
-        AvsRegistryChainReader::new(
-            get_test_logger(),
-            registry_coordinator,
-            operator_state_retriever,
-            http_endpoint,
-        )
-        .await
-        .unwrap()
-    }
 
     #[tokio::test]
     async fn test_get_quorum_count() {
@@ -1327,6 +1337,15 @@ mod tests {
             .query_existing_registered_operator_sockets(0, 1000)
             .await
             .unwrap();
+    }
+
+    #[tokio::test]
+    async fn test_get_restakeable_strategies() {
+        let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
+        let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
+
+        let strategies = avs_reader.get_restakeable_strategies().await.unwrap();
+        assert!(!strategies.is_empty());
     }
 
     #[tokio::test]
