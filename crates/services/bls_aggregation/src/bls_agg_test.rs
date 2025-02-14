@@ -19,10 +19,7 @@ pub mod integration_test {
     use eigen_services_avsregistry::chaincaller::AvsRegistryServiceChainCaller;
     use eigen_services_operatorsinfo::operatorsinfo_inmemory::OperatorInfoServiceInMemory;
     use eigen_testing_utils::{
-        anvil::{
-            mine_anvil_blocks, mine_anvil_blocks_operator_set, start_anvil_container,
-            start_m2_anvil_container,
-        },
+        anvil::{mine_anvil_blocks, start_anvil_container, start_m2_anvil_container},
         anvil_constants::{
             get_allocation_manager_address, get_erc20_mock_strategy,
             get_operator_state_retriever_address, get_permission_controller_address,
@@ -331,7 +328,7 @@ pub mod integration_test {
         let bls_agg_service = BlsAggregatorService::new(avs_registry_service, get_test_logger());
         let current_block_num = provider.get_block_number().await.unwrap();
 
-        mine_anvil_blocks_operator_set(&container, 1).await;
+        mine_anvil_blocks(&container, 1).await;
         // // Create the task related parameters
         let task_index: TaskIndex = 0;
         let time_to_expiry = Duration::from_secs(10);
@@ -615,7 +612,7 @@ pub mod integration_test {
             .await
             .unwrap();
 
-        mine_anvil_blocks_operator_set(&container, 1).await;
+        mine_anvil_blocks(&container, 1).await;
         let current_block_num = provider.get_block_number().await.unwrap();
         // Create avs clients to interact with contracts deployed on anvil
         let avs_registry_reader = AvsRegistryChainReader::new(
@@ -799,7 +796,7 @@ pub mod integration_test {
             .await
             .unwrap();
 
-        mine_anvil_blocks_operator_set(&container, 1).await;
+        mine_anvil_blocks(&container, 1).await;
         let current_block_num = provider.get_block_number().await.unwrap();
         // Create avs clients to interact with contracts deployed on anvil
         let avs_registry_reader = AvsRegistryChainReader::new(
@@ -978,7 +975,7 @@ pub mod integration_test {
             .await
             .unwrap();
 
-        mine_anvil_blocks_operator_set(&container, 1).await;
+        mine_anvil_blocks(&container, 1).await;
         let current_block_num = provider.get_block_number().await.unwrap();
         // Create avs clients to interact with contracts deployed on anvil
         let avs_registry_reader = AvsRegistryChainReader::new(
@@ -1168,7 +1165,7 @@ pub mod integration_test {
             .await
             .unwrap();
 
-        mine_anvil_blocks_operator_set(&container, 1).await;
+        mine_anvil_blocks(&container, 1).await;
         let current_block_num = provider.get_block_number().await.unwrap();
 
         // Create aggregation service
