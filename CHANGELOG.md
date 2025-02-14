@@ -80,7 +80,6 @@ Those changes in added, changed or breaking changes, should include usage exampl
       .unwrap();
   ```
 
->>>>>>>
 ### Breaking Changes 🛠
 
 ### Deprecated ⚠️
