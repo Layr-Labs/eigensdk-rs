@@ -13,17 +13,17 @@ use eigen_logging::logger::SharedLogger;
 use eigen_types::operator::operator_id_from_g1_pub_key;
 use eigen_types::operator::QuorumNum;
 use eigen_utils::convert_stake_registry_strategy_params_to_registry_coordinator_strategy_params;
-use eigen_utils::slashing::middleware::registrycoordinator::IBLSApkRegistryTypes::PubkeyRegistrationParams;
 use eigen_utils::slashing::middleware::registrycoordinator::ISlashingRegistryCoordinatorTypes::OperatorKickParam;
-use eigen_utils::slashing::middleware::registrycoordinator::ISlashingRegistryCoordinatorTypes::OperatorSetParam;
 use eigen_utils::slashing::middleware::registrycoordinator::{
-    ISignatureUtils::SignatureWithSaltAndExpiry, RegistryCoordinator,
+    IBLSApkRegistryTypes::PubkeyRegistrationParams, ISignatureUtils::SignatureWithSaltAndExpiry,
+    ISlashingRegistryCoordinatorTypes::OperatorSetParam, RegistryCoordinator,
 };
 use eigen_utils::slashing::middleware::servicemanagerbase::IRewardsCoordinatorTypes::OperatorDirectedRewardsSubmission;
-use eigen_utils::slashing::middleware::stakeregistry::IStakeRegistryTypes::StrategyParams;
-use eigen_utils::slashing::middleware::{
-    servicemanagerbase::ServiceManagerBase, stakeregistry::StakeRegistry,
+use eigen_utils::slashing::middleware::servicemanagerbase::{
+    IRewardsCoordinatorTypes::RewardsSubmission, ServiceManagerBase,
 };
+use eigen_utils::slashing::middleware::stakeregistry::IStakeRegistryTypes::StrategyParams;
+use eigen_utils::slashing::middleware::stakeregistry::StakeRegistry;
 use std::str::FromStr;
 use tracing::{info, warn};
 
@@ -669,6 +669,37 @@ impl AvsRegistryChainWriter {
         Ok(*tx.tx_hash())
     }
 
+    /// Create a new rewards submission
+    ///
+    /// This function is used to create a new rewards submission for the AVS
+    ///
+    /// # Arguments
+    ///
+    /// * `rewardsSubmissions` - The rewards submissions to create
+    ///
+    /// # Returns
+    ///
+    /// * `TxHash` - The transaction hash of the create rewards submission transaction
+    pub async fn create_avs_rewards_submission(
+        &self,
+        rewards_submissions: Vec<RewardsSubmission>,
+    ) -> Result<TxHash, AvsRegistryError> {
+        info!("setting a new Rewards Submission list with the AVS's registry coordinator");
+        let provider = get_signer(&self.signer.clone(), &self.provider);
+
+        let contract_service_manager_base =
+            ServiceManagerBase::new(self.service_manager_addr, provider);
+        let contract_call =
+            contract_service_manager_base.createAVSRewardsSubmission(rewards_submissions);
+
+        contract_call
+            .send()
+            .await
+            .map_err(AvsRegistryError::AlloyContractError)
+            .inspect(|tx| info!(tx_hash = ?tx, "successfully created a new rewards submission with the AVS's registry coordinator"))
+            .map(|tx| *tx.tx_hash())
+    }
+
     /// Update the AVS metadata URI.
     ///
     /// This function updates the AVS metadata URI of the AVS's RegistryCoordinator.
@@ -866,6 +897,7 @@ impl AvsRegistryChainWriter {
         info!(tx_hash = ?tx.tx_hash(),"modifying strategy params");
         Ok(*tx.tx_hash())
     }
+
     /// Create a new quorum that tracks total delegated stake for operators.
     ///
     /// # Arguments
@@ -1008,26 +1040,23 @@ impl AvsRegistryChainWriter {
 
 #[cfg(test)]
 mod tests {
-
     use super::AvsRegistryChainWriter;
     use crate::test_utils::{
         build_avs_registry_chain_reader, build_avs_registry_chain_writer, create_operator_set,
         test_deregister_operator, test_register_operator,
     };
-    use alloy::primitives::aliases::U96;
-    use alloy::primitives::{address, Address, Bytes, FixedBytes, U256};
+    use alloy::primitives::{address, aliases::U96, Address, Bytes, FixedBytes, U256};
     use alloy::sol_types::SolCall;
     use eigen_common::{get_provider, get_signer};
     use eigen_crypto_bls::BlsKeyPair;
     use eigen_testing_utils::anvil::{start_anvil_container, start_m2_anvil_container};
-    use eigen_testing_utils::anvil_constants::get_erc20_mock_strategy;
-    use eigen_testing_utils::anvil_constants::get_rewards_coordinator_address;
-    use eigen_testing_utils::anvil_constants::get_service_manager_address;
+    use eigen_testing_utils::anvil_constants::OPERATOR_BLS_KEY_2;
     use eigen_testing_utils::anvil_constants::SECOND_PRIVATE_KEY;
     use eigen_testing_utils::anvil_constants::THIRD_ADDRESS;
     use eigen_testing_utils::anvil_constants::THIRD_PRIVATE_KEY;
     use eigen_testing_utils::anvil_constants::{
-        get_allocation_manager_address, OPERATOR_BLS_KEY_2,
+        get_allocation_manager_address, get_erc20_mock_strategy, get_rewards_coordinator_address,
+        get_service_manager_address,
     };
     use eigen_testing_utils::anvil_constants::{
         FIFTH_ADDRESS, FIFTH_PRIVATE_KEY, FIRST_ADDRESS, FIRST_PRIVATE_KEY, OPERATOR_BLS_KEY,
@@ -1036,12 +1065,15 @@ mod tests {
     use eigen_testing_utils::transaction::wait_transaction;
     use eigen_utils::slashing::core::allocationmanager::AllocationManager;
     use eigen_utils::slashing::core::irewardscoordinator::IRewardsCoordinator;
-    use eigen_utils::slashing::middleware::registrycoordinator::ISlashingRegistryCoordinatorTypes::OperatorSetParam;
-    use eigen_utils::slashing::middleware::registrycoordinator::RegistryCoordinator;
+    use eigen_utils::slashing::middleware::registrycoordinator::{
+        ISlashingRegistryCoordinatorTypes::OperatorSetParam, RegistryCoordinator,
+    };
     use eigen_utils::slashing::middleware::servicemanagerbase::IRewardsCoordinatorTypes::OperatorDirectedRewardsSubmission;
     use eigen_utils::slashing::middleware::servicemanagerbase::IRewardsCoordinatorTypes::OperatorReward;
-    use eigen_utils::slashing::middleware::servicemanagerbase::IRewardsCoordinatorTypes::StrategyAndMultiplier;
-    use eigen_utils::slashing::middleware::servicemanagerbase::ServiceManagerBase;
+    use eigen_utils::slashing::middleware::servicemanagerbase::{
+        IRewardsCoordinatorTypes::RewardsSubmission,
+        IRewardsCoordinatorTypes::StrategyAndMultiplier, ServiceManagerBase,
+    };
     use eigen_utils::slashing::middleware::stakeregistry::IStakeRegistryTypes::StrategyParams;
     use eigen_utils::slashing::middleware::stakeregistry::StakeRegistry;
     use futures_util::StreamExt;
@@ -1936,5 +1968,77 @@ mod tests {
 
         let ejecutor = registry_contract.ejector().call().await.unwrap();
         assert_eq!(ejecutor._0, new_ejector_address);
+    }
+
+    #[tokio::test]
+    async fn test_create_avs_rewards_submission() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let private_key = FIRST_PRIVATE_KEY.to_string();
+        let avs_writer =
+            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
+
+        let rewards_coordinator_address =
+            get_rewards_coordinator_address(http_endpoint.clone()).await;
+        let provider = get_provider(&http_endpoint);
+        let rewards_coordinator = IRewardsCoordinator::new(rewards_coordinator_address, &provider);
+
+        let rewards_duration = rewards_coordinator
+            .MAX_REWARDS_DURATION()
+            .call()
+            .await
+            .unwrap()
+            ._0;
+
+        let calculation_interval_seconds = rewards_coordinator
+            .CALCULATION_INTERVAL_SECONDS()
+            .call()
+            .await
+            .unwrap()
+            ._0;
+
+        // These values are set to align with the contract's requirements for the `OperatorDirectedRewardsSubmission`.
+        // https://github.com/Layr-Labs/eigenlayer-contracts/blob/5341ef83500476c62a4406ff00cdde7f5c2cc11f/src/contracts/core/RewardsCoordinator.sol#L438
+        // https://github.com/Layr-Labs/eigenlayer-contracts/blob/5341ef83500476c62a4406ff00cdde7f5c2cc11f/src/contracts/core/RewardsCoordinator.sol#L485
+        // Calculate the most recent interval start time that is less than the current timestamp
+        // This ensures the reward submission aligns with the contract's time-based requirements
+        let current_timestamp: u32 = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap()
+            .as_secs()
+            .try_into()
+            .unwrap();
+        let intervals_since_genesis = current_timestamp / calculation_interval_seconds;
+        let start_timestamp = (intervals_since_genesis + 1) * calculation_interval_seconds;
+
+        let strategy_address = dbg!(get_erc20_mock_strategy(http_endpoint.clone()).await);
+        let (_, token) = avs_writer
+            .el_reader
+            .get_strategy_and_underlying_token(strategy_address)
+            .await
+            .unwrap();
+
+        let strategies_and_multipliers = vec![StrategyAndMultiplier {
+            strategy: strategy_address,
+            multiplier: U96::from(1),
+        }];
+        let rewards_submissions = vec![RewardsSubmission {
+            strategiesAndMultipliers: strategies_and_multipliers,
+            token,
+            amount: U256::from(1_000),
+            startTimestamp: start_timestamp,
+            duration: rewards_duration,
+        }];
+
+        let tx_hash = avs_writer
+            .create_avs_rewards_submission(rewards_submissions)
+            .await
+            .unwrap();
+
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
+
+        assert!(tx_status);
     }
 }

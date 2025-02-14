@@ -17,6 +17,23 @@ Those changes in added, changed or breaking changes, should include usage exampl
 
 ### Added 🎉
 
+* Implemented `create_avs_rewards_submission` [#345](https://github.com/Layr-Labs/eigensdk-rs/pull/345)
+
+  ```rust
+    let rewards_submissions = vec![RewardsSubmission {
+        strategiesAndMultipliers: strategies_and_multipliers,
+        token,
+        amount: U256::from(1_000),
+        startTimestamp: last_valid_interval_start,
+        duration: rewards_duration,
+    }];
+
+    let tx_hash = avs_writer
+        .create_avs_rewards_submission(rewards_submissions)
+        .await
+        .unwrap();
+  ```
+
 * Added new method `update_avs_metadata_uri` in `avsregistry/writer` in [#344](https://github.com/Layr-Labs/eigensdk-rs/pull/344).
 
   ```rust
@@ -148,6 +165,7 @@ Those changes in added, changed or breaking changes, should include usage exampl
   ```
 
 * Added custom configuration for release-plz in [#281](https://github.com/Layr-Labs/eigensdk-rs/pull/281).
+
 * Added Rewards2.1 support in [#323](https://github.com/Layr-Labs/eigensdk-rs/pull/323).
 
   * Set an operator's split on an operator set.
