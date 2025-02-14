@@ -1078,30 +1078,6 @@ mod tests {
     use eigen_utils::slashing::middleware::stakeregistry::StakeRegistry;
     use futures_util::StreamExt;
 
-    async fn get_calculation_interval_seconds_and_rewards_duration() -> (u32, u32) {
-        let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
-
-        let rewards_coordinator_address =
-            get_rewards_coordinator_address(http_endpoint.clone()).await;
-        let provider = get_provider(&http_endpoint);
-        let rewards_coordinator = IRewardsCoordinator::new(rewards_coordinator_address, &provider);
-
-        let rewards_duration = rewards_coordinator
-            .MAX_REWARDS_DURATION()
-            .call()
-            .await
-            .unwrap()
-            ._0;
-
-        let calculation_interval_seconds = rewards_coordinator
-            .CALCULATION_INTERVAL_SECONDS()
-            .call()
-            .await
-            .unwrap()
-            ._0;
-        (calculation_interval_seconds, rewards_duration)
-    }
-
     #[tokio::test]
     async fn test_avs_writer_methods() {
         let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
@@ -2005,8 +1981,27 @@ mod tests {
         // https://github.com/Layr-Labs/eigenlayer-contracts/blob/5341ef83500476c62a4406ff00cdde7f5c2cc11f/src/contracts/core/RewardsCoordinator.sol#L438
         // https://github.com/Layr-Labs/eigenlayer-contracts/blob/5341ef83500476c62a4406ff00cdde7f5c2cc11f/src/contracts/core/RewardsCoordinator.sol#L485
 
-        let (calculation_interval_seconds, rewards_duration) =
-            get_calculation_interval_seconds_and_rewards_duration().await;
+        let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
+
+        let rewards_coordinator_address =
+            get_rewards_coordinator_address(http_endpoint.clone()).await;
+        let provider = get_provider(&http_endpoint);
+        let rewards_coordinator = IRewardsCoordinator::new(rewards_coordinator_address, &provider);
+
+        let rewards_duration = rewards_coordinator
+            .MAX_REWARDS_DURATION()
+            .call()
+            .await
+            .unwrap()
+            ._0;
+
+        // calculationInterval, err := clients.EigenlayerContractBindings.RewardsCoordinator.CALCULATIONINTERVALSECONDS(nil)
+        let calculation_interval_seconds = rewards_coordinator
+            .CALCULATION_INTERVAL_SECONDS()
+            .call()
+            .await
+            .unwrap()
+            ._0;
 
         // Calculate the most recent interval start time that is less than the current timestamp
         // This ensures the reward submission aligns with the contract's time-based requirements
@@ -2017,8 +2012,8 @@ mod tests {
             .try_into()
             .unwrap();
         let intervals_since_genesis = current_timestamp / calculation_interval_seconds;
-        let last_valid_interval_start =
-            (intervals_since_genesis - 2) * calculation_interval_seconds;
+        #[allow(non_snake_case)]
+        let startTimestamp = (intervals_since_genesis + 1) * calculation_interval_seconds;
 
         let strategy_address = get_erc20_mock_strategy(http_endpoint.clone()).await;
         let (_, token) = avs_writer
@@ -2035,7 +2030,7 @@ mod tests {
             strategiesAndMultipliers: strategies_and_multipliers,
             token,
             amount: U256::from(1_000),
-            startTimestamp: last_valid_interval_start,
+            startTimestamp,
             duration: rewards_duration,
         }];
 
