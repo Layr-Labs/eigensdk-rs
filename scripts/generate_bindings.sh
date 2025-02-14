@@ -6,6 +6,7 @@ set +e
 # Print each command executed (useful for debugging)
 # set -o xtrace
 
+# Turns the contract names into flags for the `forge bind` command
 generate_flags() {
     for contract in $@; do
         echo "$acc --select ^$contract\$"
@@ -20,27 +21,11 @@ parent_path=$(
 repo_root=$parent_path/..
 cd $repo_root
 
-### SDK bindings ###
-SDK_CONTRACTS="MockAvsServiceManager ContractsRegistry MockERC20"
-SDK_CONTRACTS_LOCATION=crates/contracts
-SDK_BINDINGS_PATH=crates/utils/src/sdk
-# The echo is to remove quotes, and the patsubst to make the regex match the full text only
+# Load variables from the bindings_vars.sh file
+source scripts/bindings_vars.sh
+
 SDK_CONTRACTS_ARGS=$(generate_flags $SDK_CONTRACTS)
-
-
-### Middleware bindings ###
-MIDDLEWARE_CONTRACTS="RegistryCoordinator IndexRegistry OperatorStateRetriever StakeRegistry BLSApkRegistry IBLSSignatureChecker ServiceManagerBase IERC20 ECDSAStakeRegistry ECDSAServiceManagerBase"
-MIDDLEWARE_CONTRACTS_LOCATION=$SDK_CONTRACTS_LOCATION/lib/eigenlayer-middleware
-MIDDLEWARE_BINDINGS_PATH=crates/utils/src/middleware
-# The echo is to remove quotes, and the patsubst to make the regex match the full text only
 MIDDLEWARE_CONTRACTS_ARGS=$(generate_flags $MIDDLEWARE_CONTRACTS)
-
-
-### Core bindings ###
-CORE_CONTRACTS="DelegationManager IRewardsCoordinator RewardsCoordinator  StrategyManager IEigenPod EigenPod IEigenPodManager EigenPodManager IStrategy AVSDirectory AllocationManager PermissionController ERC20 Slasher ISlasher"
-CORE_CONTRACTS_LOCATION=$MIDDLEWARE_CONTRACTS_LOCATION/lib/eigenlayer-contracts
-CORE_BINDINGS_PATH=crates/utils/src/core
-# The echo is to remove quotes, and the patsubst to make the regex match the full text only
 CORE_CONTRACTS_ARGS=$(generate_flags $CORE_CONTRACTS)
 
 # Fetch submodules
