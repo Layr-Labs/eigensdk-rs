@@ -17,7 +17,7 @@ Those changes in added, changed or breaking changes, should include usage exampl
 
 ### Added 🎉
 
-* Implemented create_avs_rewards_submission [#345](https://github.com/Layr-Labs/eigensdk-rs/pull/345)
+* Implemented `create_avs_rewards_submission` [#345](https://github.com/Layr-Labs/eigensdk-rs/pull/345)
 
   ```rust
     let rewards_submissions = vec![RewardsSubmission {
