@@ -1989,7 +1989,6 @@ mod tests {
             .unwrap()
             ._0;
 
-        // calculationInterval, err := clients.EigenlayerContractBindings.RewardsCoordinator.CALCULATIONINTERVALSECONDS(nil)
         let calculation_interval_seconds = rewards_coordinator
             .CALCULATION_INTERVAL_SECONDS()
             .call()
