@@ -3,6 +3,7 @@ use eigen_crypto_bls::{convert_to_g1_point, error::BlsError, BlsG1Point, BlsG2Po
 use eigen_utils::common::get_url_content;
 use ethers::{types::U64, utils::keccak256};
 use num_bigint::BigUint;
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use thiserror::Error;
 
@@ -10,6 +11,10 @@ use thiserror::Error;
 pub enum OperatorTypesError {
     #[error("Operator id from pub key conversion failed")]
     OperatorIdFromPubKey(#[from] BlsError),
+    #[error("Metadata Not Found")]
+    MetadataNotFound,
+    #[error("Metadata Error")]
+    MetadataError,
 }
 
 const MAX_NUMBER_OF_QUORUMS: u8 = 192;
@@ -59,6 +64,15 @@ impl From<BlsKeyPair> for OperatorPubKeys {
     }
 }
 
+#[derive(Deserialize, Serialize)]
+pub struct OperatorMetadata {
+    quorumBitmap: U256,
+    //    address operator;
+    //    bytes32 operatorId;
+    //    BN254.G1Point pubkey;
+    //    uint96[] stakes; // in every quorum for simplicity
+}
+
 pub struct Operator {
     pub address: Address,
     pub staker_opt_out_window_blocks: u32,
@@ -71,7 +85,7 @@ pub struct Operator {
 }
 
 impl Operator {
-    pub fn validate(&self) -> Result<(), OperatorTypesError> {
+    pub async fn validate(&self) -> Result<(), OperatorTypesError> {
         //if !utils.IsValidEthereumAddress(o.Address) {
         //    return ErrInvalidOperatorAddress
         //}
@@ -116,9 +130,13 @@ impl Operator {
             }
             */
 
-            let body = get_url_content(metadata_url)?;
-            let operator_metadata: OperatorMetadata = serde_json::from_str(&body)?;
-            operator_metadata.validate()?;
+            let body = get_url_content(metadata_url)
+                .await
+                .map_err(|_| OperatorTypesError::MetadataNotFound)?;
+            let operator_metadata: OperatorMetadata =
+                serde_json::from_str(&body).map_err(|_| OperatorTypesError::MetadataError)?;
+
+            //operator_metadata.validate()?;
         }
 
         Ok(())
@@ -141,28 +159,10 @@ impl Operator {
         todo!()
     }
 
-    pub fn operator_id_from_contract_g1_pubkey(pubkey: BlsG1Point) -> OperatorId {
-        //func OperatorIdFromContractG1Pubkey(pubkey apkreg.BN254G1Point) OperatorId {
-        //    return OperatorIdFromG1Pubkey(G1PubkeyFromContractG1Pubkey(pubkey))
-        //}
-        //OperatorId::from(G1PubkeyFromContractG1Pubkey(pubkey))
-        todo!()
-    }
-
-    pub fn operator_id_from_key_pair(keypair: BlsKeyPair) -> OperatorId {
-        //func OperatorIdFromKeyPair(keyPair *bls.KeyPair) OperatorId {
-        //    return OperatorIdFromG1Pubkey(keyPair.GetPubKeyG1())
-        //}
-        //OperatorId::from(G1PubkeyFromContractG1Pubkey(keypair.get_pub_key_g1()))
-        todo!()
-    }
-
-    pub fn g1_pubkey_from_contract_g1_pubkey(pubkey: BlsG1Point) -> BlsG1Point {
-        //func G1PubkeyFromContractG1Pubkey(pubkey apkreg.BN254G1Point) *bls.G1Point {
-        //    return bls.NewG1Point(pubkey.X, pubkey.Y)
-        //}
-        //bls.NewG1Point(pubkey.X, pubkey.Y)
-        todo!()
+    pub fn operator_id_from_key_pair(
+        keypair: BlsKeyPair,
+    ) -> Result<OperatorId, OperatorTypesError> {
+        operator_id_from_g1_pub_key(keypair.public_key())
     }
 }
 
@@ -183,11 +183,11 @@ pub struct OperatorAvsState {
     pub block_num: U64,
 }
 
-pub fn operator_id_from_g1_pub_key(pub_key: BlsG1Point) -> Result<[u8; 32], OperatorTypesError> {
+pub fn operator_id_from_g1_pub_key(pub_key: BlsG1Point) -> Result<OperatorId, OperatorTypesError> {
     let x: [u8; 32] = (convert_to_g1_point(pub_key.g1())?.X).to_be_bytes();
     let y: [u8; 32] = convert_to_g1_point(pub_key.g1())?.Y.to_be_bytes();
     let bytes: Vec<u8> = x.iter().cloned().chain(y.iter().cloned()).collect();
-    Ok(keccak256(bytes))
+    Ok(FixedBytes::from(keccak256(bytes)))
 }
 
 #[derive(Debug, PartialEq, Eq)]

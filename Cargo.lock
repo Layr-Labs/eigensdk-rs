@@ -2797,6 +2797,8 @@ dependencies = [
  "eigen-utils",
  "ethers",
  "num-bigint 0.4.6",
+ "serde",
+ "serde_json",
  "thiserror 1.0.69",
  "tokio",
 ]
