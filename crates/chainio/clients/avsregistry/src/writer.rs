@@ -696,7 +696,7 @@ impl AvsRegistryChainWriter {
             .send()
             .await
             .map_err(AvsRegistryError::AlloyContractError)
-            .inspect(|tx| info!(tx_hash = ?tx, "successfully set a new rewards submission list with the AVS's registry coordinator"))
+            .inspect(|tx| info!(tx_hash = ?tx, "successfully created a new rewards submission with the AVS's registry coordinator"))
             .map(|tx| *tx.tx_hash())
     }
 
