@@ -2009,8 +2009,7 @@ mod tests {
             .try_into()
             .unwrap();
         let intervals_since_genesis = current_timestamp / calculation_interval_seconds;
-        #[allow(non_snake_case)]
-        let startTimestamp = (intervals_since_genesis + 1) * calculation_interval_seconds;
+        let start_timestamp = (intervals_since_genesis + 1) * calculation_interval_seconds;
 
         let strategy_address = dbg!(get_erc20_mock_strategy(http_endpoint.clone()).await);
         let (_, token) = avs_writer
@@ -2027,7 +2026,7 @@ mod tests {
             strategiesAndMultipliers: strategies_and_multipliers,
             token,
             amount: U256::from(1_000),
-            startTimestamp,
+            startTimestamp: start_timestamp,
             duration: rewards_duration,
         }];
 
