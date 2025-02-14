@@ -17,7 +17,7 @@ Those changes in added, changed or breaking changes, should include usage exampl
 
 ### Added 🎉
 
-*
+* Implemented create_avs_rewards_submission [#345](https://github.com/Layr-Labs/eigensdk-rs/pull/345)
 
   ```rust
     let rewards_submissions = vec![RewardsSubmission {
@@ -34,11 +34,60 @@ Those changes in added, changed or breaking changes, should include usage exampl
         .unwrap();
   ```
 
+* Added new method `update_avs_metadata_uri` in `avsregistry/writer` in [#344](https://github.com/Layr-Labs/eigensdk-rs/pull/344).
+
+  ```rust
+    let tx_hash = avs_writer
+        .update_avs_metadata_uri(new_metadata)
+        .await
+        .unwrap();
+  ```
+
+* Added new method `register_operator_with_churn` in `avsregistry/writer` in [#354](https://github.com/Layr-Labs/eigensdk-rs/pull/354).
+
+  ```rust
+    let bls_key_pair = BlsKeyPair::new(BLS_KEY).unwrap();
+    let operator_sig_salt = FixedBytes::from([0x02; 32]); 
+    let operator_sig_expiry = U256::MAX;
+    let quorum_nums = Bytes::from([0]);
+    let socket = "socket".to_string();
+    let churn_sig_salt = FixedBytes::from([0x05; 32]);
+    let churn_sig_expiry = U256::MAX;
+
+
+    let tx_hash = avs_writer_2
+        .register_operator_with_churn(
+            bls_key_pair,                 // Operator's BLS key pair
+            operator_sig_salt,            // Operator signature salt
+            operator_sig_expiry,          // Operator signature expiry
+            quorum_nums,                  // Quorum numbers for registration
+            socket,                       // Socket address
+            vec![REGISTERED_OPERATOR],    // Operators to kick if quorum is full
+            CHURN_PRIVATE_KEY,            // Churn approver's private key
+            churn_sig_salt,               // Churn signature salt
+            churn_sig_expiry,             // Churn signature expiry
+        )
+        .await
+        .unwrap();
+  ```
+
+* Added new method `set_churn_approver` in `avsregistry/writer` in [#333](https://github.com/Layr-Labs/eigensdk-rs/pull/333).
+
+  ```rust
+  let tx_hash = avs_writer
+      .set_churn_approver(new_churn_approver_address)
+      .await
+      .unwrap();
+  ```
+
+>>>>>>>
 ### Breaking Changes 🛠
 
 ### Deprecated ⚠️
 
 ### Removed 🗑
+
+* Removed `eigen-testing-utils` dependency from `eigen-cli` crate in [#353](https://github.com/Layr-Labs/eigensdk-rs/pull/353).
 
 ### Documentation 📚
 
@@ -83,6 +132,12 @@ Those changes in added, changed or breaking changes, should include usage exampl
       .unwrap();
   ```
 
+* Added new method `get_restakeable_strategies` in `avsregistry/reader` in [#349](https://github.com/Layr-Labs/eigensdk-rs/pull/349).
+
+  ```rust
+    let strategies = avs_reader.get_restakeable_strategies().await.unwrap();
+  ```
+
 * Added update_socket function for avs registry writer in [#268](https://github.com/Layr-Labs/eigensdk-rs/pull/268)
   An example of use is the following:
 
@@ -100,6 +155,17 @@ Those changes in added, changed or breaking changes, should include usage exampl
     .status(); 
   // tx_status should be true
   ```
+
+* Added `get_operator_restaked_strategies` in `avsregistry/reader` in [#348](https://github.com/Layr-Labs/eigensdk-rs/pull/348).
+
+  ```rust
+    let strategies = avs_reader
+      .get_operator_restaked_strategies(FIRST_ADDRESS)
+      .await
+      .unwrap();
+  ```
+
+* Added custom configuration for release-plz in [#281](https://github.com/Layr-Labs/eigensdk-rs/pull/281).
 
 * Added Rewards2.1 support in [#323](https://github.com/Layr-Labs/eigensdk-rs/pull/323).
 
@@ -135,7 +201,7 @@ Those changes in added, changed or breaking changes, should include usage exampl
 * Added new method `set_operator_set_param` in `avsregistry/writer` in [#327](https://github.com/Layr-Labs/eigensdk-rs/pull/327).
 
   ```rust
-   let operator_set_params = OperatorSetParam {
+    let operator_set_params = OperatorSetParam {
         maxOperatorCount: 10,
         kickBIPsOfOperatorStake: 50,
         kickBIPsOfTotalStake: 50,
@@ -146,6 +212,34 @@ Those changes in added, changed or breaking changes, should include usage exampl
         .await
         .unwrap();
   ```
+
+* Added new method `create_operator_directed_avs_rewards_submission` in `avsregistry/writer` in [#352](https://github.com/Layr-Labs/eigensdk-rs/pull/352).
+
+  ```rust
+    let operator_rewards = OperatorReward {
+        operator: SECOND_ADDRESS,
+        amount: U256::from(100),
+    };
+
+    let strategies = StrategyAndMultiplier {
+        strategy: strategy_address,
+        multiplier: U96::from(1),
+    };
+
+    let operator_rewards_submission = OperatorDirectedRewardsSubmission {
+        token: token_address,
+        description: "test".to_string(),
+        duration,
+        startTimestamp,
+        operatorRewards: vec![operator_rewards.clone()],
+        strategiesAndMultipliers: vec![strategies],
+    };
+
+    let tx_hash = avs_writer
+        .create_operator_directed_avs_rewards_submission(vec![operator_rewards_submission])
+        .await
+        .unwrap();
+  ````
 
 * Added new method `create_total_delegated_stake_quorum` in `avsregistry/writer` in [#342](https://github.com/Layr-Labs/eigensdk-rs/pull/342).
 
@@ -242,6 +336,48 @@ Those changes in added, changed or breaking changes, should include usage exampl
         .set_account_identifier(new_identifier_address)
         .await
         .unwrap();
+  ```
+
+* Added missing StakeRegistry writer functions in [#343](https://github.com/Layr-Labs/eigensdk-rs/pull/343).
+
+  * `set_minimum_stake_for_quorum`
+
+    ```rust
+    let tx_hash = avs_writer
+      .set_minimum_stake_for_quorum(quorum_number, minimum_stake)
+      .await
+      .unwrap();
+    ```
+
+  * add_strategies
+
+  ```rust
+  let tx_hash = avs_writer
+    .add_strategies(quorum_number, vec_of_strategy_params)
+    .await
+    .unwrap();
+  ```
+
+  * remove_strategies
+
+  ```rust
+  let tx_hash = avs_writer
+    .remove_strategies(quorum_number, indices_to_remove)
+    .await
+    .unwrap();
+  ```
+
+  * modify_strategy_params
+
+  ```rust
+  let tx_hash = avs_writer
+      .modify_strategy_params(
+          quorum_numbers,
+          vec_of_strategy_indices,
+          vec_of_new_multipliers,
+      )
+      .await
+      .unwrap();
   ```
 
 * Added missing stake registry view methods in `avsregistry/reader` in [#347](https://github.com/Layr-Labs/eigensdk-rs/pull/347).

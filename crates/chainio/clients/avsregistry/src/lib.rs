@@ -20,6 +20,8 @@ pub mod fake_reader;
 
 #[cfg(test)]
 pub(crate) mod test_utils {
+
+    use crate::reader::AvsRegistryChainReader;
     use crate::writer::AvsRegistryChainWriter;
     use alloy::{
         primitives::{aliases::U96, Address, Bytes, FixedBytes, U256},
@@ -43,8 +45,6 @@ pub(crate) mod test_utils {
         },
         sdk::mockavsservicemanager::MockAvsServiceManager,
     };
-
-    use crate::reader::AvsRegistryChainReader;
 
     pub(crate) async fn create_operator_set(http_endpoint: &str, avs_address: Address) {
         let allocation_manager_addr =
@@ -114,24 +114,6 @@ pub(crate) mod test_utils {
             .unwrap();
     }
 
-    pub(crate) async fn build_avs_registry_chain_reader(
-        http_endpoint: String,
-    ) -> AvsRegistryChainReader {
-        let registry_coordinator_addr =
-            get_registry_coordinator_address(http_endpoint.clone()).await;
-        let operator_state_retriever_address =
-            get_operator_state_retriever_address(http_endpoint.clone()).await;
-
-        AvsRegistryChainReader::new(
-            get_test_logger(),
-            registry_coordinator_addr,
-            operator_state_retriever_address,
-            http_endpoint.to_string(),
-        )
-        .await
-        .unwrap()
-    }
-
     pub(crate) async fn build_avs_registry_chain_writer(
         http_endpoint: String,
         private_key: String,
@@ -146,6 +128,24 @@ pub(crate) mod test_utils {
             private_key,
             registry_coordinator_address,
             operator_state_retriever_address,
+        )
+        .await
+        .unwrap()
+    }
+
+    pub(crate) async fn build_avs_registry_chain_reader(
+        http_endpoint: String,
+    ) -> AvsRegistryChainReader {
+        let registry_coordinator_addr =
+            get_registry_coordinator_address(http_endpoint.clone()).await;
+        let operator_state_retriever_address =
+            get_operator_state_retriever_address(http_endpoint.clone()).await;
+
+        AvsRegistryChainReader::new(
+            get_test_logger(),
+            registry_coordinator_addr,
+            operator_state_retriever_address,
+            http_endpoint.to_string(),
         )
         .await
         .unwrap()

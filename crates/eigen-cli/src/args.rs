@@ -1,6 +1,5 @@
 use alloy::primitives::Address;
 use clap::{ArgGroup, Parser, Subcommand};
-use eigen_testing_utils::anvil_constants::ANVIL_HTTP_URL;
 use rust_bls_bn254::{
     CHINESE_SIMPLIFIED_WORD_LIST, CHINESE_TRADITIONAL_WORD_LIST, CZECH_WORD_LIST,
     ENGLISH_WORD_LIST, ITALIAN_WORD_LIST, KOREAN_WORD_LIST, PORTUGUESE_WORD_LIST,
@@ -43,7 +42,7 @@ outputs addresses for all relevant Eigenlayer and AVS contracts within the netwo
         )]
         registry_coordinator: Option<Address>,
 
-        #[arg(long, help = "rpc url", default_value = ANVIL_HTTP_URL)]
+        #[arg(long, help = "rpc url", default_value = "http://localhost:8545")]
         rpc_url: String,
     },
 
