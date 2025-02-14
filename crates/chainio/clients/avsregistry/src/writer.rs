@@ -19,6 +19,7 @@ use eigen_utils::slashing::middleware::registrycoordinator::ISlashingRegistryCoo
 use eigen_utils::slashing::middleware::registrycoordinator::{
     ISignatureUtils::SignatureWithSaltAndExpiry, RegistryCoordinator,
 };
+use eigen_utils::slashing::middleware::servicemanagerbase::IRewardsCoordinatorTypes::OperatorDirectedRewardsSubmission;
 use eigen_utils::slashing::middleware::stakeregistry::IStakeRegistryTypes::StrategyParams;
 use eigen_utils::slashing::middleware::{
     servicemanagerbase::ServiceManagerBase, stakeregistry::StakeRegistry,
@@ -445,6 +446,32 @@ impl AvsRegistryChainWriter {
             .map_err(AvsRegistryError::AlloyContractError)?;
         info!(tx_hash = ?tx,"successfully deregistered operator with the AVS's registry coordinator" );
         Ok(*tx.tx_hash())
+    }
+
+    /// Create a new operator directed AVS rewards submission
+    ///
+    /// # Arguments
+    ///
+    /// * `operator_rewards_submission` - The operator directed rewards submission to create
+    ///
+    /// # Returns
+    ///
+    /// * `TxHash` - The transaction hash of the create operator directed AVS rewards submission transaction
+    pub async fn create_operator_directed_avs_rewards_submission(
+        &self,
+        operator_rewards_submission: Vec<OperatorDirectedRewardsSubmission>,
+    ) -> Result<TxHash, AvsRegistryError> {
+        info!("creating operator directed AVS rewards submission with ServiceManagerBase");
+        let provider = get_signer(&self.signer.clone(), &self.provider);
+
+        let service_manager = ServiceManagerBase::new(self.service_manager_addr, &provider);
+
+        service_manager.createOperatorDirectedAVSRewardsSubmission(operator_rewards_submission)
+            .send()
+            .await
+            .map_err(AvsRegistryError::AlloyContractError)
+            .inspect(|tx| info!(tx_hash = ?tx, "successfully created operator directed AVS rewards submission with ServiceManagerBase"))
+            .map(|tx| *tx.tx_hash())
     }
 
     /// Sets the look-ahead time for checking operator shares for a specific quorum
@@ -994,6 +1021,7 @@ mod tests {
     use eigen_crypto_bls::BlsKeyPair;
     use eigen_testing_utils::anvil::{start_anvil_container, start_m2_anvil_container};
     use eigen_testing_utils::anvil_constants::get_erc20_mock_strategy;
+    use eigen_testing_utils::anvil_constants::get_rewards_coordinator_address;
     use eigen_testing_utils::anvil_constants::get_service_manager_address;
     use eigen_testing_utils::anvil_constants::SECOND_PRIVATE_KEY;
     use eigen_testing_utils::anvil_constants::THIRD_ADDRESS;
@@ -1007,8 +1035,12 @@ mod tests {
     };
     use eigen_testing_utils::transaction::wait_transaction;
     use eigen_utils::slashing::core::allocationmanager::AllocationManager;
+    use eigen_utils::slashing::core::irewardscoordinator::IRewardsCoordinator;
     use eigen_utils::slashing::middleware::registrycoordinator::ISlashingRegistryCoordinatorTypes::OperatorSetParam;
     use eigen_utils::slashing::middleware::registrycoordinator::RegistryCoordinator;
+    use eigen_utils::slashing::middleware::servicemanagerbase::IRewardsCoordinatorTypes::OperatorDirectedRewardsSubmission;
+    use eigen_utils::slashing::middleware::servicemanagerbase::IRewardsCoordinatorTypes::OperatorReward;
+    use eigen_utils::slashing::middleware::servicemanagerbase::IRewardsCoordinatorTypes::StrategyAndMultiplier;
     use eigen_utils::slashing::middleware::servicemanagerbase::ServiceManagerBase;
     use eigen_utils::slashing::middleware::stakeregistry::IStakeRegistryTypes::StrategyParams;
     use eigen_utils::slashing::middleware::stakeregistry::StakeRegistry;
@@ -1076,6 +1108,99 @@ mod tests {
         let mut stream = poller.into_stream();
         let (stream_event, _) = stream.next().await.unwrap().unwrap();
         assert_eq!(stream_event.newLookAheadBlocks, lookahead);
+    }
+
+    #[tokio::test]
+    async fn test_create_operator_directed_avs_rewards_submission() {
+        let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
+        let private_key = FIRST_PRIVATE_KEY.to_string();
+        let avs_writer =
+            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
+
+        let strategy_address = get_erc20_mock_strategy(http_endpoint.clone()).await;
+
+        let (_, token_address) = avs_writer
+            .el_reader
+            .get_strategy_and_underlying_token(strategy_address)
+            .await
+            .unwrap();
+
+        let operator_rewards = OperatorReward {
+            operator: SECOND_ADDRESS,
+            amount: U256::from(100),
+        };
+
+        let strategies = StrategyAndMultiplier {
+            strategy: strategy_address,
+            multiplier: U96::from(1),
+        };
+
+        let rewards_coordinator_address =
+            get_rewards_coordinator_address(http_endpoint.clone()).await;
+        let provider = get_provider(&http_endpoint);
+        let rewards_coordinator = IRewardsCoordinator::new(rewards_coordinator_address, &provider);
+
+        let calculation_interval_seconds = rewards_coordinator
+            .CALCULATION_INTERVAL_SECONDS()
+            .call()
+            .await
+            .unwrap()
+            ._0;
+
+        assert_ne!(calculation_interval_seconds, 0);
+
+        let rewards_duration = rewards_coordinator
+            .MAX_REWARDS_DURATION()
+            .call()
+            .await
+            .unwrap()
+            ._0;
+
+        // Calculate the most recent interval start time that is less than the current timestamp
+        // This ensures the reward submission aligns with the contract's time-based requirements
+        let current_timestamp: u32 = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap()
+            .as_secs()
+            .try_into()
+            .unwrap();
+        let intervals_since_genesis = current_timestamp / calculation_interval_seconds;
+        let last_valid_interval_start =
+            (intervals_since_genesis - 2) * calculation_interval_seconds;
+
+        // These values are set to align with the contract's requirements for the `OperatorDirectedRewardsSubmission`.
+        // https://github.com/Layr-Labs/eigenlayer-contracts/blob/5341ef83500476c62a4406ff00cdde7f5c2cc11f/src/contracts/core/RewardsCoordinator.sol#L438
+        // https://github.com/Layr-Labs/eigenlayer-contracts/blob/5341ef83500476c62a4406ff00cdde7f5c2cc11f/src/contracts/core/RewardsCoordinator.sol#L485
+        let duration = rewards_duration;
+        let start_timestamp = last_valid_interval_start;
+
+        let operator_rewards_submission = OperatorDirectedRewardsSubmission {
+            token: token_address,
+            description: "test".to_string(),
+            duration,
+            startTimestamp: start_timestamp,
+            operatorRewards: vec![operator_rewards.clone()],
+            strategiesAndMultipliers: vec![strategies],
+        };
+
+        let tx_hash = avs_writer
+            .create_operator_directed_avs_rewards_submission(vec![operator_rewards_submission])
+            .await
+            .unwrap();
+
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
+        assert!(tx_status);
+
+        let is_registered = avs_writer
+            .el_reader
+            .is_operator_registered(operator_rewards.operator)
+            .await
+            .unwrap();
+
+        assert!(is_registered);
     }
 
     #[tokio::test]
