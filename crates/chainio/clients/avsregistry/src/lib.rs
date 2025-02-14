@@ -20,6 +20,8 @@ pub mod fake_reader;
 
 #[cfg(test)]
 pub(crate) mod test_utils {
+
+    use crate::reader::AvsRegistryChainReader;
     use crate::writer::AvsRegistryChainWriter;
     use alloy::{
         primitives::{aliases::U96, Address, Bytes, FixedBytes, U256},
@@ -43,8 +45,6 @@ pub(crate) mod test_utils {
         },
         sdk::mockavsservicemanager::MockAvsServiceManager,
     };
-
-    use crate::reader::AvsRegistryChainReader;
 
     pub(crate) async fn create_operator_set(http_endpoint: &str, avs_address: Address) {
         let allocation_manager_addr =
