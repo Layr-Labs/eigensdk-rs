@@ -29,7 +29,7 @@ __TESTING__: ##
 
 .PHONY: start-anvil
 start-anvil: reset-anvil ##
-	$(MAKE) start-anvil-chain-with-contracts-deployed
+	./crates/operator_sets_contracts/anvil/start-anvil-chain-with-el-and-avs-deployed.sh
 
 .PHONY: reset-anvil
 reset-anvil:
