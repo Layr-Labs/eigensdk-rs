@@ -16,13 +16,13 @@ use eigen_utils::convert_stake_registry_strategy_params_to_registry_coordinator_
 use eigen_utils::slashing::middleware::registrycoordinator::ISlashingRegistryCoordinatorTypes::OperatorKickParam;
 use eigen_utils::slashing::middleware::registrycoordinator::{
     IBLSApkRegistryTypes::PubkeyRegistrationParams, ISignatureUtils::SignatureWithSaltAndExpiry,
-    ISlashingRegistryCoordinatorTypes::OperatorSetParam, IStakeRegistryTypes::StrategyParams,
-    RegistryCoordinator,
+    ISlashingRegistryCoordinatorTypes::OperatorSetParam, RegistryCoordinator,
 };
 use eigen_utils::slashing::middleware::servicemanagerbase::IRewardsCoordinatorTypes::OperatorDirectedRewardsSubmission;
 use eigen_utils::slashing::middleware::servicemanagerbase::{
     IRewardsCoordinatorTypes::RewardsSubmission, ServiceManagerBase,
 };
+use eigen_utils::slashing::middleware::stakeregistry::IStakeRegistryTypes::StrategyParams;
 use eigen_utils::slashing::middleware::stakeregistry::StakeRegistry;
 use std::str::FromStr;
 use tracing::{info, warn};
@@ -1050,9 +1050,7 @@ mod tests {
     use eigen_common::{get_provider, get_signer};
     use eigen_crypto_bls::BlsKeyPair;
     use eigen_testing_utils::anvil::{start_anvil_container, start_m2_anvil_container};
-    use eigen_testing_utils::anvil_constants::get_erc20_mock_strategy;
-    use eigen_testing_utils::anvil_constants::get_rewards_coordinator_address;
-    use eigen_testing_utils::anvil_constants::get_service_manager_address;
+    use eigen_testing_utils::anvil_constants::OPERATOR_BLS_KEY_2;
     use eigen_testing_utils::anvil_constants::SECOND_PRIVATE_KEY;
     use eigen_testing_utils::anvil_constants::THIRD_ADDRESS;
     use eigen_testing_utils::anvil_constants::THIRD_PRIVATE_KEY;
@@ -1061,25 +1059,17 @@ mod tests {
         get_service_manager_address,
     };
     use eigen_testing_utils::anvil_constants::{
-        get_allocation_manager_address, OPERATOR_BLS_KEY_2,
-    };
-    use eigen_testing_utils::anvil_constants::{
-        FIFTH_ADDRESS, FIFTH_PRIVATE_KEY, FIRST_ADDRESS, FIRST_PRIVATE_KEY, GENESIS_TIMESTAMP,
-        OPERATOR_BLS_KEY, SECOND_ADDRESS,
+        FIFTH_ADDRESS, FIFTH_PRIVATE_KEY, FIRST_ADDRESS, FIRST_PRIVATE_KEY, OPERATOR_BLS_KEY,
+        SECOND_ADDRESS,
     };
     use eigen_testing_utils::transaction::wait_transaction;
     use eigen_utils::slashing::core::allocationmanager::AllocationManager;
     use eigen_utils::slashing::core::irewardscoordinator::IRewardsCoordinator;
-    use eigen_utils::slashing::middleware::registrycoordinator::ISlashingRegistryCoordinatorTypes::OperatorSetParam;
-    use eigen_utils::slashing::middleware::registrycoordinator::RegistryCoordinator;
     use eigen_utils::slashing::middleware::registrycoordinator::{
-        ISlashingRegistryCoordinatorTypes::OperatorSetParam, IStakeRegistryTypes::StrategyParams,
-        RegistryCoordinator,
+        ISlashingRegistryCoordinatorTypes::OperatorSetParam, RegistryCoordinator,
     };
     use eigen_utils::slashing::middleware::servicemanagerbase::IRewardsCoordinatorTypes::OperatorDirectedRewardsSubmission;
     use eigen_utils::slashing::middleware::servicemanagerbase::IRewardsCoordinatorTypes::OperatorReward;
-    use eigen_utils::slashing::middleware::servicemanagerbase::IRewardsCoordinatorTypes::StrategyAndMultiplier;
-    use eigen_utils::slashing::middleware::servicemanagerbase::ServiceManagerBase;
     use eigen_utils::slashing::middleware::servicemanagerbase::{
         IRewardsCoordinatorTypes::RewardsSubmission,
         IRewardsCoordinatorTypes::StrategyAndMultiplier, ServiceManagerBase,
@@ -2020,9 +2010,15 @@ mod tests {
 
         // Calculate the most recent interval start time that is less than the current timestamp
         // This ensures the reward submission aligns with the contract's time-based requirements
-        let intervals_since_genesis = GENESIS_TIMESTAMP / calculation_interval_seconds;
+        let current_timestamp: u32 = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap()
+            .as_secs()
+            .try_into()
+            .unwrap();
+        let intervals_since_genesis = current_timestamp / calculation_interval_seconds;
         let last_valid_interval_start =
-            (intervals_since_genesis * calculation_interval_seconds) - calculation_interval_seconds;
+            (intervals_since_genesis - 2) * calculation_interval_seconds;
 
         let strategy_address = get_erc20_mock_strategy(http_endpoint.clone()).await;
         let (_, token) = avs_writer
