@@ -87,6 +87,8 @@ Those changes in added, changed or breaking changes, should include usage exampl
 ### Removed 🗑
 
 * Removed `eigen-testing-utils` dependency from `eigen-cli` crate in [#353](https://github.com/Layr-Labs/eigensdk-rs/pull/353).
+* Removed `mine_anvil_blocks_operator_set` from `eigen-testing-utils` in [#357](https://github.com/Layr-Labs/eigensdk-rs/pull/357).
+  * Users should use `mine_anvil_blocks` that does the same thing.
 
 ### Documentation 📚
 
