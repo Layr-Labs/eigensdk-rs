@@ -25,4 +25,6 @@ cleanup() {
 trap 'cleanup $LINENO "$BASH_COMMAND"' EXIT
 
 # start an anvil instance that has eigenlayer contracts deployed
-start_anvil_docker $parent_path/dump_state.json ""
+start_anvil_docker $parent_path/operatorset_contracts_deployed_anvil_state ""
+
+docker attach anvil
