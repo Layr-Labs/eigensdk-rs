@@ -1,7 +1,7 @@
 #[cfg(test)]
 pub mod integration_test {
     use crate::{
-        bls_agg::BlsAggregatorService,
+        bls_agg::{BlsAggregatorService, TaskMetadata, TaskSignature},
         bls_aggregation_service_response::BlsAggregationServiceResponse,
     };
     use alloy::primitives::{aliases::U96, Address, Bytes, FixedBytes, B256, U256};
@@ -339,23 +339,26 @@ pub mod integration_test {
         let quorum_threshold_percentages: QuorumThresholdPercentages =
             test_data.input.quorum_threshold_percentages;
         // Initialize the task
-        bls_agg_service
-            .initialize_new_task(
-                task_index,
-                current_block_num as u32,
-                quorum_nums.to_vec(),
-                quorum_threshold_percentages,
-                time_to_expiry,
-            )
-            .await
-            .unwrap();
+        let metadata = TaskMetadata::new(
+            task_index,
+            current_block_num,
+            quorum_nums.to_vec(),
+            quorum_threshold_percentages,
+            time_to_expiry,
+        );
+        bls_agg_service.initialize_new_task(metadata).await.unwrap();
 
         // Compute the signature and send it to the aggregation service
         let task_response = 123;
         let task_response_digest = hash(task_response);
         let bls_signature = bls_key_pair.sign_message(task_response_digest.as_ref());
         bls_agg_service
-            .process_new_signature(task_index, task_response_digest, bls_signature, operator_id)
+            .process_new_signature(TaskSignature::new(
+                task_index,
+                task_response_digest,
+                bls_signature,
+                operator_id,
+            ))
             .await
             .unwrap();
 
@@ -478,16 +481,14 @@ pub mod integration_test {
         let time_to_expiry = Duration::from_secs(10);
 
         // Initialize the task
-        bls_agg_service
-            .initialize_new_task(
-                task_index,
-                current_block_num as u32,
-                quorum_nums.to_vec(),
-                quorum_threshold_percentages,
-                time_to_expiry,
-            )
-            .await
-            .unwrap();
+        let metadata = TaskMetadata::new(
+            task_index,
+            current_block_num,
+            quorum_nums.to_vec(),
+            quorum_threshold_percentages,
+            time_to_expiry,
+        );
+        bls_agg_service.initialize_new_task(metadata).await.unwrap();
 
         // Compute the signature and send it to the aggregation service
         let task_response = 123;
@@ -507,7 +508,12 @@ pub mod integration_test {
             FixedBytes::from(operator_id_from_g1_pub_key(bls_key_pair.public_key()).unwrap());
         assert_eq!(s, operator_id);
         bls_agg_service
-            .process_new_signature(task_index, task_response_digest, bls_signature, operator_id)
+            .process_new_signature(TaskSignature::new(
+                task_index,
+                task_response_digest,
+                bls_signature,
+                operator_id,
+            ))
             .await
             .unwrap();
 
@@ -648,16 +654,14 @@ pub mod integration_test {
         let time_to_expiry = Duration::from_secs(10);
 
         // Initialize the task
-        bls_agg_service
-            .initialize_new_task(
-                task_index,
-                current_block_num as u32,
-                quorum_nums.to_vec(),
-                quorum_threshold_percentages,
-                time_to_expiry,
-            )
-            .await
-            .unwrap();
+        let metadata = TaskMetadata::new(
+            task_index,
+            current_block_num,
+            quorum_nums.to_vec(),
+            quorum_threshold_percentages,
+            time_to_expiry,
+        );
+        bls_agg_service.initialize_new_task(metadata).await.unwrap();
 
         // Compute the signature and send it to the aggregation service
         let task_response = 123;
@@ -667,24 +671,25 @@ pub mod integration_test {
         let operator_id_2 =
             FixedBytes::from(operator_id_from_g1_pub_key(bls_key_pair_2.public_key()).unwrap());
         let bls_signature_1 = bls_key_pair_1.sign_message(task_response_digest.as_ref());
+
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_signature_1,
                 operator_id_1,
-            )
+            ))
             .await
             .unwrap();
 
         let bls_signature_2 = bls_key_pair_2.sign_message(task_response_digest.as_ref());
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_signature_2,
                 operator_id_2,
-            )
+            ))
             .await
             .unwrap();
 
@@ -833,16 +838,14 @@ pub mod integration_test {
         let time_to_expiry = Duration::from_secs(10);
 
         // Initialize the task
-        bls_agg_service
-            .initialize_new_task(
-                task_index,
-                current_block_num as u32,
-                quorum_nums.to_vec(),
-                quorum_threshold_percentages,
-                time_to_expiry,
-            )
-            .await
-            .unwrap();
+        let metadata = TaskMetadata::new(
+            task_index,
+            current_block_num,
+            quorum_nums.to_vec(),
+            quorum_threshold_percentages,
+            time_to_expiry,
+        );
+        bls_agg_service.initialize_new_task(metadata).await.unwrap();
 
         // Compute the signature and send it to the aggregation service
         let task_response = 123;
@@ -850,23 +853,23 @@ pub mod integration_test {
 
         let bls_signature_1 = bls_key_pair_1.sign_message(task_response_digest.as_ref());
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_signature_1,
                 operator_id_1,
-            )
+            ))
             .await
             .unwrap();
 
         let bls_signature_2 = bls_key_pair_2.sign_message(task_response_digest.as_ref());
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_signature_2,
                 operator_id_2,
-            )
+            ))
             .await
             .unwrap();
 
@@ -1014,16 +1017,14 @@ pub mod integration_test {
         let time_to_expiry = Duration::from_secs(1);
 
         // Initialize the task
-        bls_agg_service
-            .initialize_new_task(
-                task_index,
-                current_block_num as u32,
-                quorum_nums.to_vec(),
-                quorum_threshold_percentages,
-                time_to_expiry,
-            )
-            .await
-            .unwrap();
+        let metadata = TaskMetadata::new(
+            task_index,
+            current_block_num,
+            quorum_nums.to_vec(),
+            quorum_threshold_percentages,
+            time_to_expiry,
+        );
+        bls_agg_service.initialize_new_task(metadata).await.unwrap();
 
         // Compute the signature and send it to the aggregation service
         let task_response = 123;
@@ -1031,23 +1032,23 @@ pub mod integration_test {
 
         let bls_signature_1 = bls_key_pair_1.sign_message(task_response_digest.as_ref());
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_signature_1,
                 operator_id_1,
-            )
+            ))
             .await
             .unwrap();
 
         let bls_signature_2 = bls_key_pair_2.sign_message(task_response_digest.as_ref());
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_signature_2,
                 operator_id_2,
-            )
+            ))
             .await
             .unwrap();
 
@@ -1181,16 +1182,14 @@ pub mod integration_test {
         let time_to_expiry = Duration::from_secs(1);
 
         // Initialize the task
-        bls_agg_service
-            .initialize_new_task(
-                task_index,
-                current_block_num as u32,
-                quorum_nums.to_vec(),
-                quorum_threshold_percentages,
-                time_to_expiry,
-            )
-            .await
-            .unwrap();
+        let metadata = TaskMetadata::new(
+            task_index,
+            current_block_num,
+            quorum_nums.to_vec(),
+            quorum_threshold_percentages,
+            time_to_expiry,
+        );
+        bls_agg_service.initialize_new_task(metadata).await.unwrap();
 
         // Compute the signature and send it to the aggregation service
         let task_response = 123;
@@ -1198,12 +1197,12 @@ pub mod integration_test {
 
         let bls_signature_1 = bls_key_pair_1.sign_message(task_response_digest.as_ref());
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
-                bls_signature_1.clone(),
+                bls_signature_1,
                 operator_id_1,
-            )
+            ))
             .await
             .unwrap();
 

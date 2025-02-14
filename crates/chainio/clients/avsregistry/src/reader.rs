@@ -1,4 +1,5 @@
 use crate::error::AvsRegistryError;
+use alloy::primitives::aliases::U96;
 use alloy::primitives::{Address, Bytes, FixedBytes, B256, U256};
 use alloy::providers::Provider;
 use alloy::rpc::types::Filter;
@@ -11,12 +12,15 @@ use eigen_crypto_bls::{
 };
 use eigen_logging::logger::SharedLogger;
 use eigen_types::operator::{
-    bitmap_to_quorum_ids, bitmap_to_quorum_ids_from_u192, OperatorPubKeys,
+    bitmap_to_quorum_ids, bitmap_to_quorum_ids_from_u192, OperatorPubKeys, QuorumNum,
 };
-
 use eigen_utils::slashing::middleware::blsapkregistry::BLSApkRegistry;
 use eigen_utils::slashing::middleware::operatorstateretriever::OperatorStateRetriever;
 use eigen_utils::slashing::middleware::registrycoordinator::RegistryCoordinator;
+use eigen_utils::slashing::middleware::servicemanagerbase::ServiceManagerBase;
+use eigen_utils::slashing::middleware::stakeregistry::IStakeRegistryTypes::{
+    StakeUpdate, StrategyParams,
+};
 use eigen_utils::slashing::middleware::stakeregistry::StakeRegistry;
 use num_bigint::BigInt;
 use std::fmt::Debug;
@@ -318,6 +322,32 @@ impl AvsRegistryChainReader {
         Ok(s)
     }
 
+    /// Get a list of strategies that the AVS supports for restaking
+    ///
+    /// # Returns
+    ///
+    /// A vector of addresses representing the strategies that the AVS supports for restaking
+    pub async fn get_restakeable_strategies(&self) -> Result<Vec<Address>, AvsRegistryError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_registry_coordinator =
+            RegistryCoordinator::new(self.registry_coordinator_addr, &provider);
+
+        let service_manager = contract_registry_coordinator
+            .serviceManager()
+            .call()
+            .await?
+            ._0;
+
+        let strategies = ServiceManagerBase::new(service_manager, &provider)
+            .getRestakeableStrategies()
+            .call()
+            .await?
+            ._0;
+
+        Ok(strategies)
+    }
+
     /// Get operators stake in quorums of operator at current block
     ///
     /// # Arguments
@@ -433,6 +463,39 @@ impl AvsRegistryChainReader {
             }
         }
         Ok(quorums)
+    }
+
+    /// Get a list of strategies that an operator has potentially restaked on the AVS.
+    ///
+    /// # Arguments
+    ///
+    /// * `operator_address` - The operator address.
+    ///
+    /// # Returns
+    ///
+    /// A vector with strategies addresses
+    pub async fn get_operator_restaked_strategies(
+        &self,
+        operator_address: Address,
+    ) -> Result<Vec<Address>, AvsRegistryError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_registry_coordinator =
+            RegistryCoordinator::new(self.registry_coordinator_addr, &provider);
+
+        let service_manager = contract_registry_coordinator
+            .serviceManager()
+            .call()
+            .await?
+            ._0;
+
+        let strategies = ServiceManagerBase::new(service_manager, &provider)
+            .getOperatorRestakedStrategies(operator_address)
+            .call()
+            .await?
+            ._0;
+
+        Ok(strategies)
     }
 
     /// Get operator id
@@ -627,42 +690,519 @@ impl AvsRegistryChainReader {
         }
         Ok(operator_id_to_socket)
     }
+
+    /// Check if a quorum is an operator set quorum
+    ///
+    /// # Arguments
+    /// * `quorum_number` - The quorum number to query.
+    ///
+    /// # Returns
+    /// [`true`] if the quorum is an operator set quorum, [`false`] otherwise.
+    pub async fn is_operator_set_quorum(
+        &self,
+        quorum_number: QuorumNum,
+    ) -> Result<bool, AvsRegistryError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, &provider);
+
+        let quorum_status = contract_stake_registry
+            .isOperatorSetQuorum(quorum_number)
+            .call()
+            .await?;
+
+        let StakeRegistry::isOperatorSetQuorumReturn { _0: quorum_status } = quorum_status;
+
+        Ok(quorum_status)
+    }
+
+    /// Computes the total weight of operator with the given quorum number.
+    ///
+    /// The quorum number must exist, or else the tx will fail.
+    ///
+    /// # Arguments
+    ///
+    /// * `quorum_number` - The respective quorum number.
+    /// * `operator_address` - The operator's address.
+    ///
+    /// # Returns
+    ///
+    /// * [`U96`] - The total weight.
+    pub async fn weight_of_operator_for_quorum(
+        &self,
+        quorum_number: QuorumNum,
+        operator_address: Address,
+    ) -> Result<U96, AvsRegistryError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, provider);
+        let stake = contract_stake_registry
+            .weightOfOperatorForQuorum(quorum_number, operator_address)
+            .call()
+            .await?
+            ._0;
+
+        Ok(stake)
+    }
+
+    /// Returns the length of the strategy parameters stored for a given quorum.
+    ///
+    /// # Arguments
+    ///
+    /// * `quorum_number` - The quorum number.
+    ///
+    /// # Returns
+    ///
+    /// * [`U256`] - The length of the strategy parameters array.
+    pub async fn strategy_params_length(
+        &self,
+        quorum_number: QuorumNum,
+    ) -> Result<U256, AvsRegistryError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, provider);
+        let len = contract_stake_registry
+            .strategyParamsLength(quorum_number)
+            .call()
+            .await?
+            ._0;
+
+        Ok(len)
+    }
+
+    /// Returns the strategy parameters by index for a given quorum.
+    ///
+    /// # Arguments
+    ///
+    /// * `quorum_number` - The quorum number.
+    /// * `index` - The index in the strategy parameter array.
+    ///
+    /// # Returns
+    ///
+    /// * [`StrategyParams`] - The strategy parameters at the specified index.
+    pub async fn strategy_params_by_index(
+        &self,
+        quorum_number: QuorumNum,
+        index: U256,
+    ) -> Result<StrategyParams, AvsRegistryError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, provider);
+        let strategy_params = contract_stake_registry
+            .strategyParamsByIndex(quorum_number, index)
+            .call()
+            .await?
+            ._0;
+
+        Ok(strategy_params)
+    }
+
+    /// Returns the stake history length for a given operator and quorum.
+    ///
+    /// # Arguments
+    ///
+    /// * `operator_id` - The operator's identifier.
+    /// * `quorum_number` - The quorum number.
+    ///
+    /// # Returns
+    ///
+    /// * [`U256`] - The length of the stake history.
+    pub async fn get_stake_history_length(
+        &self,
+        operator_id: B256,
+        quorum_number: QuorumNum,
+    ) -> Result<U256, AvsRegistryError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, provider);
+
+        let len = contract_stake_registry
+            .getStakeHistoryLength(operator_id, quorum_number)
+            .call()
+            .await?
+            ._0;
+
+        Ok(len)
+    }
+
+    /// Returns the entire stake history for a given operator and quorum.
+    ///
+    /// # Arguments
+    ///
+    /// * `operator_id` - The operator's identifier.
+    /// * `quorum_number` - The quorum number.
+    ///
+    /// # Returns
+    ///
+    /// * `Vec<StakeUpdate>` - A vector containing all stake updates.
+    pub async fn get_stake_history(
+        &self,
+        operator_id: B256,
+        quorum_number: QuorumNum,
+    ) -> Result<Vec<StakeUpdate>, AvsRegistryError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, provider);
+
+        let stake_update_vec = contract_stake_registry
+            .getStakeHistory(operator_id, quorum_number)
+            .call()
+            .await?
+            ._0;
+
+        Ok(stake_update_vec)
+    }
+
+    /// Returns the most recent stake update for a given operator and quorum.
+    ///
+    /// # Arguments
+    ///
+    /// * `operator_id` - The operator's identifier.
+    /// * `quorum_number` - The quorum number.
+    ///
+    /// # Returns
+    ///
+    /// * [`StakeUpdate`] - The latest stake update.
+    pub async fn get_latest_stake_update(
+        &self,
+        operator_id: B256,
+        quorum_number: QuorumNum,
+    ) -> Result<StakeUpdate, AvsRegistryError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, provider);
+
+        let stake_update = contract_stake_registry
+            .getLatestStakeUpdate(operator_id, quorum_number)
+            .call()
+            .await?
+            ._0;
+
+        Ok(stake_update)
+    }
+
+    /// Returns the stake update at a specific index for a given operator and quorum.
+    ///
+    /// # Arguments
+    ///
+    /// * `quorum_number` - The quorum number.
+    /// * `operator_id` - The operator's identifier.
+    /// * `index` - The index in the stake history array.
+    ///
+    /// # Returns
+    ///
+    /// * [`StakeUpdate`] - The stake update at the specified index.
+    pub async fn get_stake_update_at_index(
+        &self,
+        quorum_number: QuorumNum,
+        operator_id: B256,
+        index: U256,
+    ) -> Result<StakeUpdate, AvsRegistryError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, provider);
+
+        let stake_update = contract_stake_registry
+            .getStakeUpdateAtIndex(quorum_number, operator_id, index)
+            .call()
+            .await?
+            ._0;
+
+        Ok(stake_update)
+    }
+
+    /// Returns the stake of an operator for a given quorum at a specific block number.
+    ///
+    /// # Arguments
+    ///
+    /// * `operator_id` - The operator's identifier.
+    /// * `quorum_number` - The quorum number.
+    /// * `block_number` - The block number at which to retrieve the stake.
+    ///
+    /// # Returns
+    ///
+    /// * [`U96`] - The stake at the specified block number.
+    pub async fn get_stake_at_block_number(
+        &self,
+        operator_id: B256,
+        quorum_number: QuorumNum,
+        block_number: u32,
+    ) -> Result<U96, AvsRegistryError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, provider);
+
+        let stake = contract_stake_registry
+            .getStakeAtBlockNumber(operator_id, quorum_number, block_number)
+            .call()
+            .await?
+            ._0;
+
+        Ok(stake)
+    }
+
+    /// Returns the index of the stake update for an operator at a given block number.
+    ///
+    /// # Arguments
+    ///
+    /// * `operator_id` - The operator's identifier.
+    /// * `quorum_number` - The quorum number.
+    /// * `block_number` - The block number.
+    ///
+    /// # Returns
+    ///
+    /// * `u32` - The index of the stake update.
+    pub async fn get_stake_update_index_at_block_number(
+        &self,
+        operator_id: B256,
+        quorum_number: QuorumNum,
+        block_number: u32,
+    ) -> Result<u32, AvsRegistryError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, provider);
+
+        let index = contract_stake_registry
+            .getStakeUpdateIndexAtBlockNumber(operator_id, quorum_number, block_number)
+            .call()
+            .await?
+            ._0;
+
+        Ok(index)
+    }
+
+    /// Returns the stake of an operator for a given quorum at a specific block number and index.
+    ///
+    /// # Arguments
+    ///
+    /// * `quorum_number` - The quorum number.
+    /// * `block_number` - The block number at which to retrieve the stake.
+    /// * `operator_id` - The operator's identifier.
+    /// * `index` - The index in the stake history array.
+    ///
+    /// # Returns
+    ///
+    /// * [`U96`] - The stake weight at the specified block number and index.
+    pub async fn get_stake_at_block_number_and_index(
+        &self,
+        quorum_number: QuorumNum,
+        block_number: u32,
+        operator_id: B256,
+        index: U256,
+    ) -> Result<U96, AvsRegistryError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, provider);
+
+        let stake_weight = contract_stake_registry
+            .getStakeAtBlockNumberAndIndex(quorum_number, block_number, operator_id, index)
+            .call()
+            .await?
+            ._0;
+
+        Ok(stake_weight)
+    }
+
+    /// Returns the length of the total stake history for a given quorum.
+    ///
+    /// # Arguments
+    ///
+    /// * `quorum_number` - The quorum number.
+    ///
+    /// # Returns
+    ///
+    /// * [`U256`] - The total stake history length.
+    pub async fn get_total_stake_history_length(
+        &self,
+        quorum_number: QuorumNum,
+    ) -> Result<U256, AvsRegistryError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, provider);
+
+        let length = contract_stake_registry
+            .getTotalStakeHistoryLength(quorum_number)
+            .call()
+            .await?
+            ._0;
+
+        Ok(length)
+    }
+
+    /// Returns the current total stake weight for a given quorum.
+    ///
+    /// # Arguments
+    ///
+    /// * `quorum_number` - The quorum number.
+    ///
+    /// # Returns
+    ///
+    /// * [`U96`] - The current total stake weight.
+    pub async fn get_current_total_stake(
+        &self,
+        quorum_number: QuorumNum,
+    ) -> Result<U96, AvsRegistryError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, provider);
+
+        let stake_weight = contract_stake_registry
+            .getCurrentTotalStake(quorum_number)
+            .call()
+            .await?
+            ._0;
+
+        Ok(stake_weight)
+    }
+
+    /// Returns the stake update at a specific index for a given quorum.
+    ///
+    /// # Arguments
+    ///
+    /// * `quorum_number` - The quorum number.
+    /// * `index` - The index in the total stake history.
+    ///
+    /// # Returns
+    ///
+    /// * [`StakeUpdate`] - The stake update at the specified index.
+    pub async fn get_total_stake_update_at_index(
+        &self,
+        quorum_number: QuorumNum,
+        index: U256,
+    ) -> Result<StakeUpdate, AvsRegistryError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, provider);
+
+        let stake_update = contract_stake_registry
+            .getTotalStakeUpdateAtIndex(quorum_number, index)
+            .call()
+            .await?
+            ._0;
+
+        Ok(stake_update)
+    }
+
+    /// Returns the total stake at a given block number and index.
+    ///
+    /// # Arguments
+    ///
+    /// * `quorum_number` - The quorum number.
+    /// * `block_number` - The block number.
+    /// * `index` - The index in the total stake history.
+    ///
+    /// # Returns
+    ///
+    /// * [`U96`] - The total stake at the specified block number and index.
+    pub async fn get_total_stake_at_block_number_from_index(
+        &self,
+        quorum_number: QuorumNum,
+        block_number: u32,
+        index: U256,
+    ) -> Result<U96, AvsRegistryError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, provider);
+
+        let total_stake = contract_stake_registry
+            .getTotalStakeAtBlockNumberFromIndex(quorum_number, block_number, index)
+            .call()
+            .await?
+            ._0;
+
+        Ok(total_stake)
+    }
+
+    /// Returns the total stake indices for the given quorum at a specific block number.
+    ///
+    /// # Arguments
+    ///
+    /// * `block_number` - The block number.
+    /// * `quorum_number` - The quorum number in bytes format.
+    ///
+    /// # Returns
+    ///
+    /// * `Vec<u32>` - A vector of stake indices at the specified block number.
+    pub async fn get_total_stake_indices_at_block_number(
+        &self,
+        block_number: u32,
+        quorum_number: Bytes,
+    ) -> Result<Vec<u32>, AvsRegistryError> {
+        let provider = get_provider(&self.provider);
+
+        let contract_stake_registry = StakeRegistry::new(self.stake_registry_addr, provider);
+
+        let total_stakes = contract_stake_registry
+            .getTotalStakeIndicesAtBlockNumber(block_number, quorum_number)
+            .call()
+            .await?
+            ._0;
+
+        Ok(total_stakes)
+    }
 }
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-    use eigen_logging::get_test_logger;
-    use eigen_testing_utils::m2_holesky_constants::{
-        HOLESKY_RPC_PROVIDER, OPERATOR_STATE_RETRIEVER, REGISTRY_COORDINATOR,
-    };
-    use hex::FromHex;
-    use std::str::FromStr;
 
-    async fn build_avs_registry_chain_reader() -> AvsRegistryChainReader {
-        AvsRegistryChainReader::new(
-            get_test_logger(),
-            REGISTRY_COORDINATOR,
-            OPERATOR_STATE_RETRIEVER,
-            HOLESKY_RPC_PROVIDER.to_string(),
-        )
-        .await
-        .unwrap()
-    }
+    use super::*;
+    use crate::test_utils::{
+        build_avs_registry_chain_reader, build_avs_registry_chain_writer, test_register_operator,
+    };
+    use alloy::primitives::address;
+    use eigen_crypto_bls::BlsKeyPair;
+    use eigen_testing_utils::{
+        anvil::{start_anvil_container, start_m2_anvil_container},
+        anvil_constants::{
+            FIFTH_ADDRESS, FIFTH_PRIVATE_KEY, FIRST_ADDRESS, FIRST_PRIVATE_KEY, OPERATOR_BLS_KEY,
+        },
+        transaction::wait_transaction,
+    };
 
     #[tokio::test]
     async fn test_get_quorum_count() {
-        let avs_reader = build_avs_registry_chain_reader().await;
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
 
         let _ = avs_reader.get_quorum_count().await.unwrap();
     }
 
     #[tokio::test]
     async fn test_get_operators_stake_in_quorums_at_block() {
-        let avs_reader = build_avs_registry_chain_reader().await;
+        let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
 
-        let quorum_number = Bytes::from_hex("0x00").expect("bytes parse");
-        let _ = avs_reader
+        let private_key = FIFTH_PRIVATE_KEY.to_string();
+        let avs_writer = build_avs_registry_chain_writer(http_endpoint.clone(), private_key).await;
+        let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
+
+        let bls_key_pair = BlsKeyPair::new(
+            "1371012690269088913462269866874713266643928125698382731338806296762673180359922"
+                .to_string(),
+        )
+        .unwrap();
+        let digest_hash: FixedBytes<32> = FixedBytes::from([0x02; 32]);
+        let quorum_nums = Bytes::from([0]);
+        let signature_expiry = U256::MAX;
+
+        let tx_hash = avs_writer
+            .register_operator_in_quorum_with_avs_registry_coordinator(
+                bls_key_pair,
+                digest_hash,
+                signature_expiry,
+                quorum_nums.clone(),
+                "".into(),
+            )
+            .await
+            .unwrap();
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
+        assert!(tx_status);
+
+        let quorum_number = Bytes::from([0]);
+
+        avs_reader
             .get_operators_stake_in_quorums_at_block(1245063, quorum_number)
             .await
             .unwrap();
@@ -670,25 +1210,81 @@ mod tests {
 
     #[tokio::test]
     async fn test_get_operators_stake_in_quorums_at_block_operator_id() {
-        let avs_reader = build_avs_registry_chain_reader().await;
+        let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
 
-        let operator_id = U256::from_str(
-            "35344093966194310405039483339636912150346494903629410125452342281826147822033",
+        let private_key = FIFTH_PRIVATE_KEY.to_string();
+        let avs_writer = build_avs_registry_chain_writer(http_endpoint.clone(), private_key).await;
+        let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
+
+        let bls_key_pair = BlsKeyPair::new(
+            "1371012690269088913462269866874713266643928125698382731338806296762673180359922"
+                .to_string(),
         )
         .unwrap();
+        let digest_hash: FixedBytes<32> = FixedBytes::from([0x02; 32]);
+        let quorum_nums = Bytes::from([0]);
+        let signature_expiry = U256::MAX;
 
-        let _ = avs_reader
-            .get_operators_stake_in_quorums_at_block_operator_id(1245842, operator_id.into())
+        let tx_hash = avs_writer
+            .register_operator_in_quorum_with_avs_registry_coordinator(
+                bls_key_pair,
+                digest_hash,
+                signature_expiry,
+                quorum_nums.clone(),
+                "".into(),
+            )
+            .await
+            .unwrap();
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
+        assert!(tx_status);
+
+        let operator_address = address!("0x9965507D1a55bcC2695C58ba16FB37d819B0A4dc");
+        let operator_id = avs_reader.get_operator_id(operator_address).await.unwrap();
+
+        avs_reader
+            .get_operators_stake_in_quorums_at_block_operator_id(1245842, operator_id)
             .await
             .unwrap();
     }
 
     #[tokio::test]
     async fn test_get_operators_stake_in_quorums_at_current_block() {
-        let avs_reader = build_avs_registry_chain_reader().await;
-        let quorum_number = Bytes::from_hex("0x00").expect("bytes parse");
+        let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
 
-        let _ = avs_reader
+        let private_key = FIFTH_PRIVATE_KEY.to_string();
+        let avs_writer = build_avs_registry_chain_writer(http_endpoint.clone(), private_key).await;
+        let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
+
+        let bls_key_pair = BlsKeyPair::new(
+            "1371012690269088913462269866874713266643928125698382731338806296762673180359922"
+                .to_string(),
+        )
+        .unwrap();
+        let digest_hash: FixedBytes<32> = FixedBytes::from([0x02; 32]);
+        let quorum_nums = Bytes::from([0]);
+        let signature_expiry = U256::MAX;
+
+        let tx_hash = avs_writer
+            .register_operator_in_quorum_with_avs_registry_coordinator(
+                bls_key_pair,
+                digest_hash,
+                signature_expiry,
+                quorum_nums.clone(),
+                "".into(),
+            )
+            .await
+            .unwrap();
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
+        assert!(tx_status);
+
+        let quorum_number = Bytes::from([0]);
+        avs_reader
             .get_operators_stake_in_quorums_at_current_block(quorum_number)
             .await
             .unwrap();
@@ -696,23 +1292,50 @@ mod tests {
 
     #[tokio::test]
     async fn test_get_operators_stake_in_quorums_of_operator_at_current_block() {
-        let avs_reader = build_avs_registry_chain_reader().await;
-        let operator_id = U256::from_str(
-            "35344093966194310405039483339636912150346494903629410125452342281826147822033",
+        let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
+
+        let private_key = FIFTH_PRIVATE_KEY.to_string();
+        let avs_writer = build_avs_registry_chain_writer(http_endpoint.clone(), private_key).await;
+        let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
+
+        let bls_key_pair = BlsKeyPair::new(
+            "1371012690269088913462269866874713266643928125698382731338806296762673180359922"
+                .to_string(),
         )
         .unwrap();
+        let digest_hash: FixedBytes<32> = FixedBytes::from([0x02; 32]);
+        let quorum_nums = Bytes::from([0]);
+        let signature_expiry = U256::MAX;
 
-        let (quorums, operators) = avs_reader
-            .get_operators_stake_in_quorums_of_operator_at_current_block(operator_id.into())
+        let tx_hash = avs_writer
+            .register_operator_in_quorum_with_avs_registry_coordinator(
+                bls_key_pair,
+                digest_hash,
+                signature_expiry,
+                quorum_nums.clone(),
+                "".into(),
+            )
             .await
             .unwrap();
-        assert_eq!(quorums.len(), 0);
-        assert_eq!(operators.len(), 0);
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
+        assert!(tx_status);
+
+        let operator_address = address!("0x9965507D1a55bcC2695C58ba16FB37d819B0A4dc");
+        let operator_id = avs_reader.get_operator_id(operator_address).await.unwrap();
+
+        avs_reader
+            .get_operators_stake_in_quorums_of_operator_at_current_block(operator_id)
+            .await
+            .unwrap();
     }
 
     #[tokio::test]
     async fn test_get_operator_stake_in_quorums_of_operator_at_current_block() {
-        let avs_reader = build_avs_registry_chain_reader().await;
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
         let operator_id = U256::from_str(
             "35344093966194310405039483339636912150346494903629410125452342281826147822033",
         )
@@ -727,10 +1350,11 @@ mod tests {
 
     #[tokio::test]
     async fn test_is_operator_registered() {
-        let avs_reader = build_avs_registry_chain_reader().await;
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
 
         let is_registered = avs_reader
-            .is_operator_registered(REGISTRY_COORDINATOR)
+            .is_operator_registered(avs_reader.registry_coordinator_addr)
             .await
             .unwrap();
         assert!(!is_registered);
@@ -738,22 +1362,97 @@ mod tests {
 
     #[tokio::test]
     async fn test_get_operators_stake_in_quorums_of_operator_at_block() {
-        let avs_reader = build_avs_registry_chain_reader().await;
+        let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
 
-        let operator_id = U256::from_str(
-            "35344093966194310405039483339636912150346494903629410125452342281826147822033",
+        let private_key = FIFTH_PRIVATE_KEY.to_string();
+        let avs_writer = build_avs_registry_chain_writer(http_endpoint.clone(), private_key).await;
+        let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
+
+        let bls_key_pair = BlsKeyPair::new(
+            "1371012690269088913462269866874713266643928125698382731338806296762673180359922"
+                .to_string(),
         )
         .unwrap();
+        let digest_hash: FixedBytes<32> = FixedBytes::from([0x02; 32]);
+        let quorum_nums = Bytes::from([0]);
+        let signature_expiry = U256::MAX;
 
-        let _ = avs_reader
-            .get_operators_stake_in_quorums_of_operator_at_block((operator_id).into(), 1246078)
+        let tx_hash = avs_writer
+            .register_operator_in_quorum_with_avs_registry_coordinator(
+                bls_key_pair,
+                digest_hash,
+                signature_expiry,
+                quorum_nums.clone(),
+                "".into(),
+            )
+            .await
+            .unwrap();
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
+        assert!(tx_status);
+
+        let operator_address = address!("0x9965507D1a55bcC2695C58ba16FB37d819B0A4dc");
+        let operator_id = avs_reader.get_operator_id(operator_address).await.unwrap();
+
+        avs_reader
+            .get_operators_stake_in_quorums_of_operator_at_block(operator_id, 1246078)
             .await
             .unwrap();
     }
 
     #[tokio::test]
+    async fn test_get_operator_restaked_strategies() {
+        let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
+        let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
+        let avs_writer =
+            build_avs_registry_chain_writer(http_endpoint.clone(), FIRST_PRIVATE_KEY.to_string())
+                .await;
+
+        let strategies = avs_reader
+            .get_operator_restaked_strategies(FIRST_ADDRESS)
+            .await
+            .unwrap();
+
+        assert!(strategies.is_empty());
+
+        let bls_key = OPERATOR_BLS_KEY.to_string();
+        let quorum_nums = Bytes::from([0]);
+        let bls_key_pair = BlsKeyPair::new(bls_key).unwrap();
+        let digest_hash: FixedBytes<32> = FixedBytes::from([0x02; 32]);
+        let signature_expiry = U256::MAX;
+
+        let tx_hash = avs_writer
+            .register_operator_in_quorum_with_avs_registry_coordinator(
+                bls_key_pair,
+                digest_hash,
+                signature_expiry,
+                quorum_nums,
+                "socket".to_string(),
+            )
+            .await
+            .unwrap();
+
+        let tx_status = wait_transaction(&http_endpoint, tx_hash)
+            .await
+            .unwrap()
+            .status();
+
+        assert!(tx_status);
+
+        let strategies = avs_reader
+            .get_operator_restaked_strategies(FIRST_ADDRESS)
+            .await
+            .unwrap();
+
+        assert!(!strategies.is_empty());
+    }
+
+    #[tokio::test]
     async fn test_query_existing_registered_operator_sockets() {
-        let avs_reader = build_avs_registry_chain_reader().await;
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
 
         let _ = avs_reader
             .query_existing_registered_operator_sockets(0, 1000)
@@ -762,8 +1461,18 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn test_get_restakeable_strategies() {
+        let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
+        let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
+
+        let strategies = avs_reader.get_restakeable_strategies().await.unwrap();
+        assert!(!strategies.is_empty());
+    }
+
+    #[tokio::test]
     async fn test_query_registration_detail() {
-        let avs_reader = build_avs_registry_chain_reader().await;
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
 
         let operator_id = U256::from_str(
             "35344093966194310405039483339636912150346494903629410125452342281826147822033",
@@ -795,5 +1504,207 @@ mod tests {
             .await
             .unwrap();
         assert!(!is_registered);
+    }
+
+    #[tokio::test]
+    async fn test_is_operator_set_quorum() {
+        let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
+        let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
+
+        let operator_set_quourm = avs_reader.is_operator_set_quorum(0).await.unwrap();
+
+        assert!(operator_set_quourm);
+    }
+
+    #[tokio::test]
+    async fn test_weight_of_operator_for_quorum() {
+        let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
+        let quorum_number = 0;
+        let operator_address = FIRST_ADDRESS;
+        let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
+        let weight = avs_reader
+            .weight_of_operator_for_quorum(quorum_number, operator_address)
+            .await
+            .unwrap();
+        assert_eq!(weight, "10000000000000000000".parse().unwrap());
+    }
+
+    #[tokio::test]
+    async fn test_strategy_params_length() {
+        let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
+        let quorum_number = 0;
+        let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
+        let len = avs_reader
+            .strategy_params_length(quorum_number)
+            .await
+            .unwrap();
+        assert_eq!(len, "1".parse().unwrap());
+    }
+
+    #[tokio::test]
+    async fn test_strategy_params_by_index() {
+        let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
+        let quorum_number = 0;
+        let index = U256::from(0);
+        let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
+        let params = avs_reader
+            .strategy_params_by_index(quorum_number, index)
+            .await
+            .unwrap();
+        assert_eq!(
+            params.multiplier,
+            "1000000000000000000".parse::<U96>().unwrap()
+        );
+    }
+
+    #[tokio::test]
+    async fn test_avs_reader_methods() {
+        let (_container, http_endpoint, _ws_endpoint) = start_m2_anvil_container().await;
+        let bls_key = OPERATOR_BLS_KEY.to_string();
+        let private_key = FIFTH_PRIVATE_KEY.to_string();
+        let avs_writer =
+            build_avs_registry_chain_writer(http_endpoint.clone(), private_key.clone()).await;
+        let operator_addr = FIFTH_ADDRESS;
+        let quorum_nums = Bytes::from([0]);
+
+        test_register_operator(
+            &avs_writer,
+            bls_key,
+            quorum_nums.clone(),
+            http_endpoint.clone(),
+        )
+        .await;
+        let quorum_number = 0;
+        let index = U256::from(0);
+        let avs_reader = build_avs_registry_chain_reader(http_endpoint.clone()).await;
+        let operator_id = avs_reader.get_operator_id(operator_addr).await.unwrap();
+
+        let stake_update = avs_reader
+            .get_stake_update_at_index(quorum_number, operator_id, index)
+            .await
+            .unwrap();
+        assert_eq!(stake_update.stake, "10000000000000000000".parse().unwrap());
+
+        let stake_update = avs_reader
+            .get_latest_stake_update(operator_id, quorum_number)
+            .await
+            .unwrap();
+        assert_eq!(stake_update.stake, "10000000000000000000".parse().unwrap());
+
+        let stake_update_vec = avs_reader
+            .get_stake_history(operator_id, quorum_number)
+            .await
+            .unwrap();
+        assert_eq!(
+            stake_update_vec.first().unwrap().stake,
+            "10000000000000000000".parse().unwrap()
+        );
+
+        let len = avs_reader
+            .get_stake_history_length(operator_id, quorum_number)
+            .await
+            .unwrap();
+        assert_eq!(len, "1".parse().unwrap());
+
+        let stake_update_history_vec = avs_reader
+            .get_stake_history(operator_id, quorum_number)
+            .await
+            .unwrap();
+
+        assert_eq!(
+            stake_update_history_vec.first().unwrap().stake,
+            "10000000000000000000".parse().unwrap()
+        );
+
+        let latest_stake_update = avs_reader
+            .get_latest_stake_update(operator_id, quorum_number)
+            .await
+            .unwrap();
+        assert_eq!(
+            latest_stake_update.stake,
+            "10000000000000000000".parse().unwrap()
+        );
+
+        let stake_update = avs_reader
+            .get_stake_update_at_index(quorum_number, operator_id, index)
+            .await
+            .unwrap();
+        assert_eq!(stake_update.stake, "10000000000000000000".parse().unwrap());
+        let block_number = get_provider(&http_endpoint)
+            .get_block_number()
+            .await
+            .unwrap();
+        let stake_update_at_index = avs_reader
+            .get_stake_at_block_number(operator_id, quorum_number, (block_number) as u32)
+            .await
+            .unwrap();
+        assert_eq!(
+            "10000000000000000000".parse::<U96>().unwrap(),
+            stake_update_at_index
+        );
+
+        let stake_update_at_index_at_block_number = avs_reader
+            .get_stake_update_index_at_block_number(operator_id, quorum_number, block_number as u32)
+            .await
+            .unwrap();
+        assert_eq!(stake_update_at_index_at_block_number, 0);
+
+        let stake_at_index_at_block_number = avs_reader
+            .get_stake_at_block_number_and_index(
+                quorum_number,
+                block_number as u32,
+                operator_id,
+                index,
+            )
+            .await
+            .unwrap();
+        assert_eq!(
+            "10000000000000000000".parse::<U96>().unwrap(),
+            stake_at_index_at_block_number
+        );
+
+        let total_stake_history_length = avs_reader
+            .get_total_stake_history_length(quorum_number)
+            .await
+            .unwrap();
+        assert_eq!(total_stake_history_length, "2".parse().unwrap());
+
+        let current_total_stake = avs_reader
+            .get_current_total_stake(quorum_number)
+            .await
+            .unwrap();
+        dbg!(current_total_stake);
+        assert_eq!(
+            "10000000000000000000".parse::<U96>().unwrap(),
+            current_total_stake
+        );
+
+        let total_stake_update_at_index = avs_reader
+            .get_total_stake_update_at_index(quorum_number, index)
+            .await
+            .unwrap();
+        assert_eq!(
+            "0".parse::<U96>().unwrap(),
+            total_stake_update_at_index.stake
+        );
+
+        let total_stake_at_block_number_from_index = avs_reader
+            .get_total_stake_at_block_number_from_index(
+                quorum_number,
+                (block_number - 1) as u32,
+                index,
+            )
+            .await
+            .unwrap();
+        assert_eq!(
+            "0".parse::<U96>().unwrap(),
+            total_stake_at_block_number_from_index
+        );
+
+        let total_stake_indices_at_block_number = avs_reader
+            .get_total_stake_indices_at_block_number(block_number as u32, quorum_nums)
+            .await
+            .unwrap();
+        assert_eq!(total_stake_indices_at_block_number.first(), Some(&1u32));
     }
 }

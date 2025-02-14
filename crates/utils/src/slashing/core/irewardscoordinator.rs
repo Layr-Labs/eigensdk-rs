@@ -2139,6 +2139,11 @@ library IRewardsCoordinatorTypes {
 }
 
 interface IRewardsCoordinator {
+    struct OperatorSet {
+        address avs;
+        uint32 id;
+    }
+
     error AmountExceedsMax();
     error AmountIsZero();
     error DurationExceedsMax();
@@ -2152,6 +2157,7 @@ interface IRewardsCoordinator {
     error InvalidEarner();
     error InvalidEarnerLeafIndex();
     error InvalidGenesisRewardsTimestampRemainder();
+    error InvalidOperatorSet();
     error InvalidRoot();
     error InvalidRootIndex();
     error InvalidStartTimestampRemainder();
@@ -2179,7 +2185,9 @@ interface IRewardsCoordinator {
     event DistributionRootSubmitted(uint32 indexed rootIndex, bytes32 indexed root, uint32 indexed rewardsCalculationEndTimestamp, uint32 activatedAt);
     event OperatorAVSSplitBipsSet(address indexed caller, address indexed operator, address indexed avs, uint32 activatedAt, uint16 oldOperatorAVSSplitBips, uint16 newOperatorAVSSplitBips);
     event OperatorDirectedAVSRewardsSubmissionCreated(address indexed caller, address indexed avs, bytes32 indexed operatorDirectedRewardsSubmissionHash, uint256 submissionNonce, IRewardsCoordinatorTypes.OperatorDirectedRewardsSubmission operatorDirectedRewardsSubmission);
+    event OperatorDirectedOperatorSetRewardsSubmissionCreated(address indexed caller, bytes32 indexed operatorDirectedRewardsSubmissionHash, OperatorSet operatorSet, uint256 submissionNonce, IRewardsCoordinatorTypes.OperatorDirectedRewardsSubmission operatorDirectedRewardsSubmission);
     event OperatorPISplitBipsSet(address indexed caller, address indexed operator, uint32 activatedAt, uint16 oldOperatorPISplitBips, uint16 newOperatorPISplitBips);
+    event OperatorSetSplitBipsSet(address indexed caller, address indexed operator, OperatorSet operatorSet, uint32 activatedAt, uint16 oldOperatorSetSplitBips, uint16 newOperatorSetSplitBips);
     event RewardsClaimed(bytes32 root, address indexed earner, address indexed claimer, address indexed recipient, address token, uint256 claimedAmount);
     event RewardsForAllSubmitterSet(address indexed rewardsForAllSubmitter, bool indexed oldValue, bool indexed newValue);
     event RewardsSubmissionForAllCreated(address indexed submitter, uint256 indexed submissionNonce, bytes32 indexed rewardsSubmissionHash, IRewardsCoordinatorTypes.RewardsSubmission rewardsSubmission);
@@ -2198,6 +2206,7 @@ interface IRewardsCoordinator {
     function claimerFor(address earner) external view returns (address);
     function createAVSRewardsSubmission(IRewardsCoordinatorTypes.RewardsSubmission[] memory rewardsSubmissions) external;
     function createOperatorDirectedAVSRewardsSubmission(address avs, IRewardsCoordinatorTypes.OperatorDirectedRewardsSubmission[] memory operatorDirectedRewardsSubmissions) external;
+    function createOperatorDirectedOperatorSetRewardsSubmission(OperatorSet memory operatorSet, IRewardsCoordinatorTypes.OperatorDirectedRewardsSubmission[] memory operatorDirectedRewardsSubmissions) external;
     function createRewardsForAllEarners(IRewardsCoordinatorTypes.RewardsSubmission[] memory rewardsSubmissions) external;
     function createRewardsForAllSubmission(IRewardsCoordinatorTypes.RewardsSubmission[] memory rewardsSubmissions) external;
     function cumulativeClaimed(address claimer, address token) external view returns (uint256);
@@ -2210,6 +2219,7 @@ interface IRewardsCoordinator {
     function getDistributionRootsLength() external view returns (uint256);
     function getOperatorAVSSplit(address operator, address avs) external view returns (uint16);
     function getOperatorPISplit(address operator) external view returns (uint16);
+    function getOperatorSetSplit(address operator, OperatorSet memory operatorSet) external view returns (uint16);
     function getRootIndexFromHash(bytes32 rootHash) external view returns (uint32);
     function initialize(address initialOwner, uint256 initialPausedStatus, address _rewardsUpdater, uint32 _activationDelay, uint16 _defaultSplitBips) external;
     function processClaim(IRewardsCoordinatorTypes.RewardsMerkleClaim memory claim, address recipient) external;
@@ -2221,6 +2231,7 @@ interface IRewardsCoordinator {
     function setDefaultOperatorSplit(uint16 split) external;
     function setOperatorAVSSplit(address operator, address avs, uint16 split) external;
     function setOperatorPISplit(address operator, uint16 split) external;
+    function setOperatorSetSplit(address operator, OperatorSet memory operatorSet, uint16 split) external;
     function setRewardsForAllSubmitter(address _submitter, bool _newValue) external;
     function setRewardsUpdater(address _rewardsUpdater) external;
     function submitRoot(bytes32 root, uint32 rewardsCalculationEndTimestamp) external;
@@ -2529,6 +2540,92 @@ interface IRewardsCoordinator {
         "name": "avs",
         "type": "address",
         "internalType": "address"
+      },
+      {
+        "name": "operatorDirectedRewardsSubmissions",
+        "type": "tuple[]",
+        "internalType": "struct IRewardsCoordinatorTypes.OperatorDirectedRewardsSubmission[]",
+        "components": [
+          {
+            "name": "strategiesAndMultipliers",
+            "type": "tuple[]",
+            "internalType": "struct IRewardsCoordinatorTypes.StrategyAndMultiplier[]",
+            "components": [
+              {
+                "name": "strategy",
+                "type": "address",
+                "internalType": "contract IStrategy"
+              },
+              {
+                "name": "multiplier",
+                "type": "uint96",
+                "internalType": "uint96"
+              }
+            ]
+          },
+          {
+            "name": "token",
+            "type": "address",
+            "internalType": "contract IERC20"
+          },
+          {
+            "name": "operatorRewards",
+            "type": "tuple[]",
+            "internalType": "struct IRewardsCoordinatorTypes.OperatorReward[]",
+            "components": [
+              {
+                "name": "operator",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
+                "name": "amount",
+                "type": "uint256",
+                "internalType": "uint256"
+              }
+            ]
+          },
+          {
+            "name": "startTimestamp",
+            "type": "uint32",
+            "internalType": "uint32"
+          },
+          {
+            "name": "duration",
+            "type": "uint32",
+            "internalType": "uint32"
+          },
+          {
+            "name": "description",
+            "type": "string",
+            "internalType": "string"
+          }
+        ]
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "createOperatorDirectedOperatorSetRewardsSubmission",
+    "inputs": [
+      {
+        "name": "operatorSet",
+        "type": "tuple",
+        "internalType": "struct OperatorSet",
+        "components": [
+          {
+            "name": "avs",
+            "type": "address",
+            "internalType": "address"
+          },
+          {
+            "name": "id",
+            "type": "uint32",
+            "internalType": "uint32"
+          }
+        ]
       },
       {
         "name": "operatorDirectedRewardsSubmissions",
@@ -2931,6 +3028,42 @@ interface IRewardsCoordinator {
   },
   {
     "type": "function",
+    "name": "getOperatorSetSplit",
+    "inputs": [
+      {
+        "name": "operator",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "operatorSet",
+        "type": "tuple",
+        "internalType": "struct OperatorSet",
+        "components": [
+          {
+            "name": "avs",
+            "type": "address",
+            "internalType": "address"
+          },
+          {
+            "name": "id",
+            "type": "uint32",
+            "internalType": "uint32"
+          }
+        ]
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint16",
+        "internalType": "uint16"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
     "name": "getRootIndexFromHash",
     "inputs": [
       {
@@ -3240,6 +3373,41 @@ interface IRewardsCoordinator {
         "name": "operator",
         "type": "address",
         "internalType": "address"
+      },
+      {
+        "name": "split",
+        "type": "uint16",
+        "internalType": "uint16"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "setOperatorSetSplit",
+    "inputs": [
+      {
+        "name": "operator",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "operatorSet",
+        "type": "tuple",
+        "internalType": "struct OperatorSet",
+        "components": [
+          {
+            "name": "avs",
+            "type": "address",
+            "internalType": "address"
+          },
+          {
+            "name": "id",
+            "type": "uint32",
+            "internalType": "uint32"
+          }
+        ]
       },
       {
         "name": "split",
@@ -3614,6 +3782,111 @@ interface IRewardsCoordinator {
   },
   {
     "type": "event",
+    "name": "OperatorDirectedOperatorSetRewardsSubmissionCreated",
+    "inputs": [
+      {
+        "name": "caller",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "operatorDirectedRewardsSubmissionHash",
+        "type": "bytes32",
+        "indexed": true,
+        "internalType": "bytes32"
+      },
+      {
+        "name": "operatorSet",
+        "type": "tuple",
+        "indexed": false,
+        "internalType": "struct OperatorSet",
+        "components": [
+          {
+            "name": "avs",
+            "type": "address",
+            "internalType": "address"
+          },
+          {
+            "name": "id",
+            "type": "uint32",
+            "internalType": "uint32"
+          }
+        ]
+      },
+      {
+        "name": "submissionNonce",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "operatorDirectedRewardsSubmission",
+        "type": "tuple",
+        "indexed": false,
+        "internalType": "struct IRewardsCoordinatorTypes.OperatorDirectedRewardsSubmission",
+        "components": [
+          {
+            "name": "strategiesAndMultipliers",
+            "type": "tuple[]",
+            "internalType": "struct IRewardsCoordinatorTypes.StrategyAndMultiplier[]",
+            "components": [
+              {
+                "name": "strategy",
+                "type": "address",
+                "internalType": "contract IStrategy"
+              },
+              {
+                "name": "multiplier",
+                "type": "uint96",
+                "internalType": "uint96"
+              }
+            ]
+          },
+          {
+            "name": "token",
+            "type": "address",
+            "internalType": "contract IERC20"
+          },
+          {
+            "name": "operatorRewards",
+            "type": "tuple[]",
+            "internalType": "struct IRewardsCoordinatorTypes.OperatorReward[]",
+            "components": [
+              {
+                "name": "operator",
+                "type": "address",
+                "internalType": "address"
+              },
+              {
+                "name": "amount",
+                "type": "uint256",
+                "internalType": "uint256"
+              }
+            ]
+          },
+          {
+            "name": "startTimestamp",
+            "type": "uint32",
+            "internalType": "uint32"
+          },
+          {
+            "name": "duration",
+            "type": "uint32",
+            "internalType": "uint32"
+          },
+          {
+            "name": "description",
+            "type": "string",
+            "internalType": "string"
+          }
+        ]
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
     "name": "OperatorPISplitBipsSet",
     "inputs": [
       {
@@ -3642,6 +3915,61 @@ interface IRewardsCoordinator {
       },
       {
         "name": "newOperatorPISplitBips",
+        "type": "uint16",
+        "indexed": false,
+        "internalType": "uint16"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "OperatorSetSplitBipsSet",
+    "inputs": [
+      {
+        "name": "caller",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "operator",
+        "type": "address",
+        "indexed": true,
+        "internalType": "address"
+      },
+      {
+        "name": "operatorSet",
+        "type": "tuple",
+        "indexed": false,
+        "internalType": "struct OperatorSet",
+        "components": [
+          {
+            "name": "avs",
+            "type": "address",
+            "internalType": "address"
+          },
+          {
+            "name": "id",
+            "type": "uint32",
+            "internalType": "uint32"
+          }
+        ]
+      },
+      {
+        "name": "activatedAt",
+        "type": "uint32",
+        "indexed": false,
+        "internalType": "uint32"
+      },
+      {
+        "name": "oldOperatorSetSplitBips",
+        "type": "uint16",
+        "indexed": false,
+        "internalType": "uint16"
+      },
+      {
+        "name": "newOperatorSetSplitBips",
         "type": "uint16",
         "indexed": false,
         "internalType": "uint16"
@@ -3943,6 +4271,11 @@ interface IRewardsCoordinator {
   },
   {
     "type": "error",
+    "name": "InvalidOperatorSet",
+    "inputs": []
+  },
+  {
+    "type": "error",
     "name": "InvalidRoot",
     "inputs": []
   },
@@ -4063,6 +4396,191 @@ pub mod IRewardsCoordinator {
     pub static DEPLOYED_BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
         b"",
     );
+    /**```solidity
+    struct OperatorSet { address avs; uint32 id; }
+    ```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct OperatorSet {
+        pub avs: alloy::sol_types::private::Address,
+        pub id: u32,
+    }
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = (
+            alloy::sol_types::sol_data::Address,
+            alloy::sol_types::sol_data::Uint<32>,
+        );
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = (alloy::sol_types::private::Address, u32);
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<OperatorSet> for UnderlyingRustTuple<'_> {
+            fn from(value: OperatorSet) -> Self {
+                (value.avs, value.id)
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for OperatorSet {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {
+                    avs: tuple.0,
+                    id: tuple.1,
+                }
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolValue for OperatorSet {
+            type SolType = Self;
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::private::SolTypeValue<Self> for OperatorSet {
+            #[inline]
+            fn stv_to_tokens(&self) -> <Self as alloy_sol_types::SolType>::Token<'_> {
+                (
+                    <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
+                        &self.avs,
+                    ),
+                    <alloy::sol_types::sol_data::Uint<32> as alloy_sol_types::SolType>::tokenize(
+                        &self.id,
+                    ),
+                )
+            }
+            #[inline]
+            fn stv_abi_encoded_size(&self) -> usize {
+                if let Some(size) = <Self as alloy_sol_types::SolType>::ENCODED_SIZE {
+                    return size;
+                }
+                let tuple =
+                    <UnderlyingRustTuple<'_> as ::core::convert::From<Self>>::from(self.clone());
+                <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::abi_encoded_size(&tuple)
+            }
+            #[inline]
+            fn stv_eip712_data_word(&self) -> alloy_sol_types::Word {
+                <Self as alloy_sol_types::SolStruct>::eip712_hash_struct(self)
+            }
+            #[inline]
+            fn stv_abi_encode_packed_to(&self, out: &mut alloy_sol_types::private::Vec<u8>) {
+                let tuple =
+                    <UnderlyingRustTuple<'_> as ::core::convert::From<Self>>::from(self.clone());
+                <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::abi_encode_packed_to(
+                    &tuple, out,
+                )
+            }
+            #[inline]
+            fn stv_abi_packed_encoded_size(&self) -> usize {
+                if let Some(size) = <Self as alloy_sol_types::SolType>::PACKED_ENCODED_SIZE {
+                    return size;
+                }
+                let tuple =
+                    <UnderlyingRustTuple<'_> as ::core::convert::From<Self>>::from(self.clone());
+                <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::abi_packed_encoded_size(
+                    &tuple,
+                )
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolType for OperatorSet {
+            type RustType = Self;
+            type Token<'a> = <UnderlyingSolTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SOL_NAME: &'static str = <Self as alloy_sol_types::SolStruct>::NAME;
+            const ENCODED_SIZE: Option<usize> =
+                <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::ENCODED_SIZE;
+            const PACKED_ENCODED_SIZE: Option<usize> =
+                <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::PACKED_ENCODED_SIZE;
+            #[inline]
+            fn valid_token(token: &Self::Token<'_>) -> bool {
+                <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::valid_token(token)
+            }
+            #[inline]
+            fn detokenize(token: Self::Token<'_>) -> Self::RustType {
+                let tuple = <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::detokenize(token);
+                <Self as ::core::convert::From<UnderlyingRustTuple<'_>>>::from(tuple)
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolStruct for OperatorSet {
+            const NAME: &'static str = "OperatorSet";
+            #[inline]
+            fn eip712_root_type() -> alloy_sol_types::private::Cow<'static, str> {
+                alloy_sol_types::private::Cow::Borrowed("OperatorSet(address avs,uint32 id)")
+            }
+            #[inline]
+            fn eip712_components(
+            ) -> alloy_sol_types::private::Vec<alloy_sol_types::private::Cow<'static, str>>
+            {
+                alloy_sol_types::private::Vec::new()
+            }
+            #[inline]
+            fn eip712_encode_type() -> alloy_sol_types::private::Cow<'static, str> {
+                <Self as alloy_sol_types::SolStruct>::eip712_root_type()
+            }
+            #[inline]
+            fn eip712_encode_data(&self) -> alloy_sol_types::private::Vec<u8> {
+                [
+                    <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::eip712_data_word(
+                            &self.avs,
+                        )
+                        .0,
+                    <alloy::sol_types::sol_data::Uint<
+                        32,
+                    > as alloy_sol_types::SolType>::eip712_data_word(&self.id)
+                        .0,
+                ]
+                    .concat()
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::EventTopic for OperatorSet {
+            #[inline]
+            fn topic_preimage_length(rust: &Self::RustType) -> usize {
+                0usize
+                    + <alloy::sol_types::sol_data::Address as alloy_sol_types::EventTopic>::topic_preimage_length(
+                        &rust.avs,
+                    )
+                    + <alloy::sol_types::sol_data::Uint<
+                        32,
+                    > as alloy_sol_types::EventTopic>::topic_preimage_length(&rust.id)
+            }
+            #[inline]
+            fn encode_topic_preimage(
+                rust: &Self::RustType,
+                out: &mut alloy_sol_types::private::Vec<u8>,
+            ) {
+                out.reserve(<Self as alloy_sol_types::EventTopic>::topic_preimage_length(rust));
+                <alloy::sol_types::sol_data::Address as alloy_sol_types::EventTopic>::encode_topic_preimage(
+                    &rust.avs,
+                    out,
+                );
+                <alloy::sol_types::sol_data::Uint<
+                    32,
+                > as alloy_sol_types::EventTopic>::encode_topic_preimage(&rust.id, out);
+            }
+            #[inline]
+            fn encode_topic(rust: &Self::RustType) -> alloy_sol_types::abi::token::WordToken {
+                let mut out = alloy_sol_types::private::Vec::new();
+                <Self as alloy_sol_types::EventTopic>::encode_topic_preimage(rust, &mut out);
+                alloy_sol_types::abi::token::WordToken(alloy_sol_types::private::keccak256(out))
+            }
+        }
+    };
     /**Custom error with signature `AmountExceedsMax()` and selector `0x1c2d69bc`.
     ```solidity
     error AmountExceedsMax();
@@ -4831,6 +5349,66 @@ pub mod IRewardsCoordinator {
             type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "InvalidGenesisRewardsTimestampRemainder()";
             const SELECTOR: [u8; 4] = [14u8, 6u8, 189u8, 49u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+        }
+    };
+    /**Custom error with signature `InvalidOperatorSet()` and selector `0x7ec5c154`.
+    ```solidity
+    error InvalidOperatorSet();
+    ```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct InvalidOperatorSet {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<InvalidOperatorSet> for UnderlyingRustTuple<'_> {
+            fn from(value: InvalidOperatorSet) -> Self {
+                ()
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for InvalidOperatorSet {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolError for InvalidOperatorSet {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "InvalidOperatorSet()";
+            const SELECTOR: [u8; 4] = [126u8, 197u8, 193u8, 84u8];
             #[inline]
             fn new<'a>(
                 tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
@@ -6914,6 +7492,150 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    /**Event with signature `OperatorDirectedOperatorSetRewardsSubmissionCreated(address,bytes32,(address,uint32),uint256,((address,uint96)[],address,(address,uint256)[],uint32,uint32,string))` and selector `0xfff0759ccb371dfb5691798724e70b4fa61cb3bfe730a33ac19fb86a48efc756`.
+    ```solidity
+    event OperatorDirectedOperatorSetRewardsSubmissionCreated(address indexed caller, bytes32 indexed operatorDirectedRewardsSubmissionHash, OperatorSet operatorSet, uint256 submissionNonce, IRewardsCoordinatorTypes.OperatorDirectedRewardsSubmission operatorDirectedRewardsSubmission);
+    ```*/
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    #[derive(Clone)]
+    pub struct OperatorDirectedOperatorSetRewardsSubmissionCreated {
+        #[allow(missing_docs)]
+        pub caller: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
+        pub operatorDirectedRewardsSubmissionHash: alloy::sol_types::private::FixedBytes<
+            32,
+        >,
+        #[allow(missing_docs)]
+        pub operatorSet: <OperatorSet as alloy::sol_types::SolType>::RustType,
+        #[allow(missing_docs)]
+        pub submissionNonce: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
+        pub operatorDirectedRewardsSubmission: <IRewardsCoordinatorTypes::OperatorDirectedRewardsSubmission as alloy::sol_types::SolType>::RustType,
+    }
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[automatically_derived]
+        impl alloy_sol_types::SolEvent for OperatorDirectedOperatorSetRewardsSubmissionCreated {
+            type DataTuple<'a> = (
+                OperatorSet,
+                alloy::sol_types::sol_data::Uint<256>,
+                IRewardsCoordinatorTypes::OperatorDirectedRewardsSubmission,
+            );
+            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type TopicList = (
+                alloy_sol_types::sol_data::FixedBytes<32>,
+                alloy::sol_types::sol_data::Address,
+                alloy::sol_types::sol_data::FixedBytes<32>,
+            );
+            const SIGNATURE: &'static str = "OperatorDirectedOperatorSetRewardsSubmissionCreated(address,bytes32,(address,uint32),uint256,((address,uint96)[],address,(address,uint256)[],uint32,uint32,string))";
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
+                alloy_sol_types::private::B256::new([
+                    255u8, 240u8, 117u8, 156u8, 203u8, 55u8, 29u8, 251u8, 86u8, 145u8, 121u8,
+                    135u8, 36u8, 231u8, 11u8, 79u8, 166u8, 28u8, 179u8, 191u8, 231u8, 48u8, 163u8,
+                    58u8, 193u8, 159u8, 184u8, 106u8, 72u8, 239u8, 199u8, 86u8,
+                ]);
+            const ANONYMOUS: bool = false;
+            #[allow(unused_variables)]
+            #[inline]
+            fn new(
+                topics: <Self::TopicList as alloy_sol_types::SolType>::RustType,
+                data: <Self::DataTuple<'_> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                Self {
+                    caller: topics.1,
+                    operatorDirectedRewardsSubmissionHash: topics.2,
+                    operatorSet: data.0,
+                    submissionNonce: data.1,
+                    operatorDirectedRewardsSubmission: data.2,
+                }
+            }
+            #[inline]
+            fn check_signature(
+                topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
+            ) -> alloy_sol_types::Result<()> {
+                if topics.0 != Self::SIGNATURE_HASH {
+                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
+                        Self::SIGNATURE,
+                        topics.0,
+                        Self::SIGNATURE_HASH,
+                    ));
+                }
+                Ok(())
+            }
+            #[inline]
+            fn tokenize_body(&self) -> Self::DataToken<'_> {
+                (
+                    <OperatorSet as alloy_sol_types::SolType>::tokenize(
+                        &self.operatorSet,
+                    ),
+                    <alloy::sol_types::sol_data::Uint<
+                        256,
+                    > as alloy_sol_types::SolType>::tokenize(&self.submissionNonce),
+                    <IRewardsCoordinatorTypes::OperatorDirectedRewardsSubmission as alloy_sol_types::SolType>::tokenize(
+                        &self.operatorDirectedRewardsSubmission,
+                    ),
+                )
+            }
+            #[inline]
+            fn topics(&self) -> <Self::TopicList as alloy_sol_types::SolType>::RustType {
+                (
+                    Self::SIGNATURE_HASH.into(),
+                    self.caller.clone(),
+                    self.operatorDirectedRewardsSubmissionHash.clone(),
+                )
+            }
+            #[inline]
+            fn encode_topics_raw(
+                &self,
+                out: &mut [alloy_sol_types::abi::token::WordToken],
+            ) -> alloy_sol_types::Result<()> {
+                if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
+                    return Err(alloy_sol_types::Error::Overrun);
+                }
+                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
+                out[1usize] = <alloy::sol_types::sol_data::Address as alloy_sol_types::EventTopic>::encode_topic(
+                    &self.caller,
+                );
+                out[2usize] = <alloy::sol_types::sol_data::FixedBytes<
+                    32,
+                > as alloy_sol_types::EventTopic>::encode_topic(
+                    &self.operatorDirectedRewardsSubmissionHash,
+                );
+                Ok(())
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::private::IntoLogData for OperatorDirectedOperatorSetRewardsSubmissionCreated {
+            fn to_log_data(&self) -> alloy_sol_types::private::LogData {
+                From::from(self)
+            }
+            fn into_log_data(self) -> alloy_sol_types::private::LogData {
+                From::from(&self)
+            }
+        }
+        #[automatically_derived]
+        impl From<&OperatorDirectedOperatorSetRewardsSubmissionCreated>
+            for alloy_sol_types::private::LogData
+        {
+            #[inline]
+            fn from(
+                this: &OperatorDirectedOperatorSetRewardsSubmissionCreated,
+            ) -> alloy_sol_types::private::LogData {
+                alloy_sol_types::SolEvent::encode_log_data(this)
+            }
+        }
+    };
     /**Event with signature `OperatorPISplitBipsSet(address,address,uint32,uint16,uint16)` and selector `0xd1e028bd664486a46ad26040e999cd2d22e1e9a094ee6afe19fcf64678f16f74`.
     ```solidity
     event OperatorPISplitBipsSet(address indexed caller, address indexed operator, uint32 activatedAt, uint16 oldOperatorPISplitBips, uint16 newOperatorPISplitBips);
@@ -7047,6 +7769,148 @@ pub mod IRewardsCoordinator {
         impl From<&OperatorPISplitBipsSet> for alloy_sol_types::private::LogData {
             #[inline]
             fn from(this: &OperatorPISplitBipsSet) -> alloy_sol_types::private::LogData {
+                alloy_sol_types::SolEvent::encode_log_data(this)
+            }
+        }
+    };
+    /**Event with signature `OperatorSetSplitBipsSet(address,address,(address,uint32),uint32,uint16,uint16)` and selector `0x14918b3834ab6752eb2e1b489b6663a67810efb5f56f3944a97ede8ecf1fd9f1`.
+    ```solidity
+    event OperatorSetSplitBipsSet(address indexed caller, address indexed operator, OperatorSet operatorSet, uint32 activatedAt, uint16 oldOperatorSetSplitBips, uint16 newOperatorSetSplitBips);
+    ```*/
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    #[derive(Clone)]
+    pub struct OperatorSetSplitBipsSet {
+        #[allow(missing_docs)]
+        pub caller: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
+        pub operator: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
+        pub operatorSet: <OperatorSet as alloy::sol_types::SolType>::RustType,
+        #[allow(missing_docs)]
+        pub activatedAt: u32,
+        #[allow(missing_docs)]
+        pub oldOperatorSetSplitBips: u16,
+        #[allow(missing_docs)]
+        pub newOperatorSetSplitBips: u16,
+    }
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[automatically_derived]
+        impl alloy_sol_types::SolEvent for OperatorSetSplitBipsSet {
+            type DataTuple<'a> = (
+                OperatorSet,
+                alloy::sol_types::sol_data::Uint<32>,
+                alloy::sol_types::sol_data::Uint<16>,
+                alloy::sol_types::sol_data::Uint<16>,
+            );
+            type DataToken<'a> = <Self::DataTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type TopicList = (
+                alloy_sol_types::sol_data::FixedBytes<32>,
+                alloy::sol_types::sol_data::Address,
+                alloy::sol_types::sol_data::Address,
+            );
+            const SIGNATURE: &'static str =
+                "OperatorSetSplitBipsSet(address,address,(address,uint32),uint32,uint16,uint16)";
+            const SIGNATURE_HASH: alloy_sol_types::private::B256 =
+                alloy_sol_types::private::B256::new([
+                    20u8, 145u8, 139u8, 56u8, 52u8, 171u8, 103u8, 82u8, 235u8, 46u8, 27u8, 72u8,
+                    155u8, 102u8, 99u8, 166u8, 120u8, 16u8, 239u8, 181u8, 245u8, 111u8, 57u8, 68u8,
+                    169u8, 126u8, 222u8, 142u8, 207u8, 31u8, 217u8, 241u8,
+                ]);
+            const ANONYMOUS: bool = false;
+            #[allow(unused_variables)]
+            #[inline]
+            fn new(
+                topics: <Self::TopicList as alloy_sol_types::SolType>::RustType,
+                data: <Self::DataTuple<'_> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                Self {
+                    caller: topics.1,
+                    operator: topics.2,
+                    operatorSet: data.0,
+                    activatedAt: data.1,
+                    oldOperatorSetSplitBips: data.2,
+                    newOperatorSetSplitBips: data.3,
+                }
+            }
+            #[inline]
+            fn check_signature(
+                topics: &<Self::TopicList as alloy_sol_types::SolType>::RustType,
+            ) -> alloy_sol_types::Result<()> {
+                if topics.0 != Self::SIGNATURE_HASH {
+                    return Err(alloy_sol_types::Error::invalid_event_signature_hash(
+                        Self::SIGNATURE,
+                        topics.0,
+                        Self::SIGNATURE_HASH,
+                    ));
+                }
+                Ok(())
+            }
+            #[inline]
+            fn tokenize_body(&self) -> Self::DataToken<'_> {
+                (
+                    <OperatorSet as alloy_sol_types::SolType>::tokenize(&self.operatorSet),
+                    <alloy::sol_types::sol_data::Uint<32> as alloy_sol_types::SolType>::tokenize(
+                        &self.activatedAt,
+                    ),
+                    <alloy::sol_types::sol_data::Uint<16> as alloy_sol_types::SolType>::tokenize(
+                        &self.oldOperatorSetSplitBips,
+                    ),
+                    <alloy::sol_types::sol_data::Uint<16> as alloy_sol_types::SolType>::tokenize(
+                        &self.newOperatorSetSplitBips,
+                    ),
+                )
+            }
+            #[inline]
+            fn topics(&self) -> <Self::TopicList as alloy_sol_types::SolType>::RustType {
+                (
+                    Self::SIGNATURE_HASH.into(),
+                    self.caller.clone(),
+                    self.operator.clone(),
+                )
+            }
+            #[inline]
+            fn encode_topics_raw(
+                &self,
+                out: &mut [alloy_sol_types::abi::token::WordToken],
+            ) -> alloy_sol_types::Result<()> {
+                if out.len() < <Self::TopicList as alloy_sol_types::TopicList>::COUNT {
+                    return Err(alloy_sol_types::Error::Overrun);
+                }
+                out[0usize] = alloy_sol_types::abi::token::WordToken(Self::SIGNATURE_HASH);
+                out[1usize] = <alloy::sol_types::sol_data::Address as alloy_sol_types::EventTopic>::encode_topic(
+                    &self.caller,
+                );
+                out[2usize] = <alloy::sol_types::sol_data::Address as alloy_sol_types::EventTopic>::encode_topic(
+                    &self.operator,
+                );
+                Ok(())
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::private::IntoLogData for OperatorSetSplitBipsSet {
+            fn to_log_data(&self) -> alloy_sol_types::private::LogData {
+                From::from(self)
+            }
+            fn into_log_data(self) -> alloy_sol_types::private::LogData {
+                From::from(&self)
+            }
+        }
+        #[automatically_derived]
+        impl From<&OperatorSetSplitBipsSet> for alloy_sol_types::private::LogData {
+            #[inline]
+            fn from(this: &OperatorSetSplitBipsSet) -> alloy_sol_types::private::LogData {
                 alloy_sol_types::SolEvent::encode_log_data(this)
             }
         }
@@ -9102,6 +9966,152 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    /**Function with signature `createOperatorDirectedOperatorSetRewardsSubmission((address,uint32),((address,uint96)[],address,(address,uint256)[],uint32,uint32,string)[])` and selector `0x0ca29899`.
+    ```solidity
+    function createOperatorDirectedOperatorSetRewardsSubmission(OperatorSet memory operatorSet, IRewardsCoordinatorTypes.OperatorDirectedRewardsSubmission[] memory operatorDirectedRewardsSubmissions) external;
+    ```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct createOperatorDirectedOperatorSetRewardsSubmissionCall {
+        pub operatorSet: <OperatorSet as alloy::sol_types::SolType>::RustType,
+        pub operatorDirectedRewardsSubmissions: alloy::sol_types::private::Vec<
+            <IRewardsCoordinatorTypes::OperatorDirectedRewardsSubmission as alloy::sol_types::SolType>::RustType,
+        >,
+    }
+    ///Container type for the return parameters of the [`createOperatorDirectedOperatorSetRewardsSubmission((address,uint32),((address,uint96)[],address,(address,uint256)[],uint32,uint32,string)[])`](createOperatorDirectedOperatorSetRewardsSubmissionCall) function.
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct createOperatorDirectedOperatorSetRewardsSubmissionReturn {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        {
+            #[doc(hidden)]
+            type UnderlyingSolTuple<'a> = (
+                OperatorSet,
+                alloy::sol_types::sol_data::Array<
+                    IRewardsCoordinatorTypes::OperatorDirectedRewardsSubmission,
+                >,
+            );
+            #[doc(hidden)]
+            type UnderlyingRustTuple<'a> = (
+                <OperatorSet as alloy::sol_types::SolType>::RustType,
+                alloy::sol_types::private::Vec<
+                    <IRewardsCoordinatorTypes::OperatorDirectedRewardsSubmission as alloy::sol_types::SolType>::RustType,
+                >,
+            );
+            #[cfg(test)]
+            #[allow(dead_code, unreachable_patterns)]
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+                match _t {
+                    alloy_sol_types::private::AssertTypeEq::<
+                        <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                    >(_) => {}
+                }
+            }
+            #[automatically_derived]
+            #[doc(hidden)]
+            impl ::core::convert::From<createOperatorDirectedOperatorSetRewardsSubmissionCall>
+                for UnderlyingRustTuple<'_>
+            {
+                fn from(value: createOperatorDirectedOperatorSetRewardsSubmissionCall) -> Self {
+                    (value.operatorSet, value.operatorDirectedRewardsSubmissions)
+                }
+            }
+            #[automatically_derived]
+            #[doc(hidden)]
+            impl ::core::convert::From<UnderlyingRustTuple<'_>>
+                for createOperatorDirectedOperatorSetRewardsSubmissionCall
+            {
+                fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                    Self {
+                        operatorSet: tuple.0,
+                        operatorDirectedRewardsSubmissions: tuple.1,
+                    }
+                }
+            }
+        }
+        {
+            #[doc(hidden)]
+            type UnderlyingSolTuple<'a> = ();
+            #[doc(hidden)]
+            type UnderlyingRustTuple<'a> = ();
+            #[cfg(test)]
+            #[allow(dead_code, unreachable_patterns)]
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+                match _t {
+                    alloy_sol_types::private::AssertTypeEq::<
+                        <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                    >(_) => {}
+                }
+            }
+            #[automatically_derived]
+            #[doc(hidden)]
+            impl ::core::convert::From<createOperatorDirectedOperatorSetRewardsSubmissionReturn>
+                for UnderlyingRustTuple<'_>
+            {
+                fn from(value: createOperatorDirectedOperatorSetRewardsSubmissionReturn) -> Self {
+                    ()
+                }
+            }
+            #[automatically_derived]
+            #[doc(hidden)]
+            impl ::core::convert::From<UnderlyingRustTuple<'_>>
+                for createOperatorDirectedOperatorSetRewardsSubmissionReturn
+            {
+                fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                    Self {}
+                }
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolCall for createOperatorDirectedOperatorSetRewardsSubmissionCall {
+            type Parameters<'a> = (
+                OperatorSet,
+                alloy::sol_types::sol_data::Array<
+                    IRewardsCoordinatorTypes::OperatorDirectedRewardsSubmission,
+                >,
+            );
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Return = createOperatorDirectedOperatorSetRewardsSubmissionReturn;
+            type ReturnTuple<'a> = ();
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "createOperatorDirectedOperatorSetRewardsSubmission((address,uint32),((address,uint96)[],address,(address,uint256)[],uint32,uint32,string)[])";
+            const SELECTOR: [u8; 4] = [12u8, 162u8, 152u8, 153u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                (
+                    <OperatorSet as alloy_sol_types::SolType>::tokenize(&self.operatorSet),
+                    <alloy::sol_types::sol_data::Array<
+                        IRewardsCoordinatorTypes::OperatorDirectedRewardsSubmission,
+                    > as alloy_sol_types::SolType>::tokenize(
+                        &self.operatorDirectedRewardsSubmissions,
+                    ),
+                )
+            }
+            #[inline]
+            fn abi_decode_returns(
+                data: &[u8],
+                validate: bool,
+            ) -> alloy_sol_types::Result<Self::Return> {
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
+            }
+        }
+    };
     /**Function with signature `createRewardsForAllEarners(((address,uint96)[],address,uint256,uint32,uint32)[])` and selector `0xff9f6cce`.
     ```solidity
     function createRewardsForAllEarners(IRewardsCoordinatorTypes.RewardsSubmission[] memory rewardsSubmissions) external;
@@ -10517,6 +11527,130 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    /**Function with signature `getOperatorSetSplit(address,(address,uint32))` and selector `0x9de4b35f`.
+    ```solidity
+    function getOperatorSetSplit(address operator, OperatorSet memory operatorSet) external view returns (uint16);
+    ```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct getOperatorSetSplitCall {
+        pub operator: alloy::sol_types::private::Address,
+        pub operatorSet: <OperatorSet as alloy::sol_types::SolType>::RustType,
+    }
+    ///Container type for the return parameters of the [`getOperatorSetSplit(address,(address,uint32))`](getOperatorSetSplitCall) function.
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct getOperatorSetSplitReturn {
+        pub _0: u16,
+    }
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        {
+            #[doc(hidden)]
+            type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Address, OperatorSet);
+            #[doc(hidden)]
+            type UnderlyingRustTuple<'a> = (
+                alloy::sol_types::private::Address,
+                <OperatorSet as alloy::sol_types::SolType>::RustType,
+            );
+            #[cfg(test)]
+            #[allow(dead_code, unreachable_patterns)]
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+                match _t {
+                    alloy_sol_types::private::AssertTypeEq::<
+                        <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                    >(_) => {}
+                }
+            }
+            #[automatically_derived]
+            #[doc(hidden)]
+            impl ::core::convert::From<getOperatorSetSplitCall> for UnderlyingRustTuple<'_> {
+                fn from(value: getOperatorSetSplitCall) -> Self {
+                    (value.operator, value.operatorSet)
+                }
+            }
+            #[automatically_derived]
+            #[doc(hidden)]
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for getOperatorSetSplitCall {
+                fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                    Self {
+                        operator: tuple.0,
+                        operatorSet: tuple.1,
+                    }
+                }
+            }
+        }
+        {
+            #[doc(hidden)]
+            type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Uint<16>,);
+            #[doc(hidden)]
+            type UnderlyingRustTuple<'a> = (u16,);
+            #[cfg(test)]
+            #[allow(dead_code, unreachable_patterns)]
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+                match _t {
+                    alloy_sol_types::private::AssertTypeEq::<
+                        <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                    >(_) => {}
+                }
+            }
+            #[automatically_derived]
+            #[doc(hidden)]
+            impl ::core::convert::From<getOperatorSetSplitReturn> for UnderlyingRustTuple<'_> {
+                fn from(value: getOperatorSetSplitReturn) -> Self {
+                    (value._0,)
+                }
+            }
+            #[automatically_derived]
+            #[doc(hidden)]
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for getOperatorSetSplitReturn {
+                fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                    Self { _0: tuple.0 }
+                }
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolCall for getOperatorSetSplitCall {
+            type Parameters<'a> = (alloy::sol_types::sol_data::Address, OperatorSet);
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Return = getOperatorSetSplitReturn;
+            type ReturnTuple<'a> = (alloy::sol_types::sol_data::Uint<16>,);
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "getOperatorSetSplit(address,(address,uint32))";
+            const SELECTOR: [u8; 4] = [157u8, 228u8, 179u8, 95u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                (
+                    <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
+                        &self.operator,
+                    ),
+                    <OperatorSet as alloy_sol_types::SolType>::tokenize(&self.operatorSet),
+                )
+            }
+            #[inline]
+            fn abi_decode_returns(
+                data: &[u8],
+                validate: bool,
+            ) -> alloy_sol_types::Result<Self::Return> {
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
+            }
+        }
+    };
     /**Function with signature `getRootIndexFromHash(bytes32)` and selector `0xe810ce21`.
     ```solidity
     function getRootIndexFromHash(bytes32 rootHash) external view returns (uint32);
@@ -11907,6 +13041,142 @@ pub mod IRewardsCoordinator {
             }
         }
     };
+    /**Function with signature `setOperatorSetSplit(address,(address,uint32),uint16)` and selector `0xf74e8eac`.
+    ```solidity
+    function setOperatorSetSplit(address operator, OperatorSet memory operatorSet, uint16 split) external;
+    ```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct setOperatorSetSplitCall {
+        pub operator: alloy::sol_types::private::Address,
+        pub operatorSet: <OperatorSet as alloy::sol_types::SolType>::RustType,
+        pub split: u16,
+    }
+    ///Container type for the return parameters of the [`setOperatorSetSplit(address,(address,uint32),uint16)`](setOperatorSetSplitCall) function.
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct setOperatorSetSplitReturn {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        {
+            #[doc(hidden)]
+            type UnderlyingSolTuple<'a> = (
+                alloy::sol_types::sol_data::Address,
+                OperatorSet,
+                alloy::sol_types::sol_data::Uint<16>,
+            );
+            #[doc(hidden)]
+            type UnderlyingRustTuple<'a> = (
+                alloy::sol_types::private::Address,
+                <OperatorSet as alloy::sol_types::SolType>::RustType,
+                u16,
+            );
+            #[cfg(test)]
+            #[allow(dead_code, unreachable_patterns)]
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+                match _t {
+                    alloy_sol_types::private::AssertTypeEq::<
+                        <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                    >(_) => {}
+                }
+            }
+            #[automatically_derived]
+            #[doc(hidden)]
+            impl ::core::convert::From<setOperatorSetSplitCall> for UnderlyingRustTuple<'_> {
+                fn from(value: setOperatorSetSplitCall) -> Self {
+                    (value.operator, value.operatorSet, value.split)
+                }
+            }
+            #[automatically_derived]
+            #[doc(hidden)]
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for setOperatorSetSplitCall {
+                fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                    Self {
+                        operator: tuple.0,
+                        operatorSet: tuple.1,
+                        split: tuple.2,
+                    }
+                }
+            }
+        }
+        {
+            #[doc(hidden)]
+            type UnderlyingSolTuple<'a> = ();
+            #[doc(hidden)]
+            type UnderlyingRustTuple<'a> = ();
+            #[cfg(test)]
+            #[allow(dead_code, unreachable_patterns)]
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+                match _t {
+                    alloy_sol_types::private::AssertTypeEq::<
+                        <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                    >(_) => {}
+                }
+            }
+            #[automatically_derived]
+            #[doc(hidden)]
+            impl ::core::convert::From<setOperatorSetSplitReturn> for UnderlyingRustTuple<'_> {
+                fn from(value: setOperatorSetSplitReturn) -> Self {
+                    ()
+                }
+            }
+            #[automatically_derived]
+            #[doc(hidden)]
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for setOperatorSetSplitReturn {
+                fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                    Self {}
+                }
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolCall for setOperatorSetSplitCall {
+            type Parameters<'a> = (
+                alloy::sol_types::sol_data::Address,
+                OperatorSet,
+                alloy::sol_types::sol_data::Uint<16>,
+            );
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            type Return = setOperatorSetSplitReturn;
+            type ReturnTuple<'a> = ();
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "setOperatorSetSplit(address,(address,uint32),uint16)";
+            const SELECTOR: [u8; 4] = [247u8, 78u8, 142u8, 172u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                (
+                    <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
+                        &self.operator,
+                    ),
+                    <OperatorSet as alloy_sol_types::SolType>::tokenize(&self.operatorSet),
+                    <alloy::sol_types::sol_data::Uint<16> as alloy_sol_types::SolType>::tokenize(
+                        &self.split,
+                    ),
+                )
+            }
+            #[inline]
+            fn abi_decode_returns(
+                data: &[u8],
+                validate: bool,
+            ) -> alloy_sol_types::Result<Self::Return> {
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
+            }
+        }
+    };
     /**Function with signature `setRewardsForAllSubmitter(address,bool)` and selector `0x0eb38345`.
     ```solidity
     function setRewardsForAllSubmitter(address _submitter, bool _newValue) external;
@@ -12293,6 +13563,9 @@ pub mod IRewardsCoordinator {
         claimerFor(claimerForCall),
         createAVSRewardsSubmission(createAVSRewardsSubmissionCall),
         createOperatorDirectedAVSRewardsSubmission(createOperatorDirectedAVSRewardsSubmissionCall),
+        createOperatorDirectedOperatorSetRewardsSubmission(
+            createOperatorDirectedOperatorSetRewardsSubmissionCall,
+        ),
         createRewardsForAllEarners(createRewardsForAllEarnersCall),
         createRewardsForAllSubmission(createRewardsForAllSubmissionCall),
         cumulativeClaimed(cumulativeClaimedCall),
@@ -12305,6 +13578,7 @@ pub mod IRewardsCoordinator {
         getDistributionRootsLength(getDistributionRootsLengthCall),
         getOperatorAVSSplit(getOperatorAVSSplitCall),
         getOperatorPISplit(getOperatorPISplitCall),
+        getOperatorSetSplit(getOperatorSetSplitCall),
         getRootIndexFromHash(getRootIndexFromHashCall),
         initialize(initializeCall),
         processClaim(processClaimCall),
@@ -12316,6 +13590,7 @@ pub mod IRewardsCoordinator {
         setDefaultOperatorSplit(setDefaultOperatorSplitCall),
         setOperatorAVSSplit(setOperatorAVSSplitCall),
         setOperatorPISplit(setOperatorPISplitCall),
+        setOperatorSetSplit(setOperatorSetSplitCall),
         setRewardsForAllSubmitter(setRewardsForAllSubmitterCall),
         setRewardsUpdater(setRewardsUpdaterCall),
         submitRoot(submitRootCall),
@@ -12330,6 +13605,7 @@ pub mod IRewardsCoordinator {
         /// Prefer using `SolInterface` methods instead.
         pub const SELECTORS: &'static [[u8; 4usize]] = &[
             [4u8, 160u8, 197u8, 2u8],
+            [12u8, 162u8, 152u8, 153u8],
             [14u8, 154u8, 83u8, 207u8],
             [14u8, 179u8, 131u8, 69u8],
             [19u8, 20u8, 51u8, 180u8],
@@ -12352,6 +13628,7 @@ pub mod IRewardsCoordinator {
             [155u8, 227u8, 212u8, 228u8],
             [156u8, 185u8, 165u8, 250u8],
             [157u8, 69u8, 194u8, 129u8],
+            [157u8, 228u8, 179u8, 95u8],
             [160u8, 22u8, 157u8, 221u8],
             [165u8, 10u8, 29u8, 156u8],
             [179u8, 219u8, 176u8, 224u8],
@@ -12362,6 +13639,7 @@ pub mod IRewardsCoordinator {
             [232u8, 16u8, 206u8, 33u8],
             [242u8, 44u8, 239u8, 133u8],
             [246u8, 239u8, 187u8, 89u8],
+            [247u8, 78u8, 142u8, 172u8],
             [248u8, 205u8, 132u8, 72u8],
             [249u8, 106u8, 191u8, 46u8],
             [251u8, 241u8, 226u8, 193u8],
@@ -12373,7 +13651,7 @@ pub mod IRewardsCoordinator {
     impl alloy_sol_types::SolInterface for IRewardsCoordinatorCalls {
         const NAME: &'static str = "IRewardsCoordinatorCalls";
         const MIN_DATA_LENGTH: usize = 0usize;
-        const COUNT: usize = 38usize;
+        const COUNT: usize = 41usize;
         #[inline]
         fn selector(&self) -> [u8; 4] {
             match self {
@@ -12413,6 +13691,9 @@ pub mod IRewardsCoordinator {
                 Self::createOperatorDirectedAVSRewardsSubmission(_) => {
                     <createOperatorDirectedAVSRewardsSubmissionCall as alloy_sol_types::SolCall>::SELECTOR
                 }
+                Self::createOperatorDirectedOperatorSetRewardsSubmission(_) => {
+                    <createOperatorDirectedOperatorSetRewardsSubmissionCall as alloy_sol_types::SolCall>::SELECTOR
+                }
                 Self::createRewardsForAllEarners(_) => {
                     <createRewardsForAllEarnersCall as alloy_sol_types::SolCall>::SELECTOR
                 }
@@ -12449,6 +13730,9 @@ pub mod IRewardsCoordinator {
                 Self::getOperatorPISplit(_) => {
                     <getOperatorPISplitCall as alloy_sol_types::SolCall>::SELECTOR
                 }
+                Self::getOperatorSetSplit(_) => {
+                    <getOperatorSetSplitCall as alloy_sol_types::SolCall>::SELECTOR
+                }
                 Self::getRootIndexFromHash(_) => {
                     <getRootIndexFromHashCall as alloy_sol_types::SolCall>::SELECTOR
                 }
@@ -12481,6 +13765,9 @@ pub mod IRewardsCoordinator {
                 }
                 Self::setOperatorPISplit(_) => {
                     <setOperatorPISplitCall as alloy_sol_types::SolCall>::SELECTOR
+                }
+                Self::setOperatorSetSplit(_) => {
+                    <setOperatorSetSplitCall as alloy_sol_types::SolCall>::SELECTOR
                 }
                 Self::setRewardsForAllSubmitter(_) => {
                     <setRewardsForAllSubmitterCall as alloy_sol_types::SolCall>::SELECTOR
@@ -12524,6 +13811,21 @@ pub mod IRewardsCoordinator {
                         .map(IRewardsCoordinatorCalls::MAX_FUTURE_LENGTH)
                     }
                     MAX_FUTURE_LENGTH
+                },
+                {
+                    fn createOperatorDirectedOperatorSetRewardsSubmission(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<IRewardsCoordinatorCalls> {
+                        <createOperatorDirectedOperatorSetRewardsSubmissionCall as alloy_sol_types::SolCall>::abi_decode_raw(
+                                data,
+                                validate,
+                            )
+                            .map(
+                                IRewardsCoordinatorCalls::createOperatorDirectedOperatorSetRewardsSubmission,
+                            )
+                    }
+                    createOperatorDirectedOperatorSetRewardsSubmission
                 },
                 {
                     fn getCurrentClaimableDistributionRoot(
@@ -12797,6 +14099,18 @@ pub mod IRewardsCoordinator {
                     CALCULATION_INTERVAL_SECONDS
                 },
                 {
+                    fn getOperatorSetSplit(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<IRewardsCoordinatorCalls> {
+                        <getOperatorSetSplitCall as alloy_sol_types::SolCall>::abi_decode_raw(
+                            data, validate,
+                        )
+                        .map(IRewardsCoordinatorCalls::getOperatorSetSplit)
+                    }
+                    getOperatorSetSplit
+                },
+                {
                     fn setClaimerFor_0(
                         data: &[u8],
                         validate: bool,
@@ -12914,6 +14228,18 @@ pub mod IRewardsCoordinator {
                             .map(IRewardsCoordinatorCalls::initialize)
                     }
                     initialize
+                },
+                {
+                    fn setOperatorSetSplit(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<IRewardsCoordinatorCalls> {
+                        <setOperatorSetSplitCall as alloy_sol_types::SolCall>::abi_decode_raw(
+                            data, validate,
+                        )
+                        .map(IRewardsCoordinatorCalls::setOperatorSetSplit)
+                    }
+                    setOperatorSetSplit
                 },
                 {
                     fn calculateTokenLeafHash(
@@ -13045,6 +14371,11 @@ pub mod IRewardsCoordinator {
                         inner,
                     )
                 }
+                Self::createOperatorDirectedOperatorSetRewardsSubmission(inner) => {
+                    <createOperatorDirectedOperatorSetRewardsSubmissionCall as alloy_sol_types::SolCall>::abi_encoded_size(
+                        inner,
+                    )
+                }
                 Self::createRewardsForAllEarners(inner) => {
                     <createRewardsForAllEarnersCall as alloy_sol_types::SolCall>::abi_encoded_size(
                         inner,
@@ -13105,6 +14436,11 @@ pub mod IRewardsCoordinator {
                         inner,
                     )
                 }
+                Self::getOperatorSetSplit(inner) => {
+                    <getOperatorSetSplitCall as alloy_sol_types::SolCall>::abi_encoded_size(
+                        inner,
+                    )
+                }
                 Self::getRootIndexFromHash(inner) => {
                     <getRootIndexFromHashCall as alloy_sol_types::SolCall>::abi_encoded_size(
                         inner,
@@ -13155,6 +14491,11 @@ pub mod IRewardsCoordinator {
                 }
                 Self::setOperatorPISplit(inner) => {
                     <setOperatorPISplitCall as alloy_sol_types::SolCall>::abi_encoded_size(
+                        inner,
+                    )
+                }
+                Self::setOperatorSetSplit(inner) => {
+                    <setOperatorSetSplitCall as alloy_sol_types::SolCall>::abi_encoded_size(
                         inner,
                     )
                 }
@@ -13248,6 +14589,12 @@ pub mod IRewardsCoordinator {
                         out,
                     )
                 }
+                Self::createOperatorDirectedOperatorSetRewardsSubmission(inner) => {
+                    <createOperatorDirectedOperatorSetRewardsSubmissionCall as alloy_sol_types::SolCall>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
                 Self::createRewardsForAllEarners(inner) => {
                     <createRewardsForAllEarnersCall as alloy_sol_types::SolCall>::abi_encode_raw(
                         inner,
@@ -13320,6 +14667,12 @@ pub mod IRewardsCoordinator {
                         out,
                     )
                 }
+                Self::getOperatorSetSplit(inner) => {
+                    <getOperatorSetSplitCall as alloy_sol_types::SolCall>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
                 Self::getRootIndexFromHash(inner) => {
                     <getRootIndexFromHashCall as alloy_sol_types::SolCall>::abi_encode_raw(
                         inner,
@@ -13386,6 +14739,12 @@ pub mod IRewardsCoordinator {
                         out,
                     )
                 }
+                Self::setOperatorSetSplit(inner) => {
+                    <setOperatorSetSplitCall as alloy_sol_types::SolCall>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
                 Self::setRewardsForAllSubmitter(inner) => {
                     <setRewardsForAllSubmitterCall as alloy_sol_types::SolCall>::abi_encode_raw(
                         inner,
@@ -13422,6 +14781,7 @@ pub mod IRewardsCoordinator {
         InvalidEarner(InvalidEarner),
         InvalidEarnerLeafIndex(InvalidEarnerLeafIndex),
         InvalidGenesisRewardsTimestampRemainder(InvalidGenesisRewardsTimestampRemainder),
+        InvalidOperatorSet(InvalidOperatorSet),
         InvalidRoot(InvalidRoot),
         InvalidRootIndex(InvalidRootIndex),
         InvalidStartTimestampRemainder(InvalidStartTimestampRemainder),
@@ -13470,6 +14830,7 @@ pub mod IRewardsCoordinator {
             [114u8, 159u8, 148u8, 44u8],
             [121u8, 108u8, 197u8, 37u8],
             [123u8, 30u8, 37u8, 197u8],
+            [126u8, 197u8, 193u8, 84u8],
             [126u8, 226u8, 180u8, 67u8],
             [135u8, 218u8, 63u8, 136u8],
             [137u8, 28u8, 99u8, 223u8],
@@ -13487,7 +14848,7 @@ pub mod IRewardsCoordinator {
     impl alloy_sol_types::SolInterface for IRewardsCoordinatorErrors {
         const NAME: &'static str = "IRewardsCoordinatorErrors";
         const MIN_DATA_LENGTH: usize = 0usize;
-        const COUNT: usize = 31usize;
+        const COUNT: usize = 32usize;
         #[inline]
         fn selector(&self) -> [u8; 4] {
             match self {
@@ -13529,6 +14890,9 @@ pub mod IRewardsCoordinator {
                 }
                 Self::InvalidGenesisRewardsTimestampRemainder(_) => {
                     <InvalidGenesisRewardsTimestampRemainder as alloy_sol_types::SolError>::SELECTOR
+                }
+                Self::InvalidOperatorSet(_) => {
+                    <InvalidOperatorSet as alloy_sol_types::SolError>::SELECTOR
                 }
                 Self::InvalidRoot(_) => {
                     <InvalidRoot as alloy_sol_types::SolError>::SELECTOR
@@ -13853,6 +15217,18 @@ pub mod IRewardsCoordinator {
                     PreviousSplitPending
                 },
                 {
+                    fn InvalidOperatorSet(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<IRewardsCoordinatorErrors> {
+                        <InvalidOperatorSet as alloy_sol_types::SolError>::abi_decode_raw(
+                            data, validate,
+                        )
+                        .map(IRewardsCoordinatorErrors::InvalidOperatorSet)
+                    }
+                    InvalidOperatorSet
+                },
+                {
                     fn StartTimestampTooFarInFuture(
                         data: &[u8],
                         validate: bool,
@@ -14064,6 +15440,11 @@ pub mod IRewardsCoordinator {
                         inner,
                     )
                 }
+                Self::InvalidOperatorSet(inner) => {
+                    <InvalidOperatorSet as alloy_sol_types::SolError>::abi_encoded_size(
+                        inner,
+                    )
+                }
                 Self::InvalidRoot(inner) => {
                     <InvalidRoot as alloy_sol_types::SolError>::abi_encoded_size(inner)
                 }
@@ -14233,6 +15614,12 @@ pub mod IRewardsCoordinator {
                         out,
                     )
                 }
+                Self::InvalidOperatorSet(inner) => {
+                    <InvalidOperatorSet as alloy_sol_types::SolError>::abi_encode_raw(
+                        inner,
+                        out,
+                    )
+                }
                 Self::InvalidRoot(inner) => {
                     <InvalidRoot as alloy_sol_types::SolError>::abi_encode_raw(
                         inner,
@@ -14354,7 +15741,11 @@ pub mod IRewardsCoordinator {
         DistributionRootSubmitted(DistributionRootSubmitted),
         OperatorAVSSplitBipsSet(OperatorAVSSplitBipsSet),
         OperatorDirectedAVSRewardsSubmissionCreated(OperatorDirectedAVSRewardsSubmissionCreated),
+        OperatorDirectedOperatorSetRewardsSubmissionCreated(
+            OperatorDirectedOperatorSetRewardsSubmissionCreated,
+        ),
         OperatorPISplitBipsSet(OperatorPISplitBipsSet),
+        OperatorSetSplitBipsSet(OperatorSetSplitBipsSet),
         RewardsClaimed(RewardsClaimed),
         RewardsForAllSubmitterSet(RewardsForAllSubmitterSet),
         RewardsSubmissionForAllCreated(RewardsSubmissionForAllCreated),
@@ -14370,6 +15761,11 @@ pub mod IRewardsCoordinator {
         ///
         /// Prefer using `SolInterface` methods instead.
         pub const SELECTORS: &'static [[u8; 32usize]] = &[
+            [
+                20u8, 145u8, 139u8, 56u8, 52u8, 171u8, 103u8, 82u8, 235u8, 46u8, 27u8, 72u8, 155u8,
+                102u8, 99u8, 166u8, 120u8, 16u8, 239u8, 181u8, 245u8, 111u8, 57u8, 68u8, 169u8,
+                126u8, 222u8, 142u8, 207u8, 31u8, 217u8, 241u8,
+            ],
             [
                 35u8, 123u8, 130u8, 244u8, 56u8, 215u8, 95u8, 197u8, 104u8, 235u8, 171u8, 72u8,
                 75u8, 117u8, 176u8, 29u8, 146u8, 135u8, 185u8, 233u8, 139u8, 73u8, 11u8, 124u8,
@@ -14440,12 +15836,17 @@ pub mod IRewardsCoordinator {
                 51u8, 246u8, 119u8, 216u8, 24u8, 150u8, 254u8, 128u8, 236u8, 198u8, 119u8, 184u8,
                 76u8, 250u8, 184u8, 24u8, 68u8, 98u8, 182u8, 224u8,
             ],
+            [
+                255u8, 240u8, 117u8, 156u8, 203u8, 55u8, 29u8, 251u8, 86u8, 145u8, 121u8, 135u8,
+                36u8, 231u8, 11u8, 79u8, 166u8, 28u8, 179u8, 191u8, 231u8, 48u8, 163u8, 58u8,
+                193u8, 159u8, 184u8, 106u8, 72u8, 239u8, 199u8, 86u8,
+            ],
         ];
     }
     #[automatically_derived]
     impl alloy_sol_types::SolEventInterface for IRewardsCoordinatorEvents {
         const NAME: &'static str = "IRewardsCoordinatorEvents";
-        const COUNT: usize = 14usize;
+        const COUNT: usize = 16usize;
         fn decode_raw_log(
             topics: &[alloy_sol_types::Word],
             data: &[u8],
@@ -14531,6 +15932,16 @@ pub mod IRewardsCoordinator {
                         .map(Self::OperatorDirectedAVSRewardsSubmissionCreated)
                 }
                 Some(
+                    <OperatorDirectedOperatorSetRewardsSubmissionCreated as alloy_sol_types::SolEvent>::SIGNATURE_HASH,
+                ) => {
+                    <OperatorDirectedOperatorSetRewardsSubmissionCreated as alloy_sol_types::SolEvent>::decode_raw_log(
+                            topics,
+                            data,
+                            validate,
+                        )
+                        .map(Self::OperatorDirectedOperatorSetRewardsSubmissionCreated)
+                }
+                Some(
                     <OperatorPISplitBipsSet as alloy_sol_types::SolEvent>::SIGNATURE_HASH,
                 ) => {
                     <OperatorPISplitBipsSet as alloy_sol_types::SolEvent>::decode_raw_log(
@@ -14539,6 +15950,16 @@ pub mod IRewardsCoordinator {
                             validate,
                         )
                         .map(Self::OperatorPISplitBipsSet)
+                }
+                Some(
+                    <OperatorSetSplitBipsSet as alloy_sol_types::SolEvent>::SIGNATURE_HASH,
+                ) => {
+                    <OperatorSetSplitBipsSet as alloy_sol_types::SolEvent>::decode_raw_log(
+                            topics,
+                            data,
+                            validate,
+                        )
+                        .map(Self::OperatorSetSplitBipsSet)
                 }
                 Some(<RewardsClaimed as alloy_sol_types::SolEvent>::SIGNATURE_HASH) => {
                     <RewardsClaimed as alloy_sol_types::SolEvent>::decode_raw_log(
@@ -14630,7 +16051,13 @@ pub mod IRewardsCoordinator {
                 Self::OperatorDirectedAVSRewardsSubmissionCreated(inner) => {
                     alloy_sol_types::private::IntoLogData::to_log_data(inner)
                 }
+                Self::OperatorDirectedOperatorSetRewardsSubmissionCreated(inner) => {
+                    alloy_sol_types::private::IntoLogData::to_log_data(inner)
+                }
                 Self::OperatorPISplitBipsSet(inner) => {
+                    alloy_sol_types::private::IntoLogData::to_log_data(inner)
+                }
+                Self::OperatorSetSplitBipsSet(inner) => {
                     alloy_sol_types::private::IntoLogData::to_log_data(inner)
                 }
                 Self::RewardsClaimed(inner) => {
@@ -14676,7 +16103,13 @@ pub mod IRewardsCoordinator {
                 Self::OperatorDirectedAVSRewardsSubmissionCreated(inner) => {
                     alloy_sol_types::private::IntoLogData::into_log_data(inner)
                 }
+                Self::OperatorDirectedOperatorSetRewardsSubmissionCreated(inner) => {
+                    alloy_sol_types::private::IntoLogData::into_log_data(inner)
+                }
                 Self::OperatorPISplitBipsSet(inner) => {
+                    alloy_sol_types::private::IntoLogData::into_log_data(inner)
+                }
+                Self::OperatorSetSplitBipsSet(inner) => {
                     alloy_sol_types::private::IntoLogData::into_log_data(inner)
                 }
                 Self::RewardsClaimed(inner) => {
@@ -14950,6 +16383,24 @@ pub mod IRewardsCoordinator {
                 operatorDirectedRewardsSubmissions,
             })
         }
+        ///Creates a new call builder for the [`createOperatorDirectedOperatorSetRewardsSubmission`] function.
+        pub fn createOperatorDirectedOperatorSetRewardsSubmission(
+            &self,
+            operatorSet: <OperatorSet as alloy::sol_types::SolType>::RustType,
+            operatorDirectedRewardsSubmissions: alloy::sol_types::private::Vec<
+                <IRewardsCoordinatorTypes::OperatorDirectedRewardsSubmission as alloy::sol_types::SolType>::RustType,
+            >,
+        ) -> alloy_contract::SolCallBuilder<
+            T,
+            &P,
+            createOperatorDirectedOperatorSetRewardsSubmissionCall,
+            N,
+        > {
+            self.call_builder(&createOperatorDirectedOperatorSetRewardsSubmissionCall {
+                operatorSet,
+                operatorDirectedRewardsSubmissions,
+            })
+        }
         ///Creates a new call builder for the [`createRewardsForAllEarners`] function.
         pub fn createRewardsForAllEarners(
             &self,
@@ -15036,6 +16487,17 @@ pub mod IRewardsCoordinator {
             operator: alloy::sol_types::private::Address,
         ) -> alloy_contract::SolCallBuilder<T, &P, getOperatorPISplitCall, N> {
             self.call_builder(&getOperatorPISplitCall { operator })
+        }
+        ///Creates a new call builder for the [`getOperatorSetSplit`] function.
+        pub fn getOperatorSetSplit(
+            &self,
+            operator: alloy::sol_types::private::Address,
+            operatorSet: <OperatorSet as alloy::sol_types::SolType>::RustType,
+        ) -> alloy_contract::SolCallBuilder<T, &P, getOperatorSetSplitCall, N> {
+            self.call_builder(&getOperatorSetSplitCall {
+                operator,
+                operatorSet,
+            })
         }
         ///Creates a new call builder for the [`getRootIndexFromHash`] function.
         pub fn getRootIndexFromHash(
@@ -15135,6 +16597,19 @@ pub mod IRewardsCoordinator {
         ) -> alloy_contract::SolCallBuilder<T, &P, setOperatorPISplitCall, N> {
             self.call_builder(&setOperatorPISplitCall { operator, split })
         }
+        ///Creates a new call builder for the [`setOperatorSetSplit`] function.
+        pub fn setOperatorSetSplit(
+            &self,
+            operator: alloy::sol_types::private::Address,
+            operatorSet: <OperatorSet as alloy::sol_types::SolType>::RustType,
+            split: u16,
+        ) -> alloy_contract::SolCallBuilder<T, &P, setOperatorSetSplitCall, N> {
+            self.call_builder(&setOperatorSetSplitCall {
+                operator,
+                operatorSet,
+                split,
+            })
+        }
         ///Creates a new call builder for the [`setRewardsForAllSubmitter`] function.
         pub fn setRewardsForAllSubmitter(
             &self,
@@ -15228,11 +16703,24 @@ pub mod IRewardsCoordinator {
         ) -> alloy_contract::Event<T, &P, OperatorDirectedAVSRewardsSubmissionCreated, N> {
             self.event_filter::<OperatorDirectedAVSRewardsSubmissionCreated>()
         }
+        ///Creates a new event filter for the [`OperatorDirectedOperatorSetRewardsSubmissionCreated`] event.
+        pub fn OperatorDirectedOperatorSetRewardsSubmissionCreated_filter(
+            &self,
+        ) -> alloy_contract::Event<T, &P, OperatorDirectedOperatorSetRewardsSubmissionCreated, N>
+        {
+            self.event_filter::<OperatorDirectedOperatorSetRewardsSubmissionCreated>()
+        }
         ///Creates a new event filter for the [`OperatorPISplitBipsSet`] event.
         pub fn OperatorPISplitBipsSet_filter(
             &self,
         ) -> alloy_contract::Event<T, &P, OperatorPISplitBipsSet, N> {
             self.event_filter::<OperatorPISplitBipsSet>()
+        }
+        ///Creates a new event filter for the [`OperatorSetSplitBipsSet`] event.
+        pub fn OperatorSetSplitBipsSet_filter(
+            &self,
+        ) -> alloy_contract::Event<T, &P, OperatorSetSplitBipsSet, N> {
+            self.event_filter::<OperatorSetSplitBipsSet>()
         }
         ///Creates a new event filter for the [`RewardsClaimed`] event.
         pub fn RewardsClaimed_filter(&self) -> alloy_contract::Event<T, &P, RewardsClaimed, N> {
