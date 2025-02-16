@@ -20,7 +20,7 @@ pub enum ElContractsError {
     GetOperatorAvsRegistrationDigestHash,
 
     /// Get Operator shares
-    #[error("Failed to get oeprator shares")]
+    #[error("Failed to get operator shares")]
     GetOperatorShares,
 
     /// Is frozen
@@ -36,7 +36,7 @@ pub enum ElContractsError {
     GetUnderlyingToken,
 
     /// Get operator details
-    #[error("Failed to get oeprator details")]
+    #[error("Failed to get operator details")]
     GetOperatorDetails,
 
     /// is operator or not
