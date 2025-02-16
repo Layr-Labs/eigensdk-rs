@@ -19,7 +19,7 @@ pub enum AvsRegistryError {
     GetOperatorState,
 
     /// Failed to get operator state with registry coordinator and operator id
-    #[error("Failed to get oeprator state with registry coordinator and operator id ")]
+    #[error("Failed to get operator state with registry coordinator and operator id ")]
     GetOperatorStateWithRegistryCoordinatorAndOperatorId,
 
     /// Failed to get current block number
