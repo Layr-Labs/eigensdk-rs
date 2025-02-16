@@ -240,14 +240,14 @@ impl OperatorInfoServiceInMemory {
             .event(OPERATOR_SOCKET_UPDATE)
             .from_block(current_block_number);
 
-        let subcription_new_operator_registration_stream = provider
+        let subscription_new_operator_registration_stream = provider
             .subscribe_logs(&new_pubkey_registration_filter)
             .await?;
         let subscription_operator_socket_update_filter = provider
             .subscribe_logs(&operator_socket_update_filter)
             .await?;
 
-        let mut new_operator_registration_stream = subcription_new_operator_registration_stream
+        let mut new_operator_registration_stream = subscription_new_operator_registration_stream
             .into_stream()
             .fuse();
         let mut operator_socket_update_stream = subscription_operator_socket_update_filter
