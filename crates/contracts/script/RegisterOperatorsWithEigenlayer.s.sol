@@ -11,7 +11,7 @@ import {ConfigsReadWriter} from "./parsers/ConfigsReadWriter.sol";
 import {ContractsRegistry} from "../src/ContractsRegistry.sol";
 // This script registers a bunch of operators with eigenlayer
 // We don't register with eigencert/eigenda because events are not registered in saved anvil state, so we need to register
-// them at runtime whenver we start anvil for a test or localnet.
+// them at runtime whenever we start anvil for a test or localnet.
 
 contract RegisterOperators is ConfigsReadWriter, EigenlayerContractsParser, TokenAndStrategyContractsParser {
     string internal mnemonic;
