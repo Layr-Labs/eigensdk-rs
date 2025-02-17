@@ -204,12 +204,74 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
             self.run(msg_rx, agg_tx).await;
         });
 
+        // Create service handler and aggregate receiver to user can interact with the service
         let service_handler = ServiceHandler { msg_sender: msg_tx };
         let aggregate_receiver = AggregateReceiver {
             aggregate_receiver: agg_rx,
         };
 
         (service_handler, aggregate_receiver)
+    }
+
+    async fn run(
+        self,
+        mut msg_receiver: UnboundedReceiver<AggregationMessage>,
+        aggregate_sender: UnboundedSender<
+            Result<BlsAggregationServiceResponse, BlsAggregationServiceError>,
+        >,
+    ) {
+        // Create hashmap to store the task channels
+        let mut task_channels: HashMap<TaskIndex, UnboundedSender<SignedTaskResponseDigest>> =
+            HashMap::new();
+
+        while let Some(message) = msg_receiver.recv().await {
+            match message {
+                AggregationMessage::InitializeTask(metadata) => {
+                    dbg!("InitializeTask");
+                    let task_index = metadata.task_index;
+                    if task_channels.contains_key(&task_index) {
+                        self.logger.error(
+                            &format!("Task {} already exists", task_index),
+                            "BlsAggregationService::run",
+                        );
+                        continue;
+                    }
+
+                    let (sig_sender, sig_receiver) =
+                        tokio::sync::mpsc::unbounded_channel::<SignedTaskResponseDigest>();
+                    task_channels.insert(task_index, sig_sender);
+
+                    let avs_registry_service = self.avs_registry_service.clone();
+                    let aggregated_response_sender = aggregate_sender.clone();
+                    self.logger.debug(
+                        &format!(
+                            "Create task to process new signed task responses for task index: {}",
+                            task_index
+                        ),
+                        "eigen-services-blsaggregation.bls_agg.initialize_new_task_with_window",
+                    );
+
+                    let logger = self.logger.clone();
+                    tokio::spawn(async move {
+                        let _ = BlsAggregatorService::<A>::single_task_aggregator(
+                            avs_registry_service,
+                            metadata,
+                            aggregated_response_sender,
+                            sig_receiver,
+                            logger,
+                        )
+                        .await
+                        .inspect_err(|err| {
+                            println!("Error: {:?}", err);
+                        });
+                    });
+                }
+                AggregationMessage::ProcessSignature(task_signature) => {
+                    dbg!("ProcessSignature");
+                    todo!();
+                }
+            };
+        }
     }
 
     ///   Creates a new task meant to process new signed task responses for a task tokio channel.
