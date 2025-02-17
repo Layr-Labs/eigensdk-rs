@@ -129,7 +129,7 @@ impl TaskSignature {
     }
 }
 
-// Messages to be sent to the BLS Aggregator Service
+// Messages to be sent to BLS Aggregator Service
 pub enum AggregationMessage {
     InitializeTask(TaskMetadata),
     ProcessSignature(TaskSignature),
@@ -635,7 +635,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                             BlsAggregatorService::build_aggregated_response(
                                 task_index,
                                 task_created_block,
-                                digest.clone(), // Puede ser el digest que usaste para la agregación
+                                digest.clone(),
                                 &operator_state_avs,
                                 digest_aggregated_operators.clone(),
                                 &avs_registry_service,
@@ -884,7 +884,6 @@ mod tests {
     use eigen_crypto_bls::{BlsG1Point, BlsG2Point, BlsKeyPair, Signature};
     use eigen_logging::get_test_logger;
     use eigen_services_avsregistry::fake_avs_registry_service::FakeAvsRegistryService;
-    use eigen_types::avs::SignatureVerificationError::{DuplicateSignature, IncorrectSignature};
     use eigen_types::operator::{QuorumNum, QuorumThresholdPercentages};
     use eigen_types::{avs::TaskIndex, test::TestOperator};
     use sha2::{Digest, Sha256};
