@@ -42,3 +42,55 @@ impl OperatorPubKeys {
         (g1, g2)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::OperatorPubKeys;
+    use alloy::primitives::U256;
+    use ark_bn254::{G1Affine, G2Affine};
+    use eigen_crypto_bls::{BlsG1Point, BlsG2Point};
+
+    #[test]
+    fn test_operator_pub_keys() {
+        let g1_pub_key = BlsG1Point::new(G1Affine {
+            x: ark_ff::Fp::from(1),
+            y: ark_ff::Fp::from(1),
+            infinity: false,
+        });
+
+        let g2_pub_key = BlsG2Point::new(G2Affine {
+            x: ark_ff::QuadExtField {
+                c0: ark_ff::Fp::from(1),
+                c1: ark_ff::Fp::from(1),
+            },
+            y: ark_ff::QuadExtField {
+                c0: ark_ff::Fp::from(1),
+                c1: ark_ff::Fp::from(1),
+            },
+            infinity: false,
+        });
+
+        let operator1_pubkeys = OperatorPubKeys {
+            g1_pub_key,
+            g2_pub_key,
+        };
+        let (g1, g2) = operator1_pubkeys.to_contract_public_keys();
+
+        // assert g1
+        let x_contract = g1.X;
+        let y_contract = g1.Y;
+        assert_eq!(x_contract, U256::from(1));
+        assert_eq!(y_contract, U256::from(1));
+
+        // assert g2
+        let x_g2_contract_0 = g2.X[0];
+        let x_g2_contract_1 = g2.X[1];
+        let y_g2_contract_0 = g2.Y[0];
+        let y_g2_contract_1 = g2.Y[1];
+
+        assert_eq!(x_g2_contract_0, U256::from(1));
+        assert_eq!(x_g2_contract_1, U256::from(1));
+        assert_eq!(y_g2_contract_0, U256::from(1));
+        assert_eq!(y_g2_contract_1, U256::from(1));
+    }
+}
