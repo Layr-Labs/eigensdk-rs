@@ -64,6 +64,25 @@ impl From<BlsKeyPair> for OperatorPubKeys {
     }
 }
 
+impl OperatorPubKeys {
+    //OperatorPubkeys.ToContractPubkeys
+    pub fn to_contract_public_keys(&self) -> (BlsG1Point, BlsG2Point) {
+        (self.g1_pub_key.clone(), self.g2_pub_key.clone())
+        // from Go code:
+        /*
+        func (op OperatorPubkeys) ToContractPubkeys() (apkreg.BN254G1Point, apkreg.BN254G2Point) {
+            return apkreg.BN254G1Point{
+                    X: op.G1Pubkey.X.BigInt(new(big.Int)),
+                    Y: op.G1Pubkey.Y.BigInt(new(big.Int)),
+                }, apkreg.BN254G2Point{
+                    X: [2]*big.Int{op.G2Pubkey.X.A0.BigInt(new(big.Int)), op.G2Pubkey.X.A1.BigInt(new(big.Int))},
+                    Y: [2]*big.Int{op.G2Pubkey.Y.A0.BigInt(new(big.Int)), op.G2Pubkey.Y.A1.BigInt(new(big.Int))},
+                }
+        }
+        */
+    }
+}
+
 #[derive(Deserialize, Serialize)]
 pub struct OperatorMetadata {
     quorumBitmap: U256,
@@ -140,23 +159,6 @@ impl Operator {
         }
 
         Ok(())
-    }
-
-    //OperatorPubkeys.ToContractPubkeys
-    pub fn to_contract_public_keys(&self) -> (BlsG1Point, BlsG2Point) {
-        // from Go code:
-        /*
-        func (op OperatorPubkeys) ToContractPubkeys() (apkreg.BN254G1Point, apkreg.BN254G2Point) {
-            return apkreg.BN254G1Point{
-                    X: op.G1Pubkey.X.BigInt(new(big.Int)),
-                    Y: op.G1Pubkey.Y.BigInt(new(big.Int)),
-                }, apkreg.BN254G2Point{
-                    X: [2]*big.Int{op.G2Pubkey.X.A0.BigInt(new(big.Int)), op.G2Pubkey.X.A1.BigInt(new(big.Int))},
-                    Y: [2]*big.Int{op.G2Pubkey.Y.A0.BigInt(new(big.Int)), op.G2Pubkey.Y.A1.BigInt(new(big.Int))},
-                }
-        }
-        */
-        todo!()
     }
 
     pub fn operator_id_from_key_pair(
