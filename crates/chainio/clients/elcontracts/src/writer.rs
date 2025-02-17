@@ -889,7 +889,7 @@ mod tests {
             address: FIRST_ADDRESS, // can only register the address corresponding to the signer used in the writer
             staker_opt_out_window_blocks: 3,
             delegation_approver_address: FIRST_ADDRESS,
-            metadata_url: Some("metadata_uri".to_string()),
+            metadata_url: "metadata_uri".to_string(),
             allocation_delay: 1,
         };
         el_chain_writer
@@ -921,7 +921,7 @@ mod tests {
             address,
             staker_opt_out_window_blocks: 3,
             delegation_approver_address: Address::ZERO,
-            metadata_url: Some("eigensdk-rs".to_string()),
+            metadata_url: "eigensdk-rs".to_string(),
             allocation_delay: 1,
         };
 
@@ -938,7 +938,7 @@ mod tests {
             address,
             staker_opt_out_window_blocks: 3,
             delegation_approver_address: Address::ZERO,
-            metadata_url: Some("new-metadata".to_string()),
+            metadata_url: "new-metadata".to_string(),
             allocation_delay: 1,
         };
 

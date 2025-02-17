@@ -174,9 +174,8 @@ mod tests {
     use eigen_crypto_bls::BlsKeyPair;
     use eigen_services_operatorsinfo::fake_operator_info::FakeOperatorInfoService;
     use eigen_testing_utils::test_data::TestData;
-    use eigen_types::operator::{
-        OperatorAvsState, OperatorInfo, OperatorPubKeys, QuorumAvsState, QuorumNum,
-    };
+    use eigen_types::avs_state::{OperatorAvsState, QuorumAvsState};
+    use eigen_types::operator::{OperatorInfo, OperatorPubKeys, QuorumNum};
     use eigen_types::test::TestOperator;
     use serde::Deserialize;
 
