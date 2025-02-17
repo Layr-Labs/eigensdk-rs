@@ -98,20 +98,20 @@ impl Operator {
 
     pub async fn validate(&self) -> Result<(), OperatorTypesError> {
         // Check for valid URL in metadata_url
-        let _ =
-            Url::parse(&self.metadata_url).map_err(|_| OperatorTypesError::InvalidMetadataUrl)?;
+        Url::parse(&self.metadata_url).map_err(|_| OperatorTypesError::InvalidMetadataUrl)?;
 
         // Check if metadata is valid
         let body = get_url_content(&self.metadata_url)
             .await
             .map_err(|_| OperatorTypesError::MetadataNotFound)?;
+
         let operator_metadata: OperatorMetadata =
             serde_json::from_str(&body).map_err(|_| OperatorTypesError::MetadataParseError)?;
 
         operator_metadata
             .validate()
             .await
-            .map_err(|e| OperatorTypesError::MetadataValidationError(e))
+            .map_err(OperatorTypesError::MetadataValidationError)
     }
 
     pub fn operator_id_from_key_pair(
