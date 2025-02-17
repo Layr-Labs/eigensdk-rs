@@ -52,8 +52,15 @@ pub enum OperatorMetadataError {
     WebsiteUrlInvalid,
     #[error("Website url is longer than 1024 characters")]
     WebsiteUrlTooLong,
-    #[error("Website url is points to local server")]
+    #[error("Website url points to local server")]
     WebsiteUrlPointsToLocalServer,
+
+    #[error("Twitter url is invalid. It must be of the format https://twitter.com/<username> or https://x.com/<username>")]
+    TwitterUrlInvalid,
+    #[error("Twitter url is longer than 1024 characters")]
+    TwitterUrlTooLong,
+    #[error("Twitter url points to local server")]
+    TwitterUrlPointsToLocalServer,
 }
 
 impl OperatorMetadata {
@@ -101,8 +108,7 @@ impl OperatorMetadata {
         // TODO: check if the server returns the content with a "image/png" mime type
 
         // website, if non-empty, must have less than 1024 characters,
-        // not point to localhost or 127.0.0.1, and must be a valid URL
-        // Also matches: `^(https?)://[^\s/$.?#].[^\s]*$`
+        // not point to localhost or 127.0.0.1, and must be a valid URL that matches the regex
         if !self.website.as_ref().is_none_or(|s| s.is_empty()) {
             let website = self.website.as_ref().unwrap();
             if website.len() > 1024 {
@@ -129,6 +135,30 @@ impl OperatorMetadata {
         // twitter, if non-empty, must have less than 1024 characters,
         // not point to localhost or 127.0.0.1, and must be a valid URL
         // Also matches: `^(?:https?://)?(?:www\.)?(?:twitter\.com/\w+|x\.com/\w+)(?:/?|$)`
+        if !self.twitter.as_ref().is_none_or(|s| s.is_empty()) {
+            let twitter = self.twitter.as_ref().unwrap();
+            if twitter.len() > 1024 {
+                return Err(TwitterUrlTooLong);
+            }
+            let url = Url::parse(&twitter).ok().ok_or(TwitterUrlInvalid)?;
+
+            let host = url.host_str().ok_or(TwitterUrlInvalid)?;
+            if url.scheme().is_empty() || host.is_empty() {
+                return Err(TwitterUrlInvalid);
+            }
+            if host == "localhost" || host == "127.0.0.1" {
+                return Err(TwitterUrlPointsToLocalServer);
+            }
+
+            let twitter_regex = regex::Regex::new(
+                r#"^(?:https?://)?(?:www\.)?(?:twitter\.com/\w+|x\.com/\w+)(?:/?|$)"#,
+            )
+            .expect("regex is valid");
+
+            if !twitter_regex.is_match(&twitter) {
+                return Err(TwitterUrlInvalid);
+            }
+        }
 
         Ok(())
     }
