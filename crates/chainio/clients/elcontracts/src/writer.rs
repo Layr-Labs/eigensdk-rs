@@ -80,7 +80,7 @@ impl ELChainWriter {
     ///
     /// # Returns
     ///
-    /// * `FixedBytes<32>` - The transaction hash if successful, otherwise an error
+    /// * `TxHash` - The transaction hash if successful, otherwise an error
     ///
     /// # Errors
     ///
@@ -88,7 +88,7 @@ impl ELChainWriter {
     pub async fn register_as_operator(
         &self,
         operator: Operator,
-    ) -> Result<FixedBytes<32>, ElContractsError> {
+    ) -> Result<TxHash, ElContractsError> {
         info!("registering operator {:?} to EigenLayer", operator.address);
         let provider = get_signer(&self.signer.clone(), &self.provider);
 
