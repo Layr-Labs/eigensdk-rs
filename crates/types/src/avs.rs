@@ -17,6 +17,8 @@ pub enum SignatureVerificationError {
     OperatorNotFound,
     #[error("duplicate signature error")]
     DuplicateSignature,
+    #[error("channel closed")]
+    ChannelClosed,
 }
 
 /// Represents a signed task response digest
