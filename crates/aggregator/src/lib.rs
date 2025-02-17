@@ -16,7 +16,7 @@ use eigen_client_avsregistry::reader::AvsRegistryChainReader;
 use eigen_common::get_ws_provider;
 use eigen_logging::get_logger;
 use eigen_services_avsregistry::chaincaller::AvsRegistryServiceChainCaller;
-use eigen_services_blsaggregation::bls_agg::BlsAggregatorService;
+use eigen_services_blsaggregation::bls_agg::{BlsAggregatorService, TaskSignature};
 use eigen_services_operatorsinfo::operatorsinfo_inmemory::OperatorInfoServiceInMemory;
 use futures_util::StreamExt;
 use jsonrpc_core::serde_json;
@@ -263,8 +263,11 @@ impl<TP: TaskProcessor + Send + 'static> Aggregator<TP> {
 
         let task_response_digest = self.tp.process_task_response(task_response).await?;
 
+        let task_signature =
+            TaskSignature::new(task_index, task_response_digest, signature, operator_id);
+
         self.bls_aggregation_service
-            .process_new_signature(task_index, task_response_digest, signature, operator_id)
+            .process_new_signature(task_signature)
             .await?;
         info!("processed signature for index {:?}", task_index);
         let quorum_reached = {
