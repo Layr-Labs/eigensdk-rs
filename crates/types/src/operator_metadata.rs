@@ -63,7 +63,7 @@ pub enum OperatorMetadataError {
 }
 
 impl OperatorMetadata {
-    pub fn validate(&self) -> Result<(), OperatorMetadataError> {
+    pub async fn validate(&self) -> Result<(), OperatorMetadataError> {
         // Alias the error types for brevity
         use OperatorMetadataError::*;
 
@@ -177,151 +177,151 @@ mod tests {
         }
     }
 
-    #[test]
-    fn test_valid_metadata() {
+    #[tokio::test]
+    async fn test_valid_metadata() {
         let metadata = get_default_metadata();
-        metadata.validate().unwrap();
+        metadata.validate().await.unwrap();
     }
 
-    #[test]
-    fn test_twitter_url_with_ending_slash() {
+    #[tokio::test]
+    async fn test_twitter_url_with_ending_slash() {
         let mut metadata = get_default_metadata();
         metadata.twitter = Some("https://twitter.com/test/".to_string());
-        metadata.validate().unwrap();
+        metadata.validate().await.unwrap();
     }
 
-    #[test]
-    fn test_twitter_x_url() {
+    #[tokio::test]
+    async fn test_twitter_x_url() {
         let mut metadata = get_default_metadata();
         metadata.twitter = Some("https://x.com/test".to_string());
-        metadata.validate().unwrap();
+        metadata.validate().await.unwrap();
     }
 
-    #[test]
-    fn test_empty_website_and_twitter() {
+    #[tokio::test]
+    async fn test_empty_website_and_twitter() {
         let mut metadata = get_default_metadata();
         metadata.website = None;
         metadata.twitter = None;
-        metadata.validate().unwrap();
+        metadata.validate().await.unwrap();
     }
 
-    #[test]
-    fn test_invalid_no_name() {
+    #[tokio::test]
+    async fn test_invalid_no_name() {
         let mut metadata = get_default_metadata();
         metadata.name = "".to_string();
-        let err = metadata.validate().unwrap_err();
+        let err = metadata.validate().await.unwrap_err();
         assert_eq!(err, OperatorMetadataError::NameEmpty);
     }
 
-    #[test]
-    fn test_invalid_name_too_long() {
+    #[tokio::test]
+    async fn test_invalid_name_too_long() {
         let mut metadata = get_default_metadata();
         metadata.name = "0".repeat(501);
-        let err = metadata.validate().unwrap_err();
+        let err = metadata.validate().await.unwrap_err();
         assert_eq!(err, OperatorMetadataError::NameTooLong);
     }
 
-    #[test]
-    fn test_invalid_name_has_js_script() {
+    #[tokio::test]
+    async fn test_invalid_name_has_js_script() {
         let mut metadata = get_default_metadata();
         metadata.name = "<script> alert('test') </script>".to_string();
-        let err = metadata.validate().unwrap_err();
+        let err = metadata.validate().await.unwrap_err();
         assert_eq!(err, OperatorMetadataError::NameInvalid);
     }
 
-    #[test]
-    fn test_invalid_no_description() {
+    #[tokio::test]
+    async fn test_invalid_no_description() {
         let mut metadata = get_default_metadata();
         metadata.description = "".to_string();
-        let err = metadata.validate().unwrap_err();
+        let err = metadata.validate().await.unwrap_err();
         assert_eq!(err, OperatorMetadataError::DescriptionEmpty);
     }
 
-    #[test]
-    fn test_invalid_description_too_long() {
+    #[tokio::test]
+    async fn test_invalid_description_too_long() {
         let mut metadata = get_default_metadata();
         metadata.description = "0".repeat(501);
-        let err = metadata.validate().unwrap_err();
+        let err = metadata.validate().await.unwrap_err();
         assert_eq!(err, OperatorMetadataError::DescriptionTooLong);
     }
 
-    #[test]
-    fn test_invalid_description_has_js_script() {
+    #[tokio::test]
+    async fn test_invalid_description_has_js_script() {
         let mut metadata = get_default_metadata();
         metadata.description = "<script> alert('test') </script>".to_string();
-        let err = metadata.validate().unwrap_err();
+        let err = metadata.validate().await.unwrap_err();
         assert_eq!(err, OperatorMetadataError::DescriptionInvalid);
     }
 
-    #[test]
-    fn test_invalid_logo_url_empty() {
+    #[tokio::test]
+    async fn test_invalid_logo_url_empty() {
         let mut metadata = get_default_metadata();
         metadata.logo = "".to_string();
-        let err = metadata.validate().unwrap_err();
+        let err = metadata.validate().await.unwrap_err();
         assert_eq!(err, OperatorMetadataError::LogoUrlEmpty);
     }
 
-    #[test]
-    fn test_invalid_wrong_image_format() {
+    #[tokio::test]
+    async fn test_invalid_wrong_image_format() {
         let mut metadata = get_default_metadata();
         metadata.logo = "https://test.com/test.svg".to_string();
-        let err = metadata.validate().unwrap_err();
+        let err = metadata.validate().await.unwrap_err();
         assert_eq!(err, OperatorMetadataError::LogoUrlInvalidImageExtension);
     }
 
-    #[test]
-    fn test_invalid_website_url_1() {
+    #[tokio::test]
+    async fn test_invalid_website_url_1() {
         let mut metadata = get_default_metadata();
         metadata.website = Some("https".to_string());
-        let err = metadata.validate().unwrap_err();
+        let err = metadata.validate().await.unwrap_err();
         assert_eq!(err, OperatorMetadataError::WebsiteUrlInvalid);
     }
 
-    #[test]
-    fn test_invalid_website_url_2() {
+    #[tokio::test]
+    async fn test_invalid_website_url_2() {
         let mut metadata = get_default_metadata();
         metadata.website = Some("https:/test.com".to_string());
-        let err = metadata.validate().unwrap_err();
+        let err = metadata.validate().await.unwrap_err();
         assert_eq!(err, OperatorMetadataError::WebsiteUrlInvalid);
     }
 
-    #[test]
-    fn test_invalid_website_url_3() {
+    #[tokio::test]
+    async fn test_invalid_website_url_3() {
         let mut metadata = get_default_metadata();
         metadata.website = Some("ps://test.com".to_string());
-        let err = metadata.validate().unwrap_err();
+        let err = metadata.validate().await.unwrap_err();
         assert_eq!(err, OperatorMetadataError::WebsiteUrlInvalid);
     }
 
-    #[test]
-    fn test_invalid_twitter_url_1() {
+    #[tokio::test]
+    async fn test_invalid_twitter_url_1() {
         let mut metadata = get_default_metadata();
         metadata.twitter = Some("http".to_string());
-        let err = metadata.validate().unwrap_err();
+        let err = metadata.validate().await.unwrap_err();
         assert_eq!(err, OperatorMetadataError::TwitterUrlInvalid);
     }
 
-    #[test]
-    fn test_invalid_twitter_url_2() {
+    #[tokio::test]
+    async fn test_invalid_twitter_url_2() {
         let mut metadata = get_default_metadata();
         metadata.twitter = Some("ht://twitter.com/test".to_string());
-        let err = metadata.validate().unwrap_err();
+        let err = metadata.validate().await.unwrap_err();
         assert_eq!(err, OperatorMetadataError::TwitterUrlInvalid);
     }
 
-    #[test]
-    fn test_invalid_twitter_url_3() {
+    #[tokio::test]
+    async fn test_invalid_twitter_url_3() {
         let mut metadata = get_default_metadata();
         metadata.twitter = Some("https:/twitt".to_string());
-        let err = metadata.validate().unwrap_err();
+        let err = metadata.validate().await.unwrap_err();
         assert_eq!(err, OperatorMetadataError::TwitterUrlInvalid);
     }
 
-    #[test]
-    fn test_invalid_twitter_url_4() {
+    #[tokio::test]
+    async fn test_invalid_twitter_url_4() {
         let mut metadata = get_default_metadata();
         metadata.twitter = Some("https://facebook.com/test".to_string());
-        let err = metadata.validate().unwrap_err();
+        let err = metadata.validate().await.unwrap_err();
         assert_eq!(err, OperatorMetadataError::TwitterUrlInvalid);
     }
 }
