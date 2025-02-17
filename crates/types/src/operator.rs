@@ -6,6 +6,7 @@ use num_bigint::BigUint;
 use thiserror::Error;
 
 pub use crate::operator_metadata::OperatorMetadata;
+use crate::operator_metadata::OperatorMetadataError;
 pub use crate::operator_pubkeys::OperatorPubKeys;
 
 #[derive(Debug, Error)]
@@ -14,8 +15,10 @@ pub enum OperatorTypesError {
     OperatorIdFromPubKey(#[from] BlsError),
     #[error("Metadata Not Found")]
     MetadataNotFound,
-    #[error("Metadata Error")]
-    MetadataError,
+    #[error("Metadata Parse Error")]
+    MetadataParseError,
+    #[error("Metadata Validation Error")]
+    MetadataValidationError(#[from] OperatorMetadataError),
 }
 
 const MAX_NUMBER_OF_QUORUMS: u8 = 192;
@@ -110,9 +113,9 @@ impl Operator {
             .await
             .map_err(|_| OperatorTypesError::MetadataNotFound)?;
         let operator_metadata: OperatorMetadata =
-            serde_json::from_str(&body).map_err(|_| OperatorTypesError::MetadataError)?;
+            serde_json::from_str(&body).map_err(|_| OperatorTypesError::MetadataParseError)?;
 
-        //operator_metadata.validate()?;
+        operator_metadata.validate()?;
 
         Ok(())
     }

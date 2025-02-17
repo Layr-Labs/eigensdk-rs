@@ -1,4 +1,5 @@
 use serde::{Deserialize, Serialize};
+use thiserror::Error;
 
 /// OperatorMetadata is the metadata operator uploads while registering
 /// itself to EigenLayer.
@@ -19,4 +20,34 @@ pub struct OperatorMetadata {
 
     /// Twitter handle of the operator (optional)
     twitter: Option<String>,
+}
+
+#[derive(Debug, Error)]
+pub enum OperatorMetadataError {
+    #[error("Name cannot be empty")]
+    NameEmpty,
+}
+
+impl OperatorMetadata {
+    pub fn validate(&self) -> Result<(), OperatorMetadataError> {
+        // name is between 1-500 characters and matches the regex:
+        // `^[a-zA-Z0-9 +.,;:?!'’"“”\-_/()\[\]~&#$—%]+$`
+        if self.name.is_empty() {
+            return Err(OperatorMetadataError::NameEmpty);
+        }
+        // same for description
+
+        // logo must be non-empty, must be a valid URL, end in .png,
+        // and the server must return the content with a "image/png" mime type
+
+        // website, if non-empty, must have less than 1024 characters,
+        // not point to localhost or 127.0.0.1, and must be a valid URL
+        // Also matches: `^(https?)://[^\s/$.?#].[^\s]*$`
+
+        // twitter, if non-empty, must have less than 1024 characters,
+        // not point to localhost or 127.0.0.1, and must be a valid URL
+        // Also matches: `^(?:https?://)?(?:www\.)?(?:twitter\.com/\w+|x\.com/\w+)(?:/?|$)`
+
+        Ok(())
+    }
 }
