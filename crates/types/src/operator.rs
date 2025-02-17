@@ -19,6 +19,10 @@ pub enum OperatorTypesError {
     MetadataParseError,
     #[error("Metadata Validation Error")]
     MetadataValidationError(#[from] OperatorMetadataError),
+    #[error("Invalid Address")]
+    InvalidAddress,
+    #[error("Invalid Delegation Approver Address")]
+    InvalidDelegationApproverAddress,
 }
 
 const MAX_NUMBER_OF_QUORUMS: u8 = 192;
@@ -70,42 +74,26 @@ pub struct Operator {
 }
 
 impl Operator {
+    pub fn new(
+        address: &str,
+        delegation_approver_address: &str,
+        metadata_url: String,
+        allocation_delay: u32,
+    ) -> Result<Self, OperatorTypesError> {
+        let address = Address::try_from(address.as_bytes())
+            .map_err(|_| OperatorTypesError::InvalidAddress)?;
+        let delegation_approver_address = Address::try_from(delegation_approver_address.as_bytes())
+            .map_err(|_| OperatorTypesError::InvalidDelegationApproverAddress)?;
+
+        Ok(Self {
+            address,
+            delegation_approver_address,
+            metadata_url,
+            allocation_delay,
+        })
+    }
+
     pub async fn validate(&self) -> Result<(), OperatorTypesError> {
-        //if !utils.IsValidEthereumAddress(o.Address) {
-        //    return ErrInvalidOperatorAddress
-        //}
-
-        if !self.address.is_zero() {
-            return Err(OperatorTypesError::OperatorIdFromPubKey(
-                BlsError::InvalidPublicKey,
-            ));
-        }
-
-        //if o.DelegationApproverAddress != ZeroAddress && !utils.IsValidEthereumAddress(o.DelegationApproverAddress) {
-        //    return ErrInvalidDelegationApproverAddress
-        //}
-        if !self.delegation_approver_address.is_zero() {
-            return Err(OperatorTypesError::OperatorIdFromPubKey(
-                BlsError::InvalidPublicKey,
-            ));
-        }
-
-        // Validate metadata
-        /*
-        body, err := utils.ReadPublicURL(o.MetadataUrl)
-        if err != nil {
-            return utils.WrapError(ErrReadingMetadataUrlResponse, err)
-        }
-
-        operatorMetadata := OperatorMetadata{}
-        err = json.Unmarshal(body, &operatorMetadata)
-        if err != nil {
-            return ErrUnmarshalOperatorMetadata
-        }
-
-        return operatorMetadata.Validate()
-        */
-
         // Check for valid URL
         /*
         err := utils.CheckIfUrlIsValid(o.MetadataUrl)
@@ -114,15 +102,17 @@ impl Operator {
         }
         */
 
+        // Check if metadata is valid
         let body = get_url_content(&self.metadata_url)
             .await
             .map_err(|_| OperatorTypesError::MetadataNotFound)?;
         let operator_metadata: OperatorMetadata =
             serde_json::from_str(&body).map_err(|_| OperatorTypesError::MetadataParseError)?;
 
-        operator_metadata.validate()?;
-
-        Ok(())
+        operator_metadata
+            .validate()
+            .await
+            .map_err(|e| OperatorTypesError::MetadataValidationError(e))
     }
 
     pub fn operator_id_from_key_pair(
