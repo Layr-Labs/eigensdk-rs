@@ -1,0 +1,76 @@
+name: Check anvil dump is up-to-date
+
+on:
+  push:
+    branches: [main]
+
+  pull_request:
+    branches: [ '**' ]
+
+jobs:
+  rewardsv2:
+    name: Check rewardsv2 anvil dump state is up to date
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # This step is needed to know if the contracts were changed.
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            contracts:
+              - 'crates/m2_contracts/lib/**'
+              - 'crates/m2_contracts/script/**'
+              - 'crates/m2_contracts/src/**'
+      
+      # This step runs only if some contract changed.
+      # It checks the diff in the anvil state file.
+      # If the diff is null, that means the anvil state has not changed,
+      # i.e. the anvil state outdated and therefore this step will fail.
+      # Note: if the git diff fails to fetch the changes, then the step will also fail.
+      - name: Check the anvil dump has changed
+        if: steps.filter.outputs.contracts == 'true'
+        working-directory: crates/m2_contracts/anvil/m2_contracts_deployed_anvil_state
+        run: |
+          if [ -z "$(git diff origin/${{ github.event.pull_request.base.ref }} -- state.json)" ]; then
+            echo "The anvil dump is outdated";
+            exit 1
+          fi
+
+  slashing:
+    name: Check slashing anvil dump state is up to date
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # This step is needed to know if the contracts were changed.
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            contracts:
+              - 'crates/operator_sets_contracts/lib/**'
+              - 'crates/operator_sets_contracts/script/**'
+              - 'crates/operator_sets_contracts/src/**'
+      
+      # This step runs only if some contract changed.
+      # It checks the diff in the anvil state file.
+      # If the diff is null, that means the anvil state has not changed,
+      # i.e. the anvil state outdated and therefore this step will fail.
+      # Note: if the git diff fails to fetch the changes, then the step will also fail.
+      - name: Check the anvil dump has changed
+        if: steps.filter.outputs.contracts == 'true'
+        working-directory: crates/operator_sets_contracts/anvil/operatorset_contracts_deployed_anvil_state
+        run: |
+          if [ -z "$(git diff origin/${{ github.event.pull_request.base.ref }} -- state.json)" ]; then
+            echo "The anvil dump is outdated";
+            exit 1
+          fi
+

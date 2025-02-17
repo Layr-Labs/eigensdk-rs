@@ -1,6 +1,6 @@
 use super::bls_aggregation_service_error::BlsAggregationServiceError;
 use super::bls_aggregation_service_response::BlsAggregationServiceResponse;
-use alloy_primitives::{FixedBytes, Uint, U256};
+use alloy::primitives::{FixedBytes, Uint, U256};
 use ark_bn254::{G1Affine, G2Affine};
 use ark_ec::AffineRepr;
 use eigen_crypto_bls::{BlsG1Point, BlsG2Point, Signature};
@@ -29,6 +29,109 @@ pub struct AggregatedOperators {
     signers_agg_sig_g1: Signature,
     signers_total_stake_per_quorum: HashMap<u8, U256>,
     pub signers_operator_ids_set: HashMap<FixedBytes<32>, bool>,
+}
+
+/// Contains the metadata required to initialize a new task.
+#[derive(Clone)]
+pub struct TaskMetadata {
+    /// Index of the task
+    task_index: TaskIndex,
+    /// Block the task was created
+    task_created_block: u32, // TODO: Should this be a u64?
+    /// Quorum numbers which should respond to the task
+    quorum_numbers: Vec<u8>,
+    /// Thresholds for each quorum
+    quorum_threshold_percentages: QuorumThresholdPercentages,
+    /// Time before expiry of the task response aggregation
+    time_to_expiry: Duration,
+    // Duration of the window to wait for signatures after quorum is reached
+    window_duration: Duration,
+}
+
+impl TaskMetadata {
+    /// Creates a new instance of [`TaskMetadata`]
+    ///
+    /// # Arguments
+    /// * `task_index` - index of the task
+    /// * `task_created_block` - block number at which the task was created
+    /// * `quorum_numbers` - quorum numbers which should respond to the task
+    /// * `quorum_threshold_percentages` - threshold percentages for each quorum
+    /// * `time_to_expiry` - time until the task expires
+    ///
+    /// Use [`with_window_duration`](Self::with_window_duration) to set the window duration.
+    /// If the window duration is not set, it will default to [`Duration::ZERO`].
+    ///
+    /// # Returns a new instance of [`TaskMetadata`]
+    pub fn new(
+        task_index: TaskIndex,
+        task_created_block: u64,
+        quorum_numbers: Vec<u8>,
+        quorum_threshold_percentages: QuorumThresholdPercentages,
+        time_to_expiry: Duration,
+    ) -> Self {
+        let task_created_block: u32 = task_created_block
+            .try_into()
+            .expect("block number should fit into a u32");
+
+        Self {
+            task_index,
+            task_created_block,
+            quorum_numbers,
+            quorum_threshold_percentages,
+            time_to_expiry,
+            window_duration: Duration::ZERO,
+        }
+    }
+
+    /// Sets the window duration for the task
+    ///
+    /// # Arguments
+    /// * `window_duration` - The duration of the window to wait for signatures after quorum is reached
+    ///
+    /// # Returns the TaskMetadata with the window duration set
+    pub fn with_window_duration(mut self, window_duration: Duration) -> Self {
+        self.window_duration = window_duration;
+        self
+    }
+}
+
+/// Contains the information of a signed task response
+#[derive(Clone)]
+pub struct TaskSignature {
+    // Index of the task
+    task_index: TaskIndex,
+    // Digest of the task response
+    task_response_digest: TaskResponseDigest,
+    // BLS signature of the task response
+    bls_signature: Signature,
+    // Operator ID of the operator that signed the task response
+    operator_id: FixedBytes<32>,
+}
+
+impl TaskSignature {
+    /// Creates a new instance of [`TaskSignature``]
+    ///
+    /// # Arguments
+    /// * `task_index` - index of the task
+    /// * `task_response_digest` - digest of the task response
+    /// * `bls_signature` - bls signature of the task response
+    /// * `operator_id` - operator ID of the operator that signed the task response
+    ///
+    /// # Returns
+    /// [`TaskSignature`] instance
+    pub fn new(
+        task_index: TaskIndex,
+        task_response_digest: TaskResponseDigest,
+        bls_signature: Signature,
+        operator_id: FixedBytes<32>,
+    ) -> Self {
+        Self {
+            task_index,
+            task_response_digest,
+            bls_signature,
+            operator_id,
+        }
+    }
 }
 
 /// The BLS Aggregator Service main struct
@@ -73,57 +176,16 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
     ///
     /// # Arguments
     ///
-    /// * `task_index` - The index of the task
-    /// * `task_created_block` - The block number at which the task was created
-    /// * `quorum_nums` - The quorum numbers for the task
-    /// * `quorum_threshold_percentages` - The quorum threshold percentages for the task
-    /// * `time_to_expiry` - The timeout for the task reader to expire
+    /// * `metadata` - task metadata
     ///
     /// # Error
     ///
     /// Returns error if the task index already exists
     pub async fn initialize_new_task(
         &self,
-        task_index: TaskIndex,
-        task_created_block: u32,
-        quorum_nums: Vec<u8>,
-        quorum_threshold_percentages: QuorumThresholdPercentages,
-        time_to_expiry: Duration,
+        metadata: TaskMetadata,
     ) -> Result<(), BlsAggregationServiceError> {
-        self.initialize_new_task_with_window(
-            task_index,
-            task_created_block,
-            quorum_nums,
-            quorum_threshold_percentages,
-            time_to_expiry,
-            Duration::ZERO,
-        )
-        .await
-    }
-
-    ///   Creates a new task meant to process new signed task responses for a task tokio channel.
-    ///
-    /// # Arguments
-    ///
-    /// * `task_index` - The index of the task
-    /// * `task_created_block` - The block number at which the task was created
-    /// * `quorum_nums` - The quorum numbers for the task
-    /// * `quorum_threshold_percentages` - The quorum threshold percentages for the task
-    /// * `time_to_expiry` - The timeout for the task reader to expire
-    /// * `window_duration` - The duration of the window to wait for signatures after quorum is reached
-    ///
-    /// # Error
-    ///
-    /// Returns error if the task index already exists
-    pub async fn initialize_new_task_with_window(
-        &self,
-        task_index: TaskIndex,
-        task_created_block: u32,
-        quorum_nums: Vec<u8>,
-        quorum_threshold_percentages: QuorumThresholdPercentages,
-        time_to_expiry: Duration,
-        window_duration: Duration,
-    ) -> Result<(), BlsAggregationServiceError> {
+        let task_index = metadata.task_index;
         let signatures_rx = {
             let mut task_channel = self.signed_task_response.write();
 
@@ -150,14 +212,9 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
             // Process each signed response here
             let _ = BlsAggregatorService::<A>::single_task_aggregator(
                 avs_registry_service,
-                task_index,
-                task_created_block,
-                quorum_nums.clone(),
-                quorum_threshold_percentages.clone(),
-                time_to_expiry,
+                metadata,
                 aggregated_response_sender,
                 signatures_rx,
-                window_duration,
                 logger,
             )
             .await
@@ -173,10 +230,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
     ///
     /// # Arguments
     ///
-    /// * `task_index` - The index of the task
-    /// * `task_response_digest` - The digest of the task response
-    /// * `bls_signature` - The BLS signature of the task response
-    /// * `operator_id` - The operator ID of the operator that signed the task response
+    /// * `task_signature` - The signed task response
     ///
     /// # Errors
     ///
@@ -186,16 +240,13 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
     /// * `SignatureVerificationError` - If the signature verification fails.
     pub async fn process_new_signature(
         &self,
-        task_index: TaskIndex,
-        task_response_digest: TaskResponseDigest,
-        bls_signature: Signature,
-        operator_id: FixedBytes<32>,
+        task_signature: TaskSignature,
     ) -> Result<(), BlsAggregationServiceError> {
         let (tx, rx) = mpsc::channel(1);
         let task = SignedTaskResponseDigest {
-            task_response_digest,
-            bls_signature,
-            operator_id,
+            task_response_digest: task_signature.task_response_digest,
+            bls_signature: task_signature.bls_signature,
+            operator_id: task_signature.operator_id,
             signature_verification_channel: tx,
         };
 
@@ -203,13 +254,13 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
             let task_channel = self.signed_task_response.read();
 
             let sender = task_channel
-                .get(&task_index)
+                .get(&task_signature.task_index)
                 .ok_or(BlsAggregationServiceError::TaskNotFound)?;
 
             self.logger.debug(
                 &format!(
                     "send the task to the aggregator thread for task index: {}",
-                    task_index
+                    task_signature.task_index
                 ),
                 "eigen-services-blsaggregation.bls_agg.process_new_signature",
             );
@@ -224,7 +275,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         self.logger.debug(
             &format!(
                 "receive the signature verification result for task index: {}",
-                task_index
+                task_signature.task_index
             ),
             "eigen-services-blsaggregation.bls_agg.process_new_signature",
         );
@@ -300,43 +351,31 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
     ///
     /// # Arguments
     ///
-    /// * `task_index` - The index of the task
-    /// * `task_created_block` - The block number at which the task was created
-    /// * `quorum_nums` - The quorum numbers for the task
-    /// * `quorum_threshold_percentages` - The quorum threshold percentages for the task
-    /// * `time_to_expiry` - The timeout for the task reader to expire
+    /// * `metadata` - task metadata
     /// * `aggregated_response_sender` - The sender channel for the aggregated responses
     /// * `signatures_rx` - The receiver channel for the signed task responses
-    /// * `window_duration` - The duration of the window to wait for signatures after quorum is reached
     /// * `logger` - The logger to log messages.
-    #[allow(clippy::too_many_arguments)]
-    pub async fn single_task_aggregator(
+    async fn single_task_aggregator(
         avs_registry_service: A,
-        task_index: TaskIndex,
-        task_created_block: u32,
-        quorum_nums: Vec<u8>,
-        quorum_threshold_percentages: QuorumThresholdPercentages,
-        time_to_expiry: Duration,
+        metadata: TaskMetadata,
         aggregated_response_sender: UnboundedSender<
             Result<BlsAggregationServiceResponse, BlsAggregationServiceError>,
         >,
         signatures_rx: UnboundedReceiver<SignedTaskResponseDigest>,
-        window_duration: Duration,
         logger: SharedLogger,
     ) -> Result<(), BlsAggregationServiceError> {
-        let quorum_threshold_percentage_map: HashMap<u8, u8> = quorum_nums
+        let quorum_threshold_percentage_map: HashMap<u8, u8> = metadata
+            .quorum_numbers
             .iter()
             .enumerate()
-            .map(|(i, quorum_number)| (*quorum_number, quorum_threshold_percentages[i]))
+            .map(|(i, quorum_number)| (*quorum_number, metadata.quorum_threshold_percentages[i]))
             .collect();
-
         let operator_state_avs = avs_registry_service
-            .get_operators_avs_state_at_block(task_created_block, &quorum_nums)
+            .get_operators_avs_state_at_block(metadata.task_created_block, &metadata.quorum_numbers)
             .await
             .map_err(|_| BlsAggregationServiceError::RegistryError)?;
-
         let quorums_avs_state = avs_registry_service
-            .get_quorums_avs_state_at_block(&quorum_nums, task_created_block)
+            .get_quorums_avs_state_at_block(&metadata.quorum_numbers, metadata.task_created_block)
             .await
             .map_err(|_| BlsAggregationServiceError::RegistryError)?;
         let total_stake_per_quorum: HashMap<_, _> = quorums_avs_state
@@ -344,7 +383,8 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
             .map(|(k, v)| (*k, v.total_stake))
             .collect();
 
-        let quorum_apks_g1: Vec<BlsG1Point> = quorum_nums
+        let quorum_apks_g1: Vec<BlsG1Point> = metadata
+            .quorum_numbers
             .iter()
             .filter_map(|quorum_num| quorums_avs_state.get(quorum_num))
             .map(|avs_state| avs_state.agg_pub_key_g1.clone())
@@ -352,17 +392,17 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
 
         Self::loop_task_aggregator(
             avs_registry_service,
-            task_index,
-            task_created_block,
-            time_to_expiry,
+            metadata.task_index,
+            metadata.task_created_block,
+            metadata.time_to_expiry,
             aggregated_response_sender,
             signatures_rx,
             operator_state_avs,
             total_stake_per_quorum,
             quorum_threshold_percentage_map,
             quorum_apks_g1,
-            quorum_nums,
-            window_duration,
+            metadata.quorum_numbers,
+            metadata.window_duration,
             logger,
         )
         .await
@@ -786,7 +826,9 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
 #[cfg(test)]
 mod tests {
     use super::{BlsAggregationServiceError, BlsAggregationServiceResponse, BlsAggregatorService};
-    use alloy_primitives::{B256, U256};
+    use crate::bls_agg::TaskMetadata;
+    use crate::bls_agg::TaskSignature;
+    use alloy::primitives::{B256, U256};
     use eigen_crypto_bls::{BlsG1Point, BlsG2Point, BlsKeyPair, Signature};
     use eigen_logging::get_test_logger;
     use eigen_services_avsregistry::fake_avs_registry_service::FakeAvsRegistryService;
@@ -862,24 +904,22 @@ mod tests {
             FakeAvsRegistryService::new(block_number, vec![test_operator_1.clone()]);
         let bls_agg_service =
             BlsAggregatorService::new(fake_avs_registry_service, get_test_logger());
-        bls_agg_service
-            .initialize_new_task(
-                task_index,
-                block_number as u32,
-                quorum_numbers,
-                quorum_threshold_percentages,
-                time_to_expiry,
-            )
-            .await
-            .unwrap();
+        let metadata = TaskMetadata::new(
+            task_index,
+            block_number,
+            quorum_numbers,
+            quorum_threshold_percentages,
+            time_to_expiry,
+        );
+        bls_agg_service.initialize_new_task(metadata).await.unwrap();
 
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_signature,
                 test_operator_1.operator_id,
-            )
+            ))
             .await
             .unwrap();
 
@@ -937,37 +977,35 @@ mod tests {
             FakeAvsRegistryService::new(block_number, test_operators.clone());
         let bls_agg_service =
             BlsAggregatorService::new(fake_avs_registry_service, get_test_logger());
-        bls_agg_service
-            .initialize_new_task(
-                task_index,
-                block_number as u32,
-                quorum_numbers,
-                quorum_threshold_percentages,
-                time_to_expiry,
-            )
-            .await
-            .unwrap();
+        let metadata = TaskMetadata::new(
+            task_index,
+            block_number,
+            quorum_numbers,
+            quorum_threshold_percentages,
+            time_to_expiry,
+        );
+        bls_agg_service.initialize_new_task(metadata).await.unwrap();
 
         let bls_signature_1 = test_operator_1
             .bls_keypair
             .sign_message(task_response_digest.as_ref());
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_signature_1.clone(),
                 test_operator_1.operator_id,
-            )
+            ))
             .await
             .unwrap();
 
         let second_signature_processing_result = bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_signature_1.clone(),
                 test_operator_1.operator_id,
-            )
+            ))
             .await;
 
         assert_eq!(
@@ -981,12 +1019,12 @@ mod tests {
             .bls_keypair
             .sign_message(task_response_digest.as_ref());
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_signature_2.clone(),
                 test_operator_2.operator_id,
-            )
+            ))
             .await
             .unwrap();
 
@@ -1056,26 +1094,24 @@ mod tests {
         let bls_agg_service =
             BlsAggregatorService::new(fake_avs_registry_service, get_test_logger());
 
-        bls_agg_service
-            .initialize_new_task(
-                task_index,
-                block_number as u32,
-                quorum_numbers,
-                quorum_threshold_percentages,
-                time_to_expiry,
-            )
-            .await
-            .unwrap();
+        let metadata = TaskMetadata::new(
+            task_index,
+            block_number,
+            quorum_numbers,
+            quorum_threshold_percentages,
+            time_to_expiry,
+        );
+        bls_agg_service.initialize_new_task(metadata).await.unwrap();
         let bls_sig_op_1 = test_operator_1
             .bls_keypair
             .sign_message(task_response_digest.as_ref());
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_sig_op_1.clone(),
                 test_operator_1.operator_id,
-            )
+            ))
             .await
             .unwrap();
 
@@ -1083,12 +1119,12 @@ mod tests {
             .bls_keypair
             .sign_message(task_response_digest.as_ref());
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_sig_op_2.clone(),
                 test_operator_2.operator_id,
-            )
+            ))
             .await
             .unwrap();
 
@@ -1096,12 +1132,12 @@ mod tests {
             .bls_keypair
             .sign_message(task_response_digest.as_ref());
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_sig_op_3.clone(),
                 test_operator_3.operator_id,
-            )
+            ))
             .await
             .unwrap();
 
@@ -1163,26 +1199,24 @@ mod tests {
         let bls_agg_service =
             BlsAggregatorService::new(fake_avs_registry_service, get_test_logger());
 
-        bls_agg_service
-            .initialize_new_task(
-                task_index,
-                block_number as u32,
-                quorum_numbers,
-                quorum_threshold_percentages,
-                time_to_expiry,
-            )
-            .await
-            .unwrap();
+        let metadata = TaskMetadata::new(
+            task_index,
+            block_number,
+            quorum_numbers,
+            quorum_threshold_percentages,
+            time_to_expiry,
+        );
+        bls_agg_service.initialize_new_task(metadata).await.unwrap();
         let bls_sig_op_1 = test_operator_1
             .bls_keypair
             .sign_message(task_response_digest.as_ref());
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_sig_op_1.clone(),
                 test_operator_1.operator_id,
-            )
+            ))
             .await
             .unwrap();
 
@@ -1190,12 +1224,12 @@ mod tests {
             .bls_keypair
             .sign_message(task_response_digest.as_ref());
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_sig_op_2.clone(),
                 test_operator_2.operator_id,
-            )
+            ))
             .await
             .unwrap();
 
@@ -1259,28 +1293,30 @@ mod tests {
         let task_1_index = 1;
         let task_1_response = 123; // Initialize with appropriate data
         let task_1_response_digest = hash(task_1_response);
+        let metadata1 = TaskMetadata::new(
+            task_1_index,
+            block_number,
+            quorum_numbers.clone(),
+            quorum_threshold_percentages.clone(),
+            time_to_expiry,
+        );
         bls_agg_service
-            .initialize_new_task(
-                task_1_index,
-                block_number as u32,
-                quorum_numbers.clone(),
-                quorum_threshold_percentages.clone(),
-                time_to_expiry,
-            )
+            .initialize_new_task(metadata1)
             .await
             .unwrap();
 
         let task_2_index = 2;
         let task_2_response = 234; // Initialize with appropriate data
         let task_2_response_digest = hash(task_2_response);
+        let metadata2 = TaskMetadata::new(
+            task_2_index,
+            block_number,
+            quorum_numbers,
+            quorum_threshold_percentages,
+            time_to_expiry,
+        );
         bls_agg_service
-            .initialize_new_task(
-                task_2_index,
-                block_number as u32,
-                quorum_numbers,
-                quorum_threshold_percentages,
-                time_to_expiry,
-            )
+            .initialize_new_task(metadata2)
             .await
             .unwrap();
 
@@ -1288,12 +1324,12 @@ mod tests {
             .bls_keypair
             .sign_message(task_1_response_digest.as_ref());
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_1_index,
                 task_1_response_digest,
                 bls_sig_task_1_op_1.clone(),
                 test_operator_1.operator_id,
-            )
+            ))
             .await
             .unwrap();
 
@@ -1301,12 +1337,12 @@ mod tests {
             .bls_keypair
             .sign_message(task_1_response_digest.as_ref());
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_1_index,
                 task_1_response_digest,
                 bls_sig_task_1_op_2.clone(),
                 test_operator_2.operator_id,
-            )
+            ))
             .await
             .unwrap();
 
@@ -1314,12 +1350,12 @@ mod tests {
             .bls_keypair
             .sign_message(task_2_response_digest.as_ref());
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_2_index,
                 task_2_response_digest,
                 bls_sig_task_2_op_1.clone(),
                 test_operator_1.operator_id,
-            )
+            ))
             .await
             .unwrap();
 
@@ -1327,12 +1363,12 @@ mod tests {
             .bls_keypair
             .sign_message(task_2_response_digest.as_ref());
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_2_index,
                 task_2_response_digest,
                 bls_sig_task_2_op_2.clone(),
                 test_operator_2.operator_id,
-            )
+            ))
             .await
             .unwrap();
 
@@ -1424,16 +1460,14 @@ mod tests {
             FakeAvsRegistryService::new(block_number, vec![test_operator_1.clone()]);
         let bls_agg_service =
             BlsAggregatorService::new(fake_avs_registry_service, get_test_logger());
-        bls_agg_service
-            .initialize_new_task(
-                task_index,
-                block_number as u32,
-                quorum_numbers,
-                quorum_threshold_percentages,
-                time_to_expiry,
-            )
-            .await
-            .unwrap();
+        let metadata = TaskMetadata::new(
+            task_index,
+            block_number,
+            quorum_numbers,
+            quorum_threshold_percentages,
+            time_to_expiry,
+        );
+        bls_agg_service.initialize_new_task(metadata).await.unwrap();
 
         let response = bls_agg_service
             .aggregated_response_receiver
@@ -1477,23 +1511,21 @@ mod tests {
         let bls_agg_service =
             BlsAggregatorService::new(fake_avs_registry_service, get_test_logger());
 
+        let metadata = TaskMetadata::new(
+            task_index,
+            block_number,
+            quorum_numbers,
+            quorum_threshold_percentages,
+            time_to_expiry,
+        );
+        bls_agg_service.initialize_new_task(metadata).await.unwrap();
         bls_agg_service
-            .initialize_new_task(
-                task_index,
-                block_number as u32,
-                quorum_numbers,
-                quorum_threshold_percentages,
-                time_to_expiry,
-            )
-            .await
-            .unwrap();
-        bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_sig_op_1.clone(),
                 test_operator_1.operator_id,
-            )
+            ))
             .await
             .unwrap();
 
@@ -1556,23 +1588,21 @@ mod tests {
         let bls_agg_service =
             BlsAggregatorService::new(fake_avs_registry_service, get_test_logger());
 
+        let metadata = TaskMetadata::new(
+            task_index,
+            block_number,
+            quorum_numbers,
+            quorum_threshold_percentages,
+            time_to_expiry,
+        );
+        bls_agg_service.initialize_new_task(metadata).await.unwrap();
         bls_agg_service
-            .initialize_new_task(
-                task_index,
-                block_number as u32,
-                quorum_numbers,
-                quorum_threshold_percentages,
-                time_to_expiry,
-            )
-            .await
-            .unwrap();
-        bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_sig_op_1,
                 test_operator_1.operator_id,
-            )
+            ))
             .await
             .unwrap();
 
@@ -1618,27 +1648,25 @@ mod tests {
         let bls_agg_service =
             BlsAggregatorService::new(fake_avs_registry_service, get_test_logger());
 
-        bls_agg_service
-            .initialize_new_task(
-                task_index,
-                block_number as u32,
-                quorum_numbers,
-                quorum_threshold_percentages,
-                time_to_expiry,
-            )
-            .await
-            .unwrap();
+        let metadata = TaskMetadata::new(
+            task_index,
+            block_number,
+            quorum_numbers,
+            quorum_threshold_percentages,
+            time_to_expiry,
+        );
+        bls_agg_service.initialize_new_task(metadata).await.unwrap();
 
         let bls_sig_op_1 = test_operator_1
             .bls_keypair
             .sign_message(task_response_digest.as_ref());
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_sig_op_1.clone(),
                 test_operator_1.operator_id,
-            )
+            ))
             .await
             .unwrap();
 
@@ -1646,12 +1674,12 @@ mod tests {
             .bls_keypair
             .sign_message(task_response_digest.as_ref());
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_sig_op_2.clone(),
                 test_operator_2.operator_id,
-            )
+            ))
             .await
             .unwrap();
 
@@ -1728,27 +1756,25 @@ mod tests {
         let bls_agg_service =
             BlsAggregatorService::new(fake_avs_registry_service, get_test_logger());
 
-        bls_agg_service
-            .initialize_new_task(
-                task_index,
-                block_number as u32,
-                quorum_numbers,
-                quorum_threshold_percentages,
-                time_to_expiry,
-            )
-            .await
-            .unwrap();
+        let metadata = TaskMetadata::new(
+            task_index,
+            block_number,
+            quorum_numbers,
+            quorum_threshold_percentages,
+            time_to_expiry,
+        );
+        bls_agg_service.initialize_new_task(metadata).await.unwrap();
 
         let bls_sig_op_1 = test_operator_1
             .bls_keypair
             .sign_message(task_response_digest.as_ref());
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_sig_op_1.clone(),
                 test_operator_1.operator_id,
-            )
+            ))
             .await
             .unwrap();
 
@@ -1756,12 +1782,12 @@ mod tests {
             .bls_keypair
             .sign_message(task_response_digest.as_ref());
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_sig_op_2.clone(),
                 test_operator_2.operator_id,
-            )
+            ))
             .await
             .unwrap();
         let signers_apk_g2 =
@@ -1839,27 +1865,25 @@ mod tests {
         let bls_agg_service =
             BlsAggregatorService::new(fake_avs_registry_service, get_test_logger());
 
-        bls_agg_service
-            .initialize_new_task(
-                task_index,
-                block_number as u32,
-                quorum_numbers,
-                quorum_threshold_percentages,
-                time_to_expiry,
-            )
-            .await
-            .unwrap();
+        let metadata = TaskMetadata::new(
+            task_index,
+            block_number,
+            quorum_numbers,
+            quorum_threshold_percentages,
+            time_to_expiry,
+        );
+        bls_agg_service.initialize_new_task(metadata).await.unwrap();
 
         let bls_sig_op_1 = test_operator_1
             .bls_keypair
             .sign_message(task_response_digest.as_ref());
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
-                bls_sig_op_1.clone(),
+                bls_sig_op_1,
                 test_operator_1.operator_id,
-            )
+            ))
             .await
             .unwrap();
 
@@ -1868,12 +1892,12 @@ mod tests {
             .sign_message(task_response_digest.as_ref());
 
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
-                bls_sig_op_2.clone(),
+                bls_sig_op_2,
                 test_operator_2.operator_id,
-            )
+            ))
             .await
             .unwrap();
 
@@ -1912,28 +1936,26 @@ mod tests {
         let bls_agg_service =
             BlsAggregatorService::new(fake_avs_registry_service, get_test_logger());
 
-        bls_agg_service
-            .initialize_new_task(
-                task_index,
-                block_number as u32,
-                quorum_numbers,
-                quorum_threshold_percentages,
-                time_to_expiry,
-            )
-            .await
-            .unwrap();
+        let metadata = TaskMetadata::new(
+            task_index,
+            block_number,
+            quorum_numbers,
+            quorum_threshold_percentages,
+            time_to_expiry,
+        );
+        bls_agg_service.initialize_new_task(metadata).await.unwrap();
 
         let bls_sig_op_1 = test_operator_1
             .bls_keypair
             .sign_message(task_response_digest.as_ref());
 
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
-                bls_sig_op_1.clone(),
+                bls_sig_op_1,
                 test_operator_1.operator_id,
-            )
+            ))
             .await
             .unwrap();
 
@@ -1978,27 +2000,25 @@ mod tests {
         let bls_agg_service =
             BlsAggregatorService::new(fake_avs_registry_service, get_test_logger());
 
-        bls_agg_service
-            .initialize_new_task(
-                task_index,
-                block_number as u32,
-                quorum_numbers,
-                quorum_threshold_percentages,
-                time_to_expiry,
-            )
-            .await
-            .unwrap();
+        let metadata = TaskMetadata::new(
+            task_index,
+            block_number,
+            quorum_numbers,
+            quorum_threshold_percentages,
+            time_to_expiry,
+        );
+        bls_agg_service.initialize_new_task(metadata).await.unwrap();
 
         let bls_sig_op_1 = test_operator_1
             .bls_keypair
             .sign_message(task_response_digest.as_ref());
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_sig_op_1,
                 test_operator_1.operator_id,
-            )
+            ))
             .await
             .unwrap();
 
@@ -2039,12 +2059,12 @@ mod tests {
             .sign_message(task_response_digest.as_ref());
 
         let result = bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
-                bls_sig_op_1.clone(),
+                bls_sig_op_1,
                 test_operator_1.operator_id,
-            )
+            ))
             .await;
 
         assert_eq!(Err(BlsAggregationServiceError::TaskNotFound), result);
@@ -2072,16 +2092,14 @@ mod tests {
         let bls_agg_service =
             BlsAggregatorService::new(fake_avs_registry_service, get_test_logger());
 
-        bls_agg_service
-            .initialize_new_task(
-                task_index,
-                block_number as u32,
-                quorum_numbers,
-                quorum_threshold_percentages,
-                time_to_expiry,
-            )
-            .await
-            .unwrap();
+        let metadata = TaskMetadata::new(
+            task_index,
+            block_number,
+            quorum_numbers,
+            quorum_threshold_percentages,
+            time_to_expiry,
+        );
+        bls_agg_service.initialize_new_task(metadata).await.unwrap();
 
         let task_response_1 = 123; // Initialize with appropriate data
         let task_response_1_digest = hash(task_response_1);
@@ -2089,12 +2107,12 @@ mod tests {
             .bls_keypair
             .sign_message(task_response_1_digest.as_ref());
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_1_digest,
-                bls_sig_op_1.clone(),
+                bls_sig_op_1,
                 test_operator_1.operator_id,
-            )
+            ))
             .await
             .unwrap();
 
@@ -2104,12 +2122,12 @@ mod tests {
             .bls_keypair
             .sign_message(task_response_2_digest.as_ref());
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_2_digest,
-                bls_sig_op_2.clone(),
+                bls_sig_op_2,
                 test_operator_1.operator_id,
-            )
+            ))
             .await
             .unwrap();
 
@@ -2149,24 +2167,22 @@ mod tests {
             FakeAvsRegistryService::new(block_number, vec![test_operator_1.clone()]);
         let bls_agg_service =
             BlsAggregatorService::new(fake_avs_registry_service, get_test_logger());
-        bls_agg_service
-            .initialize_new_task(
-                task_index,
-                block_number as u32,
-                quorum_numbers,
-                quorum_threshold_percentages,
-                time_to_expiry,
-            )
-            .await
-            .unwrap();
+        let metadata = TaskMetadata::new(
+            task_index,
+            block_number,
+            quorum_numbers,
+            quorum_threshold_percentages,
+            time_to_expiry,
+        );
+        bls_agg_service.initialize_new_task(metadata).await.unwrap();
 
         let result = bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 wrong_task_response_digest,
-                bls_signature,
+                bls_signature.clone(),
                 test_operator_1.operator_id,
-            )
+            ))
             .await;
 
         assert_eq!(
@@ -2225,29 +2241,27 @@ mod tests {
         let window_duration = Duration::from_secs(1);
 
         let start = Instant::now();
-        bls_agg_service
-            .initialize_new_task_with_window(
-                task_index,
-                block_number as u32,
-                quorum_numbers,
-                quorum_threshold_percentages,
-                time_to_expiry,
-                window_duration,
-            )
-            .await
-            .unwrap();
+        let metadata = TaskMetadata::new(
+            task_index,
+            block_number,
+            quorum_numbers,
+            quorum_threshold_percentages,
+            time_to_expiry,
+        )
+        .with_window_duration(window_duration);
+        bls_agg_service.initialize_new_task(metadata).await.unwrap();
 
         let task_response_1_digest = hash(task_response);
         let bls_sig_op_1 = test_operator_1
             .bls_keypair
             .sign_message(task_response_1_digest.as_ref());
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_1_digest,
                 bls_sig_op_1.clone(),
                 test_operator_1.operator_id,
-            )
+            ))
             .await
             .unwrap();
 
@@ -2256,12 +2270,12 @@ mod tests {
             .bls_keypair
             .sign_message(task_response_2_digest.as_ref());
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_2_digest,
                 bls_sig_op_2.clone(),
                 test_operator_2.operator_id,
-            )
+            ))
             .await
             .unwrap();
 
@@ -2272,12 +2286,12 @@ mod tests {
             .bls_keypair
             .sign_message(task_response_3_digest.as_ref());
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_3_digest,
                 bls_sig_op_3.clone(),
                 test_operator_3.operator_id,
-            )
+            ))
             .await
             .unwrap();
 
@@ -2351,29 +2365,27 @@ mod tests {
         let window_duration = Duration::from_secs(10);
 
         let start = Instant::now();
-        bls_agg_service
-            .initialize_new_task_with_window(
-                task_index,
-                block_number as u32,
-                quorum_numbers,
-                quorum_threshold_percentages,
-                time_to_expiry,
-                window_duration,
-            )
-            .await
-            .unwrap();
+        let metadata = TaskMetadata::new(
+            task_index,
+            block_number,
+            quorum_numbers,
+            quorum_threshold_percentages,
+            time_to_expiry,
+        )
+        .with_window_duration(window_duration);
+        bls_agg_service.initialize_new_task(metadata).await.unwrap();
 
         let task_response_1_digest = hash(task_response);
         let bls_sig_op_1 = test_operator_1
             .bls_keypair
             .sign_message(task_response_1_digest.as_ref());
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_1_digest,
                 bls_sig_op_1.clone(),
                 test_operator_1.operator_id,
-            )
+            ))
             .await
             .unwrap();
 
@@ -2384,12 +2396,12 @@ mod tests {
             .bls_keypair
             .sign_message(task_response_2_digest.as_ref());
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_2_digest,
                 bls_sig_op_2.clone(),
                 test_operator_2.operator_id,
-            )
+            ))
             .await
             .unwrap();
 
@@ -2457,29 +2469,27 @@ mod tests {
         let window_duration = Duration::ZERO;
 
         let start = Instant::now();
-        bls_agg_service
-            .initialize_new_task_with_window(
-                task_index,
-                block_number as u32,
-                quorum_numbers,
-                quorum_threshold_percentages,
-                time_to_expiry,
-                window_duration,
-            )
-            .await
-            .unwrap();
+        let metadata = TaskMetadata::new(
+            task_index,
+            block_number,
+            quorum_numbers,
+            quorum_threshold_percentages,
+            time_to_expiry,
+        )
+        .with_window_duration(window_duration);
+        bls_agg_service.initialize_new_task(metadata).await.unwrap();
 
         let task_response_1_digest = hash(task_response);
         let bls_sig_op_1 = test_operator_1
             .bls_keypair
             .sign_message(task_response_1_digest.as_ref());
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_1_digest,
                 bls_sig_op_1.clone(),
                 test_operator_1.operator_id,
-            )
+            ))
             .await
             .unwrap();
 
@@ -2491,12 +2501,12 @@ mod tests {
             .bls_keypair
             .sign_message(task_response_2_digest.as_ref());
         let process_signature_result = bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_2_digest,
-                bls_sig_op_2.clone(),
+                bls_sig_op_2,
                 test_operator_2.operator_id,
-            )
+            ))
             .await;
         assert_eq!(
             Err(BlsAggregationServiceError::ChannelError), // TODO: change this error to be more representative
@@ -2565,29 +2575,27 @@ mod tests {
         let window_duration = Duration::from_secs(1);
 
         let start = Instant::now();
-        bls_agg_service
-            .initialize_new_task_with_window(
-                task_index,
-                block_number as u32,
-                quorum_numbers,
-                quorum_threshold_percentages,
-                time_to_expiry,
-                window_duration,
-            )
-            .await
-            .unwrap();
+        let metadata = TaskMetadata::new(
+            task_index,
+            block_number,
+            quorum_numbers,
+            quorum_threshold_percentages,
+            time_to_expiry,
+        )
+        .with_window_duration(window_duration);
+        bls_agg_service.initialize_new_task(metadata).await.unwrap();
 
         let task_response_1_digest = hash(task_response);
         let bls_sig_op_1 = test_operator_1
             .bls_keypair
             .sign_message(task_response_1_digest.as_ref());
         bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_1_digest,
                 bls_sig_op_1.clone(),
                 test_operator_1.operator_id,
-            )
+            ))
             .await
             .unwrap();
 
@@ -2599,12 +2607,12 @@ mod tests {
             .bls_keypair
             .sign_message(task_response_2_digest.as_ref());
         let process_signature_result = bls_agg_service
-            .process_new_signature(
+            .process_new_signature(TaskSignature::new(
                 task_index,
                 task_response_2_digest,
-                bls_sig_op_2.clone(),
+                bls_sig_op_2,
                 test_operator_2.operator_id,
-            )
+            ))
             .await;
         assert_eq!(
             Err(BlsAggregationServiceError::ChannelError), // TODO: change this error to be more representative

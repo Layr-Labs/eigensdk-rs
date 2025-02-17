@@ -13,17 +13,17 @@ pub mod writer;
 #[cfg(test)]
 pub(crate) mod test_utils {
     use alloy::hex::FromHex;
+    use alloy::primitives::{address, keccak256, Address, Bytes, FixedBytes, U256, U8};
     use alloy::sol_types::SolValue;
-    use alloy_primitives::{address, keccak256, Address, Bytes, FixedBytes, U256, U8};
     use eigen_common::{get_provider, get_signer};
     use eigen_logging::get_test_logger;
     use eigen_testing_utils::anvil_constants::{
         get_allocation_manager_address, get_avs_directory_address, get_delegation_manager_address,
         get_erc20_mock_strategy, get_registry_coordinator_address, get_rewards_coordinator_address,
-        get_strategy_manager_address,
+        get_strategy_manager_address, FIRST_ADDRESS, FIRST_PRIVATE_KEY,
     };
     use eigen_utils::{
-        core::{
+        slashing::core::{
             delegationmanager::DelegationManager,
             irewardscoordinator::{
                 IRewardsCoordinator,
@@ -32,7 +32,7 @@ pub(crate) mod test_utils {
                 },
             },
         },
-        sdk::mockerc20::MockERC20,
+        slashing::sdk::mockerc20::MockERC20,
     };
     use std::str::FromStr;
 
@@ -41,10 +41,6 @@ pub(crate) mod test_utils {
     pub const OPERATOR_ADDRESS: Address = address!("70997970C51812dc3A010C7d01b50e0d17dc79C8");
     pub const OPERATOR_PRIVATE_KEY: &str =
         "0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d";
-
-    pub const ANVIL_FIRST_ADDRESS: Address = address!("f39Fd6e51aad88F6F4ce6aB8827279cffFb92266");
-    pub const ANVIL_FIRST_PRIVATE_KEY: &str =
-        "ac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
 
     pub async fn build_el_chain_reader(http_endpoint: String) -> ELChainReader {
         let delegation_manager_address =
@@ -80,11 +76,10 @@ pub(crate) mod test_utils {
         let registry_coordinator = get_registry_coordinator_address(http_endpoint.clone()).await;
 
         ELChainWriter::new(
-            delegation_manager,
             strategy_manager,
             rewards_coordinator,
-            permission_controller,
-            allocation_manager,
+            Some(permission_controller),
+            Some(allocation_manager),
             registry_coordinator,
             el_chain_reader,
             http_endpoint.clone(),
@@ -144,12 +139,12 @@ pub(crate) mod test_utils {
         (root, claim)
     }
 
-    /// The claim can be submitted from [`ANVIL_FIRST_PRIVATE_KEY`]
+    /// The claim can be submitted from [`FIRST_PRIVATE_KEY`]
     pub async fn new_claim(
         http_endpoint: &str,
         cumulative_earnings: U256,
     ) -> (FixedBytes<32>, RewardsMerkleClaim) {
-        let signer = get_signer(ANVIL_FIRST_PRIVATE_KEY, http_endpoint);
+        let signer = get_signer(FIRST_PRIVATE_KEY, http_endpoint);
         let rewards_coordinator_address =
             get_rewards_coordinator_address(http_endpoint.to_string()).await;
 
@@ -177,7 +172,7 @@ pub(crate) mod test_utils {
 
         // Generate token tree leaf
         // For the tree structure, see https://github.com/Layr-Labs/eigenlayer-contracts/blob/a888a1cd1479438dda4b138245a69177b125a973/docs/core/RewardsCoordinator.md#rewards-merkle-tree-structure
-        let earner_address = ANVIL_FIRST_ADDRESS;
+        let earner_address = FIRST_ADDRESS;
         let token_leaves = vec![TokenTreeMerkleLeaf {
             token: token_address,
             cumulativeEarnings: cumulative_earnings,

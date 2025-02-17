@@ -1,7 +1,7 @@
 use super::error::OperatorError;
 use crate::client::ClientAggregator;
+use alloy::providers::{Provider, ProviderBuilder};
 use alloy::{primitives::Address, providers::WsConnect, rpc::types::Filter, sol_types::SolEvent};
-use alloy_provider::{Provider, ProviderBuilder};
 use eigen_aggregator::rpc_server::SignedTaskResponse;
 use eigen_aggregator::traits::TaskResponse;
 use eigen_client_avsregistry::reader::AvsRegistryChainReader;

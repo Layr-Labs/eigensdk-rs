@@ -1,5 +1,5 @@
-use alloy_primitives::{Address, Bytes, FixedBytes, U256};
-use alloy_signer_local::PrivateKeySigner;
+use alloy::primitives::{Address, Bytes, FixedBytes, U256};
+use alloy::signers::local::PrivateKeySigner;
 use eigen_client_avsregistry::{reader::AvsRegistryChainReader, writer::AvsRegistryChainWriter};
 use eigen_client_elcontracts::{
     reader::ELChainReader,
@@ -22,7 +22,7 @@ use eigen_testing_utils::{
     },
     transaction::wait_transaction,
 };
-use eigen_utils::core::delegationmanager::DelegationManager;
+use eigen_utils::slashing::core::delegationmanager::DelegationManager;
 use std::{
     str::FromStr,
     time::{Duration, SystemTime, UNIX_EPOCH},
@@ -94,22 +94,21 @@ pub async fn register_operator(pvt_key: &str, bls_key: &str, http_endpoint: &str
 
     let el_chain_reader = ELChainReader::new(
         get_test_logger(),
-        Address::ZERO,
+        None,
         delegation_manager_address,
         rewards_coordinator_address,
         avs_directory_address,
-        permission_controller,
+        Some(permission_controller),
         http_endpoint.to_owned(),
     );
     let allocation_manager = get_allocation_manager_address(http_endpoint.to_string()).await;
     let registry_coordinator = get_registry_coordinator_address(http_endpoint.to_string()).await;
 
     let el_chain_writer = ELChainWriter::new(
-        delegation_manager_address,
         strategy_manager_address,
         rewards_coordinator_address,
-        permission_controller,
-        allocation_manager,
+        Some(permission_controller),
+        Some(allocation_manager),
         registry_coordinator,
         el_chain_reader,
         http_endpoint.to_string(),

@@ -1,4 +1,4 @@
-use alloy_primitives::keccak256;
+use alloy::primitives::keccak256;
 use eigen_crypto_bls::{error::BlsError, BlsKeyPair};
 
 /// Derives an operator ID from a private key

@@ -194,7 +194,7 @@ mod test {
         generate::{KeyGenerator, DEFAULT_KEY_FOLDER, PASSWORD_FILE, PRIVATE_KEY_HEX_FILE},
         operator_id::derive_operator_id,
     };
-    use alloy_primitives::Address;
+    use alloy::primitives::Address;
     use eigen_testing_utils::anvil::start_anvil_container;
     use eigen_testing_utils::anvil_constants::{
         get_registry_coordinator_address, get_service_manager_address,
@@ -283,7 +283,6 @@ mod test {
     #[tokio::test]
     async fn test_egn_addrs_with_service_manager_flag() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-
         let test_data = TestData::new(Input {
             service_manager_address: get_service_manager_address(http_endpoint.clone()).await,
             rpc_url: http_endpoint.clone(),
@@ -323,7 +322,6 @@ mod test {
     #[tokio::test]
     async fn test_egn_addrs_with_registry_coordinator_flag() {
         let (_container, http_endpoint, _ws_endpoint) = start_anvil_container().await;
-
         let registry_coordinator_address =
             get_registry_coordinator_address(http_endpoint.clone()).await;
 

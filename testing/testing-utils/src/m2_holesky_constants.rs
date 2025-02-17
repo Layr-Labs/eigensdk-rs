@@ -1,4 +1,4 @@
-use alloy_primitives::{address, Address};
+use alloy::primitives::{address, Address};
 
 /// Holesky rpc provider
 pub const HOLESKY_RPC_PROVIDER: &str = "https://ethereum-holesky-rpc.publicnode.com";

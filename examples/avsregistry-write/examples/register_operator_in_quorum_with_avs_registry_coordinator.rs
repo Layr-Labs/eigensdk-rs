@@ -1,23 +1,18 @@
 //! register operator in quorum with avs registry coordinator
-use alloy_primitives::U256;
-use alloy_primitives::{Bytes, FixedBytes};
-use alloy_signer_local::PrivateKeySigner;
+use alloy::primitives::U256;
+use alloy::primitives::{Bytes, FixedBytes};
+use alloy::signers::local::PrivateKeySigner;
 use eigen_client_avsregistry::writer::AvsRegistryChainWriter;
 use eigen_client_elcontracts::reader::ELChainReader;
 use eigen_client_elcontracts::writer::ELChainWriter;
-use eigen_common::get_provider;
 use eigen_crypto_bls::BlsKeyPair;
 use eigen_logging::get_test_logger;
 use eigen_testing_utils::anvil_constants::get_registry_coordinator_address;
-use eigen_testing_utils::{
-    anvil_constants::get_allocation_manager_address,
-    m2_holesky_constants::{
-        AVS_DIRECTORY_ADDRESS, DELEGATION_MANAGER_ADDRESS, OPERATOR_STATE_RETRIEVER,
-        REGISTRY_COORDINATOR, REWARDS_COORDINATOR, SLASHER_ADDRESS, STRATEGY_MANAGER_ADDRESS,
-    },
+use eigen_testing_utils::m2_holesky_constants::{
+    AVS_DIRECTORY_ADDRESS, DELEGATION_MANAGER_ADDRESS, OPERATOR_STATE_RETRIEVER,
+    REGISTRY_COORDINATOR, REWARDS_COORDINATOR, STRATEGY_MANAGER_ADDRESS,
 };
 use eigen_types::operator::Operator;
-use eigen_utils::core::delegationmanager::DelegationManager;
 use eyre::Result;
 use lazy_static::lazy_static;
 use std::str::FromStr;
@@ -65,36 +60,25 @@ async fn main() -> Result<()> {
     }
     let quorum_nums = Bytes::from([0x01]);
 
-    let delegation_manager_contract =
-        DelegationManager::new(DELEGATION_MANAGER_ADDRESS, get_provider(holesky_provider));
-    let permission_controller = delegation_manager_contract
-        .permissionController()
-        .call()
-        .await
-        .expect("DelegationManager contract failed when accessing PermissionController")
-        ._0;
-
     // A new ElChainReader instance
     let el_chain_reader = ELChainReader::new(
         get_test_logger().clone(),
-        SLASHER_ADDRESS,
+        None,
         DELEGATION_MANAGER_ADDRESS,
         REWARDS_COORDINATOR,
         AVS_DIRECTORY_ADDRESS,
-        permission_controller,
+        None,
         holesky_provider.to_string(),
     );
 
-    let allocation_manager = get_allocation_manager_address(holesky_provider.to_string()).await;
     let registry_coordinator = get_registry_coordinator_address(holesky_provider.to_string()).await;
 
     // A new ElChainWriter instance
     let el_writer = ELChainWriter::new(
-        DELEGATION_MANAGER_ADDRESS,
         STRATEGY_MANAGER_ADDRESS,
         REWARDS_COORDINATOR,
-        permission_controller,
-        allocation_manager,
+        None,
+        None,
         registry_coordinator,
         el_chain_reader,
         holesky_provider.to_string(),

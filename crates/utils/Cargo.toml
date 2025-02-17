@@ -7,6 +7,9 @@ repository.workspace = true
 description = "publicly exportable alloy bindings and utilities"
 license-file.workspace = true
 
+[lib]
+doctest = false
+
 [dependencies]
 alloy.workspace = true
 reqwest.workspace = true
