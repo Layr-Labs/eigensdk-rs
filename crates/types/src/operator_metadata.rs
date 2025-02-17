@@ -107,6 +107,7 @@ impl OperatorMetadata {
         if path.extension().map(|ext| ext != "png").unwrap_or(true) {
             return Err(LogoUrlInvalidImageExtension);
         }
+        // Check the server returns content with a "image/png" mime type
         let response = reqwest::get(&self.logo).await.unwrap();
         let body = response.bytes().await.unwrap();
 
@@ -270,11 +271,19 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn test_invalid_wrong_image_format() {
+    async fn test_invalid_logo_wrong_image_format() {
         let mut metadata = get_default_metadata();
         metadata.logo = "https://test.com/test.svg".to_string();
         let err = metadata.validate().await.unwrap_err();
         assert_eq!(err, OperatorMetadataError::LogoUrlInvalidImageExtension);
+    }
+
+    #[tokio::test]
+    async fn test_invalid_logo_invalid_mime_type() {
+        let mut metadata = get_default_metadata();
+        metadata.logo = "https://goerli-operator-metadata.s3.amazonaws.com/cat.png".to_string();
+        let err = metadata.validate().await.unwrap_err();
+        assert_eq!(err, OperatorMetadataError::LogoUrlInvalidMimeType);
     }
 
     #[tokio::test]
