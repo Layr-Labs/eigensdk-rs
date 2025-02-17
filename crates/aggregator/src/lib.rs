@@ -228,13 +228,7 @@ impl<TP: TaskProcessor + Send + 'static> Aggregator<TP> {
                 .lock()
                 .await
                 .bls_aggregation_service
-                .initialize_new_task(
-                    info.task_index,
-                    info.task_created_block,
-                    info.quorum_nums,
-                    info.quorum_threshold_percentages,
-                    info.time_to_expiry,
-                )
+                .initialize_new_task(info)
                 .await?;
         }
 
