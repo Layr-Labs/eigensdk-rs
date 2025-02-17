@@ -16,6 +16,7 @@ Those changes in added, changed or breaking changes, should include usage exampl
 ### Security 🔒
 
 ### Added 🎉
+* Added version explicitly in crates in [#322](https://github.com/Layr-Labs/eigensdk-rs/pull/322). 
 
 ### Breaking Changes 🛠
 
