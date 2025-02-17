@@ -111,18 +111,18 @@ impl OperatorMetadata {
         let response = reqwest::get(&self.logo).await.unwrap();
         let body = response.bytes().await.unwrap();
 
-        if body.sniff_mime_type().map_or(true, |m| m != "image/png") {
+        if body.sniff_mime_type() != Some("image/png") {
             return Err(LogoUrlInvalidMimeType);
         }
 
         // website, if non-empty, must have less than 1024 characters,
         // not point to localhost or 127.0.0.1, and must be a valid URL that matches the regex
-        if !self.website.as_ref().is_none_or(|s| s.is_empty()) {
+        if self.website.as_ref().is_some_and(|s| !s.is_empty()) {
             let website = self.website.as_ref().unwrap();
             if website.len() > 1024 {
                 return Err(WebsiteUrlTooLong);
             }
-            let url = Url::parse(&website).ok().ok_or(WebsiteUrlInvalid)?;
+            let url = Url::parse(website).ok().ok_or(WebsiteUrlInvalid)?;
 
             let host = url.host_str().ok_or(WebsiteUrlInvalid)?;
             if url.scheme().is_empty() || host.is_empty() {
@@ -135,7 +135,7 @@ impl OperatorMetadata {
             let website_regex =
                 regex::Regex::new(r#"^(https?)://[^\s/$.?#].[^\s]*$"#).expect("regex is valid");
 
-            if !website_regex.is_match(&website) {
+            if !website_regex.is_match(website) {
                 return Err(WebsiteUrlInvalid);
             }
         }
@@ -143,12 +143,12 @@ impl OperatorMetadata {
         // twitter, if non-empty, must have less than 1024 characters,
         // not point to localhost or 127.0.0.1, and must be a valid URL
         // Also matches: `^(?:https?://)?(?:www\.)?(?:twitter\.com/\w+|x\.com/\w+)(?:/?|$)`
-        if !self.twitter.as_ref().is_none_or(|s| s.is_empty()) {
+        if self.twitter.as_ref().is_some_and(|s| !s.is_empty()) {
             let twitter = self.twitter.as_ref().unwrap();
             if twitter.len() > 1024 {
                 return Err(TwitterUrlTooLong);
             }
-            let url = Url::parse(&twitter).ok().ok_or(TwitterUrlInvalid)?;
+            let url = Url::parse(twitter).ok().ok_or(TwitterUrlInvalid)?;
 
             let host = url.host_str().ok_or(TwitterUrlInvalid)?;
             if url.scheme().is_empty() || host.is_empty() {
@@ -163,7 +163,7 @@ impl OperatorMetadata {
             )
             .expect("regex is valid");
 
-            if !twitter_regex.is_match(&twitter) {
+            if !twitter_regex.is_match(twitter) {
                 return Err(TwitterUrlInvalid);
             }
         }
