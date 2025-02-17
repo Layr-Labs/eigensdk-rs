@@ -62,7 +62,7 @@ impl AvsRegistryService for FakeAvsRegistryService {
     ) -> Result<HashMap<FixedBytes<32>, OperatorAvsState>, AvsRegistryError> {
         let mut operators_state = self
             .operators
-            .get(&(block_number as u64))
+            .get(&block_number)
             .ok_or(AvsRegistryError::GetOperatorState)
             .cloned()?;
 
@@ -89,7 +89,7 @@ impl AvsRegistryService for FakeAvsRegistryService {
     ) -> Result<HashMap<u8, QuorumAvsState>, AvsRegistryError> {
         let operator_avs_state = self
             .operators
-            .get(&(block_num as u64))
+            .get(&block_num)
             .ok_or(AvsRegistryError::GetOperatorState)?;
         let mut quorum_avs_state: HashMap<QuorumNum, QuorumAvsState> = HashMap::new();
         for quorum_num in quorum_nums {
