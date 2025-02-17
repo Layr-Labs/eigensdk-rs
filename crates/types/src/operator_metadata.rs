@@ -1,7 +1,6 @@
-use std::path::{Path, PathBuf};
-
-use alloy::transports::http::reqwest::{self, Url};
+use alloy::transports::http::reqwest::Url;
 use serde::{Deserialize, Serialize};
+use std::path::PathBuf;
 use thiserror::Error;
 
 /// OperatorMetadata is the metadata operator uploads while registering
@@ -102,7 +101,7 @@ impl OperatorMetadata {
             return Err(LogoUrlInvalid);
         };
         let path = PathBuf::from(url.path());
-        if path.extension().map(|ext| ext == "png").unwrap_or(false) {
+        if path.extension().map(|ext| ext != "png").unwrap_or(true) {
             return Err(LogoUrlInvalidImageExtension);
         }
         // TODO: check if the server returns the content with a "image/png" mime type
@@ -161,5 +160,56 @@ impl OperatorMetadata {
         }
 
         Ok(())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::operator::OperatorMetadata;
+
+    fn get_default_metadata() -> OperatorMetadata {
+        OperatorMetadata {
+            name: "Ethereum Utopia".to_string(),
+            description: "Rust operator is good operator".to_string(),
+            logo: "https://goerli-operator-metadata.s3.amazonaws.com/eigenlayer.png".to_string(),
+            website: Some("https://test.com".to_string()),
+            twitter: Some("https://twitter.com/test".to_string()),
+        }
+    }
+
+    #[test]
+    fn test_valid_metadata() {
+        let metadata = OperatorMetadata {
+            name: "Ethereum Utopia".to_string(),
+            description: "Rust operator is good operator".to_string(),
+            logo: "https://goerli-operator-metadata.s3.amazonaws.com/eigenlayer.png".to_string(),
+            website: Some("https://test.com".to_string()),
+            twitter: Some("https://twitter.com/test".to_string()),
+        };
+        metadata.validate().unwrap();
+    }
+
+    #[test]
+    fn test_twitter_url_with_ending_slash() {
+        let metadata = OperatorMetadata {
+            name: "Ethereum Utopia".to_string(),
+            description: "Rust operator is good operator".to_string(),
+            logo: "https://goerli-operator-metadata.s3.amazonaws.com/eigenlayer.png".to_string(),
+            website: Some("https://test.com".to_string()),
+            twitter: Some("https://twitter.com/test/".to_string()),
+        };
+        metadata.validate().unwrap();
+    }
+
+    #[test]
+    fn test_twitter_x_url() {
+        let metadata = OperatorMetadata {
+            name: "Ethereum Utopia".to_string(),
+            description: "Rust operator is good operator".to_string(),
+            logo: "https://goerli-operator-metadata.s3.amazonaws.com/eigenlayer.png".to_string(),
+            website: Some("https://test.com".to_string()),
+            twitter: Some("https://x.com/test".to_string()),
+        };
+        metadata.validate().unwrap();
     }
 }
