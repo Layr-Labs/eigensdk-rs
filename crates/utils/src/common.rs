@@ -1,5 +1,6 @@
 use regex::Regex;
 use reqwest::Error;
+use std::sync::OnceLock;
 
 pub async fn get_url_content(url: &str) -> Result<String, Error> {
     let response = reqwest::get(url).await?;
@@ -7,8 +8,10 @@ pub async fn get_url_content(url: &str) -> Result<String, Error> {
 }
 
 pub fn is_valid_ethereum_address(address: &str) -> bool {
-    let regex = Regex::new(r"(?i)^0x[0-9a-f]{40}$").unwrap();
-    regex.is_match(address)
+    static REGEX: OnceLock<Regex> = OnceLock::new();
+    REGEX
+        .get_or_init(|| Regex::new(r"(?i)^0x[0-9a-f]{40}$").expect("Fail to compile regex"))
+        .is_match(address)
 }
 
 #[cfg(test)]
