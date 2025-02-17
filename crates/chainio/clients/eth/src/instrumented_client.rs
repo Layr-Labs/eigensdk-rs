@@ -1013,7 +1013,7 @@ mod tests {
         let private_key_hex =
             "6b35c6d8110c888de06575b45181bf3f9e6c73451fa5cde812c95a6b31e66ddf".to_string();
         let address = "009440d62dc85c73dbf889b7ad1f4da8b231d2ef";
-        set_account_balance(&container, address, "http://localhost:8546").await;
+        set_account_balance(&container, address).await;
 
         // build the transaction
         let to = address!("a0Ee7A142d267C1f36714E4a8F75612F20a79720");

@@ -37,7 +37,7 @@ async fn main() {
     let operator_address = "009440d62dc85c73dbf889b7ad1f4da8b231d2ef";
     let operator_bls_key =
         "12248929636257230549931416853095037629726205319386239410403476017439825112537";
-    set_account_balance(&container, operator_address, "http://localhost:8546").await;
+    set_account_balance(&container, operator_address).await;
 
     let avs_registry_chain_reader = AvsRegistryChainReader::new(
         get_test_logger().clone(),
