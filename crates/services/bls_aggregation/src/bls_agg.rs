@@ -292,7 +292,21 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                             "eigen-services-blsaggregation.bls_agg.process_new_signature",
                         );
                         // return the signature verification result
-                        rx.recv().await;
+                        // dbg!(rx.recv().await);
+                        let result = rx.recv().await;
+                        match result {
+                            Some(res) => {
+                                if let Err(e) = res {
+                                    let _ = aggregate_sender.send(Err(
+                                        BlsAggregationServiceError::SignatureVerificationError(e),
+                                    ));
+                                }
+                            }
+                            None => {
+                                let _ = aggregate_sender
+                                    .send(Err(BlsAggregationServiceError::ChannelError));
+                            }
+                        }
                     } else {
                         dbg!("Task not found");
                         self.logger.error(
@@ -885,7 +899,11 @@ mod tests {
     use eigen_logging::get_test_logger;
     use eigen_services_avsregistry::fake_avs_registry_service::FakeAvsRegistryService;
     use eigen_types::operator::{QuorumNum, QuorumThresholdPercentages};
-    use eigen_types::{avs::TaskIndex, test::TestOperator};
+    use eigen_types::{
+        avs::SignatureVerificationError::{DuplicateSignature, IncorrectSignature},
+        avs::TaskIndex,
+        test::TestOperator,
+    };
     use sha2::{Digest, Sha256};
     use std::collections::HashMap;
     use std::time::Duration;
@@ -1045,14 +1063,13 @@ mod tests {
             test_operator_1.operator_id,
         ));
 
-        // Right now we are not including the duplicate signature in the aggregation
-        // let agg_err = agg_response.aggregate_receiver.recv().await.unwrap();
-        // assert_eq!(
-        //     agg_err,
-        //     Err(BlsAggregationServiceError::SignatureVerificationError(
-        //         DuplicateSignature
-        //     ))
-        // );
+        let agg_err = agg_response.aggregate_receiver.recv().await.unwrap();
+        assert_eq!(
+            agg_err,
+            Err(BlsAggregationServiceError::SignatureVerificationError(
+                DuplicateSignature
+            ))
+        );
 
         let bls_signature_2 = test_operator_2
             .bls_keypair
