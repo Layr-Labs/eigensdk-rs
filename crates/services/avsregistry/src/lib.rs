@@ -9,7 +9,7 @@ use std::collections::HashMap;
 use alloy::primitives::FixedBytes;
 use async_trait::async_trait;
 use eigen_client_avsregistry::error::AvsRegistryError;
-use eigen_types::operator::{OperatorAvsState, QuorumAvsState};
+use eigen_types::avs_state::{OperatorAvsState, QuorumAvsState};
 use eigen_utils::slashing::middleware::operatorstateretriever::OperatorStateRetriever::CheckSignaturesIndices;
 
 pub mod chaincaller;

@@ -7,9 +7,10 @@ use eigen_crypto_bls::{BlsG1Point, BlsG2Point, Signature};
 use eigen_crypto_bn254::utils::verify_message;
 use eigen_logging::logger::SharedLogger;
 use eigen_services_avsregistry::AvsRegistryService;
+use eigen_types::avs_state::OperatorAvsState;
 use eigen_types::{
     avs::{SignatureVerificationError, SignedTaskResponseDigest, TaskIndex, TaskResponseDigest},
-    operator::{OperatorAvsState, QuorumThresholdPercentage, QuorumThresholdPercentages},
+    operator::{QuorumThresholdPercentage, QuorumThresholdPercentages},
 };
 use parking_lot::RwLock;
 use std::collections::HashMap;

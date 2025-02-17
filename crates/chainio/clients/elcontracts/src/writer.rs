@@ -99,7 +99,7 @@ impl ELChainWriter {
             let contract_call = contract_delegation_manager.registerAsOperator(
                 operator.address,
                 operator.allocation_delay,
-                operator.metadata_url.unwrap_or_default(),
+                operator.metadata_url,
             );
             contract_call.gas(300000)
         };
@@ -162,7 +162,7 @@ impl ELChainWriter {
         info!(tx_hash = %modify_operator_tx.tx_hash(), operator = %operator.address, "updated operator details tx");
 
         let contract_call_update_metadata_uri = contract_delegation_manager
-            .updateOperatorMetadataURI(operator.address, operator.metadata_url.unwrap_or_default());
+            .updateOperatorMetadataURI(operator.address, operator.metadata_url);
 
         let metadata_tx = contract_call_update_metadata_uri.send().await?;
 
