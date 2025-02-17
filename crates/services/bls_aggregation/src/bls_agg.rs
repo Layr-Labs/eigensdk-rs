@@ -462,6 +462,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                     // Task expired. If window is open, send aggregated reponse. Else, send error
 
                 if open_window {
+                    dbg!("Task expired in window");
                     logger.debug(
                         &format!(
                             "task_expired_timer while in the waiting window for task index: {}",
@@ -473,6 +474,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                         .send(Ok(current_aggregated_response.unwrap()))
                         .map_err(|_| BlsAggregationServiceError::ChannelError)?;
                 } else {
+                    dbg!("Task expired NOT in window");
                     logger.debug(
                         &format!(
                             "task_expired_timer NOT in the waiting window for task index: {}",
@@ -626,6 +628,28 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                         ),
                         "eigen-services-blsaggregation.bls_agg.loop_task_aggregator",
                     );
+
+                    // Review if it's correct. Fix for test_if_window_duration_is_zero_no_signatures_are_aggregated_after_reaching_quorum
+                    if window_duration == Duration::ZERO && !open_window {
+                        current_aggregated_response = Some(
+                            BlsAggregatorService::build_aggregated_response(
+                                task_index,
+                                task_created_block,
+                                digest.clone(), // Puede ser el digest que usaste para la agregación
+                                &operator_state_avs,
+                                digest_aggregated_operators.clone(),
+                                &avs_registry_service,
+                                &quorum_apks_g1,
+                                &quorum_nums,
+                                logger.clone(),
+                            ).await?
+                        );
+                        aggregated_response_sender
+                            .send(Ok(current_aggregated_response.unwrap()))
+                            .map_err(|_| BlsAggregationServiceError::ChannelError)?;
+                        return Ok(());
+                    }
+
 
                     if !open_window {
                         open_window = true;
@@ -2366,6 +2390,7 @@ mod tests {
             bls_sig_op_2,
             test_operator_2.operator_id,
         ));
+
         // This should return an error because the window duration is zero
         // assert_eq!(
         //     Err(BlsAggregationServiceError::ChannelError), // TODO: change this error to be more representative
