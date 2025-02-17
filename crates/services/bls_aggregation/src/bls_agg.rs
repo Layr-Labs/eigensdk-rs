@@ -11,14 +11,9 @@ use eigen_types::{
     avs::{SignatureVerificationError, SignedTaskResponseDigest, TaskIndex, TaskResponseDigest},
     operator::{OperatorAvsState, QuorumThresholdPercentage, QuorumThresholdPercentages},
 };
-use parking_lot::RwLock;
 use std::collections::HashMap;
-use std::sync::Arc;
 use tokio::{
-    sync::{
-        mpsc::{self, UnboundedReceiver, UnboundedSender},
-        Mutex,
-    },
+    sync::mpsc::{self, UnboundedReceiver, UnboundedSender},
     time::Duration,
 };
 
@@ -273,59 +268,6 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
             };
         }
     }
-
-    ///   Creates a new task meant to process new signed task responses for a task tokio channel.
-    ///
-    /// # Arguments
-    ///
-    /// * `metadata` - task metadata
-    ///
-    /// # Error
-    ///
-    /// Returns error if the task index already exists
-    // pub async fn initialize_new_task(
-    //     &self,
-    //     metadata: TaskMetadata,
-    // ) -> Result<(), BlsAggregationServiceError> {
-    //     let task_index = metadata.task_index;
-    //     let signatures_rx = {
-    //         let mut task_channel = self.signed_task_response.write();
-
-    //         if task_channel.contains_key(&task_index) {
-    //             return Err(BlsAggregationServiceError::DuplicateTaskIndex);
-    //         }
-
-    //         let (signatures_tx, signatures_rx) = mpsc::unbounded_channel();
-    //         task_channel.insert(task_index, signatures_tx);
-    //         signatures_rx
-    //     };
-
-    //     let avs_registry_service = self.avs_registry_service.clone();
-    //     let aggregated_response_sender = self.aggregated_response_sender.clone();
-    //     self.logger.debug(
-    //         &format!(
-    //             "Create task to process new signed task responses for task index: {}",
-    //             task_index
-    //         ),
-    //         "eigen-services-blsaggregation.bls_agg.initialize_new_task_with_window",
-    //     );
-    //     let logger = self.logger.clone();
-    //     tokio::spawn(async move {
-    //         // Process each signed response here
-    //         let _ = BlsAggregatorService::<A>::single_task_aggregator(
-    //             avs_registry_service,
-    //             metadata,
-    //             aggregated_response_sender,
-    //             signatures_rx,
-    //             logger,
-    //         )
-    //         .await
-    //         .inspect_err(|err| {
-    //             println!("Error: {:?}", err);
-    //         });
-    //     });
-    //     Ok(())
-    // }
 
     /// Processes signatures received from the channel and sends
     /// the signed task response to the task channel.
@@ -1043,19 +985,19 @@ mod tests {
     //     let response = response.aggregate_receiver.recv().await.unwrap().unwrap();
     //     assert_eq!(expected_agg_service_response, response);
 
-        // let response = bls_agg_service
-        //     .aggregated_response_receiver
-        //     .lock()
-        //     .await
-        //     .recv()
-        //     .await;
+    // let response = bls_agg_service
+    //     .aggregated_response_receiver
+    //     .lock()
+    //     .await
+    //     .recv()
+    //     .await;
 
-        // assert_eq!(
-        //     expected_agg_service_response,
-        //     response.clone().unwrap().unwrap()
-        // );
-        // assert_eq!(task_index, response.unwrap().unwrap().task_index);
-    }
+    // assert_eq!(
+    //     expected_agg_service_response,
+    //     response.clone().unwrap().unwrap()
+    // );
+    // assert_eq!(task_index, response.unwrap().unwrap().task_index);
+    // }
 
     // #[tokio::test]
     // async fn test_1_quorum_2_operator_2_duplicated_signatures() {
