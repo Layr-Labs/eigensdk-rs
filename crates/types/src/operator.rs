@@ -4,6 +4,7 @@ use eigen_utils::common::get_url_content;
 use ethers::utils::keccak256;
 use num_bigint::BigUint;
 use thiserror::Error;
+use url::Url;
 
 pub use crate::operator_metadata::OperatorMetadata;
 use crate::operator_metadata::OperatorMetadataError;
@@ -13,6 +14,8 @@ pub use crate::operator_pubkeys::OperatorPubKeys;
 pub enum OperatorTypesError {
     #[error("Operator id from pub key conversion failed")]
     OperatorIdFromPubKey(#[from] BlsError),
+    #[error("Invalid Metadata URL")]
+    InvalidMetadataUrl,
     #[error("Metadata Not Found")]
     MetadataNotFound,
     #[error("Metadata Parse Error")]
@@ -94,13 +97,9 @@ impl Operator {
     }
 
     pub async fn validate(&self) -> Result<(), OperatorTypesError> {
-        // Check for valid URL
-        /*
-        err := utils.CheckIfUrlIsValid(o.MetadataUrl)
-        if err != nil {
-            return utils.WrapError(ErrInvalidMetadataUrl, err)
-        }
-        */
+        // Check for valid URL in metadata_url
+        let _ =
+            Url::parse(&self.metadata_url).map_err(|_| OperatorTypesError::InvalidMetadataUrl)?;
 
         // Check if metadata is valid
         let body = get_url_content(&self.metadata_url)

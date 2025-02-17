@@ -20,6 +20,7 @@ serde_json.workspace = true
 serde.workspace = true
 thiserror.workspace = true
 tokio.workspace = true
+url.workspace = true
 
 [dev-dependencies]
 ark-bn254.workspace = true
