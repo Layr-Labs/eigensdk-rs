@@ -10,6 +10,7 @@ license-file.workspace = true
 
 [dependencies]
 alloy.workspace = true
+ark-ff.workspace = true
 eigen-crypto-bls.workspace = true
 eigen-utils.workspace = true
 ethers.workspace = true

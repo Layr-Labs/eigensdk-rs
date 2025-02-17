@@ -1,6 +1,10 @@
 use alloy::primitives::{aliases::U192, Address, FixedBytes, U256};
+use ark_ff::PrimeField;
 use eigen_crypto_bls::{convert_to_g1_point, error::BlsError, BlsG1Point, BlsG2Point, BlsKeyPair};
-use eigen_utils::common::get_url_content;
+use eigen_utils::{
+    common::get_url_content,
+    slashing::middleware::blsapkregistry::BN254::{G1Point, G2Point},
+};
 use ethers::{types::U64, utils::keccak256};
 use num_bigint::BigUint;
 use serde::{Deserialize, Serialize};
@@ -65,27 +69,34 @@ impl From<BlsKeyPair> for OperatorPubKeys {
 }
 
 impl OperatorPubKeys {
-    //OperatorPubkeys.ToContractPubkeys
-    pub fn to_contract_public_keys(&self) -> (BlsG1Point, BlsG2Point) {
-        (self.g1_pub_key.clone(), self.g2_pub_key.clone())
-        // from Go code:
-        /*
-        func (op OperatorPubkeys) ToContractPubkeys() (apkreg.BN254G1Point, apkreg.BN254G2Point) {
-            return apkreg.BN254G1Point{
-                    X: op.G1Pubkey.X.BigInt(new(big.Int)),
-                    Y: op.G1Pubkey.Y.BigInt(new(big.Int)),
-                }, apkreg.BN254G2Point{
-                    X: [2]*big.Int{op.G2Pubkey.X.A0.BigInt(new(big.Int)), op.G2Pubkey.X.A1.BigInt(new(big.Int))},
-                    Y: [2]*big.Int{op.G2Pubkey.Y.A0.BigInt(new(big.Int)), op.G2Pubkey.Y.A1.BigInt(new(big.Int))},
-                }
-        }
-        */
+    pub fn to_contract_public_keys(&self) -> (G1Point, G2Point) {
+        let x = self.g1_pub_key.g1().x;
+        let y = self.g1_pub_key.g1().y;
+        let g1 = G1Point {
+            X: U256::from_limbs(x.into_bigint().0),
+            Y: U256::from_limbs(y.into_bigint().0),
+        };
+
+        let x2 = self.g2_pub_key.g2().x;
+        let y2 = self.g2_pub_key.g2().y;
+        let g2 = G2Point {
+            X: [
+                U256::from_limbs(x2.c0.into_bigint().0),
+                U256::from_limbs(x2.c1.into_bigint().0),
+            ],
+            Y: [
+                U256::from_limbs(y2.c0.into_bigint().0),
+                U256::from_limbs(y2.c1.into_bigint().0),
+            ],
+        };
+        (g1, g2)
     }
 }
 
 #[derive(Deserialize, Serialize)]
 pub struct OperatorMetadata {
-    quorumBitmap: U256,
+    #[serde(rename = "quorumBitmap")]
+    quorum_bitmap: U256,
     //    address operator;
     //    bytes32 operatorId;
     //    BN254.G1Point pubkey;
