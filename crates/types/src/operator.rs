@@ -53,10 +53,15 @@ pub fn bitmap_to_quorum_ids_from_u192(quorum_bitmaps: U192) -> Vec<u8> {
     quorum_ids
 }
 
+/// Operator represents EigenLayer's view of an operator
 pub struct Operator {
+    /// Operator Address
     pub address: Address,
-    pub staker_opt_out_window_blocks: u32,
+
+    /// https://github.com/Layr-Labs/eigenlayer-contracts/blob/delegation-redesign/src/contracts/interfaces/IDelegationManager.sol#L18
     pub delegation_approver_address: Address,
+
+    /// MetadataUrl URL where operator metadata is stored
     pub metadata_url: String,
 
     /// `allocation_delay` is the delay in seconds where an operator is allowed to change allocation

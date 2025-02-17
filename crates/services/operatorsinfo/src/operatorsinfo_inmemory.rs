@@ -764,7 +764,6 @@ mod tests {
         let operator_details = Operator {
             address: signer.address(),
             delegation_approver_address: signer.address(),
-            staker_opt_out_window_blocks: 3,
             metadata_url: "eigensdk-rs".to_string(),
             allocation_delay: 0,
         };
