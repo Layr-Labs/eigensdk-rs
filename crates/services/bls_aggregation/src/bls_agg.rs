@@ -17,7 +17,7 @@ use std::sync::Arc;
 use tokio::{
     sync::{
         mpsc::{self, UnboundedReceiver, UnboundedSender},
-        Mutex,
+        oneshot, Mutex,
     },
     time::Duration,
 };
@@ -132,6 +132,47 @@ impl TaskSignature {
             operator_id,
         }
     }
+}
+
+// Messages to be sent to the BLS Aggregator Service
+pub enum AggregationMessage {
+    InitializeTask(TaskMetadata),
+    ProcessSignature(TaskSignature),
+}
+
+// Handler to interact with the BLS Aggregator Service
+#[derive(Debug, Clone)]
+pub struct ServiceHandler {
+    msg_sender: UnboundedSender<AggregationMessage>,
+}
+
+impl ServiceHandler {
+    pub fn initialize_task(&self, metadata: TaskMetadata) {
+        let _ = self
+            .msg_sender
+            .send(AggregationMessage::InitializeTask(metadata));
+    }
+
+    pub async fn process_signature(&self, signature: TaskSignature) {
+        let _ = self
+            .msg_sender
+            .send(AggregationMessage::ProcessSignature(signature));
+    }
+}
+
+pub struct AggregateReceiver {
+    pub aggregate_receiver:
+        UnboundedReceiver<Result<BlsAggregationServiceResponse, BlsAggregationServiceError>>,
+}
+
+/// The BLS Aggregator Service main struct
+#[derive(Debug)]
+pub struct BlsAggregatorService2<A: AvsRegistryService>
+where
+    A: Clone,
+{
+    logger: SharedLogger,
+    avs_registry_service: A,
 }
 
 /// The BLS Aggregator Service main struct
