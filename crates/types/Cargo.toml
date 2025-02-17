@@ -14,13 +14,15 @@ ark-ff.workspace = true
 eigen-crypto-bls.workspace = true
 eigen-utils.workspace = true
 ethers.workspace = true
-num-bigint = "0.4.4"
-regex = "1"
 serde_json.workspace = true
 serde.workspace = true
 thiserror.workspace = true
 tokio.workspace = true
 url.workspace = true
+
+num-bigint = "0.4.4"
+regex = "1"
+mime-sniffer = "0.1"
 
 [dev-dependencies]
 ark-bn254.workspace = true

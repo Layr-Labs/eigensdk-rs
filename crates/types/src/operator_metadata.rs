@@ -1,4 +1,5 @@
-use alloy::transports::http::reqwest::Url;
+use alloy::transports::http::reqwest::{self, Url};
+use mime_sniffer::MimeTypeSniffer;
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 use thiserror::Error;
@@ -46,6 +47,8 @@ pub enum OperatorMetadataError {
     LogoUrlInvalid,
     #[error("Logo url has an invalid image extension")]
     LogoUrlInvalidImageExtension,
+    #[error("Logo has an unsupported mime type")]
+    LogoUrlInvalidMimeType,
 
     #[error("Website url is invalid")]
     WebsiteUrlInvalid,
@@ -104,7 +107,12 @@ impl OperatorMetadata {
         if path.extension().map(|ext| ext != "png").unwrap_or(true) {
             return Err(LogoUrlInvalidImageExtension);
         }
-        // TODO: check if the server returns the content with a "image/png" mime type
+        let response = reqwest::get(&self.logo).await.unwrap();
+        let body = response.bytes().await.unwrap();
+
+        if body.sniff_mime_type().map_or(true, |m| m != "image/png") {
+            return Err(LogoUrlInvalidMimeType);
+        }
 
         // website, if non-empty, must have less than 1024 characters,
         // not point to localhost or 127.0.0.1, and must be a valid URL that matches the regex
