@@ -2793,6 +2793,7 @@ name = "eigen-types"
 version = "0.3.0"
 dependencies = [
  "alloy",
+ "ark-bn254 0.5.0",
  "ark-ff 0.5.0",
  "eigen-crypto-bls",
  "eigen-utils",
