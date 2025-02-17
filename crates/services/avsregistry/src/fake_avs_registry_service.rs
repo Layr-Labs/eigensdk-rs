@@ -57,7 +57,7 @@ impl FakeAvsRegistryService {
 impl AvsRegistryService for FakeAvsRegistryService {
     async fn get_operators_avs_state_at_block(
         &self,
-        block_number: u32,
+        block_number: u64,
         quorum_nums: &[u8],
     ) -> Result<HashMap<FixedBytes<32>, OperatorAvsState>, AvsRegistryError> {
         let mut operators_state = self
@@ -85,7 +85,7 @@ impl AvsRegistryService for FakeAvsRegistryService {
     async fn get_quorums_avs_state_at_block(
         &self,
         quorum_nums: &[u8],
-        block_num: u32,
+        block_num: u64,
     ) -> Result<HashMap<u8, QuorumAvsState>, AvsRegistryError> {
         let operator_avs_state = self
             .operators
@@ -126,7 +126,7 @@ impl AvsRegistryService for FakeAvsRegistryService {
 
     async fn get_check_signatures_indices(
         &self,
-        _reference_block_number: u32,
+        _reference_block_number: u64,
         _quorum_numbers: Vec<u8>,
         _non_signer_operator_ids: Vec<FixedBytes<32>>,
     ) -> Result<CheckSignaturesIndices, AvsRegistryError> {

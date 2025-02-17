@@ -29,7 +29,7 @@ pub trait AvsRegistryService {
     /// A hashmap containing the operator ID and the operator AVS state
     async fn get_operators_avs_state_at_block(
         &self,
-        block_num: u32,
+        block_num: u64,
         quorum_nums: &[u8],
     ) -> Result<HashMap<FixedBytes<32>, OperatorAvsState>, AvsRegistryError>;
 
@@ -46,7 +46,7 @@ pub trait AvsRegistryService {
     async fn get_quorums_avs_state_at_block(
         &self,
         quorum_nums: &[u8],
-        block_num: u32,
+        block_num: u64,
     ) -> Result<HashMap<u8, QuorumAvsState>, AvsRegistryError>;
 
     /// Get the signatures indices of quorum members for a specific block and checks
@@ -64,7 +64,7 @@ pub trait AvsRegistryService {
     /// and the ones that didn't
     async fn get_check_signatures_indices(
         &self,
-        reference_block_number: u32,
+        reference_block_number: u64,
         quorum_numbers: Vec<u8>,
         non_signer_operator_ids: Vec<FixedBytes<32>>,
     ) -> Result<CheckSignaturesIndices, AvsRegistryError>;
