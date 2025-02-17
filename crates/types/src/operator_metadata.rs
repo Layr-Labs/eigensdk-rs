@@ -179,37 +179,21 @@ mod tests {
 
     #[test]
     fn test_valid_metadata() {
-        let metadata = OperatorMetadata {
-            name: "Ethereum Utopia".to_string(),
-            description: "Rust operator is good operator".to_string(),
-            logo: "https://goerli-operator-metadata.s3.amazonaws.com/eigenlayer.png".to_string(),
-            website: Some("https://test.com".to_string()),
-            twitter: Some("https://twitter.com/test".to_string()),
-        };
+        let metadata = get_default_metadata();
         metadata.validate().unwrap();
     }
 
     #[test]
     fn test_twitter_url_with_ending_slash() {
-        let metadata = OperatorMetadata {
-            name: "Ethereum Utopia".to_string(),
-            description: "Rust operator is good operator".to_string(),
-            logo: "https://goerli-operator-metadata.s3.amazonaws.com/eigenlayer.png".to_string(),
-            website: Some("https://test.com".to_string()),
-            twitter: Some("https://twitter.com/test/".to_string()),
-        };
+        let mut metadata = get_default_metadata();
+        metadata.twitter = Some("https://twitter.com/test/".to_string());
         metadata.validate().unwrap();
     }
 
     #[test]
     fn test_twitter_x_url() {
-        let metadata = OperatorMetadata {
-            name: "Ethereum Utopia".to_string(),
-            description: "Rust operator is good operator".to_string(),
-            logo: "https://goerli-operator-metadata.s3.amazonaws.com/eigenlayer.png".to_string(),
-            website: Some("https://test.com".to_string()),
-            twitter: Some("https://x.com/test".to_string()),
-        };
+        let mut metadata = get_default_metadata();
+        metadata.twitter = Some("https://x.com/test".to_string());
         metadata.validate().unwrap();
     }
 }
