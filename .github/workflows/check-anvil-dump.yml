@@ -23,9 +23,9 @@ jobs:
         with:
           filters: |
             contracts:
-              - 'crates/contracts/lib/**'
-              - 'crates/contracts/script/**'
-              - 'crates/contracts/src/**'
+              - 'contracts/lib/**'
+              - 'contracts/script/**'
+              - 'contracts/src/**'
       
       # This step runs only if some contract changed.
       # It checks the diff in the anvil state file.
@@ -34,7 +34,7 @@ jobs:
       # Note: if the git diff fails to fetch the changes, then the step will also fail.
       - name: Check the anvil dump has changed
         if: steps.filter.outputs.contracts == 'true'
-        working-directory: crates/contracts/anvil/contracts_deployed_anvil_state.json
+        working-directory: contracts/anvil/contracts_deployed_anvil_state.json
         run: |
           if [ -z "$(git diff origin/${{ github.event.pull_request.base.ref }} -- state.json)" ]; then
             echo "The anvil dump is outdated";

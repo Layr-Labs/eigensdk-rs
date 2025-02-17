@@ -22,7 +22,7 @@ cd $repo_root
 
 ### SDK bindings ###
 SDK_CONTRACTS="MockAvsServiceManager ContractsRegistry MockERC20"
-SDK_CONTRACTS_LOCATION=crates/contracts
+SDK_CONTRACTS_LOCATION=contracts
 SDK_BINDINGS_PATH=crates/utils/src/sdk
 # The echo is to remove quotes, and the patsubst to make the regex match the full text only
 SDK_CONTRACTS_ARGS=$(generate_flags $SDK_CONTRACTS)
