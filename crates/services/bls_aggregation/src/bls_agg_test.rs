@@ -361,12 +361,7 @@ pub mod integration_test {
             .unwrap();
 
         // Wait for the response from the aggregation service
-        let bls_agg_response = agg_response
-            .aggregate_receiver
-            .recv()
-            .await
-            .unwrap()
-            .unwrap();
+        let bls_agg_response = agg_response.receive_aggregated_response().await.unwrap();
 
         // Send the shutdown signal to the OperatorInfoServiceInMemory
         cancellation_token.cancel();
@@ -515,12 +510,7 @@ pub mod integration_test {
             .unwrap();
 
         // Wait for the response from the aggregation service
-        let bls_agg_response = agg_response
-            .aggregate_receiver
-            .recv()
-            .await
-            .unwrap()
-            .unwrap();
+        let bls_agg_response = agg_response.receive_aggregated_response().await.unwrap();
 
         // Send the shutdown signal to the OperatorInfoServiceInMemory
         cancellation_token.cancel();
@@ -690,12 +680,7 @@ pub mod integration_test {
             .unwrap();
 
         // Wait for the response from the aggregation service
-        let bls_agg_response = agg_response
-            .aggregate_receiver
-            .recv()
-            .await
-            .unwrap()
-            .unwrap();
+        let bls_agg_response = agg_response.receive_aggregated_response().await.unwrap();
 
         // Send the shutdown signal to the OperatorInfoServiceInMemory
         cancellation_token.cancel();
@@ -869,12 +854,7 @@ pub mod integration_test {
             .unwrap();
 
         // Wait for the response from the aggregation service
-        let bls_agg_response = agg_response
-            .aggregate_receiver
-            .recv()
-            .await
-            .unwrap()
-            .unwrap();
+        let bls_agg_response = agg_response.receive_aggregated_response().await.unwrap();
 
         // Send the shutdown signal to the OperatorInfoServiceInMemory
         cancellation_token.cancel();
@@ -1046,12 +1026,7 @@ pub mod integration_test {
             .unwrap();
 
         // Wait for the response from the aggregation service
-        let bls_agg_response = agg_response
-            .aggregate_receiver
-            .recv()
-            .await
-            .unwrap()
-            .unwrap();
+        let bls_agg_response = agg_response.receive_aggregated_response().await.unwrap();
 
         // Send the shutdown signal to the OperatorInfoServiceInMemory
         cancellation_token.cancel();
@@ -1199,12 +1174,7 @@ pub mod integration_test {
             .unwrap();
 
         // Wait for the response from the aggregation service
-        let bls_agg_response = agg_response
-            .aggregate_receiver
-            .recv()
-            .await
-            .unwrap()
-            .unwrap();
+        let bls_agg_response = agg_response.receive_aggregated_response().await.unwrap();
         // Send the shutdown signal to the OperatorInfoServiceInMemory
         cancellation_token.cancel();
 
