@@ -188,14 +188,6 @@ where
     A: Clone,
 {
     logger: SharedLogger,
-    aggregated_response_sender:
-        UnboundedSender<Result<BlsAggregationServiceResponse, BlsAggregationServiceError>>,
-    pub aggregated_response_receiver: Arc<
-        Mutex<UnboundedReceiver<Result<BlsAggregationServiceResponse, BlsAggregationServiceError>>>,
-    >,
-    signed_task_response:
-        Arc<RwLock<HashMap<TaskIndex, UnboundedSender<SignedTaskResponseDigest>>>>,
-
     avs_registry_service: A,
 }
 
@@ -209,12 +201,8 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
     /// * `avs_registry_service` - The AVS registry service
     /// * `logger` - Logger to log messages
     pub fn new(avs_registry_service: A, logger: SharedLogger) -> Self {
-        let (tx, rx) = tokio::sync::mpsc::unbounded_channel();
         Self {
             logger,
-            aggregated_response_sender: tx,
-            aggregated_response_receiver: Arc::new(Mutex::new(rx)),
-            signed_task_response: Arc::new(RwLock::new(HashMap::new())),
             avs_registry_service,
         }
     }
