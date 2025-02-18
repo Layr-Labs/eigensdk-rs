@@ -1,3 +1,4 @@
+use crate::operator::OperatorId;
 use crate::operator::OperatorInfo;
 use crate::operator::QuorumNum;
 use alloy::primitives::U256;
@@ -7,7 +8,7 @@ use std::collections::HashMap;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct OperatorAvsState {
-    pub operator_id: [u8; 32],
+    pub operator_id: OperatorId,
     pub operator_info: OperatorInfo,
     pub stake_per_quorum: HashMap<QuorumNum, U256>,
     pub block_num: U64,

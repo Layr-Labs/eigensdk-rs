@@ -58,7 +58,7 @@ impl<R: AvsRegistryReader + Sync, S: OperatorInfoService + Sync> AvsRegistryServ
                 let avs_state = operators_avs_state
                     .entry(FixedBytes(*operator.operatorId))
                     .or_insert_with(|| OperatorAvsState {
-                        operator_id: *operator.operatorId,
+                        operator_id: operator.operatorId,
                         operator_info: OperatorInfo {
                             pub_keys: Some(info),
                         },
