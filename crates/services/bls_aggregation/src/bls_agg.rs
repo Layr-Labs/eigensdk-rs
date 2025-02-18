@@ -207,6 +207,110 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         }
     }
 
+    pub fn start(self) -> (ServiceHandler, AggregateReceiver) {
+        let (msg_tx, msg_rx) = mpsc::unbounded_channel();
+        let (agg_tx, agg_rx) = mpsc::unbounded_channel();
+
+        tokio::spawn(async move {
+            self.run(msg_rx, agg_tx).await;
+        });
+
+        // Create service handler and aggregate receiver to user can interact with the service
+        let service_handler = ServiceHandler { msg_sender: msg_tx };
+        let aggregate_receiver = AggregateReceiver {
+            aggregate_receiver: agg_rx,
+        };
+
+        (service_handler, aggregate_receiver)
+    }
+
+    async fn run(
+        self,
+        mut msg_receiver: UnboundedReceiver<AggregationMessage>,
+        aggregate_sender: UnboundedSender<
+            Result<BlsAggregationServiceResponse, BlsAggregationServiceError>,
+        >,
+    ) {
+        let mut task_channels: HashMap<TaskIndex, UnboundedSender<SignedTaskResponseDigest>> =
+            HashMap::new();
+
+        while let Some(message) = msg_receiver.recv().await {
+            match message {
+                AggregationMessage::InitializeTask(metadata, result_sender) => {
+                    let task_index = metadata.task_index;
+                    if task_channels.contains_key(&task_index) {
+                        // Task already exists - return error
+                        result_sender
+                            .send(Err(BlsAggregationServiceError::DuplicateTaskIndex))
+                            .ok();
+                        continue;
+                    }
+
+                    // Create a new channel to receive the signed task responses
+                    let (signature_tx, signature_rx) =
+                        mpsc::unbounded_channel::<SignedTaskResponseDigest>();
+                    task_channels.insert(task_index, signature_tx);
+
+                    let avs_registry_service = self.avs_registry_service.clone();
+                    let aggregated_response_sender = aggregate_sender.clone();
+                    let logger = self.logger.clone();
+
+                    tokio::spawn(async move {
+                        let _ = BlsAggregatorService::<A>::single_task_aggregator(
+                            avs_registry_service,
+                            metadata,
+                            aggregated_response_sender,
+                            signature_rx,
+                            logger,
+                        )
+                        .await
+                        .inspect_err(|err| {
+                            println!("Error with single_task_aggregator: {:?}", err);
+                        });
+                    });
+
+                    let _ = result_sender.send(Ok(()));
+                }
+                AggregationMessage::ProcessSignature(task_signature, result_sender) => {
+                    if let Some(sig_sender) = task_channels.get_mut(&task_signature.task_index) {
+                        // Send the signed task response to the task aggregator
+                        let (verif_tx, mut verif_rx) = tokio::sync::mpsc::channel(1);
+                        let signed_digest = SignedTaskResponseDigest {
+                            task_response_digest: task_signature.task_response_digest,
+                            bls_signature: task_signature.bls_signature,
+                            operator_id: task_signature.operator_id,
+                            signature_verification_channel: verif_tx,
+                        };
+
+                        if sig_sender.send(signed_digest).is_err() {
+                            result_sender
+                                .send(Err(BlsAggregationServiceError::ChannelError))
+                                .ok();
+                            continue;
+                        }
+
+                        if let Some(result) = verif_rx.recv().await {
+                            match result {
+                                Ok(_) => {
+                                    let _ = result_sender.send(Ok(()));
+                                }
+                                Err(e) => {
+                                    let _ = result_sender.send(Err(
+                                        BlsAggregationServiceError::SignatureVerificationError(e),
+                                    ));
+                                }
+                            }
+                        }
+                    } else {
+                        result_sender
+                            .send(Err(BlsAggregationServiceError::TaskNotFound))
+                            .ok();
+                    }
+                }
+            }
+        }
+    }
+
     ///   Creates a new task meant to process new signed task responses for a task tokio channel.
     ///
     /// # Arguments
