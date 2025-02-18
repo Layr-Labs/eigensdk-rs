@@ -38,7 +38,7 @@ pub struct TaskMetadata {
     /// Index of the task
     task_index: TaskIndex,
     /// Block the task was created
-    task_created_block: u32, // TODO: Should this be a u64?
+    task_created_block: u64,
     /// Quorum numbers which should respond to the task
     quorum_numbers: Vec<u8>,
     /// Thresholds for each quorum
@@ -70,10 +70,6 @@ impl TaskMetadata {
         quorum_threshold_percentages: QuorumThresholdPercentages,
         time_to_expiry: Duration,
     ) -> Self {
-        let task_created_block: u32 = task_created_block
-            .try_into()
-            .expect("block number should fit into a u32");
-
         Self {
             task_index,
             task_created_block,
@@ -413,7 +409,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
     async fn loop_task_aggregator(
         avs_registry_service: A,
         task_index: TaskIndex,
-        task_created_block: u32,
+        task_created_block: u64,
         time_to_expiry: Duration,
         aggregated_response_sender: UnboundedSender<
             Result<BlsAggregationServiceResponse, BlsAggregationServiceError>,
@@ -656,7 +652,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
     #[allow(clippy::too_many_arguments)]
     async fn build_aggregated_response(
         task_index: TaskIndex,
-        task_created_block: u32,
+        task_created_block: u64,
         signed_task_digest: SignedTaskResponseDigest,
         operator_state_avs: &HashMap<FixedBytes<32>, OperatorAvsState>,
         digest_aggregated_operators: AggregatedOperators,

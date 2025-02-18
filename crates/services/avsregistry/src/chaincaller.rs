@@ -38,7 +38,7 @@ impl<R: AvsRegistryReader + Sync, S: OperatorInfoService + Sync> AvsRegistryServ
 {
     async fn get_operators_avs_state_at_block(
         &self,
-        block_num: u32,
+        block_num: u64,
         quorum_nums: &[u8],
     ) -> Result<HashMap<FixedBytes<32>, OperatorAvsState>, AvsRegistryError> {
         let mut operators_avs_state: HashMap<FixedBytes<32>, OperatorAvsState> = HashMap::new();
@@ -77,7 +77,7 @@ impl<R: AvsRegistryReader + Sync, S: OperatorInfoService + Sync> AvsRegistryServ
     async fn get_quorums_avs_state_at_block(
         &self,
         quorum_nums: &[u8],
-        block_num: u32,
+        block_num: u64,
     ) -> Result<HashMap<u8, QuorumAvsState>, AvsRegistryError> {
         let operators_avs_state = self
             .get_operators_avs_state_at_block(block_num, quorum_nums)
@@ -121,7 +121,7 @@ impl<R: AvsRegistryReader + Sync, S: OperatorInfoService + Sync> AvsRegistryServ
 
     async fn get_check_signatures_indices(
         &self,
-        reference_block_number: u32,
+        reference_block_number: u64,
         quorum_numbers: Vec<u8>,
         non_signer_operator_ids: Vec<FixedBytes<32>>,
     ) -> Result<CheckSignaturesIndices, AvsRegistryError> {
@@ -189,7 +189,7 @@ mod tests {
     #[derive(Deserialize, Debug)]
     struct InputOperatorAvsState {
         quorum_numbers: Vec<QuorumNum>,
-        block_num: u32,
+        block_num: u64,
         private_key_decimal: String,
         operator_id: String,
         operator_address: String,
@@ -302,7 +302,7 @@ mod tests {
     async fn test_get_quorum_avs_state() {
         let test_operator = build_test_operator(PRIVATE_KEY_DECIMAL, OPERATOR_ID);
         let quorum_num = 1;
-        let block_num = 1u32;
+        let block_num = 1u64;
         let service =
             build_avs_registry_service_chaincaller(test_operator.clone(), OPERATOR_ADDRESS);
         let quorum_state_per_number = service

@@ -136,7 +136,7 @@ pub fn operator_id_from_g1_pub_key(pub_key: BlsG1Point) -> Result<OperatorId, Op
     let mut bytes = [0_u8; 64];
     bytes[..32].copy_from_slice(&x);
     bytes[32..].copy_from_slice(&y);
-    Ok(FixedBytes::from(keccak256(bytes)))
+    Ok(keccak256(bytes).into())
 }
 
 pub type QuorumThresholdPercentage = u8;
