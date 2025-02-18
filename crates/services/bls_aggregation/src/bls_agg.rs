@@ -17,7 +17,7 @@ use std::sync::Arc;
 use tokio::{
     sync::{
         mpsc::{self, UnboundedReceiver, UnboundedSender},
-        Mutex,
+        oneshot, Mutex,
     },
     time::Duration,
 };
@@ -145,6 +145,34 @@ pub enum AggregationMessage {
 pub struct ServiceHandler {
     /// Channel to send messages to the BLS Aggregator Service
     msg_sender: UnboundedSender<AggregationMessage>,
+}
+
+impl ServiceHandler {
+    pub async fn initialize_task(
+        &self,
+        metadata: TaskMetadata,
+    ) -> Result<(), BlsAggregationServiceError> {
+        let (tx, rx) = oneshot::channel();
+        self.msg_sender
+            .send(AggregationMessage::InitializeTask(metadata, tx))
+            .map_err(|_| BlsAggregationServiceError::ChannelError)?;
+
+        rx.await
+            .map_err(|_| BlsAggregationServiceError::ChannelError)?
+    }
+
+    pub async fn process_signature(
+        &self,
+        task_signature: TaskSignature,
+    ) -> Result<(), BlsAggregationServiceError> {
+        let (tx, rx) = oneshot::channel();
+        self.msg_sender
+            .send(AggregationMessage::ProcessSignature(task_signature, tx))
+            .map_err(|_| BlsAggregationServiceError::ChannelError)?;
+
+        rx.await
+            .map_err(|_| BlsAggregationServiceError::ChannelError)?
+    }
 }
 
 pub struct AggregateReceiver {
