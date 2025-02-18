@@ -116,6 +116,8 @@ Those changes in added, changed or breaking changes, should include usage exampl
 
   // After
   let bls_agg_service = BlsAggregatorService::new(avs_registry_service, get_test_logger());
+  let (handle, mut aggregator_response) = bls_agg_service.start();
+
   let metadata = TaskMetadata::new(
       task_index,
       block_number,
@@ -123,8 +125,6 @@ Those changes in added, changed or breaking changes, should include usage exampl
       quorum_threshold_percentages,
       time_to_expiry,
   );
-
-  let (handle, mut aggregator_response) = bls_agg_service.start();
   handle.initialize_task(metadata).await.unwrap();
 
   handle
