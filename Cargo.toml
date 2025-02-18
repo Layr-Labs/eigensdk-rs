@@ -135,6 +135,4 @@ alloy = { version = "0.9", features = [
     "signer-aws",
     "rlp",
     "json-rpc",
-    "rpc-types",
-    "rpc",
 ] }
