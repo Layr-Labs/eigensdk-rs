@@ -889,15 +889,13 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
 #[cfg(test)]
 mod tests {
     use super::{BlsAggregationServiceError, BlsAggregationServiceResponse, BlsAggregatorService};
-    use crate::bls_agg::TaskMetadata;
-    use crate::bls_agg::TaskSignature;
+    use crate::bls_agg::{TaskMetadata, TaskSignature};
     use alloy::primitives::{B256, U256};
     use eigen_crypto_bls::{BlsG1Point, BlsG2Point, BlsKeyPair, Signature};
     use eigen_logging::get_test_logger;
     use eigen_services_avsregistry::fake_avs_registry_service::FakeAvsRegistryService;
     use eigen_types::avs::SignatureVerificationError::{DuplicateSignature, IncorrectSignature};
-    use eigen_types::operator::QuorumNum;
-    use eigen_types::operator::QuorumThresholdPercentages;
+    use eigen_types::operator::{QuorumNum, QuorumThresholdPercentages};
     use eigen_types::{avs::TaskIndex, test::TestOperator};
     use sha2::{Digest, Sha256};
     use std::collections::HashMap;
