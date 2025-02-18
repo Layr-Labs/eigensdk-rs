@@ -201,6 +201,22 @@ pub struct AggregateReceiver {
         UnboundedReceiver<Result<BlsAggregationServiceResponse, BlsAggregationServiceError>>,
 }
 
+impl AggregateReceiver {
+    /// Receives the aggregated response from the BLS Aggregator Service.
+    ///
+    /// # Returns
+    ///
+    /// Returns the aggregated response or an error if the channel is closed.
+    pub async fn receive_aggregated_response(
+        &mut self,
+    ) -> Result<BlsAggregationServiceResponse, BlsAggregationServiceError> {
+        self.aggregate_receiver
+            .recv()
+            .await
+            .ok_or(BlsAggregationServiceError::ChannelError)?
+    }
+}
+
 /// The BLS Aggregator Service main struct
 #[derive(Debug)]
 pub struct BlsAggregatorService<A: AvsRegistryService>
@@ -1001,13 +1017,10 @@ mod tests {
             non_signer_stake_indices: vec![],
         };
 
-        let response = aggregator_response.aggregate_receiver.recv().await;
+        let response = aggregator_response.receive_aggregated_response().await;
 
-        assert_eq!(
-            expected_agg_service_response,
-            response.clone().unwrap().unwrap()
-        );
-        assert_eq!(task_index, response.unwrap().unwrap().task_index);
+        assert_eq!(expected_agg_service_response, response.clone().unwrap());
+        assert_eq!(task_index, response.unwrap().task_index);
     }
 
     #[tokio::test]
@@ -1103,13 +1116,10 @@ mod tests {
             non_signer_stake_indices: vec![],
         };
 
-        let response = aggregator_response.aggregate_receiver.recv().await;
+        let response = aggregator_response.receive_aggregated_response().await;
 
-        assert_eq!(
-            expected_agg_service_response,
-            response.clone().unwrap().unwrap()
-        );
-        assert_eq!(task_index, response.unwrap().unwrap().task_index);
+        assert_eq!(expected_agg_service_response, response.clone().unwrap());
+        assert_eq!(task_index, response.unwrap().task_index);
     }
 
     #[tokio::test]
@@ -1215,12 +1225,9 @@ mod tests {
             non_signer_stake_indices: vec![],
         };
 
-        let response = aggregator_response.aggregate_receiver.recv().await;
-        assert_eq!(
-            expected_agg_service_response,
-            response.clone().unwrap().unwrap()
-        );
-        assert_eq!(task_index, response.unwrap().unwrap().task_index);
+        let response = aggregator_response.receive_aggregated_response().await;
+        assert_eq!(expected_agg_service_response, response.clone().unwrap());
+        assert_eq!(task_index, response.unwrap().task_index);
     }
 
     #[tokio::test]
@@ -1308,9 +1315,9 @@ mod tests {
             non_signer_stake_indices: vec![],
         };
 
-        let response = aggregator_response.aggregate_receiver.recv().await;
+        let response = aggregator_response.receive_aggregated_response().await;
 
-        assert_eq!(expected_agg_service_response, response.unwrap().unwrap());
+        assert_eq!(expected_agg_service_response, response.unwrap());
     }
 
     #[tokio::test]
@@ -1457,18 +1464,18 @@ mod tests {
             non_signer_stake_indices: vec![],
         };
 
-        let first_response = aggregator_response.aggregate_receiver.recv().await;
-        let second_response = aggregator_response.aggregate_receiver.recv().await;
+        let first_response = aggregator_response.receive_aggregated_response().await;
+        let second_response = aggregator_response.receive_aggregated_response().await;
 
-        let (task_1_response, task_2_response) =
-            if first_response.clone().unwrap().unwrap().task_index == 1 {
-                (first_response, second_response)
-            } else {
-                (second_response, first_response)
-            };
+        let (task_1_response, task_2_response) = if first_response.clone().unwrap().task_index == 1
+        {
+            (first_response, second_response)
+        } else {
+            (second_response, first_response)
+        };
 
-        assert_eq!(expected_response_task_1, task_1_response.unwrap().unwrap());
-        assert_eq!(expected_response_task_2, task_2_response.unwrap().unwrap());
+        assert_eq!(expected_response_task_1, task_1_response.unwrap());
+        assert_eq!(expected_response_task_2, task_2_response.unwrap());
     }
 
     #[tokio::test]
@@ -1500,12 +1507,9 @@ mod tests {
         let (handle, mut aggregator_response) = bls_agg_service.start();
         handle.initialize_task(metadata).await.unwrap();
 
-        let response = aggregator_response.aggregate_receiver.recv().await;
+        let response = aggregator_response.receive_aggregated_response().await;
 
-        assert_eq!(
-            Err(BlsAggregationServiceError::TaskExpired),
-            response.unwrap()
-        );
+        assert_eq!(Err(BlsAggregationServiceError::TaskExpired), response);
     }
 
     #[tokio::test]
@@ -1574,13 +1578,10 @@ mod tests {
             non_signer_stake_indices: vec![],
         };
 
-        let response = aggregator_response.aggregate_receiver.recv().await;
+        let response = aggregator_response.receive_aggregated_response().await;
 
-        assert_eq!(
-            expected_agg_service_response,
-            response.clone().unwrap().unwrap()
-        );
-        assert_eq!(task_index, response.unwrap().unwrap().task_index);
+        assert_eq!(expected_agg_service_response, response.clone().unwrap());
+        assert_eq!(task_index, response.unwrap().task_index);
     }
 
     #[tokio::test]
@@ -1631,12 +1632,9 @@ mod tests {
             .await
             .unwrap();
 
-        let response = aggregator_response.aggregate_receiver.recv().await;
+        let response = aggregator_response.receive_aggregated_response().await;
 
-        assert_eq!(
-            Err(BlsAggregationServiceError::TaskExpired),
-            response.unwrap()
-        );
+        assert_eq!(Err(BlsAggregationServiceError::TaskExpired), response);
     }
 
     #[tokio::test]
@@ -1723,13 +1721,10 @@ mod tests {
             non_signer_stake_indices: vec![],
         };
 
-        let response = aggregator_response.aggregate_receiver.recv().await;
+        let response = aggregator_response.receive_aggregated_response().await;
 
-        assert_eq!(
-            expected_agg_service_response,
-            response.clone().unwrap().unwrap()
-        );
-        assert_eq!(task_index, response.unwrap().unwrap().task_index);
+        assert_eq!(expected_agg_service_response, response.clone().unwrap());
+        assert_eq!(task_index, response.unwrap().task_index);
     }
 
     #[tokio::test]
@@ -1828,13 +1823,10 @@ mod tests {
             non_signer_stake_indices: vec![],
         };
 
-        let response = aggregator_response.aggregate_receiver.recv().await;
+        let response = aggregator_response.receive_aggregated_response().await;
 
-        assert_eq!(
-            expected_agg_service_response,
-            response.clone().unwrap().unwrap()
-        );
-        assert_eq!(task_index, response.unwrap().unwrap().task_index);
+        assert_eq!(expected_agg_service_response, response.clone().unwrap());
+        assert_eq!(task_index, response.unwrap().task_index);
     }
 
     #[tokio::test]
@@ -1914,12 +1906,9 @@ mod tests {
             .await
             .unwrap();
 
-        let response = aggregator_response.aggregate_receiver.recv().await;
+        let response = aggregator_response.receive_aggregated_response().await;
 
-        assert_eq!(
-            Err(BlsAggregationServiceError::TaskExpired),
-            response.unwrap()
-        );
+        assert_eq!(Err(BlsAggregationServiceError::TaskExpired), response);
     }
 
     #[tokio::test]
@@ -1968,12 +1957,9 @@ mod tests {
             .await
             .unwrap();
 
-        let response = aggregator_response.aggregate_receiver.recv().await;
+        let response = aggregator_response.receive_aggregated_response().await;
 
-        assert_eq!(
-            Err(BlsAggregationServiceError::TaskExpired),
-            response.unwrap()
-        );
+        assert_eq!(Err(BlsAggregationServiceError::TaskExpired), response);
     }
 
     #[tokio::test]
@@ -2028,12 +2014,9 @@ mod tests {
             .await
             .unwrap();
 
-        let response = aggregator_response.aggregate_receiver.recv().await;
+        let response = aggregator_response.receive_aggregated_response().await;
 
-        assert_eq!(
-            Err(BlsAggregationServiceError::TaskExpired),
-            response.unwrap()
-        );
+        assert_eq!(Err(BlsAggregationServiceError::TaskExpired), response);
     }
 
     #[tokio::test]
@@ -2133,12 +2116,9 @@ mod tests {
             .await
             .unwrap();
 
-        let response = aggregator_response.aggregate_receiver.recv().await;
+        let response = aggregator_response.receive_aggregated_response().await;
 
-        assert_eq!(
-            Err(BlsAggregationServiceError::TaskExpired),
-            response.unwrap()
-        );
+        assert_eq!(Err(BlsAggregationServiceError::TaskExpired), response);
     }
 
     #[tokio::test]
@@ -2191,12 +2171,9 @@ mod tests {
         );
 
         // Also test that the aggregator service is not affected by the invalid signature, so the task should expire
-        let response = aggregator_response.aggregate_receiver.recv().await;
+        let response = aggregator_response.receive_aggregated_response().await;
 
-        assert_eq!(
-            Err(BlsAggregationServiceError::TaskExpired),
-            response.unwrap()
-        );
+        assert_eq!(Err(BlsAggregationServiceError::TaskExpired), response);
     }
 
     #[tokio::test]
@@ -2316,14 +2293,11 @@ mod tests {
             non_signer_stake_indices: vec![],
         };
 
-        let response = aggregator_response.aggregate_receiver.recv().await;
+        let response = aggregator_response.receive_aggregated_response().await;
 
         let elapsed = start.elapsed();
-        assert_eq!(
-            expected_agg_service_response,
-            response.clone().unwrap().unwrap()
-        );
-        assert_eq!(task_index, response.unwrap().unwrap().task_index);
+        assert_eq!(expected_agg_service_response, response.clone().unwrap());
+        assert_eq!(task_index, response.unwrap().task_index);
         assert!(elapsed < time_to_expiry);
         assert!(elapsed >= window_duration);
     }
@@ -2417,14 +2391,11 @@ mod tests {
             non_signer_stake_indices: vec![],
         };
 
-        let response = aggregator_response.aggregate_receiver.recv().await;
+        let response = aggregator_response.receive_aggregated_response().await;
 
         let elapsed = start.elapsed();
-        assert_eq!(
-            expected_agg_service_response,
-            response.clone().unwrap().unwrap()
-        );
-        assert_eq!(task_index, response.unwrap().unwrap().task_index);
+        assert_eq!(expected_agg_service_response, response.clone().unwrap());
+        assert_eq!(task_index, response.unwrap().task_index);
         assert!(elapsed >= time_to_expiry);
         assert!(elapsed < window_duration);
     }
@@ -2520,14 +2491,11 @@ mod tests {
             non_signer_stake_indices: vec![],
         };
 
-        let response = aggregator_response.aggregate_receiver.recv().await;
+        let response = aggregator_response.receive_aggregated_response().await;
 
         let elapsed = start.elapsed();
-        assert_eq!(
-            expected_agg_service_response,
-            response.clone().unwrap().unwrap()
-        );
-        assert_eq!(task_index, response.unwrap().unwrap().task_index);
+        assert_eq!(expected_agg_service_response, response.clone().unwrap());
+        assert_eq!(task_index, response.unwrap().task_index);
         assert!(elapsed < time_to_expiry);
     }
 
@@ -2622,14 +2590,11 @@ mod tests {
             non_signer_stake_indices: vec![],
         };
 
-        let response = aggregator_response.aggregate_receiver.recv().await;
+        let response = aggregator_response.receive_aggregated_response().await;
 
         let elapsed = start.elapsed();
-        assert_eq!(
-            expected_agg_service_response,
-            response.clone().unwrap().unwrap()
-        );
-        assert_eq!(task_index, response.unwrap().unwrap().task_index);
+        assert_eq!(expected_agg_service_response, response.clone().unwrap());
+        assert_eq!(task_index, response.unwrap().task_index);
         assert!(elapsed < time_to_expiry);
     }
 }
