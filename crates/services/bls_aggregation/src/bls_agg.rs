@@ -197,7 +197,7 @@ impl ServiceHandle {
 /// Receiver to receive the aggregated responses from the BLS Aggregator Service.
 pub struct AggregateReceiver {
     /// Channel to receive the aggregated responses from the BLS Aggregator Service
-    pub aggregate_receiver:
+    aggregate_receiver:
         UnboundedReceiver<Result<BlsAggregationServiceResponse, BlsAggregationServiceError>>,
 }
 
