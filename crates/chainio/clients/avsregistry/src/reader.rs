@@ -52,7 +52,7 @@ pub trait AvsRegistryReader {
     /// A vector of operators, containing each operator's address, id and stake.
     async fn get_operators_stake_in_quorums_at_block(
         &self,
-        block_number: u32,
+        block_number: u64,
         quorum_numbers: Bytes,
     ) -> Result<Vec<Vec<OperatorStateRetriever::Operator>>, AvsRegistryError>;
 
@@ -70,7 +70,7 @@ pub trait AvsRegistryReader {
     /// and the ones that didn't
     async fn get_check_signatures_indices(
         &self,
-        reference_block_number: u32,
+        reference_block_number: u64,
         quorum_numbers: Vec<u8>,
         non_signer_operator_ids: Vec<FixedBytes<32>>,
     ) -> Result<OperatorStateRetriever::CheckSignaturesIndices, AvsRegistryError>;
@@ -94,15 +94,22 @@ pub trait AvsRegistryReader {
 impl AvsRegistryReader for AvsRegistryChainReader {
     async fn get_operators_stake_in_quorums_at_block(
         &self,
-        block_number: u32,
+        block_number: u64,
         quorum_numbers: Bytes,
     ) -> Result<Vec<Vec<OperatorStateRetriever::Operator>>, AvsRegistryError> {
         let provider = get_provider(&self.provider);
 
         let contract_operator_state_retriever =
             OperatorStateRetriever::new(self.operator_state_retriever, provider);
+
+        let block_number_u32 =
+            u32::try_from(block_number).map_err(|_e| AvsRegistryError::BlockNumberOverflow)?;
         let operator_state = contract_operator_state_retriever
-            .getOperatorState_0(self.registry_coordinator_addr, quorum_numbers, block_number)
+            .getOperatorState_0(
+                self.registry_coordinator_addr,
+                quorum_numbers,
+                block_number_u32,
+            )
             .call()
             .await
             .map_err(|_| AvsRegistryError::GetOperatorState)?;
@@ -113,7 +120,7 @@ impl AvsRegistryReader for AvsRegistryChainReader {
 
     async fn get_check_signatures_indices(
         &self,
-        reference_block_number: u32,
+        reference_block_number: u64,
         quorum_numbers: Vec<u8>,
         non_signer_operator_ids: Vec<FixedBytes<32>>,
     ) -> Result<OperatorStateRetriever::CheckSignaturesIndices, AvsRegistryError> {
@@ -122,10 +129,12 @@ impl AvsRegistryReader for AvsRegistryChainReader {
         let contract_operator_state_retriever =
             OperatorStateRetriever::new(self.operator_state_retriever, provider);
 
+        let reference_block_number_u32 = u32::try_from(reference_block_number)
+            .map_err(|_e| AvsRegistryError::BlockNumberOverflow)?;
         let check_signature_indices = contract_operator_state_retriever
             .getCheckSignaturesIndices(
                 self.registry_coordinator_addr,
-                reference_block_number,
+                reference_block_number_u32,
                 quorum_numbers.into(),
                 non_signer_operator_ids,
             )
@@ -241,7 +250,7 @@ impl AvsRegistryChainReader {
     ///   that quorum at `block_number`, containing each operator's `operatorId` and `stake`.
     pub async fn get_operators_stake_in_quorums_at_block_operator_id(
         &self,
-        block_number: u32,
+        block_number: u64,
         operator_id: B256,
     ) -> Result<(U256, Vec<Vec<OperatorStateRetriever::Operator>>), AvsRegistryError> {
         let provider = get_provider(&self.provider);
@@ -249,9 +258,15 @@ impl AvsRegistryChainReader {
         let contract_operator_state_retriever =
             OperatorStateRetriever::new(self.operator_state_retriever, provider);
 
+        let block_number_u32 =
+            u32::try_from(block_number).map_err(|_e| AvsRegistryError::BlockNumberOverflow)?;
         let operator_state_with_registry_coordinator_and_operator_id =
             contract_operator_state_retriever
-                .getOperatorState_1(self.registry_coordinator_addr, operator_id, block_number)
+                .getOperatorState_1(
+                    self.registry_coordinator_addr,
+                    operator_id,
+                    block_number_u32,
+                )
                 .call()
                 .await
                 .map_err(|_| {
@@ -290,7 +305,7 @@ impl AvsRegistryChainReader {
             return Err(AvsRegistryError::BlockNumberOverflow);
         }
 
-        self.get_operators_stake_in_quorums_at_block(current_block_number as u32, quorum_numbers)
+        self.get_operators_stake_in_quorums_at_block(current_block_number, quorum_numbers)
             .await
             .map_err(|_| AvsRegistryError::GetOperatorStakeInQuorumAtBlockNumber)
     }
@@ -310,7 +325,7 @@ impl AvsRegistryChainReader {
     pub async fn get_operators_stake_in_quorums_of_operator_at_block(
         &self,
         operator_id: B256,
-        block_number: u32,
+        block_number: u64,
     ) -> Result<(Vec<u8>, Vec<Vec<OperatorStateRetriever::Operator>>), AvsRegistryError> {
         let (quorum_bitmaps, operator_stakes) = self
             .get_operators_stake_in_quorums_at_block_operator_id(block_number, operator_id)
@@ -373,11 +388,8 @@ impl AvsRegistryChainReader {
             return Err(AvsRegistryError::BlockNumberOverflow);
         }
 
-        self.get_operators_stake_in_quorums_of_operator_at_block(
-            operator_id,
-            current_block_number as u32,
-        )
-        .await
+        self.get_operators_stake_in_quorums_of_operator_at_block(operator_id, current_block_number)
+            .await
     }
 
     /// Get operator's stake in quorums at current block
