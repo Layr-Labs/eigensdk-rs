@@ -343,14 +343,15 @@ pub mod integration_test {
             quorum_threshold_percentages,
             time_to_expiry,
         );
-        bls_agg_service.initialize_new_task(metadata).await.unwrap();
+        let (handle, mut agg_response) = bls_agg_service.start();
+        handle.initialize_task(metadata).await.unwrap();
 
         // Compute the signature and send it to the aggregation service
         let task_response = 123;
         let task_response_digest = hash(task_response);
         let bls_signature = bls_key_pair.sign_message(task_response_digest.as_ref());
-        bls_agg_service
-            .process_new_signature(TaskSignature::new(
+        handle
+            .process_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_signature,
@@ -360,10 +361,8 @@ pub mod integration_test {
             .unwrap();
 
         // Wait for the response from the aggregation service
-        let bls_agg_response = bls_agg_service
-            .aggregated_response_receiver
-            .lock()
-            .await
+        let bls_agg_response = agg_response
+            .aggregate_receiver
             .recv()
             .await
             .unwrap()
@@ -485,7 +484,8 @@ pub mod integration_test {
             quorum_threshold_percentages,
             time_to_expiry,
         );
-        bls_agg_service.initialize_new_task(metadata).await.unwrap();
+        let (handle, mut agg_response) = bls_agg_service.start();
+        handle.initialize_task(metadata).await.unwrap();
 
         // Compute the signature and send it to the aggregation service
         let task_response = 123;
@@ -504,8 +504,8 @@ pub mod integration_test {
         let operator_id =
             FixedBytes::from(operator_id_from_g1_pub_key(bls_key_pair.public_key()).unwrap());
         assert_eq!(s, operator_id);
-        bls_agg_service
-            .process_new_signature(TaskSignature::new(
+        handle
+            .process_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_signature,
@@ -515,10 +515,8 @@ pub mod integration_test {
             .unwrap();
 
         // Wait for the response from the aggregation service
-        let bls_agg_response = bls_agg_service
-            .aggregated_response_receiver
-            .lock()
-            .await
+        let bls_agg_response = agg_response
+            .aggregate_receiver
             .recv()
             .await
             .unwrap()
@@ -658,7 +656,8 @@ pub mod integration_test {
             quorum_threshold_percentages,
             time_to_expiry,
         );
-        bls_agg_service.initialize_new_task(metadata).await.unwrap();
+        let (handle, mut agg_response) = bls_agg_service.start();
+        handle.initialize_task(metadata).await.unwrap();
 
         // Compute the signature and send it to the aggregation service
         let task_response = 123;
@@ -669,8 +668,8 @@ pub mod integration_test {
             FixedBytes::from(operator_id_from_g1_pub_key(bls_key_pair_2.public_key()).unwrap());
         let bls_signature_1 = bls_key_pair_1.sign_message(task_response_digest.as_ref());
 
-        bls_agg_service
-            .process_new_signature(TaskSignature::new(
+        handle
+            .process_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_signature_1,
@@ -680,8 +679,8 @@ pub mod integration_test {
             .unwrap();
 
         let bls_signature_2 = bls_key_pair_2.sign_message(task_response_digest.as_ref());
-        bls_agg_service
-            .process_new_signature(TaskSignature::new(
+        handle
+            .process_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_signature_2,
@@ -691,10 +690,8 @@ pub mod integration_test {
             .unwrap();
 
         // Wait for the response from the aggregation service
-        let bls_agg_response = bls_agg_service
-            .aggregated_response_receiver
-            .lock()
-            .await
+        let bls_agg_response = agg_response
+            .aggregate_receiver
             .recv()
             .await
             .unwrap()
@@ -842,15 +839,16 @@ pub mod integration_test {
             quorum_threshold_percentages,
             time_to_expiry,
         );
-        bls_agg_service.initialize_new_task(metadata).await.unwrap();
+        let (handle, mut agg_response) = bls_agg_service.start();
+        handle.initialize_task(metadata).await.unwrap();
 
         // Compute the signature and send it to the aggregation service
         let task_response = 123;
         let task_response_digest = hash(task_response);
 
         let bls_signature_1 = bls_key_pair_1.sign_message(task_response_digest.as_ref());
-        bls_agg_service
-            .process_new_signature(TaskSignature::new(
+        handle
+            .process_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_signature_1,
@@ -860,8 +858,8 @@ pub mod integration_test {
             .unwrap();
 
         let bls_signature_2 = bls_key_pair_2.sign_message(task_response_digest.as_ref());
-        bls_agg_service
-            .process_new_signature(TaskSignature::new(
+        handle
+            .process_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_signature_2,
@@ -871,10 +869,8 @@ pub mod integration_test {
             .unwrap();
 
         // Wait for the response from the aggregation service
-        let bls_agg_response = bls_agg_service
-            .aggregated_response_receiver
-            .lock()
-            .await
+        let bls_agg_response = agg_response
+            .aggregate_receiver
             .recv()
             .await
             .unwrap()
@@ -1021,15 +1017,15 @@ pub mod integration_test {
             quorum_threshold_percentages,
             time_to_expiry,
         );
-        bls_agg_service.initialize_new_task(metadata).await.unwrap();
-
+        let (handle, mut agg_response) = bls_agg_service.start();
+        handle.initialize_task(metadata).await.unwrap();
         // Compute the signature and send it to the aggregation service
         let task_response = 123;
         let task_response_digest = hash(task_response);
 
         let bls_signature_1 = bls_key_pair_1.sign_message(task_response_digest.as_ref());
-        bls_agg_service
-            .process_new_signature(TaskSignature::new(
+        handle
+            .process_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_signature_1,
@@ -1039,8 +1035,8 @@ pub mod integration_test {
             .unwrap();
 
         let bls_signature_2 = bls_key_pair_2.sign_message(task_response_digest.as_ref());
-        bls_agg_service
-            .process_new_signature(TaskSignature::new(
+        handle
+            .process_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_signature_2,
@@ -1050,10 +1046,8 @@ pub mod integration_test {
             .unwrap();
 
         // Wait for the response from the aggregation service
-        let bls_agg_response = bls_agg_service
-            .aggregated_response_receiver
-            .lock()
-            .await
+        let bls_agg_response = agg_response
+            .aggregate_receiver
             .recv()
             .await
             .unwrap()
@@ -1186,15 +1180,16 @@ pub mod integration_test {
             quorum_threshold_percentages,
             time_to_expiry,
         );
-        bls_agg_service.initialize_new_task(metadata).await.unwrap();
+        let (handle, mut agg_response) = bls_agg_service.start();
+        handle.initialize_task(metadata).await.unwrap();
 
         // Compute the signature and send it to the aggregation service
         let task_response = 123;
         let task_response_digest = hash(task_response);
 
         let bls_signature_1 = bls_key_pair_1.sign_message(task_response_digest.as_ref());
-        bls_agg_service
-            .process_new_signature(TaskSignature::new(
+        handle
+            .process_signature(TaskSignature::new(
                 task_index,
                 task_response_digest,
                 bls_signature_1,
@@ -1204,15 +1199,12 @@ pub mod integration_test {
             .unwrap();
 
         // Wait for the response from the aggregation service
-        let bls_agg_response = bls_agg_service
-            .aggregated_response_receiver
-            .lock()
-            .await
+        let bls_agg_response = agg_response
+            .aggregate_receiver
             .recv()
             .await
             .unwrap()
             .unwrap();
-
         // Send the shutdown signal to the OperatorInfoServiceInMemory
         cancellation_token.cancel();
 
