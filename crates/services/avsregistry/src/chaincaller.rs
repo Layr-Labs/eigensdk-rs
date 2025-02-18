@@ -287,7 +287,7 @@ mod tests {
             .unwrap();
 
         let expected_operator_avs_state = OperatorAvsState {
-            operator_id: test_operator.operator_id.into(),
+            operator_id: test_operator.operator_id,
             operator_info: OperatorInfo {
                 pub_keys: Some(OperatorPubKeys::from(test_operator.bls_keypair)),
             },

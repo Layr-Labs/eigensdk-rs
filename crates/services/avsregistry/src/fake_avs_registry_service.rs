@@ -38,7 +38,7 @@ impl FakeAvsRegistryService {
         // populate the inner hashmap
         for op in test_operators {
             let state = OperatorAvsState {
-                operator_id: op.operator_id.into(),
+                operator_id: op.operator_id,
                 operator_info: OperatorInfo {
                     pub_keys: Some(OperatorPubKeys::from(op.bls_keypair)),
                 },

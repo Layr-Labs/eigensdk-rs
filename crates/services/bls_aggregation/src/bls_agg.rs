@@ -566,7 +566,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
                                 signers_apk_g2,
                                 signers_agg_sig_g1,
                                 signers_operator_ids_set: HashMap::from([(
-                                    operator_state.operator_id.into(),
+                                    operator_state.operator_id,
                                     true,
                                 )]),
                                 signers_total_stake_per_quorum: operator_state.stake_per_quorum.clone(),
