@@ -142,12 +142,12 @@ pub enum AggregationMessage {
 
 /// Handler to interact with the BLS Aggregator Service
 #[derive(Debug, Clone)]
-pub struct ServiceHandler {
+pub struct ServiceHandle {
     /// Channel to send messages to the BLS Aggregator Service
     msg_sender: UnboundedSender<AggregationMessage>,
 }
 
-impl ServiceHandler {
+impl ServiceHandle {
     /// Sends a message to the BLS Aggregator Service to initialize a new task.
     ///
     /// # Arguments
@@ -231,8 +231,8 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
     ///
     /// # Returns
     ///
-    /// Returns a tuple with the [`ServiceHandler`] and [`AggregateReceiver`] to interact with the service
-    pub fn start(self) -> (ServiceHandler, AggregateReceiver) {
+    /// Returns a tuple with the [`ServiceHandle`] and [`AggregateReceiver`] to interact with the service
+    pub fn start(self) -> (ServiceHandle, AggregateReceiver) {
         let (msg_tx, msg_rx) = mpsc::unbounded_channel();
         let (agg_tx, agg_rx) = mpsc::unbounded_channel();
 
@@ -241,7 +241,7 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         });
 
         // Create service handler and aggregate receiver to user can interact with the service
-        let service_handler = ServiceHandler { msg_sender: msg_tx };
+        let service_handler = ServiceHandle { msg_sender: msg_tx };
         let aggregate_receiver = AggregateReceiver {
             aggregate_receiver: agg_rx,
         };
