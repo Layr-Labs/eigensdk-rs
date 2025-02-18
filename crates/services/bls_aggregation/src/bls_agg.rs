@@ -11,13 +11,11 @@ use eigen_types::{
     avs::{SignatureVerificationError, SignedTaskResponseDigest, TaskIndex, TaskResponseDigest},
     operator::{OperatorAvsState, QuorumThresholdPercentage, QuorumThresholdPercentages},
 };
-use parking_lot::RwLock;
 use std::collections::HashMap;
-use std::sync::Arc;
 use tokio::{
     sync::{
         mpsc::{self, UnboundedReceiver, UnboundedSender},
-        oneshot, Mutex,
+        oneshot,
     },
     time::Duration,
 };
