@@ -130,6 +130,29 @@ impl TaskSignature {
     }
 }
 
+pub enum AggregationMessage {
+    InitializeTask(
+        TaskMetadata,
+        oneshot::Sender<Result<(), BlsAggregationServiceError>>,
+    ),
+    ProcessSignature(
+        TaskSignature,
+        oneshot::Sender<Result<(), BlsAggregationServiceError>>,
+    ),
+}
+
+#[derive(Debug, Clone)]
+pub struct ServiceHandler {
+    /// Channel to send messages to the BLS Aggregator Service
+    msg_sender: UnboundedSender<AggregationMessage>,
+}
+
+pub struct AggregateReceiver {
+    /// Channel to receive the aggregated responses from the BLS Aggregator Service
+    pub aggregate_receiver:
+        UnboundedReceiver<Result<BlsAggregationServiceResponse, BlsAggregationServiceError>>,
+}
+
 /// The BLS Aggregator Service main struct
 #[derive(Debug)]
 pub struct BlsAggregatorService<A: AvsRegistryService>
