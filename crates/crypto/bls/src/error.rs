@@ -7,7 +7,7 @@ pub enum BlsError {
     InvalidPublicKey,
 
     /// Invalid Bls Private Key
-    #[error("Invalid bls private key   ")]
+    #[error("Invalid bls private key")]
     InvalidBlsPrivateKey,
 
     /// Invalid G1Affine
