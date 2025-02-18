@@ -128,6 +128,7 @@ impl TaskSignature {
     }
 }
 
+/// Valid messages to interact with the BLS Aggregator Service
 pub enum AggregationMessage {
     InitializeTask(
         TaskMetadata,
@@ -139,6 +140,7 @@ pub enum AggregationMessage {
     ),
 }
 
+/// Handler to interact with the BLS Aggregator Service
 #[derive(Debug, Clone)]
 pub struct ServiceHandler {
     /// Channel to send messages to the BLS Aggregator Service
@@ -146,6 +148,14 @@ pub struct ServiceHandler {
 }
 
 impl ServiceHandler {
+    /// Sends a message to the BLS Aggregator Service to initialize a new task.
+    ///
+    /// # Arguments
+    ///
+    /// * `metadata` - The metadata of the task to initialize
+    ///
+    /// # Returns
+    /// Returns error if the task index already exists
     pub async fn initialize_task(
         &self,
         metadata: TaskMetadata,
@@ -159,6 +169,17 @@ impl ServiceHandler {
             .map_err(|_| BlsAggregationServiceError::ChannelError)?
     }
 
+    /// Sends a message to the BLS Aggregator Service to process a signature.
+    ///
+    /// # Arguments
+    ///
+    /// * `task_signature` - The signed task response
+    ///
+    /// # Returns error:
+    ///
+    /// * `TaskNotFound` - If the task is not found
+    /// * `ChannelError` - If there is an error while sending the task through the channel
+    /// * `SignatureVerificationError` - If the signature verification fails
     pub async fn process_signature(
         &self,
         task_signature: TaskSignature,
@@ -173,6 +194,7 @@ impl ServiceHandler {
     }
 }
 
+/// Receiver to receive the aggregated responses from the BLS Aggregator Service.
 pub struct AggregateReceiver {
     /// Channel to receive the aggregated responses from the BLS Aggregator Service
     pub aggregate_receiver:
@@ -205,6 +227,11 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         }
     }
 
+    /// Starts the BLS Aggregator Service running the main loop in background.
+    ///
+    /// # Returns
+    ///
+    /// Returns a tuple with the [`ServiceHandler`] and [`AggregateReceiver`] to interact with the service
     pub fn start(self) -> (ServiceHandler, AggregateReceiver) {
         let (msg_tx, msg_rx) = mpsc::unbounded_channel();
         let (agg_tx, agg_rx) = mpsc::unbounded_channel();
@@ -222,6 +249,19 @@ impl<A: AvsRegistryService + Send + Sync + Clone + 'static> BlsAggregatorService
         (service_handler, aggregate_receiver)
     }
 
+    /// Runs the main loop of the BLS Aggregator Service.
+    ///
+    /// This function continuously processes messages from `msg_receiver` and handles:
+    /// * [`InitializeTask`]: Initializes a new aggregation task
+    /// * [`ProcessSignature`]: Forwards a signature to the appropriate task aggregator and relays the verification result.
+    ///
+    /// The final aggregated response is sent through the `aggregate_sender` channel. In addition, each
+    /// message (both [`InitializeTask`] and [`ProcessSignature`]) uses its own channel to return specific errors or results.
+    ///
+    /// # Arguments
+    ///
+    /// * `msg_receiver` - The receiver channel to receive the valid messages
+    /// * `aggregate_sender` - The sender channel to send the aggregated responses
     async fn run(
         self,
         mut msg_receiver: UnboundedReceiver<AggregationMessage>,
