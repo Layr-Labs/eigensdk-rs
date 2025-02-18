@@ -34,7 +34,7 @@ impl FakeAvsRegistryReader {
 impl AvsRegistryReader for FakeAvsRegistryReader {
     async fn get_operators_stake_in_quorums_at_block(
         &self,
-        _block_number: u32,
+        _block_number: u64,
         _quorum_numbers: Bytes,
     ) -> Result<Vec<Vec<OperatorStateRetriever::Operator>>, AvsRegistryError> {
         Ok(vec![vec![OperatorStateRetriever::Operator {
@@ -46,7 +46,7 @@ impl AvsRegistryReader for FakeAvsRegistryReader {
 
     async fn get_check_signatures_indices(
         &self,
-        _reference_block_number: u32,
+        _reference_block_number: u64,
         _quorum_numbers: Vec<u8>,
         _non_signer_operator_ids: Vec<FixedBytes<32>>,
     ) -> Result<OperatorStateRetriever::CheckSignaturesIndices, AvsRegistryError> {

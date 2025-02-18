@@ -98,7 +98,7 @@ pub struct QuorumAvsState {
     pub quorum_num: u8,
     pub total_stake: U256,
     pub agg_pub_key_g1: BlsG1Point,
-    pub block_num: u32,
+    pub block_num: u64,
 }
 
 pub type QuorumThresholdPercentage = u8;
