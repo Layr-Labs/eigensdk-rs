@@ -1529,6 +1529,7 @@ interface ServiceManagerBase {
     error DelayPeriodNotPassed();
     error OnlyRegistryCoordinator();
     error OnlyRewardsInitiator();
+    error OnlySlasher();
     error OnlyStakeRegistry();
 
     event Initialized(uint8 version);
@@ -2031,6 +2032,11 @@ interface ServiceManagerBase {
   },
   {
     "type": "error",
+    "name": "OnlySlasher",
+    "inputs": []
+  },
+  {
+    "type": "error",
     "name": "OnlyStakeRegistry",
     "inputs": []
   }
@@ -2234,6 +2240,66 @@ pub mod ServiceManagerBase {
             type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SIGNATURE: &'static str = "OnlyRewardsInitiator()";
             const SELECTOR: [u8; 4] = [142u8, 121u8, 253u8, 181u8];
+            #[inline]
+            fn new<'a>(
+                tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
+            ) -> Self {
+                tuple.into()
+            }
+            #[inline]
+            fn tokenize(&self) -> Self::Token<'_> {
+                ()
+            }
+        }
+    };
+    /**Custom error with signature `OnlySlasher()` and selector `0x7e57b1e1`.
+    ```solidity
+    error OnlySlasher();
+    ```*/
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
+    #[derive(Clone)]
+    pub struct OnlySlasher {}
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
+    const _: () = {
+        use alloy::sol_types as alloy_sol_types;
+        #[doc(hidden)]
+        type UnderlyingSolTuple<'a> = ();
+        #[doc(hidden)]
+        type UnderlyingRustTuple<'a> = ();
+        #[cfg(test)]
+        #[allow(dead_code, unreachable_patterns)]
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
+            match _t {
+                alloy_sol_types::private::AssertTypeEq::<
+                    <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
+                >(_) => {}
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<OnlySlasher> for UnderlyingRustTuple<'_> {
+            fn from(value: OnlySlasher) -> Self {
+                ()
+            }
+        }
+        #[automatically_derived]
+        #[doc(hidden)]
+        impl ::core::convert::From<UnderlyingRustTuple<'_>> for OnlySlasher {
+            fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
+                Self {}
+            }
+        }
+        #[automatically_derived]
+        impl alloy_sol_types::SolError for OnlySlasher {
+            type Parameters<'a> = UnderlyingSolTuple<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str = "OnlySlasher()";
+            const SELECTOR: [u8; 4] = [126u8, 87u8, 177u8, 225u8];
             #[inline]
             fn new<'a>(
                 tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
@@ -5643,6 +5709,7 @@ pub mod ServiceManagerBase {
         DelayPeriodNotPassed(DelayPeriodNotPassed),
         OnlyRegistryCoordinator(OnlyRegistryCoordinator),
         OnlyRewardsInitiator(OnlyRewardsInitiator),
+        OnlySlasher(OnlySlasher),
         OnlyStakeRegistry(OnlyStakeRegistry),
     }
     #[automatically_derived]
@@ -5655,6 +5722,7 @@ pub mod ServiceManagerBase {
         /// Prefer using `SolInterface` methods instead.
         pub const SELECTORS: &'static [[u8; 4usize]] = &[
             [70u8, 191u8, 34u8, 129u8],
+            [126u8, 87u8, 177u8, 225u8],
             [135u8, 41u8, 183u8, 190u8],
             [142u8, 121u8, 253u8, 181u8],
             [251u8, 98u8, 59u8, 4u8],
@@ -5664,7 +5732,7 @@ pub mod ServiceManagerBase {
     impl alloy_sol_types::SolInterface for ServiceManagerBaseErrors {
         const NAME: &'static str = "ServiceManagerBaseErrors";
         const MIN_DATA_LENGTH: usize = 0usize;
-        const COUNT: usize = 4usize;
+        const COUNT: usize = 5usize;
         #[inline]
         fn selector(&self) -> [u8; 4] {
             match self {
@@ -5677,6 +5745,7 @@ pub mod ServiceManagerBase {
                 Self::OnlyRewardsInitiator(_) => {
                     <OnlyRewardsInitiator as alloy_sol_types::SolError>::SELECTOR
                 }
+                Self::OnlySlasher(_) => <OnlySlasher as alloy_sol_types::SolError>::SELECTOR,
                 Self::OnlyStakeRegistry(_) => {
                     <OnlyStakeRegistry as alloy_sol_types::SolError>::SELECTOR
                 }
@@ -5713,6 +5782,16 @@ pub mod ServiceManagerBase {
                         .map(ServiceManagerBaseErrors::OnlyStakeRegistry)
                     }
                     OnlyStakeRegistry
+                },
+                {
+                    fn OnlySlasher(
+                        data: &[u8],
+                        validate: bool,
+                    ) -> alloy_sol_types::Result<ServiceManagerBaseErrors> {
+                        <OnlySlasher as alloy_sol_types::SolError>::abi_decode_raw(data, validate)
+                            .map(ServiceManagerBaseErrors::OnlySlasher)
+                    }
+                    OnlySlasher
                 },
                 {
                     fn OnlyRegistryCoordinator(
@@ -5771,6 +5850,9 @@ pub mod ServiceManagerBase {
                 Self::OnlyRewardsInitiator(inner) => {
                     <OnlyRewardsInitiator as alloy_sol_types::SolError>::abi_encoded_size(inner)
                 }
+                Self::OnlySlasher(inner) => {
+                    <OnlySlasher as alloy_sol_types::SolError>::abi_encoded_size(inner)
+                }
                 Self::OnlyStakeRegistry(inner) => {
                     <OnlyStakeRegistry as alloy_sol_types::SolError>::abi_encoded_size(inner)
                 }
@@ -5789,6 +5871,9 @@ pub mod ServiceManagerBase {
                 }
                 Self::OnlyRewardsInitiator(inner) => {
                     <OnlyRewardsInitiator as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
+                }
+                Self::OnlySlasher(inner) => {
+                    <OnlySlasher as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
                 }
                 Self::OnlyStakeRegistry(inner) => {
                     <OnlyStakeRegistry as alloy_sol_types::SolError>::abi_encode_raw(inner, out)
