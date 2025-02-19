@@ -82,7 +82,7 @@ impl OperatorMetadata {
             return Err(NameInvalid);
         }
 
-        // description must be non-empty, less than 500 characters, and match the regex
+        // description must be non-empty, no more than 500 characters, and match the regex
         if self.description.is_empty() {
             return Err(DescriptionEmpty);
         }
@@ -113,7 +113,7 @@ impl OperatorMetadata {
             return Err(LogoUrlInvalidMimeType);
         }
 
-        // website, if non-empty, must have less than 1024 characters,
+        // website, if non-empty, must have no more than 1024 characters,
         // not point to localhost or 127.0.0.1, and must be a valid URL that matches the regex
         if self.website.as_ref().is_some_and(|s| !s.is_empty()) {
             let website = self.website.as_ref().unwrap();
@@ -134,7 +134,7 @@ impl OperatorMetadata {
             }
         }
 
-        // twitter, if non-empty, must have less than 1024 characters,
+        // twitter, if non-empty, must no more than 1024 characters,
         // not point to localhost or 127.0.0.1, and must be a valid URL that matches the regex
         if self.twitter.as_ref().is_some_and(|s| !s.is_empty()) {
             let twitter = self.twitter.as_ref().unwrap();
