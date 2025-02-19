@@ -112,6 +112,16 @@ impl AvsRegistryChainWriter {
         })
     }
 
+    /// Sets signer for AvsRegistryChainWriter
+    ///
+    /// # Arguments
+    ///
+    /// * `signer` - signer string
+    ///
+    pub async fn set_signer(&mut self, signer: String) {
+        self.signer = signer;
+    }
+
     /// Register operator in quorum with avs registry coordinator
     ///
     /// # Arguments
