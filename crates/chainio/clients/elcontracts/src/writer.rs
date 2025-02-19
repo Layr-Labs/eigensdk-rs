@@ -72,6 +72,16 @@ impl ELChainWriter {
         }
     }
 
+    /// Sets signer for ELChainWriter
+    ///
+    /// # Arguments
+    ///
+    /// * `signer`: signer string
+    ///
+    pub fn set_signer(&mut self, signer: String) {
+        self.signer = signer;
+    }
+
     /// Register an operator to EigenLayer, and wait for the transaction to be mined.
     ///
     /// # Arguments
