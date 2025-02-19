@@ -46,6 +46,8 @@ pub enum OperatorMetadataError {
     LogoUrlEmpty,
     #[error("Logo url is invalid")]
     LogoUrlInvalid,
+    #[error("Failed to fetch logo")]
+    LogoFetchFailed,
     #[error("Logo url has an invalid image extension")]
     LogoUrlInvalidImageExtension,
     #[error("Logo has an unsupported mime type")]
@@ -106,8 +108,8 @@ impl OperatorMetadata {
             return Err(LogoUrlInvalidImageExtension);
         }
         // Check the server returns content with a "image/png" mime type
-        let response = reqwest::get(&self.logo).await.unwrap();
-        let body = response.bytes().await.unwrap();
+        let response = reqwest::get(&self.logo).await.ok().ok_or(LogoFetchFailed)?;
+        let body = response.bytes().await.ok().ok_or(LogoFetchFailed)?;
 
         if body.sniff_mime_type() != Some("image/png") {
             return Err(LogoUrlInvalidMimeType);
