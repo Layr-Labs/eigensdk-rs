@@ -867,7 +867,7 @@ mod tests {
         anvil_constants::{
             get_allocation_manager_address, get_erc20_mock_strategy,
             get_registry_coordinator_address, get_service_manager_address, FIRST_ADDRESS,
-            FIRST_PRIVATE_KEY, SECOND_PRIVATE_KEY,
+            FIRST_PRIVATE_KEY,
         },
         transaction::wait_transaction,
     };
