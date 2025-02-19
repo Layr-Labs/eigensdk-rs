@@ -78,7 +78,7 @@ impl ELChainWriter {
     ///
     /// * `signer`: signer string
     ///
-    pub async fn set_signer(&mut self, signer: String) {
+    pub fn set_signer(&mut self, signer: String) {
         self.signer = signer;
     }
 
