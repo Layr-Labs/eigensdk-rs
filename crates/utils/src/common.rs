@@ -22,7 +22,7 @@ pub async fn get_url_content(url: &str) -> Result<String, Error> {
 pub fn is_valid_ethereum_address(address: &str) -> bool {
     static REGEX: OnceLock<Regex> = OnceLock::new();
     REGEX
-        .get_or_init(|| Regex::new(r"(?i)^0x[0-9a-f]{40}$").expect("Fail to compile regex"))
+        .get_or_init(|| Regex::new(r"(?i)^0x[0-9a-f]{40}$").expect("regex is valid"))
         .is_match(address)
         && address != ZERO_ADDRESS
 }
@@ -62,7 +62,7 @@ mod tests {
 
         for (name, address, expected) in tests {
             let result = super::is_valid_ethereum_address(address);
-            assert_eq!(expected, result, "{}", name);
+            assert_eq!(expected, result, "{name}");
         }
     }
 }

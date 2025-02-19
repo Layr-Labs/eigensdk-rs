@@ -1,7 +1,8 @@
 use alloy::transports::http::reqwest::{self, Url};
 use mime_sniffer::MimeTypeSniffer;
+use regex::Regex;
 use serde::{Deserialize, Serialize};
-use std::path::PathBuf;
+use std::{path::PathBuf, sync::OnceLock};
 use thiserror::Error;
 
 /// OperatorMetadata is the metadata operator uploads while registering
@@ -70,9 +71,6 @@ impl OperatorMetadata {
         // Alias the error types for brevity
         use OperatorMetadataError::*;
 
-        let text_regex = regex::Regex::new(r#"^[a-zA-Z0-9 +.,;:?!'’"“”\-_/()\[\]~&#$—%]+$"#)
-            .expect("regex is valid");
-
         // name must be non-empty, less than 500 characters, and match the regex
         if self.name.is_empty() {
             return Err(NameEmpty);
@@ -80,7 +78,7 @@ impl OperatorMetadata {
         if self.name.len() > 500 {
             return Err(NameTooLong);
         }
-        if !text_regex.is_match(&self.name) {
+        if !is_valid_text(&self.name) {
             return Err(NameInvalid);
         }
 
@@ -91,7 +89,7 @@ impl OperatorMetadata {
         if self.description.len() > 500 {
             return Err(DescriptionTooLong);
         }
-        if !text_regex.is_match(&self.description) {
+        if !is_valid_text(&self.description) {
             return Err(DescriptionInvalid);
         }
 
@@ -131,18 +129,13 @@ impl OperatorMetadata {
             if host == "localhost" || host == "127.0.0.1" {
                 return Err(WebsiteUrlPointsToLocalServer);
             }
-
-            let website_regex =
-                regex::Regex::new(r#"^(https?)://[^\s/$.?#].[^\s]*$"#).expect("regex is valid");
-
-            if !website_regex.is_match(website) {
+            if !is_website_url(website) {
                 return Err(WebsiteUrlInvalid);
             }
         }
 
         // twitter, if non-empty, must have less than 1024 characters,
-        // not point to localhost or 127.0.0.1, and must be a valid URL
-        // Also matches: `^(?:https?://)?(?:www\.)?(?:twitter\.com/\w+|x\.com/\w+)(?:/?|$)`
+        // not point to localhost or 127.0.0.1, and must be a valid URL that matches the regex
         if self.twitter.as_ref().is_some_and(|s| !s.is_empty()) {
             let twitter = self.twitter.as_ref().unwrap();
             if twitter.len() > 1024 {
@@ -157,13 +150,7 @@ impl OperatorMetadata {
             if host == "localhost" || host == "127.0.0.1" {
                 return Err(TwitterUrlPointsToLocalServer);
             }
-
-            let twitter_regex = regex::Regex::new(
-                r#"^(?:https?://)?(?:www\.)?(?:twitter\.com/\w+|x\.com/\w+)(?:/?|$)"#,
-            )
-            .expect("regex is valid");
-
-            if !twitter_regex.is_match(twitter) {
+            if !is_twitter_url(twitter) {
                 return Err(TwitterUrlInvalid);
             }
         }
@@ -172,9 +159,38 @@ impl OperatorMetadata {
     }
 }
 
+fn is_valid_text(text: &str) -> bool {
+    static REGEX: OnceLock<Regex> = OnceLock::new();
+    let regex = REGEX.get_or_init(|| {
+        regex::Regex::new(r#"^[a-zA-Z0-9 +.,;:?!'’"“”\-_/()\[\]~&#$—%]+$"#).expect("regex is valid")
+    });
+    regex.is_match(text)
+}
+
+fn is_website_url(website_url: &str) -> bool {
+    static REGEX: OnceLock<Regex> = OnceLock::new();
+    let regex = REGEX.get_or_init(|| {
+        regex::Regex::new(r#"^(https?)://[^\s/$.?#].[^\s]*$"#).expect("regex is valid")
+    });
+    regex.is_match(website_url)
+}
+
+fn is_twitter_url(twitter_url: &str) -> bool {
+    static REGEX: OnceLock<Regex> = OnceLock::new();
+    let regex = REGEX.get_or_init(|| {
+        regex::Regex::new(r#"^(?:https?://)?(?:www\.)?(?:twitter\.com/\w+|x\.com/\w+)(?:/?|$)"#)
+            .expect("regex is valid")
+    });
+
+    regex.is_match(twitter_url)
+}
+
 #[cfg(test)]
 mod tests {
-    use crate::{operator::OperatorMetadata, operator_metadata::OperatorMetadataError};
+    use crate::{
+        operator::OperatorMetadata,
+        operator_metadata::{is_valid_text, is_website_url, OperatorMetadataError},
+    };
 
     fn get_default_metadata() -> OperatorMetadata {
         OperatorMetadata {
@@ -185,6 +201,27 @@ mod tests {
             twitter: Some("https://twitter.com/test".to_string()),
         }
     }
+
+    #[tokio::test]
+    async fn test_is_valid_text() {
+        assert!(is_valid_text("this is some text"));
+        assert!(!is_valid_text("<>"));
+    }
+
+    #[tokio::test]
+    async fn test_is_website_url() {
+        assert!(is_website_url("https://test.com"));
+        assert!(!is_website_url("nothing"));
+    }
+
+    #[tokio::test]
+    async fn test_is_twitter_url() {
+        assert!(is_website_url("https://twitter.com/test"));
+        assert!(is_website_url("https://x.com/test"));
+        assert!(!is_website_url("nothing"));
+    }
+
+    // OperatorMetadata::validate
 
     #[tokio::test]
     async fn test_valid_metadata() {
