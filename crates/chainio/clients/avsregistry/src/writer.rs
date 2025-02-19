@@ -631,7 +631,7 @@ impl AvsRegistryChainWriter {
         let provider = get_signer(&self.signer.clone(), &self.provider);
 
         RegistryCoordinator::new(self.registry_coordinator_addr, provider)
-            .setAccountIdentifier(new_account_identifier)
+            .setAvs(new_account_identifier)
             .send()
             .await
             .map_err(AvsRegistryError::AlloyContractError)
