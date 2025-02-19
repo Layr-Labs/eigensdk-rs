@@ -1,0 +1,27 @@
+[package]
+name = "eigen-config"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+repository.workspace = true
+description = " eigen configuration"
+
+[lints]
+rust.missing_docs = "allow"
+rust.missing_debug_implementations = "warn"
+rust.unreachable_pub = "warn"
+rust.unused_must_use = "deny"
+rust.rust_2018_idioms = { level = "deny", priority = -1 }
+rustdoc.all = "warn"
+
+
+[dependencies]
+serde.workspace = true
+thiserror.workspace = true
+
+#config
+hex = "0.4.3"
+ruint = "1.12.3"
+
+[dev-dependencies]
+tempfile = "3.10.1"

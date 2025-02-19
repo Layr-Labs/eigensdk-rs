@@ -9,7 +9,9 @@ use eigen_logging::logger::SharedLogger;
 use eigen_services_avsregistry::AvsRegistryService;
 use eigen_types::{
     avs::{SignatureVerificationError, SignedTaskResponseDigest, TaskIndex, TaskResponseDigest},
-    operator::{OperatorAvsState, QuorumThresholdPercentage, QuorumThresholdPercentages},
+    operator::{
+        OperatorAvsState, OperatorId, QuorumThresholdPercentage, QuorumThresholdPercentages,
+    },
 };
 use std::collections::HashMap;
 use tokio::{
@@ -117,7 +119,7 @@ impl TaskSignature {
         task_index: TaskIndex,
         task_response_digest: TaskResponseDigest,
         bls_signature: Signature,
-        operator_id: FixedBytes<32>,
+        operator_id: OperatorId,
     ) -> Self {
         Self {
             task_index,
